@@ -35,7 +35,14 @@ Here are some of the library best features.
 
 ## Using the library. 
 
-**TODO. Have a look at the docstrings in the header files and check the examples for the time being :-)**
+**TODO**
+
+- Documentation available in the docstrings located in the header files. 
+
+- Basic library usage can be found by looking at the examples located in the `/examples` sub-directory.
+
+- Python conversion scripts needed to import meshes and textures are  located in the `/extras - converters` sub-directory.
+
 
 
 

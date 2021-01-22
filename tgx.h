@@ -1,0 +1,35 @@
+/** @file tgx.h */
+//
+// Copyright 2020 Arvind Singh
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+//version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; If not, see <http://www.gnu.org/licenses/>.
+
+#pragma once
+
+/** Main library header. Includes all other headers*/
+
+#include "Misc.h"
+#include "Vec2.h"
+#include "Vec3.h"
+#include "Vec4.h"
+#include "Mat4.h"
+#include "Box2.h"
+#include "Color.h"
+#include "Image.h"
+#include "Mesh3D.h"
+#include "Renderer3D.h"
+
+/* end of file */
+
+

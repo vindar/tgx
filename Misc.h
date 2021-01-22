@@ -1,0 +1,126 @@
+/** @file Misc.h */
+//
+// Copyright 2020 Arvind Singh
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+//version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; If not, see <http://www.gnu.org/licenses/>.
+
+#pragma once
+
+#include <stdint.h>
+#include <math.h>
+
+
+#if defined(TEENSYDUINO) || defined(ESP32)
+
+// running on a MCU 
+
+#include <Arduino.h>
+#define TGX_ON_ARDUINO
+#define TGX_INLINE __attribute__((always_inline))
+
+#else 
+
+// running on a CPU ? 
+
+#define TGX_INLINE
+
+#ifndef PROGMEM
+#define PROGMEM
+#endif
+
+#endif 
+
+
+namespace tgx
+{
+
+
+	/** 
+	* Dummy type identified by an integer. 
+	* Use to bypass partial template specialization
+	* by using method overloading instead....
+	**/
+	template<int N> struct DummyType
+		{
+		// nothing here :-)
+		};
+
+
+	/**
+	* Dummy type identified by two booleans
+	* Use to bypass partial template specialization
+	* by using method overloading instead....
+	**/
+	template<bool BB1, bool BB2> struct DummyTypeBB
+		{
+		// nothing here :-)
+		};
+
+
+
+/* Set this to 1 to use float as the default floating point type 
+   and set it to 0 to use double precision instead. */
+#define SINGLE_PRECISION_COMPUTATIONS 1	 
+
+
+
+	/** sets the default floating point type for computations */
+	template<typename T = int> struct DefaultFPType
+		{
+#if SINGLE_PRECISION_COMPUTATIONS
+		typedef float fptype;	// use float as default floating point type
+#else
+		typedef double fptype;	// use double as default floating point type
+#endif
+		};
+
+#if SINGLE_PRECISION_COMPUTATIONS
+	/** ... but when already using double, keep using double...*/
+	template<> struct DefaultFPType<double>
+		{
+		typedef double fptype;
+		};
+#endif
+
+
+	/** We doesn't want to redefine swap, min and max one more time ? */
+
+	template<typename T> TGX_INLINE inline const T& min(const T& a, const T& b) { return (a < b) ? a : b; }
+
+	template<typename T> TGX_INLINE inline T& min(T& a, T& b) { return (a < b) ? a : b; }
+
+	template<typename T> TGX_INLINE inline const T& max(const T& a, const T& b) { return (a > b) ? a : b; }
+
+	template<typename T> TGX_INLINE inline T& max(T& a, T& b) { return (a > b) ? a : b; }
+
+	template<typename T> TGX_INLINE inline void swap(T& a, T& b) { T c(a); a = b; b = c; }
+
+	template<typename T> TGX_INLINE inline T clamp(const T & v, const T & vmin, const T & vmax)
+		{
+		return max(vmin, min(vmax, v));
+		}
+
+
+	/** rounding for floats */
+	TGX_INLINE inline float roundfp(const float f) { return roundf(f);  }
+	
+
+	/** ...and rounding for doubles with the same name */
+	TGX_INLINE inline double roundfp(const double f) { return round(f); }
+
+
+}
+
+/** end of file */
+
