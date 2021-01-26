@@ -1114,7 +1114,7 @@ namespace tgx
                 const fVec3 NN2 = _r_modelViewM.mult0(*N2);
 
                 // reverse normal only when culling is disabled (and we assume in this case that normals are  given for the CCW face). 
-                const float icu = (_culling_dir != 0) ? 1 : ((cu > 0) ? -1 : 1); 
+                const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f); 
  
                 if (RASTER_TYPE & TGX_SHADER_TEXTURE)
                     {
@@ -1131,7 +1131,7 @@ namespace tgx
                 }
             else
                 { // flat shading
-                const float icu = ((cu > 0) ? -1 : 1); // -1 if we need to reverse the face normal. 
+                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal. 
                 faceN.normalize();
                 if (RASTER_TYPE & TGX_SHADER_TEXTURE)
                     {
@@ -1222,7 +1222,7 @@ namespace tgx
                 const fVec3 NN3 = _r_modelViewM.mult0(*N3);
 
                 // reverse normal only when culling is disabled (and we assume in this case that normals are  given for the CCW face). 
-                const float icu = (_culling_dir != 0) ? 1 : ((cu > 0) ? -1 : 1); 
+                const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f); 
  
                 if (RASTER_TYPE & TGX_SHADER_TEXTURE)
                     {
@@ -1241,7 +1241,7 @@ namespace tgx
                 }
             else
                 { // flat shading
-                const float icu = ((cu > 0) ? -1 : 1); // -1 if we need to reverse the face normal. 
+                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal. 
                 faceN.normalize();
                 if (RASTER_TYPE & TGX_SHADER_TEXTURE)
                     {
@@ -1371,7 +1371,7 @@ namespace tgx
             {
             if (_currentpow == exponent) return;
             _currentpow = exponent;
-            float specularExponent = exponent;
+            float specularExponent = (float)exponent;
             const float bbsp = (specularExponent < 8.0f) ? specularExponent : 8.0f;
             if (exponent > 0)
                 {
@@ -1584,8 +1584,8 @@ namespace tgx
         template<int RASTER_TYPE> 
         void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawMesh(const Mesh3D<color_t>* mesh)
             {
-            static const int TEXTURE = (RASTER_TYPE & TGX_SHADER_TEXTURE);
-            static const int GOURAUD = (RASTER_TYPE & TGX_SHADER_GOURAUD);
+            static const bool TEXTURE = (bool)(RASTER_TYPE & TGX_SHADER_TEXTURE);
+            static const bool GOURAUD = (bool)(RASTER_TYPE & TGX_SHADER_GOURAUD);
             static const float clipboundXY = (2048 / ((LX > LY) ? LX : LY));
 
             // check if the object is completely outside of the image for fast discard. 
@@ -1700,7 +1700,7 @@ namespace tgx
                         { // Gouraud shading : color on vertices
 
                         // reverse normal only when culling is disabled (and we assume in this case that normals are given for the CCW face). 
-                        const float icu = (_culling_dir != 0) ? 1 : ((cu > 0) ? -1 : 1);
+                        const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
                         if (PC0->missedP)
                             {
                             PC0->N = _r_modelViewM.mult0(tab_norm[PC0->indn]);
@@ -1716,7 +1716,7 @@ namespace tgx
                         }
                     else
                         { // flat shading : color on faces
-                        const float icu = ((cu > 0) ? -1 : 1); // -1 if we need to reverse the face normal. 
+                        const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal. 
                         faceN.normalize();
                         _uni.facecolor = _phong<TEXTURE>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
                         }
