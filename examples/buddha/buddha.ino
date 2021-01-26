@@ -116,7 +116,7 @@ void loop()
      renderer.setModelMatrix(M);
 
      // draw the model onto the memory framebuffer
-     renderer.drawMesh(SHADER_GOURAUD, &buddha, false);
+     renderer.drawMesh(TGX_SHADER_GOURAUD, &buddha, false);
 
      // update the screen (asynchronous). 
      tft.update(fb);

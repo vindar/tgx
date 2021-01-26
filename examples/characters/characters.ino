@@ -74,7 +74,7 @@ Renderer3D<RGB565, SLX, SLY, true, false> renderer;
 const Mesh3D<RGB565> * meshes[9] = { &nanosuit_1, &elementalist_1, &sinbad_1, &cyborg, &naruto_1, &manga3_1, &dennis, &R2D2, &stormtrooper };
 
 // shaders to use
-const int shader = SHADER_GOURAUD | SHADER_TEXTURE;
+const int shader = TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE;
 
 
 /**
@@ -168,7 +168,7 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
     im.drawText((mesh->name != nullptr ? mesh->name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, Arial_10);
     sprintf(buf, "%d triangles", nbt);
     im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, Arial_10);
-    sprintf(buf, "%s%s", (shader & SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & SHADER_TEXTURE ? " / texturing" : ""));
+    sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE ? " / texturing" : ""));
     im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, Arial_10);
     sprintf(buf, "%d FPS", fps);
     auto B = im.measureText(buf, { 0,0 }, Arial_10, false);

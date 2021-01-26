@@ -96,7 +96,7 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
     im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, Arial_10);
     sprintf(buf, "%d triangles", nbt);
     im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, Arial_10);
-    sprintf(buf, "%s%s", (shader & SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & SHADER_TEXTURE ? " / texturing" : ""));
+    sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE ? " / texturing" : ""));
     im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, Arial_10);
     sprintf(buf, "%d FPS", fps);
     auto B = im.measureText(buf, { 0,0 }, Arial_10, false);
@@ -155,7 +155,7 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
         renderer.setModelMatrix(M);
 
         // change shader type after every turn
-        int shader = (((em * 4) / maxT) & 1) ? SHADER_GOURAUD : SHADER_FLAT;
+        int shader = (((em * 4) / maxT) & 1) ? TGX_SHADER_GOURAUD : TGX_SHADER_FLAT;
 
         // draw the mesh on the image
         renderer.drawMesh(shader, mesh, false);
