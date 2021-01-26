@@ -712,6 +712,10 @@ def savemodel(vertice, texture, normal, R, modelname, texturenames, tag, color, 
             mnb = len(R) - bnm - 1; 
             O = R[mnb]
             
+            tl = 1            
+            for C in O:                                
+                tl +=  1 + (2 + len(C))*elem 
+            
             name = modelname
             nextname = "nullptr"
             if len(R) > 1:                
@@ -728,7 +732,7 @@ def savemodel(vertice, texture, normal, R, modelname, texturenames, tag, color, 
             
             f.write(f"""
 // mesh info for object {name} (with tag [{tag[mnb]}])
-const {NAMESPACE}::Mesh3D<{NAMESPACE}::RGB565> {name} = 
+const {NAMESPACE}::Mesh3D<{NAMESPACE}::RGB565> {name} PROGMEM = 
     {{
     1, // version/id
     
@@ -736,6 +740,7 @@ const {NAMESPACE}::Mesh3D<{NAMESPACE}::RGB565> {name} =
     {len(texture)}, // number of texture coords
     {len(normal)}, // number of normal vectors
     {nbT(O)}, // number of triangles
+    {tl}, // size of the face array. 
 
     {name_vertice}, // array of vertices
     {name_texture}, // array of texture coords
