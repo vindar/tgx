@@ -18920,7 +18920,8 @@ const tgx::Mesh3D<tgx::RGB565> elementalist_7 =
     5260, // number of texture coords
     5306, // number of normal vectors
     1214, // number of triangles
-
+    5659,
+    
     elementalist_vert_array, // array of vertices
     elementalist_tex_array, // array of texture coords
     elementalist_norm_array, // array of normal vectors        
@@ -18956,7 +18957,8 @@ const tgx::Mesh3D<tgx::RGB565> elementalist_6 =
     5260, // number of texture coords
     5306, // number of normal vectors
     769, // number of triangles
-
+    3029,
+    
     elementalist_vert_array, // array of vertices
     elementalist_tex_array, // array of texture coords
     elementalist_norm_array, // array of normal vectors        
@@ -18992,7 +18994,8 @@ const tgx::Mesh3D<tgx::RGB565> elementalist_5 =
     5260, // number of texture coords
     5306, // number of normal vectors
     540, // number of triangles
-
+    2286, 
+    
     elementalist_vert_array, // array of vertices
     elementalist_tex_array, // array of texture coords
     elementalist_norm_array, // array of normal vectors        
@@ -19028,7 +19031,8 @@ const tgx::Mesh3D<tgx::RGB565> elementalist_4 =
     5260, // number of texture coords
     5306, // number of normal vectors
     876, // number of triangles
-
+    3490, 
+    
     elementalist_vert_array, // array of vertices
     elementalist_tex_array, // array of texture coords
     elementalist_norm_array, // array of normal vectors        
@@ -19064,7 +19068,8 @@ const tgx::Mesh3D<tgx::RGB565> elementalist_3 =
     5260, // number of texture coords
     5306, // number of normal vectors
     528, // number of triangles
-
+    2110,
+    
     elementalist_vert_array, // array of vertices
     elementalist_tex_array, // array of texture coords
     elementalist_norm_array, // array of normal vectors        
@@ -19100,7 +19105,8 @@ const tgx::Mesh3D<tgx::RGB565> elementalist_2 =
     5260, // number of texture coords
     5306, // number of normal vectors
     1352, // number of triangles
-
+    5828, 
+    
     elementalist_vert_array, // array of vertices
     elementalist_tex_array, // array of texture coords
     elementalist_norm_array, // array of normal vectors        
@@ -19136,7 +19142,8 @@ const tgx::Mesh3D<tgx::RGB565> elementalist_1 =
     5260, // number of texture coords
     5306, // number of normal vectors
     948, // number of triangles
-
+    3839, 
+    
     elementalist_vert_array, // array of vertices
     elementalist_tex_array, // array of texture coords
     elementalist_norm_array, // array of normal vectors        

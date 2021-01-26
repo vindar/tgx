@@ -39172,7 +39172,7 @@ const uint16_t manga3_4_face[4262] PROGMEM = {
 
 
 // mesh info for object manga3_4 (with tag [usemtl mt_acc])
-const tgx::Mesh3D<tgx::RGB565> manga3_4 = 
+const tgx::Mesh3D<tgx::RGB565> manga3_4  =
     {
     1, // version/id
     
@@ -39180,6 +39180,8 @@ const tgx::Mesh3D<tgx::RGB565> manga3_4 =
     11535, // number of texture coords
     11488, // number of normal vectors
     998, // number of triangles
+
+    4262,
 
     manga3_vert_array, // array of vertices
     manga3_tex_array, // array of texture coords
@@ -39208,7 +39210,7 @@ const tgx::Mesh3D<tgx::RGB565> manga3_4 =
     
 
 // mesh info for object manga3_3 (with tag [usemtl mt_03_eye])
-const tgx::Mesh3D<tgx::RGB565> manga3_3 = 
+const tgx::Mesh3D<tgx::RGB565> manga3_3  =
     {
     1, // version/id
     
@@ -39217,6 +39219,8 @@ const tgx::Mesh3D<tgx::RGB565> manga3_3 =
     11488, // number of normal vectors
     146, // number of triangles
 
+    523,
+    
     manga3_vert_array, // array of vertices
     manga3_tex_array, // array of texture coords
     manga3_norm_array, // array of normal vectors        
@@ -39244,7 +39248,7 @@ const tgx::Mesh3D<tgx::RGB565> manga3_3 =
     
 
 // mesh info for object manga3_2 (with tag [usemtl mt_02_hair])
-const tgx::Mesh3D<tgx::RGB565> manga3_2 = 
+const tgx::Mesh3D<tgx::RGB565> manga3_2  =
     {
     1, // version/id
     
@@ -39253,6 +39257,8 @@ const tgx::Mesh3D<tgx::RGB565> manga3_2 =
     11488, // number of normal vectors
     5308, // number of triangles
 
+    20804, 
+    
     manga3_vert_array, // array of vertices
     manga3_tex_array, // array of texture coords
     manga3_norm_array, // array of normal vectors        
@@ -39280,7 +39286,7 @@ const tgx::Mesh3D<tgx::RGB565> manga3_2 =
     
 
 // mesh info for object manga3_1 (with tag [ | o manga3 | usemtl mt_01])
-const tgx::Mesh3D<tgx::RGB565> manga3_1 = 
+const tgx::Mesh3D<tgx::RGB565> manga3_1  =
     {
     1, // version/id
     
@@ -39289,6 +39295,7 @@ const tgx::Mesh3D<tgx::RGB565> manga3_1 =
     11488, // number of normal vectors
     6975, // number of triangles
 
+    28199,
     manga3_vert_array, // array of vertices
     manga3_tex_array, // array of texture coords
     manga3_norm_array, // array of normal vectors        

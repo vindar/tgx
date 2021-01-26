@@ -12988,6 +12988,7 @@ const tgx::Mesh3D<tgx::RGB565> stormtrooper =
     4653, // number of texture coords
     3275, // number of normal vectors
     6518, // number of triangles
+    23209, 
 
     stormtrooper_vert_array, // array of vertices
     stormtrooper_tex_array, // array of texture coords

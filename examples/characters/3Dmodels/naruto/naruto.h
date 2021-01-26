@@ -5032,7 +5032,8 @@ const tgx::Mesh3D<tgx::RGB565> naruto_3 =
     1145, // number of texture coords
     1596, // number of normal vectors
     8, // number of triangles
-
+    46, 
+    
     naruto_vert_array, // array of vertices
     naruto_tex_array, // array of texture coords
     naruto_norm_array, // array of normal vectors        
@@ -5068,7 +5069,8 @@ const tgx::Mesh3D<tgx::RGB565> naruto_2 =
     1145, // number of texture coords
     1596, // number of normal vectors
     298, // number of triangles
-
+    1210, 
+    
     naruto_vert_array, // array of vertices
     naruto_tex_array, // array of texture coords
     naruto_norm_array, // array of normal vectors        
@@ -5104,7 +5106,8 @@ const tgx::Mesh3D<tgx::RGB565> naruto_1 =
     1145, // number of texture coords
     1596, // number of normal vectors
     2166, // number of triangles
-
+    8249, 
+    
     naruto_vert_array, // array of vertices
     naruto_tex_array, // array of texture coords
     naruto_norm_array, // array of normal vectors        

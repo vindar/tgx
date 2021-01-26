@@ -9740,7 +9740,8 @@ const tgx::Mesh3D<tgx::RGB565> cyborg =
     2212, // number of texture coords
     2869, // number of normal vectors
     5549, // number of triangles
-
+    20547,
+    
     cyborg_vert_array, // array of vertices
     cyborg_tex_array, // array of texture coords
     cyborg_norm_array, // array of normal vectors        

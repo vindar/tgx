@@ -17539,7 +17539,8 @@ const tgx::Mesh3D<tgx::RGB565> sinbad_7 =
     5530, // number of texture coords
     4556, // number of normal vectors
     848, // number of triangles
-
+    3343,
+    
     sinbad_vert_array, // array of vertices
     sinbad_tex_array, // array of texture coords
     sinbad_norm_array, // array of normal vectors        
@@ -17575,7 +17576,8 @@ const tgx::Mesh3D<tgx::RGB565> sinbad_6 =
     5530, // number of texture coords
     4556, // number of normal vectors
     224, // number of triangles
-
+    869, 
+    
     sinbad_vert_array, // array of vertices
     sinbad_tex_array, // array of texture coords
     sinbad_norm_array, // array of normal vectors        
@@ -17611,7 +17613,8 @@ const tgx::Mesh3D<tgx::RGB565> sinbad_5 =
     5530, // number of texture coords
     4556, // number of normal vectors
     1786, // number of triangles
-
+    6409, 
+    
     sinbad_vert_array, // array of vertices
     sinbad_tex_array, // array of texture coords
     sinbad_norm_array, // array of normal vectors        
@@ -17647,7 +17650,8 @@ const tgx::Mesh3D<tgx::RGB565> sinbad_4 =
     5530, // number of texture coords
     4556, // number of normal vectors
     802, // number of triangles
-
+    2953, 
+    
     sinbad_vert_array, // array of vertices
     sinbad_tex_array, // array of texture coords
     sinbad_norm_array, // array of normal vectors        
@@ -17683,7 +17687,8 @@ const tgx::Mesh3D<tgx::RGB565> sinbad_3 =
     5530, // number of texture coords
     4556, // number of normal vectors
     528, // number of triangles
-
+    1725, 
+    
     sinbad_vert_array, // array of vertices
     sinbad_tex_array, // array of texture coords
     sinbad_norm_array, // array of normal vectors        
@@ -17719,7 +17724,8 @@ const tgx::Mesh3D<tgx::RGB565> sinbad_2 =
     5530, // number of texture coords
     4556, // number of normal vectors
     488, // number of triangles
-
+    1808, 
+    
     sinbad_vert_array, // array of vertices
     sinbad_tex_array, // array of texture coords
     sinbad_norm_array, // array of normal vectors        
@@ -17755,7 +17761,8 @@ const tgx::Mesh3D<tgx::RGB565> sinbad_1 =
     5530, // number of texture coords
     4556, // number of normal vectors
     2936, // number of triangles
-
+    11329, 
+    
     sinbad_vert_array, // array of vertices
     sinbad_tex_array, // array of texture coords
     sinbad_norm_array, // array of normal vectors        

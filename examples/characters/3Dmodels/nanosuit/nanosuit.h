@@ -19147,7 +19147,8 @@ const tgx::Mesh3D<tgx::RGB565> nanosuit_7 =
     6295, // number of texture coords
     4790, // number of normal vectors
     1149, // number of triangles
-
+    4407, 
+    
     nanosuit_vert_array, // array of vertices
     nanosuit_tex_array, // array of texture coords
     nanosuit_norm_array, // array of normal vectors        
@@ -19183,7 +19184,8 @@ const tgx::Mesh3D<tgx::RGB565> nanosuit_6 =
     6295, // number of texture coords
     4790, // number of normal vectors
     2803, // number of triangles
-
+    10454,
+    
     nanosuit_vert_array, // array of vertices
     nanosuit_tex_array, // array of texture coords
     nanosuit_norm_array, // array of normal vectors        
@@ -19219,7 +19221,8 @@ const tgx::Mesh3D<tgx::RGB565> nanosuit_5 =
     6295, // number of texture coords
     4790, // number of normal vectors
     1528, // number of triangles
-
+    5950,
+    
     nanosuit_vert_array, // array of vertices
     nanosuit_tex_array, // array of texture coords
     nanosuit_norm_array, // array of normal vectors        
@@ -19255,7 +19258,8 @@ const tgx::Mesh3D<tgx::RGB565> nanosuit_4 =
     6295, // number of texture coords
     4790, // number of normal vectors
     26, // number of triangles
-
+    261, 
+    
     nanosuit_vert_array, // array of vertices
     nanosuit_tex_array, // array of texture coords
     nanosuit_norm_array, // array of normal vectors        
@@ -19291,7 +19295,8 @@ const tgx::Mesh3D<tgx::RGB565> nanosuit_3 =
     6295, // number of texture coords
     4790, // number of normal vectors
     30, // number of triangles
-
+    126, 
+    
     nanosuit_vert_array, // array of vertices
     nanosuit_tex_array, // array of texture coords
     nanosuit_norm_array, // array of normal vectors        
@@ -19327,7 +19332,8 @@ const tgx::Mesh3D<tgx::RGB565> nanosuit_2 =
     6295, // number of texture coords
     4790, // number of normal vectors
     827, // number of triangles
-
+    3329, 
+    
     nanosuit_vert_array, // array of vertices
     nanosuit_tex_array, // array of texture coords
     nanosuit_norm_array, // array of normal vectors        
@@ -19363,7 +19369,8 @@ const tgx::Mesh3D<tgx::RGB565> nanosuit_1 =
     6295, // number of texture coords
     4790, // number of normal vectors
     2444, // number of triangles
-
+    9237, 
+    
     nanosuit_vert_array, // array of vertices
     nanosuit_tex_array, // array of texture coords
     nanosuit_norm_array, // array of normal vectors        

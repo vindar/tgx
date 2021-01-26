@@ -15194,7 +15194,8 @@ const tgx::Mesh3D<tgx::RGB565> dennis =
     4595, // number of texture coords
     3839, // number of normal vectors
     7657, // number of triangles
-
+    29762,
+    
     dennis_vert_array, // array of vertices
     dennis_tex_array, // array of texture coords
     dennis_norm_array, // array of normal vectors        

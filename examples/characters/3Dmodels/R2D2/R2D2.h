@@ -23149,7 +23149,8 @@ const tgx::Mesh3D<tgx::RGB565> R2D2 =
     8227, // number of texture coords
     5314, // number of normal vectors
     8035, // number of triangles
-
+    36867, 
+    
     R2D2_vert_array, // array of vertices
     R2D2_tex_array, // array of texture coords
     R2D2_norm_array, // array of normal vectors        
