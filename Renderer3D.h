@@ -24,6 +24,7 @@
 #include "Vec3.h"
 #include "Vec4.h"
 #include "Box2.h"
+#include "Box3.h"
 #include "Mat4.h"
 #include "Image.h"
 #include "Mesh3D.h"
@@ -1292,9 +1293,9 @@ namespace tgx
 
         
         /* test if a box is outside the image and should be discarded. */
-        bool _discard(float xmin, float xmax, float ymin, float ymax, float zmin, float zmax, const fMat4& M)
+        bool _discard(const fBox3 & bb, const fMat4& M)
             {
-            if ((xmin == 0) && (xmax == 0) && (ymin == 0) && (ymax == 0) && (zmin == 0) && (zmax == 0))
+            if ((bb.minX == 0) && (bb.maxX == 0) && (bb.minY == 0) && (bb.maxY == 0) && (bb.minZ == 0) && (bb.maxZ == 0))
                 return false; // do not discard if the bounding box is uninitialized. 
 
             const float ilx = 2.0f / LX;
@@ -1305,21 +1306,21 @@ namespace tgx
             const float By = (_oy + _im->height() + 1) * ily - 1.0f;
 
             int fl = 63; // every bit set
-            _clip(fl, fVec3(xmin, ymin, zmin), M, bx, Bx, by, By);
+            _clip(fl, fVec3(bb.minX, bb.minY, bb.minZ), M, bx, Bx, by, By);
             if (fl == 0) return false;
-            _clip(fl, fVec3(xmin, ymin, zmax), M, bx, Bx, by, By);
+            _clip(fl, fVec3(bb.minX, bb.minY, bb.maxZ), M, bx, Bx, by, By);
             if (fl == 0) return false;
-            _clip(fl, fVec3(xmin, ymax, zmin), M, bx, Bx, by, By);
+            _clip(fl, fVec3(bb.minX, bb.maxY, bb.minZ), M, bx, Bx, by, By);
             if (fl == 0) return false;
-            _clip(fl, fVec3(xmin, ymax, zmax), M, bx, Bx, by, By);
+            _clip(fl, fVec3(bb.minX, bb.maxY, bb.maxZ), M, bx, Bx, by, By);
             if (fl == 0) return false;
-            _clip(fl, fVec3(xmax, ymin, zmin), M, bx, Bx, by, By);
+            _clip(fl, fVec3(bb.maxX, bb.minY, bb.minZ), M, bx, Bx, by, By);
             if (fl == 0) return false;
-            _clip(fl, fVec3(xmax, ymin, zmax), M, bx, Bx, by, By);
+            _clip(fl, fVec3(bb.maxX, bb.minY, bb.maxZ), M, bx, Bx, by, By);
             if (fl == 0) return false;
-            _clip(fl, fVec3(xmax, ymax, zmin), M, bx, Bx, by, By);
+            _clip(fl, fVec3(bb.maxX, bb.maxY, bb.minZ), M, bx, Bx, by, By);
             if (fl == 0) return false;
-            _clip(fl, fVec3(xmax, ymax, zmax), M, bx, Bx, by, By);
+            _clip(fl, fVec3(bb.maxX, bb.maxY, bb.maxZ), M, bx, Bx, by, By);
             if (fl == 0) return false;
             return true;
             }
@@ -1341,16 +1342,16 @@ namespace tgx
 
 
         /** test if the mesh may possibly need clipping. If it return false, then cliptest can be skipped. */
-        bool _clipTestNeeded(float clipboundXY, float xmin, float xmax, float ymin, float ymax, float zmin, float zmax, const fMat4 & M)
+        bool _clipTestNeeded(float clipboundXY, const fBox3 & bb, const fMat4 & M)
             {
-            return (_clip2(clipboundXY, fVec3(xmin, ymin, zmin), M)
-                 || _clip2(clipboundXY, fVec3(xmin, ymin, zmax), M)
-                 || _clip2(clipboundXY, fVec3(xmin, ymax, zmin), M)
-                 || _clip2(clipboundXY, fVec3(xmin, ymax, zmax), M)
-                 || _clip2(clipboundXY, fVec3(xmax, ymin, zmin), M)
-                 || _clip2(clipboundXY, fVec3(xmax, ymin, zmax), M)
-                 || _clip2(clipboundXY, fVec3(xmax, ymax, zmin), M)
-                 || _clip2(clipboundXY, fVec3(xmax, ymax, zmax), M));
+            return (_clip2(clipboundXY, fVec3(bb.minX, bb.minY, bb.minZ), M)
+                 || _clip2(clipboundXY, fVec3(bb.minX, bb.minY, bb.maxZ), M)
+                 || _clip2(clipboundXY, fVec3(bb.minX, bb.maxY, bb.minZ), M)
+                 || _clip2(clipboundXY, fVec3(bb.minX, bb.maxY, bb.maxZ), M)
+                 || _clip2(clipboundXY, fVec3(bb.maxX, bb.minY, bb.minZ), M)
+                 || _clip2(clipboundXY, fVec3(bb.maxX, bb.minY, bb.maxZ), M)
+                 || _clip2(clipboundXY, fVec3(bb.maxX, bb.maxY, bb.minZ), M)
+                 || _clip2(clipboundXY, fVec3(bb.maxX, bb.maxY, bb.maxZ), M));
             }
 
 
@@ -1588,15 +1589,10 @@ namespace tgx
             static const float clipboundXY = (2048 / ((LX > LY) ? LX : LY));
 
             // check if the object is completely outside of the image for fast discard. 
-            if (_discard(mesh->bounding_box.xmin, mesh->bounding_box.xmax,
-                mesh->bounding_box.ymin, mesh->bounding_box.ymax,
-                mesh->bounding_box.zmin, mesh->bounding_box.zmax, _projM * _r_modelViewM)) return;
+            if (_discard(mesh->bounding_box, _projM * _r_modelViewM)) return;
 
             // check if the clipping test should be performed for each triangle in the mesh. 
-            const bool cliptestneeded = _clipTestNeeded(clipboundXY,
-                mesh->bounding_box.xmin, mesh->bounding_box.xmax,
-                mesh->bounding_box.ymin, mesh->bounding_box.ymax,
-                mesh->bounding_box.zmin, mesh->bounding_box.zmax, _projM * _r_modelViewM);
+            const bool cliptestneeded = _clipTestNeeded(clipboundXY, mesh->bounding_box, _projM * _r_modelViewM);
 
             const fVec3* const tab_vert = mesh->vertice;  // array of vertices
             const fVec3* const tab_norm = mesh->normal;   // array of normals

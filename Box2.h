@@ -45,34 +45,36 @@ namespace tgx
 	typedef Box2<double>  dBox2;		// floating-point valued box with double precision
 
 
-	/** positions for anchor points in a 2D box. */
-	static const int BOX2_ANCHOR_XCENTER = 0;
-	static const int BOX2_ANCHOR_LEFT = 1;
-	static const int BOX2_ANCHOR_RIGHT = 2;
-	static const int BOX2_ANCHOR_YCENTER = 0;
-	static const int BOX2_ANCHOR_TOP = 4;
-	static const int BOX2_ANCHOR_BOTTOM = 8;
-	static const int BOX2_ANCHOR_TOPLEFT = BOX2_ANCHOR_TOP | BOX2_ANCHOR_LEFT;
-	static const int BOX2_ANCHOR_TOPRIGHT = BOX2_ANCHOR_TOP | BOX2_ANCHOR_RIGHT;
-	static const int BOX2_ANCHOR_BOTTOMLEFT = BOX2_ANCHOR_BOTTOM | BOX2_ANCHOR_LEFT;
-	static const int BOX2_ANCHOR_BOTTOMRIGHT = BOX2_ANCHOR_BOTTOM | BOX2_ANCHOR_RIGHT;
-	static const int BOX2_ANCHOR_CENTER = BOX2_ANCHOR_XCENTER | BOX2_ANCHOR_YCENTER;
-	static const int BOX2_ANCHOR_CENTERLEFT = BOX2_ANCHOR_YCENTER | BOX2_ANCHOR_LEFT;
-	static const int BOX2_ANCHOR_CENTERRIGHT = BOX2_ANCHOR_YCENTER | BOX2_ANCHOR_RIGHT;
-	static const int BOX2_ANCHOR_CENTERTOP = BOX2_ANCHOR_XCENTER | BOX2_ANCHOR_TOP;
-	static const int BOX2_ANCHOR_CENTERBOTTOM = BOX2_ANCHOR_XCENTER | BOX2_ANCHOR_BOTTOM;
+										
+/** positions for anchor points in a 2D box. */
+#define TGX_BOX2_ANCHOR_XCENTER (0)
+#define TGX_BOX2_ANCHOR_LEFT (1)
+#define TGX_BOX2_ANCHOR_RIGHT (2)
+#define TGX_BOX2_ANCHOR_YCENTER (0)
+#define TGX_BOX2_ANCHOR_TOP (4)
+#define TGX_BOX2_ANCHOR_BOTTOM (8)
+#define TGX_BOX2_ANCHOR_TOPLEFT  (TGX_BOX2_ANCHOR_TOP | TGX_BOX2_ANCHOR_LEFT)
+#define TGX_BOX2_ANCHOR_TOPRIGHT  (TGX_BOX2_ANCHOR_TOP | TGX_BOX2_ANCHOR_RIGHT)
+#define TGX_BOX2_ANCHOR_BOTTOMLEFT  (TGX_BOX2_ANCHOR_BOTTOM | TGX_BOX2_ANCHOR_LEFT)
+#define TGX_BOX2_ANCHOR_BOTTOMRIGHT  (TGX_BOX2_ANCHOR_BOTTOM | TGX_BOX2_ANCHOR_RIGHT)
+#define TGX_BOX2_ANCHOR_CENTER  (TGX_BOX2_ANCHOR_XCENTER | TGX_BOX2_ANCHOR_YCENTER)
+#define TGX_BOX2_ANCHOR_CENTERLEFT  (TGX_BOX2_ANCHOR_YCENTER | TGX_BOX2_ANCHOR_LEFT)
+#define TGX_BOX2_ANCHOR_CENTERRIGHT  (TGX_BOX2_ANCHOR_YCENTER | TGX_BOX2_ANCHOR_RIGHT)
+#define TGX_BOX2_ANCHOR_CENTERTOP  (TGX_BOX2_ANCHOR_XCENTER | TGX_BOX2_ANCHOR_TOP)
+#define TGX_BOX2_ANCHOR_CENTERBOTTOM  (TGX_BOX2_ANCHOR_XCENTER | TGX_BOX2_ANCHOR_BOTTOM)
 
-	/* Splitting a 2D box in half */
-	const int BOX2_SPLIT_UP = 1;
-	const int BOX2_SPLIT_DOWN = 3;
-	const int BOX2_SPLIT_LEFT = 4;
-	const int BOX2_SPLIT_RIGHT = 12;
 
-	/* Splitting a 2D box in quarter*/
-	const int BOX2_SPLIT_UP_LEFT = BOX2_SPLIT_UP | BOX2_SPLIT_LEFT;
-	const int BOX2_SPLIT_UP_RIGHT = BOX2_SPLIT_UP | BOX2_SPLIT_RIGHT;
-	const int BOX2_SPLIT_DOWN_LEFT = BOX2_SPLIT_DOWN | BOX2_SPLIT_LEFT;
-	const int BOX2_SPLIT_DOWN_RIGHT = BOX2_SPLIT_DOWN | BOX2_SPLIT_RIGHT;
+/* Splitting a 2D box in half */
+#define TGX_BOX2_SPLIT_UP (1)
+#define TGX_BOX2_SPLIT_DOWN (3)
+#define TGX_BOX2_SPLIT_LEFT (4)
+#define TGX_BOX2_SPLIT_RIGHT (12)
+
+/* Splitting a 2D box in quarter*/
+#define TGX_BOX2_SPLIT_UP_LEFT  (TGX_BOX2_SPLIT_UP | TGX_BOX2_SPLIT_LEFT)
+#define TGX_BOX2_SPLIT_UP_RIGHT  (TGX_BOX2_SPLIT_UP | TGX_BOX2_SPLIT_RIGHT)
+#define TGX_BOX2_SPLIT_DOWN_LEFT  (TGX_BOX2_SPLIT_DOWN | TGX_BOX2_SPLIT_LEFT)
+#define TGX_BOX2_SPLIT_DOWN_RIGHT  (TGX_BOX2_SPLIT_DOWN | TGX_BOX2_SPLIT_RIGHT)
 
 
 
@@ -408,8 +410,8 @@ namespace tgx
 
 		/**
 		* Split the box in half or in quarter.
-		* Part should be one of BOX2_SPLIT_UP, BOX2_SPLIT_DOWN, BOX2_SPLIT_LEFT, BOX2_SPLIT_RIGHT, 
-		* BOX2_SPLIT_UP_LEFT, BOX2_SPLIT_UP_RIGHT, BOX2_SPLIT_DOWN_LEFT, BOX2_SPLIT_DOWN_RIGHT
+		* Part should be one of TGX_BOX2_SPLIT_UP, TGX_BOX2_SPLIT_DOWN, TGX_BOX2_SPLIT_LEFT, TGX_BOX2_SPLIT_RIGHT, 
+		* TGX_BOX2_SPLIT_UP_LEFT, TGX_BOX2_SPLIT_UP_RIGHT, TGX_BOX2_SPLIT_DOWN_LEFT, TGX_BOX2_SPLIT_DOWN_RIGHT
 		**/
 		inline void split(int part)
 			{
@@ -419,8 +421,8 @@ namespace tgx
 
 		/**
 		* Return this box splitted in half or quarter.
-		* Part should be one of BOX2_SPLIT_UP, BOX2_SPLIT_DOWN, BOX2_SPLIT_LEFT, BOX2_SPLIT_RIGHT, 
-		* BOX2_SPLIT_UP_LEFT, BOX2_SPLIT_UP_RIGHT, BOX2_SPLIT_DOWN_LEFT, BOX2_SPLIT_DOWN_RIGHT
+		* Part should be one of TGX_BOX2_SPLIT_UP, TGX_BOX2_SPLIT_DOWN, TGX_BOX2_SPLIT_LEFT, TGX_BOX2_SPLIT_RIGHT, 
+		* TGX_BOX2_SPLIT_UP_LEFT, TGX_BOX2_SPLIT_UP_RIGHT, TGX_BOX2_SPLIT_DOWN_LEFT, TGX_BOX2_SPLIT_DOWN_RIGHT
 		**/
 		Box2<T> getSplit(int part) const
 			{
@@ -428,14 +430,14 @@ namespace tgx
 			const T midY = (minY + maxY)/2;
 			switch (part)
 				{
-			case BOX2_SPLIT_UP: { return Box2<T>(minX, maxX, midY, maxY); }
-			case BOX2_SPLIT_DOWN: { return Box2<T>(minX, maxX, minY, midY); }
-			case BOX2_SPLIT_LEFT: { return Box2<T>(minX, midX, minY, maxY); }
-			case BOX2_SPLIT_RIGHT: { return Box2<T>(midX, maxX, minY, maxY); }
-			case BOX2_SPLIT_UP_LEFT: { return Box2<T>(minX, midX, midY, maxY); }
-			case BOX2_SPLIT_UP_RIGHT: { return Box2<T>(midX, maxX, midY, maxY); }
-			case BOX2_SPLIT_DOWN_LEFT: { return Box2<T>(minX, midX, minY, midY); }
-			case BOX2_SPLIT_DOWN_RIGHT: { return Box2<T>(midX, maxX, minY, midY); }
+			case TGX_BOX2_SPLIT_UP: { return Box2<T>(minX, maxX, midY, maxY); }
+			case TGX_BOX2_SPLIT_DOWN: { return Box2<T>(minX, maxX, minY, midY); }
+			case TGX_BOX2_SPLIT_LEFT: { return Box2<T>(minX, midX, minY, maxY); }
+			case TGX_BOX2_SPLIT_RIGHT: { return Box2<T>(midX, maxX, minY, maxY); }
+			case TGX_BOX2_SPLIT_UP_LEFT: { return Box2<T>(minX, midX, midY, maxY); }
+			case TGX_BOX2_SPLIT_UP_RIGHT: { return Box2<T>(midX, maxX, midY, maxY); }
+			case TGX_BOX2_SPLIT_DOWN_LEFT: { return Box2<T>(minX, midX, minY, midY); }
+			case TGX_BOX2_SPLIT_DOWN_RIGHT: { return Box2<T>(midX, maxX, minY, midY); }
 				}
 			return *this;
 			}
@@ -449,15 +451,15 @@ namespace tgx
 			{
 			switch (anchor_pos)
 				{
-			case BOX2_ANCHOR_TOPLEFT:		return Vec2<T>(minX, maxY);
-			case BOX2_ANCHOR_TOPRIGHT:		return Vec2<T>(maxX, maxY);
-			case BOX2_ANCHOR_BOTTOMLEFT:	return Vec2<T>(minX, minY);
-			case BOX2_ANCHOR_BOTTOMRIGHT:	return Vec2<T>(maxX, minY);
-			case BOX2_ANCHOR_CENTER:		return Vec2<T>((minX + maxX) / 2, (minY + maxY) / 2);
-			case BOX2_ANCHOR_CENTERLEFT:	return Vec2<T>(minX, (minY + maxY) / 2);
-			case BOX2_ANCHOR_CENTERRIGHT:	return Vec2<T>(maxX, (minY + maxY) / 2);
-			case BOX2_ANCHOR_CENTERTOP:		return Vec2<T>((minX + maxX) / 2, maxY);
-			case BOX2_ANCHOR_CENTERBOTTOM:	return Vec2<T>((minX + maxX) / 2, minY);
+			case TGX_BOX2_ANCHOR_TOPLEFT:		return Vec2<T>(minX, maxY);
+			case TGX_BOX2_ANCHOR_TOPRIGHT:		return Vec2<T>(maxX, maxY);
+			case TGX_BOX2_ANCHOR_BOTTOMLEFT:	return Vec2<T>(minX, minY);
+			case TGX_BOX2_ANCHOR_BOTTOMRIGHT:	return Vec2<T>(maxX, minY);
+			case TGX_BOX2_ANCHOR_CENTER:		return Vec2<T>((minX + maxX) / 2, (minY + maxY) / 2);
+			case TGX_BOX2_ANCHOR_CENTERLEFT:	return Vec2<T>(minX, (minY + maxY) / 2);
+			case TGX_BOX2_ANCHOR_CENTERRIGHT:	return Vec2<T>(maxX, (minY + maxY) / 2);
+			case TGX_BOX2_ANCHOR_CENTERTOP:		return Vec2<T>((minX + maxX) / 2, maxY);
+			case TGX_BOX2_ANCHOR_CENTERBOTTOM:	return Vec2<T>((minX + maxX) / 2, minY);
 				}
 			return Vec2<T>((minX + maxX) / 2, (minY + maxY) / 2); // unknown pos returns center.
 			}
@@ -479,37 +481,73 @@ namespace tgx
 		/**
 		* Zoom outside the box (i.e. increase radius by 1/10th).
 		**/
-		void zoomOut();
+		void zoomOut()
+			{
+			const T u = lx() / 10;
+			minX -= u;
+			maxX += u;
+			const T v = ly() / 10;
+			minY -= v;
+			maxY += v;
+			}
 
 
 		/**
 		* Zoom inside the box (i.e. decrease radius by 1/8th).
 		**/
-		void zoomIn();
+		void zoomIn()
+			{
+			const T u = lx() / 8;
+			minX += u;
+			maxX -= u;
+			const T v = ly() / 8;
+			minY += v;
+			maxY -= v;
+			}
 
 
 		/**
 		* Move the box left by 1/10th of its width.
 		**/
-		void left();
+		void left()
+			{
+			const T u = lx() / 10;
+			minX -= u;
+			maxX -= u;
+			}
 
 
 		/**
 		* Move the box right by 1/10th of its width.
 		**/
-		void right();
+		void right()
+			{
+			const T u = lx() / 10;
+			minX += u;
+			maxX += u;
+			}
 
 
 		/**
 		* Move the rectangle up by 1/10th of its height.
 		**/
-		void up();
+		void up()
+			{
+			const T v = ly() / 10;
+			minY -= v;
+			maxY -= v;
+			}
 
 
 		/**
 		* Move the rectangle down by 1/10th of its height.
 		**/
-		void down();
+		void down()
+			{
+			const T v = ly() / 10;
+			minY += v;
+			maxY += v;
+			}
 
 
 		/**
@@ -530,58 +568,6 @@ namespace tgx
 
 
 
-	template<typename T> void Box2<T>::zoomOut()
-		{
-		const T u = lx() / 10;
-		minX -= u;
-		maxX += u;
-		const T v = ly() / 10;
-		minY -= v;
-		maxY += v;
-		}
-
-
-	template<typename T> void Box2<T>::zoomIn()
-		{
-		const T u = lx() / 8;
-		minX += u;
-		maxX -= u;
-		const T v = ly() / 8;
-		minY += u;
-		maxY -= u;
-		}
-
-
-	template<typename T> void Box2<T>::left()
-		{
-		const T u = lx() / 10;
-		minX -= u;
-		maxX -= u;
-		}
-
-
-	template<typename T> void Box2<T>::right()
-		{
-		const T u = lx() / 10;
-		minX += u;
-		maxX += u;
-		}
-
-
-	template<typename T> void Box2<T>::up()
-		{
-		const T v = ly() / 10;
-		minY -= v;
-		maxY -= v;
-		}
-
-
-	template<typename T> void Box2<T>::down()
-		{
-		const T v = ly() / 10;
-		minY += v;
-		maxY += v;
-		}
 
 
 	template<typename T> Box2<T> Box2<T>::getEnclosedWithSameRatioAs(const Box2<T> & B) const

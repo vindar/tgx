@@ -21,6 +21,7 @@
 #include "Misc.h"
 #include "Vec2.h"
 #include "Vec3.h"
+#include "Box3.h"
 #include "Color.h"
 #include "Image.h"
 
@@ -177,10 +178,7 @@ namespace tgx
 
 		const Mesh3D * next;				// next object to draw when chaining is enabled. nullptr at end of chain. 
 		
-		struct								// bounding box (use a struct in case we ever create a iBox3 class...)
-			{
-			float xmin, xmax, ymin, ymax, zmin, zmax;
-			} bounding_box;
+		fBox3 bounding_box;					// object bounding box.
 		
 		const char* name;					// mesh name
 		};
@@ -194,14 +192,13 @@ namespace tgx
 
 
 	/**
-	* Create a copy of a mesh where some arrays in PROGMEM are copied to EXTMEM instead
+	* Create a copy of a mesh where (specified) arrays in PROGMEM are copied to EXTMEM.
+	* 
 	* Of course, external ram must be present...
 	*
 	* - Only arrays in PROGMEM are copied to EXTMEM. Arrays located elsewhere are never copied. 
-	* 
 	* - The source mesh must not have any part located in extmem already or the method will fail.
-	* 
-	* - In general, it is only helpful to copy textures to extmem but not the other arrays. 
+	* - In general, it is most helpful to copy textures to extmem but not the other arrays. 
 	* 
 	* Return a pointer to the new mesh or nullptr on error (nothing is allocated in that case). 
 	* the methods also copies the sub-meshes linked to this one (via the ->next pointer).  
@@ -214,14 +211,10 @@ namespace tgx
 																bool copy_faces = false);
 
 
-
-
 	/**
-	* Delete a mesh which what allocated with copyMeshEXTMEM()
+	* Delete a mesh allocated with copyMeshEXTMEM().
 	**/
 	template<typename color_t> void freeMeshEXTMEM(Mesh3D<color_t>* mesh);
-
-
 
 
 

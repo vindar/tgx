@@ -21,6 +21,7 @@
 #include <math.h>
 
 
+
 #if defined(TEENSYDUINO) || defined(ESP32)
 
 // running on a MCU 
@@ -59,10 +60,8 @@ extern "C" uint8_t external_psram_size;
 
 
 
-
 namespace tgx
 {
-
 
 
 	/** 
@@ -90,21 +89,22 @@ namespace tgx
 
 /* Set this to 1 to use float as the default floating point type 
    and set it to 0 to use double precision instead. */
-#define SINGLE_PRECISION_COMPUTATIONS 1	 
-
+#ifndef TGX_SINGLE_PRECISION_COMPUTATIONS
+#define TGX_SINGLE_PRECISION_COMPUTATIONS 1	 
+#endif
 
 
 	/** sets the default floating point type for computations */
 	template<typename T = int> struct DefaultFPType
 		{
-#if SINGLE_PRECISION_COMPUTATIONS
+#if TGX_SINGLE_PRECISION_COMPUTATIONS
 		typedef float fptype;	// use float as default floating point type
 #else
 		typedef double fptype;	// use double as default floating point type
 #endif
 		};
 
-#if SINGLE_PRECISION_COMPUTATIONS
+#if TGX_SINGLE_PRECISION_COMPUTATIONS
 	/** ... but when already using double, keep using double...*/
 	template<> struct DefaultFPType<double>
 		{
@@ -113,18 +113,20 @@ namespace tgx
 #endif
 
 
-	/** We doesn't want to redefine swap, min and max one more time ? */
 
-	template<typename T> TGX_INLINE inline const T& min(const T& a, const T& b) { return (a < b) ? a : b; }
-
-	template<typename T> TGX_INLINE inline T& min(T& a, T& b) { return (a < b) ? a : b; }
-
-	template<typename T> TGX_INLINE inline const T& max(const T& a, const T& b) { return (a > b) ? a : b; }
-
-	template<typename T> TGX_INLINE inline T& max(T& a, T& b) { return (a > b) ? a : b; }
-
+	/** baby let me swap you one more time... */
 	template<typename T> TGX_INLINE inline void swap(T& a, T& b) { T c(a); a = b; b = c; }
 
+
+	/** don't know why but much faster than fminf for floats.. */
+	template<typename T> TGX_INLINE inline T min(const T & a, const T & b) { return((a < b) ? a : b); }
+
+	
+	/** don't know why but much faster than fmaxf for floats.. */
+	template<typename T> TGX_INLINE inline T max(const T & a, const T & b) { return((a > b) ? a : b); }
+
+		
+	/** template clamp version */
 	template<typename T> TGX_INLINE inline T clamp(const T & v, const T & vmin, const T & vmax)
 		{
 		return max(vmin, min(vmax, v));

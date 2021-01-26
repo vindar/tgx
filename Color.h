@@ -1769,9 +1769,9 @@ struct RGB64
 		**/
 		inline void clamp()
 			{
-			R = tgx::max(tgx::min(R, 1.0f), 0.0f);
-			G = tgx::max(tgx::min(G, 1.0f), 0.0f);
-			B = tgx::max(tgx::min(B, 1.0f), 0.0f);
+			R = tgx::clamp(R, 0.0f, 1.0f);
+			G = tgx::clamp(G, 0.0f, 1.0f);
+			B = tgx::clamp(B, 0.0f, 1.0f);
 			}
 
 

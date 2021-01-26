@@ -25,6 +25,7 @@
 #include "Vec4.h"
 #include "Mat4.h"
 #include "Box2.h"
+#include "Box3.h"
 #include "Color.h"
 #include "Image.h"
 #include "Mesh3D.h"
