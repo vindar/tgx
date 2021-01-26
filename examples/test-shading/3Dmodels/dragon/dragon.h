@@ -27420,7 +27420,8 @@ const tgx::Mesh3D<tgx::RGB565> dragon =
     0, // number of texture coords
     11392, // number of normal vectors
     23000, // number of triangles
-
+    52511, // size of faces
+    
     dragon_vert_array, // array of vertices
     nullptr, // array of texture coords
     dragon_norm_array, // array of normal vectors        

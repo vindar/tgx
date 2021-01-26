@@ -25015,6 +25015,7 @@ const tgx::Mesh3D<tgx::RGB565> buddha =
     0, // number of texture coords
     9996, // number of normal vectors
     20000, // number of triangles
+    47631, // number of faces
 
     buddha_vert_array, // array of vertices
     nullptr, // array of texture coords

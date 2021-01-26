@@ -88,7 +88,8 @@ typedef struct {
 #ifndef _ILI9341_t3H_
 #define _ILI9341_t3H_
 
-
+#ifndef _ILI9341_FONTS_H_
+#define _ILI9341_FONTS_H_
 typedef struct {
 	const unsigned char* index;
 	const unsigned char* unicode;
@@ -108,6 +109,7 @@ typedef struct {
 	unsigned char line_space;
 	unsigned char cap_height;
 } ILI9341_t3_font_t;
+#endif
 
 #endif 
 

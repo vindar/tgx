@@ -10516,7 +10516,8 @@ const tgx::Mesh3D<tgx::RGB565> spot =
     3225, // number of texture coords
     2930, // number of normal vectors
     5856, // number of triangles
-
+    20481, // size of face
+    
     spot_vert_array, // array of vertices
     spot_tex_array, // array of texture coords
     spot_norm_array, // array of normal vectors        

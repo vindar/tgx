@@ -62,7 +62,7 @@ DMAMEM float zbuf[SLX * SLY];
 Image<RGB565> im(fb, SLX, SLY);
 
 // the 3D mesh drawer (with zbuffer, perspective projection, backface culling)
-Renderer3D<RGB565, SLX, SLY, true, false, true> renderer;
+Renderer3D<RGB565, SLX, SLY, true, false> renderer;
 
 
 /**
@@ -128,9 +128,7 @@ void setup()
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
     renderer.setZbuffer(zbuf, SLX * SLY); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
-
-    renderer.useModelDefaultLightning(false); // use custom color/reflexion
-    renderer.setModelLightning(RGBf(0.75f, 0.75f, 0.75f), 0.15f, 0.7f, 0.7f, 32);   
+    renderer.setMaterial(RGBf(0.75f, 0.75f, 0.75f), 0.15f, 0.7f, 0.7f, 32);   
     }
 
 
@@ -147,11 +145,12 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
         renderer.clearZbuffer();
 
         // move the model to it correct position (depending on the current time). 
-        auto& M = renderer.modelMatrix();
+        fMat4 M;
         M.setScale(scale, scale, scale);
         M.multRotate((1440.0f * em) / maxT, { 0,1,0 }); // 4 rotations per display
         M.multRotate((800.0f * em) / maxT, { 1, 0, 0}); 
         M.multTranslate({ 0,0, -40 });
+        renderer.setModelMatrix(M);
 
         // change shader type after every turn
         int part = (em * 4) / maxT;
@@ -159,7 +158,7 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
         int shader = (part == 0) ? SHADER_GOURAUD : SHADER_GOURAUD | SHADER_TEXTURE;
 
         // draw the mesh on the image
-        renderer.draw(shader, mesh);
+        renderer.drawMesh(shader, mesh, false);
 
         // overlay some info 
         drawInfo(im, shader, *mesh);

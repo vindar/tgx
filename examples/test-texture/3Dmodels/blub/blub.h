@@ -25093,7 +25093,8 @@ const tgx::Mesh3D<tgx::RGB565> blub =
     7317, // number of texture coords
     7106, // number of normal vectors
     14208, // number of triangles
-
+    50199, // size of face
+    
     blub_vert_array, // array of vertices
     blub_tex_array, // array of texture coords
     blub_norm_array, // array of normal vectors        

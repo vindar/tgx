@@ -31015,7 +31015,8 @@ const tgx::Mesh3D<tgx::RGB565> suzanne =
     9906, // number of texture coords
     8177, // number of normal vectors
     15744, // number of triangles
-
+    57873, // size of faces
+    
     suzanne_vert_array, // array of vertices
     suzanne_tex_array, // array of texture coords
     suzanne_norm_array, // array of normal vectors        

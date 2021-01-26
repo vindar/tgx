@@ -11911,7 +11911,8 @@ const tgx::Mesh3D<tgx::RGB565> skull_4 =
     0, // number of texture coords
     5077, // number of normal vectors
     850, // number of triangles
-
+    1956, // size of faces
+    
     skull_vert_array, // array of vertices
     nullptr, // array of texture coords
     skull_norm_array, // array of normal vectors        
@@ -11947,7 +11948,8 @@ const tgx::Mesh3D<tgx::RGB565> skull_3 =
     0, // number of texture coords
     5077, // number of normal vectors
     2066, // number of triangles
-
+    4443, // size of faces
+    
     skull_vert_array, // array of vertices
     nullptr, // array of texture coords
     skull_norm_array, // array of normal vectors        
@@ -11983,7 +11985,8 @@ const tgx::Mesh3D<tgx::RGB565> skull_2 =
     0, // number of texture coords
     5077, // number of normal vectors
     1084, // number of triangles
-
+    2544, // size of faces
+    
     skull_vert_array, // array of vertices
     nullptr, // array of texture coords
     skull_norm_array, // array of normal vectors        
@@ -12019,7 +12022,8 @@ const tgx::Mesh3D<tgx::RGB565> skull_1 =
     0, // number of texture coords
     5077, // number of normal vectors
     5535, // number of triangles
-
+    12406, // size of faces
+    
     skull_vert_array, // array of vertices
     nullptr, // array of texture coords
     skull_norm_array, // array of normal vectors        

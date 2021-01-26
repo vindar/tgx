@@ -52,39 +52,39 @@ static const int SLX = 320;
 static const int SLY = 240;
 
 // main screen framebuffer (150K in DTCM)
-uint16_t fb[SLX * SLY];                 
+uint16_t fb[SLX * SLY];
 
 // internal framebuffer (150K in DMAMEM) used by the ILI9431_T4 library for double buffering.
-DMAMEM uint16_t internal_fb[SLX * SLY]; 
+DMAMEM uint16_t internal_fb[SLX * SLY];
 
 // zbuffer (300K in DMAMEM)
-DMAMEM float zbuf[SLX * SLY];           
+DMAMEM float zbuf[SLX * SLY];
 
 // image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
 
 // the 3D mesh drawer (with zbuffer, perspective projection, backface culling)
-Renderer3D<RGB565, SLX, SLY, true, false, true> renderer;
+Renderer3D<RGB565, SLX, SLY, true, false> renderer;
 
 
 /**
 * Overlay some info about the current mesh on the screen
 **/
-void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RGB565> & mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
-    {
+void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RGB565>& mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
+{
     static elapsedMillis em = 0; // number of milli elapsed since last fps update
     static int fps = 0; // last fps 
     static int count = 0; // number of frame since the last update
     // recompute fps every second. 
-    count++; 
+    count++;
     if ((int)em > 1000)
         {
-        em = 0; 
+        em = 0;
         fps = count;
         count = 0;
         }
     // count the number of triangles in the mesh (by iterating over linked meshes)
-    const Mesh3D<RGB565> * m = &mesh;
+    const Mesh3D<RGB565>* m = &mesh;
     int nbt = 0;
     while (m != nullptr)
         {
@@ -101,8 +101,8 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
     sprintf(buf, "%d FPS", fps);
     auto B = im.measureText(buf, { 0,0 }, Arial_10, false);
     im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, Arial_10);
-    }
-    
+}
+
 
 
 void setup()
@@ -115,7 +115,7 @@ void setup()
         }
 
     // ok. turn on backlight
-    pinMode(PIN_BACKLIGHT, OUTPUT);  
+    pinMode(PIN_BACKLIGHT, OUTPUT);
     digitalWrite(PIN_BACKLIGHT, HIGH);
 
     // setup the screen driver 
@@ -131,13 +131,11 @@ void setup()
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
     renderer.setZbuffer(zbuf, SLX * SLY); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
-
-    renderer.useModelDefaultLightning(false); // use custom color/reflexion
     }
 
 
 void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
-    {
+{
     const int maxT = 15000; // display model for 15 seconds. 
     elapsedMillis em = 0;
     while (em < maxT)
@@ -149,17 +147,18 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
         renderer.clearZbuffer();
 
         // move the model to it correct position (depending on the current time). 
-        auto& M = renderer.modelMatrix();
+        fMat4 M;
         M.setScale(scale, scale, scale);
         M.multRotate(tilt, { 0,0,1 }); // 4 rotations per display
         M.multRotate((1440.0f * em) / maxT, { 0,1,0 }); // 4 rotations per display
         M.multTranslate({ 0,0, -40 });
+        renderer.setModelMatrix(M);
 
         // change shader type after every turn
         int shader = (((em * 4) / maxT) & 1) ? SHADER_GOURAUD : SHADER_FLAT;
 
         // draw the mesh on the image
-        renderer.draw(shader, mesh);
+        renderer.drawMesh(shader, mesh, false);
 
         // overlay some info 
         drawInfo(im, shader, *mesh);
@@ -167,18 +166,18 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
         // update the screen (asynchronously)
         tft.update(fb);
         }
-    }
+}
 
 
 void loop()
-    {
-    renderer.setModelLightning(RGBf(0.15f, 0.7f, 0.39f), 0.2f, 0.8f, 0.5f, 8); // teapot
+{
+    renderer.setMaterial(RGBf(0.15f, 0.7f, 0.39f), 0.2f, 0.8f, 0.5f, 8); // teapot
     drawMesh(&teapot, 15, 30);
 
-    renderer.setModelLightning(RGBf(1.0f, 1.0f, 1.0f), 0.15f, 0.7f, 0.8f, 48); // bunny
+    renderer.setMaterial(RGBf(1.0f, 1.0f, 1.0f), 0.15f, 0.7f, 0.8f, 48); // bunny
     drawMesh(&bunny, 12);
 
-    renderer.setModelLightning(RGBf(166 / 256.0f, 130 / 256.0f, 110.0f / 256.0f), 0.15f, 0.7f, 0.4f, 16); // skull
+    renderer.setMaterial(RGBf(166 / 256.0f, 130 / 256.0f, 110.0f / 256.0f), 0.15f, 0.7f, 0.4f, 16); // skull
     drawMesh(&skull_1, 12);
 
     // let's have some fun with lightning
@@ -186,7 +185,7 @@ void loop()
     renderer.setLightDiffuse({ 1.0f, 0, 0 });  // red    
     renderer.setLightSpecular({ 1.0f, 1.0f, 1.0f }); // white
 
-    renderer.setModelLightning(RGBf(1.0f, 1.0f, 1.0f), 0.2f, 0.8f, 0.8f, 32); // suzanne
+    renderer.setMaterial(RGBf(1.0f, 1.0f, 1.0f), 0.2f, 0.8f, 0.8f, 32); // suzanne
     drawMesh(&suzanne, 13);
 
     // back to normal lightning
@@ -194,13 +193,13 @@ void loop()
     renderer.setLightDiffuse({ 1.0f, 1.0f, 1.0f }); // white
     renderer.setLightSpecular({ 1.0f, 1.0f, 1.0f }); // white
 
-    renderer.setModelLightning(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // dragon
+    renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // dragon
     drawMesh(&dragon, 15);
 
     // chooose new random light orientation.
     const float angle = M_PI * random(0, 360) / 180.0f;
     renderer.setLightDirection({ cosf(angle) , sinf(angle) , -0.3f });
-    }
+}
 
 
 /** end of file */

@@ -4,7 +4,7 @@
 * 
 * Minimal example for displaying a mesh. 
 * Happy buddha  (20 000 triangles) at 30FPS on an ILI9341 screen with 
-* v-sync on (i.e. no screen tearing!)
+* v-sync on (i.e. no screen tearing)
 ********************************************************************/
 
 
@@ -62,7 +62,7 @@ DMAMEM float zbuf[SLX * SLY];
 Image<RGB565> im(fb, SLX, SLY);
 
 // the 3D mesh drawer (with zbuffer, perspective projection, backface culling)
-Renderer3D<RGB565, SLX, SLY, true, false, true> renderer;
+Renderer3D<RGB565, SLX, SLY, true, false> renderer;
 
     
 
@@ -92,9 +92,8 @@ void setup()
     renderer.setOffset(0, 0); //  image = viewport
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
     renderer.setZbuffer(zbuf, SLX * SLY); // set the z buffer for depth testing
-    renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
-    renderer.useModelDefaultLightning(false); // use custom color/reflexion
-    renderer.setModelLightning(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflexion. 
+    renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix.     
+    renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflexion. 
     }
 
                   
@@ -110,13 +109,14 @@ void loop()
      renderer.clearZbuffer();
 
      // position the model
-     auto& M = renderer.modelMatrix();
+     fMat4 M;
      M.setScale(13, 13, 13);
      M.multRotate(a, { 0,1,0 });
      M.multTranslate({ 0, 0.5f, -35 });
+     renderer.setModelMatrix(M);
 
      // draw the model onto the memory framebuffer
-     renderer.draw(SHADER_GOURAUD, &buddha);
+     renderer.drawMesh(SHADER_GOURAUD, &buddha, false);
 
      // update the screen (asynchronous). 
      tft.update(fb);

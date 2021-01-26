@@ -6242,7 +6242,8 @@ const tgx::Mesh3D<tgx::RGB565> bunny =
     0, // number of texture coords
     2503, // number of normal vectors
     4968, // number of triangles
-
+    11752, // size of faces
+    
     bunny_vert_array, // array of vertices
     nullptr, // array of texture coords
     bunny_norm_array, // array of normal vectors        

@@ -2721,7 +2721,8 @@ const tgx::Mesh3D<tgx::RGB565> teapot =
     0, // number of texture coords
     1202, // number of normal vectors
     2256, // number of triangles
-
+    4788, // size of faces
+    
     teapot_vert_array, // array of vertices
     nullptr, // array of texture coords
     teapot_norm_array, // array of normal vectors        

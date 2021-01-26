@@ -18184,7 +18184,8 @@ const tgx::Mesh3D<tgx::RGB565> bob =
     5647, // number of texture coords
     5344, // number of normal vectors
     10688, // number of triangles
-
+    35383, // size of face
+    
     bob_vert_array, // array of vertices
     bob_tex_array, // array of texture coords
     bob_norm_array, // array of normal vectors        
