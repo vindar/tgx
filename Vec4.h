@@ -336,6 +336,24 @@ namespace tgx
 
 
         /**
+        * Return the normalize vector, return the same vector if it is 0.
+        * Tfloat selects the floating point type used for computation.
+        **/
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Vec4<T> getNormalize() const
+            { 
+            Vec4<T> V(*this);
+            V.normalize();
+            return V;
+            }
+
+
+
+
+
+
+
+
+        /**
         * Performs the 'z-divide' operation: 
         * x  <-  x/w
         * y  <-  x/w

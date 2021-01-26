@@ -263,6 +263,19 @@ namespace tgx
 
 
         /**
+        * Return the normalize vector, return the same vector if it is 0.
+        * Tfloat selects the floating point type used for computation.
+        **/
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Vec2<T> getNormalize() const
+            { 
+            Vec2<T> V(*this);
+            V.normalize();
+            return V;
+            }
+
+
+
+        /**
          * Rotate a the vector by +90 degree (anticlockise).
          **/
         inline void rotate90()

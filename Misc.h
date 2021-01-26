@@ -29,6 +29,22 @@
 #define TGX_ON_ARDUINO
 #define TGX_INLINE __attribute__((always_inline))
 
+
+#if defined(ARDUINO_TEENSY41)
+
+// check existence of external ram (EXTMEM). 
+extern "C" uint8_t external_psram_size;
+
+// check is an address is in flash
+#define IS_PROGMEM(X)  ((((uint32_t)(X)) >= 0x60000000)&&(((uint32_t)(X)) < 0x70000000))
+
+// check if an address is in external ram
+#define IS_EXTMEM(X) ((((uint32_t)(X)) >= 0x70000000)&&(((uint32_t)(X)) < 0x80000000))
+
+
+#endif
+
+
 #else 
 
 // running on a CPU ? 
@@ -42,8 +58,11 @@
 #endif 
 
 
+
+
 namespace tgx
 {
+
 
 
 	/** 

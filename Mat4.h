@@ -323,6 +323,18 @@ namespace tgx
 			}
 
 
+		/**
+		* invert the y axis, same as multScale({1,-1,1})
+		**/
+		void invertYaxis()
+			{
+			M[4] = -M[4];
+			M[5] = -M[5];
+			M[6] = -M[6];
+			M[7] = -M[7];
+			}
+
+
 		/** 
 		* Set the matrix a camera looking at a given direction.
 		* https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
