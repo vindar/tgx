@@ -43,9 +43,9 @@
 * https://glenviewsoftware.com/projects/products/adafonteditor/adafruit-gfx-font-format/
 **/
 
-#if __has_include(<gfxfont.h>)
-#include <gfxfont.h>
-#endif
+//#if __has_include(<gfxfont.h>)
+//#include <gfxfont.h>
+//#endif
 
 #ifndef _GFXFONT_H_
 #define _GFXFONT_H_
@@ -81,12 +81,12 @@ typedef struct {
 * https://github.com/projectitis/packedbdf/blob/master/packedbdf.md (anti-aliased extension)
 **/
 
-#if __has_include(<ILI9341_t3.h>)
-#include <ILI9341_t3.h>
-#endif
+//#if __has_include(<ILI9341_t3.h>)
+//#include <ILI9341_t3.h>
+//#endif
 
-#ifndef _ILI9341_t3H_
-#define _ILI9341_t3H_
+//#ifndef _ILI9341_t3H_
+//#define _ILI9341_t3H_
 
 #ifndef _ILI9341_FONTS_H_
 #define _ILI9341_FONTS_H_
@@ -111,7 +111,7 @@ typedef struct {
 } ILI9341_t3_font_t;
 #endif
 
-#endif 
+//#endif 
 
 
 
@@ -121,7 +121,7 @@ namespace tgx
 {
 
 	/** always cast indexes as 32bit when doing pointer arithmetic */
-	#define CAST32(a)	((int32_t)a)
+	#define TGX_CAST32(a)	((int32_t)a)
 
 		
 
@@ -130,11 +130,11 @@ namespace tgx
 	*  
 	* The class object itself is very small (16 bytes) thus image objects can easily be 
 	* passed around/copied without much cost. Also, sub-images sharing the same memory 
-	* buffer can be created and are particularly useful for clipping drawing to a given 
+	* buffer can be created and are useful for clipping drawing operation to a given 
 	* region of the image. 
 	*
 	* No memory allocation is performed by the class: it is the user's responsability to
-	* allocate memory and supply and assign the buffer to the image.   
+	* allocate memory and assign the buffer to the image.   
 	* 
 	* Image layout:
 	* 
@@ -254,7 +254,7 @@ namespace tgx
 			_lx = subbox.lx();
 			_ly = subbox.ly(); 
 			_stride = im._stride;
-			_buffer = im._buffer + CAST32(subbox.minX) + CAST32(im._stride)* CAST32(subbox.minY);
+			_buffer = im._buffer + TGX_CAST32(subbox.minX) + TGX_CAST32(im._stride)* TGX_CAST32(subbox.minY);
 			}
 
 
@@ -516,7 +516,7 @@ namespace tgx
 				{
 				if ((!isValid()) || (x < 0) || (y < 0) || (x >= _lx) || (y >= _ly)) return;
 				}
-			_buffer[CAST32(x) + CAST32(_stride) * CAST32(y)] = color;
+			_buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)] = color;
 			}
 
 
@@ -542,7 +542,7 @@ namespace tgx
 				{
 				if ((outside_color)&&((!isValid()) || (x < 0) || (y < 0) || (x >= _lx) || (y >= _ly))) return *outside_color;
 				}
-			return _buffer[CAST32(x) + CAST32(_stride) * CAST32(y)];
+			return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];
 			}
 
 
@@ -562,7 +562,7 @@ namespace tgx
 		**/
 		TGX_INLINE inline const color_t & operator()(int x, int y) const
 			{
-			return _buffer[CAST32(x) + CAST32(_stride) * CAST32(y)];
+			return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];
 			}
 
 
@@ -571,7 +571,7 @@ namespace tgx
 		**/
 		TGX_INLINE inline const color_t& operator()(iVec2 pos) const
 			{
-			return _buffer[CAST32(pos.x) + CAST32(_stride) * CAST32(pos.y)];
+			return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)];
 			}
 
 
@@ -580,7 +580,7 @@ namespace tgx
 		**/
 		TGX_INLINE inline color_t & operator()(int x, int y)
 			{
-			return _buffer[CAST32(x) + CAST32(_stride) * CAST32(y)];
+			return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];
 			}
 
 
@@ -589,7 +589,7 @@ namespace tgx
 		**/
 		TGX_INLINE inline color_t& operator()(iVec2 pos)
 			{
-			return _buffer[CAST32(pos.x) + CAST32(_stride) * CAST32(pos.y)];
+			return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)];
 			}
 
 
@@ -605,6 +605,13 @@ namespace tgx
 	*
 	****************************************************************************/
 
+
+
+		/*********************************************************************
+		*
+		* Screen filling
+		* 
+		**********************************************************************/
 
 
 		/**
@@ -638,6 +645,7 @@ namespace tgx
 
 
 
+
 		/*********************************************************************
 		*
 		* drawing lines
@@ -656,7 +664,7 @@ namespace tgx
 				if (y < 0) { h += y; y = 0; }
 				if (y + h > _ly) { h = _ly - y; }				
 				}
-			color_t* p = _buffer + CAST32(x) + CAST32(y) * CAST32(_stride);
+			color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride);
 			while (h-- > 0)
 				{
 				(*p) = color;
@@ -685,7 +693,7 @@ namespace tgx
 				if (x < 0) { w += x; x = 0; }
 				if (x + w > _lx) { w = _lx - x; }
 				}	
-			_fast_memset(_buffer + CAST32(x) + CAST32(y) * CAST32(_stride), color, w);
+			_fast_memset(_buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride), color, w);
 			}
 
 
@@ -744,7 +752,7 @@ namespace tgx
 		/**
 		* Draw a tirangle (but not its interior). 
 		**/
-		void drawTriangle(int x1,int y1, int x2, int y2, int x3, int y3, color_t color)
+		inline void drawTriangle(int x1,int y1, int x2, int y2, int x3, int y3, color_t color)
 			{
 			drawLine(x1, y1, x2, y2, color);
 			drawLine(x2, y2, x3, y3, color);
@@ -752,72 +760,20 @@ namespace tgx
 			}
 
 
-
 		/**
 		* Draw a filled triangle with a given color. 		
 		**/
-		void fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color)
+		inline void fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color)
 			{
-			fillTriangle(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, color);
+			_fillTriangle(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, color);
 			}
 
 
 		/**
-		* Draw a filled triangle with a given color.
-		* (taken from adafruit gfx / Kurte ILI93412_t3n). 
+		* Draw a filled triangle with a given color.		
 		**/
-		void fillTriangle(int x0,int y0, int x1, int y1, int x2, int y2, color_t color)
-			{
-			int a, b, y, last;			
-			if (y0 > y1) 
-				{
-				swap(y0, y1);
-				swap(x0, x1);
-				}
-			if (y1 > y2) 
-				{
-				swap(y2, y1);
-				swap(x2, x1);
-				}
-			if (y0 > y1) 
-				{
-				swap(y0, y1);
-				swap(x0, x1);
-				}
-
-			if (y0 == y2) 
-				{ // Handle awkward all-on-same-line case as its own thing
-				a = b = x0;
-				if (x1 < a) a = x1; else if (x1 > b) b = x1;
-				if (x2 < a) a = x2; else if (x2 > b) b = x2;
-				drawFastHLine<true>(a, y0, b - a + 1, color);
-				return;
-				}
-			int dx01 = x1 - x0, dy01 = y1 - y0, dx02 = x2 - x0, dy02 = y2 - y0,
-			    dx12 = x2 - x1, dy12 = y2 - y1, sa = 0, sb = 0;
-			if (y1 == y2) last = y1; else last = y1 - 1; 
-			for (y = y0; y <= last; y++) 
-				{
-				a = x0 + sa / dy01;
-				b = x0 + sb / dy02;
-				sa += dx01;
-				sb += dx02;
-				if (a > b) swap(a, b);
-				drawFastHLine<true>(a, y, b - a + 1, color);
-				}
-			sa = dx12 * (y - y1);
-			sb = dx02 * (y - y0);
-			for (; y <= y2; y++) 
-				{
-				a = x1 + sa / dy12;
-				b = x0 + sb / dy02;
-				sa += dx12;
-				sb += dx02;
-				if (a > b) swap(a, b);
-				drawFastHLine<true>(a, y, b - a + 1, color);
-				}
-			}
-
+		inline  void fillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);
+			
 
 
 
@@ -945,6 +901,9 @@ namespace tgx
 
 
 
+
+
+
 	/************************************************************************************
 	*
 	* Drawing text 
@@ -1034,9 +993,9 @@ namespace tgx
 
 	/** options for triangle rasterization */
 
-	#define	SHADER_FLAT (0)
-	#define SHADER_GOURAUD (1)
-	#define SHADER_TEXTURE (2)
+	#define	TGX_SHADER_FLAT (0)
+	#define TGX_SHADER_GOURAUD (1)
+	#define TGX_SHADER_TEXTURE (2)
 
 
 		/**
@@ -1068,12 +1027,12 @@ namespace tgx
 
 
 
-	#define RASTERIZE_SUBPIXEL_BITS (8) // <- change this to adjust sub-pixel precision (between 1 and 8)
-	#define RASTERIZE_SUBPIXEL256 (1 << RASTERIZE_SUBPIXEL_BITS)
-	#define RASTERIZE_SUBPIXEL128 (1 << (RASTERIZE_SUBPIXEL_BITS -1))
-	#define RASTERIZE_MULT256(X) ((X) << (RASTERIZE_SUBPIXEL_BITS))
-	#define RASTERIZE_MULT128(X) ((X) << (RASTERIZE_SUBPIXEL_BITS -1))
-	#define RASTERIZE_DIV256(X) ((X) >> (RASTERIZE_SUBPIXEL_BITS))
+	#define TGX_RASTERIZE_SUBPIXEL_BITS (8) // <- change this to adjust sub-pixel precision (between 1 and 8)
+	#define TGX_RASTERIZE_SUBPIXEL256 (1 << TGX_RASTERIZE_SUBPIXEL_BITS)
+	#define TGX_RASTERIZE_SUBPIXEL128 (1 << (TGX_RASTERIZE_SUBPIXEL_BITS -1))
+	#define TGX_RASTERIZE_MULT256(X) ((X) << (TGX_RASTERIZE_SUBPIXEL_BITS))
+	#define TGX_RASTERIZE_MULT128(X) ((X) << (TGX_RASTERIZE_SUBPIXEL_BITS -1))
+	#define TGX_RASTERIZE_DIV256(X) ((X) >> (TGX_RASTERIZE_SUBPIXEL_BITS))
 
 
 
@@ -1110,16 +1069,16 @@ namespace tgx
 		* PARAMETERS:
 		* 
 		* - raster_type  specify the type of shader to use during rasterization. Combination of
-		*                SHADER_FLAT, SHADER_GOURAUD, SHADER_TEXTURE
+		*                TGX_SHADER_FLAT, TGX_SHADER_GOURAUD, TGX_SHADER_TEXTURE
 		*
-		*                - SHADER_FLAT: Use flat shading (uniform color on the triangle). 
+		*                - TGX_SHADER_FLAT: Use flat shading (uniform color on the triangle). 
 		*                  the triangle color is passed in data.facecolor.
 		* 
-		*                - SHADER_GOURAUD: Overwrites the SHADER_FLAT flag and enables gouraud
+		*                - TGX_SHADER_GOURAUD: Overwrites the TGX_SHADER_FLAT flag and enables gouraud
 		*                  shading which correspond to linear interpolation of the triangle vertices
 		*                  colors. the color of each vertex is passed in V.color
 		* 
-		*				 - SHADER_TEXTURE: Enable perspective correct texture mapping on the 
+		*				 - TGX_SHADER_TEXTURE: Enable perspective correct texture mapping on the 
 		*                  triangle. the texture image is passed in data.tex. THE DIMENSION OF
 		*                  THE TEXTURE MUST BE POWERS OF TWO ! the texture coordinate for each 
 		*                  vertex are passed in V.T members and the 'illumination' for each vertex 
@@ -1159,17 +1118,17 @@ namespace tgx
 		void rasterizeTriangle(const int raster_type, const RasterizerVec4 & V0, const RasterizerVec4 & V1, const RasterizerVec4 & V2, const int32_t offset_x, const int32_t offset_y, const RasterizerParams& data)
 			{
 			// assuming that clipping was already perfomed and that V0, V1, V2 are in a reasonable "range" so no overflow will occur. 
-			const float mx = (float)(RASTERIZE_MULT128(LX));
-			const float my = (float)(RASTERIZE_MULT128(LY));
+			const float mx = (float)(TGX_RASTERIZE_MULT128(LX));
+			const float my = (float)(TGX_RASTERIZE_MULT128(LY));
 			const iVec2  P0((int32_t)floorf(V0.x * mx), (int32_t)floorf(V0.y * my));
 
 			const iVec2 sP1((int32_t)floorf(V1.x * mx), (int32_t)floorf(V1.y * my));
 			const iVec2 sP2((int32_t)floorf(V2.x * mx), (int32_t)floorf(V2.y * my));
 
-			int32_t xmin = (min(min(P0.x, sP1.x), sP2.x) + RASTERIZE_MULT128(LX)) / RASTERIZE_SUBPIXEL256; // use division and not bitshift  
-			int32_t xmax = (max(max(P0.x, sP1.x), sP2.x) + RASTERIZE_MULT128(LX)) / RASTERIZE_SUBPIXEL256; // in case values are negative.
-			int32_t ymin = (min(min(P0.y, sP1.y), sP2.y) + RASTERIZE_MULT128(LY)) / RASTERIZE_SUBPIXEL256; //
-			int32_t ymax = (max(max(P0.y, sP1.y), sP2.y) + RASTERIZE_MULT128(LY)) / RASTERIZE_SUBPIXEL256; //
+			int32_t xmin = (min(min(P0.x, sP1.x), sP2.x) + TGX_RASTERIZE_MULT128(LX)) / TGX_RASTERIZE_SUBPIXEL256; // use division and not bitshift  
+			int32_t xmax = (max(max(P0.x, sP1.x), sP2.x) + TGX_RASTERIZE_MULT128(LX)) / TGX_RASTERIZE_SUBPIXEL256; // in case values are negative.
+			int32_t ymin = (min(min(P0.y, sP1.y), sP2.y) + TGX_RASTERIZE_MULT128(LY)) / TGX_RASTERIZE_SUBPIXEL256; //
+			int32_t ymax = (max(max(P0.y, sP1.y), sP2.y) + TGX_RASTERIZE_MULT128(LY)) / TGX_RASTERIZE_SUBPIXEL256; //
 
 			// intersect the sub-image with the triangle bounding box. 			
 			int32_t sx = _lx;
@@ -1192,8 +1151,8 @@ namespace tgx
 			const iVec2& P1  = (a > 0) ? sP1 : sP2;
 			const iVec2& P2  = (a > 0) ? sP2 : sP1;
 
-			const int32_t us = RASTERIZE_MULT256(ox) - RASTERIZE_MULT128(LX) + RASTERIZE_SUBPIXEL128;   // start pixel position
-			const int32_t vs = RASTERIZE_MULT256(oy) - RASTERIZE_MULT128(LY) + RASTERIZE_SUBPIXEL128;   //
+			const int32_t us = TGX_RASTERIZE_MULT256(ox) - TGX_RASTERIZE_MULT128(LX) + TGX_RASTERIZE_SUBPIXEL128;   // start pixel position
+			const int32_t vs = TGX_RASTERIZE_MULT256(oy) - TGX_RASTERIZE_MULT128(LY) + TGX_RASTERIZE_SUBPIXEL128;   //
 
 			ox -= offset_x;
 			oy -= offset_y;
@@ -1202,19 +1161,19 @@ namespace tgx
 			const int32_t dy1 = P0.x - P1.x;
 			int64_t dO1 = (((int64_t)(us - P0.x)) * ((int64_t)dx1)) + (((int64_t)(vs - P0.y)) * ((int64_t)dy1));
 			if ((dx1 < 0) || ((dx1 == 0) && (dy1 < 0))) dO1--; // top left rule (beware, changes total aera).
-			int32_t O1 = (dO1 >= 0) ? ((int32_t)RASTERIZE_DIV256(dO1)) : -((int32_t)RASTERIZE_DIV256(-dO1 + (RASTERIZE_SUBPIXEL256 - 1)));
+			int32_t O1 = (dO1 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO1)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO1 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
 
 			const int32_t dx2 = P2.y - P1.y;
 			const int32_t dy2 = P1.x - P2.x;
 			int64_t dO2 = (((int64_t)(us - P1.x)) * ((int64_t)dx2)) + (((int64_t)(vs - P1.y)) * ((int64_t)dy2));
 			if ((dx2 < 0) || ((dx2 == 0) && (dy2 < 0))) dO2--; // top left rule (beware, changes total aera).  
-			int32_t O2 = (dO2 >= 0) ? ((int32_t)RASTERIZE_DIV256(dO2)) : -((int32_t)RASTERIZE_DIV256(-dO2 + (RASTERIZE_SUBPIXEL256 - 1)));
+			int32_t O2 = (dO2 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO2)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO2 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
 
 			const int32_t dx3 = P0.y - P2.y;
 			const int32_t dy3 = P2.x - P0.x;
 			int64_t dO3 = (((int64_t)(us - P2.x)) * ((int64_t)dx3)) + (((int64_t)(vs - P2.y)) * ((int64_t)dy3));
 			if ((dx3 < 0) || ((dx3 == 0) && (dy3 < 0))) dO3--; // top left rule (beware, changes total aera).  
-			int32_t O3 = (dO3 >= 0) ? ((int32_t)RASTERIZE_DIV256(dO3)) : -((int32_t)RASTERIZE_DIV256(-dO3 + (RASTERIZE_SUBPIXEL256 - 1)));
+			int32_t O3 = (dO3 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO3)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO3 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
 					
 			if (sx == 1)
 				{
@@ -1269,12 +1228,12 @@ namespace tgx
 			}
 
 
-#undef RASTERIZE_SUBPIXEL_BITS
-#undef RASTERIZE_SUBPIXEL256
-#undef RASTERIZE_SUBPIXEL128
-#undef RASTERIZE_MULT256
-#undef RASTERIZE_MULT128
-#undef RASTERIZE_DIV256
+#undef TGX_RASTERIZE_SUBPIXEL_BITS
+#undef TGX_RASTERIZE_SUBPIXEL256
+#undef TGX_RASTERIZE_SUBPIXEL128
+#undef TGX_RASTERIZE_MULT256
+#undef TGX_RASTERIZE_MULT128
+#undef TGX_RASTERIZE_DIV256
 
 
 
@@ -1291,1529 +1250,11 @@ private:
 	*************************************************************************************/
 
 
-	/** Called when ZBUFFER=false, ORTHO = false*/
-	void _rasterizeTriangle(DummyTypeBB<false, false> DT, const int raster_type, const int32_t& offset, const int32_t& lx, const int32_t& ly,
-		const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
-		const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
-		const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
-		const RasterizerParams& data)
-		{
-		if (raster_type & SHADER_TEXTURE)
-			{
-			if (raster_type & SHADER_GOURAUD)
-				_rasterizeTriangleGouraudTexture(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			else
-				_rasterizeTriangleFlatTexture(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			}
-		else
-			{
-			if (raster_type & SHADER_GOURAUD)
-				_rasterizeTriangleGouraud(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			else
-				_rasterizeTriangleFlat(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			}
-		}
 
 
-	/** Called when ZBUFFER=true, ORTHO = false*/
-	void _rasterizeTriangle(DummyTypeBB<true, false> DT, const int raster_type, const int32_t& offset, const int32_t& lx, const int32_t& ly,
-		const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
-		const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
-		const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
-		const RasterizerParams& data)
-		{
-		if (raster_type & SHADER_TEXTURE)
-			{
-			if (raster_type & SHADER_GOURAUD)
-				_rasterizeTriangleGouraudTextureZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			else
-				_rasterizeTriangleFlatTextureZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			}
-		else
-			{
-			if (raster_type & SHADER_GOURAUD)
-				_rasterizeTriangleGouraudZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			else
-				_rasterizeTriangleFlatZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			}
-		}
-
-	/** Called when ZBUFFER=false, ORTHO = true*/
-	void _rasterizeTriangle(DummyTypeBB<false, true> DT, const int raster_type, const int32_t& offset, const int32_t& lx, const int32_t& ly,
-		const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
-		const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
-		const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
-		const RasterizerParams& data)
-		{
-		if (raster_type & SHADER_TEXTURE)
-			{
-			if (raster_type & SHADER_GOURAUD)
-				_rasterizeTriangleGouraudTextureOrtho(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			else
-				_rasterizeTriangleFlatTextureOrtho(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			}
-		else
-			{
-			if (raster_type & SHADER_GOURAUD)
-				_rasterizeTriangleGouraud(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data); // same as perspective projection
-			else
-				_rasterizeTriangleFlat(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data); // same as perspective projection
-			}
-		}
-
-
-	/** Called when ZBUFFER=true, ORTHO = true*/
-	void _rasterizeTriangle(DummyTypeBB<true, true> DT, const int raster_type, const int32_t& offset, const int32_t& lx, const int32_t& ly,
-		const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
-		const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
-		const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
-		const RasterizerParams& data)
-		{
-		if (raster_type & SHADER_TEXTURE)
-			{
-			if (raster_type & SHADER_GOURAUD)
-				_rasterizeTriangleGouraudTextureZbufferOrtho(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			else
-				_rasterizeTriangleFlatTextureZbufferOrtho(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-			}
-		else
-			{
-			if (raster_type & SHADER_GOURAUD)
-				_rasterizeTriangleGouraudZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);  // same as perspective projection
-			else
-				_rasterizeTriangleFlatZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);  // same as perspective projection
-			}
-		}
-	
-
-
-
-
-		/**
-		* FLAT SHADING (NO ZBUFFER)
-		**/		
-		void _rasterizeTriangleFlat(const int32_t & offset, const int32_t & lx, const int32_t & ly,
-			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{
-			color_t col = (color_t)data.facecolor;
-			color_t* buf = _buffer + offset;
-			const int32_t stride = _stride;
-
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-				
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					buf[bx] = col;
-					C2 += dx2;
-					C3 += dx3;
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				}
-			}
-
-
-		/**
-		* GOURAUD SHADING (NO Z BUFFER)
-		**/
-		void _rasterizeTriangleGouraud(const int32_t & offset, const int32_t & lx, const int32_t & ly,
-			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{
-			color_t* buf = _buffer + offset;
-			const int32_t stride = _stride;
-
-			const color_t col1 = (color_t)fP1.color;
-			const color_t col2 = (color_t)fP2.color;
-			const color_t col3 = (color_t)fP3.color;
-			
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-			const int32_t aera = O1 + O2 + O3;
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					buf[bx] = blend(col2, C2, col3, C3, col1, aera);
-					C2 += dx2;
-					C3 += dx3;
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				}
-			}
-
-
-		/**
-		* TEXTURE + FLAT SHADING (NO ZBUFFER)
-		**/	
-		void _rasterizeTriangleFlatTexture(const int32_t & offset, const int32_t & lx, const int32_t & ly,
-			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{					
-			const color_t * tex = data.tex->data(); 
-			const int32_t texsize_x = data.tex->width();
-			const int32_t texsize_y = data.tex->height();
-
-			color_t* buf = _buffer + offset;
-			
-			const int32_t stride = _stride;
-
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-			const int32_t aera = O1 + O2 + O3;
-
-			const float invaera = 1.0f / aera;
-			const float fP1a = fP1.w * invaera;
-			const float fP2a = fP2.w * invaera;
-			const float fP3a = fP3.w * invaera;
-			
-			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-			const RGBf& cf = (RGBf)data.facecolor;
-			const int fPR = (int)(256 * cf.R);
-			const int fPG = (int)(256 * cf.G);
-			const int fPB = (int)(256 * cf.B);
-
-			// the texture coord
-			fVec2 T1 = fP1.T;			
-			fVec2 T2 = fP2.T;
-			fVec2 T3 = fP3.T;
-
-			// divide the texture coord by z * aera
-			T1 *= fP1a;
-			T2 *= fP2a;
-			T3 *= fP3a;
-			T1.x *= texsize_x;
-			T2.x *= texsize_x;
-			T3.x *= texsize_x;
-			T1.y *= texsize_y;
-			T2.y *= texsize_y;
-			T3.y *= texsize_y;
-
-			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-
-				int32_t C1 = O1 + (dx1 * bx);
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-				
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					const float icw = 1.0f / cw;
-					const int ttx = ((int)((tx * icw))) & (texsize_x - 1); 
-					const int tty = ((int)((ty * icw))) & (texsize_y - 1);
-
-					color_t col = tex[ttx + (tty)*texsize_x];
-					col.mult256(fPR, fPG, fPB);
-					buf[bx] = col;
-
-					C2 += dx2;
-					C3 += dx3;
-					cw += dw;
-
-					tx += dtx;
-					ty += dty;
-
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				}
-			}
-
-
-		/**
-		* TEXTURE + GOURAUD SHADING (NO ZBUFFER)
-		**/
-		void _rasterizeTriangleGouraudTexture(const int32_t & offset, const int32_t & lx, const int32_t & ly,
-			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{					
-			const color_t * tex = data.tex->data(); 
-			const int32_t texsize_x = data.tex->width();
-			const int32_t texsize_y = data.tex->height();
-
-			color_t* buf = _buffer + offset;
-
-			const int32_t stride = _stride;
-
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-			const int32_t aera = O1 + O2 + O3;
-
-			const float invaera = 1.0f / aera;
-			const float fP1a = fP1.w * invaera;
-			const float fP2a = fP2.w * invaera;
-			const float fP3a = fP3.w * invaera;
-			
-			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-				
-			const RGBf & cf1 = (RGBf)fP1.color;
-			const RGBf & cf2 = (RGBf)fP2.color;
-			const RGBf & cf3 = (RGBf)fP3.color;
-			const int fP1R = (int)(256 * cf1.R);
-			const int fP1G = (int)(256 * cf1.G);
-			const int fP1B = (int)(256 * cf1.B);
-			const int fP21R = (int)(256 * (cf2.R - cf1.R));
-			const int fP21G = (int)(256 * (cf2.G - cf1.G));
-			const int fP21B = (int)(256 * (cf2.B - cf1.B));
-			const int fP31R = (int)(256 * (cf3.R - cf1.R));
-			const int fP31G = (int)(256 * (cf3.G - cf1.G));
-			const int fP31B = (int)(256 * (cf3.B - cf1.B));
-
-			// the texture coord
-			fVec2 T1 = fP1.T;			
-			fVec2 T2 = fP2.T;
-			fVec2 T3 = fP3.T;
-
-			// divide the texture coord by z * aera
-			T1 *= fP1a;
-			T2 *= fP2a;
-			T3 *= fP3a;
-			T1.x *= texsize_x;
-			T2.x *= texsize_x;
-			T3.x *= texsize_x;
-			T1.y *= texsize_y;
-			T2.y *= texsize_y;
-			T3.y *= texsize_y;
-
-
-			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-
-				int32_t C1 = O1 + (dx1 * bx);
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-				
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					const float icw = 1.0f / cw;
-					const int ttx = ((int)((tx * icw))) & (texsize_x - 1);
-					const int tty = ((int)((ty * icw))) & (texsize_y - 1);
-
-					const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-					const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-					const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);	
-					color_t col = tex[ttx + (tty)*texsize_x];
-					col.mult256(r, g, b);
-					buf[bx] = col;
-
-					C2 += dx2;
-					C3 += dx3;
-					cw += dw;
-
-					tx += dtx;
-					ty += dty;
-
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				}
-			}
-
-
-
-
-		/**
-		* ZBUFFER + FLAT SHADING
-		**/
-		void _rasterizeTriangleFlatZbuffer(const int32_t offset, const int32_t & lx, const int32_t & ly,
-			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{			
-			const color_t col = (color_t)data.facecolor;
-			color_t* buf = _buffer + offset;
-			float* zbuf = data.zbuf + offset;
-
-			const int32_t stride = _stride;
-
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-			const int32_t aera = O1 + O2 + O3;
-
-			const float invaera = 1.0f / aera;
-			const float fP1a = fP1.w * invaera;
-			const float fP2a = fP2.w * invaera;
-			const float fP3a = fP3.w * invaera;
-			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-
-				const int32_t C1 = O1 + (dx1 * bx);
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					float& W = zbuf[bx];
-					if (W < cw)
-						{
-						W = cw;
-						buf[bx] = col;
-						}
-					C2 += dx2;
-					C3 += dx3;
-					cw += dw;
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				zbuf += stride;
-				}
-			}
-
-
-		/**
-		* ZBUFFER + GOURAUD SHADING
-		**/	
-		void _rasterizeTriangleGouraudZbuffer(const int32_t & offset, const int32_t & lx, const int32_t & ly,
-			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{
-			color_t* buf = _buffer + offset;
-			float* zbuf = data.zbuf + offset;
-
-			const int32_t stride = _stride;
-
-			const color_t col1 = (color_t)fP1.color;
-			const color_t col2 = (color_t)fP2.color;
-			const color_t col3 = (color_t)fP3.color;
-			
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-			const int32_t aera = O1 + O2 + O3;
-
-			const float invaera = 1.0f / aera;
-			const float fP1a = fP1.w * invaera;
-			const float fP2a = fP2.w * invaera;
-			const float fP3a = fP3.w * invaera;
-			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-
-				const int32_t C1 = O1 + (dx1 * bx);
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					float& W = zbuf[bx];
-					if (W < cw)
-						{
-						W = cw;
-						buf[bx] = blend(col2, C2, col3, C3, col1, aera);
-						}
-					C2 += dx2;
-					C3 += dx3;
-					cw += dw;
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				zbuf += stride;
-				}
-			}
-
-
-		/**
-		* ZBUFFER + TEXTURE + FLAT SHADING
-		**/
-		void _rasterizeTriangleFlatTextureZbuffer(const int32_t & offset, const int32_t & lx, const int32_t & ly,
-			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{					
-			const color_t * tex = data.tex->data(); 
-			const int32_t texsize_x = data.tex->width();
-			const int32_t texsize_y = data.tex->height();
-
-			color_t* buf = _buffer + offset;
-			float* zbuf = data.zbuf + offset;
-
-			const int32_t stride = _stride;
-
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-			const int32_t aera = O1 + O2 + O3;
-
-			const float invaera = 1.0f / aera;
-			const float fP1a = fP1.w * invaera;
-			const float fP2a = fP2.w * invaera;
-			const float fP3a = fP3.w * invaera;
-			
-			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-			const RGBf& cf = (RGBf)data.facecolor;
-			const int fPR = (int)(256 * cf.R);
-			const int fPG = (int)(256 * cf.G);
-			const int fPB = (int)(256 * cf.B);
-
-
-			// the texture coord
-			fVec2 T1 = fP1.T;			
-			fVec2 T2 = fP2.T;
-			fVec2 T3 = fP3.T;
-
-			// divide the texture coord by z * aera
-			T1 *= fP1a;
-			T2 *= fP2a;
-			T3 *= fP3a;
-			T1.x *= texsize_x;
-			T2.x *= texsize_x;
-			T3.x *= texsize_x;
-			T1.y *= texsize_y;
-			T2.y *= texsize_y;
-			T3.y *= texsize_y;
-
-			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-
-				int32_t C1 = O1 + (dx1 * bx);
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-				
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					float& W = zbuf[bx];
-					if (W < cw)
-						{
-						W = cw;	
-
-						const float icw = 1.0f / cw;
-						const int ttx = ((int)((tx * icw))) & (texsize_x - 1); 
-						const int tty = ((int)((ty * icw))) & (texsize_y - 1);
-
-						color_t col = tex[ttx + (tty)*texsize_x];
-						col.mult256(fPR, fPG, fPB);
-						buf[bx] = col;
-						}
-
-					C2 += dx2;
-					C3 += dx3;
-					cw += dw;
-
-					tx += dtx;
-					ty += dty;
-
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				zbuf += stride;
-				}
-			}
-
-
-		/**
-		* ZBUFFER + TEXTURE + GOURAUD SHADING
-		**/
-		void _rasterizeTriangleGouraudTextureZbuffer(const int32_t & offset, const int32_t & lx, const int32_t & ly,
-			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{					
-			const color_t * tex = data.tex->data(); 
-			const int32_t texsize_x = data.tex->width();
-			const int32_t texsize_y = data.tex->height();
-
-			color_t* buf = _buffer + offset;
-			float* zbuf = data.zbuf + offset;
-
-			const int32_t stride = _stride;
-
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-			const int32_t aera = O1 + O2 + O3;
-
-			const float invaera = 1.0f / aera;
-			const float fP1a = fP1.w * invaera;
-			const float fP2a = fP2.w * invaera;
-			const float fP3a = fP3.w * invaera;
-			
-			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-					
-			const RGBf & cf1 = (RGBf)fP1.color;
-			const RGBf & cf2 = (RGBf)fP2.color;
-			const RGBf & cf3 = (RGBf)fP3.color;
-			const int fP1R = (int)(256 * cf1.R);
-			const int fP1G = (int)(256 * cf1.G);
-			const int fP1B = (int)(256 * cf1.B);
-			const int fP21R = (int)(256 * (cf2.R - cf1.R));
-			const int fP21G = (int)(256 * (cf2.G - cf1.G));
-			const int fP21B = (int)(256 * (cf2.B - cf1.B));
-			const int fP31R = (int)(256 * (cf3.R - cf1.R));
-			const int fP31G = (int)(256 * (cf3.G - cf1.G));
-			const int fP31B = (int)(256 * (cf3.B - cf1.B));
-
-			// the texture coord
-			fVec2 T1 = fP1.T;			
-			fVec2 T2 = fP2.T;
-			fVec2 T3 = fP3.T;
-
-			// divide the texture coord by z * aera
-			T1 *= fP1a;
-			T2 *= fP2a;
-			T3 *= fP3a;
-			T1.x *= texsize_x;
-			T2.x *= texsize_x;
-			T3.x *= texsize_x;
-			T1.y *= texsize_y;
-			T2.y *= texsize_y;
-			T3.y *= texsize_y;
-
-			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-
-				int32_t C1 = O1 + (dx1 * bx);
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-				
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					float& W = zbuf[bx];
-					if (W < cw)
-						{
-						W = cw;
-										
-						const float icw = 1.0f / cw;
-						const int ttx = ((int)((tx * icw))) & (texsize_x - 1);
-						const int tty = ((int)((ty * icw))) & (texsize_y - 1);
-
-						const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-						const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-						const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);					
-						color_t col = tex[ttx + (tty)*texsize_x];
-						col.mult256(r, g, b);
-						buf[bx] = col;
-
-						}
-
-					C2 += dx2;
-					C3 += dx3;
-					cw += dw;
-
-					tx += dtx;
-					ty += dty;
-
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				zbuf += stride;
-				}
-			}
-
-
-
-
-		/**
-		* TEXTURE + FLAT SHADING (NO ZBUFFER) + ORTHOGRAPHIC
-		**/	
-		void _rasterizeTriangleFlatTextureOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
-			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{					
-			const color_t * tex = data.tex->data(); 
-			const int32_t texsize_x = data.tex->width();
-			const int32_t texsize_y = data.tex->height();
-
-			color_t* buf = _buffer + offset;
-			
-			const int32_t stride = _stride;
-
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-			const int32_t aera = O1 + O2 + O3;
-
-			const float invaera = 1.0f / aera;
-		
-			const RGBf& cf = (RGBf)data.facecolor;
-			const int fPR = (int)(256 * cf.R);
-			const int fPG = (int)(256 * cf.G);
-			const int fPB = (int)(256 * cf.B);
-
-			// the texture coord
-			fVec2 T1 = fP1.T;			
-			fVec2 T2 = fP2.T;
-			fVec2 T3 = fP3.T;
-
-			// divide the texture coord by aera
-			T1 *= invaera;
-			T2 *= invaera;
-			T3 *= invaera;			
-			T1.x *= texsize_x;
-			T2.x *= texsize_x;
-			T3.x *= texsize_x;
-			T1.y *= texsize_y;
-			T2.y *= texsize_y;
-			T3.y *= texsize_y;
-			
-			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-
-				int32_t C1 = O1 + (dx1 * bx);
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-				
-				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-				
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					const int ttx = ((int)tx) & (texsize_x - 1); 
-					const int tty = ((int)ty) & (texsize_y - 1);
-
-					color_t col = tex[ttx + (tty)*texsize_x];
-					col.mult256(fPR, fPG, fPB);
-					buf[bx] = col;
-
-					C2 += dx2;
-					C3 += dx3;					
-
-					tx += dtx;
-					ty += dty;
-
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				}
-			}
-
-
-		/**
-		* TEXTURE + GOURAUD SHADING (NO ZBUFFER) + ORTHOGRAPHIC
-		**/
-		void _rasterizeTriangleGouraudTextureOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
-			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{					
-			const color_t * tex = data.tex->data(); 
-			const int32_t texsize_x = data.tex->width();
-			const int32_t texsize_y = data.tex->height();
-
-			color_t* buf = _buffer + offset;
-
-			const int32_t stride = _stride;
-
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-			const int32_t aera = O1 + O2 + O3;
-
-			const float invaera = 1.0f / aera;
-		
-			const RGBf & cf1 = (RGBf)fP1.color;
-			const RGBf & cf2 = (RGBf)fP2.color;
-			const RGBf & cf3 = (RGBf)fP3.color;
-			const int fP1R = (int)(256 * cf1.R);
-			const int fP1G = (int)(256 * cf1.G);
-			const int fP1B = (int)(256 * cf1.B);
-			const int fP21R = (int)(256 * (cf2.R - cf1.R));
-			const int fP21G = (int)(256 * (cf2.G - cf1.G));
-			const int fP21B = (int)(256 * (cf2.B - cf1.B));
-			const int fP31R = (int)(256 * (cf3.R - cf1.R));
-			const int fP31G = (int)(256 * (cf3.G - cf1.G));
-			const int fP31B = (int)(256 * (cf3.B - cf1.B));
-
-			// the texture coord
-			fVec2 T1 = fP1.T;			
-			fVec2 T2 = fP2.T;
-			fVec2 T3 = fP3.T;
-
-			// divide the texture coord by aera
-			T1 *= invaera;
-			T2 *= invaera;
-			T3 *= invaera;
-			T1.x *= texsize_x;
-			T2.x *= texsize_x;
-			T3.x *= texsize_x;
-			T1.y *= texsize_y;
-			T2.y *= texsize_y;
-			T3.y *= texsize_y;
-
-			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-
-				int32_t C1 = O1 + (dx1 * bx);
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-
-				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-				
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					const int ttx = ((int)(tx)) & (texsize_x - 1); 
-					const int tty = ((int)(ty)) & (texsize_y - 1);
-
-					const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-					const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-					const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);	
-					color_t col = tex[ttx + (tty)*texsize_x];
-					col.mult256(r, g, b);
-					buf[bx] = col;
-
-					C2 += dx2;
-					C3 += dx3;
-
-					tx += dtx;
-					ty += dty;
-
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				}
-			}
-
-
-
-		/**
-		* ZBUFFER + TEXTURE + FLAT SHADING + ORTHOGRAPHIC
-		**/
-		void _rasterizeTriangleFlatTextureZbufferOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
-			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{					
-			const color_t * tex = data.tex->data(); 
-			const int32_t texsize_x = data.tex->width();
-			const int32_t texsize_y = data.tex->height();
-
-			color_t* buf = _buffer + offset;
-			float* zbuf = data.zbuf + offset;
-
-			const int32_t stride = _stride;
-
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-			const int32_t aera = O1 + O2 + O3;
-
-			const float invaera = 1.0f / aera;
-			const float fP1a = fP1.w * invaera;
-			const float fP2a = fP2.w * invaera;
-			const float fP3a = fP3.w * invaera;
-			
-			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-			const RGBf& cf = (RGBf)data.facecolor;
-			const int fPR = (int)(256 * cf.R);
-			const int fPG = (int)(256 * cf.G);
-			const int fPB = (int)(256 * cf.B);
-
-
-			// the texture coord
-			fVec2 T1 = fP1.T;			
-			fVec2 T2 = fP2.T;
-			fVec2 T3 = fP3.T;
-
-			// divide the texture coord by aera
-			T1 *= invaera;
-			T2 *= invaera;
-			T3 *= invaera;
-			T1.x *= texsize_x; 
-			T2.x *= texsize_x;
-			T3.x *= texsize_x;
-			T1.y *= texsize_y;
-			T2.y *= texsize_y;
-			T3.y *= texsize_y;
-
-			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-
-				int32_t C1 = O1 + (dx1 * bx);
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-				
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					float& W = zbuf[bx];
-					if (W < cw)
-						{
-						W = cw;	
-						const int ttx = ((int)(tx)) & (texsize_x - 1); 
-						const int tty = ((int)(ty)) & (texsize_y - 1);
-						color_t col = tex[ttx + (tty)*texsize_x];
-						col.mult256(fPR, fPG, fPB);
-						buf[bx] = col;
-						}
-
-					C2 += dx2;
-					C3 += dx3;
-					cw += dw;
-
-					tx += dtx;
-					ty += dty;
-
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				zbuf += stride;
-				}
-			}
-
-
-		/**
-		* ZBUFFER + TEXTURE + GOURAUD SHADING + ORTHOGRAPHIC
-		**/
-		void _rasterizeTriangleGouraudTextureZbufferOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
-			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
-			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
-			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
-			{					
-			const color_t * tex = data.tex->data(); 
-			const int32_t texsize_x = data.tex->width();
-			const int32_t texsize_y = data.tex->height();
-
-			color_t* buf = _buffer + offset;
-			float* zbuf = data.zbuf + offset;
-
-			const int32_t stride = _stride;
-
-			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-			const int32_t aera = O1 + O2 + O3;
-
-			const float invaera = 1.0f / aera;
-			const float fP1a = fP1.w * invaera;
-			const float fP2a = fP2.w * invaera;
-			const float fP3a = fP3.w * invaera;
-			
-			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-					
-			const RGBf & cf1 = (RGBf)fP1.color;
-			const RGBf & cf2 = (RGBf)fP2.color;
-			const RGBf & cf3 = (RGBf)fP3.color;
-			const int fP1R = (int)(256 * cf1.R);
-			const int fP1G = (int)(256 * cf1.G);
-			const int fP1B = (int)(256 * cf1.B);
-			const int fP21R = (int)(256 * (cf2.R - cf1.R));
-			const int fP21G = (int)(256 * (cf2.G - cf1.G));
-			const int fP21B = (int)(256 * (cf2.B - cf1.B));
-			const int fP31R = (int)(256 * (cf3.R - cf1.R));
-			const int fP31G = (int)(256 * (cf3.G - cf1.G));
-			const int fP31B = (int)(256 * (cf3.B - cf1.B));
-
-			// the texture coord
-			fVec2 T1 = fP1.T;			
-			fVec2 T2 = fP2.T;
-			fVec2 T3 = fP3.T;
-
-			// divide the texture coord by aera
-			T1 *= invaera;
-			T2 *= invaera;
-			T3 *= invaera;
-			T1.x *= texsize_x;
-			T2.x *= texsize_x;
-			T3.x *= texsize_x;
-			T1.y *= texsize_y;
-			T2.y *= texsize_y;
-			T3.y *= texsize_y;
-
-			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-			while ((uintptr_t)(buf) < end)
-				{ // iterate over scanlines
-				int32_t bx = 0; // start offset
-				if (O1 < 0)
-					{
-					// we know that dx1 > 0					
-					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
-					}
-				if (O2 < 0)
-					{
-					if (dx2 <= 0)
-						{
-						if (dy2 <= 0) return;
-						const int32_t by = (-O2 + dy2 - 1) / dy2;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
-					}
-				if (O3 < 0)
-					{
-					if (dx3 <= 0)
-						{
-						if (dy3 <= 0) return;
-						const int32_t by = (-O3 + dy3 - 1) / dy3;
-						O1 += (by * dy1);
-						O2 += (by * dy2);
-						O3 += (by * dy3);
-						const int32_t offs = by * stride;
-						buf += offs;
-						zbuf += offs;
-						continue;
-						}
-					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
-					}
-
-				int32_t C1 = O1 + (dx1 * bx);
-				int32_t C2 = O2 + (dx2 * bx);
-				int32_t C3 = O3 + (dx3 * bx);
-				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-				
-				while ((bx < lx) && ((C2 | C3) >= 0))
-					{
-					float& W = zbuf[bx];
-					if (W < cw)
-						{
-						W = cw;
-										
-						const int ttx = ((int)((tx))) & (texsize_x - 1); 
-						const int tty = ((int)((ty))) & (texsize_y - 1);
-
-						const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-						const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-						const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);					
-						color_t col = tex[ttx + (tty)*texsize_x];
-						col.mult256(r, g, b);
-						buf[bx] = col;
-
-						}
-
-					C2 += dx2;
-					C3 += dx3;
-					cw += dw;
-
-					tx += dtx;
-					ty += dty;
-
-					bx++;
-					}
-
-				O1 += dy1;
-				O2 += dy2;
-				O3 += dy3;
-				buf += stride;
-				zbuf += stride;
-				}
-			}
-
-
-
-
-
-
-
-
+		/***************************************
+		* GENERAL / COPY / RESIZE / BLIT
+		****************************************/
 
 
 		/** Make sure the image parameters are ok, else mark the image as invalid. */
@@ -2841,6 +1282,26 @@ private:
 
 		static void _blitRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy);
 
+
+
+		/***************************************
+		* DRAWING PRIMITIVES
+		****************************************/
+
+
+		/** line drawing method */
+		template<bool CHECKRANGE> inline void _drawLine(int x0, int y0, int x1, int y1, color_t color);
+
+
+		/** filled circle drawing method */
+		template<bool OUTLINE, bool FILL, bool CHECKRANGE> void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor);
+
+
+
+
+		/***************************************
+		* DRAWING TEXT
+		****************************************/
 
 
 		/** fetch a single bit from a bit array. (from ili9341_t3.cpp) */
@@ -2893,191 +1354,191 @@ private:
 
 
 
+		/***************************************
+		* TRIANGLE 3D RASTERIZER
+		****************************************/
 
-		template<bool CHECKRANGE> inline void _drawLine(int x0, int y0, int x1, int y1, color_t color)
+
+		/** Called when ZBUFFER=false, ORTHO = false*/
+		void _rasterizeTriangle(DummyTypeBB<false, false> DT, const int raster_type, const int32_t& offset, const int32_t& lx, const int32_t& ly,
+			const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
+			const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
+			const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
+			const RasterizerParams& data)
 			{
-			if (y0 == y1) 
+			if (raster_type & TGX_SHADER_TEXTURE)
 				{
-				if (x1 > x0) 
-					{
-					drawFastHLine<CHECKRANGE>(x0, y0, x1 - x0 + 1, color);
-					}
-				else if (x1 < x0) 
-					{
-					drawFastHLine<CHECKRANGE>(x1, y0, x0 - x1 + 1, color);
-					}
-				else 
-					{
-					drawPixel<CHECKRANGE>(x0, y0, color);
-					}
-				return;
+				if (raster_type & TGX_SHADER_GOURAUD)
+					_rasterizeTriangleGouraudTexture(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+				else
+					_rasterizeTriangleFlatTexture(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
 				}
-			else if (x0 == x1) 
+			else
 				{
-				if (y1 > y0) 
-					{
-					drawFastVLine<CHECKRANGE>(x0, y0, y1 - y0 + 1, color);
-					}
-				else 
-					{
-					drawFastVLine<CHECKRANGE>(x0, y1, y0 - y1 + 1, color);
-					}
-				return;
-				}
-
-			bool steep = abs(y1 - y0) > abs(x1 - x0);
-			if (steep) 
-				{
-				swap(x0, y0);
-				swap(x1, y1);
-				}
-			if (x0 > x1) 
-				{
-				swap(x0, x1);
-				swap(y0, y1);
-				}
-
-			int dx, dy;
-			dx = x1 - x0;
-			dy = abs(y1 - y0);
-
-			int err = dx / 2;
-			int ystep;
-
-			if (y0 < y1) 
-				{
-				ystep = 1;
-				}
-			else 
-				{
-				ystep = -1;
-				}
-			int xbegin = x0;
-			if (steep) 
-				{
-				for (; x0 <= x1; x0++) 
-					{
-					err -= dy;
-					if (err < 0) 
-						{
-						int len = x0 - xbegin;
-						if (len) 
-							{
-							drawFastVLine<CHECKRANGE>(y0, xbegin, len + 1, color);
-							}
-						else 
-							{
-							drawPixel<CHECKRANGE>(y0, x0, color);
-							}
-						xbegin = x0 + 1;
-						y0 += ystep;
-						err += dx;
-						}
-					}
-				if (x0 > xbegin + 1) 
-					{
-					drawFastVLine<CHECKRANGE>(y0, xbegin, x0 - xbegin, color);
-					}
-				}
-			else 
-				{
-				for (; x0 <= x1; x0++) 
-					{
-					err -= dy;
-					if (err < 0) 
-						{
-						int len = x0 - xbegin;
-						if (len) 
-							{
-							drawFastHLine<CHECKRANGE>(xbegin, y0, len + 1, color);
-							}
-						else 
-							{
-							drawPixel<CHECKRANGE>(x0, y0, color);
-							}
-						xbegin = x0 + 1;
-						y0 += ystep;
-						err += dx;
-						}
-					}
-				if (x0 > xbegin + 1) 
-					{
-					drawFastHLine<CHECKRANGE>(xbegin, y0, x0 - xbegin, color);
-					}
+				if (raster_type & TGX_SHADER_GOURAUD)
+					_rasterizeTriangleGouraud(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+				else
+					_rasterizeTriangleFlat(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
 				}
 			}
 
 
-
-		template<bool OUTLINE, bool FILL, bool CHECKRANGE> void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor)
-			{	
-			if ((r <= 0) || (!isValid())) return;
-			if ((CHECKRANGE)&&(r > 2))
-				{ // circle is large enough to check first if there is something to draw.
-				if ((xm + r < 0) || (xm - r >= _lx) || (ym + r < 0) || (ym - r >= _ly)) return; // outside of image. 
-				// TODO : check if the circle completely fills the image, in this case use FillScreen()
-				}				
-			switch (r)
+		/** Called when ZBUFFER=true, ORTHO = false*/
+		void _rasterizeTriangle(DummyTypeBB<true, false> DT, const int raster_type, const int32_t& offset, const int32_t& lx, const int32_t& ly,
+			const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
+			const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
+			const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
+			const RasterizerParams& data)
+			{
+			if (raster_type & TGX_SHADER_TEXTURE)
 				{
-				case 0:
-					{
-					if (OUTLINE)
-						{
-						drawPixel<CHECKRANGE>(xm, ym, color);
-						}
-					else if (FILL)
-						{
-						drawPixel<CHECKRANGE>(xm, ym, fillcolor);
-						}
-					return;
-					}
-				case 1:
-					{
-					if (FILL)
-						{
-						drawPixel<CHECKRANGE>(xm, ym, fillcolor);
-						}
-					drawPixel<CHECKRANGE>(xm + 1, ym, color);
-					drawPixel<CHECKRANGE>(xm - 1, ym, color);
-					drawPixel<CHECKRANGE>(xm, ym - 1, color);
-					drawPixel<CHECKRANGE>(xm, ym + 1, color);
-					return;
-					}
+				if (raster_type & TGX_SHADER_GOURAUD)
+					_rasterizeTriangleGouraudTextureZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+				else
+					_rasterizeTriangleFlatTextureZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
 				}
-			int x = -r, y = 0, err = 2 - 2 * r;
-			do {
-				if (OUTLINE)
-					{
-					drawPixel<CHECKRANGE>(xm - x, ym + y, color);
-					drawPixel<CHECKRANGE>(xm - y, ym - x, color);
-					drawPixel<CHECKRANGE>(xm + x, ym - y, color);
-					drawPixel<CHECKRANGE>(xm + y, ym + x, color);
-					}
-				r = err;
-				if (r <= y)
-					{
-					if (FILL)
-						{
-						drawFastHLine<CHECKRANGE>(xm, ym + y,  -x, fillcolor);
-						drawFastHLine<CHECKRANGE>(xm + x + 1, ym - y, -x - 1, fillcolor);
-						}
-					err += ++y * 2 + 1;
-					}
-				if (r > x || err > y)
-					{
-					err += ++x * 2 + 1;
-					if (FILL)
-						{
-						if (x)
-							{
-							drawFastHLine<CHECKRANGE>(xm - y + 1, ym - x, y - 1, fillcolor);
-							drawFastHLine<CHECKRANGE>(xm, ym + x, y, fillcolor);
-							}
-						}
-					}
-				} 
-			while (x < 0);
+			else
+				{
+				if (raster_type & TGX_SHADER_GOURAUD)
+					_rasterizeTriangleGouraudZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+				else
+					_rasterizeTriangleFlatZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+				}
 			}
+
+		/** Called when ZBUFFER=false, ORTHO = true*/
+		void _rasterizeTriangle(DummyTypeBB<false, true> DT, const int raster_type, const int32_t& offset, const int32_t& lx, const int32_t& ly,
+			const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
+			const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
+			const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
+			const RasterizerParams& data)
+			{
+				if (raster_type & TGX_SHADER_TEXTURE)
+				{
+				if (raster_type & TGX_SHADER_GOURAUD)
+					_rasterizeTriangleGouraudTextureOrtho(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+				else
+					_rasterizeTriangleFlatTextureOrtho(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+				}
+			else
+				{
+				if (raster_type & TGX_SHADER_GOURAUD)
+					_rasterizeTriangleGouraud(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data); // same as perspective projection
+				else
+					_rasterizeTriangleFlat(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data); // same as perspective projection
+				}
+			}
+
+
+		/** Called when ZBUFFER=true, ORTHO = true*/
+		void _rasterizeTriangle(DummyTypeBB<true, true> DT, const int raster_type, const int32_t& offset, const int32_t& lx, const int32_t& ly,
+			const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
+			const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
+			const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
+			const RasterizerParams& data)
+			{
+			if (raster_type & TGX_SHADER_TEXTURE)
+				{
+				if (raster_type & TGX_SHADER_GOURAUD)
+					_rasterizeTriangleGouraudTextureZbufferOrtho(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+				else
+					_rasterizeTriangleFlatTextureZbufferOrtho(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+				}
+			else
+				{
+				if (raster_type & TGX_SHADER_GOURAUD)
+					_rasterizeTriangleGouraudZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);  // same as perspective projection
+				else
+					_rasterizeTriangleFlatZbuffer(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);  // same as perspective projection
+				}
+			}
+	
+
+		/** FLAT SHADING (NO ZBUFFER) */		
+		void _rasterizeTriangleFlat(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
+
+		/** GOURAUD SHADING (NO Z BUFFER) */
+		void _rasterizeTriangleGouraud(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
+
+
+		/** TEXTURE + FLAT SHADING (NO ZBUFFER) */	
+		void _rasterizeTriangleFlatTexture(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
+
+		/** TEXTURE + GOURAUD SHADING (NO ZBUFFER) */
+		void _rasterizeTriangleGouraudTexture(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
+
+		/** ZBUFFER + FLAT SHADING */
+		void _rasterizeTriangleFlatZbuffer(const int32_t offset, const int32_t & lx, const int32_t & ly,
+			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
+
+		/** ZBUFFER + GOURAUD SHADING */	
+		void _rasterizeTriangleGouraudZbuffer(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
+
+
+		/** ZBUFFER + TEXTURE + FLAT SHADING */
+		void _rasterizeTriangleFlatTextureZbuffer(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
+
+		/** * ZBUFFER + TEXTURE + GOURAUD SHADING */
+		void _rasterizeTriangleGouraudTextureZbuffer(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
+
+		/** TEXTURE + FLAT SHADING (NO ZBUFFER) + ORTHOGRAPHIC */	
+		void _rasterizeTriangleFlatTextureOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
+
+		/** TEXTURE + GOURAUD SHADING (NO ZBUFFER) + ORTHOGRAPHIC */
+		void _rasterizeTriangleGouraudTextureOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
+
+		/** ZBUFFER + TEXTURE + FLAT SHADING + ORTHOGRAPHIC */
+		void _rasterizeTriangleFlatTextureZbufferOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
+
+		/** ZBUFFER + TEXTURE + GOURAUD SHADING + ORTHOGRAPHIC */
+		void _rasterizeTriangleGouraudTextureZbufferOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data);
 
 
 
@@ -3089,11 +1550,22 @@ private:
 
 
 
-	/**********************************************************************************
+
+
+
+
+
+
+
+
+	/******************************************************************************************************************************
 	* 
-	* Implementation details
+	* 
+	* Implementation 
 	*
-	***********************************************************************************/
+	* 
+	*******************************************************************************************************************************/
+
 
 
 
@@ -3101,7 +1573,9 @@ private:
 
 
 	/************************************************************************************
+	* 
 	*  Blitting / copying / resizing images
+	* 
 	*************************************************************************************/
 
 
@@ -3119,7 +1593,7 @@ private:
 		sx -= max(0, (sprite_x + sx - sprite._lx));
 		sy -= max(0, (sprite_y + sy - sprite._ly));
 		if ((sx <= 0) || (sy <= 0)) return;
-		_blitRegion(_buffer + CAST32(dest_y) * CAST32(_stride) + CAST32(dest_x), _stride, sprite._buffer + CAST32(sprite_y) * CAST32(sprite._stride) + CAST32(sprite_x), sprite._stride, sx, sy);
+		_blitRegion(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy);
 		}
 
 
@@ -3137,8 +1611,8 @@ private:
 		const int32_t bx = (_lx > 1) ? (int32_t)(_lx - 1) : 1;
 		for (int j = 0; j < _ly; j++)
 			{
-			const int32_t off_src = ((j * ay) / by) * CAST32(src._stride);
-			const int32_t off_dest = j * CAST32(_stride);
+			const int32_t off_src = ((j * ay) / by) * TGX_CAST32(src._stride);
+			const int32_t off_dest = j * TGX_CAST32(_stride);
 			for (int i = 0; i < _lx; i++)
 				{
 				const int32_t x = (i * ax) / bx;
@@ -3191,8 +1665,8 @@ private:
 		const int32_t ny = (int32_t)(src_image._ly >> 1);
 		for(int32_t j=0; j < ny; j++)
 			{
-			const color_t * p_src = src_image._buffer + j * CAST32(2*src_image._stride);
-			color_t * p_dest = _buffer + j * CAST32(_stride);
+			const color_t * p_src = src_image._buffer + j * TGX_CAST32(2*src_image._stride);
+			color_t * p_dest = _buffer + j * TGX_CAST32(_stride);
 			int nx = (src_image._lx >> 1);
 			while(nx-- > 0)
 				{
@@ -3208,8 +1682,16 @@ private:
 
 
 	/************************************************************************************
+	* 
 	*  Drawing primitives
+	* 
 	*************************************************************************************/
+
+
+
+	/*****************************************************
+	* Screen/box filling
+	******************************************************/
 
 
 	/** Fill a rectangle region with a single color */
@@ -3224,10 +1706,10 @@ private:
 			}
 		const int sx = B.lx();
 		int sy = B.ly();
-		color_t * p = _buffer + CAST32(B.minX) + CAST32(B.minY) * CAST32(_stride);
+		color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(B.minY) * TGX_CAST32(_stride);
 		if (sx == _stride) 
 			{ // fast, set everything at once
-			const int32_t len = CAST32(sy) * CAST32(_stride);
+			const int32_t len = TGX_CAST32(sy) * TGX_CAST32(_stride);
 			_fast_memset(p, color, len);
 			}
 		else
@@ -3255,7 +1737,7 @@ private:
 		const int16_t dr = (c64_b.R - c64_a.R) / d;
 		const int16_t dg = (c64_b.G - c64_a.G) / d;
 		const int16_t db = (c64_b.B - c64_a.B) / d;
-		color_t * p = _buffer + CAST32(B.minX) + CAST32(_stride) * CAST32(B.minY);
+		color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(_stride) * TGX_CAST32(B.minY);
 		for (int h = B.ly(); h > 0; h--)
 			{
 			RGB64 c(c64_a);
@@ -3284,7 +1766,7 @@ private:
 		const int16_t dr = (c64_b.R - c64_a.R) / d;
 		const int16_t dg = (c64_b.G - c64_a.G) / d;
 		const int16_t db = (c64_b.B - c64_a.B) / d;
-		color_t * p = _buffer + CAST32(B.minX) + CAST32(_stride) * CAST32(B.minY);
+		color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(_stride) * TGX_CAST32(B.minY);
 		for (int j = h; j > 0; j--)
 			{
 			_fast_memset(p, color_t(c64_a), B.lx());
@@ -3297,13 +1779,268 @@ private:
 
 
 
+	/*****************************************************
+	* Lines
+	******************************************************/
+
+
+	template<typename color_t>
+	template<bool CHECKRANGE> void Image<color_t>::_drawLine(int x0, int y0, int x1, int y1, color_t color)
+		{
+		if (y0 == y1)
+			{
+			if (x1 > x0)
+				{
+				drawFastHLine<CHECKRANGE>(x0, y0, x1 - x0 + 1, color);
+				}
+			else if (x1 < x0)
+				{
+				drawFastHLine<CHECKRANGE>(x1, y0, x0 - x1 + 1, color);
+				}
+			else
+				{
+				drawPixel<CHECKRANGE>(x0, y0, color);
+				}
+			return;
+			}
+		else if (x0 == x1)
+			{
+			if (y1 > y0)
+				{
+				drawFastVLine<CHECKRANGE>(x0, y0, y1 - y0 + 1, color);
+				}
+			else
+				{
+				drawFastVLine<CHECKRANGE>(x0, y1, y0 - y1 + 1, color);
+				}
+			return;
+		}
+
+		bool steep = abs(y1 - y0) > abs(x1 - x0);
+		if (steep)
+			{
+			swap(x0, y0);
+			swap(x1, y1);
+			}
+		if (x0 > x1)
+			{
+			swap(x0, x1);
+			swap(y0, y1);
+			}
+
+		int dx, dy;
+		dx = x1 - x0;
+		dy = abs(y1 - y0);
+
+		int err = dx / 2;
+		int ystep;
+
+		if (y0 < y1)
+			{
+			ystep = 1;
+			}
+		else
+			{
+			ystep = -1;
+			}
+		int xbegin = x0;
+		if (steep)
+			{
+			for (; x0 <= x1; x0++)
+				{
+				err -= dy;
+				if (err < 0)
+					{
+					int len = x0 - xbegin;
+					if (len)
+						{
+						drawFastVLine<CHECKRANGE>(y0, xbegin, len + 1, color);
+						}
+					else
+						{
+						drawPixel<CHECKRANGE>(y0, x0, color);
+						}
+					xbegin = x0 + 1;
+					y0 += ystep;
+					err += dx;
+					}
+				}
+			if (x0 > xbegin + 1)
+				{
+				drawFastVLine<CHECKRANGE>(y0, xbegin, x0 - xbegin, color);
+				}
+			}
+		else
+			{
+			for (; x0 <= x1; x0++)
+				{
+				err -= dy;
+				if (err < 0)
+					{
+					int len = x0 - xbegin;
+					if (len)
+						{
+						drawFastHLine<CHECKRANGE>(xbegin, y0, len + 1, color);
+						}
+					else
+						{
+						drawPixel<CHECKRANGE>(x0, y0, color);
+						}
+					xbegin = x0 + 1;
+					y0 += ystep;
+					err += dx;
+					}
+				}
+			if (x0 > xbegin + 1)
+				{
+				drawFastHLine<CHECKRANGE>(xbegin, y0, x0 - xbegin, color);
+				}
+			}
+		}
+
+
+	/*****************************************************
+	* Triangles
+	******************************************************/
+
+
+	/**(taken from adafruit gfx / Kurte ILI93412_t3n). */
+	template<typename color_t>
+	void Image<color_t>::fillTriangle(int x0,int y0, int x1, int y1, int x2, int y2, color_t color)
+			{
+			int a, b, y, last;			
+			if (y0 > y1) 
+				{
+				swap(y0, y1);
+				swap(x0, x1);
+				}
+			if (y1 > y2) 
+				{
+				swap(y2, y1);
+				swap(x2, x1);
+				}
+			if (y0 > y1) 
+				{
+				swap(y0, y1);
+				swap(x0, x1);
+				}
+
+			if (y0 == y2) 
+				{ // Handle awkward all-on-same-line case as its own thing
+				a = b = x0;
+				if (x1 < a) a = x1; else if (x1 > b) b = x1;
+				if (x2 < a) a = x2; else if (x2 > b) b = x2;
+				drawFastHLine<true>(a, y0, b - a + 1, color);
+				return;
+				}
+			int dx01 = x1 - x0, dy01 = y1 - y0, dx02 = x2 - x0, dy02 = y2 - y0,
+			    dx12 = x2 - x1, dy12 = y2 - y1, sa = 0, sb = 0;
+			if (y1 == y2) last = y1; else last = y1 - 1; 
+			for (y = y0; y <= last; y++) 
+				{
+				a = x0 + sa / dy01;
+				b = x0 + sb / dy02;
+				sa += dx01;
+				sb += dx02;
+				if (a > b) swap(a, b);
+				drawFastHLine<true>(a, y, b - a + 1, color);
+				}
+			sa = dx12 * (y - y1);
+			sb = dx02 * (y - y0);
+			for (; y <= y2; y++) 
+				{
+				a = x1 + sa / dy12;
+				b = x0 + sb / dy02;
+				sa += dx12;
+				sb += dx02;
+				if (a > b) swap(a, b);
+				drawFastHLine<true>(a, y, b - a + 1, color);
+				}
+			}
+
+
+	/*****************************************************
+	* Circles
+	******************************************************/
+
+	template<typename color_t>
+	template<bool OUTLINE, bool FILL, bool CHECKRANGE> void Image<color_t>::_drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor)
+		{
+		if ((r <= 0) || (!isValid())) return;
+		if ((CHECKRANGE) && (r > 2))
+			{ // circle is large enough to check first if there is something to draw.
+			if ((xm + r < 0) || (xm - r >= _lx) || (ym + r < 0) || (ym - r >= _ly)) return; // outside of image. 
+			// TODO : check if the circle completely fills the image, in this case use FillScreen()
+			}
+		switch (r)
+			{
+			case 0:
+				{
+				if (OUTLINE)
+					{
+					drawPixel<CHECKRANGE>(xm, ym, color);
+					}
+				else if (FILL)
+					{
+					drawPixel<CHECKRANGE>(xm, ym, fillcolor);
+					}
+				return;
+				}
+		case 1:
+				{
+				if (FILL)
+					{
+					drawPixel<CHECKRANGE>(xm, ym, fillcolor);
+					}
+				drawPixel<CHECKRANGE>(xm + 1, ym, color);
+				drawPixel<CHECKRANGE>(xm - 1, ym, color);
+				drawPixel<CHECKRANGE>(xm, ym - 1, color);
+				drawPixel<CHECKRANGE>(xm, ym + 1, color);
+				return;
+				}
+			}
+		int x = -r, y = 0, err = 2 - 2 * r;
+		do {
+			if (OUTLINE)
+				{
+				drawPixel<CHECKRANGE>(xm - x, ym + y, color);
+				drawPixel<CHECKRANGE>(xm - y, ym - x, color);
+				drawPixel<CHECKRANGE>(xm + x, ym - y, color);
+				drawPixel<CHECKRANGE>(xm + y, ym + x, color);
+				}
+			r = err;
+			if (r <= y)
+				{
+				if (FILL)
+					{
+					drawFastHLine<CHECKRANGE>(xm, ym + y, -x, fillcolor);
+					drawFastHLine<CHECKRANGE>(xm + x + 1, ym - y, -x - 1, fillcolor);
+					}
+				err += ++y * 2 + 1;
+				}
+			if (r > x || err > y)
+				{
+				err += ++x * 2 + 1;
+				if (FILL)
+					{
+					if (x)
+						{
+						drawFastHLine<CHECKRANGE>(xm - y + 1, ym - x, y - 1, fillcolor);
+						drawFastHLine<CHECKRANGE>(xm, ym + x, y, fillcolor);
+						}
+					}
+				}
+			} while (x < 0);
+		}
+
 
 
 
 	/************************************************************************************
+	* 
 	*  Drawing Text
+	* 
 	*************************************************************************************/
-
 
 
 	template<typename color_t>
@@ -3540,8 +2277,12 @@ private:
 
 
 
+
+
 	/************************************************************************************
-	*  Implementation of private routines
+	* 
+	*  Misc private routines
+	* 
 	*************************************************************************************/
 
 
@@ -3598,8 +2339,8 @@ private:
 		// TODO, make faster with specialization (writing 32bit at once etc...) 
 		for (int j = 0; j < sy; j++)
 			{
-			color_t* pdest2 = pdest + CAST32(j) * CAST32(dest_stride);
-			color_t* psrc2 = psrc + CAST32(j) * CAST32(src_stride);
+			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
 			for (int i = 0; i < sx; i++) { pdest2[i] = psrc2[i]; }
 			}
 		}
@@ -3611,8 +2352,8 @@ private:
 		// TODO, make faster with specialization (writing 32bit at once etc...)
 		for (int j = sy - 1; j >= 0; j--)
 			{
-			color_t* pdest2 = pdest + CAST32(j) * CAST32(dest_stride);
-			color_t* psrc2 = psrc + CAST32(j) * CAST32(src_stride);
+			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
 			for (int i = sx - 1; i >= 0; i--) { pdest2[i] = psrc2[i]; }
 			}	
 		}
@@ -3731,7 +2472,7 @@ private:
 					}
 				}
 			// off is now pointing to the begining of the line pixels and we can draw it. 
-			_drawcharline(bitmap, off + b_left, _buffer + CAST32(x) + CAST32(y) * CAST32(_stride), sx, col);
+			_drawcharline(bitmap, off + b_left, _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride), sx, col);
 			if ((--rl) == 0)
 				{ // done repeating so we move to the next line in the bitmap
 				off += rsx;
@@ -3820,11 +2561,11 @@ private:
 	template<typename color_t>
 	void Image<color_t>::_drawCharBitmap_1BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy,int x, int y, color_t col)
 		{
-		int32_t off = CAST32(b_up) * CAST32(rsx) + CAST32(b_left);
+		int32_t off = TGX_CAST32(b_up) * TGX_CAST32(rsx) + TGX_CAST32(b_left);
 		bitmap += (off >> 3);						// starting byte in the bitmap
 		uint8_t u = (uint8_t)(128 >> (off & 7));	// index of the first bit 
 		const int sk = (rsx - sx);				// number of bits to skip at the end of a row.
-		color_t* p = _buffer + CAST32(x) + CAST32(_stride) * CAST32(y); // start position in destination buffer
+		color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y); // start position in destination buffer
 		if (sx >= 8)
 			{ // each row has at least 8 pixels
 			for (int dy = sy; dy > 0; dy--)
@@ -3938,8 +2679,8 @@ private:
 			{ // each row has at least 4 pixels
 			for (int dy = 0; dy < sy; dy++)
 				{
-				int32_t off = CAST32(b_up + dy) * CAST32(rsx) + CAST32(b_left);
-				color_t* p = _buffer + CAST32(_stride) * CAST32(y + dy) + CAST32(x); 
+				int32_t off = TGX_CAST32(b_up + dy) * TGX_CAST32(rsx) + TGX_CAST32(b_left);
+				color_t* p = _buffer + TGX_CAST32(_stride) * TGX_CAST32(y + dy) + TGX_CAST32(x); 
 				int dx = sx;
 				const int32_t uu = off & 3;
 				if (uu)
@@ -3988,8 +2729,8 @@ private:
 			{ // each row has less than 4 pixels
 			for (int dy = 0; dy < sy; dy++)
 				{
-				int32_t off = CAST32(b_up + dy) * CAST32(rsx) + CAST32(b_left); // offset for the start of this line
-				color_t* p = _buffer + CAST32(_stride) * CAST32(y + dy) + CAST32(x); // start position in destination buffer
+				int32_t off = TGX_CAST32(b_up + dy) * TGX_CAST32(rsx) + TGX_CAST32(b_left); // offset for the start of this line
+				color_t* p = _buffer + TGX_CAST32(_stride) * TGX_CAST32(y + dy) + TGX_CAST32(x); // start position in destination buffer
 				int dx = sx;
 				const int32_t uu = off & 3;
 				if ((4 - uu) < sx)
@@ -4029,8 +2770,8 @@ private:
 			{ // each row has at least 2 pixels
 			for (int dy = 0; dy < sy; dy++)
 				{
-				int32_t off = CAST32(b_up + dy) * CAST32(rsx) + CAST32(b_left);
-				color_t* p = _buffer + CAST32(_stride) * CAST32(y + dy) + CAST32(x); 
+				int32_t off = TGX_CAST32(b_up + dy) * TGX_CAST32(rsx) + TGX_CAST32(b_left);
+				color_t* p = _buffer + TGX_CAST32(_stride) * TGX_CAST32(y + dy) + TGX_CAST32(x); 
 				int dx = sx;
 				if (off & 1)
 					{// not at the start of a bitmap byte: we first finish it. 
@@ -4059,8 +2800,8 @@ private:
 			}
 		else
 			{ // each row has a single pixel 
-			color_t* p = _buffer + CAST32(_stride) * CAST32(y) + CAST32(x);
-			int32_t off = CAST32(b_up) * CAST32(rsx) + CAST32(b_left);
+			color_t* p = _buffer + TGX_CAST32(_stride) * TGX_CAST32(y) + TGX_CAST32(x);
+			int32_t off = TGX_CAST32(b_up) * TGX_CAST32(rsx) + TGX_CAST32(b_left);
 			while(sy-- > 0)
 				{
 				const uint8_t b = bitmap[off >> 1];
@@ -4076,8 +2817,8 @@ private:
 	template<typename color_t>
 	void Image<color_t>::_drawCharBitmap_8BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col)
 		{
-		const uint8_t * p_src = bitmap + CAST32(b_up) * CAST32(rsx) + CAST32(b_left);
-		color_t * p_dst = _buffer + CAST32(x) + CAST32(_stride) * CAST32(y);
+		const uint8_t * p_src = bitmap + TGX_CAST32(b_up) * TGX_CAST32(rsx) + TGX_CAST32(b_left);
+		color_t * p_dst = _buffer + TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y);
 		const int sk_src = rsx - sx;
 		const int sk_dst = _stride - sx;
 		while (sy-- > 0)
@@ -4092,6 +2833,1461 @@ private:
 			p_dst += sk_dst;
 			}
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+	/************************************************************************************
+	* 
+	*  IMPLEMENTATION OF THE 3D-RASTERIZER 
+	* 
+	*************************************************************************************/
+
+
+
+
+		/**
+		* FLAT SHADING (NO ZBUFFER)
+		**/		
+		template<typename color_t>
+		void Image<color_t>::_rasterizeTriangleFlat(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{
+			color_t col = (color_t)data.facecolor;
+			color_t* buf = _buffer + offset;
+			const int32_t stride = _stride;
+
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+				
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					buf[bx] = col;
+					C2 += dx2;
+					C3 += dx3;
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				}
+			}
+
+
+		/**
+		* GOURAUD SHADING (NO Z BUFFER)
+		**/
+		template<typename color_t>
+		void Image<color_t>::_rasterizeTriangleGouraud(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{
+			color_t* buf = _buffer + offset;
+			const int32_t stride = _stride;
+
+			const color_t col1 = (color_t)fP1.color;
+			const color_t col2 = (color_t)fP2.color;
+			const color_t col3 = (color_t)fP3.color;
+			
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+			const int32_t aera = O1 + O2 + O3;
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					buf[bx] = blend(col2, C2, col3, C3, col1, aera);
+					C2 += dx2;
+					C3 += dx3;
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				}
+			}
+
+
+		/**
+		* TEXTURE + FLAT SHADING (NO ZBUFFER)
+		**/	
+		template<typename color_t>
+		void Image<color_t>::_rasterizeTriangleFlatTexture(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{					
+			const color_t * tex = data.tex->data(); 
+			const int32_t texsize_x = data.tex->width();
+			const int32_t texsize_y = data.tex->height();
+
+			color_t* buf = _buffer + offset;
+			
+			const int32_t stride = _stride;
+
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+			const int32_t aera = O1 + O2 + O3;
+
+			const float invaera = 1.0f / aera;
+			const float fP1a = fP1.w * invaera;
+			const float fP2a = fP2.w * invaera;
+			const float fP3a = fP3.w * invaera;
+			
+			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
+
+			const RGBf& cf = (RGBf)data.facecolor;
+			const int fPR = (int)(256 * cf.R);
+			const int fPG = (int)(256 * cf.G);
+			const int fPB = (int)(256 * cf.B);
+
+			// the texture coord
+			fVec2 T1 = fP1.T;			
+			fVec2 T2 = fP2.T;
+			fVec2 T3 = fP3.T;
+
+			// divide the texture coord by z * aera
+			T1 *= fP1a;
+			T2 *= fP2a;
+			T3 *= fP3a;
+			T1.x *= texsize_x;
+			T2.x *= texsize_x;
+			T3.x *= texsize_x;
+			T1.y *= texsize_y;
+			T2.y *= texsize_y;
+			T3.y *= texsize_y;
+
+			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
+			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+
+				int32_t C1 = O1 + (dx1 * bx);
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
+
+				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
+				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
+				
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					const float icw = 1.0f / cw;
+					const int ttx = ((int)((tx * icw))) & (texsize_x - 1); 
+					const int tty = ((int)((ty * icw))) & (texsize_y - 1);
+
+					color_t col = tex[ttx + (tty)*texsize_x];
+					col.mult256(fPR, fPG, fPB);
+					buf[bx] = col;
+
+					C2 += dx2;
+					C3 += dx3;
+					cw += dw;
+
+					tx += dtx;
+					ty += dty;
+
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				}
+			}
+
+
+		/**
+		* TEXTURE + GOURAUD SHADING (NO ZBUFFER)
+		**/
+		template<typename color_t>
+		void Image<color_t>::_rasterizeTriangleGouraudTexture(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{					
+			const color_t * tex = data.tex->data(); 
+			const int32_t texsize_x = data.tex->width();
+			const int32_t texsize_y = data.tex->height();
+
+			color_t* buf = _buffer + offset;
+
+			const int32_t stride = _stride;
+
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+			const int32_t aera = O1 + O2 + O3;
+
+			const float invaera = 1.0f / aera;
+			const float fP1a = fP1.w * invaera;
+			const float fP2a = fP2.w * invaera;
+			const float fP3a = fP3.w * invaera;
+			
+			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
+				
+			const RGBf & cf1 = (RGBf)fP1.color;
+			const RGBf & cf2 = (RGBf)fP2.color;
+			const RGBf & cf3 = (RGBf)fP3.color;
+			const int fP1R = (int)(256 * cf1.R);
+			const int fP1G = (int)(256 * cf1.G);
+			const int fP1B = (int)(256 * cf1.B);
+			const int fP21R = (int)(256 * (cf2.R - cf1.R));
+			const int fP21G = (int)(256 * (cf2.G - cf1.G));
+			const int fP21B = (int)(256 * (cf2.B - cf1.B));
+			const int fP31R = (int)(256 * (cf3.R - cf1.R));
+			const int fP31G = (int)(256 * (cf3.G - cf1.G));
+			const int fP31B = (int)(256 * (cf3.B - cf1.B));
+
+			// the texture coord
+			fVec2 T1 = fP1.T;			
+			fVec2 T2 = fP2.T;
+			fVec2 T3 = fP3.T;
+
+			// divide the texture coord by z * aera
+			T1 *= fP1a;
+			T2 *= fP2a;
+			T3 *= fP3a;
+			T1.x *= texsize_x;
+			T2.x *= texsize_x;
+			T3.x *= texsize_x;
+			T1.y *= texsize_y;
+			T2.y *= texsize_y;
+			T3.y *= texsize_y;
+
+
+			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
+			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+
+				int32_t C1 = O1 + (dx1 * bx);
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
+
+				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
+				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
+				
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					const float icw = 1.0f / cw;
+					const int ttx = ((int)((tx * icw))) & (texsize_x - 1);
+					const int tty = ((int)((ty * icw))) & (texsize_y - 1);
+
+					const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
+					const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
+					const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);	
+					color_t col = tex[ttx + (tty)*texsize_x];
+					col.mult256(r, g, b);
+					buf[bx] = col;
+
+					C2 += dx2;
+					C3 += dx3;
+					cw += dw;
+
+					tx += dtx;
+					ty += dty;
+
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				}
+			}
+
+
+		/**
+		* ZBUFFER + FLAT SHADING
+		**/
+		template<typename color_t>
+		void Image<color_t>::_rasterizeTriangleFlatZbuffer(const int32_t offset, const int32_t & lx, const int32_t & ly,
+			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{			
+			const color_t col = (color_t)data.facecolor;
+			color_t* buf = _buffer + offset;
+			float* zbuf = data.zbuf + offset;
+
+			const int32_t stride = _stride;
+
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+			const int32_t aera = O1 + O2 + O3;
+
+			const float invaera = 1.0f / aera;
+			const float fP1a = fP1.w * invaera;
+			const float fP2a = fP2.w * invaera;
+			const float fP3a = fP3.w * invaera;
+			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+
+				const int32_t C1 = O1 + (dx1 * bx);
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
+
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					float& W = zbuf[bx];
+					if (W < cw)
+						{
+						W = cw;
+						buf[bx] = col;
+						}
+					C2 += dx2;
+					C3 += dx3;
+					cw += dw;
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				zbuf += stride;
+				}
+			}
+
+
+		/**
+		* ZBUFFER + GOURAUD SHADING
+		**/	
+		template<typename color_t>
+		void Image<color_t>::_rasterizeTriangleGouraudZbuffer(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{
+			color_t* buf = _buffer + offset;
+			float* zbuf = data.zbuf + offset;
+
+			const int32_t stride = _stride;
+
+			const color_t col1 = (color_t)fP1.color;
+			const color_t col2 = (color_t)fP2.color;
+			const color_t col3 = (color_t)fP3.color;
+			
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+			const int32_t aera = O1 + O2 + O3;
+
+			const float invaera = 1.0f / aera;
+			const float fP1a = fP1.w * invaera;
+			const float fP2a = fP2.w * invaera;
+			const float fP3a = fP3.w * invaera;
+			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+
+				const int32_t C1 = O1 + (dx1 * bx);
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
+
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					float& W = zbuf[bx];
+					if (W < cw)
+						{
+						W = cw;
+						buf[bx] = blend(col2, C2, col3, C3, col1, aera);
+						}
+					C2 += dx2;
+					C3 += dx3;
+					cw += dw;
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				zbuf += stride;
+				}
+			}
+
+
+		/**
+		* ZBUFFER + TEXTURE + FLAT SHADING
+		**/
+		template<typename color_t>
+		void Image<color_t>::_rasterizeTriangleFlatTextureZbuffer(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{					
+			const color_t * tex = data.tex->data(); 
+			const int32_t texsize_x = data.tex->width();
+			const int32_t texsize_y = data.tex->height();
+
+			color_t* buf = _buffer + offset;
+			float* zbuf = data.zbuf + offset;
+
+			const int32_t stride = _stride;
+
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+			const int32_t aera = O1 + O2 + O3;
+
+			const float invaera = 1.0f / aera;
+			const float fP1a = fP1.w * invaera;
+			const float fP2a = fP2.w * invaera;
+			const float fP3a = fP3.w * invaera;
+			
+			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
+
+			const RGBf& cf = (RGBf)data.facecolor;
+			const int fPR = (int)(256 * cf.R);
+			const int fPG = (int)(256 * cf.G);
+			const int fPB = (int)(256 * cf.B);
+
+
+			// the texture coord
+			fVec2 T1 = fP1.T;			
+			fVec2 T2 = fP2.T;
+			fVec2 T3 = fP3.T;
+
+			// divide the texture coord by z * aera
+			T1 *= fP1a;
+			T2 *= fP2a;
+			T3 *= fP3a;
+			T1.x *= texsize_x;
+			T2.x *= texsize_x;
+			T3.x *= texsize_x;
+			T1.y *= texsize_y;
+			T2.y *= texsize_y;
+			T3.y *= texsize_y;
+
+			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
+			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+
+				int32_t C1 = O1 + (dx1 * bx);
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
+
+				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
+				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
+				
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					float& W = zbuf[bx];
+					if (W < cw)
+						{
+						W = cw;	
+
+						const float icw = 1.0f / cw;
+						const int ttx = ((int)((tx * icw))) & (texsize_x - 1); 
+						const int tty = ((int)((ty * icw))) & (texsize_y - 1);
+
+						color_t col = tex[ttx + (tty)*texsize_x];
+						col.mult256(fPR, fPG, fPB);
+						buf[bx] = col;
+						}
+
+					C2 += dx2;
+					C3 += dx3;
+					cw += dw;
+
+					tx += dtx;
+					ty += dty;
+
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				zbuf += stride;
+				}
+			}
+
+
+		/**
+		* ZBUFFER + TEXTURE + GOURAUD SHADING
+		**/
+		template<typename color_t>
+		void Image<color_t>:: _rasterizeTriangleGouraudTextureZbuffer(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{					
+			const color_t * tex = data.tex->data(); 
+			const int32_t texsize_x = data.tex->width();
+			const int32_t texsize_y = data.tex->height();
+
+			color_t* buf = _buffer + offset;
+			float* zbuf = data.zbuf + offset;
+
+			const int32_t stride = _stride;
+
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+			const int32_t aera = O1 + O2 + O3;
+
+			const float invaera = 1.0f / aera;
+			const float fP1a = fP1.w * invaera;
+			const float fP2a = fP2.w * invaera;
+			const float fP3a = fP3.w * invaera;
+			
+			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
+					
+			const RGBf & cf1 = (RGBf)fP1.color;
+			const RGBf & cf2 = (RGBf)fP2.color;
+			const RGBf & cf3 = (RGBf)fP3.color;
+			const int fP1R = (int)(256 * cf1.R);
+			const int fP1G = (int)(256 * cf1.G);
+			const int fP1B = (int)(256 * cf1.B);
+			const int fP21R = (int)(256 * (cf2.R - cf1.R));
+			const int fP21G = (int)(256 * (cf2.G - cf1.G));
+			const int fP21B = (int)(256 * (cf2.B - cf1.B));
+			const int fP31R = (int)(256 * (cf3.R - cf1.R));
+			const int fP31G = (int)(256 * (cf3.G - cf1.G));
+			const int fP31B = (int)(256 * (cf3.B - cf1.B));
+
+			// the texture coord
+			fVec2 T1 = fP1.T;			
+			fVec2 T2 = fP2.T;
+			fVec2 T3 = fP3.T;
+
+			// divide the texture coord by z * aera
+			T1 *= fP1a;
+			T2 *= fP2a;
+			T3 *= fP3a;
+			T1.x *= texsize_x;
+			T2.x *= texsize_x;
+			T3.x *= texsize_x;
+			T1.y *= texsize_y;
+			T2.y *= texsize_y;
+			T3.y *= texsize_y;
+
+			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
+			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+
+				int32_t C1 = O1 + (dx1 * bx);
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
+
+				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
+				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
+				
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					float& W = zbuf[bx];
+					if (W < cw)
+						{
+						W = cw;
+										
+						const float icw = 1.0f / cw;
+						const int ttx = ((int)((tx * icw))) & (texsize_x - 1);
+						const int tty = ((int)((ty * icw))) & (texsize_y - 1);
+
+						const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
+						const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
+						const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);					
+						color_t col = tex[ttx + (tty)*texsize_x];
+						col.mult256(r, g, b);
+						buf[bx] = col;
+
+						}
+
+					C2 += dx2;
+					C3 += dx3;
+					cw += dw;
+
+					tx += dtx;
+					ty += dty;
+
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				zbuf += stride;
+				}
+			}
+
+
+		/**
+		* TEXTURE + FLAT SHADING (NO ZBUFFER) + ORTHOGRAPHIC
+		**/	
+		template<typename color_t>
+		void Image<color_t>:: _rasterizeTriangleFlatTextureOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{					
+			const color_t * tex = data.tex->data(); 
+			const int32_t texsize_x = data.tex->width();
+			const int32_t texsize_y = data.tex->height();
+
+			color_t* buf = _buffer + offset;
+			
+			const int32_t stride = _stride;
+
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+			const int32_t aera = O1 + O2 + O3;
+
+			const float invaera = 1.0f / aera;
+		
+			const RGBf& cf = (RGBf)data.facecolor;
+			const int fPR = (int)(256 * cf.R);
+			const int fPG = (int)(256 * cf.G);
+			const int fPB = (int)(256 * cf.B);
+
+			// the texture coord
+			fVec2 T1 = fP1.T;			
+			fVec2 T2 = fP2.T;
+			fVec2 T3 = fP3.T;
+
+			// divide the texture coord by aera
+			T1 *= invaera;
+			T2 *= invaera;
+			T3 *= invaera;			
+			T1.x *= texsize_x;
+			T2.x *= texsize_x;
+			T3.x *= texsize_x;
+			T1.y *= texsize_y;
+			T2.y *= texsize_y;
+			T3.y *= texsize_y;
+			
+			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
+			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+
+				int32_t C1 = O1 + (dx1 * bx);
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+				
+				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
+				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
+				
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					const int ttx = ((int)tx) & (texsize_x - 1); 
+					const int tty = ((int)ty) & (texsize_y - 1);
+
+					color_t col = tex[ttx + (tty)*texsize_x];
+					col.mult256(fPR, fPG, fPB);
+					buf[bx] = col;
+
+					C2 += dx2;
+					C3 += dx3;					
+
+					tx += dtx;
+					ty += dty;
+
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				}
+			}
+
+
+		/**
+		* TEXTURE + GOURAUD SHADING (NO ZBUFFER) + ORTHOGRAPHIC
+		**/
+		template<typename color_t>
+		void Image<color_t>:: _rasterizeTriangleGouraudTextureOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{					
+			const color_t * tex = data.tex->data(); 
+			const int32_t texsize_x = data.tex->width();
+			const int32_t texsize_y = data.tex->height();
+
+			color_t* buf = _buffer + offset;
+
+			const int32_t stride = _stride;
+
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+			const int32_t aera = O1 + O2 + O3;
+
+			const float invaera = 1.0f / aera;
+		
+			const RGBf & cf1 = (RGBf)fP1.color;
+			const RGBf & cf2 = (RGBf)fP2.color;
+			const RGBf & cf3 = (RGBf)fP3.color;
+			const int fP1R = (int)(256 * cf1.R);
+			const int fP1G = (int)(256 * cf1.G);
+			const int fP1B = (int)(256 * cf1.B);
+			const int fP21R = (int)(256 * (cf2.R - cf1.R));
+			const int fP21G = (int)(256 * (cf2.G - cf1.G));
+			const int fP21B = (int)(256 * (cf2.B - cf1.B));
+			const int fP31R = (int)(256 * (cf3.R - cf1.R));
+			const int fP31G = (int)(256 * (cf3.G - cf1.G));
+			const int fP31B = (int)(256 * (cf3.B - cf1.B));
+
+			// the texture coord
+			fVec2 T1 = fP1.T;			
+			fVec2 T2 = fP2.T;
+			fVec2 T3 = fP3.T;
+
+			// divide the texture coord by aera
+			T1 *= invaera;
+			T2 *= invaera;
+			T3 *= invaera;
+			T1.x *= texsize_x;
+			T2.x *= texsize_x;
+			T3.x *= texsize_x;
+			T1.y *= texsize_y;
+			T2.y *= texsize_y;
+			T3.y *= texsize_y;
+
+			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
+			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+
+				int32_t C1 = O1 + (dx1 * bx);
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+
+				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
+				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
+				
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					const int ttx = ((int)(tx)) & (texsize_x - 1); 
+					const int tty = ((int)(ty)) & (texsize_y - 1);
+
+					const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
+					const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
+					const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);	
+					color_t col = tex[ttx + (tty)*texsize_x];
+					col.mult256(r, g, b);
+					buf[bx] = col;
+
+					C2 += dx2;
+					C3 += dx3;
+
+					tx += dtx;
+					ty += dty;
+
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				}
+			}
+
+
+		/**
+		* ZBUFFER + TEXTURE + FLAT SHADING + ORTHOGRAPHIC
+		**/
+		template<typename color_t>
+		void Image<color_t>:: _rasterizeTriangleFlatTextureZbufferOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{					
+			const color_t * tex = data.tex->data(); 
+			const int32_t texsize_x = data.tex->width();
+			const int32_t texsize_y = data.tex->height();
+
+			color_t* buf = _buffer + offset;
+			float* zbuf = data.zbuf + offset;
+
+			const int32_t stride = _stride;
+
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+			const int32_t aera = O1 + O2 + O3;
+
+			const float invaera = 1.0f / aera;
+			const float fP1a = fP1.w * invaera;
+			const float fP2a = fP2.w * invaera;
+			const float fP3a = fP3.w * invaera;
+			
+			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
+
+			const RGBf& cf = (RGBf)data.facecolor;
+			const int fPR = (int)(256 * cf.R);
+			const int fPG = (int)(256 * cf.G);
+			const int fPB = (int)(256 * cf.B);
+
+
+			// the texture coord
+			fVec2 T1 = fP1.T;			
+			fVec2 T2 = fP2.T;
+			fVec2 T3 = fP3.T;
+
+			// divide the texture coord by aera
+			T1 *= invaera;
+			T2 *= invaera;
+			T3 *= invaera;
+			T1.x *= texsize_x; 
+			T2.x *= texsize_x;
+			T3.x *= texsize_x;
+			T1.y *= texsize_y;
+			T2.y *= texsize_y;
+			T3.y *= texsize_y;
+
+			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
+			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+
+				int32_t C1 = O1 + (dx1 * bx);
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
+
+				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
+				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
+				
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					float& W = zbuf[bx];
+					if (W < cw)
+						{
+						W = cw;	
+						const int ttx = ((int)(tx)) & (texsize_x - 1); 
+						const int tty = ((int)(ty)) & (texsize_y - 1);
+						color_t col = tex[ttx + (tty)*texsize_x];
+						col.mult256(fPR, fPG, fPB);
+						buf[bx] = col;
+						}
+
+					C2 += dx2;
+					C3 += dx3;
+					cw += dw;
+
+					tx += dtx;
+					ty += dty;
+
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				zbuf += stride;
+				}
+			}
+
+
+		/**
+		* ZBUFFER + TEXTURE + GOURAUD SHADING + ORTHOGRAPHIC
+		**/
+		template<typename color_t>
+		void Image<color_t>::_rasterizeTriangleGouraudTextureZbufferOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
+			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
+			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
+			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
+			const RasterizerParams& data)
+			{					
+			const color_t * tex = data.tex->data(); 
+			const int32_t texsize_x = data.tex->width();
+			const int32_t texsize_y = data.tex->height();
+
+			color_t* buf = _buffer + offset;
+			float* zbuf = data.zbuf + offset;
+
+			const int32_t stride = _stride;
+
+			const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+			const int32_t aera = O1 + O2 + O3;
+
+			const float invaera = 1.0f / aera;
+			const float fP1a = fP1.w * invaera;
+			const float fP2a = fP2.w * invaera;
+			const float fP3a = fP3.w * invaera;
+			
+			const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
+					
+			const RGBf & cf1 = (RGBf)fP1.color;
+			const RGBf & cf2 = (RGBf)fP2.color;
+			const RGBf & cf3 = (RGBf)fP3.color;
+			const int fP1R = (int)(256 * cf1.R);
+			const int fP1G = (int)(256 * cf1.G);
+			const int fP1B = (int)(256 * cf1.B);
+			const int fP21R = (int)(256 * (cf2.R - cf1.R));
+			const int fP21G = (int)(256 * (cf2.G - cf1.G));
+			const int fP21B = (int)(256 * (cf2.B - cf1.B));
+			const int fP31R = (int)(256 * (cf3.R - cf1.R));
+			const int fP31G = (int)(256 * (cf3.G - cf1.G));
+			const int fP31B = (int)(256 * (cf3.B - cf1.B));
+
+			// the texture coord
+			fVec2 T1 = fP1.T;			
+			fVec2 T2 = fP2.T;
+			fVec2 T3 = fP3.T;
+
+			// divide the texture coord by aera
+			T1 *= invaera;
+			T2 *= invaera;
+			T3 *= invaera;
+			T1.x *= texsize_x;
+			T2.x *= texsize_x;
+			T3.x *= texsize_x;
+			T1.y *= texsize_y;
+			T2.y *= texsize_y;
+			T3.y *= texsize_y;
+
+			const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
+			const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+
+			while ((uintptr_t)(buf) < end)
+				{ // iterate over scanlines
+				int32_t bx = 0; // start offset
+				if (O1 < 0)
+					{
+					// we know that dx1 > 0					
+					bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+					}
+				if (O2 < 0)
+					{
+					if (dx2 <= 0)
+						{
+						if (dy2 <= 0) return;
+						const int32_t by = (-O2 + dy2 - 1) / dy2;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+					}
+				if (O3 < 0)
+					{
+					if (dx3 <= 0)
+						{
+						if (dy3 <= 0) return;
+						const int32_t by = (-O3 + dy3 - 1) / dy3;
+						O1 += (by * dy1);
+						O2 += (by * dy2);
+						O3 += (by * dy3);
+						const int32_t offs = by * stride;
+						buf += offs;
+						zbuf += offs;
+						continue;
+						}
+					bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+					}
+
+				int32_t C1 = O1 + (dx1 * bx);
+				int32_t C2 = O2 + (dx2 * bx);
+				int32_t C3 = O3 + (dx3 * bx);
+				float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
+
+				float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
+				float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
+				
+				while ((bx < lx) && ((C2 | C3) >= 0))
+					{
+					float& W = zbuf[bx];
+					if (W < cw)
+						{
+						W = cw;
+										
+						const int ttx = ((int)((tx))) & (texsize_x - 1); 
+						const int tty = ((int)((ty))) & (texsize_y - 1);
+
+						const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
+						const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
+						const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);					
+						color_t col = tex[ttx + (tty)*texsize_x];
+						col.mult256(r, g, b);
+						buf[bx] = col;
+
+						}
+
+					C2 += dx2;
+					C3 += dx3;
+					cw += dw;
+
+					tx += dtx;
+					ty += dty;
+
+					bx++;
+					}
+
+				O1 += dy1;
+				O2 += dy2;
+				O3 += dy3;
+				buf += stride;
+				zbuf += stride;
+				}
+			}
+
+
+
+
+
+
+
+
+
+#undef TGX_CAST32
 
 
 

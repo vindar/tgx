@@ -294,7 +294,7 @@ namespace tgx
 				if (adr == nullptr)
 					{ // not yet in the map, 
 					adr = extmem_malloc(size);
-					if (!IS_EXTMEM(adr))
+					if (!TGX_IS_EXTMEM(adr))
 						{ // out of memory
 						freeAll();
 						return nullptr;
@@ -341,13 +341,13 @@ namespace tgx
 	template<typename color_t> void freeMeshEXTMEM(Mesh3D<color_t>* mesh)
 		{
 		_MapPtr map;
-		while (IS_EXTMEM(mesh))
+		while (TGX_IS_EXTMEM(mesh))
 			{
-			if (IS_EXTMEM(mesh->vertice)) map.free(mesh->vertice);
-			if (IS_EXTMEM(mesh->texcoord)) map.free(mesh->texcoord);
-			if (IS_EXTMEM(mesh->normal)) map.free(mesh->normal);
-			if (IS_EXTMEM(mesh->face)) map.free(mesh->face);
-			if (IS_EXTMEM(mesh->texture))
+			if (TGX_IS_EXTMEM(mesh->vertice)) map.free(mesh->vertice);
+			if (TGX_IS_EXTMEM(mesh->texcoord)) map.free(mesh->texcoord);
+			if (TGX_IS_EXTMEM(mesh->normal)) map.free(mesh->normal);
+			if (TGX_IS_EXTMEM(mesh->face)) map.free(mesh->face);
+			if (TGX_IS_EXTMEM(mesh->texture))
 				{
 				map.free(mesh->texture->data());
 				map.free(mesh->texture);
@@ -368,7 +368,7 @@ namespace tgx
 																bool copy_faces)	
 		{
 		if (external_psram_size <= 0) return nullptr; // no extram present. 
-		if ((mesh == nullptr) || (IS_EXTMEM(mesh))) return nullptr; // not a valid mesh
+		if ((mesh == nullptr) || (TGX_IS_EXTMEM(mesh))) return nullptr; // not a valid mesh
 		_MapPtr map;
 		
 		Mesh3D<color_t>* new_mesh = (Mesh3D<color_t> * )map.malloc(mesh, sizeof(Mesh3D<color_t>));
@@ -376,45 +376,45 @@ namespace tgx
 		Mesh3D<color_t>* cur_mesh = new_mesh;	
 		while (1)
 			{
-			if (IS_EXTMEM(mesh->vertice)) { map.freeAll(); return nullptr; }
-			if ((copy_vertices) && (mesh->nb_vertices > 0) && (IS_PROGMEM(mesh->vertice)))
+			if (TGX_IS_EXTMEM(mesh->vertice)) { map.freeAll(); return nullptr; }
+			if ((copy_vertices) && (mesh->nb_vertices > 0) && (TGX_IS_PROGMEM(mesh->vertice)))
 				{
 				fVec3 *p = (fVec3 *)map.malloc(mesh->vertice, sizeof(fVec3) * mesh->nb_vertices);
 				if (p == nullptr) return nullptr;
 				cur_mesh->vertice = p;
 				}
 			
-			if (IS_EXTMEM(mesh->texcoord)) { map.freeAll(); return nullptr; }
-			if ((copy_texcoords) && (mesh->nb_texcoords > 0) && (IS_PROGMEM(mesh->texcoord)))
+			if (TGX_IS_EXTMEM(mesh->texcoord)) { map.freeAll(); return nullptr; }
+			if ((copy_texcoords) && (mesh->nb_texcoords > 0) && (TGX_IS_PROGMEM(mesh->texcoord)))
 				{
 				fVec2 * p = (fVec2 *)map.malloc(mesh->texcoord, sizeof(fVec2) * mesh->nb_texcoords);
 				if (p == nullptr) return nullptr;
 				cur_mesh->texcoord = p;
 				}
 			
-			if (IS_EXTMEM(mesh->normal)) { map.freeAll(); return nullptr; }
-			if ((copy_normals) && (mesh->nb_normals > 0) && (IS_PROGMEM(mesh->normal)))
+			if (TGX_IS_EXTMEM(mesh->normal)) { map.freeAll(); return nullptr; }
+			if ((copy_normals) && (mesh->nb_normals > 0) && (TGX_IS_PROGMEM(mesh->normal)))
 				{
 				fVec3* p = (fVec3 *)map.malloc(mesh->normal, sizeof(fVec3) * mesh->nb_normals);
 				if (p == nullptr) return nullptr;
 				cur_mesh->normal = p;
 				}
 					
-			if (IS_EXTMEM(mesh->face)) { map.freeAll(); return nullptr; }
-			if ((copy_faces) && (mesh->nb_faces > 0) && (IS_PROGMEM(mesh->face)))
+			if (TGX_IS_EXTMEM(mesh->face)) { map.freeAll(); return nullptr; }
+			if ((copy_faces) && (mesh->nb_faces > 0) && (TGX_IS_PROGMEM(mesh->face)))
 				{
 				uint16_t * p = (uint16_t *)map.malloc(mesh->face, mesh->len_face*sizeof(uint16_t));
 				if (p == nullptr) return nullptr;
 				cur_mesh->face = p;
 				}
 			
-			if (IS_EXTMEM(mesh->texture)) { map.freeAll(); return nullptr; }
+			if (TGX_IS_EXTMEM(mesh->texture)) { map.freeAll(); return nullptr; }
 			if ((copy_textures) && (mesh->texture))
 				{
 				if (mesh->texture->isValid())
 					{
-					if (IS_EXTMEM(mesh->texture->data())) { map.freeAll(); return nullptr; }
-					if (IS_PROGMEM(mesh->texture->data()))
+					if (TGX_IS_EXTMEM(mesh->texture->data())) { map.freeAll(); return nullptr; }
+					if (TGX_IS_PROGMEM(mesh->texture->data()))
 						{
 						int imlen = mesh->texture->stride() * mesh->texture->height();
 						color_t* imdata = (color_t*)map.malloc(mesh->texture->data(), imlen * sizeof(color_t));
@@ -428,7 +428,7 @@ namespace tgx
 				}
 
 			if (mesh->next == nullptr) return new_mesh;
-			if (IS_EXTMEM(mesh->next)) { map.freeAll(); return nullptr; }
+			if (TGX_IS_EXTMEM(mesh->next)) { map.freeAll(); return nullptr; }
 			Mesh3D<color_t>* next_cur_mesh = (Mesh3D<color_t>*)map.malloc(mesh->next, sizeof(Mesh3D<color_t>));
 			if (next_cur_mesh == nullptr) return nullptr;
 			cur_mesh->next = next_cur_mesh;

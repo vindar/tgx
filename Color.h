@@ -48,24 +48,24 @@ namespace tgx
 	default ordering can overridden be #definining the constants below before
 	including this header */
 
-#ifndef RGB565_ORDER_BGR
-#define RGB565_ORDER_BGR 1		// for compatibility with adafruit and most SPI display
+#ifndef TGX_RGB565_ORDER_BGR
+#define TGX_RGB565_ORDER_BGR 1		// for compatibility with adafruit and most SPI display
 #endif
 
-#ifndef RGB24_ORDER_BGR
-#define RGB24_ORDER_BGR 0
+#ifndef TGX_RGB24_ORDER_BGR
+#define TGX_RGB24_ORDER_BGR 0
 #endif
 
-#ifndef RGB32_ORDER_BGR
-#define RGB32_ORDER_BGR 1		// for compatibility with my mtools library.
+#ifndef TGX_RGB32_ORDER_BGR
+#define TGX_RGB32_ORDER_BGR 1		// for compatibility with my mtools library.
 #endif
 
-#ifndef RGB64_ORDER_BGR
-#define RGB64_ORDER_BGR 0
+#ifndef TGX_RGB64_ORDER_BGR
+#define TGX_RGB64_ORDER_BGR 0
 #endif
 
-#ifndef RGBf_ORDER_BGR
-#define RGBf_ORDER_BGR 0
+#ifndef TGX_RGBf_ORDER_BGR
+#define TGX_RGBf_ORDER_BGR 0
 #endif
 
 
@@ -164,7 +164,7 @@ struct RGB565
 			uint16_t val;			// as a uint16_t
 
 			struct {				// as 3 components R,G,B
-#if RGB565_ORDER_BGR
+#if TGX_RGB565_ORDER_BGR
 				uint16_t B : 5,
 					     G : 6,
 				         R : 5; 
@@ -190,7 +190,7 @@ struct RGB565
 		*               b in 0..31
 		**/
 		constexpr RGB565(int r, int g, int b) : 
-											#if RGB565_ORDER_BGR
+											#if TGX_RGB565_ORDER_BGR
 												B((uint8_t)b), G((uint8_t)g), R((uint8_t)r)
 											#else
 												R((uint8_t)r), G((uint8_t)g), B((uint8_t)b)
@@ -202,7 +202,7 @@ struct RGB565
 		* Ctor from float r,g,b in [0.0f, 1.0f].
 		**/
 		RGB565(float r, float g, float b) : 
-											#if RGB565_ORDER_BGR
+											#if TGX_RGB565_ORDER_BGR
 												B((uint16_t)(b * 31)),
 					                            G((uint16_t)(g * 63)),
 						                        R((uint16_t)(r * 31))
@@ -454,7 +454,7 @@ struct RGB24
 		// no dual memory represention
 		// no alignement, just 3 consecutive uint8_t
 
-#if RGB24_ORDER_BGR
+#if TGX_RGB24_ORDER_BGR
 		uint8_t B;
 		uint8_t G;
 		uint8_t R;
@@ -477,7 +477,7 @@ struct RGB24
 		* No rescaling. All value in [0,255].
 		**/
 		constexpr RGB24(int r, int g, int b) : 
-											#if RGB24_ORDER_BGR
+											#if TGX_RGB24_ORDER_BGR
 												B((uint8_t)b), G((uint8_t)g), R((uint8_t)r)
 											#else
 												R((uint8_t)r), G((uint8_t)g), B((uint8_t)b)
@@ -490,7 +490,7 @@ struct RGB24
 		* Ctor from float r,g,b in [0.0f, 1.0f].
 		**/
 		RGB24(float r, float g, float b) : 
-											#if RGB24_ORDER_BGR
+											#if TGX_RGB24_ORDER_BGR
 												B((uint8_t)(b * 255)),
 												G((uint8_t)(g * 255)),
 												R((uint8_t)(r * 255))
@@ -790,7 +790,7 @@ struct RGB32
 			uint32_t val;			// as a uint32_t
 			struct 
 				{
-#if RGB32_ORDER_BGR
+#if TGX_RGB32_ORDER_BGR
 				uint8_t B;			// as 4 components BGRA
 				uint8_t G;			//
 				uint8_t R;			//
@@ -817,7 +817,7 @@ struct RGB32
 		* No rescaling. All values in [0,255].
 		**/
 		constexpr RGB32(int r, int g, int b, int a = DEFAULT_A) : 
-															#if RGB32_ORDER_BGR
+															#if TGX_RGB32_ORDER_BGR
 																B((uint8_t)b), G((uint8_t)g), R((uint8_t)r), A((uint8_t)a)
 															#else
 																R((uint8_t)r), G((uint8_t)g), B((uint8_t)b), A((uint8_t)a)
@@ -829,7 +829,7 @@ struct RGB32
 		* Ctor from float r,g,b in [0.0f, 1.0f].
 		**/
 		RGB32(float r, float g, float b, float a = -1.0f) : 
-															#if RGB32_ORDER_BGR
+															#if TGX_RGB32_ORDER_BGR
 																B((uint8_t)(b * 255)),
 																G((uint8_t)(g * 255)),
 																R((uint8_t)(r * 255)),
@@ -1173,7 +1173,7 @@ struct RGB64
 			struct 
 				{
 
-#if RGB64_ORDER_BGR
+#if TGX_RGB64_ORDER_BGR
 				uint16_t B;			// as 4 components BGRA
 				uint16_t G;			//
 				uint16_t R;			//
@@ -1200,7 +1200,7 @@ struct RGB64
 		* No rescaling. All values in [0,65535].
 		**/
 		constexpr RGB64(int r, int g, int b, int a = DEFAULT_A) : 		
-																#if RGB64_ORDER_BGR
+																#if TGX_RGB64_ORDER_BGR
 																	B((uint16_t)b), G((uint16_t)g), R((uint16_t)r), A((uint16_t)a) 
 																#else
 																	R((uint16_t)r), G((uint16_t)g), B((uint16_t)b), A((uint16_t)a)
@@ -1212,7 +1212,7 @@ struct RGB64
 		* Ctor from float r,g,b in [0.0f, 1.0f].
 		**/
 		RGB64(float r, float g, float b, float a = -1.0f) : 
-															#if RGB64_ORDER_BGR
+															#if TGX_RGB64_ORDER_BGR
 																B((uint16_t)(b * 65535)), 
 																G((uint16_t)(g * 65535)),
 																R((uint16_t)(r * 65535)),
@@ -1566,7 +1566,7 @@ struct RGB64
 	struct RGBf
 	{
 
-#if RGBf_ORDER_BGR
+#if TGX_RGBf_ORDER_BGR
 		float B;
 		float G;
 		float R;
@@ -1590,7 +1590,7 @@ struct RGB64
 		*               b in 0..31
 		**/
 		constexpr RGBf(float r, float g, float b) :
-		#if RGBf_ORDER_BGR
+		#if TGX_RGBf_ORDER_BGR
 			B(b), G(g), R(r)
 		#else
 			R(r), G(g), B(b)
@@ -2068,7 +2068,7 @@ inline HSV meanColor(const  HSV& colA, const  HSV& colB, const  HSV& colC, const
 
 
 constexpr inline RGB565::RGB565(const RGB24& c) :
-		#if RGB565_ORDER_BGR
+		#if TGX_RGB565_ORDER_BGR
 		B(c.B >> 3), G(c.G >> 2), R(c.R >> 3)
 		#else
 		R(c.R >> 3), G(c.G >> 2), B(c.B >> 3)
@@ -2078,7 +2078,7 @@ constexpr inline RGB565::RGB565(const RGB24& c) :
 
 
 constexpr inline RGB565::RGB565(const RGB32& c) : 
-		#if RGB565_ORDER_BGR
+		#if TGX_RGB565_ORDER_BGR
 		B(c.B >> 3), G(c.G >> 2), R(c.R >> 3)
 		#else
 		R(c.R >> 3), G(c.G >> 2), B(c.B >> 3)
@@ -2088,7 +2088,7 @@ constexpr inline RGB565::RGB565(const RGB32& c) :
 
 
 constexpr inline RGB565::RGB565(const RGB64& c) : 
-		#if RGB565_ORDER_BGR
+		#if TGX_RGB565_ORDER_BGR
 		B(c.B >> 11), G(c.G >> 10), R(c.R >> 11)
 		#else
 		R(c.R >> 11), G(c.G >> 10), B(c.B >> 11)
@@ -2098,7 +2098,7 @@ constexpr inline RGB565::RGB565(const RGB64& c) :
 
 
 constexpr inline RGB565::RGB565(const RGBf& c) :
-	#if RGB565_ORDER_BGR
+	#if TGX_RGB565_ORDER_BGR
 		B((uint16_t)(c.B * 31)), G((uint16_t)(c.G *63)), R((uint16_t)(c.R * 31))
 	#else
 		R((uint16_t)(c.R * 31)), G((uint16_t)(c.G * 63)), B((uint16_t)(c.B * 31))
@@ -2178,7 +2178,7 @@ constexpr inline RGB24::RGB24(uint64_t val) : RGB24(RGB64(val))
 
 
 constexpr inline RGB24::RGB24(const RGB565& c) : 
-		#if RGB24_ORDER_BGR
+		#if TGX_RGB24_ORDER_BGR
 		B(((uint8_t)c.B) << 3), G(((uint8_t)c.G) << 2), R(((uint8_t)c.R) << 3)
 		#else
 		R(((uint8_t)c.R) << 3), G(((uint8_t)c.G) << 2), B(((uint8_t)c.B) << 3)
@@ -2188,7 +2188,7 @@ constexpr inline RGB24::RGB24(const RGB565& c) :
 
 
 constexpr inline RGB24::RGB24(const RGB32& c) :
-		#if RGB24_ORDER_BGR
+		#if TGX_RGB24_ORDER_BGR
 		B(c.B), G(c.G), R(c.R)
 		#else
 		R(c.R), G(c.G), B(c.B)
@@ -2198,7 +2198,7 @@ constexpr inline RGB24::RGB24(const RGB32& c) :
 
 
 constexpr inline RGB24::RGB24(const RGB64& c) : 
-		#if RGB24_ORDER_BGR
+		#if TGX_RGB24_ORDER_BGR
 		B(c.B >> 8), G(c.G >> 8), R(c.R >> 8)
 		#else
 		R(c.R >> 8), G(c.G >> 8), B(c.B >> 8)
@@ -2208,7 +2208,7 @@ constexpr inline RGB24::RGB24(const RGB64& c) :
 
 
 constexpr inline RGB24::RGB24(const RGBf& c) :
-		#if RGB24_ORDER_BGR
+		#if TGX_RGB24_ORDER_BGR
 		B((uint8_t)(c.B * 255)), G((uint8_t)(c.G * 255)), R((uint8_t)(c.R * 255))
 		#else
 		R((uint8_t)(c.R * 255)), G((uint8_t)(c.G * 255)), B((uint8_t)(c.B * 255))
@@ -2279,7 +2279,7 @@ constexpr inline RGB32::RGB32(uint64_t val) : RGB32(RGB64(val))
 
 
 constexpr inline RGB32::RGB32(const RGB565& c) : 
-		#if RGB32_ORDER_BGR
+		#if TGX_RGB32_ORDER_BGR
 		B(((uint8_t)c.B) << 3), G(((uint8_t)c.G) << 2), R(((uint8_t)c.R) << 3), A(DEFAULT_A)
 		#else
 		R(((uint8_t)c.R) << 3), G(((uint8_t)c.G) << 2), B(((uint8_t)c.B) << 3), A(DEFAULT_A)
@@ -2289,7 +2289,7 @@ constexpr inline RGB32::RGB32(const RGB565& c) :
 
 
 constexpr inline RGB32::RGB32(const RGB24& c) : 
-		#if RGB32_ORDER_BGR
+		#if TGX_RGB32_ORDER_BGR
 		B(c.B), G(c.G), R(c.R), A(DEFAULT_A)
 		#else
 		R(c.R), G(c.G), B(c.B), A(DEFAULT_A)
@@ -2299,7 +2299,7 @@ constexpr inline RGB32::RGB32(const RGB24& c) :
 
 
 constexpr inline RGB32::RGB32(const RGB64& c) : 
-		#if RGB32_ORDER_BGR
+		#if TGX_RGB32_ORDER_BGR
 		B(c.B >> 8), G(c.G >> 8), R(c.R >> 8), A(c.A >> 8)
 		#else
 		R(c.R >> 8), G(c.G >> 8), B(c.B >> 8), A(c.A >> 8)
@@ -2309,7 +2309,7 @@ constexpr inline RGB32::RGB32(const RGB64& c) :
 
 
 constexpr inline RGB32::RGB32(const RGBf& c) : 
-		#if RGB32_ORDER_BGR
+		#if TGX_RGB32_ORDER_BGR
 		B((uint8_t)(c.B * 255)), G((uint8_t)(c.G * 255)), R((uint8_t)(c.R * 255)), A(DEFAULT_A)
 		#else
 		R((uint8_t)(c.R * 255)), G((uint8_t)(c.G * 255)), B((uint8_t)(c.B * 255)), A(DEFAULT_A)
@@ -2376,7 +2376,7 @@ constexpr inline RGB64::RGB64(uint32_t val) : RGB64(RGB32(val))
 
 
 constexpr inline RGB64::RGB64(const RGB565& c) : 
-		#if RGB64_ORDER_BGR
+		#if TGX_RGB64_ORDER_BGR
 		B(((uint16_t)c.B) << 11), G(((uint16_t)c.G) << 10), R(((uint16_t)c.R) << 11), A(DEFAULT_A)
 		#else
 		R(((uint16_t)c.R) << 11), G(((uint16_t)c.G) << 10), B(((uint16_t)c.B) << 11), A(DEFAULT_A)
@@ -2386,7 +2386,7 @@ constexpr inline RGB64::RGB64(const RGB565& c) :
 
 
 constexpr inline RGB64::RGB64(const RGB24& c) : 
-		#if RGB64_ORDER_BGR
+		#if TGX_RGB64_ORDER_BGR
 		B(((uint16_t)c.B) << 8), G(((uint16_t)c.G) << 8), R(((uint16_t)c.R) << 8), A(DEFAULT_A)
 		#else
 		R(((uint16_t)c.R) << 8), G(((uint16_t)c.G) << 8), B(((uint16_t)c.B) << 8), A(DEFAULT_A)
@@ -2396,7 +2396,7 @@ constexpr inline RGB64::RGB64(const RGB24& c) :
 
 
 constexpr inline RGB64::RGB64(const RGB32& c) : 
-		#if RGB64_ORDER_BGR
+		#if TGX_RGB64_ORDER_BGR
 		B(((uint16_t)c.B) << 8), G(((uint16_t)c.G) << 8), R(((uint16_t)c.R) << 8), A(((uint16_t)c.A) << 8)
 		#else
 		R(((uint16_t)c.R) << 8), G(((uint16_t)c.G) << 8), B(((uint16_t)c.B) << 8), A(((uint16_t)c.A) << 8)
@@ -2406,7 +2406,7 @@ constexpr inline RGB64::RGB64(const RGB32& c) :
 
 
 constexpr inline RGB64::RGB64(const RGBf& c) : 
-		#if RGB64_ORDER_BGR
+		#if TGX_RGB64_ORDER_BGR
 		B((uint16_t)(c.B * 65535)), G((uint16_t)(c.G * 65535)), R((uint16_t)(c.R * 65535)), A(DEFAULT_A)
 		#else
 		R((uint16_t)(c.R * 65535)), G((uint16_t)(c.G * 65535)), B((uint16_t)(c.B * 65535)), A(DEFAULT_A)
@@ -2477,7 +2477,7 @@ constexpr inline RGBf::RGBf(uint64_t val) : RGBf(RGB64(val))
 
 
 constexpr inline RGBf::RGBf(const RGB565& c) : 
-		#if RGBf_ORDER_BGR
+		#if TGX_RGBf_ORDER_BGR
 		B(c.B / 31.0f), G(c.G / 63.0f), R(c.R / 31.0f)
 		#else
 		R(c.R / 31.0f), G(c.G / 63.0f), B(c.B / 31.0f)
@@ -2487,7 +2487,7 @@ constexpr inline RGBf::RGBf(const RGB565& c) :
 
 
 constexpr inline RGBf::RGBf(const RGB24& c) :
-		#if RGBf_ORDER_BGR
+		#if TGX_RGBf_ORDER_BGR
 		B(c.B / 255.0f), G(c.G / 255.0f), R(c.R / 255.0f)
 		#else
 		R(c.R / 255.0f), G(c.G / 255.0f), B(c.B / 255.0f)
@@ -2497,7 +2497,7 @@ constexpr inline RGBf::RGBf(const RGB24& c) :
 
 
 constexpr inline RGBf::RGBf(const RGB32& c) :
-		#if RGBf_ORDER_BGR
+		#if TGX_RGBf_ORDER_BGR
 		B(c.B / 255.0f), G(c.G / 255.0f), R(c.R / 255.0f)
 		#else
 		R(c.R / 255.0f), G(c.G / 255.0f), B(c.B / 255.0f)
@@ -2507,7 +2507,7 @@ constexpr inline RGBf::RGBf(const RGB32& c) :
 
 
 constexpr inline RGBf::RGBf(const RGB64& c) : 
-		#if RGBf_ORDER_BGR
+		#if TGX_RGBf_ORDER_BGR
 		B(c.B / 65535.0f), G(c.G / 65535.0f), R(c.R / 65535.0f)
 		#else
 		R(c.R / 65535.0f), G(c.G / 65535.0f), B(c.B / 65535.0f)
