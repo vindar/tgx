@@ -765,7 +765,7 @@ namespace tgx
 		**/
 		inline void fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color)
 			{
-			_fillTriangle(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, color);
+			fillTriangle(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, color);
 			}
 
 
@@ -799,9 +799,36 @@ namespace tgx
 		/**
 		* Draw a rectangle corresponding to the box B.
 		**/
-		template<bool CHECKRANGE = true> inline void drawRect(iBox2 B, color_t color)
+		template<bool CHECKRANGE = true> inline void drawRect(const iBox2 & B, color_t color)
 			{
 			drawRect(B.minX, B.minY, B.lx(), B.ly());
+			}
+
+
+		/**
+		* Draw a rounded rectangle in box B with corner radius r.
+		**/
+		inline void drawRoundRect(const iBox2 & B, int r, color_t color)
+			{
+			drawRoundRect(B.minX, B.minY, B.lx(), B.ly(), r, color);
+			}
+
+
+		/**
+		* Draw a rounded rectangle with upper left corner (x,y), width w and 
+		* height h and with corner radius r.
+		**/
+		void drawRoundRect(int x, int y, int w, int h, int r, color_t color)
+			{
+			if (!isValid() || (w <= 0) || (h <= 0)) return;
+			if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
+				{
+				_drawRoundRect<false>(x, y, w, h, r, color);
+				}
+			else
+				{
+				_drawRoundRect<true>(x, y, w, h, r, color);
+				}
 			}
 
 
@@ -817,6 +844,33 @@ namespace tgx
 		template<bool CHECKRANGE = true> inline void fillRect(int x, int y, int w, int h, color_t color)
 			{
 			fillRect<CHECKRANGE>({ x, x + w - 1, y, y + h - 1 }, color);
+			}
+
+
+		/**
+		* Draw a filled rounded rectangle in box B with corner radius r.
+		**/
+		inline void fillRoundRect(const iBox2 & B, int r, color_t color)
+			{			
+			fillRoundRect(B.minX, B.minY, B.lx(), B.ly(), r, color);			
+			}
+
+
+		/**
+		* Draw a filled rounded rectangle with upper left corner (x,y), width w and 
+		* height h and with corner radius r.
+		**/
+		void fillRoundRect(int x, int y, int w, int h, int r, color_t color)
+			{			
+			if (!isValid() || (w <= 0) || (h <= 0)) return;
+			if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
+				{
+				_fillRoundRect<false>(x, y, w, h, r, color);
+				}
+			else
+				{
+				_fillRoundRect<true>(x, y, w, h, r, color);
+				}
 			}
 
 
@@ -1021,7 +1075,7 @@ namespace tgx
 		struct RasterizerParams
 			{
 			float* zbuf;       // pointer to the z buffer (if applicable).
-			tgx::RGBf     facecolor;  // pointer to the face color when using flat shading.  
+			RGBf facecolor;  // pointer to the face color when using flat shading.  
 			const Image* tex;        // pointer to the texture (if applicable).
 			};
 
@@ -1296,6 +1350,40 @@ private:
 		/** filled circle drawing method */
 		template<bool OUTLINE, bool FILL, bool CHECKRANGE> void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor);
 
+		
+		/** draw a rounded rectangle outline */
+		template<bool CHECKRANGE> void _drawRoundRect(int x, int y, int w, int h, int r, color_t color) 
+			{
+			int max_radius = ((w < h) ? w : h) / 2;
+			if (r > max_radius) r = max_radius;
+			drawFastHLine<CHECKRANGE>(x + r, y, w - 2 * r, color);
+			drawFastHLine<CHECKRANGE>(x + r, y + h - 1, w - 2 * r, color);
+			drawFastVLine<CHECKRANGE>(x, y + r, h - 2 * r, color);
+			drawFastVLine<CHECKRANGE>(x + w - 1, y + r, h - 2 * r, color);
+			_drawCircleHelper<CHECKRANGE>(x + r, y + r, r, 1, color);
+			_drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + r, r, 2, color);
+			_drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + h - r - 1, r, 4, color);
+			_drawCircleHelper<CHECKRANGE>(x + r, y + h - r - 1, r, 8, color);
+			}
+
+
+		/** taken from Adafruit GFX library */
+		template<bool CHECKRANGE> void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color);
+
+
+		/** fill a rounded rectangle  */
+		template<bool CHECKRANGE> void _fillRoundRect(int x, int y, int w, int h, int r, color_t color)
+			{
+			int max_radius = ((w < h) ? w : h) / 2;
+			if (r > max_radius) r = max_radius;
+			fillRect(x + r, y, w - 2 * r, h, color);
+			_fillCircleHelper<CHECKRANGE>(x + w - r - 1, y + r, r, 1, h - 2 * r - 1, color);
+			_fillCircleHelper<CHECKRANGE>(x + r, y + r, r, 2, h - 2 * r - 1, color);
+			}
+
+
+		/** taken from Adafruit GFX library */
+		template<bool CHECKRANGE> void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color);
 
 
 
@@ -1899,6 +1987,8 @@ private:
 		}
 
 
+
+
 	/*****************************************************
 	* Triangles
 	******************************************************/
@@ -1963,6 +2053,92 @@ private:
 	* Circles
 	******************************************************/
 
+	/** taken from adafruit gfx */
+	template<typename color_t>
+	template<bool CHECKRANGE> void Image<color_t>::_drawCircleHelper(int x0, int y0, int r, int cornername, color_t color)
+		{
+		int f = 1 - r;
+		int ddF_x = 1;
+		int ddF_y = -2 * r;
+		int x = 0;
+		int y = r;
+		while (x < y)
+			{
+			if (f >= 0)
+				{
+				y--;
+				ddF_y += 2;
+				f += ddF_y;
+				}
+			x++;
+			ddF_x += 2;
+			f += ddF_x;
+			if (cornername & 0x4)
+				{
+				drawPixel<CHECKRANGE>(x0 + x, y0 + y, color);
+				drawPixel<CHECKRANGE>(x0 + y, y0 + x, color);
+				}
+			if (cornername & 0x2)
+				{
+				drawPixel<CHECKRANGE>(x0 + x, y0 - y, color);
+				drawPixel<CHECKRANGE>(x0 + y, y0 - x, color);
+				}
+			if (cornername & 0x8)
+				{
+				drawPixel<CHECKRANGE>(x0 - y, y0 + x, color);
+				drawPixel<CHECKRANGE>(x0 - x, y0 + y, color);
+				}
+			if (cornername & 0x1)
+				{
+				drawPixel<CHECKRANGE>(x0 - y, y0 - x, color);
+				drawPixel<CHECKRANGE>(x0 - x, y0 - y, color);
+				}
+			}
+		}
+
+
+
+	/** taken from Adafruiit GFX*/
+	template<typename color_t>
+	template<bool CHECKRANGE> void Image<color_t>::_fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color) 
+		{
+		int f = 1 - r;
+		int ddF_x = 1;
+		int ddF_y = -2 * r;
+		int x = 0;
+		int y = r;
+		int px = x;
+		int py = y;
+		delta++; // Avoid some +1's in the loop
+		while (x < y) 
+			{
+			if (f >= 0) 
+				{
+				y--;
+				ddF_y += 2;
+				f += ddF_y;
+				}
+			x++;
+			ddF_x += 2;
+			f += ddF_x;
+			// These checks avoid double-drawing certain lines, important
+			// for the SSD1306 library which has an INVERT drawing mode.
+			if (x < (y + 1)) 
+				{
+				if (corners & 1) drawFastVLine<CHECKRANGE>(x0 + x, y0 - y, 2 * y + delta, color);
+				if (corners & 2) drawFastVLine<CHECKRANGE>(x0 - x, y0 - y, 2 * y + delta, color);
+				}
+			if (y != py) 
+				{
+				if (corners & 1) drawFastVLine<CHECKRANGE>(x0 + py, y0 - px, 2 * px + delta, color);
+				if (corners & 2) drawFastVLine<CHECKRANGE>(x0 - py, y0 - px, 2 * px + delta, color);
+				py = y;
+				}
+			px = x;
+			}
+		}
+
+
 	template<typename color_t>
 	template<bool OUTLINE, bool FILL, bool CHECKRANGE> void Image<color_t>::_drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor)
 		{
@@ -1986,7 +2162,7 @@ private:
 					}
 				return;
 				}
-		case 1:
+			case 1:
 				{
 				if (FILL)
 					{

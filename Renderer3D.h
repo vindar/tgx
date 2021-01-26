@@ -738,7 +738,7 @@ namespace tgx
             if (shader & TGX_SHADER_TEXTURE)
                 { // store the texture
                 if (texture == nullptr) return -3;
-                _uni.tex = (const tgx::Image<color_t>*)texture;
+                _uni.tex = (const Image<color_t>*)texture;
                 }
             _drawTriangle(shader, &P1, &P2, &P3, nullptr, nullptr, nullptr, &T1, &T2, &T3);
             return 0;
@@ -782,7 +782,7 @@ namespace tgx
             if (shader & TGX_SHADER_TEXTURE)
                 { // store the texture
                 if (texture == nullptr) return -3;
-                _uni.tex = (const tgx::Image<color_t>*)texture;
+                _uni.tex = (const Image<color_t>*)texture;
                 }
             _drawTriangle(shader, &P1, &P2, &P3, &N1, &N2, &N3, &T1, &T2, &T3);
             return 0;
@@ -932,7 +932,7 @@ namespace tgx
             if (shader & TGX_SHADER_TEXTURE)
                 { // store the texture
                 if (texture == nullptr) return -3;
-                _uni.tex = (const tgx::Image<color_t>*)texture;
+                _uni.tex = (const Image<color_t>*)texture;
                 }
             _drawQuad(shader, &P1, &P2, &P3, &P4, nullptr, nullptr, nullptr, nullptr, &T1, &T2, &T3, &T4);
             return 0;
@@ -978,7 +978,7 @@ namespace tgx
             if (shader & TGX_SHADER_TEXTURE)
                 { // store the texture
                 if (texture == nullptr) return -3;
-                _uni.tex = (const tgx::Image<color_t>*)texture; 
+                _uni.tex = (const Image<color_t>*)texture; 
                 }
             _drawQuad(shader, &P1, &P2, &P3, &P4,   &N1, &N2, &N3, &N4,    &T1, &T2, &T3, &T4);
             return 0;
@@ -1600,7 +1600,7 @@ namespace tgx
             const uint16_t* face = mesh->face;      // array of triangles
 
             // set the texture. 
-            _uni.tex = (const tgx::Image<color_t>*)mesh->texture;
+            _uni.tex = (const Image<color_t>*)mesh->texture;
 
             ExtVec4 QQA, QQB, QQC;
             ExtVec4* PC0 = &QQA;
@@ -1776,7 +1776,7 @@ namespace tgx
 
             if (shader & TGX_SHADER_TEXTURE)
                 {
-                _uni.tex = (const tgx::Image<color_t>*)texture_image;
+                _uni.tex = (const Image<color_t>*)texture_image;
                 if (shader & TGX_SHADER_GOURAUD)
                     {
                     for (int n = 0; n < nb_triangles; n += 3)
@@ -1838,7 +1838,7 @@ namespace tgx
             nb_quads *= 4;
             if (shader & TGX_SHADER_TEXTURE)
                 {
-                _uni.tex = (const tgx::Image<color_t>*)texture_image;
+                _uni.tex = (const Image<color_t>*)texture_image;
                 if (shader & TGX_SHADER_GOURAUD)
                     {
                     for (int n = 0; n < nb_quads; n += 4)
