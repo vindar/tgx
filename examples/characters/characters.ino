@@ -245,10 +245,11 @@ void loop()
 
     // print some info about the display driver
     if (nbf++ % 200 == 0)
-    {
+        {
         tft.printStats();
         diff1.printStats();
-    }
+        diff2.printStats();
+        }
 }
 
 

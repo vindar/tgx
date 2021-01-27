@@ -125,7 +125,12 @@ void loop()
      a += 3;
 
      // print some info about the video driver every 100 frames
-     if (nbf++ % 100 == 0) tft.printStats(); 
+     if (nbf++ % 100 == 0) 
+        {
+         tft.printStats(); 
+         diff1.printStats(); 
+         diff2.printStats(); 
+        }
      }
        
 

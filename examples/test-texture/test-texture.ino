@@ -41,9 +41,9 @@ using namespace tgx;
 // the screen driver object
 ILI9341_T4::ILI9341Driver tft(PIN_CS, PIN_DC, PIN_SCK, PIN_MOSI, PIN_MISO, PIN_RESET, PIN_TOUCH_CS, PIN_TOUCH_IRQ);
 
-// 2 x 6K diff buffers (used by tft) for differential updates
-ILI9341_T4::DiffBuffStatic<6000> diff1;
-ILI9341_T4::DiffBuffStatic<6000> diff2;
+// 2 x 8K diff buffers (used by tft) for differential updates
+ILI9341_T4::DiffBuffStatic<8000> diff1;
+ILI9341_T4::DiffBuffStatic<8000> diff2;
 
 // screen dimension (landscape mode)
 static const int SLX = 320;
