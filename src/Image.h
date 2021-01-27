@@ -801,7 +801,7 @@ namespace tgx
 		**/
 		template<bool CHECKRANGE = true> inline void drawRect(const iBox2 & B, color_t color)
 			{
-			drawRect(B.minX, B.minY, B.lx(), B.ly());
+			drawRect(B.minX, B.minY, B.lx(), B.ly(), color);
 			}
 
 
