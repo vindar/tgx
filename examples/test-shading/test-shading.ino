@@ -12,7 +12,7 @@
 #include <tgx.h> 
 
 // font use to draw text on the screen. 
-#include "ili9341_t3n_font_Arial.h"  
+#include "font_Arial_10.h"    
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;

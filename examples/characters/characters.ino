@@ -15,7 +15,7 @@
 using namespace tgx;
 
 // font use to draw text on the screen. 
-#include "ili9341_t3n_font_Arial.h"  
+#include "font_Arial_10.h"  
 
 // meshes (stored in PROGMEM)
 #include "3Dmodels/nanosuit/nanosuit.h"
