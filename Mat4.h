@@ -338,19 +338,25 @@ namespace tgx
 		/** 
 		* Set the matrix a camera looking at a given direction.
 		* https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
+		* The formula given by khronos is wrong ! 
+		* The cross-product of two unit vectors is not normalized LOL :-)
+		* see: https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down
 		**/
 		void setLookAt(T eyeX, T eyeY, T eyeZ, T centerX, T centerY, T centerZ, T upX, T upY, T upZ)
 			{
-			const Vec4<T> f = normalize<T, float>(Vec4<T>{ centerX - eyeX, centerY - eyeY, centerZ - eyeZ, 0.0f });
-			const Vec4<T> upp = normalize<T, float>(Vec4<T>{ upX, upY, upZ, 0.0f });
-			const Vec4<T> s = crossProduct(f, upp);
-			const Vec4<T> u = crossProduct(normalize<T,float>(s), f);
+			// normalise direction
+			const Vec4<T> f = normalize(Vec4<T>{ centerX - eyeX, centerY - eyeY, centerZ - eyeZ, 0.0f });
+			// right = direction x up
+			const Vec4<T> s = crossProduct(f, Vec4<T>{ upX, upY, upZ, 0.0f });
+			// normalise right. 
+			const Vec4<T> sn = normalize(s);
+			// up = right x direction
+			const Vec4<T> u =  crossProduct(sn, f);
 			memset(M, 0, 16 * sizeof(T));
-			M[0] = s.x; 	M[4] = s.y;    	M[8] = s.z;
-			M[1] = u.x;		M[5] = u.y;		M[9] = u.z;
-			M[2] = -f.x;	M[6] = -f.y;    M[10] = -f.z;	
+			M[0] = sn.x; 	M[4] = sn.y;    M[8] = sn.z;    M[12] = sn.x * eyeX + sn.y * eyeY + sn.z * eyeZ;
+			M[1] = u.x;		M[5] = u.y;		M[9] = u.z;     M[13] = u.x * eyeX + u.y * eyeY + u.z * eyeZ;
+			M[2] = -f.x;	M[6] = -f.y;    M[10] = -f.z;	M[14] = f.x * eyeX + f.y * eyeY + f.z * eyeZ;
 			M[15] = 1.0;
-			multTranslate(-eyeX, -eyeY, -eyeZ);
 			}
 
 
