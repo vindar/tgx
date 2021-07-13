@@ -90,13 +90,13 @@ namespace tgx
         /**
         * default copy ctor.
         **/
-        constexpr Vec3(const Vec3 & V) = default;
+        Vec3(const Vec3 & V) = default;
 
 
         /**
         * Default assignment operator.
         **/
-        constexpr Vec3 & operator=(const Vec3 & V) = default;
+        Vec3 & operator=(const Vec3 & V) = default;
 
 
         /**

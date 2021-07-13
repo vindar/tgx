@@ -201,7 +201,7 @@ namespace tgx
 		* Ctor, create an image with a given size and a given buffer
 		* (if the stride is omitted, it defaults to stride = lx);
 		***/
-		constexpr Image(color_t* buffer, int lx, int ly, int stride = -1) : _buffer(buffer), _lx(lx), _ly(ly), _stride(stride < 0 ? lx : stride)
+		Image(color_t* buffer, int lx, int ly, int stride = -1) : _buffer(buffer), _lx(lx), _ly(ly), _stride(stride < 0 ? lx : stride)
 			{
 			_checkvalid(); // make sure dimension/stride are ok else make the image invalid
 			}
@@ -211,7 +211,7 @@ namespace tgx
 		* Ctor, create an image with a given size and a given buffer
 		* (if the stride is omitted, it defaults to stride = lx);
 		***/
-		constexpr Image(color_t* buffer, iVec2 dim, int stride = -1) : Image(buffer, dim.x, dim.y, stride)
+		Image(color_t* buffer, iVec2 dim, int stride = -1) : Image(buffer, dim.x, dim.y, stride)
 			{
 			}
 
@@ -220,7 +220,7 @@ namespace tgx
 		* Ctor, create an image with a given size and a given buffer.
 		* (if the stride is omitted, it defaults to stride = lx);
 		***/
-		template<typename T> constexpr Image(T * buffer, int lx, int ly, int stride = -1) : Image((color_t*)buffer, lx, ly, stride)
+		template<typename T> Image(T * buffer, int lx, int ly, int stride = -1) : Image((color_t*)buffer, lx, ly, stride)
 			{
 			}
 
@@ -229,7 +229,7 @@ namespace tgx
 		* Ctor, create an image with a given size and a given buffer
 		* (if the stride is omitted, it defaults to stride = lx);
 		***/
-		template<typename T> constexpr Image(T * buffer, iVec2 dim, int stride = -1) : Image((color_t*)buffer, dim.x, dim.y, stride)
+		template<typename T> Image(T * buffer, iVec2 dim, int stride = -1) : Image((color_t*)buffer, dim.x, dim.y, stride)
 			{
 			}
 
@@ -1312,7 +1312,7 @@ private:
 
 
 		/** Make sure the image parameters are ok, else mark the image as invalid. */
-		constexpr inline void _checkvalid()
+		inline void _checkvalid()
 			{
 			if ((_lx <= 0) || (_ly <= 0) || (_stride < _lx) || (_buffer == nullptr)) setInvalid();
 			}

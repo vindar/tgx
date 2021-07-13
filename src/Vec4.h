@@ -85,7 +85,7 @@ namespace tgx
         /**
         * default copy ctor.
         **/
-        constexpr Vec4(const Vec4 & V) = default;
+        Vec4(const Vec4 & V) = default;
 
 
         /**
@@ -107,7 +107,7 @@ namespace tgx
         /**
         * Default assignment operator.
         **/
-        constexpr Vec4 & operator=(const Vec4 & V) = default;
+        Vec4 & operator=(const Vec4 & V) = default;
 
 
         /**

@@ -94,13 +94,13 @@ namespace tgx
 		/** 
 		* default copy ctor.
 		**/
-		constexpr Box3(const Box3<T>& B) = default;
+		Box3(const Box3<T>& B) = default;
 
 
 		/** 
 		* default assignement operator. 
 		**/
-		constexpr Box3<T>& operator=(const Box3<T>& B) = default;
+		Box3<T>& operator=(const Box3<T>& B) = default;
 
 
 		/** 

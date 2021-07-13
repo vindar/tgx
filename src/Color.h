@@ -273,45 +273,45 @@ struct RGB565
 		/**
 		* Cast into a uint16_t (non const reference version)
 		**/
-		constexpr explicit operator uint16_t&()  { return val; }
+		explicit operator uint16_t&()  { return val; }
 
 
 		/**
 		* Cast into a uint16_t (const reference version)
 		**/
-		constexpr explicit operator const uint16_t& () const { return val; }
+		explicit operator const uint16_t& () const { return val; }
 
 
 		/**
 		* Default assignement operator 
 		**/ 
-		constexpr RGB565& operator=(const RGB565&) = default;
+		RGB565& operator=(const RGB565&) = default;
 
 
 		/**
 		* Assignement operator from a RGB24 color
 		**/
-		constexpr inline RGB565& operator=(const RGB24& c);
+		inline RGB565& operator=(const RGB24& c);
 
 
 		/**
 		* Assignement operator from a RGB32 color
 		* the A component is ignored
 		**/
-		constexpr inline RGB565& operator=(const RGB32& c);
+		inline RGB565& operator=(const RGB32& c);
 
 
 		/**
 		* Assignement operator from a RGB64 color
 		* the A component is ignored
 		**/
-		constexpr inline RGB565& operator=(const RGB64& c);
+		inline RGB565& operator=(const RGB64& c);
 
 
 		/**
 		* Assignement operator from a RGBf color
 		**/
-		constexpr inline RGB565& operator=(const RGBf& c);
+		inline RGB565& operator=(const RGBf& c);
 
 
 		/**
@@ -322,7 +322,7 @@ struct RGB565
 		/**
 		* Add another color, component by component.
 		**/
-		constexpr void operator+=(const RGB565& c)
+		void operator+=(const RGB565& c)
 			{
 			R += c.R;
 			G += c.G;
@@ -333,7 +333,7 @@ struct RGB565
 		/**
 		* Substract another color, component by component.
 		**/
-		constexpr void operator-=(const RGB565& c)
+		void operator-=(const RGB565& c)
 			{
 			R -= c.R;
 			G -= c.G;
@@ -511,7 +511,7 @@ struct RGB24
 		/**
 		* Default Copy ctor
 		**/
-		constexpr RGB24(const RGB24&) = default;
+		RGB24(const RGB24&) = default;
 
 
 		/**
@@ -567,33 +567,33 @@ struct RGB24
 		/**
 		* Default assignement operator 
 		**/ 
-		constexpr RGB24& operator=(const RGB24&) = default;
+		RGB24& operator=(const RGB24&) = default;
 
 
 		/**
 		* Assignement operator from a RGB565 color
 		**/
-		constexpr inline RGB24& operator=(const RGB565& c);
+		inline RGB24& operator=(const RGB565& c);
 
 
 		/**
 		* Assignement operator from a RGB32 color
 		* the A component is ignored
 		**/
-		constexpr inline RGB24& operator=(const RGB32& c);
+		inline RGB24& operator=(const RGB32& c);
 
 
 		/**
 		* Assignement operator from a RGB64 color
 		* the A component is ignored
 		**/
-		constexpr inline RGB24& operator=(const RGB64& c);
+		inline RGB24& operator=(const RGB64& c);
 
 
 		/**
 		* Assignement operator from a RGBf color
 		**/
-		constexpr inline RGB24& operator=(const RGBf& c);
+		inline RGB24& operator=(const RGBf& c);
 
 
 		/**
@@ -864,7 +864,7 @@ struct RGB32
 		/**
 		* Default Copy ctor
 		**/
-		constexpr RGB32(const RGB32&) = default;
+		RGB32(const RGB32&) = default;
 
 
 		/**
@@ -904,46 +904,46 @@ struct RGB32
 		/**
 		* Cast into a uint32_t (non const reference version)
 		**/
-		constexpr explicit operator uint32_t&()  { return val; }
+		explicit operator uint32_t&()  { return val; }
 
 
 		/**
 		* Cast into a uint32_t (const reference version)
 		**/
-		constexpr explicit operator const uint32_t& () const { return val; }
+		explicit operator const uint32_t& () const { return val; }
 
 
 		/**
 		* Default assignement operator 
 		**/ 
-		constexpr RGB32& operator=(const RGB32&) = default;
+		RGB32& operator=(const RGB32&) = default;
 
 
 		/**
 		* Assignement operator from a RGB24 color
 		* A component is set to DEFAULT_A
 		**/
-		constexpr inline RGB32& operator=(const RGB565& c);
+		inline RGB32& operator=(const RGB565& c);
 
 
 		/**
 		* Assignement operator from a RGB24 color
 		* A component is set to DEFAULT_A
 		**/
-		constexpr inline RGB32& operator=(const RGB24& c);
+		inline RGB32& operator=(const RGB24& c);
 
 
 		/**
 		* Assignement operator from a RGB64 color
 		**/
-		constexpr inline RGB32& operator=(const RGB64& c);
+		inline RGB32& operator=(const RGB64& c);
 
 
 		/**
 		* Assignement operator from a RGBf color
 		* A component is set to DEFAULT_A
 		**/
-		constexpr inline RGB32& operator=(const RGBf& c);
+		inline RGB32& operator=(const RGBf& c);
 
 
 		/**
@@ -1247,7 +1247,7 @@ struct RGB64
 		/**
 		* Default Copy ctor
 		**/
-		constexpr RGB64(const RGB64&) = default;
+		RGB64(const RGB64&) = default;
 
 
 		/**
@@ -1286,46 +1286,46 @@ struct RGB64
 		/**
 		* Cast into a uint64_t (non const reference version)
 		**/
-		constexpr explicit operator uint64_t&()  { return val; }
+		explicit operator uint64_t&()  { return val; }
 
 
 		/**
 		* Cast into a uint64_t (const reference version)
 		**/
-		constexpr explicit operator const uint64_t&() const { return val; }
+		explicit operator const uint64_t&() const { return val; }
 
 
 		/**
 		* Default assignement operator 
 		**/ 
-		constexpr RGB64& operator=(const RGB64&) = default;
+		RGB64& operator=(const RGB64&) = default;
 
 
 		/**
 		* Assignement operator from a RGB24 color
 		* A component is set to DEFAULT_A
 		**/
-		constexpr inline RGB64& operator=(const RGB565& c);
+		inline RGB64& operator=(const RGB565& c);
 
 
 		/**
 		* Assignement operator from a RGB24 color
 		* A component is set to DEFAULT_A
 		**/
-		constexpr inline RGB64& operator=(const RGB24& c);
+		inline RGB64& operator=(const RGB24& c);
 
 
 		/**
 		* Assignement operator from a RGB32 color
 		**/
-		constexpr inline RGB64& operator=(const RGB32& c);
+		inline RGB64& operator=(const RGB32& c);
 
 
 		/**
 		* Assignement operator from a RGBf color
 		* A component is set to DEFAULT_A
 		**/
-		constexpr inline RGB64& operator=(const RGBf& c);
+		inline RGB64& operator=(const RGBf& c);
 
 
 		/**
@@ -1659,33 +1659,33 @@ struct RGB64
 		/**
 		* Default assignement operator
 		**/
-		constexpr RGBf& operator=(const RGBf&) = default;
+		RGBf& operator=(const RGBf&) = default;
 
 
 		/**
 		* Assignement operator from a RGB565 color
 		**/
-		constexpr inline RGBf& operator=(const RGB565& c);
+		inline RGBf& operator=(const RGB565& c);
 
 
 		/**
 		* Assignement operator from a RGB24 color
 		**/
-		constexpr inline RGBf& operator=(const RGB24& c);
+		inline RGBf& operator=(const RGB24& c);
 
 
 		/**
 		* Assignement operator from a RGB32 color
 		* the A component is ignored
 		**/
-		constexpr inline RGBf& operator=(const RGB32& c);
+		inline RGBf& operator=(const RGB32& c);
 
 
 		/**
 		* Assignement operator from a RGB64 color
 		* the A component is ignored
 		**/
-		constexpr inline RGBf& operator=(const RGB64& c);
+		inline RGBf& operator=(const RGB64& c);
 
 
 		/**
@@ -1697,7 +1697,7 @@ struct RGB64
 		/**
 		* Add another color, component by component.
 		**/
-		constexpr void operator+=(const RGBf& c)
+		void operator+=(const RGBf& c)
 			{
 			R += c.R;
 			G += c.G;
@@ -1708,7 +1708,7 @@ struct RGB64
 		/**
 		* Substract another color, component by component.
 		**/
-		constexpr void operator-=(const RGBf& c)
+		void operator-=(const RGBf& c)
 			{
 			R -= c.R;
 			G -= c.G;
@@ -1874,7 +1874,7 @@ struct HSV
 		/**
 		* Default Copy ctor
 		**/
-		constexpr HSV(const HSV&) = default;
+		HSV(const HSV&) = default;
 
 
 		/**
@@ -1930,7 +1930,7 @@ struct HSV
 		/**	
 		* Default assignement operator
 		**/
-		constexpr HSV& operator=(const HSV&) = default;
+		HSV& operator=(const HSV&) = default;
 
 
 		/**
@@ -2118,7 +2118,7 @@ constexpr inline RGB565::RGB565(uint64_t val) : RGB565(RGB64(val))
 
 
 
-constexpr inline RGB565& RGB565::operator=(const RGB24& c)
+inline RGB565& RGB565::operator=(const RGB24& c)
 		{
 		B = (c.B >> 3);
 		G = (c.G >> 2);
@@ -2127,7 +2127,7 @@ constexpr inline RGB565& RGB565::operator=(const RGB24& c)
 		}
 
 
-constexpr inline RGB565& RGB565::operator=(const RGB32& c)
+inline RGB565& RGB565::operator=(const RGB32& c)
 		{
 		B = (c.B >> 3);
 		G = (c.G >> 2);
@@ -2136,7 +2136,7 @@ constexpr inline RGB565& RGB565::operator=(const RGB32& c)
 		}
 
 
-constexpr inline RGB565& RGB565::operator=(const RGB64& c)
+inline RGB565& RGB565::operator=(const RGB64& c)
 		{
 		B = (c.B >> 11);
 		G = (c.G >> 10);
@@ -2145,7 +2145,7 @@ constexpr inline RGB565& RGB565::operator=(const RGB64& c)
 		}
 
 
-constexpr inline RGB565& RGB565::operator=(const RGBf& c)
+inline RGB565& RGB565::operator=(const RGBf& c)
 		{
 		B = (uint16_t)(c.B * 31);
 		G = (uint16_t)(c.G * 63);
@@ -2217,7 +2217,7 @@ constexpr inline RGB24::RGB24(const RGBf& c) :
 		}
 
 
-constexpr inline RGB24& RGB24::operator=(const RGB565& c)
+inline RGB24& RGB24::operator=(const RGB565& c)
 		{
 		R = ((uint8_t)c.R) << 3;
 		G = ((uint8_t)c.G) << 2;
@@ -2226,7 +2226,7 @@ constexpr inline RGB24& RGB24::operator=(const RGB565& c)
 		}
 
 
-constexpr inline RGB24& RGB24::operator=(const RGB32& c)
+inline RGB24& RGB24::operator=(const RGB32& c)
 		{
 		R = c.R;
 		G = c.G;
@@ -2235,7 +2235,7 @@ constexpr inline RGB24& RGB24::operator=(const RGB32& c)
 		}
 
 
-constexpr inline RGB24& RGB24::operator=(const RGB64& c)
+inline RGB24& RGB24::operator=(const RGB64& c)
 		{
 		R = c.R >> 8;
 		G = c.G >> 8;
@@ -2244,7 +2244,7 @@ constexpr inline RGB24& RGB24::operator=(const RGB64& c)
 		}
 
 
-constexpr inline RGB24& RGB24::operator=(const RGBf& c)
+inline RGB24& RGB24::operator=(const RGBf& c)
 		{
 		R = (uint8_t)(c.R * 255);
 		G = (uint8_t)(c.G * 255);
@@ -2318,7 +2318,7 @@ constexpr inline RGB32::RGB32(const RGBf& c) :
 		}
 
 
-constexpr inline RGB32& RGB32::operator=(const RGB565& c)
+inline RGB32& RGB32::operator=(const RGB565& c)
 		{
 		B = ((uint8_t)c.B) << 3;
 		G = ((uint8_t)c.G) << 2;
@@ -2328,7 +2328,7 @@ constexpr inline RGB32& RGB32::operator=(const RGB565& c)
 		}
 
 
-constexpr inline RGB32& RGB32::operator=(const RGB24& c)
+inline RGB32& RGB32::operator=(const RGB24& c)
 		{
 		B = c.B;
 		G = c.G;
@@ -2338,7 +2338,7 @@ constexpr inline RGB32& RGB32::operator=(const RGB24& c)
 		}
 
 
-constexpr inline RGB32& RGB32::operator=(const RGB64& c)
+inline RGB32& RGB32::operator=(const RGB64& c)
 		{
 		B = c.B >> 8;
 		G = c.G >> 8;
@@ -2348,7 +2348,7 @@ constexpr inline RGB32& RGB32::operator=(const RGB64& c)
 		}
 
 
-constexpr inline RGB32& RGB32::operator=(const RGBf& c)
+inline RGB32& RGB32::operator=(const RGBf& c)
 		{
 		B = (uint8_t)(c.B * 255);
 		G = (uint8_t)(c.G * 255);
@@ -2415,7 +2415,7 @@ constexpr inline RGB64::RGB64(const RGBf& c) :
 		}
 
 
-constexpr inline RGB64& RGB64::operator=(const RGB565& c)
+inline RGB64& RGB64::operator=(const RGB565& c)
 		{
 		B = ((uint16_t)c.B) << 11;
 		G = ((uint16_t)c.G) << 10;
@@ -2425,7 +2425,7 @@ constexpr inline RGB64& RGB64::operator=(const RGB565& c)
 		}
 
 
-constexpr inline RGB64& RGB64::operator=(const RGB24& c)
+inline RGB64& RGB64::operator=(const RGB24& c)
 		{
 		B = ((uint16_t)c.B) << 8;
 		G = ((uint16_t)c.G) << 8;
@@ -2435,7 +2435,7 @@ constexpr inline RGB64& RGB64::operator=(const RGB24& c)
 		}
 
 
-constexpr inline RGB64& RGB64::operator=(const RGB32& c)
+inline RGB64& RGB64::operator=(const RGB32& c)
 		{
 		B = ((uint16_t)c.B) << 8;
 		G = ((uint16_t)c.G) << 8;
@@ -2444,7 +2444,7 @@ constexpr inline RGB64& RGB64::operator=(const RGB32& c)
 		return *this;
 		}
 
-constexpr inline RGB64& RGB64::operator=(const RGBf& c)
+inline RGB64& RGB64::operator=(const RGBf& c)
 		{
 		B = (uint16_t)(c.B * 65535);
 		G = (uint16_t)(c.G * 65535);
@@ -2457,7 +2457,7 @@ constexpr inline RGB64& RGB64::operator=(const RGBf& c)
 
 
 /**********************************************************************
-* implementation of inline method for RGB24
+* implementation of inline method for RGBf
 ***********************************************************************/
 
 
@@ -2516,7 +2516,7 @@ constexpr inline RGBf::RGBf(const RGB64& c) :
 		}
 
 
-constexpr inline RGBf& RGBf::operator=(const RGB565& c)
+inline RGBf& RGBf::operator=(const RGB565& c)
 		{
 		R = c.R / 31.0f;
 		G = c.G / 63.0f;
@@ -2525,7 +2525,7 @@ constexpr inline RGBf& RGBf::operator=(const RGB565& c)
 		}
 
 
-constexpr inline RGBf& RGBf::operator=(const RGB24& c)
+inline RGBf& RGBf::operator=(const RGB24& c)
 		{
 		R = c.R / 255.0f;
 		G = c.G / 255.0f;
@@ -2534,7 +2534,7 @@ constexpr inline RGBf& RGBf::operator=(const RGB24& c)
 		}
 
 
-constexpr inline RGBf& RGBf::operator=(const RGB32& c)
+inline RGBf& RGBf::operator=(const RGB32& c)
 		{
 		R = c.R / 255.0f;
 		G = c.G / 255.0f;
@@ -2543,7 +2543,7 @@ constexpr inline RGBf& RGBf::operator=(const RGB32& c)
 		}
 
 
-constexpr inline RGBf& RGBf::operator=(const RGB64& c)
+inline RGBf& RGBf::operator=(const RGB64& c)
 		{
 		R = c.R / 65535.0f;
 		G = c.G / 65535.0f;
