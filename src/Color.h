@@ -23,6 +23,8 @@
 #include <math.h>
 #include <type_traits>
 
+#include "Vec3.h"
+#include "Vec4.h"
 
 namespace tgx
 {
@@ -36,10 +38,12 @@ namespace tgx
 * uint64_t without any speed penalty.
 * 
 * RGB24, RGBf, HSV are 'struct-like' and their alignement is that of the 
-* color component type (ie 1 byte and 4 bytes). 
+* color component type (ie 1 byte for RGB24 and 4 bytes for RGBf and HSV). 
 * 
+* RGB32, RGB64 and RGBf have an alpha channel.
+*  
 * Fast conversion is implemented between color types (and also integer
-* types) except when converting from/to HSV.
+* types) except when converting from/to HSV which is slow. 
 ***********************************************************************/
 
 
@@ -85,7 +89,6 @@ struct RGBf;	// color in  RGB float format (4 bytes aligned).
 struct HSV;		// color in H/S/V float format (4 bytes aligned). 
 
 
-
 /** check if a type T is one of the color types declared above */
 template<typename T> struct is_color
 	{
@@ -118,6 +121,9 @@ extern const RGB32 RGB32_Teal;
 extern const RGB32 RGB32_Gray;
 extern const RGB32 RGB32_Silver;
 extern const RGB32 RGB32_Navy;
+extern const RGB32 RGB32_TransparentBlack;
+extern const RGB32 RGB32_TransparentWhite;
+
 
 
 /** Predefined colors in RGB565 format */
@@ -197,20 +203,51 @@ struct RGB565
 											#endif
 		{}
 
+
+		/**
+		* Ctor from a iVec3 vector with component ordering: R, G, B
+		* No rescaling: r in 0..31
+		*               g in 0..63
+		*               b in 0..31
+		**/
+		constexpr RGB565(iVec3 v) : RGB565(v.x, v.y, v.z)		
+		{}
+
+
+		/**
+		* Ctor from a iVec4, (same as using iVec3: the 4th vector component is ignored).
+		**/
+		constexpr RGB565(iVec4 v) : RGB565(v.x, v.y, v.z)
+		{}
+
 		
 		/**
 		* Ctor from float r,g,b in [0.0f, 1.0f].
 		**/
 		RGB565(float r, float g, float b) : 
 											#if TGX_RGB565_ORDER_BGR
-												B((uint16_t)(b * 31)),
-					                            G((uint16_t)(g * 63)),
-						                        R((uint16_t)(r * 31))
+												B((uint8_t)(b * 31)),
+					                            G((uint8_t)(g * 63)),
+						                        R((uint8_t)(r * 31))
 											#else
-												R((uint16_t)(r * 31)),
-												G((uint16_t)(g * 63)),
-												B((uint16_t)(b * 31))
+												R((uint8_t)(r * 31)),
+												G((uint8_t)(g * 63)),
+												B((uint8_t)(b * 31))
 											#endif		
+		{}
+
+
+		/**
+		* Ctor from a fVec3 vector with component ordering: R, G, B in [0.0f, 1.0f].
+		**/
+		RGB565(fVec3 v) : RGB565(v.x, v.y, v.z)
+		{}
+
+
+		/**
+		* Ctor from a fVec4, (same as using fVec3: the 4th vector component is ignored).
+		**/
+		RGB565(fVec4 v) : RGB565(v.x, v.y, v.z)
 		{}
 
 
@@ -283,6 +320,18 @@ struct RGB565
 
 
 		/**
+		* Cast into an iVec3. raw values.
+		**/
+		explicit operator iVec3() const { return iVec3(R, G, B); }
+
+
+		/**
+		* Cast into an fVec3. Values in [0.0f, 1.0f].
+		**/
+		explicit operator fVec3() const { return fVec3(R / 31.0f, G / 63.0f , B / 31.0f); }
+
+
+		/**
 		* Default assignement operator 
 		**/ 
 		RGB565& operator=(const RGB565&) = default;
@@ -319,6 +368,33 @@ struct RGB565
 		**/
 		RGB565& operator=(const HSV& c);
 
+
+		/**
+		* Assignement operator from a vector.
+        * raw value (no conversion).
+		**/
+		inline RGB565& operator=(iVec3 v);
+
+
+		/**
+		* Assignement operator from a vector. 4th component is ignored
+		* raw value (no conversion).
+		**/
+		inline RGB565& operator=(iVec4 v);
+
+
+		/**
+		* Assignement operator from a vector. All values in [0.0f, 1.0f].
+		**/
+		inline RGB565& operator=(fVec3 v);
+
+
+		/**
+		* Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
+		**/
+		inline RGB565& operator=(fVec4 v);
+
+
 		/**
 		* Add another color, component by component.
 		**/
@@ -351,9 +427,12 @@ struct RGB565
 
 
 		/**
-		* alpha-blend the fg color over this one (and save the result in this color). 
-		* floating point alpha value between 0.0f (fg fully transparent) and 1.0f (fg fully opaque).
-		**/
+         * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
+         * to 1.0f (fully opaque).
+         * 
+		 * @param   fg_col  The foreground color.
+         * @param   alpha   The opacity/alpha multiplier in [0.0f,1.0f].
+        **/
 		inline void blend(RGB565 fg_col, float alpha)
 			{
 			blend256(fg_col, (uint32_t)(alpha * 256));
@@ -362,8 +441,11 @@ struct RGB565
 
 
 		/**
-		* alpha-blend the fg color over this one (and save the result in this color).
-		* integer alpha value between 0 (fg fully transparent) and 256 (fg fully opaque).
+		 * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
+		 * transparent) to 256 (fully opaque).
+		 *
+		 * @param   fg_col  The foreground color.
+		 * @param   alpha   The opacity/alpha multiplier in [0,256].
 		**/
 		inline void blend256(const RGB565 & fg_col, uint32_t alpha)
 			{		
@@ -380,9 +462,9 @@ struct RGB565
 		**/
 		inline void mult256(int mr, int mg, int mb)
 			{
-			R = R * mr >> 8;
-			G = G * mg >> 8;
-			B = B * mb >> 8;
+			R = (R * mr) >> 8;
+			G = (G * mg) >> 8;
+			B = (B * mb) >> 8;
 			}
 
 	};
@@ -485,6 +567,21 @@ struct RGB24
 
 		{}
 
+
+		/**
+		* Ctor from a iVec3 with component order R,G,B.
+		* No rescaling. All value in [0,255].
+		**/
+		constexpr RGB24(iVec3 v) : RGB24(v.x, v.y, v.z)
+		{}
+
+
+		/**
+		* Ctor from a iVec4, (same as using iVec3: the 4th vector component is ignored).
+		**/
+		constexpr RGB24(iVec4 v) : RGB24(v.x, v.y, v.z)
+		{}
+
 		
 		/**
 		* Ctor from float r,g,b in [0.0f, 1.0f].
@@ -499,6 +596,20 @@ struct RGB24
 												G((uint8_t)(g * 255)),
 												B((uint8_t)(b * 255))
 											#endif		
+		{}
+
+
+		/**
+		* Ctor from a fVec3, component order R, G, B in [0.0f, 1.0f].
+		**/
+		RGB24(fVec3 v) : RGB24(v.x, v.y, v.z)
+		{}
+
+
+		/**
+		* Ctor from a fVec4, (same as using fVec3: the 4th vector component is ignored).
+		**/
+		RGB24(fVec4 v) : RGB24(v.x, v.y, v.z)
 		{}
 
 
@@ -565,6 +676,18 @@ struct RGB24
 
 
 		/**
+		* Cast into an iVec3. raw values.
+		**/
+		explicit operator iVec3() const { return iVec3(R, G, B); }
+
+
+		/**
+		* Cast into an fVec3. Values in [0.0f, 1.0f].
+		**/
+		explicit operator fVec3() const { return fVec3(R / 255.0f, G / 255.0f, B / 255.0f); }
+
+
+		/**
 		* Default assignement operator 
 		**/ 
 		RGB24& operator=(const RGB24&) = default;
@@ -600,6 +723,32 @@ struct RGB24
 		* Assignement operator from a HSV color
 		**/
 		RGB24& operator=(const HSV& c);
+
+
+		/**
+		* Assignement operator from a vector.
+		* raw value (no conversion).
+		**/
+		inline RGB24& operator=(iVec3 v);
+
+
+		/**
+		* Assignement operator from a vector. 4th component is ignored
+		* raw value (no conversion).
+		**/
+		inline RGB24& operator=(iVec4 v);
+
+
+		/**
+		* Assignement operator from a vector. All values in [0.0f, 1.0f].
+		**/
+		inline RGB24& operator=(fVec3 v);
+
+
+		/**
+		* Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
+		**/
+		inline RGB24& operator=(fVec4 v);
 
 
 		/**
@@ -697,11 +846,13 @@ struct RGB24
 			}
 
 
-
 		/**
-		* alpha-blend the fg color over this one (and save the result in this color).
-		* floating point alpha value between 0.0f (fg fully transparent) and 1.0f (fg fully opaque).
-		**/
+         * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
+         * to 1.0f (fully opaque).
+         * 
+		 * @param   fg_col  The foreground color.
+         * @param   alpha   The opacity/alpha multiplier in [0.0f, 1.0f].
+        **/
 		inline void blend(const RGB24 & fg_col, float alpha)
 			{
 			blend256(fg_col, (uint32_t)(alpha * 256));
@@ -709,8 +860,11 @@ struct RGB24
 
 
 		/**
-		* alpha-blend the fg color over this one (and save the result in this color).
-		* integer alpha value between 0 (fg fully transparent) and 256 (fg fully opaque).
+		 * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
+		 * transparent) to 256 (fully opaque).
+		 *
+		 * @param   fg_col  The foreground color.
+		 * @param   alpha   The opacity/alpha multiplier in [0, 256].
 		**/
 		inline void blend256(const RGB24& fg_col, uint32_t alpha);
 
@@ -720,9 +874,9 @@ struct RGB24
 		**/
 		inline void mult256(int mr, int mg, int mb)
 			{
-			R = R * mr >> 8;
-			G = G * mg >> 8;
-			B = B * mb >> 8;
+			R = (R * mr) >> 8;
+			G = (G * mg) >> 8;
+			B = (B * mb) >> 8;
 			}
 
 
@@ -777,12 +931,12 @@ struct RGB24
 * Occupies 4 bytes in memory. 
 * Can be converted from/to uint32_t.
 * 
-* the A component defaults to DEFAULT_A if not used.
+* the A component defaults to DEFAULT_A when not specified.
 **/
 struct RGB32
 	{
 
-		static const uint8_t DEFAULT_A = 0; // should be 0 to insures stability by type conversion 
+		static const uint8_t DEFAULT_A = 255; // fully opaque 
 
 
 		union // dual memory representation
@@ -824,6 +978,21 @@ struct RGB32
 															#endif
 		{}
 
+		/**
+		* Ctor from a fVec3, component order R, G, B. Component A is set to its default value
+		* No rescaling. All values in [0,255].
+		**/
+		constexpr RGB32(iVec3 v) : RGB32(v.x, v.y, v.z)
+		{}
+
+
+		/**
+		* Ctor from a fVec4, component order R, G, B, A.
+		* No rescaling. All values in [0,255].
+		**/
+		constexpr RGB32(iVec4 v) : RGB32(v.x, v.y, v.z, v.w)
+		{}
+
 
 		/**
 		* Ctor from float r,g,b in [0.0f, 1.0f].
@@ -833,13 +1002,27 @@ struct RGB32
 																B((uint8_t)(b * 255)),
 																G((uint8_t)(g * 255)),
 																R((uint8_t)(r * 255)),
-																A((uint8_t)((a < 0.0f) ? DEFAULT_A : ((uint8_t)roundf(a * 31.0f))))
+																A((uint8_t)((a < 0.0f) ? DEFAULT_A : ((uint8_t)roundf(a * 255.0f))))
 															#else
 																R((uint8_t)(r * 255.0f)),
 																G((uint8_t)(g * 255.0f)),
 																B((uint8_t)(b * 255.0f)),
-																A((uint8_t)((a < 0.0f) ? DEFAULT_A : ((uint8_t)roundf(a * 31.0f))))
+																A((uint8_t)((a < 0.0f) ? DEFAULT_A : ((uint8_t)roundf(a * 255.0f))))
 															#endif
+		{}
+
+
+		/**
+		* Ctor from a fVec3, component order R, G, B in [0.0f, 1.0f], A is set to its default value
+		**/
+		RGB32(fVec3 v) : RGB32(v.x, v.y, v.z)
+		{}
+
+
+		/**
+		* Ctor from a fVec4, component order R, G, B, A in [0.0f, 1.0f].
+		**/
+		RGB32(fVec4 v) : RGB32(v.x, v.y, v.z, v.w)
 		{}
 
 
@@ -914,6 +1097,30 @@ struct RGB32
 
 
 		/**
+		* Cast into an iVec3. raw values (component A is ignored).
+		**/
+		explicit operator iVec3() const { return iVec3(R, G, B); }
+
+
+		/**
+		* Cast into an fVec3. Values in [0.0f, 1.0f] (component A is ignored).
+		**/
+		explicit operator fVec3() const { return fVec3(R / 255.0f, G / 255.0f, B / 255.0f); }
+
+
+		/**
+		* Cast into an iVec4. raw values.
+		**/
+		explicit operator iVec4() const { return iVec4(R, G, B, A); }
+
+
+		/**
+		* Cast into an fVec4. Values in [0.0f, 1.0f].
+		**/
+		explicit operator fVec4() const { return fVec4(R / 255.0f, G / 255.0f, B / 255.0f, A / 255.0f); }
+
+
+		/**
 		* Default assignement operator 
 		**/ 
 		RGB32& operator=(const RGB32&) = default;
@@ -954,7 +1161,33 @@ struct RGB32
 
 
 		/**
-		* Add another color, component by component.
+		* Assignement operator from a vector.
+		* raw value (no conversion).
+		**/
+		inline RGB32& operator=(iVec3 v);
+
+
+		/**
+		* Assignement operator from a vector. 4th component is ignored
+		* raw value (no conversion).
+		**/
+		inline RGB32& operator=(iVec4 v);
+
+
+		/**
+		* Assignement operator from a vector. All values in [0.0f, 1.0f].
+		**/
+		inline RGB32& operator=(fVec3 v);
+
+
+		/**
+		* Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
+		**/
+		inline RGB32& operator=(fVec4 v);
+
+
+		/**
+		* Add another color, component by component (including alpha channel).
 		**/
 		void operator+=(const RGB32& c)
 			{
@@ -966,7 +1199,7 @@ struct RGB32
 
 
 		/**
-		* Substract another color, component by component.
+		* Substract another color, component by component (including alpha channel).
 		**/
 		void operator-=(const RGB32& c)
 			{
@@ -978,7 +1211,7 @@ struct RGB32
 
 
 		/**
-		* Add the scalar value v to each component
+		* Add the scalar value v to each component (including alpha channel).
 		**/
 		void operator+=(uint8_t v)
 			{
@@ -990,7 +1223,7 @@ struct RGB32
 
 
 		/**
-		 * Substract the scalar value v to each component
+		 * Substract the scalar value v to each component (including alpha channel).
 		 **/
 		void operator-=(uint8_t v)
 			{
@@ -1002,7 +1235,7 @@ struct RGB32
 
 
 		/**
-		* Multiply each component by the scalar value v.
+		* Multiply each component by the scalar value v (including alpha channel).
 		**/
 		void operator*=(uint8_t v)
 			{
@@ -1014,7 +1247,7 @@ struct RGB32
 
 
 		/**
-		* Multiply each component by the scalar (floating point) value v.
+		* Multiply each component by the scalar (floating point) value v (including alpha channel).
 		**/
 		void operator*=(float v)
 			{
@@ -1025,7 +1258,7 @@ struct RGB32
 			}
 
 		/**
-		* Divide each component by the scalar value v.
+		* Divide each component by the scalar value v (including alpha channel).
 		**/
 		void operator/=(uint8_t v)
 			{
@@ -1036,7 +1269,7 @@ struct RGB32
 			}
 
 		/**
-		* Divide each component by the scalar (floating point value) v.
+		* Divide each component by the scalar (floating point value) v, including the alpha channel.
 		**/
 		void operator/=(float v)
 			{
@@ -1056,26 +1289,45 @@ struct RGB32
 			}
 
 
-		/**
-		* alpha-blend the fg_col color over this one (and save the result in this color).
-		* floating point alpha value between 0.0f (fg fully transparent) and 1.0f (fg fully opaque).
-		*
-		* The alpha channel of the RGB32 colors is ignored !!!!
-		**/
+        /**
+         * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
+         * to 1.0f (fully opaque).
+         * 
+         * The alpha channel of fg_col is multiplied by alpha to get the final blending opacity/alpha
+         * value.
+         *
+		 * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
+		 * correct operation for the alpha channels: the resulting color is not opaque if one the
+		 * initial color is not opaque... This is not a problem when doing simple blending on a
+		 * destination image but it is not suitable for advanced image composition.
+		 *
+		 * @param   fg_col  The foreground color.
+         * @param   alpha   The opacity/alpha multiplier in [0.0f,1.0f].
+        **/
 		inline void blend(const RGB32 & fg_col, float alpha)
 			{
 			blend256(fg_col, (uint32_t)(alpha * 256));
 			}
 
 
-		/**
-		* alpha-blend the fg color over this one (and save the result in this color).
-		* integer alpha value between 0 (fg fully transparent) and 256 (fg fully opaque).
-		* 
-		* The alpha channel of the RGB32 colors is ignored !!!!
-		**/
+        /**
+         * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
+         * transparent) to 256 (fully opaque).
+         * 
+         * The alpha channel of fg_col is multiplied by alpha to get the final blending opacity/alpha
+         * value.
+         * 
+         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
+         * correct operation for the alpha channels: the resulting color is not opaque if one the
+         * initial color is not opaque... This is not a problem when doing simple blending on a
+         * destination image but it is not suitable for advanced image composition.
+         *
+         * @param   fg_col  The foreground color.
+         * @param   alpha   The opacity/alpha multiplier in [0,256].
+        **/
 		inline void blend256(const RGB32 & fg_col, uint32_t alpha)
 			{
+			alpha = (alpha * (fg_col.A + 1)) >> 8; // combine external alpha with alpha channel.
 			const uint32_t inv_alpha = 256 - alpha;
 			const uint32_t ag = ((fg_col.val & 0xFF00FF00) >> 8)*alpha  +  ((val & 0xFF00FF00) >> 8)*inv_alpha;
 			const uint32_t rb = (fg_col.val & 0x00FF00FF) * alpha + (val & 0x00FF00FF) * inv_alpha;
@@ -1083,15 +1335,20 @@ struct RGB32
 			}
 
 
-		/**
-		* alpha-blend the fg_col color over this one (and save the result in this color).
-		* 
-		* Use the A component of fg_col for the alpha value in [0, 255]. 
-		* The A component of this color does not matter as it is considered fully opaque anyway. 
-		**/
+        /**
+         * alpha-blend `fg_col` over this one.  
+         * 
+         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
+         * correct operation for the alpha channels: the resulting color is not opaque if one the
+         * initial color is not opaque... This is not a problem when doing simple blending on a
+         * destination image but it is not suitable for advanced image composition.
+         *
+         * @param   fg_col  The foreground color. The alpha channel of the color is used for blending.
+         *                  .
+        **/
 		inline void blend(RGB32 fg_col)
 			{
-			blend256(fg_col, ((uint32_t)fg_col.A) + 1); // adding one is ok: still works for A = 0 :-) 
+			blend256(fg_col, 256);  
 			}
 
 
@@ -1100,18 +1357,66 @@ struct RGB32
 		**/
 		inline void mult256(int mr, int mg, int mb)
 			{
-			R = R * mr >> 8;
-			G = G * mg >> 8;
-			B = B * mb >> 8;
+			R = (R * mr) >> 8;
+			G = (G * mg) >> 8;
+			B = (B * mb) >> 8;
+			}
+
+		/**
+		* multiply each color component by a given factor (in [0,256]).
+		**/
+		inline void mult256(int mr, int mg, int mb, int ma)
+			{
+			R = (R * mr) >> 8;
+			G = (G * mg) >> 8;
+			B = (B * mb) >> 8;
+			A = (B * ma) >> 8;
 			}
 
 
+		/**
+		* Return the opacity (alpha channel value) of this color
+        * in the range [0,1] (0=fully transparent, 1=fully opaque).
+		**/
+		float opacity() const
+			{
+			return (((float)A)/ 255.0f);
+			}
+
+		/**
+		* Return the opacity (alpha channel value) of this color
+		* in the range [0,1] (0=fully transparent, 1=fully opaque).
+		**/
+		void setOpacity(float op)
+			{
+			A = (uint8_t)(op * 255);
+			}
+
+		/**
+		* Set the alpha channel of the color to fully opaque.
+		**/
+		void setOpaque()
+			{
+			A = 255; 
+			}
+
+
+		/**
+		* Set the alpha channel of the color to fully transparent.
+		**/
+		void setTransparent()
+			{
+			A = 0; 
+			}
 
 	};
 
 
+
 	/**
 	* Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
+    * 
+	* Do not use the alpha channels !
 	**/
 	inline RGB32 blend(const RGB32& col1, int32_t C1, const  RGB32& col2, int32_t C2, const  RGB32& col3, const int32_t totC)
 		{
@@ -1164,7 +1469,7 @@ struct RGB32
 struct RGB64
 	{
 
-		static const uint16_t DEFAULT_A = 0; // should be 0 to insures stability by type conversion 
+		static const uint16_t DEFAULT_A = 65535; // fully opaque. 
 
 
 		union // dual memory representation
@@ -1207,7 +1512,23 @@ struct RGB64
 																#endif
 		{}
 
-		
+
+		/**
+		* Ctor from a iVec3, A is set to its default value
+		* No rescaling. All values in [0,65535].
+		**/
+		constexpr RGB64(iVec3 v) : RGB64(v.x, v.y, v.z)
+		{}
+
+
+		/**
+		* Ctor from a iVec4.
+		* No rescaling. All values in [0,65535].
+		**/
+		constexpr RGB64(iVec4 v) : RGB64(v.x, v.y, v.z, v.w)
+		{}
+
+
 		/**
 		* Ctor from float r,g,b in [0.0f, 1.0f].
 		**/
@@ -1223,6 +1544,20 @@ struct RGB64
 																B((uint16_t)(b * 65535)),
 																A((uint16_t)((a < 0.0f) ? DEFAULT_A : a * 65535))
 															#endif			
+		{}
+
+
+		/**
+		* Ctor from a fVec3, component order R, G, B in [0.0f, 1.0f], A is set to its default value
+		**/
+		RGB64(fVec3 v) : RGB64(v.x, v.y, v.z)
+		{}
+
+
+		/**
+		* Ctor from a fVec4, component order R, G, B, A in [0.0f, 1.0f].
+		**/
+		RGB64(fVec4 v) : RGB64(v.x, v.y, v.z, v.w)
 		{}
 
 
@@ -1296,6 +1631,30 @@ struct RGB64
 
 
 		/**
+		* Cast into an iVec3. raw values (component A is ignored).
+		**/
+		explicit operator iVec3() const { return iVec3(R, G, B); }
+
+
+		/**
+		* Cast into an fVec3. Values in [0.0f, 1.0f] (component A is ignored).
+		**/
+		explicit operator fVec3() const { return fVec3(R / 65535.0f, G / 65535.0f, B / 65535.0f); }
+
+
+		/**
+		* Cast into an iVec4. raw values.
+		**/
+		explicit operator iVec4() const { return iVec4(R, G, B, A); }
+
+
+		/**
+		* Cast into an fVec4. Values in [0.0f, 1.0f].
+		**/
+		explicit operator fVec4() const { return fVec4(R / 65535.0f, G / 65535.0f, B / 65535.0f, A / 65535.0f); }
+
+
+		/**
 		* Default assignement operator 
 		**/ 
 		RGB64& operator=(const RGB64&) = default;
@@ -1336,7 +1695,33 @@ struct RGB64
 
 
 		/**
-		* Add another color, component by component.
+		* Assignement operator from a vector.
+		* raw value (no conversion).
+		**/
+		inline RGB64& operator=(iVec3 v);
+
+
+		/**
+		* Assignement operator from a vector. 4th component is ignored
+		* raw value (no conversion).
+		**/
+		inline RGB64& operator=(iVec4 v);
+
+
+		/**
+		* Assignement operator from a vector. All values in [0.0f, 1.0f].
+		**/
+		inline RGB64& operator=(fVec3 v);
+
+
+		/**
+		* Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
+		**/
+		inline RGB64& operator=(fVec4 v);
+
+
+		/**
+		* Add another color, component by component, including the alpha channel.
 		**/
 		void operator+=(const RGB64& c)
 			{
@@ -1348,7 +1733,7 @@ struct RGB64
 
 
 		/**
-		* Substract another color, component by component.
+		* Substract another color, component by component, including the alpha channel.
 		**/
 		void operator-=(const RGB64& c)
 			{
@@ -1360,7 +1745,7 @@ struct RGB64
 
 
 		/**
-		* Add the scalar value v to each component
+		* Add the scalar value v to each component, including the alpha channel.
 		**/
 		void operator+=(uint16_t v)
 			{
@@ -1372,7 +1757,7 @@ struct RGB64
 
 
 		/**
-		 * Substract the scalar value v to each component
+		 * Substract the scalar value v to each component, including the alpha channel.
 		 **/
 		void operator-=(uint16_t v)
 			{
@@ -1384,7 +1769,7 @@ struct RGB64
 
 
 		/**
-		* Multiply each component by the scalar value v.
+		* Multiply each component by the scalar value v, including the alpha channel.
 		**/
 		void operator*=(uint16_t v)
 			{
@@ -1396,7 +1781,7 @@ struct RGB64
 
 
 		/**
-		* Multiply each component by the scalar (floating point) value v.
+		* Multiply each component by the scalar (floating point) value v, including the alpha channel.
 		**/
 		void operator*=(float v)
 			{
@@ -1407,7 +1792,7 @@ struct RGB64
 			}
 
 		/**
-		* Divide each component by the scalar value v.
+		* Divide each component by the scalar value v, including the alpha channel.
 		**/
 		void operator/=(uint16_t v)
 			{
@@ -1418,7 +1803,7 @@ struct RGB64
 			}
 
 		/**
-		* Divide each component by the scalar (floating point value) v.
+		* Divide each component by the scalar (floating point value) v, including the alpha channel.
 		**/
 		void operator/=(float v)
 			{
@@ -1438,24 +1823,42 @@ struct RGB64
 			}
 
 
-		/**
-		* alpha-blend the fg color over this one (and save the result in this color).
-		* floating point alpha value between 0.0f (fg fully transparent) and 1.0f (fg fully opaque).
-		*
-		* The alpha channel of the RGB64 colors is ignored !!!!
-		**/
+        /**
+         * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
+         * to 1.0f (fully opaque).
+         * 
+         * The alpha channel of fg_col is multiplied by alpha to get the final blending opacity/alpha
+         * value.
+         * 
+         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
+         * correct operation for the alpha channels: the resulting color is not opaque if one the
+         * initial color is not opaque... This is not a problem when doing simple blending on a
+         * destination image but it is not suitable for advanced image composition.
+         *
+         * @param   fg_col  The foreground color.
+         * @param   alpha   The opacity/alpha multiplier in [0.0f,1.0f].
+        **/
 		inline void blend(const RGB64& fg_col, float alpha)
 			{
 			blend65536(fg_col, (uint32_t)(alpha * 65536));
 			}
 
 
-		/**
-		* alpha-blend the fg_col color over this one (and save the result in this color).
-		* integer alpha value between 0 (fg fully transparent) and 256 (fg fully opaque).
-		*
-		* The alpha channel of the RGB64 colors is ignored !!!!
-		**/
+        /**
+         * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
+         * transparent) to 256 (fully opaque).
+         * 
+         * The alpha channel of fg_col is multiplied by alpha to get the final blending opacity/alpha
+         * value.
+         * 
+         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
+         * correct operation for the alpha channels: the resulting color is not opaque if one the
+         * initial color is not opaque... This is not a problem when doing simple blending on a
+         * destination image but it is not suitable for advanced image composition.
+         *
+         * @param   fg_col  The foreground color.
+         * @param   alpha   The opacity/alpha multiplier in [0,256].
+        **/
 		inline void blend256(const RGB64 & fg_col, uint32_t alpha)
 			{
 			blend65536(fg_col, (alpha << 8));
@@ -1463,31 +1866,46 @@ struct RGB64
 
 
 		/**
-		* alpha-blend the fg_col color over this one (and save the result in this color).
-		* integer alpha value between 0 (fg fully transparent) and 65536 (fg fully opaque).
-		*
-		* The alpha channel of the RGB64 colors is ignored !!!!
+		 * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
+		 * transparent) to 65536 (fully opaque).
+		 *
+		 * The alpha channel of fg_col is multiplied by alpha to get the final blending opacity/alpha
+		 * value.
+		 *
+		 * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
+		 * correct operation for the alpha channels: the resulting color is not opaque if one the
+		 * initial color is not opaque... This is not a problem when doing simple blending on a
+		 * destination image but it is not suitable for advanced image composition.
+		 *
+		 * @param   fg_col  The foreground color.
+		 * @param   alpha   The opacity/alpha multiplier in [0,65536].
 		**/
 		inline void blend65536(const RGB64 & fg_col, uint32_t alpha)
 			{
-			// todo: make it faster 
+			alpha = (alpha >> 1); // reduce range to [0,32768]
+			alpha = (alpha * (fg_col.A + 1)) >> 15; // compute finale blending alpha value 
 			const uint32_t inv_alpha = 65536 - alpha;
 			R = (uint16_t)((fg_col.R * alpha + R * inv_alpha) >> 16);
 			G = (uint16_t)((fg_col.G * alpha + G * inv_alpha) >> 16);
 			B = (uint16_t)((fg_col.B * alpha + B * inv_alpha) >> 16);
-			A = (uint16_t)((fg_col.A * alpha + A * inv_alpha) >> 16); // hum... maybe better to skip this ? 
+			A = (uint16_t)((fg_col.A * alpha + A * inv_alpha) >> 16); // hum... maybe better to skip this but let's leave for compatibility with RGB32. 
 			}
 
 
-		/**
-		* alpha-blend the fg_col color over this one (and save the result in this color).
-		* 
-		* Use the A component of fg_col for the alpha value in [0, 65535]. 
-		* The A component of this color does not matter as it is considered fully opaque anyway. 
-		**/
+        /**
+         * alpha-blend `fg_col` over this one.
+         * 
+         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
+         * correct operation for the alpha channels: the resulting color is not opaque if one the
+         * initial color is not opaque... This is not a problem when doing simple blending on a
+         * destination image but it is not suitable for advanced image composition.
+         *
+         * @param   fg_col  The foreground color. The alpha channel of the color is used for blending.
+         *                  .
+        **/
 		inline void blend(const RGB64 & fg_col)
 			{
-			blend65536(fg_col, ((uint32_t)fg_col.A) + 1); // adding one is ok: still works for A = 0 :-) 
+			blend65536(fg_col, 65536); 
 			}
 
 
@@ -1496,11 +1914,59 @@ struct RGB64
 		**/
 		inline void mult256(int mr, int mg, int mb)
 			{
-			R = R * mr >> 8;
-			G = G * mg >> 8;
-			B = B * mb >> 8;
+			R = (R * mr) >> 8;
+			G = (G * mg) >> 8;
+			B = (B * mb) >> 8;
 			}
 
+
+		/**
+		* multiply each color component by a given factor (in [0,256]).
+		**/
+		inline void mult256(int mr, int mg, int mb, int ma)
+			{
+			R = (R * mr) >> 8;
+			G = (G * mg) >> 8;
+			B = (B * mb) >> 8;
+			A = (A * mb) >> 8;
+			}
+
+
+
+		/**
+		* Return the opacity (alpha channel value) of this color
+        * in the range [0,1] (0=fully transparent, 1=fully opaque).
+		**/
+		float opacity() const
+			{
+			return (((float)A)/ 65535.0f);
+			}
+
+		/**
+		* Return the opacity (alpha channel value) of this color
+		* in the range [0,1] (0=fully transparent, 1=fully opaque).
+		**/
+		void setOpacity(float op)
+			{
+			A = (uint8_t)(op * 65535);
+			}
+
+		/**
+		* Set the alpha channel of the color to fully opaque.
+		**/
+		void setOpaque()
+			{
+			A = 65535; 
+			}
+
+
+		/**
+		* Set the alpha channel of the color to fully transparent.
+		**/
+		void setTransparent()
+			{
+			A = 0; 
+			}
 
 
 	};
@@ -1510,6 +1976,8 @@ struct RGB64
 
 	/**
 	* Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
+    * 
+	* Do not use the alpha channels !
 	**/
 	inline RGB64 blend(const RGB64& col1, int32_t C1, const  RGB64& col2, int32_t C2, const  RGB64& col3, const int32_t totC)
 		{
@@ -1530,7 +1998,6 @@ struct RGB64
 					 ((int)colA.B + (int)colB.B) >> 1,
 					 ((int)colA.A + (int)colB.A) >> 1);
 		}
-
 
 
 	/**
@@ -1584,10 +2051,7 @@ struct RGB64
 
 
 		/**
-		* Ctor from raw R,G,B value.
-		* No rescaling: r in 0..31
-		*               g in 0..63
-		*               b in 0..31
+		* Ctor from raw R,G,B values in [0.0f, 1.0f]
 		**/
 		constexpr RGBf(float r, float g, float b) :
 		#if TGX_RGBf_ORDER_BGR
@@ -1597,6 +2061,19 @@ struct RGB64
 		#endif
 		{}
 
+
+		/**
+		* Ctor from a fVec3, component order R, G, B in [0.0f, 1.0f]
+		**/
+		constexpr RGBf(fVec3 v) : RGBf(v.x, v.y, v.z)
+		{}
+
+
+		/**
+		* Ctor from a fVec4, (same as using fVec3: the 4th vector component is ignored).
+		**/
+		constexpr RGBf(fVec4 v) : RGBf(v.x, v.y, v.z)
+		{}
 
 
 		/**
@@ -1655,6 +2132,11 @@ struct RGB64
 		RGBf(const HSV& c);
 
 
+		/**
+		* Cast into an fVec3. Values in [0.0f, 1.0f].
+		**/
+		explicit operator fVec3() const { return fVec3(R, G, B); }
+
 
 		/**
 		* Default assignement operator
@@ -1692,6 +2174,18 @@ struct RGB64
 		* Assignement operator from a HSV color
 		**/
 		RGBf& operator=(const HSV& c);
+
+
+		/**
+		* Assignement operator from a vector. All values in [0.0f, 1.0f].
+		**/
+		inline RGBf& operator=(fVec3 v);
+
+
+		/**
+		* Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
+		**/
+		inline RGBf& operator=(fVec4 v);
 
 
 		/**
@@ -1775,9 +2269,27 @@ struct RGB64
 			}
 
 
+
+
 		/**
-		* alpha-blend the fg color over this one (and save the result in this color).
-		* floating point alpha value between 0.0f (fg fully transparent) and 1.0f (fg fully opaque).
+		 * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
+		 * transparent) to 256 (fully opaque).
+		 *
+		 * @param   fg_col  The foreground color.
+		 * @param   alpha   The opacity/alpha multiplier in [0,256].
+		**/
+		inline void blend256(const RGB64& fg_col, uint32_t alpha)
+			{
+			blend(fg_col, alpha / 256.0f);
+			}
+
+
+		/**
+		 * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
+		 * to 1.0f (fully opaque).
+		 *
+		 * @param   fg_col  The foreground color.
+		 * @param   alpha   The opacity/alpha multiplier in [0.0f, 1.0f].
 		**/
 		inline void blend(const RGBf & fg_col, float alpha)
 			{
@@ -1785,7 +2297,6 @@ struct RGB64
 			G += (fg_col.G - G) * alpha;
 			B += (fg_col.B - B) * alpha;
 			}
-
 
 
 		/**
@@ -1872,6 +2383,20 @@ struct HSV
 
 
 		/**
+		* Ctor from a fVec3, component order H, S, V in [0.0f, 1.0f].
+		**/
+		constexpr HSV(fVec3 v) : HSV(v.x, v.y, v.z)
+		{}
+
+
+		/**
+		* Ctor from a fVec4, (same as using fVec3: the 4th vector component is ignored).
+		**/
+		constexpr HSV(fVec4 v) : HSV(v.x, v.y, v.z)
+		{}
+
+
+		/**
 		* Default Copy ctor
 		**/
 		HSV(const HSV&) = default;
@@ -1927,6 +2452,12 @@ struct HSV
 		HSV(const RGBf& c);
 
 
+		/**
+		* Cast into an fVec3. Values in [0.0f, 1.0f].
+		**/
+		explicit operator fVec3() const { return fVec3(H, S, V); }
+
+
 		/**	
 		* Default assignement operator
 		**/
@@ -1966,6 +2497,27 @@ struct HSV
 		HSV& operator=(const RGBf& c);
 
 
+		/**
+		* Assignement operator from a vector. All values in [0.0f, 1.0f].
+		**/
+		inline HSV& operator=(fVec3 v)
+			{
+			H = v.x;
+			S = v.y;
+			V = v.z;
+			}
+
+
+		/**
+		* Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
+		**/
+		inline HSV& operator=(fVec4 v)
+			{
+			H = v.x;
+			S = v.y;
+			V = v.z;
+			}
+
 
 		/**
 		* Equality comparator
@@ -1976,13 +2528,16 @@ struct HSV
 			}
 
 
-		/**
-		* alpha-blend the fg color over this one (and save the result in this color).
-		* floating point alpha value between 0.0f (fg fully transparent) and 1.0f (fg fully opaque).
-		*
-		* Blending is done by converting the color to RGB space, then alpha blending, 
-		* then converting back to HSV 
-		**/
+        /**
+         * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
+         * to 1.0f (fully opaque).
+         * 
+         * Blending is done by converting the color to RGB space, then alpha blending, and then
+         * converting back to HSV
+         *
+         * @param   fg_col  The foreground color.
+         * @param   alpha   The opacity/alpha multiplier in [0.0f, 1.0f].
+        **/
 		inline void blend(const HSV & fg_col, float alpha)
 			{
 			// is there a natural blending formula in HSV space ? 
@@ -1994,11 +2549,15 @@ struct HSV
 
 
 		/**
-		* alpha-blend the fg color over this one (and save the result in this color).
-		* integer alpha value between 0 (fg fully transparent) and 256 (fg fully opaque).
-		*
-		* The alpha channel of the RGB32 colors is ignored !!!!
-		**/
+		 * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
+		 * transparent) to 256 (fully opaque).
+		 *
+		 * Blending is done by converting the color to RGB space, then alpha blending, and then
+		 * converting back to HSV
+		 *
+		 * @param   fg_col  The foreground color.
+		 * @param   alpha   The opacity/alpha multiplier in [0, 256].
+		 **/
 		inline void blend256(const HSV & fg_col, uint32_t alpha)
 			{
 			blend(fg_col, (alpha / 256.0f));
@@ -2029,7 +2588,6 @@ inline HSV blend(HSV col1, int32_t C1, HSV col2, int32_t C2, HSV col3, int32_t t
 	}
 
 
-
 /**
 * Return the "mean" color between colA and colB.
 **/
@@ -2048,12 +2606,6 @@ inline HSV meanColor(const  HSV& colA, const  HSV& colB, const  HSV& colC, const
 		// hum.. what does that mean in HSV, let's do it in RGB color space instead
 		return HSV(meanColor(RGBf(colA), RGBf(colB), RGBf(colC), RGBf(colD)));
 		}
-
-
-
-
-
-
 
 
 
@@ -2147,12 +2699,47 @@ inline RGB565& RGB565::operator=(const RGB64& c)
 
 inline RGB565& RGB565::operator=(const RGBf& c)
 		{
-		B = (uint16_t)(c.B * 31);
-		G = (uint16_t)(c.G * 63);
-		R = (uint16_t)(c.R * 31);
+		B = (uint8_t)(c.B * 31);
+		G = (uint8_t)(c.G * 63);
+		R = (uint8_t)(c.R * 31);
 		return *this;
 		}
 
+
+inline RGB565& RGB565::operator=(iVec3 v)
+		{
+		R = (uint8_t)v.x;
+		G = (uint8_t)v.y;
+		B = (uint8_t)v.z;
+		return *this;
+		}
+
+
+inline RGB565& RGB565::operator=(iVec4 v)
+		{
+		R = (uint8_t)v.x;
+		G = (uint8_t)v.y;
+		B = (uint8_t)v.z;
+		return *this;
+		}
+
+
+inline RGB565& RGB565::operator=(fVec3 v)
+		{
+		B = (uint8_t)(v.x * 31);
+		G = (uint8_t)(v.y * 63);
+		R = (uint8_t)(v.z * 31);
+		return *this;
+		}
+
+
+inline RGB565& RGB565::operator=(fVec4 v)
+		{
+		B = (uint8_t)(v.x * 31);
+		G = (uint8_t)(v.y * 63);
+		R = (uint8_t)(v.z * 31);
+		return *this;
+		}
 
 
 
@@ -2251,6 +2838,44 @@ inline RGB24& RGB24::operator=(const RGBf& c)
 		B = (uint8_t)(c.B * 255);
 		return *this;
 		}
+
+
+inline RGB24& RGB24::operator=(iVec3 v)
+		{
+		R = (uint8_t)v.x;
+		G = (uint8_t)v.y;
+		B = (uint8_t)v.z;
+		return *this;
+		}
+
+
+inline RGB24& RGB24::operator=(iVec4 v)
+		{
+		R = (uint8_t)v.x;
+		G = (uint8_t)v.y;
+		B = (uint8_t)v.z;
+		return *this;
+		}
+
+
+inline RGB24& RGB24::operator=(fVec3 v)
+		{
+		B = (uint8_t)(v.x * 255);
+		G = (uint8_t)(v.y * 255);
+		R = (uint8_t)(v.z * 255);
+		return *this;
+		}
+
+
+inline RGB24& RGB24::operator=(fVec4 v)
+		{
+		B = (uint8_t)(v.x * 255);
+		G = (uint8_t)(v.y * 255);
+		R = (uint8_t)(v.z * 255);
+		return *this;
+		}
+
+
 
 
 inline void RGB24::blend256(const RGB24& fg_col, uint32_t alpha)
@@ -2358,6 +2983,43 @@ inline RGB32& RGB32::operator=(const RGBf& c)
 		}
 
 
+inline RGB32& RGB32::operator=(iVec3 v)
+		{
+		R = (uint8_t)v.x;
+		G = (uint8_t)v.y;
+		B = (uint8_t)v.z;
+		return *this;
+		}
+
+
+inline RGB32& RGB32::operator=(iVec4 v)
+		{
+		R = (uint8_t)v.x;
+		G = (uint8_t)v.y;
+		B = (uint8_t)v.z;
+		A = (uint8_t)v.w;
+		return *this;
+		}
+
+
+inline RGB32& RGB32::operator=(fVec3 v)
+		{
+		B = (uint8_t)(v.x * 255);
+		G = (uint8_t)(v.y * 255);
+		R = (uint8_t)(v.z * 255);
+		return *this;
+		}
+
+
+inline RGB32& RGB32::operator=(fVec4 v)
+		{
+		B = (uint8_t)(v.x * 255);
+		G = (uint8_t)(v.y * 255);
+		R = (uint8_t)(v.z * 255);
+		A = (uint8_t)(v.w * 255);
+		return *this;
+		}
+
 
 
 
@@ -2397,9 +3059,9 @@ constexpr inline RGB64::RGB64(const RGB24& c) :
 
 constexpr inline RGB64::RGB64(const RGB32& c) : 
 		#if TGX_RGB64_ORDER_BGR
-		B(((uint16_t)c.B) << 8), G(((uint16_t)c.G) << 8), R(((uint16_t)c.R) << 8), A(((uint16_t)c.A) << 8)
+	    B((((uint16_t)c.B) << 8) | ((uint16_t)c.B)), G((((uint16_t)c.G) << 8) | ((uint16_t)c.G)), R((((uint16_t)c.R) << 8) | ((uint16_t)c.R)), A((((uint16_t)c.A) << 8) | ((uint16_t)c.A))
 		#else
-		R(((uint16_t)c.R) << 8), G(((uint16_t)c.G) << 8), B(((uint16_t)c.B) << 8), A(((uint16_t)c.A) << 8)
+		R((((uint16_t)c.R) << 8) | ((uint16_t)c.R)), G((((uint16_t)c.G) << 8) | ((uint16_t)c.G)), B((((uint16_t)c.B) << 8) | ((uint16_t)c.B)), A((((uint16_t)c.A) << 8) | ((uint16_t)c.A))
 		#endif			
 		{
 		}
@@ -2440,7 +3102,7 @@ inline RGB64& RGB64::operator=(const RGB32& c)
 		B = ((uint16_t)c.B) << 8;
 		G = ((uint16_t)c.G) << 8;
 		R = ((uint16_t)c.R) << 8;
-		A = ((uint16_t)c.A) << 8;
+		A = (((uint16_t)c.A) << 8) & ((uint16_t)c.A);
 		return *this;
 		}
 
@@ -2450,6 +3112,44 @@ inline RGB64& RGB64::operator=(const RGBf& c)
 		G = (uint16_t)(c.G * 65535);
 		R = (uint16_t)(c.R * 65535);
 		A = DEFAULT_A;
+		return *this;
+		}
+
+
+inline RGB64& RGB64::operator=(iVec3 v)
+		{
+		R = (uint16_t)v.x;
+		G = (uint16_t)v.y;
+		B = (uint16_t)v.z;
+		return *this;
+		}
+
+
+inline RGB64& RGB64::operator=(iVec4 v)
+		{
+		R = (uint16_t)v.x;
+		G = (uint16_t)v.y;
+		B = (uint16_t)v.z;
+		A = (uint16_t)v.w;
+		return *this;
+		}
+
+
+inline RGB64& RGB64::operator=(fVec3 v)
+		{
+		B = (uint16_t)(v.x * 65535);
+		G = (uint16_t)(v.y * 65535);
+		R = (uint16_t)(v.z * 65535);
+		return *this;
+		}
+
+
+inline RGB64& RGB64::operator=(fVec4 v)
+		{
+		B = (uint16_t)(v.x * 65535);
+		G = (uint16_t)(v.y * 65535);
+		R = (uint16_t)(v.z * 65535);
+		A = (uint16_t)(v.w * 65535);
 		return *this;
 		}
 
@@ -2548,6 +3248,24 @@ inline RGBf& RGBf::operator=(const RGB64& c)
 		R = c.R / 65535.0f;
 		G = c.G / 65535.0f;
 		B = c.B / 65535.0f;
+		return *this;
+		}
+
+
+inline RGBf& RGBf::operator=(fVec3 v)
+		{
+		B = v.x;
+		G = v.y;
+		R = v.z;
+		return *this;
+		}
+
+
+inline RGBf& RGBf::operator=(fVec4 v)
+		{
+		B = v.x;
+		G = v.y;
+		R = v.z;
 		return *this;
 		}
 
