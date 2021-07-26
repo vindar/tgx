@@ -20,7 +20,7 @@
 using namespace tgx;
 
 // font 
-#include "ili9341_t3n_font_Arial.h"
+#include "font_Arial_10.h"
 
 // 30mhz is enough.
 #define SPI_SPEED		30000000
@@ -193,11 +193,11 @@ void fps(const char* str)
         count = 0;
         }
     // display 
-    im.drawText(str, {3,12 }, RGB565_Red, Arial_10);
+    im.drawText(str, {3,12 }, RGB565_Red, Arial_10, false);
     char buf[10];
     sprintf(buf, "%d FPS", fps);
     auto B = im.measureText(buf, { 0,0 }, Arial_10, false);
-    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, Arial_10);
+    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, Arial_10, false);
     }
 
 

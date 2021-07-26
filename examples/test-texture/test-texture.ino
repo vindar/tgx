@@ -91,14 +91,14 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
         }
     // display some info 
     char buf[80];
-    im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, Arial_10);
+    im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, Arial_10, false);
     sprintf(buf, "%d triangles", nbt);
-    im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, Arial_10);
+    im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, Arial_10, false);
     sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE ? " / texturing" : ""));
-    im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, Arial_10);
+    im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, Arial_10, false);
     sprintf(buf, "%d FPS", fps);
     auto B = im.measureText(buf, { 0,0 }, Arial_10, false);
-    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, Arial_10);
+    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, Arial_10, false);
     }
     
 

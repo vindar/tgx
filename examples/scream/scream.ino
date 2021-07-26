@@ -188,7 +188,7 @@ void fps()
     char buf[10];
     sprintf(buf, "%d FPS", fps);
     auto B = im.measureText(buf, { 0,0 }, Arial_10, false);
-    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, Arial_10);
+    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, Arial_10,false);
     }
 
 
