@@ -27,7 +27,7 @@ namespace tgx
 {
 
 
-	/** forward declarations */
+    /** forward declarations */
 
     template<typename T> struct Vec2;
     
@@ -36,33 +36,33 @@ namespace tgx
     template<typename T> struct Vec4;
 
 
-	/** Specializations */
+    /** Specializations */
 
-	typedef Vec3<int> iVec3;            // integer valued 2-D vector with platform int
+    typedef Vec3<int> iVec3;            // integer valued 2-D vector with platform int
 
-	typedef Vec3<int16_t> iVec3_s16;    // integer valued 2-D vector with 16 bit int
+    typedef Vec3<int16_t> iVec3_s16;    // integer valued 2-D vector with 16 bit int
 
-	typedef Vec3<int32_t> iVec3_s32;    // integer valued 2-D vector with 32 bit int
+    typedef Vec3<int32_t> iVec3_s32;    // integer valued 2-D vector with 32 bit int
 
-	typedef Vec3<float>   fVec3;        // floating point value 2-D vector with float precision
+    typedef Vec3<float>   fVec3;        // floating point value 2-D vector with float precision
 
-	typedef Vec3<double>  dVec3;        // floating point value 2-D vector with double precision
-
-
+    typedef Vec3<double>  dVec3;        // floating point value 2-D vector with double precision
 
 
-	/********************************************
-	* template class for a 4-d vector
-	*********************************************/
-	template<typename T> struct Vec3 : public Vec2<T>
-		{
+
+
+    /********************************************
+    * template class for a 4-d vector
+    *********************************************/
+    template<typename T> struct Vec3 : public Vec2<T>
+        {
 
         // first two coordinates from the base class
         using Vec2<T>::x;
         using Vec2<T>::y;
 
-		// and the new third coordinates
-		T z;
+        // and the new third coordinates
+        T z;
 
 
         /**
@@ -332,7 +332,7 @@ namespace tgx
 #endif
 
 
-	};
+    };
 
 
 

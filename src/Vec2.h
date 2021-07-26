@@ -24,9 +24,9 @@ namespace tgx
 {
 
 
-	/** forward declarations */
+    /** forward declarations */
 
-	template<typename T> struct Vec2;
+    template<typename T> struct Vec2;
 
     template<typename T> struct Vec3;
 
@@ -34,29 +34,29 @@ namespace tgx
 
 
 
-	/** Specializations */
+    /** Specializations */
 
     typedef Vec2<int> iVec2;            // integer valued 2-D vector with platform int
 
-	typedef Vec2<int16_t> iVec2_s16;    // integer valued 2-D vector with 16 bit int
+    typedef Vec2<int16_t> iVec2_s16;    // integer valued 2-D vector with 16 bit int
 
-	typedef Vec2<int32_t> iVec2_s32;    // integer valued 2-D vector with 32 bit int
+    typedef Vec2<int32_t> iVec2_s32;    // integer valued 2-D vector with 32 bit int
 
-	typedef Vec2<float>   fVec2;        // floating point value 2-D vector with float precision
+    typedef Vec2<float>   fVec2;        // floating point value 2-D vector with float precision
 
-	typedef Vec2<double>  dVec2;        // floating point value 2-D vector with double precision
-
-
+    typedef Vec2<double>  dVec2;        // floating point value 2-D vector with double precision
 
 
-	/********************************************
-	* template class for a 2-d vector
-	*********************************************/
-	template<typename T> struct Vec2
-		{
 
-		// coordinates
-		T x, y;
+
+    /********************************************
+    * template class for a 2-d vector
+    *********************************************/
+    template<typename T> struct Vec2
+        {
+
+        // coordinates
+        T x, y;
 
 
         /**
@@ -327,7 +327,7 @@ namespace tgx
 
 #endif
 
-	};
+    };
 
 
 
@@ -443,8 +443,8 @@ namespace tgx
             if (delta == 0) { return false; }
             const T c1 = LA1.X() * a1 + LA1.Y() * b1;
             const T c2 = LB1.X() * a2 + LB1.Y() * b2;
-            x = ((b1 == 0) ? LA1.X() : ((b2 == 0) ? LB1.X() : (T)((b2 * c1 - b1 * c2) / delta)));	// complicated but insures perfect clipping
-            y = ((a1 == 0) ? LA1.Y() : ((a2 == 0) ? LB1.Y() : (T)((a1 * c2 - a2 * c1) / delta)));	// for horizontal and vertical lines
+            x = ((b1 == 0) ? LA1.X() : ((b2 == 0) ? LB1.X() : (T)((b2 * c1 - b1 * c2) / delta)));   // complicated but insures perfect clipping
+            y = ((a1 == 0) ? LA1.Y() : ((a2 == 0) ? LB1.Y() : (T)((a1 * c2 - a2 * c1) / delta)));   // for horizontal and vertical lines
             return true;
             }
 

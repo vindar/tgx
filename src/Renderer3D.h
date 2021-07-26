@@ -161,9 +161,9 @@ namespace tgx
             }
 
 
-		/** 
+        /** 
          * Set the projection matrix as an orthographic matrix: 
-		 * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml 
          *
          * This method is only available when ORTHO = true.
          * 
@@ -171,17 +171,17 @@ namespace tgx
         * at the origin, looking looking toward the negative Z axis with
         * the Y axis pointing up (as in opengl).
          **/
-		void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
-			{
+        void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
+            {
             static_assert(ORTHO == true, "the setOrtho() method can only be used with template parameter ORTHO = true");
             _projM.setOrtho(left, right, bottom, top, zNear, zFar);
             _projM.invertYaxis();
-			}
+            }
 
 
-		/**
+        /**
          * Set the projection matrix as a perspective matrix
-		* https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
+        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
         * 
         * This method is only available when ORTHO = false. 
          *
@@ -189,26 +189,26 @@ namespace tgx
         * at the origin, looking looking toward the negative Z axis with
         * the Y axis pointing up (as in opengl).
         **/
-		void setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
-			{
+        void setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
+            {
             static_assert(ORTHO == false, "the setFrustum() method can only be used with template parameter ORTHO = false (use projectionMatrix().setFrustum() is you really want to...)");
             _projM.setFrustum(left, right, bottom, top, zNear, zFar);
             _projM.invertYaxis();
-			}
+            }
 
 
-		/**
-		*  Set the projection matrix as a perspective matrix
-		* https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
+        /**
+        *  Set the projection matrix as a perspective matrix
+        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
         * 
         * This method is only available when ORTHO = false.
         *
         * IMPORTANT :In view space, the camera is assumed to be centered
         * at the origin, looking looking toward the negative Z axis with
         * the Y axis pointing up (as in opengl).
-		**/
-		void setPerspective(float fovy, float aspect, float zNear, float zFar)
-			{
+        **/
+        void setPerspective(float fovy, float aspect, float zNear, float zFar)
+            {
             static_assert(ORTHO == false, "the setPerspective() method can only be used with template parameter ORTHO = false (use projectionMatrix().setPerspective() is you really want to...)");
             _projM.setPerspective(fovy, aspect, zNear, zFar);
             _projM.invertYaxis();
