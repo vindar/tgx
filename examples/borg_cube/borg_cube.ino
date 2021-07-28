@@ -7,14 +7,12 @@
 ********************************************************************/
 
 
-// This example runs on teensy 4.1 with ILI9341 via SPI. 
+// This example runs on teensy 4.0/4.1 with ILI9341 via SPI. 
 // the screen driver library : https://github.com/vindar/ILI9341_T4
-#include <StatsVar.h>
-#include <DiffBuff.h>
-#include <ILI9341Driver.h> 
+#include <ILI9341_T4.h> 
 
-// the tgx library 
-#include "tgx.h"
+// the tgx graphic library 
+#include <tgx.h>
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
@@ -22,24 +20,43 @@ using namespace tgx;
 // font 
 #include "font_Arial_10.h"
 
-// 30mhz is enough.
-#define SPI_SPEED		30000000
 
-// pins (here on SPI1)
-// !!! the ILI9341_T4 screen driver only works with hardware SPI and DC 
-//     must be a valid cs pin for the corresponding SPI bus !!!
-#define PIN_SCK			27
-#define PIN_MISO		1
-#define PIN_MOSI		26
-#define PIN_DC			0
-#define PIN_RESET		29
-#define PIN_CS			30
-#define PIN_BACKLIGHT   28  // set this to 255 if not connected to MCU. 
-#define PIN_TOUCH_IRQ	32  // set this to  255 if not used (or not on the same spi bus)
-#define PIN_TOUCH_CS	31  // set this to  255 if not used (or not on the same spi bus)
+
+// DEFAULT WIRING USING SPI 0 ON TEENSY 4/4.1
+// Recall that DC must be on a valid cs pin !!! 
+#define PIN_SCK     13      // mandatory 
+#define PIN_MISO    12      // mandatory
+#define PIN_MOSI    11      // mandatory
+#define PIN_DC      10      // mandatory
+#define PIN_CS      9       // mandatory (but can be any digital pin)
+#define PIN_RESET   6       // could be omitted (set to 255) yet it is better to use (any) digital pin whenever possible.
+#define PIN_BACKLIGHT 255   // optional. Set this only if the screen LED pin is connected directly to the Teensy 
+#define PIN_TOUCH_IRQ 255   // optional. Set this only if touch is connected on the same spi bus (otherwise, set it to 255)
+#define PIN_TOUCH_CS  255   // optional. Set this only if touch is connected on the same spi bus (otherwise, set it to 255)
+
+
+// ALTERNATE WIRING USING SPI 1 ON TEENSY 4/4.1
+// Recall that DC must be on a valid cs pin !!! 
+
+//#define PIN_SCK     27      // mandatory 
+//#define PIN_MISO    1       // mandatory
+//#define PIN_MOSI    26      // mandatory
+//#define PIN_DC      0       // mandatory
+//#define PIN_CS      30      // mandatory (but can be any digital pin)
+//#define PIN_RESET   29      // could be omitted (set to 255) yet it is better to use (any) digital pin whenever possible.
+//#define PIN_BACKLIGHT 255   // optional. Set this only if the screen LED pin is connected directly to the Teensy 
+//#define PIN_TOUCH_IRQ 255   // optional. Set this only if touch is connected on the same spi bus (otherwise, set it to 255)
+//#define PIN_TOUCH_CS  255   // optional. Set this only if touch is connected on the same spi bus (otherwise, set it to 255)
+
+
+
+// 30MHz SPI. Can do much better with short wires
+#define SPI_SPEED       30000000
+
 
 // the screen driver object
 ILI9341_T4::ILI9341Driver tft(PIN_CS, PIN_DC, PIN_SCK, PIN_MOSI, PIN_MISO, PIN_RESET, PIN_TOUCH_CS, PIN_TOUCH_IRQ);
+
 
 // 2 x 5K diff buffers (used by tft) for differential updates
 ILI9341_T4::DiffBuffStatic<5000> diff1;
@@ -171,7 +188,7 @@ void splash()
     static RGB565 color;
     if (count == 0)
         color = RGB565((int)random(32), (int)random(64), (int)random(32)); 
-    count = ++count % 400;
+    count = (count + 1) % 400;
     iVec2 pos(random(tex_size), random(tex_size));
     int r = random(10);
     texture.drawRect(iBox2( pos.x - r, pos.x + r, pos.y - r, pos.y + r ), color);
