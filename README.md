@@ -1,7 +1,22 @@
-# tgx - a tiny/teensy graphics library
+# TGX - a tiny/teensy graphics library
 
-![tgx](./tgx.jpg)
+<p align="center">
+<img src="./tgx.jpg" height="400" />
+</p>
 
+<p align="center">
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=fivrlLtbYX8
+" target="_blank"><img src="http://img.youtube.com/vi/fivrlLtbYX8/0.jpg" 
+ width="240" height="180" border="10" /></a>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=arJbbU28FEU
+" target="_blank"><img src="http://img.youtube.com/vi/arJbbU28FEU/0.jpg" 
+ width="240" height="180" border="10" /></a>  
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=96D0j9J2ILs
+" target="_blank"><img src="http://img.youtube.com/vi/96D0j9J2ILs/0.jpg" 
+ width="240" height="180" border="10" /></a>
+</p>
+
+**Note** A new companion library <a href="https://github.com/vindar/tgx-font">tgx-font</a> provides a collection of plain and anti-aliased fonts which can be used with this library.
 
 ## 2D and 3D graphics library for 32bits microcontrollers. 
 
@@ -13,10 +28,13 @@ Here are some of the library best features.
 
 ### 2D graphics.
 
-- Support for multiple color types: `RGB16`, `RGB24`, `RGB32`, `RGBf`. Every 2D/3D drawing operation is available for each color type. 
+- Support for multiple color types: `RGB565`, `RGB24`, `RGB32`, `RGB64`, `RGBf` and `HSV`. Every 2D/3D drawing operation is available for each color type. 
 - Template `Image` class that encapsulates a memory framebuffer and enables the creation of sub-images (i.e. views) that share the same buffer. This provides an elegant and efficient way to clip of all drawing operations to a particular region. 
-- API (mostly) compatible with Adafruit's GFX library, but with more primitives and faster!
-- Support for Adafruit's fonts as well as PJRC's ILI9341_t3 v1 and v2.3 (anti-aliased) fonts. 
+- API (mostly) compatible with Adafruit's GFX library, but with more primitives and faster ! Primitive for drawing, lines, triangles, rectangles circles, ellipses...
+- Methods for blitting sprites (with or without mask), image color type conversion and resizing. 
+- Transparency / Alpha blending supported for all drawing methods.
+- Anti-aliased methods for drawing thick lines and circles. 
+- Support for Adafruit's fonts as well as PJRC's ILI9341_t3 v1 and v2.3 anti-aliased fonts (see <a href="https://github.com/vindar/tgx-font">tgx-font</a>).
 
 ### 3D graphics.
 
