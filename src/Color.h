@@ -427,6 +427,15 @@ struct RGB565
 
 
         /**
+        * Inequality comparator
+        **/
+        constexpr bool operator!=(const RGB565& c) const
+            {
+            return !(*this == c);
+            }
+
+
+        /**
          * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
          * to 1.0f (fully opaque).
          * 
@@ -843,6 +852,15 @@ struct RGB24
         constexpr bool operator==(const RGB24& c) const
             {
             return((R == c.R) && (G == c.G) && (B == c.B));
+            }
+
+
+        /**
+        * Inequality comparator
+        **/
+        constexpr bool operator!=(const RGB24& c) const
+            {
+            return !(*this == c);
             }
 
 
@@ -1286,6 +1304,15 @@ struct RGB32
         constexpr bool operator==(const RGB32& c) const
             {
             return(val == c.val);
+            }
+
+
+        /**
+        * Inequality comparator
+        **/
+        constexpr bool operator!=(const RGB32& c) const
+            {
+            return !(*this == c);
             }
 
 
@@ -1824,6 +1851,15 @@ struct RGB64
 
 
         /**
+        * Inequality comparator
+        **/
+        constexpr bool operator!=(const RGB64& c) const
+            {
+            return !(*this == c);
+            }
+
+
+        /**
          * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
          * to 1.0f (fully opaque).
          * 
@@ -2258,6 +2294,16 @@ struct RGB64
             return((R == c.R)&&(G == c.G)&&(B == c.B));
             }
 
+
+        /**
+        * Inequality comparator
+        **/
+        constexpr bool operator!=(const RGBf & c) const
+            {
+            return !(*this == c);
+            }
+
+
         /**
         * Clamp color channel to [0,1]
         **/
@@ -2527,6 +2573,15 @@ struct HSV
         constexpr bool operator==(const HSV & c) const
             {
             return((H == c.H)&&(S == c.S)&&(V == c.V));
+            }
+
+
+        /**
+        * Inequality comparator
+        **/
+        constexpr bool operator!=(const HSV & c) const
+            {
+            return !(*this == c);
             }
 
 
