@@ -1,35 +1,28 @@
 /********************************************************************
 *
-* tgx library example : displaying some nice meshes...
-*
-* *** ONLY FOR TEENSY 4.1 (TEENSY 4.0 DOES NOT HAVE ENOUGH FLASH) ***
+* tgx library example : comparing flat vs Gouraud shading.
 *
 ********************************************************************/
 
-// This example runs on teensy 4.1 with ILI9341 via SPI. 
+// This example runs on teensy 4.0/4.1 with ILI9341 via SPI. 
 // the screen driver library : https://github.com/vindar/ILI9341_T4
 #include <ILI9341_T4.h> 
 
 // the tgx library 
 #include <tgx.h> 
 
+// font use to draw text on the screen. 
+#include "font_Arial_10.h"    
+
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
 
-// font use to draw text on the screen. 
-#include "font_Arial_10.h"  
-
 // meshes (stored in PROGMEM)
-#include "3Dmodels/nanosuit/nanosuit.h"
-#include "3Dmodels/elementalist/elementalist.h"
-#include "3Dmodels/sinbad/sinbad.h"
-#include "3Dmodels/cyborg/cyborg.h"
-#include "3Dmodels/dennis/dennis.h"
-#include "3Dmodels/manga3/manga3.h"
-#include "3Dmodels/naruto/naruto.h"
-#include "3Dmodels/R2D2/R2D2.h"
-#include "3Dmodels/stormtrooper/stormtrooper.h"
-
+#include "3Dmodels/teapot/teapot.h"
+#include "3Dmodels/skull/skull.h"
+#include "3Dmodels/suzanne/suzanne.h"
+#include "3Dmodels/bunny/bunny.h"
+#include "3Dmodels/dragon/dragon.h"
 
 
 // DEFAULT WIRING USING SPI 0 ON TEENSY 4/4.1
@@ -67,13 +60,13 @@ using namespace tgx;
 ILI9341_T4::ILI9341Driver tft(PIN_CS, PIN_DC, PIN_SCK, PIN_MOSI, PIN_MISO, PIN_RESET, PIN_TOUCH_CS, PIN_TOUCH_IRQ);
 
 
-// 2 x 6K diff buffers (used by tft) for differential updates
-ILI9341_T4::DiffBuffStatic<6000> diff1;
-ILI9341_T4::DiffBuffStatic<6000> diff2;
+// 2 x 8K diff buffers (used by tft) for differential updates
+ILI9341_T4::DiffBuffStatic<8000> diff1;
+ILI9341_T4::DiffBuffStatic<8000> diff2;
 
-// screen dimension (portrait mode)
-static const int SLX = 240;
-static const int SLY = 320;
+// screen dimension (landscape mode)
+static const int SLX = 320;
+static const int SLY = 240;
 
 // main screen framebuffer (150K in DTCM)
 uint16_t fb[SLX * SLY];
@@ -90,79 +83,11 @@ Image<RGB565> im(fb, SLX, SLY);
 // the 3D mesh drawer (with zbuffer, perspective projection, backface culling)
 Renderer3D<RGB565, SLX, SLY, true, false> renderer;
 
-// list of meshes to display
-const Mesh3D<RGB565> * meshes[9] = { &nanosuit_1, &elementalist_1, &sinbad_1, &cyborg, &naruto_1, &manga3_1, &dennis, &R2D2, &stormtrooper };
-
-// shaders to use
-const int shader = TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE;
-
-
-/**
-* This function computes the object position
-* according to the current time.
-* Return true when it is time to change model.
-**/
-bool  moveModel() // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
-    {
-    static elapsedMillis em = 0; // timer
-    const float end1 = 6000;
-    const float end2 = 2000;
-    const float end3 = 6000;
-    const float end4 = 2000;
-    const float tot = end1 + end2 + end3 + end4;
-
-    bool change = false;
-    while (em > tot) { em -= tot; change = true; } // check if it is time to change the mesh. 
-
-    float t = em; // current time
-    const float dilat = 9; // scale model
-    const float roty = 360 * (t / 4000); // rotate 1 turn every 4 seconds        
-    float tz, ty;
-    if (t < end1)
-    { // far away
-        tz = -25;
-        ty = 0;
-    }
-    else
-    {
-        t -= end1;
-        if (t < end2)
-        { // zooming in
-            t /= end2;
-            tz = -25 + 15 * t;
-            ty = -6 * t;
-        }
-        else
-        {
-            t -= end2;
-            if (t < end3)
-            { // close up
-                tz = -10;
-                ty = -6;
-            }
-            else
-            { // zooming out
-                t -= end3;
-                t /= end4;
-                tz = -10 - 15 * t;
-                ty = -6 + 6 * t;
-            }
-        }
-    }
-    fMat4 M;
-    M.setScale({ dilat, dilat, dilat }); // scale the model
-    M.multRotate(-roty, { 0,1,0 }); // rotate around y
-    M.multTranslate({ 0,ty, tz }); // translate
-    renderer.setModelMatrix(M);
-    return change;
-    }
-
-
 
 /**
 * Overlay some info about the current mesh on the screen
 **/
-void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RGB565> * mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
+void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RGB565>& mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
 {
     static elapsedMillis em = 0; // number of milli elapsed since last fps update
     static int fps = 0; // last fps 
@@ -170,22 +95,22 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
     // recompute fps every second. 
     count++;
     if ((int)em > 1000)
-    {
+        {
         em = 0;
         fps = count;
         count = 0;
-    }
+        }
     // count the number of triangles in the mesh (by iterating over linked meshes)
-    const Mesh3D<RGB565>* m = mesh;
+    const Mesh3D<RGB565>* m = &mesh;
     int nbt = 0;
     while (m != nullptr)
-    {
+        {
         nbt += m->nb_faces;
         m = m->next;
-    }
+        }
     // display some info 
     char buf[80];
-    im.drawText((mesh->name != nullptr ? mesh->name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, Arial_10, false);
+    im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, Arial_10, false);
     sprintf(buf, "%d triangles", nbt);
     im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, Arial_10, false);
     sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE ? " / texturing" : ""));
@@ -199,6 +124,10 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
 
 void setup()
     {
+    Serial.begin(9600);
+
+    tft.output(&Serial);                // output debug infos to serial port. 
+
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED))
         {
@@ -211,65 +140,86 @@ void setup()
     digitalWrite(PIN_BACKLIGHT, HIGH);
 
     // setup the screen driver 
-    tft.setRotation(0); // portrait mode
+    tft.setRotation(3); // landscape
     tft.setFramebuffers(internal_fb); // double buffering
     tft.setDiffBuffers(&diff1, &diff2); // 2 diff buffers
     tft.setDiffGap(4); // small gap
     tft.setVSyncSpacing(0); // do not use v-sync because we want to measure the max framerate; 
-    tft.setRefreshRate(140); // max refreshrate. 
+    tft.setRefreshRate(140); // max refreshrate
 
     // setup the 3D renderer.
     renderer.setOffset(0, 0); //  image = viewport
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
     renderer.setZbuffer(zbuf, SLX * SLY); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
-
-    // if external ram is present, copy model textures to extram because it gives a few more fps. 
-    #if defined(ARDUINO_TEENSY41)
-    if (external_psram_size > 0)
-        {
-        for (auto & m : meshes)  m = copyMeshEXTMEM(m);
-        }
-    #endif
-
     }
 
 
-// index of the mesh currently displayed
-int meshindex = 0;
+void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
+{
+    const int maxT = 15000; // display model for 15 seconds. 
+    elapsedMillis em = 0;
+    while (em < maxT)
+        {
+        // erase the screen
+        im.fillScreen(RGB565_Black);
 
-// number of frame drawn
-int nbf = 0;
+        // clear the z buffer
+        renderer.clearZbuffer();
+
+        // move the model to it correct position (depending on the current time). 
+        fMat4 M;
+        M.setScale(scale, scale, scale);
+        M.multRotate(tilt, { 0,0,1 }); // 4 rotations per display
+        M.multRotate((1440.0f * em) / maxT, { 0,1,0 }); // 4 rotations per display
+        M.multTranslate({ 0,0, -40 });
+        renderer.setModelMatrix(M);
+
+        // change shader type after every turn
+        int shader = (((em * 4) / maxT) & 1) ? TGX_SHADER_GOURAUD : TGX_SHADER_FLAT;
+
+        // draw the mesh on the image
+        renderer.drawMesh(shader, mesh, false);
+
+        // overlay some info 
+        drawInfo(im, shader, *mesh);
+
+        // update the screen (asynchronously)
+        tft.update(fb);
+        }
+}
 
 
 void loop()
 {
-    // erase the screen
-    im.fillScreen(RGB565_Black);
+    renderer.setMaterial(RGBf(0.15f, 0.7f, 0.39f), 0.2f, 0.8f, 0.5f, 8); // teapot
+    drawMesh(&teapot, 15, 30);
 
-    // clear the z buffer
-    renderer.clearZbuffer();
+    renderer.setMaterial(RGBf(1.0f, 1.0f, 1.0f), 0.15f, 0.7f, 0.8f, 48); // bunny
+    drawMesh(&bunny, 12);
 
-    // move the model to it correct position (depending on current time). 
-    if (moveModel())
-        meshindex = (meshindex + 1) % (sizeof(meshes) / sizeof(meshes[0]));
+    renderer.setMaterial(RGBf(166 / 256.0f, 130 / 256.0f, 110.0f / 256.0f), 0.15f, 0.7f, 0.4f, 16); // skull
+    drawMesh(&skull_1, 12);
 
-    // draw the mesh on the image
-    renderer.drawMesh(shader, meshes[meshindex]);
+    // let's have some fun with lightning
+    renderer.setLightAmbiant({ 0, 0, 1.0f });  // blue
+    renderer.setLightDiffuse({ 1.0f, 0, 0 });  // red    
+    renderer.setLightSpecular({ 1.0f, 1.0f, 1.0f }); // white
 
-    // overlay some info 
-    drawInfo(im, shader, meshes[meshindex]);
+    renderer.setMaterial(RGBf(1.0f, 1.0f, 1.0f), 0.2f, 0.8f, 0.8f, 32); // suzanne
+    drawMesh(&suzanne, 13);
 
-    // update the screen
-    tft.update(fb);
+    // back to normal lightning
+    renderer.setLightAmbiant({ 1.0f, 1.0f, 1.0f }); // white
+    renderer.setLightDiffuse({ 1.0f, 1.0f, 1.0f }); // white
+    renderer.setLightSpecular({ 1.0f, 1.0f, 1.0f }); // white
 
-    // print some info about the display driver
-    if (nbf++ % 200 == 0)
-        {
-        tft.printStats();
-        diff1.printStats();
-        diff2.printStats();
-        }
+    renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // dragon
+    drawMesh(&dragon, 15);
+
+    // chooose new random light orientation.
+    const float angle = M_PI * random(0, 360) / 180.0f;
+    renderer.setLightDirection({ cosf(angle) , sinf(angle) , -0.3f });
 }
 
 

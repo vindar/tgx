@@ -86,6 +86,10 @@ Renderer3D<RGB565, SLX, SLY, true, false> renderer;
 
 void setup()
     {
+    Serial.begin(9600);
+
+    tft.output(&Serial);                // output debug infos to serial port. 
+
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED))
         {

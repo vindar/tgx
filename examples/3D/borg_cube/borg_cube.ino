@@ -140,6 +140,10 @@ uint16_t tex_ind[6 * 4] =
 
 void setup()
     {
+    Serial.begin(9600);
+
+    tft.output(&Serial);                // output debug infos to serial port. 
+    
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED))
         {

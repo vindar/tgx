@@ -280,6 +280,10 @@ void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
 
 void setup()
     {
+    Serial.begin(9600);
+
+    tft.output(&Serial);                // output debug infos to serial port. 
+
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED))
         {
