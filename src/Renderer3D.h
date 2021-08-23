@@ -1536,7 +1536,7 @@ namespace tgx
         int  Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawMesh(const int shader, const Mesh3D<color_t>* mesh, bool use_mesh_material, bool draw_chained_meshes)
             {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < LX * LY))) return -2; // zbuffer required but not available.            
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly() ))) return -2; // zbuffer required but not available.            
 
             while (mesh)
                 {
