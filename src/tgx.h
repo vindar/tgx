@@ -14,10 +14,15 @@
 //
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; If not, see <http://www.gnu.org/licenses/>.
-
-#pragma once
+#ifndef _TGX_H_
+#define _TGX_H_
 
 /** Main library header. Includes all other headers*/
+
+#include "Fonts.h" // include this when compiled as a C file
+
+// and now only C++, no more plain C
+#ifdef __cplusplus
 
 #include "Misc.h"
 #include "Vec2.h"
@@ -30,6 +35,10 @@
 #include "Image.h"
 #include "Mesh3D.h"
 #include "Renderer3D.h"
+
+#endif
+
+#endif // _TGX_H_
 
 /* end of file */
 

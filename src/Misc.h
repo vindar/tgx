@@ -15,7 +15,12 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; If not, see <http://www.gnu.org/licenses/>.
 
-#pragma once
+#ifndef _TGX_MISC_H_
+#define _TGX_MISC_H_
+
+// only C++, no plain C
+#ifdef __cplusplus
+
 
 #include <stdint.h>
 #include <math.h>
@@ -155,6 +160,11 @@ namespace tgx
         }
 
 }
+
+#endif
+
+#endif
+
 
 /** end of file */
 

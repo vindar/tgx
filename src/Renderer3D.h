@@ -15,7 +15,12 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; If not, see <http://www.gnu.org/licenses/>.
 
-#pragma once
+
+#ifndef _TGX_RENDERER3D_H_
+#define _TGX_RENDERER3D_H_
+
+// only C++, no plain C
+#ifdef __cplusplus
 
 
 #include "Misc.h"
@@ -1884,6 +1889,11 @@ namespace tgx
 
 
 }
+
+
+#endif
+
+#endif
 
 
 /** end of file */

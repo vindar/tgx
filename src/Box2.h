@@ -15,7 +15,12 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; If not, see <http://www.gnu.org/licenses/>.
 
-#pragma once
+#ifndef _TGX_BOX2_H_
+#define _TGX_BOX2_H_
+
+// only C++, no plain C
+#ifdef __cplusplus
+
 
 #include "Misc.h"
 #include "Vec2.h"
@@ -466,6 +471,15 @@ namespace tgx
 
 
         /**
+        * Return the center of the box. 
+        **/
+        Vec2<T> center() const
+            {
+            return Vec2<T>((minX + maxX) / 2, (minY + maxY) / 2);
+            }
+            
+
+        /**
         * return the aspect ratio of the box lx()/(ly().
         * return -1.0f for an empty box.
         * Remark: lx() and ly() are computed differently depending on 
@@ -618,6 +632,10 @@ namespace tgx
 
 }
 
-/** end of file */
 
+#endif
+
+#endif
+
+/** end of file **/
 
