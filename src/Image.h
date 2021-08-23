@@ -14,9 +14,13 @@
 //
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; If not, see <http://www.gnu.org/licenses/>.
+#ifndef _TGX_IMAGE_H_
+#define _TGX_IMAGE_H_
 
-#pragma once
+#include "Fonts.h" // include this also when compiled as a C file
 
+// and now only C++, no more plain C
+#ifdef __cplusplus
 
 #include "Misc.h"
 #include "Vec2.h"
@@ -26,96 +30,6 @@
 #include "Color.h"
 
 #include <stdint.h>
-
-
-
-/****************************************************************************
-* FONT FORMATS
-* 
-* !!! The Adafruit GFX and ILI9341_t3 libraries should be included before 
-*     this header !!!
-****************************************************************************/
-
-
-/**
-* ADAFRUIT FONT
-* Documentation on the Adafruit font format:
-* https://glenviewsoftware.com/projects/products/adafonteditor/adafruit-gfx-font-format/
-**/
-
-//#if __has_include(<gfxfont.h>)
-//#include <gfxfont.h>
-//#endif
-
-#ifndef _GFXFONT_H_
-#define _GFXFONT_H_
-
-// Font data stored PER GLYPH
-typedef struct {
-	uint16_t bitmapOffset; // Pointer into GFXfont->bitmap
-	uint8_t width;         // Bitmap dimensions in pixels
-	uint8_t height;        // Bitmap dimensions in pixels
-	uint8_t xAdvance;      // Distance to advance cursor (x axis)
-	int8_t xOffset;        // X dist from cursor pos to UL corner
-	int8_t yOffset;        // Y dist from cursor pos to UL corner
-} GFXglyph;
-
-
-// Data stored for FONT AS A WHOLE
-typedef struct {
-	uint8_t* bitmap;  // Glyph bitmaps, concatenated
-	GFXglyph* glyph;  // Glyph array
-	uint8_t first;    // ASCII extents (first char)
-	uint8_t last;     // ASCII extents (last char)
-	uint8_t yAdvance; // Newline distance (y axis)
-} GFXfont;
-
-#endif 
-
-
-
-/**
-* ILI9341_t3 PJRC FONT FORMAT
-* Documentation on the ILI9341_t3 font data format:
-* https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format (basic version)
-* https://github.com/projectitis/packedbdf/blob/master/packedbdf.md (anti-aliased extension)
-**/
-
-//#if __has_include(<ILI9341_t3.h>)
-//#include <ILI9341_t3.h>
-//#endif
-
-//#ifndef _ILI9341_t3H_
-//#define _ILI9341_t3H_
-
-#ifndef _ILI9341_FONTS_H_
-#define _ILI9341_FONTS_H_
-typedef struct {
-	const unsigned char* index;
-	const unsigned char* unicode;
-	const unsigned char* data;
-	unsigned char version;
-	unsigned char reserved;
-	unsigned char index1_first;
-	unsigned char index1_last;
-	unsigned char index2_first;
-	unsigned char index2_last;
-	unsigned char bits_index;
-	unsigned char bits_width;
-	unsigned char bits_height;
-	unsigned char bits_xoffset;
-	unsigned char bits_yoffset;
-	unsigned char bits_delta;
-	unsigned char line_space;
-	unsigned char cap_height;
-} ILI9341_t3_font_t;
-
-#endif
-
-typedef ILI9341_t3_font_t packedbdf_t;
-//#endif 
-
-
 
 
 
@@ -503,15 +417,27 @@ namespace tgx
 
 
         /**
-         * Blit a sprite at a given position on this image.
+         * Blit a sprite at a given position on the image.
          *
          * @param   sprite          The sprite image to blit.
-         * @param   upperleftpos    Position of the upper left corner of the sprite in the image should
-         *                          be.
+         * @param   upperleftpos    Position of the upper left corner of the sprite in the image
         **/
 		void blit(const Image<color_t> & sprite, iVec2 upperleftpos)
 			{
-			blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.width(), sprite.height());
+			_blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly());
+			}
+
+
+		/**
+		 * Blit a sprite at a given position on this image.
+		 *
+		 * @param   sprite          The sprite image to blit.
+		 * @param   dest_x			x coordinate of the upper left corner of the sprite in the image.
+		 * @param   dest_y			y coordinate of the upper left corner of the sprite in the image.
+		**/
+		void blit(const Image<color_t>& sprite, int dest_x, int dest_y)
+			{
+			_blit(sprite, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly());
 			}
 
 
@@ -522,110 +448,108 @@ namespace tgx
          * channel, it is also used or blending.
          *
          * @param   sprite          The sprite image to blit.
-         * @param   upperleftpos    Position of the upper left corner of the sprite in the image should
-         *                          be.
+         * @param   upperleftpos    Position of the upper left corner of the sprite in the image
          * @param   opacity         The opacity between 0.0f (fully transparent) and 1.0f (fully opaque).
         **/
 		void blit(const Image<color_t>& sprite, iVec2 upperleftpos, float opacity)
 			{
-			blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.width(), sprite.height(), opacity);
+			_blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(),opacity);
 			}
 
 
-        /**
-         * Blit a sprite at a given position on this image upperleftpos : upper left corner (on this
-         * image) where blitting occurs.
-         *
-         * @param   sprite  The sprite.
-         * @param   dest_x  (Optional) x coordinate of the upper left corner of the sprite in the image. 
-         * @param   dest_y  (Optional) x coordinate of the upper left corner of the sprite in the image.
-        **/
-		void blit(const Image<color_t> & sprite, int dest_x = 0, int dest_y = 0)
-			{
-			blit(sprite, dest_x, dest_y, 0, 0, sprite.width(), sprite.height());
-			}
-
-
-        /**
-         * Blit a sprite at a given position on this image upperleftpos : upper left corner (on this
-         * image) where blitting occurs.
-         *
+		/**
+		 * Blit a sprite at a given position on this image.
+		 *
 		 * Use blending to draw the sprite over the image with a given opacity. If color_t has an alpha
 		 * channel, it is also used or blending.
 		 *
-		 * @param   sprite  The sprite.
-         * @param   dest_x  X coordinate of the upper left corner of the sprite inside this image.
-         * @param   dest_y  X coordinate of the upper left corner of the sprite inside this image.
-         * @param   opacity The opacity between 0.0f (fully transparent) and 1.0f (fully opaque).
-        **/
+		 * @param   sprite      The sprite image to blit.
+		 * @param   dest_x		x coordinate of the upper left corner of the sprite in the image.
+		 * @param   dest_y		y coordinate of the upper left corner of the sprite in the image.
+		**/
 		void blit(const Image<color_t>& sprite, int dest_x, int dest_y, float opacity)
 			{
-			blit(sprite, dest_x, dest_y, 0, 0, sprite.width(), sprite.height(), opacity);
+			_blit(sprite, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly(), opacity);
 			}
 
 
         /**
-         * Blit part of a sprite at a given position on this image.
+         * Blit a sprite at a given position on this image. Sprite pixels with color `transparent_color`
+         * are treated as transparent hence not copied on the image. Other pixels are blended with the
+         * destination image using the opacity factor.
          *
-         * @param   sprite          The sprite.
-         * @param   upperleftpos    Position of the upper left corner of the sprite in the image should
-         *                          be.
-         * @param   sprite_subbox   box that delimit the portion of the sprite to blit.
+         * @param   sprite              The sprite image to blit.
+         * @param   transparent_color   The sprite color considered transparent.
+         * @param   upperleftpos        Position of the upper left corner of the sprite in the image.
+         * @param   opacity             The opacity between 0.0f (fully transparent) and 1.0f (fully opaque).
         **/
-		void blit(const Image<color_t> & sprite, iVec2 upperleftpos, const iBox2 & sprite_subbox)
+		void blitMasked(const Image<color_t>& sprite, color_t transparent_color, iVec2 upperleftpos, float opacity)
 			{
-			blit(sprite, upperleftpos.x, upperleftpos.y, sprite_subbox.minX, sprite_subbox.minY, sprite_subbox.lx(), sprite_subbox.ly());
+			_blitMasked(sprite, transparent_color, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), opacity);
 			}
 
 
         /**
-         * Blit part of a sprite at a given position on this image.
-         * 
-         * Use blending to draw the sprite over the image with a given opacity. If color_t has an alpha
-         * channel, it is also used or blending.
+         * Blit a sprite at a given position on this image. Sprite pixels with color `transparent_color`
+         * are treated as transparent hence not copied on the image. Other pixels are blended with the
+         * destination image using the opacity factor.
          *
-         * @param   sprite          The sprite.
-         * @param   upperleftpos    Position of the upper left corner of the sprite in the image should
-         *                          be.
-         * @param   sprite_subbox   box that delimit the portion of the sprite to blit.
-         * @param   opacity         The opacity between 0.0f (fully transparent) and 1.0f (fully opaque).
+         * @param   sprite              The sprite image to blit.
+         * @param   transparent_color   The sprite color considered transparent.
+		 * @param   dest_x				x coordinate of the upper left corner of the sprite in the image.
+		 * @param   dest_y				y coordinate of the upper left corner of the sprite in the image.
+		 * @param   opacity             The opacity between 0.0f (fully transparent) and 1.0f (fully
+         *                              opaque).
         **/
-		void blit(const Image<color_t> & sprite, iVec2 upperleftpos, const iBox2 & sprite_subbox, float opacity)
+		void blitMasked(const Image<color_t>& sprite, color_t transparent_color, int dest_x, int dest_y, float opacity)
 			{
-			blit(sprite, upperleftpos.x, upperleftpos.y, sprite_subbox.minX, sprite_subbox.minY, sprite_subbox.lx(), sprite_subbox.ly(), opacity);
+			_blitMasked(sprite, transparent_color, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly(), opacity);
 			}
 
 
-        /**
-         * Blit part of a sprite at a given position on this image.
-         *
-         * @param   sprite      The sprite.
-         * @param   dest_x      X coordinate of the upper left corner of the sprite inside this image.
-         * @param   dest_y      Y coordinate of the upper left corner of the sprite inside this image.
-         * @param   sprite_x    X coordinate of the sprite region to blit.
-         * @param   sprite_y    Y coordinate of the sprite region to blit.
-         * @param   sx          width of the sprite region to blit.
-         * @param   sy          height of the sprite region to blit.
-        **/
-		void blit(const Image<color_t> & sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy);
+		/**
+		 * Reverse blitting. Copy part of the image into the sprite
+         * This is the inverse of the blit operation.
+		 *
+		 * @param   dst_sprite      The sprite to copy part of this image into.
+		 * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
+		**/
+		void blitBackward(Image<color_t> & dst_sprite, iVec2 upperleftpos) const
+			{
+			dst_sprite._blit(*this, 0, 0, upperleftpos.x, upperleftpos.y, dst_sprite.lx(), dst_sprite.ly());
+			}
 
 
-        /**
-         * Blit part of a sprite at a given position on this image.
+		/**
+		 * Reverse blitting. Copy part of the image into the sprite
+		 * This is the inverse of the blit operation.
 		 *
-		 * Use blending to draw the sprite over the image with a given opacity. If color_t has an alpha
-		 * channel, it is also used or blending.
-		 *
-         * @param   sprite      The sprite.
-         * @param   dest_x      X coordinate of the upper left corner of the sprite inside this image.
-         * @param   dest_y      Y coordinate of the upper left corner of the sprite inside this image.
-         * @param   sprite_x    X coordinate of the sprite region to blit.
-         * @param   sprite_y    Y coordinate of the sprite region to blit.
-         * @param   sx          width of the sprite region to blit.
-         * @param   sy          height of the sprite region to blit.
-         * @param   opacity     The opacity between 0.0f (fully transparent) and 1.0f (fully opaque).
-        **/
-		void blit(const Image<color_t>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
+		 * @param   dst_sprite      The sprite to copy part of this image into.
+		 * @param   dest_x			x coordinate of the upper left corner of the sprite in the image.
+		 * @param   dest_y			y coordinate of the upper left corner of the sprite in the image.
+		**/
+		void blitBackward(Image<color_t>& dst_sprite, int dest_x, int dest_y) const
+			{
+			dst_sprite._blit(*this, 0, 0, dest_x, dest_y, dst_sprite.lx(), dst_sprite.ly());
+			}
+
+
+
+/************* TODO ***************
+
+		void blitRotated(const Image<color_t>& sprite, iVec2 sprite_anchor, iVec2 dest_anchor, float angle_in_degre);
+
+		void blitRotated(const Image<color_t>& sprite, int sprite_anchor_x, int sprite_anchor_y, int dest_anchor_x, int dest_anchor_y, float angle_in_degre);
+
+		void blitRotated(const Image<color_t>& sprite, iVec2 sprite_anchor, iVec2 dest_anchor, float angle_in_degre, float opacity);
+
+		void blitRotated(const Image<color_t>& sprite, int sprite_anchor_x, int sprite_anchor_y, int dest_anchor_x, int dest_anchor_y, float angle_in_degre, float opacity);
+
+		void blitRotatedMasked(const Image<color_t>& sprite, color_t transparent_color, iVec2 sprite_anchor, iVec2 dest_anchor, float angle_in_degre, float opacity);
+
+		void blitRotatedMasked(const Image<color_t>& sprite, color_t transparent_color, int sprite_anchor_x, int sprite_anchor_y, int dest_anchor_x, int dest_anchor_y, float angle_in_degre, float opacity);
+
+***********************************/
 
 
 		/**
@@ -795,7 +719,33 @@ namespace tgx
 			}
 
 
+        /**
+         * Iterate over all the pixels of the image going from left to right and then top to bottom. 
+         * The callback function cb_fun is called for each pixel and have a signature compatible with:
+         * 
+		 *  `bool cb_fun(tgx::iVec2 pos, color_t & color)`
+         * 
+         * where:
+         * 
+         * - `pos` is the position of the current pixel in the image
+		 * - `color` is a reference to the current pixel color. 
+		 * - the callback must return true to continue the iteration and false to abort the iteration.
+         *
+         * This method is particularly useful with lambdas, for example, to paint all black pixels
+         * to red in a RGB565 image `im`:
+		 *
+         * im.iterate( [](tgx::iVec2 pos, tgx::RGB565 & color) { if (color == tgx::RGB565_Black) color = tgx::RGB565_Red; return true;});
+         **/
+		template<typename ITERFUN> void iterate(ITERFUN cb_fun)
+			{
+			iterate(cb_fun, imageBox());
+			}
 
+
+		/**
+		* Same as above but iterate only over the pixels inside the sub-box B (intersected with the image box).
+		**/
+		template<typename ITERFUN> void iterate(ITERFUN cb_fun, tgx::iBox2 B);
 
 
 
@@ -1554,21 +1504,21 @@ namespace tgx
 		/**
 		* Draw the outline of an ellipse (but not its interior).
 		**/
-		void drawEllipse(iVec2 center, int rx, int ry, color_t interior_color, color_t outline_color)
+		void drawEllipse(iVec2 center, int rx, int ry, color_t color)
 			{
-			drawEllipse(center.x, center.y, rx, ry, interior_color, outline_color);
+			drawEllipse(center.x, center.y, rx, ry, color, color);
 			}
 
 
 		/**
 		* Draw the outline of an ellipse (but not its interior).
 		**/
-		void drawEllipse(int cx, int cy, int rx, int ry, color_t interior_color, color_t outline_color)
+		void drawEllipse(int cx, int cy, int rx, int ry, color_t color)
 			{
 			if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
-				_drawEllipse<true, false, false>(cx, cy, rx , ry, outline_color, interior_color);
+				_drawEllipse<true, false, false>(cx, cy, rx , ry, color, color);
 			else
-				_drawEllipse<true, false, true>(cx, cy, rx, ry, outline_color, interior_color);
+				_drawEllipse<true, false, true>(cx, cy, rx, ry, color, color);
 			}
 
 
@@ -1578,9 +1528,9 @@ namespace tgx
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void drawEllipse(iVec2 center, int rx, int ry, color_t interior_color, color_t outline_color, float opacity)
+		void drawEllipse(iVec2 center, int rx, int ry, color_t color, float opacity)
 			{
-			drawEllipse(center.x, center.y, rx, ry, interior_color, outline_color, opacity);
+			drawEllipse(center.x, center.y, rx, ry, color, color, opacity);
 			}
 
 		/**
@@ -1589,12 +1539,12 @@ namespace tgx
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void drawEllipse(int cx, int cy, int rx, int ry, color_t interior_color, color_t outline_color, float opacity)
+		void drawEllipse(int cx, int cy, int rx, int ry, color_t color, float opacity)
 			{
 			if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
-				_drawEllipse<true, false, false>(cx, cy, rx , ry, outline_color, interior_color, opacity);
+				_drawEllipse<true, false, false>(cx, cy, rx , ry, color, color, opacity);
 			else
-				_drawEllipse<true, false, true>(cx, cy, rx, ry, outline_color, interior_color, opacity);
+				_drawEllipse<true, false, true>(cx, cy, rx, ry, color, color, opacity);
 			}
 
 
@@ -2214,6 +2164,15 @@ private:
 		static inline void _fast_memset(color_t* p_dest, color_t color, int32_t len);
 
 
+		bool _blitClip(const Image& sprite, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy);
+
+		void _blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy);
+
+		void _blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
+
+		void _blitMasked(const Image& sprite, color_t transparent_color, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
+
+
 		/** blit a region while taking care of possible overlap */
 		static void _blitRegion(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
 			{
@@ -2222,7 +2181,6 @@ private:
 			else 
 				_blitRegionDown(pdest, dest_stride, psrc, src_stride, sx, sy);
 			}
-
 
 		/** blit a region while taking care of possible overlap */
 		static void _blendRegion(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
@@ -2233,6 +2191,14 @@ private:
 				_blendRegionDown(pdest, dest_stride, psrc, src_stride, sx, sy, opacity);
 			}
 
+		/** blit a region while taking care of possible overlap */
+		static void _maskRegion(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
+			{
+			if ((size_t)pdest <= (size_t)psrc)
+				_maskRegionUp(transparent_color, pdest, dest_stride, psrc, src_stride, sx, sy, opacity);
+			else
+				_maskRegionDown(transparent_color, pdest, dest_stride, psrc, src_stride, sx, sy, opacity);
+			}
 
 		static void _blitRegionUp(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy);
 
@@ -2241,6 +2207,10 @@ private:
 		static void _blendRegionUp(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
 
 		static void _blendRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
+
+		static void _maskRegionUp(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
+
+		static void _maskRegionDown(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
 
 
 		/***************************************
@@ -2356,9 +2326,6 @@ private:
 			float dx = pax - bax * h, dy = pay - bay * h;
 			return sqrtf(dx * dx + dy * dy) + h * dr;
 			}
-
-
-
 
 
 
@@ -2664,42 +2631,191 @@ private:
 	*************************************************************************************/
 
 
+	/** set len consecutive pixels given color starting at pdest */
 	template<typename color_t>
-	void Image<color_t>::blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy)
+	inline void Image<color_t>::_fast_memset(color_t* p_dest, color_t color, int32_t len)
+		{		
+		if(std::is_same <color_t, RGB565>::value) // optimized away at compile time
+			{ // optimized code for RGB565.			
+			if (len <= 0) return;
+			uint16_t* pdest = (uint16_t*)p_dest;				// recasting
+			const uint16_t col = (uint16_t)((RGB565)color);		// conversion to RGB565 does nothing but prevent compiler error when color_t is not RGB565
+			// ! We assume here that pdest is already aligned mod 2 (it should be) ! 
+			if (((intptr_t)pdest) & 3)
+				{
+				*(pdest++) = col;
+				len--;
+				}
+			// now we are aligned mod 4
+			const uint32_t c32 = col;
+			const uint32_t cc = (c32 | (c32 << 16));
+			uint32_t* pdest2 = (uint32_t*)pdest;
+			int len32 = (len >> 5);			
+			while (len32 > 0)
+				{ // write 32 color pixels at once
+				*(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc;
+				*(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc;
+				*(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc;
+				*(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc;
+				len32--;
+				}				
+			int len2 = ((len & 31) >> 1);		
+			while (len2 > 0)
+				{ // write 2 color pixels at once 
+				*(pdest2++) = cc;
+				len2--;
+				}
+			
+			if (len & 1)
+				{ // write the last pixel if needed. 
+				*((uint16_t*)pdest2) = col;
+				}				
+			}
+		else 
+			{ // generic code for other color types
+			while (len > 0) 
+				{ 
+				*(p_dest++) = color;
+				len--;
+                }
+			}
+		}
+
+
+	template<typename color_t>
+	void Image<color_t>::_blitRegionUp(color_t * pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
 		{
-		if ((!sprite.isValid()) || (!isValid())) { return; } // nothing to draw on or from
+		// TODO, make faster with specialization (writing 32bit at once etc...) 
+		for (int j = 0; j < sy; j++)
+			{
+			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+			for (int i = 0; i < sx; i++) { pdest2[i] = psrc2[i]; }
+			}
+		}
+
+
+	template<typename color_t>
+	void Image<color_t>::_blitRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
+		{
+		// TODO, make faster with specialization (writing 32bit at once etc...)
+		for (int j = sy - 1; j >= 0; j--)
+			{
+			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+			for (int i = sx - 1; i >= 0; i--) { pdest2[i] = psrc2[i]; }
+			}	
+		}
+
+
+	template<typename color_t>
+	void Image<color_t>::_blendRegionUp(color_t * pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
+		{
+		const int op256 = (int)(opacity * 256);
+		for (int j = 0; j < sy; j++)
+			{
+			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+			for (int i = 0; i < sx; i++) 
+				{ 
+				pdest2[i].blend256(psrc2[i], op256);
+				}
+			}
+		}
+
+
+	template<typename color_t>
+	void Image<color_t>::_blendRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
+		{
+		const int op256 = (int)(opacity * 256);
+		for (int j = sy - 1; j >= 0; j--)
+			{
+			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+			for (int i = sx - 1; i >= 0; i--) 
+				{
+				pdest2[i].blend256(psrc2[i], op256);
+				}
+			}	
+		}
+
+
+	template<typename color_t>
+	void Image<color_t>::_maskRegionUp(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
+		{
+		const int op256 = (int)(opacity * 256);
+		for (int j = 0; j < sy; j++)
+			{
+			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+			for (int i = 0; i < sx; i++) 
+				{ 
+				color_t c = psrc2[i];
+				if (c != transparent_color) pdest2[i].blend256(c, op256);
+				}
+			}
+		}
+
+
+	template<typename color_t>
+	void Image<color_t>::_maskRegionDown(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
+		{
+		const int op256 = (int)(opacity * 256);
+		for (int j = sy - 1; j >= 0; j--)
+			{
+			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+			for (int i = sx - 1; i >= 0; i--) 
+				{
+				color_t c = psrc2[i];
+				if (c != transparent_color) pdest2[i].blend256(c, op256);
+				}
+			}	
+		}
+
+
+	template<typename color_t>
+	bool Image<color_t>::_blitClip(const Image& sprite, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy)
+		{
+		if ((!sprite.isValid()) || (!isValid())) { return false; } // nothing to draw on or from
 		if (sprite_x < 0) { dest_x -= sprite_x; sx += sprite_x; sprite_x = 0; }
 		if (sprite_y < 0) { dest_y -= sprite_y; sy += sprite_y; sprite_y = 0; }
 		if (dest_x < 0) { sprite_x -= dest_x;   sx += dest_x; dest_x = 0; }
 		if (dest_y < 0) { sprite_y -= dest_y;   sy += dest_y; dest_y = 0; }
-		if ((dest_x >= _lx) || (dest_y >= _ly) || (sprite_x >= sprite._lx) || (sprite_x >= sprite._ly)) return;
+		if ((dest_x >= _lx) || (dest_y >= _ly) || (sprite_x >= sprite._lx) || (sprite_x >= sprite._ly)) return false;
 		sx -= max(0, (dest_x + sx - _lx));
 		sy -= max(0, (dest_y + sy - _ly));
 		sx -= max(0, (sprite_x + sx - sprite._lx));
 		sy -= max(0, (sprite_y + sy - sprite._ly));
-		if ((sx <= 0) || (sy <= 0)) return;
+		if ((sx <= 0) || (sy <= 0)) return false;
+		return true;
+		}
+
+
+	template<typename color_t>
+	void Image<color_t>::_blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy)
+		{
+		if (!_blitClip(sprite, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
 		_blitRegion(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy);
 		}
 
 
 	template<typename color_t>
-	void Image<color_t>::blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
+	void Image<color_t>::_blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
 		{
 		if (opacity < 0.0f) opacity = 0.0f; else if (opacity > 1.0f) opacity = 1.0f;
-		if ((!sprite.isValid()) || (!isValid())) { return; } // nothing to draw on or from
-		if (sprite_x < 0) { dest_x -= sprite_x; sx += sprite_x; sprite_x = 0; }
-		if (sprite_y < 0) { dest_y -= sprite_y; sy += sprite_y; sprite_y = 0; }
-		if (dest_x < 0) { sprite_x -= dest_x;   sx += dest_x; dest_x = 0; }
-		if (dest_y < 0) { sprite_y -= dest_y;   sy += dest_y; dest_y = 0; }
-		if ((dest_x >= _lx) || (dest_y >= _ly) || (sprite_x >= sprite._lx) || (sprite_x >= sprite._ly)) return;
-		sx -= max(0, (dest_x + sx - _lx));
-		sy -= max(0, (dest_y + sy - _ly));
-		sx -= max(0, (sprite_x + sx - sprite._lx));
-		sy -= max(0, (sprite_y + sy - sprite._ly));
-		if ((sx <= 0) || (sy <= 0)) return;
+		if (!_blitClip(sprite, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
 		_blendRegion(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, opacity);
 		}
 
+
+	template<typename color_t>
+	void Image<color_t>::_blitMasked(const Image& sprite, color_t transparent_color, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
+		{
+		if (opacity < 0.0f) opacity = 0.0f; else if (opacity > 1.0f) opacity = 1.0f;
+		if (!_blitClip(sprite, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
+		_maskRegion(transparent_color, _buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, opacity);
+		}
 
 
 	template<typename color_t>
@@ -2791,6 +2907,25 @@ private:
 	*  Drawing primitives
 	* 
 	*************************************************************************************/
+
+	/*****************************************************
+	* Direct pixel access
+	******************************************************/
+
+
+	template<typename color_t>
+	template<typename ITERFUN> void Image<color_t>::iterate(ITERFUN cb_fun, tgx::iBox2 B)
+		{
+		B &= imageBox();
+		if (B.isEmpty()) return;
+		for (int j = B.minY; j <= B.maxY; j++)
+			{
+			for (int i = B.minX; i <= B.maxX; i++)
+				{
+				if (!cb_fun(tgx::iVec2(i, j), operator()(i,j))) return;
+				}
+			}
+		}
 
 
 
@@ -3997,6 +4132,75 @@ private:
 
 
 	template<typename color_t>
+	uint32_t Image<color_t>::_fetchbits_unsigned(const uint8_t* p, uint32_t index, uint32_t required)
+		{
+		uint32_t val;
+		uint8_t* s = (uint8_t*)&p[index >> 3];
+	#ifdef UNALIGNED_IS_SAFE		// is this defined anywhere ? 
+		val = *(uint32_t*)s; // read 4 bytes - unaligned is ok
+		val = __builtin_bswap32(val); // change to big-endian order
+	#else
+		val = s[0] << 24;
+		val |= (s[1] << 16);
+		val |= (s[2] << 8);
+		val |= s[3];
+	#endif
+		val <<= (index & 7); // shift out used bits
+		if (32 - (index & 7) < required) 
+			{ // need to get more bits
+			val |= (s[4] >> (8 - (index & 7)));
+			}
+		val >>= (32 - required); // right align the bits
+		return val;
+		}
+
+
+	template<typename color_t>
+	uint32_t Image<color_t>::_fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required)
+		{
+		uint32_t val = _fetchbits_unsigned(p, index, required);
+		if (val & (1 << (required - 1))) 
+			{
+			return (int32_t)val - (1 << required);
+			}
+		return (int32_t)val;
+		}
+
+
+	template<typename color_t>
+	bool Image<color_t>::_clipit(int& x, int& y, int& sx, int& sy, int & b_left, int & b_up)
+		{
+		b_left = 0;
+		b_up = 0; 
+		if ((sx < 1) || (sy < 1) || (y >= _ly) || (y + sy <= 0) || (x >= _lx) || (x + sx <= 0))
+			{ // completely outside of image
+			return false;
+			}
+		if (y < 0)
+			{
+			b_up = -y;
+			sy += y;
+			y = 0;
+			}
+		if (y + sy > _ly)
+			{
+			sy = _ly - y;
+			}
+		if (x < 0)
+			{
+			b_left = -x;
+			sx += x;
+			x = 0;
+			}
+		if (x + sx > _lx)
+			{
+			sx = _lx - x;
+			}
+		return true;
+		}
+
+
+	template<typename color_t>
 	iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const GFXfont& font, int * xadvance)
 		{
 		uint8_t n = (uint8_t)c;
@@ -4077,7 +4281,6 @@ private:
 			}
 		return pos;
 		}
-
 
 
 	template<typename color_t>
@@ -4230,193 +4433,6 @@ private:
 				}
 			}
 		return pos;
-		}
-
-
-
-
-	/************************************************************************************
-	* 
-	*  Misc private routines
-	* 
-	*************************************************************************************/
-
-
-	/** set len consecutive pixels given color starting at pdest */
-	template<typename color_t>
-	inline void Image<color_t>::_fast_memset(color_t* p_dest, color_t color, int32_t len)
-		{		
-		if(std::is_same <color_t, RGB565>::value) // optimized away at compile time
-			{ // optimized code for RGB565.			
-			if (len <= 0) return;
-			uint16_t* pdest = (uint16_t*)p_dest;				// recasting
-			const uint16_t col = (uint16_t)((RGB565)color);		// conversion to RGB565 does nothing but prevent compiler error when color_t is not RGB565
-			// ! We assume here that pdest is already aligned mod 2 (it should be) ! 
-			if (((intptr_t)pdest) & 3)
-				{
-				*(pdest++) = col;
-				len--;
-				}
-			// now we are aligned mod 4
-			const uint32_t c32 = col;
-			const uint32_t cc = (c32 | (c32 << 16));
-			uint32_t* pdest2 = (uint32_t*)pdest;
-			int len32 = (len >> 5);			
-			while (len32 > 0)
-				{ // write 32 color pixels at once
-				*(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc;
-				*(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc;
-				*(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc;
-				*(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc;
-				len32--;
-				}				
-			int len2 = ((len & 31) >> 1);		
-			while (len2 > 0)
-				{ // write 2 color pixels at once 
-				*(pdest2++) = cc;
-				len2--;
-				}
-			
-			if (len & 1)
-				{ // write the last pixel if needed. 
-				*((uint16_t*)pdest2) = col;
-				}				
-			}
-		else 
-			{ // generic code for other color types
-			while (len > 0) 
-				{ 
-				*(p_dest++) = color;
-				len--;
-                }
-			}
-		}
-
-
-	template<typename color_t>
-	void Image<color_t>::_blitRegionUp(color_t * pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
-		{
-		// TODO, make faster with specialization (writing 32bit at once etc...) 
-		for (int j = 0; j < sy; j++)
-			{
-			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-			for (int i = 0; i < sx; i++) { pdest2[i] = psrc2[i]; }
-			}
-		}
-
-
-	template<typename color_t>
-	void Image<color_t>::_blitRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
-		{
-		// TODO, make faster with specialization (writing 32bit at once etc...)
-		for (int j = sy - 1; j >= 0; j--)
-			{
-			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-			for (int i = sx - 1; i >= 0; i--) { pdest2[i] = psrc2[i]; }
-			}	
-		}
-
-
-	template<typename color_t>
-	void Image<color_t>::_blendRegionUp(color_t * pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
-		{
-		const int op256 = (int)(opacity * 256);
-		for (int j = 0; j < sy; j++)
-			{
-			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-			for (int i = 0; i < sx; i++) 
-				{ 
-				pdest2[i].blend256(psrc2[i], op256);
-				}
-			}
-		}
-
-
-	template<typename color_t>
-	void Image<color_t>::_blendRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
-		{
-		const int op256 = (int)(opacity * 256);
-		for (int j = sy - 1; j >= 0; j--)
-			{
-			color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-			color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-			for (int i = sx - 1; i >= 0; i--) 
-				{
-				pdest2[i].blend256(psrc2[i], op256);
-				}
-			}	
-		}
-
-
-	template<typename color_t>
-	uint32_t Image<color_t>::_fetchbits_unsigned(const uint8_t* p, uint32_t index, uint32_t required)
-		{
-		uint32_t val;
-		uint8_t* s = (uint8_t*)&p[index >> 3];
-	#ifdef UNALIGNED_IS_SAFE		// is this defined anywhere ? 
-		val = *(uint32_t*)s; // read 4 bytes - unaligned is ok
-		val = __builtin_bswap32(val); // change to big-endian order
-	#else
-		val = s[0] << 24;
-		val |= (s[1] << 16);
-		val |= (s[2] << 8);
-		val |= s[3];
-	#endif
-		val <<= (index & 7); // shift out used bits
-		if (32 - (index & 7) < required) 
-			{ // need to get more bits
-			val |= (s[4] >> (8 - (index & 7)));
-			}
-		val >>= (32 - required); // right align the bits
-		return val;
-		}
-
-
-	template<typename color_t>
-	uint32_t Image<color_t>::_fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required)
-		{
-		uint32_t val = _fetchbits_unsigned(p, index, required);
-		if (val & (1 << (required - 1))) 
-			{
-			return (int32_t)val - (1 << required);
-			}
-		return (int32_t)val;
-		}
-
-
-	template<typename color_t>
-	bool Image<color_t>::_clipit(int& x, int& y, int& sx, int& sy, int & b_left, int & b_up)
-		{
-		b_left = 0;
-		b_up = 0; 
-		if ((sx < 1) || (sy < 1) || (y >= _ly) || (y + sy <= 0) || (x >= _lx) || (x + sx <= 0))
-			{ // completely outside of image
-			return false;
-			}
-		if (y < 0)
-			{
-			b_up = -y;
-			sy += y;
-			y = 0;
-			}
-		if (y + sy > _ly)
-			{
-			sy = _ly - y;
-			}
-		if (x < 0)
-			{
-			b_left = -x;
-			sx += x;
-			x = 0;
-			}
-		if (x + sx > _lx)
-			{
-			sx = _lx - x;
-			}
-		return true;
 		}
 
 
@@ -6279,19 +6295,15 @@ private:
 
 
 
-
-
-
-
-
-
 #undef TGX_CAST32
-
-
-
 
 
 }
 
+#endif
+
+#endif
+
 /** end of file */
+
 
