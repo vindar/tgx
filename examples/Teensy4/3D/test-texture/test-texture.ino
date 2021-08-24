@@ -2,6 +2,10 @@
 *
 * tgx library example : testing texture mapping.
 *
+* EXAMPLE FOR TEENSY 4 / 4.1
+*
+* DISPLAY: ILI9341 (320x240)
+*
 ********************************************************************/
 
 // This example runs on teensy 4.0/4.1 with ILI9341 via SPI. 
@@ -10,9 +14,8 @@
 
 // the tgx library 
 #include <tgx.h> 
+#include <font_tgx_OpenSans_Bold.h>
 
-// font use to draw text on the screen. 
-#include "font_Arial_10.h"   
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
@@ -108,14 +111,14 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
         }
     // display some info 
     char buf[80];
-    im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, Arial_10, false);
+    im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d triangles", nbt);
-    im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, Arial_10, false);
+    im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE ? " / texturing" : ""));
-    im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, Arial_10, false);
+    im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d FPS", fps);
-    auto B = im.measureText(buf, { 0,0 }, Arial_10, false);
-    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, Arial_10, false);
+    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
+    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     }
     
 

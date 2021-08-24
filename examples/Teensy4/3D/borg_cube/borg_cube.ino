@@ -3,7 +3,13 @@
 * tgx library example.
 *
 * The Borg cube !!! ... Well, just a stupid textured cube in fact...
+* - textured is drawn onto in real time
+* - switch between ortoscopic and perspective projection
 * 
+* EXAMPLE FOR TEENSY 4 / 4.1
+*
+* DISPLAY: ILI9341 (320x240)
+*
 ********************************************************************/
 
 
@@ -11,14 +17,13 @@
 // the screen driver library : https://github.com/vindar/ILI9341_T4
 #include <ILI9341_T4.h> 
 
-// the tgx graphic library 
-#include <tgx.h>
+// the tgx library 
+#include <tgx.h> 
+#include <font_tgx_OpenSans_Bold.h>
+
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
-
-// font 
-#include "font_Arial_10.h"
 
 
 
@@ -214,11 +219,11 @@ void fps(const char* str)
         count = 0;
         }
     // display 
-    im.drawText(str, {3,12 }, RGB565_Red, Arial_10, false);
+    im.drawText(str, {3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     char buf[10];
     sprintf(buf, "%d FPS", fps);
-    auto B = im.measureText(buf, { 0,0 }, Arial_10, false);
-    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, Arial_10, false);
+    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
+    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     }
 
 

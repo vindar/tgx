@@ -3,6 +3,11 @@
 * tgx library example : changing the geometry at runtime. 
 * 
 * 'Explosion' the scream Painting !
+*
+* EXAMPLE FOR TEENSY 4 / 4.1
+*
+* DISPLAY: ILI9341 (320x240)
+*
 ********************************************************************/
 
 
@@ -11,17 +16,15 @@
 #include <ILI9341_T4.h> 
 
 // the tgx library 
-#include <tgx.h>
+#include <tgx.h> 
+#include <font_tgx_OpenSans_Bold.h>
+
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
 
 // the texture image of the sheet
 #include "scream_texture.h"
-
-// font 
-#include "font_Arial_10.h"  
-
 
 
 // 30mhz is ok but higher is really better in this case if you can afford it. 
@@ -202,8 +205,8 @@ void fps()
     // display 
     char buf[10];
     sprintf(buf, "%d FPS", fps);
-    auto B = im.measureText(buf, { 0,0 }, Arial_10, false);
-    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, Arial_10,false);
+    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
+    im.drawText(buf, { SLX - B.lx() - 3,10 }, RGB565_Red, font_tgx_OpenSans_Bold_10,false);
     }
 
 

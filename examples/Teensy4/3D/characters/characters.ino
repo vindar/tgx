@@ -2,34 +2,38 @@
 *
 * tgx library example : displaying some nice meshes...
 *
-* *** ONLY FOR TEENSY 4.1 (TEENSY 4.0 DOES NOT HAVE ENOUGH FLASH) ***
+* EXAMPLE FOR TEENSY 4 / 4.1 (TEENSY 4.1 HAS ADDITIONNAL MODELS)
+*
+* DISPLAY: ILI9341 (320x240)
 *
 ********************************************************************/
 
-// This example runs on teensy 4.1 with ILI9341 via SPI. 
+// This example runs on teensy 4.0/4.1 with ILI9341 via SPI. 
 // the screen driver library : https://github.com/vindar/ILI9341_T4
 #include <ILI9341_T4.h> 
 
 // the tgx library 
 #include <tgx.h> 
+#include <font_tgx_OpenSans_Bold.h>
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
+  
 
-// font use to draw text on the screen. 
-#include "font_Arial_10.h"  
-
-// meshes (stored in PROGMEM)
+// meshes (stored in PROGMEM) for Teensy 4.0 and 4.1
 #include "3Dmodels/nanosuit/nanosuit.h"
+#include "3Dmodels/R2D2/R2D2.h"
+
+// additional meshes for Teensy 4.1 since it has more flash. 
+#if defined(ARDUINO_TEENSY41)
 #include "3Dmodels/elementalist/elementalist.h"
 #include "3Dmodels/sinbad/sinbad.h"
 #include "3Dmodels/cyborg/cyborg.h"
 #include "3Dmodels/dennis/dennis.h"
 #include "3Dmodels/manga3/manga3.h"
 #include "3Dmodels/naruto/naruto.h"
-#include "3Dmodels/R2D2/R2D2.h"
 #include "3Dmodels/stormtrooper/stormtrooper.h"
-
+#endif
 
 
 // DEFAULT WIRING USING SPI 0 ON TEENSY 4/4.1
@@ -91,7 +95,11 @@ Image<RGB565> im(fb, SLX, SLY);
 Renderer3D<RGB565, SLX, SLY, true, false> renderer;
 
 // list of meshes to display
+#if defined(ARDUINO_TEENSY41)
 const Mesh3D<RGB565> * meshes[9] = { &nanosuit_1, &elementalist_1, &sinbad_1, &cyborg, &naruto_1, &manga3_1, &dennis, &R2D2, &stormtrooper };
+#else
+const Mesh3D<RGB565> * meshes[2] = { &nanosuit_1,  &R2D2 };
+#endif
 
 // shaders to use
 const int shader = TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE;
@@ -185,14 +193,14 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
     }
     // display some info 
     char buf[80];
-    im.drawText((mesh->name != nullptr ? mesh->name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, Arial_10, false);
+    im.drawText((mesh->name != nullptr ? mesh->name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d triangles", nbt);
-    im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, Arial_10, false);
+    im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE ? " / texturing" : ""));
-    im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, Arial_10, false);
+    im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d FPS", fps);
-    auto B = im.measureText(buf, { 0,0 }, Arial_10, false);
-    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, Arial_10, false);
+    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
+    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
 }
 
 
@@ -278,4 +286,3 @@ void loop()
 
 
 /** end of file */
-

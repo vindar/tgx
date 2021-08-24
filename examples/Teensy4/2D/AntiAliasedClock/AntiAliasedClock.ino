@@ -1,15 +1,34 @@
 /**
-* CREDITS. Example for Teensy/tgx created by bruno@DIYLAB.DE. thanks !
-*
+* CREDITS. Example for tgx created by bruno@DIYLAB.DE. thanks !
 * SRC: https://github.com/DIYLAB-DE/AntiAliasedClock
-*
-* Adapted from the orginal 'AntiAliasedClock' example created by Bodmer for its great TFT_eSPI library
-*
-* INITIAL SRC: https://github.com/Bodmer/TFT_eSPI
+* Adapted from the 'AntiAliasedClock' example by Bodmer for its great TFT_eSPI library: https://github.com/Bodmer/TFT_eSPI
 *
 *
-* This examples runs on Teensy 4 or 4.1. 
+* EXAMPLE FOR TEENSY 4 / 4.1
+*
+* DISPLAY: ILI9341 (320x240)
+*
 **/
+
+
+// This example runs on teensy 4.0/4.1 with ILI9341 via SPI. 
+// the screen driver library : https://github.com/vindar/ILI9341_T4
+#include <ILI9341_T4.h> 
+
+// the tgx library 
+#include <tgx.h>
+#include<font_tgx_OpenSans.h>
+
+// for time keeping
+#include <TimeLib.h>
+
+
+#include "DSEG7_Classic_Bold_20.h"
+#include "DSEG7_Classic_Bold_14.h"
+#include "watchface1.h"
+#include "watchface2.h"
+#include "watchface3.h"
+
 
 
 // DEFAULT WIRING USING SPI 0 ON TEENSY 4/4.1
@@ -42,15 +61,6 @@
 
 #define SPI_SPEED       40000000  // SPI speed
 
-#include <ILI9341_T4.h>
-#include <tgx.h> 
-#include <TimeLib.h>
-#include "ili9341_font_Arial.h"
-#include "DSEG7_Classic_Bold_20.h"
-#include "DSEG7_Classic_Bold_14.h"
-#include "watchface1.h"
-#include "watchface2.h"
-#include "watchface3.h"
 
 // IntervalTimer object 
 IntervalTimer interval25ms;
@@ -71,9 +81,9 @@ ILI9341_T4::DiffBuffStatic<6000> diff2;
 
 // image that encapsulates framebuffer
 Image<RGB565> im(fb, 240, 320);
-Image<RGB565> wFace1(watchface1, 240, 320);
-Image<RGB565> wFace2(watchface2, 240, 320);
-Image<RGB565> wFace3(watchface3, 240, 320);
+const Image<RGB565> wFace1(watchface1, 240, 320);
+const Image<RGB565> wFace2(watchface2, 240, 320);
+const Image<RGB565> wFace3(watchface3, 240, 320);
 
 #define CLOCK_FG       RGB565_White
 #define CLOCK_DIGI     RGB565_White
@@ -195,7 +205,7 @@ static void renderFace(float t, uint16_t faceType) {
         // draw digiclock
         drawTextCenterX(im, bufDigiClock, 210, 220, CLOCK_DIGI, DSEG7_Classic_Bold_20, 0.5f);
         // draw day
-        im.drawText(bufDay, iVec2(191, 165), CLOCK_DAY, Arial_10, false, 1.0f);
+        im.drawText(bufDay, iVec2(191, 165), CLOCK_DAY, font_tgx_OpenSans_14, false, 1.0f);
         // draw hour hand
         getCoord(CLOCK_R, CLOCK_Y, &xp, &yp, H_HAND_LENGTH, h_angle);
         im.drawWideLine(CLOCK_R, CLOCK_Y, xp, yp, 8.0f, CLOCK_FG, 1.0f);
@@ -217,7 +227,7 @@ static void renderFace(float t, uint16_t faceType) {
         // draw digiclock
         drawTextCenterX(im, bufDigiClock, 188, 230, CLOCK_DIGI, DSEG7_Classic_Bold_14, 0.5f);
         // draw day
-        im.drawText(bufDay, iVec2(113, 240), CLOCK_DAY, Arial_10, false, 1.0f);
+        im.drawText(bufDay, iVec2(113, 240), CLOCK_DAY, font_tgx_OpenSans_14, false, 1.0f);
         // draw hour hand
         getCoord(CLOCK_R, CLOCK_Y, &xp, &yp, H_HAND_LENGTH, h_angle);
         im.drawWedgeLine(CLOCK_R, CLOCK_Y, xp, yp, 7.0f, 2.0f, RGB565_Teal, 1.0f);
@@ -262,7 +272,7 @@ static void renderFace(float t, uint16_t faceType) {
     // draw footer
     char bufFooter[30];
     sprintf(bufFooter, "%s, %s %02dst, %04d", weekDays[weekday() - 1], monthNames[month() - 1], day(), year());
-    drawTextCenterX(im, bufFooter, 305, 240, CLOCK_FOOTER, Arial_10, 1.0f);
+    drawTextCenterX(im, bufFooter, 305, 240, CLOCK_FOOTER, font_tgx_OpenSans_14, 1.0f);
 
     // update display
     tft.update(fb, false);

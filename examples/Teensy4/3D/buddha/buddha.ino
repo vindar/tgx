@@ -5,6 +5,11 @@
 * Minimal example for displaying a mesh. 
 * Happy buddha  (20 000 triangles) at 30FPS on an ILI9341 screen with 
 * v-sync on (i.e. no screen tearing)
+* 
+* EXAMPLE FOR TEENSY 4 / 4.1
+*
+* DISPLAY: ILI9341 (320x240)
+*
 ********************************************************************/
 
 
