@@ -41,25 +41,25 @@ namespace tgx
 
 
     /**
-    * Class that manages the drawing of 3D objects. 
-    * 
-    * The class create a virtual viewport with a given size LX,LY and provides methods to draw 
+    * Class that manages the drawing of 3D objects.
+    *
+    * The class create a virtual viewport with a given size LX,LY and provides methods to draw
     * 3D primitives onto this viewport (to which is attached an Image<color_t> object)
-    * 
-    * Template parameters: 
-    * 
+    *
+    * Template parameters:
+    *
     * - color_t : the color type for the image to draw onto.
-    * 
+    *
     * - LX , LY : Viewport size (up to 2048x2048). The normalized coordinates in [-1,1]x[-1,1]
-    *             are mapped to [0,LX-1]x[0,LY-1] just before rasterization. 
+    *             are mapped to [0,LX-1]x[0,LY-1] just before rasterization.
     *             It is possible to use a viewport larger than the image drawn onto and set
-    *             an offset for this image inside the viewport in order to perform 'tile rendering'. 
-    * 
+    *             an offset for this image inside the viewport in order to perform 'tile rendering'.
+    *
     * - ZBUFFER : (default true) Set this to use depth testing when drawing the mesh. In this case,
-    *             a valid depth buffer MUST be supplied with setZbuffer() before drawing a mesh. 
-    * 
+    *             a valid depth buffer MUST be supplied with setZbuffer() before drawing a mesh.
+    *
     * - ORTHO   : (default false) Set this to use orthographic projection instead of perspective
-    *             and thus disable the z-divide after projection. 
+    *             and thus disable the z-divide after projection.
     **/
     template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
     class Renderer3D
@@ -73,14 +73,14 @@ namespace tgx
        public:
 
 
-  
+
         /*****************************************************************************************
         ******************************************************************************************
         *
         * General parameters
         *
         * The methods below define how 3D objects are rendered onto the viewport
-        * 
+        *
         ******************************************************************************************
         ******************************************************************************************/
 
@@ -137,16 +137,16 @@ namespace tgx
 
         /**
         * Set the projection matrix.
-        * 
-        * This is the matrix that is used to project coordinate from 
+        *
+        * This is the matrix that is used to project coordinate from
         * 'view space' to NDC.
-        * 
+        *
         * -> When using perspective projection, the projection matrix must
         *    store -z into the w component.
         *
         * IMPORTANT :In view space, the camera is assumed to be centered
-        * at the origin, looking looking toward the negative Z axis with 
-        * the Y axis pointing up (as in opengl).  
+        * at the origin, looking looking toward the negative Z axis with
+        * the Y axis pointing up (as in opengl).
         **/
         void setProjectionMatrix(const fMat4& M)
             {
@@ -166,12 +166,12 @@ namespace tgx
             }
 
 
-        /** 
-         * Set the projection matrix as an orthographic matrix: 
-         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml 
+        /**
+         * Set the projection matrix as an orthographic matrix:
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml
          *
          * This method is only available when ORTHO = true.
-         * 
+         *
         * IMPORTANT :In view space, the camera is assumed to be centered
         * at the origin, looking looking toward the negative Z axis with
         * the Y axis pointing up (as in opengl).
@@ -187,8 +187,8 @@ namespace tgx
         /**
          * Set the projection matrix as a perspective matrix
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
-        * 
-        * This method is only available when ORTHO = false. 
+        *
+        * This method is only available when ORTHO = false.
          *
         * IMPORTANT :In view space, the camera is assumed to be centered
         * at the origin, looking looking toward the negative Z axis with
@@ -205,7 +205,7 @@ namespace tgx
         /**
         *  Set the projection matrix as a perspective matrix
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
-        * 
+        *
         * This method is only available when ORTHO = false.
         *
         * IMPORTANT :In view space, the camera is assumed to be centered
@@ -222,18 +222,18 @@ namespace tgx
 
         /**
         * Set the face culling strategy.
-        * 
+        *
         * - w > 0 : Vertices in front faces are ordered counter-clockwise CCW [default]. Clockwise faces are culled.
         * - w < 0 : Vertices in front faces are ordered clockwise (CW). Counter-clockwise faces are culled.
-        * - w = 0 : Disable face culling: both clockwise and counter-clockwise faces are drawn. 
-        * 
-        * Remark: - When face culling is enabled (w != 0), and when gouraud shading is active, the normal vectors 
-        *           supplied for the vertices must, of course, be the normal vectors for the front side of the triangle. 
-        *         - When face culling is disabled (w = 0). Both face of a triangle are drawn so there is no more 
-        *           notion of 'front' and 'back' face. In this case, when using gouraud shading, by convention, the 
-        *           normal vector supplied must be those corresponding to the counter-clockwise face being shown 
-        *           (whatever this means since these normals vector are attached to  vertices and not faces anyway, 
-        *           but still...)        
+        * - w = 0 : Disable face culling: both clockwise and counter-clockwise faces are drawn.
+        *
+        * Remark: - When face culling is enabled (w != 0), and when gouraud shading is active, the normal vectors
+        *           supplied for the vertices must, of course, be the normal vectors for the front side of the triangle.
+        *         - When face culling is disabled (w = 0). Both face of a triangle are drawn so there is no more
+        *           notion of 'front' and 'back' face. In this case, when using gouraud shading, by convention, the
+        *           normal vector supplied must be those corresponding to the counter-clockwise face being shown
+        *           (whatever this means since these normals vector are attached to  vertices and not faces anyway,
+        *           but still...)
         **/
         void setCulling(int w)
             {
@@ -278,23 +278,23 @@ namespace tgx
         ******************************************************************************************
         *
         * Scene specific parameters
-        * 
+        *
         * The method belows affect the rendering at the 'scene level': camera position, lightning..
-        * 
+        *
         ******************************************************************************************
         ******************************************************************************************/
 
 
         /**
         * Set the view tranformation matrix.
-        * 
-        * This matrix is used to transform vertices from world coordinates to view coordinates
-        * (ie from the point of view of the camera) 
-        * 
-        * Thus, changing this matrix changes the position of the camera in the world space. 
         *
-        * IMPORTANT: In view space (i.e. after transformation), the camera is assumed to be 
-        * centered at the origin, looking looking toward the negative Z axis with the Y axis 
+        * This matrix is used to transform vertices from world coordinates to view coordinates
+        * (ie from the point of view of the camera)
+        *
+        * Thus, changing this matrix changes the position of the camera in the world space.
+        *
+        * IMPORTANT: In view space (i.e. after transformation), the camera is assumed to be
+        * centered at the origin, looking looking toward the negative Z axis with the Y axis
         * pointing up (as in opengl).
         **/
         void setViewMatrix(const fMat4& M)
@@ -304,10 +304,10 @@ namespace tgx
             _r_modelViewM = _viewM * _modelM;
             _r_inorm = 1.0f / _r_modelViewM.mult0(fVec3{ 0,0,1 }).norm();
             _r_light = _viewM.mult0(_light);
-            _r_light = -_r_light; 
+            _r_light = -_r_light;
             _r_light.normalize();
             _r_light_inorm = _r_light * _r_inorm;
-            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)... 
+            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)...
             _r_H += _r_light;
             _r_H.normalize();
             _r_H_inorm = _r_H * _r_inorm;
@@ -326,18 +326,18 @@ namespace tgx
         /**
         * Set the view matrix so that the camera is looking at a given direction.
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
-        * 
-        * eye       position of the camera in world space coords. 
+        *
+        * eye       position of the camera in world space coords.
         * center    point the camera is looking toward in world space coords.
-        * up        vector that tells the up direction for the camera (in world space coords). 
+        * up        vector that tells the up direction for the camera (in world space coords).
         **/
         void setLookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
             {
-            fMat4 M; 
+            fMat4 M;
             M.setLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
             setViewMatrix(M);
             }
-            
+
 
         /**
         * Set the view matrix so that the camera is looking at a given direction.
@@ -354,19 +354,19 @@ namespace tgx
 
 
         /**
-        * Set the light source direction (i.e. the direction the light points to). 
+        * Set the light source direction (i.e. the direction the light points to).
         * Direction is given in world coordinates (hence transformed by the view Matrix
-        * at rendering time so that the light does not move with the camera). 
+        * at rendering time so that the light does not move with the camera).
         **/
         void setLightDirection(const fVec3 & direction)
             {
-            _light = direction; 
+            _light = direction;
             // recompute
             _r_light = _viewM.mult0(_light);
             _r_light = -_r_light;
             _r_light.normalize();
             _r_light_inorm = _r_light * _r_inorm;
-            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)... 
+            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)...
             _r_H += _r_light;
             _r_H.normalize();
             _r_H_inorm = _r_H * _r_inorm;
@@ -374,8 +374,8 @@ namespace tgx
 
 
         /**
-        * Set the scene ambiant light color 
-        * (according to the Phong lightning model). 
+        * Set the scene ambiant light color
+        * (according to the Phong lightning model).
         **/
         void setLightAmbiant(const RGBf & color)
             {
@@ -386,8 +386,8 @@ namespace tgx
 
 
         /**
-        * Set the scene diffuse light color 
-        * (according to the Phong lightning model). 
+        * Set the scene diffuse light color
+        * (according to the Phong lightning model).
         **/
         void setLightDiffuse(const RGBf & color)
             {
@@ -398,8 +398,8 @@ namespace tgx
 
 
         /**
-        * Set the scene specular light color 
-        * (according to the Phong lightning model). 
+        * Set the scene specular light color
+        * (according to the Phong lightning model).
         **/
         void setLightSpecular(const RGBf & color)
             {
@@ -423,29 +423,29 @@ namespace tgx
 
 
         /*****************************************************************************************
-        ****************************************************************************************** 
-        * 
+        ******************************************************************************************
+        *
         * Model specific parameters.
-        * 
-        * The method below apply to the (current) object being draw: position in world space, 
+        *
+        * The method below apply to the (current) object being draw: position in world space,
         * material properties...
-        * 
-        ****************************************************************************************** 
+        *
+        ******************************************************************************************
         ******************************************************************************************/
 
 
         /**
-        * Set the model tranformation matrix. 
-        * 
-        * This matrix describes the transformation from local object space to view space. 
-        * (i.e. the matrix specifies the position of the object in world space). 
+        * Set the model tranformation matrix.
+        *
+        * This matrix describes the transformation from local object space to view space.
+        * (i.e. the matrix specifies the position of the object in world space).
         **/
         void setModelMatrix(const fMat4& M)
             {
             _modelM = M;
             // recompute
             _r_modelViewM = _viewM * _modelM;
-            _r_inorm = 1.0f / _r_modelViewM.mult0(fVec3{ 0,0,1 }).norm();            
+            _r_inorm = 1.0f / _r_modelViewM.mult0(fVec3{ 0,0,1 }).norm();
             _r_light_inorm = _r_light * _r_inorm;
             _r_H_inorm = _r_H * _r_inorm;
             }
@@ -462,7 +462,7 @@ namespace tgx
 
         /**
         * Set the object material color.
-        * This is the color used to render the object when texturing is not used. 
+        * This is the color used to render the object when texturing is not used.
         **/
         void setMaterialColor(RGBf color)
             {
@@ -477,9 +477,9 @@ namespace tgx
         **/
         void setMaterialAmbiantStrength(float strenght = 0.1f)
             {
-            _ambiantStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces. 
+            _ambiantStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
             // recompute
-            _r_ambiantColor = _ambiantColor * _ambiantStrength;           
+            _r_ambiantColor = _ambiantColor * _ambiantStrength;
             }
 
 
@@ -488,9 +488,9 @@ namespace tgx
         **/
         void setMaterialDiffuseStrength(float strenght = 0.6f)
             {
-            _diffuseStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces. 
+            _diffuseStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
             // recompute
-            _r_diffuseColor = _diffuseColor * _diffuseStrength;           
+            _r_diffuseColor = _diffuseColor * _diffuseStrength;
             }
 
 
@@ -499,7 +499,7 @@ namespace tgx
         **/
         void setMaterialSpecularStrength(float strenght = 0.5f)
             {
-            _specularStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces. 
+            _specularStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
             // recompute
             _r_specularColor = _specularColor * _specularStrength;
             }
@@ -507,11 +507,11 @@ namespace tgx
 
         /**
         * Set the object specular exponent.
-        * Between 0 (no specular lightning) and 100 (very localized/glossy). 
+        * Between 0 (no specular lightning) and 100 (very localized/glossy).
         **/
         void setMaterialSpecularExponent(int exponent = 16)
             {
-            _specularExponent = clamp(exponent, 0, 100);           
+            _specularExponent = clamp(exponent, 0, 100);
             }
 
 
@@ -537,85 +537,85 @@ namespace tgx
         *
         ******************************************************************************************
         *
-        * Methods to draw primitives (triangles/quads/meshes) onto the viewport. 
+        * Methods to draw primitives (triangles/quads/meshes) onto the viewport.
         *
         * (1) The rasterizer accept the following shader options.
-        * 
-        *     - TGX_SHADER_FLAT   Use flat shading (i.e. uniform color on faces). This is the fastest 
-        *                     drawing method but usually gives poor results when combined with texturing. 
+        *
+        *     - TGX_SHADER_FLAT   Use flat shading (i.e. uniform color on faces). This is the fastest
+        *                     drawing method but usually gives poor results when combined with texturing.
         *                     Lighting transition between bright to dark aera may appear to 'flicker'
-        *                     when color_t = RGB565 because of the limited number of colors/shades 
-        *                     available. 
-        * 
+        *                     when color_t = RGB565 because of the limited number of colors/shades
+        *                     available.
+        *
         *                     -> the color on the face is computed according to Phong's lightning
-        *                        model use the triangle face normals computed via crossproduct. 
-        * 
-        *     - TGX_SHADER_GOURAUD  Give a color to each vertex and then use linear interpolation to 
-        *                       shade each triangle according to its vertex colors. This results in 
-        *                       smoother color transitions and works well with texturing but at a 
-        *                       higher CPU cost. 
-        * 
+        *                        model use the triangle face normals computed via crossproduct.
+        *
+        *     - TGX_SHADER_GOURAUD  Give a color to each vertex and then use linear interpolation to
+        *                       shade each triangle according to its vertex colors. This results in
+        *                       smoother color transitions and works well with texturing but at a
+        *                       higher CPU cost.
+        *
         *                       -> In order to use gouraud shading, a normal vector must be attributed
         *                          to each vertex, which is then used to determine its color according
         *                          to phong's lightning model.
-        * 
+        *
         *                       -> *** NORMAL VECTORS MUST ALWAYS BE NORMALIZED (UNIT LENGHT) ***
-        * 
+        *
         *                       -> When backface culling is enable, the normal vector must be that of
         *                          the 'front face' (obviously). When backface culling is  disabled,
-        *                          there is no more 'front' and 'back' face: by convention, the normal 
+        *                          there is no more 'front' and 'back' face: by convention, the normal
         *                          vector supplied must be then be those corresponding to the counter-
-        *                          clockwise face. 
-        * 
+        *                          clockwise face.
+        *
         *     - TGX_SHADER_TEXTURE  Use (perspective correct) texture mapping. This flag may be combined
-        *                       with either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD. The color of a pixel in the 
+        *                       with either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD. The color of a pixel in the
         *                       triangle is obtained by combining to texture color at that pixel with
-        *                       the lightning at the position (according to phoing's lightning model again).    
-        * 
+        *                       the lightning at the position (according to phong's lightning model again).
+        *
         *                       -> A texture must be stored in an Image<color_t> object:
-        * 
+        *
         *                           *** EACH TEXTURE DIMENSION MUST BE A POWER OF 2 ****
-        * 
-        *                       -> Large textures stored in flash memory may be VERY slow to access when the 
-        *                          texture is not read linearly which will happens for some (bad) triangle 
-        *                          orientations and then cache becomes useless... This problem can be somewhat 
+        *
+        *                       -> Large textures stored in flash memory may be VERY slow to access when the
+        *                          texture is not read linearly which will happens for some (bad) triangle
+        *                          orientations and then cache becomes useless... This problem can be somewhat
         *                          mitigated by:
-        * 
-        *                          (a) splitting large textured triangles into smaller ones: then each triangle 
-        *                              only accesses a small part of the texture. This helps a lot wich cache 
-        *                              optimizatrion [this is why models with thousands of faces may display 
-        *                              faster that a simple textured cube in some cases :-)]. 
-        * 
-        *                          (b) moving the image into RAM if possible. Even moving the texture from 
+        *
+        *                          (a) splitting large textured triangles into smaller ones: then each triangle
+        *                              only accesses a small part of the texture. This helps a lot wich cache
+        *                              optimizatrion [this is why models with thousands of faces may display
+        *                              faster that a simple textured cube in some cases :-)].
+        *
+        *                          (b) moving the image into RAM if possible. Even moving the texture from
         *                              FLASH to EXTMEM (if available) will usually give a great speed boost !
-        * 
+        *
         *
         * (2) Depth testing is automoatically performed when drawing is the tmeplate parameter ZBUFFER is set
-              (in this case, a valid z buffer must be supplied with setZbufffer() before calling any draw method). 
-
-              ***  DO NOT FORGET TO CLEAR THE ZBUFFER WITH clearZbuffer() BEFORE DRAWING A NEW SCENE :-) ***
+        *      (in this case, a valid z buffer must be supplied with setZbufffer() before calling any draw method).
         *
-        * 
+        *     ***  DO NOT FORGET TO CLEAR THE ZBUFFER WITH clearZbuffer() BEFORE DRAWING A NEW SCENE :-) ***
+        *
+        *
         * (3) Back face culling is automatically performed if enabled (via the setCulling() method)
-        * 
+        *
         *     *** TRIANGLES/QUADS MUST BE GIVEN TO THE DRAWING METHOD IN THEIR CORRECT WINDING ORDER ***
-        * 
-        * 
-        * (3) It is much more efficient to use methods that draws several primitives at once than issuing
-        *     multiple drawing commands for single triangles/quads. Use the following methods by order of 
+        *
+        *
+        * (4) It is much more efficient to use methods that draws several primitives at once than issuing
+        *     multiple drawing commands for single triangles/quads. Use the following methods by order of
         *    preferences:
-        * 
-        *    1 - drawMesh() is the 'most optimized' method and the one that will usually give the faster 
-        *        rendering so it should be used whenever possible (for static geometry). 
-        * 
+        *
+        *    1 - drawMesh() is the 'most optimized' method and the one that will usually give the faster
+        *        rendering so it should be used whenever possible (for static geometry).
+        *
         *    3 - and drawQuads() Not as fast a drawing a mesh.
-        * 
+        *
         *    3 - drawTriangles() Even slower than the methods above.
-        * 
+        *
         *    4 - drawTriangle() / drawQuad()  Should only be used for drawing single triangles/quads
-        *                                     slowest method because each draw call has a significant
+        *                                     slowest method because each draw call has an additional
         *                                     overhead.
-        *    
+        *
         ******************************************************************************************
         ******************************************************************************************/
 
@@ -624,28 +624,28 @@ namespace tgx
 
         /**
         * Draw a mesh onto the image.
-        * 
+        *
         * ***************************************************************************************
-        * THIS IS THE FASTEST METHOD FOR DRAWING AN OBJECT AND SHOULD BE USED WHENEVER POSSIBLE. 
+        * THIS IS THE FASTEST METHOD FOR DRAWING AN OBJECT AND SHOULD BE USED WHENEVER POSSIBLE.
         * ***************************************************************************************
-        * 
+        *
         * - shader  Type of shader to use. Combination of TGX_SHADER_GOURAUD, TGX_SHADER_FLAT, TGX_SHADER_TEXTURE
-        *            - TGX_SHADER_FLAT    : use flat shading (uniform color on each triangle). 
-        *            - TGX_SHADER_GOURAUD : This flag overwrites TGX_SHADER_FLAT but requires the mesh to have a 
-        *                               normal array otherwise the renderer will fall back to flat shading.         
+        *            - TGX_SHADER_FLAT    : use flat shading (uniform color on each triangle).
+        *            - TGX_SHADER_GOURAUD : This flag overwrites TGX_SHADER_FLAT but requires the mesh to have a
+        *                               normal array otherwise the renderer will fall back to flat shading.
         *            - TGX_SHADER_TEXTURE : use texture mapping. This flag complements TGX_SHADER_FLAT/TGX_SHADER_GOURAUD
-        *                               but require the mesh to a a valid texture array and a valid texture 
+        *                               but require the mesh to a a valid texture array and a valid texture
         *                               image otherwise the renderer will fall back to uniform color shading.
-        * 
-        * - mesh    The mesh to draw. The meshes/vertices array/textures can be in RAM or in FLASH. 
+        *
+        * - mesh    The mesh to draw. The meshes/vertices array/textures can be in RAM or in FLASH.
         *           Whenever possible, put vertex array and texture in RAM (or even EXTMEM).
-        * 
-        * - use_mesh_material   If true, ignore the current object material properties set in the renderer         
+        *
+        * - use_mesh_material   If true, ignore the current object material properties set in the renderer
         *                       and use the mesh predefined material properties.
         *                       this flag affects also all the linked meshes if draw_chained_meshes=true.
-        * 
+        *
         * - draw_chained_meshes  If true, the meshes linked to this mesh (via the ->next member) are also drawn.
-        *                        
+        *
         * The method returns  0 ok, (drawing performed correctly).
         *                    -1 invalid image
         *                    -2 invalid zbuffer (only when template parameter ZBUFFER=true)
@@ -655,13 +655,13 @@ namespace tgx
 
 
         /**
-        * Draw a single triangle on the image. 
+        * Draw a single triangle on the image. Use the current material color.
         *
         * - shader      Ignored: the triangle is draw with TGX_SHADER_FLAT anyway
-        *               since no normal nor texture coord is given... 
-        * 
+        *               since no normal nor texture coord is given...
+        *
         * - (P1,P2,P3)  Coordinates (in model space) of the triangle to draw
-        *                
+        *
         *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
         *
         * Returns: 0  OK
@@ -670,27 +670,52 @@ namespace tgx
         **/
         int drawTriangle(int shader,
                          const fVec3& P1, const fVec3& P2, const fVec3& P3)
-            {       
+            {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < LX * LY))) return -2; // zbuffer required but not available.              
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            _drawTriangle(TGX_SHADER_FLAT, &P1, &P2, &P3, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+            _drawTriangle(TGX_SHADER_FLAT, &P1, &P2, &P3, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor);
             return 0;
             }
 
 
+        /**
+        * Draw a single triangle on the image with a given color on each of its vertices.
+        * The color inside the triangle is obtained by linear interpolation.
+        *
+        * - shader      Ignored: the triangle is drawn with TGX_SHADER_FLAT anyway
+        *               since no normal nor texture coord is given...
+        *
+        * - (P1,P2,P3)  Coordinates (in model space) of the triangle to draw
+        *
+        *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
+        *
+        * - (col1,col2,col3) Colors of the vertices
+        *
+        * Returns: 0  OK
+        *          -1 invalid image
+        *          -2 invalid detph buffer
+        **/
+        int drawTriangleWithVertexColor(int shader,
+                     const fVec3& P1, const fVec3& P2, const fVec3& P3,
+                     const RGBf & col1, const RGBf & col2, const RGBf & col3)
+            {
+            fVec3 dummyN(0,0,0); // does not matter, unused
+            return drawTriangleWithVertexColor(TGX_SHADER_FLAT, P1, P2, P3, dummyN,dummyN,dummyN, col1, col2, col3);
+            }
+
 
         /**
-        * Draw a single triangle on the image. 
+        * Draw a single triangle on the image (with gouraud shading). Use the current material color.
         *
-        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD. 
-        * 
+        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD.
+        *
         * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
-        * 
+        *
         *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
         *
         * - (N1,N2,N3)  normals associated with (P1, P2, P3).
-        *               
+        *
         *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
         *
         * Returns: 0  OK
@@ -702,19 +727,62 @@ namespace tgx
                          const fVec3 & N1, const fVec3 & N2, const fVec3 & N3)
             {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < LX * LY))) return -2; // zbuffer required but not available.              
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             shader &= ~((int)TGX_SHADER_TEXTURE); // disable texturing
-            _drawTriangle(shader, &P1, &P2, &P3, &N1, &N2, &N3, nullptr, nullptr, nullptr);
+            _drawTriangle(shader, &P1, &P2, &P3, &N1, &N2, &N3, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor);
+            return 0;
+            }
+
+
+        /**
+        * Draw a single triangle on the image with a given color on each of its vertices.
+        * The color inside the triangle is obtained by linear interpolation.
+        *
+        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD.
+        *
+        * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
+        *
+        *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
+        *
+        * - (N1,N2,N3)  normals associated with (P1, P2, P3).
+        *
+        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
+        *
+        * - (col1,col2,col3) Colors of the vertices
+        *
+        * Returns: 0  OK
+        *          -1 invalid image
+        *          -2 invalid detph buffer
+        **/
+        int drawTriangleWithVertexColor(int shader,
+                     const fVec3& P1, const fVec3& P2, const fVec3& P3,
+                     const fVec3& N1, const fVec3& N2, const fVec3& N3,
+                     const RGBf & col1, const RGBf & col2, const RGBf & col3)
+            {
+            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
+            if (shader & TGX_SHADER_GOURAUD)
+                {
+                _drawTriangle(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &N1, &N2, &N3, nullptr, nullptr, nullptr, col1, col2, col3);
+                }
+            else
+                {
+                fVec3 N = crossProduct(P2 - P1, P3 - P1);// compute the triangle face normal
+                N.normalize(); // normalize it
+                _drawTriangle(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &N, &N, &N, nullptr, nullptr, nullptr, col1, col2, col3);
+                }
             return 0;
             }
 
 
 
+
         /**
-        * Draw a single triangle on the image.
+        * Draw a single triangle on the image (with texture mapping).
         *
-        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_TEXTURE. 
+        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_TEXTURE.
         *
         * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
         *
@@ -723,7 +791,7 @@ namespace tgx
         * - (T1,T2,T3)  texture coords. associated with (P1, P2, P3).
         *
         * - texture     the texture image to use
-        * 
+        *
         *               *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
         *
         * Returns: 0  OK
@@ -737,7 +805,7 @@ namespace tgx
                         const Image<color_t>* texture)
             {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < LX * LY))) return -2; // zbuffer required but not available.              
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
             if (shader & TGX_SHADER_TEXTURE)
@@ -745,14 +813,14 @@ namespace tgx
                 if (texture == nullptr) return -3;
                 _uni.tex = (const Image<color_t>*)texture;
                 }
-            _drawTriangle(shader, &P1, &P2, &P3, nullptr, nullptr, nullptr, &T1, &T2, &T3);
+            _drawTriangle(shader, &P1, &P2, &P3, nullptr, nullptr, nullptr, &T1, &T2, &T3, _r_objectColor, _r_objectColor, _r_objectColor);
             return 0;
             }
 
-    
-    
+
+
         /**
-        * Draw a single triangle on the image.
+        * Draw a single triangle on the image (with gouraud shading and texture mapping)
         *
         * - shader      Combination of TGX_SHADER_FLAT/TGX_SHADER_GOURAUD and TGX_SHADER_TEXTURE
         *
@@ -761,7 +829,7 @@ namespace tgx
         *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
         *
         * - (N1,N2,N3)  normals associated with (P1, P2, P3).
-        * 
+        *
         *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
         *
         * - (T1,T2,T3)  texture coords. associated with (P1, P2, P3).
@@ -779,51 +847,52 @@ namespace tgx
                         const fVec3 & P1, const fVec3 & P2, const fVec3 & P3,
                         const fVec3 & N1, const fVec3 & N2, const fVec3 & N3,
                         const fVec2 & T1, const fVec2 & T2, const fVec2 & T3,
-                        const Image<color_t>* texture) 
+                        const Image<color_t>* texture)
             {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < LX * LY))) return -2; // zbuffer required but not available.              
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             if (shader & TGX_SHADER_TEXTURE)
                 { // store the texture
                 if (texture == nullptr) return -3;
                 _uni.tex = (const Image<color_t>*)texture;
                 }
-            _drawTriangle(shader, &P1, &P2, &P3, &N1, &N2, &N3, &T1, &T2, &T3);
+            _drawTriangle(shader, &P1, &P2, &P3, &N1, &N2, &N3, &T1, &T2, &T3, _r_objectColor, _r_objectColor, _r_objectColor);
             return 0;
             }
-    
+
 
 
         /**
-        * Draw a list of triangles on the image.
+        * Draw a list of triangles on the image. If texture mapping is not used, then the current
+        * material color is used to draw the triangles.
         *
         * - shader       Combination of TGX_SHADER_FLAT/TGX_SHADER_GOURAUD and TGX_SHADER_TEXTURE
-        *                Some flag may be ignored if the corresponding required arrays 
+        *                Some flag may be ignored if the corresponding required arrays
         *                are missing (i.e. a normal array for TGX_SHADER_GOURAUD, and a texture
-        *                array and a texture image for TGX_SHADER_TEXTURE). 
-        * 
-        * - nb_triangles Number of triangles to draw. 
-        * 
-        * - ind_vertices Array of vertex indexes. The length of the array is nb_triangles*3 
-        *                and each 3 consecutive values represent a triangle. 
-        * 
+        *                array and a texture image for TGX_SHADER_TEXTURE).
+        *
+        * - nb_triangles Number of triangles to draw.
+        *
+        * - ind_vertices Array of vertex indexes. The length of the array is nb_triangles*3
+        *                and each 3 consecutive values represent a triangle.
+        *
         *               *** MAKE SURE THAT THE TRIANGLES ARE GIVEN WITH THE CORRECT WINDING ORDER ***
-        * 
+        *
         * - vertices     The array of vertices (given in model space).
-        * 
+        *
         * - ind_normals  [Optional] array of normal indexes. If specified, the array must
         *                have length nb_triangles*3.
-        * 
+        *
         * - normals      [Optional] The array of normals vectors (in model space).
         *
         *                 *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
         *
         * - ind_texture  [Optional] array of texture indexes. If specified, the array must
         *                have length nb_triangles*3.
-        *     
+        *
         * - textures     [Optional] The array of texture coords.
-        * 
+        *
         * - texture_image [Optional] the texture image to use.
         *
         *                  *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
@@ -844,7 +913,8 @@ namespace tgx
 
         /**
         * Draw a single quad on the image.
-        * 
+        * Use the current material color to draw the quad.
+        *
         *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
         *
         * - shader      Ignored: the quad is drawn with TGX_SHADER_FLAT anyway
@@ -862,16 +932,44 @@ namespace tgx
                      const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
             {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < LX * LY))) return -2; // zbuffer required but not available.         
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            _drawQuad(shader, &P1, &P2, &P3, &P4, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+            _drawQuad(shader, &P1, &P2, &P3, &P4, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
             return 0;
             }
 
 
+        /**
+        * Draw a single quad on the image with a given color on each of its four vertices.
+        * The color inside the quad is obtained by linear interpolation.
+        *
+        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
+        *
+        * - shader      Ignored: the quad is drawn with TGX_SHADER_FLAT anyway
+        *               since no normal nor texture coord is given...
+        *
+        * - (P1,P2,P3,P4)  Coordinates (in model space) of the triangle to draw
+        *
+        *               *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
+        *
+        * - (col1,col2,col3,col4) Colors of the vertices
+        *
+        * Returns: 0  OK
+        *          -1 invalid image
+        *          -2 invalid detph buffer
+        **/
+        int drawQuadWithVertexColor(int shader,
+                     const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
+                     const RGBf & col1, const RGBf & col2, const RGBf & col3, const RGBf & col4)
+            {
+            fVec3 dummyN(0,0,0); // does not matter, unused
+            return drawQuadWithVertexColor(TGX_SHADER_FLAT, P1, P2, P3, P4, dummyN,dummyN,dummyN,dummyN, col1, col2, col3, col4);
+            }
+
 
         /**
-        * Draw a single quad on the image.
+        * Draw a single quad on the image (with gouraud shading).
+        * Use the current material color to draw the quad.
         *
         *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
         *
@@ -894,17 +992,60 @@ namespace tgx
                      const fVec3& N1, const fVec3& N2, const fVec3& N3, const fVec3& N4)
             {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < LX * LY))) return -2; // zbuffer required but not available.              
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             shader &= ~((int)TGX_SHADER_TEXTURE); // disable texturing
-            _drawQuad(shader, &P1, &P2, &P3, &P4, &N1, &N2, &N3, &N4, nullptr, nullptr, nullptr, nullptr);
+            _drawQuad(shader, &P1, &P2, &P3, &P4, &N1, &N2, &N3, &N4, nullptr, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
             return 0;
             }
 
 
+        /**
+        * Draw a single quad on the image with a given color on each of its four vertices.
+        * The color inside the quad is obtained by linear interpolation.
+        *
+        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
+        *
+        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD.
+        *
+        * - (P1,P2,P3,P4)  coordinates (in model space) of the quad to draw
+        *
+        *               *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
+        *
+        * - (N1,N2,N3,N4)  normals associated with (P1, P2, P3, P4).
+        *
+        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
+        *
+        * - (col1,col2,col3,col4) Colors of the vertices
+        *
+        * Returns: 0  OK
+        *          -1 invalid image
+        *          -2 invalid detph buffer
+        **/
+        int drawQuadWithVertexColor(int shader,
+                     const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
+                     const fVec3& N1, const fVec3& N2, const fVec3& N3, const fVec3& N4,
+                     const RGBf & col1, const RGBf & col2, const RGBf & col3, const RGBf & col4)
+            {
+            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
+            if (shader & TGX_SHADER_GOURAUD)
+                {
+                _drawQuad(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &P4, &N1, &N2, &N3, &N4, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4);
+                }
+            else
+                {
+                fVec3 N = crossProduct(P2 - P1, P3 - P1);// compute the quad normal (quad is assumed to be planar)
+                N.normalize(); // normalize it
+                _drawQuad(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &P4, &N, &N, &N, &N, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4);
+                }
+            return 0;
+            }
+
 
         /**
-        * Draw a single quad on the image.
+        * Draw a single quad on the image (with texture mapping).
         *
         *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
         *
@@ -931,7 +1072,7 @@ namespace tgx
                      const Image<color_t>* texture)
             {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < LX * LY))) return -2; // zbuffer required but not available.              
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
             if (shader & TGX_SHADER_TEXTURE)
@@ -939,14 +1080,14 @@ namespace tgx
                 if (texture == nullptr) return -3;
                 _uni.tex = (const Image<color_t>*)texture;
                 }
-            _drawQuad(shader, &P1, &P2, &P3, &P4, nullptr, nullptr, nullptr, nullptr, &T1, &T2, &T3, &T4);
+            _drawQuad(shader, &P1, &P2, &P3, &P4, nullptr, nullptr, nullptr, nullptr, &T1, &T2, &T3, &T4, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
             return 0;
             }
-   
+
 
 
         /**
-        * Draw a single quad on the image.
+        * Draw a single quad on the image (with texture mapping and gouraud shading)
         *
         *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
         *
@@ -978,21 +1119,22 @@ namespace tgx
                      const Image<color_t>* texture)
             {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < LX * LY))) return -2; // zbuffer required but not available.              
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             if (shader & TGX_SHADER_TEXTURE)
                 { // store the texture
                 if (texture == nullptr) return -3;
-                _uni.tex = (const Image<color_t>*)texture; 
+                _uni.tex = (const Image<color_t>*)texture;
                 }
-            _drawQuad(shader, &P1, &P2, &P3, &P4,   &N1, &N2, &N3, &N4,    &T1, &T2, &T3, &T4);
+            _drawQuad(shader, &P1, &P2, &P3, &P4,   &N1, &N2, &N3, &N4,    &T1, &T2, &T3, &T4, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
             return 0;
             }
 
 
 
         /**
-        * Draw a list of quads on the image.
+        * Draw a list of quads on the image.  If texture mapping is not used, then the current
+        * material color is used to draw the triangles.
         *
         *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
         *
@@ -1050,7 +1192,7 @@ namespace tgx
         ******************************************************************************************
         *
         * BE CAREFUL PAST THIS POINT... HERE BE DRAGONS !
-        * 
+        *
         ******************************************************************************************
         ******************************************************************************************/
 
@@ -1068,12 +1210,13 @@ namespace tgx
 
 
         /** draw a single triangle */
-        void _drawTriangle(const int RASTER_TYPE, 
+        void _drawTriangle(const int RASTER_TYPE,
                            const fVec3 * P0, const fVec3 * P1, const fVec3 * P2,
                            const fVec3 * N0, const fVec3 * N1, const fVec3 * N2,
-                           const fVec2 * T0, const fVec2 * T1, const fVec2 * T2)
+                           const fVec2 * T0, const fVec2 * T1, const fVec2 * T2,
+                           const RGBf & Vcol0, const RGBf & Vcol1, const RGBf & Vcol2)
             {
-            // compute position in wiew space. 
+            // compute position in wiew space.
             const fVec4 Q0 = _r_modelViewM.mult1(*P0);
             const fVec4 Q1 = _r_modelViewM.mult1(*P1);
             const fVec4 Q2 = _r_modelViewM.mult1(*P2);
@@ -1085,7 +1228,7 @@ namespace tgx
 
             typename Image<color_t>::RasterizerVec4 PC0, PC1, PC2;
 
-            // test if clipping is needed                
+            // test if clipping is needed
             static const float clipboundXY = (2048 / ((LX > LY) ? LX : LY));
 
             (*((fVec4*)&PC0)) = _projM * Q0;
@@ -1118,9 +1261,9 @@ namespace tgx
                 const fVec3 NN1 = _r_modelViewM.mult0(*N1);
                 const fVec3 NN2 = _r_modelViewM.mult0(*N2);
 
-                // reverse normal only when culling is disabled (and we assume in this case that normals are  given for the CCW face). 
-                const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f); 
- 
+                // reverse normal only when culling is disabled (and we assume in this case that normals are  given for the CCW face).
+                const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
+
                 if (RASTER_TYPE & TGX_SHADER_TEXTURE)
                     {
                     PC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
@@ -1129,14 +1272,14 @@ namespace tgx
                     }
                 else
                     {
-                    PC0.color = _phong<false>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
-                    PC1.color = _phong<false>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
-                    PC2.color = _phong<false>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
+                    PC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm),Vcol0);
+                    PC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm),Vcol1);
+                    PC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm),Vcol2);
                     }
                 }
             else
                 { // flat shading
-                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal. 
+                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
                 faceN.normalize();
                 if (RASTER_TYPE & TGX_SHADER_TEXTURE)
                     {
@@ -1168,23 +1311,24 @@ namespace tgx
         void _drawQuad(const int RASTER_TYPE,
             const fVec3* P0, const fVec3* P1, const fVec3* P2, const fVec3* P3,
             const fVec3* N0, const fVec3* N1, const fVec3* N2, const fVec3* N3,
-            const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3)
+            const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3,
+            const RGBf & Vcol0, const RGBf & Vcol1, const RGBf & Vcol2,  const RGBf & Vcol3)
             {
-            // compute position in wiew space. 
+            // compute position in wiew space.
             const fVec4 Q0 = _r_modelViewM.mult1(*P0);
             const fVec4 Q1 = _r_modelViewM.mult1(*P1);
             const fVec4 Q2 = _r_modelViewM.mult1(*P2);
 
-            // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar. 
+            // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
             const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
-            if (cu * _culling_dir > 0) return; // Q3 is coplanar with Q0, Q1, Q2 so we discard the whole quad. 
+            if (cu * _culling_dir > 0) return; // Q3 is coplanar with Q0, Q1, Q2 so we discard the whole quad.
 
-            const fVec4 Q3 = _r_modelViewM.mult1(*P3); // compute fourth point 
+            const fVec4 Q3 = _r_modelViewM.mult1(*P3); // compute fourth point
 
             typename Image<color_t>::RasterizerVec4 PC0, PC1, PC2, PC3;
 
-            // test if clipping is needed                
+            // test if clipping is needed
             static const float clipboundXY = (2048 / ((LX > LY) ? LX : LY));
 
             (*((fVec4*)&PC0)) = _projM * Q0;
@@ -1215,9 +1359,9 @@ namespace tgx
                      | (PC3.x < -clipboundXY) | (PC3.x > clipboundXY)
                      | (PC3.y < -clipboundXY) | (PC3.y > clipboundXY)
                      | (PC3.z < -1) | (PC3.z > 1);
-           
+
             if (needclip) return; // just discard the whole quad (TODO : improve this !)
-           
+
             // compute phong lightning
             if (RASTER_TYPE & TGX_SHADER_GOURAUD)
                 { // gouraud shading
@@ -1226,9 +1370,9 @@ namespace tgx
                 const fVec3 NN2 = _r_modelViewM.mult0(*N2);
                 const fVec3 NN3 = _r_modelViewM.mult0(*N3);
 
-                // reverse normal only when culling is disabled (and we assume in this case that normals are  given for the CCW face). 
-                const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f); 
- 
+                // reverse normal only when culling is disabled (and we assume in this case that normals are  given for the CCW face).
+                const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
+
                 if (RASTER_TYPE & TGX_SHADER_TEXTURE)
                     {
                     PC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
@@ -1238,15 +1382,15 @@ namespace tgx
                     }
                 else
                     {
-                    PC0.color = _phong<false>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
-                    PC1.color = _phong<false>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
-                    PC2.color = _phong<false>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
-                    PC3.color = _phong<false>(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm));
+                    PC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm),Vcol0);
+                    PC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm),Vcol1);
+                    PC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm),Vcol2);
+                    PC3.color = _phong(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm),Vcol3);
                     }
                 }
             else
                 { // flat shading
-                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal. 
+                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
                 faceN.normalize();
                 if (RASTER_TYPE & TGX_SHADER_TEXTURE)
                     {
@@ -1296,12 +1440,12 @@ namespace tgx
             if (S.z <= +1.0f) { fl &= (~(32)); }
             }
 
-        
+
         /* test if a box is outside the image and should be discarded. */
         bool _discard(const fBox3 & bb, const fMat4& M)
             {
             if ((bb.minX == 0) && (bb.maxX == 0) && (bb.minY == 0) && (bb.maxY == 0) && (bb.minZ == 0) && (bb.maxZ == 0))
-                return false; // do not discard if the bounding box is uninitialized. 
+                return false; // do not discard if the bounding box is uninitialized.
 
             const float ilx = 2.0f / LX;
             const float bx = (_ox - 1) * ilx - 1.0f;
@@ -1366,10 +1510,10 @@ namespace tgx
         * PHONG LIGHTNING
         ************************************************************/
 
-        static const int _POWTABSIZE = 16;  // number of entries in the precomputed power table for specular exponent. 
+        static const int _POWTABSIZE = 16;  // number of entries in the precomputed power table for specular exponent.
         int _currentpow;                    // exponent for the currently computed table (<0 if table not yet computed)
         float _powfact;                     // used to compute exponent
-        float _fastpowtab[_POWTABSIZE];     // the precomputed power table. 
+        float _fastpowtab[_POWTABSIZE];     // the precomputed power table.
 
         /** Pre-compute the power table for computing specular light component (if needed). */
         void _precomputeSpecularTable(int exponent)
@@ -1399,25 +1543,35 @@ namespace tgx
 
         /** compute pow(x, exponent) using linear interpolation from the pre-computed table */
         TGX_INLINE float _powSpecular(float x) const
-            {            
+            {
             const float indf = (1.0f - x) * _powfact;
             const int indi = (int)indf;
-            return (indi >= (_POWTABSIZE - 1)) ? 0.0f : (_fastpowtab[indi] + (indf - indi) * (_fastpowtab[indi + 1] - _fastpowtab[indi])); 
+            return (indi >= (_POWTABSIZE - 1)) ? 0.0f : (_fastpowtab[indi] + (indf - indi) * (_fastpowtab[indi + 1] - _fastpowtab[indi]));
             }
 
 
-        /** compute a color according to Phong lightning model */
+        /** compute a color according to Phong lightning model, use model color */
         template<bool TEXTURE> TGX_INLINE  RGBf _phong(float v_diffuse, float v_specular) const
             {
             RGBf col = _r_ambiantColor;
             col += _r_diffuseColor * max(v_diffuse, 0.0f);
-            col += _r_specularColor * _powSpecular(max(v_specular, 0.0f)); // pow() this is too slow so we use a lookup table instead          
+            col += _r_specularColor * _powSpecular(max(v_specular, 0.0f)); // pow() this is too slow so we use a lookup table instead
             if (!(TEXTURE)) col *= _r_objectColor;
             col.clamp();
             return col;
             }
 
 
+        /** compute a color according to Phong lightning model, use given color */
+        TGX_INLINE  RGBf _phong(float v_diffuse, float v_specular, RGBf color) const
+            {
+            RGBf col = _r_ambiantColor;
+            col += _r_diffuseColor * max(v_diffuse, 0.0f);
+            col += _r_specularColor * _powSpecular(max(v_specular, 0.0f)); // pow() this is too slow so we use a lookup table instead
+            col *= color;
+            col.clamp();
+            return col;
+            }
 
 
         /***********************************************************
@@ -1425,14 +1579,14 @@ namespace tgx
         ************************************************************/
 
         // *** general parameters ***
-       
+
         int     _ox, _oy;           // image offset w.r.t. the viewport
         Image<color_t>* _im;        // image to drawn onto
 
         fMat4   _projM;             // projection matrix
 
         int     _zbuffer_len;       // size of the zbuffer
-        typename Image<color_t>::RasterizerParams  _uni; // rasterizer param (contain the zbuffer pointer). 
+        typename Image<color_t>::RasterizerParams  _uni; // rasterizer param (contain the zbuffer pointer).
 
         float _culling_dir;         // culling direction postive/negative or 0 to disable back face culling.
 
@@ -1463,23 +1617,23 @@ namespace tgx
         float _r_inorm;             // inverse of the norm of a unit vector after view transform
         fVec3 _r_light;             // light vector in view space (inverted and normalized)
         fVec3 _r_light_inorm;       // same as above but alreadsy muliplied by inorm
-        fVec3 _r_H;                 // halfway vector. 
+        fVec3 _r_H;                 // halfway vector.
         fVec3 _r_H_inorm;           // same as above but already muliplied by inorm
         RGBf _r_ambiantColor;       // ambient color multipled by object ambient strenght
         RGBf _r_diffuseColor;       // diffuse color multipled by object diffuse strenght
         RGBf _r_specularColor;      // specular color multipled by object specular strenght
-        RGBf _r_objectColor;        // color to use for drawing the object (either _color or mesh->color). 
+        RGBf _r_objectColor;        // color to use for drawing the object (either _color or mesh->color).
 
 
-        /** 
-        * Vector with additional attributes used by draw() methods. 
+        /**
+        * Vector with additional attributes used by draw() methods.
         * **/
         struct ExtVec4 : public Image<color_t>::RasterizerVec4
             {
             fVec4 P;       // after model-view matrix multiplication
             fVec4 N;       // normal vector after model-view matrix multiplication
             bool missedP;  // true if the attributes should be computed
-            int indn;      // index for normal vector in array 
+            int indn;      // index for normal vector in array
             int indt;      // index for texture vector in array
             };
 
@@ -1499,10 +1653,10 @@ namespace tgx
 
 /******************************************************************************************************************************************
 *
-* 
-* IMPLEMENTATION DETAILS. 
 *
-* 
+* IMPLEMENTATION DETAILS.
+*
+*
 *******************************************************************************************************************************************/
 
 
@@ -1510,21 +1664,21 @@ namespace tgx
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
         Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::Renderer3D() : _currentpow(-1), _ox(0), _oy(0), _im(nullptr), _zbuffer_len(0), _uni{ nullptr, RGBf(1.0f, 1.0f, 1.0f), nullptr }, _culling_dir(1)
             {
-            // let's set some default values             
+            // let's set some default values
             fMat4 M;
             if (ORTHO)
                 M.setOrtho(-16.0f, 16.0f, -12.0f, 12.0f, 1.0f, 1000.0f);
             else
-                M.setPerspective(45.0f, 1.5f, 1.0f, 1000.0f);  // 45 degree, 4/3 image ratio and minz = 1 maxz = 1000. 
+                M.setPerspective(45.0f, 1.5f, 1.0f, 1000.0f);  // 45 degree, 4/3 image ratio and minz = 1 maxz = 1000.
             this->setProjectionMatrix(M);
 
             this->setLookAt({ 0,0,0 }, { 0,0,-1 }, { 0,1,0 }); // look toward the negative z axis (id matrix)
 
-            this->setLight(fVec3(-1.0f, -1.0f, -1.0f), // white light coming from the right, above, in front. 
-                RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f)); // full white. 
+            this->setLight(fVec3(-1.0f, -1.0f, -1.0f), // white light coming from the right, above, in front.
+                RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f)); // full white.
 
             M.setIdentity();
-            this->setModelMatrix(M); // no transformation on the mesh. 
+            this->setModelMatrix(M); // no transformation on the mesh.
 
             this->setMaterial({ 0.75f, 0.75f, 0.75f }, 0.15f, 0.7f, 0.5f, 16); // just in case: silver color and some default reflexion param...
             this->_precomputeSpecularTable(16);
@@ -1536,7 +1690,7 @@ namespace tgx
         int  Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawMesh(const int shader, const Mesh3D<color_t>* mesh, bool use_mesh_material, bool draw_chained_meshes)
             {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly() ))) return -2; // zbuffer required but not available.            
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly() ))) return -2; // zbuffer required but not available.
 
             while (mesh)
                 {
@@ -1554,7 +1708,7 @@ namespace tgx
                     _precomputeSpecularTable(specularExpo);
                     int raster_type = shader;
                     if (mesh->normal == nullptr) raster_type &= ~((int)TGX_SHADER_GOURAUD); // gouraud shading not available so we disable it
-                    if ((mesh->texcoord == nullptr) || (mesh->texture == nullptr)) raster_type &= ~((int)TGX_SHADER_TEXTURE); // texturing not available so we disable it                                                     
+                    if ((mesh->texcoord == nullptr) || (mesh->texture == nullptr)) raster_type &= ~((int)TGX_SHADER_TEXTURE); // texturing not available so we disable it
                     if (raster_type & TGX_SHADER_GOURAUD)
                         {
                         if (raster_type & TGX_SHADER_TEXTURE)
@@ -1586,17 +1740,17 @@ namespace tgx
 
 
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
-        template<int RASTER_TYPE> 
+        template<int RASTER_TYPE>
         void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawMesh(const Mesh3D<color_t>* mesh)
             {
             static const bool TEXTURE = (bool)(RASTER_TYPE & TGX_SHADER_TEXTURE);
             static const bool GOURAUD = (bool)(RASTER_TYPE & TGX_SHADER_GOURAUD);
             static const float clipboundXY = (2048 / ((LX > LY) ? LX : LY));
 
-            // check if the object is completely outside of the image for fast discard. 
+            // check if the object is completely outside of the image for fast discard.
             if (_discard(mesh->bounding_box, _projM * _r_modelViewM)) return;
 
-            // check if the clipping test should be performed for each triangle in the mesh. 
+            // check if the clipping test should be performed for each triangle in the mesh.
             const bool cliptestneeded = _clipTestNeeded(clipboundXY, mesh->bounding_box, _projM * _r_modelViewM);
 
             const fVec3* const tab_vert = mesh->vertice;  // array of vertices
@@ -1604,7 +1758,7 @@ namespace tgx
             const fVec2* const tab_tex = mesh->texcoord;  // array of texture
             const uint16_t* face = mesh->face;      // array of triangles
 
-            // set the texture. 
+            // set the texture.
             _uni.tex = (const Image<color_t>*)mesh->texture;
 
             ExtVec4 QQA, QQB, QQC;
@@ -1645,10 +1799,10 @@ namespace tgx
                     fVec3 faceN = crossProduct(PC1->P - PC0->P, PC2->P - PC0->P);
                     const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PC0->P);
                     if (cu * _culling_dir > 0) goto rasterize_next_triangle; // skip triangle !
-                    // triangle is not culled                   
+                    // triangle is not culled
                     if (cliptestneeded)
                         {
-                        // test if clipping is needed                
+                        // test if clipping is needed
                         *((fVec4*)PC2) = _projM * PC2->P;
                         if (ORTHO) { PC2->w = 2.0f - PC2->z; }
                         else { PC2->zdivide(); }
@@ -1677,7 +1831,7 @@ namespace tgx
                                 | (PC1->z < -1) | (PC1->z > 1);
                             }
                         // for the time being, we just drop the triangles that need clipping
-                        // *** TODO : implement correct clipping *** 
+                        // *** TODO : implement correct clipping ***
                         if (needclip) goto rasterize_next_triangle;
                         }
                     else
@@ -1704,7 +1858,7 @@ namespace tgx
                     if (GOURAUD)
                         { // Gouraud shading : color on vertices
 
-                        // reverse normal only when culling is disabled (and we assume in this case that normals are given for the CCW face). 
+                        // reverse normal only when culling is disabled (and we assume in this case that normals are given for the CCW face).
                         const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
                         if (PC0->missedP)
                             {
@@ -1721,7 +1875,7 @@ namespace tgx
                         }
                     else
                         { // flat shading : color on faces
-                        const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal. 
+                        const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
                         faceN.normalize();
                         _uni.facecolor = _phong<TEXTURE>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
                         }
@@ -1772,11 +1926,11 @@ namespace tgx
             const Image<color_t>* texture_image)
             {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < LX * LY))) return -2; // zbuffer required but not available.              
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return -3; // invalid vertices
             if ((ind_normals == nullptr) || (normals == nullptr)) shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
             if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) shader &= ~((int)TGX_SHADER_TEXTURE); // disable texture
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed                      
+            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             nb_triangles *= 3;
 
             if (shader & TGX_SHADER_TEXTURE)
@@ -1788,7 +1942,8 @@ namespace tgx
                         {
                         _drawTriangle(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2],
                             normals + ind_normals[n], normals + ind_normals[n + 1], normals + ind_normals[n + 2],
-                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2]);
+                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2],
+                            _r_objectColor, _r_objectColor, _r_objectColor);
                         }
                     }
                 else
@@ -1797,7 +1952,8 @@ namespace tgx
                         {
                         _drawTriangle(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2],
                             nullptr, nullptr, nullptr,
-                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2]);
+                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2],
+                            _r_objectColor, _r_objectColor, _r_objectColor);
                         }
                     }
                 }
@@ -1809,7 +1965,8 @@ namespace tgx
                         {
                         _drawTriangle(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2],
                             normals + ind_normals[n], normals + ind_normals[n + 1], normals + ind_normals[n + 2],
-                            nullptr, nullptr, nullptr);
+                            nullptr, nullptr, nullptr,
+                            _r_objectColor, _r_objectColor, _r_objectColor);
                         }
                     }
                 else
@@ -1818,7 +1975,8 @@ namespace tgx
                         {
                         _drawTriangle(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2],
                             nullptr, nullptr, nullptr,
-                            nullptr, nullptr, nullptr);
+                            nullptr, nullptr, nullptr,
+                            _r_objectColor, _r_objectColor, _r_objectColor);
                         }
                     }
                 }
@@ -1835,11 +1993,11 @@ namespace tgx
             const Image<color_t>* texture_image)
             {
             if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < LX * LY))) return -2; // zbuffer required but not available.              
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return -3; // invalid vertices
             if ((ind_normals == nullptr) || (normals == nullptr)) shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
             if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) shader &= ~((int)TGX_SHADER_TEXTURE); // disable texture
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed                      
+            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             nb_quads *= 4;
             if (shader & TGX_SHADER_TEXTURE)
                 {
@@ -1850,7 +2008,8 @@ namespace tgx
                         {
                         _drawQuad(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2], vertices + ind_vertices[n + 3],
                             normals + ind_normals[n], normals + ind_normals[n + 1], normals + ind_normals[n + 2], normals + ind_normals[n + 3],
-                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2], textures + ind_texture[n + 3]);
+                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2], textures + ind_texture[n + 3],
+                            _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
                         }
                     }
                 else
@@ -1859,7 +2018,8 @@ namespace tgx
                         {
                         _drawQuad(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2], vertices + ind_vertices[n + 3],
                             nullptr, nullptr, nullptr, nullptr,
-                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2], textures + ind_texture[n + 3]);
+                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2], textures + ind_texture[n + 3],
+                            _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
                         }
                     }
                 }
@@ -1871,7 +2031,8 @@ namespace tgx
                         {
                         _drawQuad(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2], vertices + ind_vertices[n + 3],
                             normals + ind_normals[n], normals + ind_normals[n + 1], normals + ind_normals[n + 2], normals + ind_normals[n + 3],
-                            nullptr, nullptr, nullptr, nullptr);
+                            nullptr, nullptr, nullptr, nullptr,
+                            _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
                         }
                     }
                 else
@@ -1880,7 +2041,8 @@ namespace tgx
                         {
                         _drawQuad(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2], vertices + ind_vertices[n + 3],
                             nullptr, nullptr, nullptr, nullptr,
-                            nullptr, nullptr, nullptr, nullptr);
+                            nullptr, nullptr, nullptr, nullptr,
+                            _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
                         }
                     }
                 }
