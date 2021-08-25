@@ -16,15 +16,20 @@
  width="240" height="180" border="10" /></a>
 </p>
 
-**Note** A new companion library <a href="https://github.com/vindar/tgx-font">tgx-font</a> provides a collection of plain and anti-aliased fonts which can be used with this library.
+**Note:** A companion library <a href="https://github.com/vindar/tgx-font">tgx-font</a> provides a collection of plain and anti-aliased fonts which can be used with this library.
 
 ## 2D and 3D graphics library for 32bits microcontrollers. 
 
-This library implements a sets of classes that makes it simple to draw 2D and 3D graphics onto a memory framebuffer. The library is aimed and optimized toward 32bits MCUs such as Teensy or ESP32 yet it is cross-platform and also works on CPUs (mostly for testing purposes, much better alternatives are available on a real CPU with dedicated hardware). 
+This library implements a sets of classes that makes it simple to draw 2D and 3D graphics onto a memory framebuffer. The library is aimed and optimized toward 32bits MCUs yet it is cross-platform and also works on CPUs. 
 
-The library's purpose is to draw graphics **on  a memory framebuffer**. As such, it does not provide  any hardware/screen support. You will need a screen driver to display the memory framebuffer onto a physical screen. If using an ILI9341 screen via SPI, you may consider [Kurte's ILI93451_t3n library](https://github.com/KurtE/ILI9341_t3n) or [my own optimized driver](https://github.com/vindar/ILI9341_T4) (only for Teensy 4/4.1). 
+The library has been currently tested on:
+- Teensy 3.5, 3.6, 4.0, 4.1
+- ESP32
+- desktop CPUs
 
-Here are some of the library best features.
+**Warning:** The library's goal is to draw graphics **on  a memory framebuffer**. As such, it does not provide  any hardware/screen support. You will need a screen driver to display the memory framebuffer onto a physical screen. If you are using a Teensy 4.0/4.1 and an ILI9341 screen, you may consider using my [optimized driver](https://github.com/vindar/ILI9341_T4).
+
+Here are some of the library main features.
 
 ### 2D graphics.
 
@@ -59,7 +64,7 @@ Here are some of the library best features.
 
 - Basic library usage can be found by looking at the examples located in the `/examples` sub-directory.
 
-- Python conversion scripts needed to import meshes and textures are  located in the `/extras - converters` sub-directory.
+- Python conversion scripts needed to import meshes and textures are  located in the `/tools` sub-directory.
 
 
 
