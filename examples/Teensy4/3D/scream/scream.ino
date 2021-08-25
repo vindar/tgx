@@ -264,6 +264,34 @@ void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
         // draw !
         renderer.drawQuads(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE, N * M, faces, vertices, faces, normals, faces, texcoords, &scream_texture);
 
+       // remove the line above ('renderer.drawQuads(...') and uncomment the code below 
+       // to draw the sheet without texturing but wher the color depend in the height. 
+       /*       
+       for(int j=0; j < N*M; j++)
+          {
+          const fVec3 V1 = vertices[faces[4*j]];
+          const fVec3 V2 = vertices[faces[4*j + 1]];
+          const fVec3 V3 = vertices[faces[4*j + 2]];
+          const fVec3 V4 = vertices[faces[4*j + 3]];      
+
+          const fVec3 N1 = normals[faces[4*j]];
+          const fVec3 N2 = normals[faces[4*j + 1]];
+          const fVec3 N3 = normals[faces[4*j + 2]];
+          const fVec3 N4 = normals[faces[4*j + 3]];
+     
+          const float h1 = V1.y * 3.0f +0.4f;
+          const float h2 = V2.y * 3.0f +0.4f;
+          const float h3 = V3.y * 3.0f +0.4f;
+          const float h4 = V4.y * 3.0f +0.4f;
+          const RGBf C1(h1,h1*(1-h1)*3,1-h1);
+          const RGBf C2(h2,h2*(1-h2)*3,1-h2);
+          const RGBf C3(h3,h3*(1-h3)*3,1-h3);
+          const RGBf C4(h4,h4*(1-h4)*3,1-h4);
+
+          renderer.drawQuadWithVertexColor(TGX_SHADER_GOURAUD, V1,V2,V3,V4, N1, N2, N3, N4, C1,C2,C3,C4);          
+         }
+        */
+
         // update the screen (asynchronous). 
         fps();
         tft.update(fb);
