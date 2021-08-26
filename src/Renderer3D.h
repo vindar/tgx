@@ -16,6 +16,15 @@
 // License along with this library; If not, see <http://www.gnu.org/licenses/>.
 
 
+
+
+#define NEWSHADER 1
+
+
+
+
+
+
 #ifndef _TGX_RENDERER3D_H_
 #define _TGX_RENDERER3D_H_
 
@@ -32,7 +41,12 @@
 #include "Box3.h"
 #include "Mat4.h"
 #include "Image.h"
+
+#include "Shaders.h"
+#include "Rasterizer.h"
+
 #include "Mesh3D.h"
+
 
 
 
@@ -98,6 +112,7 @@ namespace tgx
         **/
         void setImage(Image<color_t>* im)
             {
+            _uni.im = im;
             _im = im;
             }
 
@@ -1216,6 +1231,8 @@ namespace tgx
                            const fVec2 * T0, const fVec2 * T1, const fVec2 * T2,
                            const RGBf & Vcol0, const RGBf & Vcol1, const RGBf & Vcol2)
             {
+            _uni.shader_type = RASTER_TYPE;
+
             // compute position in wiew space.
             const fVec4 Q0 = _r_modelViewM.mult1(*P0);
             const fVec4 Q1 = _r_modelViewM.mult1(*P1);
@@ -1226,7 +1243,7 @@ namespace tgx
             const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
             if (cu * _culling_dir > 0) return; // skip triangle !
 
-            typename Image<color_t>::RasterizerVec4 PC0, PC1, PC2;
+            RasterizerVec4 PC0, PC1, PC2;
 
             // test if clipping is needed
             static const float clipboundXY = (2048 / ((LX > LY) ? LX : LY));
@@ -1299,11 +1316,14 @@ namespace tgx
                 }
 
             // go rasterize !
+#if (NEWSHADER)            
+            rasterizeTriangle<LX, LY>(PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
+#else
             (*_im).template rasterizeTriangle<LX, LY, ZBUFFER, ORTHO>(RASTER_TYPE, PC0, PC1, PC2, _ox, _oy, _uni);
+#endif                     
 
             return;
             }
-
 
 
 
@@ -1314,6 +1334,8 @@ namespace tgx
             const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3,
             const RGBf & Vcol0, const RGBf & Vcol1, const RGBf & Vcol2,  const RGBf & Vcol3)
             {
+            _uni.shader_type = RASTER_TYPE;
+
             // compute position in wiew space.
             const fVec4 Q0 = _r_modelViewM.mult1(*P0);
             const fVec4 Q1 = _r_modelViewM.mult1(*P1);
@@ -1326,7 +1348,7 @@ namespace tgx
 
             const fVec4 Q3 = _r_modelViewM.mult1(*P3); // compute fourth point
 
-            typename Image<color_t>::RasterizerVec4 PC0, PC1, PC2, PC3;
+            RasterizerVec4 PC0, PC1, PC2, PC3;
 
             // test if clipping is needed
             static const float clipboundXY = (2048 / ((LX > LY) ? LX : LY));
@@ -1411,8 +1433,14 @@ namespace tgx
                 }
 
             // go rasterize !
+#if (NEWSHADER)            
+            rasterizeTriangle<LX, LY>(PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
+            rasterizeTriangle<LX, LY>(PC0, PC2, PC3, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
+#else
             (*_im).template rasterizeTriangle<LX, LY, ZBUFFER, ORTHO>(RASTER_TYPE, PC0, PC1, PC2, _ox, _oy, _uni);
             (*_im).template rasterizeTriangle<LX, LY, ZBUFFER, ORTHO>(RASTER_TYPE, PC0, PC2, PC3, _ox, _oy, _uni);
+#endif                     
+
             return;
             }
 
@@ -1586,7 +1614,7 @@ namespace tgx
         fMat4   _projM;             // projection matrix
 
         int     _zbuffer_len;       // size of the zbuffer
-        typename Image<color_t>::RasterizerParams  _uni; // rasterizer param (contain the zbuffer pointer).
+        RasterizerParams<color_t, color_t>  _uni; // rasterizer param (contain the zbuffer pointer).
 
         float _culling_dir;         // culling direction postive/negative or 0 to disable back face culling.
 
@@ -1628,7 +1656,7 @@ namespace tgx
         /**
         * Vector with additional attributes used by draw() methods.
         * **/
-        struct ExtVec4 : public Image<color_t>::RasterizerVec4
+        struct ExtVec4 : public RasterizerVec4
             {
             fVec4 P;       // after model-view matrix multiplication
             fVec4 N;       // normal vector after model-view matrix multiplication
@@ -1662,8 +1690,14 @@ namespace tgx
 
 
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
-        Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::Renderer3D() : _currentpow(-1), _ox(0), _oy(0), _im(nullptr), _zbuffer_len(0), _uni{ nullptr, RGBf(1.0f, 1.0f, 1.0f), nullptr }, _culling_dir(1)
+        Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::Renderer3D() : _currentpow(-1), _ox(0), _oy(0), _im(nullptr), _zbuffer_len(0), _uni(), _culling_dir(1)
             {
+            _uni.im = nullptr;
+            _uni.tex = nullptr; 
+            _uni.shader_type = 0; 
+            _uni.zbuf = 0; 
+            _uni.facecolor = RGBf(1.0, 1.0, 1.0);
+
             // let's set some default values
             fMat4 M;
             if (ORTHO)
@@ -1743,6 +1777,8 @@ namespace tgx
         template<int RASTER_TYPE>
         void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawMesh(const Mesh3D<color_t>* mesh)
             {
+            _uni.shader_type = RASTER_TYPE;
+
             static const bool TEXTURE = (bool)(RASTER_TYPE & TGX_SHADER_TEXTURE);
             static const bool GOURAUD = (bool)(RASTER_TYPE & TGX_SHADER_GOURAUD);
             static const float clipboundXY = (2048 / ((LX > LY) ? LX : LY));
@@ -1892,12 +1928,21 @@ namespace tgx
                     PC1->missedP = false;
                     PC2->missedP = false;
 
-                    // go rasterize !
+
+                    // go rasterize !                   
+#if (NEWSHADER)            
+                    
+                    rasterizeTriangle<LX, LY> ((RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
+#else
                     (*_im).template rasterizeTriangle<LX, LY, ZBUFFER, ORTHO>(RASTER_TYPE,
-                        (typename Image<color_t>::RasterizerVec4)QQA,
-                        (typename Image<color_t>::RasterizerVec4)QQB,
-                        (typename Image<color_t>::RasterizerVec4)QQC,
+                        (RasterizerVec4)QQA,
+                        (RasterizerVec4)QQB,
+                        (RasterizerVec4)QQC,
                         _ox, _oy, _uni);
+#endif                     
+
+                    
+
 
                 rasterize_next_triangle:
 

@@ -29,6 +29,8 @@
 #include "Box2.h"
 #include "Color.h"
 
+#include "ShaderParams.h"
+
 #include <stdint.h>
 
 
@@ -1887,50 +1889,6 @@ namespace tgx
 	****************************************************************************/
 
 
-	/** options for triangle rasterization */
-
-	#define	TGX_SHADER_FLAT (0)
-	#define TGX_SHADER_GOURAUD (1)
-	#define TGX_SHADER_TEXTURE (2)
-
-
-		/**
-		* Class used by the rasterizeTriangle() methods.
-		*
-		* Extension of the fVec4 class that holds the 'varying' parameters (in opengl sense)
-		* associated with a vertex and passed to the triangle rasterizer when doing 3D rendering.
-		**/
-		struct RasterizerVec4 : public tgx::fVec4
-			{
-			tgx::RGBf color;     // vertex color for gouraud shading (or light intensity for gouraud shading with texturing). 
-			tgx::fVec2 T;        // texture coordinates if applicable 
-			};
-
-
-
-		/**
-		* Class used by the rasterizeTriangle() methods.
-		*
-		* Structure that holds the 'uniform' parameters (in opengl sense) passed
-		* to the triangle rasterizer when doing 3D rendering
-		**/
-		struct RasterizerParams
-			{
-			float* zbuf;       // pointer to the z buffer (if applicable).
-			RGBf facecolor;  // pointer to the face color when using flat shading.  
-			const Image* tex;        // pointer to the texture (if applicable).
-			};
-
-
-
-	#define TGX_RASTERIZE_SUBPIXEL_BITS (8) // <- change this to adjust sub-pixel precision (between 1 and 8)
-	#define TGX_RASTERIZE_SUBPIXEL256 (1 << TGX_RASTERIZE_SUBPIXEL_BITS)
-	#define TGX_RASTERIZE_SUBPIXEL128 (1 << (TGX_RASTERIZE_SUBPIXEL_BITS -1))
-	#define TGX_RASTERIZE_MULT256(X) ((X) << (TGX_RASTERIZE_SUBPIXEL_BITS))
-	#define TGX_RASTERIZE_MULT128(X) ((X) << (TGX_RASTERIZE_SUBPIXEL_BITS -1))
-	#define TGX_RASTERIZE_DIV256(X) ((X) >> (TGX_RASTERIZE_SUBPIXEL_BITS))
-
-
 
 		/**
 		* Main method for rasterizing a triangle onto the image for 3D graphics:
@@ -2011,8 +1969,14 @@ namespace tgx
 		*          quality and simplify handling of different image types. 
 		**/
 		template<int LX, int LY, bool ZBUFFER, bool ORTHO>
-		void rasterizeTriangle(const int raster_type, const RasterizerVec4 & V0, const RasterizerVec4 & V1, const RasterizerVec4 & V2, const int32_t offset_x, const int32_t offset_y, const RasterizerParams& data)
+		void rasterizeTriangle(const int raster_type, const RasterizerVec4 & V0, const RasterizerVec4 & V1, const RasterizerVec4 & V2, const int32_t offset_x, const int32_t offset_y, const RasterizerParams<color_t,color_t> & data)
 			{
+			#define TGX_RASTERIZE_SUBPIXEL_BITS (8) // <- change this to adjust sub-pixel precision (between 1 and 8)
+			#define TGX_RASTERIZE_SUBPIXEL256 (1 << TGX_RASTERIZE_SUBPIXEL_BITS)
+			#define TGX_RASTERIZE_SUBPIXEL128 (1 << (TGX_RASTERIZE_SUBPIXEL_BITS -1))
+			#define TGX_RASTERIZE_MULT256(X) ((X) << (TGX_RASTERIZE_SUBPIXEL_BITS))
+			#define TGX_RASTERIZE_MULT128(X) ((X) << (TGX_RASTERIZE_SUBPIXEL_BITS -1))
+			#define TGX_RASTERIZE_DIV256(X) ((X) >> (TGX_RASTERIZE_SUBPIXEL_BITS))
 			// assuming that clipping was already perfomed and that V0, V1, V2 are in a reasonable "range" so no overflow will occur. 
 			const float mx = (float)(TGX_RASTERIZE_MULT128(LX));
 			const float my = (float)(TGX_RASTERIZE_MULT128(LY));
@@ -2121,15 +2085,15 @@ namespace tgx
 					data);
 				}
 			return;
+			#undef TGX_RASTERIZE_SUBPIXEL_BITS
+			#undef TGX_RASTERIZE_SUBPIXEL256
+			#undef TGX_RASTERIZE_SUBPIXEL128
+			#undef TGX_RASTERIZE_MULT256
+			#undef TGX_RASTERIZE_MULT128
+			#undef TGX_RASTERIZE_DIV256
 			}
 
 
-#undef TGX_RASTERIZE_SUBPIXEL_BITS
-#undef TGX_RASTERIZE_SUBPIXEL256
-#undef TGX_RASTERIZE_SUBPIXEL128
-#undef TGX_RASTERIZE_MULT256
-#undef TGX_RASTERIZE_MULT128
-#undef TGX_RASTERIZE_DIV256
 
 
 
@@ -2416,7 +2380,7 @@ private:
 			const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
 			const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
 			const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
-			const RasterizerParams& data)
+			const RasterizerParams<color_t,color_t>& data)
 			{
 			if (raster_type & TGX_SHADER_TEXTURE)
 				{
@@ -2440,7 +2404,7 @@ private:
 			const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
 			const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
 			const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{
 			if (raster_type & TGX_SHADER_TEXTURE)
 				{
@@ -2463,7 +2427,7 @@ private:
 			const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
 			const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
 			const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{
 				if (raster_type & TGX_SHADER_TEXTURE)
 				{
@@ -2487,7 +2451,7 @@ private:
 			const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
 			const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
 			const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{
 			if (raster_type & TGX_SHADER_TEXTURE)
 				{
@@ -2511,14 +2475,14 @@ private:
 			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 		/** GOURAUD SHADING (NO Z BUFFER) */
 		void _rasterizeTriangleGouraud(const int32_t & offset, const int32_t & lx, const int32_t & ly,
 			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 
 		/** TEXTURE + FLAT SHADING (NO ZBUFFER) */	
@@ -2526,28 +2490,28 @@ private:
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 		/** TEXTURE + GOURAUD SHADING (NO ZBUFFER) */
 		void _rasterizeTriangleGouraudTexture(const int32_t & offset, const int32_t & lx, const int32_t & ly,
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 		/** ZBUFFER + FLAT SHADING */
 		void _rasterizeTriangleFlatZbuffer(const int32_t offset, const int32_t & lx, const int32_t & ly,
 			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 		/** ZBUFFER + GOURAUD SHADING */	
 		void _rasterizeTriangleGouraudZbuffer(const int32_t & offset, const int32_t & lx, const int32_t & ly,
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 
 		/** ZBUFFER + TEXTURE + FLAT SHADING */
@@ -2555,42 +2519,42 @@ private:
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 		/** * ZBUFFER + TEXTURE + GOURAUD SHADING */
 		void _rasterizeTriangleGouraudTextureZbuffer(const int32_t & offset, const int32_t & lx, const int32_t & ly,
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 		/** TEXTURE + FLAT SHADING (NO ZBUFFER) + ORTHOGRAPHIC */	
 		void _rasterizeTriangleFlatTextureOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 		/** TEXTURE + GOURAUD SHADING (NO ZBUFFER) + ORTHOGRAPHIC */
 		void _rasterizeTriangleGouraudTextureOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 		/** ZBUFFER + TEXTURE + FLAT SHADING + ORTHOGRAPHIC */
 		void _rasterizeTriangleFlatTextureZbufferOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 		/** ZBUFFER + TEXTURE + GOURAUD SHADING + ORTHOGRAPHIC */
 		void _rasterizeTriangleGouraudTextureZbufferOrtho(const int32_t & offset, const int32_t & lx, const int32_t & ly,
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data);
+			const RasterizerParams<color_t, color_t>& data);
 
 
 
@@ -4876,7 +4840,7 @@ private:
 			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{
 			color_t col = (color_t)data.facecolor;
 			color_t* buf = _buffer + offset;
@@ -4949,7 +4913,7 @@ private:
 			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{
 			color_t* buf = _buffer + offset;
 			const int32_t stride = _stride;
@@ -5026,7 +4990,7 @@ private:
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{					
 			const color_t * tex = data.tex->data(); 
 			const int32_t texsize_x = data.tex->width();
@@ -5153,7 +5117,7 @@ private:
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{					
 			const color_t * tex = data.tex->data(); 
 			const int32_t texsize_x = data.tex->width();
@@ -5292,7 +5256,7 @@ private:
 			const int32_t & dx1, const int32_t & dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t & dx2, const int32_t & dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t & dx3, const int32_t & dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{			
 			const color_t col = (color_t)data.facecolor;
 			color_t* buf = _buffer + offset;
@@ -5386,7 +5350,7 @@ private:
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{
 			color_t* buf = _buffer + offset;
 			float* zbuf = data.zbuf + offset;
@@ -5483,7 +5447,7 @@ private:
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{					
 			const color_t * tex = data.tex->data(); 
 			const int32_t texsize_x = data.tex->width();
@@ -5621,7 +5585,7 @@ private:
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{					
 			const color_t * tex = data.tex->data(); 
 			const int32_t texsize_x = data.tex->width();
@@ -5770,7 +5734,7 @@ private:
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{					
 			const color_t * tex = data.tex->data(); 
 			const int32_t texsize_x = data.tex->width();
@@ -5889,7 +5853,7 @@ private:
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{					
 			const color_t * tex = data.tex->data(); 
 			const int32_t texsize_x = data.tex->width();
@@ -6019,7 +5983,7 @@ private:
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{					
 			const color_t * tex = data.tex->data(); 
 			const int32_t texsize_x = data.tex->width();
@@ -6154,7 +6118,7 @@ private:
 			const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 & fP1,
 			const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 & fP2,
 			const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 & fP3,			
-			const RasterizerParams& data)
+			const RasterizerParams<color_t, color_t>& data)
 			{					
 			const color_t * tex = data.tex->data(); 
 			const int32_t texsize_x = data.tex->width();
