@@ -15,16 +15,6 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; If not, see <http://www.gnu.org/licenses/>.
 
-
-
-
-#define NEWSHADER 1
-
-
-
-
-
-
 #ifndef _TGX_RENDERER3D_H_
 #define _TGX_RENDERER3D_H_
 
@@ -112,8 +102,7 @@ namespace tgx
         **/
         void setImage(Image<color_t>* im)
             {
-            _uni.im = im;
-            _im = im;
+            _uni.im = im;            
             }
 
 
@@ -686,8 +675,8 @@ namespace tgx
         int drawTriangle(int shader,
                          const fVec3& P1, const fVec3& P2, const fVec3& P3)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             _drawTriangle(TGX_SHADER_FLAT, &P1, &P2, &P3, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor);
             return 0;
@@ -741,8 +730,8 @@ namespace tgx
                          const fVec3 & P1, const fVec3 & P2, const fVec3 & P3,
                          const fVec3 & N1, const fVec3 & N2, const fVec3 & N3)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             shader &= ~((int)TGX_SHADER_TEXTURE); // disable texturing
             _drawTriangle(shader, &P1, &P2, &P3, &N1, &N2, &N3, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor);
@@ -775,8 +764,8 @@ namespace tgx
                      const fVec3& N1, const fVec3& N2, const fVec3& N3,
                      const RGBf & col1, const RGBf & col2, const RGBf & col3)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             if (shader & TGX_SHADER_GOURAUD)
                 {
@@ -819,8 +808,8 @@ namespace tgx
                         const fVec2 & T1, const fVec2 & T2, const fVec2 & T3,
                         const Image<color_t>* texture)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
             if (shader & TGX_SHADER_TEXTURE)
@@ -864,8 +853,8 @@ namespace tgx
                         const fVec2 & T1, const fVec2 & T2, const fVec2 & T3,
                         const Image<color_t>* texture)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             if (shader & TGX_SHADER_TEXTURE)
                 { // store the texture
@@ -946,8 +935,8 @@ namespace tgx
         int drawQuad(int shader,
                      const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             _drawQuad(shader, &P1, &P2, &P3, &P4, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
             return 0;
@@ -1006,8 +995,8 @@ namespace tgx
                      const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
                      const fVec3& N1, const fVec3& N2, const fVec3& N3, const fVec3& N4)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             shader &= ~((int)TGX_SHADER_TEXTURE); // disable texturing
             _drawQuad(shader, &P1, &P2, &P3, &P4, &N1, &N2, &N3, &N4, nullptr, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
@@ -1042,8 +1031,8 @@ namespace tgx
                      const fVec3& N1, const fVec3& N2, const fVec3& N3, const fVec3& N4,
                      const RGBf & col1, const RGBf & col2, const RGBf & col3, const RGBf & col4)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             if (shader & TGX_SHADER_GOURAUD)
                 {
@@ -1086,8 +1075,8 @@ namespace tgx
                      const fVec2 & T1, const fVec2 & T2, const fVec2 & T3, const fVec2& T4,
                      const Image<color_t>* texture)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
             if (shader & TGX_SHADER_TEXTURE)
@@ -1133,8 +1122,8 @@ namespace tgx
                      const fVec2 & T1, const fVec2 & T2, const fVec2 & T3, const fVec2& T4,
                      const Image<color_t>* texture)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             if (shader & TGX_SHADER_TEXTURE)
                 { // store the texture
@@ -1315,12 +1304,8 @@ namespace tgx
                 PC2.T = *T2;
                 }
 
-            // go rasterize !
-#if (NEWSHADER)            
+            // go rasterize !          
             rasterizeTriangle<LX, LY>(PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
-#else
-            (*_im).template rasterizeTriangle<LX, LY, ZBUFFER, ORTHO>(RASTER_TYPE, PC0, PC1, PC2, _ox, _oy, _uni);
-#endif                     
 
             return;
             }
@@ -1433,14 +1418,9 @@ namespace tgx
                 }
 
             // go rasterize !
-#if (NEWSHADER)            
             rasterizeTriangle<LX, LY>(PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
             rasterizeTriangle<LX, LY>(PC0, PC2, PC3, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
-#else
-            (*_im).template rasterizeTriangle<LX, LY, ZBUFFER, ORTHO>(RASTER_TYPE, PC0, PC1, PC2, _ox, _oy, _uni);
-            (*_im).template rasterizeTriangle<LX, LY, ZBUFFER, ORTHO>(RASTER_TYPE, PC0, PC2, PC3, _ox, _oy, _uni);
-#endif                     
-
+            
             return;
             }
 
@@ -1477,10 +1457,10 @@ namespace tgx
 
             const float ilx = 2.0f / LX;
             const float bx = (_ox - 1) * ilx - 1.0f;
-            const float Bx = (_ox + _im->width() + 1) * ilx - 1.0f;
+            const float Bx = (_ox + _uni.im->width() + 1) * ilx - 1.0f;
             const float ily = 2.0f / LY;
             const float by = (_oy - 1) * ily - 1.0f;
-            const float By = (_oy + _im->height() + 1) * ily - 1.0f;
+            const float By = (_oy + _uni.im->height() + 1) * ily - 1.0f;
 
             int fl = 63; // every bit set
             _clip(fl, fVec3(bb.minX, bb.minY, bb.minZ), M, bx, Bx, by, By);
@@ -1608,13 +1588,13 @@ namespace tgx
 
         // *** general parameters ***
 
-        int     _ox, _oy;           // image offset w.r.t. the viewport
-        Image<color_t>* _im;        // image to drawn onto
+        int     _ox, _oy;           // image offset w.r.t. the viewport        
 
         fMat4   _projM;             // projection matrix
 
         int     _zbuffer_len;       // size of the zbuffer
-        RasterizerParams<color_t, color_t>  _uni; // rasterizer param (contain the zbuffer pointer).
+        
+        RasterizerParams<color_t, color_t>  _uni; // rasterizer param (contain the image pointer and the zbuffer pointer).
 
         float _culling_dir;         // culling direction postive/negative or 0 to disable back face culling.
 
@@ -1690,7 +1670,7 @@ namespace tgx
 
 
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
-        Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::Renderer3D() : _currentpow(-1), _ox(0), _oy(0), _im(nullptr), _zbuffer_len(0), _uni(), _culling_dir(1)
+        Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::Renderer3D() : _currentpow(-1), _ox(0), _oy(0), _zbuffer_len(0), _uni(), _culling_dir(1)
             {
             _uni.im = nullptr;
             _uni.tex = nullptr; 
@@ -1723,8 +1703,8 @@ namespace tgx
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
         int  Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawMesh(const int shader, const Mesh3D<color_t>* mesh, bool use_mesh_material, bool draw_chained_meshes)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly() ))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly() ))) return -2; // zbuffer required but not available.
 
             while (mesh)
                 {
@@ -1928,22 +1908,10 @@ namespace tgx
                     PC1->missedP = false;
                     PC2->missedP = false;
 
-
                     // go rasterize !                   
-#if (NEWSHADER)            
-                    
                     rasterizeTriangle<LX, LY> ((RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
-#else
-                    (*_im).template rasterizeTriangle<LX, LY, ZBUFFER, ORTHO>(RASTER_TYPE,
-                        (RasterizerVec4)QQA,
-                        (RasterizerVec4)QQB,
-                        (RasterizerVec4)QQC,
-                        _ox, _oy, _uni);
-#endif                     
 
-                    
-
-
+                
                 rasterize_next_triangle:
 
                     if (--nbt == 0) break; // exit loop at end of chain
@@ -1970,8 +1938,8 @@ namespace tgx
             const uint16_t* ind_texture, const fVec2* textures,
             const Image<color_t>* texture_image)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return -3; // invalid vertices
             if ((ind_normals == nullptr) || (normals == nullptr)) shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
             if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) shader &= ~((int)TGX_SHADER_TEXTURE); // disable texture
@@ -2037,8 +2005,8 @@ namespace tgx
             const uint16_t* ind_texture, const fVec2* textures,
             const Image<color_t>* texture_image)
             {
-            if ((_im == nullptr) || (!_im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _im->lx() * _im->ly()))) return -2; // zbuffer required but not available.
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return -3; // invalid vertices
             if ((ind_normals == nullptr) || (normals == nullptr)) shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
             if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) shader &= ~((int)TGX_SHADER_TEXTURE); // disable texture
