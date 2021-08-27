@@ -35,14 +35,12 @@ namespace tgx
 	#define	TGX_SHADER_FLAT (0)				// flat shading
 	#define TGX_SHADER_GOURAUD (1)			// gouraud shading, this flag overwrites flat shading
 	#define TGX_SHADER_TEXTURE (2)			// use texture mapping,: can be combined with either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD
-	#define TGX_SHADER_BILINEAR (4)			// activate bilinear sampling (when combined with TGX_SHADER_TEXTURE), otherwise ignored
 
 
 	// macro to test if a shader has a given flag
 	#define TGX_SHADER_HAS_FLAT(shader_type)		(~(shader_type & TGX_SHADER_GOURAUD))
 	#define TGX_SHADER_HAS_GOURAUD(shader_type)		(shader_type & TGX_SHADER_GOURAUD)
 	#define TGX_SHADER_HAS_TEXTURE(shader_type)		(shader_type & TGX_SHADER_TEXTURE)
-	#define TGX_SHADER_HAS_BILINEAR(shader_type)	(shader_type & TGX_SHADER_BILINEAR)
 
 	// macro to set,add and remove shader flags
 	#define TGX_SHADER_SET(shader_type, flags) { shader_type = flags; }
@@ -52,7 +50,6 @@ namespace tgx
 	#define TGX_SHADER_ADD_BILINEAR(shader_type) { shader_type |= TGX_SHADER_BILINEAR; }
 	#define TGX_SHADER_REMOVE_GOURAUD(shader_type) { shader_type &= ~(TGX_SHADER_GOURAUD); }
 	#define TGX_SHADER_REMOVE_TEXTURE(shader_type) { shader_type &= ~(TGX_SHADER_TEXTURE); }
-	#define TGX_SHADER_REMOVE_BILINEAR(shader_type) { shader_type &= ~(TGX_SHADER_BILINEAR); }
 
 
 	//forward declaration
@@ -86,6 +83,7 @@ namespace tgx
 		float* zbuf;					// pointer to the z buffer (when using depth testing).
 		RGBf facecolor;					// pointer to the face color (when using flat shading).  
 		const Image<color_t_tex>* tex;	// pointer to the texture (when using texturing).
+        bool use_bilinear_texturing;    // true to use bilinear point sampling (when using texturing).
 		};
 
 

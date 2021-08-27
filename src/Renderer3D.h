@@ -275,7 +275,15 @@ namespace tgx
             }
 
 
-
+        /**
+        * Enable/disable the use of bilinear point sampling when using texture mapping.  
+        * Enabling it increase the quality of the rendering but is much more compute expensive. 
+        * default value = false. 
+        **/
+        void useBilinearTexturing(bool enable)
+            {
+            _uni.use_bilinear_texturing = enable;
+            }
 
 
         /*****************************************************************************************
@@ -732,8 +740,8 @@ namespace tgx
             {
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            shader &= ~((int)TGX_SHADER_TEXTURE); // disable texturing
+            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed            
+            TGX_SHADER_REMOVE_TEXTURE(shader) // disable texturing
             _drawTriangle(shader, &P1, &P2, &P3, &N1, &N2, &N3, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor);
             return 0;
             }
@@ -767,7 +775,7 @@ namespace tgx
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            if (shader & TGX_SHADER_GOURAUD)
+            if (TGX_SHADER_HAS_GOURAUD(shader))
                 {
                 _drawTriangle(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &N1, &N2, &N3, nullptr, nullptr, nullptr, col1, col2, col3);
                 }
@@ -775,7 +783,7 @@ namespace tgx
                 {
                 fVec3 N = crossProduct(P2 - P1, P3 - P1);// compute the triangle face normal
                 N.normalize(); // normalize it
-                _drawTriangle(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &N, &N, &N, nullptr, nullptr, nullptr, col1, col2, col3);
+                _drawTriangle(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &N, &N, &N, nullptr, nullptr, nullptr, col1, col2, col3); // call gouraud shader with the same normal for all 3 vertices
                 }
             return 0;
             }
@@ -811,8 +819,8 @@ namespace tgx
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
-            if (shader & TGX_SHADER_TEXTURE)
+            TGX_SHADER_REMOVE_GOURAUD(shader)
+            if (TGX_SHADER_HAS_TEXTURE(shader))
                 { // store the texture
                 if (texture == nullptr) return -3;
                 _uni.tex = (const Image<color_t>*)texture;
@@ -856,7 +864,7 @@ namespace tgx
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            if (shader & TGX_SHADER_TEXTURE)
+            if (TGX_SHADER_HAS_TEXTURE(shader))
                 { // store the texture
                 if (texture == nullptr) return -3;
                 _uni.tex = (const Image<color_t>*)texture;
@@ -998,7 +1006,7 @@ namespace tgx
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            shader &= ~((int)TGX_SHADER_TEXTURE); // disable texturing
+            TGX_SHADER_REMOVE_TEXTURE(shader) // disable texturing
             _drawQuad(shader, &P1, &P2, &P3, &P4, &N1, &N2, &N3, &N4, nullptr, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
             return 0;
             }
@@ -1034,7 +1042,7 @@ namespace tgx
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            if (shader & TGX_SHADER_GOURAUD)
+            if (TGX_SHADER_HAS_GOURAUD(shader))
                 {
                 _drawQuad(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &P4, &N1, &N2, &N3, &N4, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4);
                 }
@@ -1078,8 +1086,8 @@ namespace tgx
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
-            if (shader & TGX_SHADER_TEXTURE)
+            TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud
+            if (TGX_SHADER_HAS_TEXTURE(shader))
                 { // store the texture
                 if (texture == nullptr) return -3;
                 _uni.tex = (const Image<color_t>*)texture;
@@ -1125,7 +1133,7 @@ namespace tgx
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            if (shader & TGX_SHADER_TEXTURE)
+            if (TGX_SHADER_HAS_TEXTURE(shader))
                 { // store the texture
                 if (texture == nullptr) return -3;
                 _uni.tex = (const Image<color_t>*)texture;
@@ -1261,7 +1269,7 @@ namespace tgx
 
 
             // compute phong lightning
-            if (RASTER_TYPE & TGX_SHADER_GOURAUD)
+            if (TGX_SHADER_HAS_GOURAUD(RASTER_TYPE))
                 { // gouraud shading
                 const fVec3 NN0 = _r_modelViewM.mult0(*N0);
                 const fVec3 NN1 = _r_modelViewM.mult0(*N1);
@@ -1270,7 +1278,7 @@ namespace tgx
                 // reverse normal only when culling is disabled (and we assume in this case that normals are  given for the CCW face).
                 const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
 
-                if (RASTER_TYPE & TGX_SHADER_TEXTURE)
+                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
                     PC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
                     PC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
@@ -1287,7 +1295,7 @@ namespace tgx
                 { // flat shading
                 const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
                 faceN.normalize();
-                if (RASTER_TYPE & TGX_SHADER_TEXTURE)
+                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
                     _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
                     }
@@ -1297,7 +1305,7 @@ namespace tgx
                     }
                 }
 
-            if (RASTER_TYPE & TGX_SHADER_TEXTURE)
+            if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                 { // store texture vectors if needed
                 PC0.T = *T0;
                 PC1.T = *T1;
@@ -1370,7 +1378,7 @@ namespace tgx
             if (needclip) return; // just discard the whole quad (TODO : improve this !)
 
             // compute phong lightning
-            if (RASTER_TYPE & TGX_SHADER_GOURAUD)
+            if (TGX_SHADER_HAS_GOURAUD(RASTER_TYPE))
                 { // gouraud shading
                 const fVec3 NN0 = _r_modelViewM.mult0(*N0);
                 const fVec3 NN1 = _r_modelViewM.mult0(*N1);
@@ -1380,7 +1388,7 @@ namespace tgx
                 // reverse normal only when culling is disabled (and we assume in this case that normals are  given for the CCW face).
                 const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
 
-                if (RASTER_TYPE & TGX_SHADER_TEXTURE)
+                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
                     PC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
                     PC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
@@ -1399,7 +1407,7 @@ namespace tgx
                 { // flat shading
                 const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
                 faceN.normalize();
-                if (RASTER_TYPE & TGX_SHADER_TEXTURE)
+                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
                     _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
                     }
@@ -1409,7 +1417,7 @@ namespace tgx
                     }
                 }
 
-            if (RASTER_TYPE & TGX_SHADER_TEXTURE)
+            if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                 { // store texture vectors if needed
                 PC0.T = *T0;
                 PC1.T = *T1;
@@ -1677,6 +1685,7 @@ namespace tgx
             _uni.shader_type = 0; 
             _uni.zbuf = 0; 
             _uni.facecolor = RGBf(1.0, 1.0, 1.0);
+            _uni.use_bilinear_texturing = false;
 
             // let's set some default values
             fMat4 M;
@@ -1721,18 +1730,18 @@ namespace tgx
                     const int specularExpo = (use_mesh_material ? mesh->specular_exponent : _specularExponent);
                     _precomputeSpecularTable(specularExpo);
                     int raster_type = shader;
-                    if (mesh->normal == nullptr) raster_type &= ~((int)TGX_SHADER_GOURAUD); // gouraud shading not available so we disable it
-                    if ((mesh->texcoord == nullptr) || (mesh->texture == nullptr)) raster_type &= ~((int)TGX_SHADER_TEXTURE); // texturing not available so we disable it
-                    if (raster_type & TGX_SHADER_GOURAUD)
+                    if (mesh->normal == nullptr) TGX_SHADER_REMOVE_GOURAUD(raster_type) // gouraud shading not available so we disable it
+                    if ((mesh->texcoord == nullptr) || (mesh->texture == nullptr)) TGX_SHADER_REMOVE_TEXTURE(raster_type) // texturing not available so we disable it
+                    if (TGX_SHADER_HAS_GOURAUD(raster_type))
                         {
-                        if (raster_type & TGX_SHADER_TEXTURE)
+                        if (TGX_SHADER_HAS_TEXTURE(raster_type))
                             _drawMesh<TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE>(mesh);
                         else
                             _drawMesh<TGX_SHADER_GOURAUD>(mesh);
                         }
                     else
                         {
-                        if (raster_type & TGX_SHADER_TEXTURE)
+                        if (TGX_SHADER_HAS_TEXTURE(raster_type))
                             _drawMesh<TGX_SHADER_FLAT | TGX_SHADER_TEXTURE>(mesh);
                         else
                             _drawMesh<TGX_SHADER_FLAT>(mesh);
@@ -1759,8 +1768,8 @@ namespace tgx
             {
             _uni.shader_type = RASTER_TYPE;
 
-            static const bool TEXTURE = (bool)(RASTER_TYPE & TGX_SHADER_TEXTURE);
-            static const bool GOURAUD = (bool)(RASTER_TYPE & TGX_SHADER_GOURAUD);
+            static const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURE(RASTER_TYPE));
+            static const bool GOURAUD = (bool)(TGX_SHADER_HAS_GOURAUD(RASTER_TYPE));
             static const float clipboundXY = (2048 / ((LX > LY) ? LX : LY));
 
             // check if the object is completely outside of the image for fast discard.
@@ -1941,15 +1950,15 @@ namespace tgx
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return -3; // invalid vertices
-            if ((ind_normals == nullptr) || (normals == nullptr)) shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
-            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) shader &= ~((int)TGX_SHADER_TEXTURE); // disable texture
+            if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud            
+            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) TGX_SHADER_REMOVE_TEXTURE(shader) // disable texture
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             nb_triangles *= 3;
 
-            if (shader & TGX_SHADER_TEXTURE)
+            if (TGX_SHADER_HAS_TEXTURE(shader))
                 {
                 _uni.tex = (const Image<color_t>*)texture_image;
-                if (shader & TGX_SHADER_GOURAUD)
+                if (TGX_SHADER_HAS_GOURAUD(shader))
                     {
                     for (int n = 0; n < nb_triangles; n += 3)
                         {
@@ -1972,7 +1981,7 @@ namespace tgx
                 }
             else
                 {
-                if (shader & TGX_SHADER_GOURAUD)
+                if (TGX_SHADER_HAS_GOURAUD(shader))
                     {
                     for (int n = 0; n < nb_triangles; n += 3)
                         {
@@ -2008,14 +2017,14 @@ namespace tgx
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return -3; // invalid vertices
-            if ((ind_normals == nullptr) || (normals == nullptr)) shader &= ~((int)TGX_SHADER_GOURAUD); // disable gouraud
-            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) shader &= ~((int)TGX_SHADER_TEXTURE); // disable texture
+            if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader); // disable gouraud
+            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) TGX_SHADER_REMOVE_TEXTURE(shader) // disable texture
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             nb_quads *= 4;
-            if (shader & TGX_SHADER_TEXTURE)
+            if (TGX_SHADER_HAS_TEXTURE(shader))
                 {
                 _uni.tex = (const Image<color_t>*)texture_image;
-                if (shader & TGX_SHADER_GOURAUD)
+                if (TGX_SHADER_HAS_GOURAUD(shader))
                     {
                     for (int n = 0; n < nb_quads; n += 4)
                         {
@@ -2038,7 +2047,7 @@ namespace tgx
                 }
             else
                 {
-                if (shader & TGX_SHADER_GOURAUD)
+                if (TGX_SHADER_HAS_GOURAUD(shader))
                     {
                     for (int n = 0; n < nb_quads; n += 4)
                         {
