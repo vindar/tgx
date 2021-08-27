@@ -484,7 +484,6 @@ struct RGB565
     };
 
 
-
     /**
     * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
     **/
@@ -501,6 +500,38 @@ struct RGB565
         return RGB565((uint16_t)((result >> 16) | result)); // contract result      
         }
     
+
+    /**
+    * Return the bilinear blending of four neighouring pixels in an image with respect 
+    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
+    * the mininum coord. in direction x and y, as illustrated in the drawing below:
+    *
+    *  C01          C11
+    *                
+    *   --ax--X
+    *         |
+    *         ay
+    *  C00    |     C10
+    **/
+    inline RGB565 blend_bilinear(const RGB565 & C00, const RGB565 & C10, const RGB565 & C01, const RGB565 & C11, const float ax, const float ay)
+            {
+            /* flotating point version, slower...
+            const float rax = 1.0f - ax;
+            const float ray = 1.0f - ay;            
+            const int R = (int)(rax*(ray*C00.R + ay*C01.R) + ax*(ray*C10.R + ay*C11.R));
+            const int G = (int)(rax*(ray*C00.G + ay*C01.G) + ax*(ray*C10.G + ay*C11.G));
+            const int B = (int)(rax*(ray*C00.B + ay*C01.B) + ax*(ray*C10.B + ay*C11.B));
+            return RGB565(R,G,B);
+            */            
+            const int iax = (int)(ax * 256);
+            const int iay = (int)(ay * 256);
+            const int rax = 256 - iax;
+            const int ray = 256 - iay; 
+            const int R = rax*(ray*C00.R + iay*C01.R) + iax*(ray*C10.R + iay*C11.R);
+            const int G = rax*(ray*C00.G + iay*C01.G) + iax*(ray*C10.G + iay*C11.G);
+            const int B = rax*(ray*C00.B + iay*C01.B) + iax*(ray*C10.B + iay*C11.B);
+            return RGB565(R >> 16,G >> 16,B >> 16);            
+            }
 
 
     /**
@@ -916,6 +947,30 @@ struct RGB24
                      (int)(col3.G + (C1 * (col1.G - col3.G) + C2 * (col2.G - col3.G)) / totC),
                      (int)(col3.B + (C1 * (col1.B - col3.B) + C2 * (col2.B - col3.B)) / totC));
         }
+
+    /**
+    * Return the bilinear blending of four neighouring pixels in an image with respect 
+    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
+    * the mininum coord. in direction x and y, as illustrated in the drawing below:
+    *
+    *  C01          C11
+    *                
+    *   --ax--X
+    *         |
+    *         ay
+    *  C00    |     C10
+    **/
+    inline RGB24 blend_bilinear(const RGB24 & C00, const RGB24 & C10, const RGB24 & C01, const RGB24 & C11, const float ax, const float ay)
+            {           
+            const int iax = (int)(ax * 256);
+            const int iay = (int)(ay * 256);
+            const int rax = 256 - iax;
+            const int ray = 256 - iay; 
+            const int R = rax*(ray*C00.R + iay*C01.R) + iax*(ray*C10.R + iay*C11.R);
+            const int G = rax*(ray*C00.G + iay*C01.G) + iax*(ray*C10.G + iay*C11.G);
+            const int B = rax*(ray*C00.B + iay*C01.B) + iax*(ray*C10.B + iay*C11.B);
+            return RGB24(R >> 16,G >> 16,B >> 16);            
+            }
 
 
     /**
@@ -1458,6 +1513,30 @@ struct RGB32
                      (int)(col3.A + (C1 * (col1.A - col3.A) + C2 * (col2.A - col3.A)) / totC));
         }
 
+    /**
+    * Return the bilinear blending of four neighouring pixels in an image with respect 
+    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
+    * the mininum coord. in direction x and y, as illustrated in the drawing below:
+    *
+    *  C01          C11
+    *                
+    *   --ax--X
+    *         |
+    *         ay
+    *  C00    |     C10
+    **/
+    inline RGB32 blend_bilinear(const RGB32 & C00, const RGB32 & C10, const RGB32 & C01, const RGB32 & C11, const float ax, const float ay)
+            {           
+            const int iax = (int)(ax * 256);
+            const int iay = (int)(ay * 256);
+            const int rax = 256 - iax;
+            const int ray = 256 - iay; 
+            const int R = rax*(ray*C00.R + iay*C01.R) + iax*(ray*C10.R + iay*C11.R);
+            const int G = rax*(ray*C00.G + iay*C01.G) + iax*(ray*C10.G + iay*C11.G);
+            const int B = rax*(ray*C00.B + iay*C01.B) + iax*(ray*C10.B + iay*C11.B);
+            const int A = rax*(ray*C00.A + iay*C01.A) + iax*(ray*C10.A + iay*C11.A);
+            return RGB32(R >> 16,G >> 16,B >> 16,A >> 16);            
+            }
 
 
     /**
@@ -2030,6 +2109,31 @@ struct RGB64
 
 
     /**
+    * Return the bilinear blending of four neighouring pixels in an image with respect 
+    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
+    * the mininum coord. in direction x and y, as illustrated in the drawing below:
+    *
+    *  C01          C11
+    *                
+    *   --ax--X
+    *         |
+    *         ay
+    *  C00    |     C10
+    **/
+    inline RGB64 blend_bilinear(const RGB64 & C00, const RGB64 & C10, const RGB64 & C01, const RGB64 & C11, const float ax, const float ay)
+            {
+            // let's use floating point version for max accuraccy, RGB64 is slow anyway...
+            const float rax = 1.0f - ax;
+            const float ray = 1.0f - ay;            
+            const int R = (int)round(rax*(ray*C00.R + ay*C01.R) + ax*(ray*C10.R + ay*C11.R));
+            const int G = (int)round(rax*(ray*C00.G + ay*C01.G) + ax*(ray*C10.G + ay*C11.G));
+            const int B = (int)round(rax*(ray*C00.B + ay*C01.B) + ax*(ray*C10.B + ay*C11.B));
+            const int A = (int)round(rax*(ray*C00.A + ay*C01.A) + ax*(ray*C10.A + ay*C11.A));
+            return RGB64(R,G,B,A);
+            }
+
+
+    /**
     * Return the "mean" color between colA and colB.
     **/
     inline RGB64 meanColor(const RGB64 & colA, const RGB64 & colB)
@@ -2377,6 +2481,29 @@ struct RGB64
 
 
     /**
+    * Return the bilinear blending of four neighouring pixels in an image with respect 
+    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
+    * the mininum coord. in direction x and y, as illustrated in the drawing below:
+    *
+    *  C01          C11
+    *                
+    *   --ax--X
+    *         |
+    *         ay
+    *  C00    |     C10
+    **/
+    inline RGBf blend_bilinear(const RGBf & C00, const RGBf & C10, const RGBf & C01, const RGBf & C11, const float ax, const float ay)
+            {
+            const float rax = 1.0f - ax;
+            const float ray = 1.0f - ay;            
+            const float R = rax*(ray*C00.R + ay*C01.R) + ax*(ray*C10.R + ay*C11.R);
+            const float G = rax*(ray*C00.G + ay*C01.G) + ax*(ray*C10.G + ay*C11.G);
+            const float B = rax*(ray*C00.B + ay*C01.B) + ax*(ray*C10.B + ay*C11.B);
+            return RGBf(R,G,B);
+            }
+            
+            
+    /**
     * Return the "mean" color between colA and colB.
     **/
     inline RGBf meanColor(const RGBf & colA, const  RGBf & colB)
@@ -2649,6 +2776,25 @@ inline HSV blend(HSV col1, int32_t C1, HSV col2, int32_t C2, HSV col3, int32_t t
     return HSV(blend(RGBf(col1), C1, RGBf(col2), C2, RGBf(col3), totC));
     }
 
+
+/**
+ * Return the bilinear blending of four neighouring pixels in an image with respect 
+ * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
+ * the mininum coord. in direction x and y, as illustrated in the drawing below:
+ *
+ *  C01          C11
+ *                
+ *   --ax--X
+ *         |
+ *         ay
+ *  C00    |     C10
+ **/
+ inline HSV blend_bilinear(const HSV & C00, const HSV & C10, const HSV & C01, const HSV & C11, const float ax, const float ay)
+    {
+    // just fgorward to RGBf          ..
+    return HSV(blend_bilinear(RGBf(C00), RGBf(C10), RGBf(C01), RGBf(C11), ax, ay));
+    }
+            
 
 /**
 * Return the "mean" color between colA and colB.
