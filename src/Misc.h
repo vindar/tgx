@@ -18,51 +18,47 @@
 #ifndef _TGX_MISC_H_
 #define _TGX_MISC_H_
 
-// only C++, no plain C
-#ifdef __cplusplus
-
 
 #include <stdint.h>
 #include <math.h>
 
-
-
 #if defined(TEENSYDUINO) || defined(ESP32)
+    #include "Arduino.h" // include Arduino to get PROGMEM macro and others
+    #define TGX_ON_ARDUINO
+    #define TGX_INLINE __attribute__((always_inline))
+#else    
+    #define TGX_INLINE    
+#endif
 
-// running on a MCU 
+#ifndef PROGMEM
+    #define PROGMEM
+#endif
 
-#include <Arduino.h>
-#define TGX_ON_ARDUINO
-#define TGX_INLINE __attribute__((always_inline))
+
+/* Set this to 1 to use float as the default floating point type 
+   and set it to 0 to use double precision instead. */
+#ifndef TGX_SINGLE_PRECISION_COMPUTATIONS
+    #define TGX_SINGLE_PRECISION_COMPUTATIONS 1  
+#endif
+
+
+
+// c++, no plain c
+#ifdef __cplusplus
 
 
 #if defined(ARDUINO_TEENSY41)
 
-// check existence of external ram (EXTMEM). 
-extern "C" uint8_t external_psram_size;
+    // check existence of external ram (EXTMEM). 
+    extern "C" uint8_t external_psram_size;
 
-// check is an address is in flash
-#define TGX_IS_PROGMEM(X)  ((((uint32_t)(X)) >= 0x60000000)&&(((uint32_t)(X)) < 0x70000000))
+    // check is an address is in flash
+    #define TGX_IS_PROGMEM(X)  ((((uint32_t)(X)) >= 0x60000000)&&(((uint32_t)(X)) < 0x70000000))
 
-// check if an address is in external ram
-#define TGX_IS_EXTMEM(X) ((((uint32_t)(X)) >= 0x70000000)&&(((uint32_t)(X)) < 0x80000000))
-
+    // check if an address is in external ram
+    #define TGX_IS_EXTMEM(X) ((((uint32_t)(X)) >= 0x70000000)&&(((uint32_t)(X)) < 0x80000000))
 
 #endif
-
-
-#else 
-
-// running on a CPU ? 
-
-#define TGX_INLINE
-
-#ifndef PROGMEM
-#define PROGMEM
-#endif
-
-#endif 
-
 
 
 namespace tgx
@@ -89,14 +85,6 @@ namespace tgx
         {
         // nothing here :-)
         };
-
-
-
-/* Set this to 1 to use float as the default floating point type 
-   and set it to 0 to use double precision instead. */
-#ifndef TGX_SINGLE_PRECISION_COMPUTATIONS
-#define TGX_SINGLE_PRECISION_COMPUTATIONS 1  
-#endif
 
 
     /** sets the default floating point type for computations */

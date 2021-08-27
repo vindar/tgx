@@ -17,6 +17,11 @@
 #ifndef _TGX_SHADERSPARAMS_H_
 #define _TGX_SHADERSPARAMS_H_
 
+
+// only C++, no plain C
+#ifdef __cplusplus
+
+
 #include "Misc.h"
 #include "Vec2.h"
 #include "Vec3.h"
@@ -92,6 +97,9 @@ namespace tgx
 
 
 #endif
+
+#endif
+
 
 /** end of file */
 
