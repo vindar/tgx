@@ -178,7 +178,7 @@ float unif(float a, float b)
 
 
 /** return the camera's curent position (depending on time) */
-fVec3 cameraPosition()
+tgx::fVec3 cameraPosition()
     {   
     static elapsedMillis em; 
     const float T = 30.0f; // rotation period (in seconds). 
