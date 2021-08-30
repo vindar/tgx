@@ -23,8 +23,6 @@
 #ifdef __cplusplus
 
 
-
-
 #include <stdint.h>
 #include <type_traits>
 

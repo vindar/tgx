@@ -170,12 +170,14 @@ void setup()
 
     const float ratio = ((float)SLX) / SLY;
 
+
     // setup the 3D renderer with perspective projection
     rendererP.setOffset(0, 0);
     rendererP.setImage(&im);
     rendererP.setZbuffer(zbuf, SLX * SLY);
     rendererP.setPerspective(45, ratio, 0.1f, 1000.0f);
     rendererP.setCulling(1);
+    rendererP.useBilinearTexturing(true);
 
     // setup the 3D renderer with orthoscopic projection
     rendererO.setOffset(0, 0);
@@ -183,6 +185,7 @@ void setup()
     rendererO.setZbuffer(zbuf, SLX * SLY);
     rendererO.setOrtho(-1.8*ratio, 1.8 *ratio, -1.8, 1.8, 0.1f, 1000.0f);
     rendererO.setCulling(1);
+    rendererO.useBilinearTexturing(true);
 
     // initial textrure color
     texture.fillScreen(RGB565_Blue);

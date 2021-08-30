@@ -22,7 +22,6 @@
 // only C++, no plain C
 #ifdef __cplusplus
 
-
 #include "Misc.h"
 #include "Vec3.h"
 

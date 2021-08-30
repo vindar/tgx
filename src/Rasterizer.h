@@ -17,6 +17,11 @@
 #ifndef _TGX_RASTERIZER_H_
 #define _TGX_RASTERIZER_H_
 
+
+// only C++, no plain C
+#ifdef __cplusplus
+
+
 #include "ShaderParams.h"
 
 namespace tgx
@@ -236,6 +241,8 @@ namespace tgx
 
 #endif
 
-/** end of file */  
+#endif
+
+/** end of file */
 
 

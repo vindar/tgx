@@ -19,7 +19,7 @@
 #ifndef _TGX_FONTS_H_
 #define _TGX_FONTS_H_
 
-#include <Arduino.h>
+#include "Misc.h"
 
 /****************************************************************************
 * FONT FORMATS

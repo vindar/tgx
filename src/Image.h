@@ -34,7 +34,6 @@
 #include <stdint.h>
 
 
-
 namespace tgx
 {
 
