@@ -34,20 +34,47 @@ namespace tgx
 {
 
 
-/**********************************************************************
+/***********************************************************************************
 * Color types. 
 * 
-* RGB565, RGB32 and RGB64 are wrappers around basic integer types so
-* they can be used as drop in remplacement of uint16_t, uint32_t and 
-* uint64_t without any speed penalty.
+* The following color types are availaible for use with the tgx library:
 * 
-* RGB24, RGBf, HSV are 'struct-like' and their alignement is that of the 
-* color component type (ie 1 byte for RGB24 and 4 bytes for RGBf and HSV). 
+* - RGB565: 16bits, R:5 G:6 B:5 colors  
+*           no alpha channel wrapper around a uint16_t integer, aligned as uint16_t
+*           
+* - RGB24:  24bits, R:8 G:8 B:8 colors.   
+*           no alpha channel, not aligned in memory
+*           
+* - RGB32:  32bits, R:8 G:8 B:8 A:8 colors.   
+*           alpha channel, wrapper around a uint32_t integer, aligned as uint32_t
+*           
+* - RGB64:  64bits, R:16 G:16 B:16 A:16 colors.
+*           alpha channel, wrapper around a uint64_t integer, aligned as uint64_t
+*
+* - RGBf:   96bits, R:float G:float, B:float  
+*           no alpha channel, aligned as float.
 * 
-* RGB32 and RGB64 have an alpha channel.
+* - HSV:    96bits, H:float, S:float, V:float  
+*           hue / saturation / value color space: very slow
+*
+* 
+* REMARKS:
+* 
+* 1. RGB565, RGB32 and RGB64 are wrappers around basic integer types they can be 
+*    used as drop in remplacment of uint16_t, uint32_t and uint64_t without any 
+*    speed penalty.
+*    
+*    For example:
+*        tgx::RGB565 col(12,63,30)
+*        uint16_t v = (uint16_t)col; // <- conversion to uint16_t
+*        tgx::RGB565 col2 = tgx::RGB565(v) // <- conversion back to RGB565
+*    
+* 2. RGB32 and RGB64 have an alpha channel. The color are always assumed to have  
+*    pre-multiplied alpha. 
 *  
-* Fast conversion is implemented between color types (and also integer
-* types) except when converting from/to HSV which is slow. 
+* 3. Fast conversion is implemented between color types (and also integer types)   
+*    except when converting from/to HSV which is slow. 
+*    
 ***********************************************************************/
 
 
@@ -125,8 +152,7 @@ extern const RGB32 RGB32_Teal;
 extern const RGB32 RGB32_Gray;
 extern const RGB32 RGB32_Silver;
 extern const RGB32 RGB32_Navy;
-extern const RGB32 RGB32_TransparentBlack;
-extern const RGB32 RGB32_TransparentWhite;
+extern const RGB32 RGB32_Transparent;   // premultiplied transarent black (0,0,0,0)
 
 
 
@@ -160,10 +186,12 @@ extern const RGB565 RGB565_Navy;
 
 /**
 * Class representing a color in R5/G6/B5 format. 
-* Occupies 2 bytes in memory 
+* 
+* Occupies 2 bytes in memory (aligned as uint16_t)
+* 
 * Can be converted from/to uint16_t.
 * 
-* This type is compatible with adafruit gfx library 
+* This type is compatible with adafruit gfx library
 * and is used with most SPI display. 
 **/
 struct RGB565
@@ -471,7 +499,7 @@ struct RGB565
 
 
         /**
-        * multiply each color component by a given factor (in [0,256]).
+        * multiply each color component by a given factor x/256 with x in [0,256]
         **/
         inline void mult256(int mr, int mg, int mb)
             {
@@ -480,13 +508,28 @@ struct RGB565
             B = (B * mb) >> 8;
             }
 
+
+        /**         
+        * Dummy function for compatibility with color types having an alpha channel.
+        * 
+        * Does nothing since the color is always fully opaque. 
+        **/
+        inline void premultiply()
+            {
+            // nothing here. 
+            return;
+            }
+
+
     };
 
 
     /**
+    * Interpolate between 3 colors. 
+    * 
     * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
     **/
-    inline RGB565 blend(const RGB565 & col1, int32_t C1, const  RGB565 & col2, int32_t C2, const  RGB565 & col3, const int32_t totC)
+    inline RGB565 interpolateColorsTriangle(const RGB565 & col1, int32_t C1, const  RGB565 & col2, int32_t C2, const  RGB565 & col3, const int32_t totC)
         {       
         C1 <<= 5;
         C1 /= totC;
@@ -501,7 +544,7 @@ struct RGB565
     
 
     /**
-    * Return the bilinear blending of four neighouring pixels in an image with respect 
+    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
     * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
     * the mininum coord. in direction x and y, as illustrated in the drawing below:
     *
@@ -512,7 +555,7 @@ struct RGB565
     *         ay
     *  C00    |     C10
     **/
-    inline RGB565 blend_bilinear(const RGB565 & C00, const RGB565 & C10, const RGB565 & C01, const RGB565 & C11, const float ax, const float ay)
+    inline RGB565 interpolateColorsBilinear(const RGB565 & C00, const RGB565 & C10, const RGB565 & C01, const RGB565 & C11, const float ax, const float ay)
             {
             /* flotating point version, slower...
             const float rax = 1.0f - ax;
@@ -535,7 +578,7 @@ struct RGB565
 
     /**
     * Return the "mean" color between colA and colB.
-    * TODO : make it faster as for blend() 
+    * TODO : make it faster
     **/
     inline RGB565 meanColor(RGB565 colA, RGB565 colB)
         {
@@ -547,7 +590,7 @@ struct RGB565
 
     /**
     * Return the "mean" color between 4 colors.
-    * TODO : make it faster as for blend()
+    * TODO : make it faster
     **/
     inline RGB565 meanColor(RGB565 colA, RGB565 colB, RGB565 colC, RGB565 colD)
         {
@@ -567,12 +610,14 @@ struct RGB565
 
 /**
 * Class representing a color in R8/G8/B8 format. 
-* Occupies 3 bytes in memory.
+* 
+* Occupies 3 bytes in memory. No alignement
 * 
 * Remark: This color type should only be used when memory space 
-* is tight but RGB565 does not offer enough resolution. Use 
-* RGB32 instead when possible (even if not using the alpha 
-* component) because will be faster with correct 4 bytes alignment.
+* is really tight but RGB565 does not offer enough resolution. 
+* Use RGB32 instead when possible (even if not using the alpha 
+* component) because most operation will be faster with correct 
+* 4 bytes alignment.
 **/
 struct RGB24
     {
@@ -919,11 +964,18 @@ struct RGB24
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0, 256].
         **/
-        inline void blend256(const RGB24& fg_col, uint32_t alpha);
+        inline void blend256(const RGB24& fg_col, uint32_t alpha)
+            {
+            const uint16_t a = (uint16_t)alpha;
+            const uint16_t ia = (uint16_t)(256 - alpha);
+            R = ((fg_col.R * a) + (R * ia)) >> 8;
+            G = ((fg_col.G * a) + (G * ia)) >> 8;
+            B = ((fg_col.B * a) + (B * ia)) >> 8;
+            }
 
 
         /**
-        * multiply each color component by a given factor (in [0,256]).
+        * multiply each color component by a given factor x/256 with x in [0,256]
         **/
         inline void mult256(int mr, int mg, int mb)
             {
@@ -933,14 +985,28 @@ struct RGB24
             }
 
 
+        /**         
+        * Dummy function for compatibility with color types having an alpha channel.
+        * 
+        * Does nothing since the color is always fully opaque. 
+        **/
+        inline void premultiply()
+            {
+            // nothing here. 
+            return;
+            }
+
+
     };
 
 
 
     /**
+    * Interpolate between 3 colors.
+    *
     * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
     **/
-    inline RGB24 blend(const RGB24& col1, int32_t C1, const  RGB24& col2, int32_t C2, const  RGB24& col3, const int32_t totC)
+    inline RGB24 interpolateColorsTriangle(const RGB24& col1, int32_t C1, const  RGB24& col2, int32_t C2, const  RGB24& col3, const int32_t totC)
         {
         return RGB24((int)(col3.R + (C1 * (col1.R - col3.R) + C2 * (col2.R - col3.R)) / totC),
                      (int)(col3.G + (C1 * (col1.G - col3.G) + C2 * (col2.G - col3.G)) / totC),
@@ -948,7 +1014,7 @@ struct RGB24
         }
 
     /**
-    * Return the bilinear blending of four neighouring pixels in an image with respect 
+    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
     * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
     * the mininum coord. in direction x and y, as illustrated in the drawing below:
     *
@@ -959,7 +1025,7 @@ struct RGB24
     *         ay
     *  C00    |     C10
     **/
-    inline RGB24 blend_bilinear(const RGB24 & C00, const RGB24 & C10, const RGB24 & C01, const RGB24 & C11, const float ax, const float ay)
+    inline RGB24 interpolateColorsBilinear(const RGB24 & C00, const RGB24 & C10, const RGB24 & C01, const RGB24 & C11, const float ax, const float ay)
             {           
             const int iax = (int)(ax * 256);
             const int iay = (int)(ay * 256);
@@ -1004,11 +1070,18 @@ struct RGB24
 
 
 /**
-* Class representing a color in R8/G8/B8/(A8) format. 
+* Class representing a color in R8/G8/B8/(A8) format.
+*  
 * Occupies 4 bytes in memory. 
+* 
 * Can be converted from/to uint32_t.
 * 
-* the A component defaults to DEFAULT_A when not specified.
+* the A component defaults to DEFAULT_A = 255 (fully opaque)
+* when not specified.
+* 
+* REMARK : For all drawing/blending procedure, the color is assume to have 
+*          pre-multiplied alpha. Use the premultiply() method to convert a 
+*          plain alpha color to its pre-multiplied version.
 **/
 struct RGB32
     {
@@ -1379,16 +1452,10 @@ struct RGB32
          * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
          * to 1.0f (fully opaque).
          * 
-         * The alpha channel of fg_col is multiplied by alpha to get the final blending opacity/alpha
-         * value.
-         *
-         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
-         * correct operation for the alpha channels: the resulting color is not opaque if one the
-         * initial color is not opaque... This is not a problem when doing simple blending on a
-         * destination image but it is not suitable for advanced image composition.
+         * *** WARNING The color fg_col is assumed to have pre-multiplied alpha. *** 
          *
          * @param   fg_col  The foreground color.
-         * @param   alpha   The opacity/alpha multiplier in [0.0f,1.0f].
+         * @param   alpha   Additional opacity/alpha multiplier in [0.0f,1.0f].
         **/
         inline void blend(const RGB32 & fg_col, float alpha)
             {
@@ -1397,24 +1464,24 @@ struct RGB32
 
 
         /**
-         * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
-         * transparent) to 256 (fully opaque).
-         * 
-         * The alpha channel of fg_col is multiplied by alpha to get the final blending opacity/alpha
-         * value.
-         * 
-         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
-         * correct operation for the alpha channels: the resulting color is not opaque if one the
-         * initial color is not opaque... This is not a problem when doing simple blending on a
-         * destination image but it is not suitable for advanced image composition.
+         * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
+         * to 1.0f (fully opaque).
+         *
+         * *** WARNING The color fg_col is assumed to have pre-multiplied alpha. ***
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,256].
         **/
         inline void blend256(const RGB32 & fg_col, uint32_t alpha)
             {
-            alpha = (alpha * (fg_col.A + 1)) >> 8; // combine external alpha with alpha channel.
+            /* WRONG.
+            alpha = (alpha * (fg_col.A + (fg_col.A > 127))) >> 8; // combine external alpha with alpha channel.
             const uint32_t inv_alpha = 256 - alpha;
+            */
+            // below is the correct alpha blending with pre-multiplied alpha
+            // we do 'real' interpolate with eternal 'alpha' but not with the 'A' component of fg_col
+            // since it is already pre-multiplied
+            const uint32_t inv_alpha = 256 - ((alpha * (fg_col.A + (fg_col.A > 127))) >> 8);
             const uint32_t ag = ((fg_col.val & 0xFF00FF00) >> 8)*alpha  +  ((val & 0xFF00FF00) >> 8)*inv_alpha;
             const uint32_t rb = (fg_col.val & 0x00FF00FF) * alpha + (val & 0x00FF00FF) * inv_alpha;
             val = (ag & 0xFF00FF00) | ((rb >> 8) & 0x00FF00FF);
@@ -1422,15 +1489,12 @@ struct RGB32
 
 
         /**
-         * alpha-blend `fg_col` over this one.  
-         * 
-         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
-         * correct operation for the alpha channels: the resulting color is not opaque if one the
-         * initial color is not opaque... This is not a problem when doing simple blending on a
-         * destination image but it is not suitable for advanced image composition.
+         * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
+         * to 1.0f (fully opaque).
          *
+         * *** WARNING The color fg_col is assumed to have pre-multiplied alpha. ***
+         * 
          * @param   fg_col  The foreground color. The alpha channel of the color is used for blending.
-         *                  .
         **/
         inline void blend(RGB32 fg_col)
             {
@@ -1439,7 +1503,7 @@ struct RGB32
 
 
         /**
-        * multiply each color component by a given factor (in [0,256]).
+        * multiply each color component by a given factor x/256 with x in [0,256]
         **/
         inline void mult256(int mr, int mg, int mb)
             {
@@ -1448,8 +1512,9 @@ struct RGB32
             B = (B * mb) >> 8;
             }
 
+
         /**
-        * multiply each color component by a given factor (in [0,256]).
+        * multiply each color component by a given factor x/256 with x in [0,256]
         **/
         inline void mult256(int mr, int mg, int mb, int ma)
             {
@@ -1461,6 +1526,22 @@ struct RGB32
 
 
         /**
+        * Convert the color from plain alpha to pre-multiplied alpha.
+        * 
+        * REMARK: Normally, all colors type in TGX should have pre-multiplied alpha. 
+        * Thus, this method should only be used when loading a color from external data 
+        * (a png image for example) where the colors are not initially pre-multiplied. 
+        **/
+        inline void premultiply()
+            {
+            R = (uint8_t)((((uint16_t)R) * A) / 255);
+            G = (uint8_t)((((uint16_t)G) * A) / 255);
+            B = (uint8_t)((((uint16_t)B) * A) / 255);
+            }
+
+
+
+        /**
         * Return the opacity (alpha channel value) of this color
         * in the range [0,1] (0=fully transparent, 1=fully opaque).
         **/
@@ -1469,21 +1550,60 @@ struct RGB32
             return (((float)A)/ 255.0f);
             }
 
+
         /**
-        * Return the opacity (alpha channel value) of this color
-        * in the range [0,1] (0=fully transparent, 1=fully opaque).
+        * Change the opacity of the color to a given value in [0.0f, 1.0f]
+        * 
+        * This method assumes (and returns) a color with pre-multiplied alpha.
+        * 
+        * REMARK: Use multOpacity() instead whenever possible because it is faster. 
         **/
         void setOpacity(float op)
             {
-            A = (uint8_t)(op * 255);
+            // slow version
+            float mo = op * 255.0f;
+            float mult = (A == 0) ? 0.0f : (mo / ((float)A));
+            (*this) =  RGB32((int)(R * mult), (int)(G * mult), (int)(B * mult), (int)mo);
             }
+
+
+        /**
+        * Multiply the opacity of the color by a given factor in [0.0f, 1.0f]
+        * 
+        * This method assumes (and returns) a color with pre-multiplied alpha.
+        **/
+        void multOpacity(float op)
+            {
+            *this = getMultOpacity(op);
+            }
+
+
+        /**
+        * Return a copy of this color with opacity multiplied by a given factor in [0.0f, 1.0f]
+        *
+        * This method assumes (and returns) a color with pre-multiplied alpha.
+        **/
+        RGB32 getMultOpacity(float op)
+            {
+            // faster
+            uint32_t o = (uint32_t)(256 * op);
+            uint32_t ag = (val & 0xFF00FF00) >> 8;
+            uint32_t rb = val & 0x00FF00FF;
+            uint32_t sag = o * ag;
+            uint32_t srb = o * rb;
+            sag = sag & 0xFF00FF00;
+            srb = (srb >> 8) & 0x00FF00FF;
+            val = (sag | srb);
+            return RGB32(sag | srb);
+            }
+
 
         /**
         * Set the alpha channel of the color to fully opaque.
         **/
         void setOpaque()
             {
-            A = 255; 
+            setOpacity(1.0f);
             }
 
 
@@ -1492,19 +1612,23 @@ struct RGB32
         **/
         void setTransparent()
             {
-            A = 0; 
+            R = 0;
+            G = 0;
+            B = 0;
+            A = 0;
             }
+
 
     };
 
 
 
     /**
+    * Interpolate between 3 colors.
+    *
     * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
-    * 
-    * Do not use the alpha channels !
     **/
-    inline RGB32 blend(const RGB32& col1, int32_t C1, const  RGB32& col2, int32_t C2, const  RGB32& col3, const int32_t totC)
+    inline RGB32 interpolateColorsTriangle(const RGB32& col1, int32_t C1, const  RGB32& col2, int32_t C2, const  RGB32& col3, const int32_t totC)
         {
         return RGB32((int)(col3.R + (C1 * (col1.R - col3.R) + C2 * (col2.R - col3.R)) / totC),
                      (int)(col3.G + (C1 * (col1.G - col3.G) + C2 * (col2.G - col3.G)) / totC),
@@ -1512,8 +1636,9 @@ struct RGB32
                      (int)(col3.A + (C1 * (col1.A - col3.A) + C2 * (col2.A - col3.A)) / totC));
         }
 
+
     /**
-    * Return the bilinear blending of four neighouring pixels in an image with respect 
+    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
     * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
     * the mininum coord. in direction x and y, as illustrated in the drawing below:
     *
@@ -1524,7 +1649,7 @@ struct RGB32
     *         ay
     *  C00    |     C10
     **/
-    inline RGB32 blend_bilinear(const RGB32 & C00, const RGB32 & C10, const RGB32 & C01, const RGB32 & C11, const float ax, const float ay)
+    inline RGB32 interpolateColorsBilinear(const RGB32 & C00, const RGB32 & C10, const RGB32 & C01, const RGB32 & C11, const float ax, const float ay)
             {           
             const int iax = (int)(ax * 256);
             const int iay = (int)(ay * 256);
@@ -1554,12 +1679,12 @@ struct RGB32
     * Return the "mean" color between 4 colors
     **/
     inline RGB32 meanColor(RGB32 colA, RGB32 colB, RGB32 colC, RGB32 colD)
-    {
+        {
         return RGB32(((int)colA.R + (int)colB.R + (int)colC.R + (int)colD.R) >> 2,
                      ((int)colA.G + (int)colB.G + (int)colC.G + (int)colD.G) >> 2,
                      ((int)colA.B + (int)colB.B + (int)colC.B + (int)colD.B) >> 2,
                      ((int)colA.A + (int)colB.A + (int)colC.A + (int)colD.A) >> 2);
-    }
+        }
 
 
 
@@ -1569,12 +1694,20 @@ struct RGB32
 * declaration of class RGB64
 ***********************************************************************/
 
+
 /**
 * Class representing a color in R16/G16/B16/(A16) format. 
+* 
 * Occupies 8 bytes in memory.
+* 
 * Can be converted from/to uint64_t.
 * 
-* the A component defaults to DEFAULT_A if not used.
+* the A component defaults to DEFAULT_A = 65535 (fully opaque) 
+* if not specified.
+* 
+* REMARK : For all drawing/blending procedure, the color is assume to have
+*          pre-multiplied alpha. Use the premultiply() method to convert a
+*          plain alpha color to its pre-multiplied version.
 **/
 struct RGB64
     {
@@ -1672,7 +1805,7 @@ struct RGB64
 
 
         /**
-        * Ctor from a uint32_t.
+        * Ctor from a uint64_t.
         **/
         constexpr inline RGB64(uint64_t c) : val(c) {}
 
@@ -1680,13 +1813,13 @@ struct RGB64
         /**
         * Ctor from a uint16_t (seen as RGB565).
         **/
-        constexpr inline RGB64(uint16_t val);
+        inline RGB64(uint16_t val);
 
 
         /**
         * Ctor from a uint32_t (seen as RGB32).
         **/
-        constexpr inline RGB64(uint32_t val);
+        inline RGB64(uint32_t val);
 
 
         /**
@@ -1699,26 +1832,26 @@ struct RGB64
         * Ctor from a RGB565 color.
         * A component is set to DEFAULT_A
         **/
-        constexpr inline RGB64(const RGB565& c);
+        inline RGB64(const RGB565& c);
 
 
         /**
         * Ctor from a RGB24 color.
         * A component is set to DEFAULT_A
         **/
-        constexpr inline RGB64(const RGB24& c);
+        inline RGB64(const RGB24& c);
 
 
         /**
         * Ctor from a RGB32 color.
         **/
-        constexpr inline RGB64(const RGB32& c);
+        inline RGB64(const RGB32& c);
 
 
         /**
         * Ctor from a RGBf color.
         **/
-        constexpr inline RGB64(const RGBf& c);
+        inline RGB64(const RGBf& c);
 
 
         /**
@@ -1942,20 +2075,16 @@ struct RGB64
             }
 
 
+
+
         /**
          * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
          * to 1.0f (fully opaque).
-         * 
-         * The alpha channel of fg_col is multiplied by alpha to get the final blending opacity/alpha
-         * value.
-         * 
-         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
-         * correct operation for the alpha channels: the resulting color is not opaque if one the
-         * initial color is not opaque... This is not a problem when doing simple blending on a
-         * destination image but it is not suitable for advanced image composition.
+         *
+         * *** WARNING: The color fg_col is assumed to have pre-multiplied alpha. ***
          *
          * @param   fg_col  The foreground color.
-         * @param   alpha   The opacity/alpha multiplier in [0.0f,1.0f].
+         * @param   alpha   Additional opacity/alpha multiplier in [0.0f,1.0f].
         **/
         inline void blend(const RGB64& fg_col, float alpha)
             {
@@ -1966,14 +2095,8 @@ struct RGB64
         /**
          * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
          * transparent) to 256 (fully opaque).
-         * 
-         * The alpha channel of fg_col is multiplied by alpha to get the final blending opacity/alpha
-         * value.
-         * 
-         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
-         * correct operation for the alpha channels: the resulting color is not opaque if one the
-         * initial color is not opaque... This is not a problem when doing simple blending on a
-         * destination image but it is not suitable for advanced image composition.
+         *
+         * *** WARNING The color fg_col is assumed o have pre-multiplied alpha. ***
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,256].
@@ -1988,36 +2111,27 @@ struct RGB64
          * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
          * transparent) to 65536 (fully opaque).
          *
-         * The alpha channel of fg_col is multiplied by alpha to get the final blending opacity/alpha
-         * value.
-         *
-         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
-         * correct operation for the alpha channels: the resulting color is not opaque if one the
-         * initial color is not opaque... This is not a problem when doing simple blending on a
-         * destination image but it is not suitable for advanced image composition.
+         * *** WARNING The color fg_col is assumed to have pre-multiplied alpha. ***
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,65536].
         **/
         inline void blend65536(const RGB64 & fg_col, uint32_t alpha)
             {
-            alpha = (alpha >> 1); // reduce range to [0,32768]
-            alpha = (alpha * (fg_col.A + 1)) >> 15; // compute finale blending alpha value 
-            const uint32_t inv_alpha = 65536 - alpha;
+            // correct version where 'alpha' is imterpolated normally but 'A' is only multiplied 
+            // with background because the color is assumed pre-multiplied 
+            const uint32_t inv_alpha = 65536 - ((alpha * (fg_col.A + (fg_col.A > 32767))) >> 15);
             R = (uint16_t)((fg_col.R * alpha + R * inv_alpha) >> 16);
             G = (uint16_t)((fg_col.G * alpha + G * inv_alpha) >> 16);
             B = (uint16_t)((fg_col.B * alpha + B * inv_alpha) >> 16);
-            A = (uint16_t)((fg_col.A * alpha + A * inv_alpha) >> 16); // hum... maybe better to skip this but let's leave for compatibility with RGB32. 
+            A = (uint16_t)((fg_col.A * alpha + A * inv_alpha) >> 16); 
             }
 
 
         /**
          * alpha-blend `fg_col` over this one.
-         * 
-         * NOTE: Alpha blending is done by interpolating the 4 channels of both colors. This is not the
-         * correct operation for the alpha channels: the resulting color is not opaque if one the
-         * initial color is not opaque... This is not a problem when doing simple blending on a
-         * destination image but it is not suitable for advanced image composition.
+         *
+         * *** WARNING The color fg_col is assumed to have pre-multiplied alpha. ***
          *
          * @param   fg_col  The foreground color. The alpha channel of the color is used for blending.
          *                  .
@@ -2029,7 +2143,7 @@ struct RGB64
 
 
         /**
-        * multiply each color component by a given factor (in [0,256]).
+        * multiply each color component by a given factor x/256 with x in [0,256].
         **/
         inline void mult256(int mr, int mg, int mb)
             {
@@ -2040,7 +2154,7 @@ struct RGB64
 
 
         /**
-        * multiply each color component by a given factor (in [0,256]).
+        * multiply each color component by a given factor x/256 with x in [0,256].
         **/
         inline void mult256(int mr, int mg, int mb, int ma)
             {
@@ -2051,6 +2165,21 @@ struct RGB64
             }
 
 
+        /**
+        * Convert the color from plain alpha to pre-multiplied alpha.
+        *
+        * REMARK: Normally, all colors type in TGX should have pre-multiplied alpha.
+        * Thus, this method should only be used when loading a color from external data
+        * (a png image for example) where the colors are not initially pre-multiplied.
+        **/
+        inline void premultiply()
+            {
+            R = (uint16_t)((((uint32_t)R) * A) / 65535);
+            G = (uint16_t)((((uint32_t)G) * A) / 65535);
+            B = (uint16_t)((((uint32_t)B) * A) / 65535);
+            }
+
+
 
         /**
         * Return the opacity (alpha channel value) of this color
@@ -2058,24 +2187,54 @@ struct RGB64
         **/
         float opacity() const
             {
-            return (((float)A)/ 65535.0f);
+            return (((float)A) / 65535.0f);
             }
 
+
         /**
-        * Return the opacity (alpha channel value) of this color
-        * in the range [0,1] (0=fully transparent, 1=fully opaque).
+        * Change the opacity of the color to a given value in [0.0f, 1.0f]
+        *
+        * This method assumes (and returns) a color with pre-multiplied alpha.
+        *
+        * REMARK: Use multOpacity() instead whenever possible because it is faster.
         **/
         void setOpacity(float op)
             {
-            A = (uint8_t)(op * 65535);
+            // slow version
+            float mo = op * 65535.0f;
+            float mult = (A == 0) ? 0.0f : (mo / ((float)A));
+            (*this) = RGB64((int)(R * mult), (int)(G * mult), (int)(B * mult), (int)mo);
             }
+
+
+        /**
+        * Multiply the opacity of the color by a given factor in [0.0f, 1.0f]
+        *
+        * This method assumes (and returns) a color with pre-multiplied alpha.
+        **/
+        void multOpacity(float op)
+            {
+            *this = getMultOpacity(op);
+            }
+
+
+        /**
+        * Return a copy of this color with opacity multiplied by a given factor in [0.0f, 1.0f]
+        *
+        * This method assumes (and returns) a color with pre-multiplied alpha.
+        **/
+        RGB64 getMultOpacity(float op)
+            {
+            return RGB64((int)(R * op), (int)(G * op), (int)(B * op), (int)(A * op));
+            }
+
 
         /**
         * Set the alpha channel of the color to fully opaque.
         **/
         void setOpaque()
             {
-            A = 65535; 
+            setOpacity(1.0f);
             }
 
 
@@ -2084,6 +2243,9 @@ struct RGB64
         **/
         void setTransparent()
             {
+            R = 0;
+            G = 0;
+            B = 0;
             A = 0; 
             }
 
@@ -2094,13 +2256,13 @@ struct RGB64
 
 
     /**
+    * Interpolate between 3 colors.
+    *
     * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
-    * 
-    * Do not use the alpha channels !
     **/
-    inline RGB64 blend(const RGB64& col1, int32_t C1, const  RGB64& col2, int32_t C2, const  RGB64& col3, const int32_t totC)
+    inline RGB64 interpolateColorsTriangle(const RGB64& col1, int32_t C1, const  RGB64& col2, int32_t C2, const  RGB64& col3, const int32_t totC)
         {
-        return RGB32((int)(col3.R + (C1 * (col1.R - col3.R) + C2 * (col2.R - col3.R)) / totC),
+        return RGB64((int)(col3.R + (C1 * (col1.R - col3.R) + C2 * (col2.R - col3.R)) / totC),
                      (int)(col3.G + (C1 * (col1.G - col3.G) + C2 * (col2.G - col3.G)) / totC),
                      (int)(col3.B + (C1 * (col1.B - col3.B) + C2 * (col2.B - col3.B)) / totC),
                      (int)(col3.A + (C1 * (col1.A - col3.A) + C2 * (col2.A - col3.A)) / totC));
@@ -2108,7 +2270,7 @@ struct RGB64
 
 
     /**
-    * Return the bilinear blending of four neighouring pixels in an image with respect 
+    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
     * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
     * the mininum coord. in direction x and y, as illustrated in the drawing below:
     *
@@ -2119,15 +2281,15 @@ struct RGB64
     *         ay
     *  C00    |     C10
     **/
-    inline RGB64 blend_bilinear(const RGB64 & C00, const RGB64 & C10, const RGB64 & C01, const RGB64 & C11, const float ax, const float ay)
+    inline RGB64 interpolateColorsBilinear(const RGB64 & C00, const RGB64 & C10, const RGB64 & C01, const RGB64 & C11, const float ax, const float ay)
             {
             // let's use floating point version for max accuraccy, RGB64 is slow anyway...
             const float rax = 1.0f - ax;
             const float ray = 1.0f - ay;            
-            const int R = (int)round(rax*(ray*C00.R + ay*C01.R) + ax*(ray*C10.R + ay*C11.R));
-            const int G = (int)round(rax*(ray*C00.G + ay*C01.G) + ax*(ray*C10.G + ay*C11.G));
-            const int B = (int)round(rax*(ray*C00.B + ay*C01.B) + ax*(ray*C10.B + ay*C11.B));
-            const int A = (int)round(rax*(ray*C00.A + ay*C01.A) + ax*(ray*C10.A + ay*C11.A));
+            const int R = (int)roundf(rax*(ray*C00.R + ay*C01.R) + ax*(ray*C10.R + ay*C11.R));
+            const int G = (int)roundf(rax*(ray*C00.G + ay*C01.G) + ax*(ray*C10.G + ay*C11.G));
+            const int B = (int)roundf(rax*(ray*C00.B + ay*C01.B) + ax*(ray*C10.B + ay*C11.B));
+            const int A = (int)roundf(rax*(ray*C00.A + ay*C01.A) + ax*(ray*C10.A + ay*C11.A));
             return RGB64(R,G,B,A);
             }
 
@@ -2167,12 +2329,14 @@ struct RGB64
 
 
     /**
-    * Class representing a color in R5/G6/B5 format.
-    * Occupies 2 bytes in memory
-    * Can be converted from/to uint16_t.
+    * Class representing a color R,G,B float format.
+    * 
+    * Occupies 4*3 = 12 bytes in memory (aligned as float). 
+    * 
+    * No alpha channel. 
     *
-    * This type is compatible with adafruit gfx library
-    * and is used with most SPI display.
+    * Useful for high precision computation. 
+    * Used by the 3D rasterizer for all color/shading. 
     **/
     struct RGBf
     {
@@ -2454,7 +2618,7 @@ struct RGB64
 
 
         /**
-        * multiply each color component by a given factor (in [0,256]).
+        * multiply each color component by a given factor x/256 with x in [0,256].
         **/
         inline void mult256(int mr, int mg, int mb)
             {
@@ -2464,14 +2628,27 @@ struct RGB64
             }
 
 
+        /**         
+        * Dummy function for compatibility with color types having an alpha channel.
+        * 
+        * Does nothing since the color is always fully opaque. 
+        **/
+        inline void premultiply()
+            {
+            // nothing here. 
+            return;
+            }
 
     };
 
 
+
     /**
+    * Interpolate between 3 colors.
+    *
     * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
     **/
-    inline RGBf blend(const RGBf & col1, int32_t C1, const  RGBf & col2, int32_t C2, const  RGBf & col3, int32_t totC)
+    inline RGBf interpolateColorsTriangle(const RGBf & col1, int32_t C1, const  RGBf & col2, int32_t C2, const  RGBf & col3, int32_t totC)
         {
         return RGBf(col3.R + (C1 * (col1.R - col3.R) + C2 * (col2.R - col3.R)) / totC,
                     col3.G + (C1 * (col1.G - col3.G) + C2 * (col2.G - col3.G)) / totC,
@@ -2480,7 +2657,7 @@ struct RGB64
 
 
     /**
-    * Return the bilinear blending of four neighouring pixels in an image with respect 
+    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
     * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
     * the mininum coord. in direction x and y, as illustrated in the drawing below:
     *
@@ -2491,7 +2668,7 @@ struct RGB64
     *         ay
     *  C00    |     C10
     **/
-    inline RGBf blend_bilinear(const RGBf & C00, const RGBf & C10, const RGBf & C01, const RGBf & C11, const float ax, const float ay)
+    inline RGBf interpolateColorsBilinear(const RGBf & C00, const RGBf & C10, const RGBf & C01, const RGBf & C11, const float ax, const float ay)
             {
             const float rax = 1.0f - ax;
             const float ray = 1.0f - ay;            
@@ -2753,7 +2930,10 @@ struct HSV
 
 
         /**
-        * multiply each color component by a given factor (in [0,256]).
+        * multiply each color component by factor (x/256) with x in [0,256].
+        * 
+        * Uses the R,G,B components for compatibility (and just forward to the
+        * corresponding RGBf method). 
         **/
         inline void mult256(int mr, int mg, int mb)
             {
@@ -2763,52 +2943,65 @@ struct HSV
             }
 
 
+        /**         
+        * Dummy function for compatibility with color types having an alpha channel.
+        * 
+        * Does nothing since the color is always fully opaque. 
+        **/
+        inline void premultiply()
+            {
+            // nothing here. 
+            return;
+            }
+
     };
 
 
 
-/**
-* Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
-**/
-inline HSV blend(HSV col1, int32_t C1, HSV col2, int32_t C2, HSV col3, int32_t totC)
-    {
-    return HSV(blend(RGBf(col1), C1, RGBf(col2), C2, RGBf(col3), totC));
-    }
+    /**
+    * Interpolate between 3 colors.
+    *
+    * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
+    **/
+    inline HSV interpolateColorsTriangle(HSV col1, int32_t C1, HSV col2, int32_t C2, HSV col3, int32_t totC)
+        {
+        return HSV(interpolateColorsTriangle(RGBf(col1), C1, RGBf(col2), C2, RGBf(col3), totC));
+        }
 
 
-/**
- * Return the bilinear blending of four neighouring pixels in an image with respect 
- * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
- * the mininum coord. in direction x and y, as illustrated in the drawing below:
- *
- *  C01          C11
- *                
- *   --ax--X
- *         |
- *         ay
- *  C00    |     C10
- **/
- inline HSV blend_bilinear(const HSV & C00, const HSV & C10, const HSV & C01, const HSV & C11, const float ax, const float ay)
-    {
-    // just fgorward to RGBf          ..
-    return HSV(blend_bilinear(RGBf(C00), RGBf(C10), RGBf(C01), RGBf(C11), ax, ay));
-    }
+    /**
+    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
+    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
+    * the mininum coord. in direction x and y, as illustrated in the drawing below:
+    *
+    *  C01          C11
+    *                
+    *   --ax--X
+    *         |
+    *         ay
+    *  C00    |     C10
+    **/
+    inline HSV interpolateColorsBilinear(const HSV & C00, const HSV & C10, const HSV & C01, const HSV & C11, const float ax, const float ay)
+        {
+        // just forward to RGBf          ..
+        return HSV(interpolateColorsBilinear(RGBf(C00), RGBf(C10), RGBf(C01), RGBf(C11), ax, ay));
+        }
             
 
-/**
-* Return the "mean" color between colA and colB.
-**/
-inline HSV meanColor(const  HSV & colA, const  HSV & colB)
+    /**
+    * Return the "mean" color between colA and colB.
+    **/
+    inline HSV meanColor(const  HSV & colA, const  HSV & colB)
         {
         // hum.. what does that mean in HSV, let's do it in RGB color space instead
         return HSV(meanColor(RGBf(colA), RGBf(colB)));
         }
 
 
-/**
-* Return the "mean" color between 4 colors
-**/
-inline HSV meanColor(const  HSV& colA, const  HSV& colB, const  HSV& colC, const  HSV& colD)
+    /**
+    * Return the "mean" color between 4 colors
+    **/
+    inline HSV meanColor(const  HSV& colA, const  HSV& colB, const  HSV& colC, const  HSV& colD)
         {
         // hum.. what does that mean in HSV, let's do it in RGB color space instead
         return HSV(meanColor(RGBf(colA), RGBf(colB), RGBf(colC), RGBf(colD)));
@@ -2971,11 +3164,11 @@ constexpr inline RGB24::RGB24(uint64_t val) : RGB24(RGB64(val))
         }
 
 
-constexpr inline RGB24::RGB24(const RGB565& c) : 
+constexpr inline RGB24::RGB24(const RGB565& c) :
         #if TGX_RGB24_ORDER_BGR
-        B(((uint8_t)c.B) << 3), G(((uint8_t)c.G) << 2), R(((uint8_t)c.R) << 3)
+        B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2))
         #else
-        R(((uint8_t)c.R) << 3), G(((uint8_t)c.G) << 2), B(((uint8_t)c.B) << 3)
+        R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2))
         #endif
         {
         }
@@ -3013,9 +3206,9 @@ constexpr inline RGB24::RGB24(const RGBf& c) :
 
 inline RGB24& RGB24::operator=(const RGB565& c)
         {
-        R = ((uint8_t)c.R) << 3;
-        G = ((uint8_t)c.G) << 2;
-        B = ((uint8_t)c.B) << 3;
+        B = (((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2);
+        G = (((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4);
+        R = (((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2);
         return *this;
         }
 
@@ -3085,16 +3278,6 @@ inline RGB24& RGB24::operator=(fVec4 v)
 
 
 
-inline void RGB24::blend256(const RGB24& fg_col, uint32_t alpha)
-        {
-        // just forward to RGB32 methods. Might do something a bit faster but don't really care as RGB24 will be slow anyway...
-        RGB32 c(*this);
-        c.blend256(RGB32(fg_col), alpha);
-        *this = RGB24(c); // forward to RGB32
-        }
-
-
-
 
 
 /**********************************************************************
@@ -3112,9 +3295,9 @@ constexpr inline RGB32::RGB32(uint64_t val) : RGB32(RGB64(val))
 
 constexpr inline RGB32::RGB32(const RGB565& c) : 
         #if TGX_RGB32_ORDER_BGR
-        B(((uint8_t)c.B) << 3), G(((uint8_t)c.G) << 2), R(((uint8_t)c.R) << 3), A(DEFAULT_A)
+        B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2)), A(DEFAULT_A)
         #else
-        R(((uint8_t)c.R) << 3), G(((uint8_t)c.G) << 2), B(((uint8_t)c.B) << 3), A(DEFAULT_A)
+        R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2)), A(DEFAULT_A)
         #endif
         {
         }
@@ -3152,9 +3335,9 @@ constexpr inline RGB32::RGB32(const RGBf& c) :
 
 inline RGB32& RGB32::operator=(const RGB565& c)
         {
-        B = ((uint8_t)c.B) << 3;
-        G = ((uint8_t)c.G) << 2;
-        R = ((uint8_t)c.R) << 3;
+        B = (((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2);
+        G = (((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4);
+        R = (((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2);
         A = DEFAULT_A;
         return *this;
         }
@@ -3195,6 +3378,7 @@ inline RGB32& RGB32::operator=(iVec3 v)
         R = (uint8_t)v.x;
         G = (uint8_t)v.y;
         B = (uint8_t)v.z;
+        A = DEFAULT_A;
         return *this;
         }
 
@@ -3214,6 +3398,7 @@ inline RGB32& RGB32::operator=(fVec3 v)
         B = (uint8_t)(v.x * 255);
         G = (uint8_t)(v.y * 255);
         R = (uint8_t)(v.z * 255);
+        A = DEFAULT_A;
         return *this;
         }
 
@@ -3234,61 +3419,45 @@ inline RGB32& RGB32::operator=(fVec4 v)
 * implementation of inline method for RGB64
 ***********************************************************************/
 
-constexpr inline RGB64::RGB64(uint16_t val) : RGB64(RGB565(val))
+inline RGB64::RGB64(uint16_t val) : RGB64(RGB565(val))
         {
         }
 
 
-constexpr inline RGB64::RGB64(uint32_t val) : RGB64(RGB32(val))
+inline RGB64::RGB64(uint32_t val) : RGB64(RGB32(val))
         {
         }
 
 
-constexpr inline RGB64::RGB64(const RGB565& c) : 
-        #if TGX_RGB64_ORDER_BGR
-        B(((uint16_t)c.B) << 11), G(((uint16_t)c.G) << 10), R(((uint16_t)c.R) << 11), A(DEFAULT_A)
-        #else
-        R(((uint16_t)c.R) << 11), G(((uint16_t)c.G) << 10), B(((uint16_t)c.B) << 11), A(DEFAULT_A)
-        #endif  
+inline RGB64::RGB64(const RGB565& c) 
         {
+        this->operator=(c);
         }
 
 
-constexpr inline RGB64::RGB64(const RGB24& c) : 
-        #if TGX_RGB64_ORDER_BGR
-        B(((uint16_t)c.B) << 8), G(((uint16_t)c.G) << 8), R(((uint16_t)c.R) << 8), A(DEFAULT_A)
-        #else
-        R(((uint16_t)c.R) << 8), G(((uint16_t)c.G) << 8), B(((uint16_t)c.B) << 8), A(DEFAULT_A)
-        #endif      
+inline RGB64::RGB64(const RGB24& c) 
         {   
+        this->operator=(c);
         }
 
 
-constexpr inline RGB64::RGB64(const RGB32& c) : 
-        #if TGX_RGB64_ORDER_BGR
-        B((((uint16_t)c.B) << 8) | ((uint16_t)c.B)), G((((uint16_t)c.G) << 8) | ((uint16_t)c.G)), R((((uint16_t)c.R) << 8) | ((uint16_t)c.R)), A((((uint16_t)c.A) << 8) | ((uint16_t)c.A))
-        #else
-        R((((uint16_t)c.R) << 8) | ((uint16_t)c.R)), G((((uint16_t)c.G) << 8) | ((uint16_t)c.G)), B((((uint16_t)c.B) << 8) | ((uint16_t)c.B)), A((((uint16_t)c.A) << 8) | ((uint16_t)c.A))
-        #endif          
+inline RGB64::RGB64(const RGB32& c)
         {
+        this->operator=(c);
         }
 
 
-constexpr inline RGB64::RGB64(const RGBf& c) : 
-        #if TGX_RGB64_ORDER_BGR
-        B((uint16_t)(c.B * 65535)), G((uint16_t)(c.G * 65535)), R((uint16_t)(c.R * 65535)), A(DEFAULT_A)
-        #else
-        R((uint16_t)(c.R * 65535)), G((uint16_t)(c.G * 65535)), B((uint16_t)(c.B * 65535)), A(DEFAULT_A)
-        #endif  
+inline RGB64::RGB64(const RGBf& c) 
         {
+        this->operator=(c);
         }
 
 
 inline RGB64& RGB64::operator=(const RGB565& c)
         {
-        B = ((uint16_t)c.B) << 11;
-        G = ((uint16_t)c.G) << 10;
-        R = ((uint16_t)c.R) << 11;
+        R = (((uint16_t)c.R) << 11) | (((uint16_t)c.R) << 6) | (((uint16_t)c.R) << 1) | (((uint16_t)c.R) >> 4);
+        G = (((uint16_t)c.G) << 10) | (((uint16_t)c.G) << 4) | (((uint16_t)c.G) >> 2);
+        B = (((uint16_t)c.B) << 11) | (((uint16_t)c.B) << 6) | (((uint16_t)c.B) << 1) | (((uint16_t)c.B) >> 4);
         A = DEFAULT_A;
         return *this;
         }
@@ -3296,9 +3465,9 @@ inline RGB64& RGB64::operator=(const RGB565& c)
 
 inline RGB64& RGB64::operator=(const RGB24& c)
         {
-        B = ((uint16_t)c.B) << 8;
-        G = ((uint16_t)c.G) << 8;
-        R = ((uint16_t)c.R) << 8;
+        R = (((uint16_t)c.R) << 8) | ((uint16_t)c.R);
+        G = (((uint16_t)c.G) << 8) | ((uint16_t)c.G);
+        B = (((uint16_t)c.B) << 8) | ((uint16_t)c.B);
         A = DEFAULT_A;
         return *this;
         }
@@ -3306,10 +3475,10 @@ inline RGB64& RGB64::operator=(const RGB24& c)
 
 inline RGB64& RGB64::operator=(const RGB32& c)
         {
-        B = ((uint16_t)c.B) << 8;
-        G = ((uint16_t)c.G) << 8;
-        R = ((uint16_t)c.R) << 8;
-        A = (((uint16_t)c.A) << 8) & ((uint16_t)c.A);
+        R = (((uint16_t)c.R) << 8) | ((uint16_t)c.R);
+        G = (((uint16_t)c.G) << 8) | ((uint16_t)c.G);
+        B = (((uint16_t)c.B) << 8) | ((uint16_t)c.B);
+        A = (((uint16_t)c.A) << 8) | ((uint16_t)c.A);
         return *this;
         }
 
@@ -3328,6 +3497,7 @@ inline RGB64& RGB64::operator=(iVec3 v)
         R = (uint16_t)v.x;
         G = (uint16_t)v.y;
         B = (uint16_t)v.z;
+        A = DEFAULT_A;
         return *this;
         }
 
@@ -3347,6 +3517,7 @@ inline RGB64& RGB64::operator=(fVec3 v)
         B = (uint16_t)(v.x * 65535);
         G = (uint16_t)(v.y * 65535);
         R = (uint16_t)(v.z * 65535);
+        A = DEFAULT_A;
         return *this;
         }
 

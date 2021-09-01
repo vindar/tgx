@@ -41,8 +41,7 @@ const RGB32 RGB32_Teal(0, 128, 128);
 const RGB32 RGB32_Gray(128, 128, 128);
 const RGB32 RGB32_Silver(192, 192, 192);
 const RGB32 RGB32_Navy(0, 0, 128);
-const RGB32 RGB32_TransparentBlack(0, 0, 0, 0);
-const RGB32 RGB32_TransparentWhite(255, 255, 255, 0);
+const RGB32 RGB32_Transparent(0, 0, 0, 0); // transparent for pre-multiplied alpha
 
 
 /** definitions of predefined colors in RGB565 format */
