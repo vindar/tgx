@@ -105,6 +105,21 @@ namespace tgx
         Vec3 & operator=(const Vec3 & V) = default;
 
 
+
+        /**
+        * Explicit conversion to another vector
+        **/
+        template<typename U>
+        explicit operator Vec3<U>() { return Vec3<U>((U)x, (U)y, (U)z); }
+
+
+        /**
+        * Implicit conversion to floating point type.
+        **/
+        operator Vec3<typename DefaultFPType<T>::fptype>() { return Vec3<typename DefaultFPType<T>::fptype>((typename DefaultFPType<T>::fptype)x, (typename DefaultFPType<T>::fptype)y, (typename DefaultFPType<T>::fptype)z); }
+
+
+
         /**
          * Equality comparator. True if both component are equal. 
          **/

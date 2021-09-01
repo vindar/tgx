@@ -77,16 +77,31 @@ namespace tgx
         constexpr Vec2(T X, T Y) : x(X), y(Y) {}
 
 
+
         /**
         * default copy ctor.
         **/
         Vec2(const Vec2 & v) = default;
 
 
+
         /**
         * Default assignment operator.
         **/
         Vec2 & operator=(const Vec2 & V) = default;
+
+
+        /**
+        * Explicit conversion to another vector
+        **/
+        template<typename U>
+        explicit operator Vec2<U>() { return Vec2<U>((U)x, (U)y); }
+
+
+        /**
+        * Implicit conversion to floating point type. 
+        **/
+        operator Vec2<typename DefaultFPType<T>::fptype>() { return Vec2<typename DefaultFPType<T>::fptype>((typename DefaultFPType<T>::fptype)x, (typename DefaultFPType<T>::fptype)y); }
 
 
 
@@ -465,7 +480,6 @@ namespace tgx
                             (T)(V1.y + alpha * (V2.y - V1.y)) };
             }
         
-
 
 }
 
