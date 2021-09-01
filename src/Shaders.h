@@ -166,7 +166,7 @@ namespace tgx
 			int32_t C3 = O3 + (dx3 * bx);
 			while ((bx < lx) && ((C2 | C3) >= 0))
 				{
-				buf[bx] = blend(col2, C2, col3, C3, col1, aera);
+				buf[bx] = interpolateColorsTriangle(col2, C2, col3, C3, col1, aera);
 				C2 += dx2;
 				C3 += dx3;
 				bx++;
@@ -191,12 +191,6 @@ namespace tgx
 		const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
 		const RasterizerParams<color_t, color_t>& data)
 		{
-		const color_t* tex = data.tex->data();
-        
-		const int32_t texsize_x = data.tex->width() - 1;
-		const int32_t texsize_y = data.tex->height() - 1;
-        const int32_t texstride = data.tex->stride();
-
 		color_t* buf = data.im->data() + offset;
 		const int32_t stride = data.im->stride();
 
@@ -219,6 +213,13 @@ namespace tgx
 		fVec2 T1 = fP1.T;
 		fVec2 T2 = fP2.T;
 		fVec2 T3 = fP3.T;
+
+		const color_t* tex = data.tex->data();
+		const int32_t texsize_x = data.tex->width();
+		const int32_t texsize_y = data.tex->height();
+		const int32_t texsize_x_mm = texsize_x - 1;
+		const int32_t texsize_y_mm = texsize_y - 1;
+		const int32_t texstride = data.tex->stride();
 
 		// divide the texture coord by z * aera
 		T1 *= fP1a;
@@ -294,16 +295,16 @@ namespace tgx
                     const int tty = (int)floorf(yy);
                     const float ax = xx - ttx;
                     const float ay = yy - tty;                    
-                    const int minx = ttx & (texsize_x);
-                    const int maxx = (ttx + 1) & (texsize_x);
-                    const int miny = (tty & (texsize_y))*texstride;
-                    const int maxy = ((tty + 1) & (texsize_y))*texstride;                  
-                    col = blend_bilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                    const int minx = ttx & (texsize_x_mm);
+                    const int maxx = (ttx + 1) & (texsize_x_mm);
+                    const int miny = (tty & (texsize_y_mm))*texstride;
+                    const int maxy = ((tty + 1) & (texsize_y_mm))*texstride;                  
+                    col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
                     }
                 else
                     {
-                    const int ttx = ((int)((tx * icw))) & (texsize_x);
-                    const int tty = ((int)((ty * icw))) & (texsize_y);
+                    const int ttx = ((int)((tx * icw))) & (texsize_x_mm);
+                    const int tty = ((int)((ty * icw))) & (texsize_y_mm);
                     col = tex[ttx + (tty)*texstride];
                     }                  
                                 
@@ -339,12 +340,7 @@ namespace tgx
 		const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
 		const RasterizerParams<color_t, color_t>& data)
 		{
-		const color_t* tex = data.tex->data();
-        
-		const int32_t texsize_x = data.tex->width() - 1;
-		const int32_t texsize_y = data.tex->height() - 1;
-        const int32_t texstride = data.tex->stride();
-        
+       
 		color_t* buf = data.im->data() + offset;
 		const int32_t stride = data.im->stride();
 
@@ -375,6 +371,13 @@ namespace tgx
 		fVec2 T1 = fP1.T;
 		fVec2 T2 = fP2.T;
 		fVec2 T3 = fP3.T;
+
+		const color_t* tex = data.tex->data();
+		const int32_t texsize_x = data.tex->width();
+		const int32_t texsize_y = data.tex->height();
+		const int32_t texsize_x_mm = texsize_x - 1;
+		const int32_t texsize_y_mm = texsize_y - 1;
+		const int32_t texstride = data.tex->stride();
 
 		// divide the texture coord by z * aera
 		T1 *= fP1a;
@@ -451,16 +454,16 @@ namespace tgx
                     const int tty = (int)floorf(yy);
                     const float ax = xx - ttx;
                     const float ay = yy - tty;                    
-                    const int minx = ttx & (texsize_x);
-                    const int maxx = (ttx + 1) & (texsize_x);
-                    const int miny = (tty & (texsize_y))*texstride;
-                    const int maxy = ((tty + 1) & (texsize_y))*texstride;                  
-                    col = blend_bilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                    const int minx = ttx & (texsize_x_mm);
+                    const int maxx = (ttx + 1) & (texsize_x_mm);
+                    const int miny = (tty & (texsize_y_mm))*texstride;
+                    const int maxy = ((tty + 1) & (texsize_y_mm))*texstride;                  
+                    col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
                     }
                 else
                     {
-                    const int ttx = ((int)((tx * icw))) & (texsize_x);
-                    const int tty = ((int)((ty * icw))) & (texsize_y);
+                    const int ttx = ((int)((tx * icw))) & (texsize_x_mm);
+                    const int tty = ((int)((ty * icw))) & (texsize_y_mm);
                     col = tex[ttx + (tty)*texstride];
                     }
                     
@@ -666,7 +669,7 @@ namespace tgx
 				if (W < cw)
 					{
 					W = cw;
-					buf[bx] = blend(col2, C2, col3, C3, col1, aera);
+					buf[bx] = interpolateColorsTriangle(col2, C2, col3, C3, col1, aera);
 					}
 				C2 += dx2;
 				C3 += dx3;
@@ -693,13 +696,7 @@ namespace tgx
 		const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
 		const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
 		const RasterizerParams<color_t, color_t>& data)
-		{
-		const color_t* tex = data.tex->data();
-        
-		const int32_t texsize_x = data.tex->width() - 1;
-		const int32_t texsize_y = data.tex->height() - 1;
-        const int32_t texstride = data.tex->stride();
-        
+		{      
 		color_t* buf = data.im->data() + offset;
 		float* zbuf = data.zbuf + offset;
 
@@ -721,11 +718,17 @@ namespace tgx
 		const int fPG = (int)(256 * cf.G);
 		const int fPB = (int)(256 * cf.B);
 
-
 		// the texture coord
 		fVec2 T1 = fP1.T;
 		fVec2 T2 = fP2.T;
 		fVec2 T3 = fP3.T;
+
+		const color_t* tex = data.tex->data();
+		const int32_t texsize_x = data.tex->width();
+		const int32_t texsize_y = data.tex->height();
+		const int32_t texsize_x_mm = texsize_x - 1;
+		const int32_t texsize_y_mm = texsize_y - 1;
+		const int32_t texstride = data.tex->stride();
 
 		// divide the texture coord by z * aera
 		T1 *= fP1a;
@@ -806,16 +809,16 @@ namespace tgx
                         const int tty = (int)floorf(yy);
                         const float ax = xx - ttx;
                         const float ay = yy - tty;                    
-                        const int minx = ttx & (texsize_x);
-                        const int maxx = (ttx + 1) & (texsize_x);
-                        const int miny = (tty & (texsize_y))*texstride;
-                        const int maxy = ((tty + 1) & (texsize_y))*texstride;                  
-                        col = blend_bilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                        const int minx = ttx & (texsize_x_mm);
+                        const int maxx = (ttx + 1) & (texsize_x_mm);
+                        const int miny = (tty & (texsize_y_mm))*texstride;
+                        const int maxy = ((tty + 1) & (texsize_y_mm))*texstride;                  
+                        col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
                         }
                     else
                         {
-                        const int ttx = ((int)((tx * icw))) & (texsize_x);
-                        const int tty = ((int)((ty * icw))) & (texsize_y);
+                        const int ttx = ((int)((tx * icw))) & (texsize_x_mm);
+                        const int tty = ((int)((ty * icw))) & (texsize_y_mm);
                         col = tex[ttx + (tty)*texstride];                           
                         }  
                     
@@ -852,13 +855,7 @@ namespace tgx
 		const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
 		const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
 		const RasterizerParams<color_t, color_t>& data)
-		{
-		const color_t* tex = data.tex->data();
-        
-		const int32_t texsize_x = data.tex->width() - 1;
-		const int32_t texsize_y = data.tex->height() - 1;
-        const int32_t texstride = data.tex->stride();
-        
+		{       
 		color_t* buf = data.im->data() + offset;
 		float* zbuf = data.zbuf + offset;
 
@@ -892,6 +889,13 @@ namespace tgx
 		fVec2 T1 = fP1.T;
 		fVec2 T2 = fP2.T;
 		fVec2 T3 = fP3.T;
+
+		const color_t* tex = data.tex->data();
+		const int32_t texsize_x = data.tex->width();
+		const int32_t texsize_y = data.tex->height();
+		const int32_t texsize_x_mm = texsize_x - 1;
+		const int32_t texsize_y_mm = texsize_y - 1;
+		const int32_t texstride = data.tex->stride();
 
 		// divide the texture coord by z * aera
 		T1 *= fP1a;
@@ -972,16 +976,16 @@ namespace tgx
                         const int tty = (int)floorf(yy);
                         const float ax = xx - ttx;
                         const float ay = yy - tty;                    
-                        const int minx = ttx & (texsize_x);
-                        const int maxx = (ttx + 1) & (texsize_x);
-                        const int miny = (tty & (texsize_y))*texstride;
-                        const int maxy = ((tty + 1) & (texsize_y))*texstride;
-                        col = blend_bilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                        const int minx = ttx & (texsize_x_mm);
+                        const int maxx = (ttx + 1) & (texsize_x_mm);
+                        const int miny = (tty & (texsize_y_mm))*texstride;
+                        const int maxy = ((tty + 1) & (texsize_y_mm))*texstride;
+                        col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
                         }
                     else
                         {
-                        const int ttx = ((int)((tx * icw))) & (texsize_x);
-                        const int tty = ((int)((ty * icw))) & (texsize_y);
+                        const int ttx = ((int)((tx * icw))) & (texsize_x_mm);
+                        const int tty = ((int)((ty * icw))) & (texsize_y_mm);
                         col = tex[ttx + (tty)*texstride];
                         }  
 
@@ -1021,13 +1025,7 @@ namespace tgx
 		const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
 		const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
 		const RasterizerParams<color_t, color_t>& data)
-		{
-		const color_t* tex = data.tex->data();
-        
-		const int32_t texsize_x = data.tex->width() - 1;
-		const int32_t texsize_y = data.tex->height() - 1;
-        const int32_t texstride = data.tex->stride();
-        
+		{       
 		color_t* buf = data.im->data() + offset;
 		const int32_t stride = data.im->stride();
 
@@ -1045,6 +1043,13 @@ namespace tgx
 		fVec2 T1 = fP1.T;
 		fVec2 T2 = fP2.T;
 		fVec2 T3 = fP3.T;
+
+		const color_t* tex = data.tex->data();
+		const int32_t texsize_x = data.tex->width();
+		const int32_t texsize_y = data.tex->height();
+		const int32_t texsize_x_mm = texsize_x - 1;
+		const int32_t texsize_y_mm = texsize_y - 1;
+		const int32_t texstride = data.tex->stride();
 
 		// divide the texture coord by aera
 		T1 *= invaera;
@@ -1117,16 +1122,16 @@ namespace tgx
                     const int tty = (int)floorf(yy);
                     const float ax = xx - ttx;
                     const float ay = yy - tty;                    
-                    const int minx = ttx & (texsize_x);
-                    const int maxx = (ttx + 1) & (texsize_x);
-                    const int miny = (tty & (texsize_y))*texstride;
-                    const int maxy = ((tty + 1) & (texsize_y))*texstride;                  
-                    col = blend_bilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                    const int minx = ttx & (texsize_x_mm);
+                    const int maxx = (ttx + 1) & (texsize_x_mm);
+                    const int miny = (tty & (texsize_y_mm))*texstride;
+                    const int maxy = ((tty + 1) & (texsize_y_mm))*texstride;                  
+                    col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
                     }
                 else
                     {
-                    const int ttx = ((int)((tx))) & (texsize_x);
-                    const int tty = ((int)((ty))) & (texsize_y);
+                    const int ttx = ((int)((tx))) & (texsize_x_mm);
+                    const int tty = ((int)((ty))) & (texsize_y_mm);
                     col = tex[ttx + (tty)*texstride];
                     }  
                         
@@ -1160,12 +1165,7 @@ namespace tgx
 		const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
 		const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
 		const RasterizerParams<color_t, color_t>& data)
-		{
-		const color_t* tex = data.tex->data();
-		const int32_t texsize_x = data.tex->width() - 1;
-		const int32_t texsize_y = data.tex->height() - 1;
-        const int32_t texstride = data.tex->stride();
-        
+		{        
 		color_t* buf = data.im->data() + offset;        
 		const int32_t stride = data.im->stride();
 
@@ -1191,6 +1191,13 @@ namespace tgx
 		fVec2 T1 = fP1.T;
 		fVec2 T2 = fP2.T;
 		fVec2 T3 = fP3.T;
+
+		const color_t* tex = data.tex->data();
+		const int32_t texsize_x = data.tex->width();
+		const int32_t texsize_y = data.tex->height();
+		const int32_t texsize_x_mm = texsize_x - 1;
+		const int32_t texsize_y_mm = texsize_y - 1;
+		const int32_t texstride = data.tex->stride();
 
 		// divide the texture coord by aera
 		T1 *= invaera;
@@ -1264,16 +1271,16 @@ namespace tgx
                     const int tty = (int)floorf(yy);
                     const float ax = xx - ttx;
                     const float ay = yy - tty;                    
-                    const int minx = ttx & (texsize_x);
-                    const int maxx = (ttx + 1) & (texsize_x);
-                    const int miny = (tty & (texsize_y))*texstride;
-                    const int maxy = ((tty + 1) & (texsize_y))*texstride;                  
-                    col = blend_bilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                    const int minx = ttx & (texsize_x_mm);
+                    const int maxx = (ttx + 1) & (texsize_x_mm);
+                    const int miny = (tty & (texsize_y_mm))*texstride;
+                    const int maxy = ((tty + 1) & (texsize_y_mm))*texstride;                  
+                    col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
                     }
                 else
                     {
-                    const int ttx = ((int)((tx))) & (texsize_x);
-                    const int tty = ((int)((ty))) & (texsize_y);
+                    const int ttx = ((int)((tx))) & (texsize_x_mm);
+                    const int tty = ((int)((ty))) & (texsize_y_mm);
                     col = tex[ttx + (tty)*texstride];
                     }
                            
@@ -1311,12 +1318,6 @@ namespace tgx
 		const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
 		const RasterizerParams<color_t, color_t>& data)
 		{
-		const color_t* tex = data.tex->data();
-
-		const int32_t texsize_x = data.tex->width() - 1;
-		const int32_t texsize_y = data.tex->height() - 1;
-        const int32_t texstride = data.tex->stride();
-
 		color_t* buf = data.im->data() + offset;
 		float* zbuf = data.zbuf + offset;
 
@@ -1338,11 +1339,17 @@ namespace tgx
 		const int fPG = (int)(256 * cf.G);
 		const int fPB = (int)(256 * cf.B);
 
-
 		// the texture coord
 		fVec2 T1 = fP1.T;
 		fVec2 T2 = fP2.T;
 		fVec2 T3 = fP3.T;
+
+		const color_t* tex = data.tex->data();
+		const int32_t texsize_x = data.tex->width();
+		const int32_t texsize_y = data.tex->height();
+		const int32_t texsize_x_mm = texsize_x - 1;
+		const int32_t texsize_y_mm = texsize_y - 1;
+		const int32_t texstride = data.tex->stride();
 
 		// divide the texture coord by aera
 		T1 *= invaera;
@@ -1423,16 +1430,16 @@ namespace tgx
                         const int tty = (int)floorf(yy);
                         const float ax = xx - ttx;
                         const float ay = yy - tty;                    
-                        const int minx = ttx & (texsize_x);
-                        const int maxx = (ttx + 1) & (texsize_x);
-                        const int miny = (tty & (texsize_y))*texstride;
-                        const int maxy = ((tty + 1) & (texsize_y))*texstride;                  
-                        col = blend_bilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                        const int minx = ttx & (texsize_x_mm);
+                        const int maxx = (ttx + 1) & (texsize_x_mm);
+                        const int miny = (tty & (texsize_y_mm))*texstride;
+                        const int maxy = ((tty + 1) & (texsize_y_mm))*texstride;                  
+                        col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
                         }
                     else
                         {
-                        const int ttx = ((int)((tx))) & (texsize_x);
-                        const int tty = ((int)((ty))) & (texsize_y);
+                        const int ttx = ((int)((tx))) & (texsize_x_mm);
+                        const int tty = ((int)((ty))) & (texsize_y_mm);
                         col = tex[ttx + (tty)*texstride];
                         }                            
                                                         
@@ -1470,12 +1477,6 @@ namespace tgx
 		const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
 		const RasterizerParams<color_t, color_t>& data)
 		{
-		const color_t* tex = data.tex->data();
-            
-		const int32_t texsize_x = data.tex->width() - 1;
-		const int32_t texsize_y = data.tex->height() - 1;
-        const int32_t texstride = data.tex->stride();            
-
 		color_t* buf = data.im->data() + offset;
 		float* zbuf = data.zbuf + offset;
 
@@ -1509,6 +1510,13 @@ namespace tgx
 		fVec2 T1 = fP1.T;
 		fVec2 T2 = fP2.T;
 		fVec2 T3 = fP3.T;
+
+		const color_t* tex = data.tex->data();
+		const int32_t texsize_x = data.tex->width();
+		const int32_t texsize_y = data.tex->height();
+		const int32_t texsize_x_mm = texsize_x - 1;
+		const int32_t texsize_y_mm = texsize_y - 1;
+		const int32_t texstride = data.tex->stride();
 
 		// divide the texture coord by aera
 		T1 *= invaera;
@@ -1589,11 +1597,11 @@ namespace tgx
                         const int tty = (int)floorf(yy);                    
                         const float ax = xx - ttx;
                         const float ay = yy - tty;                    
-                        const int minx = ttx & (texsize_x);
-                        const int maxx = (ttx + 1) & (texsize_x);
-                        const int miny = (tty & (texsize_y))*texstride;
-                        const int maxy = ((tty + 1) & (texsize_y))*texstride;                  
-                        col = blend_bilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                        const int minx = ttx & (texsize_x_mm);
+                        const int maxx = (ttx + 1) & (texsize_x_mm);
+                        const int miny = (tty & (texsize_y_mm))*texstride;
+                        const int maxy = ((tty + 1) & (texsize_y_mm))*texstride;                  
+                        col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
                         }
                     else
                         {
@@ -1760,6 +1768,208 @@ namespace tgx
 
 
 
+
+
+
+	inline TGX_INLINE int shaderclip(int v, int minv, int maxv)
+		{
+		return ((v < minv) ? minv : ((v > maxv) ? maxv : v));
+		}
+
+
+
+	/**
+	* 2D shader
+	**/
+	template<bool USE_BLENDING, bool USE_MASKING, bool USE_GRADIENT, typename color_t_im, typename color_t_tex>
+	void shader_2D(const int32_t& offset, const int32_t& lx, const int32_t& ly,
+		const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+		const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+		const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+		const RasterizerParams<color_t_im, color_t_tex> & data)
+		{
+
+		color_t_im * buf = data.im->data() + offset;        
+		const int32_t stride = data.im->stride();
+
+		const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+		const int32_t aera = O1 + O2 + O3;
+
+		const float invaera = 1.0f / aera;
+
+		const color_t_tex mask_color = data.mask_color;
+
+		const RGBf& cf1 = (RGBf)fP1.color;
+		const RGBf& cf2 = (RGBf)fP2.color;
+		const RGBf& cf3 = (RGBf)fP3.color;
+		const int fP1R = (int)(256 * cf1.R);
+		const int fP1G = (int)(256 * cf1.G);
+		const int fP1B = (int)(256 * cf1.B);
+		const int fP21R = (int)(256 * (cf2.R - cf1.R));
+		const int fP21G = (int)(256 * (cf2.G - cf1.G));
+		const int fP21B = (int)(256 * (cf2.B - cf1.B));
+		const int fP31R = (int)(256 * (cf3.R - cf1.R));
+		const int fP31G = (int)(256 * (cf3.G - cf1.G));
+		const int fP31B = (int)(256 * (cf3.B - cf1.B));
+
+
+		// the texture coord
+		fVec2 T1 = fP1.T;
+		fVec2 T2 = fP2.T;
+		fVec2 T3 = fP3.T;
+
+		const color_t_tex * tex = data.tex->data();
+		const int32_t texsize_x = data.tex->width();
+		const int32_t texsize_y = data.tex->height();
+		const int32_t texsize_x_mm = data.tex->width() - 1;
+		const int32_t texsize_y_mm = data.tex->height() - 1;
+		const int32_t texstride = data.tex->stride();
+
+		// divide the texture coord by aera
+		T1 *= invaera;
+		T2 *= invaera;
+		T3 *= invaera;
+		T1.x *= texsize_x;
+		T2.x *= texsize_x;
+		T3.x *= texsize_x;
+		T1.y *= texsize_y;
+		T2.y *= texsize_y;
+		T3.y *= texsize_y;
+
+		const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
+		const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+		 
+		while ((uintptr_t)(buf) < end)
+			{ // iterate over scanlines
+			int32_t bx = 0; // start offset
+			if (O1 < 0)
+				{
+				// we know that dx1 > 0					
+				bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+				}
+			if (O2 < 0)
+				{
+				if (dx2 <= 0)
+					{
+					if (dy2 <= 0) return;
+					const int32_t by = (-O2 + dy2 - 1) / dy2;
+					O1 += (by * dy1);
+					O2 += (by * dy2);
+					O3 += (by * dy3);
+					const int32_t offs = by * stride;
+					buf += offs;
+					continue;
+					}
+				bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+				}
+			if (O3 < 0)
+				{
+				if (dx3 <= 0)
+					{
+					if (dy3 <= 0) return;
+					const int32_t by = (-O3 + dy3 - 1) / dy3;
+					O1 += (by * dy1);
+					O2 += (by * dy2);
+					O3 += (by * dy3);
+					const int32_t offs = by * stride;
+					buf += offs;
+					continue;
+					}
+				bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+				}
+                
+			int32_t C1 = O1 + (dx1 * bx);
+			int32_t C2 = O2 + (dx2 * bx);
+			int32_t C3 = O3 + (dx3 * bx);
+
+			float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3)) - 0.5f;
+			float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3)) - 0.5f;
+
+			while ((bx < lx) && ((C2 | C3) >= 0))
+				{                         
+                const float xx = tx;
+                const float yy = ty;                    
+                const int ttx = (int)floorf(xx);
+                const int tty = (int)floorf(yy);
+                const float ax = xx - ttx;
+                const float ay = yy - tty;                    
+
+				const int minx = shaderclip(ttx, 0, texsize_x_mm);
+				const int maxx = shaderclip(ttx + 1, 0, texsize_x_mm);
+				const int miny = shaderclip(tty, 0, texsize_y_mm) * texstride;
+				const int maxy = shaderclip(tty + 1, 0, texsize_y_mm) * texstride;
+
+				if (USE_MASKING)
+					{ // 
+					auto col00 = tex[minx + miny];
+					tgx::RGB32 acol00 = (col00 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col00);
+
+					auto col10 = tex[maxx + miny];
+					tgx::RGB32 acol10 = (col10 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col10);
+
+					auto col01 = tex[minx + maxy];
+					tgx::RGB32 acol01 = (col01 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col01);
+
+					auto col11 = tex[maxx + maxy];
+					tgx::RGB32 acol11 = (col11 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col11);
+
+					tgx::RGB32 col = interpolateColorsBilinear(acol00, acol10, acol01, acol11, ax, ay);
+
+					if (USE_GRADIENT)
+						{
+						const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
+						const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
+						const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
+						col.mult256(r, g, b);
+						}
+					if (USE_BLENDING)
+						{
+						tgx::RGB32 c = tgx::RGB32(buf[bx]);
+						c.blend(col, data.opacity);
+						buf[bx] = color_t_im(c);
+						}
+					else
+						{
+						buf[bx] = color_t_im(col);
+						}
+					}
+				else
+					{
+					color_t_tex col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);
+					if (USE_GRADIENT)
+						{
+						const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
+						const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
+						const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
+						col.mult256(r, g, b);
+						}
+					if (USE_BLENDING)
+						{
+						color_t_tex c = color_t_tex(buf[bx]);
+						c.blend(col, data.opacity);
+						buf[bx] = color_t_im(c);
+						}
+					else
+						{
+						buf[bx] = color_t_im(col);
+						}
+					}
+
+				C2 += dx2;
+				C3 += dx3;
+
+				tx += dtx;
+				ty += dty;
+
+				bx++;
+				}
+
+			O1 += dy1;
+			O2 += dy2;
+			O3 += dy3;
+			buf += stride;
+			}
+		}
 
 }
 

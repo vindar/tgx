@@ -87,8 +87,10 @@ namespace tgx
 		Image<color_t_im> * im;			// pointer to the destination image to draw onto
 		float* zbuf;					// pointer to the z buffer (when using depth testing).
 		RGBf facecolor;					// pointer to the face color (when using flat shading).  
+		float opacity;					// opacity multiplier (currently used only with the 2D shader)
 		const Image<color_t_tex>* tex;	// pointer to the texture (when using texturing).
         bool use_bilinear_texturing;    // true to use bilinear point sampling (when using texturing).
+		color_t_tex mask_color;			// 'transparent color' when masking is enabled (on for the 2D shader).
 		};
 
 
