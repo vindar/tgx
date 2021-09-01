@@ -30,6 +30,8 @@
 #include "Color.h"
 
 #include "ShaderParams.h"
+#include "Shaders.h"
+#include "Rasterizer.h"
 
 #include <stdint.h>
 
@@ -406,193 +408,6 @@ namespace tgx
 			}
 
 
-
-
-	/****************************************************************************
-	*
-	*
-	* Blitting / copying / resizing images
-	*
-	*
-	****************************************************************************/
-
-
-        /**
-         * Blit a sprite at a given position on the image.
-         *
-         * @param   sprite          The sprite image to blit.
-         * @param   upperleftpos    Position of the upper left corner of the sprite in the image
-        **/
-		void blit(const Image<color_t> & sprite, iVec2 upperleftpos)
-			{
-			_blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly());
-			}
-
-
-		/**
-		 * Blit a sprite at a given position on this image.
-		 *
-		 * @param   sprite          The sprite image to blit.
-		 * @param   dest_x			x coordinate of the upper left corner of the sprite in the image.
-		 * @param   dest_y			y coordinate of the upper left corner of the sprite in the image.
-		**/
-		void blit(const Image<color_t>& sprite, int dest_x, int dest_y)
-			{
-			_blit(sprite, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly());
-			}
-
-
-        /**
-         * Blit a sprite at a given position on this image.
-         * 
-         * Use blending to draw the sprite over the image with a given opacity. If color_t has an alpha
-         * channel, it is also used or blending.
-         *
-         * @param   sprite          The sprite image to blit.
-         * @param   upperleftpos    Position of the upper left corner of the sprite in the image
-         * @param   opacity         The opacity between 0.0f (fully transparent) and 1.0f (fully opaque).
-        **/
-		void blit(const Image<color_t>& sprite, iVec2 upperleftpos, float opacity)
-			{
-			_blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(),opacity);
-			}
-
-
-		/**
-		 * Blit a sprite at a given position on this image.
-		 *
-		 * Use blending to draw the sprite over the image with a given opacity. If color_t has an alpha
-		 * channel, it is also used or blending.
-		 *
-		 * @param   sprite      The sprite image to blit.
-		 * @param   dest_x		x coordinate of the upper left corner of the sprite in the image.
-		 * @param   dest_y		y coordinate of the upper left corner of the sprite in the image.
-		**/
-		void blit(const Image<color_t>& sprite, int dest_x, int dest_y, float opacity)
-			{
-			_blit(sprite, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly(), opacity);
-			}
-
-
-        /**
-         * Blit a sprite at a given position on this image. Sprite pixels with color `transparent_color`
-         * are treated as transparent hence not copied on the image. Other pixels are blended with the
-         * destination image using the opacity factor.
-         *
-         * @param   sprite              The sprite image to blit.
-         * @param   transparent_color   The sprite color considered transparent.
-         * @param   upperleftpos        Position of the upper left corner of the sprite in the image.
-         * @param   opacity             The opacity between 0.0f (fully transparent) and 1.0f (fully opaque).
-        **/
-		void blitMasked(const Image<color_t>& sprite, color_t transparent_color, iVec2 upperleftpos, float opacity)
-			{
-			_blitMasked(sprite, transparent_color, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), opacity);
-			}
-
-
-        /**
-         * Blit a sprite at a given position on this image. Sprite pixels with color `transparent_color`
-         * are treated as transparent hence not copied on the image. Other pixels are blended with the
-         * destination image using the opacity factor.
-         *
-         * @param   sprite              The sprite image to blit.
-         * @param   transparent_color   The sprite color considered transparent.
-		 * @param   dest_x				x coordinate of the upper left corner of the sprite in the image.
-		 * @param   dest_y				y coordinate of the upper left corner of the sprite in the image.
-		 * @param   opacity             The opacity between 0.0f (fully transparent) and 1.0f (fully
-         *                              opaque).
-        **/
-		void blitMasked(const Image<color_t>& sprite, color_t transparent_color, int dest_x, int dest_y, float opacity)
-			{
-			_blitMasked(sprite, transparent_color, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly(), opacity);
-			}
-
-
-		/**
-		 * Reverse blitting. Copy part of the image into the sprite
-         * This is the inverse of the blit operation.
-		 *
-		 * @param   dst_sprite      The sprite to copy part of this image into.
-		 * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
-		**/
-		void blitBackward(Image<color_t> & dst_sprite, iVec2 upperleftpos) const
-			{
-			dst_sprite._blit(*this, 0, 0, upperleftpos.x, upperleftpos.y, dst_sprite.lx(), dst_sprite.ly());
-			}
-
-
-		/**
-		 * Reverse blitting. Copy part of the image into the sprite
-		 * This is the inverse of the blit operation.
-		 *
-		 * @param   dst_sprite      The sprite to copy part of this image into.
-		 * @param   dest_x			x coordinate of the upper left corner of the sprite in the image.
-		 * @param   dest_y			y coordinate of the upper left corner of the sprite in the image.
-		**/
-		void blitBackward(Image<color_t>& dst_sprite, int dest_x, int dest_y) const
-			{
-			dst_sprite._blit(*this, 0, 0, dest_x, dest_y, dst_sprite.lx(), dst_sprite.ly());
-			}
-
-
-
-/************* TODO ***************
-
-		void blitRotated(const Image<color_t>& sprite, iVec2 sprite_anchor, iVec2 dest_anchor, float angle_in_degre);
-
-		void blitRotated(const Image<color_t>& sprite, int sprite_anchor_x, int sprite_anchor_y, int dest_anchor_x, int dest_anchor_y, float angle_in_degre);
-
-		void blitRotated(const Image<color_t>& sprite, iVec2 sprite_anchor, iVec2 dest_anchor, float angle_in_degre, float opacity);
-
-		void blitRotated(const Image<color_t>& sprite, int sprite_anchor_x, int sprite_anchor_y, int dest_anchor_x, int dest_anchor_y, float angle_in_degre, float opacity);
-
-		void blitRotatedMasked(const Image<color_t>& sprite, color_t transparent_color, iVec2 sprite_anchor, iVec2 dest_anchor, float angle_in_degre, float opacity);
-
-		void blitRotatedMasked(const Image<color_t>& sprite, color_t transparent_color, int sprite_anchor_x, int sprite_anchor_y, int dest_anchor_x, int dest_anchor_y, float angle_in_degre, float opacity);
-
-***********************************/
-
-
-		/**
-		* Main method for converting between image types.
-		*
-		* Copy the src image onto this image. Resize/interpolate and change the color type 
-		* if needed to match this image dimension and color type.
-		* 
-		* Beware: The method does not check for buffer overlap betwen source and destination !
-		**/
-		template<typename src_color_t> void copyFrom(const Image<src_color_t> & src);
-
-
-		/**
-		* Copy the source image pixels into this image, reducing it by half in the process.
-		* Ignore the last row/column for odd dimensions larger than 1.
-		* Resizing is done by averaging the color of the 4 neighbour pixels. 
-		* 
-		* This image must be large enough to accomodate the reduced image otherwise do nothing. 
-		* The reduced image is copied on the top left corner of this image.
-		* 
-		* Return a sub-image of this image corresponding to the reduced image pixels (or an 
-		* empty image if nothing was done).
-		**/
-		Image<color_t> copyReduceHalf(const Image<color_t> & src_image);
-
-
-		/**
-		* Reduce this image by half. Use the same memory buffer and keep the same stride. 
-		* Resizing is done by averaging the color of the 4 neighbour pixels.
-		* Same as copyReduceHalf(*this)
-		*
-		* Return a sub-image of this image corresponding to the reduced image pixels
-		* which correspond to the upper left half of this image. 
-		**/
-		Image<color_t> reduceHalf()
-			{
-			return copyReduceHalf(*this);
-			}
-
-
-
 	/****************************************************************************
 	* 
 	* 
@@ -750,6 +565,305 @@ namespace tgx
 
 
 
+
+
+	/****************************************************************************
+	*
+	*
+	* Blitting / copying / resizing images
+	*
+	*
+	****************************************************************************/
+
+
+        /**
+         * Blit a sprite at a given position on the image.
+         *
+         * @param   sprite          The sprite image to blit.
+         * @param   upperleftpos    Position of the upper left corner of the sprite in the image
+        **/
+		void blit(const Image<color_t> & sprite, iVec2 upperleftpos)
+			{
+			_blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly());
+			}
+
+
+		/**
+		 * Blit a sprite at a given position on this image.
+		 *
+		 * @param   sprite          The sprite image to blit.
+		 * @param   dest_x			x coordinate of the upper left corner of the sprite in the image.
+		 * @param   dest_y			y coordinate of the upper left corner of the sprite in the image.
+		**/
+		DEPRECATED_SCALAR_PARAMS void blit(const Image<color_t>& sprite, int dest_x, int dest_y)
+			{
+			_blit(sprite, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly());
+			}
+
+
+        /**
+         * Blit a sprite at a given position on this image.
+         * 
+         * Use blending to draw the sprite over the image with a given opacity. If color_t has an alpha
+         * channel, it is also used or blending.
+         *
+         * @param   sprite          The sprite image to blit.
+         * @param   upperleftpos    Position of the upper left corner of the sprite in the image
+         * @param   opacity         The opacity between 0.0f (fully transparent) and 1.0f (fully opaque).
+        **/
+		void blit(const Image<color_t>& sprite, iVec2 upperleftpos, float opacity)
+			{
+			_blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(),opacity);
+			}
+
+
+		/**
+		 * Blit a sprite at a given position on this image.
+		 *
+		 * Use blending to draw the sprite over the image with a given opacity. If color_t has an alpha
+		 * channel, it is also used or blending.
+		 *
+		 * @param   sprite      The sprite image to blit.
+		 * @param   dest_x		x coordinate of the upper left corner of the sprite in the image.
+		 * @param   dest_y		y coordinate of the upper left corner of the sprite in the image.
+		**/
+		DEPRECATED_SCALAR_PARAMS void blit(const Image<color_t>& sprite, int dest_x, int dest_y, float opacity)
+			{
+			_blit(sprite, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly(), opacity);
+			}
+
+
+        /**
+         * Blit a sprite at a given position on this image. Sprite pixels with color `transparent_color`
+         * are treated as transparent hence not copied on the image. Other pixels are blended with the
+         * destination image after being multiplied by the opacity factor.
+         *
+         * @param   sprite              The sprite image to blit.
+         * @param   transparent_color   The sprite color considered transparent.
+         * @param   upperleftpos        Position of the upper left corner of the sprite in the image.
+         * @param   opacity             The opacity between 0.0f (fully transparent) and 1.0f (fully opaque).
+        **/
+		void blitMasked(const Image<color_t>& sprite, color_t transparent_color, iVec2 upperleftpos, float opacity)
+			{
+			_blitMasked(sprite, transparent_color, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), opacity);
+			}
+
+
+        /**
+         * Blit a sprite at a given position on this image. Sprite pixels with color `transparent_color`
+         * are treated as transparent hence not copied on the image. Other pixels are blended with the
+         * destination image using the opacity factor.
+         *
+         * @param   sprite              The sprite image to blit.
+         * @param   transparent_color   The sprite color considered transparent.
+		 * @param   dest_x				x coordinate of the upper left corner of the sprite in the image.
+		 * @param   dest_y				y coordinate of the upper left corner of the sprite in the image.
+		 * @param   opacity             The opacity between 0.0f (fully transparent) and 1.0f (fully
+         *                              opaque).
+        **/
+		DEPRECATED_SCALAR_PARAMS void blitMasked(const Image<color_t>& sprite, color_t transparent_color, int dest_x, int dest_y, float opacity)
+			{
+			_blitMasked(sprite, transparent_color, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly(), opacity);
+			}
+
+
+		/**
+		 * Reverse blitting. Copy part of the image into the sprite
+         * This is the inverse of the blit operation.
+		 *
+		 * @param   dst_sprite      The sprite to copy part of this image into.
+		 * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
+		**/
+		void blitBackward(Image<color_t> & dst_sprite, iVec2 upperleftpos) const
+			{
+			dst_sprite._blit(*this, 0, 0, upperleftpos.x, upperleftpos.y, dst_sprite.lx(), dst_sprite.ly());
+			}
+
+
+		/**
+		 * Reverse blitting. Copy part of the image into the sprite
+		 * This is the inverse of the blit operation.
+		 *
+		 * @param   dst_sprite      The sprite to copy part of this image into.
+		 * @param   dest_x			x coordinate of the upper left corner of the sprite in the image.
+		 * @param   dest_y			y coordinate of the upper left corner of the sprite in the image.
+		**/
+		DEPRECATED_SCALAR_PARAMS void blitBackward(Image<color_t>& dst_sprite, int dest_x, int dest_y) const
+			{
+			dst_sprite._blit(*this, 0, 0, dest_x, dest_y, dst_sprite.lx(), dst_sprite.ly());
+			}
+
+
+        /**
+         * Blit a sprite onto this image after rescaling and rotation. The anchor point 'anchor_src' in
+         * the sprite is mapped to 'anchor_im' in this image. The rotation is performed in counter-
+         * clockwise direction around the anchor point.
+         * 
+         * Remarks:
+         * 
+         * 1. The positions are given using floating point values to allow for sub-pixel precision for
+         *    smoother animation.
+         * 2. The method use bilinear interpolation for high quality rendering.  
+         * 3. The sprite image can have a different color type from this image.
+         * 4. This version does NOT use blending: pixel from the source are simply copied over this
+         *    image.
+         * 
+         * Note: When rotated, access to  the sprite pixels colors is not linear anymore. For certain
+         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
+         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
+         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
+         *       (or another faster memory) before blitting...
+         *
+         * @param   src_im          The sprite image to draw.
+         * @param   anchor_src      Position of the anchor point in the sprite image.
+         * @param   anchor_dst      Position of the anchor point in this (destination) image.
+         * @param   scale           Scaling factor (1.0f for no scaling).
+         * @param   angle_degrees   The rotation angle in degrees.
+        **/
+		template<typename color_t_src>
+		void blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees);
+
+
+        /**
+         * Blit a sprite onto this image after rescaling and rotation. The anchor point 'anchor_src' in
+         * the sprite is mapped to 'anchor_im' in this image. The rotation is performed in counter-
+         * clockwise direction around the anchor point.
+         * 
+         * Remarks:
+         * 
+         * 1. The positions are given using floating point values to allow for sub-pixel precision for
+         *    smoother animation.
+         * 2. The method use bilinear interpolation for high quality rendering.
+         * 3. The sprite image can have a different color type from this image.
+         * 4. This version use blending and opacity. If the sprite image color type has an alpha channel,
+         *    then it is used for blending and multiplied by the opacity factor (even if this image does
+         *    not have an alpha channel).
+         * 
+         * Note: When rotated, access to  the sprite pixels colors is not linear anymore. For certain
+         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
+         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
+         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
+         *       (or another faster memory) before blitting...
+         *
+         * @param   src_im          The sprite image to draw.
+         * @param   anchor_src      Position of the anchor point in the sprite image.
+         * @param   anchor_dst      Position of the anchor point in this (destination) image.
+         * @param   scale           Scaling factor (1.0f for no scaling).
+         * @param   angle_degrees   The rotation angle in degrees.
+         * @param   opacity         The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
+        **/
+		template<typename color_t_src>
+		void blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity);
+
+
+        /**
+         * Blit a sprite onto this image after rescaling and rotation and use a given color which is
+         * treated as fully transparent. This is especially useful when the sprite color type does not
+         * have an alpha channel). The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im'
+         * in this image. The rotation is performed in counter-clockwise direction around the anchor
+         * point.
+         * 
+         * Remarks:
+         * 
+         * 1. The positions are given using floating point values to allow for sub-pixel precision for
+         *    smoother animation.
+         * 2. The method use bilinear interpolation for high quality rendering.
+         * 3. The sprite image can have a different color type from this image.
+		 * 4. This version use blending and opacity. If the sprite image color type has an alpha channel,
+		 *    then it is used for blending and multiplied by the opacity factor (even if this image does
+		 *    not have an alpha channel).
+		 *
+         * Note: When rotated, access to  the sprite pixels colors is not linear anymore. For certain
+         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
+         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
+         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
+         *       (or another faster memory) before blitting...
+         *
+         * @tparam  color_t_src Type of the color t source.
+         * @param   src_im              The sprite image to draw.
+         * @param   transparent_color   The transparent color.
+         * @param   anchor_src          Position of the anchor point in the sprite image.
+         * @param   anchor_dst          Position of the anchor point in this (destination) image.
+         * @param   scale               Scaling factor (1.0f for no scaling).
+         * @param   angle_degrees       The rotation angle in degrees.
+		 * @param   opacity				The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
+		**/
+		template<typename color_t_src>
+		void blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity);
+
+
+
+        /**
+         * Copy the src image onto the destination image with resizing and color conversion.
+         * 
+         * Remark:
+         * 
+         * 1. src is resized to match this image size. Bilinear interpolation is used to improve quality.  
+         * 2. The source and destination image may have different color type. Conversion is automatic
+         * 
+         * Beware: The method does not check for buffer overlap between source and destination !
+         *
+         * @param   src_im  The image to copy into this image.
+        **/
+		template<typename src_color_t> void copyFrom(const Image<src_color_t>& src_im);
+
+
+        /**
+         * Blend the src image onto the destination image with resizing and color conversion.
+         * 
+         * This version uses blending and opacity to combine the src over the existing image.
+         * 
+         * 1. src is resized to match this image size. Bilinear interpolation is used to improve quality.  
+         * 2. The source and destination image may have different color type. Conversion is automatic.  
+         * 
+         * Beware: The method does not check for buffer overlap between source and destination !
+         *
+         * @param   src_im  Source image to copy onto this image
+         * @param   opacity opacity between 0.0f (fully transparent) and 1.0f (fully opaque).
+        **/
+		template<typename src_color_t> void copyFrom(const Image<src_color_t>& src_im, float opacity);
+
+
+
+		/**
+		* Copy the source image pixels into this image, reducing it by half in the process.
+		* Ignore the last row/column for odd dimensions larger than 1.
+		* Resizing is done by averaging the color of the 4 neighbour pixels. 
+		* 
+		* This image must be large enough to accomodate the reduced image otherwise do nothing. 
+		* The reduced image is copied on the top left corner of this image.
+		* 
+		* Return a sub-image of this image corresponding to the reduced image pixels (or an 
+		* empty image if nothing was done).
+        * 
+		* REMARK: This is an old method. Use blitScaledRotated() to get a more resizing
+		*         options
+		**/
+		Image<color_t> copyReduceHalf(const Image<color_t> & src_image);
+
+
+		/**
+		* Reduce this image by half. Use the same memory buffer and keep the same stride. 
+		* Resizing is done by averaging the color of the 4 neighbour pixels.
+		* Same as copyReduceHalf(*this)
+		*
+		* Return a sub-image of this image corresponding to the reduced image pixels
+		* which correspond to the upper left half of this image. 
+		*
+		* REMARK: This is an old method. Use blitScaledRotated() to get a more resizing
+		*         options
+		**/
+		Image<color_t> reduceHalf()
+			{
+			return copyReduceHalf(*this);
+			}
+
+
+
+
+
+
+
 	/****************************************************************************
 	* 
 	* 
@@ -810,15 +924,8 @@ namespace tgx
 		**/
 		template<bool CHECKRANGE = true> TGX_INLINE inline void drawFastVLine(iVec2 pos, int h, color_t color)
 			{
-			drawFastVLine<CHECKRANGE>(pos.x, pos.y, h, color);
-			}
-
-
-		/**
-		* Draw a vertical line of h pixels starting at (x,y).
-		**/
-		template<bool CHECKRANGE = true> inline void drawFastVLine(int x, int y, int h, color_t color)
-			{
+			int x = pos.x;
+			int y = pos.y;
 			if (CHECKRANGE)	// optimized away at compile time
 				{
 				if ((!isValid()) || (x < 0) || (x >= _lx) || (y >= _ly)) return;
@@ -835,6 +942,16 @@ namespace tgx
 
 
 		/**
+		* Draw a vertical line of h pixels starting at (x,y).
+		**/
+		template<bool CHECKRANGE = true> 
+		DEPRECATED_SCALAR_PARAMS inline void drawFastVLine(int x, int y, int h, color_t color)
+			{
+			drawFastVLine<CHECKRANGE>({ x, y }, h, color);
+			}
+
+
+		/**
 		* Draw an vertical line of h pixels starting at pos.
 		*
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
@@ -842,18 +959,8 @@ namespace tgx
 		**/
 		template<bool CHECKRANGE = true> TGX_INLINE inline void drawFastVLine(iVec2 pos, int h, color_t color, float opacity)
 			{
-			drawFastVLine<CHECKRANGE>(pos.x, pos.y, h, color, opacity);
-			}
-
-
-        /**
-         * Draw a vertical line of h pixels starting at (x,y).
-         * 
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-		**/
-		template<bool CHECKRANGE = true> inline void drawFastVLine(int x, int y, int h, color_t color, float opacity)
-			{
+			int x = pos.x;
+			int y = pos.y;
 			if (CHECKRANGE)	// optimized away at compile time
 				{
 				if ((!isValid()) || (x < 0) || (x >= _lx) || (y >= _ly)) return;
@@ -869,19 +976,18 @@ namespace tgx
 			}
 
 
-		/**
-		* Draw an horizontal line of w pixels starting at (x,y). 
+        /**
+         * Draw a vertical line of h pixels starting at (x,y).
+         * 
+		* Blend with the current color background using opacity between 0.0f (fully transparent) and
+		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		template<bool CHECKRANGE = true> inline void drawFastHLine(int x, int y, int w, color_t color)
-			{			
-			if (CHECKRANGE)	// optimized away at compile time
-				{
-				if ((!isValid()) || (y < 0) || (y >= _ly) || (x >= _lx)) return;
-				if (x < 0) { w += x; x = 0; }
-				if (x + w > _lx) { w = _lx - x; }
-				}	
-			_fast_memset(_buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride), color, w);
+		template<bool CHECKRANGE = true> 
+		DEPRECATED_SCALAR_PARAMS inline void drawFastVLine(int x, int y, int h, color_t color, float opacity)
+			{
+			drawFastVLine<CHECKRANGE>({ x, y }, h, color, opacity);
 			}
+
 
 
 		/**
@@ -889,7 +995,25 @@ namespace tgx
 		**/
 		template<bool CHECKRANGE = true> TGX_INLINE inline void drawFastHLine(iVec2 pos, int w, color_t color)
 			{
-			drawFastHLine<CHECKRANGE>(pos.x, pos.y, w, color);
+			int x = pos.x;
+			int y = pos.y;
+			if (CHECKRANGE)	// optimized away at compile time
+				{
+				if ((!isValid()) || (y < 0) || (y >= _ly) || (x >= _lx)) return;
+				if (x < 0) { w += x; x = 0; }
+				if (x + w > _lx) { w = _lx - x; }
+				}
+			_fast_memset(_buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride), color, w);
+			}
+
+
+		/**
+		* Draw an horizontal line of w pixels starting at (x,y). 
+		**/
+		template<bool CHECKRANGE = true> 
+		DEPRECATED_SCALAR_PARAMS inline void drawFastHLine(int x, int y, int w, color_t color)
+			{			
+			drawFastHLine<CHECKRANGE>({ x, y }, w, color);
 			}
 
 
@@ -901,18 +1025,8 @@ namespace tgx
 		**/
 		template<bool CHECKRANGE = true> TGX_INLINE inline void drawFastHLine(iVec2 pos, int w, color_t color, float opacity)
 			{
-			drawFastHLine<CHECKRANGE>(pos.x, pos.y, w, color, opacity);
-			}
-
-
-		/**
-		* Draw an horizontal line of w pixels starting at (x,y).
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-		**/
-		template<bool CHECKRANGE = true> inline void drawFastHLine(int x, int y, int w, color_t color, float opacity)
-			{			
+			int x = pos.x;
+			int y = pos.y;
 			if (CHECKRANGE)	// optimized away at compile time
 				{
 				if ((!isValid()) || (y < 0) || (y >= _ly) || (x >= _lx)) return;
@@ -928,35 +1042,57 @@ namespace tgx
 
 
 		/**
-		* Draw a line between (x0,y0) and (x1,y1) using Bresenham algorithm
+		* Draw an horizontal line of w pixels starting at (x,y).
+		*
+		* Blend with the current color background using opacity between 0.0f (fully transparent) and
+		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void drawLine(int x0, int y0, int x1, int y1, color_t color)
-			{
-			if (!isValid()) return;
-			if ((x0 < 0) || (y0 < 0) || (x1 < 0) || (y1 < 0) || (x0 >= _lx) || (y0 >= _ly) || (x1 >= _lx) || (y1 >= _ly))
-				_drawLine<true>(x0, y0, x1, y1, color);
-			else
-				_drawLine<false>(x0, y0, x1, y1, color);
+		template<bool CHECKRANGE = true> 
+		DEPRECATED_SCALAR_PARAMS inline void drawFastHLine(int x, int y, int w, color_t color, float opacity)
+			{	
+			drawFastHLine<CHECKRANGE>({ x, y }, w, color, opacity);
 			}
+
 
 
 		/**
 		* Draw a line between P1 and P2 using Bresenham algorithm
 		**/
-		inline void drawLine(const iVec2 & P1, const iVec2 & P2, color_t color)
+		inline void drawLine(iVec2 P1, iVec2 P2, color_t color)
 			{
-			drawLine(P1.x, P1.y, P2.x, P2.y, color);
+			const int x0 = P1.x;
+			const int y0 = P1.y;
+			const int x1 = P2.x;
+			const int y1 = P2.y;
+			if (!isValid()) return;
+			if ((x0 < 0) || (y0 < 0) || (x1 < 0) || (y1 < 0) || (x0 >= _lx) || (y0 >= _ly) || (x1 >= _lx) || (y1 >= _ly))
+				_drawLine<true>(x0, y0, x1, y1, color);
+			else
+				_drawLine<false>(x0, y0, x1, y1, color);			
 			}
 
 
 		/**
 		* Draw a line between (x0,y0) and (x1,y1) using Bresenham algorithm
+		**/
+		DEPRECATED_SCALAR_PARAMS void drawLine(int x0, int y0, int x1, int y1, color_t color)
+			{
+			drawLine({ x0,y0 }, { x1,y1 }, color);
+			}
+
+
+		/**
+		* Draw a line between P1 and P2 using Bresenham algorithm
 		*
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void drawLine(int x0, int y0, int x1, int y1, color_t color, float opacity)
+		inline void drawLine(iVec2 P1, iVec2 P2, color_t color, float opacity)
 			{
+			const int x0 = P1.x;
+			const int y0 = P1.y;
+			const int x1 = P2.x;
+			const int y1 = P2.y;
 			if (!isValid()) return;
 			if ((x0 < 0) || (y0 < 0) || (x1 < 0) || (y1 < 0) || (x0 >= _lx) || (y0 >= _ly) || (x1 >= _lx) || (y1 >= _ly))
 				_drawLine<true>(x0, y0, x1, y1, color, opacity);
@@ -966,16 +1102,15 @@ namespace tgx
 
 
 		/**
-		* Draw a line between P1 and P2 using Bresenham algorithm
+		* Draw a line between (x0,y0) and (x1,y1) using Bresenham algorithm
 		*
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		inline void drawLine(const iVec2 & P1, const iVec2 & P2, color_t color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void drawLine(int x0, int y0, int x1, int y1, color_t color, float opacity)
 			{
-			drawLine(P1.x, P1.y, P2.x, P2.y, color, opacity);
+			drawLine({ x0,y0 }, { x1,y1 }, color, opacity);
 			}
-
 
 
 
@@ -1000,7 +1135,7 @@ namespace tgx
 		/**
 		* Draw a triangle (but not its interior). 
 		**/
-		void drawTriangle(int x1,int y1, int x2, int y2, int x3, int y3, color_t color)
+		DEPRECATED_SCALAR_PARAMS void drawTriangle(int x1,int y1, int x2, int y2, int x3, int y3, color_t color)
 			{
 			_drawTriangle<false, true, false>(iVec2(x1, y1), iVec2(x2, y2), iVec2(x3, y3), color, color, 1.0f);
 			}
@@ -1024,7 +1159,7 @@ namespace tgx
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void drawTriangle(int x1,int y1, int x2, int y2, int x3, int y3, color_t color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void drawTriangle(int x1,int y1, int x2, int y2, int x3, int y3, color_t color, float opacity)
 			{
 			_drawTriangle<false, true, true>(iVec2(x1, y1), iVec2(x2, y2), iVec2(x3, y3), color, color, opacity);
 			}
@@ -1042,7 +1177,7 @@ namespace tgx
 		/**
 		* Draw a filled triangle with possibly different colors for the outline and the interior.
 		**/
-		void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, color_t interior_color, color_t outline_color)
+		DEPRECATED_SCALAR_PARAMS void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, color_t interior_color, color_t outline_color)
 			{
 			_drawTriangle<true, true, false>(iVec2(x1, y1), iVec2(x2, y2), iVec2(x3, y3), interior_color, outline_color, 1.0f);
 			}
@@ -1066,7 +1201,7 @@ namespace tgx
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, color_t interior_color, color_t outline_color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, color_t interior_color, color_t outline_color, float opacity)
 			{
 			_drawTriangle<true, true, true>(iVec2(x1, y1), iVec2(x2, y2), iVec2(x3, y3), interior_color, outline_color, opacity);
 			}
@@ -1082,36 +1217,84 @@ namespace tgx
 		**********************************************************************/
 
 
-		/**
-		* Draw a rectangle corresponding to the box B.
-		**/
+        /**
+         * Draw a rectangle corresponding to the box B.
+         *
+         * @param   B       B representing the rectangle.
+         * @param   color   Color to use.
+        **/
 		void drawRect(const iBox2 & B, color_t color)
 			{
-			drawRect(B.minX, B.minY, B.lx(), B.ly(), color);
+			drawRect({ B.minX, B.minY }, { B.lx(), B.ly() }, color);
+			}
+
+
+        /**
+         * Draw a rectangle with given upper left corner and dimension.
+         *
+         * @param   upper_left_pos  Position of the upper left corner of the rectangle.
+         * @param   dimension       (width,height) of the rectangle.
+         * @param   color           color to use.
+        **/
+		void drawRect(iVec2 upper_left_pos, iVec2 dimension, color_t color)
+			{
+			const int x = upper_left_pos.x;
+			const int y = upper_left_pos.y;
+			const int w = dimension.x;
+			const int h = dimension.y;
+			drawFastHLine<true>({ x, y }, w, color);
+			if (h > 1) drawFastHLine<true>({ x, y + h - 1 }, w, color);
+			drawFastVLine<true>({ x, y + 1 }, h - 2, color);
+			if (w > 1) drawFastVLine<true>({ x + w - 1, y + 1 }, h - 2, color);
 			}
 
 
 		/**
 		* Draw a rectangle with size (w,h) and upperleft corner at (x,y)
 		**/
-		void drawRect(int x, int y, int w, int h, color_t color)
+		DEPRECATED_SCALAR_PARAMS void drawRect(int x, int y, int w, int h, color_t color)
 			{
-			drawFastHLine<true>(x, y, w, color);
-			if (h > 1) drawFastHLine<true>(x, y + h - 1, w, color);
-			drawFastVLine<true>(x, y + 1, h - 2, color);
-			if (w > 1) drawFastVLine<true>(x + w - 1, y + 1, h - 2, color);
+			drawRect({ x, y }, { w, h }, color);
 			}
 
 
-		/**
-		* Draw a rectangle corresponding to the box B.
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-		**/
+        /**
+         * Draw a rectangle corresponding to the box B.
+         * 
+         * Blend with the current color background using opacity between 0.0f (fully transparent) and
+         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         *
+		 * @param   B       B representing the rectangle.
+		 * @param   color   Color to use.
+		 * @param   opacity between 0.0f (transparent) to 1.0f (fully opaque).
+        **/
 		void drawRect(const iBox2& B, color_t color, float opacity)
 			{
-			drawRect(B.minX, B.minY, B.lx(), B.ly(), color, opacity);
+			drawRect({ B.minX, B.minY }, { B.lx(), B.ly() }, color, opacity);
+			}
+
+
+        /**
+         * Draw a rectangle with given upper left corner and dimension.
+         * 
+         * Blend with the current color background using opacity between 0.0f (fully transparent) and
+         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         *
+         * @param   upper_left_pos  Position of the upper left corner of the rectangle.
+         * @param   dimension       (width,height) of the rectangle.
+         * @param   color           color to use.
+         * @param   opacity         between 0.0f (transparent) to 1.0f (fully opaque).
+        **/
+		void drawRect(iVec2 upper_left_pos, iVec2 dimension, color_t color, float opacity)
+			{
+			const int x = upper_left_pos.x;
+			const int y = upper_left_pos.y;
+			const int w = dimension.x;
+			const int h = dimension.y;
+			drawFastHLine<true>({ x, y }, w, color, opacity);
+			if (h > 1) drawFastHLine<true>({ x, y + h - 1 }, w, color, opacity);
+			drawFastVLine<true>({ x, y + 1 }, h - 2, color, opacity);
+			if (w > 1) drawFastVLine<true>({ x + w - 1, y + 1 }, h - 2, color, opacity);
 			}
 
 
@@ -1121,54 +1304,94 @@ namespace tgx
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void drawRect(int x, int y, int w, int h, color_t color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void drawRect(int x, int y, int w, int h, color_t color, float opacity)
 			{
-			drawFastHLine<true>(x, y, w, color, opacity);
-			if (h > 1) drawFastHLine<true>(x, y + h - 1, w, color, opacity);
-			drawFastVLine<true>(x, y + 1, h - 2, color, opacity);
-			if (w > 1) drawFastVLine<true>(x + w - 1, y + 1, h - 2, color, opacity);
+			drawRect({ x, y }, { w, h }, color, opacity);
 			}
-	
 
-		/**
-		* Fill a rectangle region with a single color
-		**/
+
+        /**
+         * Fill a rectangle region with a single color
+         *
+         * @param   B       Box representing the rectangle
+         * @param   color   The color to use
+        **/
 		void fillRect(iBox2 B, color_t color);
 
 
+        /**
+		 * Fill a rectangle region with a single color
+		 *
+		 * @param   upper_left_pos  Position of the upper left corner of the rectangle.
+		 * @param   dimension       (width,height) of the rectangle.
+		 * @param   color           color to use.
+		**/
+		void fillRect(iVec2 upper_left_pos, iVec2 dimension, color_t color)
+			{
+			fillRect(iBox2(upper_left_pos.x, upper_left_pos.x + dimension.x - 1, upper_left_pos.y, upper_left_pos.y + dimension.y - 1), color);
+			}
+
+
 		/**
 		* Fill a rectangle region with a single color
 		**/
-		void fillRect(int x, int y, int w, int h, color_t color)
+		DEPRECATED_SCALAR_PARAMS void fillRect(int x, int y, int w, int h, color_t color)
 			{
 			fillRect(iBox2( x, x + w - 1, y, y + h - 1 ), color);
 			}
 
 
-		/**
-		* Fill a rectangle region with a single color
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-		**/
+
+        /**
+         * Fill a rectangle region with a single color
+         * 
+         * Blend with the current color background using opacity between 0.0f (fully transparent) and
+         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         *
+         * @param   B       An iBox2 to process.
+         * @param   color   The color.
+         * @param   opacity The opacity.
+        **/
 		void fillRect(iBox2 B, color_t color, float opacity);
 
 
-		/**
-		* Fill a rectangle region with a single color
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+        /**
+         * Fill a rectangle region with a single color
+         * 
+         * Blend with the current color background using opacity between 0.0f (fully transparent) and
+         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         *
+		 * @param   upper_left_pos  Position of the upper left corner of the rectangle.
+		 * @param   dimension       (width,height) of the rectangle.
+		 * @param   color           color to use.
+		 * @param   opacity         between 0.0f (transparent) to 1.0f (fully opaque).
 		**/
-		void fillRect(int x, int y, int w, int h, color_t color, float opacity)
+		void fillRect(iVec2 upper_left_pos, iVec2 dimension, color_t color, float opacity)
+			{
+			fillRect(iBox2(upper_left_pos.x, upper_left_pos.x + dimension.x - 1, upper_left_pos.y, upper_left_pos.y + dimension.y - 1), color, opacity);
+			}
+
+
+        /**
+         * Fill a rectangle region with a single color
+         * 
+         * Blend with the current color background using opacity between 0.0f (fully transparent) and
+         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         *
+        **/
+		DEPRECATED_SCALAR_PARAMS void fillRect(int x, int y, int w, int h, color_t color, float opacity)
 			{
 			fillRect(iBox2( x, x + w - 1, y, y + h - 1 ), color, opacity);
 			}
 
 
-		/**
-		* Fill a rectangle with different colors for the outline and the interior
-		**/
+        /**
+         * Fill a rectangle with different colors for the outline and the interior
+         *
+         * @param   B               box representing the rectangle
+         * @param   color_interior  color for the interior
+         * @param   color_outline   color for the outline
+        **/
 		void fillRect(iBox2 B, color_t color_interior, color_t color_outline)
 			{
 			drawRect(B, color_outline);
@@ -1176,21 +1399,40 @@ namespace tgx
 			}
 
 
-		/**
-		* Fill a rectangle with different colors for the outline and the interior
-		**/
-		void fillRect(int x, int y, int w, int h, color_t color_interior, color_t color_outline)
+        /**
+         * Fill a rectangle with different colors for the outline and the interior
+         *
+         * @param   upper_left_pos  upper left corner of the rectangle
+         * @param   dimension       (width, height) of the rectangle
+         * @param   color_interior  color for the interior.
+         * @param   color_outline   color for the outline.
+        **/
+		void fillRect(iVec2 upper_left_pos, iVec2 dimension, color_t color_interior, color_t color_outline)
 			{
-			fillRect(iBox2( x, x + w - 1, y, y + h - 1 ), color_interior, color_outline);
+			fillRect(iBox2(upper_left_pos.x, upper_left_pos.x + dimension.x - 1, upper_left_pos.y, upper_left_pos.y + dimension.y - 1), color_interior, color_outline);
 			}
 
 
 		/**
 		* Fill a rectangle with different colors for the outline and the interior
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
+		DEPRECATED_SCALAR_PARAMS void fillRect(int x, int y, int w, int h, color_t color_interior, color_t color_outline)
+			{
+			fillRect(iBox2( x, x + w - 1, y, y + h - 1 ), color_interior, color_outline);
+			}
+
+
+        /**
+         * Fill a rectangle with different colors for the outline and the interior
+         * 
+         * Blend with the current color background using opacity between 0.0f (fully transparent) and
+         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         *
+         * @param   B               box representing the rectangle.
+         * @param   color_interior  color for the interior.
+         * @param   color_outline   color for the outline.
+         * @param   opacity         opacity between 0.0f (transparent) and 1.0f (opaque).
+        **/
 		void fillRect(iBox2 B, color_t color_interior, color_t color_outline, float opacity)
 			{
 			drawRect(B, color_outline, opacity);
@@ -1198,16 +1440,35 @@ namespace tgx
 			}
 
 
+        /**
+         * Fill a rectangle with different colors for the outline and the interior
+         * 
+         * Blend with the current color background using opacity between 0.0f (fully transparent) and
+         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         *
+         * @param   upper_left_pos  upper left corner of the rectangle.
+         * @param   dimension       (width, height) of the rectangle.
+         * @param   color_interior  color for the interior.
+         * @param   color_outline   color for the outline.
+         * @param   opacity         opacity between 0.0f (transparent) and 1.0f (opaque).
+        **/
+		void fillRect(iVec2 upper_left_pos, iVec2 dimension, color_t color_interior, color_t color_outline, float opacity)
+			{
+			fillRect(iBox2(upper_left_pos.x, upper_left_pos.x + dimension.x - 1, upper_left_pos.y, upper_left_pos.y + dimension.y - 1), color_interior, color_outline, opacity);
+			}
+
+
 		/**
 		* Fill a rectangle with different colors for the outline and the interior
 		*
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void fillRect(int x, int y, int w, int h, color_t color_interior, color_t color_outline, float opacity)
+		DEPRECATED_SCALAR_PARAMS void fillRect(int x, int y, int w, int h, color_t color_interior, color_t color_outline, float opacity)
 			{
 			fillRect(iBox2( x, x + w - 1, y, y + h - 1 ), color_interior, color_outline, opacity);
 			}
+
 
 
 		/**
@@ -1215,7 +1476,15 @@ namespace tgx
 		**/
 		void drawRoundRect(const iBox2 & B, int r, color_t color)
 			{
-			drawRoundRect(B.minX, B.minY, B.lx(), B.ly(), r, color);
+			const int x = B.minX;
+			const int y = B.minY;
+			const int w = B.lx();
+			const int h = B.ly();
+			if (!isValid() || (w <= 0) || (h <= 0)) return;
+			if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
+				_drawRoundRect<false>(x, y, w, h, r, color);
+			else
+				_drawRoundRect<true>(x, y, w, h, r, color);
 			}
 
 
@@ -1223,13 +1492,9 @@ namespace tgx
 		* Draw a rounded rectangle with upper left corner (x,y), width w and 
 		* height h and with corner radius r.
 		**/
-		void drawRoundRect(int x, int y, int w, int h, int r, color_t color)
+		DEPRECATED_SCALAR_PARAMS void drawRoundRect(int x, int y, int w, int h, int r, color_t color)
 			{
-			if (!isValid() || (w <= 0) || (h <= 0)) return;
-			if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
-				_drawRoundRect<false>(x, y, w, h, r, color);
-			else
-				_drawRoundRect<true>(x, y, w, h, r, color);
+			drawRoundRect(iBox2{ x, x + w - 1 ,y, y + h - 1 }, r, color);
 			}
 
 
@@ -1241,7 +1506,15 @@ namespace tgx
 		**/
 		void drawRoundRect(const iBox2 & B, int r, color_t color, float opacity)
 			{
-			drawRoundRect(B.minX, B.minY, B.lx(), B.ly(), r, color, opacity);
+			const int x = B.minX;
+			const int y = B.minY;
+			const int w = B.lx();
+			const int h = B.ly();
+			if (!isValid() || (w <= 0) || (h <= 0)) return;
+			if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
+				_drawRoundRect<false>(x, y, w, h, r, color, opacity);
+			else
+				_drawRoundRect<true>(x, y, w, h, r, color, opacity);
 			}
 
 
@@ -1252,13 +1525,9 @@ namespace tgx
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity)
 			{
-			if (!isValid() || (w <= 0) || (h <= 0)) return;
-			if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
-				_drawRoundRect<false>(x, y, w, h, r, color, opacity);
-			else
-				_drawRoundRect<true>(x, y, w, h, r, color, opacity);
+			drawRoundRect(iBox2{ x, x + w - 1 ,y, y + h - 1 }, r, color, opacity);
 			}
 
 
@@ -1266,8 +1535,16 @@ namespace tgx
 		* Draw a filled rounded rectangle in box B with corner radius r.
 		**/
 		void fillRoundRect(const iBox2 & B, int r, color_t color)
-			{			
-			fillRoundRect(B.minX, B.minY, B.lx(), B.ly(), r, color);			
+			{	
+			const int x = B.minX;
+			const int y = B.minY;
+			const int w = B.lx();
+			const int h = B.ly();
+			if (!isValid() || (w <= 0) || (h <= 0)) return;
+			if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
+				_fillRoundRect<false>(x, y, w, h, r, color);
+			else
+				_fillRoundRect<true>(x, y, w, h, r, color);
 			}
 
 
@@ -1275,13 +1552,9 @@ namespace tgx
 		* Draw a filled rounded rectangle with upper left corner (x,y), width w and
 		* height h and with corner radius r.
 		**/
-		void fillRoundRect(int x, int y, int w, int h, int r, color_t color)
+		DEPRECATED_SCALAR_PARAMS void fillRoundRect(int x, int y, int w, int h, int r, color_t color)
 			{
-			if (!isValid() || (w <= 0) || (h <= 0)) return;
-			if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
-				_fillRoundRect<false>(x, y, w, h, r, color);
-			else
-				_fillRoundRect<true>(x, y, w, h, r, color);
+			fillRoundRect(iBox2{ x, x + w - 1 ,y, y + h - 1 }, r, color);
 			}
 
 
@@ -1293,7 +1566,15 @@ namespace tgx
 		**/
 		void fillRoundRect(const iBox2& B, int r, color_t color, float opacity)
 			{
-			fillRoundRect(B.minX, B.minY, B.lx(), B.ly(), r, color, opacity);
+			const int x = B.minX;
+			const int y = B.minY;
+			const int w = B.lx();
+			const int h = B.ly();
+			if (!isValid() || (w <= 0) || (h <= 0)) return;
+			if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
+				_fillRoundRect<false>(x, y, w, h, r, color, opacity);
+			else
+				_fillRoundRect<true>(x, y, w, h, r, color, opacity);
 			}
 
 
@@ -1304,14 +1585,11 @@ namespace tgx
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity)
-			{			
-			if (!isValid() || (w <= 0) || (h <= 0)) return;
-			if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
-				_fillRoundRect<false>(x, y, w, h, r, color, opacity);
-			else
-				_fillRoundRect<true>(x, y, w, h, r, color, opacity);
+		DEPRECATED_SCALAR_PARAMS void fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity)
+			{
+			fillRoundRect(iBox2{ x, x + w - 1 ,y, y + h - 1 }, r, color, opacity);
 			}
+
 
 
 		/**
@@ -1325,7 +1603,7 @@ namespace tgx
 		* Fill a rectangle region with a horizontal color gradient between color1 and color2.
 		* color interpolation takes place in RGB color space (even if color_t is HSV).
 		**/
-		void fillRectHGradient(int x, int y, int w, int h, color_t color1, color_t color2)
+		DEPRECATED_SCALAR_PARAMS void fillRectHGradient(int x, int y, int w, int h, color_t color1, color_t color2)
 			{
 			fillRectHGradient(iBox2(x, x + w - 1, y, y + h - 1), color1, color2);
 			}
@@ -1348,7 +1626,7 @@ namespace tgx
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void fillRectHGradient(int x, int y, int w, int h, color_t color1, color_t color2, float opacity)
+		DEPRECATED_SCALAR_PARAMS void fillRectHGradient(int x, int y, int w, int h, color_t color1, color_t color2, float opacity)
 			{
 			fillRectHGradient(iBox2(x, x + w - 1, y, y + h - 1), color1, color2, opacity);
 			}
@@ -1365,7 +1643,7 @@ namespace tgx
 		* Fill a rectangle region with a vertical color gradient between color1 and color2.
 		* color interpolation takes place in RGB color space (even if color_t is HSV).
 		**/
-		void fillRectVGradient(int x, int y, int w, int h, color_t color1, color_t color2) 
+		DEPRECATED_SCALAR_PARAMS void fillRectVGradient(int x, int y, int w, int h, color_t color1, color_t color2)
 			{
 			fillRectVGradient(iBox2(x, x + w - 1, y, y + h - 1), color1, color2);
 			}
@@ -1388,7 +1666,7 @@ namespace tgx
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void fillRectVGradient(int x, int y, int w, int h, color_t color1, color_t color2, float opacity) 
+		DEPRECATED_SCALAR_PARAMS void fillRectVGradient(int x, int y, int w, int h, color_t color1, color_t color2, float opacity)
 			{
 			fillRectVGradient(iBox2(x, x + w - 1, y, y + h - 1), color1, color2, opacity);
 			}
@@ -1408,15 +1686,6 @@ namespace tgx
 		/**
 		* Draw a circle (the outline but not its interior). 
 		**/
-		void drawCircle(int cx, int cy, int r, color_t color)
-			{
-			drawCircle(iVec2(cx,cy), r, color);
-			}
-
-
-		/**
-		* Draw a circle (the outline but not its interior). 
-		**/
 		void drawCircle(iVec2 center, int r, color_t color)
 			{
 			if ((center.x - r >= 0) && (center.x + r < _lx) && (center.y - r >= 0) && (center.y + r < _ly))
@@ -1428,13 +1697,10 @@ namespace tgx
 
 		/**
 		* Draw a circle (the outline but not its interior). 
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void drawCircle(int cx, int cy, int r, color_t color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void drawCircle(int cx, int cy, int r, color_t color)
 			{
-			drawCircle(iVec2(cx,cy), r, color, opacity);
+			drawCircle(iVec2(cx,cy), r, color);
 			}
 
 
@@ -1454,11 +1720,14 @@ namespace tgx
 
 
 		/**
-		* Draw both the outline and interior of a circle (possibly with distinct colors).
+		* Draw a circle (the outline but not its interior). 
+		*
+		* Blend with the current color background using opacity between 0.0f (fully transparent) and
+		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void fillCircle(int cx, int cy, int r, color_t interior_color, color_t outline_color)
+		DEPRECATED_SCALAR_PARAMS void drawCircle(int cx, int cy, int r, color_t color, float opacity)
 			{
-			fillCircle(iVec2(cx, cy), r, interior_color, outline_color);
+			drawCircle(iVec2(cx,cy), r, color, opacity);
 			}
 
 
@@ -1476,13 +1745,10 @@ namespace tgx
 
 		/**
 		* Draw both the outline and interior of a circle (possibly with distinct colors).
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void fillCircle(int cx, int cy, int r, color_t interior_color, color_t outline_color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void fillCircle(int cx, int cy, int r, color_t interior_color, color_t outline_color)
 			{
-			fillCircle(iVec2(cx, cy), r, interior_color, outline_color, opacity);
+			fillCircle(iVec2(cx, cy), r, interior_color, outline_color);
 			}
 
 
@@ -1501,23 +1767,30 @@ namespace tgx
 			}
 
 
-
 		/**
-		* Draw the outline of an ellipse (but not its interior).
+		* Draw both the outline and interior of a circle (possibly with distinct colors).
+		*
+		* Blend with the current color background using opacity between 0.0f (fully transparent) and
+		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void drawEllipse(iVec2 center, int rx, int ry, color_t color)
+		DEPRECATED_SCALAR_PARAMS void fillCircle(int cx, int cy, int r, color_t interior_color, color_t outline_color, float opacity)
 			{
-			drawEllipse(center.x, center.y, rx, ry, color, color);
+			fillCircle(iVec2(cx, cy), r, interior_color, outline_color, opacity);
 			}
 
 
+
 		/**
 		* Draw the outline of an ellipse (but not its interior).
 		**/
-		void drawEllipse(int cx, int cy, int rx, int ry, color_t color)
+		void drawEllipse(iVec2 center, iVec2 radiuses, color_t color)
 			{
+			const int cx = center.x;
+			const int cy = center.y;
+			const int rx = radiuses.x;
+			const int ry = radiuses.y;
 			if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
-				_drawEllipse<true, false, false>(cx, cy, rx , ry, color, color);
+				_drawEllipse<true, false, false>(cx, cy, rx, ry, color, color);
 			else
 				_drawEllipse<true, false, true>(cx, cy, rx, ry, color, color);
 			}
@@ -1525,13 +1798,29 @@ namespace tgx
 
 		/**
 		* Draw the outline of an ellipse (but not its interior).
+		**/
+		DEPRECATED_SCALAR_PARAMS void drawEllipse(int cx, int cy, int rx, int ry, color_t color)
+			{
+			drawEllipse({ cx, cy }, { rx, ry }, color, color);
+			}
+
+
+		/**
+		* Draw the outline of an ellipse (but not its interior).
 		*
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void drawEllipse(iVec2 center, int rx, int ry, color_t color, float opacity)
+		void drawEllipse(iVec2 center, iVec2 radiuses, color_t color, float opacity)
 			{
-			drawEllipse(center.x, center.y, rx, ry, color, color, opacity);
+			const int cx = center.x;
+			const int cy = center.y;
+			const int rx = radiuses.x;
+			const int ry = radiuses.y;
+			if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
+				_drawEllipse<true, false, false>(cx, cy, rx , ry, color, color, opacity);
+			else
+				_drawEllipse<true, false, true>(cx, cy, rx, ry, color, color, opacity);
 			}
 
 		/**
@@ -1540,31 +1829,23 @@ namespace tgx
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void drawEllipse(int cx, int cy, int rx, int ry, color_t color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void drawEllipse(int cx, int cy, int rx, int ry, color_t color, float opacity)
 			{
-			if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
-				_drawEllipse<true, false, false>(cx, cy, rx , ry, color, color, opacity);
-			else
-				_drawEllipse<true, false, true>(cx, cy, rx, ry, color, color, opacity);
+			drawEllipse({ cx, cy }, { rx, ry }, color, color, opacity);
 			}
 
 
 		/**
 		* Draw both the outline and interior of an ellipse (possibly with distinct colors).
 		**/
-		void fillEllipse(iVec2 center, int rx, int ry, color_t interior_color, color_t outline_color)
+		void fillEllipse(iVec2 center, iVec2 radiuses, color_t interior_color, color_t outline_color)
 			{
-			fillEllipse(center.x, center.y, rx, ry, interior_color, outline_color);
-			}
-
-
-		/**
-		* Draw both the outline and interior of an ellipse (possibly with distinct colors).
-		**/
-		void fillEllipse(int cx, int cy, int rx, int ry, color_t interior_color, color_t outline_color)
-			{
+			const int cx = center.x;
+			const int cy = center.y;
+			const int rx = radiuses.x;
+			const int ry = radiuses.y;
 			if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
-				_drawEllipse<true, true, false>(cx, cy, rx , ry, outline_color, interior_color);
+				_drawEllipse<true, true, false>(cx, cy, rx, ry, outline_color, interior_color);
 			else
 				_drawEllipse<true, true, true>(cx, cy, rx, ry, outline_color, interior_color);
 			}
@@ -1572,13 +1853,10 @@ namespace tgx
 
 		/**
 		* Draw both the outline and interior of an ellipse (possibly with distinct colors).
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void fillEllipse(iVec2 center, int rx, int ry, color_t interior_color, color_t outline_color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void fillEllipse(int cx, int cy, int rx, int ry, color_t interior_color, color_t outline_color)
 			{
-			fillEllipse(center.x, center.y, rx, ry, interior_color, outline_color, opacity);
+			fillEllipse({ cx, cy }, { rx, ry }, interior_color, outline_color);
 			}
 
 
@@ -1588,12 +1866,28 @@ namespace tgx
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
 		**/
-		void fillEllipse(int cx, int cy, int rx, int ry, color_t interior_color, color_t outline_color, float opacity)
+		void fillEllipse(iVec2 center, iVec2 radiuses, color_t interior_color, color_t outline_color, float opacity)
 			{
+			const int cx = center.x;
+			const int cy = center.y;
+			const int rx = radiuses.x;
+			const int ry = radiuses.y;
 			if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
-				_drawEllipse<true, true, false>(cx, cy, rx , ry, outline_color, interior_color, opacity);
+				_drawEllipse<true, true, false>(cx, cy, rx, ry, outline_color, interior_color, opacity);
 			else
 				_drawEllipse<true, true, true>(cx, cy, rx, ry, outline_color, interior_color, opacity);
+			}
+
+
+		/**
+		* Draw both the outline and interior of an ellipse (possibly with distinct colors).
+		*
+		* Blend with the current color background using opacity between 0.0f (fully transparent) and
+		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+		**/
+		DEPRECATED_SCALAR_PARAMS void fillEllipse(int cx, int cy, int rx, int ry, color_t interior_color, color_t outline_color, float opacity)
+			{
+			fillEllipse({ cx, cy }, { rx, ry }, interior_color, outline_color, opacity);
 			}
 
 
@@ -1602,10 +1896,31 @@ namespace tgx
 		/************************************************************************************
 		*
 		*
-		* High quality drawing: Anti-aliased primitives
+		* New high quality drawing methods: anti-aliasing, bilinear filtering, subpixel precison...
 		*
 		*
 		*************************************************************************************/
+
+
+        /**
+         * Draw an anti-aliased wide line from PA to PB with thickness wd and radiuses ends. Use
+         * floating point values for sub-pixel precision.
+         * 
+         * Blend with the current color background using opacity between 0.0f (fully transparent) and
+         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         * 
+         * CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
+         *
+         * @param   PA      first end point.
+         * @param   PB      second end point.
+         * @param   wd      thickness.
+         * @param   color   color.
+         * @param   opacity opacity between 0.0f and 1.0f.
+        **/
+		void drawWideLine(fVec2 PA, fVec2 PB, float wd, color_t color, float opacity)
+			{
+			_drawWideLine(PA.x, PA.y, PB.x, PB.y, wd, color, opacity);
+			}
 
 
 		/**
@@ -1617,36 +1932,31 @@ namespace tgx
 		*
 		* CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
 		**/
-		void drawWideLine(float ax, float ay, float bx, float by, float wd, color_t color, float opacity);
-
-
-		/**
-		* Draw an anti-aliased wide line from PA to PB with thickness wd and radiuses ends.
-		* Use floating point values for sub-pixel precision.
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-		*
-		* CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
-		**/
-		void drawWideLine(fVec2 PA, fVec2 PB, float wd, color_t color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void drawWideLine(float ax, float ay, float bx, float by, float wd, color_t color, float opacity)
 			{
-			drawWideLine(PA.x, PA.y, PB.x, PB.y, wd, color, opacity);
+			_drawWideLine(ax, ay , bx, by , wd, color, opacity);
 			}
 
 
-		/**
-		* Draw an anti-aliased wide line from PA to PB with thickness wd and radiuses ends.
-		* Use floating point values for sub-pixel precision.
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-		*
-		* CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
+        /**
+         * Draw an anti-aliased wedge line from PA to PB with respective wideness aw and bw at the ends.
+         * Use floating point values for sub-pixel precision.
+         * 
+         * Blend with the current color background using opacity between 0.0f (fully transparent) and
+         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         * 
+         * CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
+         *
+         * @param   PA      first end point
+         * @param   PB      second end point
+         * @param   aw      radius at the first end point
+         * @param   bw      radius at the second end point
+		 * @param   color   color.
+		 * @param   opacity opacity between 0.0f and 1.0f.
 		**/
-		void drawWideLine(iVec2 PA, iVec2 PB, float wd, color_t color, float opacity)
+		void drawWedgeLine(fVec2 PA, fVec2 PB, float aw, float bw, color_t color, float opacity)
 			{
-			drawWideLine((float)PA.x, (float)PA.y, (float)PB.x, (float)PB.y, wd, color, opacity);
+			_drawWedgeLine(PA.x, PA.y, PB.x, PB.y, aw, bw, color, opacity);
 			}
 
 
@@ -1659,75 +1969,344 @@ namespace tgx
 		*
 		* CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
 		**/
-		void drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity);
-
-
-		/**
-		* Draw an anti-aliased wedge line from PA to PB with respective wideness aw and bw at the ends.
-		* Use floating point values for sub-pixel precision.
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-		*
-		* CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
-		**/
-		void drawWedgeLine(fVec2 PA, fVec2 PB, float aw, float bw, color_t color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity)
 			{
-			drawWedgeLine(PA.x, PA.y, PB.x, PB.y, aw, bw, color, opacity);
+			_drawWedgeLine(ax, ay, bx, by, aw, bw, color, opacity);
 			}
 
 
-		/**
-		* Draw an anti-aliased wedge line from PA to PB with respective wideness aw and bw at the ends.
-		* Integer value version: no sub-pixel precision.
-		*
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-		*
-		* CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
-		**/
-		void drawWedgeLine(iVec2 PA, iVec2 PB, float aw, float bw, color_t color, float opacity)
-			{
-			drawWedgeLine((float)PA.x, (float)PA.y, (float)PB.x, (float)PB.y, aw, bw, color, opacity);
-			}
-
-
-		/**
-		* Draw an anti-aliased filled circle. Use floating point value for sub-pixel precision.
-        * 
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-		**/
-		void drawSpot(float ax, float ay, float r, color_t color, float opacity)
-			{
-			// Filled circle can be created by the wide line function with length zero
-			drawWideLine(ax, ay, ax, ay, 2.0f * r, color, opacity);
-			}
-
-
-		/**
-		* Draw an anti-aliased filled circle. Use floating point value for sub-pixel precision.
-        * 
-		* Blend with the current color background using opacity between 0.0f (fully transparent) and
-		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+        /**
+         * Draw an anti-aliased filled circle. Use floating point value for sub-pixel precision.
+         * 
+         * Blend with the current color background using opacity between 0.0f (fully transparent) and
+         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         * 
+         * CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
+         *
+         * @param   center  center point
+         * @param   r       radius
+		 * @param   color   color.
+		 * @param   opacity opacity between 0.0f and 1.0f.
 		**/
 		void drawSpot(fVec2 center, float r, color_t color, float opacity)
 			{
-			drawSpot(center.x, center.y, r, color, opacity);
+			// Filled circle can be created by the wide line function with length zero
+			_drawWideLine(center.x, center.y, center.x, center.y, 2.0f * r, color, opacity);
 			}
 
 
 		/**
-		* Draw an anti-aliased filled circle. Integer valued version
+		* Draw an anti-aliased filled circle. Use floating point value for sub-pixel precision.
         * 
 		* Blend with the current color background using opacity between 0.0f (fully transparent) and
 		* 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+		*
+		* CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
 		**/
-		void drawSpot(iVec2 center, float r, color_t color, float opacity)
+		DEPRECATED_SCALAR_PARAMS void drawSpot(float ax, float ay, float r, color_t color, float opacity)
 			{
-			drawSpot((float)center.x, (float)center.y, r, color, opacity);
+			// Filled circle can be created by the wide line function with length zero
+			_drawWideLine(ax, ay, ax, ay, 2.0f * r, color, opacity);
 			}
 
+
+        /**
+         * Draw textured triangle (does not use blending).
+         * 
+         * Remarks:
+         * 
+         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
+         * smoother animation).
+         * 2. The method use bilinear interpolation for high quality rendering.
+         * 3. The sprite image can have a different color type from this image.
+         * 4. This version does NOT use blending: pixel from the source are simply copied over this
+         * image.
+         * 
+         * Note: When rotated, access to  the texture pixels colors is not linear anymore. For certain
+         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
+         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
+         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
+         *       (or another faster memory) before blitting...       *
+         *
+         * @param   src_im  the image/texture to map onto the triangle.
+         * @param   srcP1   coords of point 1 on the texture.
+         * @param   srcP2   coords of point 2 on the texture.
+         * @param   srcP3   coords of point 3 on the texture.
+         * @param   dstP1   coords of point 1 on this image.
+         * @param   dstP2   coords of point 2 on this image.
+         * @param   dstP3   coords of point 3 on this image.
+        **/
+		template<typename color_t_tex>
+		void drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3)
+			{
+			drawTexturedTriangleGradient(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f));
+			}
+
+
+        /**
+         * Draw textured triangle (use blending).
+         * 
+         * Remarks:
+         * 
+         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
+         * smoother animation).
+         * 2. The method use bilinear interpolation for high quality rendering.
+         * 3. The sprite image can have a different color type from this image.
+         * 4. This version use blending and opacity.If the sprite image color type has an alpha channel,
+         * then it is used for blendingand multiplied by the opacity factor(even if this image does not
+         * have an alpha channel).           *
+         * 
+         * Note: When rotated, access to  the texture pixels colors is not linear anymore. For certain
+         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
+         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
+         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
+         *       (or another faster memory) before blitting...       *
+         *
+         * @param   src_im  the image/texture to map onto the triangle.
+         * @param   srcP1   coords of point 1 on the texture.
+         * @param   srcP2   coords of point 2 on the texture.
+         * @param   srcP3   coords of point 3 on the texture.
+         * @param   dstP1   coords of point 1 on this image.
+         * @param   dstP2   coords of point 2 on this image.
+         * @param   dstP3   coords of point 3 on this image.
+         * @param   opacity The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
+        **/
+		template<typename color_t_tex>
+		void drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity)
+			{
+			drawTexturedTriangleGradient(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f), opacity);
+			}
+
+
+        /**
+         * Draw textured triangle combined with a color gradient (does not use blending).
+         * 
+         * Remarks:
+         * 
+         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
+         * smoother animation).
+         * 2. The method use bilinear interpolation for high quality rendering.
+         * 3. The sprite image can have a different color type from this image.
+		 * 4. This version does NOT use blending: pixel from the source are simply copied over this
+		 * image.
+		 *
+         * Note: When rotated, access to  the texture pixels colors is not linear anymore. For certain
+         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
+         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
+         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
+         *       (or another faster memory) before blitting...       *
+         *
+         * @param   src_im  the image/texture to map onto the triangle.
+         * @param   srcP1   coords of point 1 on the texture.
+         * @param   srcP2   coords of point 2 on the texture.
+         * @param   srcP3   coords of point 3 on the texture.
+         * @param   dstP1   coords of point 1 on this image.
+         * @param   dstP2   coords of point 2 on this image.
+         * @param   dstP3   coords of point 3 on this image.
+         * @param   C1      color gradient multiplier at point 1.
+         * @param   C2      color gradient multiplier at point 2.
+         * @param   C3      color gradient multiplier at point 3.
+        **/
+		template<typename color_t_tex>
+		void drawTexturedTriangleGradient(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, RGBf C1, RGBf C2, RGBf C3);
+
+
+        /**
+         * Draw textured triangle combined with a color gradient (use blending).
+         * 
+         * Remarks:
+         * 
+         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
+         * smoother animation).
+         * 2. The method use bilinear interpolation for high quality rendering.
+         * 3. The sprite image can have a different color type from this image.
+         * 4. This version use blending and opacity.If the sprite image color type has an alpha channel,
+         * then it is used for blendingand multiplied by the opacity factor(even if this image does not
+         * have an alpha channel).           *
+         * 
+         * Note: When rotated, access to  the texture pixels colors is not linear anymore. For certain
+         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
+         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
+         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
+         *       (or another faster memory) before blitting...       *
+         *
+         * @param   src_im  the image/texture to map onto the triangle.
+         * @param   srcP1   coords of point 1 on the texture.
+         * @param   srcP2   coords of point 2 on the texture.
+         * @param   srcP3   coords of point 3 on the texture.
+         * @param   dstP1   coords of point 1 on this image.
+         * @param   dstP2   coords of point 2 on this image.
+         * @param   dstP3   coords of point 3 on this image.
+         * @param   C1      color gradient multiplier at point 1.
+         * @param   C2      color gradient multiplier at point 2.
+         * @param   C3      color gradient multiplier at point 3.
+		 * @param   opacity The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
+		**/
+		template<typename color_t_tex>
+		void drawTexturedTriangleGradient(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, RGBf C1, RGBf C2, RGBf C3, float opacity);
+
+
+        /**
+         * Draw textured triangle with a mask (i.e. a specific color is treated as fully opaque, which
+         * is useful for drawing sprite when the source image color type does not have an alpha channel).
+         * 
+         * Remarks:
+         * 
+         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
+         * smoother animation).
+         * 2. The method use bilinear interpolation for high quality rendering.
+         * 3. The sprite image can have a different color type from this image.
+         * 4. This version use blending (if src_im has an alpha channel).
+         * 
+         * Note: When rotated, access to  the texture pixels colors is not linear anymore. For certain
+         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
+         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
+         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
+         *       (or another faster memory) before blitting...       *
+         *
+         * @param   src_im              the image/texture to map onto the triangle.
+         * @param   transparent_color   the color considered transparent in the source texture.
+         * @param   srcP1               coords of point 1 on the texture.
+         * @param   srcP2               coords of point 2 on the texture.
+         * @param   srcP3               coords of point 3 on the texture.
+         * @param   dstP1               coords of point 1 on this image.
+         * @param   dstP2               coords of point 2 on this image.
+         * @param   dstP3               coords of point 3 on this image.
+         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f
+         *                              (opaque).
+        **/
+		template<typename color_t_tex>
+		void drawTexturedTriangleMasked(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity)
+			{
+			drawTexturedTriangleMaskedGradient(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f), opacity);
+			}
+
+
+        /**
+         * Draw textured triangle with a mask (i.e. a specific color is treated as fully opaque, which
+         * is useful for drawing sprite when the source image color type does not have an alpha channel)
+         * Combine the drawing with a color gradient.
+         * 
+         * Remarks:
+         * 
+         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
+         *    smoother animation).
+         * 2. The method use bilinear interpolation for high quality rendering.
+         * 3. The sprite image can have a different color type from this image.
+         * 4. This version use blending (if src_im has an alpha channel).
+         * 
+         * Note: When rotated, access to  the texture pixels colors is not linear anymore. For certain
+         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
+         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
+         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
+         *       (or another faster memory) before blitting...       *
+         *
+         * @param   src_im              the image/texture to map onto the triangle.
+         * @param   transparent_color   the color considered transparent in the source texture.
+         * @param   srcP1               coords of point 1 on the texture.
+         * @param   srcP2               coords of point 2 on the texture.
+         * @param   srcP3               coords of point 3 on the texture.
+         * @param   dstP1               coords of point 1 on this image.
+         * @param   dstP2               coords of point 2 on this image.
+         * @param   dstP3               coords of point 3 on this image.
+         * @param   C1                  color gradient multiplier at point 1.
+         * @param   C2                  color gradient multiplier at point 2.
+         * @param   C3                  color gradient multiplier at point 3.
+         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f
+         *                              (opaque).
+        **/
+		template<typename color_t_tex>
+		void drawTexturedTriangleMaskedGradient(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, RGBf C1, RGBf C2, RGBf C3, float opacity);
+
+
+		/**
+		* Draw a textured quad (no blending).
+        * 
+		* See drawTexturedTriangle() for details.
+        * 
+		* NOTE: the vertices can be given in clockwise or counter-clockwise order.
+		**/
+		template<typename color_t_tex>
+		void drawTexturedQuad(const Image<color_t_tex> & src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4)
+			{
+			drawTexturedTriangle(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3);
+			drawTexturedTriangle(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4);
+			}
+
+
+		/**
+		* Draw a textured quad (with blending).
+		*
+		* See drawTexturedTriangle() for details.
+		*
+		* NOTE: the vertices can be given in clockwise or counter-clockwise order.
+		**/
+		template<typename color_t_tex>
+		void drawTexturedQuad(const Image<color_t_tex> & src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, float opacity)
+			{
+			drawTexturedTriangle(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, opacity);
+			drawTexturedTriangle(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, opacity);
+			}
+
+
+		/**
+		* Draw a textured quad combined with a color gradient (no blending).
+		*
+		* See drawTexturedTriangleGradient() for details.
+		*
+		* NOTE: the vertices can be given in clockwise or counter-clockwise order.
+		**/
+		template<typename color_t_tex>
+		void drawTexturedQuadGradient(const Image<color_t_tex> & src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, RGBf C1, RGBf C2, RGBf C3, RGBf C4)
+			{
+			drawTexturedTriangleGradient(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3);
+			drawTexturedTriangleGradient(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, C1, C3, C4);
+			}
+
+
+		/**
+		* Draw a textured quad combined with a color gradient (with blending).
+		*
+		* See drawTexturedTriangleGradient() for details.
+		*
+		* NOTE: the vertices can be given in clockwise or counter-clockwise order.
+		**/
+		template<typename color_t_tex>
+		void drawTexturedQuadGradient(const Image<color_t_tex> & src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, RGBf C1, RGBf C2, RGBf C3, RGBf C4, float opacity)
+			{
+			drawTexturedTriangleGradient(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
+			drawTexturedTriangleGradient(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, C1, C3, C4, opacity);
+			}
+
+
+		/**
+		* Draw a textured quad with a mask (i.e. a fixed transparent color).
+		*
+		* See drawTexturedTriangleMasked() for details.
+		*
+		* NOTE: the vertices can be given in clockwise or counter-clockwise order.
+		**/
+		template<typename color_t_tex>
+		void drawTexturedQuadMasked(const Image<color_t_tex> & src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, float opacity)
+			{
+			drawTexturedTriangleMasked(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, opacity);
+			drawTexturedTriangleMasked(src_im, transparent_color, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, opacity);
+			}
+
+
+		/**
+		* Draw a textured quad with a mask (i.e. a fixed transparent color) and combined with a color gradient.
+		*
+		* See drawTexturedTriangleMaskedGradient() for details.
+		*
+		* NOTE: the vertices can be given in clockwise or counter-clockwise order.
+		**/
+		template<typename color_t_tex>
+		void drawTexturedQuadMaskedGradient(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, RGBf C1, RGBf C2, RGBf C3, RGBf C4, float opacity)
+			{
+			drawTexturedTriangleMaskedGradient(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
+			drawTexturedTriangleMaskedGradient(src_im, transparent_color, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, C1, C3, C4, opacity);
+			}
 
 
 
@@ -2036,18 +2615,33 @@ private:
 		void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity);
 
 
-		/** taken from bodmer e_tft library */
+		/** adapted from bodmer e_tft library */
 		template<bool OUTLINE, bool FILL, bool CHECKRANGE>
 		void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color);
 
 
-		/** taken from bodmer e_tft library */
+		/** adapted from bodmer e_tft library */
 		template<bool OUTLINE, bool FILL, bool CHECKRANGE>
 		void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity);
 
 
+
+		/***************************************
+		* High Quality drawing primitive
+		****************************************/
+
+
+
+		/** adapted from bodmer e_tft library */
+		void _drawWideLine(float ax, float ay, float bx, float by, float wd, color_t color, float opacity);
+	
+
+		/** adapted from bodmer e_tft library */
+		void _drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity);
+
+
 		/**
-		* Taken from Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
+		* adapted from bodmer e_tft library
 		* Calculate distance of px,py to closest part of line
 		**/
 		inline float TGX_INLINE _wideLineDistance(float pax, float pay, float bax, float bay, float dr)
@@ -2061,7 +2655,7 @@ private:
 
 
 		/**
-		* Taken from Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
+		* adapted from bodmer e_tft library
 		* Calculate distance of px,py to closest part of line
 		**/
 		inline TGX_INLINE float _wedgeLineDistance(float pax, float pay, float bax, float bay, float dr)
@@ -2070,6 +2664,24 @@ private:
 			float dx = pax - bax * h, dy = pay - bay * h;
 			return sqrtf(dx * dx + dy * dy) + h * dr;
 			}
+
+
+		/** Convert to texture coordinates */
+		inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size)
+			{
+			return tgx::fVec2((1.0f / size.x) * (pos.x), (1.0f / size.y) * (pos.y));
+			}
+
+
+		/** Convert to viewport coordinates */
+		inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size)
+			{
+			return tgx::fVec2((2.0f / size.x) * (pos.x) - 1.0f, (2.0f / size.y) * (pos.y) - 1.0f);
+			}
+
+
+
+
 
 
 
@@ -2373,32 +2985,6 @@ private:
 
 
 	template<typename color_t>
-	template<typename src_color_t>
-	void Image<color_t>::copyFrom(const Image<src_color_t> & src)
-		{ 
-		// TODO : 
-		//1) make it faster 
-		//2) implement high quality resizing 
-		if ((!src.isValid()) || (!isValid())) { return; }
-		const int32_t ay = (src._ly > 1) ? (int32_t)(src._ly - 1) : (int32_t)(src._ly >> 1);
-		const int32_t by = (_ly > 1) ? (int32_t)(_ly - 1) : 1;
-		const int32_t ax = (src._lx > 1) ? (int32_t)(src._lx - 1) : (int32_t)(src._lx >> 1);
-		const int32_t bx = (_lx > 1) ? (int32_t)(_lx - 1) : 1;
-		for (int j = 0; j < _ly; j++)
-			{
-			const int32_t off_src = ((j * ay) / by) * TGX_CAST32(src._stride);
-			const int32_t off_dest = j * TGX_CAST32(_stride);
-			for (int i = 0; i < _lx; i++)
-				{
-				const int32_t x = (i * ax) / bx;
-				_buffer[i + off_dest] = color_t(src._buffer[x + off_src]); // color conversion
-				}
-			}
-		}
-
-
-
-	template<typename color_t>
 	Image<color_t> Image<color_t>::copyReduceHalf(const Image<color_t>& src_image)
 		{
 		if ((!isValid())||(!src_image.isValid())) { return Image<color_t>(); }
@@ -2454,6 +3040,121 @@ private:
 		}
 
 
+	template<typename color_t>
+	template<typename color_t_src>
+	void Image<color_t>::blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees)
+		{
+		if ((!isValid()) || (!src_im.isValid())) return;
+
+		const float tlx = (float)src_im.lx();
+		const float tly = (float)src_im.ly();
+
+		const float a = 0.01745329251f; // 2PI/360
+		const float co = cosf(a * angle_degrees);
+		const float so = sinf(a * angle_degrees);
+
+		const fVec2 P1 = scale * (fVec2(0.0f, 0.0f) - anchor_src);
+		const fVec2 Q1 = fVec2(P1.x * co - P1.y * so, P1.y * co + P1.x * so) + anchor_dst;
+
+		const fVec2 P2 = scale * (fVec2(tlx, 0.0f) - anchor_src);
+		const fVec2 Q2 = fVec2(P2.x * co - P2.y * so, P2.y * co + P2.x * so) + anchor_dst;
+
+		const fVec2 P3 = scale * (fVec2(tlx, tly) - anchor_src);
+		const fVec2 Q3 = fVec2(P3.x * co - P3.y * so, P3.y * co + P3.x * so) + anchor_dst;
+
+		const fVec2 P4 = scale * (fVec2(0.0f, tly) - anchor_src);
+		const fVec2 Q4 = fVec2(P4.x * co - P4.y * so, P4.y * co + P4.x * so) + anchor_dst;
+
+		drawTexturedQuad(src_im, fVec2(0.0f, 0.0f), fVec2(tlx, 0.0f), fVec2(tlx, tly), fVec2(0.0f, tly), Q1, Q2, Q3, Q4);
+		}
+
+
+	template<typename color_t>
+	template<typename color_t_src> 
+	void Image<color_t>::blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
+		{
+		if ((!isValid()) || (!src_im.isValid())) return;
+
+		const float tlx = (float)src_im.lx();
+		const float tly = (float)src_im.ly();
+
+		const float a = 0.01745329251f; // 2PI/360
+		const float co = cosf(a * angle_degrees);
+		const float so = sinf(a * angle_degrees);
+
+		const fVec2 P1 = scale * (fVec2(0.0f, 0.0f) - anchor_src);
+		const fVec2 Q1 = fVec2(P1.x * co - P1.y * so, P1.y * co + P1.x * so) + anchor_dst;
+
+		const fVec2 P2 = scale * (fVec2(tlx, 0.0f) - anchor_src);
+		const fVec2 Q2 = fVec2(P2.x * co - P2.y * so, P2.y * co + P2.x * so) + anchor_dst;
+
+		const fVec2 P3 = scale * (fVec2(tlx, tly) - anchor_src);
+		const fVec2 Q3 = fVec2(P3.x * co - P3.y * so, P3.y * co + P3.x * so) + anchor_dst;
+
+		const fVec2 P4 = scale * (fVec2(0.0f, tly) - anchor_src);
+		const fVec2 Q4 = fVec2(P4.x * co - P4.y * so, P4.y * co + P4.x * so) + anchor_dst;
+
+		drawTexturedQuad(src_im, fVec2(0.0f, 0.0f), fVec2(tlx, 0.0f), fVec2(tlx, tly), fVec2(0.0f, tly), Q1, Q2, Q3, Q4, opacity);
+		}
+
+
+	template<typename color_t>
+	template<typename color_t_src>
+	void Image<color_t>::blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
+		{
+		if ((!isValid()) || (!src_im.isValid())) return;
+
+		const float tlx = (float)src_im.lx();
+		const float tly = (float)src_im.ly();
+
+		const float a = 0.01745329251f; // 2PI/360
+		const float co = cosf(a * angle_degrees);
+		const float so = sinf(a * angle_degrees);
+
+		const fVec2 P1 = scale * (fVec2(0.0f, 0.0f) - anchor_src);
+		const fVec2 Q1 = fVec2(P1.x * co - P1.y * so, P1.y * co + P1.x * so) + anchor_dst;
+
+		const fVec2 P2 = scale * (fVec2(tlx, 0.0f) - anchor_src);
+		const fVec2 Q2 = fVec2(P2.x * co - P2.y * so, P2.y * co + P2.x * so) + anchor_dst;
+
+		const fVec2 P3 = scale * (fVec2(tlx, tly) - anchor_src);
+		const fVec2 Q3 = fVec2(P3.x * co - P3.y * so, P3.y * co + P3.x * so) + anchor_dst;
+
+		const fVec2 P4 = scale * (fVec2(0.0f, tly) - anchor_src);
+		const fVec2 Q4 = fVec2(P4.x * co - P4.y * so, P4.y * co + P4.x * so) + anchor_dst;
+
+		drawTexturedQuadMasked(src_im, transparent_color, fVec2(0.0f, 0.0f), fVec2(tlx, 0.0f), fVec2(tlx, tly), fVec2(0.0f, tly), Q1, Q2, Q3, Q4, opacity);
+		}
+
+
+
+
+	template<typename color_t>
+	template<typename src_color_t> 
+	void Image<color_t>::copyFrom(const Image<src_color_t>& src_im)
+		{
+		if ((!isValid()) || (!src_im.isValid())) return;
+		const float ilx = (float)lx();
+		const float ily = (float)ly();
+		const float tlx = (float)src_im.lx();
+		const float tly = (float)src_im.ly();
+		drawTexturedQuad(src_im, fVec2(0.0f, 0.0f), fVec2(tlx, 0.0f), fVec2(tlx, tly), fVec2(0.0f, tly), fVec2(0.0f, 0.0f), fVec2(ilx, 0.0f), fVec2(ilx, ily), fVec2(0.0f, ily));
+		}
+
+
+	template<typename color_t>
+	template<typename src_color_t> 
+	void Image<color_t>::copyFrom(const Image<src_color_t>& src_im, float opacity)
+		{
+		if ((!isValid()) || (!src_im.isValid())) return;
+		const float ilx = (float)lx();
+		const float ily = (float)ly();
+		const float tlx = (float)src_im.lx();
+		const float tly = (float)src_im.ly();
+		drawTexturedQuad(src_im, fVec2(0.0f, 0.0f), fVec2(tlx, 0.0f), fVec2(tlx, tly), fVec2(0.0f, tly), fVec2(0.0f, 0.0f), fVec2(ilx, 0.0f), fVec2(ilx, ily), fVec2(0.0f, ily), opacity);
+		}
+
+
 
 
 	/************************************************************************************
@@ -2494,17 +3195,17 @@ private:
 		if (y0 == y1)
 			{
 			if (x1 >= x0) 
-				drawFastHLine<CHECKRANGE>(x0, y0, x1 - x0 + 1, color); 
+				drawFastHLine<CHECKRANGE>({ x0, y0 }, x1 - x0 + 1, color);
 			else 
-				drawFastHLine<CHECKRANGE>(x1, y0, x0 - x1 + 1, color);
+				drawFastHLine<CHECKRANGE>({ x1, y0 }, x0 - x1 + 1, color);
 			return;
 			}
 		else if (x0 == x1)
 			{
 			if (y1 >= y0) 
-				drawFastVLine<CHECKRANGE>(x0, y0, y1 - y0 + 1, color);
+				drawFastVLine<CHECKRANGE>({ x0, y0 }, y1 - y0 + 1, color);
 			else
-				drawFastVLine<CHECKRANGE>(x0, y1, y0 - y1 + 1, color);
+				drawFastVLine<CHECKRANGE>({ x0, y1 }, y0 - y1 + 1, color);
 			return;
 			}
 		bool steep = abs(y1 - y0) > abs(x1 - x0);
@@ -2532,7 +3233,7 @@ private:
 					{
 					int len = x0 - xbegin;
 					if (len)
-						drawFastVLine<CHECKRANGE>(y0, xbegin, len + 1, color);
+						drawFastVLine<CHECKRANGE>({ y0, xbegin }, len + 1, color);
 					else
 						drawPixel<CHECKRANGE>(y0, x0, color);
 					xbegin = x0 + 1;
@@ -2541,7 +3242,7 @@ private:
 					}
 				}
 			if (x0 > xbegin + 1)
-				drawFastVLine<CHECKRANGE>(y0, xbegin, x0 - xbegin, color);
+				drawFastVLine<CHECKRANGE>({ y0, xbegin }, x0 - xbegin, color);
 			}
 		else
 			{
@@ -2552,7 +3253,7 @@ private:
 					{
 					int len = x0 - xbegin;
 					if (len)
-						drawFastHLine<CHECKRANGE>(xbegin, y0, len + 1, color);
+						drawFastHLine<CHECKRANGE>({ xbegin, y0 }, len + 1, color);
 					else
 						drawPixel<CHECKRANGE>(x0, y0, color);
 					xbegin = x0 + 1;
@@ -2561,7 +3262,7 @@ private:
 					}
 				}
 			if (x0 > xbegin + 1)
-				drawFastHLine<CHECKRANGE>(xbegin, y0, x0 - xbegin, color);
+				drawFastHLine<CHECKRANGE>({ xbegin, y0 }, x0 - xbegin, color);
 			}
 		}
 
@@ -2572,17 +3273,17 @@ private:
 		if (y0 == y1)
 			{
 			if (x1 >= x0) 
-				drawFastHLine<CHECKRANGE>(x0, y0, x1 - x0 + 1, color, opacity); 
+				drawFastHLine<CHECKRANGE>({ x0, y0 }, x1 - x0 + 1, color, opacity);
 			else 
-				drawFastHLine<CHECKRANGE>(x1, y0, x0 - x1 + 1, color, opacity);
+				drawFastHLine<CHECKRANGE>({ x1, y0 }, x0 - x1 + 1, color, opacity);
 			return;
 			}
 		else if (x0 == x1)
 			{
 			if (y1 >= y0) 
-				drawFastVLine<CHECKRANGE>(x0, y0, y1 - y0 + 1, color, opacity);
+				drawFastVLine<CHECKRANGE>({ x0, y0 } , y1 - y0 + 1, color, opacity);
 			else
-				drawFastVLine<CHECKRANGE>(x0, y1, y0 - y1 + 1, color, opacity);
+				drawFastVLine<CHECKRANGE>({ x0, y1 }, y0 - y1 + 1, color, opacity);
 			return;
 			}
 		bool steep = abs(y1 - y0) > abs(x1 - x0);
@@ -2610,7 +3311,7 @@ private:
 					{
 					int len = x0 - xbegin;
 					if (len)
-						drawFastVLine<CHECKRANGE>(y0, xbegin, len + 1, color, opacity);
+						drawFastVLine<CHECKRANGE>({ y0, xbegin }, len + 1, color, opacity);
 					else
 						drawPixel<CHECKRANGE>(y0, x0, color, opacity);
 					xbegin = x0 + 1;
@@ -2619,7 +3320,7 @@ private:
 					}
 				}
 			if (x0 > xbegin + 1)
-				drawFastVLine<CHECKRANGE>(y0, xbegin, x0 - xbegin, color, opacity);
+				drawFastVLine<CHECKRANGE>({ y0, xbegin }, x0 - xbegin, color, opacity);
 			}
 		else
 			{
@@ -2630,7 +3331,7 @@ private:
 					{
 					int len = x0 - xbegin;
 					if (len)
-						drawFastHLine<CHECKRANGE>(xbegin, y0, len + 1, color, opacity);
+						drawFastHLine<CHECKRANGE>({ xbegin, y0 }, len + 1, color, opacity);
 					else
 						drawPixel<CHECKRANGE>(x0, y0, color, opacity);
 					xbegin = x0 + 1;
@@ -2639,7 +3340,7 @@ private:
 					}
 				}
 			if (x0 > xbegin + 1)
-				drawFastHLine<CHECKRANGE>(xbegin, y0, x0 - xbegin, color, opacity);
+				drawFastHLine<CHECKRANGE>({ xbegin, y0 }, x0 - xbegin, color, opacity);
 			}
 		}
 
@@ -2682,16 +3383,16 @@ private:
 				if ((!DRAW_OUTLINE) && (DRAW_INTERIOR))
 					{
 					if (BLEND)
-						drawFastHLine<CHECKRANGE>(a, y0, b - a + 1, interior_color, opacity);
+						drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, interior_color, opacity);
 					else
-						drawFastHLine<CHECKRANGE>(a, y0, b - a + 1, interior_color);
+						drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, interior_color);
 					}
 				if (DRAW_OUTLINE)
 					{
 					if (BLEND)
-						drawFastHLine<CHECKRANGE>(a, y0, b - a + 1, outline_color, opacity);
+						drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, outline_color, opacity);
 					else
-						drawFastHLine<CHECKRANGE>(a, y0, b - a + 1, outline_color);
+						drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, outline_color);
 					}
 				return;
 				}
@@ -2708,7 +3409,7 @@ private:
 					sa += dx01;
 					sb += dx02;
 					if (a > b) swap(a, b);
-					if (BLEND) drawFastHLine<CHECKRANGE>(a, y, b - a + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>(a, y, b - a + 1, interior_color);
+					if (BLEND) drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color);
 					}
 				sa = dx12 * (y - y1);
 				sb = dx02 * (y - y0);
@@ -2719,7 +3420,7 @@ private:
 					sa += dx12;
 					sb += dx02;
 					if (a > b) swap(a, b);
-					if (BLEND) drawFastHLine<CHECKRANGE>(a, y, b - a + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>(a, y, b - a + 1, interior_color);
+					if (BLEND) drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color);
 					}
 				}
 			else
@@ -2743,12 +3444,12 @@ private:
 						}
 					else if (hha > 0)
 						{
-						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>(prv_a + 1, y, hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>(prv_a + 1, y, hha, outline_color); }
+						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color); }
 						ia = a + 1;
 						}
 					else
 						{
-						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>(a, y, -hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>(a, y, -hha, outline_color); }
+						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color); }
 						ia = prv_a;
 						}
 
@@ -2760,22 +3461,22 @@ private:
 						}
 					else if (hhb > 0)
 						{
-						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>(prv_b + 1, y, hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>(prv_b + 1, y, hhb, outline_color); }
+						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color); }
 						ib = prv_b;
 						}
 					else
 						{
-						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>(b, y, -hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>(b, y, -hhb, outline_color); }
+						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color); }
 						ib = b - 1;
 						}
 
 					if ((DRAW_OUTLINE) && ((y == y2) || (y == y0)))
 						{
-						if (BLEND) drawFastHLine<CHECKRANGE>(ia, y, ib - ia + 1, outline_color, opacity); else drawFastHLine<CHECKRANGE>(ia, y, ib - ia + 1, outline_color);
+						if (BLEND) drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color);
 						}
 					if ((DRAW_INTERIOR) && (y < y2) && (y > y0))
 						{
-						if (BLEND) drawFastHLine<CHECKRANGE>(ia, y, ib - ia + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>(ia, y, ib - ia + 1, interior_color);
+						if (BLEND) drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color);
 						}
 					prv_a = a;
 					prv_b = b;
@@ -2799,12 +3500,12 @@ private:
 						}
 					else if (hha > 0)
 						{
-						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>(prv_a + 1, y, hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>(prv_a + 1, y, hha, outline_color); }
+						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color); }
 						ia = a + 1;
 						}
 					else
 						{
-						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>(a, y, -hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>(a, y, -hha, outline_color); }
+						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color); }
 						ia = prv_a;
 						}
 					const auto hhb = b - prv_b;
@@ -2815,21 +3516,21 @@ private:
 						}
 					else if (hhb > 0)
 						{
-						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>(prv_b + 1, y, hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>(prv_b + 1, y, hhb, outline_color); }
+						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color); }
 						ib = prv_b;
 						}
 					else
 						{
-						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>(b, y, -hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>(b, y, -hhb, outline_color); }
+						if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color); }
 						ib = b - 1;
 						}
 					if ((DRAW_OUTLINE) && ((y == y2) || (y == y0)))
 						{
-						if (BLEND) drawFastHLine<CHECKRANGE>(ia, y, ib - ia + 1, outline_color, opacity); else drawFastHLine<CHECKRANGE>(ia, y, ib - ia + 1, outline_color);
+						if (BLEND) drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color);
 						}
 					if ((DRAW_INTERIOR) && (y < y2) && (y > y0))
 						{
-						if (BLEND) drawFastHLine<CHECKRANGE>(ia, y, ib - ia + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>(ia, y, ib - ia + 1, interior_color);
+						if (BLEND) drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color);
 						}
 					prv_a = a;
 					prv_b = b;
@@ -3028,10 +3729,10 @@ private:
 		{
 		int max_radius = ((w < h) ? w : h) / 2;
 		if (r > max_radius) r = max_radius;
-		drawFastHLine<CHECKRANGE>(x + r, y, w - 2 * r, color);
-		drawFastHLine<CHECKRANGE>(x + r, y + h - 1, w - 2 * r, color);
-		drawFastVLine<CHECKRANGE>(x, y + r, h - 2 * r, color);
-		drawFastVLine<CHECKRANGE>(x + w - 1, y + r, h - 2 * r, color);
+		drawFastHLine<CHECKRANGE>({ x + r, y }, w - 2 * r, color);
+		drawFastHLine<CHECKRANGE>({ x + r, y + h - 1 }, w - 2 * r, color);
+		drawFastVLine<CHECKRANGE>({ x, y + r }, h - 2 * r, color);
+		drawFastVLine<CHECKRANGE>({ x + w - 1 , y + r }, h - 2 * r, color);
 		_drawCircleHelper<CHECKRANGE>(x + r, y + r, r, 1, color);
 		_drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + r, r, 2, color);
 		_drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + h - r - 1, r, 4, color);
@@ -3045,10 +3746,10 @@ private:
 		{
 		int max_radius = ((w < h) ? w : h) / 2;
 		if (r > max_radius) r = max_radius;
-		drawFastHLine<CHECKRANGE>(x + r, y, w - 2 * r, color, opacity);
-		drawFastHLine<CHECKRANGE>(x + r, y + h - 1, w - 2 * r, color, opacity);
-		drawFastVLine<CHECKRANGE>(x, y + r, h - 2 * r, color, opacity);
-		drawFastVLine<CHECKRANGE>(x + w - 1, y + r, h - 2 * r, color, opacity);
+		drawFastHLine<CHECKRANGE>({ x + r, y }, w - 2 * r, color, opacity);
+		drawFastHLine<CHECKRANGE>({ x + r, y + h - 1 }, w - 2 * r, color, opacity);
+		drawFastVLine<CHECKRANGE>({ x, y + r }, h - 2 * r, color, opacity);
+		drawFastVLine<CHECKRANGE>({ x + w - 1, y + r }, h - 2 * r, color, opacity);
 		_drawCircleHelper<CHECKRANGE>(x + r, y + r, r, 1, color, opacity);
 		_drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + r, r, 2, color, opacity);
 		_drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + h - r - 1, r, 4, color, opacity);
@@ -3062,7 +3763,7 @@ private:
 		{
 		int max_radius = ((w < h) ? w : h) / 2;
 		if (r > max_radius) r = max_radius;
-		fillRect(x + r, y, w - 2 * r, h, color);
+		fillRect(iVec2{ x + r, y }, iVec2{ w - 2 * r, h }, color);
 		_fillCircleHelper<CHECKRANGE>(x + w - r - 1, y + r, r, 1, h - 2 * r - 1, color);
 		_fillCircleHelper<CHECKRANGE>(x + r, y + r, r, 2, h - 2 * r - 1, color);
 		}
@@ -3074,7 +3775,7 @@ private:
 		{
 		int max_radius = ((w < h) ? w : h) / 2;
 		if (r > max_radius) r = max_radius;
-		fillRect(x + r, y, w - 2 * r, h, color, opacity);
+		fillRect(iVec2{ x + r, y }, iVec2{ w - 2 * r, h }, color, opacity);
 		_fillCircleHelper<CHECKRANGE>(x + w - r - 1, y + r, r, 1, h - 2 * r - 1, color, opacity);
 		_fillCircleHelper<CHECKRANGE>(x + r, y + r, r, 2, h - 2 * r - 1, color, opacity);
 		}
@@ -3203,13 +3904,13 @@ private:
 			// for the SSD1306 library which has an INVERT drawing mode.
 			if (x < (y + 1)) 
 				{
-				if (corners & 1) drawFastVLine<CHECKRANGE>(x0 + x, y0 - y, 2 * y + delta, color);
-				if (corners & 2) drawFastVLine<CHECKRANGE>(x0 - x, y0 - y, 2 * y + delta, color);
+				if (corners & 1) drawFastVLine<CHECKRANGE>({ x0 + x, y0 - y }, 2 * y + delta, color);
+				if (corners & 2) drawFastVLine<CHECKRANGE>({ x0 - x, y0 - y }, 2 * y + delta, color);
 				}
 			if (y != py) 
 				{
-				if (corners & 1) drawFastVLine<CHECKRANGE>(x0 + py, y0 - px, 2 * px + delta, color);
-				if (corners & 2) drawFastVLine<CHECKRANGE>(x0 - py, y0 - px, 2 * px + delta, color);
+				if (corners & 1) drawFastVLine<CHECKRANGE>({ x0 + py, y0 - px }, 2 * px + delta, color);
+				if (corners & 2) drawFastVLine<CHECKRANGE>({ x0 - py, y0 - px }, 2 * px + delta, color);
 				py = y;
 				}
 			px = x;
@@ -3244,13 +3945,13 @@ private:
 			// for the SSD1306 library which has an INVERT drawing mode.
 			if (x < (y + 1))
 				{
-				if (corners & 1) drawFastVLine<CHECKRANGE>(x0 + x, y0 - y, 2 * y + delta, color, opacity);
-				if (corners & 2) drawFastVLine<CHECKRANGE>(x0 - x, y0 - y, 2 * y + delta, color, opacity);
+				if (corners & 1) drawFastVLine<CHECKRANGE>({ x0 + x, y0 - y }, 2 * y + delta, color, opacity);
+				if (corners & 2) drawFastVLine<CHECKRANGE>({ x0 - x, y0 - y }, 2 * y + delta, color, opacity);
 				}
 			if (y != py)
 				{
-				if (corners & 1) drawFastVLine<CHECKRANGE>(x0 + py, y0 - px, 2 * px + delta, color, opacity);
-				if (corners & 2) drawFastVLine<CHECKRANGE>(x0 - py, y0 - px, 2 * px + delta, color, opacity);
+				if (corners & 1) drawFastVLine<CHECKRANGE>({ x0 + py, y0 - px }, 2 * px + delta, color, opacity);
+				if (corners & 2) drawFastVLine<CHECKRANGE>({ x0 - py, y0 - px }, 2 * px + delta, color, opacity);
 				py = y;
 				}
 			px = x;
@@ -3309,8 +4010,8 @@ private:
 				{
 				if (FILL)
 					{
-					drawFastHLine<CHECKRANGE>(xm, ym + y, -x, fillcolor);
-					drawFastHLine<CHECKRANGE>(xm + x + 1, ym - y, -x - 1, fillcolor);
+					drawFastHLine<CHECKRANGE>({ xm, ym + y }, -x, fillcolor);
+					drawFastHLine<CHECKRANGE>({ xm + x + 1, ym - y }, -x - 1, fillcolor);
 					}
 				err += ++y * 2 + 1;
 				}
@@ -3321,8 +4022,8 @@ private:
 					{
 					if (x)
 						{
-						drawFastHLine<CHECKRANGE>(xm - y + 1, ym - x, y - 1, fillcolor);
-						drawFastHLine<CHECKRANGE>(xm, ym + x, y, fillcolor);
+						drawFastHLine<CHECKRANGE>({ xm - y + 1, ym - x }, y - 1, fillcolor);
+						drawFastHLine<CHECKRANGE>({ xm, ym + x }, y, fillcolor);
 						}
 					}
 				}
@@ -3380,8 +4081,8 @@ private:
 				{
 				if (FILL)
 					{
-					drawFastHLine<CHECKRANGE>(xm, ym + y, -x, fillcolor, opacity);
-					drawFastHLine<CHECKRANGE>(xm + x + 1, ym - y, -x - 1, fillcolor, opacity);
+					drawFastHLine<CHECKRANGE>({ xm, ym + y }, -x, fillcolor, opacity);
+					drawFastHLine<CHECKRANGE>({ xm + x + 1, ym - y }, -x - 1, fillcolor, opacity);
 					}
 				err += ++y * 2 + 1;
 				}
@@ -3392,8 +4093,8 @@ private:
 					{
 					if (x)
 						{
-						drawFastHLine<CHECKRANGE>(xm - y + 1, ym - x, y - 1, fillcolor, opacity);
-						drawFastHLine<CHECKRANGE>(xm, ym + x, y, fillcolor, opacity);
+						drawFastHLine<CHECKRANGE>({ xm - y + 1, ym - x }, y - 1, fillcolor, opacity);
+						drawFastHLine<CHECKRANGE>({ xm, ym + x }, y, fillcolor, opacity);
 						}
 					}
 				}
@@ -3441,8 +4142,8 @@ private:
 					{
 					if (ry2 * x <= rx2 * y)
 						{
-						drawFastHLine<CHECKRANGE>(x0 - x, y0 - y, x + x + 1, interior_color);
-						drawFastHLine<CHECKRANGE>(x0 - x, y0 + y, x + x + 1, interior_color);
+						drawFastHLine<CHECKRANGE>({ x0 - x, y0 - y }, x + x + 1, interior_color);
+						drawFastHLine<CHECKRANGE>({ x0 - x, y0 + y }, x + x + 1, interior_color);
 						yt = y;
 						}
 					}
@@ -3468,9 +4169,9 @@ private:
 					{
 					if (y != 0)
 						{
-						drawFastHLine<CHECKRANGE>(x0 - x + 1, y0 - y, x + x - 1, interior_color);
+						drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 - y }, x + x - 1, interior_color);
 						}
-					drawFastHLine<CHECKRANGE>(x0 - x + 1, y0 + y, x + x - 1, interior_color);
+					drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 + y }, x + x - 1, interior_color);
 					}
 				}
 
@@ -3519,8 +4220,8 @@ private:
 					{
 					if (ry2 * x <= rx2 * y)
 						{
-						drawFastHLine<CHECKRANGE>(x0 - x, y0 - y, x + x + 1, interior_color, opacity);
-						drawFastHLine<CHECKRANGE>(x0 - x, y0 + y, x + x + 1, interior_color, opacity);
+						drawFastHLine<CHECKRANGE>({ x0 - x, y0 - y }, x + x + 1, interior_color, opacity);
+						drawFastHLine<CHECKRANGE>({ x0 - x, y0 + y }, x + x + 1, interior_color, opacity);
 						yt = y;
 						}
 					}
@@ -3546,9 +4247,9 @@ private:
 					{
 					if (y != 0)
 						{
-						drawFastHLine<CHECKRANGE>(x0 - x + 1, y0 - y, x + x - 1, interior_color, opacity);
+						drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 - y }, x + x - 1, interior_color, opacity);
 						}
-					drawFastHLine<CHECKRANGE>(x0 - x + 1, y0 + y, x + x - 1, interior_color, opacity);
+					drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 + y }, x + x - 1, interior_color, opacity);
 					}
 				}
 
@@ -3565,13 +4266,13 @@ private:
 
 
 	/*****************************************************
-	* Antialiased routines
+	* High quality routines
 	******************************************************/
 
 
 	/** Adapted from Bodmer e_tft library. */
 	template<typename color_t>
-	void Image<color_t>::drawWideLine(float ax, float ay, float bx, float by, float wd, color_t color, float opacity)
+	void Image<color_t>::_drawWideLine(float ax, float ay, float bx, float by, float wd, color_t color, float opacity)
 		{
 		const float LoAlphaTheshold = 64.0f / 255.0f;
 		const float HiAlphaTheshold = 1.0f - LoAlphaTheshold;
@@ -3625,7 +4326,7 @@ private:
 
 	/** Adapted from Bodmer e_tft library. */
 	template<typename color_t>
-	void Image<color_t>::drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity)
+	void Image<color_t>::_drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity)
 		{
 		const float LoAlphaTheshold = 64.0f / 255.0f;
 		const float HiAlphaTheshold = 1.0f - LoAlphaTheshold;
@@ -3674,6 +4375,138 @@ private:
 			}
 		}
 
+
+
+
+	template<typename color_t>
+	template<typename color_t_tex>
+	void Image<color_t>::drawTexturedTriangleGradient(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, RGBf C1, RGBf C2, RGBf C3)
+		{
+		if ((!isValid()) || (!src_im.isValid())) return;
+		const iVec2 texdim = src_im.dim();
+		const iVec2 imdim = dim();
+		tgx::RasterizerVec4 V1, V2, V3;
+
+		const fVec2 U1 = _coord_viewport(dstP1, imdim);
+		V1.x = U1.x;
+		V1.y = U1.y;
+		V1.T = _coord_texture(srcP1, texdim);
+		V1.color = C1;
+
+		const fVec2 U2 = _coord_viewport(dstP2, imdim);
+		V2.x = U2.x;
+		V2.y = U2.y;
+		V2.T = _coord_texture(srcP2, texdim);
+		V2.color = C2;
+
+		const fVec2 U3 = _coord_viewport(dstP3, imdim);
+		V3.x = U3.x;
+		V3.y = U3.y;
+		V3.T = _coord_texture(srcP3, texdim);
+		V3.color = C3;
+
+		tgx::RasterizerParams<color_t, color_t_tex> rparam;
+		rparam.im = this;
+		rparam.tex = &src_im;
+
+		if ((C1 == C2) && (C2 == C3) && (C3 == RGBf(1.0f, 1.0f, 1.0f)))
+			{
+			tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D<false, false, false, color_t, color_t_tex>);
+			}
+		else
+			{
+			tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D<false, false, true, color_t, color_t_tex>);
+			}
+		}
+
+
+
+	template<typename color_t>
+	template<typename color_t_tex>
+	void Image<color_t>::drawTexturedTriangleGradient(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, RGBf C1, RGBf C2, RGBf C3, float opacity)
+		{
+		if ((!isValid()) || (!src_im.isValid())) return;
+		const iVec2 texdim = src_im.dim();
+		const iVec2 imdim = dim();
+		tgx::RasterizerVec4 V1, V2, V3;
+
+		const fVec2 U1 = _coord_viewport(dstP1, imdim);
+		V1.x = U1.x;
+		V1.y = U1.y;
+		V1.T = _coord_texture(srcP1, texdim);
+		V1.color = C1;
+
+		const fVec2 U2 = _coord_viewport(dstP2, imdim);
+		V2.x = U2.x;
+		V2.y = U2.y;
+		V2.T = _coord_texture(srcP2, texdim);
+		V2.color = C2;
+
+		const fVec2 U3 = _coord_viewport(dstP3, imdim);
+		V3.x = U3.x;
+		V3.y = U3.y;
+		V3.T = _coord_texture(srcP3, texdim);
+		V3.color = C3;
+
+		tgx::RasterizerParams<color_t, color_t_tex> rparam;
+		rparam.im = this;
+		rparam.tex = &src_im;
+		rparam.opacity = opacity;
+
+		if ((C1 == C2) && (C2 == C3) && (C3 == RGBf(1.0f, 1.0f, 1.0f)))
+			{
+			tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D<true, false, false, color_t, color_t_tex>);
+			}
+		else
+			{
+			tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D<true, false, true, color_t, color_t_tex>);
+			}
+		}
+
+
+
+	template<typename color_t>
+	template<typename color_t_tex>
+	void Image<color_t>::drawTexturedTriangleMaskedGradient(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, RGBf C1, RGBf C2, RGBf C3, float opacity)
+		{
+		if ((!isValid()) || (!src_im.isValid())) return;
+		const iVec2 texdim = src_im.dim();
+		const iVec2 imdim = dim();
+		tgx::RasterizerVec4 V1, V2, V3;
+
+		const fVec2 U1 = _coord_viewport(dstP1, imdim);
+		V1.x = U1.x;
+		V1.y = U1.y;
+		V1.T = _coord_texture(srcP1, texdim);
+		V1.color = C1;
+
+		const fVec2 U2 = _coord_viewport(dstP2, imdim);
+		V2.x = U2.x;
+		V2.y = U2.y;
+		V2.T = _coord_texture(srcP2, texdim);
+		V2.color = C2;
+
+		const fVec2 U3 = _coord_viewport(dstP3, imdim);
+		V3.x = U3.x;
+		V3.y = U3.y;
+		V3.T = _coord_texture(srcP3, texdim);
+		V3.color = C3;
+
+		tgx::RasterizerParams<color_t, color_t_tex> rparam;
+		rparam.im = this;
+		rparam.tex = &src_im;
+		rparam.opacity = opacity;
+		rparam.mask_color = transparent_color;
+
+		if ((C1 == C2) && (C2 == C3) && (C3 == RGBf(1.0f, 1.0f, 1.0f)))
+			{
+			tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D<true, true, false, color_t, color_t_tex>);
+			}
+		else
+			{
+			tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D<true, true, true, color_t, color_t_tex>);
+			}
+		}
 
 
 
