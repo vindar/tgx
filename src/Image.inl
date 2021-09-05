@@ -306,8 +306,8 @@ namespace tgx
 
 
 	template<typename color_t>
-	template<typename color_t_src, int CACHE_SIZE>
-	void Image<color_t>::_blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity, bool use_blending, bool usemask)
+	template<typename color_t_src, int CACHE_SIZE, bool USE_BLENDING, bool USE_MASK>
+	void Image<color_t>::_blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
 		{
 		if ((!isValid()) || (!src_im.isValid())) return;
 
@@ -349,11 +349,11 @@ namespace tgx
 			const fVec2 U3 = (Q2 * imb) + (Q3 * mb);
 			const fVec2 U4 = (Q1 * imb) + (Q4 * mb);
 
-			if (usemask)
+			if (USE_MASK)
 				{
 				drawTexturedQuadMasked(src_im, transparent_color, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4, opacity);
 				}
-			else if (use_blending)
+			else if (USE_BLENDING)
 				{
 				drawTexturedQuad(src_im, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4, opacity);
 				}

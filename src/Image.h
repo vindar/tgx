@@ -774,7 +774,7 @@ namespace tgx
 		template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
 		void blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees)
 			{
-			_blitScaledRotated<color_t_src, CACHE_SIZE>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, 1.0f, false, false);
+			_blitScaledRotated<color_t_src, CACHE_SIZE, false, false>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, 1.0f);
 			}
 
 
@@ -813,7 +813,7 @@ namespace tgx
 		template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
 		void blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
 			{
-			_blitScaledRotated<color_t_src, CACHE_SIZE>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, opacity, true, false);
+			_blitScaledRotated<color_t_src, CACHE_SIZE, true, false>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, opacity);
 			}
 
 
@@ -857,7 +857,7 @@ namespace tgx
 		template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
 		void blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
 			{
-			_blitScaledRotated<color_t_src,CACHE_SIZE>(src_im, transparent_color, anchor_src, anchor_dst, scale, angle_degrees, opacity, true, true);
+			_blitScaledRotated<color_t_src,CACHE_SIZE, true, true>(src_im, transparent_color, anchor_src, anchor_dst, scale, angle_degrees, opacity);
 			}
 
 
@@ -2754,8 +2754,8 @@ private:
 		static void _maskRegionDown(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
 
 
-		template<typename color_t_src, int CACHE_SIZE>
-		void _blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity, bool use_blending, bool usemask);
+		template<typename color_t_src, int CACHE_SIZE, bool USE_BLENDING, bool USE_MASK>
+		void _blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity);
 
 
 		/***************************************
