@@ -761,15 +761,21 @@ namespace tgx
          *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
          *       (or another faster memory) before blitting...
          *
-         * @tparam  color_t_src		Color type of the sprite image
+         * @tparam  color_t_src Color type of the sprite image.
+         * @tparam  CACHE_SIZE  Size of the MCU cache when reading from flash. This value is indicative
+         *                      and used to optimize cache access to flash memory. You may try changing
+         *                      the default value it if drawing takes a long time...
          * @param   src_im          The sprite image to draw.
          * @param   anchor_src      Position of the anchor point in the sprite image.
          * @param   anchor_dst      Position of the anchor point in this (destination) image.
          * @param   scale           Scaling factor (1.0f for no scaling).
          * @param   angle_degrees   The rotation angle in degrees.
         **/
-		template<typename color_t_src>
-		void blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees);
+		template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
+		void blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees)
+			{
+			_blitScaledRotated<color_t_src, CACHE_SIZE>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, 1.0f, false, false);
+			}
 
 
         /**
@@ -793,16 +799,23 @@ namespace tgx
          *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
          *       (or another faster memory) before blitting...
          *
-		 * @tparam  color_t_src		Color type of the sprite image
-		 * @param   src_im          The sprite image to draw.
+         * @tparam  color_t_src Color type of the sprite image.
+         * @tparam  CACHE_SIZE  Size of the MCU cache when reading from flash. This value is indicative
+         *                      and used to optimize cache access to flash memory. You may try changing
+         *                      the default value it if drawing takes a long time...
+         * @param   src_im          The sprite image to draw.
          * @param   anchor_src      Position of the anchor point in the sprite image.
          * @param   anchor_dst      Position of the anchor point in this (destination) image.
          * @param   scale           Scaling factor (1.0f for no scaling).
          * @param   angle_degrees   The rotation angle in degrees.
          * @param   opacity         The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
         **/
-		template<typename color_t_src>
-		void blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity);
+		template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
+		void blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
+			{
+			_blitScaledRotated<color_t_src, CACHE_SIZE>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, opacity, true, false);
+			}
+
 
 
         /**
@@ -818,27 +831,34 @@ namespace tgx
          *    smoother animation.
          * 2. The method use bilinear interpolation for high quality rendering.
          * 3. The sprite image can have a different color type from this image.
-		 * 4. This version use blending and opacity. If the sprite image color type has an alpha channel,
-		 *    then it is used for blending and multiplied by the opacity factor (even if this image does
-		 *    not have an alpha channel).
-		 *
+         * 4. This version use blending and opacity. If the sprite image color type has an alpha channel,
+         *    then it is used for blending and multiplied by the opacity factor (even if this image does
+         *    not have an alpha channel).
+         * 
          * Note: When rotated, access to  the sprite pixels colors is not linear anymore. For certain
          *       orientations, this will yield very 'irregular' access to the sprite memory locations.
          *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
          *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
          *       (or another faster memory) before blitting...
          *
-		 * @tparam  color_t_src			Color type of the sprite image
-		 * @param   src_im              The sprite image to draw.
+         * @tparam  color_t_src Color type of the sprite image.
+         * @tparam  CACHE_SIZE  Size of the MCU cache when reading from flash. This value is indicative
+         *                      and used to optimize cache access to flash memory. You may try changing
+         *                      the default value it if drawing takes a long time...
+         * @param   src_im              The sprite image to draw.
          * @param   transparent_color   The transparent color.
          * @param   anchor_src          Position of the anchor point in the sprite image.
          * @param   anchor_dst          Position of the anchor point in this (destination) image.
          * @param   scale               Scaling factor (1.0f for no scaling).
          * @param   angle_degrees       The rotation angle in degrees.
-		 * @param   opacity				The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
-		**/
-		template<typename color_t_src>
-		void blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity);
+         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f
+         *                              (opaque).
+        **/
+		template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
+		void blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
+			{
+			_blitScaledRotated<color_t_src,CACHE_SIZE>(src_im, transparent_color, anchor_src, anchor_dst, scale, angle_degrees, opacity, true, true);
+			}
 
 
         /**
@@ -2732,6 +2752,10 @@ private:
 		static void _maskRegionUp(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
 
 		static void _maskRegionDown(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
+
+
+		template<typename color_t_src, int CACHE_SIZE>
+		void _blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity, bool use_blending, bool usemask);
 
 
 		/***************************************

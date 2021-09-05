@@ -306,13 +306,17 @@ namespace tgx
 
 
 	template<typename color_t>
-	template<typename color_t_src>
-	void Image<color_t>::blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees)
+	template<typename color_t_src, int CACHE_SIZE>
+	void Image<color_t>::_blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity, bool use_blending, bool usemask)
 		{
 		if ((!isValid()) || (!src_im.isValid())) return;
 
+		// number of slices to draw
+		// (we slice it to improve cache access when reading texwxture from flash)
+		const int nb_slices = (angle_degrees == 0) ? 1 : ((src_im.stride() * src_im.ly() * sizeof(color_t_src)) / CACHE_SIZE + 1);
+
 		const float tlx = (float)src_im.lx();
-		const float tly = (float)src_im.ly();
+		const float tly = (float)src_im.ly();		
 
 		const float a = 0.01745329251f; // 2PI/360
 		const float co = cosf(a * angle_degrees);
@@ -330,65 +334,34 @@ namespace tgx
 		const fVec2 P4 = scale * (fVec2(0.0f, tly) - anchor_src);
 		const fVec2 Q4 = fVec2(P4.x * co - P4.y * so, P4.y * co + P4.x * so) + anchor_dst;
 
-		drawTexturedQuad(src_im, fVec2(0.0f, 0.0f), fVec2(tlx, 0.0f), fVec2(tlx, tly), fVec2(0.0f, tly), Q1, Q2, Q3, Q4);
-		}
+		for (int n = 0; n < nb_slices; n++)
+			{
+			float y1 = (tly * n) / nb_slices;
+			float y2 = (tly * (n+1)) / nb_slices;
 
+			const float ma = ((float)n) / ((float)nb_slices);
+			const float ima = 1.0f - ma;
+			const float mb = ((float)(n+1)) / ((float)nb_slices);
+			const float imb = 1.0f - mb;
 
-	template<typename color_t>
-	template<typename color_t_src> 
-	void Image<color_t>::blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
-		{
-		if ((!isValid()) || (!src_im.isValid())) return;
+			const fVec2 U1 = (Q1 * ima) + (Q4 * ma);
+			const fVec2 U2 = (Q2 * ima) + (Q3 * ma);
+			const fVec2 U3 = (Q2 * imb) + (Q3 * mb);
+			const fVec2 U4 = (Q1 * imb) + (Q4 * mb);
 
-		const float tlx = (float)src_im.lx();
-		const float tly = (float)src_im.ly();
-
-		const float a = 0.01745329251f; // 2PI/360
-		const float co = cosf(a * angle_degrees);
-		const float so = sinf(a * angle_degrees);
-
-		const fVec2 P1 = scale * (fVec2(0.0f, 0.0f) - anchor_src);
-		const fVec2 Q1 = fVec2(P1.x * co - P1.y * so, P1.y * co + P1.x * so) + anchor_dst;
-
-		const fVec2 P2 = scale * (fVec2(tlx, 0.0f) - anchor_src);
-		const fVec2 Q2 = fVec2(P2.x * co - P2.y * so, P2.y * co + P2.x * so) + anchor_dst;
-
-		const fVec2 P3 = scale * (fVec2(tlx, tly) - anchor_src);
-		const fVec2 Q3 = fVec2(P3.x * co - P3.y * so, P3.y * co + P3.x * so) + anchor_dst;
-
-		const fVec2 P4 = scale * (fVec2(0.0f, tly) - anchor_src);
-		const fVec2 Q4 = fVec2(P4.x * co - P4.y * so, P4.y * co + P4.x * so) + anchor_dst;
-
-		drawTexturedQuad(src_im, fVec2(0.0f, 0.0f), fVec2(tlx, 0.0f), fVec2(tlx, tly), fVec2(0.0f, tly), Q1, Q2, Q3, Q4, opacity);
-		}
-
-
-	template<typename color_t>
-	template<typename color_t_src>
-	void Image<color_t>::blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
-		{
-		if ((!isValid()) || (!src_im.isValid())) return;
-
-		const float tlx = (float)src_im.lx();
-		const float tly = (float)src_im.ly();
-
-		const float a = 0.01745329251f; // 2PI/360
-		const float co = cosf(a * angle_degrees);
-		const float so = sinf(a * angle_degrees);
-
-		const fVec2 P1 = scale * (fVec2(0.0f, 0.0f) - anchor_src);
-		const fVec2 Q1 = fVec2(P1.x * co - P1.y * so, P1.y * co + P1.x * so) + anchor_dst;
-
-		const fVec2 P2 = scale * (fVec2(tlx, 0.0f) - anchor_src);
-		const fVec2 Q2 = fVec2(P2.x * co - P2.y * so, P2.y * co + P2.x * so) + anchor_dst;
-
-		const fVec2 P3 = scale * (fVec2(tlx, tly) - anchor_src);
-		const fVec2 Q3 = fVec2(P3.x * co - P3.y * so, P3.y * co + P3.x * so) + anchor_dst;
-
-		const fVec2 P4 = scale * (fVec2(0.0f, tly) - anchor_src);
-		const fVec2 Q4 = fVec2(P4.x * co - P4.y * so, P4.y * co + P4.x * so) + anchor_dst;
-
-		drawTexturedQuadMasked(src_im, transparent_color, fVec2(0.0f, 0.0f), fVec2(tlx, 0.0f), fVec2(tlx, tly), fVec2(0.0f, tly), Q1, Q2, Q3, Q4, opacity);
+			if (usemask)
+				{
+				drawTexturedQuadMasked(src_im, transparent_color, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4, opacity);
+				}
+			else if (use_blending)
+				{
+				drawTexturedQuad(src_im, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4, opacity);
+				}
+			else
+				{
+				drawTexturedQuad(src_im, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4);
+				}
+			}
 		}
 
 
