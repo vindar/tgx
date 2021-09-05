@@ -47,6 +47,9 @@
 #endif
 
 
+// macro to cast indexes as 32bit when doing pointer arithmetic
+#define TGX_CAST32(a)	((int32_t)a)
+
 
 // c++, no plain c
 #ifdef __cplusplus
