@@ -509,12 +509,45 @@ struct RGB565
             }
 
 
+        /**
+        * multiply each color component by a given factor x/256 with x in [0,256]
+        * component A is ignored since there is not alpha channel
+        **/
+        inline void mult256(int mr, int mg, int mb, int ma)
+            {
+            mult256(mr, mg, mb);
+            }
+
+
         /**         
         * Dummy function for compatibility with color types having an alpha channel.
         * 
         * Does nothing since the color is always fully opaque. 
         **/
         inline void premultiply()
+            {
+            // nothing here. 
+            return;
+            }
+
+
+        /**
+        * Dummy function for compatibility with color types having an alpha channel.
+        *
+        * Return 1.0f (fully opaque)
+        **/
+        float opacity() const
+            {
+            return 1.0f;
+            }
+
+
+        /**
+        * Dummy function for compatibility with color types having an alpha channel.
+        *
+        * Does nothing since the color is always fully opaque.
+        **/
+        void setOpacity(float op)
             {
             // nothing here. 
             return;
@@ -985,12 +1018,45 @@ struct RGB24
             }
 
 
+        /**
+        * multiply each color component by a given factor x/256 with x in [0,256]
+        * component A is ignored since there is not alpha channel
+        **/
+        inline void mult256(int mr, int mg, int mb, int ma)
+            {
+            mult256(mr, mg, mb);
+            }
+
+
         /**         
         * Dummy function for compatibility with color types having an alpha channel.
         * 
         * Does nothing since the color is always fully opaque. 
         **/
         inline void premultiply()
+            {
+            // nothing here. 
+            return;
+            }
+
+
+        /**
+        * Dummy function for compatibility with color types having an alpha channel.
+        *
+        * Return 1.0f (fully opaque)
+        **/
+        float opacity() const
+            {
+            return 1.0f;
+            }
+
+
+        /**
+        * Dummy function for compatibility with color types having an alpha channel.
+        *
+        * Does nothing since the color is always fully opaque.
+        **/
+        void setOpacity(float op)
             {
             // nothing here. 
             return;
@@ -1474,14 +1540,10 @@ struct RGB32
         **/
         inline void blend256(const RGB32 & fg_col, uint32_t alpha)
             {
-            /* WRONG.
-            alpha = (alpha * (fg_col.A + (fg_col.A > 127))) >> 8; // combine external alpha with alpha channel.
-            const uint32_t inv_alpha = 256 - alpha;
-            */
             // below is the correct alpha blending with pre-multiplied alpha
             // we do 'real' interpolate with eternal 'alpha' but not with the 'A' component of fg_col
             // since it is already pre-multiplied
-            const uint32_t inv_alpha = 256 - ((alpha * (fg_col.A + (fg_col.A > 127))) >> 8);
+            const uint32_t inv_alpha = (65536 - (alpha * (fg_col.A + (fg_col.A > 127)))) >> 8;
             const uint32_t ag = ((fg_col.val & 0xFF00FF00) >> 8)*alpha  +  ((val & 0xFF00FF00) >> 8)*inv_alpha;
             const uint32_t rb = (fg_col.val & 0x00FF00FF) * alpha + (val & 0x00FF00FF) * inv_alpha;
             val = (ag & 0xFF00FF00) | ((rb >> 8) & 0x00FF00FF);
@@ -2116,15 +2178,16 @@ struct RGB64
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,65536].
         **/
-        inline void blend65536(const RGB64 & fg_col, uint32_t alpha)
-            {
-            // correct version where 'alpha' is imterpolated normally but 'A' is only multiplied 
-            // with background because the color is assumed pre-multiplied 
-            const uint32_t inv_alpha = 65536 - ((alpha * (fg_col.A + (fg_col.A > 32767))) >> 15);
-            R = (uint16_t)((fg_col.R * alpha + R * inv_alpha) >> 16);
-            G = (uint16_t)((fg_col.G * alpha + G * inv_alpha) >> 16);
-            B = (uint16_t)((fg_col.B * alpha + B * inv_alpha) >> 16);
-            A = (uint16_t)((fg_col.A * alpha + A * inv_alpha) >> 16); 
+        inline void blend65536(RGB64 fg_col, uint32_t alpha)
+            {            
+            // correct version where 'alpha' is interpolated normally but 'A' is only multiplied 
+            // with background because the color is assumed pre-multiplied             
+            alpha >>= 1; // alpha in [0,32768]
+            const uint32_t inv_alpha = (2147483648 - (alpha * (((uint32_t)fg_col.A) + (fg_col.A > 32767)))) >> 16;
+            R = (uint16_t)((((uint32_t)fg_col.R) * alpha + ((uint32_t)R) * inv_alpha) >> 15);
+            G = (uint16_t)((((uint32_t)fg_col.G) * alpha + ((uint32_t)G) * inv_alpha) >> 15);
+            B = (uint16_t)((((uint32_t)fg_col.B) * alpha + ((uint32_t)B) * inv_alpha) >> 15);
+            A = (uint16_t)((((uint32_t)fg_col.A) * alpha + ((uint32_t)A) * inv_alpha) >> 15);
             }
 
 
@@ -2262,10 +2325,8 @@ struct RGB64
     **/
     inline RGB64 interpolateColorsTriangle(const RGB64& col1, int32_t C1, const  RGB64& col2, int32_t C2, const  RGB64& col3, const int32_t totC)
         {
-        return RGB64((int)(col3.R + (C1 * (col1.R - col3.R) + C2 * (col2.R - col3.R)) / totC),
-                     (int)(col3.G + (C1 * (col1.G - col3.G) + C2 * (col2.G - col3.G)) / totC),
-                     (int)(col3.B + (C1 * (col1.B - col3.B) + C2 * (col2.B - col3.B)) / totC),
-                     (int)(col3.A + (C1 * (col1.A - col3.A) + C2 * (col2.A - col3.A)) / totC));
+        // forward to RGB32 (, maybe improve this but is it worth it, the method is never used ?)
+        return RGB64(interpolateColorsTriangle(RGB32(col1), C1, RGB32(col2), C2, RGB32(col3), totC));
         }
 
 
@@ -2628,6 +2689,16 @@ struct RGB64
             }
 
 
+        /**
+        * multiply each color component by a given factor x/256 with x in [0,256]
+        * component A is ignored since there is not alpha channel
+        **/
+        inline void mult256(int mr, int mg, int mb, int ma)
+            {
+            mult256(mr, mg, mb);
+            }
+
+
         /**         
         * Dummy function for compatibility with color types having an alpha channel.
         * 
@@ -2638,6 +2709,30 @@ struct RGB64
             // nothing here. 
             return;
             }
+
+
+        /**
+        * Dummy function for compatibility with color types having an alpha channel.
+        *
+        * Return 1.0f (fully opaque)
+        **/
+        float opacity() const
+            {
+            return 1.0f;
+            }
+
+
+        /**
+        * Dummy function for compatibility with color types having an alpha channel.
+        *
+        * Does nothing since the color is always fully opaque.
+        **/
+        void setOpacity(float op)
+            {
+            // nothing here. 
+            return;
+            }
+
 
     };
 
@@ -2943,12 +3038,45 @@ struct HSV
             }
 
 
+        /**
+        * multiply each color component by a given factor x/256 with x in [0,256]
+        * component A is ignored since there is not alpha channel
+        **/
+        inline void mult256(int mr, int mg, int mb, int ma)
+            {
+            mult256(mr, mg, mb);
+            }
+
+
         /**         
         * Dummy function for compatibility with color types having an alpha channel.
         * 
         * Does nothing since the color is always fully opaque. 
         **/
         inline void premultiply()
+            {
+            // nothing here. 
+            return;
+            }
+
+
+        /**
+        * Dummy function for compatibility with color types having an alpha channel.
+        *
+        * Return 1.0f (fully opaque)
+        **/
+        float opacity() const
+            {
+            return 1.0f;
+            }
+
+
+        /**
+        * Dummy function for compatibility with color types having an alpha channel.
+        *
+        * Does nothing since the color is always fully opaque.
+        **/
+        void setOpacity(float op)
             {
             // nothing here. 
             return;
