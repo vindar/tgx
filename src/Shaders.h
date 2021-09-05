@@ -1771,6 +1771,9 @@ namespace tgx
 
 
 
+
+
+
 	inline TGX_INLINE int shaderclip(int v, int minv, int maxv)
 		{
 		return ((v < minv) ? minv : ((v > maxv) ? maxv : v));
@@ -1778,11 +1781,101 @@ namespace tgx
 
 
 
+
+
 	/**
-	* 2D shader
+	* 2D shader (gradient)
+	**/
+	template<bool USE_BLENDING, typename color_t_im>
+	void shader_2D_gradient(const int32_t& offset, const int32_t& lx, const int32_t& ly,
+		const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+		const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+		const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+		const RasterizerParams<color_t_im, color_t_im> & data)
+		{
+		color_t_im * buf = data.im->data() + offset;
+		const int32_t stride = data.im->stride();
+
+		// use RGB32 (could use RGB64 be it would be slower). 
+		const RGB32 col1 = RGB64(fP1.color.R, fP1.color.G, fP1.color.B, fP1.A);
+		const RGB32 col2 = RGB64(fP2.color.R, fP2.color.G, fP2.color.B, fP2.A);
+		const RGB32 col3 = RGB64(fP3.color.R, fP3.color.G, fP3.color.B, fP3.A);
+
+		const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+		const int32_t aera = O1 + O2 + O3;
+
+		while ((uintptr_t)(buf) < end)
+			{ // iterate over scanlines
+			int32_t bx = 0; // start offset
+			if (O1 < 0)
+				{
+				// we know that dx1 > 0					
+				bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+				}
+			if (O2 < 0)
+				{
+				if (dx2 <= 0)
+					{
+					if (dy2 <= 0) return;
+					const int32_t by = (-O2 + dy2 - 1) / dy2;
+					O1 += (by * dy1);
+					O2 += (by * dy2);
+					O3 += (by * dy3);
+					const int32_t offs = by * stride;
+					buf += offs;
+					continue;
+					}
+				bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+				}
+			if (O3 < 0)
+				{
+				if (dx3 <= 0)
+					{
+					if (dy3 <= 0) return;
+					const int32_t by = (-O3 + dy3 - 1) / dy3;
+					O1 += (by * dy1);
+					O2 += (by * dy2);
+					O3 += (by * dy3);
+					const int32_t offs = by * stride;
+					buf += offs;
+					continue;
+					}
+				bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+				}
+
+			int32_t C2 = O2 + (dx2 * bx);
+			int32_t C3 = O3 + (dx3 * bx);
+			while ((bx < lx) && ((C2 | C3) >= 0))
+				{
+				if (USE_BLENDING)
+					{
+					RGB32 c(buf[bx]); // could use RGB64 instead but would be slower
+					c.blend(interpolateColorsTriangle(col2, C2, col3, C3, col1, aera), data.opacity);
+					buf[bx] = color_t_im(c);
+					}
+				else
+					{
+					buf[bx] = color_t_im(interpolateColorsTriangle(col2, C2, col3, C3, col1, aera));
+					}
+				C2 += dx2;
+				C3 += dx3;
+				bx++;
+				}
+
+			O1 += dy1;
+			O2 += dy2;
+			O3 += dy3;
+			buf += stride;
+			}
+		}
+
+
+
+	/**
+	* 2D shader (texture)
 	**/
 	template<bool USE_BLENDING, bool USE_MASKING, bool USE_GRADIENT, typename color_t_im, typename color_t_tex>
-	void shader_2D(const int32_t& offset, const int32_t& lx, const int32_t& ly,
+	void shader_2D_texture(const int32_t& offset, const int32_t& lx, const int32_t& ly,
 		const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
 		const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
 		const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -1805,13 +1898,15 @@ namespace tgx
 		const int fP1R = (int)(256 * cf1.R);
 		const int fP1G = (int)(256 * cf1.G);
 		const int fP1B = (int)(256 * cf1.B);
+		const int fP1A = (int)(256 * fP1.A);
 		const int fP21R = (int)(256 * (cf2.R - cf1.R));
 		const int fP21G = (int)(256 * (cf2.G - cf1.G));
 		const int fP21B = (int)(256 * (cf2.B - cf1.B));
+		const int fP21A = (int)(256 * (fP2.A - fP1.A));
 		const int fP31R = (int)(256 * (cf3.R - cf1.R));
 		const int fP31G = (int)(256 * (cf3.G - cf1.G));
 		const int fP31B = (int)(256 * (cf3.B - cf1.B));
-
+		const int fP31A = (int)(256 * (fP3.A - fP1.A));
 
 		// the texture coord
 		fVec2 T1 = fP1.T;
@@ -1920,7 +2015,8 @@ namespace tgx
 						const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
 						const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
 						const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
-						col.mult256(r, g, b);
+						const int a = fP1A + ((C2 * fP21A + C3 * fP31A) / aera);
+						col.mult256(r, g, b, a);
 						}
 					if (USE_BLENDING)
 						{
@@ -1941,7 +2037,8 @@ namespace tgx
 						const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
 						const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
 						const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
-						col.mult256(r, g, b);
+						const int a = fP1A + ((C2 * fP21A + C3 * fP31A) / aera);
+						col.mult256(r, g, b, a);
 						}
 					if (USE_BLENDING)
 						{
