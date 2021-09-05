@@ -1,4 +1,4 @@
-/** @file Image.h */
+/** @file Image.inl */
 //
 // Copyright 2020 Arvind Singh
 //
