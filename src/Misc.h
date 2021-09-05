@@ -47,6 +47,21 @@
 #endif
 
 
+
+// approximate size of the cache when reading in 
+// PROGMEM. This value is used to try to optimize 
+// cache read to improve rendering speed when reading
+// large image in flash...
+// On teensy 4, 8K give good results...
+
+#if defined(TEENSYDUINO) || defined(ESP32)
+// On teensy, 8K give good results...
+#define TGX_PROGMEM_DEFAULT_CACHE_SIZE 8192
+#else 
+// make it bigger on CPU...
+#define TGX_PROGMEM_DEFAULT_CACHE_SIZE 262144
+#endif
+
 // macro to cast indexes as 32bit when doing pointer arithmetic
 #define TGX_CAST32(a)	((int32_t)a)
 
