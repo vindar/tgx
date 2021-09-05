@@ -71,6 +71,7 @@ namespace tgx
 		{
 		tgx::RGBf color;     // vertex color for gouraud shading (or light intensity for gouraud shading with texturing). 
 		tgx::fVec2 T;        // texture coordinates if applicable 
+		float A;			 // alpha value (if used). 
 		};
 
 
