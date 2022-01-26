@@ -1204,19 +1204,21 @@ namespace tgx
         *
         *                            WireFrame drawing methods
         *
-        * WARNING : The methods for drawing wireframe objects are for DEBUG PURPOSE mostly:
-        *           They are NOT OPTIMZED and may be slower than those the methods for drawing 
-        *           regular flat/shaded triangles/quads/meshes...
-        *           
+        * Each methods comes in two flavors: without or with a specified line thickness.
+        * 
+        * - methods without thickness are fast but are not accurate (single pixel line, without  
+        *   blending, anti-aliasing or sub-pixel precision.
+        * 
+        * - methods with a thickness specified are VERY SLOW (even slower than texturing !) but  
+        *   the line is drawn in high quality, using anti-aliasing, sub-pixel precision, blending
+        *   and the given thickness in pixels (a positive float value)
+        * 
         ******************************************************************************************
         ******************************************************************************************/
 
 
-
-
-
         /**
-        * Draw a mesh onto the image using 'wireframe' lines. 
+        * Draw a mesh onto the image using 'wireframe' lines (FAST BUT LOW QUALITY METHOD). 
         * 
         * The mesh is drawn with the current material color (not that of the mesh). This method does not 
         * require a zbuffer but back face culling is used if it is enabled.
@@ -1225,54 +1227,98 @@ namespace tgx
         *           Whenever possible, put vertex array and texture in RAM (or even EXTMEM).
         *
         * - draw_chained_meshes:  If true, the meshes linked to this mesh (via the ->next member) are also drawn.
-        *
-        * - thickness: the absolute thickness of the line (in pixels) on the image. 
-        *
+        *        *
         * The method returns  0 ok, (drawing performed correctly).
         *                    -1 invalid image
         **/
-        int drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes = true, float thickness = 1)
+        int drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes = true)
             {
-            return drawWireFrameMesh(mesh, draw_chained_meshes, color_t(_color), 1.0f, thickness);
+            return _drawWireFrameMesh<true>(mesh, draw_chained_meshes, color_t(_color), 1.0f, 1.0f);
             }
 
 
         /**
-        * Draw a mesh onto the image using 'wireframe' lines.
+        * Draw a mesh onto the image using 'wireframe' lines (HIGH QUALITY / SLOW VERSION).
         *
-        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
-        **/
-        int drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness = 1);
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        * 
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        * 
+        **/        
+        int drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness)
+            {
+            return _drawWireFrameMesh<false>(mesh, draw_chained_meshes, color_t(_color), 1.0f, thickness);
+            }
+            
 
 
         /**
-        * Draw a 'wireframe' 3D line segment. 
+        * Draw a mesh onto the image using 'wireframe' lines (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        * Also set the color and opacity for blending instead of using the material color.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        * 
+        **/        
+        int drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness, color_t color, float opacity)
+            {
+            return _drawWireFrameMesh<false>(mesh, draw_chained_meshes, color, opacity, thickness);
+            }
+            
+
+
+
+        /**
+        * Draw a 'wireframe' 3D line segment  (FAST BUT LOW QUALITY METHOD).
         *
         * the line is drawn with the current material color. This method does not require a zbuffer.
         *
         * - (P1, P2) coordinates (in model space) of the segment to draw.
         *
-        * - thickness: the absolute thickness of the line (in pixels) on the image.
-        *
         * The method returns  0 ok, (drawing performed correctly).
         *                    -1 invalid image
         **/
-        int drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness = 1)
+        int drawWireFrameLine(const fVec3& P1, const fVec3& P2)
             {
-            return drawWireFrameLine(P1, P2, color_t(_color), 1.0f, thickness);
+            return _drawWireFrameLine<true>(P1, P2, color_t(_color), 1.0f, 1.0f);
             }
 
 
         /**
-        * Draw a 'wireframe' 3D line segment.
+        * Draw a 'wireframe' 3D line segment. (HIGH QUALITY / SLOW VERSION).
         *
-        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
         **/
-        int drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness = 1);
+        int drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness)
+            {
+            return _drawWireFrameLine<false>(P1, P2, color_t(_color), 1.0f, thickness);
+            }
 
 
         /**
-        * Draw a list of wireframe lines on the image. 
+        * Draw a 'wireframe' 3D line segment. (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        * Also set the color and opacity for blending instead of using the material color.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
+        **/
+        int drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness, color_t color, float opacity)
+            {
+            return _drawWireFrameLine<false>(P1, P2, color, opacity, thickness);
+            }
+
+
+
+
+
+        /**
+        * Draw a list of wireframe lines on the image (FAST BUT LOW QUALITY METHOD). 
         * the triangles are drawn with the current material color. This method does not require a zbuffer.
         *
         * - nb_lines Number of lines to draw.
@@ -1286,51 +1332,96 @@ namespace tgx
         *          -1 invalid image
         *          -2 invalid vertice list
         **/
-        int drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness = 1)
+        int drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices)
             {
-            return drawWireFrameLines(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            return _drawWireFrameLines<true>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
         /**
-        * Draw a list of wireframe lines on the image.
+        * Draw a list of wireframe lines on the image. (HIGH QUALITY / SLOW VERSION).
         *
-        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
         **/
-        int drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness = 1);
+        int drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
+            {
+            return _drawWireFrameLines<false>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            }
+
+
+        /**
+        * Draw a list of wireframe lines on the image. (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        * Also set the color and opacity for blending instead of using the material color.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
+        **/
+        int drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
+            {
+            return _drawWireFrameLines<false>(nb_lines, ind_vertices, vertices, color, opacity, thickness);
+            }
+
+
 
 
 
         /**
-        * Draw a 'wireframe' triangle.
+        * Draw a 'wireframe' triangle (FAST BUT LOW QUALITY METHOD).
         *
         * the triangle is drawn with the current material color. This method does not require a zbuffer
         * but back face culling is used (if enabled).
         *
         * - (P1, P2, P3) coordinates (in model space) of the triangle to draw.
         *
-        * - thickness: the absolute thickness of the lines (in pixels) on the image.
-        *
         * The method returns  0 ok, (drawing performed correctly).
         *                    -1 invalid image
         **/
-        int drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness = 1)
+        int drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3)
             {
-            return drawWireFrameTriangle(P1, P2, P3, color_t(_color), 1.0f, thickness);
+            return _drawWireFrameTriangle<true>(P1, P2, P3, color_t(_color), 1.0f, 1.0f);
             }
 
 
         /**
-        * Draw a 'wireframe' triangle.
+        * Draw a 'wireframe' triangle. (HIGH QUALITY / SLOW VERSION).
         *
-        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
         **/
-        int drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness = 1);
+        int drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness)
+            {
+            return _drawWireFrameTriangle<false>(P1, P2, P3, color_t(_color), 1.0f, thickness);
+            }
     
+
+        /**
+        * Draw a 'wireframe' triangle. (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        * Also set the color and opacity for blending instead of using the material color.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
+        **/
+        int drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness, color_t color, float opacity)
+            {
+            return _drawWireFrameTriangle<false>(P1, P2, P3, color, opacity, thickness);
+            }
+
+
+
+
 
 
         /**
-        * Draw a list of wireframe triangles on the image. 
+        * Draw a list of wireframe triangles on the image (FAST BUT LOW QUALITY METHOD).
         * 
         * the triangles are drawn with the current material color. This method does not require a zbuffer.
         * but back face culling is used (if enabled).
@@ -1344,59 +1435,98 @@ namespace tgx
         *
         * - vertices     The array of vertices (given in model space).
         *
-        * - thickness: the absolute thickness of the lines (in pixels) on the image.
-        *
         * Returns: 0  OK
         *          -1 invalid image
         *          -2 invalid vertice list
         **/
-        int drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness = 1)
+        int drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices)
             {
-            return drawWireFrameTriangles(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            return _drawWireFrameTriangles<true>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
         /**
-        * Draw a list of wireframe triangles on the image.
+        * Draw a list of wireframe triangles on the image. (HIGH QUALITY / SLOW VERSION).
         *
-        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
         **/
-        int drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness = 1);
+        int drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
+            {
+            return _drawWireFrameTriangles<false>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            }
           
+
+        /**
+        * Draw a list of wireframe triangles on the image. (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        * Also set the color and opacity for blending instead of using the material color.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
+        **/
+        int drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
+            {
+            return _drawWireFrameTriangles<false>(nb_triangles, ind_vertices, vertices, color, opacity, thickness);
+            }
+
+
+
 
 
         /**
-        * Draw a 'wireframe' quad.
+        * Draw a 'wireframe' quad (FAST BUT LOW QUALITY METHOD). 
         *
         * the quad is drawn with the current material color. This method does not require a zbuffer
         * but back face culling is used (if enabled).
         *
         * - (P1, P2, P3, P4) coordinates (in model space) of the quad to draw.
         *
-        * - thickness: the absolute thickness of the lines (in pixels) on the image.
-        *
         * The method returns  0 ok, (drawing performed correctly).
         *                    -1 invalid image
         **/
-        int drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness = 1)
+        int drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
             {
-            return drawWireFrameQuad(P1, P2, P3, P4, color_t(_color), 1.0f, thickness);
+            return _drawWireFrameQuad<true>(P1, P2, P3, P4, color_t(_color), 1.0f, 1.0f);
             }
 
 
+        /**
+        * Draw a 'wireframe' quad. (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
+        **/
+        int drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness)
+            {
+            return _drawWireFrameQuad<false>(P1, P2, P3, P4, color_t(_color), 1.0f, thickness);
+            }
+           
 
         /**
-        * Draw a 'wireframe' quad.
+        * Draw a 'wireframe' quad. (HIGH QUALITY / SLOW VERSION).
         *
-        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        * Also set the color and opacity for blending instead of using the material color.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
         **/
-        int drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness = 1);
+        int drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness, color_t color, float opacity)
+            {
+            return _drawWireFrameQuad<false>(P1, P2, P3, P4, color, opacity, thickness);
+            }
            
 
 
 
         /**
-        * Draw a list of wireframe quads on the image.
+        * Draw a list of wireframe quads on the image (FAST BUT LOW QUALITY METHOD). 
         * 
         * the quads are drawn with the current material color. This method does not require a zbuffer
         * but back face culling is used (if enabled).
@@ -1411,26 +1541,44 @@ namespace tgx
         *
         * - vertices     The array of vertices (given in model space).
         *
-        * - thickness: the absolute thickness of the lines (in pixels) on the image.
-        *
         * Returns: 0  OK
         *          -1 invalid image
         *          -2 invalid vertice list
         **/
-        int drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness = 1)
+        int drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices)
             {
-            return drawWireFrameQuads(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            return _drawWireFrameQuads<true>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
 
         /**
-        * Draw a list of quads on the image.
+        * Draw a list of quads on the image. (HIGH QUALITY / SLOW VERSION).
         *
-        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
         **/
-        int drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness = 1);
-           
+        int drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
+            {
+            return _drawWireFrameQuads<false>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            }
+
+
+        /**
+        * Draw a list of quads on the image. (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        * Also set the color and opacity for blending instead of using the material color.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        *
+        **/
+        int drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
+            {
+            return _drawWireFrameQuads<false>(nb_quads, ind_vertices, vertices, color, opacity, thickness);
+            }
 
 
 
@@ -1672,6 +1820,28 @@ namespace tgx
             return;
             }
 
+
+
+
+
+
+        /***********************************************************
+        * Drawing wireframe
+        ************************************************************/
+
+        template<bool DRAW_FAST> int _drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness);
+
+        template<bool DRAW_FAST> int _drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness);
+
+        template<bool DRAW_FAST> int _drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
+
+        template<bool DRAW_FAST> int _drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness);
+
+        template<bool DRAW_FAST> int _drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
+
+        template<bool DRAW_FAST> int _drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness);
+
+        template<bool DRAW_FAST> int _drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
 
 
         /***********************************************************
@@ -2313,8 +2483,11 @@ namespace tgx
 
 
 
+
+
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
-        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness)
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness)
             {
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if (thickness <= 0) return 0;
@@ -2398,9 +2571,36 @@ namespace tgx
                         PC2->missedP = false;
 
                         // draw triangle                       
-                        _uni.im->drawWideLine(*((fVec2*)PC0), *((fVec2*)PC1), thickness, color, opacity);
-                        _uni.im->drawWideLine(*((fVec2*)PC1), *((fVec2*)PC2), thickness, color, opacity);
-                        _uni.im->drawWideLine(*((fVec2*)PC2), *((fVec2*)PC0), thickness, color, opacity);
+                        if (DRAW_FAST)
+                            {
+                            iVec2 PP0(*((fVec2*)PC0));
+                            iVec2 PP1(*((fVec2*)PC1));
+                            iVec2 PP2(*((fVec2*)PC2));
+                            if (PP0 == PP1) 
+                                {
+                                _uni.im->drawLine(PP0, PP2, color);
+                                }
+                            else if (PP0 == PP2)
+                                {
+                                _uni.im->drawLine(PP0, PP1, color);
+                                }
+                            else if (PP1 == PP2)
+                                {
+                                _uni.im->drawLine(PP0, PP1, color);
+                                }
+                            else
+                                {
+                                _uni.im->drawLine(PP0, PP1, color);
+                                _uni.im->drawLine(PP1, PP2, color);
+                                _uni.im->drawLine(PP2, PP0, color);
+                                }
+                            }
+                        else
+                            {
+                            _uni.im->drawWideLine(*((fVec2*)PC0), *((fVec2*)PC1), thickness, color, opacity);
+                            _uni.im->drawWideLine(*((fVec2*)PC1), *((fVec2*)PC2), thickness, color, opacity);
+                            _uni.im->drawWideLine(*((fVec2*)PC2), *((fVec2*)PC0), thickness, color, opacity);
+                            }
 
                     rasterize_next_triangle:
 
@@ -2417,12 +2617,14 @@ namespace tgx
                     }
                 mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
                 }
-            }
+            return 0;            
+        }
 
 
 
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
-        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness)
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness)
             {
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if (thickness <= 0) return 0;
@@ -2444,7 +2646,16 @@ namespace tgx
             if (!ORTHO) H1.zdivide();
             H1 = M.mult1(H1);
 
-            _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+            if (DRAW_FAST)
+                {
+                iVec2 PP0(H0);
+                iVec2 PP1(H1);
+                _uni.im->drawLine(PP0, PP1, color);
+                }
+            else
+                {
+                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                }
 
             return 0;
             }
@@ -2452,7 +2663,8 @@ namespace tgx
 
 
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
-        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return -2; // invalid vertices
@@ -2478,7 +2690,17 @@ namespace tgx
                 if (!ORTHO) H1.zdivide();
                 H1 = M.mult1(H1);
 
-                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                if (DRAW_FAST)
+                    {
+                    iVec2 PP0(H0);
+                    iVec2 PP1(H1);
+                    _uni.im->drawLine(PP0, PP1, color);
+                    }
+                else
+                    {
+                    _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                    }
+
                 }
 
             return 0;            
@@ -2487,7 +2709,8 @@ namespace tgx
 
 
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
-        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness)
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness)
             {
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if (thickness <= 0) return 0;
@@ -2519,9 +2742,37 @@ namespace tgx
             if (!ORTHO) H2.zdivide();
             H2 = M.mult1(H2);
 
-            _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
-            _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
-            _uni.im->drawWideLine(H2, H0, thickness, color, opacity);
+            // draw triangle                       
+            if (DRAW_FAST)
+                {
+                iVec2 PP0(H0);
+                iVec2 PP1(H1);
+                iVec2 PP2(H2);
+                if (PP0 == PP1)
+                    {
+                    _uni.im->drawLine(PP0, PP2, color);
+                    }
+                else if (PP0 == PP2)
+                    {
+                    _uni.im->drawLine(PP0, PP1, color);
+                    }
+                else if (PP1 == PP2)
+                    {
+                    _uni.im->drawLine(PP0, PP1, color);
+                    }
+                else
+                    {
+                    _uni.im->drawLine(PP0, PP1, color);
+                    _uni.im->drawLine(PP1, PP2, color);
+                    _uni.im->drawLine(PP2, PP0, color);
+                    }
+                }
+            else
+                {
+                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+                _uni.im->drawWideLine(H2, H0, thickness, color, opacity);
+                }
 
             return 0;
             }
@@ -2529,7 +2780,8 @@ namespace tgx
 
 
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
-        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return -2; // invalid vertices
@@ -2565,9 +2817,38 @@ namespace tgx
                 if (!ORTHO) H2.zdivide();
                 H2 = M.mult1(H2);
 
-                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
-                _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
-                _uni.im->drawWideLine(H2, H0, thickness, color, opacity);
+                // draw triangle                       
+                if (DRAW_FAST)
+                    {
+                    iVec2 PP0(H0);
+                    iVec2 PP1(H1);
+                    iVec2 PP2(H2);
+                    if (PP0 == PP1)
+                        {
+                        _uni.im->drawLine(PP0, PP2, color);
+                        }
+                    else if (PP0 == PP2)
+                        {
+                        _uni.im->drawLine(PP0, PP1, color);
+                        }
+                    else if (PP1 == PP2)
+                        {
+                        _uni.im->drawLine(PP0, PP1, color);
+                        }
+                    else
+                        {
+                        _uni.im->drawLine(PP0, PP1, color);
+                        _uni.im->drawLine(PP1, PP2, color);
+                        _uni.im->drawLine(PP2, PP0, color);
+                        }
+                    }
+                else
+                    {
+                    _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                    _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+                    _uni.im->drawWideLine(H2, H0, thickness, color, opacity);
+                    }
+
                 }
 
             return 0;
@@ -2577,7 +2858,8 @@ namespace tgx
 
 
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
-        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness)
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness)
             {
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if (thickness <= 0) return 0;
@@ -2615,10 +2897,25 @@ namespace tgx
             if (!ORTHO) H3.zdivide();
             H3 = M.mult1(H3);
 
-            _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
-            _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
-            _uni.im->drawWideLine(H2, H3, thickness, color, opacity);
-            _uni.im->drawWideLine(H3, H0, thickness, color, opacity);
+            // draw quad                      
+            if (DRAW_FAST)
+                {
+                iVec2 PP0(H0);
+                iVec2 PP1(H1);
+                iVec2 PP2(H2);
+                iVec2 PP3(H3);
+                if (PP0 != PP1) _uni.im->drawLine(PP0, PP1, color);
+                if (PP1 != PP2) _uni.im->drawLine(PP1, PP2, color);
+                if (PP2 != PP3) _uni.im->drawLine(PP2, PP3, color);
+                if (PP3 != PP0) _uni.im->drawLine(PP3, PP0, color);
+                }
+            else
+                {
+                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+                _uni.im->drawWideLine(H2, H3, thickness, color, opacity);
+                _uni.im->drawWideLine(H3, H0, thickness, color, opacity);
+                }
 
             return 0;
             }
@@ -2626,7 +2923,8 @@ namespace tgx
 
 
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
-        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
             if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return -2; // invalid vertices
@@ -2668,10 +2966,26 @@ namespace tgx
                 if (!ORTHO) H3.zdivide();
                 H3 = M.mult1(H3);
 
-                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
-                _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
-                _uni.im->drawWideLine(H2, H3, thickness, color, opacity);
-                _uni.im->drawWideLine(H3, H0, thickness, color, opacity);
+                // draw quad                      
+                if (DRAW_FAST)
+                    {
+                    iVec2 PP0(H0);
+                    iVec2 PP1(H1);
+                    iVec2 PP2(H2);
+                    iVec2 PP3(H3);
+                    if (PP0 != PP1) _uni.im->drawLine(PP0, PP1, color);
+                    if (PP1 != PP2) _uni.im->drawLine(PP1, PP2, color);
+                    if (PP2 != PP3) _uni.im->drawLine(PP2, PP3, color);
+                    if (PP3 != PP0) _uni.im->drawLine(PP3, PP0, color);
+                    }
+                else
+                    {
+                    _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                    _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+                    _uni.im->drawWideLine(H2, H3, thickness, color, opacity);
+                    _uni.im->drawWideLine(H3, H0, thickness, color, opacity);
+                    }
+
                 }
 
             return 0;
