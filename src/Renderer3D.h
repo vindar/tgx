@@ -666,6 +666,7 @@ namespace tgx
 
 
 
+
         /**
         * Draw a single triangle on the image. Use the current material color.
         *
@@ -1191,6 +1192,245 @@ namespace tgx
                        const uint16_t * ind_texture = nullptr, const fVec2* textures = nullptr,
                        const Image<color_t>* texture_image = nullptr);
 
+
+
+
+
+
+
+
+        /*****************************************************************************************
+        ******************************************************************************************
+        *
+        *                            WireFrame drawing methods
+        *
+        * WARNING : The methods for drawing wireframe objects are for DEBUG PURPOSE mostly:
+        *           They are NOT OPTIMZED and may be slower than those the methods for drawing 
+        *           regular flat/shaded triangles/quads/meshes...
+        *           
+        ******************************************************************************************
+        ******************************************************************************************/
+
+
+
+
+
+        /**
+        * Draw a mesh onto the image using 'wireframe' lines. 
+        * 
+        * The mesh is drawn with the current material color (not that of the mesh). This method does not 
+        * require a zbuffer but back face culling is used if it is enabled.
+        *
+        * - mesh:    The mesh to draw. The meshes/vertices array/textures can be in RAM or in FLASH.
+        *           Whenever possible, put vertex array and texture in RAM (or even EXTMEM).
+        *
+        * - draw_chained_meshes:  If true, the meshes linked to this mesh (via the ->next member) are also drawn.
+        *
+        * - thickness: the absolute thickness of the line (in pixels) on the image. 
+        *
+        * The method returns  0 ok, (drawing performed correctly).
+        *                    -1 invalid image
+        **/
+        int drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes = true, float thickness = 1)
+            {
+            return drawWireFrameMesh(mesh, draw_chained_meshes, color_t(_color), 1.0f, thickness);
+            }
+
+
+        /**
+        * Draw a mesh onto the image using 'wireframe' lines.
+        *
+        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        **/
+        int drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness = 1);
+
+
+        /**
+        * Draw a 'wireframe' 3D line segment. 
+        *
+        * the line is drawn with the current material color. This method does not require a zbuffer.
+        *
+        * - (P1, P2) coordinates (in model space) of the segment to draw.
+        *
+        * - thickness: the absolute thickness of the line (in pixels) on the image.
+        *
+        * The method returns  0 ok, (drawing performed correctly).
+        *                    -1 invalid image
+        **/
+        int drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness = 1)
+            {
+            return drawWireFrameLine(P1, P2, color_t(_color), 1.0f, thickness);
+            }
+
+
+        /**
+        * Draw a 'wireframe' 3D line segment.
+        *
+        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        **/
+        int drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness = 1);
+
+
+        /**
+        * Draw a list of wireframe lines on the image. 
+        * the triangles are drawn with the current material color. This method does not require a zbuffer.
+        *
+        * - nb_lines Number of lines to draw.
+        *
+        * - ind_vertices Array of vertex indexes. The length of the array is nb_lines*2
+        *                and each 2 consecutive values represent a line segment.
+        *
+        * - vertices     The array of vertices (given in model space).
+        *
+        * Returns: 0  OK
+        *          -1 invalid image
+        *          -2 invalid vertice list
+        **/
+        int drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness = 1)
+            {
+            return drawWireFrameLines(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            }
+
+
+        /**
+        * Draw a list of wireframe lines on the image.
+        *
+        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        **/
+        int drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness = 1);
+
+
+
+        /**
+        * Draw a 'wireframe' triangle.
+        *
+        * the triangle is drawn with the current material color. This method does not require a zbuffer
+        * but back face culling is used (if enabled).
+        *
+        * - (P1, P2, P3) coordinates (in model space) of the triangle to draw.
+        *
+        * - thickness: the absolute thickness of the lines (in pixels) on the image.
+        *
+        * The method returns  0 ok, (drawing performed correctly).
+        *                    -1 invalid image
+        **/
+        int drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness = 1)
+            {
+            return drawWireFrameTriangle(P1, P2, P3, color_t(_color), 1.0f, thickness);
+            }
+
+
+        /**
+        * Draw a 'wireframe' triangle.
+        *
+        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        **/
+        int drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness = 1);
+    
+
+
+        /**
+        * Draw a list of wireframe triangles on the image. 
+        * 
+        * the triangles are drawn with the current material color. This method does not require a zbuffer.
+        * but back face culling is used (if enabled).
+        * 
+        * - nb_triangles Number of triangles to draw.
+        *
+        * - ind_vertices Array of vertex indexes. The length of the array is nb_triangles*3
+        *                and each 3 consecutive values represent a triangle.
+        *
+        *               *** MAKE SURE THAT THE TRIANGLES ARE GIVEN WITH THE CORRECT WINDING ORDER ***
+        *
+        * - vertices     The array of vertices (given in model space).
+        *
+        * - thickness: the absolute thickness of the lines (in pixels) on the image.
+        *
+        * Returns: 0  OK
+        *          -1 invalid image
+        *          -2 invalid vertice list
+        **/
+        int drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness = 1)
+            {
+            return drawWireFrameTriangles(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            }
+
+
+        /**
+        * Draw a list of wireframe triangles on the image.
+        *
+        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        **/
+        int drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness = 1);
+          
+
+
+        /**
+        * Draw a 'wireframe' quad.
+        *
+        * the quad is drawn with the current material color. This method does not require a zbuffer
+        * but back face culling is used (if enabled).
+        *
+        * - (P1, P2, P3, P4) coordinates (in model space) of the quad to draw.
+        *
+        * - thickness: the absolute thickness of the lines (in pixels) on the image.
+        *
+        * The method returns  0 ok, (drawing performed correctly).
+        *                    -1 invalid image
+        **/
+        int drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness = 1)
+            {
+            return drawWireFrameQuad(P1, P2, P3, P4, color_t(_color), 1.0f, thickness);
+            }
+
+
+
+        /**
+        * Draw a 'wireframe' quad.
+        *
+        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        **/
+        int drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness = 1);
+           
+
+
+
+        /**
+        * Draw a list of wireframe quads on the image.
+        * 
+        * the quads are drawn with the current material color. This method does not require a zbuffer
+        * but back face culling is used (if enabled).
+        *
+        * - nb_quads Number of triangles to draw.
+        *
+        * - ind_vertices Array of vertex indexes. The length of the array is nb_triangles*3
+        *                and each 3 consecutive values represent a triangle.
+        *
+        *               *** MAKE SURE THAT THE QUADS ARE GIVEN WITH THE CORRECT WINDING ORDER ***
+        *               *** QUADS MUST BE COPLANAR ***
+        *
+        * - vertices     The array of vertices (given in model space).
+        *
+        * - thickness: the absolute thickness of the lines (in pixels) on the image.
+        *
+        * Returns: 0  OK
+        *          -1 invalid image
+        *          -2 invalid vertice list
+        **/
+        int drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness = 1)
+            {
+            return drawWireFrameQuads(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            }
+
+
+
+        /**
+        * Draw a list of quads on the image.
+        *
+        * Same as above but use a given color/opacity for drawing/blending instead of the material color.
+        **/
+        int drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness = 1);
+           
 
 
 
@@ -2070,6 +2310,391 @@ namespace tgx
                 }
             return 0;
             }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if (thickness <= 0) return 0;
+
+            const tgx::fMat4 M(LX/2.0f, 0, 0, LX / 2.0f - _ox,
+                               0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                               0, 0, 1, 0,
+                               0, 0, 0, 0);
+
+            while (mesh != nullptr)
+                {
+                // check if the object is completely outside of the image for fast discard.
+                if (_discard(mesh->bounding_box, _projM * _r_modelViewM)) return 0;
+
+                const fVec3* const tab_norm = mesh->normal;   // array of normals
+                const fVec2* const tab_tex = mesh->texcoord;  // array of texture
+
+                const fVec3* const tab_vert = mesh->vertice;  // array of vertices
+                const uint16_t* face = mesh->face;      // array of triangles
+
+                ExtVec4 QQA, QQB, QQC;
+                ExtVec4* PC0 = &QQA;
+                ExtVec4* PC1 = &QQB;
+                ExtVec4* PC2 = &QQC;
+
+                int nbt;
+                while ((nbt = *(face++)) > 0)
+                    { // starting a chain with nbt triangles
+
+                    // load the first triangle
+                    const uint16_t v0 = *(face++);
+                    if (tab_tex) face++;
+                    if (tab_norm) face++;
+
+                    const uint16_t v1 = *(face++);
+                    if (tab_tex) face++;
+                    if (tab_norm) face++;
+
+                    const uint16_t v2 = *(face++);
+                    if (tab_tex) face++;
+                    if (tab_norm) face++;
+
+                    // compute vertices position because we are sure we will need them...
+                    PC2->P = _r_modelViewM.mult1(tab_vert[v2]);
+                    PC0->P = _r_modelViewM.mult1(tab_vert[v0]);
+                    PC1->P = _r_modelViewM.mult1(tab_vert[v1]);
+
+                    // ...but use lazy computation of other vertex attributes
+                    PC0->missedP = true;
+                    PC1->missedP = true;
+                    PC2->missedP = true;
+
+                    while (1)
+                        {
+                        // face culling
+                        fVec3 faceN = crossProduct(PC1->P - PC0->P, PC2->P - PC0->P);
+                        const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PC0->P);
+                        if (cu * _culling_dir > 0) goto rasterize_next_triangle; // skip triangle !
+
+                        // triangle is not culled
+                        *((fVec4*)PC2) = _projM * PC2->P;
+                        if (!ORTHO) { PC2->zdivide(); }
+                        *((fVec4*)PC2) = M.mult1(*((fVec4*)PC2));
+
+                        if (PC0->missedP)
+                            {
+                            *((fVec4*)PC0) = _projM * PC0->P;
+                            if (!ORTHO) { PC0->zdivide(); }
+                            *((fVec4*)PC0) = M.mult1(*((fVec4*)PC0));
+                            }
+                        if (PC1->missedP)
+                            {
+                            *((fVec4*)PC1) = _projM * PC1->P;
+                            if (!ORTHO) { PC1->zdivide(); }
+                            *((fVec4*)PC1) = M.mult1(*((fVec4*)PC1));
+                            }
+
+                        // attributes are now all up to date
+                        PC0->missedP = false;
+                        PC1->missedP = false;
+                        PC2->missedP = false;
+
+                        // draw triangle                       
+                        _uni.im->drawWideLine(*((fVec2*)PC0), *((fVec2*)PC1), thickness, color, opacity);
+                        _uni.im->drawWideLine(*((fVec2*)PC1), *((fVec2*)PC2), thickness, color, opacity);
+                        _uni.im->drawWideLine(*((fVec2*)PC2), *((fVec2*)PC0), thickness, color, opacity);
+
+                    rasterize_next_triangle:
+
+                        if (--nbt == 0) break; // exit loop at end of chain
+
+                        // get the next triangle
+                        const uint16_t nv2 = *(face++);
+                        swap(((nv2 & 32768) ? PC0 : PC1), PC2);
+                        if (tab_tex) face++;
+                        if (tab_norm) face++;
+                        PC2->P = _r_modelViewM.mult1(tab_vert[nv2 & 32767]);
+                        PC2->missedP = true;
+                        }
+                    }
+                mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
+                }
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if (thickness <= 0) return 0;
+
+            // compute position in wiew space.
+            const fVec4 Q0 = _r_modelViewM.mult1(P1);
+            const fVec4 Q1 = _r_modelViewM.mult1(P2);
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            fVec4 H0 = _projM * Q0;
+            if (!ORTHO) H0.zdivide();
+            H0 = M.mult1(H0);
+
+            fVec4 H1 = _projM * Q1;
+            if (!ORTHO) H1.zdivide();
+            H1 = M.mult1(H1);
+
+            _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+
+            return 0;
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ind_vertices == nullptr) || (vertices == nullptr)) return -2; // invalid vertices
+            if (thickness <= 0) return 0;
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            nb_lines *= 2;
+            for (int n = 0; n < nb_lines; n += 2)
+                {
+                // compute position in wiew space.
+                const fVec4 Q0 = _r_modelViewM.mult1(vertices[ind_vertices[n]]);
+                const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
+
+                fVec4 H0 = _projM * Q0;
+                if (!ORTHO) H0.zdivide();
+                H0 = M.mult1(H0);
+
+                fVec4 H1 = _projM * Q1;
+                if (!ORTHO) H1.zdivide();
+                H1 = M.mult1(H1);
+
+                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                }
+
+            return 0;            
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if (thickness <= 0) return 0;
+
+            // compute position in wiew space.
+            const fVec4 Q0 = _r_modelViewM.mult1(P1);
+            const fVec4 Q1 = _r_modelViewM.mult1(P2);
+            const fVec4 Q2 = _r_modelViewM.mult1(P3);
+
+            // face culling
+            fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
+            const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+            if (cu * _culling_dir > 0) return 0; // skip triangle !
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            fVec4 H0 = _projM * Q0;
+            if (!ORTHO) H0.zdivide();
+            H0 = M.mult1(H0);
+
+            fVec4 H1 = _projM * Q1;
+            if (!ORTHO) H1.zdivide();
+            H1 = M.mult1(H1);
+
+            fVec4 H2 = _projM * Q2;
+            if (!ORTHO) H2.zdivide();
+            H2 = M.mult1(H2);
+
+            _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+            _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+            _uni.im->drawWideLine(H2, H0, thickness, color, opacity);
+
+            return 0;
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ind_vertices == nullptr) || (vertices == nullptr)) return -2; // invalid vertices
+            if (thickness <= 0) return 0;
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            nb_triangles *= 3;
+            for (int n = 0; n < nb_triangles; n += 3)
+                {
+                // compute position in wiew space.
+                const fVec4 Q0 = _r_modelViewM.mult1(vertices[ind_vertices[n]]);
+                const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
+                const fVec4 Q2 = _r_modelViewM.mult1(vertices[ind_vertices[n + 2]]);
+
+                // face culling 
+                fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
+                const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+                if (cu * _culling_dir > 0) continue; // we discard the triangle.
+
+                fVec4 H0 = _projM * Q0;
+                if (!ORTHO) H0.zdivide();
+                H0 = M.mult1(H0);
+
+                fVec4 H1 = _projM * Q1;
+                if (!ORTHO) H1.zdivide();
+                H1 = M.mult1(H1);
+
+                fVec4 H2 = _projM * Q2;
+                if (!ORTHO) H2.zdivide();
+                H2 = M.mult1(H2);
+
+                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+                _uni.im->drawWideLine(H2, H0, thickness, color, opacity);
+                }
+
+            return 0;
+
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if (thickness <= 0) return 0;
+
+            // compute position in wiew space.
+            const fVec4 Q0 = _r_modelViewM.mult1(P1);
+            const fVec4 Q1 = _r_modelViewM.mult1(P2);
+            const fVec4 Q2 = _r_modelViewM.mult1(P3);
+
+            // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
+            fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
+            const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+            if (cu * _culling_dir > 0) return 0; // Q3 is coplanar with Q0, Q1, Q2 so we discard the whole quad.
+
+            const fVec4 Q3 = _r_modelViewM.mult1(P4); // compute fourth point
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            fVec4 H0 = _projM * Q0;
+            if (!ORTHO) H0.zdivide();
+            H0 = M.mult1(H0);
+
+            fVec4 H1 = _projM * Q1;
+            if (!ORTHO) H1.zdivide();
+            H1 = M.mult1(H1);
+
+            fVec4 H2 = _projM * Q2;
+            if (!ORTHO) H2.zdivide();
+            H2 = M.mult1(H2);
+
+            fVec4 H3 = _projM * Q3;
+            if (!ORTHO) H3.zdivide();
+            H3 = M.mult1(H3);
+
+            _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+            _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+            _uni.im->drawWideLine(H2, H3, thickness, color, opacity);
+            _uni.im->drawWideLine(H3, H0, thickness, color, opacity);
+
+            return 0;
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ind_vertices == nullptr) || (vertices == nullptr)) return -2; // invalid vertices
+            if (thickness <= 0) return 0;
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            nb_quads *= 4;
+            for (int n = 0; n < nb_quads; n += 4)
+                {
+                // compute position in wiew space.
+                const fVec4 Q0 = _r_modelViewM.mult1(vertices[ind_vertices[n]]);
+                const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
+                const fVec4 Q2 = _r_modelViewM.mult1(vertices[ind_vertices[n + 2]]);
+
+                // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
+                fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
+                const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+                if (cu * _culling_dir > 0) continue; // Q3 is coplanar with Q0, Q1, Q2 so we discard the whole quad.
+
+                const fVec4 Q3 = _r_modelViewM.mult1(vertices[ind_vertices[n + 3]]); // compute fourth point
+
+                fVec4 H0 = _projM * Q0;
+                if (!ORTHO) H0.zdivide();
+                H0 = M.mult1(H0);
+
+                fVec4 H1 = _projM * Q1;
+                if (!ORTHO) H1.zdivide();
+                H1 = M.mult1(H1);
+
+                fVec4 H2 = _projM * Q2;
+                if (!ORTHO) H2.zdivide();
+                H2 = M.mult1(H2);
+
+                fVec4 H3 = _projM * Q3;
+                if (!ORTHO) H3.zdivide();
+                H3 = M.mult1(H3);
+
+                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+                _uni.im->drawWideLine(H2, H3, thickness, color, opacity);
+                _uni.im->drawWideLine(H3, H0, thickness, color, opacity);
+                }
+
+            return 0;
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
