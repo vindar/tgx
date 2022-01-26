@@ -91,7 +91,7 @@ Renderer3D<RGB565, SLX, SLY, true, false> renderer;
 /**
 * Overlay some info about the current mesh on the screen
 **/
-void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RGB565>& mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
+void drawInfo(tgx::Image<tgx::RGB565>& im, int t, const tgx::Mesh3D<tgx::RGB565>& mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
 {
     static elapsedMillis em = 0; // number of milli elapsed since last fps update
     static int fps = 0; // last fps 
@@ -99,25 +99,25 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
     // recompute fps every second. 
     count++;
     if ((int)em > 1000)
-        {
+    {
         em = 0;
         fps = count;
         count = 0;
-        }
+    }
     // count the number of triangles in the mesh (by iterating over linked meshes)
     const Mesh3D<RGB565>* m = &mesh;
     int nbt = 0;
     while (m != nullptr)
-        {
+    {
         nbt += m->nb_faces;
         m = m->next;
-        }
+    }
     // display some info 
     char buf[80];
     im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d triangles", nbt);
     im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-    sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE ? " / texturing" : ""));
+    sprintf(buf, "%s", (t == 0) ? "Wireframe" : ((t==1) ? "Flat shading": "Gouraud shading"));
     im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d FPS", fps);
     auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
@@ -127,17 +127,17 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
 
 
 void setup()
-    {
+{
     Serial.begin(9600);
 
     tft.output(&Serial);                // output debug infos to serial port. 
 
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED))
-        {
+    {
         Serial.println("Initialization error...");
         delay(1000);
-        }
+    }
 
     // ok. turn on backlight
     pinMode(PIN_BACKLIGHT, OUTPUT);
@@ -156,15 +156,15 @@ void setup()
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
     renderer.setZbuffer(zbuf, SLX * SLY); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
-    }
+}
 
 
 void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
 {
-    const int maxT = 15000; // display model for 15 seconds. 
+    const int maxT = 12000; // display model for 12 seconds. 
     elapsedMillis em = 0;
     while (em < maxT)
-        {
+    {
         // erase the screen
         im.fillScreen(RGB565_Black);
 
@@ -179,18 +179,22 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
         M.multTranslate({ 0,0, -40 });
         renderer.setModelMatrix(M);
 
-        // change shader type after every turn
-        int shader = (((em * 4) / maxT) & 1) ? TGX_SHADER_GOURAUD : TGX_SHADER_FLAT;
+        // change shader type after every turn        
+        int t = (((em * 3) / maxT) % 3);
 
-        // draw the mesh on the image
-        renderer.drawMesh(shader, mesh, false);
+        if (t == 0)
+            renderer.drawWireFrameMesh(mesh, false);
+        else if (t==1)
+            renderer.drawMesh(TGX_SHADER_FLAT, mesh, false);
+        else
+            renderer.drawMesh(TGX_SHADER_GOURAUD, mesh, false);
 
         // overlay some info 
-        drawInfo(im, shader, *mesh);
+        drawInfo(im, t, *mesh);
 
         // update the screen (asynchronously)
         tft.update(fb);
-        }
+    }
 }
 
 
