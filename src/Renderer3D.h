@@ -43,6 +43,12 @@
 namespace tgx
 {
 
+    /** forward declaration for the vertices and faces of the unit cube [-1,1]^3 */
+    extern const tgx::fVec3 UNIT_CUBE_VERTICES[8];
+    extern const uint16_t UNIT_CUBE_FACES[6*4];
+
+
+
 
     /**
     * Class that manages the drawing of 3D objects.
@@ -1584,6 +1590,292 @@ namespace tgx
 
 
 
+        /*****************************************************************************************
+        ******************************************************************************************
+        *
+        *                          Drawing simple geometric object
+        *
+        *
+        ******************************************************************************************
+        ******************************************************************************************/
+
+
+        /**
+        * Draw the cube [-1,1]^3. 
+        * 
+        * As usual, model-view transform is applied a drawing time.
+        **/
+        void drawCube()
+            {
+            // set culling direction = -1 and save previous value
+            float save_culling = _culling_dir;
+            _culling_dir = 1;
+            drawQuads(TGX_SHADER_FLAT, 6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
+            // restore culling direction
+            _culling_dir = save_culling; 
+            }
+            
+
+
+
+
+        /**
+        * vertex list and face list for the unit cube [-1,1]^3.
+        *
+        *
+        *                                                                   H--------E
+        *                                                                   |        |
+        *                                                                   |  top   |
+        *                          H-------------E                          |        |
+        *                         /.            /|                 H--------A--------D--------E
+        *                        / .   top     / |                 |        |        |        |
+        *                       /  .          /  |                 |  left  | front  |  right |
+        *                      A------------D    |  right          |        |        |        |
+        *                      |   .        |    |                 G--------B--------C--------F
+        *                      |   G .......|....F                          |        |
+        *                      |  .         |   /                           | bottom |
+        *                      | .  front   |  /                            |        |
+        *                      |.           | /                             G--------F
+        *                      B------------C                               |        |
+        *                                                                   |  back  |
+        *                                                                   |        |
+        *                                                                   H--------E
+        *
+        * - Each face may use a different texture (or set the image to nullptr to disable texturing a face).
+        *
+        * - the texture coordinate for each face are given ordered by their name
+        *   (e.g. 'v_front_A_B_C_D' means vertex in order: A, B, C, D for the front face)
+        *
+        *   *** THE TEXTURE SIZE MUST BE A POWER OF 2 IN EVERY DIMENSION ****
+        *
+        * - As usual, model-view transform is applied a drawing time.
+        */
+
+        void drawCube(int shader,
+            fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
+            fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
+            fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
+            fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
+            fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
+            fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right
+            )
+            {
+
+            if (!(TGX_SHADER_HAS_TEXTURE(shader)))
+                {
+                drawCube();
+                return;
+                }
+
+            // set culling direction = 1 and save previous value
+            float save_culling = _culling_dir;
+            _culling_dir = 1;
+
+            const uint16_t list_v[4] = { 0,1,2,3 };
+            if (texture_front) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_front_ABCD, texture_front); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES); }
+            if (texture_back) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 4, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_back_EFGH, texture_back); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 4, UNIT_CUBE_VERTICES); }
+            if (texture_top) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 8, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_top_HADE, texture_top); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 8, UNIT_CUBE_VERTICES); }
+            if (texture_bottom) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 12, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_bottom_BGFC, texture_bottom); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 12, UNIT_CUBE_VERTICES); }
+            if (texture_left) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 16, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_left_HGBA, texture_left); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 16, UNIT_CUBE_VERTICES); }
+            if (texture_right) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 20, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_right_DCFE, texture_right); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 20, UNIT_CUBE_VERTICES); }
+
+            // restore culling direction
+            _culling_dir = save_culling;
+            }
+
+
+
+        /**
+        * Draw a unit radius sphere centered at the origin S(0,1).
+        *
+        * Create a UV-sphere with a given number of sector and stacks.
+        *
+        * As usual, model-view transform is applied a drawing time.
+        **/
+        void drawSphere(int shader, int nb_sectors, int nb_stacks)
+            {
+            _drawSphere<false,false>(TGX_SHADER_HAS_GOURAUD(shader), nb_stacks * 2, nb_stacks, 1.0f, _color, 1.0f);
+            }
+
+
+
+        /**
+        * Draw a unit radius sphere centered at the origin S(0,1).
+        *
+        * Draw a UV-sphere where the number of sector and stacks is computed 
+        * automatically according to the apparent size on the screen.
+        * 
+        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to   
+        *   imcrease or  decrease the number of faces in the tesselation:
+        *     - quality < 1 : decrease quality but improve speed  
+        *     - quality > 1 : improve quality but decrease speed  
+        * 
+        * The sphere is not textured, (the shader used is either FLAT or GOURAUD).
+        * As usual, model-view transform is applied a drawing time.
+        **/
+        void drawAdaptativeSphere(int shader, float quality = 1.0f)
+            {
+            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            _drawSphere<false,false>(TGX_SHADER_HAS_GOURAUD(shader), nb_stacks*2 - 2, nb_stacks, 1.0f, _color,1.0f);
+            }   
+
+
+
+        /*****************************************************************************************
+        ******************************************************************************************
+        *
+        *                          Drawing simple geometric object in wireframe
+        *
+        *
+        ******************************************************************************************
+        ******************************************************************************************/
+
+
+        /**
+        * Draw a cube in wireframe (FAST BUT LOW QUALITY METHOD). 
+        **/
+        void drawWireFrameCube()
+            {
+            // set culling direction = 1 and save previous value
+            float save_culling = _culling_dir;
+            _culling_dir = 1;
+            drawWireFrameQuads(6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
+            // restore culling direction
+            _culling_dir = save_culling;
+            }
+
+
+        /**
+        * Draw a cube in wireframe (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        **/
+        void drawWireFrameCube(float thickness)
+            {
+            drawWireFrameCube(thickness, color_t(_color), 1.0f);
+            }
+
+
+        /**
+        * Draw a cube in wireframe (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        * Also set the color and opacity for blending instead of using the material color.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        **/
+        void drawWireFrameCube(float thickness, color_t color, float opacity)
+            {
+            // set culling direction = 1 and save previous value
+            float save_culling = _culling_dir;
+            _culling_dir = 1;
+            drawWireFrameQuads(6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES, thickness, color, opacity);
+            // restore culling direction
+            _culling_dir = save_culling;
+            }
+
+
+
+        /**
+        * Draw a wireframe unit radius sphere centered at the origin.  (FAST BUT LOW QUALITY METHOD).
+        * 
+        * Create a UV-sphere with a given number of sector and stacks.
+        *
+        * As usual, model-view transform is applied a drawing time.
+        **/
+        void drawWireFrameSphere(int nb_sectors, int nb_stacks)
+            {
+            _drawSphere<true,true>(false,nb_sectors, nb_stacks,1.0f, color_t(_color),1.0f);
+            }
+
+
+        /**
+        * Draw a wireframe unit radius sphere centered at the origin. (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        **/
+        void drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness)
+            {
+            _drawSphere<true,false>(false,nb_sectors, nb_stacks,thickness, color_t(_color),1.0f);
+            }
+
+
+        /**
+        * Draw a wireframe unit radius sphere centered at the origin. (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        * Also set the color and opacity for blending instead of using the material color.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        **/
+        void drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity)
+            {
+            _drawSphere<true,false>(false,nb_sectors, nb_stacks,thickness, color, opacity);
+            }
+
+
+
+        /**
+        * Draw a wireframe unit radius sphere centered at the origin. (FAST BUT LOW QUALITY METHOD).
+        *
+        * Draw a UV-sphere wherethe number of sector and stacks is
+        * computed automatically according to the apparent size on the screen.
+        *
+        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to
+        *   imcrease or  decrease the number of faces in the tesselation:
+        *     - quality < 1 : decrease quality but improve speed
+        *     - quality > 1 : improve quality but decrease speed
+        *
+        * As usual, model-view transform is applied a drawing time.
+        **/
+        void drawWireFrameAdaptativeSphere(float quality = 1.0f)
+            {
+            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            _drawSphere<true, true>(false, nb_stacks*2 - 2, nb_stacks, 1.0f, color_t(_color), 1.0f);
+            }   
+
+
+        /**
+        * Draw a wireframe unit radius sphere centered at the origin. (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        **/
+        void drawWireFrameAdaptativeSphere(float quality, float thickness)
+            {
+            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            _drawSphere<true, false>(false, nb_stacks*2 - 2, nb_stacks, thickness, color_t(_color), 1.0f);
+            }   
+
+
+        /**
+        * Draw a wireframe unit radius sphere centered at the origin. (HIGH QUALITY / SLOW VERSION).
+        *
+        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
+        * Also set the color and opacity for blending instead of using the material color.
+        *
+        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
+        **/
+        void drawWireFrameAdaptativeSphere(float quality, float thickness, color_t color, float opacity)
+            {
+            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            _drawSphere<true, false>(false, nb_stacks*2 - 2, nb_stacks, thickness, color, opacity);
+            }   
+
+
+
+
+
+
     private:
 
 
@@ -1829,6 +2121,7 @@ namespace tgx
         * Drawing wireframe
         ************************************************************/
 
+
         template<bool DRAW_FAST> int _drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness);
 
         template<bool DRAW_FAST> int _drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness);
@@ -1842,6 +2135,38 @@ namespace tgx
         template<bool DRAW_FAST> int _drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness);
 
         template<bool DRAW_FAST> int _drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
+
+
+
+
+        /***********************************************************
+        * Simple geometric objects
+        ************************************************************/
+        
+        /**
+        * For adaptative mesh: compute the diameter (in pixels) of the unit sphere S(0,1) once projected the screen
+        **/
+        float _unitSphereScreenDiameter()
+            {
+            const float ONEOVERSQRT2 = 0.70710678118;
+            fVec4 P0 = _r_modelViewM.mult1(fVec3(0, 0, 0));
+            fVec4 P1 = _r_modelViewM.mult1(fVec3(1, 0, 0));
+            float r = fVec3(P0 - P1).norm(); // radius after modelview transform
+            fVec4 P2 = { P0.x - r * ONEOVERSQRT2, P0.y - r * ONEOVERSQRT2, P0.z, P0.w }; // take a point on the sphere that is at same z as origin and take equal contribution from x and y. 
+
+            fVec4 Q0 = _projM * P0;
+            fVec4 Q2 = _projM * P2;
+            if (!ORTHO)
+                {
+                Q0.zdivide();
+                Q2.zdivide();
+                }
+            return sqrtf(((Q2.x - Q0.x) * (Q2.x - Q0.x) * LX * LX) + ((Q2.y - Q0.y) * (Q2.y - Q0.y) * LY * LY)); // diameter on the screen
+            }
+
+
+        template<bool WIREFRAME, bool DRAWFAST> void _drawSphere(const bool gouraud, int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity);
+
 
 
         /***********************************************************
@@ -2994,7 +3319,143 @@ namespace tgx
 
 
 
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool WIREFRAME, bool DRAWFAST>
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawSphere(const bool gouraud, int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity)
+            {     
+            // set culling direction = 1 and save previous value
+            float save_culling = _culling_dir;
+            _culling_dir = 1; 
 
+            const float MPI = 3.141592653589793238f;
+            const int MAX_SECTORS = 256; 
+            if (nb_sectors > MAX_SECTORS) nb_sectors = 256;
+            if (nb_sectors < 3) nb_sectors = 3;
+            if (nb_stacks < 3) nb_stacks = 3;
+
+            // precomputed sin/cos for sectors as we will need them often
+            float cosTheta[MAX_SECTORS];
+            float sinTheta[MAX_SECTORS];
+            
+            const float d_sector = 2*MPI / nb_sectors;
+            for(int i = 0; i < nb_sectors; i++)
+                {
+                cosTheta[i] = cosf(i * d_sector);
+                sinTheta[i] = sinf(i * d_sector);
+                }
+
+            const float d_stack = MPI / nb_stacks;
+
+            fVec3 P1, P2, P3, P4;
+
+            // top part, top vertex at {0,1,0}
+            
+            float cosPhi = cosf(d_stack);
+            float sinPhi = sinf(d_stack);
+
+            P1 = { 0,1,0 };
+
+            P2.x = sinPhi * cosTheta[nb_sectors-1];
+            P2.y = cosPhi;
+            P2.z = sinPhi * sinTheta[nb_sectors - 1];
+
+            P3.y = cosPhi;
+
+            for (int i = 0; i < nb_sectors; i++)
+                {
+                P3.x = sinPhi * cosTheta[i];
+                P3.z = sinPhi * sinTheta[i];
+                
+                if (WIREFRAME)
+                    {
+                    if (DRAWFAST) drawWireFrameTriangle(P1, P3, P2); else drawWireFrameTriangle(P1, P3, P2, thickness, color, opacity);
+                    }
+                else
+                    {
+                    if (gouraud) drawTriangle(TGX_SHADER_GOURAUD, P1, P3, P2, P1, P3, P2);  else drawTriangle(TGX_SHADER_FLAT, P1, P3, P2);
+                    }
+
+                P2.x = P3.x;
+                P2.z = P3.z;
+                }
+
+            // main part       
+            for (int j = 2; j < nb_stacks; j++)
+                {
+
+                float new_cosPhi = cosf(d_stack * j);
+                float new_sinPhi = sinf(d_stack * j);
+
+                P1.x = sinPhi * cosTheta[nb_sectors - 1];
+                P1.y = cosPhi;
+                P1.z = sinPhi * sinTheta[nb_sectors - 1];
+
+                P3.y = cosPhi;
+
+                P2.x = new_sinPhi * cosTheta[nb_sectors - 1];
+                P2.y = new_cosPhi;
+                P2.z = new_sinPhi * sinTheta[nb_sectors - 1];
+
+                P4.y = new_cosPhi;
+
+                for (int i = 0; i < nb_sectors; i++)
+                    {
+                    P3.x = sinPhi * cosTheta[i];
+                    P3.z = sinPhi * sinTheta[i];
+
+                    P4.x = new_sinPhi * cosTheta[i];
+                    P4.z = new_sinPhi * sinTheta[i];
+
+                    if (WIREFRAME)
+                        {
+                        if (DRAWFAST) drawWireFrameQuad(P1, P3, P4, P2); else drawWireFrameQuad(P1, P3, P4, P2, thickness, color, opacity);
+                        }
+                    else
+                        {
+                        if (gouraud) drawQuad(TGX_SHADER_GOURAUD, P1, P3, P4, P2, P1, P3, P4, P2);  else drawQuad(TGX_SHADER_FLAT, P1, P3, P4, P2);
+                        }
+                    P1.x = P3.x;
+                    P1.z = P3.z;
+                    P2.x = P4.x;
+                    P2.z = P4.z;
+                    }
+
+                cosPhi = new_cosPhi;
+                sinPhi = new_sinPhi;
+
+                }
+                
+            // bottom part, bottom vertex at {0,1,0}
+            P1 = { 0,-1,0 };
+
+            P2.x = sinPhi * cosTheta[nb_sectors - 1];
+            P2.y = cosPhi;
+            P2.z = sinPhi * sinTheta[nb_sectors - 1];
+
+            P3.y = cosPhi;
+
+            for (int i = 0; i < nb_sectors; i++)
+                {
+                P3.x = sinPhi * cosTheta[i];
+                P3.z = sinPhi * sinTheta[i];
+
+                if (WIREFRAME)
+                    {
+                    if (DRAWFAST) drawWireFrameTriangle(P1, P2, P3); else drawWireFrameTriangle(P1, P2, P3, thickness, color, opacity);
+                    }
+                else
+                    {
+                    if (gouraud) drawTriangle(TGX_SHADER_GOURAUD, P1, P2, P3, P1, P2, P3);  else drawTriangle(TGX_SHADER_FLAT, P1, P2, P3);
+                    }
+
+                P2.x = P3.x;
+                P2.z = P3.z;
+                }
+
+            // restore culling direction
+            _culling_dir = save_culling;
+            return; 
+            }
 
 
 
