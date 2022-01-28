@@ -1694,9 +1694,25 @@ namespace tgx
         **/
         void drawSphere(int shader, int nb_sectors, int nb_stacks)
             {
-            _drawSphere<false,false>(TGX_SHADER_HAS_GOURAUD(shader), nb_stacks * 2, nb_stacks, 1.0f, _color, 1.0f);
+            drawSphere(shader, nb_sectors, nb_stacks, nullptr);
             }
 
+
+        /**
+        * Draw a textured unit radius sphere centered at the origin S(0,1).
+        *
+        * Create a UV-sphere with a given number of sector and stacks.
+        *
+        * The texture is mapped using the mercator projection. 
+        * 
+        *                  *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
+        * 
+        * As usual, model-view transform is applied a drawing time.
+        **/
+        void drawSphere(int shader, int nb_sectors, int nb_stacks, const Image<color_t>* texture)
+            {
+            _drawSphere<false,false>(shader, nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
+            }
 
 
         /**
@@ -1717,8 +1733,35 @@ namespace tgx
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
-            _drawSphere<false,false>(TGX_SHADER_HAS_GOURAUD(shader), nb_stacks*2 - 2, nb_stacks, 1.0f, _color,1.0f);
+            drawSphere(shader, nb_sectors, nb_stacks, nullptr);
             }   
+
+
+        /**
+        * Draw a textured unit radius sphere centered at the origin S(0,1).
+        *
+        * Draw a UV-sphere where the number of sector and stacks is computed
+        * automatically according to the apparent size on the screen.
+        *
+        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to
+        *   imcrease or  decrease the number of faces in the tesselation:
+        *     - quality < 1 : decrease quality but improve speed
+        *     - quality > 1 : improve quality but decrease speed
+        *
+        * The texture is mapped using the mercator projection.
+        *
+        *                  *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
+        *                  
+        * As usual, model-view transform is applied a drawing time.
+        **/
+        void drawAdaptativeSphere(int shader, const Image<color_t>* texture, float quality = 1.0f)
+            {
+            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            drawSphere(shader, nb_stacks * 2 - 2, nb_stacks, texture);
+            }
+
+
 
 
 
@@ -1788,7 +1831,7 @@ namespace tgx
         **/
         void drawWireFrameSphere(int nb_sectors, int nb_stacks)
             {
-            _drawSphere<true,true>(false,nb_sectors, nb_stacks,1.0f, color_t(_color),1.0f);
+            _drawSphere<true, true>(TGX_SHADER_FLAT, nb_sectors, nb_stacks, nullptr, 1.0f, color_t(_color), 1.0f);
             }
 
 
@@ -1801,7 +1844,7 @@ namespace tgx
         **/
         void drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness)
             {
-            _drawSphere<true,false>(false,nb_sectors, nb_stacks,thickness, color_t(_color),1.0f);
+            drawWireFrameSphere(nb_sectors, nb_stacks, thickness, color_t(_color), 1.0f);
             }
 
 
@@ -1815,7 +1858,7 @@ namespace tgx
         **/
         void drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity)
             {
-            _drawSphere<true,false>(false,nb_sectors, nb_stacks,thickness, color, opacity);
+            _drawSphere<true,false>(TGX_SHADER_FLAT, nb_sectors, nb_stacks, nullptr, thickness, color, opacity);
             }
 
 
@@ -1837,7 +1880,7 @@ namespace tgx
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
-            _drawSphere<true, true>(false, nb_stacks*2 - 2, nb_stacks, 1.0f, color_t(_color), 1.0f);
+            drawWireFrameSphere(nb_stacks*2 - 2, nb_stacks);
             }   
 
 
@@ -1852,7 +1895,7 @@ namespace tgx
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
-            _drawSphere<true, false>(false, nb_stacks*2 - 2, nb_stacks, thickness, color_t(_color), 1.0f);
+            drawWireFrameSphere(nb_stacks * 2 - 2, nb_stacks, thickness);
             }   
 
 
@@ -1868,8 +1911,8 @@ namespace tgx
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
-            _drawSphere<true, false>(false, nb_stacks*2 - 2, nb_stacks, thickness, color, opacity);
-            }   
+            drawWireFrameSphere(nb_stacks * 2 - 2, nb_stacks, thickness, color, opacity);
+            }
 
 
 
@@ -2165,7 +2208,7 @@ namespace tgx
             }
 
 
-        template<bool WIREFRAME, bool DRAWFAST> void _drawSphere(const bool gouraud, int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity);
+        template<bool WIREFRAME, bool DRAWFAST> void _drawSphere(int shader, int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity);
 
 
 
@@ -3321,8 +3364,13 @@ namespace tgx
 
         template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
         template<bool WIREFRAME, bool DRAWFAST>
-        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawSphere(const bool gouraud, int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity)
-            {     
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawSphere(int shader, int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
+            {
+            if (texture == nullptr)
+                {
+                TGX_SHADER_REMOVE_TEXTURE(shader);
+                }
+
             // set culling direction = 1 and save previous value
             float save_culling = _culling_dir;
             _culling_dir = 1; 
@@ -3361,6 +3409,11 @@ namespace tgx
 
             P3.y = cosPhi;
 
+            const float dtx = 1.0f / nb_sectors;
+
+            float v = 0.5f * cosPhi + 0.5f;
+            float u = 0;
+
             for (int i = 0; i < nb_sectors; i++)
                 {
                 P3.x = sinPhi * cosTheta[i];
@@ -3372,13 +3425,14 @@ namespace tgx
                     }
                 else
                     {
-                    if (gouraud) drawTriangle(TGX_SHADER_GOURAUD, P1, P3, P2, P1, P3, P2);  else drawTriangle(TGX_SHADER_FLAT, P1, P3, P2);
+                    drawTriangle(shader, P1, P3, P2, P1, P3, P2, { 0,1 }, { u + dtx, v }, { u , v }, texture);
                     }
 
+                u += dtx; 
                 P2.x = P3.x;
                 P2.z = P3.z;
                 }
-
+            
             // main part       
             for (int j = 2; j < nb_stacks; j++)
                 {
@@ -3398,11 +3452,16 @@ namespace tgx
 
                 P4.y = new_cosPhi;
 
+                v = 0.5f*cosPhi + 0.5f;
+                const float vv = 0.5f*new_cosPhi + 0.5f;
+
+                u = 0; 
+
                 for (int i = 0; i < nb_sectors; i++)
                     {
+                    const float uu = u + dtx;
                     P3.x = sinPhi * cosTheta[i];
                     P3.z = sinPhi * sinTheta[i];
-
                     P4.x = new_sinPhi * cosTheta[i];
                     P4.z = new_sinPhi * sinTheta[i];
 
@@ -3410,10 +3469,12 @@ namespace tgx
                         {
                         if (DRAWFAST) drawWireFrameQuad(P1, P3, P4, P2); else drawWireFrameQuad(P1, P3, P4, P2, thickness, color, opacity);
                         }
-                    else
+                        else
                         {
-                        if (gouraud) drawQuad(TGX_SHADER_GOURAUD, P1, P3, P4, P2, P1, P3, P4, P2);  else drawQuad(TGX_SHADER_FLAT, P1, P3, P4, P2);
+                        drawQuad(shader, P1, P3, P4, P2, P1, P3, P4, P2, {u,v}, {uu,v}, {uu,vv}, {u,vv}, texture);
                         }
+
+                    u += dtx; 
                     P1.x = P3.x;
                     P1.z = P3.z;
                     P2.x = P4.x;
@@ -3422,7 +3483,6 @@ namespace tgx
 
                 cosPhi = new_cosPhi;
                 sinPhi = new_sinPhi;
-
                 }
                 
             // bottom part, bottom vertex at {0,1,0}
@@ -3433,6 +3493,8 @@ namespace tgx
             P2.z = sinPhi * sinTheta[nb_sectors - 1];
 
             P3.y = cosPhi;
+
+            u = 0; 
 
             for (int i = 0; i < nb_sectors; i++)
                 {
@@ -3445,9 +3507,10 @@ namespace tgx
                     }
                 else
                     {
-                    if (gouraud) drawTriangle(TGX_SHADER_GOURAUD, P1, P2, P3, P1, P2, P3);  else drawTriangle(TGX_SHADER_FLAT, P1, P2, P3);
+                    drawTriangle(shader, P1, P2, P3, P1, P2, P3, { 0, 0 }, { u,v }, { u + dtx, v }, texture);
                     }
 
+                u += dtx;
                 P2.x = P3.x;
                 P2.z = P3.z;
                 }
@@ -3456,11 +3519,6 @@ namespace tgx
             _culling_dir = save_culling;
             return; 
             }
-
-
-
-
-
 
 
 
