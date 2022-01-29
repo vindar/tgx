@@ -1733,7 +1733,7 @@ namespace tgx
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
-            drawSphere(shader, nb_sectors, nb_stacks, nullptr);
+            drawSphere(shader, nb_stacks * 2 - 2, nb_stacks, nullptr);
             }   
 
 
@@ -2304,52 +2304,57 @@ namespace tgx
         * PHONG LIGHTNING
         ************************************************************/
 
-        static const int _POWTABSIZE = 16;  // number of entries in the precomputed power table for specular exponent.
-        int _currentpow;                    // exponent for the currently computed table (<0 if table not yet computed)
-        float _powfact;                     // used to compute exponent
-        float _fastpowtab[_POWTABSIZE];     // the precomputed power table.
+        /***********************************************************
+        * PHONG LIGHTNING
+        ************************************************************/
+
+        static const int _POWTABSIZE = 32;      // number of entries in the precomputed power table for specular exponent.
+        int _currentpow;                        // exponent for the currently computed table (<0 if table not yet computed)
+        float _powmax;                          // used to compute exponent
+        float _fastpowtab[_POWTABSIZE];         // the precomputed power table.
 
         /** Pre-compute the power table for computing specular light component (if needed). */
         void _precomputeSpecularTable(int exponent)
             {
             if (_currentpow == exponent) return;
             _currentpow = exponent;
-            float specularExponent = (float)exponent;
-            const float bbsp = (specularExponent < 8.0f) ? specularExponent : 8.0f;
+            float specularExponent = (float)exponent;            
             if (exponent > 0)
                 {
-                _powfact = ((specularExponent * _POWTABSIZE) / bbsp);
+                const float MAX_VAL_POW = 10.0f;  //  maximum value that the power can take
+
+                _powmax = pow(MAX_VAL_POW, 1 / specularExponent);
                 for (int k = 0; k < _POWTABSIZE; k++)
                     {
-                    float v = 1.0f - ((bbsp * k) / (specularExponent * _POWTABSIZE));
-                    _fastpowtab[k] = powf(v, specularExponent);
+                    float v = 1.0f - (((float)k) / _POWTABSIZE);
+                    _fastpowtab[k] = powf(_powmax*v, specularExponent);
                     }
                 }
             else
                 {
-                _powfact = 0;
+                _powmax = 1; 
                 for (int k = 0; k < _POWTABSIZE; k++)
                     {
                     _fastpowtab[k] = 0.0f;
                     }
                 }
+            return;
             }
 
         /** compute pow(x, exponent) using linear interpolation from the pre-computed table */
         TGX_INLINE float _powSpecular(float x) const
             {
-            const float indf = (1.0f - x) * _powfact;
-            const int indi = (int)indf;
-            return (indi >= (_POWTABSIZE - 1)) ? 0.0f : (_fastpowtab[indi] + (indf - indi) * (_fastpowtab[indi + 1] - _fastpowtab[indi]));
+            const float indf = (_powmax - x) * _POWTABSIZE;
+            const int indi = max(0,(int)indf);
+            return (indi >= (_POWTABSIZE - 1)) ? 0.0f : (_fastpowtab[indi] + (indf - indi) * (_fastpowtab[indi + 1] - _fastpowtab[indi]));;
             }
-
 
         /** compute a color according to Phong lightning model, use model color */
         template<bool TEXTURE> TGX_INLINE  RGBf _phong(float v_diffuse, float v_specular) const
             {
             RGBf col = _r_ambiantColor;
             col += _r_diffuseColor * max(v_diffuse, 0.0f);
-            col += _r_specularColor * _powSpecular(max(v_specular, 0.0f)); // pow() this is too slow so we use a lookup table instead
+            col += _r_specularColor * _powSpecular(v_specular); // pow() this is too slow so we use a lookup table instead
             if (!(TEXTURE)) col *= _r_objectColor;
             col.clamp();
             return col;
@@ -2361,7 +2366,7 @@ namespace tgx
             {
             RGBf col = _r_ambiantColor;
             col += _r_diffuseColor * max(v_diffuse, 0.0f);
-            col += _r_specularColor * _powSpecular(max(v_specular, 0.0f)); // pow() this is too slow so we use a lookup table instead
+            col += _r_specularColor * _powSpecular(v_specular); // pow() this is too slow so we use a lookup table instead
             col *= color;
             col.clamp();
             return col;
@@ -2481,8 +2486,8 @@ namespace tgx
             M.setIdentity();
             this->setModelMatrix(M); // no transformation on the mesh.
 
-            this->setMaterial({ 0.75f, 0.75f, 0.75f }, 0.15f, 0.7f, 0.5f, 16); // just in case: silver color and some default reflexion param...
-            this->_precomputeSpecularTable(16);
+            this->setMaterial({ 0.75f, 0.75f, 0.75f }, 0.15f, 0.7f, 0.5f, 8); // just in case: silver color and some default reflexion param...
+            this->_precomputeSpecularTable(8);
             }
 
 
