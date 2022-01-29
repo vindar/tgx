@@ -372,6 +372,50 @@ namespace tgx
 
 
         /**
+        * Convert from world coord. to the standard viewport coord.
+        * 
+        * - P : point given in the word coordinate system.    
+        *
+        * Return the projection of P on the standard viewport [-1,1]^2 according 
+        * to the current position of the camera. 
+        * 
+        * Note: - the model matrix is not taken into account here.
+        *       - the .w value can be used for depth testing. 
+        **/
+        fVec4 worldToViewPort(fVec3 P)
+            {
+            fVec4 Q = _projM * _viewM.mult1(P);
+            if (!ORTHO) Q.zdivide();
+            return Q;
+            }
+
+
+        /**
+        * Convert from world coord. to the corresponding image pixel.
+        *
+        * - P : point given in the word coordinate system.
+        *
+        * Return the position of the associated pixel on the image.
+        * 
+        * Note: - the position returned may be outside of the image ! 
+        *       - return (0,0) if no image inserted. 
+        **/
+        iVec2 worldToImage(fVec3 P)
+            {
+            fVec4 Q = _projM * _viewM.mult1(P);
+            if (!ORTHO) Q.zdivide();
+            
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            Q = M.mult1(Q);            
+            return iVec2(roundfp(Q.x), roundfp(Q.y));
+            }
+
+
+        /**
         * Set the light source direction (i.e. the direction the light points to).
         * Direction is given in world coordinates (hence transformed by the view Matrix
         * at rendering time so that the light does not move with the camera).
@@ -440,6 +484,7 @@ namespace tgx
 
 
 
+
         /*****************************************************************************************
         ******************************************************************************************
         *
@@ -475,6 +520,72 @@ namespace tgx
         fMat4  getModelMatrix() const
             {
             return _modelM;
+            }
+
+
+
+        /**
+        * Set the model matrix in such way that a model centered at the origin (in model coordinate) 
+        * will appear at a given position/scale/rotation on the world coordinates. 
+        *
+        * Transform are done in the following order:
+        * 
+        * (1) model is scaled in each direction in the model coord. according to 'scale'
+        * (2) model is rotated in model coord. around direction 'rot_dir' and with an angle 'rot_angle' (in degree).
+        * (3) model is translated to position 'center' in the world coord. 
+        **/
+        void setModelPosScaleRot(const fVec3& center = fVec3{ 0,0,0 }, const fVec3& scale = fVec3(1, 1, 1), float rot_angle = 0, const fVec3& rot_dir = fVec3{ 0,1,0 })
+            {
+            _modelM.setScale(scale);
+            _modelM.multRotate(rot_angle, rot_dir);
+            _modelM.multTranslate(center);
+            // recompute
+            _r_modelViewM = _viewM * _modelM;
+            _r_inorm = 1.0f / _r_modelViewM.mult0(fVec3{ 0,0,1 }).norm();
+            _r_light_inorm = _r_light * _r_inorm;
+            _r_H_inorm = _r_H * _r_inorm;
+            }
+
+
+        /**
+        * Convert from model coord. to the standard viewport coord.
+        * 
+        * - P : point given in the model coordinate system.    
+        *
+        * Return the projection of P on the standard viewport [-1,1]^2 according 
+        * to the current position of the camera. 
+        * 
+        * Note:  the .w value can be used for depth testing. 
+        **/
+        fVec4 modelToViewPort(fVec3 P)
+            {
+            fVec4 Q = _projM * _r_modelViewM.mult1(P);
+            if (!ORTHO) Q.zdivide();
+            return Q;
+            }
+
+
+        /**
+        * Convert from model coord. to the corresponding image pixel.
+        *
+        * - P : point given in the model coordinate system.
+        *
+        * Return the position of the associated pixel on the image.
+        *
+        * Note: the .z value returned is the z distance which may be useful.
+        **/
+        iVec2 modelToImage(fVec3 P)
+            {
+            fVec4 Q = _projM * _r_modelViewM.mult1(P);
+            if (!ORTHO) Q.zdivide();
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            Q = M.mult1(Q);
+            return iVec2(roundfp(Q.x), roundfp(Q.y));
             }
 
 
@@ -544,6 +655,8 @@ namespace tgx
             this->setMaterialSpecularStrength(specularStrength);
             this->setMaterialSpecularExponent(specularExponent);
             }
+
+
 
 
 
@@ -1202,6 +1315,235 @@ namespace tgx
 
 
 
+        /*****************************************************************************************
+        ******************************************************************************************
+        *
+        *                          Drawing simple geometric object
+        *
+        *
+        ******************************************************************************************
+        ******************************************************************************************/
+
+
+        /**
+        * Draw a single pixel on the image at a given position (given in model space). 
+        * 
+        * Use the material color and ignore the scene lightning parameters. 
+        **/
+        void drawPixel(const fVec3& pos);
+
+
+        /**
+        * Draw a single pixel on the image at a given position (given in model space).
+        *
+        * Use the specified color instead of the material color (and ignore the 
+        * scene lightning parameters).
+        **/
+        void drawPixel(const fVec3& pos, color_t color);
+
+
+        /**
+        * Draw a single pixel on the image at a given position (given in model space).
+        *
+        * Use the specified color and opacity and use blending (ignore the scene 
+        * lightning parameters).
+        **/
+        void drawPixel(const fVec3& pos, color_t color, float opacity);
+
+
+        /**
+        * Draw a dot/circle on the image at a given position (given in model space)
+        * with a given radius in screen pixels.
+        *
+        * - Use the material color and ignore the scene lightning parameters.
+        **/
+        void drawDot(const fVec3& pos, int r);
+
+
+        /**
+        * Draw a dot/circle on the image at a given position (given in model space)
+        * with a given radius in screen pixels.
+        *
+        * - Use the specified color instead of the material color (and ignore the
+        *   scene lightning parameters).
+        **/
+        void drawDot(const fVec3& pos, int r, color_t color);
+
+
+        /**
+        * Draw a dot/circle on the image at a given position (given in model space).
+        *
+        * Use the specified color and opacity and use blending (ignore the scene
+        * lightning parameters).
+        **/
+        void drawDot(const fVec3& pos, float r, color_t color, float opacity);
+
+
+
+
+        /**
+        * Draw the cube [-1,1]^3 (in model space). 
+        * 
+        * -> Use the Model matrix to draw a rectangle and/or choose the position 
+        *    in world coord.
+        **/
+        void drawCube()
+            {
+            // set culling direction = -1 and save previous value
+            float save_culling = _culling_dir;
+            _culling_dir = 1;
+            drawQuads(TGX_SHADER_FLAT, 6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
+            // restore culling direction
+            _culling_dir = save_culling; 
+            }
+            
+
+
+
+
+        /**
+        * draw a textured unit cube [-1,1]^3 (in model space)
+        * 
+        * -> Use the Model matrix to draw a rectangle and/or choose the position
+        *    in world coord.
+        *                                                                   H--------E
+        *                                                                   |        |
+        *                                                                   |  top   |
+        *                          H-------------E                          |        |
+        *                         /.            /|                 H--------A--------D--------E
+        *                        / .   top     / |                 |        |        |        |
+        *                       /  .          /  |                 |  left  | front  |  right |
+        *                      A------------D    |  right          |        |        |        |
+        *                      |   .        |    |                 G--------B--------C--------F
+        *                      |   G .......|....F                          |        |
+        *                      |  .         |   /                           | bottom |
+        *                      | .  front   |  /                            |        |
+        *                      |.           | /                             G--------F
+        *                      B------------C                               |        |
+        *                                                                   |  back  |
+        *                                                                   |        |
+        *                                                                   H--------E
+        *
+        * - Each face may use a different texture (or set the image to nullptr to disable texturing a face).
+        *
+        * - the texture coordinate for each face are given ordered by their name
+        *   (e.g. 'v_front_A_B_C_D' means vertex in order: A, B, C, D for the front face)
+        *
+        *   *** THE TEXTURE SIZE MUST BE A POWER OF 2 IN EVERY DIMENSION ****
+        */
+
+        void drawCube(int shader,
+            fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
+            fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
+            fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
+            fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
+            fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
+            fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right
+            )
+            {
+
+            if (!(TGX_SHADER_HAS_TEXTURE(shader)))
+                {
+                drawCube();
+                return;
+                }
+
+            // set culling direction = 1 and save previous value
+            float save_culling = _culling_dir;
+            _culling_dir = 1;
+
+            const uint16_t list_v[4] = { 0,1,2,3 };
+            if (texture_front) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_front_ABCD, texture_front); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES); }
+            if (texture_back) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 4, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_back_EFGH, texture_back); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 4, UNIT_CUBE_VERTICES); }
+            if (texture_top) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 8, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_top_HADE, texture_top); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 8, UNIT_CUBE_VERTICES); }
+            if (texture_bottom) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 12, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_bottom_BGFC, texture_bottom); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 12, UNIT_CUBE_VERTICES); }
+            if (texture_left) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 16, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_left_HGBA, texture_left); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 16, UNIT_CUBE_VERTICES); }
+            if (texture_right) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 20, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_right_DCFE, texture_right); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 20, UNIT_CUBE_VERTICES); }
+
+            // restore culling direction
+            _culling_dir = save_culling;
+            }
+
+
+
+        /**
+        * Draw a unit radius sphere centered at the origin S(0,1).
+        *
+        * Create a UV-sphere with a given number of sector and stacks.
+        *
+        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
+        *    in world coord.
+        **/
+        void drawSphere(int shader, int nb_sectors, int nb_stacks)
+            {
+            drawSphere(shader, nb_sectors, nb_stacks, nullptr);
+            }
+
+
+        /**
+        * Draw a textured unit radius sphere centered at the origin S(0,1).
+        *
+        * Create a UV-sphere with a given number of sector and stacks.
+        *
+        * The texture is mapped using the Mercator projection. 
+        * 
+        *                  *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
+        * 
+        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
+        *    in world coord.
+        **/
+        void drawSphere(int shader, int nb_sectors, int nb_stacks, const Image<color_t>* texture)
+            {
+            _drawSphere<false,false>(shader, nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
+            }
+
+
+        /**
+        * Draw a unit radius sphere centered at the origin S(0,1).
+        *
+        * Draw a UV-sphere where the number of sector and stacks is computed 
+        * automatically according to the apparent size on the screen.
+        * 
+        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to   
+        *   imcrease or  decrease the number of faces in the tesselation:
+        *     - quality < 1 : decrease quality but improve speed  
+        *     - quality > 1 : improve quality but decrease speed  
+        * 
+        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
+        *    in world coord.
+        **/
+        void drawAdaptativeSphere(int shader, float quality = 1.0f)
+            {
+            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            drawSphere(shader, nb_stacks * 2 - 2, nb_stacks, nullptr);
+            }   
+
+
+        /**
+        * Draw a textured unit radius sphere centered at the origin S(0,1).
+        *
+        * Draw a UV-sphere where the number of sector and stacks is computed
+        * automatically according to the apparent size on the screen.
+        *
+        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to
+        *   imcrease or  decrease the number of faces in the tesselation:
+        *     - quality < 1 : decrease quality but improve speed
+        *     - quality > 1 : improve quality but decrease speed
+        *
+        * The texture is mapped using the mercator projection.
+        *
+        *                  *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
+        *                  
+        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
+        *    in world coord.
+        **/
+        void drawAdaptativeSphere(int shader, const Image<color_t>* texture, float quality = 1.0f)
+            {
+            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            drawSphere(shader, nb_stacks * 2 - 2, nb_stacks, texture);
+            }
 
 
 
@@ -1215,10 +1557,14 @@ namespace tgx
         * - methods without thickness are fast but are not accurate (single pixel line, without  
         *   blending, anti-aliasing or sub-pixel precision.
         * 
-        * - methods with a thickness specified are VERY SLOW (even slower than texturing !) but  
-        *   the line is drawn in high quality, using anti-aliasing, sub-pixel precision, blending
-        *   and the given thickness in pixels (a positive float value)
+        * - methods with a thickness specified are currently VERY SLOW (even slower than texturing!)   
+        *   but the line is drawn in high quality, using anti-aliasing, sub-pixel precision, blending
+        *   and the given thickness in pixels (a positive float value).
         * 
+        *  *** WIREFRAME DRAWING METHODS DO NOT USE DEPTH TESTING (even if a z-buffer is on) ***
+        *  
+        *  *** WIREFRAME DRAWING METHODS DO NOT TAKE LIGHTNING INTO ACCOUNT FOR LINE COLORS ***
+        *  
         ******************************************************************************************
         ******************************************************************************************/
 
@@ -1371,9 +1717,6 @@ namespace tgx
             {
             return _drawWireFrameLines<false>(nb_lines, ind_vertices, vertices, color, opacity, thickness);
             }
-
-
-
 
 
         /**
@@ -1589,182 +1932,6 @@ namespace tgx
 
 
 
-
-        /*****************************************************************************************
-        ******************************************************************************************
-        *
-        *                          Drawing simple geometric object
-        *
-        *
-        ******************************************************************************************
-        ******************************************************************************************/
-
-
-        /**
-        * Draw the cube [-1,1]^3. 
-        * 
-        * As usual, model-view transform is applied a drawing time.
-        **/
-        void drawCube()
-            {
-            // set culling direction = -1 and save previous value
-            float save_culling = _culling_dir;
-            _culling_dir = 1;
-            drawQuads(TGX_SHADER_FLAT, 6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
-            // restore culling direction
-            _culling_dir = save_culling; 
-            }
-            
-
-
-
-
-        /**
-        * vertex list and face list for the unit cube [-1,1]^3.
-        *
-        *
-        *                                                                   H--------E
-        *                                                                   |        |
-        *                                                                   |  top   |
-        *                          H-------------E                          |        |
-        *                         /.            /|                 H--------A--------D--------E
-        *                        / .   top     / |                 |        |        |        |
-        *                       /  .          /  |                 |  left  | front  |  right |
-        *                      A------------D    |  right          |        |        |        |
-        *                      |   .        |    |                 G--------B--------C--------F
-        *                      |   G .......|....F                          |        |
-        *                      |  .         |   /                           | bottom |
-        *                      | .  front   |  /                            |        |
-        *                      |.           | /                             G--------F
-        *                      B------------C                               |        |
-        *                                                                   |  back  |
-        *                                                                   |        |
-        *                                                                   H--------E
-        *
-        * - Each face may use a different texture (or set the image to nullptr to disable texturing a face).
-        *
-        * - the texture coordinate for each face are given ordered by their name
-        *   (e.g. 'v_front_A_B_C_D' means vertex in order: A, B, C, D for the front face)
-        *
-        *   *** THE TEXTURE SIZE MUST BE A POWER OF 2 IN EVERY DIMENSION ****
-        *
-        * - As usual, model-view transform is applied a drawing time.
-        */
-
-        void drawCube(int shader,
-            fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
-            fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
-            fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
-            fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
-            fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
-            fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right
-            )
-            {
-
-            if (!(TGX_SHADER_HAS_TEXTURE(shader)))
-                {
-                drawCube();
-                return;
-                }
-
-            // set culling direction = 1 and save previous value
-            float save_culling = _culling_dir;
-            _culling_dir = 1;
-
-            const uint16_t list_v[4] = { 0,1,2,3 };
-            if (texture_front) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_front_ABCD, texture_front); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES); }
-            if (texture_back) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 4, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_back_EFGH, texture_back); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 4, UNIT_CUBE_VERTICES); }
-            if (texture_top) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 8, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_top_HADE, texture_top); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 8, UNIT_CUBE_VERTICES); }
-            if (texture_bottom) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 12, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_bottom_BGFC, texture_bottom); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 12, UNIT_CUBE_VERTICES); }
-            if (texture_left) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 16, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_left_HGBA, texture_left); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 16, UNIT_CUBE_VERTICES); }
-            if (texture_right) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 20, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_right_DCFE, texture_right); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 20, UNIT_CUBE_VERTICES); }
-
-            // restore culling direction
-            _culling_dir = save_culling;
-            }
-
-
-
-        /**
-        * Draw a unit radius sphere centered at the origin S(0,1).
-        *
-        * Create a UV-sphere with a given number of sector and stacks.
-        *
-        * As usual, model-view transform is applied a drawing time.
-        **/
-        void drawSphere(int shader, int nb_sectors, int nb_stacks)
-            {
-            drawSphere(shader, nb_sectors, nb_stacks, nullptr);
-            }
-
-
-        /**
-        * Draw a textured unit radius sphere centered at the origin S(0,1).
-        *
-        * Create a UV-sphere with a given number of sector and stacks.
-        *
-        * The texture is mapped using the mercator projection. 
-        * 
-        *                  *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
-        * 
-        * As usual, model-view transform is applied a drawing time.
-        **/
-        void drawSphere(int shader, int nb_sectors, int nb_stacks, const Image<color_t>* texture)
-            {
-            _drawSphere<false,false>(shader, nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
-            }
-
-
-        /**
-        * Draw a unit radius sphere centered at the origin S(0,1).
-        *
-        * Draw a UV-sphere where the number of sector and stacks is computed 
-        * automatically according to the apparent size on the screen.
-        * 
-        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to   
-        *   imcrease or  decrease the number of faces in the tesselation:
-        *     - quality < 1 : decrease quality but improve speed  
-        *     - quality > 1 : improve quality but decrease speed  
-        * 
-        * The sphere is not textured, (the shader used is either FLAT or GOURAUD).
-        * As usual, model-view transform is applied a drawing time.
-        **/
-        void drawAdaptativeSphere(int shader, float quality = 1.0f)
-            {
-            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
-            drawSphere(shader, nb_stacks * 2 - 2, nb_stacks, nullptr);
-            }   
-
-
-        /**
-        * Draw a textured unit radius sphere centered at the origin S(0,1).
-        *
-        * Draw a UV-sphere where the number of sector and stacks is computed
-        * automatically according to the apparent size on the screen.
-        *
-        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to
-        *   imcrease or  decrease the number of faces in the tesselation:
-        *     - quality < 1 : decrease quality but improve speed
-        *     - quality > 1 : improve quality but decrease speed
-        *
-        * The texture is mapped using the mercator projection.
-        *
-        *                  *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
-        *                  
-        * As usual, model-view transform is applied a drawing time.
-        **/
-        void drawAdaptativeSphere(int shader, const Image<color_t>* texture, float quality = 1.0f)
-            {
-            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
-            drawSphere(shader, nb_stacks * 2 - 2, nb_stacks, texture);
-            }
-
-
-
-
-
         /*****************************************************************************************
         ******************************************************************************************
         *
@@ -1776,7 +1943,7 @@ namespace tgx
 
 
         /**
-        * Draw a cube in wireframe (FAST BUT LOW QUALITY METHOD). 
+        * Draw the cube [0,1]^3 (in model space) in wireframe (FAST BUT LOW QUALITY METHOD). 
         **/
         void drawWireFrameCube()
             {
@@ -1790,7 +1957,7 @@ namespace tgx
 
 
         /**
-        * Draw a cube in wireframe (HIGH QUALITY / SLOW VERSION).
+        * Draw the cube [0,1]^3 (in model space) in wireframe (HIGH QUALITY / SLOW VERSION).
         *
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         *
@@ -1803,7 +1970,7 @@ namespace tgx
 
 
         /**
-        * Draw a cube in wireframe (HIGH QUALITY / SLOW VERSION).
+        * Draw the cube [0,1]^3 (in model space) in wireframe (HIGH QUALITY / SLOW VERSION).
         *
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         * Also set the color and opacity for blending instead of using the material color.
@@ -1823,11 +1990,9 @@ namespace tgx
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin.  (FAST BUT LOW QUALITY METHOD).
+        * Draw a wireframe unit radius sphere centered at the origin (in model space). (FAST BUT LOW QUALITY METHOD).
         * 
         * Create a UV-sphere with a given number of sector and stacks.
-        *
-        * As usual, model-view transform is applied a drawing time.
         **/
         void drawWireFrameSphere(int nb_sectors, int nb_stacks)
             {
@@ -1836,7 +2001,7 @@ namespace tgx
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin. (HIGH QUALITY / SLOW VERSION).
+        * Draw a wireframe unit radius sphere centered at the origin (in model space). (HIGH QUALITY / SLOW VERSION).
         *
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         *
@@ -1849,7 +2014,7 @@ namespace tgx
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin. (HIGH QUALITY / SLOW VERSION).
+        * Draw a wireframe unit radius sphere centered at the origin (in model space). (HIGH QUALITY / SLOW VERSION).
         *
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         * Also set the color and opacity for blending instead of using the material color.
@@ -1864,7 +2029,7 @@ namespace tgx
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin. (FAST BUT LOW QUALITY METHOD).
+        * Draw a wireframe unit radius sphere centered at the origin (in model space). (FAST BUT LOW QUALITY METHOD).
         *
         * Draw a UV-sphere wherethe number of sector and stacks is
         * computed automatically according to the apparent size on the screen.
@@ -1885,7 +2050,7 @@ namespace tgx
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin. (HIGH QUALITY / SLOW VERSION).
+        * Draw a wireframe unit radius sphere centered at the origin (in model space). (HIGH QUALITY / SLOW VERSION).
         *
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         *
@@ -1900,7 +2065,7 @@ namespace tgx
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin. (HIGH QUALITY / SLOW VERSION).
+        * Draw a wireframe unit radius sphere centered at the origin (in model space). (HIGH QUALITY / SLOW VERSION).
         *
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         * Also set the color and opacity for blending instead of using the material color.
@@ -2120,10 +2285,10 @@ namespace tgx
                     }
                 else
                     {
-                    PC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm),Vcol0);
-                    PC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm),Vcol1);
-                    PC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm),Vcol2);
-                    PC3.color = _phong(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm),Vcol3);
+                    PC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm), Vcol0);
+                    PC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm), Vcol1);
+                    PC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm), Vcol2);
+                    PC3.color = _phong(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm), Vcol3);
                     }
                 }
             else
@@ -2191,7 +2356,7 @@ namespace tgx
         **/
         float _unitSphereScreenDiameter()
             {
-            const float ONEOVERSQRT2 = 0.70710678118;
+            const float ONEOVERSQRT2 = 0.70710678118f;
             fVec4 P0 = _r_modelViewM.mult1(fVec3(0, 0, 0));
             fVec4 P1 = _r_modelViewM.mult1(fVec3(1, 0, 0));
             float r = fVec3(P0 - P1).norm(); // radius after modelview transform
@@ -2304,10 +2469,6 @@ namespace tgx
         * PHONG LIGHTNING
         ************************************************************/
 
-        /***********************************************************
-        * PHONG LIGHTNING
-        ************************************************************/
-
         static const int _POWTABSIZE = 32;      // number of entries in the precomputed power table for specular exponent.
         int _currentpow;                        // exponent for the currently computed table (<0 if table not yet computed)
         float _powmax;                          // used to compute exponent
@@ -2349,6 +2510,7 @@ namespace tgx
             return (indi >= (_POWTABSIZE - 1)) ? 0.0f : (_fastpowtab[indi] + (indf - indi) * (_fastpowtab[indi + 1] - _fastpowtab[indi]));;
             }
 
+
         /** compute a color according to Phong lightning model, use model color */
         template<bool TEXTURE> TGX_INLINE  RGBf _phong(float v_diffuse, float v_specular) const
             {
@@ -2371,6 +2533,7 @@ namespace tgx
             col.clamp();
             return col;
             }
+ 
 
 
         /***********************************************************
@@ -3490,6 +3653,7 @@ namespace tgx
                 sinPhi = new_sinPhi;
                 }
                 
+
             // bottom part, bottom vertex at {0,1,0}
             P1 = { 0,-1,0 };
 
