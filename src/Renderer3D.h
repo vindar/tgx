@@ -404,14 +404,9 @@ namespace tgx
             {
             fVec4 Q = _projM * _viewM.mult1(P);
             if (!ORTHO) Q.zdivide();
-            
-            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
-                0, LY / 2.0f, 0, LY / 2.0f - _oy,
-                0, 0, 1, 0,
-                0, 0, 0, 0);
-
-            Q = M.mult1(Q);            
-            return iVec2(roundfp(Q.x), roundfp(Q.y));
+            Q.x = ((Q.x + 1) * LX) / 2 - _ox;
+            Q.y = ((Q.y + 1) * LY) / 2 - _oy;
+            return iVec2((int)roundfp(Q.x), (int)roundfp(Q.y));
             }
 
 
@@ -571,20 +566,13 @@ namespace tgx
         * - P : point given in the model coordinate system.
         *
         * Return the position of the associated pixel on the image.
-        *
-        * Note: the .z value returned is the z distance which may be useful.
         **/
         iVec2 modelToImage(fVec3 P)
             {
             fVec4 Q = _projM * _r_modelViewM.mult1(P);
             if (!ORTHO) Q.zdivide();
-
-            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
-                0, LY / 2.0f, 0, LY / 2.0f - _oy,
-                0, 0, 1, 0,
-                0, 0, 0, 0);
-
-            Q = M.mult1(Q);
+            Q.x = ((Q.x + 1) * LX) / 2 - _ox;
+            Q.y = ((Q.y + 1) * LY) / 2 - _oy;
             return iVec2(roundfp(Q.x), roundfp(Q.y));
             }
 
@@ -1326,57 +1314,179 @@ namespace tgx
 
 
         /**
-        * Draw a single pixel on the image at a given position (given in model space). 
-        * 
-        * Use the material color and ignore the scene lightning parameters. 
+        * Draw a single pixel on the image at a given position (in model space).
+        *
+        * Use the the material color.
+        *
+        * The scene lightning is ignored.
         **/
-        void drawPixel(const fVec3& pos);
+        void drawPixel(const fVec3& pos)
+            {
+            _drawPixel<false>(pos, _color, 1.0f);
+            }
+
+
+
+        /**
+        * Draw a single pixel on the image at a given position (in model space).
+        *
+        * Use the specified color instead of the material color.
+        *
+        * The scene lightning is ignored.
+        **/
+        void drawPixel(const fVec3& pos, color_t color)
+            {
+            _drawPixel<false>(pos, color, 1.0f);
+            }
 
 
         /**
         * Draw a single pixel on the image at a given position (given in model space).
         *
-        * Use the specified color instead of the material color (and ignore the 
-        * scene lightning parameters).
+        * Use the specified color and opacity and use blending
+        *         
+        * The scene lightning is ignored.
         **/
-        void drawPixel(const fVec3& pos, color_t color);
+        void drawPixel(const fVec3& pos, color_t color, float opacity)
+            {
+            _drawPixel<true>(pos, color, opacity);
+            }
 
 
         /**
-        * Draw a single pixel on the image at a given position (given in model space).
+        * Draw a list of pixels on the image at given positions (in model space).
         *
-        * Use the specified color and opacity and use blending (ignore the scene 
-        * lightning parameters).
+        * Use the material color for all pixels.
+        *
+        * The scene lightning is ignored.
         **/
-        void drawPixel(const fVec3& pos, color_t color, float opacity);
+        void drawPixels(int nb_pixels, const fVec3* pos_list)
+            {
+            int index = 0;
+            _drawPixels<false>(nb_pixels, pos_list, &index, &_color, nullptr, nullptr);
+            }
 
 
         /**
-        * Draw a dot/circle on the image at a given position (given in model space)
+        * Draw a list of pixels on the image at given positions (in model space).
+        *
+        * Use a (possibly) different color for each pixel.
+        * The color are given by a palette and a list of indices (one for each pixel).
+        *
+        * The scene lightning is ignored.
+        **/
+        void drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors)
+            {
+            _drawPixels<false>(nb_pixels, pos_list, colors_ind, colors, nullptr, nullptr);
+            }
+
+
+        /**
+        * Draw a list of pixels on the image at given positions (in model space).
+        *
+        * Use a (possibly) different color/opacity for each pixel and use blending.
+        * The color and opacities are both given by a palette and a list of indices
+        * (one for each pixel)
+        *
+        * The scene lightning parameters are ignored.
+        **/
+        void drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
+            {
+            _drawPixels<true>(nb_pixels, pos_list, colors_ind, colors, opacities_ind, opacities);
+            }
+
+
+
+
+        /**
+        * Draw a dot/circle on the image at a given position (in model space)
         * with a given radius in screen pixels.
         *
-        * - Use the material color and ignore the scene lightning parameters.
+        * Use the the material color.
+        *
+        * The scene lightning is ignored.
         **/
-        void drawDot(const fVec3& pos, int r);
+        void drawDot(const fVec3& pos, int r)
+            {
+            _drawDot<false>(pos, r, _color, 1.0f);
+            }
 
 
         /**
-        * Draw a dot/circle on the image at a given position (given in model space)
+        * Draw a dot/circle on the image at a given position (in model space)
         * with a given radius in screen pixels.
         *
-        * - Use the specified color instead of the material color (and ignore the
-        *   scene lightning parameters).
+        * Use the specified color instead of the material color.
+        *
+        * The scene lightning is ignored.
         **/
-        void drawDot(const fVec3& pos, int r, color_t color);
+        void drawDot(const fVec3& pos, int r, color_t color)
+            {
+            _drawDot<false>(pos, r, color, 1.0f);
+            }
 
 
         /**
-        * Draw a dot/circle on the image at a given position (given in model space).
+        * Draw a dot/circle on the image at a given position (in model space).
         *
-        * Use the specified color and opacity and use blending (ignore the scene
-        * lightning parameters).
+        * Use the specified color and opacity and use blending
+        *
+        * The scene lightning is ignored.
         **/
-        void drawDot(const fVec3& pos, float r, color_t color, float opacity);
+        void drawDot(const fVec3& pos, int r, color_t color, float opacity)
+            {
+            _drawDot<true>(pos, r, color, opacity);
+            }
+
+
+        /**
+        * Draw a list of dots/circles on the image at given positions (in model space).
+        *
+        * Use the material color for all dot.
+        * Use a possible different radius for each dot.
+        *
+        * The scene lightning is ignored.
+        **/
+        void drawDots(int nb_dots, const fVec3* pos_list, const int * radius_ind, const int * radius)
+            {
+            int index = 0;
+            _drawDots<false>(nb_dots, pos_list, radius_ind, radius, &index, &_color, nullptr, nullptr);
+            }
+
+
+        /**
+        * Draw a list of dots/circles on the image at given positions (in model space).
+        *
+        * Use a possible different radius for each dot
+        * Use a (possibly) different color for each dot.
+        *
+        * The scene lightning is ignored.
+        **/
+        void drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const fVec3* colors_ind, const color_t* colors)
+            {
+            _drawDots<false>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, nullptr, nullptr);
+            }
+
+
+        /**
+        * Draw a list of dots/circles on the image at given positions (in model space).
+        *
+        * Use a possible different radius for each dot
+        * Use a (possibly) different color for each dot
+        * Use a (possibly) different opacity for each dot (and use blending when drawing)
+        *
+        * The scene lightning parameters are ignored.
+        **/
+        void drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int * colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
+            {
+            _drawDots<false>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, opacities_ind, opacities);
+            }
+
+
+
+
+
+
 
 
 
@@ -2122,6 +2232,9 @@ namespace tgx
             const fVec4 Q0 = _r_modelViewM.mult1(*P0);
             const fVec4 Q1 = _r_modelViewM.mult1(*P1);
             const fVec4 Q2 = _r_modelViewM.mult1(*P2);
+            
+            // behind the scene, drop it
+            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
 
             // face culling
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
@@ -2135,21 +2248,19 @@ namespace tgx
 
             (*((fVec4*)&PC0)) = _projM * Q0;
             if (ORTHO) { PC0.w = 2.0f - PC0.z; } else { PC0.zdivide(); }
-            bool needclip = (Q0.z >= 0)
-                          | (PC0.x < -clipboundXY) | (PC0.x > clipboundXY)
+            bool needclip = (PC0.x < -clipboundXY) | (PC0.x > clipboundXY)
                           | (PC0.y < -clipboundXY) | (PC0.y > clipboundXY)
                           | (PC0.z < -1) | (PC0.z > 1);
+          
             (*((fVec4*)&PC1)) = _projM * Q1;
             if (ORTHO) { PC1.w = 2.0f - PC1.z; } else { PC1.zdivide(); }
-            needclip |= (Q1.z >= 0)
-                     | (PC1.x < -clipboundXY) | (PC1.x > clipboundXY)
+            needclip |= (PC1.x < -clipboundXY) | (PC1.x > clipboundXY)
                      | (PC1.y < -clipboundXY) | (PC1.y > clipboundXY)
                      | (PC1.z < -1) | (PC1.z > 1);
 
             (*((fVec4*)&PC2)) = _projM * Q2;
             if (ORTHO) { PC2.w = 2.0f - PC2.z; } else { PC2.zdivide(); }
-            needclip |= (Q2.z >= 0)
-                     | (PC2.x < -clipboundXY) | (PC2.x > clipboundXY)
+            needclip |= (PC2.x < -clipboundXY) | (PC2.x > clipboundXY)
                      | (PC2.y < -clipboundXY) | (PC2.y > clipboundXY)
                      | (PC2.z < -1) | (PC2.z > 1);
 
@@ -2222,12 +2333,18 @@ namespace tgx
             const fVec4 Q1 = _r_modelViewM.mult1(*P1);
             const fVec4 Q2 = _r_modelViewM.mult1(*P2);
 
+            // behind the scene, drop it.
+            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+
             // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
             const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
             if (cu * _culling_dir > 0) return; // Q3 is coplanar with Q0, Q1, Q2 so we discard the whole quad.
 
             const fVec4 Q3 = _r_modelViewM.mult1(*P3); // compute fourth point
+
+            // behind the scene, drop it.
+            if (Q3.z >= 0) return;
 
             RasterizerVec4 PC0, PC1, PC2, PC3;
 
@@ -2236,30 +2353,26 @@ namespace tgx
 
             (*((fVec4*)&PC0)) = _projM * Q0;
             if (ORTHO) { PC0.w = 2.0f - PC0.z; } else { PC0.zdivide(); }
-            bool needclip  = (Q0.z >= 0)
-                           | (PC0.x < -clipboundXY) | (PC0.x > clipboundXY)
+            bool needclip  = (PC0.x < -clipboundXY) | (PC0.x > clipboundXY)
                            | (PC0.y < -clipboundXY) | (PC0.y > clipboundXY)
                            | (PC0.z < -1) | (PC0.z > 1);
 
             (*((fVec4*)&PC1)) = _projM * Q1;
             if (ORTHO) { PC1.w = 2.0f - PC1.z; } else { PC1.zdivide(); }
-            needclip |= (Q1.z >= 0)
-                     | (PC1.x < -clipboundXY) | (PC1.x > clipboundXY)
+            needclip |= (PC1.x < -clipboundXY) | (PC1.x > clipboundXY)
                      | (PC1.y < -clipboundXY) | (PC1.y > clipboundXY)
                      | (PC1.z < -1) | (PC1.z > 1);
 
             (*((fVec4*)&PC2)) = _projM * Q2;
             if (ORTHO) { PC2.w = 2.0f - PC2.z; } else { PC2.zdivide(); }
-            needclip |= (Q2.z >= 0)
-                     | (PC2.x < -clipboundXY) | (PC2.x > clipboundXY)
+            needclip |= (PC2.x < -clipboundXY) | (PC2.x > clipboundXY)
                      | (PC2.y < -clipboundXY) | (PC2.y > clipboundXY)
                      | (PC2.z < -1) | (PC2.z > 1);
 
 
             (*((fVec4*)&PC3)) = _projM * Q3;
             if (ORTHO) { PC3.w = 2.0f - PC3.z; } else { PC3.zdivide(); }
-            needclip |= (Q3.z >= 0)
-                     | (PC3.x < -clipboundXY) | (PC3.x > clipboundXY)
+            needclip |= (PC3.x < -clipboundXY) | (PC3.x > clipboundXY)
                      | (PC3.y < -clipboundXY) | (PC3.y > clipboundXY)
                      | (PC3.z < -1) | (PC3.z > 1);
 
@@ -2351,6 +2464,224 @@ namespace tgx
         * Simple geometric objects
         ************************************************************/
         
+
+
+
+        template<bool USE_BLENDING> void _drawPixel(const fVec3& pos, color_t color, float opacity)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return;   // nothing to do
+            const bool has_zbuffer = ((ZBUFFER) && ((_uni.zbuf != nullptr) && (_zbuffer_len >= _uni.im->lx()* _uni.im->ly())));                       
+            fVec4 Q = _projM * _r_modelViewM.mult1(pos);
+            if (ORTHO) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+            if ((Q.w < -1) || (Q.w > 1)) return;
+            Q.x = ((Q.x + 1) * LX) / 2 - _ox;
+            Q.y = ((Q.y + 1) * LY) / 2 - _oy;
+            const int x = (int)roundfp(Q.x);
+            const int y = (int)roundfp(Q.y);
+            if (!has_zbuffer)
+                {
+                if (USE_BLENDING) _uni.im->drawPixel<true>(x, y, color, opacity); else  _uni.im->drawPixel<true>(x, y, color);
+                }
+            else
+                {
+                drawPixelZbuf<true, USE_BLENDING>(x, y, color, opacity, Q.w);
+                }
+            }
+
+
+        template<bool USE_BLENDING> void _drawPixels(int nb_pixels, fVec3* pos_list, int* colors_ind, color_t* colors, int* opacities_ind, float* opacities)
+            {
+            if ((pos_list == nullptr) || (colors_ind == nullptr) || (colors == nullptr)) return;
+            if ((USE_BLENDING) && ((opacities_ind == nullptr) || (opacities == nullptr))) return;
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return;   // nothing to do
+            const bool has_zbuffer = ((ZBUFFER) && ((_uni.zbuf != nullptr) && (_zbuffer_len >= _uni.im->lx()* _uni.im->ly())));                       
+            for (int k = 0; k < nb_pixels; k++)
+                {
+                fVec4 Q = _projM * _r_modelViewM.mult1(pos_list[k]);
+                if (ORTHO) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+                if ((Q.w < -1) || (Q.w > 1)) continue;
+                Q.x = ((Q.x + 1) * LX) / 2 - _ox;
+                Q.y = ((Q.y + 1) * LY) / 2 - _oy;
+                const int x = (int)roundfp(Q.x);
+                const int y = (int)roundfp(Q.y);
+                if (!has_zbuffer)
+                    {
+                    if (USE_BLENDING) _uni.im->drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]); else  _uni.im->drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]);
+                    }
+                else
+                    {
+                    drawPixelZbuf<true, USE_BLENDING>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                    }
+                }           
+            }
+
+
+        template<bool USE_BLENDING> void _drawDot(const fVec3& pos, int r, color_t color, float opacity)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return;   // nothing to do
+            const bool has_zbuffer = ((ZBUFFER) && ((_uni.zbuf != nullptr) && (_zbuffer_len >= _uni.im->lx()* _uni.im->ly())));                       
+            fVec4 Q = _projM * _r_modelViewM.mult1(pos);
+            if (ORTHO) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+            if ((Q.w < -1) || (Q.w > 1)) return;
+            Q.x = ((Q.x + 1) * LX) / 2 - _ox;
+            Q.y = ((Q.y + 1) * LY) / 2 - _oy;
+            const int x = (int)roundfp(Q.x);
+            const int y = (int)roundfp(Q.y);
+            if (!has_zbuffer)
+                {
+                if (USE_BLENDING)
+                    _uni.im->drawCircle(x, y, r, color, opacity);
+                else
+                    _uni.im->drawCircle(x, y, r, color);
+                }
+            else 
+                {
+                const int lx = _uni.im->lx();
+                const int ly = _uni.im->ly();
+                if ((x - r >= 0) && (x + r < lx) && (y - r >= 0) && (y + r < ly))
+                    _drawCircleZbuf<false, USE_BLENDING>(x, y, r, color, opacity, Q.w);
+                else
+                    {
+                    if ((x >= 0) && (x < lx) && (y >= 0) && (y < ly))
+                        _drawCircleZbuf<true, USE_BLENDING>(x, y, r, color, opacity, Q.w);
+                    }
+                }                
+            }
+
+
+        template<bool USE_BLENDING> void _drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
+            {
+            if ((pos_list == nullptr) || (colors_ind == nullptr) || (colors == nullptr) || (radius_ind == nullptr) || (radius == nullptr)) return;
+            if ((USE_BLENDING) && ((opacities_ind == nullptr) || (opacities == nullptr))) return;
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return;   // nothing to do
+            const bool has_zbuffer = ((ZBUFFER) && ((_uni.zbuf != nullptr) && (_zbuffer_len >= _uni.im->lx() * _uni.im->ly())));
+            for (int k = 0; k < nb_dots; k++)
+                {
+                fVec4 Q = _projM * _r_modelViewM.mult1(pos_list[k]);
+                if (ORTHO) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+                if ((Q.w < -1) || (Q.w > 1)) continue;
+                Q.x = ((Q.x + 1) * LX) / 2 - _ox;
+                Q.y = ((Q.y + 1) * LY) / 2 - _oy;
+                const int x = (int)roundfp(Q.x);
+                const int y = (int)roundfp(Q.y);
+                if (!has_zbuffer)
+                    {
+                    if (USE_BLENDING) 
+                        _uni.im->drawCircle(x, y, radius[radius_ind[k]], colors[colors_ind[k]], opacities[opacities_ind[k]]); 
+                    else 
+                        _uni.im->drawCircle(x, y, radius[radius_ind[k]], colors[colors_ind[k]]);
+                    }
+                else
+                    {
+                    const int lx = _uni.im->lx();
+                    const int ly = _uni.im->ly();
+                    const int r = radius[radius_ind[k]];
+                    if ((x - r >= 0) && (x + r < lx) && (y - r >= 0) && (y + r < ly))
+                        _drawCircleZbuf<false,USE_BLENDING>(x, y, r, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                    else
+                        {
+                        if ((x >= 0) && (x < lx) && (y >= 0) && (y < ly))
+                            _drawCircleZbuf<true, USE_BLENDING>(x, y, r, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                        }
+                    }
+                }
+            }
+
+
+        template<bool CHECKRANGE, bool USE_BLENDING> void drawPixelZbuf(int x, int y, color_t color, float opacity, float z)
+            {
+            if (CHECKRANGE && ((x < 0) || (x >= _uni.im->lx()) || (y < 0) || (y >= _uni.im->ly()))) return;
+            if (_uni.zbuf[x + _uni.im->lx() * y] < z)
+                {
+                _uni.zbuf[x + _uni.im->lx() * y] = z;
+                if (USE_BLENDING) _uni.im->drawPixel<false>(x, y, color, opacity); else  _uni.im->drawPixel<false>(x, y, color);
+                }
+            }
+
+
+        template<bool CHECKRANGE, bool USE_BLENDING> TGX_INLINE inline void drawHLineZbuf(int x, int y, int w, color_t color, float opacity, float z)
+            {
+            if (CHECKRANGE)	// optimized away at compile time
+                {
+                const int lx = _uni.im->lx();
+                const int ly = _uni.im->ly();
+                if ((y < 0) || (y >= ly) || (x >= lx)) return;
+                if (x < 0) { w += x; x = 0; }
+                if (x + w > lx) { w = lx - x; }
+                }
+            while(w--) drawPixelZbuf<CHECKRANGE, USE_BLENDING>(x++, y, color, opacity, z);
+            }
+
+
+        template<bool CHECKRANGE, bool USE_BLENDING> void _drawCircleZbuf(int xm, int ym, int r, color_t color, float opacity, float z)
+            { 
+            if ((CHECKRANGE) && (r > 2))
+                { // circle is large enough to check first if there is something to draw.
+                if ((xm + r < 0) || (xm - r >= _uni.im->lx()) || (ym + r < 0) || (ym - r >= _uni.im->ly())) return; // outside of image. 
+                }
+
+            auto fillcolor = color; 
+            const bool OUTLINE = true;
+            const bool FILL = true;
+
+            switch (r)
+                {
+                case 0:
+                    {
+                    if (OUTLINE)
+                        drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm, ym, color, opacity, z);
+                    else if (FILL)
+                        drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm, ym, fillcolor, opacity, z);
+                    return;
+                    }
+                case 1:
+                    {
+                    if (FILL)
+                        drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm, ym, fillcolor, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm + 1, ym, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm - 1, ym, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm, ym - 1, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm, ym + 1, color, opacity, z);
+                    return;
+                    }
+                }
+            int x = -r, y = 0, err = 2 - 2 * r;
+            do {
+                if (OUTLINE)
+                    {
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm - x, ym + y, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm - y, ym - x, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm + x, ym - y, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm + y, ym + x, color, opacity, z);
+                    }
+                r = err;
+                if (r <= y)
+                    {
+                    if (FILL)
+                        {
+                        drawHLineZbuf<CHECKRANGE, USE_BLENDING>(xm, ym + y, -x, fillcolor, opacity, z);
+                        drawHLineZbuf<CHECKRANGE, USE_BLENDING>(xm + x + 1, ym - y, -x - 1, fillcolor, opacity, z);
+                        }
+                    err += ++y * 2 + 1;
+                    }
+                if (r > x || err > y)
+                    {
+                    err += ++x * 2 + 1;
+                    if (FILL)
+                        {
+                        if (x)
+                            {
+                            drawHLineZbuf<CHECKRANGE, USE_BLENDING>(xm - y + 1, ym - x, y - 1, fillcolor, opacity, z);
+                            drawHLineZbuf<CHECKRANGE, USE_BLENDING>(xm, ym + x, y, fillcolor, opacity, z);
+                            }
+                        }
+                    }
+                } 
+            while (x < 0);
+            }
+
+
+
         /**
         * For adaptative mesh: compute the diameter (in pixels) of the unit sphere S(0,1) once projected the screen
         **/
@@ -2771,58 +3102,38 @@ namespace tgx
                     const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PC0->P);
                     if (cu * _culling_dir > 0) goto rasterize_next_triangle; // skip triangle !
                     // triangle is not culled
+
+                    *((fVec4*)PC2) = _projM * PC2->P;
+                    if (ORTHO) { PC2->w = 2.0f - PC2->z; } else { PC2->zdivide(); }
+
+                    if (PC0->missedP)
+                        {
+                        *((fVec4*)PC0) = _projM * PC0->P;
+                        if (ORTHO) { PC0->w = 2.0f - PC0->z; } else { PC0->zdivide(); }
+                        }
+                    if (PC1->missedP)
+                        {
+                        *((fVec4*)PC1) = _projM * PC1->P;
+                        if (ORTHO) { PC1->w = 2.0f - PC1->z; } else { PC1->zdivide(); }
+                        }
+                        
+                    // for the time being, we just drop the triangles that need clipping
+                    // *** TODO : implement correct clipping ***                        
                     if (cliptestneeded)
                         {
-                        // test if clipping is needed
-                        *((fVec4*)PC2) = _projM * PC2->P;
-                        if (ORTHO) { PC2->w = 2.0f - PC2->z; }
-                        else { PC2->zdivide(); }
-                        bool needclip = (PC2->P.z >= 0)
+                        const bool needclip = (PC2->P.z >= 0)
                             | (PC2->x < -clipboundXY) | (PC2->x > clipboundXY)
                             | (PC2->y < -clipboundXY) | (PC2->y > clipboundXY)
-                            | (PC2->z < -1) | (PC2->z > 1);
-                        if (PC0->missedP)
-                            {
-                            *((fVec4*)PC0) = _projM * PC0->P;
-                            if (ORTHO) { PC0->w = 2.0f - PC0->z; }
-                            else { PC0->zdivide(); }
-                            needclip |= (PC0->P.z >= 0)
-                                | (PC0->x < -clipboundXY) | (PC0->x > clipboundXY)
-                                | (PC0->y < -clipboundXY) | (PC0->y > clipboundXY)
-                                | (PC0->z < -1) | (PC0->z > 1);
-                            }
-                        if (PC1->missedP)
-                            {
-                            *((fVec4*)PC1) = _projM * PC1->P;
-                            if (ORTHO) { PC1->w = 2.0f - PC1->z; }
-                            else { PC1->zdivide(); }
-                            needclip |= (PC1->P.z >= 0)
-                                | (PC1->x < -clipboundXY) | (PC1->x > clipboundXY)
-                                | (PC1->y < -clipboundXY) | (PC1->y > clipboundXY)
-                                | (PC1->z < -1) | (PC1->z > 1);
-                            }
-                        // for the time being, we just drop the triangles that need clipping
-                        // *** TODO : implement correct clipping ***
+                            | (PC2->z < -1) | (PC2->z > 1)                      
+                            | (PC0->P.z >= 0)
+                            | (PC0->x < -clipboundXY) | (PC0->x > clipboundXY)
+                            | (PC0->y < -clipboundXY) | (PC0->y > clipboundXY)
+                            | (PC0->z < -1) | (PC0->z > 1)
+                            | (PC1->P.z >= 0)
+                            | (PC1->x < -clipboundXY) | (PC1->x > clipboundXY)
+                            | (PC1->y < -clipboundXY) | (PC1->y > clipboundXY)
+                            | (PC1->z < -1) | (PC1->z > 1);
                         if (needclip) goto rasterize_next_triangle;
-                        }
-                    else
-                        {
-                        // skip the clipping test
-                        *((fVec4*)PC2) = _projM * PC2->P;
-                        if (ORTHO) { PC2->w = 2.0f - PC2->z; }
-                        else { PC2->zdivide(); }
-                        if (PC0->missedP)
-                            {
-                            *((fVec4*)PC0) = _projM * PC0->P;
-                            if (ORTHO) { PC0->w = 2.0f - PC0->z; }
-                            else { PC0->zdivide(); }
-                            }
-                        if (PC1->missedP)
-                            {
-                            *((fVec4*)PC1) = _projM * PC1->P;
-                            if (ORTHO) { PC1->w = 2.0f - PC1->z; }
-                            else { PC1->zdivide(); }
-                            }
                         }
 
                     // ok, the triangle must be rasterized !
@@ -3081,23 +3392,24 @@ namespace tgx
                         // face culling
                         fVec3 faceN = crossProduct(PC1->P - PC0->P, PC2->P - PC0->P);
                         const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PC0->P);
-                        if (cu * _culling_dir > 0) goto rasterize_next_triangle; // skip triangle !
+                        if (cu * _culling_dir > 0) goto rasterize_next_wireframetriangle; // skip triangle !
+
 
                         // triangle is not culled
-                        *((fVec4*)PC2) = _projM * PC2->P;
-                        if (!ORTHO) { PC2->zdivide(); }
+                        *((fVec4*)PC2) = _projM * PC2->P;                        
+                        if (ORTHO) { PC2->w = 2.0f - PC2->z; } else { PC2->zdivide(); }
                         *((fVec4*)PC2) = M.mult1(*((fVec4*)PC2));
 
                         if (PC0->missedP)
                             {
-                            *((fVec4*)PC0) = _projM * PC0->P;
-                            if (!ORTHO) { PC0->zdivide(); }
+                            *((fVec4*)PC0) = _projM * PC0->P;                            
+                            if (ORTHO) { PC0->w = 2.0f - PC0->z; } else { PC0->zdivide(); }
                             *((fVec4*)PC0) = M.mult1(*((fVec4*)PC0));
                             }
                         if (PC1->missedP)
                             {
                             *((fVec4*)PC1) = _projM * PC1->P;
-                            if (!ORTHO) { PC1->zdivide(); }
+                            if (ORTHO) { PC1->w = 2.0f - PC1->z; } else { PC1->zdivide(); }
                             *((fVec4*)PC1) = M.mult1(*((fVec4*)PC1));
                             }
 
@@ -3105,6 +3417,12 @@ namespace tgx
                         PC0->missedP = false;
                         PC1->missedP = false;
                         PC2->missedP = false;
+
+                        // clip test
+                        if ((PC0->P.z >= 0) || (PC0->z < -1) || (PC0->z > 1) 
+                         || (PC1->P.z >= 0) || (PC1->z < -1) || (PC1->z > 1) 
+                         || (PC2->P.z >= 0) || (PC2->z < -1) || (PC2->z > 1))
+                            goto rasterize_next_wireframetriangle;
 
                         // draw triangle                       
                         if (DRAW_FAST)
@@ -3138,7 +3456,7 @@ namespace tgx
                             _uni.im->drawWideLine(*((fVec2*)PC2), *((fVec2*)PC0), thickness, color, opacity);
                             }
 
-                    rasterize_next_triangle:
+                    rasterize_next_wireframetriangle:
 
                         if (--nbt == 0) break; // exit loop at end of chain
 
@@ -3169,17 +3487,21 @@ namespace tgx
             const fVec4 Q0 = _r_modelViewM.mult1(P1);
             const fVec4 Q1 = _r_modelViewM.mult1(P2);
 
+            if ((Q0.z >= 0)||(Q1.z >= 0)) return;
+
             const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
                 0, LY / 2.0f, 0, LY / 2.0f - _oy,
                 0, 0, 1, 0,
                 0, 0, 0, 0);
 
             fVec4 H0 = _projM * Q0;
-            if (!ORTHO) H0.zdivide();
+            if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+            if ((H0.w < -1) || (H0.w > 1)) return;
             H0 = M.mult1(H0);
 
             fVec4 H1 = _projM * Q1;
-            if (!ORTHO) H1.zdivide();
+            if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+            if ((H1.w < -1) || (H1.w > 1)) return;
             H1 = M.mult1(H1);
 
             if (DRAW_FAST)
@@ -3218,12 +3540,16 @@ namespace tgx
                 const fVec4 Q0 = _r_modelViewM.mult1(vertices[ind_vertices[n]]);
                 const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
 
+                if ((Q0.z >= 0)||(Q1.z >= 0)) return;
+                
                 fVec4 H0 = _projM * Q0;
-                if (!ORTHO) H0.zdivide();
+                if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+                if ((H0.w < -1) || (H0.w > 1)) continue;
                 H0 = M.mult1(H0);
 
                 fVec4 H1 = _projM * Q1;
-                if (!ORTHO) H1.zdivide();
+                if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+                if ((H1.w < -1) || (H1.w > 1)) continue;
                 H1 = M.mult1(H1);
 
                 if (DRAW_FAST)
@@ -3256,6 +3582,8 @@ namespace tgx
             const fVec4 Q1 = _r_modelViewM.mult1(P2);
             const fVec4 Q2 = _r_modelViewM.mult1(P3);
 
+            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+
             // face culling
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
             const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
@@ -3267,15 +3595,18 @@ namespace tgx
                 0, 0, 0, 0);
 
             fVec4 H0 = _projM * Q0;
-            if (!ORTHO) H0.zdivide();
+            if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+            if ((H0.w < -1) || (H0.w > 1)) return;
             H0 = M.mult1(H0);
 
             fVec4 H1 = _projM * Q1;
-            if (!ORTHO) H1.zdivide();
+            if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+            if ((H1.w < -1) || (H1.w > 1)) return;
             H1 = M.mult1(H1);
 
             fVec4 H2 = _projM * Q2;
-            if (!ORTHO) H2.zdivide();
+            if (ORTHO) { H2.w = 2.0f - H2.z; } else { H2.zdivide(); }
+            if ((H2.w < -1) || (H2.w > 1)) return;
             H2 = M.mult1(H2);
 
             // draw triangle                       
@@ -3336,21 +3667,26 @@ namespace tgx
                 const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
                 const fVec4 Q2 = _r_modelViewM.mult1(vertices[ind_vertices[n + 2]]);
 
+                if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+
                 // face culling 
                 fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
                 const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
                 if (cu * _culling_dir > 0) continue; // we discard the triangle.
 
                 fVec4 H0 = _projM * Q0;
-                if (!ORTHO) H0.zdivide();
+                if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+                if ((H0.w < -1) || (H0.w > 1)) continue;
                 H0 = M.mult1(H0);
 
                 fVec4 H1 = _projM * Q1;
-                if (!ORTHO) H1.zdivide();
+                if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+                if ((H1.w < -1) || (H1.w > 1)) continue;
                 H1 = M.mult1(H1);
 
                 fVec4 H2 = _projM * Q2;
-                if (!ORTHO) H2.zdivide();
+                if (ORTHO) { H2.w = 2.0f - H2.z; } else { H2.zdivide(); }
+                if ((H2.w < -1) || (H2.w > 1)) continue;
                 H2 = M.mult1(H2);
 
                 // draw triangle                       
@@ -3405,6 +3741,8 @@ namespace tgx
             const fVec4 Q1 = _r_modelViewM.mult1(P2);
             const fVec4 Q2 = _r_modelViewM.mult1(P3);
 
+            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+
             // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
             const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
@@ -3412,25 +3750,31 @@ namespace tgx
 
             const fVec4 Q3 = _r_modelViewM.mult1(P4); // compute fourth point
 
+            if (Q3.z >= 0) return;
+
             const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
                 0, LY / 2.0f, 0, LY / 2.0f - _oy,
                 0, 0, 1, 0,
                 0, 0, 0, 0);
 
             fVec4 H0 = _projM * Q0;
-            if (!ORTHO) H0.zdivide();
+            if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+            if ((H0.w < -1) || (H0.w > 1)) return;
             H0 = M.mult1(H0);
 
             fVec4 H1 = _projM * Q1;
-            if (!ORTHO) H1.zdivide();
+            if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+            if ((H1.w < -1) || (H1.w > 1)) return;
             H1 = M.mult1(H1);
 
             fVec4 H2 = _projM * Q2;
-            if (!ORTHO) H2.zdivide();
+            if (ORTHO) { H2.w = 2.0f - H2.z; } else { H2.zdivide(); }
+            if ((H2.w < -1) || (H2.w > 1)) return;
             H2 = M.mult1(H2);
 
             fVec4 H3 = _projM * Q3;
-            if (!ORTHO) H3.zdivide();
+            if (ORTHO) { H3.w = 2.0f - H3.z; } else { H3.zdivide(); }
+            if ((H3.w < -1) || (H3.w > 1)) return;
             H3 = M.mult1(H3);
 
             // draw quad                      
@@ -3479,6 +3823,8 @@ namespace tgx
                 const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
                 const fVec4 Q2 = _r_modelViewM.mult1(vertices[ind_vertices[n + 2]]);
 
+                if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+
                 // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
                 fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
                 const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
@@ -3486,20 +3832,26 @@ namespace tgx
 
                 const fVec4 Q3 = _r_modelViewM.mult1(vertices[ind_vertices[n + 3]]); // compute fourth point
 
+                if (Q3.z >= 0) return;
+
                 fVec4 H0 = _projM * Q0;
-                if (!ORTHO) H0.zdivide();
+                if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+                if ((H0.w < -1) || (H0.w > 1)) continue;
                 H0 = M.mult1(H0);
 
                 fVec4 H1 = _projM * Q1;
-                if (!ORTHO) H1.zdivide();
+                if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+                if ((H1.w < -1) || (H1.w > 1)) continue;
                 H1 = M.mult1(H1);
 
                 fVec4 H2 = _projM * Q2;
-                if (!ORTHO) H2.zdivide();
+                if (ORTHO) { H2.w = 2.0f - H2.z; } else { H2.zdivide(); }
+                if ((H2.w < -1) || (H2.w > 1)) continue;
                 H2 = M.mult1(H2);
 
                 fVec4 H3 = _projM * Q3;
-                if (!ORTHO) H3.zdivide();
+                if (ORTHO) { H3.w = 2.0f - H3.z; } else { H3.zdivide(); }
+                if ((H3.w < -1) || (H3.w > 1)) continue;
                 H3 = M.mult1(H3);
 
                 // draw quad                      
