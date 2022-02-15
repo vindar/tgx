@@ -2737,6 +2737,18 @@ struct RGB64
     };
 
 
+    /**
+    * Interpolate between 2 colors.
+    *
+    * Return the color  col1 + alpha*(col2 - col1)
+    **/
+    inline RGBf interpolate(const RGBf& col1, const  RGBf& col2, float alpha)
+        {
+        return RGBf(col1.R + alpha * (col2.R - col1.R),
+                    col1.G + alpha * (col2.G - col1.G),
+                    col1.B + alpha * (col2.B - col1.B));
+        }
+
 
     /**
     * Interpolate between 3 colors.
