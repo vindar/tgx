@@ -1,0 +1,2049 @@
+/** @file Renderer3D.inl */
+//
+// Copyright 2020 Arvind Singh
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+//version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; If not, see <http://www.gnu.org/licenses/>.
+#ifndef _TGX_RENDERER3D_INL_
+#define _TGX_RENDERER3D_INL_
+
+
+/************************************************************************************
+*
+* Implementation file for the template class Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>
+* 
+*************************************************************************************/
+namespace tgx
+{
+
+
+
+    /********************************************************
+    * CONSTRUCTOR
+    *********************************************************/
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::Renderer3D() : _currentpow(-1), _ox(0), _oy(0), _zbuffer_len(0), _uni(), _culling_dir(1)
+            {
+            _uni.im = nullptr;
+            _uni.tex = nullptr; 
+            _uni.shader_type = 0; 
+            _uni.zbuf = 0; 
+            _uni.facecolor = RGBf(1.0, 1.0, 1.0);
+            _uni.use_bilinear_texturing = false;
+
+            // let's set some default values
+            fMat4 M;
+            if (ORTHO)
+                M.setOrtho(-16.0f, 16.0f, -12.0f, 12.0f, 1.0f, 1000.0f);
+            else
+                M.setPerspective(45.0f, 1.5f, 1.0f, 1000.0f);  // 45 degree, 4/3 image ratio and minz = 1 maxz = 1000.
+            this->setProjectionMatrix(M);
+
+            this->setLookAt({ 0,0,0 }, { 0,0,-1 }, { 0,1,0 }); // look toward the negative z axis (id matrix)
+
+            this->setLight(fVec3(-1.0f, -1.0f, -1.0f), // white light coming from the right, above, in front.
+                RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f)); // full white.
+
+            M.setIdentity();
+            this->setModelMatrix(M); // no transformation on the mesh.
+
+            this->setMaterial({ 0.75f, 0.75f, 0.75f }, 0.15f, 0.7f, 0.5f, 8); // just in case: silver color and some default reflexion param...
+            this->_precomputeSpecularTable(8);
+            }
+
+
+
+
+
+
+        /********************************************************
+        * TRIANGLE CLIPPING
+        *********************************************************/
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_triangleClip1in(int shader, tgx::fVec4 CP,
+            float cp1, float cp2, float cp3,
+            const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
+            RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
+            {
+            const float f12 = _cpfactor(CP, cp1, cp2);
+            const float f13 = _cpfactor(CP, cp1, cp3);
+            fVec4& U1 = *((fVec4*)&P1);
+            fVec4& U2 = *((fVec4*)&P2);
+            fVec4& U3 = *((fVec4*)&P3);
+            fVec4& nU1 = *((fVec4*)&nP1);
+            fVec4& nU2 = *((fVec4*)&nP2);
+            fVec4& nU3 = *((fVec4*)&nP3);
+
+            nU1 = U1;
+            nU2 = U1 + f12 * (U2 - U1);
+            nU3 = U1 + f13 * (U3 - U1);
+
+            nP1.color = P1.color;
+            nP2.color = interpolate(P1.color, P2.color, f12);
+            nP3.color = interpolate(P1.color, P3.color, f13);
+
+            if (TGX_SHADER_HAS_TEXTURE(shader))
+                {
+                nP1.T = P1.T;
+                nP2.T = P1.T + f12 * (P2.T - P1.T);
+                nP3.T = P1.T + f13 * (P3.T - P1.T);
+                }
+            }
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_triangleClip2in(int shader, tgx::fVec4 CP,
+            float cp1, float cp2, float cp3,
+            const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
+            RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
+            {
+            const float f23 = _cpfactor(CP, cp2, cp3);
+            const float f13 = _cpfactor(CP, cp1, cp3);
+            fVec4& U1 = *((fVec4*)&P1);
+            fVec4& U2 = *((fVec4*)&P2);
+            fVec4& U3 = *((fVec4*)&P3);
+            fVec4& nU1 = *((fVec4*)&nP1);
+            fVec4& nU2 = *((fVec4*)&nP2);
+            fVec4& nU3 = *((fVec4*)&nP3);
+            fVec4& nU4 = *((fVec4*)&nP4);
+
+            nU1 = U1;
+            nU2 = U2;
+            nU3 = U2 + f23 * (U3 - U2);
+            nU4 = U1 + f13 * (U3 - U1);
+
+            nP1.color = P1.color;
+            nP2.color = P2.color;
+            nP3.color = interpolate(P2.color, P3.color, f23);
+            nP4.color = interpolate(P1.color, P3.color, f13);
+
+            if (TGX_SHADER_HAS_TEXTURE(shader))
+                {
+                nP1.T = P1.T;
+                nP2.T = P2.T;
+                nP3.T = P2.T + f23 * (P3.T - P2.T);
+                nP4.T = P1.T + f13 * (P3.T - P1.T);
+                }
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_triangleClip(int shader, tgx::fVec4 CP, float off,
+            const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
+            RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
+            {
+            const float cp1 = _cpdist(CP, off, P1);
+            const float cp2 = _cpdist(CP, off, P2);
+            const float cp3 = _cpdist(CP, off, P3);
+            if ((cp1 >= 0) && (cp2 >= 0) && (cp3 >= 0))
+                { // triangle fully inside so it can be drawn directly
+                return 0;
+                }
+            // at least one vertex if outside the clip plane
+            if (cp1 >= 0)
+                {
+                if (cp2 >= 0)
+                    {
+                    _triangleClip2in(shader, CP, cp1, cp2, cp3, P1, P2, P3, nP1, nP2, nP3, nP4);
+                    return 2;
+                    }
+                else if (cp3 >= 0)
+                    {
+                    _triangleClip2in(shader, CP, cp3, cp1, cp2, P3, P1, P2, nP1, nP2, nP3, nP4);
+                    return 2;
+                    }
+                _triangleClip1in(shader, CP, cp1, cp2, cp3, P1, P2, P3, nP1, nP2, nP3, nP4);
+                return 1;
+                }
+            if (cp2 >= 0)
+                {
+                if (cp3 >= 0)
+                    {
+                    _triangleClip2in(shader, CP, cp2, cp3, cp1, P2, P3, P1, nP1, nP2, nP3, nP4);
+                    return 2;
+                    }
+                _triangleClip1in(shader, CP, cp2, cp3, cp1, P2, P3, P1, nP1, nP2, nP3, nP4);
+                return 1;
+                }
+
+            if (cp3 >= 0)
+                {
+                _triangleClip1in(shader, CP, cp3, cp1, cp2, P3, P1, P2, nP1, nP2, nP3, nP4);
+                return 1;
+                }
+            // nothing to draw !
+            return -1;
+            }
+
+
+
+    /********************************************************
+    * DRAWING TRIANGLE / QUADS / MESHES
+    *********************************************************/
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawTriangleClipped(const int RASTER_TYPE,
+            const fVec4* Q0, const fVec4* Q1, const fVec4* Q2,
+            const fVec3* N0, const fVec3* N1, const fVec3* N2,
+            const fVec2* T0, const fVec2* T1, const fVec2* T2,
+            const RGBf& col0, const RGBf& col1, const RGBf& col2)
+            {
+
+            _uni.shader_type = RASTER_TYPE; // just in case
+
+            // face culling (unneeded but we must compute cu anyway). 
+            fVec3 faceN = crossProduct(*Q1 - *Q0, *Q2 - *Q0);
+            const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, *Q0);
+            if (cu * _culling_dir > 0) return; // skip triangle !
+            
+            RasterizerVec4 PC0,PC1,PC2;
+
+            *((fVec4*)&PC0) = _projM * (*Q0);
+            *((fVec4*)&PC1) = _projM * (*Q1);
+            *((fVec4*)&PC2) = _projM * (*Q2);
+
+
+            // compute phong lightning
+            if (TGX_SHADER_HAS_GOURAUD(RASTER_TYPE))
+                { // gouraud shading
+                const fVec3 NN0 = _r_modelViewM.mult0(*N0);
+                const fVec3 NN1 = _r_modelViewM.mult0(*N1);
+                const fVec3 NN2 = _r_modelViewM.mult0(*N2);
+
+                // reverse normal only when culling is disabled (and we assume in this case that normals are  given for the CCW face).
+                const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
+
+                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
+                    {
+                    PC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
+                    PC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
+                    PC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
+                    }
+                else
+                    {
+                    PC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm), col0);
+                    PC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm), col1);
+                    PC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm), col2);
+                    }
+                }
+            else
+                { // flat shading
+                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
+                faceN.normalize();
+                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
+                    {
+                    _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                    }
+                else
+                    {
+                    _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                    }
+                PC0.color = _uni.facecolor; // unneeded but
+                PC1.color = _uni.facecolor; // does no harm
+                PC2.color = _uni.facecolor; // and remove a warning
+                }
+
+            if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
+                { // store texture vectors if needed
+                PC0.T = *T0;
+                PC1.T = *T1;
+                PC2.T = *T2;
+                }
+
+            // ok, now PC0, PC1 and PC2 contain the points in NDC coord with associated color and texture indices, let's go (recursively) !
+            _drawTriangleClippedSub(RASTER_TYPE, 0, PC0, PC1, PC2); 
+            }
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawTriangleClippedSub(const int RASTER_TYPE, const int plane, const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3)
+            {
+            fVec4 CP; 
+            float off;
+            RasterizerVec4 V1, V2, V3, V4;            
+            switch (plane)
+                {                
+                case 0: // left plane
+                    if (ORTHO)
+                        { // X + 1 >= 0
+                        CP = fVec4(1, 0, 0, 0);
+                        off = 1;
+                        }
+                    else
+                        { // X  + CLIPBOUND_XY W >= 0
+                        CP = fVec4(1, 0, 0, CLIPBOUND_XY);
+                        off = 0;
+                        }
+                    break;
+                
+                case 1: // right plane
+                    if (ORTHO)
+                        { // -X + 1 >= 0
+                        CP = fVec4(-1, 0, 0, 0);
+                        off = 1;
+                        }
+                    else
+                        { // -X + CLIPBOUND_XY W >= 0
+                        CP = fVec4(-1, 0, 0, CLIPBOUND_XY);
+                        off = 0;
+                        }
+                    break;
+                
+                case 2: // bottom plane
+                    if (ORTHO)
+                        { // Y + 1 >= 0
+                        CP = fVec4(0, 1, 0, 0);
+                        off = 1;
+                        }
+                    else
+                        { // Y + CLIPBOUND_XY W >= 0
+                        CP = fVec4(0, 1, 0, CLIPBOUND_XY);
+                        off = 0;
+                        }
+                    break;
+                
+                case 3: // top plane
+                    if (ORTHO)
+                        { // -Y + 1 >= 0
+                        CP = fVec4(0, -1, 0, 0);
+                        off = 1;
+                        }
+                    else
+                        { // -Y + CLIPBOUND_XY W >= 0
+                        CP = fVec4(0, -1, 0, CLIPBOUND_XY);
+                        off = 0;
+                        }
+                    break;
+                
+                case 4: // near plane 
+                    if (ORTHO)
+                        { // Z + 1 >= 0
+                        CP = fVec4(0, 0, 1, 0);
+                        off = 1;
+                        }
+                    else
+                        { // Z + W >= 0
+                        CP = fVec4(0, 0, 1, 1);
+                        off = 0;
+                        }
+                    break;
+                /*
+                case 5: // far plane
+                    if (ORTHO)
+                        { // -Z + 1 >= 0
+                        CP = fVec4(0, 0, -1, 0);
+                        off = 1;
+                        }
+                    else
+                        { // -Z + W >= 0
+                        CP = fVec4(0, 0, -1, 1);
+                        off = 0;
+                        }
+                    break;
+                */
+
+                default:
+                    {  
+                    V1 = P1; 
+                    V2 = P2; 
+                    V3 = P3;
+                    // Triangle is now correctly clipped so it can be drawn directly !
+                    if (ORTHO)
+                        {
+                        V1.w = 2.0f - V1.z;
+                        V2.w = 2.0f - V2.z;
+                        V3.w = 2.0f - V3.z;
+                        }
+                    else
+                        {
+                        V1.zdivide();
+                        V2.zdivide();
+                        V3.zdivide();
+                        }
+                    rasterizeTriangle<LX, LY>(V1, V2, V3, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
+                    return;
+                    }
+                }
+            const int nbt = _triangleClip(RASTER_TYPE, CP, off, P1, P2, P3, V1, V2, V3, V4);
+            switch (nbt)
+                {
+                case 0:
+                    _drawTriangleClippedSub(RASTER_TYPE, plane + 1, P1, P2, P3);
+                    break;
+                case 2: 
+                    _drawTriangleClippedSub(RASTER_TYPE, plane + 1, V1, V3, V4);
+                case 1:
+                    _drawTriangleClippedSub(RASTER_TYPE, plane + 1, V1, V2, V3);
+                }
+            return;
+            }
+
+
+
+
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawTriangle(const int RASTER_TYPE,
+                           const fVec3 * P0, const fVec3 * P1, const fVec3 * P2,
+                           const fVec3 * N0, const fVec3 * N1, const fVec3 * N2,
+                           const fVec2 * T0, const fVec2 * T1, const fVec2 * T2,
+                           const RGBf & Vcol0, const RGBf & Vcol1, const RGBf & Vcol2)
+            {
+            _uni.shader_type = RASTER_TYPE;
+
+            // compute position in view space.
+            const fVec4 Q0 = _r_modelViewM.mult1(*P0);
+            const fVec4 Q1 = _r_modelViewM.mult1(*P1);
+            const fVec4 Q2 = _r_modelViewM.mult1(*P2);
+            
+            // face culling
+            fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
+            const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+            if (cu * _culling_dir > 0) return; // skip triangle !
+
+            RasterizerVec4 PC0, PC1, PC2;
+
+            // test if clipping is needed
+            (*((fVec4*)&PC0)) = _projM * Q0;
+            if (ORTHO) { PC0.w = 2.0f - PC0.z; } else { PC0.zdivide(); }
+            bool needclip = (PC0.x < -CLIPBOUND_XY) | (PC0.x > CLIPBOUND_XY)
+                          | (PC0.y < -CLIPBOUND_XY) | (PC0.y > CLIPBOUND_XY)
+                          | (PC0.z < -1) | (PC0.z > 1) | (PC0.w <= 0);
+          
+            (*((fVec4*)&PC1)) = _projM * Q1;
+            if (ORTHO) { PC1.w = 2.0f - PC1.z; } else { PC1.zdivide(); }
+            needclip |= (PC1.x < -CLIPBOUND_XY) | (PC1.x > CLIPBOUND_XY)
+                     | (PC1.y < -CLIPBOUND_XY) | (PC1.y > CLIPBOUND_XY)
+                     | (PC1.z < -1) | (PC1.z > 1) | (PC1.w <= 0);
+
+            (*((fVec4*)&PC2)) = _projM * Q2;
+            if (ORTHO) { PC2.w = 2.0f - PC2.z; } else { PC2.zdivide(); }
+            needclip |= (PC2.x < -CLIPBOUND_XY) | (PC2.x > CLIPBOUND_XY)
+                     | (PC2.y < -CLIPBOUND_XY) | (PC2.y > CLIPBOUND_XY)
+                     | (PC2.z < -1) | (PC2.z > 1) | (PC2.w <= 0);
+
+            if (needclip)
+                {// test if we can discard the triangle immediately
+                if (!_discardTriangle(PC0, PC1, PC2))
+                    { // no, so we use the slow version where we perform clipping.
+                    _drawTriangleClipped(RASTER_TYPE, 
+                                         &Q0, &Q1, &Q2, // vertices are sent after modelview mult.
+                                         N0, N1, N2,
+                                         T0, T1, T2,
+                                         Vcol0, Vcol1, Vcol2);
+                    }
+                return;
+                }
+
+            // compute phong lightning
+            if (TGX_SHADER_HAS_GOURAUD(RASTER_TYPE))
+                { // gouraud shading
+                const fVec3 NN0 = _r_modelViewM.mult0(*N0);
+                const fVec3 NN1 = _r_modelViewM.mult0(*N1);
+                const fVec3 NN2 = _r_modelViewM.mult0(*N2);
+
+                // reverse normal only when culling is disabled (and we assume in this case that normals are  given for the CCW face).
+                const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
+
+                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
+                    {
+                    PC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
+                    PC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
+                    PC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
+                    }
+                else
+                    {
+                    PC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm),Vcol0);
+                    PC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm),Vcol1);
+                    PC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm),Vcol2);
+                    }
+                }
+            else
+                { // flat shading
+                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
+                faceN.normalize();
+                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
+                    {
+                    _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                    }
+                else
+                    {
+                    _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                    }
+                }
+
+            if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
+                { // store texture vectors if needed
+                PC0.T = *T0;
+                PC1.T = *T1;
+                PC2.T = *T2;
+                }
+
+            // go rasterize !          
+            rasterizeTriangle<LX, LY>(PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
+
+            return;
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawQuad(const int RASTER_TYPE,
+            const fVec3* P0, const fVec3* P1, const fVec3* P2, const fVec3* P3,
+            const fVec3* N0, const fVec3* N1, const fVec3* N2, const fVec3* N3,
+            const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3,
+            const RGBf & Vcol0, const RGBf & Vcol1, const RGBf & Vcol2,  const RGBf & Vcol3)
+            {
+            _uni.shader_type = RASTER_TYPE;
+
+            // compute position in wiew space.
+            const fVec4 Q0 = _r_modelViewM.mult1(*P0);
+            const fVec4 Q1 = _r_modelViewM.mult1(*P1);
+            const fVec4 Q2 = _r_modelViewM.mult1(*P2);
+         
+            // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
+            fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
+            const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+            if (cu * _culling_dir > 0) return; // Q3 is coplanar with Q0, Q1, Q2 so we discard the whole quad.
+
+            const fVec4 Q3 = _r_modelViewM.mult1(*P3); // compute fourth point
+
+            RasterizerVec4 PC0, PC1, PC2, PC3;
+
+            // test if clipping is needed
+            (*((fVec4*)&PC0)) = _projM * Q0;
+            if (ORTHO) { PC0.w = 2.0f - PC0.z; } else { PC0.zdivide(); }
+            bool needclip = (PC0.x < -CLIPBOUND_XY) | (PC0.x > CLIPBOUND_XY)
+                     | (PC0.y < -CLIPBOUND_XY) | (PC0.y > CLIPBOUND_XY)
+                     | (PC0.z < -1) | (PC0.z > 1) | (PC0.w <= 0);
+
+            (*((fVec4*)&PC1)) = _projM * Q1;
+            if (ORTHO) { PC1.w = 2.0f - PC1.z; } else { PC1.zdivide(); }
+            needclip |= (PC1.x < -CLIPBOUND_XY) | (PC1.x > CLIPBOUND_XY)
+                     | (PC1.y < -CLIPBOUND_XY) | (PC1.y > CLIPBOUND_XY)
+                     | (PC1.z < -1) | (PC1.z > 1) | (PC1.w <= 0);
+
+            (*((fVec4*)&PC2)) = _projM * Q2;
+            if (ORTHO) { PC2.w = 2.0f - PC2.z; } else { PC2.zdivide(); }
+            needclip |= (PC2.x < -CLIPBOUND_XY) | (PC2.x > CLIPBOUND_XY)
+                     | (PC2.y < -CLIPBOUND_XY) | (PC2.y > CLIPBOUND_XY)
+                     | (PC2.z < -1) | (PC2.z > 1) | (PC2.w <= 0);
+
+            (*((fVec4*)&PC3)) = _projM * Q3;
+            if (ORTHO) { PC3.w = 2.0f - PC3.z; } else { PC3.zdivide(); }
+            needclip |= (PC3.x < -CLIPBOUND_XY) | (PC3.x > CLIPBOUND_XY)
+                     | (PC3.y < -CLIPBOUND_XY) | (PC3.y > CLIPBOUND_XY)
+                     | (PC3.z < -1) | (PC3.z > 1) | (PC3.w <= 0);
+
+            if (needclip)
+                {// test if we can discard some triangles of the quad immediately
+                if (!_discardTriangle(PC0, PC1, PC2))
+                    {// slow version where we perform clipping.
+                    _drawTriangleClipped(RASTER_TYPE, 
+                                         &Q0, &Q1, &Q2, // vertices are sent after modelview mult.
+                                         N0, N1, N2,
+                                         T0, T1, T2,
+                                         Vcol0, Vcol1, Vcol2);
+                    }
+                if (!_discardTriangle(PC0, PC2, PC3))
+                    {// slow version where we perform clipping.
+                    _drawTriangleClipped(RASTER_TYPE, 
+                                         &Q0, &Q2, &Q3, // vertices are sent after modelview mult.
+                                         N0, N2, N3,
+                                         T0, T2, T3,
+                                         Vcol0, Vcol2, Vcol3);
+                    }                
+                return;
+                }
+
+            // compute phong lightning
+            if (TGX_SHADER_HAS_GOURAUD(RASTER_TYPE))
+                { // gouraud shading
+                const fVec3 NN0 = _r_modelViewM.mult0(*N0);
+                const fVec3 NN1 = _r_modelViewM.mult0(*N1);
+                const fVec3 NN2 = _r_modelViewM.mult0(*N2);
+                const fVec3 NN3 = _r_modelViewM.mult0(*N3);
+
+                // reverse normal only when culling is disabled (and we assume in this case that normals are  given for the CCW face).
+                const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
+
+                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
+                    {
+                    PC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
+                    PC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
+                    PC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
+                    PC3.color = _phong<true>(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm));
+                    }
+                else
+                    {
+                    PC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm), Vcol0);
+                    PC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm), Vcol1);
+                    PC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm), Vcol2);
+                    PC3.color = _phong(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm), Vcol3);
+                    }
+                }
+            else
+                { // flat shading
+                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
+                faceN.normalize();
+                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
+                    {
+                    _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                    }
+                else
+                    {
+                    _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                    }
+                }
+
+            if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
+                { // store texture vectors if needed
+                PC0.T = *T0;
+                PC1.T = *T1;
+                PC2.T = *T2;
+                PC3.T = *T3;
+                }
+
+            // go rasterize !
+            rasterizeTriangle<LX, LY>(PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
+            rasterizeTriangle<LX, LY>(PC0, PC2, PC3, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
+            
+            return;
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        int  Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawMesh(const int shader, const Mesh3D<color_t>* mesh, bool use_mesh_material, bool draw_chained_meshes)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly() ))) return -2; // zbuffer required but not available.
+
+            while (mesh)
+                {
+                if (mesh->vertice)
+                    {
+                    if (use_mesh_material)
+                        {   // use mesh material if requested
+                        _r_ambiantColor = _ambiantColor * mesh->ambiant_strength;
+                        _r_diffuseColor = _diffuseColor * mesh->diffuse_strength;
+                        _r_specularColor = _specularColor * mesh->specular_strength;
+                        _r_objectColor = mesh->color;
+                        }
+                    // precompute pow(.,specularExponent) table if needed
+                    const int specularExpo = (use_mesh_material ? mesh->specular_exponent : _specularExponent);
+                    _precomputeSpecularTable(specularExpo);
+                    int raster_type = shader;
+                    if (mesh->normal == nullptr) TGX_SHADER_REMOVE_GOURAUD(raster_type) // gouraud shading not available so we disable it
+                    if ((mesh->texcoord == nullptr) || (mesh->texture == nullptr)) TGX_SHADER_REMOVE_TEXTURE(raster_type) // texturing not available so we disable it
+                    if (TGX_SHADER_HAS_GOURAUD(raster_type))
+                        {
+                        if (TGX_SHADER_HAS_TEXTURE(raster_type))
+                            _drawMesh<TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE>(mesh);
+                        else
+                            _drawMesh<TGX_SHADER_GOURAUD>(mesh);
+                        }
+                    else
+                        {
+                        if (TGX_SHADER_HAS_TEXTURE(raster_type))
+                            _drawMesh<TGX_SHADER_FLAT | TGX_SHADER_TEXTURE>(mesh);
+                        else
+                            _drawMesh<TGX_SHADER_FLAT>(mesh);
+                        }
+                    }
+                mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
+                }
+
+            if (use_mesh_material)
+                { // restore material pre-computed values
+                _r_ambiantColor = _ambiantColor * _ambiantStrength;
+                _r_diffuseColor = _diffuseColor * _diffuseStrength;
+                _r_specularColor = _specularColor * _specularStrength;
+                _r_objectColor = _color;
+                }
+            return 0;
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<int RASTER_TYPE>
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawMesh(const Mesh3D<color_t>* mesh)
+            {
+            _uni.shader_type = RASTER_TYPE;
+
+            static const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURE(RASTER_TYPE));
+            static const bool GOURAUD = (bool)(TGX_SHADER_HAS_GOURAUD(RASTER_TYPE));
+
+            // check if the object is completely outside of the image for fast discard.
+            if (_discardBox(mesh->bounding_box, _projM * _r_modelViewM)) return;
+
+            // check if the clipping test should be performed for each triangle in the mesh.
+            const bool cliptestneeded = _clipTestNeeded(CLIPBOUND_XY, mesh->bounding_box, _projM * _r_modelViewM);
+
+            const fVec3* const tab_vert = mesh->vertice;  // array of vertices
+            const fVec3* const tab_norm = mesh->normal;   // array of normals
+            const fVec2* const tab_tex = mesh->texcoord;  // array of texture
+            const uint16_t* face = mesh->face;      // array of triangles
+
+            // set the texture.
+            _uni.tex = (const Image<color_t>*)mesh->texture;
+
+            ExtVec4 QQA, QQB, QQC;
+            ExtVec4* PC0 = &QQA;
+            ExtVec4* PC1 = &QQB;
+            ExtVec4* PC2 = &QQC;
+
+            int nbt;
+            while ((nbt = *(face++)) > 0)
+                { // starting a chain with nbt triangles
+
+                // load the first triangle
+                const uint16_t v0 = *(face++);
+                if (TEXTURE) PC0->indt = *(face++); else { if (tab_tex) face++; }
+                if (GOURAUD) PC0->indn = *(face++); else { if (tab_norm) face++; }
+
+                const uint16_t v1 = *(face++);
+                if (TEXTURE) PC1->indt = *(face++); else { if (tab_tex) face++; }
+                if (GOURAUD) PC1->indn = *(face++); else { if (tab_norm) face++; }
+
+                const uint16_t v2 = *(face++);
+                if (TEXTURE) PC2->indt = *(face++); else { if (tab_tex) face++; }
+                if (GOURAUD) PC2->indn = *(face++); else { if (tab_norm) face++; }
+
+                // compute vertices position because we are sure we will need them...
+                PC2->P = _r_modelViewM.mult1(tab_vert[v2]);
+                PC0->P = _r_modelViewM.mult1(tab_vert[v0]);
+                PC1->P = _r_modelViewM.mult1(tab_vert[v1]);
+
+                // ...but use lazy computation of other vertex attributes
+                PC0->missedP = true;
+                PC1->missedP = true;
+                PC2->missedP = true;
+
+                while (1)
+                    {
+                    // face culling
+                    fVec3 faceN = crossProduct(PC1->P - PC0->P, PC2->P - PC0->P);
+                    const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PC0->P);
+                    if (cu * _culling_dir > 0) goto rasterize_next_triangle; // skip triangle !
+                    // triangle is not culled
+
+                    *((fVec4*)PC2) = _projM * PC2->P;
+                    if (ORTHO) { PC2->w = 2.0f - PC2->z; } else { PC2->zdivide(); }
+
+                    if (PC0->missedP)
+                        {
+                        *((fVec4*)PC0) = _projM * PC0->P;
+                        if (ORTHO) { PC0->w = 2.0f - PC0->z; } else { PC0->zdivide(); }
+                        }
+                    if (PC1->missedP)
+                        {
+                        *((fVec4*)PC1) = _projM * PC1->P;
+                        if (ORTHO) { PC1->w = 2.0f - PC1->z; } else { PC1->zdivide(); }
+                        }
+                        
+                    // test if triangle must be clipped                                         
+                    if (cliptestneeded)
+                        {
+                        const bool needclip = (PC2->P.z >= 0)
+                            | (PC2->x < -CLIPBOUND_XY) | (PC2->x > CLIPBOUND_XY)
+                            | (PC2->y < -CLIPBOUND_XY) | (PC2->y > CLIPBOUND_XY)
+                            | (PC2->z < -1) | (PC2->z > 1)                      
+                            | (PC0->P.z >= 0)
+                            | (PC0->x < -CLIPBOUND_XY) | (PC0->x > CLIPBOUND_XY)
+                            | (PC0->y < -CLIPBOUND_XY) | (PC0->y > CLIPBOUND_XY)
+                            | (PC0->z < -1) | (PC0->z > 1)
+                            | (PC1->P.z >= 0)
+                            | (PC1->x < -CLIPBOUND_XY) | (PC1->x > CLIPBOUND_XY)
+                            | (PC1->y < -CLIPBOUND_XY) | (PC1->y > CLIPBOUND_XY)
+                            | (PC1->z < -1) | (PC1->z > 1);
+                        if (needclip)
+                            { // need cliiping, test is we can just discard the triangle if not shown on screen
+                            if (!_discardTriangle(*((fVec4*)PC0), *((fVec4*)PC1), *((fVec4*)PC2)))
+                                { // no, use the slow drawing method with clipping
+                                _drawTriangleClipped(RASTER_TYPE,
+                                                &(PC0->P), &(PC1->P), &(PC2->P),
+                                                ((GOURAUD) ? tab_norm + PC0->indn : nullptr), ((GOURAUD) ? tab_norm + PC1->indn : nullptr), ((GOURAUD) ? tab_norm + PC2->indn : nullptr),                                
+                                                ((TEXTURE) ? tab_tex + PC0->indt : nullptr), ((TEXTURE) ? tab_tex + PC1->indt : nullptr), ((TEXTURE) ? tab_tex + PC2->indt : nullptr),
+                                                _uni.facecolor, _uni.facecolor, _uni.facecolor);
+                                }
+                            goto rasterize_next_triangle;
+                            }
+                        }
+
+                    // ok, the triangle must be rasterized !
+                    if (GOURAUD)
+                        { // Gouraud shading : color on vertices
+
+                        // reverse normal only when culling is disabled (and we assume in this case that normals are given for the CCW face).
+                        const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
+                        if (PC0->missedP)
+                            {
+                            PC0->N = _r_modelViewM.mult0(tab_norm[PC0->indn]);
+                            PC0->color = _phong<TEXTURE>(icu * dotProduct(PC0->N, _r_light_inorm), icu * dotProduct(PC0->N, _r_H_inorm));
+                            }
+                        if (PC1->missedP)
+                            {
+                            PC1->N = _r_modelViewM.mult0(tab_norm[PC1->indn]);
+                            PC1->color = _phong<TEXTURE>(icu * dotProduct(PC1->N, _r_light_inorm), icu * dotProduct(PC1->N, _r_H_inorm));
+                            }
+                        PC2->N = _r_modelViewM.mult0(tab_norm[PC2->indn]);
+                        PC2->color = _phong<TEXTURE>(icu * dotProduct(PC2->N, _r_light_inorm), icu * dotProduct(PC2->N, _r_H_inorm));
+                        }
+                    else
+                        { // flat shading : color on faces
+                        const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
+                        faceN.normalize();
+                        _uni.facecolor = _phong<TEXTURE>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                        }
+
+                    if (TEXTURE)
+                        { // compute texture vectors if needed
+                        if (PC0->missedP) { PC0->T = tab_tex[PC0->indt]; }
+                        if (PC1->missedP) { PC1->T = tab_tex[PC1->indt]; }
+                        PC2->T = tab_tex[PC2->indt];
+                        }
+
+                    // attributes are now all up to date
+                    PC0->missedP = false;
+                    PC1->missedP = false;
+                    PC2->missedP = false;
+
+                    // go rasterize !                   
+                    rasterizeTriangle<LX, LY> ((RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ZBUFFER, ORTHO, color_t>);
+              
+                rasterize_next_triangle:
+
+                    if (--nbt == 0) break; // exit loop at end of chain
+
+                    // get the next triangle
+                    const uint16_t nv2 = *(face++);
+                    swap(((nv2 & 32768) ? PC0 : PC1), PC2);
+                    if (TEXTURE) PC2->indt = *(face++); else { if (tab_tex) face++; }
+                    if (GOURAUD) PC2->indn = *(face++);  else { if (tab_norm) face++; }
+                    PC2->P = _r_modelViewM.mult1(tab_vert[nv2 & 32767]);
+                    PC2->missedP = true;
+                    }
+                }
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawTriangles(int shader, int nb_triangles,
+            const uint16_t* ind_vertices, const fVec3* vertices,
+            const uint16_t* ind_normals, const fVec3* normals,
+            const uint16_t* ind_texture, const fVec2* textures,
+            const Image<color_t>* texture_image)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
+            if ((ind_vertices == nullptr) || (vertices == nullptr)) return -3; // invalid vertices
+            if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud            
+            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) TGX_SHADER_REMOVE_TEXTURE(shader) // disable texture
+            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
+            nb_triangles *= 3;
+
+            if (TGX_SHADER_HAS_TEXTURE(shader))
+                {
+                _uni.tex = (const Image<color_t>*)texture_image;
+                if (TGX_SHADER_HAS_GOURAUD(shader))
+                    {
+                    for (int n = 0; n < nb_triangles; n += 3)
+                        {
+                        _drawTriangle(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2],
+                            normals + ind_normals[n], normals + ind_normals[n + 1], normals + ind_normals[n + 2],
+                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2],
+                            _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    }
+                else
+                    {
+                    for (int n = 0; n < nb_triangles; n += 3)
+                        {
+                        _drawTriangle(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2],
+                            nullptr, nullptr, nullptr,
+                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2],
+                            _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    }
+                }
+            else
+                {
+                if (TGX_SHADER_HAS_GOURAUD(shader))
+                    {
+                    for (int n = 0; n < nb_triangles; n += 3)
+                        {
+                        _drawTriangle(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2],
+                            normals + ind_normals[n], normals + ind_normals[n + 1], normals + ind_normals[n + 2],
+                            nullptr, nullptr, nullptr,
+                            _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    }
+                else
+                    {
+                    for (int n = 0; n < nb_triangles; n += 3)
+                        {
+                        _drawTriangle(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2],
+                            nullptr, nullptr, nullptr,
+                            nullptr, nullptr, nullptr,
+                            _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    }
+                }
+            return 0;
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawQuads(int shader, int nb_quads,
+            const uint16_t* ind_vertices, const fVec3* vertices,
+            const uint16_t* ind_normals, const fVec3* normals,
+            const uint16_t* ind_texture, const fVec2* textures,
+            const Image<color_t>* texture_image)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
+            if ((ind_vertices == nullptr) || (vertices == nullptr)) return -3; // invalid vertices
+            if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader); // disable gouraud
+            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) TGX_SHADER_REMOVE_TEXTURE(shader) // disable texture
+            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
+            nb_quads *= 4;
+            if (TGX_SHADER_HAS_TEXTURE(shader))
+                {
+                _uni.tex = (const Image<color_t>*)texture_image;
+                if (TGX_SHADER_HAS_GOURAUD(shader))
+                    {
+                    for (int n = 0; n < nb_quads; n += 4)
+                        {
+                        _drawQuad(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2], vertices + ind_vertices[n + 3],
+                            normals + ind_normals[n], normals + ind_normals[n + 1], normals + ind_normals[n + 2], normals + ind_normals[n + 3],
+                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2], textures + ind_texture[n + 3],
+                            _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    }
+                else
+                    {
+                    for (int n = 0; n < nb_quads; n += 4)
+                        {
+                        _drawQuad(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2], vertices + ind_vertices[n + 3],
+                            nullptr, nullptr, nullptr, nullptr,
+                            textures + ind_texture[n], textures + ind_texture[n + 1], textures + ind_texture[n + 2], textures + ind_texture[n + 3],
+                            _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    }
+                }
+            else
+                {
+                if (TGX_SHADER_HAS_GOURAUD(shader))
+                    {
+                    for (int n = 0; n < nb_quads; n += 4)
+                        {
+                        _drawQuad(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2], vertices + ind_vertices[n + 3],
+                            normals + ind_normals[n], normals + ind_normals[n + 1], normals + ind_normals[n + 2], normals + ind_normals[n + 3],
+                            nullptr, nullptr, nullptr, nullptr,
+                            _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    }
+                else
+                    {
+                    for (int n = 0; n < nb_quads; n += 4)
+                        {
+                        _drawQuad(shader, vertices + ind_vertices[n], vertices + ind_vertices[n + 1], vertices + ind_vertices[n + 2], vertices + ind_vertices[n + 3],
+                            nullptr, nullptr, nullptr, nullptr,
+                            nullptr, nullptr, nullptr, nullptr,
+                            _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    }
+                }
+            return 0;
+            }
+
+
+
+
+    /********************************************************
+    * WIREFRAME DRAWING
+    *********************************************************/
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if (thickness <= 0) return 0;
+
+            const tgx::fMat4 M(LX/2.0f, 0, 0, LX / 2.0f - _ox,
+                               0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                               0, 0, 1, 0,
+                               0, 0, 0, 0);
+
+            while (mesh != nullptr)
+                {
+                // check if the object is completely outside of the image for fast discard.
+                if (_discardBox(mesh->bounding_box, _projM * _r_modelViewM)) return 0;
+
+                const fVec3* const tab_norm = mesh->normal;   // array of normals
+                const fVec2* const tab_tex = mesh->texcoord;  // array of texture
+
+                const fVec3* const tab_vert = mesh->vertice;  // array of vertices
+                const uint16_t* face = mesh->face;      // array of triangles
+
+                ExtVec4 QQA, QQB, QQC;
+                ExtVec4* PC0 = &QQA;
+                ExtVec4* PC1 = &QQB;
+                ExtVec4* PC2 = &QQC;
+
+                int nbt;
+                while ((nbt = *(face++)) > 0)
+                    { // starting a chain with nbt triangles
+
+                    // load the first triangle
+                    const uint16_t v0 = *(face++);
+                    if (tab_tex) face++;
+                    if (tab_norm) face++;
+
+                    const uint16_t v1 = *(face++);
+                    if (tab_tex) face++;
+                    if (tab_norm) face++;
+
+                    const uint16_t v2 = *(face++);
+                    if (tab_tex) face++;
+                    if (tab_norm) face++;
+
+                    // compute vertices position because we are sure we will need them...
+                    PC2->P = _r_modelViewM.mult1(tab_vert[v2]);
+                    PC0->P = _r_modelViewM.mult1(tab_vert[v0]);
+                    PC1->P = _r_modelViewM.mult1(tab_vert[v1]);
+
+                    // ...but use lazy computation of other vertex attributes
+                    PC0->missedP = true;
+                    PC1->missedP = true;
+                    PC2->missedP = true;
+
+                    while (1)
+                        {
+                        // face culling
+                        fVec3 faceN = crossProduct(PC1->P - PC0->P, PC2->P - PC0->P);
+                        const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PC0->P);
+                        if (cu * _culling_dir > 0) goto rasterize_next_wireframetriangle; // skip triangle !
+
+
+                        // triangle is not culled
+                        *((fVec4*)PC2) = _projM * PC2->P;                        
+                        if (ORTHO) { PC2->w = 2.0f - PC2->z; } else { PC2->zdivide(); }
+                        *((fVec4*)PC2) = M.mult1(*((fVec4*)PC2));
+
+                        if (PC0->missedP)
+                            {
+                            *((fVec4*)PC0) = _projM * PC0->P;                            
+                            if (ORTHO) { PC0->w = 2.0f - PC0->z; } else { PC0->zdivide(); }
+                            *((fVec4*)PC0) = M.mult1(*((fVec4*)PC0));
+                            }
+                        if (PC1->missedP)
+                            {
+                            *((fVec4*)PC1) = _projM * PC1->P;
+                            if (ORTHO) { PC1->w = 2.0f - PC1->z; } else { PC1->zdivide(); }
+                            *((fVec4*)PC1) = M.mult1(*((fVec4*)PC1));
+                            }
+
+                        // attributes are now all up to date
+                        PC0->missedP = false;
+                        PC1->missedP = false;
+                        PC2->missedP = false;
+
+                        // clip test
+                        if ((PC0->P.z >= 0) || (PC0->z < -1) || (PC0->z > 1) 
+                         || (PC1->P.z >= 0) || (PC1->z < -1) || (PC1->z > 1) 
+                         || (PC2->P.z >= 0) || (PC2->z < -1) || (PC2->z > 1))
+                            goto rasterize_next_wireframetriangle;
+
+                        // draw triangle                       
+                        if (DRAW_FAST)
+                            {
+                            iVec2 PP0(*((fVec2*)PC0));
+                            iVec2 PP1(*((fVec2*)PC1));
+                            iVec2 PP2(*((fVec2*)PC2));
+                            if (PP0 == PP1) 
+                                {
+                                _uni.im->drawLine(PP0, PP2, color);
+                                }
+                            else if (PP0 == PP2)
+                                {
+                                _uni.im->drawLine(PP0, PP1, color);
+                                }
+                            else if (PP1 == PP2)
+                                {
+                                _uni.im->drawLine(PP0, PP1, color);
+                                }
+                            else
+                                {
+                                _uni.im->drawLine(PP0, PP1, color);
+                                _uni.im->drawLine(PP1, PP2, color);
+                                _uni.im->drawLine(PP2, PP0, color);
+                                }
+                            }
+                        else
+                            {
+                            _uni.im->drawWideLine(*((fVec2*)PC0), *((fVec2*)PC1), thickness, color, opacity);
+                            _uni.im->drawWideLine(*((fVec2*)PC1), *((fVec2*)PC2), thickness, color, opacity);
+                            _uni.im->drawWideLine(*((fVec2*)PC2), *((fVec2*)PC0), thickness, color, opacity);
+                            }
+
+                    rasterize_next_wireframetriangle:
+
+                        if (--nbt == 0) break; // exit loop at end of chain
+
+                        // get the next triangle
+                        const uint16_t nv2 = *(face++);
+                        swap(((nv2 & 32768) ? PC0 : PC1), PC2);
+                        if (tab_tex) face++;
+                        if (tab_norm) face++;
+                        PC2->P = _r_modelViewM.mult1(tab_vert[nv2 & 32767]);
+                        PC2->missedP = true;
+                        }
+                    }
+                mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
+                }
+            return 0;            
+        }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if (thickness <= 0) return 0;
+
+            // compute position in wiew space.
+            const fVec4 Q0 = _r_modelViewM.mult1(P1);
+            const fVec4 Q1 = _r_modelViewM.mult1(P2);
+
+            if ((Q0.z >= 0)||(Q1.z >= 0)) return;
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            fVec4 H0 = _projM * Q0;
+            if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+            if ((H0.w < -1) || (H0.w > 1)) return;
+            H0 = M.mult1(H0);
+
+            fVec4 H1 = _projM * Q1;
+            if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+            if ((H1.w < -1) || (H1.w > 1)) return;
+            H1 = M.mult1(H1);
+
+            if (DRAW_FAST)
+                {
+                iVec2 PP0(H0);
+                iVec2 PP1(H1);
+                _uni.im->drawLine(PP0, PP1, color);
+                }
+            else
+                {
+                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                }
+
+            return 0;
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ind_vertices == nullptr) || (vertices == nullptr)) return -2; // invalid vertices
+            if (thickness <= 0) return 0;
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            nb_lines *= 2;
+            for (int n = 0; n < nb_lines; n += 2)
+                {
+                // compute position in wiew space.
+                const fVec4 Q0 = _r_modelViewM.mult1(vertices[ind_vertices[n]]);
+                const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
+
+                if ((Q0.z >= 0)||(Q1.z >= 0)) return;
+                
+                fVec4 H0 = _projM * Q0;
+                if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+                if ((H0.w < -1) || (H0.w > 1)) continue;
+                H0 = M.mult1(H0);
+
+                fVec4 H1 = _projM * Q1;
+                if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+                if ((H1.w < -1) || (H1.w > 1)) continue;
+                H1 = M.mult1(H1);
+
+                if (DRAW_FAST)
+                    {
+                    iVec2 PP0(H0);
+                    iVec2 PP1(H1);
+                    _uni.im->drawLine(PP0, PP1, color);
+                    }
+                else
+                    {
+                    _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                    }
+
+                }
+
+            return 0;            
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if (thickness <= 0) return 0;
+
+            // compute position in wiew space.
+            const fVec4 Q0 = _r_modelViewM.mult1(P1);
+            const fVec4 Q1 = _r_modelViewM.mult1(P2);
+            const fVec4 Q2 = _r_modelViewM.mult1(P3);
+
+            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+
+            // face culling
+            fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
+            const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+            if (cu * _culling_dir > 0) return 0; // skip triangle !
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            fVec4 H0 = _projM * Q0;
+            if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+            if ((H0.w < -1) || (H0.w > 1)) return;
+            H0 = M.mult1(H0);
+
+            fVec4 H1 = _projM * Q1;
+            if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+            if ((H1.w < -1) || (H1.w > 1)) return;
+            H1 = M.mult1(H1);
+
+            fVec4 H2 = _projM * Q2;
+            if (ORTHO) { H2.w = 2.0f - H2.z; } else { H2.zdivide(); }
+            if ((H2.w < -1) || (H2.w > 1)) return;
+            H2 = M.mult1(H2);
+
+            // draw triangle                       
+            if (DRAW_FAST)
+                {
+                iVec2 PP0(H0);
+                iVec2 PP1(H1);
+                iVec2 PP2(H2);
+                if (PP0 == PP1)
+                    {
+                    _uni.im->drawLine(PP0, PP2, color);
+                    }
+                else if (PP0 == PP2)
+                    {
+                    _uni.im->drawLine(PP0, PP1, color);
+                    }
+                else if (PP1 == PP2)
+                    {
+                    _uni.im->drawLine(PP0, PP1, color);
+                    }
+                else
+                    {
+                    _uni.im->drawLine(PP0, PP1, color);
+                    _uni.im->drawLine(PP1, PP2, color);
+                    _uni.im->drawLine(PP2, PP0, color);
+                    }
+                }
+            else
+                {
+                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+                _uni.im->drawWideLine(H2, H0, thickness, color, opacity);
+                }
+
+            return 0;
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ind_vertices == nullptr) || (vertices == nullptr)) return -2; // invalid vertices
+            if (thickness <= 0) return 0;
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            nb_triangles *= 3;
+            for (int n = 0; n < nb_triangles; n += 3)
+                {
+                // compute position in wiew space.
+                const fVec4 Q0 = _r_modelViewM.mult1(vertices[ind_vertices[n]]);
+                const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
+                const fVec4 Q2 = _r_modelViewM.mult1(vertices[ind_vertices[n + 2]]);
+
+                if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+
+                // face culling 
+                fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
+                const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+                if (cu * _culling_dir > 0) continue; // we discard the triangle.
+
+                fVec4 H0 = _projM * Q0;
+                if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+                if ((H0.w < -1) || (H0.w > 1)) continue;
+                H0 = M.mult1(H0);
+
+                fVec4 H1 = _projM * Q1;
+                if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+                if ((H1.w < -1) || (H1.w > 1)) continue;
+                H1 = M.mult1(H1);
+
+                fVec4 H2 = _projM * Q2;
+                if (ORTHO) { H2.w = 2.0f - H2.z; } else { H2.zdivide(); }
+                if ((H2.w < -1) || (H2.w > 1)) continue;
+                H2 = M.mult1(H2);
+
+                // draw triangle                       
+                if (DRAW_FAST)
+                    {
+                    iVec2 PP0(H0);
+                    iVec2 PP1(H1);
+                    iVec2 PP2(H2);
+                    if (PP0 == PP1)
+                        {
+                        _uni.im->drawLine(PP0, PP2, color);
+                        }
+                    else if (PP0 == PP2)
+                        {
+                        _uni.im->drawLine(PP0, PP1, color);
+                        }
+                    else if (PP1 == PP2)
+                        {
+                        _uni.im->drawLine(PP0, PP1, color);
+                        }
+                    else
+                        {
+                        _uni.im->drawLine(PP0, PP1, color);
+                        _uni.im->drawLine(PP1, PP2, color);
+                        _uni.im->drawLine(PP2, PP0, color);
+                        }
+                    }
+                else
+                    {
+                    _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                    _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+                    _uni.im->drawWideLine(H2, H0, thickness, color, opacity);
+                    }
+
+                }
+
+            return 0;
+
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if (thickness <= 0) return 0;
+
+            // compute position in wiew space.
+            const fVec4 Q0 = _r_modelViewM.mult1(P1);
+            const fVec4 Q1 = _r_modelViewM.mult1(P2);
+            const fVec4 Q2 = _r_modelViewM.mult1(P3);
+
+            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+
+            // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
+            fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
+            const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+            if (cu * _culling_dir > 0) return 0; // Q3 is coplanar with Q0, Q1, Q2 so we discard the whole quad.
+
+            const fVec4 Q3 = _r_modelViewM.mult1(P4); // compute fourth point
+
+            if (Q3.z >= 0) return;
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            fVec4 H0 = _projM * Q0;
+            if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+            if ((H0.w < -1) || (H0.w > 1)) return;
+            H0 = M.mult1(H0);
+
+            fVec4 H1 = _projM * Q1;
+            if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+            if ((H1.w < -1) || (H1.w > 1)) return;
+            H1 = M.mult1(H1);
+
+            fVec4 H2 = _projM * Q2;
+            if (ORTHO) { H2.w = 2.0f - H2.z; } else { H2.zdivide(); }
+            if ((H2.w < -1) || (H2.w > 1)) return;
+            H2 = M.mult1(H2);
+
+            fVec4 H3 = _projM * Q3;
+            if (ORTHO) { H3.w = 2.0f - H3.z; } else { H3.zdivide(); }
+            if ((H3.w < -1) || (H3.w > 1)) return;
+            H3 = M.mult1(H3);
+
+            // draw quad                      
+            if (DRAW_FAST)
+                {
+                iVec2 PP0(H0);
+                iVec2 PP1(H1);
+                iVec2 PP2(H2);
+                iVec2 PP3(H3);
+                if (PP0 != PP1) _uni.im->drawLine(PP0, PP1, color);
+                if (PP1 != PP2) _uni.im->drawLine(PP1, PP2, color);
+                if (PP2 != PP3) _uni.im->drawLine(PP2, PP3, color);
+                if (PP3 != PP0) _uni.im->drawLine(PP3, PP0, color);
+                }
+            else
+                {
+                _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+                _uni.im->drawWideLine(H2, H3, thickness, color, opacity);
+                _uni.im->drawWideLine(H3, H0, thickness, color, opacity);
+                }
+
+            return 0;
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool DRAW_FAST>
+        int Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
+            if ((ind_vertices == nullptr) || (vertices == nullptr)) return -2; // invalid vertices
+            if (thickness <= 0) return 0;
+
+            const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
+                0, LY / 2.0f, 0, LY / 2.0f - _oy,
+                0, 0, 1, 0,
+                0, 0, 0, 0);
+
+            nb_quads *= 4;
+            for (int n = 0; n < nb_quads; n += 4)
+                {
+                // compute position in wiew space.
+                const fVec4 Q0 = _r_modelViewM.mult1(vertices[ind_vertices[n]]);
+                const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
+                const fVec4 Q2 = _r_modelViewM.mult1(vertices[ind_vertices[n + 2]]);
+
+                if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+
+                // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
+                fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
+                const float cu = (ORTHO) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+                if (cu * _culling_dir > 0) continue; // Q3 is coplanar with Q0, Q1, Q2 so we discard the whole quad.
+
+                const fVec4 Q3 = _r_modelViewM.mult1(vertices[ind_vertices[n + 3]]); // compute fourth point
+
+                if (Q3.z >= 0) return;
+
+                fVec4 H0 = _projM * Q0;
+                if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+                if ((H0.w < -1) || (H0.w > 1)) continue;
+                H0 = M.mult1(H0);
+
+                fVec4 H1 = _projM * Q1;
+                if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+                if ((H1.w < -1) || (H1.w > 1)) continue;
+                H1 = M.mult1(H1);
+
+                fVec4 H2 = _projM * Q2;
+                if (ORTHO) { H2.w = 2.0f - H2.z; } else { H2.zdivide(); }
+                if ((H2.w < -1) || (H2.w > 1)) continue;
+                H2 = M.mult1(H2);
+
+                fVec4 H3 = _projM * Q3;
+                if (ORTHO) { H3.w = 2.0f - H3.z; } else { H3.zdivide(); }
+                if ((H3.w < -1) || (H3.w > 1)) continue;
+                H3 = M.mult1(H3);
+
+                // draw quad                      
+                if (DRAW_FAST)
+                    {
+                    iVec2 PP0(H0);
+                    iVec2 PP1(H1);
+                    iVec2 PP2(H2);
+                    iVec2 PP3(H3);
+                    if (PP0 != PP1) _uni.im->drawLine(PP0, PP1, color);
+                    if (PP1 != PP2) _uni.im->drawLine(PP1, PP2, color);
+                    if (PP2 != PP3) _uni.im->drawLine(PP2, PP3, color);
+                    if (PP3 != PP0) _uni.im->drawLine(PP3, PP0, color);
+                    }
+                else
+                    {
+                    _uni.im->drawWideLine(H0, H1, thickness, color, opacity);
+                    _uni.im->drawWideLine(H1, H2, thickness, color, opacity);
+                    _uni.im->drawWideLine(H2, H3, thickness, color, opacity);
+                    _uni.im->drawWideLine(H3, H0, thickness, color, opacity);
+                    }
+
+                }
+
+            return 0;
+            }
+
+
+
+    /********************************************************
+    * DRAWING BASIC OBJECTS : PIXELS, DOTS, SPHERE, CUBE, SKYBOX...
+    *********************************************************/
+
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool USE_BLENDING> 
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawPixel(const fVec3& pos, color_t color, float opacity)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return;   // nothing to do
+            const bool has_zbuffer = ((ZBUFFER) && ((_uni.zbuf != nullptr) && (_zbuffer_len >= _uni.im->lx()* _uni.im->ly())));                       
+            fVec4 Q = _projM * _r_modelViewM.mult1(pos);
+            if (ORTHO) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+            if ((Q.w < -1) || (Q.w > 1)) return;
+            Q.x = ((Q.x + 1) * LX) / 2 - _ox;
+            Q.y = ((Q.y + 1) * LY) / 2 - _oy;
+            const int x = (int)roundfp(Q.x);
+            const int y = (int)roundfp(Q.y);
+            if (!has_zbuffer)
+                {
+                if (USE_BLENDING) _uni.im->drawPixel<true>(x, y, color, opacity); else  _uni.im->drawPixel<true>(x, y, color);
+                }
+            else
+                {
+                drawPixelZbuf<true, USE_BLENDING>(x, y, color, opacity, Q.w);
+                }
+            }
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool USE_BLENDING> 
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawPixels(int nb_pixels, fVec3* pos_list, int* colors_ind, color_t* colors, int* opacities_ind, float* opacities)
+            {
+            if ((pos_list == nullptr) || (colors_ind == nullptr) || (colors == nullptr)) return;
+            if ((USE_BLENDING) && ((opacities_ind == nullptr) || (opacities == nullptr))) return;
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return;   // nothing to do
+            const bool has_zbuffer = ((ZBUFFER) && ((_uni.zbuf != nullptr) && (_zbuffer_len >= _uni.im->lx()* _uni.im->ly())));                       
+            for (int k = 0; k < nb_pixels; k++)
+                {
+                fVec4 Q = _projM * _r_modelViewM.mult1(pos_list[k]);
+                if (ORTHO) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+                if ((Q.w < -1) || (Q.w > 1)) continue;
+                Q.x = ((Q.x + 1) * LX) / 2 - _ox;
+                Q.y = ((Q.y + 1) * LY) / 2 - _oy;
+                const int x = (int)roundfp(Q.x);
+                const int y = (int)roundfp(Q.y);
+                if (!has_zbuffer)
+                    {
+                    if (USE_BLENDING) _uni.im->drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]); else  _uni.im->drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]);
+                    }
+                else
+                    {
+                    drawPixelZbuf<true, USE_BLENDING>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                    }
+                }           
+            }
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool USE_BLENDING> 
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawDot(const fVec3& pos, int r, color_t color, float opacity)
+            {
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return;   // nothing to do
+            const bool has_zbuffer = ((ZBUFFER) && ((_uni.zbuf != nullptr) && (_zbuffer_len >= _uni.im->lx()* _uni.im->ly())));                       
+            fVec4 Q = _projM * _r_modelViewM.mult1(pos);
+            if (ORTHO) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+            if ((Q.w < -1) || (Q.w > 1)) return;
+            Q.x = ((Q.x + 1) * LX) / 2 - _ox;
+            Q.y = ((Q.y + 1) * LY) / 2 - _oy;
+            const int x = (int)roundfp(Q.x);
+            const int y = (int)roundfp(Q.y);
+            if (!has_zbuffer)
+                {
+                if (USE_BLENDING)
+                    _uni.im->drawCircle(x, y, r, color, opacity);
+                else
+                    _uni.im->drawCircle(x, y, r, color);
+                }
+            else 
+                {
+                const int lx = _uni.im->lx();
+                const int ly = _uni.im->ly();
+                if ((x - r >= 0) && (x + r < lx) && (y - r >= 0) && (y + r < ly))
+                    _drawCircleZbuf<false, USE_BLENDING>(x, y, r, color, opacity, Q.w);
+                else
+                    {
+                    if ((x >= 0) && (x < lx) && (y >= 0) && (y < ly))
+                        _drawCircleZbuf<true, USE_BLENDING>(x, y, r, color, opacity, Q.w);
+                    }
+                }                
+            }
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool USE_BLENDING> 
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
+            {
+            if ((pos_list == nullptr) || (colors_ind == nullptr) || (colors == nullptr) || (radius_ind == nullptr) || (radius == nullptr)) return;
+            if ((USE_BLENDING) && ((opacities_ind == nullptr) || (opacities == nullptr))) return;
+            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return;   // nothing to do
+            const bool has_zbuffer = ((ZBUFFER) && ((_uni.zbuf != nullptr) && (_zbuffer_len >= _uni.im->lx() * _uni.im->ly())));
+            for (int k = 0; k < nb_dots; k++)
+                {
+                fVec4 Q = _projM * _r_modelViewM.mult1(pos_list[k]);
+                if (ORTHO) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+                if ((Q.w < -1) || (Q.w > 1)) continue;
+                Q.x = ((Q.x + 1) * LX) / 2 - _ox;
+                Q.y = ((Q.y + 1) * LY) / 2 - _oy;
+                const int x = (int)roundfp(Q.x);
+                const int y = (int)roundfp(Q.y);
+                if (!has_zbuffer)
+                    {
+                    if (USE_BLENDING) 
+                        _uni.im->drawCircle(x, y, radius[radius_ind[k]], colors[colors_ind[k]], opacities[opacities_ind[k]]); 
+                    else 
+                        _uni.im->drawCircle(x, y, radius[radius_ind[k]], colors[colors_ind[k]]);
+                    }
+                else
+                    {
+                    const int lx = _uni.im->lx();
+                    const int ly = _uni.im->ly();
+                    const int r = radius[radius_ind[k]];
+                    if ((x - r >= 0) && (x + r < lx) && (y - r >= 0) && (y + r < ly))
+                        _drawCircleZbuf<false,USE_BLENDING>(x, y, r, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                    else
+                        {
+                        if ((x >= 0) && (x < lx) && (y >= 0) && (y < ly))
+                            _drawCircleZbuf<true, USE_BLENDING>(x, y, r, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool CHECKRANGE, bool USE_BLENDING> void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawCircleZbuf(int xm, int ym, int r, color_t color, float opacity, float z)
+            { 
+            if ((CHECKRANGE) && (r > 2))
+                { // circle is large enough to check first if there is something to draw.
+                if ((xm + r < 0) || (xm - r >= _uni.im->lx()) || (ym + r < 0) || (ym - r >= _uni.im->ly())) return; // outside of image. 
+                }
+
+            auto fillcolor = color; 
+            const bool OUTLINE = true;
+            const bool FILL = true;
+
+            switch (r)
+                {
+                case 0:
+                    {
+                    if (OUTLINE)
+                        drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm, ym, color, opacity, z);
+                    else if (FILL)
+                        drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm, ym, fillcolor, opacity, z);
+                    return;
+                    }
+                case 1:
+                    {
+                    if (FILL)
+                        drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm, ym, fillcolor, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm + 1, ym, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm - 1, ym, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm, ym - 1, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm, ym + 1, color, opacity, z);
+                    return;
+                    }
+                }
+            int x = -r, y = 0, err = 2 - 2 * r;
+            do {
+                if (OUTLINE)
+                    {
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm - x, ym + y, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm - y, ym - x, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm + x, ym - y, color, opacity, z);
+                    drawPixelZbuf<CHECKRANGE, USE_BLENDING>(xm + y, ym + x, color, opacity, z);
+                    }
+                r = err;
+                if (r <= y)
+                    {
+                    if (FILL)
+                        {
+                        drawHLineZbuf<CHECKRANGE, USE_BLENDING>(xm, ym + y, -x, fillcolor, opacity, z);
+                        drawHLineZbuf<CHECKRANGE, USE_BLENDING>(xm + x + 1, ym - y, -x - 1, fillcolor, opacity, z);
+                        }
+                    err += ++y * 2 + 1;
+                    }
+                if (r > x || err > y)
+                    {
+                    err += ++x * 2 + 1;
+                    if (FILL)
+                        {
+                        if (x)
+                            {
+                            drawHLineZbuf<CHECKRANGE, USE_BLENDING>(xm - y + 1, ym - x, y - 1, fillcolor, opacity, z);
+                            drawHLineZbuf<CHECKRANGE, USE_BLENDING>(xm, ym + x, y, fillcolor, opacity, z);
+                            }
+                        }
+                    }
+                } 
+            while (x < 0);
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        float Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_unitSphereScreenDiameter()
+            {
+            const float ONEOVERSQRT2 = 0.70710678118f;
+            fVec4 P0 = _r_modelViewM.mult1(fVec3(0, 0, 0));
+            fVec4 P1 = _r_modelViewM.mult1(fVec3(1, 0, 0));
+            float r = fVec3(P0 - P1).norm(); // radius after modelview transform
+            fVec4 P2 = { P0.x - r * ONEOVERSQRT2, P0.y - r * ONEOVERSQRT2, P0.z, P0.w }; // take a point on the sphere that is at same z as origin and take equal contribution from x and y. 
+
+            fVec4 Q0 = _projM * P0;
+            fVec4 Q2 = _projM * P2;
+            if (!ORTHO)
+                {
+                Q0.zdivide();
+                Q2.zdivide();
+                }
+            return sqrtf(((Q2.x - Q0.x) * (Q2.x - Q0.x) * LX * LX) + ((Q2.y - Q0.y) * (Q2.y - Q0.y) * LY * LY)); // diameter on the screen
+            }
+
+
+
+
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawCube(int shader,
+            fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
+            fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
+            fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
+            fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
+            fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
+            fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right
+            )
+            {
+
+            if (!(TGX_SHADER_HAS_TEXTURE(shader)))
+                {
+                drawCube();
+                return;
+                }
+
+            // set culling direction = 1 and save previous value
+            float save_culling = _culling_dir;
+            if (_culling_dir != 0) _culling_dir = 1;
+
+            const uint16_t list_v[4] = { 0,1,2,3 };
+            if (texture_front) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_front_ABCD, texture_front); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES); }
+            if (texture_back) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 4, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_back_EFGH, texture_back); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 4, UNIT_CUBE_VERTICES); }
+            if (texture_top) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 8, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_top_HADE, texture_top); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 8, UNIT_CUBE_VERTICES); }
+            if (texture_bottom) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 12, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_bottom_BGFC, texture_bottom); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 12, UNIT_CUBE_VERTICES); }
+            if (texture_left) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 16, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_left_HGBA, texture_left); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 16, UNIT_CUBE_VERTICES); }
+            if (texture_right) { drawQuads(TGX_SHADER_TEXTURE, 1, UNIT_CUBE_FACES + 20, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_right_DCFE, texture_right); } else { drawQuads(TGX_SHADER_FLAT, 1, UNIT_CUBE_FACES + 20, UNIT_CUBE_VERTICES); }
+
+            // restore culling direction
+            _culling_dir = save_culling;            
+            }
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::drawCube(int shader,
+            const Image<color_t>* texture_front,
+            const Image<color_t>* texture_back,
+            const Image<color_t>* texture_top,
+            const Image<color_t>* texture_bottom,
+            const Image<color_t>* texture_left,
+            const Image<color_t>* texture_right
+            )
+            {
+            float epsx = 0, epsy = 0; 
+            if (texture_front) 
+                {
+                epsx = 1.0f / (texture_front->lx() - 1); 
+                epsy = 1.0f / (texture_front->ly() - 1);
+                }
+            tgx::fVec2 t_front[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            if (texture_back) 
+                {
+                epsx = 1.0f / (texture_back->lx() - 1); 
+                epsy = 1.0f / (texture_back->ly() - 1);
+                }
+            tgx::fVec2 t_back[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            if (texture_top) 
+                {
+                epsx = 1.0f / (texture_top->lx() - 1); 
+                epsy = 1.0f / (texture_top->ly() - 1);
+                }
+            tgx::fVec2 t_top[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            if (texture_bottom) 
+                {
+                epsx = 1.0f / (texture_bottom->lx() - 1); 
+                epsy = 1.0f / (texture_bottom->ly() - 1);
+                }
+            tgx::fVec2 t_bottom[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            if (texture_left) 
+                {
+                epsx = 1.0f / (texture_left->lx() - 1); 
+                epsy = 1.0f / (texture_left->ly() - 1);
+                }
+            tgx::fVec2 t_left[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            if (texture_right) 
+                {
+                epsx = 1.0f / (texture_right->lx() - 1); 
+                epsy = 1.0f / (texture_right->ly() - 1);
+                }
+            tgx::fVec2 t_right[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            drawCube(shader,
+                t_front, texture_front,
+                t_back, texture_back,
+                t_top, texture_top,
+                t_bottom, texture_bottom,
+                t_left, texture_left,
+                t_right, texture_right);
+            }
+
+
+
+
+
+
+
+
+
+
+
+        template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+        template<bool WIREFRAME, bool DRAWFAST>
+        void Renderer3D<color_t, LX, LY, ZBUFFER, ORTHO>::_drawSphere(int shader, int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
+            {
+            if (texture == nullptr)
+                {
+                TGX_SHADER_REMOVE_TEXTURE(shader);
+                }
+
+            // set culling direction = 1 and save previous value
+            float save_culling = _culling_dir;
+            if (_culling_dir != 0) _culling_dir = 1;
+
+            const float MPI = 3.141592653589793238f;
+            const int MAX_SECTORS = 256; 
+            if (nb_sectors > MAX_SECTORS) nb_sectors = 256;
+            if (nb_sectors < 3) nb_sectors = 3;
+            if (nb_stacks < 3) nb_stacks = 3;
+
+            // precomputed sin/cos for sectors as we will need them often
+            float cosTheta[MAX_SECTORS];
+            float sinTheta[MAX_SECTORS];
+            
+            const float d_sector = 2*MPI / nb_sectors;
+            for(int i = 0; i < nb_sectors; i++)
+                {
+                cosTheta[i] = cosf(i * d_sector);
+                sinTheta[i] = sinf(i * d_sector);
+                }
+
+            const float d_stack = MPI / nb_stacks;
+
+            fVec3 P1, P2, P3, P4;
+
+            // top part, top vertex at {0,1,0}
+            
+            float cosPhi = cosf(d_stack);
+            float sinPhi = sinf(d_stack);
+
+            P1 = { 0,1,0 };
+
+            P2.x = sinPhi * cosTheta[nb_sectors-1];
+            P2.y = cosPhi;
+            P2.z = sinPhi * sinTheta[nb_sectors - 1];
+
+            P3.y = cosPhi;
+
+            const float dtx = 1.0f / nb_sectors;
+
+            float v = 0.5f * cosPhi + 0.5f;
+            float u = 0;
+
+            for (int i = 0; i < nb_sectors; i++)
+                {
+                P3.x = sinPhi * cosTheta[i];
+                P3.z = sinPhi * sinTheta[i];
+                
+                if (WIREFRAME)
+                    {
+                    if (DRAWFAST) drawWireFrameTriangle(P1, P3, P2); else drawWireFrameTriangle(P1, P3, P2, thickness, color, opacity);
+                    }
+                else
+                    {
+                    drawTriangle(shader, P1, P3, P2, P1, P3, P2, { 0,1 }, { u + dtx, v }, { u , v }, texture);
+                    }
+
+                u += dtx; 
+                P2.x = P3.x;
+                P2.z = P3.z;
+                }
+            
+            // main part       
+            for (int j = 2; j < nb_stacks; j++)
+                {
+
+                float new_cosPhi = cosf(d_stack * j);
+                float new_sinPhi = sinf(d_stack * j);
+
+                P1.x = sinPhi * cosTheta[nb_sectors - 1];
+                P1.y = cosPhi;
+                P1.z = sinPhi * sinTheta[nb_sectors - 1];
+
+                P3.y = cosPhi;
+
+                P2.x = new_sinPhi * cosTheta[nb_sectors - 1];
+                P2.y = new_cosPhi;
+                P2.z = new_sinPhi * sinTheta[nb_sectors - 1];
+
+                P4.y = new_cosPhi;
+
+                v = 0.5f*cosPhi + 0.5f;
+                const float vv = 0.5f*new_cosPhi + 0.5f;
+
+                u = 0; 
+
+                for (int i = 0; i < nb_sectors; i++)
+                    {
+                    const float uu = u + dtx;
+                    P3.x = sinPhi * cosTheta[i];
+                    P3.z = sinPhi * sinTheta[i];
+                    P4.x = new_sinPhi * cosTheta[i];
+                    P4.z = new_sinPhi * sinTheta[i];
+
+                    if (WIREFRAME)
+                        {
+                        if (DRAWFAST) drawWireFrameQuad(P1, P3, P4, P2); else drawWireFrameQuad(P1, P3, P4, P2, thickness, color, opacity);
+                        }
+                        else
+                        {
+                        drawQuad(shader, P1, P3, P4, P2, P1, P3, P4, P2, {u,v}, {uu,v}, {uu,vv}, {u,vv}, texture);
+                        }
+
+                    u += dtx; 
+                    P1.x = P3.x;
+                    P1.z = P3.z;
+                    P2.x = P4.x;
+                    P2.z = P4.z;
+                    }
+
+                cosPhi = new_cosPhi;
+                sinPhi = new_sinPhi;
+                }
+                
+
+            // bottom part, bottom vertex at {0,1,0}
+            P1 = { 0,-1,0 };
+
+            P2.x = sinPhi * cosTheta[nb_sectors - 1];
+            P2.y = cosPhi;
+            P2.z = sinPhi * sinTheta[nb_sectors - 1];
+
+            P3.y = cosPhi;
+
+            u = 0; 
+
+            for (int i = 0; i < nb_sectors; i++)
+                {
+                P3.x = sinPhi * cosTheta[i];
+                P3.z = sinPhi * sinTheta[i];
+
+                if (WIREFRAME)
+                    {
+                    if (DRAWFAST) drawWireFrameTriangle(P1, P2, P3); else drawWireFrameTriangle(P1, P2, P3, thickness, color, opacity);
+                    }
+                else
+                    {
+                    drawTriangle(shader, P1, P2, P3, P1, P2, P3, { 0, 0 }, { u,v }, { u + dtx, v }, texture);
+                    }
+
+                u += dtx;
+                P2.x = P3.x;
+                P2.z = P3.z;
+                }
+
+            // restore culling direction
+            _culling_dir = save_culling;
+            return; 
+            }
+
+
+
+}
+
+
+
+#endif
+
+/** end of file */
+
