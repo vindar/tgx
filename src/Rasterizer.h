@@ -28,6 +28,7 @@ namespace tgx
 {
 
 #define TGX_RASTERIZE_SUBPIXEL_BITS (8) // <- change this to adjust sub-pixel precision (between 1 and 8) UNTESTED !
+
 #define TGX_RASTERIZE_SUBPIXEL256 (1 << TGX_RASTERIZE_SUBPIXEL_BITS)
 #define TGX_RASTERIZE_SUBPIXEL128 (1 << (TGX_RASTERIZE_SUBPIXEL_BITS -1))
 #define TGX_RASTERIZE_MULT256(X) ((X) << (TGX_RASTERIZE_SUBPIXEL_BITS))
@@ -346,16 +347,6 @@ namespace tgx
 			}
 		return;
 		}
-
-
-
-
-#undef TGX_RASTERIZE_SUBPIXEL_BITS
-#undef TGX_RASTERIZE_SUBPIXEL256
-#undef TGX_RASTERIZE_SUBPIXEL128
-#undef TGX_RASTERIZE_MULT256
-#undef TGX_RASTERIZE_MULT128
-#undef TGX_RASTERIZE_DIV256
 
 
 
