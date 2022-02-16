@@ -1480,7 +1480,7 @@ namespace tgx
                 const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
                 const fVec4 Q2 = _r_modelViewM.mult1(vertices[ind_vertices[n + 2]]);
 
-                if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+                if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return 0;
 
                 // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
                 fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
@@ -1489,7 +1489,7 @@ namespace tgx
 
                 const fVec4 Q3 = _r_modelViewM.mult1(vertices[ind_vertices[n + 3]]); // compute fourth point
 
-                if (Q3.z >= 0) return;
+                if (Q3.z >= 0) return 0;
 
                 fVec4 H0 = _projM * Q0;
                 if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
