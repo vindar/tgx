@@ -1239,7 +1239,7 @@ namespace tgx
             const fVec4 Q1 = _r_modelViewM.mult1(P2);
             const fVec4 Q2 = _r_modelViewM.mult1(P3);
 
-            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return 0;
 
             // face culling
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
@@ -1253,17 +1253,17 @@ namespace tgx
 
             fVec4 H0 = _projM * Q0;
             if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
-            if ((H0.w < -1) || (H0.w > 1)) return;
+            if ((H0.w < -1) || (H0.w > 1)) return 0;
             H0 = M.mult1(H0);
 
             fVec4 H1 = _projM * Q1;
             if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
-            if ((H1.w < -1) || (H1.w > 1)) return;
+            if ((H1.w < -1) || (H1.w > 1)) return 0;
             H1 = M.mult1(H1);
 
             fVec4 H2 = _projM * Q2;
             if (ORTHO) { H2.w = 2.0f - H2.z; } else { H2.zdivide(); }
-            if ((H2.w < -1) || (H2.w > 1)) return;
+            if ((H2.w < -1) || (H2.w > 1)) return 0;
             H2 = M.mult1(H2);
 
             // draw triangle                       
@@ -1398,7 +1398,7 @@ namespace tgx
             const fVec4 Q1 = _r_modelViewM.mult1(P2);
             const fVec4 Q2 = _r_modelViewM.mult1(P3);
 
-            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return 0;
 
             // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
@@ -1407,7 +1407,7 @@ namespace tgx
 
             const fVec4 Q3 = _r_modelViewM.mult1(P4); // compute fourth point
 
-            if (Q3.z >= 0) return;
+            if (Q3.z >= 0) return 0;
 
             const tgx::fMat4 M(LX / 2.0f, 0, 0, LX / 2.0f - _ox,
                 0, LY / 2.0f, 0, LY / 2.0f - _oy,
@@ -1416,22 +1416,22 @@ namespace tgx
 
             fVec4 H0 = _projM * Q0;
             if (ORTHO) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
-            if ((H0.w < -1) || (H0.w > 1)) return;
+            if ((H0.w < -1) || (H0.w > 1)) return 0;
             H0 = M.mult1(H0);
 
             fVec4 H1 = _projM * Q1;
             if (ORTHO) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
-            if ((H1.w < -1) || (H1.w > 1)) return;
+            if ((H1.w < -1) || (H1.w > 1)) return 0;
             H1 = M.mult1(H1);
 
             fVec4 H2 = _projM * Q2;
             if (ORTHO) { H2.w = 2.0f - H2.z; } else { H2.zdivide(); }
-            if ((H2.w < -1) || (H2.w > 1)) return;
+            if ((H2.w < -1) || (H2.w > 1)) return 0;
             H2 = M.mult1(H2);
 
             fVec4 H3 = _projM * Q3;
             if (ORTHO) { H3.w = 2.0f - H3.z; } else { H3.zdivide(); }
-            if ((H3.w < -1) || (H3.w > 1)) return;
+            if ((H3.w < -1) || (H3.w > 1)) return 0;
             H3 = M.mult1(H3);
 
             // draw quad                      
