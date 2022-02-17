@@ -350,19 +350,15 @@ namespace tgx
         **/
         void setLookAt(T eyeX, T eyeY, T eyeZ, T centerX, T centerY, T centerZ, T upX, T upY, T upZ)
             {
-            // normalise direction
-            const Vec4<T> f = normalize(Vec4<T>{ centerX - eyeX, centerY - eyeY, centerZ - eyeZ, 0.0f });
-            // right = direction x up
-            const Vec4<T> s = crossProduct(f, Vec4<T>{ upX, upY, upZ, 0.0f });
-            // normalise right. 
-            const Vec4<T> sn = normalize(s);
-            // up = right x direction
-            const Vec4<T> u =  crossProduct(sn, f);
-            memset(M, 0, 16 * sizeof(T));
-            M[0] = sn.x;    M[4] = sn.y;    M[8] = sn.z;    M[12] = sn.x * eyeX + sn.y * eyeY + sn.z * eyeZ;
-            M[1] = u.x;     M[5] = u.y;     M[9] = u.z;     M[13] = u.x * eyeX + u.y * eyeY + u.z * eyeZ;
-            M[2] = -f.x;    M[6] = -f.y;    M[10] = -f.z;   M[14] = f.x * eyeX + f.y * eyeY + f.z * eyeZ;
-            M[15] = 1.0;
+             const Vec4<T> f = normalize(Vec4<T>{ centerX - eyeX, centerY - eyeY, centerZ - eyeZ, 0.0f });
+            Vec4<T> up = normalize(Vec4<T>{ upX, upY, upZ, 0.0f });
+            up = normalize(up - (dotProduct(up, f) * f));
+            const Vec4<T> s = crossProduct(f, up);
+            const Vec4<T> u = crossProduct(s, f);
+            M[0] = s.x;    M[4] = s.y;    M[8] = s.z;     M[12] = -s.x * eyeX - s.y * eyeY - s.z * eyeZ;
+            M[1] = u.x;    M[5] = u.y;    M[9] = u.z;     M[13] = -u.x * eyeX - u.y * eyeY - u.z * eyeZ;
+            M[2] = -f.x;   M[6] = -f.y;   M[10] = -f.z;   M[14] = f.x * eyeX + f.y * eyeY + f.z * eyeZ;
+            M[3] = 0;      M[7] = 0;      M[11] = 0;      M[15] = 1.0f;            
             }
 
 
