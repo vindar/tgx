@@ -49,7 +49,6 @@ namespace tgx
 
 
 
-
     /**
     * Class that manages the drawing of 3D objects.
     *
@@ -60,25 +59,59 @@ namespace tgx
     *
     * - color_t : the color type for the image to draw onto.
     *
-    * - LX , LY : Viewport size (up to 2048x2048). The normalized coordinates in [-1,1]x[-1,1]
+    * - LX , LY : Viewport size (up to 4096x4096). The normalized coordinates in [-1,1]x[-1,1]
     *             are mapped to [0,LX-1]x[0,LY-1] just before rasterization.
     *             It is possible to use a viewport larger than the image drawn onto and set
     *             an offset for this image inside the viewport in order to perform 'tile rendering'.
     *
-    * - ZBUFFER : (default true) Set this to use depth testing when drawing the mesh. In this case,
-    *             a valid depth buffer MUST be supplied with setZbuffer() before drawing a mesh.
-    *
-    * - ORTHO   : (default false) Set this to use orthographic projection instead of perspective
-    *             and thus disable the z-divide after projection.
+    * - LOADED_SHADERS :   
+    *  
+    *   A list of all shaders that can be used with this object. By default, all shaders are loaded. 
+    *    
+    *    -> LOADING ONLY THE REQUIRED SHADERS SAVES *A LOT* OF MEMORY SPACE AND INCREASES PERFORMANCE.
+    *                    
+    *   A combination of the following flags:
+    *                    
+    *   - TGX_SHADER_PERSPECTIVE        when set, drawing with perspective projection is allowed
+    *   - TGX_SHADER_ORTHO              when set, drawing with orthographic projection is allowed
+    *   - TGX_SHADER_NOZBUFFER          when set, drawing without using a z-buffer is allowed
+    *   - TGX_SHADER_ZBUFFER            when set, drawing while using a z-buffer is allowed
+    *   - TGX_SHADER_FLAT               when set, drawing with flat shading is allowed
+    *   - TGX_SHADER_GOURAUD            when set, drawing with gouraud shading is allowed
+    *   - TGX_SHADER_NOTEXTURE          when set, drawing without using a texture is allowed
+    *   - TGX_SHADER_TEXTURE_NEAREST    when set, drawing with a texture using nearest neighbour interpolation is allowed
+    *   - TGX_SHADER_TEXTURE_BILINEAR   when set, drawing with a texture using bilinear interpolation is allowed
+    *   - TGX_SHADER_TEXTURE_WRAP_POW2  when set, drawing with a texture using wrap around mode (with dimensions of texture being power of two) is allowed
+    *   - TGX_SHADER_TEXTURE_CLAMP      when set, drawing with a texture using clamping to edge mode is allowed
+    *                      
+    *   NOTE: if a drawing call is made that requires a disabled shader, then
+    *         the drawing operation fails silently (i.e. it is simply ignored). 
     **/
-    template<typename color_t, int LX, int LY, bool ZBUFFER, bool ORTHO>
+    template<typename color_t, int LX, int LY, int LOADED_SHADERS = TGX_SHADER_MASK_ALL>
     class Renderer3D
     {
-        
+       
         static const int MAXVIEWPORTDIMENSION = 2048 * (1 << ((8 - TGX_RASTERIZE_SUBPIXEL_BITS) >> 1));
         static_assert((LX > 0) && (LX <= MAXVIEWPORTDIMENSION), "Invalid viewport width.");
         static_assert((LY > 0) && (LY <= MAXVIEWPORTDIMENSION), "Invalid viewport height.");
         static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in color.h");
+
+        
+        // true if some kind of texturing may be used. 
+        static const int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (TGX_SHADER_TEXTURE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));
+        
+        static const int ENABLED_SHADERS = LOADED_SHADERS  
+                                         | (ENABLE_TEXTURING ? TGX_SHADER_TEXTURE : TGX_SHADER_NOTEXTURE); // enable texturing when at least one texturing related flag is set
+        
+        // check that disabled shaders do not completely disable all drawing operations.         
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), "At least one of the two shaders TGX_SHADER_PERSPECTIVE or TGX_SHADER_ORTHO must be enabled");        
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), "At least one of the two shaders TGX_SHADER_NOZBUFFER or TGX_SHADER_ZBUFFER must be enabled");        
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), "At least one of the two shaders TGX_SHADER_FLAT or TGX_SHADER_GOURAUD must be enabled");        
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), "At least one of the two shaders TGX_SHADER_TEXTURE or TGX_SHADER_NOTEXTURE must be enabled");                              
+        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders TGX_SHADER_TEXTURE_BILINEAR or TGX_SHADER_TEXTURE_NEAREST must be enabled");
+        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders TGX_SHADER_TEXTURE_WRAP_POW2 or TGX_SHADER_TEXTURE_CLAMP must be enabled");
+
+
 
        public:
 
@@ -175,12 +208,33 @@ namespace tgx
             return M;
             }
 
+        /**
+        * Set projection mode to orthographic (ie no z-divide)
+        **/
+        void useOrthographicProjection()
+            {
+            static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use useOrthographicProjection()");
+            _ortho = true;
+            _rectifyShaderOrtho();
+            }
+
+
+        /**
+        * Set projection mode to perspective (ie with z-divide)
+        **/
+        void usePerspectiveProjection()
+            {
+            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use usePerspectiveProjection()");
+            _ortho = false;
+            _rectifyShaderOrtho();
+            }
+
 
         /**
          * Set the projection matrix as an orthographic matrix:
          * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml
          *
-         * This method is only available when ORTHO = true.
+         * This method automatically switches to orthographic projection mode.
          *
         * IMPORTANT :In view space, the camera is assumed to be centered
         * at the origin, looking looking toward the negative Z axis with
@@ -188,7 +242,8 @@ namespace tgx
          **/
         void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
             {
-            static_assert(ORTHO == true, "the setOrtho() method can only be used with template parameter ORTHO = true");
+            static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use setOrtho()");
+            useOrthographicProjection();
             _projM.setOrtho(left, right, bottom, top, zNear, zFar);
             _projM.invertYaxis();
             }
@@ -198,7 +253,7 @@ namespace tgx
          * Set the projection matrix as a perspective matrix
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
         *
-        * This method is only available when ORTHO = false.
+         * This method automatically switches to perspective projection mode.
          *
         * IMPORTANT :In view space, the camera is assumed to be centered
         * at the origin, looking looking toward the negative Z axis with
@@ -206,7 +261,8 @@ namespace tgx
         **/
         void setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
             {
-            static_assert(ORTHO == false, "the setFrustum() method can only be used with template parameter ORTHO = false (use projectionMatrix().setFrustum() is you really want to...)");
+            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setFrustrum()");
+            usePerspectiveProjection();
             _projM.setFrustum(left, right, bottom, top, zNear, zFar);
             _projM.invertYaxis();
             }
@@ -224,7 +280,8 @@ namespace tgx
         **/
         void setPerspective(float fovy, float aspect, float zNear, float zFar)
             {
-            static_assert(ORTHO == false, "the setPerspective() method can only be used with template parameter ORTHO = false (use projectionMatrix().setPerspective() is you really want to...)");
+            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setPerspective()");
+            usePerspectiveProjection();
             _projM.setPerspective(fovy, aspect, zNear, zFar);
             _projM.invertYaxis();
             }
@@ -252,16 +309,19 @@ namespace tgx
 
 
         /**
-        * Set the zbuffer and its size (in number of floats).
+        * Set the zbuffer.
         *
-        * The zbuffer must be large enough to be used with the image that is being drawn onto.
-        * This means that we must have length >= image.width()*image.height().
+        * Warning: the zbuffer must be large enough to be used with the image that is being 
+          drawn onto. This means that we must have length >= image.width()*image.height().
+        *
+        * - Setting a valid zbuffer automatically turns on z-buffering.
+        * - Removing the z-buffer (by setting it to nullptr) turns off z-buffering.
         **/
-        void setZbuffer(float* zbuffer, int length)
+        void setZbuffer(float* zbuffer)
             {
-            static_assert(ZBUFFER == true, "the setZbuffer() method can only be used with template parameter ZBUFFER = true");
+            static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use setZbuffer()");
             _uni.zbuf = zbuffer;
-            _zbuffer_len = length;
+            _rectifyShaderZbuffer();
             }
 
 
@@ -276,20 +336,141 @@ namespace tgx
         **/
         void clearZbuffer()
             {
-            static_assert(ZBUFFER == true, "the clearZbuffer() method can only be used with template parameter ZBUFFER = true");
-            if (_uni.zbuf) memset(_uni.zbuf, 0, _zbuffer_len*sizeof(float));
+            static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use clearZbuffer()");
+            if ((_uni.zbuf) && (_uni.im != nullptr) && (_uni.im->isValid()))
+                {
+                memset(_uni.zbuf, 0, _uni.im->lx() * _uni.im->ly() * sizeof(float));        
+                }
             }
 
 
         /**
-        * Enable/disable the use of bilinear point sampling when using texture mapping.  
-        * Enabling it increase the quality of the rendering but is much more compute expensive. 
-        * default value = false. 
+        * Set the shaders to use for subsequent drawing operations. A combination of the following flags.
+        * 
+        * NOTE: If a shader flag is set with SetShaders but is disabled in the template parameter LOADED_SHADER, 
+        *       then the drawing calls will silently fail (draw nothing) or, in the best case, sometime fall-back 
+        *       using another shader that is loaded. 
+        * 
+        * - Choosing the shading algorithm: TGX_SHADER_FLAT or TGX_SHADER_GOURAUD (see https://en.wikipedia.org/wiki/Shading)
+        *                                  
+        *     TGX_SHADER_FLAT     Use flat shading (i.e. uniform color on faces). This is the fastest
+        *                         drawing method but usually gives poor results when combined with texturing.
+        *                         Lighting transition between bright to dark aera may appear to 'flicker'
+        *                         when color_t = RGB565 because of the limited number of colors/shades
+        *                         available.
+        *
+        *                      -> the color on the face is computed according to Phong's lightning
+        *                         model use the triangle face normals computed via crossproduct.
+        *                         https://en.wikipedia.org/wiki/Phong_reflection_model
+        *                         
+        *
+        *     TGX_SHADER_GOURAUD  Give a color to each vertex and then use linear interpolation to
+        *                         shade each triangle according to its vertex colors. This results in
+        *                         smoother color transitions and works well with texturing but at a
+        *                         higher CPU cost.
+        *
+        *                      -> In order to use gouraud shading, a normal vector must be attributed
+        *                          to each vertex, which is then used to determine its color according
+        *                          to phong's lightning model.
+        *
+        *                      -> *** NORMAL VECTORS MUST ALWAYS BE NORMALIZED (UNIT LENGHT) ***
+        *
+        *                      -> When backface culling is enable, the normal vector must be that of
+        *                         the 'front face' (obviously). When backface culling is  disabled,
+        *                         there is no more 'front' and 'back' face: by convention, the normal
+        *                         vector supplied must then be that corresponding to the counter-
+        *                         clockwise face.
+        *
+        *  - Enabling (perspective correct) texture mapping.  
+        *    Texture mapping is perspective correct and is performed in combination with TGX_SHADER_FLAT or 
+        *    TGX_SHADER_GOURAUD. The color of a pixel in the triangle is obtained by combining to texture color 
+        *    at that pixel with the lightning at the position (according to phong's lightning model again).
+        *    
+        *    TGX_SHADER_TEXTURE   enable texture mapping. 
+        *                         -> A texture must be stored in an Image<color_t> object
+        *                         
+        *                         -> wrap mode is set with `setTextureWrappingMode()`
+        *                         
+        *                         -> drawing quality is set with `setTextureQuality()`
+        *
+        *                         -> NOTE: Large textures stored in flash memory may be VERY slow to access when
+        *                            the texture is not read linearly which will happens for some (bad) triangle
+        *                            orientations and then cache becomes useless... This problem can be somewhat
+        *                            mitigated by:
+        *
+        *                            (a) splitting large textured triangles into smaller ones: then each triangle
+        *                                only accesses a small part of the texture. This helps a lot wich cache
+        *                                optimizatrion [this is why models with thousands of faces may display
+        *                                faster that a simple textured cube in some cases :-)].
+        *
+        *                            (b) moving the image into RAM if possible. Even moving the texture from
+        *                                FLASH to EXTMEM (if available) will usually give a great speed boost !
         **/
-        void useBilinearTexturing(bool enable)
-            {
-            _uni.use_bilinear_texturing = enable;
+        void setShaders(int shaders)
+            {               
+            _rectifyShaderShading(shaders);
             }
+
+
+        /**
+        * Set the wrap mode when using texturing. One of:
+        * 
+        * TGX_SHADER_TEXTURE_WRAP_POW2      Wrap around (repeat) the texture. This is the fastest mode.
+        * 
+        *                                   !!! WARNING : WHEN USING THIS FLAG, THE TEXTURE MUST HAVE DIMENSIONS 
+        *                                       THAT ARE POWER OF 2 ALONG EACH AXIS !!!
+        * 
+        * 
+        * TGX_SHADER_TEXTURE_CLAMP          Clamp to the edge. Slower than above but the texture can be any size. 
+        **/
+        void setTextureWrappingMode(int wrap_mode)
+            {
+            if (TGX_SHADER_HAS_TEXTURE_CLAMP(wrap_mode))
+                {
+                if (TGX_SHADER_HAS_TEXTURE_CLAMP(ENABLED_SHADERS))
+                    _texture_wrap_mode = TGX_SHADER_TEXTURE_CLAMP;
+                else
+                    _texture_wrap_mode = TGX_SHADER_TEXTURE_WRAP_POW2; // fallback
+                }
+            else
+                {
+                if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(ENABLED_SHADERS))
+                    _texture_wrap_mode = TGX_SHADER_TEXTURE_WRAP_POW2;
+                else
+                    _texture_wrap_mode = TGX_SHADER_TEXTURE_CLAMP; // fallback
+                }
+            _rectifyShaderTextureWrapping();
+            }
+
+
+        /**
+        * Set the texturing quality. One of
+        *
+        * TGX_SHADER_TEXTURE_NEAREST      Use nearest neighbour point sampling when texturing. 
+        *                                 (fastest method).
+        *
+        * TGX_SHADER_TEXTURE_BILINEAR     Use bilinear interpolation when texturing
+        *                                 (slower but higher quality).
+        **/
+        void setTextureQuality(int quality)
+            {
+            if (TGX_SHADER_HAS_TEXTURE_BILINEAR(quality))
+                {
+                if (TGX_SHADER_HAS_TEXTURE_BILINEAR(ENABLED_SHADERS))
+                    _texture_quality = TGX_SHADER_TEXTURE_BILINEAR;
+                else
+                    _texture_quality = TGX_SHADER_TEXTURE_NEAREST; // fallback
+                }
+            else
+                {
+                if (TGX_SHADER_HAS_TEXTURE_NEAREST(ENABLED_SHADERS))
+                    _texture_quality = TGX_SHADER_TEXTURE_NEAREST;
+                else
+                    _texture_quality = TGX_SHADER_TEXTURE_BILINEAR; // fallback
+                }
+            _rectifyShaderTextureQuality();
+            }
+
 
 
         /*****************************************************************************************
@@ -385,7 +566,7 @@ namespace tgx
         fVec4 worldToViewPort(fVec3 P)
             {
             fVec4 Q = _projM * _viewM.mult1(P);
-            if (!ORTHO) Q.zdivide();
+            if (!_ortho) Q.zdivide();
             return Q;
             }
 
@@ -403,7 +584,7 @@ namespace tgx
         iVec2 worldToImage(fVec3 P)
             {
             fVec4 Q = _projM * _viewM.mult1(P);
-            if (!ORTHO) Q.zdivide();
+            if (!_ortho) Q.zdivide();
             Q.x = ((Q.x + 1) * LX) / 2 - _ox;
             Q.y = ((Q.y + 1) * LY) / 2 - _oy;
             return iVec2((int)roundfp(Q.x), (int)roundfp(Q.y));
@@ -555,7 +736,7 @@ namespace tgx
         fVec4 modelToViewPort(fVec3 P)
             {
             fVec4 Q = _projM * _r_modelViewM.mult1(P);
-            if (!ORTHO) Q.zdivide();
+            if (!_ortho) Q.zdivide();
             return Q;
             }
 
@@ -570,7 +751,7 @@ namespace tgx
         iVec2 modelToImage(fVec3 P)
             {
             fVec4 Q = _projM * _r_modelViewM.mult1(P);
-            if (!ORTHO) Q.zdivide();
+            if (!_ortho) Q.zdivide();
             Q.x = ((Q.x + 1) * LX) / 2 - _ox;
             Q.y = ((Q.y + 1) * LY) / 2 - _oy;
             return iVec2(roundfp(Q.x), roundfp(Q.y));
@@ -658,66 +839,25 @@ namespace tgx
         *
         * Methods to draw primitives (triangles/quads/meshes) onto the viewport.
         *
-        * (1) The rasterizer accept the following shader options.
+        * (1) The rasterizer uses the shaders set with setShaders(). If the requested shaders cannot
+        *     be used because they are disabled in the template parameter DISABLED_SHADERS or because 
+        *     the correct parameters are not supplied (e.g.  no normals for Gouraud shading or no image 
+        *     for texturing) then the drawing operation silently fails and return without drawing anything
+        *     (in the best case, it may fall back using another shader).
         *
-        *     - TGX_SHADER_FLAT   Use flat shading (i.e. uniform color on faces). This is the fastest
-        *                     drawing method but usually gives poor results when combined with texturing.
-        *                     Lighting transition between bright to dark aera may appear to 'flicker'
-        *                     when color_t = RGB565 because of the limited number of colors/shades
-        *                     available.
-        *
-        *                     -> the color on the face is computed according to Phong's lightning
-        *                        model use the triangle face normals computed via crossproduct.
-        *
-        *     - TGX_SHADER_GOURAUD  Give a color to each vertex and then use linear interpolation to
-        *                       shade each triangle according to its vertex colors. This results in
-        *                       smoother color transitions and works well with texturing but at a
-        *                       higher CPU cost.
-        *
-        *                       -> In order to use gouraud shading, a normal vector must be attributed
-        *                          to each vertex, which is then used to determine its color according
-        *                          to phong's lightning model.
-        *
-        *                       -> *** NORMAL VECTORS MUST ALWAYS BE NORMALIZED (UNIT LENGHT) ***
-        *
-        *                       -> When backface culling is enable, the normal vector must be that of
-        *                          the 'front face' (obviously). When backface culling is  disabled,
-        *                          there is no more 'front' and 'back' face: by convention, the normal
-        *                          vector supplied must be then be those corresponding to the counter-
-        *                          clockwise face.
-        *
-        *     - TGX_SHADER_TEXTURE  Use (perspective correct) texture mapping. This flag may be combined
-        *                       with either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD. The color of a pixel in the
-        *                       triangle is obtained by combining to texture color at that pixel with
-        *                       the lightning at the position (according to phong's lightning model again).
-        *
-        *                       -> A texture must be stored in an Image<color_t> object:
-        *
-        *                           *** EACH TEXTURE DIMENSION MUST BE A POWER OF 2 ****
-        *
-        *                       -> Large textures stored in flash memory may be VERY slow to access when the
-        *                          texture is not read linearly which will happens for some (bad) triangle
-        *                          orientations and then cache becomes useless... This problem can be somewhat
-        *                          mitigated by:
-        *
-        *                          (a) splitting large textured triangles into smaller ones: then each triangle
-        *                              only accesses a small part of the texture. This helps a lot wich cache
-        *                              optimizatrion [this is why models with thousands of faces may display
-        *                              faster that a simple textured cube in some cases :-)].
-        *
-        *                          (b) moving the image into RAM if possible. Even moving the texture from
-        *                              FLASH to EXTMEM (if available) will usually give a great speed boost !
+        *     -> *** NORMAL VECTORS MUST ALWAYS BE NORMALIZED (UNIT LENGHT) ***
+        *       
+        *     -> *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
         *
         *
-        * (2) Depth testing is automoatically performed when drawing is the tmeplate parameter ZBUFFER is set
-        *      (in this case, a valid z buffer must be supplied with setZbufffer() before calling any draw method).
+        * (2) Depth testing is automatically performed when a z-buffer is available.
         *
-        *     ***  DO NOT FORGET TO CLEAR THE ZBUFFER WITH clearZbuffer() BEFORE DRAWING A NEW SCENE :-) ***
+        *     -> ***  DO NOT FORGET TO CLEAR THE ZBUFFER WITH clearZbuffer() BEFORE DRAWING A NEW SCENE ***
         *
         *
         * (3) Back face culling is automatically performed if enabled (via the setCulling() method)
         *
-        *     *** TRIANGLES/QUADS MUST BE GIVEN TO THE DRAWING METHOD IN THEIR CORRECT WINDING ORDER ***
+        *     -> *** TRIANGLES/QUADS MUST BE GIVEN TO THE DRAWING METHOD IN THEIR CORRECT WINDING ORDER ***
         *
         *
         * (4) It is much more efficient to use methods that draws several primitives at once than issuing
@@ -748,14 +888,6 @@ namespace tgx
         * THIS IS THE FASTEST METHOD FOR DRAWING AN OBJECT AND SHOULD BE USED WHENEVER POSSIBLE.
         * ***************************************************************************************
         *
-        * - shader  Type of shader to use. Combination of TGX_SHADER_GOURAUD, TGX_SHADER_FLAT, TGX_SHADER_TEXTURE
-        *            - TGX_SHADER_FLAT    : use flat shading (uniform color on each triangle).
-        *            - TGX_SHADER_GOURAUD : This flag overwrites TGX_SHADER_FLAT but requires the mesh to have a
-        *                               normal array otherwise the renderer will fall back to flat shading.
-        *            - TGX_SHADER_TEXTURE : use texture mapping. This flag complements TGX_SHADER_FLAT/TGX_SHADER_GOURAUD
-        *                               but require the mesh to a a valid texture array and a valid texture
-        *                               image otherwise the renderer will fall back to uniform color shading.
-        *
         * - mesh    The mesh to draw. The meshes/vertices array/textures can be in RAM or in FLASH.
         *           Whenever possible, put vertex array and texture in RAM (or even EXTMEM).
         *
@@ -764,233 +896,63 @@ namespace tgx
         *                       this flag affects also all the linked meshes if draw_chained_meshes=true.
         *
         * - draw_chained_meshes  If true, the meshes linked to this mesh (via the ->next member) are also drawn.
-        *
-        * The method returns  0 ok, (drawing performed correctly).
-        *                    -1 invalid image
-        *                    -2 invalid zbuffer (only when template parameter ZBUFFER=true)
         **/
-        int drawMesh(const int shader, const Mesh3D<color_t>* mesh, bool use_mesh_material = true, bool draw_chained_meshes = true);
+        void drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material = true, bool draw_chained_meshes = true);
 
 
 
 
         /**
-        * Draw a single triangle on the image. Use the current material color.
+        * Draw a single triangle on the image.
         *
-        * - shader      Ignored: the triangle is draw with TGX_SHADER_FLAT anyway
-        *               since no normal nor texture coord is given...
-        *
-        * - (P1,P2,P3)  Coordinates (in model space) of the triangle to draw
+        * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
         *
         *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
         *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
+        * - (N1,N2,N3)  pointers to the normals associated with (P1, P2, P3).  
+        *               or nullptr if not using gouraud shading
+        *               
+        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
+        *
+        * - (T1,T2,T3)  pointers to the texture coords. associated with (P1, P2, P3).  
+        *               or nullptr if not using texturing
+        *
+        * - texture     pointer to the texture image to use (or nullptr if not used)
+        *
+        *               *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
         **/
-        int drawTriangle(int shader,
-                         const fVec3& P1, const fVec3& P2, const fVec3& P3)
-            {
-            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            _drawTriangle(TGX_SHADER_FLAT, &P1, &P2, &P3, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor);
-            return 0;
-            }
+        void drawTriangle(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3,
+                          const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr,
+                          const fVec2 * T1 = nullptr, const fVec2 * T2 = nullptr, const fVec2 * T3 = nullptr,
+                          const Image<color_t> * texture = nullptr);
+
+
 
 
         /**
         * Draw a single triangle on the image with a given color on each of its vertices.
         * The color inside the triangle is obtained by linear interpolation.
         *
-        * - shader      Ignored: the triangle is drawn with TGX_SHADER_FLAT anyway
-        *               since no normal nor texture coord is given...
-        *
-        * - (P1,P2,P3)  Coordinates (in model space) of the triangle to draw
-        *
-        *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (col1,col2,col3) Colors of the vertices
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        **/
-        int drawTriangleWithVertexColor(int shader,
-                     const fVec3& P1, const fVec3& P2, const fVec3& P3,
-                     const RGBf & col1, const RGBf & col2, const RGBf & col3)
-            {
-            fVec3 dummyN(0,0,0); // does not matter, unused
-            return drawTriangleWithVertexColor(TGX_SHADER_FLAT, P1, P2, P3, dummyN,dummyN,dummyN, col1, col2, col3);
-            }
-
-
-        /**
-        * Draw a single triangle on the image (with gouraud shading). Use the current material color.
-        *
-        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD.
-        *
         * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
         *
         *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
         *
-        * - (N1,N2,N3)  normals associated with (P1, P2, P3).
+        * - (col1,col2,col3) Colors of the vertices.
+        *
+        * - (N1,N2,N3)  normals associated with (P1, P2, P3)
+        *               or nullptr if not using gouraud shading.
         *
         *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
         **/
-        int drawTriangle(int shader,
-                         const fVec3 & P1, const fVec3 & P2, const fVec3 & P3,
-                         const fVec3 & N1, const fVec3 & N2, const fVec3 & N3)
-            {
-            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed            
-            TGX_SHADER_REMOVE_TEXTURE(shader) // disable texturing
-            _drawTriangle(shader, &P1, &P2, &P3, &N1, &N2, &N3, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor);
-            return 0;
-            }
-
-
-        /**
-        * Draw a single triangle on the image with a given color on each of its vertices.
-        * The color inside the triangle is obtained by linear interpolation.
-        *
-        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD.
-        *
-        * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
-        *
-        *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (N1,N2,N3)  normals associated with (P1, P2, P3).
-        *
-        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * - (col1,col2,col3) Colors of the vertices
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        **/
-        int drawTriangleWithVertexColor(int shader,
-                     const fVec3& P1, const fVec3& P2, const fVec3& P3,
-                     const fVec3& N1, const fVec3& N2, const fVec3& N3,
-                     const RGBf & col1, const RGBf & col2, const RGBf & col3)
-            {
-            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            if (TGX_SHADER_HAS_GOURAUD(shader))
-                {
-                _drawTriangle(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &N1, &N2, &N3, nullptr, nullptr, nullptr, col1, col2, col3);
-                }
-            else
-                {
-                fVec3 N = crossProduct(P2 - P1, P3 - P1);// compute the triangle face normal
-                N.normalize(); // normalize it
-                _drawTriangle(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &N, &N, &N, nullptr, nullptr, nullptr, col1, col2, col3); // call gouraud shader with the same normal for all 3 vertices
-                }
-            return 0;
-            }
-
-
-
-
-        /**
-        * Draw a single triangle on the image (with texture mapping).
-        *
-        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_TEXTURE.
-        *
-        * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
-        *
-        *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (T1,T2,T3)  texture coords. associated with (P1, P2, P3).
-        *
-        * - texture     the texture image to use
-        *
-        *               *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        *          -3 invalid texture image
-        **/
-        int drawTriangle(int shader,
-                        const fVec3 & P1, const fVec3 & P2, const fVec3 & P3,
-                        const fVec2 & T1, const fVec2 & T2, const fVec2 & T3,
-                        const Image<color_t>* texture)
-            {
-            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            TGX_SHADER_REMOVE_GOURAUD(shader)
-            if (TGX_SHADER_HAS_TEXTURE(shader))
-                { // store the texture
-                if (texture == nullptr) return -3;
-                _uni.tex = (const Image<color_t>*)texture;
-                }
-            _drawTriangle(shader, &P1, &P2, &P3, nullptr, nullptr, nullptr, &T1, &T2, &T3, _r_objectColor, _r_objectColor, _r_objectColor);
-            return 0;
-            }
-
-
-
-        /**
-        * Draw a single triangle on the image (with gouraud shading and texture mapping)
-        *
-        * - shader      Combination of TGX_SHADER_FLAT/TGX_SHADER_GOURAUD and TGX_SHADER_TEXTURE
-        *
-        * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
-        *
-        *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (N1,N2,N3)  normals associated with (P1, P2, P3).
-        *
-        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * - (T1,T2,T3)  texture coords. associated with (P1, P2, P3).
-        *
-        * - texture     the texture image to use
-        *
-        *               *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        *          -3 invalid texture image
-        **/
-        int drawTriangle(int shader,
-                        const fVec3 & P1, const fVec3 & P2, const fVec3 & P3,
-                        const fVec3 & N1, const fVec3 & N2, const fVec3 & N3,
-                        const fVec2 & T1, const fVec2 & T2, const fVec2 & T3,
-                        const Image<color_t>* texture)
-            {
-            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            if (TGX_SHADER_HAS_TEXTURE(shader))
-                { // store the texture
-                if (texture == nullptr) return -3;
-                _uni.tex = (const Image<color_t>*)texture;
-                }
-            _drawTriangle(shader, &P1, &P2, &P3, &N1, &N2, &N3, &T1, &T2, &T3, _r_objectColor, _r_objectColor, _r_objectColor);
-            return 0;
-            }
+        void drawTriangleWithVertexColor(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3,
+                                         const RGBf & col1, const RGBf & col2, const RGBf & col3,
+                                         const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr);
 
 
 
         /**
         * Draw a list of triangles on the image. If texture mapping is not used, then the current
         * material color is used to draw the triangles.
-        *
-        * - shader       Combination of TGX_SHADER_FLAT/TGX_SHADER_GOURAUD and TGX_SHADER_TEXTURE
-        *                Some flag may be ignored if the corresponding required arrays
-        *                are missing (i.e. a normal array for TGX_SHADER_GOURAUD, and a texture
-        *                array and a texture image for TGX_SHADER_TEXTURE).
         *
         * - nb_triangles Number of triangles to draw.
         *
@@ -1001,254 +963,79 @@ namespace tgx
         *
         * - vertices     The array of vertices (given in model space).
         *
-        * - ind_normals  [Optional] array of normal indexes. If specified, the array must
+        * - ind_normals  array of normal indexes. If specified, the array must
         *                have length nb_triangles*3.
         *
-        * - normals      [Optional] The array of normals vectors (in model space).
+        * - normals      The array of normals vectors (in model space).
         *
         *                 *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
         *
-        * - ind_texture  [Optional] array of texture indexes. If specified, the array must
+        * - ind_texture  array of texture indexes. If specified, the array must
         *                have length nb_triangles*3.
         *
-        * - textures     [Optional] The array of texture coords.
+        * - textures     The array of texture coords.
         *
-        * - texture_image [Optional] the texture image to use.
+        * - texture_image The texture image to use.
         *
-        *                  *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        *          -3 invalid vertice list
+        *                 *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
         **/
-        int drawTriangles(int shader, int nb_triangles,
-                            const uint16_t * ind_vertices, const fVec3 * vertices,
-                            const uint16_t * ind_normals = nullptr, const fVec3* normals = nullptr,
-                            const uint16_t * ind_texture = nullptr, const fVec2* textures = nullptr,
-                            const Image<color_t> * texture_image = nullptr);
-
+        void drawTriangles(int nb_triangles,
+                           const uint16_t * ind_vertices, const fVec3 * vertices,
+                           const uint16_t * ind_normals = nullptr, const fVec3* normals = nullptr,
+                           const uint16_t * ind_texture = nullptr, const fVec2* textures = nullptr,
+                           const Image<color_t> * texture_image = nullptr);
 
 
 
         /**
         * Draw a single quad on the image.
-        * Use the current material color to draw the quad.
         *
         *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - shader      Ignored: the quad is drawn with TGX_SHADER_FLAT anyway
-        *               since no normal nor texture coord is given...
-        *
-        * - (P1,P2,P3,P4)  Coordinates (in model space) of the triangle to draw
-        *
-        *               *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        **/
-        int drawQuad(int shader,
-                     const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
-            {
-            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            _drawQuad(shader, &P1, &P2, &P3, &P4, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
-            return 0;
-            }
-
-
-        /**
-        * Draw a single quad on the image with a given color on each of its four vertices.
-        * The color inside the quad is obtained by linear interpolation.
-        *
-        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - shader      Ignored: the quad is drawn with TGX_SHADER_FLAT anyway
-        *               since no normal nor texture coord is given...
-        *
-        * - (P1,P2,P3,P4)  Coordinates (in model space) of the triangle to draw
-        *
-        *               *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (col1,col2,col3,col4) Colors of the vertices
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        **/
-        int drawQuadWithVertexColor(int shader,
-                     const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
-                     const RGBf & col1, const RGBf & col2, const RGBf & col3, const RGBf & col4)
-            {
-            fVec3 dummyN(0,0,0); // does not matter, unused
-            return drawQuadWithVertexColor(TGX_SHADER_FLAT, P1, P2, P3, P4, dummyN,dummyN,dummyN,dummyN, col1, col2, col3, col4);
-            }
-
-
-        /**
-        * Draw a single quad on the image (with gouraud shading).
-        * Use the current material color to draw the quad.
-        *
-        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD.
-        *
-        * - (P1,P2,P3,P4)  coordinates (in model space) of the quad to draw
-        *
-        *               *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (N1,N2,N3,N4)  normals associated with (P1, P2, P3, P4).
-        *
-        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        **/
-        int drawQuad(int shader,
-                     const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
-                     const fVec3& N1, const fVec3& N2, const fVec3& N3, const fVec3& N4)
-            {
-            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            TGX_SHADER_REMOVE_TEXTURE(shader) // disable texturing
-            _drawQuad(shader, &P1, &P2, &P3, &P4, &N1, &N2, &N3, &N4, nullptr, nullptr, nullptr, nullptr, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
-            return 0;
-            }
-
-
-        /**
-        * Draw a single quad on the image with a given color on each of its four vertices.
-        * The color inside the quad is obtained by linear interpolation.
-        *
-        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD.
-        *
-        * - (P1,P2,P3,P4)  coordinates (in model space) of the quad to draw
-        *
-        *               *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (N1,N2,N3,N4)  normals associated with (P1, P2, P3, P4).
-        *
-        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * - (col1,col2,col3,col4) Colors of the vertices
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        **/
-        int drawQuadWithVertexColor(int shader,
-                     const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
-                     const fVec3& N1, const fVec3& N2, const fVec3& N3, const fVec3& N4,
-                     const RGBf & col1, const RGBf & col2, const RGBf & col3, const RGBf & col4)
-            {
-            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            if (TGX_SHADER_HAS_GOURAUD(shader))
-                {
-                _drawQuad(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &P4, &N1, &N2, &N3, &N4, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4);
-                }
-            else
-                {
-                fVec3 N = crossProduct(P2 - P1, P3 - P1);// compute the quad normal (quad is assumed to be planar)
-                N.normalize(); // normalize it
-                _drawQuad(TGX_SHADER_GOURAUD, &P1, &P2, &P3, &P4, &N, &N, &N, &N, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4);
-                }
-            return 0;
-            }
-
-
-        /**
-        * Draw a single quad on the image (with texture mapping).
-        *
-        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - shader      Either TGX_SHADER_FLAT or TGX_SHADER_TEXTURE.
-        *
-        * - (P1,P2,P3,P4)  coordinates (in model space) of the quad to draw
-        *
-        *               *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (T1,T2,T3,T4)  texture coords. associated with (P1, P2, P3, P4).
-        *
-        * - texture     the texture image to use
-        *
-        *               *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        *          -3 invalid texture image
-        **/
-        int drawQuad(int shader,
-                     const fVec3 & P1, const fVec3 & P2, const fVec3 & P3, const fVec3& P4,
-                     const fVec2 & T1, const fVec2 & T2, const fVec2 & T3, const fVec2& T4,
-                     const Image<color_t>* texture)
-            {
-            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud
-            if (TGX_SHADER_HAS_TEXTURE(shader))
-                { // store the texture
-                if (texture == nullptr) return -3;
-                _uni.tex = (const Image<color_t>*)texture;
-                }
-            _drawQuad(shader, &P1, &P2, &P3, &P4, nullptr, nullptr, nullptr, nullptr, &T1, &T2, &T3, &T4, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
-            return 0;
-            }
-
-
-
-        /**
-        * Draw a single quad on the image (with texture mapping and gouraud shading)
-        *
-        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - shader      Combination of TGX_SHADER_FLAT/TGX_SHADER_GOURAUD and TGX_SHADER_TEXTURE
         *
         * - (P1,P2,P3,P4)  coordinates (in model space) of the quad to draw
         *
         *                  *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
         *
         * - (N1,N2,N3,N4)  normals associated with (P1, P2, P3, P4).
+        *                  or nullptr if not using gouraud shading
         *
         *                  *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
         *
         * - (T1,T2,T3,T4)  texture coords. associated with (P1, P2, P3).
+        *                  or nullptr if not using texturing
         *
-        * - texture     the texture image to use
+        * - texture     the texture image to use (or nullptr if unused).
         *
-        *               *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        *          -3 invalid texture image
+        *               *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
         **/
-        int drawQuad(int shader,
-                     const fVec3 & P1, const fVec3 & P2, const fVec3 & P3, const fVec3& P4,
-                     const fVec3 & N1, const fVec3 & N2, const fVec3 & N3, const fVec3& N4,
-                     const fVec2 & T1, const fVec2 & T2, const fVec2 & T3, const fVec2& T4,
-                     const Image<color_t>* texture)
-            {
-            if ((_uni.im == nullptr) || (!_uni.im->isValid())) return -1;   // no valid image
-            if ((ZBUFFER) && ((_uni.zbuf == nullptr) || (_zbuffer_len < _uni.im->lx() * _uni.im->ly()))) return -2; // zbuffer required but not available.
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
-            if (TGX_SHADER_HAS_TEXTURE(shader))
-                { // store the texture
-                if (texture == nullptr) return -3;
-                _uni.tex = (const Image<color_t>*)texture;
-                }
-            _drawQuad(shader, &P1, &P2, &P3, &P4,   &N1, &N2, &N3, &N4,    &T1, &T2, &T3, &T4, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
-            return 0;
-            }
+        void drawQuad(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3, const fVec3 & P4,
+                      const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr, const fVec3 * N4 = nullptr,
+                      const fVec2 * T1 = nullptr, const fVec2 * T2 = nullptr, const fVec2 * T3 = nullptr, const fVec2 * T4 = nullptr,
+                      const Image<color_t>* texture = nullptr);
+        
+
+
+        /**
+        * Draw a single quad on the image with a given color on each of its four vertices.
+        * The color inside the quad is obtained by linear interpolation.
+        *
+        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
+        *
+        * - (P1,P2,P3,P4)  coordinates (in model space) of the quad to draw
+        *
+        *               *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
+        *
+        * - (col1,col2,col3,col4) Colors of the vertices
+        *
+        * - (N1,N2,N3,N4)  normals associated with (P1, P2, P3, P4).
+        *                  or nullptr if not using gouraud shading.
+        *
+        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
+        **/
+        void drawQuadWithVertexColor(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3, const fVec3 & P4,
+                                     const RGBf & col1, const RGBf & col2, const RGBf & col3, const RGBf & col4,
+                                     const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr, const fVec3 * N4 = nullptr);
+         
 
 
 
@@ -1257,11 +1044,6 @@ namespace tgx
         * material color is used to draw the triangles.
         *
         *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - shader       Combination of TGX_SHADER_FLAT/TGX_SHADER_GOURAUD and TGX_SHADER_TEXTURE
-        *                Some flag may be ignored if the corresponding required arrays
-        *                are missing (i.e. a normal array for TGX_SHADER_GOURAUD, and a texture
-        *                array and a texture image for TGX_SHADER_TEXTURE).
         *
         * - nb_quads     Number of quads to draw.
         *
@@ -1286,18 +1068,14 @@ namespace tgx
         *
         * - texture_image [Optional] the texture image to use.
         *
-        *                  *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid detph buffer
-        *          -3 invalid vertice list
+        *                 *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
         **/
-        int drawQuads(int shader, int nb_quads,
+        void drawQuads(int nb_quads,
                        const uint16_t * ind_vertices, const fVec3 * vertices,
                        const uint16_t * ind_normals = nullptr, const fVec3* normals = nullptr,
                        const uint16_t * ind_texture = nullptr, const fVec2* textures = nullptr,
                        const Image<color_t>* texture_image = nullptr);
+
 
 
 
@@ -1499,7 +1277,7 @@ namespace tgx
             // set culling direction = -1 and save previous value
             float save_culling = _culling_dir;
             if (_culling_dir != 0) _culling_dir = 1;
-            drawQuads(TGX_SHADER_FLAT, 6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
+            drawQuads(6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
             // restore culling direction
             _culling_dir = save_culling; 
             }
@@ -1534,10 +1312,9 @@ namespace tgx
         * - the texture coordinate for each face are given ordered by their name
         *   (e.g. 'v_front_A_B_C_D' means vertex in order: A, B, C, D for the front face)
         *
-        *   *** THE TEXTURE SIZE MUST BE A POWER OF 2 IN EVERY DIMENSION ****
+        *    *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
         */
-
-        void drawCube(int shader,
+        void drawCube(
             fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
             fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
             fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
@@ -1553,7 +1330,7 @@ namespace tgx
         *
         * Same as above for use the whole texture image given for each face.
         **/
-        void drawCube(int shader,
+        void drawCube(
             const Image<color_t>* texture_front,
             const Image<color_t>* texture_back,
             const Image<color_t>* texture_top,
@@ -1574,9 +1351,9 @@ namespace tgx
         * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
         *    in world coord.
         **/
-        void drawSphere(int shader, int nb_sectors, int nb_stacks)
+        void drawSphere(int nb_sectors, int nb_stacks)
             {
-            drawSphere(shader, nb_sectors, nb_stacks, nullptr);
+            drawSphere(nb_sectors, nb_stacks, nullptr);
             }
 
 
@@ -1587,14 +1364,14 @@ namespace tgx
         *
         * The texture is mapped using the Mercator projection. 
         * 
-        *                  *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
-        * 
+        * *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
+        *
         * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
         *    in world coord.
         **/
-        void drawSphere(int shader, int nb_sectors, int nb_stacks, const Image<color_t>* texture)
+        void drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture)
             {
-            _drawSphere<false,false>(shader, nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
+            _drawSphere<false,false>(nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
             }
 
 
@@ -1612,11 +1389,11 @@ namespace tgx
         * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
         *    in world coord.
         **/
-        void drawAdaptativeSphere(int shader, float quality = 1.0f)
+        void drawAdaptativeSphere(float quality = 1.0f)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
-            drawSphere(shader, nb_stacks * 2 - 2, nb_stacks, nullptr);
+            drawSphere(nb_stacks * 2 - 2, nb_stacks, nullptr);
             }   
 
 
@@ -1633,17 +1410,20 @@ namespace tgx
         *
         * The texture is mapped using the mercator projection.
         *
-        *                  *** THE DIMENSION OF THE TEXTURE MUST BE POWERS OF 2 ***
-        *                  
+        *  *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
+        *
         * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
         *    in world coord.
         **/
-        void drawAdaptativeSphere(int shader, const Image<color_t>* texture, float quality = 1.0f)
+        void drawAdaptativeSphere(const Image<color_t>* texture, float quality = 1.0f)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
-            drawSphere(shader, nb_stacks * 2 - 2, nb_stacks, texture);
+            drawSphere(nb_stacks * 2 - 2, nb_stacks, texture);
             }
+
+
+
 
 
 
@@ -1679,13 +1459,10 @@ namespace tgx
         *           Whenever possible, put vertex array and texture in RAM (or even EXTMEM).
         *
         * - draw_chained_meshes:  If true, the meshes linked to this mesh (via the ->next member) are also drawn.
-        *        *
-        * The method returns  0 ok, (drawing performed correctly).
-        *                    -1 invalid image
         **/
-        int drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes = true)
+        void drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes = true)
             {
-            return _drawWireFrameMesh<true>(mesh, draw_chained_meshes, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameMesh<true>(mesh, draw_chained_meshes, color_t(_color), 1.0f, 1.0f);
             }
 
 
@@ -1695,14 +1472,12 @@ namespace tgx
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         * 
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        * 
         **/        
-        int drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness)
+        void drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness)
             {
-            return _drawWireFrameMesh<false>(mesh, draw_chained_meshes, color_t(_color), 1.0f, thickness);
+            _drawWireFrameMesh<false>(mesh, draw_chained_meshes, color_t(_color), 1.0f, thickness);
             }
             
-
 
         /**
         * Draw a mesh onto the image using 'wireframe' lines (HIGH QUALITY / SLOW VERSION).
@@ -1711,15 +1486,12 @@ namespace tgx
         * Also set the color and opacity for blending instead of using the material color.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        * 
         **/        
-        int drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness, color_t color, float opacity)
+        void drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness, color_t color, float opacity)
             {
-            return _drawWireFrameMesh<false>(mesh, draw_chained_meshes, color, opacity, thickness);
+            _drawWireFrameMesh<false>(mesh, draw_chained_meshes, color, opacity, thickness);
             }
             
-
-
 
         /**
         * Draw a 'wireframe' 3D line segment  (FAST BUT LOW QUALITY METHOD).
@@ -1727,13 +1499,10 @@ namespace tgx
         * the line is drawn with the current material color. This method does not require a zbuffer.
         *
         * - (P1, P2) coordinates (in model space) of the segment to draw.
-        *
-        * The method returns  0 ok, (drawing performed correctly).
-        *                    -1 invalid image
         **/
-        int drawWireFrameLine(const fVec3& P1, const fVec3& P2)
+        void drawWireFrameLine(const fVec3& P1, const fVec3& P2)
             {
-            return _drawWireFrameLine<true>(P1, P2, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameLine<true>(P1, P2, color_t(_color), 1.0f, 1.0f);
             }
 
 
@@ -1743,11 +1512,10 @@ namespace tgx
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness)
+        void drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness)
             {
-            return _drawWireFrameLine<false>(P1, P2, color_t(_color), 1.0f, thickness);
+            _drawWireFrameLine<false>(P1, P2, color_t(_color), 1.0f, thickness);
             }
 
 
@@ -1758,20 +1526,16 @@ namespace tgx
         * Also set the color and opacity for blending instead of using the material color.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness, color_t color, float opacity)
+        void drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness, color_t color, float opacity)
             {
-            return _drawWireFrameLine<false>(P1, P2, color, opacity, thickness);
+            _drawWireFrameLine<false>(P1, P2, color, opacity, thickness);
             }
-
-
-
 
 
         /**
         * Draw a list of wireframe lines on the image (FAST BUT LOW QUALITY METHOD). 
-        * the triangles are drawn with the current material color. This method does not require a zbuffer.
+        * the lines are drawn with the current material color. This method does not require a zbuffer.
         *
         * - nb_lines Number of lines to draw.
         *
@@ -1779,14 +1543,10 @@ namespace tgx
         *                and each 2 consecutive values represent a line segment.
         *
         * - vertices     The array of vertices (given in model space).
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid vertice list
         **/
-        int drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices)
+        void drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices)
             {
-            return _drawWireFrameLines<true>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameLines<true>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
@@ -1796,11 +1556,10 @@ namespace tgx
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
+        void drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
             {
-            return _drawWireFrameLines<false>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            _drawWireFrameLines<false>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
             }
 
 
@@ -1811,11 +1570,10 @@ namespace tgx
         * Also set the color and opacity for blending instead of using the material color.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
+        void drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
-            return _drawWireFrameLines<false>(nb_lines, ind_vertices, vertices, color, opacity, thickness);
+            _drawWireFrameLines<false>(nb_lines, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
@@ -1826,13 +1584,10 @@ namespace tgx
         * but back face culling is used (if enabled).
         *
         * - (P1, P2, P3) coordinates (in model space) of the triangle to draw.
-        *
-        * The method returns  0 ok, (drawing performed correctly).
-        *                    -1 invalid image
         **/
-        int drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3)
+        void drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3)
             {
-            return _drawWireFrameTriangle<true>(P1, P2, P3, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameTriangle<true>(P1, P2, P3, color_t(_color), 1.0f, 1.0f);
             }
 
 
@@ -1842,11 +1597,10 @@ namespace tgx
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness)
+        void drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness)
             {
-            return _drawWireFrameTriangle<false>(P1, P2, P3, color_t(_color), 1.0f, thickness);
+            _drawWireFrameTriangle<false>(P1, P2, P3, color_t(_color), 1.0f, thickness);
             }
     
 
@@ -1857,16 +1611,11 @@ namespace tgx
         * Also set the color and opacity for blending instead of using the material color.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness, color_t color, float opacity)
+        void drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness, color_t color, float opacity)
             {
-            return _drawWireFrameTriangle<false>(P1, P2, P3, color, opacity, thickness);
+            _drawWireFrameTriangle<false>(P1, P2, P3, color, opacity, thickness);
             }
-
-
-
-
 
 
         /**
@@ -1883,14 +1632,10 @@ namespace tgx
         *               *** MAKE SURE THAT THE TRIANGLES ARE GIVEN WITH THE CORRECT WINDING ORDER ***
         *
         * - vertices     The array of vertices (given in model space).
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid vertice list
         **/
-        int drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices)
+        void drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices)
             {
-            return _drawWireFrameTriangles<true>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameTriangles<true>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
@@ -1900,11 +1645,10 @@ namespace tgx
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
+        void drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
             {
-            return _drawWireFrameTriangles<false>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            _drawWireFrameTriangles<false>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
             }
           
 
@@ -1915,15 +1659,11 @@ namespace tgx
         * Also set the color and opacity for blending instead of using the material color.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
+        void drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
-            return _drawWireFrameTriangles<false>(nb_triangles, ind_vertices, vertices, color, opacity, thickness);
+            _drawWireFrameTriangles<false>(nb_triangles, ind_vertices, vertices, color, opacity, thickness);
             }
-
-
-
 
 
         /**
@@ -1933,13 +1673,10 @@ namespace tgx
         * but back face culling is used (if enabled).
         *
         * - (P1, P2, P3, P4) coordinates (in model space) of the quad to draw.
-        *
-        * The method returns  0 ok, (drawing performed correctly).
-        *                    -1 invalid image
         **/
-        int drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
+        void drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
             {
-            return _drawWireFrameQuad<true>(P1, P2, P3, P4, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameQuad<true>(P1, P2, P3, P4, color_t(_color), 1.0f, 1.0f);
             }
 
 
@@ -1949,11 +1686,10 @@ namespace tgx
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness)
+        void drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness)
             {
-            return _drawWireFrameQuad<false>(P1, P2, P3, P4, color_t(_color), 1.0f, thickness);
+            _drawWireFrameQuad<false>(P1, P2, P3, P4, color_t(_color), 1.0f, thickness);
             }
            
 
@@ -1964,15 +1700,12 @@ namespace tgx
         * Also set the color and opacity for blending instead of using the material color.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness, color_t color, float opacity)
+        void drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness, color_t color, float opacity)
             {
-            return _drawWireFrameQuad<false>(P1, P2, P3, P4, color, opacity, thickness);
+            _drawWireFrameQuad<false>(P1, P2, P3, P4, color, opacity, thickness);
             }
            
-
-
 
         /**
         * Draw a list of wireframe quads on the image (FAST BUT LOW QUALITY METHOD). 
@@ -1989,16 +1722,11 @@ namespace tgx
         *               *** QUADS MUST BE COPLANAR ***
         *
         * - vertices     The array of vertices (given in model space).
-        *
-        * Returns: 0  OK
-        *          -1 invalid image
-        *          -2 invalid vertice list
         **/
-        int drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices)
+        void drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices)
             {
-            return _drawWireFrameQuads<true>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameQuads<true>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
-
 
 
         /**
@@ -2007,11 +1735,10 @@ namespace tgx
         * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
+        void drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
             {
-            return _drawWireFrameQuads<false>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
+            _drawWireFrameQuads<false>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
             }
 
 
@@ -2022,11 +1749,10 @@ namespace tgx
         * Also set the color and opacity for blending instead of using the material color.
         *
         * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        *
         **/
-        int drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
+        void drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
-            return _drawWireFrameQuads<false>(nb_quads, ind_vertices, vertices, color, opacity, thickness);
+            _drawWireFrameQuads<false>(nb_quads, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
@@ -2096,7 +1822,7 @@ namespace tgx
         **/
         void drawWireFrameSphere(int nb_sectors, int nb_stacks)
             {
-            _drawSphere<true, true>(TGX_SHADER_FLAT, nb_sectors, nb_stacks, nullptr, 1.0f, color_t(_color), 1.0f);
+            _drawSphere<true, true>(nb_sectors, nb_stacks, nullptr, 1.0f, color_t(_color), 1.0f);
             }
 
 
@@ -2123,7 +1849,7 @@ namespace tgx
         **/
         void drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity)
             {
-            _drawSphere<true,false>(TGX_SHADER_FLAT, nb_sectors, nb_stacks, nullptr, thickness, color, opacity);
+            _drawSphere<true,false>(nb_sectors, nb_stacks, nullptr, thickness, color, opacity);
             }
 
 
@@ -2196,13 +1922,137 @@ namespace tgx
         ******************************************************************************************
         ******************************************************************************************/
 
-        // Choose bounds so that we have some margin of error on both side. 
-        static constexpr float CLIPBOUND_XY = (1.0f + 3.0f*(((float)MAXVIEWPORTDIMENSION) / ((LX > LY) ? LX : LY)))/4.0f;
 
+
+        /** Make sure we can perform a drawing operation */
+        TGX_INLINE bool _validDraw()
+            {
+            return ((_uni.im != nullptr) && (_uni.im->isValid()));
+            }
+
+
+        /***********************************************************
+        * Making sure shader flags are coherent
+        ************************************************************/
+
+        void _rectifyShaderOrtho()
+            {
+            if (_ortho)
+                {
+                TGX_SHADER_ADD_ORTHO(_shaders)
+                TGX_SHADER_REMOVE_PERSPECTIVE(_shaders)
+                }
+            else
+                {
+                TGX_SHADER_ADD_PERSPECTIVE(_shaders)
+                TGX_SHADER_REMOVE_ORTHO(_shaders)
+                }
+            }
+
+
+        void _rectifyShaderZbuffer()
+            {
+            if (_uni.zbuf)
+                {
+                TGX_SHADER_ADD_ZBUFFER(_shaders)
+                TGX_SHADER_REMOVE_NOZBUFFER(_shaders)
+                }
+            else
+                {
+                TGX_SHADER_ADD_NOZBUFFER(_shaders)
+                TGX_SHADER_REMOVE_ZBUFFER(_shaders)
+                }
+            }
+
+
+        void _rectifyShaderShading(int new_shaders)
+            {
+            if (TGX_SHADER_HAS_GOURAUD(new_shaders))
+                {
+                TGX_SHADER_ADD_GOURAUD(_shaders)
+                TGX_SHADER_REMOVE_FLAT(_shaders)
+                }
+            else 
+                {
+                TGX_SHADER_ADD_FLAT(_shaders)
+                TGX_SHADER_REMOVE_GOURAUD(_shaders)
+                }
+
+            bool tex = (TGX_SHADER_HAS_TEXTURE(new_shaders));
+
+            if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(new_shaders))
+                {
+                setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
+                tex = true;
+                }
+            if (TGX_SHADER_HAS_TEXTURE_CLAMP(new_shaders))
+                {
+                setTextureWrappingMode(TGX_SHADER_TEXTURE_CLAMP);
+                tex = true;
+                }
+            if (TGX_SHADER_HAS_TEXTURE_NEAREST(new_shaders))
+                {
+                setTextureQuality(TGX_SHADER_TEXTURE_NEAREST);
+                tex = true;
+                }
+            if (TGX_SHADER_HAS_TEXTURE_BILINEAR(new_shaders))
+                {
+                setTextureQuality(TGX_SHADER_TEXTURE_BILINEAR);
+                tex = true;
+                }
+            if (tex)
+                {
+                TGX_SHADER_ADD_TEXTURE(_shaders)
+                TGX_SHADER_REMOVE_NOTEXTURE(_shaders)
+                }
+            else
+                {
+                TGX_SHADER_ADD_NOTEXTURE(_shaders)
+                TGX_SHADER_REMOVE_TEXTURE(_shaders)
+                }
+            }
+
+
+        void _rectifyShaderTextureWrapping()
+            {
+            if (_texture_wrap_mode == TGX_SHADER_TEXTURE_WRAP_POW2)
+                {
+                TGX_SHADER_ADD_TEXTURE_WRAP_POW2(_shaders)
+                TGX_SHADER_REMOVE_TEXTURE_CLAMP(_shaders)                    
+                }
+            else
+                {
+                TGX_SHADER_ADD_TEXTURE_CLAMP(_shaders)
+                 TGX_SHADER_REMOVE_TEXTURE_WRAP_POW2(_shaders)
+                }
+            }
+
+
+        void _rectifyShaderTextureQuality()
+            {
+            if (_texture_quality == TGX_SHADER_TEXTURE_BILINEAR)
+                {
+                TGX_SHADER_ADD_TEXTURE_BILINEAR(_shaders)
+                TGX_SHADER_REMOVE_TEXTURE_NEAREST(_shaders)                    
+                }
+            else
+                {
+                TGX_SHADER_ADD_TEXTURE_NEAREST(_shaders)                    
+                TGX_SHADER_REMOVE_TEXTURE_BILINEAR(_shaders)
+                }
+            }
+
+
+
+
+       
 
        /***********************************************************
         * DRAWING STUFF
         ************************************************************/
+
+        // Choose bounds so that we have some margin of error on both side. 
+        static constexpr float CLIPBOUND_XY = (1.0f + 3.0f * (((float)MAXVIEWPORTDIMENSION) / ((LX > LY) ? LX : LY))) / 4.0f;
 
 
         /** draw a triangle and takes care of clipping (slow, called by the other methods only when necessary) */
@@ -2235,7 +2085,7 @@ namespace tgx
 
 
         /** Method called by drawMesh() which does the actual drawing. */
-        template<int RASTER_TYPE> void _drawMesh(const Mesh3D<color_t>* mesh);
+        void _drawMesh(const int RASTER_TYPE, const Mesh3D<color_t>* mesh);
 
 
 
@@ -2244,19 +2094,19 @@ namespace tgx
         ************************************************************/
 
 
-        template<bool DRAW_FAST> int _drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness);
+        template<bool DRAW_FAST> void _drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> int _drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness);
+        template<bool DRAW_FAST> void _drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> int _drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
+        template<bool DRAW_FAST> void _drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> int _drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness);
+        template<bool DRAW_FAST> void _drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> int _drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
+        template<bool DRAW_FAST> void _drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> int _drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness);
+        template<bool DRAW_FAST> void _drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> int _drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
+        template<bool DRAW_FAST> void _drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
 
 
 
@@ -2292,7 +2142,7 @@ namespace tgx
 
         template<bool CHECKRANGE, bool USE_BLENDING> TGX_INLINE inline void drawHLineZbuf(int x, int y, int w, color_t color, float opacity, float z)
             {
-            if (CHECKRANGE)	// optimized away at compile time
+            if (CHECKRANGE) // optimized away at compile time
                 {
                 const int lx = _uni.im->lx();
                 const int ly = _uni.im->ly();
@@ -2313,7 +2163,7 @@ namespace tgx
         float _unitSphereScreenDiameter();
 
 
-        template<bool WIREFRAME, bool DRAWFAST> void _drawSphere(int shader, int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity);
+        template<bool WIREFRAME, bool DRAWFAST> void _drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity);
 
 
 
@@ -2338,7 +2188,7 @@ namespace tgx
         void _clip(int & fl, const fVec3 & P, float bx, float Bx, float by, float By, const fMat4 & M)
             {
             fVec4 S = M.mult1(P);
-            if (!ORTHO) S.zdivide();
+            if (!_ortho) S.zdivide();
             return _clip(fl, S, bx, Bx, by, By);
             }
 
@@ -2404,7 +2254,7 @@ namespace tgx
         bool _clip2(float clipboundXY, const fVec3 & P, const fMat4 & M)
             {
             fVec4 S = M.mult1(P);
-            if (!ORTHO)
+            if (!_ortho)
                 {
                 S.zdivide();
                 if (S.w <= 0) S.z = -2;
@@ -2494,32 +2344,14 @@ namespace tgx
         float _fastpowtab[_POWTABSIZE];         // the precomputed power table.
 
         /** Pre-compute the power table for computing specular light component (if needed). */
-        void _precomputeSpecularTable(int exponent)
+        TGX_INLINE void _precomputeSpecularTable(int exponent)
             {
             if (_currentpow == exponent) return;
-            _currentpow = exponent;
-            float specularExponent = (float)exponent;            
-            if (exponent > 0)
-                {
-                const float MAX_VAL_POW = 10.0f;  //  maximum value that the power can take
-
-                _powmax = pow(MAX_VAL_POW, 1 / specularExponent);
-                for (int k = 0; k < _POWTABSIZE; k++)
-                    {
-                    float v = 1.0f - (((float)k) / _POWTABSIZE);
-                    _fastpowtab[k] = powf(_powmax*v, specularExponent);
-                    }
-                }
-            else
-                {
-                _powmax = 1; 
-                for (int k = 0; k < _POWTABSIZE; k++)
-                    {
-                    _fastpowtab[k] = 0.0f;
-                    }
-                }
-            return;
+            _precomputeSpecularTable2(exponent);
             }
+
+        void _precomputeSpecularTable2(int exponent);
+
 
         /** compute pow(x, exponent) using linear interpolation from the pre-computed table */
         TGX_INLINE float _powSpecular(float x) const
@@ -2563,14 +2395,17 @@ namespace tgx
 
         int     _ox, _oy;           // image offset w.r.t. the viewport        
 
+        bool    _ortho;             // true to use orthographic projection and false for perspective projection
+        
         fMat4   _projM;             // projection matrix
 
-        int     _zbuffer_len;       // size of the zbuffer
-        
         RasterizerParams<color_t, color_t>  _uni; // rasterizer param (contain the image pointer and the zbuffer pointer).
 
         float _culling_dir;         // culling direction postive/negative or 0 to disable back face culling.
 
+        int   _shaders;             // the shaders to use. 
+        int   _texture_wrap_mode;   // wrapping mode (wrap_pow2 or clamp)
+        int   _texture_quality;     // texturing quality (nearest or bilinear)
 
         // *** scene parameters ***
 

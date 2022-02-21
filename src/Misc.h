@@ -26,12 +26,18 @@
     #include "Arduino.h" // include Arduino to get PROGMEM macro and others
     #define TGX_ON_ARDUINO
     #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_NOINLINE __attribute__((noinline, noclone)) FLASHMEM
 #else    
     #define TGX_INLINE    
+    #define TGX_NOINLINE
 #endif
 
 #ifndef PROGMEM
     #define PROGMEM
+#endif
+
+#ifndef FLASHMEM
+    #define FLASHMEM
 #endif
 
 #define DEPRECATED(x) [[deprecated("use " #x " instead")]]
@@ -63,7 +69,7 @@
 #endif
 
 // macro to cast indexes as 32bit when doing pointer arithmetic
-#define TGX_CAST32(a)	((int32_t)a)
+#define TGX_CAST32(a)   ((int32_t)a)
 
 
 // c++, no plain c
