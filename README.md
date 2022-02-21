@@ -1,3 +1,7 @@
+
+***NEW VERSION 0.3 : Improve performances but several API breaking changes !***
+
+
 # TGX - a tiny/teensy graphics library
 
 <p align="center">
@@ -45,14 +49,15 @@ Here are the library main features.
 
 ### 3D graphics.
 
-- Heavily optimized "pixel perfect" triangle rasterizer with 8bits sub-pixels precision. 
+- Heavily optimized "pixel perfect" triangle rasterizer with selectable sub-pixels precision (2, 4, 6 or 8 bits precision). 
 - Depth buffer testing. 
 - Two Wireframe drawing modes: *fast* (simple lines, low quality) or *slow* (high quality, sub-pixel precision, anti-aliasing, custom line thickness)
 - Flat and Gouraud shading.
 - Phong lightning model with separate ambient/diffuse/specular color components (currently only one directional light source). 
 - Per object material properties. 
-- Perspective-correct texture mapping with selectable point sampling / bilinear filtering.
-- Perspective and Orthographic projection. 
+- Perspective-correct texture mapping with selectable point sampling / bilinear filtering. Selectable wrap mode: repeat (for power of two textures)
+ and clamp to edge. 
+ - Perspective and Orthographic projection. 
 - Optional backface culling.
 - Tile rasterization: it is possible to render only part of the viewport at a time to save RAM by using a smaller image and a smaller zbuffer. 
 - Templates classes for all the needed maths: `Vec2`, `Vec3`, `Vec4` (vectors), `Mat4` (4x4 matrix) and `Box2` (2D box). 
