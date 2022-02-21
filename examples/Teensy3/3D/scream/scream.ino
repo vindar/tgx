@@ -49,12 +49,15 @@ float zbuf[LX * LY]; // zbuffer
 
 Image<RGB565> * front_fb, * back_fb; 
 
-     
-// the 3D mesh drawer (with zbuffer and perspective projection)
-Renderer3D<RGB565, LX, LY, true, false> renderer;
+// only load the shaders we need.
+const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_NOTEXTURE | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
 
-static const int N = 30; // [-1,1]x[-1,1] is subdivided in NxM subsquares
-static const int M = 30; // total number of triangles is 2*N*M
+// the renderer object that performs the 3D drawings
+Renderer3D<RGB565, LX, LY, LOADED_SHADERS> renderer;
+
+
+static const int N = 25; // [-1,1]x[-1,1] is subdivided in NxM subsquares
+static const int M = 25; // total number of triangles is 2*N*M
 
 const float dx = 2.0f/N; // each subsquare has size  dx x dy
 const float dy = 2.0f/M;
@@ -249,7 +252,7 @@ void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
         renderer.setLookAt(cameraPosition(), { 0,0,0 }, { 0,1,0 });
 
         // draw !
-        renderer.drawQuads(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE, N * M, faces, vertices, faces, normals, faces, texcoords, &scream_texture);
+        renderer.drawQuads(N * M, faces, vertices, faces, normals, faces, texcoords, &scream_texture);
 
        // remove the line above ('renderer.drawQuads(...') and uncomment the code below 
        // to draw the sheet without texturing but wher the color depend in the height. 
@@ -275,11 +278,10 @@ void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
           const RGBf C3(h3,h3*(1-h3)*3,1-h3);
           const RGBf C4(h4,h4*(1-h4)*3,1-h4);
 
-          renderer.drawQuadWithVertexColor(TGX_SHADER_GOURAUD, V1,V2,V3,V4, N1, N2, N3, N4, C1,C2,C3,C4);          
+          renderer.drawQuadWithVertexColor(V1,V2,V3,V4, C1,C2,C3,C4, &N1, &N2, &N3, &N4);                   
          }
         */
-        
-        
+       
         // update the screen (asynchronous). 
         fps();        
         updateAndSwitchFB();
@@ -303,11 +305,14 @@ void setup()
  
     // setup the 3D renderer.
     renderer.setOffset(0, 0); //  image = viewport
-    renderer.setZbuffer(zbuf, LX * LY); // set the z buffer for depth testing    
+    renderer.setZbuffer(zbuf); // set the z buffer for depth testing    
     renderer.setPerspective(45, ((float)LX) / LY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
     renderer.setCulling(0); // in case we see below the sheet. 
     renderer.setImage(currentFB());
-            
+    renderer.setTextureQuality(TGX_SHADER_TEXTURE_NEAREST);
+    renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);        
+    renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE);
+    
     fMat4 MV;
     MV.setIdentity();
     renderer.setModelMatrix(MV); // identity model matrix. 

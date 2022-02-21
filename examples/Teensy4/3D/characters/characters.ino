@@ -18,7 +18,7 @@
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
-  
+
 
 // meshes (stored in PROGMEM) for Teensy 4.0 and 4.1
 #include "3Dmodels/nanosuit/nanosuit.h"
@@ -91,18 +91,25 @@ DMAMEM float zbuf[SLX * SLY];
 // image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
 
-// the 3D mesh drawer (with zbuffer, perspective projection, backface culling)
-Renderer3D<RGB565, SLX, SLY, true, false> renderer;
+
+// we only use nearest neighbour texturing for power of 2 textures, combined texturing with gouraud shading, a z buffer and perspective projection
+const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
+
+// the renderer object that performs the 3D drawings
+Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS> renderer;
+
+
+// shaders to use
+const int shader = TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2;
+
 
 // list of meshes to display
 #if defined(ARDUINO_TEENSY41)
-const Mesh3D<RGB565> * meshes[9] = { &nanosuit_1, &elementalist_1, &sinbad_1, &cyborg, &naruto_1, &manga3_1, &dennis, &R2D2, &stormtrooper };
+const Mesh3D<RGB565>* meshes[9] = { &nanosuit_1, &elementalist_1, &sinbad_1, &cyborg, &naruto_1, &manga3_1, &dennis, &R2D2, &stormtrooper };
 #else
-const Mesh3D<RGB565> * meshes[2] = { &nanosuit_1,  &R2D2 };
+const Mesh3D<RGB565>* meshes[2] = { &nanosuit_1,  &R2D2 };
 #endif
 
-// shaders to use
-const int shader = TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE;
 
 
 /**
@@ -127,36 +134,36 @@ bool  moveModel() // remark: need to keep the tgx:: prefix in function signature
     const float roty = 360 * (t / 4000); // rotate 1 turn every 4 seconds        
     float tz, ty;
     if (t < end1)
-    { // far away
+        { // far away
         tz = -25;
         ty = 0;
-    }
+        }
     else
-    {
+        {
         t -= end1;
         if (t < end2)
-        { // zooming in
+            { // zooming in
             t /= end2;
             tz = -25 + 15 * t;
             ty = -6 * t;
-        }
+            }
         else
-        {
+            {
             t -= end2;
             if (t < end3)
-            { // close up
+                { // close up
                 tz = -10;
                 ty = -6;
-            }
+                }
             else
-            { // zooming out
+                { // zooming out
                 t -= end3;
                 t /= end4;
                 tz = -10 - 15 * t;
                 ty = -6 + 6 * t;
+                }
             }
         }
-    }
     fMat4 M;
     M.setScale({ dilat, dilat, dilat }); // scale the model
     M.multRotate(-roty, { 0,1,0 }); // rotate around y
@@ -170,38 +177,38 @@ bool  moveModel() // remark: need to keep the tgx:: prefix in function signature
 /**
 * Overlay some info about the current mesh on the screen
 **/
-void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RGB565> * mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
-{
+void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RGB565>* mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
+    {
     static elapsedMillis em = 0; // number of milli elapsed since last fps update
     static int fps = 0; // last fps 
     static int count = 0; // number of frame since the last update
     // recompute fps every second. 
     count++;
     if ((int)em > 1000)
-    {
+        {
         em = 0;
         fps = count;
         count = 0;
-    }
+        }
     // count the number of triangles in the mesh (by iterating over linked meshes)
     const Mesh3D<RGB565>* m = mesh;
     int nbt = 0;
     while (m != nullptr)
-    {
+        {
         nbt += m->nb_faces;
         m = m->next;
-    }
+        }
     // display some info 
     char buf[80];
     im.drawText((mesh->name != nullptr ? mesh->name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d triangles", nbt);
     im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-    sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE ? " / texturing" : ""));
+    sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE_NEAREST ? " / texturing" : ""));
     im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d FPS", fps);
     auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
     im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-}
+    }
 
 
 
@@ -210,7 +217,7 @@ void setup()
     Serial.begin(9600);
 
     tft.output(&Serial);                // output debug infos to serial port. 
-    
+
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED))
         {
@@ -233,17 +240,18 @@ void setup()
     // setup the 3D renderer.
     renderer.setOffset(0, 0); //  image = viewport
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
-    renderer.setZbuffer(zbuf, SLX * SLY); // set the z buffer for depth testing
+    renderer.setZbuffer(zbuf); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
+    renderer.setCulling(1);
+    renderer.setShaders(shader);
 
     // if external ram is present, copy model textures to extram because it gives a few more fps. 
     #if defined(ARDUINO_TEENSY41)
     if (external_psram_size > 0)
         {
-        for (auto & m : meshes)  m = copyMeshEXTMEM(m);
+        for (auto& m : meshes)  m = copyMeshEXTMEM(m);
         }
     #endif
-
     }
 
 
@@ -255,7 +263,7 @@ int nbf = 0;
 
 
 void loop()
-{
+    {
     // erase the screen
     im.fillScreen(RGB565_Black);
 
@@ -267,7 +275,7 @@ void loop()
         meshindex = (meshindex + 1) % (sizeof(meshes) / sizeof(meshes[0]));
 
     // draw the mesh on the image
-    renderer.drawMesh(shader, meshes[meshindex]);
+    renderer.drawMesh(meshes[meshindex]);
 
     // overlay some info 
     drawInfo(im, shader, meshes[meshindex]);
@@ -282,7 +290,8 @@ void loop()
         diff1.printStats();
         diff2.printStats();
         }
-}
+    }
 
 
 /** end of file */
+

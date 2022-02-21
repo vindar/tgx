@@ -64,29 +64,32 @@ using namespace tgx;
 ILI9341_T4::ILI9341Driver tft(PIN_CS, PIN_DC, PIN_SCK, PIN_MOSI, PIN_MISO, PIN_RESET, PIN_TOUCH_CS, PIN_TOUCH_IRQ);
 
 // 2 x 3K diff buffers (used by tft) for differential updates
-ILI9341_T4::DiffBuffStatic<3000> diff1;
-ILI9341_T4::DiffBuffStatic<3000> diff2;
+DMAMEM ILI9341_T4::DiffBuffStatic<3000> diff1;
+DMAMEM ILI9341_T4::DiffBuffStatic<3000> diff2;
 
 // screen dimension (portrait mode)
 static const int SLX = 240;
 static const int SLY = 320;
 
 // main screen framebuffer (150K in DTCM)
-uint16_t fb[SLX * SLY];                 
+uint16_t fb[SLX * SLY];
 
 // internal framebuffer (150K in DMAMEM) used by the ILI9431_T4 library for double buffering.
-DMAMEM uint16_t internal_fb[SLX * SLY]; 
+DMAMEM uint16_t internal_fb[SLX * SLY];
 
 // zbuffer (300K in DMAMEM)
-DMAMEM float zbuf[SLX * SLY];           
+DMAMEM float zbuf[SLX * SLY];
 
 // image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
 
-// the 3D mesh drawer (with zbuffer, perspective projection, backface culling)
-Renderer3D<RGB565, SLX, SLY, true, false> renderer;
+// we only use Gouraud shading with perspective projection and a z-buffer
+const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD;
 
-    
+// the renderer object that performs the 3D drawings
+Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS> renderer;
+
+
 
 
 void setup()
@@ -117,48 +120,44 @@ void setup()
     // setup the 3D renderer.
     renderer.setOffset(0, 0); //  image = viewport
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
-    renderer.setZbuffer(zbuf, SLX * SLY); // set the z buffer for depth testing
+    renderer.setZbuffer(zbuf); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix.     
     renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflexion. 
+    renderer.setShaders(TGX_SHADER_GOURAUD);
     }
 
-                  
+
 int nbf = 0; // number of frames drawn
 float a = 0; // current angle
 
 void loop()
     {
-     // erase the screen
-     im.fillScreen(RGB565_Blue);
+    // erase the screen
+    im.fillScreen(RGB565_Blue);
 
-     // clear the z-buffer
-     renderer.clearZbuffer();
+    // clear the z-buffer
+    renderer.clearZbuffer();
 
-     // position the model
-     fMat4 M;
-     M.setScale(13, 13, 13);
-     M.multRotate(a, { 0,1,0 });
-     M.multTranslate({ 0, 0.5f, -35 });
-     renderer.setModelMatrix(M);
+    // position the model
+    renderer.setModelPosScaleRot({ 0, 0.5f, -35 }, { 13,13,13 }, a);
 
-     // draw the model onto the memory framebuffer
-     renderer.drawMesh(TGX_SHADER_GOURAUD, &buddha, false);
+    // draw the model onto the memory framebuffer
+    renderer.drawMesh(&buddha, false);
 
-     // update the screen (asynchronous). 
-     tft.update(fb);
+    // update the screen (asynchronous). 
+    tft.update(fb);
 
-     // increase the angle by 3 degrees.
-     a += 3;
+    // increase the angle by 3 degrees.
+    a += 3;
 
-     // print some info about the video driver every 100 frames
-     if (nbf++ % 100 == 0) 
+    // print some info about the video driver every 100 frames
+    if (nbf++ % 100 == 0)
         {
-         tft.printStats(); 
-         diff1.printStats(); 
-         diff2.printStats(); 
+        tft.printStats();
+        diff1.printStats();
+        diff2.printStats();
         }
-     }
-       
+    }
+
 
 /** end of file */
-

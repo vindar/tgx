@@ -81,8 +81,11 @@ DMAMEM float zbuf[SLX * SLY];
 // image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
 
-// the 3D mesh drawer (with zbuffer and perspective projection)
-Renderer3D<RGB565, SLX, SLY, true, false> renderer;
+// only load the shaders we need.
+const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_NOTEXTURE | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
+
+// the renderer object that performs the 3D drawings
+Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS> renderer;
 
 static const int N = 45; // [-1,1]x[-1,1] is subdivided in NxM subsquares
 static const int M = 45; // total number of triangles is 2*N*M
@@ -261,12 +264,12 @@ void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
         // set the camera position
         renderer.setLookAt(cameraPosition(), { 0,0,0 }, { 0,1,0 });
 
-        // draw !
-        renderer.drawQuads(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE, N * M, faces, vertices, faces, normals, faces, texcoords, &scream_texture);
+        // draw !        
+        renderer.drawQuads(N * M, faces, vertices, faces, normals, faces, texcoords, &scream_texture);
 
        // remove the line above ('renderer.drawQuads(...') and uncomment the code below 
-       // to draw the sheet without texturing but wher the color depend in the height. 
-       /*       
+       // to draw the sheet without texturing but where the color depend in the height. 
+       /*
        for(int j=0; j < N*M; j++)
           {
           const fVec3 V1 = vertices[faces[4*j]];
@@ -288,7 +291,7 @@ void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
           const RGBf C3(h3,h3*(1-h3)*3,1-h3);
           const RGBf C4(h4,h4*(1-h4)*3,1-h4);
 
-          renderer.drawQuadWithVertexColor(TGX_SHADER_GOURAUD, V1,V2,V3,V4, N1, N2, N3, N4, C1,C2,C3,C4);          
+          renderer.drawQuadWithVertexColor(V1,V2,V3,V4, C1, C2, C3, C4, &N1, &N2, &N3, &N4);
          }
         */
 
@@ -337,9 +340,11 @@ void setup()
     // setup the 3D renderer.
     renderer.setOffset(0, 0); //  image = viewport
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
-    renderer.setZbuffer(zbuf, SLX * SLY); // set the z buffer for depth testing    
+    renderer.setZbuffer(zbuf); // set the z buffer for depth testing    
     renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
+    renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2); // shader ot use
     renderer.setCulling(0); // in case we see below the sheet. 
+
     fMat4 MV;
     MV.setIdentity();
     renderer.setModelMatrix(MV); // identity model matrix. 

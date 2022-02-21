@@ -41,8 +41,14 @@ float* zbuf;
 // the image that encapsulate framebuffer fb
 Image<RGB565> imfb(fb, SLX, SLY);
 
-// the 3D mesh drawer (with zbuffer and perspective projection)
-Renderer3D<RGB565, SLX, SLY, true, false> renderer;
+
+// only load the shaders we need.
+const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_FLAT | TGX_SHADER_GOURAUD | TGX_SHADER_NOTEXTURE | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
+
+// the renderer object that performs the 3D drawings
+Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS> renderer;
+
+
 
 
 
@@ -79,10 +85,13 @@ void setup()
 
     // setup the 3D renderer.
     renderer.setImage(&imfb); // set the image to draw onto (ie the screen framebuffer)
-    renderer.setZbuffer(zbuf, SLX * SLY); // set the z buffer for depth testing
+    renderer.setZbuffer(zbuf); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix.     
     renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflexion. 
     renderer.setOffset(0, 0);
+    renderer.setCulling(1);
+    renderer.setTextureQuality(TGX_SHADER_TEXTURE_NEAREST);
+    renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);        
 }
 
 
@@ -167,10 +176,20 @@ void loop()
     // choose the shader to use
     switch (loopnumber % 4)
         {
-        case 0: renderer.drawMesh(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE, &naruto_1, false); break;
-        case 1: renderer.drawWireFrameMesh(&naruto_1, true); break;
-        case 2: renderer.drawMesh(TGX_SHADER_FLAT, &naruto_1, false);  break;
-        case 3: renderer.drawMesh(TGX_SHADER_GOURAUD, &naruto_1, false); break;
+        case 0: renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE);
+                renderer.drawMesh(&naruto_1, false); 
+                break;
+                
+        case 1: renderer.drawWireFrameMesh(&naruto_1, true);
+                break;
+        
+        case 2: renderer.setShaders(TGX_SHADER_FLAT);
+                renderer.drawMesh(&naruto_1, false); 
+                break;
+                
+        case 3: renderer.setShaders(TGX_SHADER_GOURAUD);
+                renderer.drawMesh(&naruto_1, false); 
+                break;        
         }
 
     if (prev_loopnumber != loopnumber)
@@ -195,4 +214,3 @@ void loop()
 
 
 /** end of file */
-

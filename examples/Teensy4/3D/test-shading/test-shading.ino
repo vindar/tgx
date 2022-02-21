@@ -84,60 +84,66 @@ DMAMEM float zbuf[SLX * SLY];
 // image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
 
-// the 3D mesh drawer (with zbuffer, perspective projection, backface culling)
-Renderer3D<RGB565, SLX, SLY, true, false> renderer;
+
+
+// only load the shaders we need.
+const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_FLAT | TGX_SHADER_GOURAUD;
+
+// the renderer object that performs the 3D drawings
+Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS> renderer;
+
 
 
 /**
 * Overlay some info about the current mesh on the screen
 **/
 void drawInfo(tgx::Image<tgx::RGB565>& im, int t, const tgx::Mesh3D<tgx::RGB565>& mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
-{
+    {
     static elapsedMillis em = 0; // number of milli elapsed since last fps update
     static int fps = 0; // last fps 
     static int count = 0; // number of frame since the last update
     // recompute fps every second. 
     count++;
     if ((int)em > 1000)
-    {
+        {
         em = 0;
         fps = count;
         count = 0;
-    }
+        }
     // count the number of triangles in the mesh (by iterating over linked meshes)
     const Mesh3D<RGB565>* m = &mesh;
     int nbt = 0;
     while (m != nullptr)
-    {
+        {
         nbt += m->nb_faces;
         m = m->next;
-    }
+        }
     // display some info 
     char buf[80];
     im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d triangles", nbt);
     im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-    sprintf(buf, "%s", (t == 0) ? "Wireframe" : ((t==1) ? "Flat shading": "Gouraud shading"));
+    sprintf(buf, "%s", (t == 0) ? "Wireframe" : ((t == 1) ? "Flat shading" : "Gouraud shading"));
     im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d FPS", fps);
     auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
     im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-}
+    }
 
 
 
 void setup()
-{
+    {
     Serial.begin(9600);
 
     tft.output(&Serial);                // output debug infos to serial port. 
 
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED))
-    {
+        {
         Serial.println("Initialization error...");
         delay(1000);
-    }
+        }
 
     // ok. turn on backlight
     pinMode(PIN_BACKLIGHT, OUTPUT);
@@ -154,9 +160,10 @@ void setup()
     // setup the 3D renderer.
     renderer.setOffset(0, 0); //  image = viewport
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
-    renderer.setZbuffer(zbuf, SLX * SLY); // set the z buffer for depth testing
+    renderer.setZbuffer(zbuf); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
-}
+    renderer.setCulling(1);
+    }
 
 
 void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
@@ -164,7 +171,7 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
     const int maxT = 12000; // display model for 12 seconds. 
     elapsedMillis em = 0;
     while (em < maxT)
-    {
+        {
         // erase the screen
         im.fillScreen(RGB565_Black);
 
@@ -184,17 +191,23 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
 
         if (t == 0)
             renderer.drawWireFrameMesh(mesh, false);
-        else if (t==1)
-            renderer.drawMesh(TGX_SHADER_FLAT, mesh, false);
+        else if (t == 1)
+            {
+            renderer.setShaders(TGX_SHADER_FLAT);
+            renderer.drawMesh(mesh, false);
+            }            
         else
-            renderer.drawMesh(TGX_SHADER_GOURAUD, mesh, false);
+            {
+            renderer.setShaders(TGX_SHADER_GOURAUD);
+            renderer.drawMesh(mesh, false);
+            }
 
         // overlay some info 
         drawInfo(im, t, *mesh);
 
         // update the screen (asynchronously)
         tft.update(fb);
-    }
+        }
 }
 
 

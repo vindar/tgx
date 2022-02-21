@@ -20020,7 +20020,7 @@ const tgx::fVec3 buddha_norm_array[9996] PROGMEM = {
 
 
 // face array: 93kb.
-const uint16_t buddha_face[47631]  = {
+const uint16_t buddha_face[47631] PROGMEM = {
 75, // chain 0
 0,0, 1,1, 2,2, 
 3,3, 32772,4, 32773,5, 32774,6, 32769,1, 7,7, 32776,8, 32768,0, 9,9, 32778,10, 32779,11, 32771,3, 12,12, 32781,13, 32782,14, 32772,4, 

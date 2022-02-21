@@ -71,11 +71,13 @@ ILI9341_T4::DiffBuffStatic<5000> diff2;
 static const int SLX = 320;
 static const int SLY = 240;
 
+const float ratio = ((float)SLX) / SLY; // aspect ratio
+
 // main screen framebuffer (150K in DTCM for fastest access)
 uint16_t fb[SLX * SLY];                 
 
 // internal framebuffer (150K) used by the ILI9431_T4 library for double buffering.
-uint16_t internal_fb[SLX * SLY]; 
+DMAMEM uint16_t internal_fb[SLX * SLY]; 
 
 // zbuffer (300K in DMAMEM)
 DMAMEM float zbuf[SLX * SLY];           
@@ -88,59 +90,12 @@ const int tex_size = 128;
 RGB565 texture_data[tex_size*tex_size];
 Image<RGB565> texture(texture_data, tex_size, tex_size);
 
-// 3D mesh drawer : using perspective projection.
-Renderer3D<RGB565, SLX, SLY, true, false> rendererP;
 
-// 3D mesh drawer : using orthoscopic projection.
-Renderer3D<RGB565, SLX, SLY, true, true> rendererO;
+// we only use bilinear texturing for power of 2 texture, combined texturing with flat shading, a z buffer and both perspective and orthographic projection
+const int LOADED_SHADERS = TGX_SHADER_ORTHO | TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_FLAT | TGX_SHADER_TEXTURE_BILINEAR |TGX_SHADER_TEXTURE_WRAP_POW2;
 
-
-// the cube 8 vertices
-fVec3 tab_vertices[8] = 
-    {
-    {-1,-1,1},
-    {1,-1,1},
-    {1,1,1},
-    {-1,1,1},
-    {-1,-1,-1},
-    {1,-1,-1},
-    {1,1,-1},
-    {-1,1,-1}
-    };
-
-
-// texture indices
-fVec2 tab_tex[4] = 
-    {
-    {0.0f, 0.0f},
-    {1.0f, 0.0f},
-    {1.0f, 1.0f},
-    {0.0f, 1.0f},
-    };
-
-
-// list of quads. 
-uint16_t vert_ind[6 * 4] =
-    {
-    0, 1, 2, 3, // front
-    1, 5, 6, 2, // right
-    5, 4, 7, 6, // back
-    4, 0, 3, 7, // left
-    0, 4, 5, 1, // bottom
-    3, 2, 6, 7  // top
-    };
-
-
-// use the same texture on each quad
-uint16_t tex_ind[6 * 4] =
-    {
-    0, 1, 2, 3,
-    0, 1, 2, 3,
-    0, 1, 2, 3,
-    0, 1, 2, 3,
-    0, 1, 2, 3,
-    0, 1, 2, 3
-    };
+// the renderer object that performs the 3D drawings
+Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS> renderer;
 
 
 void setup()
@@ -168,26 +123,16 @@ void setup()
     tft.setRefreshRate(140); // refresh at 60hz
     tft.setVSyncSpacing(0); // lock the framerate at 60/2 = 30fps. 
 
-    const float ratio = ((float)SLX) / SLY;
-
-
     // setup the 3D renderer with perspective projection
-    rendererP.setOffset(0, 0);
-    rendererP.setImage(&im);
-    rendererP.setZbuffer(zbuf, SLX * SLY);
-    rendererP.setPerspective(45, ratio, 0.1f, 1000.0f);
-    rendererP.setCulling(1);
-    rendererP.useBilinearTexturing(true);
+    renderer.setOffset(0, 0);
+    renderer.setImage(&im);
+    renderer.setZbuffer(zbuf);
+    renderer.setCulling(1);
+    renderer.setTextureQuality(TGX_SHADER_TEXTURE_BILINEAR);
+    renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
+    renderer.setShaders(TGX_SHADER_FLAT | TGX_SHADER_TEXTURE );
 
-    // setup the 3D renderer with orthoscopic projection
-    rendererO.setOffset(0, 0);
-    rendererO.setImage(&im);
-    rendererO.setZbuffer(zbuf, SLX * SLY);
-    rendererO.setOrtho(-1.8*ratio, 1.8 *ratio, -1.8, 1.8, 0.1f, 1000.0f);
-    rendererO.setCulling(1);
-    rendererO.useBilinearTexturing(true);
-
-    // initial textrure color
+    // initial texture color
     texture.fillScreen(RGB565_Blue);
     }
 
@@ -237,8 +182,7 @@ int projtype = 0; // current projection used.
 
 
 void loop()
-    {
-   
+    {   
     // model matrix
     fMat4 M;
     M.setRotate(em / 11.0f, { 0,1,0 });
@@ -246,22 +190,13 @@ void loop()
     M.multRotate(em / 41.0f, { 0,0,1 });
     M.multTranslate({ 0, 0, -5 });
 
-    if (projtype)
-        {        
-        im.fillScreen(RGB565_Black); // erase the screen
-        rendererP.clearZbuffer(); // clear the z buffer        
-        rendererP.setModelMatrix(M);// position the model        
-        rendererP.drawQuads(TGX_SHADER_TEXTURE, 6, vert_ind, tab_vertices, nullptr, nullptr, tex_ind, tab_tex, &texture); // draw !        
-        fps("Perspective projection"); // overlay some infos
-        }
-    else
-        {
-        im.fillScreen(RGB565_Gray); // erase the screen
-        rendererO.clearZbuffer();
-        rendererO.setModelMatrix(M);
-        rendererO.drawQuads(TGX_SHADER_TEXTURE, 6, vert_ind, tab_vertices, nullptr, nullptr, tex_ind, tab_tex, &texture); // draw !
-        fps("Orthoscopic projection"); // overlay some infos
-        }
+    im.fillScreen((projtype) ? RGB565_Black : RGB565_Gray); // erase the screen, black in perspective and grey in orthographic projection
+    renderer.clearZbuffer(); // clear the z buffer        
+    renderer.setModelMatrix(M);// position the model
+
+    renderer.drawCube(&texture, & texture, & texture, & texture, & texture, & texture); // draw the textured cube
+
+    fps((projtype) ? "Perspective projection" : "Orthographic projection"); // overlay some infos
 
     // update the screen (async). 
     tft.update(fb);
@@ -269,16 +204,21 @@ void loop()
     // add a random rect on the texture.
     splash();
 
-    // swith between perspective and orthogonal projection every 1000 frames.
-        if (nbf++ % 1000 == 0)
-            {
-            projtype = 1 - projtype;
-            tft.printStats();
-            diff1.printStats();
-            diff2.printStats();
-            }
+    // switch between perspective and orthogonal projection every 1000 frames.
+    if (nbf++ % 1000 == 0)
+        {
+        projtype = 1 - projtype;
+
+        if (projtype)
+            renderer.setPerspective(45, ratio, 0.1f, 1000.0f);
+        else
+            renderer.setOrtho(-1.8 * ratio, 1.8 * ratio, -1.8, 1.8, 0.1f, 1000.0f);
+
+        tft.printStats();
+        diff1.printStats();
+        diff2.printStats();
+        }
     }
        
 
 /** end of file */
-

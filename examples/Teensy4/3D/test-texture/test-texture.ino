@@ -81,8 +81,12 @@ DMAMEM float zbuf[SLX * SLY];
 // image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
 
-// the 3D mesh drawer (with zbuffer, perspective projection, backface culling)
-Renderer3D<RGB565, SLX, SLY, true, false> renderer;
+
+// only load the shaders we need (note that TGX_SHADER_NOTEXTURE is needed in order to draw without texturing !). 
+const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_NOTEXTURE | TGX_SHADER_TEXTURE_BILINEAR | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2;
+
+// the renderer object that performs the 3D drawings
+Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS> renderer;
 
 
 /**
@@ -114,7 +118,7 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
     im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d triangles", nbt);
     im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-    sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE ? " / texturing" : ""));
+    sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE_BILINEAR ? " / texturing (bilinear)" : (shader & TGX_SHADER_TEXTURE_NEAREST ? " / texturing (nearest neighbour)" : "")));
     im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%d FPS", fps);
     auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
@@ -150,15 +154,17 @@ void setup()
     // setup the 3D renderer.
     renderer.setOffset(0, 0); //  image = viewport
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
-    renderer.setZbuffer(zbuf, SLX * SLY); // set the z buffer for depth testing
+    renderer.setZbuffer(zbuf); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
     renderer.setMaterial(RGBf(0.75f, 0.75f, 0.75f), 0.15f, 0.7f, 0.7f, 32);   
+    renderer.setCulling(1);
+    renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
     }
 
 
 void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
     {
-    const int maxT = 15000; // display model for 15 seconds. 
+    const int maxT = 18000; // display model for 15 seconds. 
     elapsedMillis em = 0;
     while (em < maxT)
         {
@@ -177,12 +183,15 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
         renderer.setModelMatrix(M);
 
         // change shader type after every turn
-        int part = (em * 4) / maxT;
+        int part = (em * 3) / maxT;
+ 
+        // choose the shader to use
+        int shader = (part == 0) ? TGX_SHADER_GOURAUD : ((part == 1) ? (TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST) : (TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_BILINEAR));
 
-        int shader = (part == 0) ? TGX_SHADER_GOURAUD : TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE;
+        renderer.setShaders(shader);
 
         // draw the mesh on the image
-        renderer.drawMesh(shader, mesh, false);
+        renderer.drawMesh(mesh, false);
 
         // overlay some info 
         drawInfo(im, shader, *mesh);

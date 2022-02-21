@@ -41,7 +41,6 @@
 using namespace tgx;
 
 
-
 // Pinout, hardware SPI0
 #define TFT_MOSI  11
 #define TFT_SCK   13
@@ -69,8 +68,11 @@ float zbuf[LX * LY]; // zbuffer
 Image<RGB565> * front_fb, * back_fb; 
 
 
-// the 3D mesh drawer (with zbuffer and perspective projection)
-Renderer3D<RGB565, LX, LY, true, false> renderer;
+// we only use nearest neighbour texturing for power of 2 textures, combined texturing with gouraud shading, a z buffer and perspective projection
+const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
+
+// the renderer object that performs the 3D drawings
+Renderer3D<RGB565, LX, LY, LOADED_SHADERS> renderer;
 
 
 void setup() 
@@ -85,10 +87,14 @@ void setup()
     tft.useFrameBuffer(true);
 
     // setup the 3D renderer.
-    renderer.setZbuffer(zbuf, LX * LY); // set the z buffer for depth testing
+    renderer.setZbuffer(zbuf); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)LX) / LY, 0.1f, 1000.0f);  // set the perspective projection matrix.     
     renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflexion. 
     renderer.setOffset(0, 0);
+    renderer.setCulling(1);
+    renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE);
+    renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
+    renderer.setTextureQuality(TGX_SHADER_TEXTURE_NEAREST);
     }
 
 
@@ -211,7 +217,7 @@ void loop()
     const Mesh3D<RGB565>* mesh = &stormtrooper; 
 #endif
 
-    renderer.drawMesh(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE,mesh, false); // draw !
+    renderer.drawMesh(mesh, false); // draw !
 
     // flash memory just overflows on T3.6 when we try to print FPS :-( 
     // (todo: fixit)  
@@ -225,4 +231,3 @@ void loop()
 
 
 /** end of file */
-
