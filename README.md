@@ -1,5 +1,5 @@
 
-***NEW VERSION 0.3 : Improve performances but several API breaking changes !***
+***NEW VERSION 0.3 : Improved performance but several API breaking changes !***
 
 
 # TGX - a tiny/teensy graphics library
