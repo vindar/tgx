@@ -1730,7 +1730,7 @@ namespace tgx
             const int y = (int)roundfp(Q.y);
             if (!has_zbuffer)
                 {
-                if (USE_BLENDING) _uni.im->drawPixel<true>(x, y, color, opacity); else  _uni.im->drawPixel<true>(x, y, color);
+                if (USE_BLENDING) _uni.im->template drawPixel<true>(x, y, color, opacity); else  _uni.im->template drawPixel<true>(x, y, color);
                 }
             else
                 {
@@ -1759,7 +1759,7 @@ namespace tgx
                 const int y = (int)roundfp(Q.y);
                 if (!has_zbuffer)
                     {
-                    if (USE_BLENDING) _uni.im->drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]); else  _uni.im->drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]);
+                    if (USE_BLENDING) _uni.im->template drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]); else  _uni.im->template drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]);
                     }
                 else
                     {

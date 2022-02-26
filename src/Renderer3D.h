@@ -2135,7 +2135,7 @@ namespace tgx
             if (_uni.zbuf[x + _uni.im->lx() * y] < z)
                 {
                 _uni.zbuf[x + _uni.im->lx() * y] = z;
-                if (USE_BLENDING) _uni.im->drawPixel<false>(x, y, color, opacity); else  _uni.im->drawPixel<false>(x, y, color);
+                if (USE_BLENDING) _uni.im->template drawPixel<false>(x, y, color, opacity); else _uni.im->template drawPixel<false>(x, y, color);
                 }
             }
 
