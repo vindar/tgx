@@ -120,9 +120,13 @@ namespace tgx
         // make sure right away that the template parameter is admissible to prevent cryptic error message later.  
         static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in color.h");
 
-
         // befriend all sister Image classes
         template<typename> friend class Image;
+
+        // mtools extension (if available).    
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Image.inl>
+        #endif
 
 
     /************************************************************************************

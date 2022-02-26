@@ -67,6 +67,12 @@ namespace tgx
 
         static_assert(std::is_floating_point<T>::value, "The template parameter T of class Mat4<T> must be a floating point number.");
 
+
+        // mtools extension (if available).   
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Mat4.inl>
+        #endif
+
         // column major ordering:
         //
         // M[0]  M[4]  M[8]   M[12]

@@ -58,11 +58,17 @@ namespace tgx
 
 
     /********************************************
-    * template class for a 4-d vector
+    * template class for a 3-d vector
     *********************************************/
     template<typename T> struct Vec3 : public Vec2<T>
         {
 
+        // mtools extension (if available).  
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Vec3.inl>
+        #endif
+        
+        
         // first two coordinates from the base class
         using Vec2<T>::x;
         using Vec2<T>::y;

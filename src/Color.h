@@ -196,6 +196,12 @@ extern const RGB565 RGB565_Navy;
 **/
 struct RGB565
     {
+        
+        // mtools extension (if available).  
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Color_RGB565.inl>
+        #endif
+        
 
         union // dual memory representation
             { 
@@ -655,6 +661,13 @@ struct RGB565
 struct RGB24
     {
 
+        
+        // mtools extension (if available).  
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Color_RGB24.inl>
+        #endif
+        
+        
         // no dual memory represention
         // no alignement, just 3 consecutive uint8_t
 
@@ -1151,6 +1164,13 @@ struct RGB24
 **/
 struct RGB32
     {
+
+        
+        // mtools extension (if available).  
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Color_RGB32.inl>
+        #endif
+
 
         static const uint8_t DEFAULT_A = 255; // fully opaque 
 
@@ -1774,6 +1794,13 @@ struct RGB32
 struct RGB64
     {
 
+        
+        // mtools extension (if available).  
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Color_RGB64.inl>
+        #endif
+        
+        
         static const uint16_t DEFAULT_A = 65535; // fully opaque. 
 
 
@@ -2402,6 +2429,12 @@ struct RGB64
     struct RGBf
     {
 
+        // mtools extension (if available).  
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Color_RGBf.inl>
+        #endif
+
+
 #if TGX_RGBf_ORDER_BGR
         float B;
         float G;
@@ -2824,6 +2857,12 @@ struct RGB64
 **/
 struct HSV
     {
+
+        // mtools extension (if available).  
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Color_HSV.inl>
+        #endif
+
 
         // color components
         float H;        // hue in [0.0f ,1.0f]

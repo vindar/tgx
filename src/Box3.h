@@ -66,6 +66,11 @@ namespace tgx
     ***************************************************************/
     template<typename T> struct Box3
     {
+        
+        // mtools extension (if available).   
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Box3.inl>
+        #endif        
 
         // box dimension: [minX, maxX] x [minY, maxY] x [minZ, maxZ]
         // the box is closed !

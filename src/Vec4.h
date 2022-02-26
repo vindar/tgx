@@ -66,6 +66,12 @@ namespace tgx
     template<typename T> struct Vec4 : public Vec3<T>
         {
 
+        // mtools extension (if available).  
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Vec4.inl>
+        #endif
+
+
         // first three coordinates from base classes
         using Vec2<T>::x;
         using Vec2<T>::y;

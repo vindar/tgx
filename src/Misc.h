@@ -22,6 +22,13 @@
 #include <stdint.h>
 #include <math.h>
 
+
+// disable mtools extensions by default
+#ifndef MTOOLS_TGX_EXTENSIONS
+#define MTOOLS_TGX_EXTENSIONS 0 
+#endif
+
+
 #if defined(TEENSYDUINO) || defined(ESP32)
     #include "Arduino.h" // include Arduino to get PROGMEM macro and others
     #define TGX_ON_ARDUINO

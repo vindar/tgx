@@ -98,6 +98,12 @@ namespace tgx
     template<typename T> struct Box2
     {
 
+        // mtools extension (if available).  
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Box2.inl>
+        #endif
+
+
         // box dimension: [minX, maxX] x [minY, maxY]
         // the box is closed !
         T minX, maxX, minY, maxY;

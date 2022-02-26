@@ -61,6 +61,11 @@ namespace tgx
     template<typename T> struct Vec2
         {
 
+        // mtools extension (if available).  
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Vec2.inl>
+        #endif
+        
         // coordinates
         T x, y;
 
