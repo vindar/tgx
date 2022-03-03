@@ -123,10 +123,9 @@ namespace tgx
         // befriend all sister Image classes
         template<typename> friend class Image;
 
-        // mtools extension (if available).    
-        #if (MTOOLS_TGX_EXTENSIONS)
-        #include <mtools/extensions/tgx/tgx_ext_Image.inl>
-        #endif
+
+
+
 
 
     /************************************************************************************
@@ -139,6 +138,11 @@ namespace tgx
 
 
     public:
+
+
+        #if (MTOOLS_TGX_EXTENSIONS)
+        #include <mtools/extensions/tgx/tgx_ext_Image.inl> 
+        #endif
 
 
     /************************************************************************************
