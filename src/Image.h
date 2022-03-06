@@ -496,7 +496,7 @@ namespace tgx
             {
             if (CHECKRANGE) // optimized away at compile time
                 {
-                if ((outside_color)&&((!isValid()) || (x < 0) || (y < 0) || (x >= _lx) || (y >= _ly))) return *outside_color;
+                if (((!isValid()) || (x < 0) || (y < 0) || (x >= _lx) || (y >= _ly))) return outside_color;
                 }
             return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];
             }
