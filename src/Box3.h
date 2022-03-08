@@ -354,7 +354,7 @@ namespace tgx
         /**
         * Return the smallest box containing this box and point v.
         **/
-        inline void operator|(const Vec3<T>& v) const
+        inline Box3<T> operator|(const Vec3<T>& v) const
             {
             Box3<T> R;
             if (isEmpty())
@@ -402,7 +402,7 @@ namespace tgx
         /**
         * Return this box translated by v.
         **/
-        inline void operator+(Vec3<T>  V) const
+        inline Box3<T> operator+(Vec3<T>  V) const
             {
             return Box3<T>(minX + V.x, maxX + V.x, minY + V.y, maxY + V.y, minZ + V.z, maxZ + V.z);
             }
@@ -425,7 +425,7 @@ namespace tgx
         /**
         * Return this box translated by v.
         **/
-        inline void operator-(Vec3<T> V) const
+        inline Box3<T> operator-(Vec3<T> V) const
             {
             return Box3<T>(minX - V.x, maxX - V.x, minY - V.y, maxY - V.y, minZ - V.z, maxZ - V.z);
             }
