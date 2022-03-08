@@ -422,7 +422,7 @@ namespace tgx
         **/
         template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > inline  Vec4<T> normalize(Vec4<T> V)
             {
-            V.normalize<Tfloat>();
+            V.template normalize<Tfloat>();
             return V;
             }
 
