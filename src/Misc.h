@@ -21,6 +21,7 @@
 
 #include <stdint.h>
 #include <math.h>
+#include <string.h>
 
 
 // disable mtools extensions by default
