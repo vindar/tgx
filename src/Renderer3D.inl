@@ -1740,17 +1740,21 @@ namespace tgx
 
 
         template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
-        template<bool USE_BLENDING> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawPixels(int nb_pixels, fVec3* pos_list, int* colors_ind, color_t* colors, int* opacities_ind, float* opacities)
+        template<bool USE_COLORS, bool USE_BLENDING> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             if (!_validDraw()) return;
-            if ((pos_list == nullptr) || (colors_ind == nullptr) || (colors == nullptr)) return;
-            if ((USE_BLENDING) && ((opacities_ind == nullptr) || (opacities == nullptr))) return;
+            if (pos_list == nullptr) return;            
+            if ((USE_COLORS) && ((colors_ind == nullptr) || (colors == nullptr))) return;
+            if ((USE_BLENDING) && ((!USE_COLORS) || (opacities_ind == nullptr) || (opacities == nullptr))) return;
             const bool has_zbuffer = TGX_SHADER_HAS_ZBUFFER(_shaders);
             const bool ortho = _ortho;
+
+            auto M = _projM * _r_modelViewM;
             for (int k = 0; k < nb_pixels; k++)
                 {
-                fVec4 Q = _projM * _r_modelViewM.mult1(pos_list[k]);
+                fVec3 P = pos_list[k];
+                fVec4 Q = M.mult1(P);
                 if (ortho) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
                 if ((Q.w < -1) || (Q.w > 1)) continue;
                 Q.x = ((Q.x + 1) * LX) / 2 - _ox;
@@ -1759,11 +1763,22 @@ namespace tgx
                 const int y = (int)roundfp(Q.y);
                 if (!has_zbuffer)
                     {
-                    if (USE_BLENDING) _uni.im->template drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]); else  _uni.im->template drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]);
+                    if (USE_BLENDING)
+                        _uni.im->template drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]);
+                    else if (USE_COLORS)
+                        _uni.im->template drawPixel<true>(x, y, colors[colors_ind[k]]);
+                    else
+                        _uni.im->template drawPixel<true>(x, y, _color);
                     }
                 else
                     {
-                    drawPixelZbuf<true, USE_BLENDING>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                    
+                    if (USE_BLENDING)
+                        drawPixelZbuf<true, true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                    else if (USE_COLORS)
+                        drawPixelZbuf<true, true>(x, y, colors[colors_ind[k]], 1.0f, Q.w);
+                    else
+                        drawPixelZbuf<true, true>(x, y, _color, 1.0f, Q.w);                        
                     }
                 }           
             }
@@ -1804,41 +1819,62 @@ namespace tgx
 
 
         template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
-        template<bool USE_BLENDING> TGX_NOINLINE
+        template<bool USE_RADIUS, bool USE_COLORS, bool USE_BLENDING> TGX_NOINLINE
         void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             if (!_validDraw()) return;
-            if ((pos_list == nullptr) || (colors_ind == nullptr) || (colors == nullptr) || (radius_ind == nullptr) || (radius == nullptr)) return;
-            if ((USE_BLENDING) && ((opacities_ind == nullptr) || (opacities == nullptr))) return;
-            const bool ortho = _ortho;
+            if ((pos_list == nullptr) || (radius == nullptr)) return;
+            if ((USE_RADIUS) && (radius_ind == nullptr)) return;
+            if ((USE_COLORS) && ((colors_ind == nullptr) || (colors == nullptr))) return;
+            if ((USE_BLENDING) && ((!USE_COLORS) || (opacities_ind == nullptr) || (opacities == nullptr))) return;
             const bool has_zbuffer = TGX_SHADER_HAS_ZBUFFER(_shaders);
+            const bool ortho = _ortho;
+            const int rr = radius[0];
+            auto M = _projM * _r_modelViewM;
             for (int k = 0; k < nb_dots; k++)
                 {
-                fVec4 Q = _projM * _r_modelViewM.mult1(pos_list[k]);
+                fVec4 Q = M.mult1(pos_list[k]);
                 if (ortho) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
                 if ((Q.w < -1) || (Q.w > 1)) continue;
                 Q.x = ((Q.x + 1) * LX) / 2 - _ox;
                 Q.y = ((Q.y + 1) * LY) / 2 - _oy;
                 const int x = (int)roundfp(Q.x);
                 const int y = (int)roundfp(Q.y);
+                const int r = (USE_RADIUS) ? radius[radius_ind[k]] : rr;
                 if (!has_zbuffer)
                     {
-                    if (USE_BLENDING) 
-                        _uni.im->drawCircle(x, y, radius[radius_ind[k]], colors[colors_ind[k]], opacities[opacities_ind[k]]); 
-                    else 
-                        _uni.im->drawCircle(x, y, radius[radius_ind[k]], colors[colors_ind[k]]);
+                    if (USE_BLENDING)
+                        _uni.im->drawCircle(x, y, radius[r], colors[colors_ind[k]], opacities[opacities_ind[k]]);
+                    else if (USE_COLORS)
+                        _uni.im->drawCircle(x, y, radius[r], colors[colors_ind[k]]);
+                    else
+                        _uni.im->drawCircle(x, y, radius[r], _color);
                     }
                 else
                     {
                     const int lx = _uni.im->lx();
                     const int ly = _uni.im->ly();
-                    const int r = radius[radius_ind[k]];
+                    
                     if ((x - r >= 0) && (x + r < lx) && (y - r >= 0) && (y + r < ly))
-                        _drawCircleZbuf<false,USE_BLENDING>(x, y, r, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                        {
+                        if (USE_BLENDING)
+                            _drawCircleZbuf<false, USE_BLENDING>(x, y, r, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                        else if (USE_COLORS)
+                            _drawCircleZbuf<false, USE_BLENDING>(x, y, r, colors[colors_ind[k]], 1.0f, Q.w);
+                        else
+                            _drawCircleZbuf<false, USE_BLENDING>(x, y, r, _color, 1.0f, Q.w);
+                        }
                     else
                         {
                         if ((x >= 0) && (x < lx) && (y >= 0) && (y < ly))
-                            _drawCircleZbuf<true, USE_BLENDING>(x, y, r, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                            {
+                            if (USE_BLENDING)
+                                _drawCircleZbuf<true, USE_BLENDING>(x, y, r, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
+                            else if (USE_COLORS)
+                                _drawCircleZbuf<true, USE_BLENDING>(x, y, r, colors[colors_ind[k]], 1.0f, Q.w);
+                            else
+                                _drawCircleZbuf<true, USE_BLENDING>(x, y, r, _color, 1.0f, Q.w);
+                            }
                         }
                     }
                 }

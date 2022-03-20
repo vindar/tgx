@@ -1140,8 +1140,7 @@ namespace tgx
         **/
         void drawPixels(int nb_pixels, const fVec3* pos_list)
             {
-            int index = 0;
-            _drawPixels<false>(nb_pixels, pos_list, &index, &_color, nullptr, nullptr);
+            _drawPixels<false, false>(nb_pixels, pos_list, nullptr, nullptr, nullptr, nullptr);
             }
 
 
@@ -1155,14 +1154,14 @@ namespace tgx
         **/
         void drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors)
             {
-            _drawPixels<false>(nb_pixels, pos_list, colors_ind, colors, nullptr, nullptr);
+            _drawPixels<true,false>(nb_pixels, pos_list, colors_ind, colors, nullptr, nullptr);
             }
 
 
         /**
         * Draw a list of pixels on the image at given positions (in model space).
         *
-        * Use a (possibly) different color/opacity for each pixel and use blending.
+        * Use different color/opacity for each pixel and use blending.
         * The color and opacities are both given by a palette and a list of indices
         * (one for each pixel)
         *
@@ -1170,7 +1169,7 @@ namespace tgx
         **/
         void drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
-            _drawPixels<true>(nb_pixels, pos_list, colors_ind, colors, opacities_ind, opacities);
+            _drawPixels<true,true>(nb_pixels, pos_list, colors_ind, colors, opacities_ind, opacities);
             }
 
 
@@ -1217,6 +1216,21 @@ namespace tgx
             }
 
 
+
+        /**
+        * Draw a list of dots/circles on the image at given positions (in model space).
+        *
+        * Use the material color for all dot.
+        * Use the same radius for each dot.
+        *
+        * The scene lightning is ignored.
+        **/
+        void drawDots(int nb_dots, const fVec3* pos_list, const int radius)
+            {
+            _drawDots<false, false, false>(nb_dots, pos_list, nullptr, &radius, nullptr, nullptr, nullptr, nullptr);
+            }
+
+
         /**
         * Draw a list of dots/circles on the image at given positions (in model space).
         *
@@ -1227,8 +1241,7 @@ namespace tgx
         **/
         void drawDots(int nb_dots, const fVec3* pos_list, const int * radius_ind, const int * radius)
             {
-            int index = 0;
-            _drawDots<false>(nb_dots, pos_list, radius_ind, radius, &index, &_color, nullptr, nullptr);
+            _drawDots<true, false,false>(nb_dots, pos_list, radius_ind, radius, nullptr, nullptr, nullptr, nullptr);
             }
 
 
@@ -1242,7 +1255,7 @@ namespace tgx
         **/
         void drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const fVec3* colors_ind, const color_t* colors)
             {
-            _drawDots<false>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, nullptr, nullptr);
+            _drawDots<true, true,false>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, nullptr, nullptr);
             }
 
 
@@ -1257,7 +1270,7 @@ namespace tgx
         **/
         void drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int * colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
-            _drawDots<false>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, opacities_ind, opacities);
+            _drawDots<true, true,true>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, opacities_ind, opacities);
             }
 
 
@@ -2119,13 +2132,13 @@ namespace tgx
         template<bool USE_BLENDING> void _drawPixel(const fVec3& pos, color_t color, float opacity);
            
 
-        template<bool USE_BLENDING> void _drawPixels(int nb_pixels, fVec3* pos_list, int* colors_ind, color_t* colors, int* opacities_ind, float* opacities);
+        template<bool USE_COLORS, bool USE_BLENDING> void _drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities);
             
 
         template<bool USE_BLENDING> void _drawDot(const fVec3& pos, int r, color_t color, float opacity);
            
 
-        template<bool USE_BLENDING> void _drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities);
+        template<bool USE_RADIUS, bool USE_COLORS, bool USE_BLENDING> void _drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities);
             
 
 
