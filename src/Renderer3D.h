@@ -1328,12 +1328,12 @@ namespace tgx
         *    *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
         */
         void drawCube(
-            fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
-            fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
-            fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
-            fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
-            fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
-            fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right
+            const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
+            const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
+            const fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
+            const fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
+            const fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
+            const fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right
             );
 
 
