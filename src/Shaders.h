@@ -37,12 +37,12 @@ namespace tgx
     /**
     * FLAT SHADING (NO ZBUFFER)
     **/
-    template<typename color_t>
+    template<typename color_t, typename ZBUFFER_t>
     void shader_Flat(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
         color_t col = (color_t)data.facecolor;
         color_t* buf = data.im->data() + offset;
@@ -111,12 +111,12 @@ namespace tgx
     /**
     * GOURAUD SHADING (NO Z BUFFER)
     **/
-    template<typename color_t>
+    template<typename color_t, typename ZBUFFER_t>
     void shader_Gouraud(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
         color_t* buf = data.im->data() + offset;
         const int32_t stride = data.im->stride();
@@ -189,12 +189,12 @@ namespace tgx
     /**
     * TEXTURE + FLAT SHADING (NO ZBUFFER)
     **/
-    template<typename color_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
     void shader_Flat_Texture(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
         color_t* buf = data.im->data() + offset;
         const int32_t stride = data.im->stride();
@@ -338,12 +338,12 @@ namespace tgx
     /**
     * TEXTURE + GOURAUD SHADING (NO ZBUFFER)
     **/
-    template<typename color_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
     void shader_Gouraud_Texture(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
        
         color_t* buf = data.im->data() + offset;
@@ -501,16 +501,16 @@ namespace tgx
     /**
     * ZBUFFER + FLAT SHADING
     **/
-    template<typename color_t> 
+    template<typename color_t, typename ZBUFFER_t>
     void shader_Flat_Zbuffer(const int32_t offset, const int32_t& lx, const int32_t& ly,
         const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
         const color_t col = (color_t)data.facecolor;
         color_t* buf = data.im->data() + offset;
-        float* zbuf = data.zbuf + offset;
+        ZBUFFER_t * zbuf = data.zbuf + offset;
 
         const int32_t stride = data.im->stride();
         const int32_t zstride = data.im->lx();
@@ -572,7 +572,7 @@ namespace tgx
 
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
-                float& W = zbuf[bx];
+                ZBUFFER_t & W = zbuf[bx];
                 if (W < cw)
                     {
                     W = cw;
@@ -597,15 +597,15 @@ namespace tgx
     /**
     * ZBUFFER + GOURAUD SHADING
     **/
-    template<typename color_t>
+    template<typename color_t, typename ZBUFFER_t>
     void shader_Gouraud_Zbuffer(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
         color_t* buf = data.im->data() + offset;
-        float* zbuf = data.zbuf + offset;
+        ZBUFFER_t* zbuf = data.zbuf + offset;
 
         const int32_t stride = data.im->stride();
         const int32_t zstride = data.im->lx();
@@ -671,7 +671,7 @@ namespace tgx
 
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
-                float& W = zbuf[bx];
+                ZBUFFER_t& W = zbuf[bx];
                 if (W < cw)
                     {
                     W = cw;
@@ -696,15 +696,15 @@ namespace tgx
     /**
     * ZBUFFER + TEXTURE + FLAT SHADING
     **/
-    template<typename color_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
     void shader_Flat_Texture_Zbuffer(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {      
         color_t* buf = data.im->data() + offset;
-        float* zbuf = data.zbuf + offset;
+        ZBUFFER_t* zbuf = data.zbuf + offset;
 
         const int32_t stride = data.im->stride();
         const int32_t zstride = data.im->lx();
@@ -801,7 +801,7 @@ namespace tgx
 
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
-                float& W = zbuf[bx];
+                ZBUFFER_t& W = zbuf[bx];
                 if (W < cw)
                     {
                     W = cw;
@@ -855,15 +855,15 @@ namespace tgx
     /**
     * ZBUFFER + TEXTURE + GOURAUD SHADING
     **/
-    template<typename color_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
     void shader_Gouraud_Texture_Zbuffer(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {       
         color_t* buf = data.im->data() + offset;
-        float* zbuf = data.zbuf + offset;
+        ZBUFFER_t* zbuf = data.zbuf + offset;
 
         const int32_t stride = data.im->stride();
         const int32_t zstride = data.im->lx();
@@ -967,7 +967,7 @@ namespace tgx
 
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
-                float& W = zbuf[bx];
+                ZBUFFER_t& W = zbuf[bx];
                 if (W < cw)
                     {
                     W = cw;
@@ -1025,12 +1025,12 @@ namespace tgx
     /**
     * TEXTURE + FLAT SHADING (NO ZBUFFER) + ORTHOGRAPHIC
     **/
-    template<typename color_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
     void shader_Flat_Texture_Ortho(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {       
         color_t* buf = data.im->data() + offset;
         const int32_t stride = data.im->stride();
@@ -1165,12 +1165,12 @@ namespace tgx
     /**
     * TEXTURE + GOURAUD SHADING (NO ZBUFFER) + ORTHOGRAPHIC
     **/
-    template<typename color_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
     void shader_Gouraud_Texture_Ortho(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {        
         color_t* buf = data.im->data() + offset;        
         const int32_t stride = data.im->stride();
@@ -1317,15 +1317,15 @@ namespace tgx
     /**
     * ZBUFFER + TEXTURE + FLAT SHADING + ORTHOGRAPHIC
     **/
-    template<typename color_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
     void shader_Flat_Texture_Zbuffer_Ortho(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
         color_t* buf = data.im->data() + offset;
-        float* zbuf = data.zbuf + offset;
+        ZBUFFER_t* zbuf = data.zbuf + offset;
 
         const int32_t stride = data.im->stride();
         const int32_t zstride = data.im->lx();
@@ -1422,7 +1422,7 @@ namespace tgx
 
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
-                float& W = zbuf[bx];
+                ZBUFFER_t& W = zbuf[bx];
                 if (W < cw)
                     {
                     W = cw;
@@ -1476,15 +1476,15 @@ namespace tgx
     /**
     * ZBUFFER + TEXTURE + GOURAUD SHADING + ORTHOGRAPHIC
     **/
-    template<typename color_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
     void shader_Gouraud_Texture_Zbuffer_Ortho(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t>& data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
         color_t* buf = data.im->data() + offset;
-        float* zbuf = data.zbuf + offset;
+        ZBUFFER_t* zbuf = data.zbuf + offset;
 
         const int32_t stride = data.im->stride();
         const int32_t zstride = data.im->lx();
@@ -1589,7 +1589,7 @@ namespace tgx
 
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
-                float& W = zbuf[bx];
+                ZBUFFER_t& W = zbuf[bx];
                 if (W < cw)
                     {
                     W = cw;
@@ -1649,11 +1649,11 @@ namespace tgx
     /**
     * META-SHADER THAT DISPATCH TO THE CORRECT SHADER ABOVE (IF ENABLED).
     **/
-    template<int SHADER_FLAGS_ENABLED, typename color_t> void shader_select(const int32_t& offset, const int32_t& lx, const int32_t& ly,
+    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t> void shader_select(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t> & data)
+        const RasterizerParams<color_t, color_t, ZBUFFER_t> & data)
         {       
         int raster_type = data.shader_type;       
         if (TGX_SHADER_HAS_ZBUFFER(SHADER_FLAGS_ENABLED) && (TGX_SHADER_HAS_ZBUFFER(raster_type)))
@@ -1667,16 +1667,16 @@ namespace tgx
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))                    
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t,ZBUFFER_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t, true, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, true, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
@@ -1684,25 +1684,25 @@ namespace tgx
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Zbuffer_Ortho<color_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Zbuffer_Ortho<color_t, true,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, true,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Zbuffer_Ortho<color_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Zbuffer_Ortho<color_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     }
                 else if (TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
                     {
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        shader_Gouraud_Zbuffer<color_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);  // same as perspective projection
+                        shader_Gouraud_Zbuffer<color_t, ZBUFFER_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);  // same as perspective projection
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        shader_Flat_Zbuffer<color_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);  // same as perspective projection
+                        shader_Flat_Zbuffer<color_t, ZBUFFER_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);  // same as perspective projection
                     }
                 }
             else if (TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED))
@@ -1714,16 +1714,16 @@ namespace tgx
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Zbuffer<color_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Zbuffer<color_t, ZBUFFER_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Zbuffer<color_t, true, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Zbuffer<color_t, ZBUFFER_t, true, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Zbuffer<color_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Zbuffer<color_t, ZBUFFER_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Zbuffer<color_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Zbuffer<color_t, ZBUFFER_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
@@ -1731,25 +1731,25 @@ namespace tgx
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Zbuffer<color_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Zbuffer<color_t, ZBUFFER_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Zbuffer<color_t, true,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Zbuffer<color_t, ZBUFFER_t, true,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Zbuffer<color_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Zbuffer<color_t, ZBUFFER_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Zbuffer<color_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Zbuffer<color_t, ZBUFFER_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     }
                 else if (TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
                     {
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        shader_Gouraud_Zbuffer<color_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                        shader_Gouraud_Zbuffer<color_t, ZBUFFER_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        shader_Flat_Zbuffer<color_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                        shader_Flat_Zbuffer<color_t, ZBUFFER_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     }
                 }
             }
@@ -1764,16 +1764,16 @@ namespace tgx
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Ortho<color_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Ortho<color_t, ZBUFFER_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Ortho<color_t, true,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Ortho<color_t, ZBUFFER_t, true,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Ortho<color_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Ortho<color_t, ZBUFFER_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Ortho<color_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture_Ortho<color_t, ZBUFFER_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
@@ -1781,25 +1781,25 @@ namespace tgx
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Ortho<color_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Ortho<color_t, ZBUFFER_t, true,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Ortho<color_t, true,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Ortho<color_t, ZBUFFER_t, true,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Ortho<color_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Ortho<color_t, ZBUFFER_t, false,false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Ortho<color_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture_Ortho<color_t, ZBUFFER_t, false,true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     }
                 else if (TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
                     {
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        shader_Gouraud<color_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data); // same as perspective projection
+                        shader_Gouraud<color_t, ZBUFFER_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data); // same as perspective projection
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        shader_Flat<color_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data); // same as perspective projection
+                        shader_Flat<color_t, ZBUFFER_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data); // same as perspective projection
                     }
                 }
             else if (TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED))
@@ -1811,16 +1811,16 @@ namespace tgx
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture<color_t, true, false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture<color_t, ZBUFFER_t, true, false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture<color_t, true, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture<color_t, ZBUFFER_t, true, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture<color_t, false, false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture<color_t, ZBUFFER_t, false, false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture<color_t, false, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Gouraud_Texture<color_t, ZBUFFER_t, false, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
@@ -1828,25 +1828,25 @@ namespace tgx
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture<color_t, true, false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture<color_t, ZBUFFER_t, true, false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture<color_t, true, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture<color_t, ZBUFFER_t, true, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
                             {
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture<color_t, false, false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture<color_t, ZBUFFER_t, false, false>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture<color_t, false, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                shader_Flat_Texture<color_t, ZBUFFER_t, false, true>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     }
                 else if (TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
                     {
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        shader_Gouraud<color_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                        shader_Gouraud<color_t, ZBUFFER_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        shader_Flat<color_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                        shader_Flat<color_t, ZBUFFER_t>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     }
                 }
             }       
@@ -1864,7 +1864,7 @@ namespace tgx
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t_im, color_t_im> & data)
+        const RasterizerParams<color_t_im, color_t_im, float> & data)
         {
         color_t_im * buf = data.im->data() + offset;
         const int32_t stride = data.im->stride();
@@ -1952,7 +1952,7 @@ namespace tgx
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t_im, color_t_tex> & data)
+        const RasterizerParams<color_t_im, color_t_tex, float> & data)
         {
 
         color_t_im * buf = data.im->data() + offset;        

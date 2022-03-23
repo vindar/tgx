@@ -33,8 +33,8 @@ namespace tgx
     *********************************************************/
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::Renderer3D() : _currentpow(-1), _ox(0), _oy(0),  _uni(), _culling_dir(1)
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::Renderer3D() : _currentpow(-1), _ox(0), _oy(0),  _uni(), _culling_dir(1)
             {            
             _shaders = 0; 
 
@@ -74,8 +74,8 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_precomputeSpecularTable2(int exponent)
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_precomputeSpecularTable2(int exponent)
             {
             _currentpow = exponent;
             float specularExponent = (float)exponent;
@@ -107,8 +107,8 @@ namespace tgx
         *********************************************************/
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_triangleClip1in(int shader, tgx::fVec4 CP,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_triangleClip1in(int shader, tgx::fVec4 CP,
             float cp1, float cp2, float cp3,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
@@ -139,8 +139,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_triangleClip2in(int shader, tgx::fVec4 CP,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_triangleClip2in(int shader, tgx::fVec4 CP,
             float cp1, float cp2, float cp3,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
@@ -176,8 +176,8 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        int Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_triangleClip(int shader, tgx::fVec4 CP, float off,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        int Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_triangleClip(int shader, tgx::fVec4 CP, float off,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
             {
@@ -232,8 +232,8 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawTriangleClipped(const int RASTER_TYPE,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawTriangleClipped(const int RASTER_TYPE,
             const fVec4* Q0, const fVec4* Q1, const fVec4* Q2,
             const fVec3* N0, const fVec3* N1, const fVec3* N2,
             const fVec2* T0, const fVec2* T1, const fVec2* T2,
@@ -306,8 +306,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawTriangleClippedSub(const int RASTER_TYPE, const int plane, const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3)
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawTriangleClippedSub(const int RASTER_TYPE, const int plane, const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3)
             {
             fVec4 CP; 
             float off;
@@ -412,7 +412,7 @@ namespace tgx
                         V2.zdivide();
                         V3.zdivide();
                         }
-                    rasterizeTriangle<LX, LY>(V1, V2, V3, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t>);
+                    rasterizeTriangle<LX, LY>(V1, V2, V3, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
                     return;
                     }
                 }
@@ -434,8 +434,8 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawTriangle(const int RASTER_TYPE,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawTriangle(const int RASTER_TYPE,
                            const fVec3 * P0, const fVec3 * P1, const fVec3 * P2,
                            const fVec3 * N0, const fVec3 * N1, const fVec3 * N2,
                            const fVec2 * T0, const fVec2 * T1, const fVec2 * T2,
@@ -542,15 +542,15 @@ namespace tgx
                 }
 
             // go rasterize !          
-            rasterizeTriangle<LX, LY>(PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t>);
+            rasterizeTriangle<LX, LY>(PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
 
             return;
             }
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawQuad(const int RASTER_TYPE,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawQuad(const int RASTER_TYPE,
             const fVec3* P0, const fVec3* P1, const fVec3* P2, const fVec3* P3,
             const fVec3* N0, const fVec3* N1, const fVec3* N2, const fVec3* N3,
             const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3,
@@ -678,8 +678,8 @@ namespace tgx
                 }
 
             // go rasterize !
-            rasterizeTriangle<LX, LY>(PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t>);
-            rasterizeTriangle<LX, LY>(PC0, PC2, PC3, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t>);
+            rasterizeTriangle<LX, LY>(PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+            rasterizeTriangle<LX, LY>(PC0, PC2, PC3, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
             
             return;
             }
@@ -688,8 +688,8 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material, bool draw_chained_meshes)            
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material, bool draw_chained_meshes)
             {
             if (!_validDraw()) return;
 
@@ -726,8 +726,8 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>  TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawMesh(const int RASTER_TYPE, const Mesh3D<color_t>* mesh)
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>  TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawMesh(const int RASTER_TYPE, const Mesh3D<color_t>* mesh)
             {
             _uni.shader_type = RASTER_TYPE;
             const bool ortho = _ortho;
@@ -884,7 +884,7 @@ namespace tgx
                     PC2->missedP = false;
 
                     // go rasterize !                   
-                    rasterizeTriangle<LX, LY> ((RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t>);
+                    rasterizeTriangle<LX, LY> ((RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
               
                 rasterize_next_triangle:
 
@@ -902,8 +902,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::drawTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::drawTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3,
                 const fVec3* N1, const fVec3* N2, const fVec3* N3,
                 const fVec2* T1, const fVec2* T2, const fVec2* T3,
                 const Image<color_t>* texture)
@@ -918,8 +918,8 @@ namespace tgx
                 }
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::drawTriangleWithVertexColor(const fVec3& P1, const fVec3& P2, const fVec3& P3,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::drawTriangleWithVertexColor(const fVec3& P1, const fVec3& P2, const fVec3& P3,
                 const RGBf& col1, const RGBf& col2, const RGBf& col3,
                 const fVec3* N1, const fVec3* N2, const fVec3* N3)
                 {
@@ -941,8 +941,8 @@ namespace tgx
                 }
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::drawTriangles(int nb_triangles,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::drawTriangles(int nb_triangles,
             const uint16_t* ind_vertices, const fVec3* vertices,
             const uint16_t* ind_normals, const fVec3* normals,
             const uint16_t* ind_texture, const fVec2* textures,
@@ -1007,8 +1007,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::drawQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::drawQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
             const fVec3* N1, const fVec3* N2, const fVec3* N3, const fVec3* N4,
             const fVec2* T1, const fVec2* T2, const fVec2* T3, const fVec2* T4,
             const Image<color_t>* texture)
@@ -1023,8 +1023,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::drawQuadWithVertexColor(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::drawQuadWithVertexColor(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
             const RGBf& col1, const RGBf& col2, const RGBf& col3, const RGBf& col4,
             const fVec3* N1, const fVec3* N2, const fVec3* N3, const fVec3* N4)
             {
@@ -1046,8 +1046,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::drawQuads(int nb_quads,
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::drawQuads(int nb_quads,
             const uint16_t* ind_vertices, const fVec3* vertices,
             const uint16_t* ind_normals, const fVec3* normals,
             const uint16_t* ind_texture, const fVec2* textures,
@@ -1120,9 +1120,9 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
@@ -1265,9 +1265,9 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
@@ -1317,9 +1317,9 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
             
             if (!_validDraw()) return;
@@ -1375,9 +1375,9 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
@@ -1459,9 +1459,9 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return; // invalid vertices
@@ -1548,9 +1548,9 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
@@ -1629,9 +1629,9 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return; // invalid vertices
@@ -1715,9 +1715,9 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool USE_BLENDING> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawPixel(const fVec3& pos, color_t color, float opacity)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawPixel(const fVec3& pos, color_t color, float opacity)
             {
             if (!_validDraw()) return;
             const bool has_zbuffer = TGX_SHADER_HAS_ZBUFFER(_shaders);
@@ -1739,9 +1739,9 @@ namespace tgx
             }
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool USE_COLORS, bool USE_BLENDING> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             if (!_validDraw()) return;
             if (pos_list == nullptr) return;            
@@ -1783,9 +1783,9 @@ namespace tgx
                 }           
             }
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool USE_BLENDING> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawDot(const fVec3& pos, int r, color_t color, float opacity)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawDot(const fVec3& pos, int r, color_t color, float opacity)
             {
             if (!_validDraw()) return;
             const bool has_zbuffer = TGX_SHADER_HAS_ZBUFFER(_shaders);
@@ -1818,9 +1818,9 @@ namespace tgx
             }
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool USE_RADIUS, bool USE_COLORS, bool USE_BLENDING> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             if (!_validDraw()) return;
             if ((pos_list == nullptr) || (radius == nullptr)) return;
@@ -1882,11 +1882,9 @@ namespace tgx
 
 
 
-
-
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> 
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> 
         template<bool CHECKRANGE, bool USE_BLENDING> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawCircleZbuf(int xm, int ym, int r, color_t color, float opacity, float z)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawCircleZbuf(int xm, int ym, int r, color_t color, float opacity, float z)
             { 
             if ((CHECKRANGE) && (r > 2))
                 { // circle is large enough to check first if there is something to draw.
@@ -1954,9 +1952,8 @@ namespace tgx
             }
 
 
-
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        float Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_unitSphereScreenDiameter()
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        float Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_unitSphereScreenDiameter()
             {
             const float ONEOVERSQRT2 = 0.70710678118f;
             fVec4 P0 = _r_modelViewM.mult1(fVec3(0, 0, 0));
@@ -1975,13 +1972,8 @@ namespace tgx
             }
 
 
-
-
-
-
-
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::drawCube(
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::drawCube(
             const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
             const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
             const fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
@@ -2017,8 +2009,8 @@ namespace tgx
 
 
 
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::drawCube(
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::drawCube(
             const Image<color_t>* texture_front,
             const Image<color_t>* texture_back,
             const Image<color_t>* texture_top,
@@ -2080,18 +2072,9 @@ namespace tgx
             }
 
 
-
-
-
-
-
-
-
-
-
-        template<typename color_t, int LX, int LY, int DISABLED_SHADERS>
+        template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t>
         template<bool WIREFRAME, bool DRAWFAST> TGX_NOINLINE
-        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS>::_drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
+        void Renderer3D<color_t, LX, LY, DISABLED_SHADERS, ZBUFFER_t>::_drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
             {
             
             const int save_shaders = _shaders; 
