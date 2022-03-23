@@ -45,6 +45,8 @@ namespace tgx
             _uni.shader_type = 0; 
             _uni.zbuf = 0; 
             _uni.facecolor = RGBf(1.0, 1.0, 1.0);
+            _uni.wa = 65535;    // default values
+            _uni.wb = 0;        // 
 
             // let's set some default values
             fMat4 M;

@@ -607,8 +607,8 @@ namespace tgx
         color_t* buf = data.im->data() + offset;
         ZBUFFER_t* zbuf = data.zbuf + offset;
 
-        const float wa = 65535;
-        const float wb = 0;
+        const float wa = data.wa;
+        const float wb = data.wb;
 
         const int32_t stride = data.im->stride();
         const int32_t zstride = data.im->lx();

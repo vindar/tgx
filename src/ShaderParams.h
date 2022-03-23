@@ -180,6 +180,8 @@ namespace tgx
         const Image<color_t_tex>*   tex;            // pointer to the texture (when using texturing).        
         color_t_tex                 mask_color;     // 'transparent color' when masking is enabled (on for the 2D shader).
         int                         shader_type;    // shader type
+        float                       wa;             // constants such that f(w) = wa * w + wb maps
+        float                       wb;             // w (= -1/z) -> float(0, 65535) for conversion to uint16_t
         };
 
 
