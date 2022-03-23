@@ -607,6 +607,9 @@ namespace tgx
         color_t* buf = data.im->data() + offset;
         ZBUFFER_t* zbuf = data.zbuf + offset;
 
+        const float wa = 65535;
+        const float wb = 0;
+
         const int32_t stride = data.im->stride();
         const int32_t zstride = data.im->lx();
 
@@ -672,9 +675,10 @@ namespace tgx
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
                 ZBUFFER_t& W = zbuf[bx];
-                if (W < cw)
+                const ZBUFFER_t aa = (std::is_same<ZBUFFER_t, float>::value) ? cw : ((uint16_t)(wa * cw + wb));
+                if (W < aa)
                     {
-                    W = cw;
+                    W = aa;
                     buf[bx] = interpolateColorsTriangle(col2, C2, col3, C3, col1, aera);
                     }
                 C2 += dx2;
@@ -690,7 +694,6 @@ namespace tgx
             zbuf += zstride;
             }
         }
-
 
 
     /**
