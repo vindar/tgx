@@ -130,6 +130,8 @@ void setup()
 int nbf = 0; // number of frames drawn
 float a = 0; // current angle
 
+float rt = 0;
+
 void loop()
     {
     // erase the screen
@@ -142,11 +144,13 @@ void loop()
     renderer.setModelPosScaleRot({ 0, 0.5f, -35 }, { 13,13,13 }, a);
 
     // draw the model onto the memory framebuffer
+    elapsedMicros em;
     renderer.drawMesh(&buddha, false);
+    rt += (1000000.0f / ((int)em));
 
     // update the screen (asynchronous). 
     tft.update(fb);
-
+  
     // increase the angle by 3 degrees.
     a += 3;
 
@@ -156,8 +160,11 @@ void loop()
         tft.printStats();
         diff1.printStats();
         diff2.printStats();
+
+        Serial.printf("\nMesh rendering framerate: %.2f FPS\n\n", (rt / nbf) );
         }
     }
 
 
 /** end of file */
+
