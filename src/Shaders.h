@@ -607,8 +607,6 @@ namespace tgx
         color_t* buf = data.im->data() + offset;
         ZBUFFER_t* zbuf = data.zbuf + offset;
 
-        const float wa = data.wa;
-        const float wb = data.wb;
 
         const int32_t stride = data.im->stride();
         const int32_t zstride = data.im->lx();
@@ -620,10 +618,13 @@ namespace tgx
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
         const int32_t aera = O1 + O2 + O3;
 
+        const float wa = data.wa;
+        const float wb = data.wb;
+
         const float invaera = 1.0f / aera;
-        const float fP1a = fP1.w * invaera;
-        const float fP2a = fP2.w * invaera;
-        const float fP3a = fP3.w * invaera;
+        const float fP1a = fP1.w * invaera * wa;
+        const float fP2a = fP2.w * invaera * wa;
+        const float fP3a = fP3.w * invaera * wa;
         const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
 
         while ((uintptr_t)(buf) < end)
@@ -670,12 +671,12 @@ namespace tgx
             const int32_t C1 = O1 + (dx1 * bx);
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
-            float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
+            float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a)) + wb;
 
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
                 ZBUFFER_t& W = zbuf[bx];
-                const ZBUFFER_t aa = (std::is_same<ZBUFFER_t, float>::value) ? cw : ((uint16_t)(wa * cw + wb));
+                const ZBUFFER_t aa = (ZBUFFER_t)(cw);
                 if (W < aa)
                     {
                     W = aa;
