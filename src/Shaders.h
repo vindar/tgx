@@ -714,6 +714,12 @@ namespace tgx
         color_t* buf = data.im->data() + offset;
         ZBUFFER_t* zbuf = data.zbuf + offset;
 
+        const float wa = data.wa;
+        const float wb = data.wb;
+        (void)wa; // silence possible unused warnings
+        (void)wb; // 
+
+
         const int32_t stride = data.im->stride();
         const int32_t zstride = data.im->lx();
 
@@ -810,9 +816,10 @@ namespace tgx
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
                 ZBUFFER_t& W = zbuf[bx];
-                if (W < cw)
+                const ZBUFFER_t aa = (std::is_same<ZBUFFER_t, uint16_t>::value) ? ((ZBUFFER_t)(cw * wa + wb)) : ((ZBUFFER_t)cw);
+                if (W < aa)
                     {
-                    W = cw;
+                    W = aa;
                     const float icw = 1.0f / cw;
                     color_t col;
                     if (TEXTURE_BILINEAR)
@@ -872,6 +879,11 @@ namespace tgx
         {       
         color_t* buf = data.im->data() + offset;
         ZBUFFER_t* zbuf = data.zbuf + offset;
+
+        const float wa = data.wa;
+        const float wb = data.wb;
+        (void)wa; // silence possible unused warnings
+        (void)wb; // 
 
         const int32_t stride = data.im->stride();
         const int32_t zstride = data.im->lx();
@@ -976,9 +988,10 @@ namespace tgx
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
                 ZBUFFER_t& W = zbuf[bx];
-                if (W < cw)
+                const ZBUFFER_t aa = (std::is_same<ZBUFFER_t, uint16_t>::value) ? ((ZBUFFER_t)(cw * wa + wb)) : ((ZBUFFER_t)cw);
+                if (W < aa)
                     {
-                    W = cw;
+                    W = aa;
                     const float icw = 1.0f / cw;
 
                     color_t col;
