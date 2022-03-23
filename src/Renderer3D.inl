@@ -45,8 +45,6 @@ namespace tgx
             _uni.shader_type = 0; 
             _uni.zbuf = 0; 
             _uni.facecolor = RGBf(1.0, 1.0, 1.0);
-            _uni.wa = 65535;    // default values
-            _uni.wb = 0;        // 
 
             // let's set some default values
             fMat4 M;
@@ -73,7 +71,6 @@ namespace tgx
             setTextureWrappingMode(TGX_SHADER_TEXTURE_CLAMP); // slow but safer (no need to be power of 2)
             setTextureQuality(TGX_SHADER_TEXTURE_NEAREST); // dirty but fast
             }
-
 
 
         template<typename color_t, int LX, int LY, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
@@ -404,9 +401,9 @@ namespace tgx
                     // Triangle is now correctly clipped so it can be drawn directly !
                     if (ortho)
                         {
-                        V1.w = 2.0f - V1.z;
-                        V2.w = 2.0f - V2.z;
-                        V3.w = 2.0f - V3.z;
+                        V1.w = 1.0f - V1.z;
+                        V2.w = 1.0f - V2.z;
+                        V3.w = 1.0f - V3.z;
                         }
                     else
                         {
@@ -465,9 +462,9 @@ namespace tgx
 
             if (ortho) 
                 { 
-                PC0.w = 2.0f - PC0.z; 
-                PC1.w = 2.0f - PC1.z;
-                PC2.w = 2.0f - PC2.z;
+                PC0.w = 1.0f - PC0.z; 
+                PC1.w = 1.0f - PC1.z;
+                PC2.w = 1.0f - PC2.z;
                 } 
             else 
                 { 
@@ -584,10 +581,10 @@ namespace tgx
 
             if (ortho)
                 { 
-                PC0.w = 2.0f - PC0.z; 
-                PC1.w = 2.0f - PC1.z;
-                PC2.w = 2.0f - PC2.z;
-                PC3.w = 2.0f - PC3.z;
+                PC0.w = 1.0f - PC0.z; 
+                PC1.w = 1.0f - PC1.z;
+                PC2.w = 1.0f - PC2.z;
+                PC3.w = 1.0f - PC3.z;
                 } 
             else 
                 { 
@@ -792,17 +789,17 @@ namespace tgx
                     // triangle is not culled
 
                     *((fVec4*)PC2) = _projM * PC2->P;
-                    if (ortho) { PC2->w = 2.0f - PC2->z; } else { PC2->zdivide(); }
+                    if (ortho) { PC2->w = 1.0f - PC2->z; } else { PC2->zdivide(); }
 
                     if (PC0->missedP)
                         {
                         *((fVec4*)PC0) = _projM * PC0->P;
-                        if (ortho) { PC0->w = 2.0f - PC0->z; } else { PC0->zdivide(); }
+                        if (ortho) { PC0->w = 1.0f - PC0->z; } else { PC0->zdivide(); }
                         }
                     if (PC1->missedP)
                         {
                         *((fVec4*)PC1) = _projM * PC1->P;
-                        if (ortho) { PC1->w = 2.0f - PC1->z; } else { PC1->zdivide(); }
+                        if (ortho) { PC1->w = 1.0f - PC1->z; } else { PC1->zdivide(); }
                         }
                         
                     // test if triangle must be clipped                                         
@@ -1189,19 +1186,19 @@ namespace tgx
 
                         // triangle is not culled
                         *((fVec4*)PC2) = _projM * PC2->P;                        
-                        if (ortho) { PC2->w = 2.0f - PC2->z; } else { PC2->zdivide(); }
+                        if (ortho) { PC2->w = 1.0f - PC2->z; } else { PC2->zdivide(); }
                         *((fVec4*)PC2) = M.mult1(*((fVec4*)PC2));
 
                         if (PC0->missedP)
                             {
                             *((fVec4*)PC0) = _projM * PC0->P;                            
-                            if (ortho) { PC0->w = 2.0f - PC0->z; } else { PC0->zdivide(); }
+                            if (ortho) { PC0->w = 1.0f - PC0->z; } else { PC0->zdivide(); }
                             *((fVec4*)PC0) = M.mult1(*((fVec4*)PC0));
                             }
                         if (PC1->missedP)
                             {
                             *((fVec4*)PC1) = _projM * PC1->P;
-                            if (ortho) { PC1->w = 2.0f - PC1->z; } else { PC1->zdivide(); }
+                            if (ortho) { PC1->w = 1.0f - PC1->z; } else { PC1->zdivide(); }
                             *((fVec4*)PC1) = M.mult1(*((fVec4*)PC1));
                             }
 
@@ -1292,8 +1289,8 @@ namespace tgx
 
             if (ortho) 
                 { 
-                H0.w = 2.0f - H0.z; 
-                H1.w = 2.0f - H1.z;
+                H0.w = 1.0f - H0.z; 
+                H1.w = 1.0f - H1.z;
                 } 
             else 
                 { 
@@ -1348,8 +1345,8 @@ namespace tgx
                 fVec4 H1 = _projM * Q1;
                 if (ortho) 
                     { 
-                    H0.w = 2.0f - H0.z; 
-                    H1.w = 2.0f - H1.z;
+                    H0.w = 1.0f - H0.z; 
+                    H1.w = 1.0f - H1.z;
                     } 
                 else 
                     { 
@@ -1409,9 +1406,9 @@ namespace tgx
 
             if (ortho) 
                 { 
-                H0.w = 2.0f - H0.z; 
-                H1.w = 2.0f - H1.z;
-                H2.w = 2.0f - H2.z;
+                H0.w = 1.0f - H0.z; 
+                H1.w = 1.0f - H1.z;
+                H2.w = 1.0f - H2.z;
                 }
             else 
                 { 
@@ -1496,9 +1493,9 @@ namespace tgx
                 fVec4 H2 = _projM * Q2;
                 if (ortho) 
                     { 
-                    H0.w = 2.0f - H0.z; 
-                    H1.w = 2.0f - H1.z;
-                    H2.w = 2.0f - H2.z;
+                    H0.w = 1.0f - H0.z; 
+                    H1.w = 1.0f - H1.z;
+                    H2.w = 1.0f - H2.z;
                     } 
                 else 
                     { 
@@ -1587,10 +1584,10 @@ namespace tgx
 
             if (ortho) 
                 { 
-                H0.w = 2.0f - H0.z; 
-                H1.w = 2.0f - H1.z;
-                H2.w = 2.0f - H2.z;
-                H3.w = 2.0f - H3.z;
+                H0.w = 1.0f - H0.z; 
+                H1.w = 1.0f - H1.z;
+                H2.w = 1.0f - H2.z;
+                H3.w = 1.0f - H3.z;
                 }
             else 
                 { 
@@ -1666,22 +1663,22 @@ namespace tgx
                 if (Q3.z >= 0) return;
 
                 fVec4 H0 = _projM * Q0;
-                if (ortho) { H0.w = 2.0f - H0.z; } else { H0.zdivide(); }
+                if (ortho) { H0.w = 1.0f - H0.z; } else { H0.zdivide(); }
                 if ((H0.w < -1) || (H0.w > 1)) continue;
                 H0 = M.mult1(H0);
 
                 fVec4 H1 = _projM * Q1;
-                if (ortho) { H1.w = 2.0f - H1.z; } else { H1.zdivide(); }
+                if (ortho) { H1.w = 1.0f - H1.z; } else { H1.zdivide(); }
                 if ((H1.w < -1) || (H1.w > 1)) continue;
                 H1 = M.mult1(H1);
 
                 fVec4 H2 = _projM * Q2;
-                if (ortho) { H2.w = 2.0f - H2.z; } else { H2.zdivide(); }
+                if (ortho) { H2.w = 1.0f - H2.z; } else { H2.zdivide(); }
                 if ((H2.w < -1) || (H2.w > 1)) continue;
                 H2 = M.mult1(H2);
 
                 fVec4 H3 = _projM * Q3;
-                if (ortho) { H3.w = 2.0f - H3.z; } else { H3.zdivide(); }
+                if (ortho) { H3.w = 1.0f - H3.z; } else { H3.zdivide(); }
                 if ((H3.w < -1) || (H3.w > 1)) continue;
                 H3 = M.mult1(H3);
 
@@ -1724,7 +1721,7 @@ namespace tgx
             if (!_validDraw()) return;
             const bool has_zbuffer = TGX_SHADER_HAS_ZBUFFER(_shaders);
             fVec4 Q = _projM * _r_modelViewM.mult1(pos);
-            if (_ortho) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+            if (_ortho) { Q.w = 1.0f - Q.z; } else { Q.zdivide(); }
             if ((Q.w < -1) || (Q.w > 1)) return;
             Q.x = ((Q.x + 1) * LX) / 2 - _ox;
             Q.y = ((Q.y + 1) * LY) / 2 - _oy;
@@ -1757,7 +1754,7 @@ namespace tgx
                 {
                 fVec3 P = pos_list[k];
                 fVec4 Q = M.mult1(P);
-                if (ortho) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+                if (ortho) { Q.w = 1.0f - Q.z; } else { Q.zdivide(); }
                 if ((Q.w < -1) || (Q.w > 1)) continue;
                 Q.x = ((Q.x + 1) * LX) / 2 - _ox;
                 Q.y = ((Q.y + 1) * LY) / 2 - _oy;
@@ -1792,7 +1789,7 @@ namespace tgx
             if (!_validDraw()) return;
             const bool has_zbuffer = TGX_SHADER_HAS_ZBUFFER(_shaders);
             fVec4 Q = _projM * _r_modelViewM.mult1(pos);
-            if (_ortho) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+            if (_ortho) { Q.w = 1.0f - Q.z; } else { Q.zdivide(); }
             if ((Q.w < -1) || (Q.w > 1)) return;
             Q.x = ((Q.x + 1) * LX) / 2 - _ox;
             Q.y = ((Q.y + 1) * LY) / 2 - _oy;
@@ -1836,7 +1833,7 @@ namespace tgx
             for (int k = 0; k < nb_dots; k++)
                 {
                 fVec4 Q = M.mult1(pos_list[k]);
-                if (ortho) { Q.w = 2.0f - Q.z; } else { Q.zdivide(); }
+                if (ortho) { Q.w = 1.0f - Q.z; } else { Q.zdivide(); }
                 if ((Q.w < -1) || (Q.w > 1)) continue;
                 Q.x = ((Q.x + 1) * LX) / 2 - _ox;
                 Q.y = ((Q.y + 1) * LY) / 2 - _oy;

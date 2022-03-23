@@ -203,6 +203,7 @@ namespace tgx
             {
             _projM = M;
             _projM.invertYaxis();
+            _recompute_wa_wb();
             }
 
 
@@ -224,6 +225,7 @@ namespace tgx
             static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use useOrthographicProjection()");
             _ortho = true;
             _rectifyShaderOrtho();
+            _recompute_wa_wb();
             }
 
 
@@ -235,6 +237,7 @@ namespace tgx
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use usePerspectiveProjection()");
             _ortho = false;
             _rectifyShaderOrtho();
+            _recompute_wa_wb();
             }
 
 
@@ -251,9 +254,9 @@ namespace tgx
         void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use setOrtho()");
-            useOrthographicProjection();
             _projM.setOrtho(left, right, bottom, top, zNear, zFar);
             _projM.invertYaxis();
+            useOrthographicProjection();
             }
 
 
@@ -270,9 +273,9 @@ namespace tgx
         void setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setFrustrum()");
-            usePerspectiveProjection();
             _projM.setFrustum(left, right, bottom, top, zNear, zFar);
             _projM.invertYaxis();
+            usePerspectiveProjection();
             }
 
 
@@ -289,9 +292,9 @@ namespace tgx
         void setPerspective(float fovy, float aspect, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setPerspective()");
-            usePerspectiveProjection();
             _projM.setPerspective(fovy, aspect, zNear, zFar);
             _projM.invertYaxis();
+            usePerspectiveProjection();
             }
 
 
@@ -1950,6 +1953,40 @@ namespace tgx
             {
             return ((_uni.im != nullptr) && (_uni.im->isValid()));
             }
+
+
+
+        /** recompute the wa and wa scaling constants. called after every change of the projection matrix or projection mode */
+        void _recompute_wa_wb()
+            {
+            if (_ortho)
+                { // orthographic projection
+                if (std::is_same<ZBUFFER_t, float>::value)
+                    { // float zbuffer : no normalization needed
+                    _uni.wa = 1.0f;
+                    _uni.wb = 0.0f;
+                    }
+                else
+                    { // uint16_t zbuffer : normalize in [0,65535]
+                    _uni.wa = 32767.4f;
+                    _uni.wb = 0;
+                    }
+                }
+            else
+                { // perspective projection
+                if (std::is_same<ZBUFFER_t, float>::value)
+                    { // float zbuffer : no normalization needed
+                    _uni.wa = 1.0f;
+                    _uni.wb = 0.0f;
+                    }
+                else
+                    { // uint16_t zbuffer : normalize in [0,65535]
+                    _uni.wa = -32768 * _projM[14];
+                    _uni.wb = 32768 * (_projM[10] + 1);
+                    }
+                }
+            }
+
 
 
         /***********************************************************
