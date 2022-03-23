@@ -2189,10 +2189,12 @@ namespace tgx
 
         template<bool CHECKRANGE, bool USE_BLENDING> void drawPixelZbuf(int x, int y, color_t color, float opacity, float z)
             {
-            if (CHECKRANGE && ((x < 0) || (x >= _uni.im->lx()) || (y < 0) || (y >= _uni.im->ly()))) return;
-            if (_uni.zbuf[x + _uni.im->lx() * y] < z)
+            if (CHECKRANGE && ((x < 0) || (x >= _uni.im->lx()) || (y < 0) || (y >= _uni.im->ly()))) return;           
+            ZBUFFER_t& W = _uni.zbuf[x + _uni.im->lx() * y];
+            const ZBUFFER_t aa =  (std::is_same<ZBUFFER_t, uint16_t>::value) ? ((ZBUFFER_t)(z * _uni.wa + _uni.wb)) : ((ZBUFFER_t)z);
+            if (W < aa)
                 {
-                _uni.zbuf[x + _uni.im->lx() * y] = z;
+                W = aa;
                 if (USE_BLENDING) _uni.im->template drawPixel<false>(x, y, color, opacity); else _uni.im->template drawPixel<false>(x, y, color);
                 }
             }

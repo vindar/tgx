@@ -43,7 +43,7 @@ namespace tgx
             _uni.im = nullptr;
             _uni.tex = nullptr; 
             _uni.shader_type = 0; 
-            _uni.zbuf = 0; 
+            _uni.zbuf = nullptr; 
             _uni.facecolor = RGBf(1.0, 1.0, 1.0);
 
             // let's set some default values
