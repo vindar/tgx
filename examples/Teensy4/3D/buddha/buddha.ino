@@ -77,8 +77,8 @@ uint16_t fb[SLX * SLY];
 // internal framebuffer (150K in DMAMEM) used by the ILI9431_T4 library for double buffering.
 DMAMEM uint16_t internal_fb[SLX * SLY];
 
-// zbuffer (300K in DMAMEM)
-DMAMEM float zbuf[SLX * SLY];
+// zbuffer in 16bits precision (150K in DMAMEM)
+DMAMEM uint16_t zbuf[SLX * SLY];           
 
 // image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
@@ -87,7 +87,7 @@ Image<RGB565> im(fb, SLX, SLY);
 const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD;
 
 // the renderer object that performs the 3D drawings
-Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS> renderer;
+Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS, uint16_t> renderer;
 
 
 
@@ -121,7 +121,7 @@ void setup()
     renderer.setOffset(0, 0); //  image = viewport
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
     renderer.setZbuffer(zbuf); // set the z buffer for depth testing
-    renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix.     
+    renderer.setPerspective(45, ((float)SLX) / SLY, 1.0f, 100.0f);  // set the perspective projection matrix.     
     renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflexion. 
     renderer.setShaders(TGX_SHADER_GOURAUD);
     }

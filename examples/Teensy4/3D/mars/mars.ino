@@ -74,9 +74,9 @@ using namespace tgx;
 
 
 
-// extreme 60MHz SPI. 
+// fast 60MHz SPI. 
 //
-// !!!!!!! SET A LOWER SPEED IF ARTIFACT APPEAR ON THE SCREEN !!!!!!!
+// !!!!!!! SET A LOWER SPEED IF ARTIFACT APPEAR ON THE SCREEN, OR TRY 70MHz IF IT WORKS... !!!!!!!
 // 
 #define SPI_SPEED       60000000
 
@@ -98,8 +98,8 @@ uint16_t fb[SLX * SLY];
 // internal framebuffer (150K) used by the ILI9431_T4 library for double buffering.
 uint16_t internal_fb[SLX * SLY]; 
 
-// zbuffer (300K in DMAMEM)
-DMAMEM float zbuf[SLX * SLY];           
+// zbuffer in 16bits precision (150K in DMAMEM)
+DMAMEM uint16_t zbuf[SLX * SLY];              
 
 // image that encapsulates the framebuffer fb.
 Image<RGB565> im(fb, SLX, SLY);
@@ -108,11 +108,11 @@ Image<RGB565> im(fb, SLX, SLY);
 const int LOADED_SHADER = TGX_SHADER_ZBUFFER | TGX_SHADER_PERSPECTIVE | TGX_SHADER_GOURAUD | TGX_SHADER_FLAT | TGX_SHADER_NOTEXTURE |TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_BILINEAR | TGX_SHADER_TEXTURE_WRAP_POW2;
 
 // the 3D renderer object.
-Renderer3D<RGB565, SLX, SLY, LOADED_SHADER> renderer;
+Renderer3D<RGB565, SLX, SLY, LOADED_SHADER, uint16_t> renderer;
 
 // additional memory in DMAMEM (175Kb)
 // used to load temporary objects. 
-DMAMEM int dma_buf[175 * 256]; // 175kb in DMAMEM
+DMAMEM int dma_buf[260 * 256]; // 260kb in DMAMEM
 
 
 // marble image texture in dma memory
@@ -161,7 +161,7 @@ TGX_NOINLINE FLASHMEM void setup()
     renderer.setOffset(0, 0);
     renderer.setImage(&im);
     renderer.setZbuffer(zbuf);
-    renderer.setPerspective(50, ratio, 0.1f, 8000.0f);
+    renderer.setPerspective(50, ratio, 10.0f, 8000.0f);
     renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
 
     // set the lighning direction (to match the sun position in the skybox). 
@@ -351,15 +351,24 @@ void loadEarthTexture()
 
 void loadFalconTexture()
     {
-    memcpy(dma_buf, FalcPlan_texture_data, 256 * 256 * 2);
+    memcpy(dma_buf, FalcPlan_texture_data, 256*256*2);
     FalcPlan_texture.set(dma_buf, iVec2(256, 256), 256); // 128kb
 
     tgx::fVec3* va = (tgx::fVec3*)(dma_buf + (128 * 256));
     memcpy(va, falcon_vs_vert_array, sizeof(falcon_vs_vert_array));
+
+    tgx::fVec3* vt = (tgx::fVec3*)(dma_buf + (128 * 256) + (sizeof(falcon_vs_vert_array) + 3)/4);
+    memcpy(vt, falcon_vs_tex_array, sizeof(falcon_vs_tex_array));
+
+    tgx::fVec3* vn = (tgx::fVec3*)(dma_buf + (128 * 256) + (sizeof(falcon_vs_vert_array) + 3)/4 + (sizeof(falcon_vs_tex_array) + 3)/4);
+    memcpy(vn, falcon_vs_norm_array, sizeof(falcon_vs_norm_array));
+    
     tgx::Mesh3D<tgx::RGB565> * mesh = &falcon_vs_1;
     while (mesh != nullptr)
         {
         mesh->vertice = va;
+        mesh->texcoord = vt;
+        mesh->normal = vn;
         mesh = (tgx::Mesh3D<tgx::RGB565>*)mesh->next;
         }
     }
@@ -1162,4 +1171,3 @@ void loop()
        
 
 /** end of file */
-
