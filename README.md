@@ -1,5 +1,5 @@
 
-***NEW VERSION 0.3 : Improved performance but several API breaking changes !***
+***NEW VERSION 0.5 : the Z-buffer can now be either of type `float` (32 bits) or `uint16_t` (16 bits).***
 
 
 # TGX - a tiny/teensy graphics library
@@ -50,8 +50,8 @@ Here are the library main features.
 ### 3D graphics.
 
 - Heavily optimized "pixel perfect" triangle rasterizer with selectable sub-pixels precision (2, 4, 6 or 8 bits precision). 
-- Depth buffer testing. 
-- Two Wireframe drawing modes: *fast* (simple lines, low quality) or *slow* (high quality, sub-pixel precision, anti-aliasing, custom line thickness)
+- Depth buffer testing (selectable 16 bits or 32 bits precision). 
+- Two wire-frame drawing modes: *fast* (simple lines, low quality) or *slow* (high quality, sub-pixel precision, anti-aliasing, custom line thickness)
 - Flat and Gouraud shading.
 - Phong lightning model with separate ambient/diffuse/specular color components (currently only one directional light source). 
 - Per object material properties. 
