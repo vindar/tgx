@@ -45,7 +45,7 @@ Image<RGB565> imfb1(fb1, LX, LY); // image that encapsulate framebuffer 1
 uint16_t fb2[LX * LY];      // framebuffer 2
 Image<RGB565> imfb2(fb2, LX, LY); // image that encapsulate framebuffer 2
 
-float zbuf[LX * LY]; // zbuffer
+uint16_t zbuf[LX * LY]; // zbuffer in 16 bits precision
 
 Image<RGB565> * front_fb, * back_fb; 
 
@@ -53,7 +53,7 @@ Image<RGB565> * front_fb, * back_fb;
 const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_NOTEXTURE | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
-Renderer3D<RGB565, LX, LY, LOADED_SHADERS> renderer;
+Renderer3D<RGB565, LX, LY, LOADED_SHADERS, uint16_t> renderer;
 
 
 static const int N = 25; // [-1,1]x[-1,1] is subdivided in NxM subsquares
@@ -306,7 +306,7 @@ void setup()
     // setup the 3D renderer.
     renderer.setOffset(0, 0); //  image = viewport
     renderer.setZbuffer(zbuf); // set the z buffer for depth testing    
-    renderer.setPerspective(45, ((float)LX) / LY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
+    renderer.setPerspective(45, ((float)LX) / LY, 0.1f, 50.0f);  // set the perspective projection matrix. 
     renderer.setCulling(0); // in case we see below the sheet. 
     renderer.setImage(currentFB());
     renderer.setTextureQuality(TGX_SHADER_TEXTURE_NEAREST);

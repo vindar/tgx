@@ -75,8 +75,8 @@ uint16_t fb[SLX * SLY];
 // internal framebuffer (150K in DMAMEM) used by the ILI9431_T4 library for double buffering.
 DMAMEM uint16_t internal_fb[SLX * SLY]; 
 
-// zbuffer (300K in DMAMEM)
-DMAMEM float zbuf[SLX * SLY];           
+// zbuffer in 16 bits precision (150K in DMAMEM)
+DMAMEM uint16_t zbuf[SLX * SLY];           
 
 // image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
@@ -85,7 +85,7 @@ Image<RGB565> im(fb, SLX, SLY);
 const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_NOTEXTURE | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
-Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS> renderer;
+Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS, uint16_t> renderer;
 
 static const int N = 45; // [-1,1]x[-1,1] is subdivided in NxM subsquares
 static const int M = 45; // total number of triangles is 2*N*M
@@ -341,7 +341,7 @@ void setup()
     renderer.setOffset(0, 0); //  image = viewport
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
     renderer.setZbuffer(zbuf); // set the z buffer for depth testing    
-    renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 1000.0f);  // set the perspective projection matrix. 
+    renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 50.0f);  // set the perspective projection matrix. 
     renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2); // shader ot use
     renderer.setCulling(0); // in case we see below the sheet. 
 

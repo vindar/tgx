@@ -63,7 +63,7 @@ namespace tgx
     *             are mapped to [0,LX-1]x[0,LY-1] just before rasterization.
     *             It is possible to use a viewport larger than the image drawn onto and set
     *             an offset for this image inside the viewport in order to perform 'tile rendering'.
-    *
+    * 
     * - LOADED_SHADERS :   
     *  
     *   A list of all shaders that can be used with this object. By default, all shaders are loaded. 
@@ -86,8 +86,15 @@ namespace tgx
     *                      
     *   NOTE: if a drawing call is made that requires a disabled shader, then
     *         the drawing operation fails silently (i.e. it is simply ignored). 
+    *         
+    *
+    * - ZBUFFER_t : type used for storing z-buffer values. Must be either `float` or `uint16_t`.
+    *               The z-buffer must be as large as the image (but can be smaller than the viewport
+    *               LXxLY when using an offset).
+    *               -> float : higher quality but requires 4 bytes per pixel.
+    *               -> uint16_t : lower quality (z-fighting may occur) but only 2 bytes per pixel.
     **/
-    template<typename color_t, int LX, int LY, int LOADED_SHADERS = TGX_SHADER_MASK_ALL>
+    template<typename color_t, int LX, int LY,int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float>
     class Renderer3D
     {
        
@@ -95,7 +102,8 @@ namespace tgx
         static_assert((LX > 0) && (LX <= MAXVIEWPORTDIMENSION), "Invalid viewport width.");
         static_assert((LY > 0) && (LY <= MAXVIEWPORTDIMENSION), "Invalid viewport height.");
         static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in color.h");
-
+        static_assert((std::is_same<ZBUFFER_t, float>::value) || (std::is_same<ZBUFFER_t, uint16_t>::value), "The Z-buffer type must be either float or uint16_t");
+            
         
         // true if some kind of texturing may be used. 
         static const int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (TGX_SHADER_TEXTURE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));
@@ -195,6 +203,7 @@ namespace tgx
             {
             _projM = M;
             _projM.invertYaxis();
+            _recompute_wa_wb();
             }
 
 
@@ -216,6 +225,7 @@ namespace tgx
             static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use useOrthographicProjection()");
             _ortho = true;
             _rectifyShaderOrtho();
+            _recompute_wa_wb();
             }
 
 
@@ -227,6 +237,7 @@ namespace tgx
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use usePerspectiveProjection()");
             _ortho = false;
             _rectifyShaderOrtho();
+            _recompute_wa_wb();
             }
 
 
@@ -243,9 +254,9 @@ namespace tgx
         void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use setOrtho()");
-            useOrthographicProjection();
             _projM.setOrtho(left, right, bottom, top, zNear, zFar);
             _projM.invertYaxis();
+            useOrthographicProjection();
             }
 
 
@@ -262,9 +273,9 @@ namespace tgx
         void setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setFrustrum()");
-            usePerspectiveProjection();
             _projM.setFrustum(left, right, bottom, top, zNear, zFar);
             _projM.invertYaxis();
+            usePerspectiveProjection();
             }
 
 
@@ -281,9 +292,9 @@ namespace tgx
         void setPerspective(float fovy, float aspect, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setPerspective()");
-            usePerspectiveProjection();
             _projM.setPerspective(fovy, aspect, zNear, zFar);
             _projM.invertYaxis();
+            usePerspectiveProjection();
             }
 
 
@@ -317,7 +328,7 @@ namespace tgx
         * - Setting a valid zbuffer automatically turns on z-buffering.
         * - Removing the z-buffer (by setting it to nullptr) turns off z-buffering.
         **/
-        void setZbuffer(float* zbuffer)
+        void setZbuffer(ZBUFFER_t * zbuffer)
             {
             static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use setZbuffer()");
             _uni.zbuf = zbuffer;
@@ -339,7 +350,7 @@ namespace tgx
             static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use clearZbuffer()");
             if ((_uni.zbuf) && (_uni.im != nullptr) && (_uni.im->isValid()))
                 {
-                memset(_uni.zbuf, 0, _uni.im->lx() * _uni.im->ly() * sizeof(float));        
+                memset(_uni.zbuf, 0, _uni.im->lx() * _uni.im->ly() * sizeof(ZBUFFER_t));        
                 }
             }
 
@@ -1944,6 +1955,40 @@ namespace tgx
             }
 
 
+
+        /** recompute the wa and wa scaling constants. called after every change of the projection matrix or projection mode */
+        void _recompute_wa_wb()
+            {
+            if (_ortho)
+                { // orthographic projection
+                if (std::is_same<ZBUFFER_t, float>::value)
+                    { // float zbuffer : no normalization needed
+                    _uni.wa = 1.0f;
+                    _uni.wb = 0.0f;
+                    }
+                else
+                    { // uint16_t zbuffer : normalize in [0,65535]
+                    _uni.wa = 32767.4f;
+                    _uni.wb = 0;
+                    }
+                }
+            else
+                { // perspective projection
+                if (std::is_same<ZBUFFER_t, float>::value)
+                    { // float zbuffer : no normalization needed
+                    _uni.wa = 1.0f;
+                    _uni.wb = 0.0f;
+                    }
+                else
+                    { // uint16_t zbuffer : normalize in [0,65535]
+                    _uni.wa = -32768 * _projM[14];
+                    _uni.wb = 32768 * (_projM[10] + 1);
+                    }
+                }
+            }
+
+
+
         /***********************************************************
         * Making sure shader flags are coherent
         ************************************************************/
@@ -2144,10 +2189,12 @@ namespace tgx
 
         template<bool CHECKRANGE, bool USE_BLENDING> void drawPixelZbuf(int x, int y, color_t color, float opacity, float z)
             {
-            if (CHECKRANGE && ((x < 0) || (x >= _uni.im->lx()) || (y < 0) || (y >= _uni.im->ly()))) return;
-            if (_uni.zbuf[x + _uni.im->lx() * y] < z)
+            if (CHECKRANGE && ((x < 0) || (x >= _uni.im->lx()) || (y < 0) || (y >= _uni.im->ly()))) return;           
+            ZBUFFER_t& W = _uni.zbuf[x + _uni.im->lx() * y];
+            const ZBUFFER_t aa =  (std::is_same<ZBUFFER_t, uint16_t>::value) ? ((ZBUFFER_t)(z * _uni.wa + _uni.wb)) : ((ZBUFFER_t)z);
+            if (W < aa)
                 {
-                _uni.zbuf[x + _uni.im->lx() * y] = z;
+                W = aa;
                 if (USE_BLENDING) _uni.im->template drawPixel<false>(x, y, color, opacity); else _uni.im->template drawPixel<false>(x, y, color);
                 }
             }
@@ -2412,7 +2459,7 @@ namespace tgx
         
         fMat4   _projM;             // projection matrix
 
-        RasterizerParams<color_t, color_t>  _uni; // rasterizer param (contain the image pointer and the zbuffer pointer).
+        RasterizerParams<color_t, color_t,ZBUFFER_t>  _uni; // rasterizer param (contain the image pointer and the zbuffer pointer).
 
         float _culling_dir;         // culling direction postive/negative or 0 to disable back face culling.
 

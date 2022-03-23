@@ -79,8 +79,8 @@ uint16_t fb[SLX * SLY];
 // internal framebuffer (150K) used by the ILI9431_T4 library for double buffering.
 DMAMEM uint16_t internal_fb[SLX * SLY]; 
 
-// zbuffer (300K in DMAMEM)
-DMAMEM float zbuf[SLX * SLY];           
+// zbuffer in 16bits precision (150K in DTCM)
+uint16_t zbuf[SLX * SLY];           
 
 // image that encapsulates the framebuffer fb.
 Image<RGB565> im(fb, SLX, SLY);
@@ -95,7 +95,7 @@ Image<RGB565> texture(texture_data, tex_size, tex_size);
 const int LOADED_SHADERS = TGX_SHADER_ORTHO | TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_FLAT | TGX_SHADER_TEXTURE_BILINEAR |TGX_SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
-Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS> renderer;
+Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS, uint16_t> renderer;
 
 
 void setup()
@@ -131,7 +131,8 @@ void setup()
     renderer.setTextureQuality(TGX_SHADER_TEXTURE_BILINEAR);
     renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
     renderer.setShaders(TGX_SHADER_FLAT | TGX_SHADER_TEXTURE );
-
+    renderer.setPerspective(45, ratio, 1.0f, 100.0f);
+    
     // initial texture color
     texture.fillScreen(RGB565_Blue);
     }
@@ -210,9 +211,9 @@ void loop()
         projtype = 1 - projtype;
 
         if (projtype)
-            renderer.setPerspective(45, ratio, 0.1f, 1000.0f);
+            renderer.setPerspective(45, ratio, 1.0f, 100.0f);
         else
-            renderer.setOrtho(-1.8 * ratio, 1.8 * ratio, -1.8, 1.8, 0.1f, 1000.0f);
+            renderer.setOrtho(-1.8 * ratio, 1.8 * ratio, -1.8, 1.8, 1.0f, 100.0f);
 
         tft.printStats();
         diff1.printStats();
@@ -222,3 +223,4 @@ void loop()
        
 
 /** end of file */
+

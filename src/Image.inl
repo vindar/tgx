@@ -1641,7 +1641,7 @@ namespace tgx
         V3.color = RGBf(colorP3);
         V3.A = colorP3.opacity();
 
-        tgx::RasterizerParams<color_t, color_t> rparam;
+        tgx::RasterizerParams<color_t, color_t, float> rparam;
         rparam.im = this;
         rparam.tex = nullptr;
         rparam.opacity = opacity;
@@ -1690,7 +1690,7 @@ namespace tgx
         V3.color = RGBf(C3);
         V3.A = C3.opacity();
 
-        tgx::RasterizerParams<color_t, color_t_tex> rparam;
+        tgx::RasterizerParams<color_t, color_t_tex, float> rparam;
         rparam.im = this;
         rparam.tex = &src_im;
         rparam.opacity = opacity;

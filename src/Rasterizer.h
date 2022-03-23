@@ -159,6 +159,8 @@ namespace tgx
         if ((dx3 < 0) || ((dx3 == 0) && (dy3 < 0))) dO3--; // top left rule (beware, changes total aera).  
         int32_t O3 = (dO3 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO3)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO3 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
 
+        if (O1 + O2 + O3 == 0) return; // do not draw flat triangles
+
         if (sx == 1)
             {
             while (((O1 | O2 | O3) < 0) && (sy > 0))
@@ -277,6 +279,8 @@ namespace tgx
         int64_t dO3 = (((int64_t)(us - P2.x)) * ((int64_t)dx3)) + (((int64_t)(vs - P2.y)) * ((int64_t)dy3));
         if ((dx3 < 0) || ((dx3 == 0) && (dy3 < 0))) dO3--; // top left rule (beware, changes total aera).  
         int32_t O3 = (dO3 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO3)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO3 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
+
+        if (O1 + O2 + O3 == 0) return; // do not draw flat triangles
 
         if (sx == 1)
             {
