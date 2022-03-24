@@ -89,6 +89,19 @@ const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHA
 Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS, uint16_t> renderer;
 
 
+// DTCM and DMAMEM buffers used to cache meshes into RAM
+// which is faster than progmem: caching may lead to significant speedup. 
+
+const int DTCM_buf_size = 35000; // adjust this value to fill unused DTCM but leave at least 20K for the stack to be sure
+char buf_DTCM[DTCM_buf_size];
+
+const int DMAMEM_buf_size = 330000; // adjust this value to fill unused DMAMEM,  leave at least 10k for additional serial objects. 
+DMAMEM char buf_DMAMEM[DMAMEM_buf_size];
+
+const tgx::Mesh3D<tgx::RGB565> * cached_mesh; // pointer to the currently cached mesh. 
+
+
+
 /**
 * Overlay some info about the current mesh on the screen
 **/
@@ -164,6 +177,9 @@ void setup()
 
 void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
     {
+    // cache the first mesh to display in RAM to improve framerate
+    cached_mesh  = tgx::cacheMesh(mesh, buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size);
+  
     const int maxT = 18000; // display model for 15 seconds. 
     elapsedMillis em = 0;
     while (em < maxT)
@@ -191,7 +207,7 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
         renderer.setShaders(shader);
 
         // draw the mesh on the image
-        renderer.drawMesh(mesh, false);
+        renderer.drawMesh(cached_mesh, false);
 
         // overlay some info 
         drawInfo(im, shader, *mesh);

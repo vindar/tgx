@@ -78,7 +78,7 @@ uint16_t fb[SLX * SLY];
 // internal framebuffer (150K in DMAMEM) used by the ILI9431_T4 library for double buffering.
 DMAMEM uint16_t internal_fb[SLX * SLY];
 
-// zbuffer in 16 bits precision (150K in DMAMEM)
+// zbuffer in 16 bits precision (150K in DTCM)
 DMAMEM uint16_t zbuf[SLX * SLY];
 
 // image that encapsulates fb.
@@ -91,6 +91,20 @@ const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHA
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS, uint16_t> renderer;
+
+
+
+// DTCM and DMAMEM buffers used to cache meshes into RAM
+// which is faster than progmem: caching may lead to significant speedup. 
+
+const int DTCM_buf_size = 190000; // adjust this value to fill unused DTCM but leave at least 20K for the stack to be sure
+char buf_DTCM[DTCM_buf_size];
+
+const int DMAMEM_buf_size = 190000; // adjust this value to fill unused DMAMEM,  leave at least 10k for additional serial objects. 
+DMAMEM char buf_DMAMEM[DMAMEM_buf_size];
+
+const tgx::Mesh3D<tgx::RGB565> * cached_mesh; // pointer to the currently cached mesh. 
+
 
 
 
@@ -168,6 +182,9 @@ void setup()
 
 void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
 {
+    // cache the first mesh to display in RAM to improve framerate
+    cached_mesh  = tgx::cacheMesh(mesh, buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size);
+    
     const int maxT = 12000; // display model for 12 seconds. 
     elapsedMillis em = 0;
     while (em < maxT)
@@ -190,20 +207,20 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
         int t = (((em * 3) / maxT) % 3);
 
         if (t == 0)
-            renderer.drawWireFrameMesh(mesh, false);
+            renderer.drawWireFrameMesh(cached_mesh, false);
         else if (t == 1)
             {
             renderer.setShaders(TGX_SHADER_FLAT);
-            renderer.drawMesh(mesh, false);
+            renderer.drawMesh(cached_mesh, false);
             }            
         else
             {
             renderer.setShaders(TGX_SHADER_GOURAUD);
-            renderer.drawMesh(mesh, false);
+            renderer.drawMesh(cached_mesh, false);
             }
 
         // overlay some info 
-        drawInfo(im, t, *mesh);
+        drawInfo(im, t, *cached_mesh);
 
         // update the screen (asynchronously)
         tft.update(fb);
@@ -245,4 +262,5 @@ void loop()
 
 
 /** end of file */
+
 

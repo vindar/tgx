@@ -90,13 +90,24 @@ const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHA
 Renderer3D<RGB565, SLX, SLY, LOADED_SHADERS, uint16_t> renderer;
 
 
+// DTCM and DMAMEM buffers used to cache meshes into RAM
+// which is faster than progmem: caching may lead to significant speedup. 
+
+const int DTCM_buf_size = 200000; // adjust this value to fill unused DTCM but leave at least 10K for the stack to be sure
+char buf_DTCM[DTCM_buf_size];
+
+const int DMAMEM_buf_size = 170000; // adjust this value to fill unused DMAMEM,  leave at least 10k for additional serial objects. 
+DMAMEM char buf_DMAMEM[DMAMEM_buf_size];
+
+// pointer to the cashed mesh.
+const Mesh3D<tgx::RGB565> * buddha_cached;
 
 
 void setup()
     {
     Serial.begin(9600);
 
-    tft.output(&Serial);                // output debug infos to serial port. 
+    tft.output(&Serial); // output debug infos to serial port. 
 
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED))
@@ -124,6 +135,10 @@ void setup()
     renderer.setPerspective(45, ((float)SLX) / SLY, 1.0f, 100.0f);  // set the perspective projection matrix.     
     renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflexion. 
     renderer.setShaders(TGX_SHADER_GOURAUD);
+
+    // cache the mesh in RAM. 
+    buddha_cached = tgx::cacheMesh(&buddha, buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size);
+
     }
 
 
@@ -145,7 +160,7 @@ void loop()
 
     // draw the model onto the memory framebuffer
     elapsedMicros em;
-    renderer.drawMesh(&buddha, false);
+    renderer.drawMesh(buddha_cached, false);
     rt += (1000000.0f / ((int)em));
 
     // update the screen (asynchronous). 

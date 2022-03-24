@@ -111,6 +111,18 @@ const Mesh3D<RGB565>* meshes[2] = { &nanosuit_1,  &R2D2 };
 #endif
 
 
+// DTCM and DMAMEM buffers used to cache meshes into RAM
+// which is faster than progmem: caching may lead to significant speedup. 
+
+const int DTCM_buf_size = 35000; // adjust this value to fill unused DTCM but leave at least 20K for the stack to be sure
+char buf_DTCM[DTCM_buf_size];
+
+const int DMAMEM_buf_size = 330000; // adjust this value to fill unused DMAMEM,  leave at least 10k for additional serial objects. 
+DMAMEM char buf_DMAMEM[DMAMEM_buf_size];
+
+const tgx::Mesh3D<tgx::RGB565> * cached_mesh; // pointer to the currently cached mesh. 
+
+
 
 /**
 * This function computes the object position
@@ -212,6 +224,14 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
 
 
 
+
+// index of the mesh currently displayed
+int meshindex = 0;
+
+// number of frame drawn
+int nbf = 0;
+
+
 void setup()
     {
     Serial.begin(9600);
@@ -252,14 +272,14 @@ void setup()
         for (auto& m : meshes)  m = copyMeshEXTMEM(m);
         }
     #endif
+
+    // cache the first mesh to display in RAM to improve framerate
+    cached_mesh  = tgx::cacheMesh(meshes[meshindex], buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size);
+
     }
 
 
-// index of the mesh currently displayed
-int meshindex = 0;
 
-// number of frame drawn
-int nbf = 0;
 
 
 void loop()
@@ -272,10 +292,17 @@ void loop()
 
     // move the model to it correct position (depending on current time). 
     if (moveModel())
+        {
+        // selct next mesh
         meshindex = (meshindex + 1) % (sizeof(meshes) / sizeof(meshes[0]));
 
+        // cache it in RAM to improve framerate
+        cached_mesh  = tgx::cacheMesh(meshes[meshindex], buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size);
+        }
+
+
     // draw the mesh on the image
-    renderer.drawMesh(meshes[meshindex]);
+    renderer.drawMesh(cached_mesh);
 
     // overlay some info 
     drawInfo(im, shader, meshes[meshindex]);
@@ -294,3 +321,4 @@ void loop()
 
 
 /** end of file */
+
