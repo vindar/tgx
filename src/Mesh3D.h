@@ -60,7 +60,7 @@ namespace tgx
     *
     * face     The array of triangular face.
     *          The array is composed of uint16_t and is divided in
-    *          "chains of triangles". See below to details
+    *          "chains of triangles". See below for details
     *
     * texture  the texture image associated with the model (if any).
     *          nullptr if texture is not present/used currently (ok
@@ -76,9 +76,11 @@ namespace tgx
     * 
     * specular_exponent     specular lightning component.
     *
-    * next      pointer to the next mesh to draw.
+    * next      pointer to the next mesh to draw. nullptr if none.
     * 
+    * bounding_box  model bounding box.
     * 
+    * name  name of the model (optional, nullptr if none). 
     * 
     * DESCRIPTION OF THE FACE ARRAY
     * 
@@ -123,7 +125,7 @@ namespace tgx
     * if DBIT = 0, then the next triangle is [V1, V3, V4]
     * if DBIT = 1, then the next triangle is [V3, V2, V4]
     *
-    * REMARK: the winding order of the trinagle matters (for face culling)  and 
+    * REMARK: the winding order of the triangle matters (for face culling)  and 
     * that is what the DBIT is for.
     * 
     * EXAMPLE: We assume that texcoord = nullptr but normal != nullptr so that
@@ -185,8 +187,55 @@ namespace tgx
         
         fBox3 bounding_box;                 // object bounding box.
         
-        const char* name;                   // mesh name
+        const char* name;                   // mesh name, or nullptr
         };
+
+
+
+
+    /**
+     * Helper method to create a "cache version" of a mesh by copying part of its data into fast
+     * memory buffers. A typical scenario for using this method is when when using a MCU with
+     * limited RAM and slow FLASH memory.
+     * 
+     * The method copy as much as it can into the given RAM1/RAM2 buffers but will leave the arrays
+     * that are to big in their current place. The method never 'fails' but it may return the
+     * original mesh if not caching is possible.
+     * 
+     * A C-string describe which arrays should be copied and in which order:
+     * 
+     * "V" = vertex array. 
+     * "N" = normal array. 
+     * "T" = texture array. 
+     * "I" = texture image  
+     * "F" = face arrays.
+     * 
+     * For example "VIT" means copy vertex arrays first, then image texture and finally texture
+     * coord (if there is still room).
+     * 
+     * REMARKS: 
+     *   1. the memory buffers supplied do NOT have to be be aligned, the method takes care of it.
+     * 
+     *   2. The method also caches the sub-meshes linked after this one.
+     * 
+     * @param           mesh        Pointer to the mesh to cache.
+     * @param [in,out]  ram1_buffer pointer to the first memory buffer (should have the fastest access)
+     * @param           ram1_size   size in bytes of the ram1 buffer.
+     * @param [in,out]  ram2_buffer pointer to a second memory buffer, may be nullptr.
+     * @param           ram2_size   size in bytes of the ram2 buffer or 0 if not supplied.
+     * @param           copy_order  c string that describe which array should be copied and in which order
+     * @param [in,out]  ram1_used   If non-null, the number of bytes ultimately used in ram1_buffer is put here. 
+     * @param [in,out]  ram2_used   If non-null, the number of bytes ultimately used in ram2_buffer is put here. 
+     *
+     * @returns The cached mesh (or the initial mesh if nothing was cached).
+    **/
+    template<typename color_t> const Mesh3D<color_t> * cacheMesh(const Mesh3D<color_t> * mesh,
+                                                           void * ram1_buffer, size_t ram1_size,
+                                                           void * ram2_buffer, size_t ram2_size,
+                                                           const char * copy_order = "VNTIF",
+                                                           size_t * ram1_used = nullptr,
+                                                           size_t * ram2_used = nullptr);
+
 
 
 
@@ -195,24 +244,30 @@ namespace tgx
 
 #if defined(ARDUINO_TEENSY41)
 
+    /******************************************************************************************
+    *
+    * TEENSY 4 SPECIFIC METHODS
+    *
+    *******************************************************************************************/
+
 
     /**
-    * Create a copy of a mesh where (specified) arrays in PROGMEM are copied to EXTMEM.
+    * Create a copy of a mesh where specified arrays in PROGMEM are copied to EXTMEM.
     * 
     * Of course, external ram must be present...
     *
     * - Only arrays in PROGMEM are copied to EXTMEM. Arrays located elsewhere are never copied. 
     * - The source mesh must not have any part located in extmem already or the method will fail.
-    * - In general, it is most helpful to copy textures to extmem but not the other arrays. 
+    * - In practice, it is most helpful to copy textures to extmem (but not the other arrays). 
     * 
     * Return a pointer to the new mesh or nullptr on error (nothing is allocated in that case). 
     * the methods also copies the sub-meshes linked to this one (via the ->next pointer).  
     **/
     template<typename color_t> Mesh3D<color_t>* copyMeshEXTMEM(const Mesh3D<color_t>* mesh,
-                                                                bool copy_textures = true,
                                                                 bool copy_vertices = false,
                                                                 bool copy_normals = false,
                                                                 bool copy_texcoords = false,
+                                                                bool copy_textures = true,
                                                                 bool copy_faces = false);
 
 
@@ -220,221 +275,6 @@ namespace tgx
     * Delete a mesh allocated with copyMeshEXTMEM().
     **/
     template<typename color_t> void freeMeshEXTMEM(Mesh3D<color_t>* mesh);
-
-
-
-
-
-
-
-
-
-    /*******************************************************************************************
-    *
-    * Implementation details
-    * 
-    ********************************************************************************************/
-
-
-
-    /** 
-     * Very stupid, unoptimized "map" container to make sure memory is 
-     * allocated/freed only once for each object.
-     * Algo. inefficient but we dont care here... 
-     **/
-    class _MapPtr
-        {
-        public:
-
-            /** ctor, empty container */
-            _MapPtr() : _nb(0) {}
-
-
-            /** 
-             * free p if p is not a key in the map 
-             * and then add it to the map (with itself as value)
-             **/
-            inline void free(const void* p)
-                {
-                if ((p) && (_find(p) == nullptr))
-                    {
-                    _add(p, (void *)p);
-                    extmem_free((void *)p);
-                    }
-                }
-
-            /** free all value pointers in the map and then clear the map */
-            inline void freeAll()
-                {
-                for (int k = 0; k < _nb; k++)
-                    {
-                    extmem_free(_vals[k]);
-                    }
-                _nb = 0; 
-                }
-
-            /** 
-             * Check if src is a key in the map. 
-             * If true, return the mapped pointer.
-             * If false, allocate size bytes and add to the map src as key
-             * and the allocated adress as value and return the allocated adress. 
-             * 
-             * if allocation fails, free all cvalue pointer in the map and return nulptr
-             **/
-            inline void* malloc(const void* src, size_t size)
-                {
-                if ((src == nullptr) || (size == 0) || (_nb >= MAXPTR))
-                    { // error or map full
-                    freeAll();
-                    return nullptr;
-                    }
-                void* adr = _find(src);
-                if (adr == nullptr)
-                    { // not yet in the map, 
-                    adr = extmem_malloc(size);
-                    if (!TGX_IS_EXTMEM(adr))
-                        { // out of memory
-                        freeAll();
-                        return nullptr;
-                        }
-                    _add(src, adr);
-                    memcpy(adr, src, size);
-                    }
-                return adr;
-                }
-
-        private: 
-
-            /** push a new element, no overflow check ! */
-            void _add(const void* key, void * val) 
-                { 
-                _keys[_nb] = key; 
-                _vals[_nb] = val;
-                _nb++;
-                }
-
-            /** check if a pointer is already registered, return its value or nullptr if not found */
-            void * _find(const void* key) const
-                {
-                for(int k=0; k< _nb; k++)
-                    {
-                    if (_keys[k] == key) return _vals[k];
-                    }
-                return nullptr;
-                }
-
-        private:
-
-            static const int MAXPTR = 256; // max number of entries
-
-            int         _nb;            // number of entries
-            const void* _keys[MAXPTR];  // list of keys
-            void*       _vals[MAXPTR];  // list of values
-        };
-
-
-
-
-
-    template<typename color_t> void freeMeshEXTMEM(Mesh3D<color_t>* mesh)
-        {
-        _MapPtr map;
-        while (TGX_IS_EXTMEM(mesh))
-            {
-            if (TGX_IS_EXTMEM(mesh->vertice)) map.free(mesh->vertice);
-            if (TGX_IS_EXTMEM(mesh->texcoord)) map.free(mesh->texcoord);
-            if (TGX_IS_EXTMEM(mesh->normal)) map.free(mesh->normal);
-            if (TGX_IS_EXTMEM(mesh->face)) map.free(mesh->face);
-            if (TGX_IS_EXTMEM(mesh->texture))
-                {
-                map.free(mesh->texture->data());
-                map.free(mesh->texture);
-                }       
-            Mesh3D<color_t>* m = mesh;
-            mesh = (Mesh3D<color_t> * )mesh->next;
-            map.free(m);
-            }
-        }
-    
-
-
-    template<typename color_t> Mesh3D<color_t>* copyMeshEXTMEM(const Mesh3D<color_t>* mesh,
-                                                                bool copy_textures,
-                                                                bool copy_vertices,
-                                                                bool copy_normals,
-                                                                bool copy_texcoords,
-                                                                bool copy_faces)    
-        {
-        if (external_psram_size <= 0) return nullptr; // no extram present. 
-        if ((mesh == nullptr) || (TGX_IS_EXTMEM(mesh))) return nullptr; // not a valid mesh
-        _MapPtr map;
-        
-        Mesh3D<color_t>* new_mesh = (Mesh3D<color_t> * )map.malloc(mesh, sizeof(Mesh3D<color_t>));
-        if (new_mesh == nullptr) return nullptr;
-        Mesh3D<color_t>* cur_mesh = new_mesh;   
-        while (1)
-            {
-            if (TGX_IS_EXTMEM(mesh->vertice)) { map.freeAll(); return nullptr; }
-            if ((copy_vertices) && (mesh->nb_vertices > 0) && (TGX_IS_PROGMEM(mesh->vertice)))
-                {
-                fVec3 *p = (fVec3 *)map.malloc(mesh->vertice, sizeof(fVec3) * mesh->nb_vertices);
-                if (p == nullptr) return nullptr;
-                cur_mesh->vertice = p;
-                }
-            
-            if (TGX_IS_EXTMEM(mesh->texcoord)) { map.freeAll(); return nullptr; }
-            if ((copy_texcoords) && (mesh->nb_texcoords > 0) && (TGX_IS_PROGMEM(mesh->texcoord)))
-                {
-                fVec2 * p = (fVec2 *)map.malloc(mesh->texcoord, sizeof(fVec2) * mesh->nb_texcoords);
-                if (p == nullptr) return nullptr;
-                cur_mesh->texcoord = p;
-                }
-            
-            if (TGX_IS_EXTMEM(mesh->normal)) { map.freeAll(); return nullptr; }
-            if ((copy_normals) && (mesh->nb_normals > 0) && (TGX_IS_PROGMEM(mesh->normal)))
-                {
-                fVec3* p = (fVec3 *)map.malloc(mesh->normal, sizeof(fVec3) * mesh->nb_normals);
-                if (p == nullptr) return nullptr;
-                cur_mesh->normal = p;
-                }
-                    
-            if (TGX_IS_EXTMEM(mesh->face)) { map.freeAll(); return nullptr; }
-            if ((copy_faces) && (mesh->nb_faces > 0) && (TGX_IS_PROGMEM(mesh->face)))
-                {
-                uint16_t * p = (uint16_t *)map.malloc(mesh->face, mesh->len_face*sizeof(uint16_t));
-                if (p == nullptr) return nullptr;
-                cur_mesh->face = p;
-                }
-            
-            if (TGX_IS_EXTMEM(mesh->texture)) { map.freeAll(); return nullptr; }
-            if ((copy_textures) && (mesh->texture))
-                {
-                if (mesh->texture->isValid())
-                    {
-                    if (TGX_IS_EXTMEM(mesh->texture->data())) { map.freeAll(); return nullptr; }
-                    if (TGX_IS_PROGMEM(mesh->texture->data()))
-                        {
-                        int imlen = mesh->texture->stride() * mesh->texture->height();
-                        color_t* imdata = (color_t*)map.malloc(mesh->texture->data(), imlen * sizeof(color_t));
-                        if (imdata == nullptr) return nullptr;
-                        Image<color_t>* imp = (Image<color_t>*)map.malloc(mesh->texture, sizeof(Image<color_t>)); // dirty, should use placement new...
-                        if (imp == nullptr) return nullptr;
-                        imp->set(imdata, { mesh->texture->width() , mesh->texture->height() }, mesh->texture->stride());
-                        cur_mesh->texture = imp;
-                        }
-                    }
-                }
-
-            if (mesh->next == nullptr) return new_mesh;
-            if (TGX_IS_EXTMEM(mesh->next)) { map.freeAll(); return nullptr; }
-            Mesh3D<color_t>* next_cur_mesh = (Mesh3D<color_t>*)map.malloc(mesh->next, sizeof(Mesh3D<color_t>));
-            if (next_cur_mesh == nullptr) return nullptr;
-            cur_mesh->next = next_cur_mesh;
-            cur_mesh = next_cur_mesh;
-            mesh = mesh->next;
-            }
-        return new_mesh; 
-        }
 
 
 
@@ -454,6 +294,10 @@ namespace tgx
 
 
 }
+
+
+
+#include "Mesh3D.inl"
 
 
 #endif
