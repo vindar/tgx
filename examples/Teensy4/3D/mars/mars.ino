@@ -168,6 +168,14 @@ TGX_NOINLINE FLASHMEM void setup()
     tgx::fVec3 lightdir(-0.40f, -0.30f, 1.0f);
     renderer.setLightDirection(lightdir);
     renderer.setLightAmbiant(tgx::RGBf(1, 1, 1));
+    
+    // copy falcon mesh to extmem (if present) on Teensy 4.1
+#if defined(ARDUINO_TEENSY41)
+    if (external_psram_size > 0)
+        { 
+        falcon_vs_1 = *(copyMeshEXTMEM(&falcon_vs_1));
+        }
+#endif
     }
 
 
