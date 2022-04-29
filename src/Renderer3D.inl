@@ -65,8 +65,7 @@ namespace tgx
 
             this->setMaterial({ 0.75f, 0.75f, 0.75f }, 0.15f, 0.7f, 0.5f, 8); // just in case: silver color and some default reflexion param...
             this->_precomputeSpecularTable(8);
-
-            setZbuffer(nullptr);
+            
             setShaders(TGX_SHADER_FLAT);
             setTextureWrappingMode(TGX_SHADER_TEXTURE_CLAMP); // slow but safer (no need to be power of 2)
             setTextureQuality(TGX_SHADER_TEXTURE_NEAREST); // dirty but fast
