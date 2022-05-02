@@ -33,6 +33,7 @@
 #if defined(TEENSYDUINO) || defined(ESP32)
     #include "Arduino.h" // include Arduino to get PROGMEM macro and others
     #define TGX_ON_ARDUINO
+    #define TGX_USE_FAST_INV_SQRT_TRICK
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE __attribute__((noinline, noclone)) FLASHMEM
 #else    
@@ -182,6 +183,44 @@ namespace tgx
         const int32_t max32 = 2147483647;
         const int32_t nB = max32 / ((A > 0) ? A : (-A));
         return ((B <= nB) ? B : nB);
+        }
+
+
+    TGX_INLINE inline float fast_sqrt(float x)
+        {
+        return sqrtf(x);
+        }
+
+
+    TGX_INLINE inline double fast_sqrt(double x)
+        {
+        return sqrt(x);
+        }
+
+
+    TGX_INLINE inline float fast_invsqrt(float x)
+        {
+#if defined (TGX_USE_FAST_INV_SQRT_TRICK)
+        const float threehalfs = 1.5F;
+        const float x2 = x * 0.5F;
+        float y = x;
+        int32_t i = *(int32_t*)&y;
+        i = 0x5f3759df - (i >> 1);
+        y = *(float*)&i;
+        y = y * (threehalfs - (x2 * y * y));
+//        y = y * (threehalfs - (x2 * y * y));  // 2nd iteration, this can be removed
+        return y;
+#else
+        const float s = fast_sqrt(x);
+        return (s != 0) ? (1.0f / s) : 1.0f;
+#endif
+        }
+
+
+    TGX_INLINE inline double fast_invsqrt(double x)
+        {
+        const double y = fast_sqrt(x);
+        return (y != 0) ? (1.0 / y) : 1.0;
         }
 
 }

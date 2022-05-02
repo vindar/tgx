@@ -2880,7 +2880,7 @@ private:
             float dx = pax - bax * h, dy = pay - bay * h;
             dx = dx * dx + dy * dy;
             if (dx < dr) return 0.0f;
-            return sqrtf(dx);
+            return tgx::fast_sqrt(dx);
             }
 
 
@@ -2892,7 +2892,7 @@ private:
             {
             float h = fmaxf(fminf((pax * bax + pay * bay) / (bax * bax + bay * bay), 1.0f), 0.0f);
             float dx = pax - bax * h, dy = pay - bay * h;
-            return sqrtf(dx * dx + dy * dy) + h * dr;
+            return tgx::fast_sqrt(dx * dx + dy * dy) + h * dr;
             }
 
 

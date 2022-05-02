@@ -312,7 +312,16 @@ namespace tgx
          **/
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat norm() const
             { 
-            return (Tfloat)sqrt((Tfloat)(x*x + y*y +z*z));
+            return (Tfloat)tgx::fast_sqrt((Tfloat)(x*x + y*y +z*z));
+            }
+
+        /**
+         * Compute the inverse euclidian norm of the vector (return a Tfloat).
+        * Tfloat selects the floating point type used for computation.
+         **/
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat invnorm() const
+            { 
+            return (Tfloat)tgx::fast_invsqrt((Tfloat)(x*x + y*y +z*z));
             }
 
 
@@ -322,13 +331,10 @@ namespace tgx
         **/
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void normalize()
             { 
-            Tfloat a = norm<Tfloat>(); 
-            if (a > 0) 
-                {
-                x = (T)(x / a);
-                y = (T)(y / a);
-                z = (T)(z / a);
-                }
+            Tfloat a = invnorm<Tfloat>(); 
+            x = (T)(x * a);
+            y = (T)(y * a);
+            z = (T)(z * a);
             }
 
 
@@ -385,7 +391,7 @@ namespace tgx
             const T xx = V1.x - V2.y;
             const T yy = V1.y - V2.y;
             const T zz = V1.z - V2.z;
-            return (Tfloat)sqrt((Tfloat)(xx * xx + yy * yy + zz * zz));
+            return (Tfloat)tgx::fast_sqrt((Tfloat)(xx * xx + yy * yy + zz * zz));
             }
 
 

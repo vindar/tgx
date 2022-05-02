@@ -1416,7 +1416,7 @@ namespace tgx
         void drawAdaptativeSphere(float quality = 1.0f)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
             drawSphere(nb_stacks * 2 - 2, nb_stacks, nullptr);
             }   
 
@@ -1442,7 +1442,7 @@ namespace tgx
         void drawAdaptativeSphere(const Image<color_t>* texture, float quality = 1.0f)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
             drawSphere(nb_stacks * 2 - 2, nb_stacks, texture);
             }
 
@@ -1894,7 +1894,7 @@ namespace tgx
         void drawWireFrameAdaptativeSphere(float quality = 1.0f)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
             drawWireFrameSphere(nb_stacks*2 - 2, nb_stacks);
             }   
 
@@ -1909,7 +1909,7 @@ namespace tgx
         void drawWireFrameAdaptativeSphere(float quality, float thickness)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
             drawWireFrameSphere(nb_stacks * 2 - 2, nb_stacks, thickness);
             }   
 
@@ -1925,7 +1925,7 @@ namespace tgx
         void drawWireFrameAdaptativeSphere(float quality, float thickness, color_t color, float opacity)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)sqrtf(l * quality); // Why this formula ? Well, why not...
+            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
             drawWireFrameSphere(nb_stacks * 2 - 2, nb_stacks, thickness, color, opacity);
             }
 

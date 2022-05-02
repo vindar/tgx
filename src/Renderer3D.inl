@@ -1966,7 +1966,7 @@ namespace tgx
                 Q0.zdivide();
                 Q2.zdivide();
                 }
-            return sqrtf(((Q2.x - Q0.x) * (Q2.x - Q0.x) * LX * LX) + ((Q2.y - Q0.y) * (Q2.y - Q0.y) * LY * LY)); // diameter on the screen
+            return tgx::fast_sqrt(((Q2.x - Q0.x) * (Q2.x - Q0.x) * LX * LX) + ((Q2.y - Q0.y) * (Q2.y - Q0.y) * LY * LY)); // diameter on the screen
             }
 
 
