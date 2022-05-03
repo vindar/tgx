@@ -204,9 +204,11 @@ namespace tgx
         const float threehalfs = 1.5F;
         const float x2 = x * 0.5F;
         float y = x;
-        int32_t i = *(int32_t*)&y;
-        i = 0x5f3759df - (i >> 1);
-        y = *(float*)&i;
+        int32_t * pi = (int32_t*)&y;
+        int32_t i = *pi;
+        i = 0x5f3759df - (i >> 1);        
+        float * py = (float *)&i;
+        y = *py;
         y = y * (threehalfs - (x2 * y * y));
 //        y = y * (threehalfs - (x2 * y * y));  // 2nd iteration, this can be removed
         return y;
