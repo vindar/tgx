@@ -500,13 +500,13 @@ namespace tgx
 
         /**
         * return the aspect ratio of the box lx()/(ly().
-        * return -1.0f for an empty box.
+        * return -1 for an empty box.
         * Remark: lx() and ly() are computed differently depending on 
         * wether T is an integer or a floating point type ! 
         **/
         template<typename Tfloat = DefaultFPType<T> > inline  Tfloat ratio() const
             {
-            if (isEmpty()) return -1.0f;
+            if (isEmpty()) return (Tfloat)(-1);
             return ((Tfloat)(lx())) / ((Tfloat)(ly()));
             }
 

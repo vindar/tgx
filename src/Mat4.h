@@ -356,15 +356,15 @@ namespace tgx
         **/
         void setLookAt(T eyeX, T eyeY, T eyeZ, T centerX, T centerY, T centerZ, T upX, T upY, T upZ)
             {
-             const Vec4<T> f = normalize(Vec4<T>{ centerX - eyeX, centerY - eyeY, centerZ - eyeZ, 0.0f });
-            Vec4<T> up = normalize(Vec4<T>{ upX, upY, upZ, 0.0f });
+             const Vec4<T> f = normalize(Vec4<T>{ centerX - eyeX, centerY - eyeY, centerZ - eyeZ, (T)0 });
+            Vec4<T> up = normalize(Vec4<T>{ upX, upY, upZ, (T)0 });
             up = normalize(up - (dotProduct(up, f) * f));
             const Vec4<T> s = crossProduct(f, up);
             const Vec4<T> u = crossProduct(s, f);
             M[0] = s.x;    M[4] = s.y;    M[8] = s.z;     M[12] = -s.x * eyeX - s.y * eyeY - s.z * eyeZ;
             M[1] = u.x;    M[5] = u.y;    M[9] = u.z;     M[13] = -u.x * eyeX - u.y * eyeY - u.z * eyeZ;
             M[2] = -f.x;   M[6] = -f.y;   M[10] = -f.z;   M[14] = f.x * eyeX + f.y * eyeY + f.z * eyeZ;
-            M[3] = 0;      M[7] = 0;      M[11] = 0;      M[15] = 1.0f;            
+            M[3] = 0;      M[7] = 0;      M[11] = 0;      M[15] = (T)1;            
             }
 
 
@@ -485,7 +485,7 @@ namespace tgx
             {
             for (int j = 0; j < 4; j++)
                 {
-                R.M[i + j*4] = 0.0;
+                R.M[i + j*4] = (T)0;
                 for (int k = 0; k < 4; k++) { R.M[i + j * 4] += A.M[i + k * 4] * B.M[k + j * 4]; }
                 }
             }
