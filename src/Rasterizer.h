@@ -51,7 +51,15 @@ namespace tgx
     * 
     * TEMPLATE PARAMETERS :
     *
-    * - (LX, LY)     the viewport size
+    * - SHADER_FUNCTION     the shader function to call.     
+    * 
+    * - RASTERIZER_PARAMS   the type of the object containing the 'uniform' data (ie data that are not   
+    *                       specific to a vertex). 
+    *                       
+    * 
+    * PARAMETERS:
+    *
+    * - LX, LY       the viewport size
     *                The image itself may be smaller than the viewport and an offset may be
     *                specified so it is possible to draw the whole viewport  in 'tile" mode
     *                be calling this method several time with different offsets.
@@ -63,15 +71,7 @@ namespace tgx
     *                 |      6        |      4096 x 4096        |
     *                 |      4        |      8192 x 8192        |
     *                 |      2        |     16384 x 16384       |
-    *
-    *
-    * - SHADER_FUNCTION     the shader function to call.     
-    * 
-    * - RASTERIZER_PARAMS   the type of the object containing the 'uniform' data (ie data that are not   
-    *                       specific to a vertex). 
-    *                       
-    * 
-    * PARAMETERS:
+
     *
     * - V0,V1,V2     Normalized coordinates of the vertices of the triangle (x,y,z,w)  where,
     *                'a la opengl' the viewport is mapped to [-1, 1]^2.
@@ -96,132 +96,10 @@ namespace tgx
     * REMARKS: color are passed in RGBf format irrespectively of the image color type to improve
     *          quality and simplify handling of different image types.
     **/
-    
-    template<int LX, int LY, typename SHADER_FUNCTION, typename RASTERIZER_PARAMS> 
-    void rasterizeTriangle(const RasterizerVec4 & V0, const RasterizerVec4 & V1, const RasterizerVec4 & V2, const int32_t offset_x, const int32_t offset_y, const RASTERIZER_PARAMS & data, SHADER_FUNCTION shader_fun)
-        {
-
-        // assuming that clipping was already perfomed and that V0, V1, V2 are in a reasonable "range" so no overflow will occur. 
-        const float mx = (float)(TGX_RASTERIZE_MULT128(LX));
-        const float my = (float)(TGX_RASTERIZE_MULT128(LY));
-        const iVec2  P0((int32_t)floorf(V0.x * mx), (int32_t)floorf(V0.y * my));
-
-        const iVec2 sP1((int32_t)floorf(V1.x * mx), (int32_t)floorf(V1.y * my));
-        const iVec2 sP2((int32_t)floorf(V2.x * mx), (int32_t)floorf(V2.y * my));
-
-        int32_t xmin = (min(min(P0.x, sP1.x), sP2.x) + TGX_RASTERIZE_MULT128(LX)) / TGX_RASTERIZE_SUBPIXEL256; // use division and not bitshift  
-        int32_t xmax = (max(max(P0.x, sP1.x), sP2.x) + TGX_RASTERIZE_MULT128(LX)) / TGX_RASTERIZE_SUBPIXEL256; // in case values are negative.
-        int32_t ymin = (min(min(P0.y, sP1.y), sP2.y) + TGX_RASTERIZE_MULT128(LY)) / TGX_RASTERIZE_SUBPIXEL256; //
-        int32_t ymax = (max(max(P0.y, sP1.y), sP2.y) + TGX_RASTERIZE_MULT128(LY)) / TGX_RASTERIZE_SUBPIXEL256; //
-
-        // intersect the sub-image with the triangle bounding box.          
-        int32_t sx = data.im->lx();
-        int32_t sy = data.im->ly();
-        int32_t ox = offset_x;
-        int32_t oy = offset_y;
-        if (ox < xmin) { sx -= (xmin - ox); ox = xmin; }
-        if (ox + sx > xmax) { sx = xmax - ox + 1; }
-        if (sx <= 0) return;
-        if (oy < ymin) { sy -= (ymin - oy); oy = ymin; }
-        if (oy + sy > ymax) { sy = ymax - oy + 1; }
-        if (sy <= 0) return;
-
-        const int64_t a = (((int64_t)(sP2.x - P0.x)) * ((int64_t)(sP1.y - P0.y))) - (((int64_t)(sP2.y - P0.y)) * ((int64_t)(sP1.x - P0.x))); // aera
-
-        if (a == 0) return; // do not draw flat triangles
-
-        const RasterizerVec4& fP1 = (a > 0) ? V1 : V2;
-        const RasterizerVec4& fP2 = (a > 0) ? V2 : V1;
-        const iVec2& P1 = (a > 0) ? sP1 : sP2;
-        const iVec2& P2 = (a > 0) ? sP2 : sP1;
-
-        const int32_t us = TGX_RASTERIZE_MULT256(ox) - TGX_RASTERIZE_MULT128(LX) + TGX_RASTERIZE_SUBPIXEL128;   // start pixel position
-        const int32_t vs = TGX_RASTERIZE_MULT256(oy) - TGX_RASTERIZE_MULT128(LY) + TGX_RASTERIZE_SUBPIXEL128;   //
-
-        ox -= offset_x;
-        oy -= offset_y;
-
-        const int32_t dx1 = P1.y - P0.y;
-        const int32_t dy1 = P0.x - P1.x;
-        int64_t dO1 = (((int64_t)(us - P0.x)) * ((int64_t)dx1)) + (((int64_t)(vs - P0.y)) * ((int64_t)dy1));
-        if ((dx1 < 0) || ((dx1 == 0) && (dy1 < 0))) dO1--; // top left rule (beware, changes total aera).
-        int32_t O1 = (dO1 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO1)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO1 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
-
-        const int32_t dx2 = P2.y - P1.y;
-        const int32_t dy2 = P1.x - P2.x;
-        int64_t dO2 = (((int64_t)(us - P1.x)) * ((int64_t)dx2)) + (((int64_t)(vs - P1.y)) * ((int64_t)dy2));
-        if ((dx2 < 0) || ((dx2 == 0) && (dy2 < 0))) dO2--; // top left rule (beware, changes total aera).  
-        int32_t O2 = (dO2 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO2)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO2 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
-
-        const int32_t dx3 = P0.y - P2.y;
-        const int32_t dy3 = P2.x - P0.x;
-        int64_t dO3 = (((int64_t)(us - P2.x)) * ((int64_t)dx3)) + (((int64_t)(vs - P2.y)) * ((int64_t)dy3));
-        if ((dx3 < 0) || ((dx3 == 0) && (dy3 < 0))) dO3--; // top left rule (beware, changes total aera).  
-        int32_t O3 = (dO3 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO3)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO3 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
-
-        if (O1 + O2 + O3 == 0) return; // do not draw flat triangles
-
-        if (sx == 1)
-            {
-            while (((O1 | O2 | O3) < 0) && (sy > 0))
-                {
-                sy--;
-                oy++;
-                O1 += dy1;
-                O2 += dy2;
-                O3 += dy3;
-                }
-            if (sy == 0) return;
-            }
-        else if (sy == 1)
-            {
-            while (((O1 | O2 | O3) < 0) && (sx > 0))
-                {
-                sx--;
-                ox++;
-                O1 += dx1;
-                O2 += dx2;
-                O3 += dx3;
-                }
-            if (sx == 0) return;
-            }
-
-        if (dx1 > 0)
-            {
-            shader_fun(ox + (data.im->stride() * oy), sx, sy,
-                dx1, dy1, O1, fP2,
-                dx2, dy2, O2, V0,
-                dx3, dy3, O3, fP1,
-                data);
-            }
-        else if (dx2 > 0)
-            {
-            shader_fun(ox + (data.im->stride() * oy), sx, sy,
-                dx2, dy2, O2, V0,
-                dx3, dy3, O3, fP1,
-                dx1, dy1, O1, fP2,
-                data);
-            }
-        else
-            {
-            shader_fun(ox + (data.im->stride() * oy), sx, sy,
-                dx3, dy3, O3, fP1,
-                dx1, dy1, O1, fP2,
-                dx2, dy2, O2, V0,
-                data);
-            }
-        return;
-        }
-
-
-
-
-
-
-    /** UNTEMPLATED VERSION ON IMAGE SIZE: SLOWER... */
     template<typename SHADER_FUNCTION, typename RASTERIZER_PARAMS> 
     void rasterizeTriangle(const int LX, const int LY, const RasterizerVec4 & V0, const RasterizerVec4 & V1, const RasterizerVec4 & V2, const int32_t offset_x, const int32_t offset_y, const RASTERIZER_PARAMS & data, SHADER_FUNCTION shader_fun)
         {
+        
         // assuming that clipping was already perfomed and that V0, V1, V2 are in a reasonable "range" so no overflow will occur. 
         const float mx = (float)(TGX_RASTERIZE_MULT128(LX));
         const float my = (float)(TGX_RASTERIZE_MULT128(LY));

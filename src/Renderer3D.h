@@ -52,18 +52,13 @@ namespace tgx
     /**
     * Class that manages the drawing of 3D objects.
     *
-    * The class create a virtual viewport with a given size LX,LY and provides methods to draw
-    * 3D primitives onto this viewport (to which is attached an Image<color_t> object)
+    * The class create a virtual viewport and provides methods to draw 3D primitives 
+    * onto this viewport (to which is attached an Image<color_t> object)
     *
     * Template parameters:
     *
     * - color_t : the color type for the image to draw onto.
     *
-    * - LX , LY : Viewport size (up to 4096x4096). The normalized coordinates in [-1,1]x[-1,1]
-    *             are mapped to [0,LX-1]x[0,LY-1] just before rasterization.
-    *             It is possible to use a viewport larger than the image drawn onto and set
-    *             an offset for this image inside the viewport in order to perform 'tile rendering'.
-    * 
     * - LOADED_SHADERS :   
     *  
     *   A list of all shaders that can be used with this object. By default, all shaders are loaded. 
@@ -89,22 +84,18 @@ namespace tgx
     *         
     *
     * - ZBUFFER_t : type used for storing z-buffer values. Must be either `float` or `uint16_t`.
-    *               The z-buffer must be as large as the image (but can be smaller than the viewport
-    *               LXxLY when using an offset).
+    *               The z-buffer must be as large as the image (but can be smaller than the viewport when using an offset).
     *               -> float : higher quality but requires 4 bytes per pixel.
     *               -> uint16_t : lower quality (z-fighting may occur) but only 2 bytes per pixel.
     **/
-    template<typename color_t, int LX, int LY,int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float>
+    template<typename color_t, int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float>
     class Renderer3D
     {
        
         static const int MAXVIEWPORTDIMENSION = 2048 * (1 << ((8 - TGX_RASTERIZE_SUBPIXEL_BITS) >> 1));
-        static_assert((LX > 0) && (LX <= MAXVIEWPORTDIMENSION), "Invalid viewport width.");
-        static_assert((LY > 0) && (LY <= MAXVIEWPORTDIMENSION), "Invalid viewport height.");
         static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in color.h");
         static_assert((std::is_same<ZBUFFER_t, float>::value) || (std::is_same<ZBUFFER_t, uint16_t>::value), "The Z-buffer type must be either float or uint16_t");
-            
-        
+                    
         // true if some kind of texturing may be used. 
         static const int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (TGX_SHADER_TEXTURE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));
         
@@ -150,6 +141,28 @@ namespace tgx
         void setImage(Image<color_t>* im)
             {
             _uni.im = im;            
+            }
+
+
+        /**
+        * Set the size of the viewport, up to 4096x4096. 
+        * The normalized coordinates in [-1,1]x[-1,1} are mapped to [0,lx-1]x[0,ly-1] just before rasterization.
+        * It is possible to use a viewport larger than the image drawn onto by using an offset for the image inside 
+        * the viewport in order to perform 'tile rendering'.        
+        **/
+        void setViewportSize(int lx, int ly)
+            {
+            _lx = clamp(lx, 2, MAXVIEWPORTDIMENSION);
+            _ly = clamp(ly, 2, MAXVIEWPORTDIMENSION);
+            }
+
+        /**
+        * Set the size of the viewport, up to 4096x4096. 
+        * Same as above but in vector form. 
+        **/
+        void setViewPortSize(const iVec2& viewport_dim)
+            {
+            setViewportSize(viewport_dim.x, viewport_dim.y);
             }
 
 
@@ -596,8 +609,8 @@ namespace tgx
             {
             fVec4 Q = _projM * _viewM.mult1(P);
             if (!_ortho) Q.zdivide();
-            Q.x = ((Q.x + 1) * LX) / 2 - _ox;
-            Q.y = ((Q.y + 1) * LY) / 2 - _oy;
+            Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
+            Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
             return iVec2((int)roundfp(Q.x), (int)roundfp(Q.y));
             }
 
@@ -763,8 +776,8 @@ namespace tgx
             {
             fVec4 Q = _projM * _r_modelViewM.mult1(P);
             if (!_ortho) Q.zdivide();
-            Q.x = ((Q.x + 1) * LX) / 2 - _ox;
-            Q.y = ((Q.y + 1) * LY) / 2 - _oy;
+            Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
+            Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
             return iVec2(roundfp(Q.x), roundfp(Q.y));
             }
 
@@ -1947,9 +1960,16 @@ namespace tgx
         ******************************************************************************************/
 
 
+        /** Choose bounds so that we have some margin of error on both side.  */
+        TGX_INLINE float _clipbound_xy() const
+            { 
+            return (256 + 3*((MAXVIEWPORTDIMENSION * 256) / ((_lx > _ly) ? _lx : _ly))) / 1024.0f; // use integer computation up to the last divide
+            //return (1.0f + 3.0f * (((float)MAXVIEWPORTDIMENSION) / ((_lx > _ly) ? _lx : _ly))) / 4.0f;                                  
+            }
+
 
         /** Make sure we can perform a drawing operation */
-        TGX_INLINE bool _validDraw()
+        TGX_INLINE bool _validDraw() const
             {
             return ((_uni.im != nullptr) && (_uni.im->isValid()));
             }
@@ -2109,9 +2129,6 @@ namespace tgx
         * DRAWING STUFF
         ************************************************************/
 
-        // Choose bounds so that we have some margin of error on both side. 
-        static constexpr float CLIPBOUND_XY = (1.0f + 3.0f * (((float)MAXVIEWPORTDIMENSION) / ((LX > LY) ? LX : LY))) / 4.0f;
-
 
         /** draw a triangle and takes care of clipping (slow, called by the other methods only when necessary) */
         void _drawTriangleClipped(const int RASTER_TYPE,
@@ -2260,10 +2277,10 @@ namespace tgx
             if ((bb.minX == 0) && (bb.maxX == 0) && (bb.minY == 0) && (bb.maxY == 0) && (bb.minZ == 0) && (bb.maxZ == 0))
                 return false; // do not discard if the bounding box is uninitialized.
 
-            const float ilx = 2.0f / LX;
+            const float ilx = 2.0f / _lx;
             const float bx = (_ox - 1) * ilx - 1.0f;
             const float Bx = (_ox + _uni.im->width() + 1) * ilx - 1.0f;
-            const float ily = 2.0f / LY;
+            const float ily = 2.0f / _ly;
             const float by = (_oy - 1) * ily - 1.0f;
             const float By = (_oy + _uni.im->height() + 1) * ily - 1.0f;
 
@@ -2292,10 +2309,10 @@ namespace tgx
          * coords are given after z-divide. */
         bool _discardTriangle(const fVec4 & P1, const fVec4 & P2, const fVec4 & P3)
             {
-            const float ilx = 2.0f / LX;
+            const float ilx = 2.0f / _lx;
             const float bx = (_ox - 1) * ilx - 1.0f;
             const float Bx = (_ox + _uni.im->width() + 1) * ilx - 1.0f;
-            const float ily = 2.0f / LY;
+            const float ily = 2.0f / _ly;
             const float by = (_oy - 1) * ily - 1.0f;
             const float By = (_oy + _uni.im->height() + 1) * ily - 1.0f;
 
@@ -2452,6 +2469,8 @@ namespace tgx
         ************************************************************/
 
         // *** general parameters ***
+
+        int     _lx, _ly;           // viewport dimension        
 
         int     _ox, _oy;           // image offset w.r.t. the viewport        
 

@@ -1,4 +1,6 @@
 
+***NEW VERSION 0.6 : [breaking changes] removed viewport dimension as template parameter, the dimension can now be set at runtime.***
+
 ***NEW VERSION 0.5 : the Z-buffer can now be either of type `float` (32 bits) or `uint16_t` (16 bits).***
 
 
