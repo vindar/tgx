@@ -53,7 +53,7 @@ Image<RGB565> * front_fb, * back_fb;
 const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_NOTEXTURE | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
-Renderer3D<RGB565, LX, LY, LOADED_SHADERS, uint16_t> renderer;
+Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
 
 
 static const int N = 25; // [-1,1]x[-1,1] is subdivided in NxM subsquares
@@ -304,6 +304,7 @@ void setup()
     tft.useFrameBuffer(true);
  
     // setup the 3D renderer.
+    renderer.setViewportSize(LX,LY); // viewport = screen                
     renderer.setOffset(0, 0); //  image = viewport
     renderer.setZbuffer(zbuf); // set the z buffer for depth testing    
     renderer.setPerspective(45, ((float)LX) / LY, 0.1f, 50.0f);  // set the perspective projection matrix. 

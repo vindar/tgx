@@ -45,32 +45,34 @@
 using namespace tgx;
 
 
-
+//
 // DEFAULT WIRING USING SPI 0 ON TEENSY 4/4.1
-// Recall that DC must be on a valid cs pin !!! 
-#define PIN_SCK     13      // mandatory 
+//
+#define PIN_SCK     13      // mandatory
 #define PIN_MISO    12      // mandatory
 #define PIN_MOSI    11      // mandatory
-#define PIN_DC      10      // mandatory
-#define PIN_CS      9       // mandatory (but can be any digital pin)
-#define PIN_RESET   6       // could be omitted (set to 255) yet it is better to use (any) digital pin whenever possible.
-#define PIN_BACKLIGHT 255   // optional. Set this only if the screen LED pin is connected directly to the Teensy 
-#define PIN_TOUCH_IRQ 255   // optional. Set this only if touch is connected on the same spi bus (otherwise, set it to 255)
-#define PIN_TOUCH_CS  255   // optional. Set this only if touch is connected on the same spi bus (otherwise, set it to 255)
+#define PIN_DC      10      // mandatory, can be any pin but using pin 10 (or 36 or 37 on T4.1) provides greater performance
+
+#define PIN_CS      9       // optional (but recommended), can be any pin.  
+#define PIN_RESET   6       // optional (but recommended), can be any pin. 
+#define PIN_BACKLIGHT 255   // optional, set this only if the screen LED pin is connected directly to the Teensy.
+#define PIN_TOUCH_IRQ 255   // optional. set this only if the touchscreen is connected on the same SPI bus
+#define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
 
 
-// ALTERNATE WIRING USING SPI 1 ON TEENSY 4/4.1
-// Recall that DC must be on a valid cs pin !!! 
-
+//
+// ALTERNATE WIRING USING SPI 1 ON TEENSY 4/4.1 
+//
 //#define PIN_SCK     27      // mandatory 
 //#define PIN_MISO    1       // mandatory
 //#define PIN_MOSI    26      // mandatory
-//#define PIN_DC      0       // mandatory
-//#define PIN_CS      30      // mandatory (but can be any digital pin)
-//#define PIN_RESET   29      // could be omitted (set to 255) yet it is better to use (any) digital pin whenever possible.
-//#define PIN_BACKLIGHT 255   // optional. Set this only if the screen LED pin is connected directly to the Teensy 
-//#define PIN_TOUCH_IRQ 255   // optional. Set this only if touch is connected on the same spi bus (otherwise, set it to 255)
-//#define PIN_TOUCH_CS  255   // optional. Set this only if touch is connected on the same spi bus (otherwise, set it to 255)
+//#define PIN_DC      0       // mandatory, can be any pin but using pin 0 (or 38 on T4.1) provides greater performance
+
+//#define PIN_CS      30      // optional (but recommended), can be any pin.  
+//#define PIN_RESET   29      // optional (but recommended), can be any pin.  
+//#define PIN_BACKLIGHT 255   // optional, set this only if the screen LED pin is connected directly to the Teensy. 
+//#define PIN_TOUCH_IRQ 255   // optional. set this only if the touchscreen is connected on the same SPI bus
+//#define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
 
 
 
@@ -108,7 +110,7 @@ Image<RGB565> im(fb, SLX, SLY);
 const int LOADED_SHADER = TGX_SHADER_ZBUFFER | TGX_SHADER_PERSPECTIVE | TGX_SHADER_GOURAUD | TGX_SHADER_FLAT | TGX_SHADER_NOTEXTURE |TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_BILINEAR | TGX_SHADER_TEXTURE_WRAP_POW2;
 
 // the 3D renderer object.
-Renderer3D<RGB565, SLX, SLY, LOADED_SHADER, uint16_t> renderer;
+Renderer3D<RGB565, LOADED_SHADER, uint16_t> renderer;
 
 // additional memory in DMAMEM (175Kb)
 // used to load temporary objects. 
@@ -158,6 +160,7 @@ TGX_NOINLINE FLASHMEM void setup()
     const float ratio = ((float)SLX) / SLY;
 
     // setup the 3D renderer with perspective projection
+    renderer.setViewportSize(SLX,SLY);
     renderer.setOffset(0, 0);
     renderer.setImage(&im);
     renderer.setZbuffer(zbuf);

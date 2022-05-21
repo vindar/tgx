@@ -72,7 +72,7 @@ Image<RGB565> * front_fb, * back_fb;
 const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
-Renderer3D<RGB565, LX, LY, LOADED_SHADERS, uint16_t> renderer;
+Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
 
 
 void setup() 
@@ -87,10 +87,11 @@ void setup()
     tft.useFrameBuffer(true);
 
     // setup the 3D renderer.
+    renderer.setViewportSize(LX,LY);                 
+    renderer.setOffset(0, 0);
     renderer.setZbuffer(zbuf); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)LX) / LY, 1.0f, 100.0f);  // set the perspective projection matrix.     
     renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflexion. 
-    renderer.setOffset(0, 0);
     renderer.setCulling(1);
     renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE);
     renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
