@@ -128,20 +128,12 @@ namespace tgx
 
 
         /**
-        * Constructor. Set some default parameters.
+        * Constructor. 
+        *
+        * Optionally set some parameters: viewport size, destination image and zbuffer (if used). 
         **/
-        Renderer3D();
+        Renderer3D(const iVec2& viewportSize = {0,0}, Image<color_t> * im = nullptr, ZBUFFER_t * zbuffer = nullptr);
 
-
-
-        /**
-        * Set the image that will be drawn onto.
-        * The image can be smaller than the viewport.
-        **/
-        void setImage(Image<color_t>* im)
-            {
-            _uni.im = im;            
-            }
 
 
         /**
@@ -152,8 +144,8 @@ namespace tgx
         **/
         void setViewportSize(int lx, int ly)
             {
-            _lx = clamp(lx, 2, MAXVIEWPORTDIMENSION);
-            _ly = clamp(ly, 2, MAXVIEWPORTDIMENSION);
+            _lx = clamp(lx, 0, MAXVIEWPORTDIMENSION);
+            _ly = clamp(ly, 0, MAXVIEWPORTDIMENSION);
             }
 
         /**
@@ -163,6 +155,17 @@ namespace tgx
         void setViewPortSize(const iVec2& viewport_dim)
             {
             setViewportSize(viewport_dim.x, viewport_dim.y);
+            }
+
+
+
+        /**
+        * Set the image that will be drawn onto.
+        * The image can be smaller than the viewport.
+        **/
+        void setImage(Image<color_t>* im)
+            {
+            _uni.im = im;            
             }
 
 
@@ -1971,7 +1974,7 @@ namespace tgx
         /** Make sure we can perform a drawing operation */
         TGX_INLINE bool _validDraw() const
             {
-            return ((_uni.im != nullptr) && (_uni.im->isValid()));
+            return ((_lx > 0) && (_ly > 0) && (_uni.im != nullptr) && (_uni.im->isValid()));
             }
 
 

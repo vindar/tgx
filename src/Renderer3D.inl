@@ -34,27 +34,27 @@ namespace tgx
 
 
         template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::Renderer3D() : _currentpow(-1), _uni(), _culling_dir(1)
+        Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::Renderer3D(const iVec2& viewportSize, Image<color_t> * im, ZBUFFER_t * zbuffer) : _currentpow(-1), _uni(), _culling_dir(1)
             {                        
-            setViewportSize(320, 240); // default size
-            setOffset(0, 0); // no offset
-            
-            _shaders = 0; 
-
+            _shaders = 0;             
             _ortho = TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS) ? false : true; // default projection is perspective if not disabled)
             
-            _uni.im = nullptr;
             _uni.tex = nullptr; 
             _uni.shader_type = 0; 
             _uni.zbuf = nullptr; 
             _uni.facecolor = RGBf(1.0f, 1.0f, 1.0f);
 
+            setViewportSize(viewportSize.x, viewportSize.y);
+            setImage(im);
+            setOffset(0, 0); // no offset
+
             // let's set some default values
             fMat4 M;
+            const float ar = _validDraw() ? (((float)_lx) / _ly) : 1.5f;
             if (_ortho)
-                M.setOrtho(-16.0f, 16.0f, -12.0f, 12.0f, 1.0f, 1000.0f);
+                M.setOrtho(-10*ar, 10*ar, -10.0f, 10.0f, 1.0f, 100.0f);
             else
-                M.setPerspective(45.0f, 1.5f, 1.0f, 1000.0f);  // 45 degree, 4/3 image ratio and minz = 1 maxz = 1000.
+                M.setPerspective(45.0f, ar, 1.0f, 100.0f);
                 
             this->setProjectionMatrix(M);
 
@@ -72,6 +72,7 @@ namespace tgx
             setShaders(TGX_SHADER_FLAT);
             setTextureWrappingMode(TGX_SHADER_TEXTURE_CLAMP); // slow but safer (no need to be power of 2)
             setTextureQuality(TGX_SHADER_TEXTURE_NEAREST); // dirty but fast
+            setZbuffer(zbuffer);
             }
 
 
