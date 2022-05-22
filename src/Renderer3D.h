@@ -152,7 +152,7 @@ namespace tgx
         * Set the size of the viewport, up to 4096x4096. 
         * Same as above but in vector form. 
         **/
-        void setViewPortSize(const iVec2& viewport_dim)
+        void setViewportSize(const iVec2& viewport_dim)
             {
             setViewportSize(viewport_dim.x, viewport_dim.y);
             }
