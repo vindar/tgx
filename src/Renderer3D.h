@@ -2280,10 +2280,10 @@ namespace tgx
             if ((bb.minX == 0) && (bb.maxX == 0) && (bb.minY == 0) && (bb.maxY == 0) && (bb.minZ == 0) && (bb.maxZ == 0))
                 return false; // do not discard if the bounding box is uninitialized.
 
-            const float ilx = 2.0f / _lx;
+            const float ilx = 2.0f * fast_inv((float)_lx);
             const float bx = (_ox - 1) * ilx - 1.0f;
             const float Bx = (_ox + _uni.im->width() + 1) * ilx - 1.0f;
-            const float ily = 2.0f / _ly;
+            const float ily = 2.0f * fast_inv((float)_ly);
             const float by = (_oy - 1) * ily - 1.0f;
             const float By = (_oy + _uni.im->height() + 1) * ily - 1.0f;
 
@@ -2312,10 +2312,10 @@ namespace tgx
          * coords are given after z-divide. */
         bool _discardTriangle(const fVec4 & P1, const fVec4 & P2, const fVec4 & P3)
             {
-            const float ilx = 2.0f / _lx;
+            const float ilx = 2.0f  * fast_inv((float)_lx);
             const float bx = (_ox - 1) * ilx - 1.0f;
             const float Bx = (_ox + _uni.im->width() + 1) * ilx - 1.0f;
-            const float ily = 2.0f / _ly;
+            const float ily = 2.0f  * fast_inv((float)_ly);
             const float by = (_oy - 1) * ily - 1.0f;
             const float By = (_oy + _uni.im->height() + 1) * ily - 1.0f;
 

@@ -33,7 +33,9 @@
 #if defined(TEENSYDUINO) || defined(ESP32)
     #include "Arduino.h" // include Arduino to get PROGMEM macro and others
     #define TGX_ON_ARDUINO
-    #define TGX_USE_FAST_INV_SQRT_TRICK
+    //#define TGX_USE_FAST_INV_SQRT_TRICK
+    #define TGX_USE_FAST_SQRT_TRICK
+    #define TGX_USE_FAST_INV_TRICK    
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE __attribute__((noinline, noclone)) FLASHMEM
 #else    
@@ -186,43 +188,115 @@ namespace tgx
         }
 
 
+
+    TGX_INLINE inline float fast_inv(float x)
+        {
+// Disable fast inverse: not precise enough for texture mapping...  
+//#if defined (TGX_USE_FAST_INV_TRICK)            
+//        union
+//            {
+//            float f;
+//            uint32_t u;
+//            } v;
+//        v.f = (x < 0) ? -x : x;
+//        v.u = 0x5f375a86 - (v.u >> 1);        
+//        return (x < 0) ? (-v.f * v.f) : (v.f * v.f);
+//#else 
+        return 1.0f / x;     
+//#endif            
+        }
+
+
+    TGX_INLINE inline double fast_inv(double x)
+        {  
+// Disable fast inverse: not precise enough for texture mapping...  
+//#if defined (TGX_USE_FAST_INV_TRICK)            
+//        union
+//            {
+//            double f;
+//            uint64_t u;
+//            } v;
+//        v.f= (x < 0) ? -x : x;;
+//        v.u=0x5fe6eb50c7b537a9-(v.u>>1);        
+//        return (x < 0) ? (-v.f * v.f) : (v.f * v.f);
+//#else 
+        return 1.0 / x;
+//#endif            
+        }
+
+
+
     TGX_INLINE inline float fast_sqrt(float x)
         {
-        return sqrtf(x);
+#if defined (TGX_USE_FAST_SQRT_TRICK)            
+        union
+            {
+            float f;
+            uint32_t u;
+            } v;
+        v.f = x;
+        v.u = 0x5f375a86 - (v.u >> 1);
+        return x*v.f;            
+#else 
+        return sqrtf(x);    
+#endif            
         }
 
 
     TGX_INLINE inline double fast_sqrt(double x)
         {
-        return sqrt(x);
+#if defined (TGX_USE_FAST_SQRT_TRICK)            
+        union
+            {
+            double f;
+            uint64_t u;
+            } v;
+        v.f=x;
+        v.u=0x5fe6eb50c7b537a9-(v.u>>1);
+        return x*v.f;            
+#else 
+        return sqrt(x);    
+#endif            
         }
 
 
     TGX_INLINE inline float fast_invsqrt(float x)
-        {
-#if defined (TGX_USE_FAST_INV_SQRT_TRICK)
-        const float threehalfs = 1.5F;
-        const float x2 = x * 0.5F;
-        float y = x;
-        int32_t * pi = (int32_t*)&y;
-        int32_t i = *pi;
-        i = 0x5f3759df - (i >> 1);        
-        float * py = (float *)&i;
-        y = *py;
-        y = y * (threehalfs - (x2 * y * y));
-//        y = y * (threehalfs - (x2 * y * y));  // 2nd iteration, this can be removed
-        return y;
-#else
+        {            
+#if defined (TGX_USE_FAST_INV_SQRT_TRICK)            
+        // fast reciprocal square root: https://en.wikipedia.org/wiki/Fast_inverse_square_root
+        // code from https://github.com/JarkkoPFC/meshlete/blob/master/src/core/math/fast_math.inl
+        union
+            {
+            float f;
+            uint32_t u;
+            } v;
+        v.f = x;
+        v.u = 0x5f375a86 - (v.u >> 1); // slightly more precise than the original 0x5f3759df
+        return v.f;            
+#else      
         const float s = fast_sqrt(x);
-        return (s != 0) ? (1.0f / s) : 1.0f;
+        return ((s == 0) ? 1.0f : fast_inv(s));
 #endif
         }
 
 
     TGX_INLINE inline double fast_invsqrt(double x)
-        {
-        const double y = fast_sqrt(x);
-        return (y != 0) ? (1.0 / y) : 1.0;
+        {            
+#if defined (TGX_USE_FAST_INV_SQRT_TRICK)            
+        // fast reciprocal square root: https://en.wikipedia.org/wiki/Fast_inverse_square_root
+        // code from https://github.com/JarkkoPFC/meshlete/blob/master/src/core/math/fast_math.inl
+        union
+            {
+            double f;
+            uint64_t u;
+            } v;
+        v.f=x;
+        v.u=0x5fe6eb50c7b537a9 - (v.u >> 1);
+        return v.f;            
+#else                        
+        const double s = fast_sqrt(x);
+        return ((s == 0) ? 1.0 : fast_inv(s));
+#endif
         }
 
 }

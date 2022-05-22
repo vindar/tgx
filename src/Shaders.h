@@ -202,7 +202,7 @@ namespace tgx
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
         const int32_t aera = O1 + O2 + O3;
 
-        const float invaera = 1.0f / aera;
+        const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
         const float fP2a = fP2.w * invaera;
         const float fP3a = fP3.w * invaera;
@@ -289,7 +289,7 @@ namespace tgx
 
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
-                const float icw = 1.0f / cw;
+                const float icw = fast_inv(cw);
                                 
                 color_t col;
                 if (TEXTURE_BILINEAR)
@@ -352,7 +352,7 @@ namespace tgx
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
         const int32_t aera = O1 + O2 + O3;
 
-        const float invaera = 1.0f / aera;
+        const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
         const float fP2a = fP2.w * invaera;
         const float fP3a = fP3.w * invaera;
@@ -448,7 +448,7 @@ namespace tgx
 
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
-                const float icw = 1.0f / cw;
+                const float icw = fast_inv(cw);
                 
                 color_t col;
                 if (TEXTURE_BILINEAR)
@@ -520,7 +520,7 @@ namespace tgx
 
         const float wa = data.wa;
         const float wb = data.wb;
-        const float invaera = 1.0f / aera;
+        const float invaera = fast_inv((float)aera);
         const float invaera_wa = invaera * wa;
         const float fP1a = fP1.w * invaera_wa;
         const float fP2a = fP2.w * invaera_wa;
@@ -624,7 +624,7 @@ namespace tgx
 
         const float wa = data.wa;
         const float wb = data.wb;
-        const float invaera = 1.0f / aera;
+        const float invaera = fast_inv((float)aera);
         const float invaera_wa = invaera * wa;
         const float fP1a = fP1.w * invaera_wa;
         const float fP2a = fP2.w * invaera_wa;
@@ -726,7 +726,7 @@ namespace tgx
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
         const int32_t aera = O1 + O2 + O3;
 
-        const float invaera = 1.0f / aera;
+        const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
         const float fP2a = fP2.w * invaera;
         const float fP3a = fP3.w * invaera;
@@ -820,7 +820,7 @@ namespace tgx
                 if (W < aa)
                     {
                     W = aa;
-                    const float icw = 1.0f / cw;
+                    const float icw = fast_inv(cw);
                     color_t col;
                     if (TEXTURE_BILINEAR)
                         {
@@ -891,7 +891,7 @@ namespace tgx
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
         const int32_t aera = O1 + O2 + O3;
 
-        const float invaera = 1.0f / aera;
+        const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
         const float fP2a = fP2.w * invaera;
         const float fP3a = fP3.w * invaera;
@@ -992,7 +992,7 @@ namespace tgx
                 if (W < aa)
                     {
                     W = aa;
-                    const float icw = 1.0f / cw;
+                    const float icw = fast_inv(cw);
 
                     color_t col;
                     if (TEXTURE_BILINEAR)
@@ -1059,7 +1059,7 @@ namespace tgx
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
         const int32_t aera = O1 + O2 + O3;
 
-        const float invaera = 1.0f / aera;
+        const float invaera = fast_inv((float)aera);
 
         const RGBf& cf = (RGBf)data.facecolor;
         const int fPR = (int)(256 * cf.R);
@@ -1199,7 +1199,7 @@ namespace tgx
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
         const int32_t aera = O1 + O2 + O3;
 
-        const float invaera = 1.0f / aera;
+        const float invaera = fast_inv((float)aera);
 
         const RGBf& cf1 = (RGBf)fP1.color;
         const RGBf& cf2 = (RGBf)fP2.color;
@@ -1359,7 +1359,7 @@ namespace tgx
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
         const int32_t aera = O1 + O2 + O3;
 
-        const float invaera = 1.0f / aera;
+        const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
         const float fP2a = fP2.w * invaera;
         const float fP3a = fP3.w * invaera;
@@ -1524,7 +1524,7 @@ namespace tgx
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
         const int32_t aera = O1 + O2 + O3;
 
-        const float invaera = 1.0f / aera;
+        const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
         const float fP2a = fP2.w * invaera;
         const float fP3a = fP3.w * invaera;
@@ -1994,7 +1994,7 @@ namespace tgx
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
         const int32_t aera = O1 + O2 + O3;
 
-        const float invaera = 1.0f / aera;
+        const float invaera = fast_inv((float)aera);
 
         const color_t_tex mask_color = data.mask_color;
 

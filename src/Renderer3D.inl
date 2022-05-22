@@ -2034,43 +2034,43 @@ namespace tgx
             float epsx = 0, epsy = 0; 
             if (texture_front) 
                 {
-                epsx = 1.0f / (texture_front->lx() - 1); 
-                epsy = 1.0f / (texture_front->ly() - 1);
+                epsx = fast_inv((float)(texture_front->lx() - 1)); 
+                epsy = fast_inv((float)(texture_front->ly() - 1));
                 }
             tgx::fVec2 t_front[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
             if (texture_back) 
                 {
-                epsx = 1.0f / (texture_back->lx() - 1); 
-                epsy = 1.0f / (texture_back->ly() - 1);
+                epsx = fast_inv((float)(texture_back->lx() - 1)); 
+                epsy = fast_inv((float)(texture_back->ly() - 1));
                 }
             tgx::fVec2 t_back[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
             if (texture_top) 
                 {
-                epsx = 1.0f / (texture_top->lx() - 1); 
-                epsy = 1.0f / (texture_top->ly() - 1);
+                epsx = fast_inv((float)(texture_top->lx() - 1)); 
+                epsy = fast_inv((float)(texture_top->ly() - 1));
                 }
             tgx::fVec2 t_top[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
             if (texture_bottom) 
                 {
-                epsx = 1.0f / (texture_bottom->lx() - 1); 
-                epsy = 1.0f / (texture_bottom->ly() - 1);
+                epsx = fast_inv((float)(texture_bottom->lx() - 1)); 
+                epsy = fast_inv((float)(texture_bottom->ly() - 1));
                 }
             tgx::fVec2 t_bottom[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
             if (texture_left) 
                 {
-                epsx = 1.0f / (texture_left->lx() - 1); 
-                epsy = 1.0f / (texture_left->ly() - 1);
+                epsx = fast_inv((float)(texture_left->lx() - 1)); 
+                epsy = fast_inv((float)(texture_left->ly() - 1));
                 }
             tgx::fVec2 t_left[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
             if (texture_right) 
                 {
-                epsx = 1.0f / (texture_right->lx() - 1); 
-                epsy = 1.0f / (texture_right->ly() - 1);
+                epsx = fast_inv((float)(texture_right->lx() - 1)); 
+                epsy = fast_inv((float)(texture_right->ly() - 1));
                 }
             tgx::fVec2 t_right[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
