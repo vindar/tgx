@@ -211,7 +211,7 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
         int t = (((em * 3) / maxT) % 3);
 
         if (t == 0)
-            renderer.drawWireFrameMesh(cached_mesh, false);
+            renderer.drawWireFrameMesh(cached_mesh);
         else if (t == 1)
             {
             renderer.setShaders(TGX_SHADER_FLAT);
