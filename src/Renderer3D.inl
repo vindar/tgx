@@ -44,7 +44,7 @@ namespace tgx
             _uni.zbuf = nullptr; 
             _uni.facecolor = RGBf(1.0f, 1.0f, 1.0f);
 
-            setViewportSize(viewportSize.x, viewportSize.y);
+            setViewportSize(viewportSize);
             setImage(im);
             setOffset(0, 0); // no offset
 
