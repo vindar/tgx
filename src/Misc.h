@@ -33,9 +33,9 @@
 #if defined(TEENSYDUINO) || defined(ESP32)
     #include "Arduino.h" // include Arduino to get PROGMEM macro and others
     #define TGX_ON_ARDUINO
-    //#define TGX_USE_FAST_INV_SQRT_TRICK
-    #define TGX_USE_FAST_SQRT_TRICK
-    #define TGX_USE_FAST_INV_TRICK    
+    #define TGX_USE_FAST_INV_SQRT_TRICK
+    //#define TGX_USE_FAST_SQRT_TRICK  // BUG BUG DO NOT USE
+    //#define TGX_USE_FAST_INV_TRICK   // BUG BUG DO NOT USE 
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE __attribute__((noinline, noclone)) FLASHMEM
 #else    
@@ -191,7 +191,7 @@ namespace tgx
 
     TGX_INLINE inline float fast_inv(float x)
         {
-// Disable fast inverse: not precise enough for texture mapping...  
+// NOT PRECISE ENOUGH !            
 //#if defined (TGX_USE_FAST_INV_TRICK)            
 //        union
 //            {
@@ -209,7 +209,7 @@ namespace tgx
 
     TGX_INLINE inline double fast_inv(double x)
         {  
-// Disable fast inverse: not precise enough for texture mapping...  
+// NOT PRECISE ENOUGH !
 //#if defined (TGX_USE_FAST_INV_TRICK)            
 //        union
 //            {
@@ -228,35 +228,37 @@ namespace tgx
 
     TGX_INLINE inline float fast_sqrt(float x)
         {
-#if defined (TGX_USE_FAST_SQRT_TRICK)            
-        union
-            {
-            float f;
-            uint32_t u;
-            } v;
-        v.f = x;
-        v.u = 0x5f375a86 - (v.u >> 1);
-        return x*v.f;            
-#else 
+// NOT PRECISDE ENOUGH !            
+//#if defined (TGX_USE_FAST_SQRT_TRICK)            
+//        union
+//            {
+//            float f;
+//            uint32_t u;
+//            } v;
+//        v.f = x;
+//        v.u = 0x5f375a86 - (v.u >> 1);
+//        return x*v.f;            
+//#else 
         return sqrtf(x);    
-#endif            
+//#endif            
         }
 
 
     TGX_INLINE inline double fast_sqrt(double x)
         {
-#if defined (TGX_USE_FAST_SQRT_TRICK)            
-        union
-            {
-            double f;
-            uint64_t u;
-            } v;
-        v.f=x;
-        v.u=0x5fe6eb50c7b537a9-(v.u>>1);
-        return x*v.f;            
-#else 
+// NOT PRECISE ENOUGH !            
+//#if defined (TGX_USE_FAST_SQRT_TRICK)            
+//        union
+//            {
+//            double f;
+//            uint64_t u;
+//            } v;
+//        v.f=x;
+//        v.u=0x5fe6eb50c7b537a9-(v.u>>1);
+//        return x*v.f;            
+//#else 
         return sqrt(x);    
-#endif            
+//#endif            
         }
 
 
