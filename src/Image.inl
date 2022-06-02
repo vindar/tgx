@@ -262,7 +262,7 @@ namespace tgx
 
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
-    void Image<color_t>::_blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, BLEND_OPERATOR& blend_op)
+    void Image<color_t>::_blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
         {
         if (!_blitClip(sprite, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
         _blendRegion(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, blend_op);
@@ -270,7 +270,7 @@ namespace tgx
 
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
-    void Image<color_t>::_blendRegionUp(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, BLEND_OPERATOR& blend_op)
+    void Image<color_t>::_blendRegionUp(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, const BLEND_OPERATOR& blend_op)
         {
         for (int j = 0; j < sy; j++)
             {
@@ -285,7 +285,7 @@ namespace tgx
 
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
-    void Image<color_t>::_blendRegionDown(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, BLEND_OPERATOR& blend_op)
+    void Image<color_t>::_blendRegionDown(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, const BLEND_OPERATOR& blend_op)
         {
         for (int j = sy - 1; j >= 0; j--)
             {

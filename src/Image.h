@@ -895,7 +895,7 @@ namespace tgx
          * @param [in,out]  blend_op        The blending operator
         **/
         template<typename color_t_src, typename BLEND_OPERATOR> 
-        void blend(const Image<color_t_src>& sprite, iVec2 upperleftpos, BLEND_OPERATOR& blend_op)
+        void blend(const Image<color_t_src>& sprite, iVec2 upperleftpos, const BLEND_OPERATOR& blend_op)
             {
             _blend(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), blend_op);
             }
@@ -2809,10 +2809,10 @@ private:
 
 
         template<typename color_t_src, typename BLEND_OPERATOR>
-        void _blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, BLEND_OPERATOR& blend_op);
+        void _blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const  BLEND_OPERATOR& blend_op);
 
         template<typename color_t_src, typename BLEND_OPERATOR>
-        static void _blendRegion(color_t* pdest, int dest_stride, color_t_src * psrc, int src_stride, int sx, int sy, BLEND_OPERATOR& blend_op)
+        static void _blendRegion(color_t* pdest, int dest_stride, color_t_src * psrc, int src_stride, int sx, int sy, const  BLEND_OPERATOR& blend_op)
             {
             if ((size_t)pdest <= (size_t)psrc)
                 _blendRegionUp(pdest, dest_stride, psrc, src_stride, sx, sy, blend_op);
@@ -2821,10 +2821,10 @@ private:
             }
 
         template<typename color_t_src, typename BLEND_OPERATOR>
-        static void _blendRegionUp(color_t* pdest, int dest_stride, color_t_src * psrc, int src_stride, int sx, int sy, BLEND_OPERATOR& blend_op);
+        static void _blendRegionUp(color_t* pdest, int dest_stride, color_t_src * psrc, int src_stride, int sx, int sy, const  BLEND_OPERATOR& blend_op);
 
         template<typename color_t_src, typename BLEND_OPERATOR>
-        static void _blendRegionDown(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, BLEND_OPERATOR& blend_op);
+        static void _blendRegionDown(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, const  BLEND_OPERATOR& blend_op);
 
 
 
