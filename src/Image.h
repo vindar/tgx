@@ -621,6 +621,10 @@ namespace tgx
     ****************************************************************************/
 
 
+
+
+
+
         /**
          * Blit a sprite at a given position on the image.
          * 
@@ -867,6 +871,41 @@ namespace tgx
             {
             _blitScaledRotated<color_t_src,CACHE_SIZE, true, true>(src_im, transparent_color, anchor_src, anchor_dst, scale, angle_degrees, opacity);
             }
+
+
+        /**
+         * Blend a sprite at a given position on the image using a custom blending operator.
+         * 
+         * The blending operator 'blend_op' can be a function/functor. It takes as input the color
+         * of the source (sprite) pixel and the color of the dest. pixel and return the blended color.
+         * 
+         * Thus, it must be callable in the form:
+         *   
+         *       blend_op(col_src, col_dst)
+         * 
+         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it 
+         * must return a valid color (of any type but preferably of type color_t for best performance).
+         * 
+         * Remark: If only part of the sprite should be blended onto this image, one simply has to create a
+         * temporary sub-image like so: 'blend(sprite.getCrop(subbox),upperleftpos, blend_op)'. No  copy is
+         * performed when creating (shallow) sub-image so this does not incur any slowdown.
+         *
+         * @param           sprite          The sprite image to blend.
+         * @param           upperleftpos    Position of the upper left corner of the sprite in the image.
+         * @param [in,out]  blend_op        The blending operator
+        **/
+        template<typename color_t_src, typename BLEND_OPERATOR> 
+        void blend(const Image<color_t_src>& sprite, iVec2 upperleftpos, BLEND_OPERATOR& blend_op)
+            {
+            _blend(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), blend_op);
+            }
+
+
+
+
+
+
+
 
 
         /**
@@ -2715,14 +2754,10 @@ private:
 
         bool _blitClip(const Image& sprite, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy);
 
+
+
         void _blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy);
 
-        void _blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
-
-        void _blitMasked(const Image& sprite, color_t transparent_color, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
-
-
-        /** blit a region while taking care of possible overlap */
         static void _blitRegion(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
             {
             if ((size_t)pdest <= (size_t)psrc) 
@@ -2731,16 +2766,31 @@ private:
                 _blitRegionDown(pdest, dest_stride, psrc, src_stride, sx, sy);
             }
 
-        /** blit a region while taking care of possible overlap */
-        static void _blendRegion(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
+        static void _blitRegionUp(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy);
+
+        static void _blitRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy);
+
+
+
+
+        void _blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
+
+        static void _blitRegion(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
             {
             if ((size_t)pdest <= (size_t)psrc)
-                _blendRegionUp(pdest, dest_stride, psrc, src_stride, sx, sy, opacity);
+                _blitRegionUp(pdest, dest_stride, psrc, src_stride, sx, sy, opacity);
             else
-                _blendRegionDown(pdest, dest_stride, psrc, src_stride, sx, sy, opacity);
+                _blitRegionDown(pdest, dest_stride, psrc, src_stride, sx, sy, opacity);
             }
 
-        /** blit a region while taking care of possible overlap */
+        static void _blitRegionUp(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
+
+        static void _blitRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
+
+
+
+        void _blitMasked(const Image& sprite, color_t transparent_color, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
+
         static void _maskRegion(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
             {
             if ((size_t)pdest <= (size_t)psrc)
@@ -2749,21 +2799,41 @@ private:
                 _maskRegionDown(transparent_color, pdest, dest_stride, psrc, src_stride, sx, sy, opacity);
             }
 
-        static void _blitRegionUp(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy);
-
-        static void _blitRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy);
-
-        static void _blendRegionUp(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
-
-        static void _blendRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
-
         static void _maskRegionUp(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
 
         static void _maskRegionDown(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
 
 
+
+
+
+
+        template<typename color_t_src, typename BLEND_OPERATOR>
+        void _blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, BLEND_OPERATOR& blend_op);
+
+        template<typename color_t_src, typename BLEND_OPERATOR>
+        static void _blendRegion(color_t* pdest, int dest_stride, color_t_src * psrc, int src_stride, int sx, int sy, BLEND_OPERATOR& blend_op)
+            {
+            if ((size_t)pdest <= (size_t)psrc)
+                _blendRegionUp(pdest, dest_stride, psrc, src_stride, sx, sy, blend_op);
+            else
+                _blendRegionDown(pdest, dest_stride, psrc, src_stride, sx, sy, blend_op);
+            }
+
+        template<typename color_t_src, typename BLEND_OPERATOR>
+        static void _blendRegionUp(color_t* pdest, int dest_stride, color_t_src * psrc, int src_stride, int sx, int sy, BLEND_OPERATOR& blend_op);
+
+        template<typename color_t_src, typename BLEND_OPERATOR>
+        static void _blendRegionDown(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, BLEND_OPERATOR& blend_op);
+
+
+
+
+
+
         template<typename color_t_src, int CACHE_SIZE, bool USE_BLENDING, bool USE_MASK>
         void _blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity);
+
 
 
         /***************************************

@@ -113,98 +113,8 @@ namespace tgx
         }
 
 
-    template<typename color_t>
-    void Image<color_t>::_blitRegionUp(color_t * pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
-        {
-        // TODO, make faster with specialization (writing 32bit at once etc...) 
-        for (int j = 0; j < sy; j++)
-            {
-            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = 0; i < sx; i++) { pdest2[i] = psrc2[i]; }
-            }
-        }
 
-
-    template<typename color_t>
-    void Image<color_t>::_blitRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
-        {
-        // TODO, make faster with specialization (writing 32bit at once etc...)
-        for (int j = sy - 1; j >= 0; j--)
-            {
-            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = sx - 1; i >= 0; i--) { pdest2[i] = psrc2[i]; }
-            }   
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::_blendRegionUp(color_t * pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
-        {
-        const int op256 = (int)(opacity * 256);
-        for (int j = 0; j < sy; j++)
-            {
-            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = 0; i < sx; i++) 
-                { 
-                pdest2[i].blend256(psrc2[i], op256);
-                }
-            }
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::_blendRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
-        {
-        const int op256 = (int)(opacity * 256);
-        for (int j = sy - 1; j >= 0; j--)
-            {
-            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = sx - 1; i >= 0; i--) 
-                {
-                pdest2[i].blend256(psrc2[i], op256);
-                }
-            }   
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::_maskRegionUp(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
-        {
-        const int op256 = (int)(opacity * 256);
-        for (int j = 0; j < sy; j++)
-            {
-            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = 0; i < sx; i++) 
-                { 
-                color_t c = psrc2[i];
-                if (c != transparent_color) pdest2[i].blend256(c, op256);
-                }
-            }
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::_maskRegionDown(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
-        {
-        const int op256 = (int)(opacity * 256);
-        for (int j = sy - 1; j >= 0; j--)
-            {
-            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = sx - 1; i >= 0; i--) 
-                {
-                color_t c = psrc2[i];
-                if (c != transparent_color) pdest2[i].blend256(c, op256);
-                }
-            }   
-        }
-
-
+    
     template<typename color_t>
     bool Image<color_t>::_blitClip(const Image& sprite, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy)
         {
@@ -223,6 +133,10 @@ namespace tgx
         }
 
 
+
+
+
+
     template<typename color_t>
     void Image<color_t>::_blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy)
         {
@@ -230,14 +144,75 @@ namespace tgx
         _blitRegion(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy);
         }
 
+    template<typename color_t>
+    void Image<color_t>::_blitRegionUp(color_t * pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
+        {
+        // TODO, make faster with specialization (writing 32bit at once etc...) 
+        for (int j = 0; j < sy; j++)
+            {
+            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            for (int i = 0; i < sx; i++) { pdest2[i] = psrc2[i]; }
+            }
+        }
+
+    template<typename color_t>
+    void Image<color_t>::_blitRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
+        {
+        // TODO, make faster with specialization (writing 32bit at once etc...)
+        for (int j = sy - 1; j >= 0; j--)
+            {
+            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            for (int i = sx - 1; i >= 0; i--) { pdest2[i] = psrc2[i]; }
+            }   
+        }
+
+
+
+
 
     template<typename color_t>
     void Image<color_t>::_blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
         {
         if (opacity < 0.0f) opacity = 0.0f; else if (opacity > 1.0f) opacity = 1.0f;
         if (!_blitClip(sprite, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
-        _blendRegion(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, opacity);
+        _blitRegion(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, opacity);
         }
+
+    template<typename color_t>
+    void Image<color_t>::_blitRegionUp(color_t * pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
+        {
+        const int op256 = (int)(opacity * 256);
+        for (int j = 0; j < sy; j++)
+            {
+            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            for (int i = 0; i < sx; i++) 
+                { 
+                pdest2[i].blend256(psrc2[i], op256);
+                }
+            }
+        }
+
+    template<typename color_t>
+    void Image<color_t>::_blitRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
+        {
+        const int op256 = (int)(opacity * 256);
+        for (int j = sy - 1; j >= 0; j--)
+            {
+            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            for (int i = sx - 1; i >= 0; i--) 
+                {
+                pdest2[i].blend256(psrc2[i], op256);
+                }
+            }   
+        }
+
+
+
+
 
 
     template<typename color_t>
@@ -247,6 +222,87 @@ namespace tgx
         if (!_blitClip(sprite, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
         _maskRegion(transparent_color, _buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, opacity);
         }
+
+    template<typename color_t>
+    void Image<color_t>::_maskRegionUp(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
+        {
+        const int op256 = (int)(opacity * 256);
+        for (int j = 0; j < sy; j++)
+            {
+            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            for (int i = 0; i < sx; i++) 
+                { 
+                color_t c = psrc2[i];
+                if (c != transparent_color) pdest2[i].blend256(c, op256);
+                }
+            }
+        }
+
+    template<typename color_t>
+    void Image<color_t>::_maskRegionDown(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
+        {
+        const int op256 = (int)(opacity * 256);
+        for (int j = sy - 1; j >= 0; j--)
+            {
+            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            for (int i = sx - 1; i >= 0; i--) 
+                {
+                color_t c = psrc2[i];
+                if (c != transparent_color) pdest2[i].blend256(c, op256);
+                }
+            }   
+        }
+
+
+
+
+    
+
+    template<typename color_t>
+    template<typename color_t_src, typename BLEND_OPERATOR>
+    void Image<color_t>::_blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, BLEND_OPERATOR& blend_op)
+        {
+        if (!_blitClip(sprite, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
+        _blendRegion(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, blend_op);
+        }
+
+    template<typename color_t>
+    template<typename color_t_src, typename BLEND_OPERATOR>
+    void Image<color_t>::_blendRegionUp(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, BLEND_OPERATOR& blend_op)
+        {
+        for (int j = 0; j < sy; j++)
+            {
+            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            for (int i = 0; i < sx; i++) 
+                { 
+                pdest2[i] = (color_t)blend_op(psrc2[i], pdest2[i]);
+                }
+            }
+        }
+
+    template<typename color_t>
+    template<typename color_t_src, typename BLEND_OPERATOR>
+    void Image<color_t>::_blendRegionDown(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, BLEND_OPERATOR& blend_op)
+        {
+        for (int j = sy - 1; j >= 0; j--)
+            {
+            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            for (int i = sx - 1; i >= 0; i--) 
+                {
+                pdest2[i] = (color_t)blend_op(psrc2[i], pdest2[i]);
+                }
+            }   
+        }
+
+
+
+
+
+
 
 
     template<typename color_t>
@@ -391,6 +447,15 @@ namespace tgx
         const float tly = (float)src_im.ly();
         drawTexturedQuad(src_im, fVec2(0.0f, 0.0f), fVec2(tlx, 0.0f), fVec2(tlx, tly), fVec2(0.0f, tly), fVec2(0.0f, 0.0f), fVec2(ilx, 0.0f), fVec2(ilx, ily), fVec2(0.0f, ily), opacity);
         }
+
+
+
+
+
+
+
+
+
 
 
 
