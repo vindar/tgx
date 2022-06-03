@@ -146,6 +146,12 @@ namespace tgx
 #endif
 
 
+    /** test equality of types. Same as std::is_same */
+    template <typename, typename> struct is_same { static const bool value = false; };
+    template <typename T> struct is_same<T, T> { static const bool value = true; };
+
+
+
 
     /** baby let me swap you one more time... */
     template<typename T> TGX_INLINE inline void swap(T& a, T& b) { T c(a); a = b; b = c; }
