@@ -643,10 +643,7 @@ namespace tgx
 
         /**
          * Blit a sprite at a given position on this image.
-         *
-         * @param   sprite          The sprite image to blit.
-         * @param   dest_x          x coordinate of the upper left corner of the sprite in the image.
-         * @param   dest_y          y coordinate of the upper left corner of the sprite in the image.
+         * Same as above using ints instead of iVec2 for position (deprecated).
         **/
         DEPRECATED_SCALAR_PARAMS void blit(const Image<color_t>& sprite, int dest_x, int dest_y)
             {
@@ -672,19 +669,46 @@ namespace tgx
 
         /**
          * Blend a sprite over this image at a given position.
-         * 
-         * Use blending to draw the sprite over the image with a given opacity. If color_t has an alpha
-         * channel, it is also used or blending.
-         *
-         * @param   sprite  The sprite image to blit.
-         * @param   dest_x  x coordinate of the upper left corner of the sprite in the image.
-         * @param   dest_y  y coordinate of the upper left corner of the sprite in the image.
-         * @param   opacity The mult. opacity factor from 0.0f (transparent) and 1.0f (opaque).
+         * Same as above using ints instead of iVec2 for position (deprecated).
         **/
         DEPRECATED_SCALAR_PARAMS void blit(const Image<color_t>& sprite, int dest_x, int dest_y, float opacity)
             {
             _blit(sprite, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly(), opacity);
             }
+
+
+        /**
+         * Blend a sprite at a given position on the image using a custom blending operator.
+         * 
+         * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the 
+         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended 
+         * color.
+         * 
+         * Thus, it must be callable in the form:
+         *   
+         *       blend_op(col_src, col_dst)
+         * 
+         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it 
+         * must return a valid color (of any type but preferably of type color_t for best performance).
+         * 
+         * Remarks: 
+         * 
+         * 1. To perform "classical alpha blending", use the blit() method with an opacity parameter instead   
+         *    as it will be faster.        
+         * 2. If only part of the sprite should be blended onto this image, one simply has to create a
+         *    temporary sub-image like so: 'blend(sprite.getCrop(subbox),upperleftpos, blend_op)'. No copy 
+         *    is performed when creating (shallow) sub-image so this does not incur any slowdown.
+         *
+         * @param   sprite          The sprite image to blend.
+         * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
+         * @param   blend_op        The blending operator
+        **/
+        template<typename color_t_src, typename BLEND_OPERATOR> 
+        void blit(const Image<color_t_src>& sprite, iVec2 upperleftpos, const BLEND_OPERATOR& blend_op)
+            {
+            _blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), blend_op);
+            }
+
 
 
         /**
@@ -708,17 +732,7 @@ namespace tgx
 
         /**
          * Blit a sprite at a given position on this image. Sprite pixels with color `transparent_color`
-         * are treated as transparent hence not copied on the image. Other pixels
-         * are blended with the destination image after being multiplied by the opacity factor.
-         * 
-         * Remark: this method is especially useful when color_t does not have an alpha channel hence no
-         * predefined transparent color.
-         *
-         * @param   sprite              The sprite image to blit.
-         * @param   transparent_color   The sprite color considered transparent.
-         * @param   dest_x              x coordinate of the upper left corner of the sprite in the image.
-         * @param   dest_y              y coordinate of the upper left corner of the sprite in the image.
-         * @param   opacity             The mult. opacity factor from 0.0f (transparent) and 1.0f (opaque).
+         * Same as above using ints instead of iVec2 for position (deprecated).
         **/
         DEPRECATED_SCALAR_PARAMS void blitMasked(const Image<color_t>& sprite, color_t transparent_color, int dest_x, int dest_y, float opacity)
             {
@@ -741,11 +755,7 @@ namespace tgx
 
         /**
          * Reverse blitting. Copy part of the image into the sprite
-         * This is the inverse of the blit operation.
-         *
-         * @param   dst_sprite      The sprite to copy part of this image into.
-         * @param   dest_x          x coordinate of the upper left corner of the sprite in the image.
-         * @param   dest_y          y coordinate of the upper left corner of the sprite in the image.
+         * Same as above using ints instead of iVec2 for position (deprecated).
         **/
         DEPRECATED_SCALAR_PARAMS void blitBackward(Image<color_t>& dst_sprite, int dest_x, int dest_y) const
             {
@@ -786,7 +796,7 @@ namespace tgx
         template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
         void blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees)
             {
-            _blitScaledRotated<color_t_src, CACHE_SIZE, false, false>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, 1.0f);
+            _blitScaledRotated<color_t_src, CACHE_SIZE, false, false, false>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, 1.0f, [](color_t_src cola, color_t colb) {return colb; });
             }
 
 
@@ -825,9 +835,58 @@ namespace tgx
         template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
         void blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
             {
-            _blitScaledRotated<color_t_src, CACHE_SIZE, true, false>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, opacity);
+            _blitScaledRotated<color_t_src, CACHE_SIZE, true, false, false>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, opacity, [](color_t_src cola, color_t colb) {return colb; });
             }
 
+
+        /**
+         * Blend a sprite onto this image after rescaling and rotation using a custom blending operator.
+         * 
+         * The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The rotation 
+         * is performed in counter-clockwise direction around the anchor point.
+         * 
+         * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
+         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended
+         * color.
+         *
+         * Thus, it must be callable in the form:
+         *
+         *       blend_op(col_src, col_dst)
+         *
+         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it
+         * must return a valid color (of any type but preferably of type color_t for best performance).
+         *
+         * Remarks:
+         * 
+         * 1. The positions are given using floating point values to allow for sub-pixel precision for
+         *    smoother animation.
+         * 2. The method use bilinear interpolation for high quality rendering.
+         * 3. The sprite image can have a different color type from this image.  
+         * 4. To perform "classical alpha blending", use the blitScaleRotated() method with an opacity   
+         *    parameter instead as it will be faster. 
+         *
+         * Note: When rotated, access to  the sprite pixels colors is not linear anymore. For certain
+         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
+         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
+         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
+         *       (or another faster memory) before blitting...
+         *
+         * @tparam  color_t_src Color type of the sprite image.
+         * @tparam  CACHE_SIZE  Size of the MCU cache when reading from flash. This value is indicative
+         *                      and used to optimize cache access to flash memory. You may try changing
+         *                      the default value it if drawing takes a long time...
+         * @param   src_im          The sprite image to draw.
+         * @param   anchor_src      Position of the anchor point in the sprite image.
+         * @param   anchor_dst      Position of the anchor point in this (destination) image.
+         * @param   scale           Scaling factor (1.0f for no scaling).
+         * @param   angle_degrees   The rotation angle in degrees.
+         * @param   blend_op        The blending operator
+        **/
+        template<typename color_t_src, typename BLEND_OPERATOR, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
+        void blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, const BLEND_OPERATOR& blend_op)
+            {
+            _blitScaledRotated<color_t_src, CACHE_SIZE, true, false, true>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, 1.0f, blend_op);
+            }
 
 
         /**
@@ -869,43 +928,10 @@ namespace tgx
         template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
         void blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
             {
-            _blitScaledRotated<color_t_src,CACHE_SIZE, true, true>(src_im, transparent_color, anchor_src, anchor_dst, scale, angle_degrees, opacity);
+            _blitScaledRotated<color_t_src, CACHE_SIZE, true, true, false>(src_im, transparent_color, anchor_src, anchor_dst, scale, angle_degrees, opacity, [](color_t_src cola, color_t colb) {return colb; });
             }
 
-
-        /**
-         * Blend a sprite at a given position on the image using a custom blending operator.
-         * 
-         * The blending operator 'blend_op' can be a function/functor. It takes as input the color
-         * of the source (sprite) pixel and the color of the dest. pixel and return the blended color.
-         * 
-         * Thus, it must be callable in the form:
-         *   
-         *       blend_op(col_src, col_dst)
-         * 
-         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it 
-         * must return a valid color (of any type but preferably of type color_t for best performance).
-         * 
-         * Remark: If only part of the sprite should be blended onto this image, one simply has to create a
-         * temporary sub-image like so: 'blend(sprite.getCrop(subbox),upperleftpos, blend_op)'. No  copy is
-         * performed when creating (shallow) sub-image so this does not incur any slowdown.
-         *
-         * @param           sprite          The sprite image to blend.
-         * @param           upperleftpos    Position of the upper left corner of the sprite in the image.
-         * @param [in,out]  blend_op        The blending operator
-        **/
-        template<typename color_t_src, typename BLEND_OPERATOR> 
-        void blend(const Image<color_t_src>& sprite, iVec2 upperleftpos, const BLEND_OPERATOR& blend_op)
-            {
-            _blend(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), blend_op);
-            }
-
-
-
-
-
-
-
+       
 
 
         /**
@@ -947,6 +973,40 @@ namespace tgx
 
 
         /**
+         * Blend the src image onto the destination image with resizing and color conversion.
+         * 
+         * This version uses a custom blending operator to combine src over the existing image.
+         * 
+         * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
+         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended
+         * color.
+         *
+         * Thus, it must be callable in the form:
+         *
+         *       blend_op(col_src, col_dst)
+         *
+         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it
+         * must return a valid color (of any type but preferably of type color_t for best performance).
+         * 
+         * Remarks:
+         * 
+         * 1. the source image is resized to match this image size. Bilinear interpolation is used to
+         *    improve quality.
+         * 2. The source and destination image may have different color type. Conversion is automatic.  
+         * 3. To perform "classical alpha blending", use the copyFrom() method with an opacity parameter   
+         *    instead as it will be faster.
+         * 
+         * Beware: The method does not check for buffer overlap between source and destination !
+         *
+         * @tparam  src_color_t     color type of the source image
+         * @param   src_im          Source image to copy onto this image.
+         * @param   blend_op        The blending operator
+        **/
+        template<typename src_color_t, typename BLEND_OPERATOR> void copyFrom(const Image<src_color_t>& src_im, const BLEND_OPERATOR& blend_op);
+
+
+
+        /**
         * Copy the source image pixels into this image, reducing it by half in the process.
         * Ignore the last row/column for odd dimensions larger than 1.
         * Resizing is done by averaging the color of the 4 neighbour pixels. 
@@ -960,6 +1020,7 @@ namespace tgx
         * REMARK: This is an old method. Use blitScaledRotated() for a more powerful method.
         **/
         Image<color_t> copyReduceHalf(const Image<color_t> & src_image);
+
 
 
         /**
@@ -2270,7 +2331,62 @@ namespace tgx
             {
             _drawTexturedTriangle<color_t_tex, false, true, false>(src_im, color_t_tex(), srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, color_t_tex(), color_t_tex(), color_t_tex(), opacity);
             }
+ 
 
+        /**
+         * Blend a textured triangle over this image using a custom blend operator to combine to color 
+         * from the sprite with the color of this image. 
+         * 
+         * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
+         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended
+         * color.
+         *
+         * Thus, it must be callable in the form:
+         *
+         *       blend_op(col_src, col_dst)
+         *
+         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it
+         * must return a valid color (of any type but preferably of type color_t for best performance).         * 
+         * 
+         * Remarks:
+         * 
+         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
+         * smoother animation).
+         * 2. The method use bilinear interpolation for high quality rendering.
+         * 3. The sprite image can have a different color type from this image.  
+         * 4. To perform "classical alpha blending", use the blitScaleRotated() method with an opacity
+         *    parameter instead as it will be faster.
+         * 
+         * IMPORTANT WARNING !
+         * 
+         * For certain orientation of the triangle, access to the texture pixels is highly non-linear.
+         * For texture store in flash memory, this can cause dramatic slowdown because the read cache
+         * becomes basically useless. To overcome this problem, two solutions are possible:
+         * 
+         * a. Move the texture to a faster memory location before drawing.
+         * 
+         * b. Tessellate the triangle into smaller triangles so that each the memory data for each  
+         *    triangle can fit into the cache memory. Note that doing so will note cause any artifact
+         *    because the triangle rasterizer is "pixel perfect" so no pixel will be written twice.
+         *    However, all the small triangles must be given in the same winding direction !
+         *
+         * @tparam  color_t_tex Type of the color t tex.
+         * @param   src_im  the image/texture to map onto the triangle.
+         * @param   srcP1   coords of point 1 on the texture.
+         * @param   srcP2   coords of point 2 on the texture.
+         * @param   srcP3   coords of point 3 on the texture.
+         * @param   dstP1   coords of point 1 on this image.
+         * @param   dstP2   coords of point 2 on this image.
+         * @param   dstP3   coords of point 3 on this image.
+         * @param   blend_op    the blending operator
+        **/
+        template<typename color_t_tex, typename BLEND_OPERATOR>
+        void drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, const BLEND_OPERATOR& blend_op);
+
+
+
+
+   
 
         /**
          * Draw textured triangle combined with a color gradient (does not use blending).
@@ -2501,7 +2617,7 @@ namespace tgx
 
 
         /**
-        * Draw a textured quad (with blending).
+        * Draw a textured quad (with alpha blending).
         *
         * See drawTexturedTriangle() for details.
         *
@@ -2513,6 +2629,23 @@ namespace tgx
             drawTexturedTriangle(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, opacity);
             drawTexturedTriangle(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, opacity);
             }
+
+
+        /**
+        * Draw a textured quad with a custom blending operator.
+        *
+        * See drawTexturedTriangle() for more details.
+        *
+        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
+        **/
+        template<typename color_t_tex, typename BLEND_OPERATOR>
+        void drawTexturedQuad(const Image<color_t_tex> & src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, const BLEND_OPERATOR& blend_op)
+            {
+            drawTexturedTriangle(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, blend_op);
+            drawTexturedTriangle(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, blend_op);
+            }
+
+
 
 
         /**
@@ -2789,6 +2922,28 @@ private:
 
 
 
+
+        template<typename color_t_src, typename BLEND_OPERATOR>
+        void _blit(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const  BLEND_OPERATOR& blend_op);
+
+        template<typename color_t_src, typename BLEND_OPERATOR>
+        static void _blitRegion(color_t* pdest, int dest_stride, color_t_src * psrc, int src_stride, int sx, int sy, const  BLEND_OPERATOR& blend_op)
+            {
+            if ((size_t)pdest <= (size_t)psrc)
+                _blitRegionUp(pdest, dest_stride, psrc, src_stride, sx, sy, blend_op);
+            else
+                _blitRegionDown(pdest, dest_stride, psrc, src_stride, sx, sy, blend_op);
+            }
+
+        template<typename color_t_src, typename BLEND_OPERATOR>
+        static void _blitRegionUp(color_t* pdest, int dest_stride, color_t_src * psrc, int src_stride, int sx, int sy, const  BLEND_OPERATOR& blend_op);
+
+        template<typename color_t_src, typename BLEND_OPERATOR>
+        static void _blitRegionDown(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, const  BLEND_OPERATOR& blend_op);
+
+
+
+
         void _blitMasked(const Image& sprite, color_t transparent_color, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
 
         static void _maskRegion(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity)
@@ -2806,33 +2961,9 @@ private:
 
 
 
+        template<typename color_t_src, int CACHE_SIZE, bool USE_BLENDING, bool USE_MASK, bool USE_CUSTOM_OPERATOR, typename BLEND_OPERATOR>
+        void _blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity, const BLEND_OPERATOR& blend_op);
 
-
-        template<typename color_t_src, typename BLEND_OPERATOR>
-        void _blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const  BLEND_OPERATOR& blend_op);
-
-        template<typename color_t_src, typename BLEND_OPERATOR>
-        static void _blendRegion(color_t* pdest, int dest_stride, color_t_src * psrc, int src_stride, int sx, int sy, const  BLEND_OPERATOR& blend_op)
-            {
-            if ((size_t)pdest <= (size_t)psrc)
-                _blendRegionUp(pdest, dest_stride, psrc, src_stride, sx, sy, blend_op);
-            else
-                _blendRegionDown(pdest, dest_stride, psrc, src_stride, sx, sy, blend_op);
-            }
-
-        template<typename color_t_src, typename BLEND_OPERATOR>
-        static void _blendRegionUp(color_t* pdest, int dest_stride, color_t_src * psrc, int src_stride, int sx, int sy, const  BLEND_OPERATOR& blend_op);
-
-        template<typename color_t_src, typename BLEND_OPERATOR>
-        static void _blendRegionDown(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, const  BLEND_OPERATOR& blend_op);
-
-
-
-
-
-
-        template<typename color_t_src, int CACHE_SIZE, bool USE_BLENDING, bool USE_MASK>
-        void _blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity);
 
 
 

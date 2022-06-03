@@ -171,7 +171,7 @@ namespace tgx
     * Structure that holds the 'uniform' parameters (in opengl sense) passed
     * to the triangle rasterizer when doing 3D rendering
     **/
-    template<typename color_t_im, typename color_t_tex, typename ZBUFFER_t> struct RasterizerParams
+    template<typename color_t_im, typename color_t_tex, typename ZBUFFER_t, typename BLEND_OP = void> struct RasterizerParams
         {
         RGBf                        facecolor;      // pointer to the face color (when using flat shading).  
         float                       opacity;        // opacity multiplier (currently used only with the 2D shader)        
@@ -182,6 +182,7 @@ namespace tgx
         int                         shader_type;    // shader type
         float                       wa;             // constants such that f(w) = wa * w + wb maps
         float                       wb;             // w (= -1/z) -> float(0, 65535) for conversion to uint16_t
+        const BLEND_OP *            p_blend_op;     // pointer to the blending operator to use (only with the 2D shader)        
         };
 
 

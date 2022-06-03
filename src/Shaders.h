@@ -2174,6 +2174,136 @@ namespace tgx
             }
         }
 
+
+
+
+    /**
+    * 2D shader (texture with custom blending operator)
+    **/
+    template<typename BLEND_OP, typename color_t_im, typename color_t_tex>
+    void shader_2D_texture_blend_op(const int32_t& offset, const int32_t& lx, const int32_t& ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+        const RasterizerParams<color_t_im, color_t_tex, float, BLEND_OP> & data)
+        {
+
+        color_t_im * buf = data.im->data() + offset;        
+        const int32_t stride = data.im->stride();
+
+        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
+        const int32_t aera = O1 + O2 + O3;
+
+        const float invaera = fast_inv((float)aera);
+
+        // the texture coord
+        fVec2 T1 = fP1.T;
+        fVec2 T2 = fP2.T;
+        fVec2 T3 = fP3.T;
+
+
+        const color_t_tex * tex = data.tex->data();
+        const int32_t texsize_x = data.tex->width();
+        const int32_t texsize_y = data.tex->height();
+        const int32_t texsize_x_mm = data.tex->width() - 1;
+        const int32_t texsize_y_mm = data.tex->height() - 1;
+        const int32_t texstride = data.tex->stride();
+
+        // divide the texture coord by aera
+        T1 *= invaera;
+        T2 *= invaera;
+        T3 *= invaera;
+        T1.x *= texsize_x;
+        T2.x *= texsize_x;
+        T3.x *= texsize_x;
+        T1.y *= texsize_y;
+        T2.y *= texsize_y;
+        T3.y *= texsize_y;
+
+        const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
+        const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+         
+        while ((uintptr_t)(buf) < end)
+            { // iterate over scanlines
+            int32_t bx = 0; // start offset
+            if (O1 < 0)
+                {
+                // we know that dx1 > 0                 
+                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                }
+            if (O2 < 0)
+                {
+                if (dx2 <= 0)
+                    {
+                    if (dy2 <= 0) return;
+                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    O1 += (by * dy1);
+                    O2 += (by * dy2);
+                    O3 += (by * dy3);
+                    const int32_t offs = by * stride;
+                    buf += offs;
+                    continue;
+                    }
+                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                }
+            if (O3 < 0)
+                {
+                if (dx3 <= 0)
+                    {
+                    if (dy3 <= 0) return;
+                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    O1 += (by * dy1);
+                    O2 += (by * dy2);
+                    O3 += (by * dy3);
+                    const int32_t offs = by * stride;
+                    buf += offs;
+                    continue;
+                    }
+                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                }
+                
+            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C2 = O2 + (dx2 * bx);
+            int32_t C3 = O3 + (dx3 * bx);
+
+            float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3)) - 0.5f;
+            float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3)) - 0.5f;
+
+            while ((bx < lx) && ((C2 | C3) >= 0))
+                {                         
+                const float xx = tx;
+                const float yy = ty;                    
+                const int ttx = (int)floorf(xx);
+                const int tty = (int)floorf(yy);
+                const float ax = xx - ttx;
+                const float ay = yy - tty;                    
+
+                const int minx = shaderclip(ttx, texsize_x_mm);
+                const int maxx = shaderclip(ttx + 1, texsize_x_mm);
+                const int miny = shaderclip(tty,  texsize_y_mm) * texstride;
+                const int maxy = shaderclip(tty + 1,  texsize_y_mm) * texstride;
+                
+                color_t_tex col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);
+
+                buf[bx] = (color_t_im)((*data.p_blend_op)(col, buf[bx]));
+
+                C2 += dx2;
+                C3 += dx3;
+
+                tx += dtx;
+                ty += dty;
+
+                bx++;
+                }
+
+            O1 += dy1;
+            O2 += dy2;
+            O3 += dy3;
+            buf += stride;
+            }
+        }
+
+
 }
 
 #endif

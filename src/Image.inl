@@ -262,15 +262,15 @@ namespace tgx
 
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
-    void Image<color_t>::_blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
+    void Image<color_t>::_blit(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
         {
         if (!_blitClip(sprite, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
-        _blendRegion(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, blend_op);
+        _blitRegion(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, blend_op);
         }
 
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
-    void Image<color_t>::_blendRegionUp(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, const BLEND_OPERATOR& blend_op)
+    void Image<color_t>::_blitRegionUp(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, const BLEND_OPERATOR& blend_op)
         {
         for (int j = 0; j < sy; j++)
             {
@@ -285,7 +285,7 @@ namespace tgx
 
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
-    void Image<color_t>::_blendRegionDown(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, const BLEND_OPERATOR& blend_op)
+    void Image<color_t>::_blitRegionDown(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, const BLEND_OPERATOR& blend_op)
         {
         for (int j = sy - 1; j >= 0; j--)
             {
@@ -362,8 +362,8 @@ namespace tgx
 
 
     template<typename color_t>
-    template<typename color_t_src, int CACHE_SIZE, bool USE_BLENDING, bool USE_MASK>
-    void Image<color_t>::_blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
+    template<typename color_t_src, int CACHE_SIZE, bool USE_BLENDING, bool USE_MASK, bool USE_CUSTOM_OPERATOR, typename BLEND_OPERATOR>
+    void Image<color_t>::_blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity, const BLEND_OPERATOR& blend_op)
         {
         if ((!isValid()) || (!src_im.isValid())) return;
 
@@ -411,7 +411,10 @@ namespace tgx
                 }
             else if (USE_BLENDING)
                 {
-                drawTexturedQuad(src_im, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4, opacity);
+                if (USE_CUSTOM_OPERATOR)
+                    drawTexturedQuad(src_im, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4, blend_op);
+                else
+                    drawTexturedQuad(src_im, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4, opacity);
                 }
             else
                 {
@@ -450,6 +453,17 @@ namespace tgx
 
 
 
+    template<typename color_t>
+    template<typename src_color_t, typename BLEND_OPERATOR> 
+    void Image<color_t>::copyFrom(const Image<src_color_t>& src_im, const BLEND_OPERATOR& blend_op)
+        {
+        if ((!isValid()) || (!src_im.isValid())) return;
+        const float ilx = (float)lx();
+        const float ily = (float)ly();
+        const float tlx = (float)src_im.lx();
+        const float tly = (float)src_im.ly();
+        drawTexturedQuad(src_im, fVec2(0.0f, 0.0f), fVec2(tlx, 0.0f), fVec2(tlx, tly), fVec2(0.0f, tly), fVec2(0.0f, 0.0f), fVec2(ilx, 0.0f), fVec2(ilx, ily), fVec2(0.0f, ily), blend_op);
+        }
 
 
 
@@ -1797,6 +1811,47 @@ namespace tgx
                     }
                 }
             }
+        }
+
+
+
+
+    template<typename color_t>
+    template<typename color_t_tex, typename BLEND_OPERATOR>
+    void Image<color_t>::drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, const BLEND_OPERATOR& blend_op)
+        {
+        if ((!isValid()) || (!src_im.isValid())) return;
+        const iVec2 texdim = src_im.dim();
+        const iVec2 imdim = dim();
+        tgx::RasterizerVec4 V1, V2, V3;
+
+        const fVec2 U1 = _coord_viewport(dstP1, imdim);
+        V1.x = U1.x;
+        V1.y = U1.y;
+        V1.T = _coord_texture(srcP1, texdim);
+        V1.color = RGBf(1.0f, 1.0f, 1.0f);
+        V1.A = 1.0f;
+
+        const fVec2 U2 = _coord_viewport(dstP2, imdim);
+        V2.x = U2.x;
+        V2.y = U2.y;
+        V2.T = _coord_texture(srcP2, texdim);
+        V2.color = RGBf(1.0f, 1.0f, 1.0f);
+        V2.A = 1.0f;
+
+        const fVec2 U3 = _coord_viewport(dstP3, imdim);
+        V3.x = U3.x;
+        V3.y = U3.y;
+        V3.T = _coord_texture(srcP3, texdim);
+        V3.color = RGBf(1.0f, 1.0f, 1.0f);
+        V3.A = 1.0f;
+
+        tgx::RasterizerParams<color_t, color_t_tex, float, BLEND_OPERATOR> rparam;
+        rparam.im = this;
+        rparam.tex = &src_im;
+        rparam.p_blend_op = &blend_op;
+
+        tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture_blend_op<BLEND_OPERATOR, color_t, color_t_tex>);
         }
 
 
