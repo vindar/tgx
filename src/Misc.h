@@ -33,9 +33,11 @@
 #if defined(TEENSYDUINO) || defined(ESP32)
     #include "Arduino.h" // include Arduino to get PROGMEM macro and others
     #define TGX_ON_ARDUINO
+
     #define TGX_USE_FAST_INV_SQRT_TRICK
-    //#define TGX_USE_FAST_SQRT_TRICK  // BUG BUG DO NOT USE
-    //#define TGX_USE_FAST_INV_TRICK   // BUG BUG DO NOT USE 
+    #define TGX_USE_FAST_SQRT_TRICK     
+    #define TGX_USE_FAST_INV_TRICK
+     
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE __attribute__((noinline, noclone)) FLASHMEM
 #else    
@@ -195,79 +197,93 @@ namespace tgx
 
 
 
+
     TGX_INLINE inline float fast_inv(float x)
         {
-// NOT PRECISE ENOUGH !            
-//#if defined (TGX_USE_FAST_INV_TRICK)            
-//        union
-//            {
-//            float f;
-//            uint32_t u;
-//            } v;
-//        v.f = (x < 0) ? -x : x;
-//        v.u = 0x5f375a86 - (v.u >> 1);        
-//        return (x < 0) ? (-v.f * v.f) : (v.f * v.f);
-//#else 
-        return 1.0f / x;     
-//#endif            
+#if defined (TGX_USE_FAST_INV_TRICK)            
+        union
+            {
+            float f;
+            uint32_t u;
+            } v;
+        v.f = x;
+        v.u = 0x5f375a86 - (v.u >> 1); // slightly more precise than the original 0x5f3759df
+        const float x2 = x * 0.5f;
+        const float threehalfs = 1.5f;
+        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 1st iteration
+//        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 2nd iteration (not needed)
+        return v.f * v.f;                   
+#else 
+        return ((x == 0) ? 1.0f : (1.0f / x));
+#endif            
         }
 
 
     TGX_INLINE inline double fast_inv(double x)
-        {  
-// NOT PRECISE ENOUGH !
-//#if defined (TGX_USE_FAST_INV_TRICK)            
-//        union
-//            {
-//            double f;
-//            uint64_t u;
-//            } v;
-//        v.f= (x < 0) ? -x : x;;
-//        v.u=0x5fe6eb50c7b537a9-(v.u>>1);        
-//        return (x < 0) ? (-v.f * v.f) : (v.f * v.f);
-//#else 
-        return 1.0 / x;
-//#endif            
+        {
+        // do not use fast approximation for double type.             
+        return ((x == 0) ? 1.0 : (1.0 / x));    
         }
 
 
 
+    TGX_INLINE inline float precise_sqrt(float x)
+        {
+        return sqrtf(x);
+        }
+
+
+    TGX_INLINE inline double precise_sqrt(double x)
+        {
+        return sqrt(x);
+        }
+
+
     TGX_INLINE inline float fast_sqrt(float x)
         {
-// NOT PRECISDE ENOUGH !            
-//#if defined (TGX_USE_FAST_SQRT_TRICK)            
-//        union
-//            {
-//            float f;
-//            uint32_t u;
-//            } v;
-//        v.f = x;
-//        v.u = 0x5f375a86 - (v.u >> 1);
-//        return x*v.f;            
-//#else 
-        return sqrtf(x);    
-//#endif            
+#if defined (TGX_USE_FAST_SQRT_TRICK)            
+        union
+            {
+            float f;
+            uint32_t u;
+            } v;
+        v.f = x;
+        v.u = 0x5f375a86 - (v.u >> 1); // slightly more precise than the original 0x5f3759df
+        const float x2 = x * 0.5f;
+        const float threehalfs = 1.5f;
+        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 1st iteration
+//        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 2nd iteration (not needed)
+        return x * v.f;              
+#else 
+        return precise_sqrt(x);
+#endif            
         }
 
 
     TGX_INLINE inline double fast_sqrt(double x)
         {
-// NOT PRECISE ENOUGH !            
-//#if defined (TGX_USE_FAST_SQRT_TRICK)            
-//        union
-//            {
-//            double f;
-//            uint64_t u;
-//            } v;
-//        v.f=x;
-//        v.u=0x5fe6eb50c7b537a9-(v.u>>1);
-//        return x*v.f;            
-//#else 
-        return sqrt(x);    
-//#endif            
+        // do not use fast approximation for double type.             
+        return precise_sqrt(x);
         }
 
 
+
+    TGX_INLINE inline float precise_invsqrt(float x)
+        {
+        const float s = sqrtf(x);
+        return (s == 0) ? 1.0f : (1.0f / s);
+        }
+
+
+    TGX_INLINE inline double precise_invsqrt(double x)
+        {
+        const double s = sqrt(x);
+        return (s == 0) ? 1.0 : (1.0 / sqrt(s));
+        }
+
+
+
+    
     TGX_INLINE inline float fast_invsqrt(float x)
         {            
 #if defined (TGX_USE_FAST_INV_SQRT_TRICK)            
@@ -280,31 +296,21 @@ namespace tgx
             } v;
         v.f = x;
         v.u = 0x5f375a86 - (v.u >> 1); // slightly more precise than the original 0x5f3759df
-        return v.f;            
+        const float x2 = x * 0.5f;
+        const float threehalfs = 1.5f;
+        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 1st iteration
+//        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 2nd iteration (not needed)
+        return v.f;
 #else      
-        const float s = fast_sqrt(x);
-        return ((s == 0) ? 1.0f : fast_inv(s));
+        return precise_invsqrt(x);
 #endif
         }
 
-
+   
     TGX_INLINE inline double fast_invsqrt(double x)
         {            
-#if defined (TGX_USE_FAST_INV_SQRT_TRICK)            
-        // fast reciprocal square root: https://en.wikipedia.org/wiki/Fast_inverse_square_root
-        // code from https://github.com/JarkkoPFC/meshlete/blob/master/src/core/math/fast_math.inl
-        union
-            {
-            double f;
-            uint64_t u;
-            } v;
-        v.f=x;
-        v.u=0x5fe6eb50c7b537a9 - (v.u >> 1);
-        return v.f;            
-#else                        
-        const double s = fast_sqrt(x);
-        return ((s == 0) ? 1.0 : fast_inv(s));
-#endif
+        // do not use fast approximation for double type.             
+        return precise_invsqrt(x);
         }
 
 }

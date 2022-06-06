@@ -528,7 +528,7 @@ namespace tgx
             _viewM = M;
             // recompute
             _r_modelViewM = _viewM * _modelM;
-            _r_inorm = 1.0f / _r_modelViewM.mult0(fVec3{ 0,0,1 }).norm();
+            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
             _r_light = _viewM.mult0(_light);
             _r_light = -_r_light;
             _r_light.normalize();
@@ -711,7 +711,7 @@ namespace tgx
             _modelM = M;
             // recompute
             _r_modelViewM = _viewM * _modelM;
-            _r_inorm = 1.0f / _r_modelViewM.mult0(fVec3{ 0,0,1 }).norm();
+            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
             _r_light_inorm = _r_light * _r_inorm;
             _r_H_inorm = _r_H * _r_inorm;
             }
@@ -744,7 +744,7 @@ namespace tgx
             _modelM.multTranslate(center);
             // recompute
             _r_modelViewM = _viewM * _modelM;
-            _r_inorm = 1.0f / _r_modelViewM.mult0(fVec3{ 0,0,1 }).norm();
+            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
             _r_light_inorm = _r_light * _r_inorm;
             _r_H_inorm = _r_H * _r_inorm;
             }

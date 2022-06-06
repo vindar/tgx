@@ -183,7 +183,7 @@ namespace tgx
         void setRotate(T angle, T x, T y, T z)
             {
             static const T deg2rad = (T)(M_PI / 180);
-            const T norm = tgx::fast_sqrt(x*x + y*y + z*z);
+            const T norm = tgx::precise_sqrt(x*x + y*y + z*z);
             if (norm == 0) { setIdentity(); return; }
             const T nx = x / norm;
             const T ny = y / norm;

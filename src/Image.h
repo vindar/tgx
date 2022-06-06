@@ -3100,14 +3100,14 @@ private:
         /** Convert to texture coordinates */
         inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size)
             {
-            return tgx::fVec2((fast_inv((float)size.x)) * (pos.x), (fast_inv((float)size.y)) * (pos.y));
+            return tgx::fVec2(pos.x / ((float)size.x) , pos.y / ((float)size.y));
             }
 
 
         /** Convert to viewport coordinates */
         inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size)
             {
-            return tgx::fVec2((2.0f * fast_inv((float)size.x)) * (pos.x) - 1.0f, (2.0f * fast_inv((float)size.y)) * (pos.y) - 1.0f);
+            return tgx::fVec2((2.0f / ((float)size.x)) * (pos.x) - 1.0f, (2.0f / ((float)size.y)) * (pos.y) - 1.0f);
             }
 
 

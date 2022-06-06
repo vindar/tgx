@@ -339,9 +339,19 @@ namespace tgx
 
         /**
          * Compute the euclidian norm of the vector (return a Tfloat).
-        * Tfloat selects the floating point type used for computation.
+         * Tfloat selects the floating point type used for computation.
          **/
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat norm() const
+            { 
+            return (Tfloat)tgx::precise_sqrt((Tfloat)(x*x + y*y + z*z + w*w));
+            }
+
+
+        /**
+         * Compute the euclidian norm of the vector (return a Tfloat). Use fast (approx) computations.
+         * Tfloat selects the floating point type used for computation.
+         **/
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat norm_fast() const
             { 
             return (Tfloat)tgx::fast_sqrt((Tfloat)(x*x + y*y + z*z + w*w));
             }
@@ -349,12 +359,23 @@ namespace tgx
 
         /**
          * Compute the euclidian norm of the vector (return a Tfloat).
-        * Tfloat selects the floating point type used for computation.
+         * Tfloat selects the floating point type used for computation.
          **/
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat invnorm() const
             { 
+            return (Tfloat)tgx::precise_invsqrt((Tfloat)(x*x + y*y + z*z + w*w));
+            }
+
+
+        /**
+         * Compute the euclidian norm of the vector (return a Tfloat). Use fast (approx) computations.
+         * Tfloat selects the floating point type used for computation.
+         **/
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat invnorm_fast() const
+            { 
             return (Tfloat)tgx::fast_invsqrt((Tfloat)(x*x + y*y + z*z + w*w));
             }
+
 
         /**
         * Normalise the vector so that its norm is 1, does nothing if the vector is 0.
@@ -363,6 +384,20 @@ namespace tgx
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void normalize()
             { 
             Tfloat a = invnorm<Tfloat>(); 
+            x = (T)(x * a);
+            y = (T)(y * a);
+            z = (T)(z * a);
+            w = (T)(w * a);
+            }
+
+
+        /**
+        * Normalise the vector so that its norm is 1, does nothing if the vector is 0. Use fast (approx) computations.
+        * Tfloat selects the floating point type used for computation.
+        **/
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void normalize_fast()
+            { 
+            Tfloat a = invnorm_fast<Tfloat>(); 
             x = (T)(x * a);
             y = (T)(y * a);
             z = (T)(z * a);
@@ -382,6 +417,16 @@ namespace tgx
             }
 
 
+        /**
+        * Return the normalize vector, return the same vector if it is 0. Use fast (approx) computations.
+        * Tfloat selects the floating point type used for computation.
+        **/
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Vec4<T> getNormalize_fast() const
+            { 
+            Vec4<T> V(*this);
+            V.normalize_fast();
+            return V;
+            }
 
 
 
@@ -397,7 +442,7 @@ namespace tgx
         **/
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void zdivide() 
             {
-            const float iw = 1 / w;
+            const float iw = tgx::fast_inv(w);
             x = iw*x;
             y = iw*y;
             z = iw*z;
@@ -434,6 +479,18 @@ namespace tgx
 
 
         /**
+        * Return the normalized vector, does nothing if the vector is 0.
+        * Tfloat selects the floating point type used for computation.
+        **/
+        template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > inline  Vec4<T> normalize_fast(Vec4<T> V)
+            {
+            V.template normalize_fast<Tfloat>();
+            return V;
+            }
+
+
+
+        /**
         * Compute the squared euclidian distance between two vectors. Return as type T.
         **/
         template<typename T> inline T dist2(const Vec4<T>  V1, const Vec4<T>  V2)
@@ -450,6 +507,19 @@ namespace tgx
          * Compute the euclidian distance between two vectors, return as Tfloat.
          **/
         template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist(Vec4<T> V1, const Vec4<T> V2)
+            {
+            const T xx = V1.x - V2.y;
+            const T yy = V1.y - V2.y;
+            const T zz = V1.z - V2.z;
+            const T ww = V1.w - V2.w;
+            return (Tfloat)tgx::precise_sqrt((Tfloat)(xx * xx + yy * yy + zz * zz + ww * ww));
+            }
+
+
+        /**
+         * Compute the euclidian distance between two vectors, return as Tfloat.
+         **/
+        template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist_fast(Vec4<T> V1, const Vec4<T> V2)
             {
             const T xx = V1.x - V2.y;
             const T yy = V1.y - V2.y;

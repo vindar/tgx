@@ -269,6 +269,16 @@ namespace tgx
          **/
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat norm() const
             { 
+            return (Tfloat)tgx::precise_sqrt((Tfloat)(x*x + y*y));
+            }
+
+
+        /**
+         * Compute the euclidian norm of the vector (return a Tfloat). Use fast (approx) computation.
+        * Tfloat selects the floating point type used for computation.
+         **/
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat norm_fast() const
+            { 
             return (Tfloat)tgx::fast_sqrt((Tfloat)(x*x + y*y));
             }
 
@@ -279,8 +289,19 @@ namespace tgx
          **/
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat invnorm() const
             { 
+            return (Tfloat)tgx::precise_invsqrt((Tfloat)(x*x + y*y));
+            }
+
+
+        /**
+         * Compute the inverse euclidian norm of the vector (return a Tfloat). Use fast (approx) computation.
+        * Tfloat selects the floating point type used for computation.
+         **/
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat invnorm_fast() const
+            { 
             return (Tfloat)tgx::fast_invsqrt((Tfloat)(x*x + y*y));
             }
+
 
 
         /**
@@ -296,6 +317,18 @@ namespace tgx
 
 
         /**
+        * Normalise the vector so that its norm is 1, does nothing if the vector is 0. Use fast (approx) computation.
+        * Tfloat selects the floating point type used for computation.
+        **/
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void normalize_fast()
+            { 
+            Tfloat a = invnorm_fast<Tfloat>(); 
+            x = (T)(x * a);
+            y = (T)(y * a);
+            }
+
+
+        /**
         * Return the normalize vector, return the same vector if it is 0.
         * Tfloat selects the floating point type used for computation.
         **/
@@ -303,6 +336,18 @@ namespace tgx
             { 
             Vec2<T> V(*this);
             V.normalize();
+            return V;
+            }
+
+
+        /**
+        * Return the normalize vector, return the same vector if it is 0. Use fast (approx) computation.
+        * Tfloat selects the floating point type used for computation.
+        **/
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Vec2<T> getNormalize_fast() const
+            { 
+            Vec2<T> V(*this);
+            V.normalize_fast();
             return V;
             }
 
@@ -384,8 +429,20 @@ namespace tgx
             {
             const T xx = V1.x - V2.y;
             const T yy = V1.y - V2.y;
+            return (Tfloat)tgx::precise_sqrt((Tfloat)(xx * xx + yy * yy));
+            }
+
+
+        /**
+         * Compute the euclidian distance between two vectors, return as Tfloat. Use fast (approx) computations.
+         **/
+        template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist_fast(Vec2<T> V1, const Vec2<T> V2)
+            {
+            const T xx = V1.x - V2.y;
+            const T yy = V1.y - V2.y;
             return (Tfloat)tgx::fast_sqrt((Tfloat)(xx * xx + yy * yy));
             }
+
 
 
         /**

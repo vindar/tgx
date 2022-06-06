@@ -80,10 +80,10 @@ namespace tgx
     *                each vertex (when applicable) that are used by the shader function.
     *
     *                NOTE: the (x,y) coordinates of the vertices V0,V1,V2 do not need to
-    *                be inside the viewport [-1.0,1.0]^2 and the triangle will still be
+    *                be inside the viewport [-1,1]^2 and the triangle will still be
     *                perfectly rasterized provided that they are not 'too far away'. This
     *                'too far away' correspond to the mximum viewport size according to the 
-    *                chosen sub-pixel precision (for instance, [-2.0,2.0]^2 will work for 
+    *                chosen sub-pixel precision (for instance, [-2,2]^2 will work for 
     *                any viewport at most 1024x1024 when using 8bit precision).
     *
     * - offset_x, offset_y  Offset of this image inside the viewport. So the image corresponds to

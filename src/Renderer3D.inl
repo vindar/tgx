@@ -282,7 +282,7 @@ namespace tgx
             else
                 { // flat shading
                 const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
-                faceN.normalize();
+                faceN.normalize_fast();
                 if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
                     _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
@@ -530,7 +530,7 @@ namespace tgx
             else
                 { // flat shading
                 const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
-                faceN.normalize();
+                faceN.normalize_fast();
                 if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
                     _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
@@ -667,7 +667,7 @@ namespace tgx
             else
                 { // flat shading
                 const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
-                faceN.normalize();
+                faceN.normalize_fast();
                 if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
                     _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
@@ -876,7 +876,7 @@ namespace tgx
                     else
                         { // flat shading : color on faces
                         const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
-                        faceN.normalize();
+                        faceN.normalize_fast();
                         if (TEXTURE)
                             _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
                         else
@@ -947,7 +947,7 @@ namespace tgx
                 else
                     {
                     fVec3 N = crossProduct(P2 - P1, P3 - P1);// compute the triangle face normal
-                    N.normalize(); // normalize it
+                    N.normalize_fast(); // normalize it
                     _drawTriangle(shader, &P1, &P2, &P3, &N, &N, &N, nullptr, nullptr, nullptr, col1, col2, col3); // call gouraud shader with the same normal for all 3 vertices
                     }
                 }
@@ -1052,7 +1052,7 @@ namespace tgx
             else
                 {
                 fVec3 N = crossProduct(P2 - P1, P3 - P1);// compute the triangle face normal
-                N.normalize(); // normalize it
+                N.normalize_fast(); // normalize it
                 _drawQuad(shader, &P1, &P2, &P3, &P4, &N, &N, &N, &N, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4); // call gouraud shader with the same normal for all 3 vertices
                 }
             }
@@ -1970,7 +1970,7 @@ namespace tgx
             const float ONEOVERSQRT2 = 0.70710678118f;
             fVec4 P0 = _r_modelViewM.mult1(fVec3(0, 0, 0));
             fVec4 P1 = _r_modelViewM.mult1(fVec3(1, 0, 0));
-            float r = fVec3(P0 - P1).norm(); // radius after modelview transform
+            float r = fVec3(P0 - P1).norm_fast(); // radius after modelview transform
             fVec4 P2 = { P0.x - r * ONEOVERSQRT2, P0.y - r * ONEOVERSQRT2, P0.z, P0.w }; // take a point on the sphere that is at same z as origin and take equal contribution from x and y. 
 
             fVec4 Q0 = _projM * P0;
