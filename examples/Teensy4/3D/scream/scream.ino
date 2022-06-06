@@ -195,27 +195,6 @@ tgx::fVec3 cameraPosition()
     }
 
 
-/** draw the current fps on the image */
-void fps()
-    {
-    static elapsedMillis em = 0; // number of milli elapsed since last fps update
-    static int fps = 0;         // last fps 
-    static int count = 0;       // number of frames since the last update
-    // recompute fps every second. 
-    count++;
-    if ((int)em > 1000)
-        {
-        em = 0;
-        fps = count;
-        count = 0;
-        }
-    // display 
-    char buf[10];
-    sprintf(buf, "%d FPS", fps);
-    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
-    im.drawText(buf, { SLX - B.lx() - 3,10 }, RGB565_Red, font_tgx_OpenSans_Bold_10,false);
-    }
-
 
 /** display an explosion */
 void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
@@ -299,8 +278,10 @@ void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
          }
         */
 
+        // draw the current framerate on the framebuffer
+        tft.overlayFPS(fb);
+
         // update the screen (asynchronous). 
-        fps();
         tft.update(fb);
 
         if (t < t1)

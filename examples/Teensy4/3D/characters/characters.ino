@@ -195,17 +195,6 @@ bool  moveModel() // remark: need to keep the tgx:: prefix in function signature
 **/
 void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RGB565>* mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
     {
-    static elapsedMillis em = 0; // number of milli elapsed since last fps update
-    static int fps = 0; // last fps 
-    static int count = 0; // number of frame since the last update
-    // recompute fps every second. 
-    count++;
-    if ((int)em > 1000)
-        {
-        em = 0;
-        fps = count;
-        count = 0;
-        }
     // count the number of triangles in the mesh (by iterating over linked meshes)
     const Mesh3D<RGB565>* m = mesh;
     int nbt = 0;
@@ -221,9 +210,6 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
     im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE_NEAREST ? " / texturing" : ""));
     im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-    sprintf(buf, "%d FPS", fps);
-    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
-    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     }
 
 
@@ -312,10 +298,13 @@ void loop()
     // overlay some info 
     drawInfo(im, shader, meshes[meshindex]);
 
+    // add FPS counter
+    tft.overlayFPS(fb); 
+    
     // update the screen
     tft.update(fb);
 
-    // print some info about the display driver
+    // periodically print some info about the display driver
     if (nbf++ % 200 == 0)
         {
         tft.printStats();

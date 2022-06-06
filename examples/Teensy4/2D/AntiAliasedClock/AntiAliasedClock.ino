@@ -136,7 +136,7 @@ void setup() {
     tft.setDiffBuffers(&diff1, &diff2);  // set the 2 diff buffers => activate differential updates 
     tft.setDiffGap(4);                   // use a small gap for the diff buffers
     tft.setRefreshRate(120);             // around 120hz for the display refresh rate 
-    tft.setVSyncSpacing(2);              // set framerate = refreshrate/2 (and enable vsync at the same time) 
+    tft.setVSyncSpacing(1);              // set framerate = refreshrate/2 (and enable vsync at the same time) 
 
     // make sure backlight is on
     if (PIN_BACKLIGHT != 255) {

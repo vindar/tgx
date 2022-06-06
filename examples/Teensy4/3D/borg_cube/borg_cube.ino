@@ -156,30 +156,6 @@ void splash()
     }
 
 
-/** draw the current fps on the image */
-void fps(const char* str)
-    {
-    static elapsedMillis em = 0; // number of milli elapsed since last fps update
-    static int fps = 0;         // last fps 
-    static int count = 0;       // number of frames since the last update
-    // recompute fps every second. 
-    count++;
-    if ((int)em > 1000)
-        {
-        em = 0;
-        fps = count;
-        count = 0;
-        }
-    // display 
-    im.drawText(str, {3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-    char buf[10];
-    sprintf(buf, "%d FPS", fps);
-    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
-    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-    }
-
-
-
 elapsedMillis em = 0; // time
 int nbf = 0; ; // number frames drawn
 int projtype = 0; // current projection used. 
@@ -200,8 +176,13 @@ void loop()
 
     renderer.drawCube(&texture, & texture, & texture, & texture, & texture, & texture); // draw the textured cube
 
-    fps((projtype) ? "Perspective projection" : "Orthographic projection"); // overlay some infos
 
+    // info about the projection type
+    im.drawText((projtype) ? "Perspective projection" : "Orthographic projection", {3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
+
+    // add fps counter
+    tft.overlayFPS(fb); 
+    
     // update the screen (async). 
     tft.update(fb);
 
@@ -226,4 +207,3 @@ void loop()
        
 
 /** end of file */
-

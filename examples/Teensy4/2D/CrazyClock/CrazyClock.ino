@@ -167,6 +167,7 @@ void loop()
         im.fillScreen(RGB565_Black);  
         im.drawText("TGX library",iVec2{110,y1}, RGB565_Red, font_tgx_OpenSans_Bold_18, true);
         im.drawText("Crazy clock demo",iVec2{35,y2}, RGB565_White, font_tgx_OpenSans_Bold_28, true);      
+        tft.overlayFPS(fb);
         tft.update(fb);
         yield(); // to keep the board responsive
         }
@@ -182,6 +183,7 @@ void loop()
         drawClock(200 - t/5, sc);
         drawSmallHand(t/10, sc);
         drawLongHand(t/2, sc); 
+        tft.overlayFPS(fb);        
         tft.update(fb);
         yield(); // to keep the board responsive
         }
@@ -194,6 +196,7 @@ void loop()
         drawClock(0, 1.0f);
         drawSmallHand(100 +360*sin(t / 1500.0f), 1.0f);
         drawLongHand(500*cos(t / 5000.0f), 1.0f); 
+        tft.overlayFPS(fb);        
         tft.update(fb);              
         yield(); // to keep the board responsive
         }  
@@ -205,6 +208,7 @@ void loop()
         drawClock(0, 1.0f);
         drawSmallHand(100 +360*sin(t / 1500.0f), 0.292893 + abs(sin( 0.7853981 + (t-10000.0f) / 3000.0f)));
         drawLongHand(500*cos(t / 5000.0f), 0.292893 + abs(cos( 0.7853981 + (t-10000.0f) / 3000.0f))); 
+        tft.overlayFPS(fb);        
         tft.update(fb);              
         yield(); // to keep the board responsive
         }      
@@ -216,6 +220,7 @@ void loop()
         drawClock( 150.0f*sin((t-20000.0f) / 2000.0f), 1.0f);
         drawSmallHand(100 +360*sin(t / 1500.0f), 0.292893 + abs(sin( 0.7853981 + (t-10000.0f) / 3000.0f)));
         drawLongHand(500*cos(t / 5000.0f), 0.292893 + abs(cos( 0.7853981 + (t-10000.0f) / 3000.0f))); 
+        tft.overlayFPS(fb);        
         tft.update(fb);              
         yield(); // to keep the board responsive
         }  
@@ -227,6 +232,7 @@ void loop()
         drawClock( 150.0f*sin((t-20000.0f) / 2000.0f), 1.0f - (t - 35000.0f)/5000.0f, 1.0f - (t - 35000.0f)/5000.0f);
         drawSmallHand(100 +360*sin(t / 1500.0f), 0.292893 + abs(sin( 0.7853981 + (t-10000.0f) / 3000.0f)), 1.0f - (t - 35000.0f)/5000.0f);
         drawLongHand(500*cos(t / 5000.0f), 0.292893 + abs(cos( 0.7853981 + (t-10000.0f) / 3000.0f)), 1.0f - (t - 35000.0f)/5000.0f); 
+        tft.overlayFPS(fb);        
         tft.update(fb);              
         yield();
         }  

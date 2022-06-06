@@ -95,7 +95,7 @@ Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
 // DTCM and DMAMEM buffers used to cache meshes into RAM
 // which is faster than progmem: caching may lead to significant speedup. 
 
-const int DTCM_buf_size = 35000; // adjust this value to fill unused DTCM but leave at least 20K for the stack to be sure
+const int DTCM_buf_size = 10000; // adjust this value to fill unused DTCM but leave at least 20K for the stack to be sure
 char buf_DTCM[DTCM_buf_size];
 
 const int DMAMEM_buf_size = 330000; // adjust this value to fill unused DMAMEM,  leave at least 10k for additional serial objects. 
@@ -110,17 +110,6 @@ const tgx::Mesh3D<tgx::RGB565> * cached_mesh; // pointer to the currently cached
 **/
 void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RGB565> & mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
     {
-    static elapsedMillis em = 0; // number of milli elapsed since last fps update
-    static int fps = 0; // last fps 
-    static int count = 0; // number of frame since the last update
-    // recompute fps every second. 
-    count++; 
-    if ((int)em > 1000)
-        {
-        em = 0; 
-        fps = count;
-        count = 0;
-        }
     // count the number of triangles in the mesh (by iterating over linked meshes)
     const Mesh3D<RGB565> * m = &mesh;
     int nbt = 0;
@@ -136,9 +125,6 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
     im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE_BILINEAR ? " / texturing (bilinear)" : (shader & TGX_SHADER_TEXTURE_NEAREST ? " / texturing (nearest neighbour)" : "")));
     im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-    sprintf(buf, "%d FPS", fps);
-    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_10, false);
-    im.drawText(buf, { SLX - B.lx() - 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
     }
     
 
@@ -213,6 +199,9 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
         // draw the mesh on the image
         renderer.drawMesh(cached_mesh, false);
 
+        // add the FPs counter
+        tft.overlayFPS(fb); 
+        
         // overlay some info 
         drawInfo(im, shader, *mesh);
 
