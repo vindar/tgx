@@ -128,11 +128,11 @@ void setup() {
     setTime(now());
 
     // display
-    while (!tft.begin(SPI_SPEED)) delay(1000);
+    while (!tft.begin(SPI_SPEED));
 
     tft.setScroll(0);
     tft.setRotation(0);
-    tft.setFramebuffers(ib);             // set 1 internal framebuffer -> activate float buffering
+    tft.setFramebuffer(ib);              // set 1 internal framebuffer -> activate float buffering
     tft.setDiffBuffers(&diff1, &diff2);  // set the 2 diff buffers => activate differential updates 
     tft.setDiffGap(4);                   // use a small gap for the diff buffers
     tft.setRefreshRate(120);             // around 120hz for the display refresh rate 

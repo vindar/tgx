@@ -229,11 +229,7 @@ void setup()
     tft.output(&Serial);                // output debug infos to serial port. 
 
     // initialize the ILI9341 screen
-    while (!tft.begin(SPI_SPEED))
-        {
-        Serial.println("Initialization error...");
-        delay(1000);
-        }
+    while (!tft.begin(SPI_SPEED));
 
     // ok. turn on backlight
     pinMode(PIN_BACKLIGHT, OUTPUT);
@@ -241,7 +237,7 @@ void setup()
 
     // setup the screen driver 
     tft.setRotation(0); // portrait mode
-    tft.setFramebuffers(internal_fb); // double buffering
+    tft.setFramebuffer(internal_fb); // double buffering
     tft.setDiffBuffers(&diff1, &diff2); // 2 diff buffers
     tft.setDiffGap(4); // small gap
     tft.setVSyncSpacing(0); // do not use v-sync because we want to measure the max framerate; 
