@@ -24,8 +24,8 @@ using namespace tgx;
 #include "3Dmodels/nanosuit/nanosuit.h"
 #include "3Dmodels/R2D2/R2D2.h"
 
-// additional meshes for Teensy 4.1 since it has more flash. 
-#if defined(ARDUINO_TEENSY41)
+// additional meshes for Teensy 4.1 / MicroMod since it has more flash. 
+#if defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSY_MICROMOD)
 #include "3Dmodels/elementalist/elementalist.h"
 #include "3Dmodels/sinbad/sinbad.h"
 #include "3Dmodels/cyborg/cyborg.h"
@@ -108,7 +108,7 @@ const int shader = TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_
 
 
 // list of meshes to display
-#if defined(ARDUINO_TEENSY41)
+#if defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSY_MICROMOD)
 const Mesh3D<RGB565>* meshes[9] = { &nanosuit_1, &elementalist_1, &sinbad_1, &cyborg, &naruto_1, &manga3_1, &dennis, &R2D2, &stormtrooper };
 #else
 const Mesh3D<RGB565>* meshes[2] = { &nanosuit_1,  &R2D2 };
