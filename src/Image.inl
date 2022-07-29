@@ -664,6 +664,616 @@ namespace tgx
 
 
 
+    /** Draw a Bresenham segment */
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_drawSeg(bool checkrange, int x0, int y0, int x1, int y1, bool draw_last, color_t color, float opacity)
+        {
+        const int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+        const int dy = -abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+        int err = dx + dy, e2; /* error value e_xy */
+        while ((x0 != x1) || (y0 != y1))
+            {
+            _drawPixel<BLEND>(checkrange, x0, y0, color, opacity);
+            e2 = 2 * err;
+            if (e2 >= dy) { err += dy; x0 += sx; }
+            if (e2 <= dx) { err += dx; y0 += sy; }
+            }
+        if (draw_last) _drawPixel<BLEND>(checkrange, x1, y1, color, opacity);
+        }
+
+
+
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_drawPolyLine(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity)
+    {
+        if (!isValid()) return;
+        for (int i = 0; i < nbpoints - 1; i++)
+        {
+            _drawSeg<BLEND>(true, tabPoints[i].x, tabPoints[i].y, tabPoints[i + 1].x, tabPoints[i + 1].y, ((draw_last_point) && (i == nbpoints - 2)), color, opacity);
+        }
+    }
+
+
+
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
+    {
+        if (!isValid()) return;
+        for (int i = 0; i < nbpoints - 1; i++)
+        {
+            _drawSeg<BLEND>(true, tabPoints[i].x, tabPoints[i].y, tabPoints[i + 1].x, tabPoints[i + 1].y, false, color, opacity);
+        }
+        _drawSeg<BLEND>(true, tabPoints[nbpoints - 1].x, tabPoints[nbpoints - 1].y, tabPoints[0].x, tabPoints[0].y, false, color, opacity);
+    }
+
+
+    /*****************************************************
+    * Bezier / Splines
+    ******************************************************/
+
+
+    /**
+    * draw a limited rational Bezier segment, squared weight. Used by _plotQuadRationalBezier().
+    * adapted from Alois Zingl  (http://members.chello.at/easyfilter/bresenham.html)
+    * change: do not draw the endpoint (x2,y2)
+    **/
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_plotQuadRationalBezierSeg(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const color_t color, const float opacity)
+    {
+        if ((x0 == x2) && (y0 == y2)) { return; }
+        int sx = x2 - x1, sy = y2 - y1;
+        float dx = (float)(x0 - x2), dy = (float)(y0 - y2), xx = (float)(x0 - x1), yy = (float)(y0 - y1);
+        float xy = xx * sy + yy * sx, cur = xx * sy - yy * sx, err;
+        if ((cur == 0) || (w <= 0))
+        {
+            _drawSeg<BLEND>(checkrange, x0, y0, x2, y2, false, color, opacity);
+            return;
+        }
+        bool sw = false;
+        if (sx * sx + sy * sy > xx * xx + yy * yy)
+        {
+            x2 = x0; x0 -= (int)dx; y2 = y0; y0 -= (int)dy; cur = -cur;
+            sw = true;
+        }
+        xx = 2.0f * (4.0f * w * sx * xx + dx * dx);
+        yy = 2.0f * (4.0f * w * sy * yy + dy * dy);
+        sx = x0 < x2 ? 1 : -1;
+        sy = y0 < y2 ? 1 : -1;
+        xy = -2.0f * sx * sy * (2.0f * w * xy + dx * dy);
+        if (cur * sx * sy < 0.0f) { xx = -xx; yy = -yy; xy = -xy; cur = -cur; }
+        dx = 4.0f * w * (x1 - x0) * sy * cur + xx / 2.0f + xy;
+        dy = 4.0f * w * (y0 - y1) * sx * cur + yy / 2.0f + xy;
+        if (w < 0.5f && (dy > xy || dx < xy))
+        {
+            cur = (w + 1.0f) / 2.0f; w = sqrtf(w); xy = 1.0f / (w + 1.0f);
+            sx = (int)floorf((x0 + 2.0f * w * x1 + x2) * xy / 2.0f + 0.5f);
+            sy = (int)floorf((y0 + 2.0f * w * y1 + y2) * xy / 2.0f + 0.5f);
+            dx = floorf((w * x1 + x0) * xy + 0.5f); dy = floorf((y1 * w + y0) * xy + 0.5f);
+            if (sw)
+            {
+                _plotQuadRationalBezierSeg<BLEND>(checkrange, sx, sy, (int)dx, (int)dy, x0, y0, cur, color, opacity);
+                dx = floorf((w * x1 + x2) * xy + 0.5f); dy = floorf((y1 * w + y2) * xy + 0.5f);
+                _plotQuadRationalBezierSeg<BLEND>(checkrange, x2, y2, (int)dx, (int)dy, sx, sy, cur, color, opacity);
+            }
+            else
+            {
+                _plotQuadRationalBezierSeg<BLEND>(checkrange, x0, y0, (int)dx, (int)dy, sx, sy, cur, color, opacity);
+                dx = floorf((w * x1 + x2) * xy + 0.5f); dy = floorf((y1 * w + y2) * xy + 0.5f);
+                _plotQuadRationalBezierSeg<BLEND>(checkrange, sx, sy, (int)dx, (int)dy, x2, y2, cur, color, opacity);
+            }
+            return;
+        }
+        err = dx + dy - xy;
+        if (sw)
+        {
+            x1 = 2 * err > dy; y1 = 2 * (err + yy) < -dy;
+            if (2 * err < dx || y1) { y0 += sy; dy += xy; err += dx += xx; }
+            if (2 * err > dx || x1) { x0 += sx; dx += xy; err += dy += yy; }
+        }
+        while (dy <= xy && dx >= xy)
+        {
+            if (x0 == x2 && y0 == y2)
+            {
+                if (sw) _drawPixel<BLEND>(checkrange, x0, y0, color, opacity); // write last if swaped
+                return;
+            }
+            _drawPixel<BLEND>(checkrange, x0, y0, color, opacity);
+            x1 = 2 * err > dy; y1 = 2 * (err + yy) < -dy;
+            if (2 * err < dx || y1) { y0 += sy; dy += xy; err += dx += xx; }
+            if (2 * err > dx || x1) { x0 += sx; dx += xy; err += dy += yy; }
+        }
+        _drawSeg<BLEND>(checkrange, x0, y0, x2, y2, sw, color, opacity);
+    }
+
+
+    /**
+    * Plot any quadratic rational Bezier curve.
+    * adapted from Alois Zingl  (http://members.chello.at/easyfilter/bresenham.html)
+    * change: do not draw always the endpoint (x2,y2)
+    **/
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_plotQuadRationalBezier(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const bool draw_P2, const color_t color, const float opacity)
+    {
+        if (checkrange)
+        { // check if we can discard the whole curve
+            iBox2 mbr(iVec2{ x0, y0 });
+            mbr |= iVec2{ x1, y1 };
+            mbr |= iVec2{ x2, y2 };
+            if ((mbr & iBox2(0, _lx - 1, 0, _ly - 1)).isEmpty()) return;
+        }
+        if (draw_P2) { _drawPixel<BLEND>(checkrange, x2, y2, color, opacity); }
+        if ((x0 == x2) && (y0 == y2)) { return; }
+        int x = x0 - 2 * x1 + x2, y = y0 - 2 * y1 + y2;
+        float xx = (float)(x0 - x1), yy = (float)(y0 - y1), ww, t, q;
+        if (xx * (x2 - x1) > 0)
+        {
+            if (yy * (y2 - y1) > 0)
+                if (fabs(xx * y) > fabs(yy * x))
+                {
+                    x0 = x2; x2 = (int)(xx + x1); y0 = y2; y2 = (int)(yy + y1);
+                }
+            if (x0 == x2 || w == 1.0f) t = (x0 - x1) / (float)x;
+            else
+            {
+                q = sqrtf(4.0f * w * w * (x0 - x1) * (x2 - x1) + (x2 - x0) * (x2 - x0));
+                if (x1 < x0) q = -q;
+                t = (2.0f * w * (x0 - x1) - x0 + x2 + q) / (2.0f * (1.0f - w) * (x2 - x0));
+            }
+            q = 1.0f / (2.0f * t * (1.0f - t) * (w - 1.0f) + 1.0f);
+            xx = (t * t * (x0 - 2.0f * w * x1 + x2) + 2.0f * t * (w * x1 - x0) + x0) * q;
+            yy = (t * t * (y0 - 2.0f * w * y1 + y2) + 2.0f * t * (w * y1 - y0) + y0) * q;
+            ww = t * (w - 1.0f) + 1.0f; ww *= ww * q;
+            w = ((1.0f - t) * (w - 1.0f) + 1.0f) * sqrtf(q);
+            x = (int)floorf(xx + 0.5f); y = (int)floorf(yy + 0.5f);
+            yy = (xx - x0) * (y1 - y0) / (x1 - x0) + y0;
+            _plotQuadRationalBezierSeg<BLEND>(checkrange, x0, y0, x, (int)floorf(yy + 0.5f), x, y, ww, color, opacity);
+            yy = (xx - x2) * (y1 - y2) / (x1 - x2) + y2;
+            y1 = (int)floorf(yy + 0.5f); x0 = x1 = x; y0 = y;
+        }
+        if ((y0 - y1) * (y2 - y1) > 0)
+        {
+            if (y0 == y2 || w == 1.0f) t = (y0 - y1) / (y0 - 2.0f * y1 + y2);
+            else
+            {
+                q = sqrtf(4.0f * w * w * (y0 - y1) * (y2 - y1) + (y2 - y0) * (y2 - y0));
+                if (y1 < y0) q = -q;
+                t = (2.0f * w * (y0 - y1) - y0 + y2 + q) / (2.0f * (1.0f - w) * (y2 - y0));
+            }
+            q = 1.0f / (2.0f * t * (1.0f - t) * (w - 1.0f) + 1.0f);
+            xx = (t * t * (x0 - 2.0f * w * x1 + x2) + 2.0f * t * (w * x1 - x0) + x0) * q;
+            yy = (t * t * (y0 - 2.0f * w * y1 + y2) + 2.0f * t * (w * y1 - y0) + y0) * q;
+            ww = t * (w - 1.0f) + 1.0f; ww *= ww * q;
+            w = ((1.0f - t) * (w - 1.0f) + 1.0f) * sqrtf(q);
+            x = (int)floorf(xx + 0.5f); y = (int)floorf(yy + 0.5f);
+            xx = (x1 - x0) * (yy - y0) / (y1 - y0) + x0;
+            _plotQuadRationalBezierSeg<BLEND>(checkrange, x0, y0, (int)floorf(xx + 0.5f), y, x, y, ww, color, opacity);
+            xx = (x1 - x2) * (yy - y2) / (y1 - y2) + x2;
+            x1 = (int)floorf(xx + 0.5f); x0 = x; y0 = y1 = y;
+        }
+        _plotQuadRationalBezierSeg<BLEND>(checkrange, x0, y0, x1, y1, x2, y2, w * w, color, opacity);
+    }
+
+
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_drawQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, bool drawP2, color_t color, float opacity)
+    {
+        if (!isValid()) return;
+        if (wc < 0) wc = 0;
+        const bool checkrange = ((P1.x < 0) || (P2.x < 0) || (PC.x < 0) ||
+            (P1.y < 0) || (P2.y < 0) || (PC.y < 0) ||
+            (P1.x >= _lx) || (P2.x >= _lx) || (PC.x >= _lx) ||
+            (P1.y >= _ly) || (P2.y >= _ly) || (PC.y >= _ly));
+        _plotQuadRationalBezier<BLEND>(checkrange, P1.x, P1.y, PC.x, PC.y, P2.x, P2.y, wc, drawP2, color, opacity);
+    }
+
+
+
+    /**
+    * Plot a limited cubic Bezier segment.
+    * adapted from Alois Zingl  (http://members.chello.at/easyfilter/bresenham.html)
+    * change: do not draw always the endpoint (x2,y2)
+    **/
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_plotCubicBezierSeg(const bool checkrange, int x0, int y0, float x1, float y1, float x2, float y2, int x3, int y3, const color_t color, const float opacity)
+    {
+        if ((x0 == x3) && (y0 == y3)) return;
+        int sax3 = x3, say3 = y3;
+        int f, fx, fy, leg = 1;
+        int sx = x0 < x3 ? 1 : -1, sy = y0 < y3 ? 1 : -1;
+        float xc = -fabs(x0 + x1 - x2 - x3), xa = xc - 4 * sx * (x1 - x2), xb = sx * (x0 - x1 - x2 + x3);
+        float yc = -fabs(y0 + y1 - y2 - y3), ya = yc - 4 * sy * (y1 - y2), yb = sy * (y0 - y1 - y2 + y3);
+        float ab, ac, bc, cb, xx, xy, yy, dx, dy, ex, * pxy, EP = 0.01f;
+        if (xa == 0 && ya == 0)
+        {
+            sx = (int)floorf((3 * x1 - x0 + 1) / 2); sy = (int)floorf((3 * y1 - y0 + 1) / 2);
+            _plotQuadRationalBezierSeg<BLEND>(checkrange, x0, y0, sx, sy, x3, y3, 1.0f, color, opacity);
+            return;
+        }
+        x1 = (x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0) + 1;
+        x2 = (x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3) + 1;
+        do {
+            ab = xa * yb - xb * ya; ac = xa * yc - xc * ya; bc = xb * yc - xc * yb;
+            ex = ab * (ab + ac - 3 * bc) + ac * ac;
+            f = (ex > 0) ? 1 : (int)sqrtf(1 + 1024 / x1);
+            ab *= f; ac *= f; bc *= f; ex *= f * f;
+            xy = 9 * (ab + ac + bc) / 8; cb = 8 * (xa - ya);
+            dx = 27 * (8 * ab * (yb * yb - ya * yc) + ex * (ya + 2 * yb + yc)) / 64 - ya * ya * (xy - ya);
+            dy = 27 * (8 * ab * (xb * xb - xa * xc) - ex * (xa + 2 * xb + xc)) / 64 - xa * xa * (xy + xa);
+            xx = 3 * (3 * ab * (3 * yb * yb - ya * ya - 2 * ya * yc) - ya * (3 * ac * (ya + yb) + ya * cb)) / 4;
+            yy = 3 * (3 * ab * (3 * xb * xb - xa * xa - 2 * xa * xc) - xa * (3 * ac * (xa + xb) + xa * cb)) / 4;
+            xy = xa * ya * (6 * ab + 6 * ac - 3 * bc + cb); ac = ya * ya; cb = xa * xa;
+            xy = 3 * (xy + 9 * f * (cb * yb * yc - xb * xc * ac) - 18 * xb * yb * ab) / 8;
+            if (ex < 0) { dx = -dx; dy = -dy; xx = -xx; yy = -yy; xy = -xy; ac = -ac; cb = -cb; }
+            ab = 6 * ya * ac; ac = -6 * xa * ac; bc = 6 * ya * cb; cb = -6 * xa * cb;
+            dx += xy; ex = dx + dy; dy += xy; /* error of 1st step */
+            for (pxy = &xy, fx = fy = f; x0 != x3 && y0 != y3; )
+            {
+                if ((x0 != sax3) || (y0 != say3)) _drawPixel<BLEND>(checkrange, x0, y0, color, opacity);
+                do
+                {
+                    if (dx > *pxy || dy < *pxy) goto exit_cubic_bezier_seg;
+                    y1 = 2 * ex - dy;
+                    if (2 * ex >= dx) { fx--; ex += dx += xx; dy += xy += ac; yy += bc; xx += ab; }
+                    if (y1 <= 0) { fy--; ex += dy += yy; dx += xy += bc; xx += ac; yy += cb; }
+                } while (fx > 0 && fy > 0);
+                if (2 * fx <= f) { x0 += sx; fx += f; }
+                if (2 * fy <= f) { y0 += sy; fy += f; }
+                if (pxy == &xy && dx < 0 && dy > 0) pxy = &EP;
+            }
+        exit_cubic_bezier_seg:
+            xx = (float)x0; x0 = x3; x3 = (int)xx; sx = -sx; xb = -xb;
+            yy = (float)y0; y0 = y3; y3 = (int)yy; sy = -sy; yb = -yb; x1 = x2;
+        } while (leg--);
+        if ((x0 == sax3) && (y0 == say3)) { _drawSeg<BLEND>(checkrange, x3, y3, x0, y0, false, color, opacity); }
+        else if ((x3 == sax3) && (y3 == say3)) { _drawSeg<BLEND>(checkrange, x0, y0, x3, y3, false, color, opacity); }
+        else _drawSeg<BLEND>(checkrange, x0, y0, x3, y3, true, color, opacity);
+    }
+
+
+
+    /**
+    * Plot any cubic Bezier curve.
+    * adapted from Alois Zingl  (http://members.chello.at/easyfilter/bresenham.html)
+    * change: do not draw always the endpoint (x2,y2)
+    **/
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_plotCubicBezier(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, bool draw_P2, const color_t color, const float opacity)
+    {
+        if (checkrange)
+        { // check if we can discard the whole curve
+            iBox2 mbr(iVec2{ x0, y0 });
+            mbr |= iVec2{ x1, y1 };
+            mbr |= iVec2{ x2, y2 };
+            mbr |= iVec2{ x3, y3 };
+            if ((mbr & iBox2(0, _lx - 1, 0, _ly - 1)).isEmpty()) return;
+        }
+        if (draw_P2) { _drawPixel<BLEND>(checkrange, x3, y3, color, opacity); }
+        if ((x0 == x3) && (y0 == y3)) return;
+        int n = 0, i = 0;
+        int xc = x0 + x1 - x2 - x3, xa = xc - 4 * (x1 - x2);
+        int xb = x0 - x1 - x2 + x3, xd = xb + 4 * (x1 + x2);
+        int yc = y0 + y1 - y2 - y3, ya = yc - 4 * (y1 - y2);
+        int yb = y0 - y1 - y2 + y3, yd = yb + 4 * (y1 + y2);
+        float fx0 = (float)x0, fx1, fx2, fx3, fy0 = (float)y0, fy1, fy2, fy3;
+        float t1 = (float)(xb * xb - xa * xc), t2, t[6];
+        if (xa == 0) { if (fabs(xc) < 2 * fabs(xb)) t[n++] = xc / (2.0f * xb); }
+        else if (t1 > 0.0f)
+        {
+            t2 = sqrtf(t1);
+            t1 = (xb - t2) / xa; if (fabs(t1) < 1.0f) t[n++] = t1;
+            t1 = (xb + t2) / xa; if (fabs(t1) < 1.0f) t[n++] = t1;
+        }
+        t1 = (float)(yb * yb - ya * yc);
+        if (ya == 0) { if (fabs(yc) < 2 * fabs(yb)) t[n++] = yc / (2.0f * yb); }
+        else if (t1 > 0.0f)
+        {
+            t2 = sqrtf(t1);
+            t1 = (yb - t2) / ya; if (fabs(t1) < 1.0f) t[n++] = t1;
+            t1 = (yb + t2) / ya; if (fabs(t1) < 1.0f) t[n++] = t1;
+        }
+        for (i = 1; i < n; i++) if ((t1 = t[i - 1]) > t[i]) { t[i - 1] = t[i]; t[i] = t1; i = 0; }
+        t1 = -1.0f; t[n] = 1.0f;
+        for (i = 0; i <= n; i++)
+        {
+            t2 = t[i];
+            fx1 = (t1 * (t1 * xb - 2 * xc) - t2 * (t1 * (t1 * xa - 2 * xb) + xc) + xd) / 8 - fx0;
+            fy1 = (t1 * (t1 * yb - 2 * yc) - t2 * (t1 * (t1 * ya - 2 * yb) + yc) + yd) / 8 - fy0;
+            fx2 = (t2 * (t2 * xb - 2 * xc) - t1 * (t2 * (t2 * xa - 2 * xb) + xc) + xd) / 8 - fx0;
+            fy2 = (t2 * (t2 * yb - 2 * yc) - t1 * (t2 * (t2 * ya - 2 * yb) + yc) + yd) / 8 - fy0;
+            fx0 -= fx3 = (t2 * (t2 * (3 * xb - t2 * xa) - 3 * xc) + xd) / 8;
+            fy0 -= fy3 = (t2 * (t2 * (3 * yb - t2 * ya) - 3 * yc) + yd) / 8;
+            x3 = (int)floorf(fx3 + 0.5f); y3 = (int)floorf(fy3 + 0.5f);
+            if (fx0 != 0.0f) { fx1 *= fx0 = (x0 - x3) / fx0; fx2 *= fx0; }
+            if (fy0 != 0.0f) { fy1 *= fy0 = (y0 - y3) / fy0; fy2 *= fy0; }
+            if (x0 != x3 || y0 != y3)
+            {
+                _plotCubicBezierSeg<BLEND>(checkrange, x0, y0, x0 + fx1, y0 + fy1, x0 + fx2, y0 + fy2, x3, y3, color, opacity);
+            }
+            x0 = x3; y0 = y3; fx0 = fx3; fy0 = fy3; t1 = t2;
+        }
+    }
+
+
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_drawCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, bool drawP2, color_t color, float opacity)
+    {
+        if (!isValid()) return;
+        const bool checkrange = ((P1.x < 0) || (P2.x < 0) || (PA.x < 0) || (PB.x < 0) ||
+            (P1.y < 0) || (P2.y < 0) || (PA.y < 0) || (PB.y < 0) ||
+            (P1.x >= _lx) || (P2.x >= _lx) || (PA.x >= _lx) || (PB.x >= _lx) ||
+            (P1.y >= _ly) || (P2.y >= _ly) || (PA.y >= _ly) || (PB.y >= _ly));
+        _plotCubicBezier<BLEND>(checkrange, P1.x, P1.y, PA.x, PA.y, PB.x, PB.y, P2.x, P2.y, drawP2, color, opacity);
+    }
+
+
+    /**
+    * plot quadratic spline, destroys input arrays x,y.
+    * adapted from Alois Zingl  (http://members.chello.at/easyfilter/bresenham.html)
+    * change: do not draw always the endpoint (x2,y2)
+    **/
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_plotQuadSpline(int n, int x[], int y[], bool draw_last, const color_t color, const float opacity)
+    {
+        if (draw_last) { _drawPixel<BLEND>(true, x[n], y[n], color, opacity); }
+        const int M_MAX = 6;
+        float mi = 1, m[M_MAX];
+        int i, x0, y0, x1, y1, x2 = x[n], y2 = y[n];
+        x[1] = x0 = 8 * x[1] - 2 * x[0];
+        y[1] = y0 = 8 * y[1] - 2 * y[0];
+        for (i = 2; i < n; i++)
+        {
+            if (i - 2 < M_MAX) m[i - 2] = mi = 1.0f / (6.0f - mi);
+            x[i] = x0 = (int)floorf(8 * x[i] - x0 * mi + 0.5f);
+            y[i] = y0 = (int)floorf(8 * y[i] - y0 * mi + 0.5f);
+        }
+        x1 = (int)(floorf((x0 - 2 * x2) / (5.0f - mi) + 0.5f));
+        y1 = (int)(floorf((y0 - 2 * y2) / (5.0f - mi) + 0.5f));
+        for (i = n - 2; i > 0; i--)
+        {
+            if (i <= M_MAX) mi = m[i - 1];
+            x0 = (int)floorf((x[i] - x1) * mi + 0.5f);
+            y0 = (int)floorf((y[i] - y1) * mi + 0.5f);
+            _drawQuadBezier<BLEND>({ (x0 + x1) / 2, (y0 + y1) / 2 }, { x2, y2 }, { x1, y1 }, 1.0f, false, color, opacity);
+            x2 = (x0 + x1) / 2; x1 = x0;
+            y2 = (y0 + y1) / 2; y1 = y0;
+        }
+        _drawQuadBezier<BLEND>({ x[0], y[0] }, { x2, y2 }, { x1, y1 }, 1.0f, false, color, opacity);
+    }
+
+
+    template<typename color_t>
+    template<int SPLINE_MAX_POINTS, bool BLEND> void Image<color_t>::_drawQuadSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity)
+    {
+        if (!isValid()) return;
+        if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
+        switch (nbpoints)
+        {
+        case 0:
+        {
+            return;
+        }
+        case 1:
+        {
+            if (draw_last_point) _drawPixel<BLEND>(true, tabPoints[0].x, tabPoints[0].y, color, opacity);
+            return;
+        }
+        case 2:
+        {
+            _drawSeg<BLEND>(true, tabPoints[0].x, tabPoints[0].y, tabPoints[1].x, tabPoints[1].y, draw_last_point, color, opacity);
+            return;
+        }
+        default:
+        {
+            int xx[SPLINE_MAX_POINTS];
+            int yy[SPLINE_MAX_POINTS];
+            for (int n = 0; n < nbpoints; n++)
+            {
+                xx[n] = tabPoints[n].x;
+                yy[n] = tabPoints[n].y;
+            }
+            _plotQuadSpline<BLEND>(nbpoints - 1, xx, yy, draw_last_point, color, opacity);
+        }
+        }
+    }
+
+
+    /**
+    * Uses the method described in "On the solution of circulant linear systems (Chen 1985)
+    * to solve the linear system with circulant matrix:
+    *
+    *  |61    1|   |Q1|   |8P1|
+    *  |161    |   |Q2|   |8P2|
+    *  | ...   |   |. |   |.  |
+    *  |  ...  | x |. | = |.  |
+    *  |   ... |   |. |   |.  |
+    *  |    161|   |. |   |.  |
+    *  |1    16|   |Qn|   |8Pn|
+    *
+    * Same as Alois Zingl  (http://members.chello.at/easyfilter/bresenham.html) page 85 but
+    * for closed Bezier curve...
+    **/
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_plotClosedSpline(int n, int x[], int y[], const color_t color, const float opacity)
+    {
+        const float a = 0.1715728752538099f; // 3 - 2 * sqrt(2)
+        float ux = 0, uy = 0;
+        float p = 1;
+        for (int i = 1; i <= n; i++)
+        {
+            x[n - i] *= 8;
+            y[n - i] *= 8;
+            ux += (x[n - i] * p);
+            uy += (y[n - i] * p);
+            p *= (-a);
+        }
+        const float eta = a / (1 - p);
+
+        float xx, yy;
+        xx = a * (x[0] - (eta * ux));
+        yy = a * (y[0] - (eta * uy));
+        x[0] = (int)floorf(xx + 0.5f);
+        y[0] = (int)floorf(yy + 0.5f);
+        for (int i = 1; i < n; i++)
+        {
+            xx = a * (x[i] - xx);
+            yy = a * (y[i] - yy);
+            x[i] = (int)floorf(xx + 0.5f);
+            y[i] = (int)floorf(yy + 0.5f);
+        }
+
+        ux = 0, uy = 0;
+        p = 1;
+        for (int i = 0; i < n; i++)
+        {
+            ux += (x[i] * p);
+            uy += (y[i] * p);
+            p *= (-a);
+        }
+
+        xx = x[n - 1] - (eta * ux);
+        yy = y[n - 1] - (eta * uy);
+        x[n - 1] = (int)floorf(xx + 0.5f);
+        y[n - 1] = (int)floorf(yy + 0.5f);
+
+        for (int i = n - 2; i >= 0; i--)
+        {
+            xx = x[i] - a * xx;
+            yy = y[i] - a * yy;
+            x[i] = (int)floorf(xx + 0.5f);
+            y[i] = (int)floorf(yy + 0.5f);
+        }
+        _drawQuadBezier<BLEND>({ (x[n - 1] + x[0]) / 2, (y[n - 1] + y[0]) / 2 }, { (x[0] + x[1]) / 2, (y[0] + y[1]) / 2 }, { x[0], y[0] }, 1.0f, false, color, opacity);
+        for (int i = 1; i < n - 1; i++)
+        {
+            _drawQuadBezier<BLEND>({ (x[i - 1] + x[i]) / 2, (y[i - 1] + y[i]) / 2 }, { (x[i] + x[i + 1]) / 2, (y[i] + y[i + 1]) / 2 }, { x[i], y[i] }, 1.0f, false, color, opacity);
+        }
+        _drawQuadBezier<BLEND>({ (x[n - 2] + x[n - 1]) / 2, (y[n - 2] + y[n - 1]) / 2 }, { (x[n - 1] + x[0]) / 2, (y[n - 1] + y[0]) / 2 }, { x[n - 1], y[n - 1] }, 1.0f, false, color, opacity);
+    }
+
+
+    template<typename color_t>
+    template<int SPLINE_MAX_POINTS, bool BLEND> void Image<color_t>::_drawClosedSpline(int nbpoints, const iVec2* tabPoints, color_t color, float opacity)
+    {
+        if (!isValid()) return;
+        if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
+        switch (nbpoints)
+        {
+        case 0:
+        {
+            return;
+        }
+        case 1:
+        {
+            _drawPixel<BLEND>(true, tabPoints[0].x, tabPoints[0].y, color, opacity);
+            return;
+        }
+        case 2:
+        {
+            _drawSeg<BLEND>(true, tabPoints[0].x, tabPoints[0].y, tabPoints[1].x, tabPoints[1].y, true, color, opacity);
+            return;
+        }
+        default:
+        {
+            int xx[SPLINE_MAX_POINTS];
+            int yy[SPLINE_MAX_POINTS];
+            for (int n = 0; n < nbpoints; n++)
+            {
+                xx[n] = tabPoints[n].x;
+                yy[n] = tabPoints[n].y;
+            }
+            _plotClosedSpline<BLEND>(nbpoints, xx, yy, color, opacity);
+        }
+        }
+    }
+
+
+    /**
+    * plot cubic spline, destroys input arrays x,y.
+    * adapted from Alois Zingl  (http://members.chello.at/easyfilter/bresenham.html)
+    * change: do not draw always the endpoint (x2,y2)
+    **/
+    template<typename color_t>
+    template<bool BLEND> void Image<color_t>::_plotCubicSpline(int n, int x[], int y[], bool draw_last, const color_t color, const float opacity)
+    {
+        if (draw_last) { _drawPixel<BLEND>(true, x[n], y[n], color, opacity); }
+        const int M_MAX = 6;
+        float mi = 0.25f, m[M_MAX];
+        int x3 = x[n - 1], y3 = y[n - 1], x4 = x[n], y4 = y[n];
+        int i, x0, y0, x1, y1, x2, y2;
+        x[1] = x0 = 12 * x[1] - 3 * x[0];
+        y[1] = y0 = 12 * y[1] - 3 * y[0];
+        for (i = 2; i < n; i++)
+        {
+            if (i - 2 < M_MAX) m[i - 2] = mi = 0.25f / (2.0f - mi);
+            x[i] = x0 = (int)floorf(12 * x[i] - 2 * x0 * mi + 0.5f);
+            y[i] = y0 = (int)floorf(12 * y[i] - 2 * y0 * mi + 0.5f);
+        }
+        x2 = (int)(floorf((x0 - 3 * x4) / (7 - 4 * mi) + 0.5f));
+        y2 = (int)(floorf((y0 - 3 * y4) / (7 - 4 * mi) + 0.5f));
+        _drawCubicBezier<BLEND>({ x3, y3 }, { x4, y4 }, { (x2 + x4) / 2, (y2 + y4) / 2 }, { x4, y4 }, false, color, opacity);
+        if (n - 3 < M_MAX) mi = m[n - 3];
+        x1 = (int)floorf((x[n - 2] - 2 * x2) * mi + 0.5f);
+        y1 = (int)floorf((y[n - 2] - 2 * y2) * mi + 0.5f);
+        for (i = n - 3; i > 0; i--)
+        {
+            if (i <= M_MAX) mi = m[i - 1];
+            x0 = (int)floorf((x[i] - 2 * x1) * mi + 0.5f);
+            y0 = (int)floorf((y[i] - 2 * y1) * mi + 0.5f);
+            x4 = (int)floorf((x0 + 4 * x1 + x2 + 3) / 6.0f);
+            y4 = (int)floorf((y0 + 4 * y1 + y2 + 3) / 6.0f);
+            _drawCubicBezier<BLEND>({ x4, y4 }, { x3, y3 }, { (int)floorf((2 * x1 + x2) / 3 + 0.5f), (int)floorf((2 * y1 + y2) / 3 + 0.5f) }, { (int)floorf((x1 + 2 * x2) / 3 + 0.5f), (int)floorf((y1 + 2 * y2) / 3 + 0.5f) }, false, color, opacity);
+            x3 = x4; y3 = y4; x2 = x1; y2 = y1; x1 = x0; y1 = y0;
+        }
+        x0 = x[0]; x4 = (int)floorf((3 * x0 + 7 * x1 + 2 * x2 + 6) / 12.0f);
+        y0 = y[0]; y4 = (int)floorf((3 * y0 + 7 * y1 + 2 * y2 + 6) / 12.0f);
+        _drawCubicBezier<BLEND>({ x4, y4 }, { x3, y3 }, { (int)floorf((2 * x1 + x2) / 3 + 0.5f), (int)floorf((2 * y1 + y2) / 3 + 0.5f) }, { (int)floorf((x1 + 2 * x2) / 3 + 0.5f), (int)floorf((y1 + 2 * y2) / 3 + 0.5f) }, false, color, opacity);
+        _drawCubicBezier<BLEND>({ x0, y0 }, { x4, y4 }, { x0, y0 }, { (x0 + x1) / 2, (y0 + y1) / 2 }, false, color, opacity);
+    }
+
+
+    template<typename color_t>
+    template<int SPLINE_MAX_POINTS, bool BLEND> void Image<color_t>::_drawCubicSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity)
+    {
+        if (!isValid()) return;
+        if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
+        switch (nbpoints)
+        {
+        case 0:
+        {
+            return;
+        }
+        case 1:
+        {
+            if (draw_last_point) _drawPixel<BLEND>(true, tabPoints[0].x, tabPoints[0].y, color, opacity);
+            return;
+        }
+        case 2:
+        {
+            _drawSeg<BLEND>(true, tabPoints[0].x, tabPoints[0].y, tabPoints[1].x, tabPoints[1].y, draw_last_point, color, opacity);
+            return;
+        }
+        case 3:
+        {
+            _drawQuadSpline<SPLINE_MAX_POINTS, BLEND>(nbpoints, tabPoints, draw_last_point, color, opacity);
+            return;
+        }
+        default:
+        {
+            int xx[SPLINE_MAX_POINTS];
+            int yy[SPLINE_MAX_POINTS];
+            for (int n = 0; n < nbpoints; n++)
+            {
+                xx[n] = tabPoints[n].x;
+                yy[n] = tabPoints[n].y;
+            }
+            _plotCubicSpline<BLEND>(nbpoints - 1, xx, yy, draw_last_point, color, opacity);
+        }
+        }
+    }
+
+
+
+
 
     /*****************************************************
     * Triangles
