@@ -1040,6 +1040,62 @@ namespace tgx
 
 
 
+        /*********************************************************************
+        *
+        * Flood filling
+        * 
+        **********************************************************************/
+
+
+
+        /**
+		* Flood fill a 4-connected region of the image.
+		* 
+		* Recolor the unicolor component containing position 'start_pos' with the color 'new_color'. 
+		* 
+        * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack.
+        * If the algorithm runs out of space, it stops without completing the filling (and return -1 to indicate failure).
+        * Otherwise, the method return the max number of bytes used on the stack during the filling.  
+        * 
+        * @param	start_pos   Start position. The color to replace is the color at that position.
+		* @param	new_color   New color to use 
+        * @return   return the max stack used during the algorithm. Return -1 if we run out of memory (in this
+        *           case the method returns early without completing the full filling.
+        **/
+        template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t new_color)
+            {
+            return _scanfill<true, STACK_SIZE>(start_pos.x,start_pos.y, new_color, new_color);
+            }
+
+
+
+		/**
+		* Flood fill a 4-connected region of the image.
+		*
+		* Recolor the connected component containing position 'startpos' whose boundary is delimited by 'border_color'. 
+		*
+        * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack. 
+        * If the algorithm runs out of space, it stops without completing the filling (and return -1 to indicate failure). 
+        * Otherwise, the method return the max number of bytes used on the stack during the filling.
+        *
+        * NOTE: During the algorithm, 'new_color' is treated the same as 'border_color' and will also block the
+        *       filling when encountered. 
+        * 
+		* @param	start_pos		Start position. 
+		* @param	border_color	border color that delimits the connected component to fill. 
+		* @param	new_color		New color to use
+        * @return   return the max stack used during the algorithm. Return -1 if we run out of memory (in this 
+        *           case the method returns early without completing the full filling. 
+		**/
+        template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t border_color, color_t new_color)
+            {
+            return _scanfill<false, STACK_SIZE>(start_pos.x, start_pos.y, border_color, new_color);
+            }
+
+
+
+
+
 
 
 
@@ -3226,6 +3282,15 @@ private:
         template<typename color_t_src, int CACHE_SIZE, bool USE_BLENDING, bool USE_MASK, bool USE_CUSTOM_OPERATOR, typename BLEND_OPERATOR>
         void _blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity, const BLEND_OPERATOR& blend_op);
 
+
+
+
+        /***************************************
+        * FLOOD FILLING
+        ****************************************/
+
+
+        template<bool UNICOLOR_COMP, int STACK_SIZE_BYTES> int _scanfill(int x, int y, color_t border_color, color_t new_color);
 
 
 

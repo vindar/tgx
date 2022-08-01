@@ -468,8 +468,93 @@ namespace tgx
 
 
 
+    /*********************************************************************
+    * Flood filling
+    **********************************************************************/
 
 
+    /**
+    * scanline seed fill algorithm taken from Graphic Gems 1 (1995), chap IV.10 p271.
+    **/
+    template<typename color_t>
+    template<bool UNICOLOR_COMP, int STACK_SIZE_BYTES> int Image<color_t>::_scanfill(int x, int y, color_t border_color, color_t new_color)
+        {
+
+        #define TGX_SCANFILL_PUSH(X1,X2,Y,DY)   { \
+                                                if (stp == STACK_LEN) return -1; \
+                                                if ((Y + DY >= 0)&(Y + DY < _ly)) \
+                                                    { \
+                                                    Qx1[stp] = (uint16_t)X1; \
+                                                    Qx2[stp] = (uint16_t)X2; \
+                                                    Qy[stp] = (uint16_t)((Y << 1) | ((DY > 0) ? 1 : 0)); \
+                                                    stp++; \
+                                                    if (stp > max_st) { max_st = stp; } \
+                                                    } \
+                                                }
+
+
+        #define TGX_SCANFILL_POP(X1,X2,Y,DY)    { \
+                                                stp--; \
+                                                X1 = (int)Qx1[stp]; \
+                                                X2 = (int)Qx2[stp]; \
+                                                DY = (int)((Qy[stp] & 1) ? 1 : -1); \
+                                                Y = (int)(Qy[stp] >> 1) + DY; \
+                                                }
+
+        #define TGX_SCANFILL_STACKSIZE         (stp)          
+
+        #define TGX_SCANFILL_INSIDE(COLOR)      (UNICOLOR_COMP ? (COLOR == orig_color) : ((COLOR != border_color) && (COLOR != new_color)))
+
+        const int STACK_LEN = STACK_SIZE_BYTES / 6;
+        uint16_t Qx1[STACK_LEN];
+        uint16_t Qx2[STACK_LEN];
+        uint16_t Qy[STACK_LEN];
+        int stp = 0;
+        int max_st = 0;
+
+        if ((!isValid()) || (x < 0) || (x >= _lx) || (y < 0) || (y >= _ly)) return 0;
+        const color_t orig_color = readPixel<false>(x, y);
+        if ((UNICOLOR_COMP) && (orig_color == new_color)) return 0; // nothing to do
+        if (!TGX_SCANFILL_INSIDE(orig_color)) return 0; // nothing to do 
+
+        TGX_SCANFILL_PUSH(x, x, y, 1);
+        TGX_SCANFILL_PUSH(x, x, y + 1, -1);
+
+        while (TGX_SCANFILL_STACKSIZE > 0)
+            {
+            int x1, x2, dy;
+            TGX_SCANFILL_POP(x1, x2, y, dy); // segment previously filled was [x1,x2] x {y - dy}
+            x = x1;
+            while ((x >= 0) && (TGX_SCANFILL_INSIDE(readPixel<false>(x, y))))
+                {
+                drawPixel<false>(x--, y, new_color);
+                }
+            if (x >= x1) goto TGX_SCANFILL_SKIP;
+            int start = x + 1;
+            if (start < x1) TGX_SCANFILL_PUSH(start, x1 - 1, y, -dy); // leak on left
+            x = x1 + 1;
+            do
+                {
+                while ((x < _lx) && (TGX_SCANFILL_INSIDE(readPixel<false>(x, y))))
+                    {
+                    drawPixel<false>(x++, y, new_color);
+                    }
+                TGX_SCANFILL_PUSH(start, x - 1, y, dy);
+                if (x > x2 + 1) TGX_SCANFILL_PUSH(x2 + 1, x - 1, y, -dy); // leak on right
+            TGX_SCANFILL_SKIP:
+                x++;
+                while ((x <= x2) && (!(TGX_SCANFILL_INSIDE(readPixel<false>(x, y))))) { x++; }
+                start = x;
+                } 
+            while (x <= x2);
+            }
+        return (6 * max_st);
+
+        #undef TGX_SCANFILL_PUSH
+        #undef TGX_SCANFILL_POP
+        #undef TGX_SCANFILL_STACKSIZE
+        #undef TGX_SCANFILL_INSIDE
+        }
 
 
 
