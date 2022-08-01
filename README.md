@@ -1,7 +1,4 @@
-
-***NEW VERSION 0.6 : [breaking changes] removed viewport dimension as template parameter, the dimension can now be set at runtime.***
-
-***NEW VERSION 0.5 : the Z-buffer can now be either of type `float` (32 bits) or `uint16_t` (16 bits).***
+***NEW IN VERSION 0.8  (8/2/2022): Added methods for drawing quadratic and cubic Bezier curves and b-spline. Added flood filling methods.***
 
 
 # TGX - a tiny/teensy graphics library
@@ -41,7 +38,7 @@ Here are the library main features.
 
 - Support for multiple color types: `RGB565`, `RGB24`, `RGB32`, `RGB64`, `RGBf` and `HSV`. Every 2D/3D drawing operation is available for each color type. 
 - Template `Image` class that encapsulates a memory framebuffer and enables the creation of sub-images (i.e. views) that share the same buffer. This provides an elegant and efficient way to clip of all drawing operations to a particular region. 
-- API (mostly) compatible with [Adafruit's GFX](https://github.com/adafruit/Adafruit-GFX-Library) and [Bodmer's TFT_eSPI](https://github.com/Bodmer/TFT_eSPI) libraries, but with more drawing primitives and usually faster ! Primitives for drawing lines, triangles, rectangles, circles, ellipses...
+- API (mostly) compatible with [Adafruit's GFX](https://github.com/adafruit/Adafruit-GFX-Library) and [Bodmer's TFT_eSPI](https://github.com/Bodmer/TFT_eSPI) libraries, but with more drawing primitives and usually faster ! Primitives for drawing lines, triangles, rectangles, circles, ellipses, Bezier curves and b-splines.
 - Methods for blitting sprites with or without a transparent mask, with rotation and scaling. High quality drawing is achieved using bilinear filtering and sub-pixel precision for very smooth animations.  
 - Image color type conversion and resizing.
 - Transparency supported for all drawing methods. The color types `RGB32` and `RGB64` have an alpha channel used for alpha blending. 
