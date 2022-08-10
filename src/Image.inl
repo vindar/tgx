@@ -2635,7 +2635,7 @@ namespace tgx
     iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const GFXfont& font, int * xadvance)
         {
         uint8_t n = (uint8_t)c;
-        if ((n < font.first) || (n > font.last)) return iBox2(); // nothing to draw. 
+        if ((n < font.first) || (n > font.last)) return iBox2(pos.x,pos.x,pos.y,pos.y); // nothing to draw. 
         auto& g = font.glyph[n - font.first];
         int x = pos.x + g.xOffset;
         int y = pos.y + g.yOffset;
