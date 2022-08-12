@@ -31,6 +31,7 @@
 #include "ShaderParams.h"
 #include "Shaders.h"
 #include "Rasterizer.h"
+#include "bseg.h"
 
 #include <stdint.h>
 
