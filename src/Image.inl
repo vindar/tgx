@@ -34,6 +34,54 @@ namespace tgx
     *************************************************************************************/
 
 
+
+    template<typename color_t>
+    Image<color_t>::Image() : _buffer(nullptr), _lx(0), _ly(0), _stride(0)
+        {
+        }
+
+
+    template<typename color_t>
+    template<typename T> Image<color_t>::Image(T* buffer, int lx, int ly, int stride) : _buffer((color_t*)buffer), _lx(lx), _ly(ly), _stride(stride < 0 ? lx : stride)
+        {
+        _checkvalid(); // make sure dimension/stride are ok else make the image invalid
+        }
+
+
+    template<typename color_t>
+    template<typename T> Image<color_t>::Image(T* buffer, iVec2 dim, int stride) : Image<color_t>((color_t*)buffer, dim.x, dim.y, stride)
+        {
+        }
+
+
+    template<typename color_t>
+    template<typename T> void Image<color_t>::set(T* buffer, iVec2 dim, int stride)
+        {
+        set<color_t>((color_t*)buffer, dim.x, dim.y, stride);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::crop(const iBox2& subbox)
+        {
+        *this = Image<color_t>(*this, subbox, true);
+        }
+
+
+    template<typename color_t>
+    Image<color_t> Image<color_t>::getCrop(const iBox2& subbox, bool clamp) const
+        {
+        return Image<color_t>(*this, subbox, clamp);
+        }
+
+
+    template<typename color_t>
+    Image<color_t> Image<color_t>::operator[](const iBox2& B) const
+        {
+        return Image<color_t>(*this, B, true);
+        }
+
+
     template<typename color_t>
     Image<color_t>::Image(const Image<color_t> & im, iBox2 subbox, bool clamp)
         {
@@ -54,12 +102,135 @@ namespace tgx
         }
 
 
+    template<typename color_t>
+    template<typename T> void Image<color_t>::set(T* buffer, int lx, int ly, int stride)
+        {
+        _buffer = (color_t*)buffer;
+        _lx = lx;
+        _ly = ly;
+        _stride = (stride < 0) ? lx : stride;
+        _checkvalid(); // make sure dimension/stride are ok else make the image invalid
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::setInvalid()
+        {
+        _buffer = nullptr;
+        _lx = 0;
+        _ly = 0;
+        _stride = 0;
+        }
+
+
+
+
+
+    /************************************************************************************
+    *
+    *  Direct pixel access
+    *
+    *************************************************************************************/
+
+
+
+    template<typename color_t>
+    template<typename ITERFUN> void Image<color_t>::iterate(ITERFUN cb_fun)
+        {
+        iterate(cb_fun, imageBox());
+        }
+
+
+    template<typename color_t>
+    template<typename ITERFUN> void Image<color_t>::iterate(ITERFUN cb_fun, tgx::iBox2 B)
+    {
+        B &= imageBox();
+        if (B.isEmpty()) return;
+        for (int j = B.minY; j <= B.maxY; j++)
+        {
+            for (int i = B.minX; i <= B.maxX; i++)
+            {
+                if (!cb_fun(tgx::iVec2(i, j), operator()({ i, j }))) return;
+            }
+        }
+    }
+
+
+
 
     /************************************************************************************
     * 
     *  Blitting / copying / resizing images
     * 
     *************************************************************************************/
+
+
+    template<typename color_t>
+    void Image<color_t>::blit(const Image<color_t>& sprite, iVec2 upperleftpos, float opacity)
+        {
+        if ((opacity < 0) || (opacity > 1))
+            _blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly());
+        else
+            _blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), opacity);
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_src, typename BLEND_OPERATOR>
+    void Image<color_t>::blit(const Image<color_t_src>& sprite, iVec2 upperleftpos, const BLEND_OPERATOR& blend_op)
+        {
+        _blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), blend_op);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::blitMasked(const Image<color_t>& sprite, color_t transparent_color, iVec2 upperleftpos, float opacity)
+        {
+        _blitMasked(sprite, transparent_color, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::blitBackward(Image<color_t>& dst_sprite, iVec2 upperleftpos) const
+        {
+        dst_sprite._blit(*this, 0, 0, upperleftpos.x, upperleftpos.y, dst_sprite.lx(), dst_sprite.ly());
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_src, int CACHE_SIZE>
+    void Image<color_t>::blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
+        {
+        if ((opacity < 0) || (opacity > 1))
+            _blitScaledRotated<color_t_src, CACHE_SIZE, false, false, false>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, 1.0f, [](color_t_src cola, color_t colb) {return colb; });
+        else
+            _blitScaledRotated<color_t_src, CACHE_SIZE, true, false, false>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, opacity, [](color_t_src cola, color_t colb) {return colb; });
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_src, typename BLEND_OPERATOR, int CACHE_SIZE>
+    void Image<color_t>::blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, const BLEND_OPERATOR& blend_op)
+        {
+        _blitScaledRotated<color_t_src, CACHE_SIZE, true, false, true>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, 1.0f, blend_op);
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_src, int CACHE_SIZE>
+    void Image<color_t>::blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
+        {
+        _blitScaledRotated<color_t_src, CACHE_SIZE, true, true, false>(src_im, transparent_color, anchor_src, anchor_dst, scale, angle_degrees, ((opacity < 0.0f) || (opacity > 1.0f)) ? 1.0f : opacity, [](color_t_src cola, color_t colb) {return colb; });
+        }
+
+
+    template<typename color_t>
+    Image<color_t> Image<color_t>::reduceHalf()
+        {
+        return copyReduceHalf(*this);
+        }
+
+
 
 
     /** set len consecutive pixels given color starting at pdest */
@@ -123,7 +294,7 @@ namespace tgx
         if (sprite_y < 0) { dest_y -= sprite_y; sy += sprite_y; sprite_y = 0; }
         if (dest_x < 0) { sprite_x -= dest_x;   sx += dest_x; dest_x = 0; }
         if (dest_y < 0) { sprite_y -= dest_y;   sy += dest_y; dest_y = 0; }
-        if ((dest_x >= _lx) || (dest_y >= _ly) || (sprite_x >= sprite._lx) || (sprite_x >= sprite._ly)) return false;
+        if ((dest_x >= _lx) || (dest_y >= _ly) || (sprite_x >= sprite._lx) || (sprite_y >= sprite._ly)) return false;
         sx -= max(0, (dest_x + sx - _lx));
         sy -= max(0, (dest_y + sy - _ly));
         sx -= max(0, (sprite_x + sx - sprite._lx));
@@ -218,7 +389,7 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::_blitMasked(const Image& sprite, color_t transparent_color, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
         {
-        if (opacity < 0.0f) opacity = 0.0f; else if (opacity > 1.0f) opacity = 1.0f;
+        if ((opacity < 0.0f) || (opacity > 1.0f)) opacity = 1.0f;
         if (!_blitClip(sprite, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
         _maskRegion(transparent_color, _buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, opacity);
         }
@@ -366,7 +537,7 @@ namespace tgx
     void Image<color_t>::_blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity, const BLEND_OPERATOR& blend_op)
         {
         if ((!isValid()) || (!src_im.isValid())) return;
-
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         // number of slices to draw
         // (we slice it to improve cache access when reading texwxture from flash)
         const int nb_slices = (angle_degrees == 0) ? 1 : ((src_im.stride() * src_im.ly() * sizeof(color_t_src)) / CACHE_SIZE + 1);
@@ -425,20 +596,6 @@ namespace tgx
 
 
 
-
-    template<typename color_t>
-    template<typename src_color_t> 
-    void Image<color_t>::copyFrom(const Image<src_color_t>& src_im)
-        {
-        if ((!isValid()) || (!src_im.isValid())) return;
-        const float ilx = (float)lx();
-        const float ily = (float)ly();
-        const float tlx = (float)src_im.lx();
-        const float tly = (float)src_im.ly();
-        drawTexturedQuad(src_im, fVec2(0.0f, 0.0f), fVec2(tlx, 0.0f), fVec2(tlx, tly), fVec2(0.0f, tly), fVec2(0.0f, 0.0f), fVec2(ilx, 0.0f), fVec2(ilx, ily), fVec2(0.0f, ily));
-        }
-
-
     template<typename color_t>
     template<typename src_color_t> 
     void Image<color_t>::copyFrom(const Image<src_color_t>& src_im, float opacity)
@@ -473,20 +630,32 @@ namespace tgx
     **********************************************************************/
 
 
-    /**
-    * scanline seed fill algorithm taken from Graphic Gems 1 (1995), chap IV.10 p271.
-    **/
+    template<typename color_t>
+    template<int STACK_SIZE> int Image<color_t>::fill(iVec2 start_pos, color_t new_color)
+        {
+        return _scanfill<true, STACK_SIZE>(start_pos.x, start_pos.y, new_color, new_color);
+        }
+
+
+    template<typename color_t>
+    template<int STACK_SIZE > int Image<color_t>::fill(iVec2 start_pos, color_t border_color, color_t new_color)
+        {
+        return _scanfill<false, STACK_SIZE>(start_pos.x, start_pos.y, border_color, new_color);
+        }
+
+
+    /** scanline seed fill algorithm taken from Graphic Gems 1 (1995), chap IV.10 p271. */
     template<typename color_t>
     template<bool UNICOLOR_COMP, int STACK_SIZE_BYTES> int Image<color_t>::_scanfill(int x, int y, color_t border_color, color_t new_color)
         {
 
         #define TGX_SCANFILL_PUSH(X1,X2,Y,DY)   { \
-                                                if (stp == STACK_LEN) return -1; \
-                                                if ((Y + DY >= 0)&(Y + DY < _ly)) \
+                                                if (stp == (STACK_LEN)) return -1; \
+                                                if (((Y) + (DY) >= 0)&((Y) + (DY) < _ly)) \
                                                     { \
-                                                    Qx1[stp] = (uint16_t)X1; \
-                                                    Qx2[stp] = (uint16_t)X2; \
-                                                    Qy[stp] = (uint16_t)((Y << 1) | ((DY > 0) ? 1 : 0)); \
+                                                    Qx1[stp] = (uint16_t)(X1); \
+                                                    Qx2[stp] = (uint16_t)(X2); \
+                                                    Qy[stp] = (uint16_t)(((Y) << 1) | (((DY) > 0) ? 1 : 0)); \
                                                     stp++; \
                                                     if (stp > max_st) { max_st = stp; } \
                                                     } \
@@ -498,7 +667,7 @@ namespace tgx
                                                 X1 = (int)Qx1[stp]; \
                                                 X2 = (int)Qx2[stp]; \
                                                 DY = (int)((Qy[stp] & 1) ? 1 : -1); \
-                                                Y = (int)(Qy[stp] >> 1) + DY; \
+                                                Y = (int)(Qy[stp] >> 1) + (DY); \
                                                 }
 
         #define TGX_SCANFILL_STACKSIZE         (stp)          
@@ -513,7 +682,7 @@ namespace tgx
         int max_st = 0;
 
         if ((!isValid()) || (x < 0) || (x >= _lx) || (y < 0) || (y >= _ly)) return 0;
-        const color_t orig_color = readPixel<false>(x, y);
+        const color_t orig_color = readPixel<false>({ x, y });
         if ((UNICOLOR_COMP) && (orig_color == new_color)) return 0; // nothing to do
         if (!TGX_SCANFILL_INSIDE(orig_color)) return 0; // nothing to do 
 
@@ -525,9 +694,9 @@ namespace tgx
             int x1, x2, dy;
             TGX_SCANFILL_POP(x1, x2, y, dy); // segment previously filled was [x1,x2] x {y - dy}
             x = x1;
-            while ((x >= 0) && (TGX_SCANFILL_INSIDE(readPixel<false>(x, y))))
+            while ((x >= 0) && (TGX_SCANFILL_INSIDE(readPixel<false>({ x, y }))))
                 {
-                drawPixel<false>(x--, y, new_color);
+                _drawPixel<false>({ x--, y }, new_color);
                 }
             if (x >= x1) goto TGX_SCANFILL_SKIP;
             int start = x + 1;
@@ -535,15 +704,15 @@ namespace tgx
             x = x1 + 1;
             do
                 {
-                while ((x < _lx) && (TGX_SCANFILL_INSIDE(readPixel<false>(x, y))))
+                while ((x < _lx) && (TGX_SCANFILL_INSIDE(readPixel<false>({ x, y }))))
                     {
-                    drawPixel<false>(x++, y, new_color);
+                    _drawPixel<false>({ x++, y }, new_color);
                     }
                 TGX_SCANFILL_PUSH(start, x - 1, y, dy);
                 if (x > x2 + 1) TGX_SCANFILL_PUSH(x2 + 1, x - 1, y, -dy); // leak on right
             TGX_SCANFILL_SKIP:
                 x++;
-                while ((x <= x2) && (!(TGX_SCANFILL_INSIDE(readPixel<false>(x, y))))) { x++; }
+                while ((x <= x2) && (!(TGX_SCANFILL_INSIDE(readPixel<false>({ x, y }))))) { x++; }
                 start = x;
                 } 
             while (x <= x2);
@@ -565,231 +734,232 @@ namespace tgx
     * 
     *************************************************************************************/
 
-    /*****************************************************
-    * Direct pixel access
-    ******************************************************/
+    /*********************************************************************
+    *
+    * Screen filling
+    *
+    **********************************************************************/
 
 
     template<typename color_t>
-    template<typename ITERFUN> void Image<color_t>::iterate(ITERFUN cb_fun, tgx::iBox2 B)
+    void Image<color_t>::fillScreen(color_t color)
         {
-        B &= imageBox();
-        if (B.isEmpty()) return;
-        for (int j = B.minY; j <= B.maxY; j++)
-            {
-            for (int i = B.minX; i <= B.maxX; i++)
-                {
-                if (!cb_fun(tgx::iVec2(i, j), operator()(i,j))) return;
-                }
-            }
+        fillRect(imageBox(), color);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillScreenVGradient(color_t top_color, color_t bottom_color)
+        {
+        fillRectVGradient(imageBox(), top_color, bottom_color);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillScreenHGradient(color_t left_color, color_t right_color)
+        {
+        fillRectHGradient(imageBox(), left_color, right_color);
         }
 
 
 
     /*****************************************************
+    * 
     * Lines
+    * 
     ******************************************************/
 
 
+
     template<typename color_t>
-    template<bool CHECKRANGE> void Image<color_t>::_drawLine(int x0, int y0, int x1, int y1, color_t color)
+    void Image<color_t>::drawFastVLine(iVec2 pos, int h, color_t color, float opacity)
         {
-        if (y0 == y1)
+        if (!isValid()) return;
+        _drawFastVLine<true>(pos, h, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::drawFastHLine(iVec2 pos, int w, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        _drawFastHLine<true>(pos, w, color, opacity);
+        }
+
+
+
+    template<typename color_t>
+    template<bool CHECKRANGE> void Image<color_t>::_drawFastVLine(iVec2 pos, int h, color_t color)
+        {
+        int x = pos.x;
+        int y = pos.y;
+        if (CHECKRANGE) // optimized away at compile time
             {
-            if (x1 >= x0) 
-                drawFastHLine<CHECKRANGE>({ x0, y0 }, x1 - x0 + 1, color);
-            else 
-                drawFastHLine<CHECKRANGE>({ x1, y0 }, x0 - x1 + 1, color);
-            return;
+            if ((x < 0) || (x >= _lx) || (y >= _ly)) return;
+            if (y < 0) { h += y; y = 0; }
+            if (y + h > _ly) { h = _ly - y; }
             }
-        else if (x0 == x1)
+        color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride);
+        while (h-- > 0)
             {
-            if (y1 >= y0) 
-                drawFastVLine<CHECKRANGE>({ x0, y0 }, y1 - y0 + 1, color);
-            else
-                drawFastVLine<CHECKRANGE>({ x0, y1 }, y0 - y1 + 1, color);
-            return;
+            (*p) = color;
+            p += _stride;
             }
-        bool steep = abs(y1 - y0) > abs(x1 - x0);
-        if (steep)
+        }
+
+
+    template<typename color_t>
+    template<bool CHECKRANGE> void Image<color_t>::_drawFastVLine(iVec2 pos, int h, color_t color, float opacity)
+        {
+        int x = pos.x;
+        int y = pos.y;
+        if (CHECKRANGE) // optimized away at compile time
             {
-            swap(x0, y0);
-            swap(x1, y1);
+            if ((x < 0) || (x >= _lx) || (y >= _ly)) return;
+            if (y < 0) { h += y; y = 0; }
+            if (y + h > _ly) { h = _ly - y; }
             }
-        if (x0 > x1)
+        color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride);
+        if ((opacity < 0) || (opacity > 1))
             {
-            swap(x0, x1);
-            swap(y0, y1);
-            }
-        int dx = x1 - x0;
-        int dy = abs(y1 - y0);
-        int err = dx / 2;
-        int ystep = (y0 < y1) ? 1 : -1;
-        int xbegin = x0;
-        if (steep)
-            {
-            for (; x0 <= x1; x0++)
+            while (h-- > 0)
                 {
-                err -= dy;
-                if (err < 0)
-                    {
-                    int len = x0 - xbegin;
-                    if (len)
-                        drawFastVLine<CHECKRANGE>({ y0, xbegin }, len + 1, color);
-                    else
-                        drawPixel<CHECKRANGE>(y0, x0, color);
-                    xbegin = x0 + 1;
-                    y0 += ystep;
-                    err += dx;
-                    }
+                (*p) = color;
+                p += _stride;
                 }
-            if (x0 > xbegin + 1)
-                drawFastVLine<CHECKRANGE>({ y0, xbegin }, x0 - xbegin, color);
             }
         else
             {
-            for (; x0 <= x1; x0++)
+            while (h-- > 0)
                 {
-                err -= dy;
-                if (err < 0)
-                    {
-                    int len = x0 - xbegin;
-                    if (len)
-                        drawFastHLine<CHECKRANGE>({ xbegin, y0 }, len + 1, color);
-                    else
-                        drawPixel<CHECKRANGE>(x0, y0, color);
-                    xbegin = x0 + 1;
-                    y0 += ystep;
-                    err += dx;
-                    }
+                (*p).blend(color, opacity);
+                p += _stride;
                 }
-            if (x0 > xbegin + 1)
-                drawFastHLine<CHECKRANGE>({ xbegin, y0 }, x0 - xbegin, color);
             }
         }
 
 
     template<typename color_t>
-    template<bool CHECKRANGE> void Image<color_t>::_drawLine(int x0, int y0, int x1, int y1, color_t color, float opacity)
+    template<bool CHECKRANGE> void Image<color_t>::_drawFastHLine(iVec2 pos, int w, color_t color)
         {
-        if (y0 == y1)
+        int x = pos.x;
+        int y = pos.y;
+        if (CHECKRANGE) // optimized away at compile time
             {
-            if (x1 >= x0) 
-                drawFastHLine<CHECKRANGE>({ x0, y0 }, x1 - x0 + 1, color, opacity);
-            else 
-                drawFastHLine<CHECKRANGE>({ x1, y0 }, x0 - x1 + 1, color, opacity);
-            return;
+            if ((y < 0) || (y >= _ly) || (x >= _lx)) return;
+            if (x < 0) { w += x; x = 0; }
+            if (x + w > _lx) { w = _lx - x; }
             }
-        else if (x0 == x1)
+        _fast_memset(_buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride), color, w);
+        }
+
+
+
+
+    template<typename color_t>
+    template<bool CHECKRANGE> void Image<color_t>::_drawFastHLine(iVec2 pos, int w, color_t color, float opacity)
+        {
+        int x = pos.x;
+        int y = pos.y;
+        if (CHECKRANGE) // optimized away at compile time
             {
-            if (y1 >= y0) 
-                drawFastVLine<CHECKRANGE>({ x0, y0 } , y1 - y0 + 1, color, opacity);
-            else
-                drawFastVLine<CHECKRANGE>({ x0, y1 }, y0 - y1 + 1, color, opacity);
-            return;
+            if ((y < 0) || (y >= _ly) || (x >= _lx)) return;
+            if (x < 0) { w += x; x = 0; }
+            if (x + w > _lx) { w = _lx - x; }
             }
-        bool steep = abs(y1 - y0) > abs(x1 - x0);
-        if (steep)
+        color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride);
+        if ((opacity < 0) || (opacity > 1))
             {
-            swap(x0, y0);
-            swap(x1, y1);
-            }
-        if (x0 > x1)
-            {
-            swap(x0, x1);
-            swap(y0, y1);
-            }
-        int dx = x1 - x0;
-        int dy = abs(y1 - y0);
-        int err = dx / 2;
-        int ystep = (y0 < y1) ? 1 : -1;
-        int xbegin = x0;
-        if (steep)
-            {
-            for (; x0 <= x1; x0++)
-                {
-                err -= dy;
-                if (err < 0)
-                    {
-                    int len = x0 - xbegin;
-                    if (len)
-                        drawFastVLine<CHECKRANGE>({ y0, xbegin }, len + 1, color, opacity);
-                    else
-                        drawPixel<CHECKRANGE>(y0, x0, color, opacity);
-                    xbegin = x0 + 1;
-                    y0 += ystep;
-                    err += dx;
-                    }
-                }
-            if (x0 > xbegin + 1)
-                drawFastVLine<CHECKRANGE>({ y0, xbegin }, x0 - xbegin, color, opacity);
+            _fast_memset(_buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride), color, w);
             }
         else
             {
-            for (; x0 <= x1; x0++)
+            while (w-- > 0)
                 {
-                err -= dy;
-                if (err < 0)
-                    {
-                    int len = x0 - xbegin;
-                    if (len)
-                        drawFastHLine<CHECKRANGE>({ xbegin, y0 }, len + 1, color, opacity);
-                    else
-                        drawPixel<CHECKRANGE>(x0, y0, color, opacity);
-                    xbegin = x0 + 1;
-                    y0 += ystep;
-                    err += dx;
-                    }
+                (*p++).blend(color, opacity);
                 }
-            if (x0 > xbegin + 1)
-                drawFastHLine<CHECKRANGE>({ xbegin, y0 }, x0 - xbegin, color, opacity);
             }
         }
 
 
 
 
-    /** Draw a Bresenham segment */
     template<typename color_t>
-    template<bool BLEND> void Image<color_t>::_drawSeg(bool checkrange, int x0, int y0, int x1, int y1, bool draw_last, color_t color, float opacity)
+    void Image<color_t>::drawLine(iVec2 P1, iVec2 P2, color_t color, float opacity)
         {
-        const int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
-        const int dy = -abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
-        int err = dx + dy, e2; /* error value e_xy */
-        while ((x0 != x1) || (y0 != y1))
+        if (!isValid()) return;
+        _drawSeg(P1, true, P2, true, color, opacity);
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSegment(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        _drawSeg(P1, drawP1, P2, drawP2, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity)
+        {
+        tgx::BSeg S(P1, P2);
+        if (drawP2) S.inclen();
+        if (!drawP1) S.move();
+        auto B = imageBox();
+        S.move_inside_box(B);
+        S.len() = tgx::min(S.lenght_inside_box(B), S.len());	// truncate to stay inside the box
+        if (S.x_major())
             {
-            _drawPixel<BLEND>(checkrange, x0, y0, color, opacity);
-            e2 = 2 * err;
-            if (e2 >= dy) { err += dy; x0 += sx; }
-            if (e2 <= dx) { err += dx; y0 += sy; }
+            const bool X_MAJOR = true;
+            if ((opacity < 0) || (opacity > 1))
+                {
+                while (S.len() > 0) { _drawPixel<false>(S.pos(), color); S.move<X_MAJOR>(); }
+                }
+            else
+                {
+                while (S.len() > 0) { _drawPixel<false, false>(S.pos(), color, opacity); S.move<X_MAJOR>(); }
+                }
             }
-        if (draw_last) _drawPixel<BLEND>(checkrange, x1, y1, color, opacity);
+        else
+            {
+            const bool X_MAJOR = false;
+            if ((opacity < 0) || (opacity > 1))
+                {
+                while (S.len() > 0) { _drawPixel<false>(S.pos(), color); S.move<X_MAJOR>(); }
+                }
+            else
+                {
+                while (S.len() > 0) { _drawPixel<false, false>(S.pos(), color, opacity); S.move<X_MAJOR>(); }
+                }
+            }
         }
-
 
 
     template<typename color_t>
-    template<bool BLEND> void Image<color_t>::_drawPolyLine(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity)
-    {
+    void Image<color_t>::drawPolyLine(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
+        {
         if (!isValid()) return;
         for (int i = 0; i < nbpoints - 1; i++)
-        {
-            _drawSeg<BLEND>(true, tabPoints[i].x, tabPoints[i].y, tabPoints[i + 1].x, tabPoints[i + 1].y, ((draw_last_point) && (i == nbpoints - 2)), color, opacity);
+            {
+            _drawSeg(tabPoints[i], true, tabPoints[i+1], (i == nbpoints - 2), color, opacity);
+            }
         }
-    }
 
 
-
-    template<typename color_t>
-    template<bool BLEND> void Image<color_t>::_drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
-    {
+    template<typename color_t> 
+    void Image<color_t>::drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
+        {
         if (!isValid()) return;
         for (int i = 0; i < nbpoints - 1; i++)
-        {
-            _drawSeg<BLEND>(true, tabPoints[i].x, tabPoints[i].y, tabPoints[i + 1].x, tabPoints[i + 1].y, false, color, opacity);
+            {
+            _drawSeg(tabPoints[i], true, tabPoints[i + 1], false, color, opacity);
+            }
+        _drawSeg(tabPoints[nbpoints - 1], true, tabPoints[0], false, color, opacity);
         }
-        _drawSeg<BLEND>(true, tabPoints[nbpoints - 1].x, tabPoints[nbpoints - 1].y, tabPoints[0].x, tabPoints[0].y, false, color, opacity);
-    }
+
+
 
 
     /*****************************************************
@@ -1451,7 +1621,7 @@ namespace tgx
                     int ia, ib;
                     if (hha == 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); else drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); else _drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); }
                         ia = a + 1;
                         }
                     else if (hha > 0)
@@ -1468,7 +1638,7 @@ namespace tgx
                     const auto hhb = b - prv_b;
                     if (hhb == 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); else drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); else _drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); }
                         ib = prv_b - 1;
                         }
                     else if (hhb > 0)
@@ -1507,7 +1677,7 @@ namespace tgx
                     int ia, ib;
                     if (hha == 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); else drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); else _drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); }
                         ia = a + 1;
                         }
                     else if (hha > 0)
@@ -1523,7 +1693,7 @@ namespace tgx
                     const auto hhb = b - prv_b;
                     if (hhb == 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); else drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); else _drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); }
                         ib = prv_b - 1;
                         }
                     else if (hhb > 0)
@@ -1741,10 +1911,10 @@ namespace tgx
         {
         int max_radius = ((w < h) ? w : h) / 2;
         if (r > max_radius) r = max_radius;
-        drawFastHLine<CHECKRANGE>({ x + r, y }, w - 2 * r, color);
-        drawFastHLine<CHECKRANGE>({ x + r, y + h - 1 }, w - 2 * r, color);
-        drawFastVLine<CHECKRANGE>({ x, y + r }, h - 2 * r, color);
-        drawFastVLine<CHECKRANGE>({ x + w - 1 , y + r }, h - 2 * r, color);
+        _drawFastHLine<CHECKRANGE>({ x + r, y }, w - 2 * r, color);
+        _drawFastHLine<CHECKRANGE>({ x + r, y + h - 1 }, w - 2 * r, color);
+        _drawFastVLine<CHECKRANGE>({ x, y + r }, h - 2 * r, color);
+        _drawFastVLine<CHECKRANGE>({ x + w - 1 , y + r }, h - 2 * r, color);
         _drawCircleHelper<CHECKRANGE>(x + r, y + r, r, 1, color);
         _drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + r, r, 2, color);
         _drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + h - r - 1, r, 4, color);
@@ -1823,23 +1993,23 @@ namespace tgx
             f += ddF_x;
             if (cornername & 0x4)
                 {
-                drawPixel<CHECKRANGE>(x0 + x, y0 + y, color);
-                drawPixel<CHECKRANGE>(x0 + y, y0 + x, color);
+                _drawPixel<CHECKRANGE>(x0 + x, y0 + y, color);
+                _drawPixel<CHECKRANGE>(x0 + y, y0 + x, color);
                 }
             if (cornername & 0x2)
                 {
-                drawPixel<CHECKRANGE>(x0 + x, y0 - y, color);
-                drawPixel<CHECKRANGE>(x0 + y, y0 - x, color);
+                _drawPixel<CHECKRANGE>(x0 + x, y0 - y, color);
+                _drawPixel<CHECKRANGE>(x0 + y, y0 - x, color);
                 }
             if (cornername & 0x8)
                 {
-                drawPixel<CHECKRANGE>(x0 - y, y0 + x, color);
-                drawPixel<CHECKRANGE>(x0 - x, y0 + y, color);
+                _drawPixel<CHECKRANGE>(x0 - y, y0 + x, color);
+                _drawPixel<CHECKRANGE>(x0 - x, y0 + y, color);
                 }
             if (cornername & 0x1)
                 {
-                drawPixel<CHECKRANGE>(x0 - y, y0 - x, color);
-                drawPixel<CHECKRANGE>(x0 - x, y0 - y, color);
+                _drawPixel<CHECKRANGE>(x0 - y, y0 - x, color);
+                _drawPixel<CHECKRANGE>(x0 - x, y0 - y, color);
                 }
             }
         }
@@ -1866,23 +2036,23 @@ namespace tgx
             f += ddF_x;
             if (cornername & 0x4)
                 {
-                drawPixel<CHECKRANGE>(x0 + x, y0 + y, color, opacity);
-                if (x!= y) drawPixel<CHECKRANGE>(x0 + y, y0 + x, color, opacity);
+                _drawPixel<CHECKRANGE>(x0 + x, y0 + y, color, opacity);
+                if (x!= y) _drawPixel<CHECKRANGE>(x0 + y, y0 + x, color, opacity);
                 }
             if (cornername & 0x2)
                 {
-                drawPixel<CHECKRANGE>(x0 + x, y0 - y, color, opacity);
-                if (x != y) drawPixel<CHECKRANGE>(x0 + y, y0 - x, color, opacity);
+                _drawPixel<CHECKRANGE>(x0 + x, y0 - y, color, opacity);
+                if (x != y) _drawPixel<CHECKRANGE>(x0 + y, y0 - x, color, opacity);
                 }
             if (cornername & 0x8)
                 {
-                drawPixel<CHECKRANGE>(x0 - y, y0 + x, color, opacity);
-                if (x != y) drawPixel<CHECKRANGE>(x0 - x, y0 + y, color, opacity);
+                _drawPixel<CHECKRANGE>(x0 - y, y0 + x, color, opacity);
+                if (x != y) _drawPixel<CHECKRANGE>(x0 - x, y0 + y, color, opacity);
                 }
             if (cornername & 0x1)
                 {
-                drawPixel<CHECKRANGE>(x0 - y, y0 - x, color, opacity);
-                if (x != y) drawPixel<CHECKRANGE>(x0 - x, y0 - y, color, opacity);
+                _drawPixel<CHECKRANGE>(x0 - y, y0 - x, color, opacity);
+                if (x != y) _drawPixel<CHECKRANGE>(x0 - x, y0 - y, color, opacity);
                 }
             }
         }
@@ -1987,11 +2157,11 @@ namespace tgx
                 {
                 if (OUTLINE)
                     {
-                    drawPixel<CHECKRANGE>(xm, ym, color);
+                    _drawPixel<CHECKRANGE>({ xm, ym }, color);
                     }
                 else if (FILL)
                     {
-                    drawPixel<CHECKRANGE>(xm, ym, fillcolor);
+                    _drawPixel<CHECKRANGE>({ xm, ym }, fillcolor);
                     }
                 return;
                 }
@@ -1999,12 +2169,12 @@ namespace tgx
                 {
                 if (FILL)
                     {
-                    drawPixel<CHECKRANGE>(xm, ym, fillcolor);
+                    _drawPixel<CHECKRANGE>({ xm, ym }, fillcolor);
                     }
-                drawPixel<CHECKRANGE>(xm + 1, ym, color);
-                drawPixel<CHECKRANGE>(xm - 1, ym, color);
-                drawPixel<CHECKRANGE>(xm, ym - 1, color);
-                drawPixel<CHECKRANGE>(xm, ym + 1, color);
+                _drawPixel<CHECKRANGE>({ xm + 1, ym }, color);
+                _drawPixel<CHECKRANGE>({ xm - 1, ym }, color);
+                _drawPixel<CHECKRANGE>({ xm, ym - 1 }, color);
+                _drawPixel<CHECKRANGE>({ xm, ym + 1 }, color);
                 return;
                 }
             }
@@ -2012,18 +2182,18 @@ namespace tgx
         do {
             if (OUTLINE)
                 {
-                drawPixel<CHECKRANGE>(xm - x, ym + y, color);
-                drawPixel<CHECKRANGE>(xm - y, ym - x, color);
-                drawPixel<CHECKRANGE>(xm + x, ym - y, color);
-                drawPixel<CHECKRANGE>(xm + y, ym + x, color);
+                _drawPixel<CHECKRANGE>({ xm - x, ym + y }, color);
+                _drawPixel<CHECKRANGE>({ xm - y, ym - x }, color);
+                _drawPixel<CHECKRANGE>({ xm + x, ym - y }, color);
+                _drawPixel<CHECKRANGE>({ xm + y, ym + x }, color);
                 }
             r = err;
             if (r <= y)
                 {
                 if (FILL)
                     {
-                    drawFastHLine<CHECKRANGE>({ xm, ym + y }, -x, fillcolor);
-                    drawFastHLine<CHECKRANGE>({ xm + x + 1, ym - y }, -x - 1, fillcolor);
+                    _drawFastHLine<CHECKRANGE>({ xm, ym + y }, -x, fillcolor);
+                    _drawFastHLine<CHECKRANGE>({ xm + x + 1, ym - y }, -x - 1, fillcolor);
                     }
                 err += ++y * 2 + 1;
                 }
@@ -2034,8 +2204,8 @@ namespace tgx
                     {
                     if (x)
                         {
-                        drawFastHLine<CHECKRANGE>({ xm - y + 1, ym - x }, y - 1, fillcolor);
-                        drawFastHLine<CHECKRANGE>({ xm, ym + x }, y, fillcolor);
+                        _drawFastHLine<CHECKRANGE>({ xm - y + 1, ym - x }, y - 1, fillcolor);
+                        _drawFastHLine<CHECKRANGE>({ xm, ym + x }, y, fillcolor);
                         }
                     }
                 }
@@ -2058,11 +2228,11 @@ namespace tgx
                 {
                 if (OUTLINE)
                     {
-                    drawPixel<CHECKRANGE>(xm, ym, color, opacity);
+                    _drawPixel<CHECKRANGE>({ xm, ym }, color, opacity);
                     }
                 else if (FILL)
                     {
-                    drawPixel<CHECKRANGE>(xm, ym, fillcolor, opacity);
+                    _drawPixel<CHECKRANGE>({ xm, ym }, fillcolor, opacity);
                     }
                 return;
                 }
@@ -2070,12 +2240,12 @@ namespace tgx
                 {
                 if (FILL)
                     {
-                    drawPixel<CHECKRANGE>(xm, ym, fillcolor, opacity);
+                    _drawPixel<CHECKRANGE>({ xm, ym }, fillcolor, opacity);
                     }
-                drawPixel<CHECKRANGE>(xm + 1, ym, color, opacity);
-                drawPixel<CHECKRANGE>(xm - 1, ym, color, opacity);
-                drawPixel<CHECKRANGE>(xm, ym - 1, color, opacity);
-                drawPixel<CHECKRANGE>(xm, ym + 1, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm + 1, ym }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm - 1, ym }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm, ym - 1 }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm, ym + 1 }, color, opacity);
                 return;
                 }
             }
@@ -2083,18 +2253,18 @@ namespace tgx
         do {
             if (OUTLINE)
                 {
-                drawPixel<CHECKRANGE>(xm - x, ym + y, color, opacity);
-                drawPixel<CHECKRANGE>(xm - y, ym - x, color, opacity);
-                drawPixel<CHECKRANGE>(xm + x, ym - y, color, opacity);
-                drawPixel<CHECKRANGE>(xm + y, ym + x, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm - x, ym + y }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm - y, ym - x }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm + x, ym - y }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm + y, ym + x }, color, opacity);
                 }
             r = err;
             if (r <= y)
                 {
                 if (FILL)
                     {
-                    drawFastHLine<CHECKRANGE>({ xm, ym + y }, -x, fillcolor, opacity);
-                    drawFastHLine<CHECKRANGE>({ xm + x + 1, ym - y }, -x - 1, fillcolor, opacity);
+                    _drawFastHLine<CHECKRANGE>({ xm, ym + y }, -x, fillcolor, opacity);
+                    _drawFastHLine<CHECKRANGE>({ xm + x + 1, ym - y }, -x - 1, fillcolor, opacity);
                     }
                 err += ++y * 2 + 1;
                 }
@@ -2105,8 +2275,8 @@ namespace tgx
                     {
                     if (x)
                         {
-                        drawFastHLine<CHECKRANGE>({ xm - y + 1, ym - x }, y - 1, fillcolor, opacity);
-                        drawFastHLine<CHECKRANGE>({ xm, ym + x }, y, fillcolor, opacity);
+                        _drawFastHLine<CHECKRANGE>({ xm - y + 1, ym - x }, y - 1, fillcolor, opacity);
+                        _drawFastHLine<CHECKRANGE>({ xm, ym + x }, y, fillcolor, opacity);
                         }
                     }
                 }
@@ -2138,12 +2308,12 @@ namespace tgx
             {
             if (OUTLINE)
                 {
-                drawPixel<CHECKRANGE>(x0 - x, y0 - y, outline_color);
-                drawPixel<CHECKRANGE>(x0 - x, y0 + y, outline_color);
+                _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, outline_color);
+                _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, outline_color);
                 if (x != 0)
                     {
-                    drawPixel<CHECKRANGE>(x0 + x, y0 - y, outline_color);
-                    drawPixel<CHECKRANGE>(x0 + x, y0 + y, outline_color);
+                    _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, outline_color);
+                    _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, outline_color);
                     }
                 }
             if (s >= 0) 
@@ -2154,8 +2324,8 @@ namespace tgx
                     {
                     if (ry2 * x <= rx2 * y)
                         {
-                        drawFastHLine<CHECKRANGE>({ x0 - x, y0 - y }, x + x + 1, interior_color);
-                        drawFastHLine<CHECKRANGE>({ x0 - x, y0 + y }, x + x + 1, interior_color);
+                        _drawFastHLine<CHECKRANGE>({ x0 - x, y0 - y }, x + x + 1, interior_color);
+                        _drawFastHLine<CHECKRANGE>({ x0 - x, y0 + y }, x + x + 1, interior_color);
                         yt = y;
                         }
                     }
@@ -2167,12 +2337,12 @@ namespace tgx
             {
             if (OUTLINE)
                 {
-                drawPixel<CHECKRANGE>(x0 - x, y0 - y, outline_color);
-                drawPixel<CHECKRANGE>(x0 + x, y0 - y, outline_color);
+                _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, outline_color);
+                _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, outline_color);
                 if (y != 0)
                     {
-                    drawPixel<CHECKRANGE>(x0 - x, y0 + y, outline_color);
-                    drawPixel<CHECKRANGE>(x0 + x, y0 + y, outline_color);
+                    _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, outline_color);
+                    _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, outline_color);
                     }
                 }
             if (FILL)
@@ -2181,9 +2351,9 @@ namespace tgx
                     {
                     if (y != 0)
                         {
-                        drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 - y }, x + x - 1, interior_color);
+                        _drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 - y }, x + x - 1, interior_color);
                         }
-                    drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 + y }, x + x - 1, interior_color);
+                    _drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 + y }, x + x - 1, interior_color);
                     }
                 }
 
@@ -2216,12 +2386,12 @@ namespace tgx
             {
             if (OUTLINE)
                 {
-                drawPixel<CHECKRANGE>(x0 - x, y0 - y, outline_color, opacity);
-                drawPixel<CHECKRANGE>(x0 - x, y0 + y, outline_color, opacity);
+                _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, outline_color, opacity);
+                _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, outline_color, opacity);
                 if (x != 0)
                     {
-                    drawPixel<CHECKRANGE>(x0 + x, y0 - y, outline_color, opacity);
-                    drawPixel<CHECKRANGE>(x0 + x, y0 + y, outline_color, opacity);
+                    _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, outline_color, opacity);
+                    _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, outline_color, opacity);
                     }
                 }
             if (s >= 0) 
@@ -2232,8 +2402,8 @@ namespace tgx
                     {
                     if (ry2 * x <= rx2 * y)
                         {
-                        drawFastHLine<CHECKRANGE>({ x0 - x, y0 - y }, x + x + 1, interior_color, opacity);
-                        drawFastHLine<CHECKRANGE>({ x0 - x, y0 + y }, x + x + 1, interior_color, opacity);
+                        _drawFastHLine<CHECKRANGE>({ x0 - x, y0 - y }, x + x + 1, interior_color, opacity);
+                        _drawFastHLine<CHECKRANGE>({ x0 - x, y0 + y }, x + x + 1, interior_color, opacity);
                         yt = y;
                         }
                     }
@@ -2245,12 +2415,12 @@ namespace tgx
             {
             if (OUTLINE)
                 {
-                drawPixel<CHECKRANGE>(x0 - x, y0 - y, outline_color, opacity);
-                drawPixel<CHECKRANGE>(x0 + x, y0 - y, outline_color, opacity);
+                _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, outline_color, opacity);
+                _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, outline_color, opacity);
                 if (y != 0)
                     {
-                    drawPixel<CHECKRANGE>(x0 - x, y0 + y, outline_color, opacity);
-                    drawPixel<CHECKRANGE>(x0 + x, y0 + y, outline_color, opacity);
+                    _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, outline_color, opacity);
+                    _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, outline_color, opacity);
                     }
                 }
             if (FILL)
@@ -2259,9 +2429,9 @@ namespace tgx
                     {
                     if (y != 0)
                         {
-                        drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 - y }, x + x - 1, interior_color, opacity);
+                        _drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 - y }, x + x - 1, interior_color, opacity);
                         }
-                    drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 + y }, x + x - 1, interior_color, opacity);
+                    _drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 + y }, x + x - 1, interior_color, opacity);
                     }
                 }
 
@@ -2326,9 +2496,9 @@ namespace tgx
                 if (alpha <= LoAlphaTheshold) continue;
                 // Track left line boundary
                 if (!endX) { endX = true; if ((y > (y0 + ri)) && (xp > xs)) xs = xp; }
-                if (alpha > HiAlphaTheshold) { drawPixel(xp, yp, color, opacity); continue; }
+                if (alpha > HiAlphaTheshold) { _drawPixel(xp, yp, color, opacity); continue; }
                 //Blend colour with background and plot
-                drawPixel(xp, yp, color, alpha * opacity);
+                _drawPixel(xp, yp, color, alpha * opacity);
                 }
             yp += yinc;
             }
@@ -2379,9 +2549,9 @@ namespace tgx
                 if (alpha <= LoAlphaTheshold) continue;
                 // Track left line segment boundary
                 if (!endX) { endX = true; if ((y > (y0 + ri)) && (xp > xs)) xs = xp; }
-                if (alpha > HiAlphaTheshold) { drawPixel(xp, yp, color, opacity);  continue; }
+                if (alpha > HiAlphaTheshold) { _drawPixel(xp, yp, color, opacity);  continue; }
                 //Blend color with background and plot
-                drawPixel(xp, yp, color, alpha * opacity);
+                _drawPixel(xp, yp, color, alpha * opacity);
                 }
             yp += yinc;
             }

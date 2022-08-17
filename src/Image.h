@@ -150,18 +150,19 @@ namespace tgx
     * 
     *  Creation of images and sub-images 
     * 
-    * The memory buffer must be supplied at creation. Otherwise, the image is set as 
+    * The memory buffer should be supplied at creation. Otherwise, the image is set as 
     * invalid until a valid buffer is supplied. 
+    * 
+    * NOTE: the image class itsel is lightweight as it does not manage the memory buffer.
+    *       Creating image and sub-image is very fast and do not use much memory.  
     * 
     *************************************************************************************/
 
 
         /** 
-        * Create default invalid/empty image. 
+        * Create a default empty (invalid) image. 
         */
-        Image() : _buffer(nullptr), _lx(0), _ly(0), _stride(0)
-            {
-            }
+        Image();
 
 
         /**
@@ -172,10 +173,7 @@ namespace tgx
          * @param           ly      the image height.
          * @param           stride  the stride to use (equal to the image width if not specified).
         **/
-        template<typename T> Image(T * buffer, int lx, int ly, int stride = -1) : _buffer((color_t*)buffer), _lx(lx), _ly(ly), _stride(stride < 0 ? lx : stride)
-            {
-            _checkvalid(); // make sure dimension/stride are ok else make the image invalid
-            }
+        template<typename T> Image(T* buffer, int lx, int ly, int stride = -1);
 
 
         /**
@@ -185,9 +183,7 @@ namespace tgx
          * @param           dim     the image dimension (width, height) in pixels.
          * @param           stride  the stride to use (equal to the image width if not specified).
         **/
-        template<typename T> Image(T * buffer, iVec2 dim, int stride = -1) : Image<color_t>((color_t*)buffer, dim.x, dim.y, stride)
-            {
-            }
+        template<typename T> Image(T* buffer, iVec2 dim, int stride = -1);
 
 
         /**
@@ -234,14 +230,7 @@ namespace tgx
          * @param           stride  (Optional) The stride. If not specified, the stride is set equal to
          *                          the image width.
         **/
-        template<typename T> void set(T * buffer, int lx, int ly, int stride = -1)
-            {
-            _buffer = (color_t*)buffer;
-            _lx = lx;
-            _ly = ly;
-            _stride = (stride < 0) ? lx : stride;
-            _checkvalid(); // make sure dimension/stride are ok else make the image invalid
-            }
+        template<typename T> void set(T* buffer, int lx, int ly, int stride = -1);
 
 
         /**
@@ -251,10 +240,7 @@ namespace tgx
          * @param           dim     the image dimensions.
          * @param           stride  (Optional) The stride. If not specified, the stride is set equal to.
         **/
-        template<typename T> void set(T * buffer, iVec2 dim, int stride = -1)
-            {
-            set<color_t>((color_t*)buffer, dim.x, dim.y, stride);
-            }
+        template<typename T> void set(T* buffer, iVec2 dim, int stride = -1);
 
 
         /**
@@ -266,15 +252,14 @@ namespace tgx
          *
          * @param   subbox  The region to to keep.
         **/
-        void crop(const iBox2& subbox)
-            {
-            *this = Image<color_t>(*this, subbox, true);
-            }
+        void crop(const iBox2& subbox);
 
 
         /**
          * Return a sub-image of this image (sharing the same pixel buffer).
          *
+         * See also`operator[](const iBox2 &)`.
+         * 
          * @param   subbox  The region to to keep.
          * @param   clamp   (Optional) True to clamp the values of the `subbox` parameter. If set,
          *                  `subbox` is intersected with this image box to create a valid region.
@@ -283,10 +268,38 @@ namespace tgx
          *
          * @returns the cropped image.
         **/
-        Image<color_t> getCrop(const iBox2& subbox, bool clamp = true) const
-            {
-            return Image<color_t>(*this, subbox, clamp);
-            }
+        Image<color_t> getCrop(const iBox2& subbox, bool clamp = true) const;
+
+
+        /**
+         * Return a sub-image of this image (sharing the same pixel buffer).
+         * 
+         * This is the same as `getCrop(B, true)`
+         *
+         * @param   B  box that delimit the sub-image inside this image. 
+         *
+         * @returns the sub-image delimited by B and sharing the same memory buffer. 
+        **/
+        Image<color_t> operator[](const iBox2& B) const;
+
+
+        /**
+         * Query if the image is valid.
+         *
+         * @returns True if the image if valid, false otherwise.
+        **/
+        inline TGX_INLINE bool isValid() const { return (_buffer != nullptr); }
+
+
+        /**
+        * Set the image as invalid.
+        *
+        * Note: It is the user responsibility to manage the memory allocated for
+        * the pixel buffer (if required). No deallocation is performed here.
+        */
+        void setInvalid();
+
+
 
 
 
@@ -294,7 +307,7 @@ namespace tgx
     /************************************************************************************
     * 
     *
-    *  Image dimensions
+    *  Image attributes.
     * 
     *
     *************************************************************************************/
@@ -374,29 +387,8 @@ namespace tgx
         inline TGX_INLINE color_t * data() { return _buffer; }
 
 
-        /**
-         * Query if this object is valid
-         *
-         * @returns True if the image if valid, false otherwise.
-        **/
-        inline TGX_INLINE bool isValid() const { return (_buffer != nullptr); }
 
-
-        /** 
-        * Set the image as invalid. 
-        * 
-        * Note: It is the user responsibility to manage the memory allocated for 
-        * the pixel buffer (if required). No deallocation is performed here. 
-        */
-        void setInvalid()
-            {
-            _buffer = nullptr;
-            _lx = 0; 
-            _ly = 0; 
-            _stride = 0;
-            }
-
-
+       
 
     /****************************************************************************
     * 
@@ -410,27 +402,6 @@ namespace tgx
         /**
          * Set a pixel at a given position.
          * 
-         * Use template parameter to disable range check for faster access (danger!).
-         *
-         * @tparam  CHECKRANGE  True to check the range and false to disable checking.
-         * @param   x       The x coordinate.
-         * @param   y       The y coordinate.
-         * @param   color   The color to set.
-        **/
-        template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(int x, int y, color_t color)
-            {
-            if (CHECKRANGE) // optimized away at compile time
-                {
-                if ((!isValid()) || (x < 0) || (y < 0) || (x >= _lx) || (y >= _ly)) return;
-                }
-            _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)] = color;
-            }
-
-
-
-        /**
-         * Set a pixel at a given position.
-         * 
          * Use template parameter to disable range check for faster access (danger!)
          *
          * @tparam  CHECKRANGE  True to check the range and false to disable checking.
@@ -439,7 +410,8 @@ namespace tgx
         **/
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color)
             {
-            drawPixel<CHECKRANGE>(pos.x, pos.y, color);
+            if ((CHECKRANGE) && (!isValid())) return;
+            _drawPixel<CHECKRANGE>(pos, color);
             }
 
 
@@ -450,57 +422,15 @@ namespace tgx
          * Use template parameter to disable range check for faster access (danger!).
          *
          * @tparam  CHECKRANGE  True to check the range and false to disable checking.
-         * @param   x       The x coordinate.
-         * @param   y       The y coordinate.
+         * @param   pos     The position.
          * @param   color   The color to blend.
-         * @param   opacity mult. opacity factor from 0.0f (fully transparent) to 1.0f fully transparent.
-        **/
-        template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(int x, int y, color_t color, float opacity)
-            {
-            if (CHECKRANGE) // optimized away at compile time
-                {
-                if ((!isValid()) || (x < 0) || (y < 0) || (x >= _lx) || (y >= _ly)) return;
-                }
-            _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)].blend(color,opacity);
-            }
-
-
-        /**
-         * Blend a pixel with the current pixel color after multiplying its opacity with a given factor.
-         * If type color_t has an alpha channel, then it is used for alpha blending.
-         *
-         * Use template parameter to disable range check for faster access (danger!).
-         *
-         * @tparam  CHECKRANGE  True to check the range and false to disable checking.
-         * @param   pos     The position
-         * @param   color   The color to blend.
-         * @param   opacity mult. opacity factor from 0.0f (fully transparent) to 1.0f fully transparent.
+         * @param   opacity opacity multiplier from 0.0f (fully transparent) to 1.0f fully transparent.
+         *                  if negative, then simle overwrittening of color is used instead of blending.
         **/
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color, float opacity)
             {
-            drawPixel<CHECKRANGE>(pos.x, pos.y, color, opacity);
-            }
-
-
-        /**
-         * Return the color of a pixel at a given position.
-         * 
-         * If CHECKRANGE is true, outside_color is returned when querying outside of the image.
-         *
-         * @tparam  CHECKRANGE  True to check the range and false to disable it (danger!).
-         * @param   x               The x coordinate.
-         * @param   y               The y coordinate.
-         * @param   outside_color   (Optional) color to return when querying outside the range.
-         *
-         * @returns The pixel color
-        **/
-        template<bool CHECKRANGE = true> TGX_INLINE inline color_t readPixel(int x, int y, color_t outside_color = color_t()) const
-            {
-            if (CHECKRANGE) // optimized away at compile time
-                {
-                if (((!isValid()) || (x < 0) || (y < 0) || (x >= _lx) || (y >= _ly))) return outside_color;
-                }
-            return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];
+            if ((CHECKRANGE) && (!isValid())) return;
+            _drawPixel<CHECKRANGE,true>(pos, color, opacity);
             }
 
 
@@ -517,21 +447,8 @@ namespace tgx
         **/
         template<bool CHECKRANGE = true> TGX_INLINE inline color_t readPixel(iVec2 pos, color_t outside_color = color_t()) const
             {
-            return readPixel<CHECKRANGE>(pos.x, pos.y, outside_color);
-            }
-
-
-        /**
-         * Get a reference to a pixel (no range check!) const version
-         *
-         * @param   x   The x coordinate.
-         * @param   y   The y coordinate.
-         *
-         * @returns a const reference to the pixel color.
-        **/
-        TGX_INLINE inline const color_t & operator()(int x, int y) const
-            {
-            return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];
+            if ((CHECKRANGE) && (!isValid())) return outside_color;
+            return _readPixel(pos, outside_color);
             }
 
 
@@ -549,27 +466,13 @@ namespace tgx
 
 
         /**
-         * Get a reference to a pixel (no range check!)
-         *
-         * @param   x   The x coordinate.
-         * @param   y   The y coordinate.
-         *
-         * @returns a reference to the pixel color.
-        **/
-        TGX_INLINE inline color_t & operator()(int x, int y)
-            {
-            return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];
-            }
-
-
-        /**
          * Get a reference to a pixel (no range check!) 
          *
          * @param   pos The position.
          *
          * @returns a reference to the pixel color.
         **/
-        TGX_INLINE inline color_t& operator()(iVec2 pos)
+        TGX_INLINE inline color_t & operator()(iVec2 pos)
             {
             return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)];
             }
@@ -595,10 +498,7 @@ namespace tgx
          *
          * @param   cb_fun  The callback function
         **/
-        template<typename ITERFUN> void iterate(ITERFUN cb_fun)
-            {
-            iterate(cb_fun, imageBox());
-            }
+        template<typename ITERFUN> void iterate(ITERFUN cb_fun);
 
 
         /**
@@ -614,6 +514,7 @@ namespace tgx
 
 
 
+
     /****************************************************************************
     *
     *
@@ -623,163 +524,92 @@ namespace tgx
     ****************************************************************************/
 
 
-
-
-
-
         /**
-         * Blit a sprite at a given position on the image.
-         * 
-         * Remark: If only part of the sprite should be blit onto this image, one simply has to create a
-         * temporary sub-image like so: 'blit(sprite.getCrop(subbox),upperleftpos)'. No  copy is
-         * performed when creating (shallow) sub-image so this does not incur any slowdown.
+         * Blit/blend a sprite over this image at a given position.
          *
-         * @param   sprite          The sprite image to blit.
+         * @param   sprite          The sprite image to blit over this image.
          * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply overwrite the spite over the
+         *                          image.
         **/
-        void blit(const Image<color_t> & sprite, iVec2 upperleftpos)
-            {
-            _blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly());
-            }
-
-
-        /**
-         * Blit a sprite at a given position on this image.
-         * Same as above using ints instead of iVec2 for position (deprecated).
-        **/
-        DEPRECATED_SCALAR_PARAMS void blit(const Image<color_t>& sprite, int dest_x, int dest_y)
-            {
-            _blit(sprite, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly());
-            }
-
-
-        /**
-         * Blend a sprite over this image at a given position.
-         * 
-         * Use blending to draw the sprite over the image with a given opacity. If color_t has an alpha
-         * channel, it is also used or blending.
-         *
-         * @param   sprite          The sprite image to blit.
-         * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
-         * @param   opacity         The mult. opacity factor from 0.0f (transparent) and 1.0f (opaque).
-        **/
-        void blit(const Image<color_t>& sprite, iVec2 upperleftpos, float opacity)
-            {
-            _blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(),opacity);
-            }
-
-
-        /**
-         * Blend a sprite over this image at a given position.
-         * Same as above using ints instead of iVec2 for position (deprecated).
-        **/
-        DEPRECATED_SCALAR_PARAMS void blit(const Image<color_t>& sprite, int dest_x, int dest_y, float opacity)
-            {
-            _blit(sprite, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly(), opacity);
-            }
+        void blit(const Image<color_t>& sprite, iVec2 upperleftpos, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
          * Blend a sprite at a given position on the image using a custom blending operator.
          * 
-         * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the 
-         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended 
+         * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
+         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended
          * color.
          * 
          * Thus, it must be callable in the form:
-         *   
+         * 
          *       blend_op(col_src, col_dst)
          * 
-         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it 
+         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it
          * must return a valid color (of any type but preferably of type color_t for best performance).
          * 
-         * Remarks: 
+         * Remarks:
          * 
-         * 1. To perform "classical alpha blending", use the blit() method with an opacity parameter instead   
-         *    as it will be faster.        
+         * 1. To perform "classical alpha blending", use the blit() method with an opacity parameter
+         *    instead of this method as it will be faster.
          * 2. If only part of the sprite should be blended onto this image, one simply has to create a
-         *    temporary sub-image like so: 'blend(sprite.getCrop(subbox),upperleftpos, blend_op)'. No copy 
-         *    is performed when creating (shallow) sub-image so this does not incur any slowdown.
+         *    temporary sub-image like so: 'blend(sprite.getCrop(subbox),upperleftpos, blend_op)'. No
+         *    copy is performed when creating (shallow) sub-image so this does not incur any slowdown.
          *
          * @param   sprite          The sprite image to blend.
          * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
-         * @param   blend_op        The blending operator
+         * @param   blend_op        The blending operator.
         **/
         template<typename color_t_src, typename BLEND_OPERATOR> 
-        void blit(const Image<color_t_src>& sprite, iVec2 upperleftpos, const BLEND_OPERATOR& blend_op)
-            {
-            _blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), blend_op);
-            }
-
+        void blit(const Image<color_t_src>& sprite, iVec2 upperleftpos, const BLEND_OPERATOR& blend_op);
 
 
         /**
-         * Blend a sprite at a given position on this image. Sprite pixels with color
-         * `transparent_color` are treated as transparent hence not copied on the image. Other pixels
+         * Blend a sprite at a given position on this image with a given mask. Sprite pixels with color
+         * transparent_color` are treated as transparent hence are not copied on the image. Other pixels
          * are blended with the destination image after being multiplied by the opacity factor.
          * 
-         * Remark: this method is especially useful when color_t does not have an alpha channel hence no
+         * Remark: This method is especially useful when color_t does not have an alpha channel hence no
          * predefined transparent color.
          *
          * @param   sprite              The sprite image to blit.
          * @param   transparent_color   The sprite color considered transparent.
          * @param   upperleftpos        Position of the upper left corner of the sprite in the image.
-         * @param   opacity             The mult. opacity factor from 0.0f (transparent) and 1.0f (opaque).
+         * @param   opacity             (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                              negative to disable blending and simply overwrite the spite over
+         *                              the image.
         **/
-        void blitMasked(const Image<color_t>& sprite, color_t transparent_color, iVec2 upperleftpos, float opacity)
-            {
-            _blitMasked(sprite, transparent_color, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), opacity);
-            }
+        void blitMasked(const Image<color_t>& sprite, color_t transparent_color, iVec2 upperleftpos, float opacity = 1.0f);
 
 
         /**
-         * Blit a sprite at a given position on this image. Sprite pixels with color `transparent_color`
-         * Same as above using ints instead of iVec2 for position (deprecated).
-        **/
-        DEPRECATED_SCALAR_PARAMS void blitMasked(const Image<color_t>& sprite, color_t transparent_color, int dest_x, int dest_y, float opacity)
-            {
-            _blitMasked(sprite, transparent_color, dest_x, dest_y, 0, 0, sprite.lx(), sprite.ly(), opacity);
-            }
-
-
-        /**
-         * Reverse blitting. Copy part of the image into the sprite
-         * This is the inverse of the blit operation.
+         * Reverse blitting. Copy part of the image into the sprite This is the inverse of the blit
+         * operation.
+         * 
+         * THis method can be useful to 'save' a potion of the image into a sprite before
+         * drawing/blitiing something on it...
          *
-         * @param   dst_sprite      The sprite to copy part of this image into.
-         * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
+         * @param [in,out]  dst_sprite      The sprite to save part of this image into.
+         * @param           upperleftpos    Position of the upper left corner of the sprite in the image.
         **/
-        void blitBackward(Image<color_t> & dst_sprite, iVec2 upperleftpos) const
-            {
-            dst_sprite._blit(*this, 0, 0, upperleftpos.x, upperleftpos.y, dst_sprite.lx(), dst_sprite.ly());
-            }
+        void blitBackward(Image<color_t>& dst_sprite, iVec2 upperleftpos) const;
 
 
         /**
-         * Reverse blitting. Copy part of the image into the sprite
-         * Same as above using ints instead of iVec2 for position (deprecated).
-        **/
-        DEPRECATED_SCALAR_PARAMS void blitBackward(Image<color_t>& dst_sprite, int dest_x, int dest_y) const
-            {
-            dst_sprite._blit(*this, 0, 0, dest_x, dest_y, dst_sprite.lx(), dst_sprite.ly());
-            }
-
-
-        /**
-         * Blit a sprite onto this image after rescaling and rotation. The anchor point 'anchor_src' in
-         * the sprite is mapped to 'anchor_im' in this image. The rotation is performed in counter-
-         * clockwise direction around the anchor point.
+         * Blit/blend a sprite onto this image after rescaling and rotation. The anchor point
+         * 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The rotation is performed
+         * in counter-clockwise direction around the anchor point.
          * 
          * Remarks:
          * 
          * 1. The positions are given using floating point values to allow for sub-pixel precision for
          *    smoother animation.
-         * 2. The method use bilinear interpolation for high quality rendering.  
+         * 2. The method uses bilinear interpolation for high quality rendering.
          * 3. The sprite image can have a different color type from this image.
-         * 4. This version does NOT use blending: pixel from the source are simply copied over this
-         *    image.
          * 
-         * Note: When rotated, access to  the sprite pixels colors is not linear anymore. For certain
+         * Note: When rotated, access to the sprite pixels colors is not linear anymore. For certain
          *       orientations, this will yield very 'irregular' access to the sprite memory locations.
          *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
          *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
@@ -792,103 +622,62 @@ namespace tgx
          * @param   src_im          The sprite image to draw.
          * @param   anchor_src      Position of the anchor point in the sprite image.
          * @param   anchor_dst      Position of the anchor point in this (destination) image.
-         * @param   scale           Scaling factor (1.0f for no scaling).
-         * @param   angle_degrees   The rotation angle in degrees.
+         * @param   scale           Scaling factor (1.0f for no rescaling).
+         * @param   angle_degrees   The rotation angle in degrees (0 for no rotation).
+         * @param   opacity         Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                          disable blending and simply use overwrite.
         **/
         template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
-        void blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees)
-            {
-            _blitScaledRotated<color_t_src, CACHE_SIZE, false, false, false>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, 1.0f, [](color_t_src cola, color_t colb) {return colb; });
-            }
+        void blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
-
-        /**
-         * Blend a sprite onto this image after rescaling and rotation. The anchor point 'anchor_src' in
-         * the sprite is mapped to 'anchor_im' in this image. The rotation is performed in counter-
-         * clockwise direction around the anchor point.
-         * 
-         * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision for
-         *    smoother animation.
-         * 2. The method use bilinear interpolation for high quality rendering.
-         * 3. The sprite image can have a different color type from this image.
-         * 4. This version use blending and opacity. If the sprite image color type has an alpha channel,
-         *    then it is used for blending and multiplied by the opacity factor (even if this image does
-         *    not have an alpha channel).
-         * 
-         * Note: When rotated, access to  the sprite pixels colors is not linear anymore. For certain
-         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
-         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
-         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
-         *       (or another faster memory) before blitting...
-         *
-         * @tparam  color_t_src Color type of the sprite image.
-         * @tparam  CACHE_SIZE  Size of the MCU cache when reading from flash. This value is indicative
-         *                      and used to optimize cache access to flash memory. You may try changing
-         *                      the default value it if drawing takes a long time...
-         * @param   src_im          The sprite image to draw.
-         * @param   anchor_src      Position of the anchor point in the sprite image.
-         * @param   anchor_dst      Position of the anchor point in this (destination) image.
-         * @param   scale           Scaling factor (1.0f for no scaling).
-         * @param   angle_degrees   The rotation angle in degrees.
-         * @param   opacity         The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
-        **/
-        template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
-        void blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
-            {
-            _blitScaledRotated<color_t_src, CACHE_SIZE, true, false, false>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, opacity, [](color_t_src cola, color_t colb) {return colb; });
-            }
 
 
         /**
          * Blend a sprite onto this image after rescaling and rotation using a custom blending operator.
          * 
-         * The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The rotation 
-         * is performed in counter-clockwise direction around the anchor point.
+         * The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The
+         * rotation is performed in counter-clockwise direction around the anchor point.
          * 
          * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
          * color of the source (sprite) pixel and the color of the dest. pixel and return the blended
          * color.
-         *
+         * 
          * Thus, it must be callable in the form:
-         *
+         * 
          *       blend_op(col_src, col_dst)
-         *
+         * 
          * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it
          * must return a valid color (of any type but preferably of type color_t for best performance).
-         *
+         * 
          * Remarks:
          * 
          * 1. The positions are given using floating point values to allow for sub-pixel precision for
          *    smoother animation.
          * 2. The method use bilinear interpolation for high quality rendering.
          * 3. The sprite image can have a different color type from this image.  
-         * 4. To perform "classical alpha blending", use the blitScaleRotated() method with an opacity   
-         *    parameter instead as it will be faster. 
-         *
+         * 4. To perform "classical alpha blending", use the blitScaleRotated() method with an opacity
+         *    parameter instead as it will be faster.
+         * 
          * Note: When rotated, access to  the sprite pixels colors is not linear anymore. For certain
          *       orientations, this will yield very 'irregular' access to the sprite memory locations.
          *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
          *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
          *       (or another faster memory) before blitting...
          *
-         * @tparam  color_t_src Color type of the sprite image.
-         * @tparam  CACHE_SIZE  Size of the MCU cache when reading from flash. This value is indicative
-         *                      and used to optimize cache access to flash memory. You may try changing
-         *                      the default value it if drawing takes a long time...
+         * @tparam  color_t_src     Color type of the sprite image.
+         * @tparam  BLEND_OPERATOR  Type of the blend operator.
+         * @tparam  CACHE_SIZE      Size of the MCU cache when reading from flash. This value is
+         *                          indicative and used to optimize cache access to flash memory. You may
+         *                          try changing the default value it if drawing takes a long time...
          * @param   src_im          The sprite image to draw.
          * @param   anchor_src      Position of the anchor point in the sprite image.
          * @param   anchor_dst      Position of the anchor point in this (destination) image.
          * @param   scale           Scaling factor (1.0f for no scaling).
          * @param   angle_degrees   The rotation angle in degrees.
-         * @param   blend_op        The blending operator
+         * @param   blend_op        The blending operator.
         **/
         template<typename color_t_src, typename BLEND_OPERATOR, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
-        void blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, const BLEND_OPERATOR& blend_op)
-            {
-            _blitScaledRotated<color_t_src, CACHE_SIZE, true, false, true>(src_im, color_t_src(), anchor_src, anchor_dst, scale, angle_degrees, 1.0f, blend_op);
-            }
+        void blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, const BLEND_OPERATOR& blend_op);
 
 
         /**
@@ -904,9 +693,6 @@ namespace tgx
          *    smoother animation.
          * 2. The method use bilinear interpolation for high quality rendering.
          * 3. The sprite image can have a different color type from this image.
-         * 4. This version use blending and opacity. If the sprite image color type has an alpha channel,
-         *    then it is used for blending and multiplied by the opacity factor (even if this image does
-         *    not have an alpha channel).
          * 
          * Note: When rotated, access to  the sprite pixels colors is not linear anymore. For certain
          *       orientations, this will yield very 'irregular' access to the sprite memory locations.
@@ -924,20 +710,14 @@ namespace tgx
          * @param   anchor_dst          Position of the anchor point in this (destination) image.
          * @param   scale               Scaling factor (1.0f for no scaling).
          * @param   angle_degrees       The rotation angle in degrees.
-         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f
-         *                              (opaque).
+         * @param   opacity             Opacity multiplier when blending (in [0.0f, 1.0f]) 
         **/
         template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
-        void blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
-            {
-            _blitScaledRotated<color_t_src, CACHE_SIZE, true, true, false>(src_im, transparent_color, anchor_src, anchor_dst, scale, angle_degrees, opacity, [](color_t_src cola, color_t colb) {return colb; });
-            }
-
-       
+        void blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity = 1.0f);
 
 
         /**
-         * Copy the src image onto the destination image with resizing and color conversion.
+         * Copy (or blend) the src image onto the destination image with resizing and color conversion.
          * 
          * Remark:
          * 
@@ -949,29 +729,11 @@ namespace tgx
          *
          * @tparam  src_color_t color type of the source image
          * @param   src_im  The image to copy into this image.
+         * @param   opacity             Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                              disable blending and simply use overwrite.
         **/
-        template<typename src_color_t> void copyFrom(const Image<src_color_t>& src_im);
+        template<typename src_color_t> void copyFrom(const Image<src_color_t>& src_im, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
-
-        /**
-         * Blend the src image onto the destination image with resizing and color conversion.
-         * 
-         * This version uses blending and opacity to combine the src over the existing image.
-         * 
-         * 1. the source image is resized to match this image size. Bilinear interpolation is used to
-         *    improve quality.
-         * 2. The source and destination image may have different color type. Conversion is automatic.
-         * 3. This version use blending and opacity. If the source image color type has an alpha channel,
-         *    then it is used for blending and multiplied by the opacity factor (even if this image does
-         *    not have an alpha channel).
-         * 
-         * Beware: The method does not check for buffer overlap between source and destination !
-         *
-         * @tparam  src_color_t color type of the source image
-         * @param   src_im  Source image to copy onto this image.
-         * @param   opacity opacity between 0.0f (fully transparent) and 1.0f (fully opaque).
-        **/
-        template<typename src_color_t> void copyFrom(const Image<src_color_t>& src_im, float opacity);
 
 
         /**
@@ -1007,43 +769,45 @@ namespace tgx
         template<typename src_color_t, typename BLEND_OPERATOR> void copyFrom(const Image<src_color_t>& src_im, const BLEND_OPERATOR& blend_op);
 
 
-
         /**
-        * Copy the source image pixels into this image, reducing it by half in the process.
-        * Ignore the last row/column for odd dimensions larger than 1.
-        * Resizing is done by averaging the color of the 4 neighbour pixels. 
-        * 
-        * This image must be large enough to accomodate the reduced image otherwise do nothing. 
-        * The reduced image is copied on the top left corner of this image.
-        * 
-        * Return a sub-image of this image corresponding to the reduced image pixels (or an 
-        * empty image if nothing was done).
-        * 
-        * REMARK: This is an old method. Use blitScaledRotated() for a more powerful method.
+         * Copy the source image pixels into this image, reducing it by half in the process. Ignore the
+         * last row/column for odd dimensions larger than 1. Resizing is done by averaging the color of
+         * the 4 neighbour pixels.
+         * 
+         * This image must be large enough to accomodate the reduced image otherwise do nothing. The
+         * reduced image is copied on the top left corner of this image.
+         * 
+         * Return a sub-image of this image corresponding to the reduced image pixels (or an empty image
+         * if nothing was done).
+         * 
+         * REMARK: This is an old method. Use blitScaledRotated() for a more powerful method.
+         *
+         * @param   src_image   the source image.
+         *
+         * @returns a subimage of this image that contain the reduced image.
         **/
         Image<color_t> copyReduceHalf(const Image<color_t> & src_image);
 
 
-
         /**
-        * Reduce this image by half. Use the same memory buffer and keep the same stride. 
-        * Resizing is done by averaging the color of the 4 neighbour pixels.
-        * Same as copyReduceHalf(*this)
-        *
-        * Return a sub-image of this image corresponding to the reduced image pixels
-        * which correspond to the upper left half of this image. 
+         * Reduce this image by half. Use the same memory buffer and keep the same stride. Resizing is
+         * done by averaging the color of the 4 neighbour pixels. Same as copyReduceHalf(*this)
+         * 
+         * Return a sub-image of this image corresponding to the reduced image pixels which correspond
+         * to the upper left half of this image.
+         *
+         * @returns a sub-image of this image that contains the reduce image. 
         **/
-        Image<color_t> reduceHalf()
-            {
-            return copyReduceHalf(*this);
-            }
+        Image<color_t> reduceHalf();
 
 
 
 
         /*********************************************************************
         *
+        * 
         * Flood filling
+        * 
         * 
         **********************************************************************/
 
@@ -1063,10 +827,7 @@ namespace tgx
         * @return   return the max stack used during the algorithm. Return -1 if we run out of memory (in this
         *           case the method returns early without completing the full filling.
         **/
-        template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t new_color)
-            {
-            return _scanfill<true, STACK_SIZE>(start_pos.x,start_pos.y, new_color, new_color);
-            }
+        template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t new_color);
 
 
 
@@ -1088,12 +849,7 @@ namespace tgx
         * @return   return the max stack used during the algorithm. Return -1 if we run out of memory (in this 
         *           case the method returns early without completing the full filling. 
 		**/
-        template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t border_color, color_t new_color)
-            {
-            return _scanfill<false, STACK_SIZE>(start_pos.x, start_pos.y, border_color, new_color);
-            }
-
-
+        template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t border_color, color_t new_color);
 
 
 
@@ -1110,6 +866,7 @@ namespace tgx
 
 
 
+
         /*********************************************************************
         *
         * Screen filling
@@ -1122,36 +879,29 @@ namespace tgx
          *
          * @param   color   The color to use.
         **/
-        void fillScreen(color_t color)
-            {
-            fillRect(imageBox(), color);
-            }
+        void fillScreen(color_t color);
 
 
         /**
-         * Fill the whole image with a vertical color gradient between color1 and color2. color
-         * interpolation takes place in RGB color space (even if color_t is HSV).
+         * Fill the whole image with a vertical color gradient between two colors.
+         * 
+         * Interpolation takes place in RGB color space (even if color_t is HSV).
          *
-         * @param   top_color       color at the top of the image
+         * @param   top_color       color at the top of the image.
          * @param   bottom_color    color at the bottom of the image.
         **/
-        void fillScreenVGradient(color_t top_color, color_t bottom_color)
-            {
-            fillRectVGradient(imageBox(),top_color, bottom_color);
-            }
+        void fillScreenVGradient(color_t top_color, color_t bottom_color);
 
 
         /**
-         * Fill the whole screen with an horizontal color gradient between color1 and color2. color
-         * interpolation takes place in RGB color space (even if color_t is HSV).
+         * Fill the whole screen with an horizontal color gradient between two colors.
+         * 
+         * Interpolation takes place in RGB color space (even if color_t is HSV).
          *
-         * @param   left_color  color on the left side of the image
-         * @param   right_color color on the right side of the image
+         * @param   left_color  color on the left side of the image.
+         * @param   right_color color on the right side of the image.
         **/
-        void fillScreenHGradient(color_t left_color, color_t right_color)
-            {
-            fillRectHGradient(imageBox(), left_color, right_color);
-            }
+        void fillScreenHGradient(color_t left_color, color_t right_color);
 
 
 
@@ -1164,258 +914,79 @@ namespace tgx
 
 
         /**
-        * Draw an vertical line of h pixels starting at pos.
+         * Draw an vertical segment of h pixels starting at pos.
+         *
+         * @param   pos     position of the top endpoint of the segment.
+         * @param   h       number of pixels in the segment.
+         * @param   color   color to use.
+         * @param   opacity opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
+         *                  blending.
         **/
-        template<bool CHECKRANGE = true> TGX_INLINE inline void drawFastVLine(iVec2 pos, int h, color_t color)
-            {
-            int x = pos.x;
-            int y = pos.y;
-            if (CHECKRANGE) // optimized away at compile time
-                {
-                if ((!isValid()) || (x < 0) || (x >= _lx) || (y >= _ly)) return;
-                if (y < 0) { h += y; y = 0; }
-                if (y + h > _ly) { h = _ly - y; }               
-                }
-            color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride);
-            while (h-- > 0)
-                {
-                (*p) = color;
-                p += _stride;
-                }
-            }
+        void drawFastVLine(iVec2 pos, int h, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-        * Draw a vertical line of h pixels starting at (x,y).
+         * Draw an horizontal segment of h pixels starting at pos.
+         *
+         * @param   pos     position of the left endpoint of the segment.
+         * @param   w       number of pixels in the segment.
+         * @param   color   color to use.
+         * @param   opacity opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
+         *                  blending and simply use overwritting.
         **/
-        template<bool CHECKRANGE = true> 
-        DEPRECATED_SCALAR_PARAMS inline void drawFastVLine(int x, int y, int h, color_t color)
-            {
-            drawFastVLine<CHECKRANGE>({ x, y }, h, color);
-            }
+        void drawFastHLine(iVec2 pos, int w, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-        * Draw an vertical line of h pixels starting at pos.
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         * Draw a line segment between two points (using Bresenham's algorithm).
+         *
+         * @param   P1      The first point.
+         * @param   P2      The second point.
+         * @param   color   color to use.
+         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending and simply use overwritting.
         **/
-        template<bool CHECKRANGE = true> TGX_INLINE inline void drawFastVLine(iVec2 pos, int h, color_t color, float opacity)
-            {
-            int x = pos.x;
-            int y = pos.y;
-            if (CHECKRANGE) // optimized away at compile time
-                {
-                if ((!isValid()) || (x < 0) || (x >= _lx) || (y >= _ly)) return;
-                if (y < 0) { h += y; y = 0; }
-                if (y + h > _ly) { h = _ly - y; }
-                }
-            color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride);
-            while (h-- > 0)
-                {
-                (*p).blend(color, opacity);
-                p += _stride;
-                }   
-            }
+        void drawLine(iVec2 P1, iVec2 P2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-         * Draw a vertical line of h pixels starting at (x,y).
-         * 
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         * Draw a line segment between two points (using Bresenham's algorithm) 
+         * Same as drawLine() but possibly without drawing one or both endpoints.
+         *
+         * @param   P1      The first point.
+         * @param   drawP1  True to draw the pixel at endpoint P1.
+         * @param   P2      The second point.
+         * @param   drawP2  True to draw the pixel at endpoint P2.
+         * @param   color   color to use.
+         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending and simply use overwritting.
         **/
-        template<bool CHECKRANGE = true> 
-        DEPRECATED_SCALAR_PARAMS inline void drawFastVLine(int x, int y, int h, color_t color, float opacity)
-            {
-            drawFastVLine<CHECKRANGE>({ x, y }, h, color, opacity);
-            }
-
+        void drawSegment(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-        * Draw an horizontal line of w pixels starting at pos.
+         * Draw a polyline i.e. a sequence of consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
         **/
-        template<bool CHECKRANGE = true> TGX_INLINE inline void drawFastHLine(iVec2 pos, int w, color_t color)
-            {
-            int x = pos.x;
-            int y = pos.y;
-            if (CHECKRANGE) // optimized away at compile time
-                {
-                if ((!isValid()) || (y < 0) || (y >= _ly) || (x >= _lx)) return;
-                if (x < 0) { w += x; x = 0; }
-                if (x + w > _lx) { w = _lx - x; }
-                }
-            _fast_memset(_buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride), color, w);
-            }
+        void drawPolyLine(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-        * Draw an horizontal line of w pixels starting at (x,y). 
+         * Draw a closed polygon with vertices [P0,P2, .., PN]
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points of the polygon.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
         **/
-        template<bool CHECKRANGE = true> 
-        DEPRECATED_SCALAR_PARAMS inline void drawFastHLine(int x, int y, int w, color_t color)
-            {           
-            drawFastHLine<CHECKRANGE>({ x, y }, w, color);
-            }
+        void drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
-
-        /**
-        * Draw an horizontal line of w pixels starting at pos.
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        template<bool CHECKRANGE = true> TGX_INLINE inline void drawFastHLine(iVec2 pos, int w, color_t color, float opacity)
-            {
-            int x = pos.x;
-            int y = pos.y;
-            if (CHECKRANGE) // optimized away at compile time
-                {
-                if ((!isValid()) || (y < 0) || (y >= _ly) || (x >= _lx)) return;
-                if (x < 0) { w += x; x = 0; }
-                if (x + w > _lx) { w = _lx - x; }
-                }
-            color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride);
-            while (w-- > 0)
-                {
-                (*p++).blend(color, opacity);
-                }
-            }
-
-
-        /**
-        * Draw an horizontal line of w pixels starting at (x,y).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        template<bool CHECKRANGE = true> 
-        DEPRECATED_SCALAR_PARAMS inline void drawFastHLine(int x, int y, int w, color_t color, float opacity)
-            {   
-            drawFastHLine<CHECKRANGE>({ x, y }, w, color, opacity);
-            }
-
-
-
-        /**
-        * Draw a line between P1 and P2 using Bresenham algorithm
-        **/
-        inline void drawLine(iVec2 P1, iVec2 P2, color_t color)
-            {
-            const int x0 = P1.x;
-            const int y0 = P1.y;
-            const int x1 = P2.x;
-            const int y1 = P2.y;
-            if (!isValid()) return;
-            if ((x0 < 0) || (y0 < 0) || (x1 < 0) || (y1 < 0) || (x0 >= _lx) || (y0 >= _ly) || (x1 >= _lx) || (y1 >= _ly))
-                _drawLine<true>(x0, y0, x1, y1, color);
-            else
-                _drawLine<false>(x0, y0, x1, y1, color);            
-            }
-
-
-        /**
-        * Draw a line between (x0,y0) and (x1,y1) using Bresenham algorithm
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawLine(int x0, int y0, int x1, int y1, color_t color)
-            {
-            drawLine({ x0,y0 }, { x1,y1 }, color);
-            }
-
-
-        /**
-        * Draw a line between P1 and P2 using Bresenham algorithm
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        inline void drawLine(iVec2 P1, iVec2 P2, color_t color, float opacity)
-            {
-            const int x0 = P1.x;
-            const int y0 = P1.y;
-            const int x1 = P2.x;
-            const int y1 = P2.y;
-            if (!isValid()) return;
-            if ((x0 < 0) || (y0 < 0) || (x1 < 0) || (y1 < 0) || (x0 >= _lx) || (y0 >= _ly) || (x1 >= _lx) || (y1 >= _ly))
-                _drawLine<true>(x0, y0, x1, y1, color, opacity);
-            else
-                _drawLine<false>(x0, y0, x1, y1, color, opacity);
-            }
-
-
-        /**
-        * Draw a line between (x0,y0) and (x1,y1) using Bresenham algorithm
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawLine(int x0, int y0, int x1, int y1, color_t color, float opacity)
-            {
-            drawLine({ x0,y0 }, { x1,y1 }, color, opacity);
-            }
-
-
-        /**
-        * Draw a polyline i.e. a sequence of consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
-        *
-        * @param	nbpoints		number of points in tabPoints
-        * @param	tabPoints		array of points
-        * @param	draw_last_point	true to draw the last point
-        * @param	color			The color to use.
-        **/
-        void drawPolyLine(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color)
-            {
-            _drawPolyLine<false>(nbpoints, tabPoints, draw_last_point, color, 1.0f);
-            }
-
-
-        /**
-        * Draw a polyline i.e. a sequence of consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
-        * Same as above but use blending
-        *
-        * @param	nbpoints		number of points in tabPoints
-        * @param	tabPoints		array of points
-        * @param	draw_last_point	true to draw the last point
-        * @param	color			The color to use.
-        * @param    opacity         opacity scale factor between 0.0f (transparent) and 1.0f (fully opaque).
-        **/
-        void drawPolyLine(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity)
-            {
-            _drawPolyLine<true>(nbpoints, tabPoints, draw_last_point, color, opacity);
-            }
-
-
-
-        /**
-        * Draw a closed polygon with vertices [P0,P2, .., PN]
-        * Same as above but use blending
-        *
-        * @param	nbpoints		number of points in tabPoints
-        * @param	tabPoints		array of points of the polygon
-        * @param	color			The color to use.
-        * @param    opacity         opacity scale factor between 0.0f (transparent) and 1.0f (fully opaque).
-        **/
-        void drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color)
-            {
-            _drawPolygon<false>(nbpoints, tabPoints, color, 1.0f);
-            }
-
-
-        /**
-        * Draw a closed polygon with vertices [P0,P2, .., PN]
-        * Same as above but use blending
-        *
-        * @param	nbpoints		number of points in tabPoints
-        * @param	tabPoints		array of points of the polygon
-        * @param	color			The color to use.
-        * @param    opacity         opacity scale factor between 0.0f (transparent) and 1.0f (fully opaque).
-        **/
-        void drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
-            {
-            _drawPolygon<true>(nbpoints, tabPoints, color, opacity);
-            }
 
 
 
@@ -1723,44 +1294,128 @@ namespace tgx
 
 
         /**
-         * Draw a rectangle corresponding to the box B.
+         * Draw a rectangle (single pixel wide)
          *
-         * @param   B       B representing the rectangle.
-         * @param   color   Color to use.
+         * @param   B       box that delimits the rectangle to draw.
+         * @param   color   rectangle outline color.
+         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f] or negative to
+         *                  disable blending.
         **/
-        void drawRect(const iBox2 & B, color_t color)
+
+        /*
+        void drawRect(const iBox2& B, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE)
             {
-            drawRect({ B.minX, B.minY }, { B.lx(), B.ly() }, color);
+            drawRect( { B.minX, B.minY }, {B.lx(), B.ly()}, color, opacity);
             }
+         */
 
 
         /**
-         * Draw a rectangle with given upper left corner and dimension.
+         * Draw a rectangle (single pixel wide)
          *
-         * @param   upper_left_pos  Position of the upper left corner of the rectangle.
-         * @param   dimension       (width,height) of the rectangle.
-         * @param   color           color to use.
+         * @param   upper_left_pos  The upper left coord of the ranctagle.
+         * @param   dimension       The dimension (width, height)
+         * @param   color           rectangle outline color.
+         * @param   opacity         (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending.
         **/
-        void drawRect(iVec2 upper_left_pos, iVec2 dimension, color_t color)
+        /*
+        void drawRect(iVec2 upper_left_pos, iVec2 dimension, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE)
             {
             const int x = upper_left_pos.x;
             const int y = upper_left_pos.y;
             const int w = dimension.x;
             const int h = dimension.y;
-            drawFastHLine<true>({ x, y }, w, color);
+            drawFastHLine<true>({ x, y }, w, color, opacity);
             if (h > 1) drawFastHLine<true>({ x, y + h - 1 }, w, color);
             drawFastVLine<true>({ x, y + 1 }, h - 2, color);
             if (w > 1) drawFastVLine<true>({ x + w - 1, y + 1 }, h - 2, color);
             }
+        */
+
 
 
         /**
-        * Draw a rectangle with size (w,h) and upperleft corner at (x,y)
+         * Draw a thick rectangle.
+         *
+         * @param   B           box that delimits the rectangle to draw.
+         * @param   thickness   thickness of the outline in pixels.
+         * @param   color       rectangle outline color.
+         * @param   opacity     (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending.
         **/
-        DEPRECATED_SCALAR_PARAMS void drawRect(int x, int y, int w, int h, color_t color)
-            {
-            drawRect({ x, y }, { w, h }, color);
-            }
+//        void drawThickRect(const iBox2& B, int thickness, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a thick rectangle.
+         *
+         * @param   upper_left_pos  The upper left coord of the ranctagle.
+         * @param   dimension       The dimension (width, height)
+         * @param   thickness       thickness of the outline in pixels.
+         * @param   color           rectangle outline color.
+         * @param   opacity         (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending.
+        **/
+//        void drawThickRect(iVec2 upper_left_pos, iVec2 dimension, int thickness, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a filled rectangle.
+         *
+         * @param   B       box that delimits the rectangle to draw.
+         * @param   color   rectangle interior color.
+         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending.
+        **/
+//        void fillRect(iBox2 B, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a filled rectangle
+         *
+         * @param   upper_left_pos  The upper left coord of the ranctagle.
+         * @param   dimension       The dimension (width, height)
+         * @param   color           rectangle interior color.
+         * @param   opacity         (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending.
+        **/
+//        void fillRect(iVec2 upper_left_pos, iVec2 dimension, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a rectangle filled with an horizontal gradient of colors
+         *
+         * @param   B           box that delimits the rectangle to draw.
+         * @param   color_left  color on the left side
+         * @param   color_right color on the right side
+         * @param   opacity     (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending.
+        **/
+//        void fillRectHGradient(iBox2 B, color_t color_left, color_t color_right, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a rectangle filled with a vertical gradient of colors
+         *
+         * @param   B       box that delimits the rectangle to draw.
+         * @param   color1  color on the left side.
+         * @param   color2  color on the right side.
+         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending.
+        **/
+//        void fillRectVGradient(iBox2 B, color_t color_top, color_t color_bottom, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+//        void drawRoundRect();
+
+//        void fillRoundRect();
+
+//        void drawSmoothThickRoundRect();
+
+//        void fillSmoothThickRoundRect();
+
+
+
 
 
         /**
@@ -1796,10 +1451,10 @@ namespace tgx
             const int y = upper_left_pos.y;
             const int w = dimension.x;
             const int h = dimension.y;
-            drawFastHLine<true>({ x, y }, w, color, opacity);
-            if (h > 1) drawFastHLine<true>({ x, y + h - 1 }, w, color, opacity);
-            drawFastVLine<true>({ x, y + 1 }, h - 2, color, opacity);
-            if (w > 1) drawFastVLine<true>({ x + w - 1, y + 1 }, h - 2, color, opacity);
+            drawFastHLine({ x, y }, w, color, opacity);
+            if (h > 1) drawFastHLine({ x, y + h - 1 }, w, color, opacity);
+            drawFastVLine({ x, y + 1 }, h - 2, color, opacity);
+            if (w > 1) drawFastVLine({ x + w - 1, y + 1 }, h - 2, color, opacity);
             }
 
 
@@ -3299,34 +2954,102 @@ private:
         * DRAWING PRIMITIVES
         ****************************************/
 
-        /** line drawing method */
-        template<bool CHECKRANGE> inline void _drawLine(int x0, int y0, int x1, int y1, color_t color);
 
-
-        /** line drawing method */
-        template<bool CHECKRANGE> inline void _drawLine(int x0, int y0, int x1, int y1, color_t color, float opacity);
-
-
-        /** Set/blend a pixel. */
-        template<bool BLEND> inline void _drawPixel(bool checkrange, int x, int y, color_t color, float opacity)
-        {
-            if (checkrange) // optimized away at compile time
+        template<bool CHECKRANGE, bool CHECK_VALID_BLEND = true> TGX_INLINE inline void _drawPixel(iVec2 pos, color_t color, float opacity)
             {
-                if ((x < 0) || (y < 0) || (x >= _lx) || (y >= _ly)) return;
-            }
-            if (BLEND)
-                _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)].blend(color, opacity);
+            if (CHECKRANGE)
+                {
+                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
+                }
+            if ((CHECK_VALID_BLEND) && ((opacity < 0)||(opacity>1)))
+                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
             else
-                _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)] = color;
-        }
+                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)].blend(color, opacity);
+            }
 
 
-        /* draw segment (same as line but possibly without endpoint) */
-        template<bool BLEND> void _drawSeg(bool checkrange, int x0, int y0, int x1, int y1, bool draw_last, color_t color, float opacity);
+        template<bool CHECKRANGE> TGX_INLINE inline void _drawPixel(iVec2 pos, color_t color)
+            {
+            if (CHECKRANGE)
+                {
+                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
+                }
+            _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
+            }
 
-        template<bool BLEND> void _drawPolyLine(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity);
 
-        template<bool BLEND> void _drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity);
+        TGX_INLINE inline void _drawPixel(bool checkrange, iVec2 pos, color_t color, float opacity)
+            {
+            if (checkrange)
+                {
+                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
+                }
+            if ((opacity < 0)||(opacity>1))
+                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
+            else
+                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)].blend(color, opacity);
+            }
+
+
+        TGX_INLINE inline void _drawPixel(bool checkrange, iVec2 pos, color_t color)
+            {
+            if (checkrange)
+                {
+                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
+                }
+            _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
+            }
+
+
+
+        template<bool CHECKRANGE = true> TGX_INLINE inline color_t _readPixel(iVec2 pos, color_t outside_color) const
+            {
+            if (CHECKRANGE) // optimized away at compile time
+                {
+                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return outside_color;
+                }
+            return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)];
+            }
+
+
+
+
+        template<bool CHECKRANGE> void _drawFastVLine(iVec2 pos, int h, color_t color, float opacity);
+
+        template<bool CHECKRANGE> void _drawFastHLine(iVec2 pos, int w, color_t color, float opacity);
+
+        template<bool CHECKRANGE> void _drawFastVLine(iVec2 pos, int h, color_t color);
+
+        template<bool CHECKRANGE> void _drawFastHLine(iVec2 pos, int w, color_t color);
+
+
+        void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color, float opacity)
+            {
+            if (checkrange) _drawFastVLine<true>(pos, h, color, opacity); else _drawFastVLine<false>(pos, h, color, opacity);
+            }
+
+        void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color, float opacity)
+            {
+            if (checkrange) _drawFastHLine<true>(pos, w, color, opacity); else _drawFastHLine<false>(pos, w, color, opacity);
+            }
+
+        void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color)
+            {
+            if (checkrange) _drawFastVLine<true>(pos, h, color); else _drawFastVLine<false>(pos, h, color);
+            }
+
+        void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color)
+            {
+            if (checkrange) _drawFastHLine<true>(pos, w, color); else _drawFastHLine<false>(pos, w, color);
+            }
+
+
+
+
+        void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity);
+
+
+
 
 
         /**

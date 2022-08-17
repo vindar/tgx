@@ -66,6 +66,10 @@
 #endif
 
 
+// Default blending operation for drawing
+// primitive: overwrite. 
+#define TGX_DEFAULT_BLENDING_MODE -1.0f
+
 
 // approximate size of the cache when reading in 
 // PROGMEM. This value is used to try to optimize 
@@ -82,7 +86,7 @@
 #endif
 
 // macro to cast indexes as 32bit when doing pointer arithmetic
-#define TGX_CAST32(a)   ((int32_t)a)
+#define TGX_CAST32(a)   ((int32_t)(a))
 
 
 // c++, no plain c

@@ -490,6 +490,10 @@ namespace tgx
 		*/
 		inline void inclen() { _len++; }
 
+		/**
+		* Decrease len by 1
+		*/
+		inline void declen() { _len--; }
 
 		/**
 		* Query the current position on the line
