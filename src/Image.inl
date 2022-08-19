@@ -1574,7 +1574,60 @@ namespace tgx
     ******************************************************/
 
 
-        /**Adapted from from adafruit gfx / Kurte ILI93412_t3n. */
+
+    template<typename color_t>
+    void Image<color_t>::drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        _drawTriangle(P1, P2, P3, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity)
+        {
+        if (!isValid()) return;
+//        _drawTriangle<true, true, false>(P1, P2, P3, interior_color, outline_color, 1.0f);
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
+        {
+        if ((false)&& (opacity >=0)&&(opacity<=1))
+            { // draw without overlap
+//            _bseg_draw(P1, P2, true, 0, color, blending);
+//            _bseg_avoid1(P2, P3, P1, true, true, color, blending);
+//            _bseg_avoid11(P3, P1, P2, P2, true, true, color, blending);
+            return;
+            }
+        _drawSeg(P1, true, P2, false, color, opacity);
+        _drawSeg(P2, true, P3, false, color, opacity);
+        _drawSeg(P3, true, P1, false, color, opacity);
+        }
+
+
+
+
+        /**
+         
+       
+        template<typename color_t>
+        void Image<color_t>::drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
+            {
+            _drawTriangle<false, true, true>(P1, P2, P3, color, color, opacity);
+            }
+
+
+        template<typename color_t>
+        void Image<color_t>::fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity)
+            {
+            _drawTriangle<true, true, false>(P1, P2, P3, interior_color, outline_color, 1.0f);
+            }
+
+
+        //Adapted from from adafruit gfx / Kurte ILI93412_t3n. 
         template<typename color_t>
         template<bool CHECKRANGE, bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
         void Image<color_t>::_drawTriangle_sub(int x0, int y0, int x1, int y1, int x2, int y2, color_t interior_color, color_t outline_color, float opacity)
@@ -1604,16 +1657,16 @@ namespace tgx
                 if ((!DRAW_OUTLINE) && (DRAW_INTERIOR))
                     {
                     if (BLEND)
-                        drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, interior_color, opacity);
+                        _drawFastHLine<CHECKRANGE>( { a, y0 }, b - a + 1, interior_color, opacity);
                     else
-                        drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, interior_color);
+                        _drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, interior_color);
                     }
                 if (DRAW_OUTLINE)
                     {
                     if (BLEND)
-                        drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, outline_color, opacity);
+                        _drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, outline_color, opacity);
                     else
-                        drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, outline_color);
+                        _drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, outline_color);
                     }
                 return;
                 }
@@ -1630,7 +1683,7 @@ namespace tgx
                     sa += dx01;
                     sb += dx02;
                     if (a > b) swap(a, b);
-                    if (BLEND) drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color);
+                    if (BLEND) _drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color, opacity); else _drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color);
                     }
                 sa = dx12 * (y - y1);
                 sb = dx02 * (y - y0);
@@ -1641,7 +1694,7 @@ namespace tgx
                     sa += dx12;
                     sb += dx02;
                     if (a > b) swap(a, b);
-                    if (BLEND) drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color);
+                    if (BLEND) _drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color, opacity); else _drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color);
                     }
                 }
             else
@@ -1660,44 +1713,44 @@ namespace tgx
                     int ia, ib;
                     if (hha == 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); else _drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>({ prv_a, y }, outline_color, opacity); else _drawPixel<CHECKRANGE>({ prv_a, y }, outline_color, opacity); }
                         ia = a + 1;
                         }
                     else if (hha > 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color); }
                         ia = a + 1;
                         }
                     else
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color); }
                         ia = prv_a;
                         }
 
                     const auto hhb = b - prv_b;
                     if (hhb == 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); else _drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>({ prv_b, y }, outline_color, opacity); else _drawPixel<CHECKRANGE>({ prv_b, y }, outline_color, opacity); }
                         ib = prv_b - 1;
                         }
                     else if (hhb > 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color); }
                         ib = prv_b;
                         }
                     else
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color); }
                         ib = b - 1;
                         }
 
                     if ((DRAW_OUTLINE) && ((y == y2) || (y == y0)))
                         {
-                        if (BLEND) drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color);
+                        if (BLEND) _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color);
                         }
                     if ((DRAW_INTERIOR) && (y < y2) && (y > y0))
                         {
-                        if (BLEND) drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color);
+                        if (BLEND) _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color, opacity); else _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color);
                         }
                     prv_a = a;
                     prv_b = b;
@@ -1716,49 +1769,49 @@ namespace tgx
                     int ia, ib;
                     if (hha == 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); else _drawPixel<CHECKRANGE>(prv_a, y, outline_color, opacity); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>({ prv_a, y }, outline_color, opacity); else _drawPixel<CHECKRANGE>({ prv_a, y }, outline_color, opacity); }
                         ia = a + 1;
                         }
                     else if (hha > 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color); }
                         ia = a + 1;
                         }
                     else
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color); }
                         ia = prv_a;
                         }
                     const auto hhb = b - prv_b;
                     if (hhb == 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); else _drawPixel<CHECKRANGE>(prv_b, y, outline_color, opacity); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>({ prv_b, y }, outline_color, opacity); else _drawPixel<CHECKRANGE>({ prv_b, y }, outline_color, opacity); }
                         ib = prv_b - 1;
                         }
                     else if (hhb > 0)
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color); }
                         ib = prv_b;
                         }
                     else
                         {
-                        if (DRAW_OUTLINE) { if (BLEND) drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color); }
+                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color); }
                         ib = b - 1;
                         }
                     if ((DRAW_OUTLINE) && ((y == y2) || (y == y0)))
                         {
-                        if (BLEND) drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color, opacity); else drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color);
+                        if (BLEND) _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color);
                         }
                     if ((DRAW_INTERIOR) && (y < y2) && (y > y0))
                         {
-                        if (BLEND) drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color, opacity); else drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color);
+                        if (BLEND) _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color, opacity); else _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color);
                         }
                     prv_a = a;
                     prv_b = b;
                     }
                 }
             }
-
+        */
 
 
     /*****************************************************

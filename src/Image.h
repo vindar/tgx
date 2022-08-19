@@ -1092,87 +1092,30 @@ namespace tgx
 
 
         /**
-        * Draw a triangle (but not its interior).
+         * Draw a triangle.
+         *
+         * @param   P1      first vertex.
+         * @param   P2      second vertex.
+         * @param   P3      third vertex.
+         * @param   color   The color to use.
+         * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
+         *                  blending and simply use overwrite.
         **/
-        void drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color)
-            {
-            _drawTriangle<false, true, false>(P1, P2, P3, color, color, 1.0f);
-            }
+        void drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-        * Draw a triangle (but not its interior). 
+         * Draw a filled triangle with possibly different colors for the outline and the interior.
+         *
+         * @param   P1              first vertex.
+         * @param   P2              second vertex.
+         * @param   P3              third vertex.
+         * @param   interior_color  color for the interior.
+         * @param   outline_color   color for the outline.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply use overwrite.
         **/
-        DEPRECATED_SCALAR_PARAMS void drawTriangle(int x1,int y1, int x2, int y2, int x3, int y3, color_t color)
-            {
-            _drawTriangle<false, true, false>(iVec2(x1, y1), iVec2(x2, y2), iVec2(x3, y3), color, color, 1.0f);
-            }
-
-
-        /**
-        * Draw a triangle (but not its interior).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        void drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
-            {
-            _drawTriangle<false, true, true>(P1, P2, P3, color, color, opacity);
-            }
-
-
-        /**
-        * Draw a triangle (but not its interior).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawTriangle(int x1,int y1, int x2, int y2, int x3, int y3, color_t color, float opacity)
-            {
-            _drawTriangle<false, true, true>(iVec2(x1, y1), iVec2(x2, y2), iVec2(x3, y3), color, color, opacity);
-            }
-
-
-        /**
-        * Draw a filled triangle with possibly different colors for the outline and the interior.
-        **/
-        void fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color)
-            {
-            _drawTriangle<true, true, false>(P1, P2, P3, interior_color, outline_color, 1.0f);
-            }
-
-
-        /**
-        * Draw a filled triangle with possibly different colors for the outline and the interior.
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, color_t interior_color, color_t outline_color)
-            {
-            _drawTriangle<true, true, false>(iVec2(x1, y1), iVec2(x2, y2), iVec2(x3, y3), interior_color, outline_color, 1.0f);
-            }
-
-
-        /**
-        * Draw a filled triangle with possibly different colors for the outline and the interior.
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        void fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity)
-            {
-            _drawTriangle<true, true, true>(P1, P2, P3, interior_color, outline_color, opacity);
-            }
-
-
-        /**
-        * Draw a filled triangle with possibly different colors for the outline and the interior.
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, color_t interior_color, color_t outline_color, float opacity)
-            {
-            _drawTriangle<true, true, true>(iVec2(x1, y1), iVec2(x2, y2), iVec2(x3, y3), interior_color, outline_color, opacity);
-            }
+        void fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
 
@@ -2951,6 +2894,12 @@ private:
         void _plotCubicSpline(int n, int x[], int y[], bool draw_last, const color_t color, const float opacity);
 
         template<int SPLINE_MAX_POINTS> void _drawCubicSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity);
+
+
+
+
+
+        void _drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity);
 
 
 
