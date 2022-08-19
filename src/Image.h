@@ -998,198 +998,90 @@ namespace tgx
 
 
         /**
-        * Draw a quadratic (rational) Bezier curve.
-        *
-        * @param	P1				Start point.
-        * @param	P2				End point.
-        * @param	PC				Control point.
-        * @param	wc				Control point weight (must be positive). Fastest for wc=1.
-        * @param	draw_P2			true to draw the endpoint P2.
-        * @param	color			The color to use.
+         * Draw a quadratic (rational) Bezier curve.
+         *
+         * @param   P1      Start point.
+         * @param   P2      End point.
+         * @param   PC      Control point.
+         * @param   wc      Control point weight (must be positive). Fastest for wc=1.
+         * @param   drawP2  true to draw the endpoint P2.
+         * @param   color   The color to use.
+         * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
+         *                  blending and simply use overwrite.
         **/
-        void drawQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, bool drawP2, color_t color)
-            {
-            _drawQuadBezier<false>(P1, P2, PC, wc, drawP2, color, 1.0f);
-            }
+        void drawQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, bool drawP2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-        * Draw a quadratic (rational) Bezier curve. Same as above but uses blending.
-        *
-        * @param	P1				Start point.
-        * @param	P2				End point.
-        * @param	PC				Control point.
-        * @param	wc				Control point weight (must be positive). Fastest for wc=1.
-        * @param	draw_P2			true to draw the endpoint P2.
-        * @param	color			The color to use.
-        * @param    opacity         opacity scale factor between 0.0f (transparent) and 1.0f (fully opaque).
+         * Draw a cubic Bezier curve.
+         *
+         * @param   P1      Start point.
+         * @param   P2      End point.
+         * @param   PA      first control point.
+         * @param   PB      second control point.
+         * @param   drawP2  true to draw the endpoint P2.
+         * @param   color   The color to use.
+         * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
+         *                  blending and simply use overwrite.
         **/
-        void drawQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, bool drawP2, color_t color, float opacity)
-            {
-            _drawQuadBezier<true>(P1, P2, PC, wc, drawP2, color, opacity);
-            }
+        void drawCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, bool drawP2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-        * Draw a cubic Bezier curve.
-        *
-        * @param	P1				Start point.
-        * @param	P2				End point.
-        * @param	PA				first control point.
-        * @param	PB				second control point.
-        * @param	draw_P2			true to draw the endpoint P2.
-        * @param	color			The color to use.
-        **/
-        void drawCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, bool drawP2, color_t color)
-            {
-            _drawCubicBezier<false>(P1, P2, PA, PB, drawP2, color, 1.0f);
-            }
-
-
-        /**
-        * Draw a cubic Bezier curve. Same as above but uses blending.
-        *
-        * @param	P1				Start point.
-        * @param	P2				End point.
-        * @param	PA				first control point.
-        * @param	PB				second control point.
-        * @param	draw_P2			true to draw the endpoint P2.
-        * @param	color			The color to use.
-        * @param    opacity         opacity scale factor between 0.0f (transparent) and 1.0f (fully opaque).
-        **/
-        void drawCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, bool drawP2, color_t color, float opacity)
-            {
-            _drawCubicBezier<true>(P1, P2, PA, PB, drawP2, color, opacity);
-            }
-
-
-
-
-        /**
-        * Draw a quadratic spline interpolating between a given set of points. 
-        *
-        * The template parameter SPLINE_MAX_POINTS defines the maximum number of points
-        * that a spline can have. Can be increased if needed but this will increase the
-        * memory used on the stack for allocating the temporary point arrays...
-        * 
-        * @param	nbpoints	   	number of points in the spline
-        *                           Must be smaller or equal to SPLINE_MAX_POINTS. 
-        * @param	tabPoints	   	the array of points to interpolate.
-        * @param	draw_last_point	true to draw the last point.
-        * @param	color		   	The color to use.
+         * Draw a quadratic spline interpolating between a given set of points.
+         * 
+         * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
+         * can have. Can be increased if needed but this will increase the memory used on the stack for
+         * allocating the temporary point arrays...
+         *
+         * @param   nbpoints        number of points in the spline Must be smaller or equal to
+         *                          SPLINE_MAX_POINTS.
+         * @param   tabPoints       the array of points to interpolate.
+         * @param   draw_last_point true to draw the last point.
+         * @param   color           The color to use.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawQuadSpline(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color)
-            {
-            _drawQuadSpline< SPLINE_MAX_POINTS, false>(nbpoints, tabPoints, draw_last_point, color, 1.0f);
-            }
+        void drawQuadSpline(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-        * Draw a quadratic spline interpolating between a given set of points. Same as above
-        * but uses blending.
-        *
-        * The template parameter SPLINE_MAX_POINTS defines the maximum number of points
-        * that a spline can have. Can be increased if needed but this will increase the
-        * memory used on the stack for allocating the temporary point arrays...
-        * 
-        * @param	nbpoints	   	number of points in the spline
-        *                           Must be smaller or equal to SPLINE_MAX_POINTS. 
-        * @param	tabPoints	   	the array of points to interpolate.
-        * @param	draw_last_point	true to draw the last point.
-        * @param	color		   	The color to use.
-        * @param    opacity         opacity scale factor between 0.0f (transparent) and 1.0f (fully opaque).
+         * Draw a cubic spline interpolating between a given set of points. 
+         * 
+         * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
+         * can have. Can be increased if needed but this will increase the memory used on the stack for
+         * allocating the temporary point arrays...
+         *
+         * @tparam  SPLINE_MAX_POINTS   Type of the spline maximum points.
+         * @param   nbpoints        number of points in the spline Must be smaller or equal to
+         *                          SPLINE_MAX_POINTS.
+         * @param   tabPoints       the array of points to interpolate.
+         * @param   draw_last_point true to draw the last point.
+         * @param   color           The color to use.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawQuadSpline(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity)
-            {
-            _drawQuadSpline< SPLINE_MAX_POINTS, true>(nbpoints, tabPoints, draw_last_point, color, opacity);
-            }
+        void drawCubicSpline(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-        * Draw a cubic spline interpolating between a given set of points. 
-        *
-        * The template parameter SPLINE_MAX_POINTS defines the maximum number of points
-        * that a spline can have. Can be increased if needed but this will increase the
-        * memory used on the stack for allocating the temporary point arrays...
-        * 
-        * @param	nbpoints	   	number of points in the spline
-        *                           Must be smaller or equal to SPLINE_MAX_POINTS. 
-        * @param	tabPoints	   	the array of points to interpolate.
-        * @param	draw_last_point	true to draw the last point.
-        * @param	color		   	The color to use.
+         * Draw a closed quadratic spline interpolating between a given set of points.
+         * 
+         * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
+         * can have. Can be increased if needed but this will increase the memory used on the stack for
+         * allocating the temporary point arrays...
+         *
+         * @param   nbpoints    number of points in the spline Must be smaller or equal to
+         *                      SPLINE_MAX_POINTS.
+         * @param   tabPoints   the array of points to interpolate.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawCubicSpline(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color)
-            {
-            _drawCubicSpline< SPLINE_MAX_POINTS, false>(nbpoints, tabPoints, draw_last_point, color, 1.0f);
-            }
-
-
-        /**
-        * Draw a cubic spline interpolating between a given set of points. Same as above
-        * but uses blending.
-        *
-        * The template parameter SPLINE_MAX_POINTS defines the maximum number of points
-        * that a spline can have. Can be increased if needed but this will increase the
-        * memory used on the stack for allocating the temporary point arrays...
-        * 
-        * @param	nbpoints	   	number of points in the spline
-        *                           Must be smaller or equal to SPLINE_MAX_POINTS. 
-        * @param	tabPoints	   	the array of points to interpolate.
-        * @param	draw_last_point	true to draw the last point.
-        * @param	color		   	The color to use.
-        * @param    opacity         opacity scale factor between 0.0f (transparent) and 1.0f (fully opaque).
-        **/
-        template<int SPLINE_MAX_POINTS = 32>
-        void drawCubicSpline(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity)
-            {
-            _drawCubicSpline< SPLINE_MAX_POINTS, true>(nbpoints, tabPoints, draw_last_point, color, opacity);
-            }
-
-
-
-        /**
-        * Draw a closed quadratic spline interpolating between a given set of points.
-        *
-        * The template parameter SPLINE_MAX_POINTS defines the maximum number of points
-        * that a spline can have. Can be increased if needed but this will increase the
-        * memory used on the stack for allocating the temporary point arrays...
-        *
-        * @param	nbpoints	   	number of points in the spline
-        *                           Must be smaller or equal to SPLINE_MAX_POINTS.
-        * @param	tabPoints	   	the array of points to interpolate.
-        * @param	draw_last_point	true to draw the last point.
-        * @param	color		   	The color to use.
-        **/
-        template<int SPLINE_MAX_POINTS = 32>
-        void drawClosedSpline(int nbpoints, const iVec2 tabPoints[], color_t color)
-            {
-            _drawClosedSpline<SPLINE_MAX_POINTS, false>(nbpoints, tabPoints, color, 1.0f);
-            }
-
-
-        /**
-        * Draw a closed quadratic spline interpolating between a given set of points. Same as above
-        * but uses blending.
-        *
-        * The template parameter SPLINE_MAX_POINTS defines the maximum number of points
-        * that a spline can have. Can be increased if needed but this will increase the
-        * memory used on the stack for allocating the temporary point arrays...
-        *
-        * @param	nbpoints	   	number of points in the spline
-        *                           Must be smaller or equal to SPLINE_MAX_POINTS.
-        * @param	tabPoints	   	the array of points to interpolate.
-        * @param	draw_last_point	true to draw the last point.
-        * @param	color		   	The color to use.
-        * @param    opacity         opacity scale factor between 0.0f (transparent) and 1.0f (fully opaque).
-        **/
-        template<int SPLINE_MAX_POINTS = 32>
-        void drawClosedSpline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
-            {
-            _drawClosedSpline<SPLINE_MAX_POINTS, true>(nbpoints, tabPoints, color, opacity);
-            }
+        void drawClosedSpline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /*********************************************************************
@@ -3012,8 +2904,6 @@ private:
             }
 
 
-
-
         template<bool CHECKRANGE> void _drawFastVLine(iVec2 pos, int h, color_t color, float opacity);
 
         template<bool CHECKRANGE> void _drawFastHLine(iVec2 pos, int w, color_t color, float opacity);
@@ -3022,63 +2912,45 @@ private:
 
         template<bool CHECKRANGE> void _drawFastHLine(iVec2 pos, int w, color_t color);
 
+        void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color, float opacity) { if (checkrange) _drawFastVLine<true>(pos, h, color, opacity); else _drawFastVLine<false>(pos, h, color, opacity); }
 
-        void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color, float opacity)
-            {
-            if (checkrange) _drawFastVLine<true>(pos, h, color, opacity); else _drawFastVLine<false>(pos, h, color, opacity);
-            }
+        void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color, float opacity) { if (checkrange) _drawFastHLine<true>(pos, w, color, opacity); else _drawFastHLine<false>(pos, w, color, opacity); }
 
-        void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color, float opacity)
-            {
-            if (checkrange) _drawFastHLine<true>(pos, w, color, opacity); else _drawFastHLine<false>(pos, w, color, opacity);
-            }
+        void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color) { if (checkrange) _drawFastVLine<true>(pos, h, color); else _drawFastVLine<false>(pos, h, color); }
 
-        void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color)
-            {
-            if (checkrange) _drawFastVLine<true>(pos, h, color); else _drawFastVLine<false>(pos, h, color);
-            }
-
-        void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color)
-            {
-            if (checkrange) _drawFastHLine<true>(pos, w, color); else _drawFastHLine<false>(pos, w, color);
-            }
-
-
+        void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color) { if (checkrange) _drawFastHLine<true>(pos, w, color); else _drawFastHLine<false>(pos, w, color); }
 
 
         void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity);
-
-
-
 
 
         /**
         * Bezier / Splines
         **/
 
-        template<bool BLEND> void _plotQuadRationalBezierSeg(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const color_t color, const float opacity);
+        void _plotQuadRationalBezierSeg(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const color_t color, const float opacity);
 
-        template<bool BLEND> void _plotQuadRationalBezier(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const bool draw_P2, const color_t color, const float opacity);
+        void _plotQuadRationalBezier(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const bool draw_P2, const color_t color, const float opacity);
 
-        template<bool BLEND> void _drawQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, bool drawP2, color_t color, float opacity);
+        void _drawQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, bool drawP2, color_t color, float opacity);
 
-        template<bool BLEND> void _plotCubicBezierSeg(const bool checkrange, int x0, int y0, float x1, float y1, float x2, float y2, int x3, int y3, const color_t color, const float opacity);
+        void _plotCubicBezierSeg(const bool checkrange, int x0, int y0, float x1, float y1, float x2, float y2, int x3, int y3, const color_t color, const float opacity);
 
-        template<bool BLEND> void _plotCubicBezier(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, bool draw_P2, const color_t color, const float opacity);
+        void _plotCubicBezier(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, bool draw_P2, const color_t color, const float opacity);
 
-        template<bool BLEND> void _drawCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, bool drawP2, color_t color, float opacity);
+        void _drawCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, bool drawP2, color_t color, float opacity);
 
-        template<bool BLEND> void _plotQuadSpline(int n, int x[], int y[], bool draw_last, const color_t color, const float opacity);
+        void _plotQuadSpline(int n, int x[], int y[], bool draw_last, const color_t color, const float opacity);
 
-        template<int SPLINE_MAX_POINTS, bool BLEND> void _drawQuadSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity);
+        template<int SPLINE_MAX_POINTS> void _drawQuadSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity);
 
-        template<bool BLEND> void _plotClosedSpline(int n, int x[], int y[], const color_t color, const float opacity);
+        void _plotClosedSpline(int n, int x[], int y[], const color_t color, const float opacity);
 
-        template<int SPLINE_MAX_POINTS, bool BLEND> void _drawClosedSpline(int nbpoints, const iVec2* tabPoints, color_t color, float opacity);
+        template<int SPLINE_MAX_POINTS> void _drawClosedSpline(int nbpoints, const iVec2* tabPoints, color_t color, float opacity);
 
-        template<bool BLEND> void _plotCubicSpline(int n, int x[], int y[], bool draw_last, const color_t color, const float opacity);
+        void _plotCubicSpline(int n, int x[], int y[], bool draw_last, const color_t color, const float opacity);
 
-        template<int SPLINE_MAX_POINTS, bool BLEND> void _drawCubicSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity);
+        template<int SPLINE_MAX_POINTS> void _drawCubicSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity);
 
 
 
