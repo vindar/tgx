@@ -1595,7 +1595,7 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::_drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
         {
-        if ((false)&& (opacity >=0)&&(opacity<=1))
+        if ((opacity >=0)&&(opacity<=1))
             { // draw without overlap
 //            _bseg_draw(P1, P2, true, 0, color, blending);
 //            _bseg_avoid1(P2, P3, P1, true, true, color, blending);
