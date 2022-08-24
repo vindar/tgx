@@ -3373,6 +3373,27 @@ private:
 
 
 
+        /** Compute the signed aera of a triangle. */
+        inline float _triangleAera(fVec2 P1, fVec2 P2, fVec2 P3)
+            {
+            return (((P1.x - P3.x) * (P1.y + P3.y)) + ((P2.x - P1.x) * (P2.y + P1.y)) + ((P3.x - P2.x) * (P3.y + P2.y)))*0.5f;
+            }
+
+
+        void fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
+            {
+            _bseg_fill_triangle(P1, P2, P3, color, opacity);	// fill the triangle 
+            float a = _triangleAera(P1, P2, P3); // winding direction of the polygon
+            const int w = (a > 0) ? -1 : ((a < 0) ? 1 : 0);
+            const int op = (int)(opacity * 256);
+            _bseg_draw(P1, P2, true, color, w, op, true);
+            _bseg_avoid1(P2, P3, P1, true, true, color, w, op, true);
+            _bseg_avoid11(P3, P1, P2, P2, true, true, color, w, op, true);
+            }
+
+            
+
+
 
     };
 
