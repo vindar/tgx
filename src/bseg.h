@@ -450,7 +450,7 @@ namespace tgx
 				a = (((a - _frac) * _amul) >> 20);
 				if (SIDE > 0) { if (_stepx == _stepy) a = 256 - a; } else { if (_stepx != _stepy) a = 256 - a; }
 				}
-			a = (a >> 2) + (a >> 1) + 32; // compensate
+			a = (a >> 2) + (a >> 1) + 48; // compensate (32 is the correct middle value but 48 look better IMO)
 			return a; // a should be in [0,256]
 			}
 
