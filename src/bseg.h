@@ -370,9 +370,9 @@ namespace tgx
 			{
 			// ************************************************************
 			// Fall back to integer computations
-			//init(round(Pf1), round(Pf2));
+			//init(tgx::iVec2((int)roundf(Pf1.x), (int)roundf(Pf1.y)), tgx::iVec2((int)roundf(Pf2.x), (int)roundf(Pf2.y)));
 			//return;
-			// ************************************************************
+			// ************************************************************	
 			const int32_t PRECISION = 256; // 1024*16;
 			bool sw = false;
 			if ((Pf1.x > Pf2.x) || ((Pf1.x == Pf2.x) && (Pf1.y > Pf2.y))) { sw = true; tgx::swap(Pf1, Pf2); }
@@ -386,7 +386,7 @@ namespace tgx
 			const float fdy = (Pf2.y - Pf1.y);
 			_len = (adx > ady) ? adx : ady;
 			if ((adx == 0) && (ady == 0))
-				{ // default horizontal line
+				{ // default horizontal line, could do better to compute _frac for shading...  
 				if (sw) { tgx::swap(P1, P2); }
 				_x_major = true;
 				_dx = 2; _dy = 0;
@@ -398,10 +398,21 @@ namespace tgx
 				_len = 0;
 				return;
 				}
-			else if ((adx > ady) || ((adx == ady) && (fdx > fdy)))
+			else if ((adx > ady) || ((adx == ady) && (abs(fdx) > abs(fdy)))) // (abs(fdx) > abs(fdy))
 				{ // x major
 				_x_major = true;
 				const float mul = fdy / fdx;
+				/*
+				const float ep = 0.299f;
+				Pf1.y -= mul*(Pf1.x - P1.x);
+				Pf1.x = P1.x;
+				if (Pf1.y > P1.y + ep) Pf1.y = P1.y + ep;
+				if (Pf1.y < P1.y - ep) Pf1.y = P1.y - ep;
+				Pf2.y -= mul * (Pf2.x - P2.x);
+				Pf2.x = P2.x;
+				if (Pf2.y > P2.y + ep) Pf2.y = P2.y + ep;
+				if (Pf2.y < P2.y - ep) Pf2.y = P2.y - ep;
+				*/
 				float f1 = mul * (P1.x - Pf1.x) + Pf1.y - P1.y; // how much above
 				float f2 = mul * (P2.x - Pf2.x) + Pf2.y - P2.y; // how much below
 				int32_t if1 = (int32_t)((2 * PRECISION) * f1); if (if1 <= -PRECISION) { if1 = -PRECISION + 1; } else if (if1 >= PRECISION) { if1 = PRECISION - 1; }
@@ -417,7 +428,18 @@ namespace tgx
 			else
 				{ // y major
 				_x_major = false;
-				const float mul = fdx / fdy;
+				const float mul = fdx / fdy;	
+				/*
+				const float ep = 0.299f;
+				Pf1.x -= mul * (Pf1.y - P1.y);
+				Pf1.y = P1.y;
+				if (Pf1.x > P1.x + ep) Pf1.x = P1.x + ep;
+				if (Pf1.x < P1.x - ep) Pf1.x = P1.x - ep;
+				Pf2.x -= mul * (Pf2.y - P2.y);
+				Pf2.y = P2.y;
+				if (Pf2.x > P2.x + ep) Pf2.x = P2.x + ep;
+				if (Pf2.x < P2.x - ep) Pf2.x = P2.x - ep;
+				*/
 				float f1 = mul * (P1.y - Pf1.y) + Pf1.x - P1.x;
 				float f2 = mul * (P2.y - Pf2.y) + Pf2.x - P2.x;
 				int32_t if1 = (int32_t)((2 * PRECISION) * f1); if (if1 <= -PRECISION) { if1 = -PRECISION + 1; } else if (if1 >= PRECISION) { if1 = PRECISION - 1; }
