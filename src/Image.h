@@ -3382,6 +3382,7 @@ private:
 
         void fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
             {
+            if (!isValid()) return;
             _bseg_fill_triangle(P1, P2, P3, color, opacity);	// fill the triangle 
             float a = _triangleAera(P1, P2, P3); // winding direction of the polygon
             const int w = (a > 0) ? -1 : ((a < 0) ? 1 : 0);

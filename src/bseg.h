@@ -385,50 +385,53 @@ namespace tgx
 			const float fdx = (Pf2.x - Pf1.x);
 			const float fdy = (Pf2.y - Pf1.y);
 			_len = (adx > ady) ? adx : ady;
-			if (adx == ady)
-				{ // edge cases, TODO: better. 
+			if ((adx == 0) && (ady == 0))
+				{ // default horizontal line
 				if (sw) { tgx::swap(P1, P2); }
-				init(P1, P2);
+				_x_major = true;
+				_dx = 2; _dy = 0;
+				_stepx = 1; _stepy = 1;
+				_rat = 0;
+				_amul = ((int32_t)1 << 28) / 2;
+				_x = P1.x; _y = P1.y;
+				_frac = -2;
+				_len = 0;
 				return;
 				}
+			else if ((adx > ady) || ((adx == ady) && (fdx > fdy)))
+				{ // x major
+				_x_major = true;
+				const float mul = fdy / fdx;
+				float f1 = mul * (P1.x - Pf1.x) + Pf1.y - P1.y; // how much above
+				float f2 = mul * (P2.x - Pf2.x) + Pf2.y - P2.y; // how much below
+				int32_t if1 = (int32_t)((2 * PRECISION) * f1); if (if1 <= -PRECISION) { if1 = -PRECISION + 1; } else if (if1 >= PRECISION) { if1 = PRECISION - 1; }
+				int32_t if2 = (int32_t)((2 * PRECISION) * f2); if (if2 <= -PRECISION) { if2 = -PRECISION + 1; } else if (if2 >= PRECISION) { if2 = PRECISION - 1; }
+				if (fdx < 0) { _stepx = -1; } else { _stepx = +1; }
+				if (fdy < 0) { _stepy = -1;  if1 = -if1; if2 = -if2; } else { _stepy = +1; }
+				_dx = adx * (2 * PRECISION);
+				_dy = ady * (2 * PRECISION); _dy += -if1 + if2;
+				_rat = (_dy == 0) ? 0 : (_dx / _dy);
+				_amul = ((int32_t)1 << 28) / _dx;
+				_frac = (if1 - PRECISION) * adx + _dy;
+				}
 			else
-				{
-				if (adx > ady)
-					{ // x major
-					_x_major = true;
-					const float mul = fdy / fdx;
-					float f1 = mul * (P1.x - Pf1.x) + Pf1.y - P1.y; // how much above
-					float f2 = mul * (P2.x - Pf2.x) + Pf2.y - P2.y; // how much below
-					int32_t if1 = (int32_t)((2 * PRECISION) * f1); if (if1 <= -PRECISION) { if1 = -PRECISION + 1; } else if (if1 >= PRECISION) { if1 = PRECISION - 1; }
-					int32_t if2 = (int32_t)((2 * PRECISION) * f2); if (if2 <= -PRECISION) { if2 = -PRECISION + 1; } else if (if2 >= PRECISION) { if2 = PRECISION - 1; }
-					if (fdx < 0) { _stepx = -1; } else { _stepx = +1; }
-					if (fdy < 0) { _stepy = -1;  if1 = -if1; if2 = -if2; } else { _stepy = +1; }
-					_dx = adx * (2 * PRECISION);
-					_dy = ady * (2 * PRECISION); _dy += -if1 + if2;
-					_rat = (_dy == 0) ? 0 : (_dx / _dy);
-					_amul = ((int32_t)1 << 28) / _dx;
-					_frac = (if1 - PRECISION) * adx + _dy;
-					}
-				else
-					{ // y major
-					_x_major = false;
-					const float mul = fdx / fdy;
-					float f1 = mul * (P1.y - Pf1.y) + Pf1.x - P1.x;
-					float f2 = mul * (P2.y - Pf2.y) + Pf2.x - P2.x;
-					int32_t if1 = (int32_t)((2 * PRECISION) * f1); if (if1 <= -PRECISION) { if1 = -PRECISION + 1; } else if (if1 >= PRECISION) { if1 = PRECISION - 1; }
-					int32_t if2 = (int32_t)((2 * PRECISION) * f2); if (if2 <= -PRECISION) { if2 = -PRECISION + 1; } else if (if2 >= PRECISION) { if2 = PRECISION - 1; }
-					if (fdx < 0) { _stepx = -1;  if1 = -if1; if2 = -if2; } else { _stepx = +1; }
-					if (fdy < 0) { _stepy = -1; } else { _stepy = +1; }
-					_dy = ady * (2 * PRECISION);
-					_dx = adx * (2 * PRECISION); _dx += -if1 + if2;
-					_rat = (_dx == 0) ? 0 : (_dy / _dx);
-					_amul = ((int32_t)1 << 28) / _dy;
-					_frac = (if1 - PRECISION) * ady + _dx;
-					}
+				{ // y major
+				_x_major = false;
+				const float mul = fdx / fdy;
+				float f1 = mul * (P1.y - Pf1.y) + Pf1.x - P1.x;
+				float f2 = mul * (P2.y - Pf2.y) + Pf2.x - P2.x;
+				int32_t if1 = (int32_t)((2 * PRECISION) * f1); if (if1 <= -PRECISION) { if1 = -PRECISION + 1; } else if (if1 >= PRECISION) { if1 = PRECISION - 1; }
+				int32_t if2 = (int32_t)((2 * PRECISION) * f2); if (if2 <= -PRECISION) { if2 = -PRECISION + 1; } else if (if2 >= PRECISION) { if2 = PRECISION - 1; }
+				if (fdx < 0) { _stepx = -1;  if1 = -if1; if2 = -if2; } else { _stepx = +1; }
+				if (fdy < 0) { _stepy = -1; } else { _stepy = +1; }
+				_dy = ady * (2 * PRECISION);
+				_dx = adx * (2 * PRECISION); _dx += -if1 + if2;
+				_rat = (_dx == 0) ? 0 : (_dy / _dx);
+				_amul = ((int32_t)1 << 28) / _dy;
+				_frac = (if1 - PRECISION) * ady + _dx;
 				}
 			if (sw)
 				{
-				tgx::swap(P1, P2);
 				reverse();
 				}
 			}
