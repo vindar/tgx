@@ -386,7 +386,10 @@ namespace tgx
 			const float fdy = (Pf2.y - Pf1.y);
 			_len = (adx > ady) ? adx : ady;
 			if ((adx == 0) && (ady == 0))
-				{ // default horizontal line, could do better to compute _frac for shading...  
+				{ 
+				// default horizontal line: could do better and compute _frac for shading
+				// but single point line are usually not raw (since endpoint is not drawn)
+				// so it does not really matter...
 				if (sw) { tgx::swap(P1, P2); }
 				_x_major = true;
 				_dx = 2; _dy = 0;
@@ -402,19 +405,8 @@ namespace tgx
 				{ // x major
 				_x_major = true;
 				const float mul = fdy / fdx;
-				/*
-				const float ep = 0.299f;
-				Pf1.y -= mul*(Pf1.x - P1.x);
-				Pf1.x = P1.x;
-				if (Pf1.y > P1.y + ep) Pf1.y = P1.y + ep;
-				if (Pf1.y < P1.y - ep) Pf1.y = P1.y - ep;
-				Pf2.y -= mul * (Pf2.x - P2.x);
-				Pf2.x = P2.x;
-				if (Pf2.y > P2.y + ep) Pf2.y = P2.y + ep;
-				if (Pf2.y < P2.y - ep) Pf2.y = P2.y - ep;
-				*/
-				float f1 = mul * (P1.x - Pf1.x) + Pf1.y - P1.y; // how much above
-				float f2 = mul * (P2.x - Pf2.x) + Pf2.y - P2.y; // how much below
+				const float f1 = mul * (P1.x - Pf1.x) + Pf1.y - P1.y; // how much above
+				const float f2 = mul * (P2.x - Pf2.x) + Pf2.y - P2.y; // how much below
 				int32_t if1 = (int32_t)((2 * PRECISION) * f1); if (if1 <= -PRECISION) { if1 = -PRECISION + 1; } else if (if1 >= PRECISION) { if1 = PRECISION - 1; }
 				int32_t if2 = (int32_t)((2 * PRECISION) * f2); if (if2 <= -PRECISION) { if2 = -PRECISION + 1; } else if (if2 >= PRECISION) { if2 = PRECISION - 1; }
 				if (fdx < 0) { _stepx = -1; } else { _stepx = +1; }
@@ -429,19 +421,8 @@ namespace tgx
 				{ // y major
 				_x_major = false;
 				const float mul = fdx / fdy;	
-				/*
-				const float ep = 0.299f;
-				Pf1.x -= mul * (Pf1.y - P1.y);
-				Pf1.y = P1.y;
-				if (Pf1.x > P1.x + ep) Pf1.x = P1.x + ep;
-				if (Pf1.x < P1.x - ep) Pf1.x = P1.x - ep;
-				Pf2.x -= mul * (Pf2.y - P2.y);
-				Pf2.y = P2.y;
-				if (Pf2.x > P2.x + ep) Pf2.x = P2.x + ep;
-				if (Pf2.x < P2.x - ep) Pf2.x = P2.x - ep;
-				*/
-				float f1 = mul * (P1.y - Pf1.y) + Pf1.x - P1.x;
-				float f2 = mul * (P2.y - Pf2.y) + Pf2.x - P2.x;
+				const float f1 = mul * (P1.y - Pf1.y) + Pf1.x - P1.x;
+				const float f2 = mul * (P2.y - Pf2.y) + Pf2.x - P2.x;
 				int32_t if1 = (int32_t)((2 * PRECISION) * f1); if (if1 <= -PRECISION) { if1 = -PRECISION + 1; } else if (if1 >= PRECISION) { if1 = PRECISION - 1; }
 				int32_t if2 = (int32_t)((2 * PRECISION) * f2); if (if2 <= -PRECISION) { if2 = -PRECISION + 1; } else if (if2 >= PRECISION) { if2 = PRECISION - 1; }
 				if (fdx < 0) { _stepx = -1;  if1 = -if1; if2 = -if2; } else { _stepx = +1; }
@@ -483,65 +464,65 @@ namespace tgx
 		/**
 		 * Query if the line is x_major
 		 */
-		inline bool x_major() const { return _x_major; }
+		TGX_INLINE inline bool x_major() const { return _x_major; }
 
 
 		/**
 		* Query step_x
 		*/
-		inline int32_t step_x() const { return _stepx; }
+		TGX_INLINE inline int32_t step_x() const { return _stepx; }
 
 
 		/**
 		* Query step_y
 		*/
-		inline int32_t step_y() const { return _stepy; }
+		TGX_INLINE inline int32_t step_y() const { return _stepy; }
 
 
 		/**
 		* Query the remaining distance to the endpoind
 		*/
-		inline const int32_t & len() const { return _len; }
+		TGX_INLINE inline const int32_t & len() const { return _len; }
 
 
 		/**
 		* remaining distance to the endpoind
 		*/
-		inline int32_t & len() { return _len; }
+		TGX_INLINE inline int32_t & len() { return _len; }
 
 
 		/**
 		* Increase len by 1
 		*/
-		inline void inclen() { _len++; }
+		TGX_INLINE inline void inclen() { _len++; }
 
 		/**
 		* Decrease len by 1
 		*/
-		inline void declen() { _len--; }
+		TGX_INLINE inline void declen() { _len--; }
 
 		/**
 		* Query the current position on the line
 		*/
-		inline tgx::iVec2 pos() const { return { _x,_y }; }
+		TGX_INLINE inline tgx::iVec2 pos() const { return { _x,_y }; }
 
 
 		/**
 		* x-coordinate of the current position
 		*/
-		inline int32_t X() const { return _x; }
+		TGX_INLINE inline int32_t X() const { return _x; }
 
 
 		/**
 		* y-coordinate of the current position
 		*/
-		inline int32_t Y() const { return _y; }
+		TGX_INLINE inline int32_t Y() const { return _y; }
 
 
 		/**
 		* Operator== return true if both segment are currently at the same position.
 		*/
-		inline bool operator==(const BSeg& seg) const
+		TGX_INLINE inline bool operator==(const BSeg& seg) const
 			{
 			return ((_x == seg._x) && (_y == seg._y));
 			}
@@ -550,7 +531,7 @@ namespace tgx
 		/**
 		* Operator!= return true if both segment are currently at different positions.
 		*/
-		inline bool operator!=(const BSeg& seg) const
+		TGX_INLINE inline bool operator!=(const BSeg& seg) const
 			{
 			return ((_x != seg._x) || (_y != seg._y));
 			}
