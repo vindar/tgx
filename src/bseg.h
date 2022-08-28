@@ -456,9 +456,40 @@ namespace tgx
 				a = (((a - _frac) * _amul) >> 20);
 				if (SIDE > 0) { if (_stepx == _stepy) a = 256 - a; } else { if (_stepx != _stepy) a = 256 - a; }
 				}
-			a = (a >> 2) + (a >> 1) + 48; // compensate (32 is the correct middle value but 48 look better IMO)
+			if (a < 16) a = 0; else if (a > 240) a = 256;
+		//	a = (a >> 2) + (a >> 1) + 48; // compensate (32 is the correct middle value but 48 look better IMO)
 			return a; // a should be in [0,256]
 			}
+
+
+		/* Compute the aa value for line anti-aliasing */
+		template<int SIDE, bool X_MAJOR> inline int32_t AA(int & dir) const
+			{
+			int32_t a;
+			if (X_MAJOR)
+				{
+				a = _dy;
+				a = (((a - _frac) * _amul) >> 20);
+				}
+			else
+				{
+				a = _dx;
+				a = (((a - _frac) * _amul) >> 20);
+				}
+			if (a > 127)
+				{
+				dir = (X_MAJOR) ? -_stepy : -_stepx;				
+				a = (128 + 256) - a;
+				}
+			else
+				{
+				dir = (X_MAJOR) ? _stepy : _stepx;
+				a = a + 128;
+				}
+			return a; // a should be in [0,256]
+			}
+
+
 
 
 		/**
