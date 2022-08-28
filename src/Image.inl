@@ -625,6 +625,49 @@ namespace tgx
 
 
 
+    /************************************************************************************
+    * 
+    *  Drawing primitives
+    * 
+    *************************************************************************************/
+
+
+
+
+
+
+    /*********************************************************************
+    *
+    * Screen filling
+    *
+    **********************************************************************/
+
+
+    template<typename color_t>
+    void Image<color_t>::fillScreen(color_t color)
+        {
+        fillRect(imageBox(), color);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillScreenVGradient(color_t top_color, color_t bottom_color)
+        {
+        fillRectVGradient(imageBox(), top_color, bottom_color);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillScreenHGradient(color_t left_color, color_t right_color)
+        {
+        fillRectHGradient(imageBox(), left_color, right_color);
+        }
+
+
+
+
+
+
     /*********************************************************************
     * Flood filling
     **********************************************************************/
@@ -728,38 +771,6 @@ namespace tgx
 
 
 
-    /************************************************************************************
-    * 
-    *  Drawing primitives
-    * 
-    *************************************************************************************/
-
-    /*********************************************************************
-    *
-    * Screen filling
-    *
-    **********************************************************************/
-
-
-    template<typename color_t>
-    void Image<color_t>::fillScreen(color_t color)
-        {
-        fillRect(imageBox(), color);
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::fillScreenVGradient(color_t top_color, color_t bottom_color)
-        {
-        fillRectVGradient(imageBox(), top_color, bottom_color);
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::fillScreenHGradient(color_t left_color, color_t right_color)
-        {
-        fillRectHGradient(imageBox(), left_color, right_color);
-        }
 
 
 
@@ -958,6 +969,61 @@ namespace tgx
             }
         _drawSeg(tabPoints[nbpoints - 1], true, tabPoints[0], false, color, opacity);
         }
+
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothLine(fVec2 P1, fVec2 P2, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        int32_t op = (int32_t)(256 * opacity);
+        _bseg_draw_AA(P1, P2, true, color, op, true);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothThickLine(fVec2 P1, fVec2 P2, float line_width, bool rounded_ends, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, float line_width_P2, bool rounded_ends, color_t color, float opacity)    
+        {
+        if (!isValid()) return;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3600,6 +3666,50 @@ namespace tgx
             _bseg_draw_template<-1>(seg, draw_last, color, op, checkrange);
         else
             _bseg_draw_template<0>(seg, draw_last, color, op, checkrange);
+        }
+
+
+
+    template<typename color_t>
+    template<typename vecType>
+    void Image<color_t>::_bseg_draw_AA(const vecType& P, const vecType& Q, bool draw_last, color_t color, int32_t op, bool checkrange)
+        {
+        BSeg seg(P, Q);
+        if (draw_last) seg.inclen();
+        if (checkrange)
+            {
+            auto B = imageBox();
+            seg.move_inside_box(B);
+            seg.len() = tgx::min(seg.lenght_inside_box(B), seg.len());	// truncate to stay inside the box
+            }
+        if (seg.x_major())
+            {
+            const bool X_MAJOR = true;
+            while (seg.len() > 0)
+                {
+                int dir;
+                const int aa = seg.AA<1, X_MAJOR>(dir);
+                int aa2 = 256 - aa;
+                const tgx::iVec2 pos = seg.pos();
+                operator()(seg.X(), seg.Y()).blend256(color, (uint32_t)((op * aa) >> 8));
+                operator()(seg.X(), seg.Y() + dir).blend256(color, (uint32_t)((op * aa2) >> 8));
+                seg.move<X_MAJOR>();
+                }
+            }
+        else
+            {
+            const bool X_MAJOR = false;
+            while (seg.len() > 0)
+                {
+                int dir;
+                const int aa = seg.AA<1, X_MAJOR>(dir);
+                int aa2 = 256 - aa;
+                const tgx::iVec2 pos = seg.pos();
+                operator()(seg.X(), seg.Y()).blend256(color, (uint32_t)((op * aa) >> 8));
+                operator()(seg.X() + dir, seg.Y()).blend256(color, (uint32_t)((op * aa2) >> 8));
+                seg.move<X_MAJOR>();
+                }
+            }
         }
 
 

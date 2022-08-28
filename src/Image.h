@@ -146,16 +146,19 @@ namespace tgx
         #endif
 
 
+
+
+
     /************************************************************************************
-    * 
-    *  Creation of images and sub-images 
+    ************************************************************************************* 
+    *  CREATION OF IMAGES AND SUB-IMAGES
     * 
     * The memory buffer should be supplied at creation. Otherwise, the image is set as 
     * invalid until a valid buffer is supplied. 
     * 
     * NOTE: the image class itsel is lightweight as it does not manage the memory buffer.
     *       Creating image and sub-image is very fast and do not use much memory.  
-    * 
+    ************************************************************************************* 
     *************************************************************************************/
 
 
@@ -303,13 +306,12 @@ namespace tgx
 
 
 
-
     /************************************************************************************
+    ************************************************************************************* 
     * 
-    *
-    *  Image attributes.
+    *  QUERY OF IMAGE ATTRIBUTES
     * 
-    *
+    ************************************************************************************* 
     *************************************************************************************/
 
 
@@ -390,13 +392,13 @@ namespace tgx
 
        
 
-    /****************************************************************************
+    /************************************************************************************
+    ************************************************************************************* 
     * 
+    *  DIRECT PIXEL ACCESS
     * 
-    * Direct pixel access
-    * 
-    *
-    ****************************************************************************/
+    ************************************************************************************* 
+    *************************************************************************************/
 
 
         /**
@@ -498,9 +500,9 @@ namespace tgx
          * @param   x   x-coordinate
          * @param   y   y-coordinate.
          *
-         * @returns a const reference to the pixel color.
+         * @returns a reference to the pixel color.
         **/
-        TGX_INLINE inline const color_t& operator()(int x, int y)
+        TGX_INLINE inline color_t& operator()(int x, int y)
             {
             return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];
             }
@@ -543,13 +545,14 @@ namespace tgx
 
 
 
-    /****************************************************************************
+
+    /************************************************************************************
+    *************************************************************************************
     *
+    * BLITTING, COPYING AND RESIZING IMAGES
     *
-    * Blitting / copying / resizing images
-    *
-    *
-    ****************************************************************************/
+    *************************************************************************************
+    *************************************************************************************/
 
 
         /**
@@ -831,75 +834,27 @@ namespace tgx
 
 
 
-        /*********************************************************************
-        *
-        * 
-        * Flood filling
-        * 
-        * 
-        **********************************************************************/
 
 
 
-        /**
-		* Flood fill a 4-connected region of the image.
-		* 
-		* Recolor the unicolor component containing position 'start_pos' with the color 'new_color'. 
-		* 
-        * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack.
-        * If the algorithm runs out of space, it stops without completing the filling (and return -1 to indicate failure).
-        * Otherwise, the method return the max number of bytes used on the stack during the filling.  
-        * 
-        * @param	start_pos   Start position. The color to replace is the color at that position.
-		* @param	new_color   New color to use 
-        * @return   return the max stack used during the algorithm. Return -1 if we run out of memory (in this
-        *           case the method returns early without completing the full filling.
-        **/
-        template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t new_color);
-
-
-
-		/**
-		* Flood fill a 4-connected region of the image.
-		*
-		* Recolor the connected component containing position 'startpos' whose boundary is delimited by 'border_color'. 
-		*
-        * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack. 
-        * If the algorithm runs out of space, it stops without completing the filling (and return -1 to indicate failure). 
-        * Otherwise, the method return the max number of bytes used on the stack during the filling.
-        *
-        * NOTE: During the algorithm, 'new_color' is treated the same as 'border_color' and will also block the
-        *       filling when encountered. 
-        * 
-		* @param	start_pos		Start position. 
-		* @param	border_color	border color that delimits the connected component to fill. 
-		* @param	new_color		New color to use
-        * @return   return the max stack used during the algorithm. Return -1 if we run out of memory (in this 
-        *           case the method returns early without completing the full filling. 
-		**/
-        template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t border_color, color_t new_color);
-
-
-
-
-
-
-    /****************************************************************************
+    /************************************************************************************
+    ************************************************************************************* 
     * 
+    *  DRAWING PRIMITIVES
     * 
-    * Drawing primitives
-    * 
-    *
-    ****************************************************************************/
+    ************************************************************************************* 
+    *************************************************************************************/
 
 
 
 
-        /*********************************************************************
+
+
+        /********************************************************************************
         *
-        * Screen filling
+        * FILLING (A REGION OF) AN IMAGE.
         * 
-        **********************************************************************/
+        *********************************************************************************/
 
 
         /**
@@ -934,11 +889,62 @@ namespace tgx
 
 
 
-        /*********************************************************************
+        /**
+        * 'Flood fill' a 4-connected region of the image.
         *
-        * drawing lines
+        * Recolor the unicolor component containing position 'start_pos' with the color 'new_color'.
+        *
+        * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack.
+        * If the algorithm runs out of space, it stops without completing the filling (and return -1 to indicate failure).
+        * Otherwise, the method return the max number of bytes used on the stack during the filling.
+        *
+        * @param	start_pos   Start position. The color to replace is the color at that position.
+        * @param	new_color   New color to use
+        * @return   return the max stack used during the algorithm. Return -1 if we run out of memory (in this
+        *           case the method returns early without completing the full filling.
+        **/
+        template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t new_color);
+
+
+
+        /**
+        * 'Flood fill' a 4-connected region of the image.
+        *
+        * Recolor the connected component containing position 'startpos' whose boundary is delimited by 'border_color'.
+        *
+        * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack.
+        * If the algorithm runs out of space, it stops without completing the filling (and return -1 to indicate failure).
+        * Otherwise, the method return the max number of bytes used on the stack during the filling.
+        *
+        * NOTE: During the algorithm, 'new_color' is treated the same as 'border_color' and will also block the
+        *       filling when encountered.
+        *
+        * @param	start_pos		Start position.
+        * @param	border_color	border color that delimits the connected component to fill.
+        * @param	new_color		New color to use
+        * @return   return the max stack used during the algorithm. Return -1 if we run out of memory (in this
+        *           case the method returns early without completing the full filling.
+        **/
+        template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t border_color, color_t new_color);
+
+
+
+
+
+
+        /********************************************************************************
+        *
+        * DRAWING LINES
         * 
-        **********************************************************************/
+        *********************************************************************************/
+
+
+
+
+        /*****************************************************
+        * LOW QUALITY (FAST) DRAWING METHODS
+        ******************************************************/
+
 
 
         /**
@@ -1017,11 +1023,55 @@ namespace tgx
 
 
 
-//        drawSmoothLine
-        
-        
-        
-//        drawSmoothThickLine
+
+        /*****************************************************
+        * HIGH QUALITY (SLOW) DRAWING METHODS
+        ******************************************************/
+
+
+
+        /**
+         * Draw a smooth (i.e. antialiased with sub-pixel precision) line segment between two points
+         * (using Bresenham's algorithm)
+         *
+         * @param   P1      The first point.
+         * @param   P2      The second point.
+         * @param   color   color to use.
+         * @param   opacity opacity multiplier between 0.0f and 1.0f (default).
+        **/
+        void drawSmoothLine(fVec2 P1, fVec2 P2, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a smooth (i.e. antialiased with sub-pixel precision) thick line segment between two
+         * points (using Bresenham's algorithm)
+         *
+         * @param   P1              The first point.
+         * @param   P2              The second point.
+         * @param   line_width      Width of the line.
+         * @param   rounded_ends    true to draw rounded ends on the line extremities
+         * @param   color           color to use.
+         * @param   opacity opacity multiplier between 0.0f and 1.0f (default).
+        **/
+        void drawSmoothThickLine(fVec2 P1, fVec2 P2, float line_width, bool rounded_ends, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a smooth (i.e. antialiased with sub-pixel precision) wedge line from P1 to P2 with
+         * rounded ends and with respective wideness line_width_P1 and line_width_P2 at both ends.
+         * 
+         * CREDIT: code for wedge with rounded edges is adapted Bodmer TFT_eSPI library:
+         * https://github.com/Bodmer/TFT_eSPI
+         *
+         * @param   P1              first end point.
+         * @param   P2              second end point.
+         * @param   line_width_P1   width of the wedge at P1.
+         * @param   line_width_P2   width of the wedge at P2
+         * @param   rounded_ends    true to draw rounded ends on the extremities
+         * @param   color           color to use.
+         * @param   opacity opacity multiplier between 0.0f and 1.0f (default).
+        **/
+        void drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, float line_width_P2, bool rounded_ends, color_t color, float opacity = 1.0f);
 
 
 
@@ -1031,11 +1081,18 @@ namespace tgx
 
 
 
-        /*********************************************************************
+
+        /********************************************************************************
         *
-        * drawing Bezier curves/splines
+        * DRAWING BEZIER CURVES AND SPLINES
         *
-        **********************************************************************/
+        *********************************************************************************/
+
+
+
+        /*****************************************************
+        * LOW QUALITY (FAST) DRAWING METHODS
+        ******************************************************/
 
 
         /**
@@ -3209,11 +3266,19 @@ private:
         template<int SIDE> void _bseg_draw_template(BSeg& seg, bool draw_last, color_t color, int32_t op, bool checkrange);
 
 
+
         /**
          * Draw a Bresenham segment [P,Q|.
         **/
         template<typename vecType>
         void _bseg_draw(const vecType& P, const vecType& Q, bool draw_last, color_t color, int side, int32_t op, bool checkrange);
+
+
+        /**
+        * Draw an antialiased Bresenham segment [P,Q|.
+        **/
+        template<typename vecType>
+        void _bseg_draw_AA(const vecType& P, const vecType& Q, bool draw_last, color_t color, int32_t op, bool checkrange);
 
 
      
