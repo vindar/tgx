@@ -1026,63 +1026,6 @@ namespace tgx
 
 
 
-        void _line_wu_sub(tgx::iVec2 P1, tgx::iVec2 P2, color_t color, bool draw_last, float opacity)
-            {
-            int & x0 = P1.x; int & y0 = P1.y;
-            int & x1 = P2.x; int & y1 = P2.y;
-            _drawPixel<true>({ x0,y0 }, color, opacity);
-            if (draw_last) _drawPixel<true>({ x1,y1 }, color, opacity);
-            if (y0 > y1) { tgx::swap(y0, y1); tgx::swap(x0, x1); }
-            int dx = x1 - x0;
-            int dir;
-            if (dx >= 0) { dir = 1; }
-            else { dir = -1; dx = -dx; }
-            int dy = y1 - y0;
-            /*
-            if (dx == 0) { while (--dy > 0) { y0++; _updatePixel<blend, checkrange, false, usepen>(x0, y0, color, 0, penwidth); } return; }
-            if (dy == 0) { while (--dx > 0) { x0 += dir; _updatePixel<blend, checkrange, false, usepen>(x0, y0, color, 0, penwidth); } return; }
-            if (dx == dy) { while (--dy > 0) { x0 += dir; y0++; _updatePixel<blend, checkrange, false, usepen>(x0, y0, color, 0, penwidth); } return; }
-            */
-            uint32_t err = 0; // important to be 32 bit, do not change !
-            if (dy > dx)
-                {
-                uint32_t inc = (uint32_t)((dx << 16) / dy);
-                while (--dy > 0)
-                    {
-                    const uint32_t tmp = err;
-                    err += inc;
-                    if (err <= tmp) { x0 += dir; } // overflow !
-                    y0++;
-                    uint32_t mm = (err >> 8) + 1;
-                    _drawPixel<true>({ x0 + dir, y0 }, color, (mm*opacity) / 256);
-                    _drawPixel<true>({ x0, y0 }, color, ((256 - mm) * opacity) / 256);
-                    }
-                }
-            else
-                {
-                uint32_t inc = (uint32_t)((dy << 16) / dx);
-                while (--dx > 0)
-                    {
-                    const uint32_t tmp = err;
-                    err += inc;
-                    if (err <= tmp) { y0++; } // overflow !
-                    x0 += dir;
-                    uint32_t mm = (err >> 8) + 1;
-                    _drawPixel<true>({ x0, y0 + 1 }, color, (mm * opacity) / 256);
-                    _drawPixel<true>({ x0, y0 }, color, ((256 - mm) * opacity) / 256);
-                    }
-                }
-            return;
-            }
-
-
-
-
-
-
-
-
-
 
 
 
