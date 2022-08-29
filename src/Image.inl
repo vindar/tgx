@@ -947,41 +947,6 @@ namespace tgx
         }
 
 
-    template<typename color_t>
-    void Image<color_t>::_drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity)
-        {
-        tgx::BSeg S(P1, P2);
-        if (drawP2) S.inclen();
-        if (!drawP1) S.move();
-        auto B = imageBox();
-        S.move_inside_box(B);
-        S.len() = tgx::min(S.lenght_inside_box(B), S.len());	// truncate to stay inside the box
-        if (S.x_major())
-            {
-            const bool X_MAJOR = true;
-            if ((opacity < 0) || (opacity > 1))
-                {
-                while (S.len() > 0) { _drawPixel<false>(S.pos(), color); S.move<X_MAJOR>(); }
-                }
-            else
-                {
-                while (S.len() > 0) { _drawPixel<false, false>(S.pos(), color, opacity); S.move<X_MAJOR>(); }
-                }
-            }
-        else
-            {
-            const bool X_MAJOR = false;
-            if ((opacity < 0) || (opacity > 1))
-                {
-                while (S.len() > 0) { _drawPixel<false>(S.pos(), color); S.move<X_MAJOR>(); }
-                }
-            else
-                {
-                while (S.len() > 0) { _drawPixel<false, false>(S.pos(), color, opacity); S.move<X_MAJOR>(); }
-                }
-            }
-        }
-
 
     template<typename color_t>
     void Image<color_t>::drawPolyLine(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
@@ -1021,7 +986,7 @@ namespace tgx
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         int32_t op = (int32_t)(256 * opacity);
-        _bseg_draw_AA(P1, P2, true, color, op, true);
+        _bseg_draw_AA(BSeg(P1, P2), true, true, color, op, true);
         }
 
 
@@ -3649,8 +3614,9 @@ namespace tgx
 
 
     template<typename color_t>
-    template<int SIDE> void Image<color_t>::_bseg_draw_template(BSeg& seg, bool draw_last, color_t color, int32_t op, bool checkrange)
+    template<int SIDE> void Image<color_t>::_bseg_draw_template(BSeg& seg, bool draw_first, bool draw_last, color_t color, int32_t op, bool checkrange)
         {
+        if (draw_first) seg.move();
         if (draw_last) seg.inclen();
         if (checkrange)
             {
@@ -3679,25 +3645,25 @@ namespace tgx
 
 
     template<typename color_t>
-    template<typename vecType>
-    void Image<color_t>::_bseg_draw(const vecType& P, const vecType& Q, bool draw_last, color_t color, int side, int32_t op, bool checkrange)
+    void Image<color_t>::_bseg_draw(BSeg& seg, bool draw_first, bool draw_last, color_t color, int side, int32_t op, bool checkrange)
         {
-        BSeg seg(P, Q);
+        auto segS = seg.save();
         if (side > 0)
-            _bseg_draw_template<1>(seg, draw_last, color, op, checkrange);
+            _bseg_draw_template<1>(seg, draw_first, draw_last, color, op, checkrange);
         else if (side < 0)
-            _bseg_draw_template<-1>(seg, draw_last, color, op, checkrange);
+            _bseg_draw_template<-1>(seg, draw_first, draw_last, color, op, checkrange);
         else
-            _bseg_draw_template<0>(seg, draw_last, color, op, checkrange);
+            _bseg_draw_template<0>(seg, draw_first, draw_last, color, op, checkrange);
+        seg.restore(segS);
         }
 
 
 
     template<typename color_t>
-    template<typename vecType>
-    void Image<color_t>::_bseg_draw_AA(const vecType& P, const vecType& Q, bool draw_last, color_t color, int32_t op, bool checkrange)
+    void Image<color_t>::_bseg_draw_AA(BSeg& seg, bool draw_first, bool draw_last, color_t color, int32_t op, bool checkrange)
         {
-        BSeg seg(P, Q);
+        auto segS = seg.save();
+        if (draw_first) seg.move();
         if (draw_last) seg.inclen();
         if (checkrange)
             {
@@ -3711,7 +3677,7 @@ namespace tgx
             while (seg.len() > 0)
                 {
                 int dir;
-                const int aa = seg.AA<1, X_MAJOR>(dir);
+                const int aa = seg.AA_bothside<X_MAJOR>(dir);
                 const int aa2 = 256 - aa;
                 int x = seg.X(), y = seg.Y();
                 operator()(x,y).blend256(color, (uint32_t)((op * aa) >> 8));
@@ -3725,7 +3691,7 @@ namespace tgx
             while (seg.len() > 0)
                 {
                 int dir;
-                const int aa = seg.AA<1, X_MAJOR>(dir);
+                const int aa = seg.AA_bothside<X_MAJOR>(dir);
                 const int aa2 = 256 - aa;
                 int x = seg.X(), y = seg.Y();
                 operator()(x, y).blend256(color, (uint32_t)((op * aa) >> 8));
@@ -3733,7 +3699,11 @@ namespace tgx
                 seg.move<X_MAJOR>();
                 }
             }
+        seg.restore(segS);
         }
+
+
+
 
 
 
@@ -3802,15 +3772,18 @@ namespace tgx
 
 
     template<typename color_t>
-    template<typename vecType>
-    void Image<color_t>::_bseg_avoid1(const vecType& P, const vecType& Q, const vecType& PA, bool drawQ, bool closedPA, color_t color, int side, int32_t op, bool checkrange)
+    void Image<color_t>::_bseg_avoid1(BSeg& PQ, BSeg& PA, bool drawQ, bool closedPA, color_t color, int side, int32_t op, bool checkrange)
         {
+        auto PQs = PQ.save();
+        auto PAs = PA.save();
         if (side > 0)
-            _bseg_avoid1_template<1>(BSeg(P, Q), drawQ, BSeg(P, PA), closedPA, color, op, checkrange);
+            _bseg_avoid1_template<1>(PQ, drawQ, PA, closedPA, color, op, checkrange);
         else if (side < 0)
-            _bseg_avoid1_template<-1>(BSeg(P, Q), drawQ, BSeg(P, PA), closedPA, color, op, checkrange);
+            _bseg_avoid1_template<-1>(PQ, drawQ, PA, closedPA, color, op, checkrange);
         else
-            _bseg_avoid1_template<0>(BSeg(P, Q), drawQ, BSeg(P, PA), closedPA, color, op, checkrange);
+            _bseg_avoid1_template<0>(PQ, drawQ, PA, closedPA, color, op, checkrange);
+        PQ.restore(PQs);
+        PA.restore(PAs);
         }
 
 
@@ -3883,16 +3856,22 @@ namespace tgx
 
 
     template<typename color_t>
-    template<typename vecType>
-    void Image<color_t>::_bseg_avoid2(const vecType& P, const vecType& Q, const vecType& PA, const vecType& PB, bool drawQ, bool closedPA, bool closedPB, color_t color, int side, int32_t op, bool checkrange)
+    void Image<color_t>::_bseg_avoid2(BSeg& PQ, BSeg& PA, BSeg& PB, bool drawQ, bool closedPA, bool closedPB, color_t color, int side, int32_t op, bool checkrange)
         {
+        auto PQs = PQ.save();
+        auto PAs = PA.save();
+        auto PBs = PB.save();
         if (side > 0)
-            _bseg_avoid2_template<1>(BSeg(P, Q), drawQ, BSeg(P, PA), closedPA, BSeg(P, PB), closedPB, color, op, checkrange);
+            _bseg_avoid2_template<1>(PQ, drawQ, PA, closedPA, PB, closedPB, color, op, checkrange);
         else if (side < 0)
-            _bseg_avoid2_template<-1>(BSeg(P, Q), drawQ, BSeg(P, PA), closedPA, BSeg(P, PB), closedPB, color, op, checkrange);
+            _bseg_avoid2_template<-1>(PQ, drawQ, PA, closedPA, PB, closedPB, color, op, checkrange);
         else
-            _bseg_avoid2_template<0>(BSeg(P, Q), drawQ, BSeg(P, PA), closedPA, BSeg(P, PB), closedPB, color, op, checkrange);
+            _bseg_avoid2_template<0>(PQ, drawQ, PA, closedPA, PB, closedPB, color, op, checkrange);
+        PQ.restore(PQs);
+        PA.restore(PAs);
+        PB.restore(PBs);
         }
+
 
 
     template<typename color_t>
@@ -3961,18 +3940,24 @@ namespace tgx
         }
 
 
-
     template<typename color_t>
-    template<typename vecType>
-    void Image<color_t>::_bseg_avoid11(const vecType& P, const vecType& Q, const vecType& PA, const vecType& QA, bool closedPA, bool closedQA, color_t color, int side, int32_t op, bool checkrange)
+    void Image<color_t>::_bseg_avoid11(BSeg& PQ, BSeg& PA, BSeg& QB, bool closedPA, bool closedQB, color_t color, int side, int32_t op, bool checkrange)
         {
+        auto PQs = PQ.save();
+        auto PAs = PA.save();
+        auto QBs = QB.save();
         if (side > 0)
-            _bseg_avoid11_template<1>(BSeg(P, Q), BSeg(P, PA), closedPA, BSeg(Q, QA), closedQA, color, op, checkrange);
+            _bseg_avoid11_template<1>(PQ, PA, closedPA, QB, closedQB, color, op, checkrange);
         else if (side < 0)
-            _bseg_avoid11_template<-1>(BSeg(P, Q), BSeg(P, PA), closedPA, BSeg(Q, QA), closedQA, color, op, checkrange);
+            _bseg_avoid11_template<-1>(PQ, PA, closedPA, QB, closedQB, color, op, checkrange);
         else
-            _bseg_avoid11_template<0>(BSeg(P, Q), BSeg(P, PA), closedPA, BSeg(Q, QA), closedQA, color, op, checkrange);
+            _bseg_avoid11_template<0>(PQ, PA, closedPA, QB, closedQB, color, op, checkrange);
+        PQ.restore(PQs);
+        PA.restore(PAs);
+        QB.restore(QBs);
         }
+
+
 
 
 
@@ -4046,15 +4031,22 @@ namespace tgx
 
 
     template<typename color_t>
-    template<typename vecType>
-    void Image<color_t>::_bseg_avoid21(const vecType& P, const vecType& Q, const vecType& PA, const vecType& PB, const vecType& QA, bool closedPA, bool closedPB, bool closedQA, color_t color, int side, int32_t op, bool checkrange)
+    void Image<color_t>::_bseg_avoid21(BSeg& PQ, BSeg& PA, BSeg& PB, BSeg& QC, bool closedPA, bool closedPB, bool closedQC, color_t color, int side, int32_t op, bool checkrange)
         {
+        auto PQs = PQ.save();
+        auto PAs = PA.save();
+        auto PBs = PB.save();
+        auto QCs = QC.save();
         if (side > 0)
-            _bseg_avoid21_template<1>(BSeg(P, Q), BSeg(P, PA), closedPA, BSeg(P, PB), closedPB, BSeg(Q, QA), closedQA, color, op, checkrange);
+            _bseg_avoid21_template<1>(PQ, PA, closedPA, PB, closedPB, QC, closedQC, color, op, checkrange);
         else if (side < 0)
-            _bseg_avoid21_template<-1>(BSeg(P, Q), BSeg(P, PA), closedPA, BSeg(P, PB), closedPB, BSeg(Q, QA), closedQA, color, op, checkrange);
+            _bseg_avoid21_template<-1>(PQ, PA, closedPA, PB, closedPB, QC, closedQC, color, op, checkrange);
         else
-            _bseg_avoid21_template<0>(BSeg(P, Q), BSeg(P, PA), closedPA, BSeg(P, PB), closedPB, BSeg(Q, QA), closedQA, color, op, checkrange);
+            _bseg_avoid21_template<0>(PQ, PA, closedPA, PB, closedPB, QC, closedQC, color, op, checkrange);
+        PQ.restore(PQs);
+        PA.restore(PAs);
+        PB.restore(PBs);
+        QC.restore(QCs);
         }
 
 
@@ -4134,18 +4126,28 @@ namespace tgx
 
 
     template<typename color_t>
-    template<typename vecType>
-    void Image<color_t>::_bseg_avoid22(const vecType& P, const vecType& Q, const vecType& PA, const vecType& PB, const vecType& QA, const vecType& QB, bool closedPA, bool closedPB, bool closedQA, bool closedQB, color_t color, int side, int32_t op, bool checkrange)
+    void Image<color_t>::_bseg_avoid22(BSeg& PQ, BSeg& PA, BSeg& PB, BSeg& QC, BSeg& QD, bool closedPA, bool closedPB, bool closedQC, bool closedQD, color_t color, int side, int32_t op, bool checkrange)
         {
+        auto PQs = PQ.save();
+        auto PAs = PA.save();
+        auto PBs = PB.save();
+        auto QCs = QC.save();
+        auto QDs = QD.save();
         if (side > 0)
-            _bseg_avoid22_template<1>(BSeg(P, Q), BSeg(P, PA), closedPA, BSeg(P, PB), closedPB, BSeg(Q, QA), closedQA, BSeg(Q, QB), closedQB, color, op, checkrange);
+            _bseg_avoid22_template<1>(PQ, PA, closedPA, PB, closedPB, QC, closedQC, QD, closedQD, color, op, checkrange);
         else if (side < 0)
-            _bseg_avoid22_template<-1>(BSeg(P, Q), BSeg(P, PA), closedPA, BSeg(P, PB), closedPB, BSeg(Q, QA), closedQA, BSeg(Q, QB), closedQB, color, op, checkrange);
+            _bseg_avoid22_template<-1>(PQ, PA, closedPA, PB, closedPB, QC, closedQC, QD, closedQD, color, op, checkrange);
         else
-            _bseg_avoid22_template<0>(BSeg(P, Q), BSeg(P, PA), closedPA, BSeg(P, PB), closedPB, BSeg(Q, QA), closedQA, BSeg(Q, QB), closedQB, color, op, checkrange);
+            _bseg_avoid22_template<0>(PQ, PA, closedPA, PB, closedPB, QC, closedQC, QD, closedQD, color, op, checkrange);
+        PQ.restore(PQs);
+        PA.restore(PAs);
+        PB.restore(PBs);
+        QC.restore(QCs);
+        QD.restore(QDs);
         }
 
 
+    /*
     template<typename color_t>
     void Image<color_t>::_bseg_fill_triangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t fillcolor, float opacity)
         {
@@ -4191,6 +4193,11 @@ namespace tgx
         _bseg_fill_interior_angle(P1, P2, P3, seg12, seg13, fillcolor, !fl3, opacity);
         return;
         }
+    */
+
+
+
+
 
 
 
@@ -4198,48 +4205,102 @@ namespace tgx
     void Image<color_t>::_bseg_fill_triangle(fVec2 fP1, fVec2 fP2, fVec2 fP3, color_t fillcolor, float opacity)
         {
         if (fP1.y > fP2.y) { tgx::swap(fP1, fP2); } // reorder by increasing Y value
-        if (fP1.y > fP3.y) { tgx::swap(fP1, fP3); } //
-        if (fP2.y > fP3.y) { tgx::swap(fP2, fP3); } //
+        if (fP1.y > fP3.y) { tgx::swap(fP1, fP3); } // so we can directly call 
+        if (fP2.y > fP3.y) { tgx::swap(fP2, fP3); } // _bseg_fill_triangle_precomputed_sub()
+        BSeg seg12(fP1, fP2); BSeg seg21 = seg12.get_reverse();
+        BSeg seg13(fP1, fP3); BSeg seg31 = seg13.get_reverse();
+        BSeg seg23(fP2, fP3); BSeg seg32 = seg23.get_reverse();
+        _bseg_fill_triangle_precomputed_sub(fP1, fP2, fP3, seg12, seg21, seg23, seg32, seg31, seg13, fillcolor, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::_bseg_fill_triangle_precomputed(fVec2 fP1, fVec2 fP2, fVec2 fP3, BSeg& seg12, BSeg& seg21, BSeg& seg23, BSeg& seg32, BSeg& seg31, BSeg& seg13, color_t fillcolor, float opacity)
+        {
+        auto s12 = seg12.save();
+        auto s21 = seg21.save();
+        auto s23 = seg23.save();
+        auto s32 = seg32.save();
+        auto s31 = seg31.save();
+        auto s13 = seg13.save();
+        fVec2* P[3] = { &fP1, &fP2, &fP3 };
+        BSeg* S[3][3];
+        S[0][1] = &seg12;
+        S[0][2] = &seg13;
+        S[1][0] = &seg21;
+        S[1][2] = &seg23;
+        S[2][0] = &seg31;
+        S[2][1] = &seg32;
+        int u1, u2, u3;
+        if ((fP1.y <= fP2.y) && (fP2.y <= fP3.y))
+            {
+            u1 = 0; u2 = 1; u3 = 2;
+            }
+        else if ((fP1.y <= fP3.y) && (fP3.y <= fP2.y))
+            {
+            u1 = 0; u2 = 2; u3 = 1;
+            }
+        else if ((fP2.y <= fP1.y) && (fP1.y <= fP3.y))
+            {
+            u1 = 1; u2 = 0; u3 = 2;
+            }
+        else if ((fP2.y <= fP3.y) && (fP3.y <= fP1.y))
+            {
+            u1 = 1; u2 = 2; u3 = 0;
+            }
+        else if ((fP3.y <= fP1.y) && (fP1.y <= fP2.y))
+            {
+            u1 = 2; u2 = 0; u3 = 1;
+            }
+        else
+            {
+            u1 = 2; u2 = 1; u3 = 0;
+            }
+        _bseg_fill_triangle_precomputed_sub(*(P[u1]), *(P[u2]), *(P[u3]), *(S[u1][u2]), *(S[u2][u1]), *(S[u2][u3]), *(S[u3][u2]), *(S[u3][u1]), *(S[u1][u3]), fillcolor, opacity);
+        seg12.restore(s12);
+        seg21.restore(s21);
+        seg23.restore(s23);
+        seg32.restore(s32);
+        seg31.restore(s31);
+        seg13.restore(s13);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::_bseg_fill_triangle_precomputed_sub(fVec2 fP1, fVec2 fP2, fVec2 fP3, BSeg & seg12, BSeg & seg21, BSeg & seg23, BSeg & seg32, BSeg & seg31, BSeg & seg13, color_t fillcolor, float opacity)
+        {
         iVec2 P1((int)roundf(fP1.x), (int)roundf(fP1.y)); int y1 = P1.y;
         iVec2 P2((int)roundf(fP2.x), (int)roundf(fP2.y)); int y2 = P2.y;
         iVec2 P3((int)roundf(fP3.x), (int)roundf(fP3.y)); int y3 = P3.y;
         if (y1 == y3) return; //flat, nothing to draw. 
         if (y1 == y2)
             {
-            BSeg seg31(fP3, fP1);
-            BSeg seg32(fP3, fP2);
             _bseg_fill_interior_angle(P3, P1, P2, seg31, seg32, fillcolor, false, opacity);
-            return;
             }
-        if (y2 == y3)
+        else if (y2 == y3)
             {
-            BSeg seg12(fP1, fP2);
-            BSeg seg13(fP1, fP3);
             _bseg_fill_interior_angle(P1, P2, P3, seg12, seg13, fillcolor, false, opacity);
-            return;
-            }
-        BSeg seg12(fP1, fP2); BSeg seg21 = seg12.get_reverse();
-        BSeg seg13(fP1, fP3); BSeg seg31 = seg13.get_reverse();
-        BSeg seg23(fP2, fP3); BSeg seg32 = seg23.get_reverse();
-
-        fVec2 vA = (fP3 - fP1), vB = (fP2 - fP1);
-        const float det = vA.x * vB.y - vB.x * vA.y;
-        seg23.move_y_dir();
-        seg21.move_y_dir();
-        bool fl3;
-        if (det < 0)
-            {
-            fl3 = (seg23.X() < seg21.X()) ? true : false;
             }
         else
             {
-            fl3 = (seg23.X() > seg21.X()) ? true : false;
+            fVec2 vA = (fP3 - fP1), vB = (fP2 - fP1);
+            const float det = vA.x * vB.y - vB.x * vA.y;
+            seg23.move_y_dir();
+            seg21.move_y_dir();
+            bool fl3;
+            if (det < 0)
+                {
+                fl3 = (seg23.X() < seg21.X()) ? true : false;
+                }
+            else
+                {
+                fl3 = (seg23.X() > seg21.X()) ? true : false;
+                }
+            _bseg_fill_interior_angle(P3, P2, P1, seg32, seg31, fillcolor, fl3, opacity);
+            _bseg_fill_interior_angle(P1, P2, P3, seg12, seg13, fillcolor, !fl3, opacity);
             }
-        _bseg_fill_interior_angle(P3, P2, P1, seg32, seg31, fillcolor, fl3, opacity);
-        _bseg_fill_interior_angle(P1, P2, P3, seg12, seg13, fillcolor, !fl3, opacity);
         return;
-    }
-
+        }
 
 
     template<typename color_t>

@@ -31,6 +31,11 @@ namespace tgx
 {
 
 
+
+	
+	struct BSegState;
+
+
 	/** Bresenham segment */
 	struct BSeg
 		{
@@ -462,8 +467,16 @@ namespace tgx
 			}
 
 
+		/* Compute the aa value on a given side, non templatesd version */
+		inline int32_t AA(int side) const
+			{
+			return (_x_major ? ((side > 0) ? AA<1,true>() : AA<-1,true>())
+				             : ((side > 0) ? AA<1,false>() : AA<-1,false>()));
+			}
+
+
 		/* Compute the aa value for line anti-aliasing */
-		template<int SIDE, bool X_MAJOR> inline int32_t AA(int & dir) const
+		template<bool X_MAJOR> inline int32_t AA_bothside(int & dir) const
 			{
 			int32_t a;
 			if (X_MAJOR)
@@ -490,7 +503,14 @@ namespace tgx
 			}
 
 
-
+		/**
+        /* Return a normalized direction vector
+		* (use fast sqrt)
+		**/
+		TGX_INLINE inline fVec2 unitVec() const
+			{
+			return fVec2((float)(_dx * _stepx), (float)(_dy * _stepy)).getNormalize_fast();
+			}
 
 		/**
 		 * Query if the line is x_major
@@ -568,6 +588,19 @@ namespace tgx
 			}
 
 
+		/**
+        * Save the current position 
+		**/
+		TGX_INLINE inline BSegState save() const;
+
+
+		/**
+        * Restore a position previously stored. 
+		**/
+		TGX_INLINE inline void restore(const BSegState& state);
+
+
+
 		int32_t _x, _y;			// current pos
 		int32_t _frac;			// fractional part
 		int32_t _len;			// number of pixels
@@ -577,6 +610,39 @@ namespace tgx
 		int32_t _amul;			// multiplication factor to compute aa values. 
 		bool  _x_major;			// true if the line is xmajor (ie dx > dy) and false if y major (dy >= dx).
 	};
+
+
+
+
+	/** object to save the current position on a bresenham segment */
+	struct BSegState
+		{
+		BSegState(const BSeg& bseg) : _x(bseg._x), _y(bseg._y), _frac(bseg._frac), _len(bseg._len), _stepx(bseg._stepx), _stepy(bseg._stepy)
+			{
+			}
+
+		int32_t _x, _y;			// current pos
+		int32_t _frac;			// fractional part
+		int32_t _len;			// number of pixels
+		int32_t _stepx, _stepy;	// directions (+/-1)
+		};
+
+
+	BSegState BSeg::save() const
+		{
+		return BSegState(*this);
+		}
+
+
+	void BSeg::restore(const BSegState& state)
+		{
+		_x = state._x;
+		_y = state._y;
+		_frac = state._frac;
+		_len = state._len;
+		_stepx = state._stepx;
+		_stepy = state._stepy;
+		}
 
 
 }

@@ -2958,22 +2958,19 @@ private:
 
 
 
-        template<int SIDE> void _bseg_draw_template(BSeg& seg, bool draw_last, color_t color, int32_t op, bool checkrange);
-
+        template<int SIDE> void _bseg_draw_template(BSeg& seg, bool draw_first, bool draw_last, color_t color, int32_t op, bool checkrange);
 
 
         /**
          * Draw a Bresenham segment [P,Q|.
         **/
-        template<typename vecType>
-        void _bseg_draw(const vecType& P, const vecType& Q, bool draw_last, color_t color, int side, int32_t op, bool checkrange);
+        void _bseg_draw(BSeg & seg, bool draw_first, bool draw_last, color_t color, int side, int32_t op, bool checkrange);
 
 
         /**
         * Draw an antialiased Bresenham segment [P,Q|.
         **/
-        template<typename vecType>
-        void _bseg_draw_AA(const vecType& P, const vecType& Q, bool draw_last, color_t color, int32_t op, bool checkrange);
+        void _bseg_draw_AA(BSeg & seg, bool draw_first, bool draw_last, color_t color, int32_t op, bool checkrange);
 
 
      
@@ -2982,56 +2979,34 @@ private:
 
 
         /**
-         * Draw the bresenham segment [P,Q| while avoiding [P,PA|
+         * Draw the bresenham segment [P,Q| while avoiding [P,A|
          *
-         *            PA
+         *             A
          *            /
          *           /
          *          /
          *        P+-------------Q
-         *
-         * @param	P	   	start point of the segment to draw.
-         * @param	Q	   	endpoint of the segment to draw.
-         * @param	PA	   	endpoint of the segment to avoid.
-         * @param	drawQ  	true to draw the closed segment.
-         * @param	closedPA true to avoid the closed segment.
-         * @param	color  	color to use.
-         * @param	side   	(Optional) 0 for no side AA and +/-1 for side AA.
-         * @param	op	   	(Optional) opacity to apply if 0 &lt;= op &lt;= 256.
         **/
-        template<typename vecType>
-        void _bseg_avoid1(const vecType& P, const vecType& Q, const vecType& PA, bool drawQ, bool closedPA, color_t color, int side, int32_t op, bool checkrange);
+        void _bseg_avoid1(BSeg& PQ, BSeg& PA, bool drawQ, bool closedPA, color_t color, int side, int32_t op, bool checkrange);
 
+
+         
 
         /** Used by _bseg_avoid2 */
         template<int SIDE> void _bseg_avoid2_template(BSeg& segA, bool lastA, BSeg& segB, bool lastB, BSeg& segC, bool lastC, color_t color, int32_t op, bool checkrange);
 
 
         /**
-        * Draw the bresenham segment [P,Q| while avoiding [P,PA| and [P,PB|
-        *
-        * SAFE FOR ANY VALUE OF THE POINTS
-        *
-        *     PA      PB
+        * Draw the bresenham segment [P,Q| while avoiding [P,A| and [P,B|
+        * 
+        *     A       B
         *      \     /
         *       \   /
         *        \ /
         *         +--------------
         *         P             Q
-        *
-        * @param	P	   	start point of the segment to draw.
-        * @param	Q	   	endpoint of the segment to draw.
-        * @param	PA	   	endpoint of the first segment to avoid.
-        * @param	PB	   	endpoint of the second egment to avoid.
-        * @param	drawQ  	true to draw the closed segment.
-        * @param	closedPA	true to avoid the closed first segment.
-        * @param	closedPB	true to avoid the closed second segment.
-        * @param	color  	color to use.
-        * @param	side   	(Optional) 0 for no side AA and +/-1 for side AA.
-        * @param	op	   	(Optional) opacity to apply if 0 &lt;= op &lt;= 256.
         **/
-        template<typename vecType>
-        void _bseg_avoid2(const vecType& P, const vecType& Q, const vecType& PA, const vecType& PB, bool drawQ, bool closedPA, bool closedPB, color_t color, int side, int32_t op, bool checkrange);
+        void _bseg_avoid2(BSeg & PQ, BSeg & PA, BSeg & PB, bool drawQ, bool closedPA, bool closedPB, color_t color, int side, int32_t op, bool checkrange);
 
 
         /** Used by _bseg_avoid11 */
@@ -3040,29 +3015,17 @@ private:
 
 
         /**
-        * Draw the bresenham segment [P,Q| while avoiding [P,PA| and [Q,QA|
+        * Draw the bresenham segment [P,Q| while avoiding [P,A| and [Q,B|
         *
-        * SAFE FOR ANY VALUE OF THE POINTS
-        *
-        *     PA                   QA
+        *     A                     B
         *      \                   /
         *       \                 /
         *        \               /
         *         +--------------
         *         P             Q
-        *
-        * @param	P	   	start point of the segment to draw.
-        * @param	Q	   	endpoint of the segment to draw.
-        * @param	PA	   	endpoint of the first segment to avoid.
-        * @param	QA	   	endpoint of the second segment to avoid.
-        * @param	closedPA	true to avoid the closed first segment.
-        * @param	closedQA	true to avoid the closed second segment.
-        * @param	color  	color to use.
-        * @param	side   	(Optional) 0 for no side AA and +/-1 for side AA.
-        * @param	op	   	(Optional) opacity to apply if 0 &lt;= op &lt;= 256.
+
         **/
-        template<typename vecType>
-        void _bseg_avoid11(const vecType& P, const vecType& Q, const vecType& PA, const vecType& QA, bool closedPA, bool closedQA, color_t color, int side, int32_t op, bool checkrange);
+        void _bseg_avoid11(BSeg & PQ, BSeg& PA, BSeg & QB, bool closedPA, bool closedQB, color_t color, int side, int32_t op, bool checkrange);
 
 
 
@@ -3071,31 +3034,16 @@ private:
 
 
         /**
-        * Draw the bresenham segment [P,Q| while avoiding [P,PA| , [P, PB| and [Q,QA|
+        * Draw the bresenham segment [P,Q| while avoiding [P,A| , [P, B| and [Q,C|
         *
-        * SAFE FOR ANY VALUE OF THE POINTS
-        *
-        *     PA     PB            QA
+        *      A      B             C
         *      \     /             /
         *       \   /             /
         *        \ /             /
         *         +--------------
         *         P             Q
-        *
-        * @param	P	   	start point of the segment to draw.
-        * @param	Q	   	endpoint of the segment to draw.
-        * @param	PA	   	endpoint of the first segment to avoid.
-        * @param	PB	   	endpoint of the second segment to avoid.
-        * @param	QA	   	endpoint of the third segment to avoid.
-        * @param	closedPA	true to avoid the closed first segment.
-        * @param	closedPB	true to avoid the closed second segment.
-        * @param	closedQA	true to avoid the closed third segment.
-        * @param	color  	color to use.
-        * @param	side   	(Optional) 0 for no side AA and +/-1 for side AA.
-        * @param	op	   	(Optional) opacity to apply if 0 &lt;= op &lt;= 256.
         **/
-        template<typename vecType>
-        void _bseg_avoid21(const vecType& P, const vecType& Q, const vecType& PA, const vecType& PB, const vecType& QA, bool closedPA, bool closedPB, bool closedQA, color_t color, int side, int32_t op, bool checkrange);
+        void _bseg_avoid21(BSeg& PQ, BSeg& PA, BSeg& PB, BSeg& QC, bool closedPA, bool closedPB, bool closedQC, color_t color, int side, int32_t op, bool checkrange);
 
 
 
@@ -3104,33 +3052,16 @@ private:
 
 
         /**
-        * Draw the bresenham segment [P,Q| while avoiding [P,PA| , [P, PB|,  [Q,QA| and [Q,QB|
+        * Draw the bresenham segment [P,Q| while avoiding [P,A| , [P, B|,  [Q,C| and [Q,D|
         *
-        * SAFE FOR ANY VALUE OF THE POINTS
-        *
-        *     PA     PB         QA     QB
+        *     A       B         C       D
         *      \     /           \     /
         *       \   /             \   /
         *        \ /               \ /
-        *         +------------------
+        *         +-----------------+
         *         P                 Q
-        *
-        * @param	P	   	start point of the segment to draw.
-        * @param	Q	   	endpoint of the segment to draw.
-        * @param	PA	   	endpoint of the first segment to avoid.
-        * @param	PB	   	endpoint of the second segment to avoid.
-        * @param	QA	   	endpoint of the third segment to avoid.
-        * @param	QB	   	endpoint of the fourth segment to avoid.
-        * @param	closedPA	true to avoid the closed first segment.
-        * @param	closedPB	true to avoid the closed second segment.
-        * @param	closedQA	true to avoid the closed third segment.
-        * @param	closedQB	true to avoid the closed third segment.
-        * @param	color  	color to use.
-        * @param	side   	(Optional) 0 for no side AA and +/-1 for side AA.
-        * @param	op	   	(Optional) opacity to apply if 0 &lt;= op &lt;= 256.
         **/
-        template<typename vecType>
-        void _bseg_avoid22(const vecType& P, const vecType& Q, const vecType& PA, const vecType& PB, const vecType& QA, const vecType& QB, bool closedPA, bool closedPB, bool closedQA, bool closedQB, color_t color, int side, int32_t op, bool checkrange);
+        void _bseg_avoid22(BSeg& PQ, BSeg& PA, BSeg& PB, BSeg& QC, BSeg& QD, bool closedPA, bool closedPB, bool closedQC, bool closedQD, color_t color, int side, int32_t op, bool checkrange);
 
 
 
@@ -3138,7 +3069,7 @@ private:
         * Fill the interior of a triangle. 
         * integer valued version
         **/
-        void _bseg_fill_triangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t fillcolor, float opacity);
+        //void _bseg_fill_triangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t fillcolor, float opacity);
 
 
         /**
@@ -3146,6 +3077,15 @@ private:
         * floating point version with sub pixel precision
         **/
         void _bseg_fill_triangle(fVec2 fP1, fVec2 fP2, fVec2 fP3, color_t fillcolor, float opacity);
+
+
+        /**
+        * Fill the interior of a triangle.
+        * floating point version with sub pixel precision and BSeg already defined
+        **/
+        void _bseg_fill_triangle_precomputed(fVec2 fP1, fVec2 fP2, fVec2 fP3, BSeg & seg12, BSeg & seg21, BSeg & seg23, BSeg & seg32, BSeg & seg31, BSeg & seg13, color_t fillcolor, float opacity);
+
+        void _bseg_fill_triangle_precomputed_sub(fVec2 fP1, fVec2 fP2, fVec2 fP3, BSeg & seg12, BSeg & seg21, BSeg & seg23, BSeg & seg32, BSeg & seg31, BSeg & seg13, color_t fillcolor, float opacity);
 
 
         void _bseg_fill_interior_angle(iVec2 P, iVec2 Q1, iVec2 Q2, BSeg& seg1, BSeg& seg2, color_t color, bool fill_last, float opacity);
@@ -3169,6 +3109,35 @@ private:
 
 
         void _bseg_fill_interior_angle_sub(int dir, int y, int ytarget, BSeg& sega, BSeg& segb, color_t color, float opacity);
+
+
+        int32_t _bseg_intersect_AA(const BSeg& segPA, int side_PA, const BSeg& segPB)
+            {   
+            const fVec2 VA = segPA.unitVec(); 
+            const fVec2 VB = segPB.unitVec();
+            const float w = (((-VB.x) * (VB.y)) + ((VA.x) * (VA.y)) + ((VB.x - VA.x) * (VB.y + VA.y))) * side_PA;
+            const float alpha = tgx::dotProduct(VA, VB);
+            const int32_t aaA = segPA.AA(side_PA);
+            const int32_t aaB = segPB.AA(-side_PA);
+            const int32_t minAA = tgx::min(aaA, aaB);
+            const int32_t maxAA = tgx::max(aaA, aaB);
+            int32_t a;
+            if (w >= 0)
+                { // obtuse angle
+                a = minAA * ((1 - alpha) / 2);
+                }
+            else
+                {
+                a = (int32_t)(maxAA + (minAA * ((1 + alpha) / 2)));
+                }
+            return ((a < 0) ? 0 : ((a > 256) ? 256 : a));
+            }
+
+
+        inline float _triangleAera(fVec2 P1, fVec2 P2, fVec2 P3)
+            {
+            return (((-P3.x) * (P3.y)) + ((P2.x) * (P2.y)) + ((P3.x - P2.x) * (P3.y + P2.y))) * 0.5f;
+            }
 
 
 
@@ -3253,7 +3222,8 @@ private:
         void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color) { if (checkrange) _drawFastHLine<true>(pos, w, color); else _drawFastHLine<false>(pos, w, color); }
 
 
-        void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity);
+        void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity) { _bseg_draw(BSeg(P1, P2), drawP1, drawP2, color, 0, (int32_t)(opacity * 256), true); }
+
 
 
 
@@ -3530,14 +3500,8 @@ private:
 
 
 
-
+        public: 
         /** Compute the signed aera of a triangle. */
-        inline float _triangleAera(fVec2 P1, fVec2 P2, fVec2 P3)
-            {
-            return (((P1.x - P3.x) * (P1.y + P3.y)) + ((P2.x - P1.x) * (P2.y + P1.y)) + ((P3.x - P2.x) * (P3.y + P2.y)))*0.5f;
-            }
-
-
 
 
 
@@ -3551,16 +3515,17 @@ private:
 
         void _fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
             {
-            float a = _triangleAera(P1, P2, P3); // winding direction of the polygon
+            float a = _triangleAera(P1, P2, P3); // winding direction of the polygon            
             const int w = (a > 0) ? -1 : ((a < 0) ? 1 : 0);
             const int op = (int)(opacity * 256);
-            _bseg_fill_triangle(P1, P2, P3, color, opacity);	// fill the triangle 
-            _bseg_draw(P1, P2, true, color, w, op, true);
-            _bseg_avoid1(P2, P3, P1, true, true, color, w, op, true);
-            _bseg_avoid11(P3, P1, P2, P2, true, true, color, w, op, true);
+            BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
+            BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
+            BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
+            _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangle 
+            _bseg_draw(seg12, true, false, color, w, op, true);
+            _bseg_avoid1(seg23, seg21, true, true, color, w, op, true);
+            _bseg_avoid11(seg31, seg32, seg12, true, true, color, w, op, true);
             }
-
-
 
 
 
@@ -3570,7 +3535,6 @@ private:
             if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
             _fillSmoothQuad(P1, P2, P3, P4, color, opacity);
             }
-
 
 
         void _fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity)
@@ -3584,14 +3548,20 @@ private:
             const float a = _triangleAera(P1, P2, P3); // winding direction of the polygon
             const int w = (a > 0) ? -1 : ((a < 0) ? 1 : 0);
             const int op = (int)(opacity * 256);
-            _bseg_fill_triangle(P1, P2, P3, color, opacity);	// fill the triangles 
-            _bseg_fill_triangle(P1, P3, P4, color, opacity);	// fill the triangles 
-            _bseg_draw(P1, P2, true, color, w, op, true);
-            _bseg_draw(P3, P4, true, color, w, op, true);
-            _bseg_avoid11(P4, P1, P3, P2, true, true, color, w, op, true);
-            _bseg_avoid11(P2, P3, P1, P4, true, true, color, w, op, true);
-            _bseg_avoid22(P1, P3, P2, P4, P2, P4, true, true, true, true, color, 0, op, true);
+            BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
+            BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
+            BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
+            BSeg seg34(P3, P4); BSeg seg43 = seg34.get_reverse();
+            BSeg seg41(P4, P1); BSeg seg14 = seg41.get_reverse();
+            _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangles 
+            _bseg_fill_triangle_precomputed(P1, P3, P4, seg13, seg31, seg34, seg43, seg41, seg14, color, opacity);	// fill the triangles 
+            _bseg_draw(seg12, true, true, color, w, op, true);
+            _bseg_draw(seg34, true, true, color, w, op, true);
+            _bseg_avoid11(seg41, seg43, seg12, true, true, color, w, op, true);
+            _bseg_avoid11(seg23, seg21, seg34, true, true, color, w, op, true);
+            _bseg_avoid22(seg13, seg12,seg14,seg32,seg34, true, true, true, true, color, 0, op, true);
             }
+
 
 
         void _fillSmoothRect(const fBox2& B, color_t color, float opacity)
@@ -3643,6 +3613,7 @@ private:
 
 
     };
+
 
 
 
