@@ -1082,6 +1082,8 @@ namespace tgx
 
 
 
+
+
         /********************************************************************************
         *
         * DRAWING BEZIER CURVES AND SPLINES
@@ -1182,11 +1184,47 @@ namespace tgx
         void drawClosedSpline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
-        /*********************************************************************
+
+
+
+        /********************************************************************************
         *
-        * drawing triangles
+        * DRAWING RECTANGLES AND ROUNDED RECTANGLES
         *
-        **********************************************************************/
+        *********************************************************************************/
+
+
+
+
+
+        /********************************************************************************
+        *
+        * DRAWING TRIANGLES
+        *
+        *********************************************************************************/
+
+
+
+
+
+        /********************************************************************************
+        *
+        * DRAWING QUADS
+        *
+        *********************************************************************************/
+
+
+
+
+        /********************************************************************************
+        *
+        * DRAWING CIRCLES AND ELLIPSES
+        *
+        *********************************************************************************/
+
+
+
+
 
 
         /**
@@ -2763,15 +2801,20 @@ namespace tgx
 
 
 
+
+
 private:
 
 
 
     /************************************************************************************
     * 
+    * 
     * Don't you dare look below... this is private :-p
     * 
+    * 
     *************************************************************************************/
+
 
 
 
@@ -2884,357 +2927,9 @@ private:
 
 
         /***************************************
-        * DRAWING PRIMITIVES
+        * BRESENHAM
         ****************************************/
-
-
-        template<bool CHECKRANGE, bool CHECK_VALID_BLEND = true> TGX_INLINE inline void _drawPixel(iVec2 pos, color_t color, float opacity)
-            {
-            if (CHECKRANGE)
-                {
-                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
-                }
-            if ((CHECK_VALID_BLEND) && ((opacity < 0)||(opacity>1)))
-                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
-            else
-                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)].blend(color, opacity);
-            }
-
-
-        template<bool CHECKRANGE> TGX_INLINE inline void _drawPixel(iVec2 pos, color_t color)
-            {
-            if (CHECKRANGE)
-                {
-                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
-                }
-            _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
-            }
-
-
-        TGX_INLINE inline void _drawPixel(bool checkrange, iVec2 pos, color_t color, float opacity)
-            {
-            if (checkrange)
-                {
-                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
-                }
-            if ((opacity < 0)||(opacity>1))
-                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
-            else
-                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)].blend(color, opacity);
-            }
-
-
-        TGX_INLINE inline void _drawPixel(bool checkrange, iVec2 pos, color_t color)
-            {
-            if (checkrange)
-                {
-                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
-                }
-            _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
-            }
-
-
-
-        template<bool CHECKRANGE = true> TGX_INLINE inline color_t _readPixel(iVec2 pos, color_t outside_color) const
-            {
-            if (CHECKRANGE) // optimized away at compile time
-                {
-                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return outside_color;
-                }
-            return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)];
-            }
-
-
-        template<bool CHECKRANGE> void _drawFastVLine(iVec2 pos, int h, color_t color, float opacity);
-
-        template<bool CHECKRANGE> void _drawFastHLine(iVec2 pos, int w, color_t color, float opacity);
-
-        template<bool CHECKRANGE> void _drawFastVLine(iVec2 pos, int h, color_t color);
-
-        template<bool CHECKRANGE> void _drawFastHLine(iVec2 pos, int w, color_t color);
-
-        void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color, float opacity) { if (checkrange) _drawFastVLine<true>(pos, h, color, opacity); else _drawFastVLine<false>(pos, h, color, opacity); }
-
-        void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color, float opacity) { if (checkrange) _drawFastHLine<true>(pos, w, color, opacity); else _drawFastHLine<false>(pos, w, color, opacity); }
-
-        void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color) { if (checkrange) _drawFastVLine<true>(pos, h, color); else _drawFastVLine<false>(pos, h, color); }
-
-        void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color) { if (checkrange) _drawFastHLine<true>(pos, w, color); else _drawFastHLine<false>(pos, w, color); }
-
-
-        void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity);
-
-
-        /**
-        * Bezier / Splines
-        **/
-
-        void _plotQuadRationalBezierSeg(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const color_t color, const float opacity);
-
-        void _plotQuadRationalBezier(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const bool draw_P2, const color_t color, const float opacity);
-
-        void _drawQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, bool drawP2, color_t color, float opacity);
-
-        void _plotCubicBezierSeg(const bool checkrange, int x0, int y0, float x1, float y1, float x2, float y2, int x3, int y3, const color_t color, const float opacity);
-
-        void _plotCubicBezier(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, bool draw_P2, const color_t color, const float opacity);
-
-        void _drawCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, bool drawP2, color_t color, float opacity);
-
-        void _plotQuadSpline(int n, int x[], int y[], bool draw_last, const color_t color, const float opacity);
-
-        template<int SPLINE_MAX_POINTS> void _drawQuadSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity);
-
-        void _plotClosedSpline(int n, int x[], int y[], const color_t color, const float opacity);
-
-        template<int SPLINE_MAX_POINTS> void _drawClosedSpline(int nbpoints, const iVec2* tabPoints, color_t color, float opacity);
-
-        void _plotCubicSpline(int n, int x[], int y[], bool draw_last, const color_t color, const float opacity);
-
-        template<int SPLINE_MAX_POINTS> void _drawCubicSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity);
-
-
-
-
-
-        void _drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity);
-
-
-
-
-        /** triangle drawing method */
-        template<bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
-        void _drawTriangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t interior_color, color_t outline_color, float opacity)
-            {
-            const iBox2 B = imageBox();
-            if (B.contains(P1) && B.contains(P2)&& B.contains(P3))
-                _drawTriangle_sub<false, DRAW_INTERIOR, DRAW_OUTLINE, BLEND>(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, interior_color, outline_color, opacity);
-            else
-                _drawTriangle_sub<true, DRAW_INTERIOR, DRAW_OUTLINE, BLEND> (P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, interior_color, outline_color, opacity);
-            }
-
-
-        /** triangle drawing method templated on CHECKRANGE */
-        template<bool CHECKRANGE, bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
-        void _drawTriangle_sub(int x0, int y0, int x1, int y1, int x2, int y2, color_t interior_color, color_t outline_color, float opacity);
-
-    
-        /** draw a rounded rectangle outline */
-        template<bool CHECKRANGE> 
-        void _drawRoundRect(int x, int y, int w, int h, int r, color_t color);
-
-
-        /** draw a rounded rectangle outline */
-        template<bool CHECKRANGE> 
-        void _drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
-
-
-        /** fill a rounded rectangle  */
-        template<bool CHECKRANGE> 
-        void _fillRoundRect(int x, int y, int w, int h, int r, color_t color);
-
-
-        /** fill a rounded rectangle  */
-        template<bool CHECKRANGE> 
-        void _fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
-
-
-        /** taken from Adafruit GFX library */
-        template<bool CHECKRANGE> 
-        void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color);
-
-
-        /** taken from Adafruit GFX library */
-        template<bool CHECKRANGE> 
-        void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color, float opacity);
-
-
-        /** taken from Adafruit GFX library */
-        template<bool CHECKRANGE> 
-        void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color);
-
-
-        /** taken from Adafruit GFX library */
-        template<bool CHECKRANGE> 
-        void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color, float opacity);
-
-
-        /** filled circle drawing method */
-        template<bool OUTLINE, bool FILL, bool CHECKRANGE> 
-        void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor);
-
-
-        /** filled circle drawing method */
-        template<bool OUTLINE, bool FILL, bool CHECKRANGE> 
-        void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity);
-
-
-        /** adapted from bodmer e_tft library */
-        template<bool OUTLINE, bool FILL, bool CHECKRANGE>
-        void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color);
-
-
-        /** adapted from bodmer e_tft library */
-        template<bool OUTLINE, bool FILL, bool CHECKRANGE>
-        void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity);
-
-
-
-        /***************************************
-        * High Quality drawing primitive
-        ****************************************/
-
-
-
-        /** adapted from bodmer e_tft library */
-        void _drawWideLine(float ax, float ay, float bx, float by, float wd, color_t color, float opacity);
-    
-
-        /** adapted from bodmer e_tft library */
-        void _drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity);
-
-
-        /**
-        * adapted from bodmer e_tft library
-        * Calculate distance of px,py to closest part of line
-        **/
-        inline float TGX_INLINE _wideLineDistance(float pax, float pay, float bax, float bay, float dr)
-            {
-            float h = fmaxf(fminf((pax * bax + pay * bay) / (bax * bax + bay * bay), 1.0f), 0.0f);
-            float dx = pax - bax * h, dy = pay - bay * h;
-            dx = dx * dx + dy * dy;
-            if (dx < dr) return 0.0f;
-            return tgx::fast_sqrt(dx);
-            }
-
-
-        /**
-        * adapted from bodmer e_tft library
-        * Calculate distance of px,py to closest part of line
-        **/
-        inline TGX_INLINE float _wedgeLineDistance(float pax, float pay, float bax, float bay, float dr)
-            {
-            float h = fmaxf(fminf((pax * bax + pay * bay) / (bax * bax + bay * bay), 1.0f), 0.0f);
-            float dx = pax - bax * h, dy = pay - bay * h;
-            return tgx::fast_sqrt(dx * dx + dy * dy) + h * dr;
-            }
-
-
-        /** Convert to texture coordinates */
-        inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size)
-            {
-            return tgx::fVec2(pos.x / ((float)size.x) , pos.y / ((float)size.y));
-            }
-
-
-        /** Convert to viewport coordinates */
-        inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size)
-            {
-            return tgx::fVec2((2.0f / ((float)size.x)) * (pos.x) - 1.0f, (2.0f / ((float)size.y)) * (pos.y) - 1.0f);
-            }
-
-
-
-        /** template method for drawing a 2D gradient triangle*/        
-        template<typename color_alt, bool USE_BLENDING>
-        void _drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity);
-
-
-        /** template method for drawing 2D textured (possibly with gradient and mask) triangle */
-        template<typename color_t_tex, bool GRADIENT, bool USE_BLENDING, bool MASKED>
-        void _drawTexturedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity);
-
-
-
-
-
-
-        /***************************************
-        * DRAWING TEXT
-        ****************************************/
-
-
-        /** fetch a single bit from a bit array. (from ili9341_t3.cpp) */
-        static inline uint32_t _fetchbit(const uint8_t* p, uint32_t index) { return (p[index >> 3] & (0x80 >> (index & 7))); }
-
-
-        /** fetch 'required' bits from a bit array, returned as an unsigned integer  (from ili9341_t3.cpp)*/
-        static uint32_t _fetchbits_unsigned(const uint8_t* p, uint32_t index, uint32_t required);
-
-
-        /** fetch 'required' bits from a bit array, returned as a signed integer (from ili9341_t3.cpp) */
-        static uint32_t _fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required);
-
-
-        /** used for clipping a font bitmap */
-        bool _clipit(int& x, int& y, int& sx, int& sy, int& b_left, int& b_up);
-
-
-        template<bool BLEND>
-        iVec2 _drawTextGFX(const char* text, iVec2 pos, color_t col, const GFXfont& font, bool start_newline_at_0, float opacity);
-
-
-        template<bool BLEND>
-        iVec2 _drawTextILI(const char* text, iVec2 pos, color_t col, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity);
-
-
-        template<bool BLEND>
-        iVec2 _drawCharGFX(char c, iVec2 pos, color_t col, const GFXfont& font, float opacity);
-
-
-        template<bool BLEND>
-        iVec2 _drawCharILI(char c, iVec2 pos, color_t col, const ILI9341_t3_font_t& font, float opacity);
-
-
-        /**
-         * draw a character from an ILI9341_t3 font bitmap (version 1, with line compression).
-         * The ILI9341_t3 font format is described here: https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format
-         **/
-        template<bool BLEND>
-        void _drawCharILI9341_t3(const uint8_t* bitmap, int32_t off, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
-
-
-        /** used by _drawCharILI9341_t3 to draw a single row of a font bitmap */
-        template<bool BLEND>
-        static void _drawcharline(const uint8_t* bitmap, int32_t off, color_t* p, int dx, color_t col, float opacity);
-
-
-        /** 
-         * draw a 1 bit per pixel char bitmap on the image 
-         * Use to draw char from Adafruit font format: https://glenviewsoftware.com/projects/products/adafonteditor/adafruit-tgx-font-format/
-         **/
-        template<bool BLEND>
-        void _drawCharBitmap_1BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
-
-
-        /** draw a 2 bit per pixel char bitmap on the image 
-        *  packed bdf format 23 : https://github.com/projectitis/packedbdf/blob/master/packedbdf.md
-        **/
-        template<bool BLEND>
-        void _drawCharBitmap_2BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
-
-
-        /** draw a 4 bit per pixel char bitmap on the image */
-        template<bool BLEND>
-        void _drawCharBitmap_4BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
-
-
-        /** draw a 8 bit per pixel char bitmap on the image */
-        template<bool BLEND>
-        void _drawCharBitmap_8BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
-
-
-
-
-
-        /******************************************************************************************************************************************************
-        *																				   																      *
-        *                                                        BRESENHAM SEGMENT AND TRIANGLE FILLING                                                       *
-        *																																					  *
-        *******************************************************************************************************************************************************/
-
-
-        public:
+     
 
         /** update a pixel on a bresenham segment */
         template<bool X_MAJOR, bool BLEND, int SIDE, bool CHECKRANGE = false> inline TGX_INLINE void _bseg_update_pixel(const BSeg & seg, color_t color, int32_t op)
@@ -3439,8 +3134,6 @@ private:
 
 
 
-
-
         /**
         * Fill the interior of a triangle. 
         * integer valued version
@@ -3479,6 +3172,365 @@ private:
 
 
 
+
+
+        /***************************************
+        * DRAWING LINES
+        ****************************************/
+
+
+        template<bool CHECKRANGE, bool CHECK_VALID_BLEND = true> TGX_INLINE inline void _drawPixel(iVec2 pos, color_t color, float opacity)
+            {
+            if (CHECKRANGE)
+                {
+                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
+                }
+            if ((CHECK_VALID_BLEND) && ((opacity < 0)||(opacity>1)))
+                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
+            else
+                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)].blend(color, opacity);
+            }
+
+
+        template<bool CHECKRANGE> TGX_INLINE inline void _drawPixel(iVec2 pos, color_t color)
+            {
+            if (CHECKRANGE)
+                {
+                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
+                }
+            _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
+            }
+
+
+        TGX_INLINE inline void _drawPixel(bool checkrange, iVec2 pos, color_t color, float opacity)
+            {
+            if (checkrange)
+                {
+                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
+                }
+            if ((opacity < 0)||(opacity>1))
+                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
+            else
+                _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)].blend(color, opacity);
+            }
+
+
+        TGX_INLINE inline void _drawPixel(bool checkrange, iVec2 pos, color_t color)
+            {
+            if (checkrange)
+                {
+                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return;
+                }
+            _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)] = color;
+            }
+
+
+
+        template<bool CHECKRANGE = true> TGX_INLINE inline color_t _readPixel(iVec2 pos, color_t outside_color) const
+            {
+            if (CHECKRANGE) // optimized away at compile time
+                {
+                if ((pos.x < 0) || (pos.y < 0) || (pos.x >= _lx) || (pos.y >= _ly)) return outside_color;
+                }
+            return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)];
+            }
+
+
+        template<bool CHECKRANGE> void _drawFastVLine(iVec2 pos, int h, color_t color, float opacity);
+
+        template<bool CHECKRANGE> void _drawFastHLine(iVec2 pos, int w, color_t color, float opacity);
+
+        template<bool CHECKRANGE> void _drawFastVLine(iVec2 pos, int h, color_t color);
+
+        template<bool CHECKRANGE> void _drawFastHLine(iVec2 pos, int w, color_t color);
+
+        void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color, float opacity) { if (checkrange) _drawFastVLine<true>(pos, h, color, opacity); else _drawFastVLine<false>(pos, h, color, opacity); }
+
+        void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color, float opacity) { if (checkrange) _drawFastHLine<true>(pos, w, color, opacity); else _drawFastHLine<false>(pos, w, color, opacity); }
+
+        void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color) { if (checkrange) _drawFastVLine<true>(pos, h, color); else _drawFastVLine<false>(pos, h, color); }
+
+        void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color) { if (checkrange) _drawFastHLine<true>(pos, w, color); else _drawFastHLine<false>(pos, w, color); }
+
+
+        void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity);
+
+
+
+        /** adapted from bodmer e_tft library */
+        void _drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity);
+
+
+        /** taken from bodmer e_tft library **/
+        inline TGX_INLINE float _wedgeLineDistance(float pax, float pay, float bax, float bay, float dr)
+            {
+            float h = fmaxf(fminf((pax * bax + pay * bay) / (bax * bax + bay * bay), 1.0f), 0.0f);
+            float dx = pax - bax * h, dy = pay - bay * h;
+            return tgx::fast_sqrt(dx * dx + dy * dy) + h * dr;
+            }
+
+
+
+
+
+        /***************************************
+        * DRAWING BEZIER
+        ****************************************/
+
+
+        void _plotQuadRationalBezierSeg(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const color_t color, const float opacity);
+
+        void _plotQuadRationalBezier(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const bool draw_P2, const color_t color, const float opacity);
+
+        void _drawQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, bool drawP2, color_t color, float opacity);
+
+        void _plotCubicBezierSeg(const bool checkrange, int x0, int y0, float x1, float y1, float x2, float y2, int x3, int y3, const color_t color, const float opacity);
+
+        void _plotCubicBezier(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, bool draw_P2, const color_t color, const float opacity);
+
+        void _drawCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, bool drawP2, color_t color, float opacity);
+
+        void _plotQuadSpline(int n, int x[], int y[], bool draw_last, const color_t color, const float opacity);
+
+        template<int SPLINE_MAX_POINTS> void _drawQuadSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity);
+
+        void _plotClosedSpline(int n, int x[], int y[], const color_t color, const float opacity);
+
+        template<int SPLINE_MAX_POINTS> void _drawClosedSpline(int nbpoints, const iVec2* tabPoints, color_t color, float opacity);
+
+        void _plotCubicSpline(int n, int x[], int y[], bool draw_last, const color_t color, const float opacity);
+
+        template<int SPLINE_MAX_POINTS> void _drawCubicSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        void _drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity);
+
+
+
+
+        /** triangle drawing method */
+        template<bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
+        void _drawTriangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t interior_color, color_t outline_color, float opacity)
+            {
+            const iBox2 B = imageBox();
+            if (B.contains(P1) && B.contains(P2)&& B.contains(P3))
+                _drawTriangle_sub<false, DRAW_INTERIOR, DRAW_OUTLINE, BLEND>(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, interior_color, outline_color, opacity);
+            else
+                _drawTriangle_sub<true, DRAW_INTERIOR, DRAW_OUTLINE, BLEND> (P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, interior_color, outline_color, opacity);
+            }
+
+
+        /** triangle drawing method templated on CHECKRANGE */
+        template<bool CHECKRANGE, bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
+        void _drawTriangle_sub(int x0, int y0, int x1, int y1, int x2, int y2, color_t interior_color, color_t outline_color, float opacity);
+
+    
+        /** draw a rounded rectangle outline */
+        template<bool CHECKRANGE> 
+        void _drawRoundRect(int x, int y, int w, int h, int r, color_t color);
+
+
+        /** draw a rounded rectangle outline */
+        template<bool CHECKRANGE> 
+        void _drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
+
+
+        /** fill a rounded rectangle  */
+        template<bool CHECKRANGE> 
+        void _fillRoundRect(int x, int y, int w, int h, int r, color_t color);
+
+
+        /** fill a rounded rectangle  */
+        template<bool CHECKRANGE> 
+        void _fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
+
+
+        /** taken from Adafruit GFX library */
+        template<bool CHECKRANGE> 
+        void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color);
+
+
+        /** taken from Adafruit GFX library */
+        template<bool CHECKRANGE> 
+        void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color, float opacity);
+
+
+        /** taken from Adafruit GFX library */
+        template<bool CHECKRANGE> 
+        void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color);
+
+
+        /** taken from Adafruit GFX library */
+        template<bool CHECKRANGE> 
+        void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color, float opacity);
+
+
+        /** filled circle drawing method */
+        template<bool OUTLINE, bool FILL, bool CHECKRANGE> 
+        void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor);
+
+
+        /** filled circle drawing method */
+        template<bool OUTLINE, bool FILL, bool CHECKRANGE> 
+        void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity);
+
+
+        /** adapted from bodmer e_tft library */
+        template<bool OUTLINE, bool FILL, bool CHECKRANGE>
+        void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color);
+
+
+        /** adapted from bodmer e_tft library */
+        template<bool OUTLINE, bool FILL, bool CHECKRANGE>
+        void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity);
+
+
+
+        /***************************************
+        * High Quality drawing primitive
+        ****************************************/
+
+
+
+
+
+
+        /** Convert to texture coordinates */
+        inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size)
+            {
+            return tgx::fVec2(pos.x / ((float)size.x) , pos.y / ((float)size.y));
+            }
+
+
+        /** Convert to viewport coordinates */
+        inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size)
+            {
+            return tgx::fVec2((2.0f / ((float)size.x)) * (pos.x) - 1.0f, (2.0f / ((float)size.y)) * (pos.y) - 1.0f);
+            }
+
+
+
+        /** template method for drawing a 2D gradient triangle*/        
+        template<typename color_alt, bool USE_BLENDING>
+        void _drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity);
+
+
+        /** template method for drawing 2D textured (possibly with gradient and mask) triangle */
+        template<typename color_t_tex, bool GRADIENT, bool USE_BLENDING, bool MASKED>
+        void _drawTexturedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity);
+
+
+
+
+
+
+        /***************************************
+        * DRAWING TEXT
+        ****************************************/
+
+
+        /** fetch a single bit from a bit array. (from ili9341_t3.cpp) */
+        static inline uint32_t _fetchbit(const uint8_t* p, uint32_t index) { return (p[index >> 3] & (0x80 >> (index & 7))); }
+
+
+        /** fetch 'required' bits from a bit array, returned as an unsigned integer  (from ili9341_t3.cpp)*/
+        static uint32_t _fetchbits_unsigned(const uint8_t* p, uint32_t index, uint32_t required);
+
+
+        /** fetch 'required' bits from a bit array, returned as a signed integer (from ili9341_t3.cpp) */
+        static uint32_t _fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required);
+
+
+        /** used for clipping a font bitmap */
+        bool _clipit(int& x, int& y, int& sx, int& sy, int& b_left, int& b_up);
+
+
+        template<bool BLEND>
+        iVec2 _drawTextGFX(const char* text, iVec2 pos, color_t col, const GFXfont& font, bool start_newline_at_0, float opacity);
+
+
+        template<bool BLEND>
+        iVec2 _drawTextILI(const char* text, iVec2 pos, color_t col, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity);
+
+
+        template<bool BLEND>
+        iVec2 _drawCharGFX(char c, iVec2 pos, color_t col, const GFXfont& font, float opacity);
+
+
+        template<bool BLEND>
+        iVec2 _drawCharILI(char c, iVec2 pos, color_t col, const ILI9341_t3_font_t& font, float opacity);
+
+
+        /**
+         * draw a character from an ILI9341_t3 font bitmap (version 1, with line compression).
+         * The ILI9341_t3 font format is described here: https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format
+         **/
+        template<bool BLEND>
+        void _drawCharILI9341_t3(const uint8_t* bitmap, int32_t off, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
+
+
+        /** used by _drawCharILI9341_t3 to draw a single row of a font bitmap */
+        template<bool BLEND>
+        static void _drawcharline(const uint8_t* bitmap, int32_t off, color_t* p, int dx, color_t col, float opacity);
+
+
+        /** 
+         * draw a 1 bit per pixel char bitmap on the image 
+         * Use to draw char from Adafruit font format: https://glenviewsoftware.com/projects/products/adafonteditor/adafruit-tgx-font-format/
+         **/
+        template<bool BLEND>
+        void _drawCharBitmap_1BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
+
+
+        /** draw a 2 bit per pixel char bitmap on the image 
+        *  packed bdf format 23 : https://github.com/projectitis/packedbdf/blob/master/packedbdf.md
+        **/
+        template<bool BLEND>
+        void _drawCharBitmap_2BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
+
+
+        /** draw a 4 bit per pixel char bitmap on the image */
+        template<bool BLEND>
+        void _drawCharBitmap_4BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
+
+
+        /** draw a 8 bit per pixel char bitmap on the image */
+        template<bool BLEND>
+        void _drawCharBitmap_8BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
+
+
+
+
+
+        /******************************************************************************************************************************************************
+        *																				   																      *
+        *                                                        TRIANGLE FILLING                                                                             *
+        *																																					  *
+        *******************************************************************************************************************************************************/
+
+
+
+
+
+
         /** Compute the signed aera of a triangle. */
         inline float _triangleAera(fVec2 P1, fVec2 P2, fVec2 P3)
             {
@@ -3486,19 +3538,107 @@ private:
             }
 
 
-        void fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
+
+
+
+        void fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity = 1.0f)
             {
             if (!isValid()) return;
-            _bseg_fill_triangle(P1, P2, P3, color, opacity);	// fill the triangle 
+            if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+            _fillSmoothTriangle(P1, P2, P3, color, opacity);
+            }
+
+
+        void _fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
+            {
             float a = _triangleAera(P1, P2, P3); // winding direction of the polygon
             const int w = (a > 0) ? -1 : ((a < 0) ? 1 : 0);
             const int op = (int)(opacity * 256);
+            _bseg_fill_triangle(P1, P2, P3, color, opacity);	// fill the triangle 
             _bseg_draw(P1, P2, true, color, w, op, true);
             _bseg_avoid1(P2, P3, P1, true, true, color, w, op, true);
             _bseg_avoid11(P3, P1, P2, P2, true, true, color, w, op, true);
             }
 
-            
+
+
+
+
+        void fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity = 1.0f)
+            {
+            if (!isValid()) return;
+            if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+            _fillSmoothQuad(P1, P2, P3, P4, color, opacity);
+            }
+
+
+
+        void _fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity)
+            {
+            if (((P1.x == P2.x) && (P3.x == P4.x) && (P2.y == P3.y) && (P1.y == P4.y)) || ((P1.x == P4.x) && (P2.x == P3.x) && (P1.y == P2.y) && (P3.y == P4.y)))
+                { // quad is a box...
+                fBox2 B(tgx::min(P1.x, P3.x), tgx::max(P1.x, P3.x), tgx::min(P2.y, P4.y), tgx::max(P2.y, P4.y));
+                _fillSmoothRect(B, color, opacity);
+                return;
+                }
+            const float a = _triangleAera(P1, P2, P3); // winding direction of the polygon
+            const int w = (a > 0) ? -1 : ((a < 0) ? 1 : 0);
+            const int op = (int)(opacity * 256);
+            _bseg_fill_triangle(P1, P2, P3, color, opacity);	// fill the triangles 
+            _bseg_fill_triangle(P1, P3, P4, color, opacity);	// fill the triangles 
+            _bseg_draw(P1, P2, true, color, w, op, true);
+            _bseg_draw(P3, P4, true, color, w, op, true);
+            _bseg_avoid11(P4, P1, P3, P2, true, true, color, w, op, true);
+            _bseg_avoid11(P2, P3, P1, P4, true, true, color, w, op, true);
+            _bseg_avoid22(P1, P3, P2, P4, P2, P4, true, true, true, true, color, 0, op, true);
+            }
+
+
+        void _fillSmoothRect(const fBox2& B, color_t color, float opacity)
+            {
+            tgx::iBox2 eB((int)floorf(B.minX + 0.5f), (int)ceilf(B.maxX - 0.5f), (int)floorf(B.minY + 0.5f), (int)ceilf(B.maxY - 0.5f));
+            const bool checkrange = (imageBox().contains(eB)) ? false : true;
+            if (eB.minX == eB.maxX)
+                { // just a vertical line
+                if (eB.minY == eB.maxY)
+                    { // single point
+                    const float aera = (B.maxX - B.minX) * (B.maxY - B.minY);
+                    _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity* aera);
+                    return;
+                    }
+                const float w = B.maxX - B.minX;
+                const float a_up = 0.5f + eB.minY - B.minY;
+                const float a_down = 0.5f + B.maxY - eB.maxY;
+                _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity * a_up * w);
+                _drawPixel(checkrange, { eB.minX, eB.maxY }, color, opacity * a_down * w);
+                _drawFastVLine(checkrange, { eB.minX, eB.minY + 1 }, eB.maxY - eB.minY - 1, color, opacity * w);
+                return;
+                }
+            if (eB.minY == eB.maxY)
+                { // just an horizontal line
+                const float h = B.maxY - B.minY;
+                const float a_left = 0.5f + eB.minX - B.minX;
+                const float a_right = 0.5f + B.maxX - eB.maxX;
+                _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity * a_left * h);
+                _drawPixel(checkrange, { eB.maxX, eB.minY }, color, opacity * a_right * h);
+                _drawFastHLine(checkrange, { eB.minX + 1, eB.minY }, eB.maxX - eB.minX - 1, color, opacity * h);
+                return;
+                }
+            fillRect(tgx::iBox2(eB.minX + 1, eB.maxX - 1, eB.minY + 1, eB.maxY - 1), color, opacity); // fill interior (may be empty)	
+            const float a_left = 0.5f + eB.minX - B.minX;
+            const float a_right = 0.5f + B.maxX - eB.maxX;
+            const float a_up = 0.5f + eB.minY - B.minY;
+            const float a_down = 0.5f + B.maxY - eB.maxY;
+            _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity * a_left * a_up);
+            _drawPixel(checkrange, { eB.minX, eB.maxY }, color, opacity * a_left * a_down);
+            _drawPixel(checkrange, { eB.maxX, eB.minY }, color, opacity * a_right * a_up);
+            _drawPixel(checkrange, { eB.maxX, eB.maxY }, color, opacity * a_right * a_down);
+            _drawFastHLine(checkrange, { eB.minX + 1, eB.minY }, eB.maxX - eB.minX - 1, color, opacity * a_up);
+            _drawFastHLine(checkrange, { eB.minX + 1, eB.maxY }, eB.maxX - eB.minX - 1, color, opacity * a_down);
+            _drawFastVLine(checkrange, { eB.minX, eB.minY + 1 }, eB.maxY - eB.minY - 1, color, opacity * a_left);
+            _drawFastVLine(checkrange, { eB.maxX, eB.minY + 1 }, eB.maxY - eB.minY - 1, color, opacity * a_right);
+            return;
+            }
 
 
 

@@ -20,17 +20,27 @@
 
 /************************************************************************************
 *
+* 
 * Implementation file for the template class Image<color_t>
+* 
 * 
 *************************************************************************************/
 namespace tgx
 {
 
 
+
+  
     /************************************************************************************
+    *************************************************************************************
+    *  CREATION OF IMAGES AND SUB-IMAGES
     *
-    *  Creation of images and sub-images
+    * The memory buffer should be supplied at creation. Otherwise, the image is set as
+    * invalid until a valid buffer is supplied.
     *
+    * NOTE: the image class itsel is lightweight as it does not manage the memory buffer.
+    *       Creating image and sub-image is very fast and do not use much memory.
+    *************************************************************************************
     *************************************************************************************/
 
 
@@ -125,11 +135,12 @@ namespace tgx
 
 
 
-
     /************************************************************************************
+    *************************************************************************************
     *
-    *  Direct pixel access
+    *  DIRECT PIXEL ACCESS
     *
+    *************************************************************************************
     *************************************************************************************/
 
 
@@ -158,10 +169,18 @@ namespace tgx
 
 
 
+
+
+
+
+
+
     /************************************************************************************
-    * 
-    *  Blitting / copying / resizing images
-    * 
+    *************************************************************************************
+    *
+    * BLITTING, COPYING AND RESIZING IMAGES
+    *
+    *************************************************************************************
     *************************************************************************************/
 
 
@@ -625,10 +644,20 @@ namespace tgx
 
 
 
+
+
+
+
+
+
+
+
     /************************************************************************************
-    * 
-    *  Drawing primitives
-    * 
+    *************************************************************************************
+    *
+    *  DRAWING PRIMITIVES
+    *
+    *************************************************************************************
     *************************************************************************************/
 
 
@@ -636,11 +665,12 @@ namespace tgx
 
 
 
-    /*********************************************************************
+    /********************************************************************************
     *
-    * Screen filling
+    * FILLING (A REGION OF) AN IMAGE.
     *
-    **********************************************************************/
+    *********************************************************************************/
+
 
 
     template<typename color_t>
@@ -662,15 +692,6 @@ namespace tgx
         {
         fillRectHGradient(imageBox(), left_color, right_color);
         }
-
-
-
-
-
-
-    /*********************************************************************
-    * Flood filling
-    **********************************************************************/
 
 
     template<typename color_t>
@@ -774,13 +795,27 @@ namespace tgx
 
 
 
+
+
+    /********************************************************************************
+    *
+    * DRAWING LINES
+    *
+    *********************************************************************************/
+
+
+
     /*****************************************************
-    * 
-    * Lines
-    * 
+    * BRESENHAM METHODS
     ******************************************************/
 
 
+
+    /*****************************************************
+    * LOW QUALITY (FAST) DRAWING METHODS
+    ******************************************************/
+
+    
 
     template<typename color_t>
     void Image<color_t>::drawFastVLine(iVec2 pos, int h, color_t color, float opacity)
@@ -973,6 +1008,12 @@ namespace tgx
 
 
 
+    /*****************************************************
+    * HIGH QUALITY (FAST) DRAWING METHODS
+    ******************************************************/
+
+
+
 
     template<typename color_t>
     void Image<color_t>::drawSmoothLine(fVec2 P1, fVec2 P2, color_t color, float opacity)
@@ -984,11 +1025,11 @@ namespace tgx
         }
 
 
+
     template<typename color_t>
     void Image<color_t>::drawSmoothThickLine(fVec2 P1, fVec2 P2, float line_width, bool rounded_ends, color_t color, float opacity)
-        {
-        if (!isValid()) return;
-
+        {    
+        drawSmoothWedgeLine(P1, P2, line_width, line_width, rounded_ends, color, opacity);
         }
 
 
@@ -996,16 +1037,101 @@ namespace tgx
     void Image<color_t>::drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, float line_width_P2, bool rounded_ends, color_t color, float opacity)    
         {
         if (!isValid()) return;
-
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        if (rounded_ends)
+            _drawWedgeLine(P1.x, P1.y, P2.x, P2.y, line_width_P1, line_width_P2, color, opacity);
+        else
+            { 
+            const fVec2 H = (P1 - P2).getRotate90().getNormalize();
+            const fVec2 H1 = H * (line_width_P1 / 2);
+            const fVec2 H2 = H * (line_width_P2 / 2);
+            const fVec2 PA = P1 + H1, PB = P2 + H2, PC = P2 - H2, PD = P1 - H1;
+            _fillSmoothQuad(PA, PB, PC, PD, color, opacity);
+            }
         }
 
 
 
 
+    /** Adapted from Bodmer e_tft library. */
+    template<typename color_t>
+    void Image<color_t>::_drawWedgeLine(float ax, float ay, float bx, float by, float ar, float br, color_t color, float opacity)
+        {
+        const float LoAlphaTheshold = 64.0f / 255.0f;
+        const float HiAlphaTheshold = 1.0f - LoAlphaTheshold;
 
+        if ((abs(ax - bx) < 0.01f) && (abs(ay - by) < 0.01f)) bx += 0.01f;  // Avoid divide by zero
 
+        ar = ar / 2.0f;
+        br = br / 2.0f;
 
+        iBox2 B((int)floorf(fminf(ax - ar, bx - br)), (int)ceilf(fmaxf(ax + ar, bx + br)), (int)floorf(fminf(ay - ar, by - br)), (int)ceilf(fmaxf(ay + ar, by + br)));
+        B &= imageBox();
+        if (B.isEmpty()) return;
+        // Find line bounding box
+        int x0 = B.minX;
+        int x1 = B.maxX;
+        int y0 = B.minY;
+        int y1 = B.maxY;
 
+        // Establish x start and y start
+        int32_t ys = (int32_t)ay;
+        if ((ax - ar) > (bx - br)) ys = (int32_t)by;
+
+        float rdt = ar - br; // Radius delta
+        float alpha = 1.0f;
+        ar += 0.5f;
+
+        float xpax, ypay, bax = bx - ax, bay = by - ay;
+
+        int32_t xs = x0;
+        // Scan bounding box from ys down, calculate pixel intensity from distance to line
+        for (int32_t yp = ys; yp <= y1; yp++) 
+            {
+            bool endX = false; // Flag to skip pixels
+            ypay = yp - ay;
+            for (int32_t xp = xs; xp <= x1; xp++) 
+                {
+                if (endX) if (alpha <= LoAlphaTheshold) break;  // Skip right side
+                xpax = xp - ax;
+                alpha = ar - _wedgeLineDistance(xpax, ypay, bax, bay, rdt);
+                if (alpha <= LoAlphaTheshold) continue;
+                // Track edge to minimise calculations
+                if (!endX) { endX = true; xs = xp; }
+                if (alpha > HiAlphaTheshold) 
+                    {
+                    _drawPixel<false, false>( { xp, yp }, color, opacity);
+                    continue;
+                    }
+                //Blend color with background and plot
+                _drawPixel<false, false>({ xp, yp }, color, opacity * alpha);
+                }
+            }
+        // Reset x start to left side of box
+        xs = x0;
+        // Scan bounding box from ys-1 up, calculate pixel intensity from distance to line
+        for (int32_t yp = ys - 1; yp >= y0; yp--) 
+            {
+            bool endX = false; // Flag to skip pixels
+            ypay = yp - ay;
+            for (int32_t xp = xs; xp <= x1; xp++) 
+                {
+                if (endX) if (alpha <= LoAlphaTheshold) break;  // Skip right side of drawn line
+                xpax = xp - ax;
+                alpha = ar - _wedgeLineDistance(xpax, ypay, bax, bay, rdt);
+                if (alpha <= LoAlphaTheshold) continue;
+                // Track line boundary
+                if (!endX) { endX = true; xs = xp; }
+                if (alpha > HiAlphaTheshold) 
+                    {
+                    _drawPixel<false, false>({ xp, yp }, color, opacity);
+                    continue;
+                    }
+                //Blend color with background and plot
+                _drawPixel<false, false>({ xp, yp }, color, opacity * alpha);
+                }
+            }
+        }
 
 
 
@@ -2610,110 +2736,7 @@ namespace tgx
     ******************************************************/
 
 
-    /** Adapted from Bodmer e_tft library. */
-    template<typename color_t>
-    void Image<color_t>::_drawWideLine(float ax, float ay, float bx, float by, float wd, color_t color, float opacity)
-        {
-        const float LoAlphaTheshold = 64.0f / 255.0f;
-        const float HiAlphaTheshold = 1.0f - LoAlphaTheshold;
 
-        if ((abs(ax - bx) < 0.01f) && (abs(ay - by) < 0.01f)) bx += 0.01f;  // Avoid divide by zero
-
-        wd = wd / 2.0f; // wd is now end radius of line
-
-        iBox2 B((int)floorf(fminf(ax, bx) - wd), (int)ceilf(fmaxf(ax, bx) + wd), (int)floorf(fminf(ay, by) - wd), (int)ceilf(fmaxf(ay, by) + wd));
-        B &= imageBox();
-        if (B.isEmpty()) return;
-        // Find line bounding box
-        int x0 = B.minX;
-        int x1 = B.maxX;
-        int y0 = B.minY;
-        int y1 = B.maxY;
-
-        // Establish slope direction
-        int xs = x0, yp = y1, yinc = -1;
-        if ((ax > bx && ay > by) || (ax < bx && ay < by)) { yp = y0; yinc = 1; }
-
-        float alpha = 1.0f; wd += 0.5f;
-        int ri = (int)wd;
-
-        float   wd2 = fmaxf(wd - 1.0f, 0.0f);
-        wd2 = wd2 * wd2;
-        float pax, pay, bax = bx - ax, bay = by - ay;
-
-        // Scan bounding box, calculate pixel intensity from distance to line
-        for (int y = y0; y <= y1; y++)
-            {
-            bool endX = false;                       // Flag to skip pixels
-            pay = yp - ay;
-            for (int xp = xs; xp <= x1; xp++)
-                {
-                if (endX) if (alpha <= LoAlphaTheshold) break;  // Skip right side of drawn line
-                pax = xp - ax;
-                alpha = wd - _wideLineDistance(pax, pay, bax, bay, wd2);
-                if (alpha <= LoAlphaTheshold) continue;
-                // Track left line boundary
-                if (!endX) { endX = true; if ((y > (y0 + ri)) && (xp > xs)) xs = xp; }
-                if (alpha > HiAlphaTheshold) { _drawPixel(xp, yp, color, opacity); continue; }
-                //Blend colour with background and plot
-                _drawPixel(xp, yp, color, alpha * opacity);
-                }
-            yp += yinc;
-            }
-        }
-
-
-
-    /** Adapted from Bodmer e_tft library. */
-    template<typename color_t>
-    void Image<color_t>::_drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity)
-        {
-        const float LoAlphaTheshold = 64.0f / 255.0f;
-        const float HiAlphaTheshold = 1.0f - LoAlphaTheshold;
-
-        if ((abs(ax - bx) < 0.01f) && (abs(ay - by) < 0.01f)) bx += 0.01f;  // Avoid divide by zero
-
-        aw = aw / 2.0f;
-        bw = bw / 2.0f;
-
-        iBox2 B((int)floorf(fminf(ax - aw, bx - bw)), (int)ceilf(fmaxf(ax + aw, bx + bw)), (int)floorf(fminf(ay - aw, by - bw)), (int)ceilf(fmaxf(ay + aw, by + bw)));
-        B &= imageBox();
-        if (B.isEmpty()) return;
-        // Find line bounding box
-        int x0 = B.minX;
-        int x1 = B.maxX;
-        int y0 = B.minY;
-        int y1 = B.maxY;
-
-        // Establish slope direction
-        int xs = x0, yp = y1, yinc = -1;
-        if (((ax - aw) > (bx - bw) && (ay > by)) || ((ax - aw) < (bx - bw) && ay < by)) { yp = y0; yinc = 1; }
-
-        bw = aw - bw; // Radius delta
-        float alpha = 1.0f; aw += 0.5f;
-        int ri = (int)aw;
-        float pax, pay, bax = bx - ax, bay = by - ay;
-
-        // Scan bounding box, calculate pixel intensity from distance to line
-        for (int y = y0; y <= y1; y++)
-            {
-            bool endX = false;                       // Flag to skip pixels
-            pay = yp - ay;
-            for (int32_t xp = xs; xp <= x1; xp++)
-                {
-                if (endX) if (alpha <= LoAlphaTheshold) break;  // Skip right side of drawn line
-                pax = xp - ax;
-                alpha = aw - _wedgeLineDistance(pax, pay, bax, bay, bw);
-                if (alpha <= LoAlphaTheshold) continue;
-                // Track left line segment boundary
-                if (!endX) { endX = true; if ((y > (y0 + ri)) && (xp > xs)) xs = xp; }
-                if (alpha > HiAlphaTheshold) { _drawPixel(xp, yp, color, opacity);  continue; }
-                //Blend color with background and plot
-                _drawPixel(xp, yp, color, alpha * opacity);
-                }
-            yp += yinc;
-            }
-        }
 
 
 
@@ -3689,10 +3712,10 @@ namespace tgx
                 {
                 int dir;
                 const int aa = seg.AA<1, X_MAJOR>(dir);
-                int aa2 = 256 - aa;
-                const tgx::iVec2 pos = seg.pos();
-                operator()(seg.X(), seg.Y()).blend256(color, (uint32_t)((op * aa) >> 8));
-                operator()(seg.X(), seg.Y() + dir).blend256(color, (uint32_t)((op * aa2) >> 8));
+                const int aa2 = 256 - aa;
+                int x = seg.X(), y = seg.Y();
+                operator()(x,y).blend256(color, (uint32_t)((op * aa) >> 8));
+                operator()(x, y + dir).blend256(color, (uint32_t)((op * aa2) >> 8));
                 seg.move<X_MAJOR>();
                 }
             }
@@ -3703,10 +3726,10 @@ namespace tgx
                 {
                 int dir;
                 const int aa = seg.AA<1, X_MAJOR>(dir);
-                int aa2 = 256 - aa;
-                const tgx::iVec2 pos = seg.pos();
-                operator()(seg.X(), seg.Y()).blend256(color, (uint32_t)((op * aa) >> 8));
-                operator()(seg.X() + dir, seg.Y()).blend256(color, (uint32_t)((op * aa2) >> 8));
+                const int aa2 = 256 - aa;
+                int x = seg.X(), y = seg.Y();
+                operator()(x, y).blend256(color, (uint32_t)((op * aa) >> 8));
+                operator()(x + dir, y).blend256(color, (uint32_t)((op * aa2) >> 8));
                 seg.move<X_MAJOR>();
                 }
             }
