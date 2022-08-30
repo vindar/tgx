@@ -1086,18 +1086,13 @@ namespace tgx
         *********************************************************************************/
 
 
+
+
         /*****************************************************
         * DRAWING RECTANGLES AND ROUNDED RECTANGLES
         * LOW QUALITY (FAST) DRAWING METHODS
         ******************************************************/
 
-
-
-        /*********************************************************************
-        *
-        * drawing rectangles
-        *
-        **********************************************************************/
 
 
         /**
@@ -1165,8 +1160,8 @@ namespace tgx
          * @param   B       box that delimits the rectangle to draw.
          * @param   r       corner radius.
          * @param   color   rectangle color.
-         * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
-         *                  blending.
+         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending.
         **/
         void fillRoundRect(const iBox2& B, int r, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
@@ -1217,6 +1212,138 @@ namespace tgx
         *********************************************************************************/
 
 
+
+        /*****************************************************
+        * DRAWING CIRCLE AND ELLIPSE
+        * LOW QUALITY (FAST) DRAWING METHODS
+        ******************************************************/
+
+
+        /**
+         * Draw a circle.
+         *
+         * @param   center  Circle center.
+         * @param   r       radius.
+         * @param   color   color.
+         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending.
+        **/
+        void drawCircle(iVec2 center, int r, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a filled circle with possibly distinct colors for outline and interior.
+         *
+         * @param   center          Circle center.
+         * @param   r               radius.
+         * @param   interior_color  color for the interior.
+         * @param   outline_color   color for the outline.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending.
+        **/
+        void fillCircle(iVec2 center, int r, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw an ellipse.
+         *
+         * @param   center      Circle center.
+         * @param   radiuses    radiuses along the x and y axis.
+         * @param   color       color.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending.
+        **/
+        void drawEllipse(iVec2 center, iVec2 radiuses, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a filled ellipse with possibly different colors for the outline and the interior.
+         *
+         * @param   center          Circle center.
+         * @param   radiuses        radiuses along the x and y axis.
+         * @param   interior_color  color for the interior.
+         * @param   outline_color   color for the outline.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending.
+        **/
+        void fillEllipse(iVec2 center, iVec2 radiuses, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+
+
+        /*****************************************************
+        * DRAWING CIRCLE AND ELLISPES
+        * HIGH QUALITY (SLOW) DRAWING METHODS
+        ******************************************************/
+
+
+        /**
+         * Draw smooth (anti-aliased and with sub-pixel precision) circle
+         *
+         * @param   center  Circle center.
+         * @param   r       radius.
+         * @param   color   color
+         * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothCircle(fVec2 center, float r, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a thick smooth (anti-aliased and with sub-pixel precision) circle
+         *
+         * @param   center      Circle center.
+         * @param   r           external radius (the internal radius is r - thickness).
+         * @param   thickness   circle thickness. Should be > 1 otherwise use drawSmoothCircle(() instead.
+         * @param   color       color.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothThickCircle(fVec2 center, float r, float thickness, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a filled smooth (anti-aliased and with sub-pixel precision) circle
+         *
+         * @param   center  Circle center.
+         * @param   r       radius.
+         * @param   color   color.
+         * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothCircle(fVec2 center, float r, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw smooth (anti-aliased and with sub-pixel precision) ellipse.
+         *
+         * @param   center      Ellipse center.
+         * @param   radiuses    radiuses along the x and y axis.
+         * @param   color       color.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothEllipse(fVec2 center, fVec2 radiuses, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a thick smooth (anti-aliased and with sub-pixel precision) ellipse. .
+         *
+         * @param   center      Ellipse center.
+         * @param   radiuses    external radiuses along the x and y axis.
+         * @param   thickness   thickness: should be > 1 otherwise use drawSmoothEllipse(() instead.
+         * @param   color       color.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothThickEllipse(fVec2 center, fVec2 radiuses, float thickness, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a filled smooth (anti-aliased and with sub-pixel precision) ellipse.
+         *
+         * @param   center      Ellipse center.
+         * @param   radiuses    radiuses along the x and y axis.
+         * @param   color       color.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothEllipse(fVec2 center, fVec2 radiuses, color_t color, float opacity = 1.0f);
 
 
 
@@ -1371,219 +1498,7 @@ namespace tgx
 
 
 
-        /*********************************************************************
-        *
-        * drawing circles
-        *
-        **********************************************************************/
 
-
-        /**
-        * Draw a circle (the outline but not its interior). 
-        **/
-        void drawCircle(iVec2 center, int r, color_t color)
-            {
-            if ((center.x - r >= 0) && (center.x + r < _lx) && (center.y - r >= 0) && (center.y + r < _ly))
-                _drawFilledCircle<true, false, false>(center.x, center.y, r, color, color);
-            else
-                _drawFilledCircle<true, false, true>(center.x, center.y, r, color, color);
-            }
-
-
-        /**
-        * Draw a circle (the outline but not its interior). 
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawCircle(int cx, int cy, int r, color_t color)
-            {
-            drawCircle(iVec2(cx,cy), r, color);
-            }
-
-
-        /**
-        * Draw a circle (the outline but not its interior). 
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        void drawCircle(iVec2 center, int r, color_t color, float opacity)
-            {
-            if ((center.x - r >= 0) && (center.x + r < _lx) && (center.y - r >= 0) && (center.y + r < _ly))
-                _drawFilledCircle<true, false, false>(center.x, center.y, r, color, color, opacity);
-            else
-                _drawFilledCircle<true, false, true>(center.x, center.y, r, color, color, opacity);
-            }
-
-
-        /**
-        * Draw a circle (the outline but not its interior). 
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawCircle(int cx, int cy, int r, color_t color, float opacity)
-            {
-            drawCircle(iVec2(cx,cy), r, color, opacity);
-            }
-
-
-        /**
-        * Draw both the outline and interior of a circle (possibly with distinct colors).
-        **/
-        void fillCircle(iVec2 center, int r, color_t interior_color, color_t outline_color)
-            {
-            if ((center.x - r >= 0) && (center.x + r < _lx) && (center.y - r >= 0) && (center.y + r < _ly))
-                _drawFilledCircle<true, true, false>(center.x, center.y, r, outline_color, interior_color);
-            else
-                _drawFilledCircle<true, true, true>(center.x, center.y, r, outline_color, interior_color);
-            }
-
-
-        /**
-        * Draw both the outline and interior of a circle (possibly with distinct colors).
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillCircle(int cx, int cy, int r, color_t interior_color, color_t outline_color)
-            {
-            fillCircle(iVec2(cx, cy), r, interior_color, outline_color);
-            }
-
-
-        /**
-        * Draw both the outline and interior of a circle (possibly with distinct colors).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        void fillCircle(iVec2 center, int r, color_t interior_color, color_t outline_color, float opacity)
-            {
-            if ((center.x - r >= 0) && (center.x + r < _lx) && (center.y - r >= 0) && (center.y + r < _ly))
-                _drawFilledCircle<true, true, false>(center.x, center.y, r, outline_color, interior_color, opacity);
-            else
-                _drawFilledCircle<true, true, true>(center.x, center.y, r, outline_color, interior_color, opacity);
-            }
-
-
-        /**
-        * Draw both the outline and interior of a circle (possibly with distinct colors).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillCircle(int cx, int cy, int r, color_t interior_color, color_t outline_color, float opacity)
-            {
-            fillCircle(iVec2(cx, cy), r, interior_color, outline_color, opacity);
-            }
-
-
-
-        /**
-        * Draw the outline of an ellipse (but not its interior).
-        **/
-        void drawEllipse(iVec2 center, iVec2 radiuses, color_t color)
-            {
-            const int cx = center.x;
-            const int cy = center.y;
-            const int rx = radiuses.x;
-            const int ry = radiuses.y;
-            if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
-                _drawEllipse<true, false, false>(cx, cy, rx, ry, color, color);
-            else
-                _drawEllipse<true, false, true>(cx, cy, rx, ry, color, color);
-            }
-
-
-        /**
-        * Draw the outline of an ellipse (but not its interior).
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawEllipse(int cx, int cy, int rx, int ry, color_t color)
-            {
-            drawEllipse({ cx, cy }, { rx, ry }, color, color);
-            }
-
-
-        /**
-        * Draw the outline of an ellipse (but not its interior).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        void drawEllipse(iVec2 center, iVec2 radiuses, color_t color, float opacity)
-            {
-            const int cx = center.x;
-            const int cy = center.y;
-            const int rx = radiuses.x;
-            const int ry = radiuses.y;
-            if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
-                _drawEllipse<true, false, false>(cx, cy, rx , ry, color, color, opacity);
-            else
-                _drawEllipse<true, false, true>(cx, cy, rx, ry, color, color, opacity);
-            }
-
-        /**
-        * Draw the outline of an ellipse (but not its interior).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawEllipse(int cx, int cy, int rx, int ry, color_t color, float opacity)
-            {
-            drawEllipse({ cx, cy }, { rx, ry }, color, color, opacity);
-            }
-
-
-        /**
-        * Draw both the outline and interior of an ellipse (possibly with distinct colors).
-        **/
-        void fillEllipse(iVec2 center, iVec2 radiuses, color_t interior_color, color_t outline_color)
-            {
-            const int cx = center.x;
-            const int cy = center.y;
-            const int rx = radiuses.x;
-            const int ry = radiuses.y;
-            if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
-                _drawEllipse<true, true, false>(cx, cy, rx, ry, outline_color, interior_color);
-            else
-                _drawEllipse<true, true, true>(cx, cy, rx, ry, outline_color, interior_color);
-            }
-
-
-        /**
-        * Draw both the outline and interior of an ellipse (possibly with distinct colors).
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillEllipse(int cx, int cy, int rx, int ry, color_t interior_color, color_t outline_color)
-            {
-            fillEllipse({ cx, cy }, { rx, ry }, interior_color, outline_color);
-            }
-
-
-        /**
-        * Draw both the outline and interior of an ellipse (possibly with distinct colors).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        void fillEllipse(iVec2 center, iVec2 radiuses, color_t interior_color, color_t outline_color, float opacity)
-            {
-            const int cx = center.x;
-            const int cy = center.y;
-            const int rx = radiuses.x;
-            const int ry = radiuses.y;
-            if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
-                _drawEllipse<true, true, false>(cx, cy, rx, ry, outline_color, interior_color, opacity);
-            else
-                _drawEllipse<true, true, true>(cx, cy, rx, ry, outline_color, interior_color, opacity);
-            }
-
-
-        /**
-        * Draw both the outline and interior of an ellipse (possibly with distinct colors).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillEllipse(int cx, int cy, int rx, int ry, color_t interior_color, color_t outline_color, float opacity)
-            {
-            fillEllipse({ cx, cy }, { rx, ry }, interior_color, outline_color, opacity);
-            }
 
 
 
@@ -1597,112 +1512,6 @@ namespace tgx
         *************************************************************************************/
 
 
-        /**
-         * Draw an anti-aliased wide line from PA to PB with thickness wd and radiuses ends. Use
-         * floating point values for sub-pixel precision.
-         * 
-         * Blend with the current color background using opacity between 0.0f (fully transparent) and
-         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-         * 
-         * CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
-         *
-         * @param   PA      first end point.
-         * @param   PB      second end point.
-         * @param   wd      thickness.
-         * @param   color   color.
-         * @param   opacity opacity between 0.0f and 1.0f.
-        **/
-        void drawWideLine(fVec2 PA, fVec2 PB, float wd, color_t color, float opacity)
-            {
-            _drawWideLine(PA.x, PA.y, PB.x, PB.y, wd, color, opacity);
-            }
-
-
-        /**
-        * Draw an anti-aliased wide line from (ax,ay) to (bx,by) with thickness wd and radiuses ends.
-        * Use floating point values for sub-pixel precision.
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        *
-        * CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawWideLine(float ax, float ay, float bx, float by, float wd, color_t color, float opacity)
-            {
-            _drawWideLine(ax, ay , bx, by , wd, color, opacity);
-            }
-
-
-        /**
-         * Draw an anti-aliased wedge line from PA to PB with respective wideness aw and bw at the ends.
-         * Use floating point values for sub-pixel precision.
-         * 
-         * Blend with the current color background using opacity between 0.0f (fully transparent) and
-         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-         * 
-         * CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
-         *
-         * @param   PA      first end point
-         * @param   PB      second end point
-         * @param   aw      radius at the first end point
-         * @param   bw      radius at the second end point
-         * @param   color   color.
-         * @param   opacity opacity between 0.0f and 1.0f.
-        **/
-        void drawWedgeLine(fVec2 PA, fVec2 PB, float aw, float bw, color_t color, float opacity)
-            {
-            _drawWedgeLine(PA.x, PA.y, PB.x, PB.y, aw, bw, color, opacity);
-            }
-
-
-        /**
-        * Draw an anti-aliased wedge line from (ax,ay) to (bx,by) with respective wideness aw and bw at the ends.
-        * Use floating point values for sub-pixel precision. 
-        * 
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        *
-        * CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity)
-            {
-            _drawWedgeLine(ax, ay, bx, by, aw, bw, color, opacity);
-            }
-
-
-        /**
-         * Draw an anti-aliased filled circle. Use floating point value for sub-pixel precision.
-         * 
-         * Blend with the current color background using opacity between 0.0f (fully transparent) and
-         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-         * 
-         * CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
-         *
-         * @param   center  center point
-         * @param   r       radius
-         * @param   color   color.
-         * @param   opacity opacity between 0.0f and 1.0f.
-        **/
-        void drawSpot(fVec2 center, float r, color_t color, float opacity)
-            {
-            // Filled circle can be created by the wide line function with length zero
-            _drawWideLine(center.x, center.y, center.x, center.y, 2.0f * r, color, opacity);
-            }
-
-
-        /**
-        * Draw an anti-aliased filled circle. Use floating point value for sub-pixel precision.
-        * 
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        *
-        * CREDIT: Bodmer TFT_eSPI library : https://github.com/Bodmer/TFT_eSPI
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawSpot(float ax, float ay, float r, color_t color, float opacity)
-            {
-            // Filled circle can be created by the wide line function with length zero
-            _drawWideLine(ax, ay, ax, ay, 2.0f * r, color, opacity);
-            }
 
 
         /**
@@ -2853,6 +2662,121 @@ namespace tgx
 
 
 
+
+
+
+        /***************************************
+        * CIRCLES AND ELLIPSE
+        ****************************************/
+
+
+        /** taken from Adafruit GFX library */
+        template<bool CHECKRANGE>
+        void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color, float opacity);
+
+
+
+        /** taken from Adafruit GFX library */
+        template<bool CHECKRANGE>
+        void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color, float opacity);
+
+
+
+        /** filled circle drawing method */
+        template<bool OUTLINE, bool FILL, bool CHECKRANGE>
+        void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity);
+
+
+
+        /** adapted from bodmer e_tft library */
+        template<bool OUTLINE, bool FILL, bool CHECKRANGE>
+        void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity);
+
+
+
+
+        void _fillSmoothQuarterCircle(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
+
+
+        void _fillSmoothCircle(tgx::fVec2 C, float R, color_t color, float opacity);
+
+
+        void _smoothQuarterCircle(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
+
+        
+        void _smoothCircle(tgx::fVec2 C, float R, color_t color, float opacity);
+
+        
+        void _smoothWideQuarterCircle(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
+
+
+        void _smoothWideCircle(tgx::fVec2 C, float R, float thickness, color_t color, float opacity);
+
+
+        /***************************************
+        * Triangles
+        ****************************************/
+
+
+
+
+        void _drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity);
+
+
+        /** triangle drawing method */
+        template<bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
+        void _drawTriangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t interior_color, color_t outline_color, float opacity)
+        {
+            const iBox2 B = imageBox();
+            if (B.contains(P1) && B.contains(P2) && B.contains(P3))
+                _drawTriangle_sub<false, DRAW_INTERIOR, DRAW_OUTLINE, BLEND>(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, interior_color, outline_color, opacity);
+            else
+                _drawTriangle_sub<true, DRAW_INTERIOR, DRAW_OUTLINE, BLEND>(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, interior_color, outline_color, opacity);
+        }
+
+
+        /** triangle drawing method templated on CHECKRANGE */
+        template<bool CHECKRANGE, bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
+        void _drawTriangle_sub(int x0, int y0, int x1, int y1, int x2, int y2, color_t interior_color, color_t outline_color, float opacity);
+
+
+
+
+
+        /***************************************
+        * High Quality drawing primitive
+        ****************************************/
+
+
+
+        /** Convert to texture coordinates */
+        inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size)
+        {
+            return tgx::fVec2(pos.x / ((float)size.x), pos.y / ((float)size.y));
+        }
+
+
+        /** Convert to viewport coordinates */
+        inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size)
+        {
+            return tgx::fVec2((2.0f / ((float)size.x)) * (pos.x) - 1.0f, (2.0f / ((float)size.y)) * (pos.y) - 1.0f);
+        }
+
+
+
+        /** template method for drawing a 2D gradient triangle*/
+        template<typename color_alt, bool USE_BLENDING>
+        void _drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity);
+
+
+        /** template method for drawing 2D textured (possibly with gradient and mask) triangle */
+        template<typename color_t_tex, bool GRADIENT, bool USE_BLENDING, bool MASKED>
+        void _drawTexturedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity);
+
+
+
+
+
         /***************************************
         * DRAWING BEZIER
         ****************************************/
@@ -2896,105 +2820,14 @@ namespace tgx
 
 
 
-        void _drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity);
 
 
 
-
-        /** triangle drawing method */
-        template<bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
-        void _drawTriangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t interior_color, color_t outline_color, float opacity)
-            {
-            const iBox2 B = imageBox();
-            if (B.contains(P1) && B.contains(P2)&& B.contains(P3))
-                _drawTriangle_sub<false, DRAW_INTERIOR, DRAW_OUTLINE, BLEND>(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, interior_color, outline_color, opacity);
-            else
-                _drawTriangle_sub<true, DRAW_INTERIOR, DRAW_OUTLINE, BLEND> (P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, interior_color, outline_color, opacity);
-            }
-
-
-        /** triangle drawing method templated on CHECKRANGE */
-        template<bool CHECKRANGE, bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
-        void _drawTriangle_sub(int x0, int y0, int x1, int y1, int x2, int y2, color_t interior_color, color_t outline_color, float opacity);
 
     
 
 
 
-
-
-
-
-        /** taken from Adafruit GFX library */
-        template<bool CHECKRANGE> 
-        void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color, float opacity);
-
-
-
-        /** taken from Adafruit GFX library */
-        template<bool CHECKRANGE> 
-        void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color, float opacity);
-
-
-
-
-
-
-        /** filled circle drawing method */
-        template<bool OUTLINE, bool FILL, bool CHECKRANGE> 
-        void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor);
-
-
-        /** filled circle drawing method */
-        template<bool OUTLINE, bool FILL, bool CHECKRANGE> 
-        void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity);
-
-
-
-
-
-        /** adapted from bodmer e_tft library */
-        template<bool OUTLINE, bool FILL, bool CHECKRANGE>
-        void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color);
-
-
-        /** adapted from bodmer e_tft library */
-        template<bool OUTLINE, bool FILL, bool CHECKRANGE>
-        void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity);
-
-
-
-
-
-        /***************************************
-        * High Quality drawing primitive
-        ****************************************/
-
-
-
-        /** Convert to texture coordinates */
-        inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size)
-            {
-            return tgx::fVec2(pos.x / ((float)size.x) , pos.y / ((float)size.y));
-            }
-
-
-        /** Convert to viewport coordinates */
-        inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size)
-            {
-            return tgx::fVec2((2.0f / ((float)size.x)) * (pos.x) - 1.0f, (2.0f / ((float)size.y)) * (pos.y) - 1.0f);
-            }
-
-
-
-        /** template method for drawing a 2D gradient triangle*/        
-        template<typename color_alt, bool USE_BLENDING>
-        void _drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity);
-
-
-        /** template method for drawing 2D textured (possibly with gradient and mask) triangle */
-        template<typename color_t_tex, bool GRADIENT, bool USE_BLENDING, bool MASKED>
-        void _drawTexturedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity);
 
 
 

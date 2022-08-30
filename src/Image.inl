@@ -1984,11 +1984,256 @@ namespace tgx
 
 
 
+
+
+    template<typename color_t>
+    void Image<color_t>::drawRect(const iBox2& B, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        const int x = B.minX;
+        const int y = B.minY;
+        const int w = B.maxX - B.minX + 1;
+        const int h = B.maxY - B.minY + 1;
+        if ((w <= 0) || (h <= 0)) return;
+        _drawFastHLine<true>({ x,y }, w, color, opacity);
+        if (h > 1) _drawFastHLine<true>({ x, y + h - 1 }, w, color, opacity);
+        _drawFastVLine<true>({ x, y + 1 }, h - 2, color, opacity);
+        if (w > 1) _drawFastVLine<true>({ x + w - 1, y + 1 }, h - 2, color, opacity);
+        }
+
+
+
+    /** Fill a rectangle region with a single color */
+    template<typename color_t>
+    void Image<color_t>::fillRect(const iBox2 & B, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        _fillRect(B, color, opacity);
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_fillRect(iBox2 B, color_t color, float opacity)
+        {
+        B &= imageBox();
+        if (B.isEmpty()) return;
+        const int sx = B.lx();
+        int sy = B.ly();
+        color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(B.minY) * TGX_CAST32(_stride);
+        if (sx == _stride) 
+            { // fast, set everything at once
+            int32_t len = TGX_CAST32(sy) * TGX_CAST32(_stride);
+            if ((opacity < 0) || (opacity > 1))
+                {
+                _fast_memset(p, color, len);
+                }
+            else
+                {
+                while (len-- > 0) { (*(p++)).blend(color, opacity); }
+                }
+            }
+        else
+            { // set each line separately
+            if ((opacity < 0) || (opacity > 1))
+                {
+                while (sy-- > 0)
+                    {
+                    _fast_memset(p, color, sx);
+                    p += _stride;
+                    }
+                }
+            else
+                {
+                while (sy-- > 0)
+                    {
+                    int len = sx;
+                    while (len-- > 0) { (*(p++)).blend(color, opacity); }
+                    p += (_stride - sx);
+                    }
+                }
+
+            }
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::fillRectHGradient(iBox2 B, color_t color1, color_t color2, float opacity)
+        {
+        if (!isValid()) return;
+        B &= imageBox();
+        if (B.isEmpty()) return;        
+        const int w = B.lx();
+        const uint16_t d = (uint16_t)((w > 1) ? (w - 1) : 1);
+        RGB64 c64_a(color1);    // color conversion to RGB64
+        RGB64 c64_b(color2);    //
+        const int16_t dr = (c64_b.R - c64_a.R) / d;
+        const int16_t dg = (c64_b.G - c64_a.G) / d;
+        const int16_t db = (c64_b.B - c64_a.B) / d;
+        const int16_t da = (c64_b.A - c64_a.A) / d;
+        color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(_stride) * TGX_CAST32(B.minY);
+        if ((opacity < 0) || (opacity > 1))
+            {
+            for (int h = B.ly(); h > 0; h--)
+                {
+                RGB64 c(c64_a);
+                for (int i = 0; i < w; i++)
+                    {
+                    p[i] = color_t(c);  // convert back
+                    c.R += dr;
+                    c.G += dg;
+                    c.B += db;
+                    c.A += da;
+                    }
+                p += _stride;
+                }
+            }
+        else
+            {
+            for (int h = B.ly(); h > 0; h--)
+                {
+                RGB64 c(c64_a);
+                for (int i = 0; i < w; i++)
+                    {
+                    p[i].blend(color_t(c), opacity);
+                    c.R += dr;
+                    c.G += dg;
+                    c.B += db;
+                    c.A += da;
+                    }
+                p += _stride;
+                }    
+            }
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::fillRectVGradient(iBox2 B, color_t color1, color_t color2, float opacity)
+        {
+        if (!isValid()) return;
+        B &= imageBox();
+        if (B.isEmpty()) return;
+        const int h = B.ly(); 
+        const uint16_t d = (uint16_t)((h > 1) ? (h - 1) : 1);
+        RGB64 c64_a(color1);    // color conversion to RGB64
+        RGB64 c64_b(color2);    //
+        const int16_t dr = (c64_b.R - c64_a.R) / d;
+        const int16_t dg = (c64_b.G - c64_a.G) / d;
+        const int16_t db = (c64_b.B - c64_a.B) / d;
+        const int16_t da = (c64_b.A - c64_a.A) / d;
+        color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(_stride) * TGX_CAST32(B.minY);
+
+        if ((opacity < 0) || (opacity > 1))
+            {
+            for (int j = h; j > 0; j--)
+                {
+                _fast_memset(p, color_t(c64_a), B.lx());
+                c64_a.R += dr;
+                c64_a.G += dg;
+                c64_a.B += db;
+                c64_a.A += da;
+                p += _stride;
+                }
+            }
+        else
+            {
+            for (int j = h; j > 0; j--)
+                {
+                int l = B.lx();
+                while (l-- > 0) { (*(p++)).blend(color_t(c64_a), opacity); }
+                c64_a.R += dr;
+                c64_a.G += dg;
+                c64_a.B += db;
+                c64_a.A += da;
+                p += _stride - B.lx();
+                }                
+            }
+        }
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::drawRoundRect(const iBox2& B, int r, color_t color, float opacity)
+        {
+        const int x = B.minX;
+        const int y = B.minY;
+        const int w = B.lx();
+        const int h = B.ly();
+        if (!isValid() || (w <= 0) || (h <= 0)) return;
+        if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
+            _drawRoundRect<false>(x, y, w, h, r, color, opacity);
+        else
+            _drawRoundRect<true>(x, y, w, h, r, color, opacity);
+        }
+
+
+    template<typename color_t>
+    template<bool CHECKRANGE> void Image<color_t>::_drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity)
+        {
+        int max_radius = ((w < h) ? w : h) / 2;
+        if (r > max_radius) r = max_radius;
+        _drawFastHLine<CHECKRANGE>( { x + r, y }, w - 2 * r, color, opacity);
+        _drawFastHLine<CHECKRANGE>({ x + r, y + h - 1 }, w - 2 * r, color, opacity);
+        _drawFastVLine<CHECKRANGE>({ x, y + r }, h - 2 * r, color, opacity);
+        _drawFastVLine<CHECKRANGE>({ x + w - 1, y + r }, h - 2 * r, color, opacity);
+        _drawCircleHelper<CHECKRANGE>(x + r, y + r, r, 1, color, opacity);
+        _drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + r, r, 2, color, opacity);
+        _drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + h - r - 1, r, 4, color, opacity);
+        _drawCircleHelper<CHECKRANGE>(x + r, y + h - r - 1, r, 8, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillRoundRect(const iBox2& B, int r, color_t color, float opacity)
+        {
+        const int x = B.minX;
+        const int y = B.minY;
+        const int w = B.lx();
+        const int h = B.ly();
+        if (!isValid() || (w <= 0) || (h <= 0)) return;
+        if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
+            _fillRoundRect<false>(x, y, w, h, r, color, opacity);
+        else
+            _fillRoundRect<true>(x, y, w, h, r, color, opacity);
+        }
+
+
+    template<typename color_t>
+    template<bool CHECKRANGE> void Image<color_t>::_fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity)
+        {
+        int max_radius = ((w < h) ? w : h) / 2;
+        if (r > max_radius) r = max_radius;
+        fillRect(iBox2(x + r, x + r + w - (2*r) - 1, y, y + h - 1), color, opacity);
+        _fillCircleHelper<CHECKRANGE>(x + w - r - 1, y + r, r, 1, h - 2 * r - 1, color, opacity);
+        _fillCircleHelper<CHECKRANGE>(x + r, y + r, r, 2, h - 2 * r - 1, color, opacity);
+        }
+
+
+
     /********************************************************************************
     *
     * DRAWING TRIANGLES
     *
     *********************************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2003,11 +2248,493 @@ namespace tgx
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     /********************************************************************************
     *
     * DRAWING CIRCLES AND ELLIPSES
     *
     *********************************************************************************/
+
+
+    template<typename color_t>
+    void Image<color_t>::drawCircle(iVec2 center, int r, color_t color, float opacity)
+        {
+        if ((center.x - r >= 0) && (center.x + r < _lx) && (center.y - r >= 0) && (center.y + r < _ly))
+            _drawFilledCircle<true, false, false>(center.x, center.y, r, color, color, opacity);
+        else
+            _drawFilledCircle<true, false, true>(center.x, center.y, r, color, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillCircle(iVec2 center, int r, color_t interior_color, color_t outline_color, float opacity)
+        {
+        if ((center.x - r >= 0) && (center.x + r < _lx) && (center.y - r >= 0) && (center.y + r < _ly))
+            _drawFilledCircle<true, true, false>(center.x, center.y, r, outline_color, interior_color, opacity);
+        else
+            _drawFilledCircle<true, true, true>(center.x, center.y, r, outline_color, interior_color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::drawEllipse(iVec2 center, iVec2 radiuses, color_t color, float opacity)
+        {
+        const int cx = center.x;
+        const int cy = center.y;
+        const int rx = radiuses.x;
+        const int ry = radiuses.y;
+        if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
+            _drawEllipse<true, false, false>(cx, cy, rx, ry, color, color, opacity);
+        else
+            _drawEllipse<true, false, true>(cx, cy, rx, ry, color, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillEllipse(iVec2 center, iVec2 radiuses, color_t interior_color, color_t outline_color, float opacity)
+        {
+        const int cx = center.x;
+        const int cy = center.y;
+        const int rx = radiuses.x;
+        const int ry = radiuses.y;
+        if ((cx - rx >= 0) && (cx + rx < _lx) && (cy - ry >= 0) && (cy + ry < _ly))
+            _drawEllipse<true, true, false>(cx, cy, rx, ry, outline_color, interior_color, opacity);
+        else
+            _drawEllipse<true, true, true>(cx, cy, rx, ry, outline_color, interior_color, opacity);
+        }
+
+
+
+    /** taken from adafruit gfx */
+    template<typename color_t>
+    template<bool CHECKRANGE> void Image<color_t>::_drawCircleHelper(int x0, int y0, int r, int cornername, color_t color, float opacity)
+        {
+        int f = 1 - r;
+        int ddF_x = 1;
+        int ddF_y = -2 * r;
+        int x = 0;
+        int y = r;
+        while (x < y - 1)
+            {
+            if (f >= 0)
+                {
+                y--;
+                ddF_y += 2;
+                f += ddF_y;
+                }
+            x++;
+            ddF_x += 2;
+            f += ddF_x;
+            if (cornername & 0x4)
+                {
+                _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, color, opacity);
+                if (x != y) _drawPixel<CHECKRANGE>({ x0 + y, y0 + x }, color, opacity);
+                }
+            if (cornername & 0x2)
+                {
+                _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, color, opacity);
+                if (x != y) _drawPixel<CHECKRANGE>({ x0 + y, y0 - x }, color, opacity);
+                }
+            if (cornername & 0x8)
+                {
+                _drawPixel<CHECKRANGE>({ x0 - y, y0 + x }, color, opacity);
+                if (x != y) _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, color, opacity);
+                }
+            if (cornername & 0x1)
+                {
+                _drawPixel<CHECKRANGE>({ x0 - y, y0 - x }, color, opacity);
+                if (x != y) _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, color, opacity);
+                }
+            }
+        }
+
+
+
+    /** taken from Adafruit GFX*/
+    template<typename color_t>
+    template<bool CHECKRANGE> void Image<color_t>::_fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color, float opacity)
+        {
+        int f = 1 - r;
+        int ddF_x = 1;
+        int ddF_y = -2 * r;
+        int x = 0;
+        int y = r;
+        int px = x;
+        int py = y;
+        delta++; // Avoid some +1's in the loop
+        while (x < y)
+            {
+            if (f >= 0)
+                {
+                y--;
+                ddF_y += 2;
+                f += ddF_y;
+                }
+            x++;
+            ddF_x += 2;
+            f += ddF_x;
+            // These checks avoid double-drawing certain lines, important
+            // for the SSD1306 library which has an INVERT drawing mode.
+            if (x < (y + 1))
+                {
+                if (corners & 1) _drawFastVLine<CHECKRANGE>({ x0 + x, y0 - y }, 2 * y + delta, color, opacity);
+                if (corners & 2) _drawFastVLine<CHECKRANGE>({ x0 - x, y0 - y }, 2 * y + delta, color, opacity);
+                }
+            if (y != py)
+                {
+                if (corners & 1) _drawFastVLine<CHECKRANGE>({ x0 + py, y0 - px }, 2 * px + delta, color, opacity);
+                if (corners & 2) _drawFastVLine<CHECKRANGE>({ x0 - py, y0 - px }, 2 * px + delta, color, opacity);
+                py = y;
+                }
+            px = x;
+            }
+        }
+
+
+
+
+
+    template<typename color_t>
+    template<bool OUTLINE, bool FILL, bool CHECKRANGE> void Image<color_t>::_drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity)
+        {
+        if ((r <= 0) || (!isValid())) return;
+        if ((CHECKRANGE) && (r > 2))
+            { // circle is large enough to check first if there is something to draw.
+            if ((xm + r < 0) || (xm - r >= _lx) || (ym + r < 0) || (ym - r >= _ly)) return; // outside of image. 
+            // TODO : check if the circle completely fills the image, in this case use FillScreen()
+            }
+        switch (r)
+            {
+            case 0:
+                {
+                if (OUTLINE)
+                    {
+                    _drawPixel<CHECKRANGE>({ xm, ym }, color, opacity);
+                    }
+                else if (FILL)
+                    {
+                    _drawPixel<CHECKRANGE>({ xm, ym }, fillcolor, opacity);
+                    }
+                return;
+                }
+            case 1:
+                {
+                if (FILL)
+                    {
+                    _drawPixel<CHECKRANGE>({ xm, ym }, fillcolor, opacity);
+                    }
+                _drawPixel<CHECKRANGE>({ xm + 1, ym }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm - 1, ym }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm, ym - 1 }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm, ym + 1 }, color, opacity);
+                return;
+                }
+            }
+        int x = -r, y = 0, err = 2 - 2 * r;
+        do {
+            if (OUTLINE)
+                {
+                _drawPixel<CHECKRANGE>({ xm - x, ym + y }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm - y, ym - x }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm + x, ym - y }, color, opacity);
+                _drawPixel<CHECKRANGE>({ xm + y, ym + x }, color, opacity);
+                }
+            r = err;
+            if (r <= y)
+                {
+                if (FILL)
+                    {
+                    _drawFastHLine<CHECKRANGE>({ xm, ym + y }, -x, fillcolor, opacity);
+                    _drawFastHLine<CHECKRANGE>({ xm + x + 1, ym - y }, -x - 1, fillcolor, opacity);
+                    }
+                err += ++y * 2 + 1;
+                }
+            if (r > x || err > y)
+                {
+                err += ++x * 2 + 1;
+                if (FILL)
+                    {
+                    if (x)
+                        {
+                        _drawFastHLine<CHECKRANGE>({ xm - y + 1, ym - x }, y - 1, fillcolor, opacity);
+                        _drawFastHLine<CHECKRANGE>({ xm, ym + x }, y, fillcolor, opacity);
+                        }
+                    }
+                }
+            } while (x < 0);
+        }
+
+
+
+    /** Adapted from Bodmer e_tft library. */
+    template<typename color_t>
+    template<bool OUTLINE, bool FILL, bool CHECKRANGE>
+    void Image<color_t>::_drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity)
+        {
+        if (!isValid()) return;
+        if (rx < 2) return;
+        if (ry < 2) return;
+        int32_t x, y;
+        int32_t rx2 = rx * rx;
+        int32_t ry2 = ry * ry;
+        int32_t fx2 = 4 * rx2;
+        int32_t fy2 = 4 * ry2;
+        int32_t s;
+        int yt = ry;
+        for (x = 0, y = ry, s = 2 * ry2 + rx2 * (1 - 2 * ry); ry2 * x <= rx2 * y; x++) 
+            {
+            if (OUTLINE)
+                {
+                _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, outline_color, opacity);
+                _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, outline_color, opacity);
+                if (x != 0)
+                    {
+                    _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, outline_color, opacity);
+                    _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, outline_color, opacity);
+                    }
+                }
+            if (s >= 0) 
+                {
+                s += fx2 * (1 - y);
+                y--;
+                if (FILL)
+                    {
+                    if (ry2 * x <= rx2 * y)
+                        {
+                        _drawFastHLine<CHECKRANGE>({ x0 - x, y0 - y }, x + x + 1, interior_color, opacity);
+                        _drawFastHLine<CHECKRANGE>({ x0 - x, y0 + y }, x + x + 1, interior_color, opacity);
+                        yt = y;
+                        }
+                    }
+                }
+            s += ry2 * ((4 * x) + 6);
+            }
+        
+        for (x = rx, y = 0, s = 2 * rx2 + ry2 * (1 - 2 * rx); rx2 * y <= ry2 * x; y++) 
+            {
+            if (OUTLINE)
+                {
+                _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, outline_color, opacity);
+                _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, outline_color, opacity);
+                if (y != 0)
+                    {
+                    _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, outline_color, opacity);
+                    _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, outline_color, opacity);
+                    }
+                }
+            if (FILL)
+                {
+                if (y != yt)
+                    {
+                    if (y != 0)
+                        {
+                        _drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 - y }, x + x - 1, interior_color, opacity);
+                        }
+                    _drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 + y }, x + x - 1, interior_color, opacity);
+                    }
+                }
+
+            if (s >= 0)
+                {
+                s += fy2 * (1 - x);
+                x--;
+                }
+            s += rx2 * ((4 * y) + 6);
+            }
+        }
+
+
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_fillSmoothQuarterCircle(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity)
+        {
+        // check radius >0  and im valid...
+        const int dir_x = (quarter & 1) ? -1 : 1;
+        const int dir_y = (quarter & 2) ? -1 : 1;
+        auto B = im.imageBox();
+        B &= tgx::iBox2(
+            ((dir_x > 0) ? (int)floorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + R - 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - R + 0.5f)),
+            ((dir_y > 0) ? (int)ceilf(C.y + R - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
+        if (B.isEmpty()) return;
+        if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
+        B.maxY += dir_y;
+        if (dir_x < 0) { tgx::swap(B.minX, B.maxX); }
+        B.maxX += dir_x;
+        const float RT = (R < 0.5f) ? 4 * R * R : (R + 0.5f);
+        const float RA2 = RT * RT;
+        const float RB2 = (R < 0.5f) ? -1 : (R - 0.5f) * (R - 0.5f);
+        int i_min = B.minX;
+        for (int j = B.minY; j != B.maxY; j += dir_y)
+        {
+            float dy2 = (j - C.y); dy2 *= dy2;
+            for (int i = i_min; i != B.maxX; i += dir_x)
+            {
+                float dx2 = (i - C.x); dx2 *= dx2;
+                const float e2 = dx2 + dy2;
+                if (e2 >= RA2) { i_min = i + dir_x; continue; }
+                if (e2 <= RB2)
+                {
+                    const int h = B.maxX - dir_x - i;
+                    if (h >= 0)
+                        im.drawFastHLine({ i,j }, h + 1, color, opacity);
+                    else
+                        im.drawFastHLine({ B.maxX - dir_x,j }, 1 - h, color, opacity);
+                    break;
+                }
+                const float alpha = RT - sqrtf(e2);
+                im.drawPixel<false>({ i,j }, color, alpha * opacity);
+            }
+        }
+        return;
+    }
+
+    template<typename color_t>
+    void Image<color_t>::_fillSmoothCircle(tgx::fVec2 C, float R, color_t color, float opacity)
+        {
+        // check radius >0  and im valid...
+        _fillSmoothQuarterCircle(im, C, R, 0, 1, 1, color, opacity);
+        _fillSmoothQuarterCircle(im, C, R, 1, 0, 1, color, opacity);
+        _fillSmoothQuarterCircle(im, C, R, 2, 1, 0, color, opacity);
+        _fillSmoothQuarterCircle(im, C, R, 3, 0, 0, color, opacity);
+        }
+
+
+
+    //
+    //  2    x=1, y=-1  |  3   x=-1; y=-1
+    //   ---------------------------------
+    //  0    x=1, y=1   |  1   x=-1, y=1
+    template<typename color_t>
+    void Image<color_t>::_smoothQuarterCircle(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity)
+    {
+        // check radius >0  and im valid...
+        const int dir_x = (quarter & 1) ? -1 : 1;
+        const int dir_y = (quarter & 2) ? -1 : 1;
+        auto B = im.imageBox();
+        B &= tgx::iBox2(
+            ((dir_x > 0) ? (int)floorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + R - 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - R + 0.5f)),
+            ((dir_y > 0) ? (int)ceilf(C.y + R - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
+        /*	B &= tgx::iBox2(
+                ((dir_x > 0) ? (int)roundf(C.x - R - 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+                ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)roundf(C.x + R + 0.5f)),
+                ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)roundf(C.y - R - 0.5f)),
+                ((dir_y > 0) ? (int)roundf(C.y + R + 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1))); */
+        if (B.isEmpty()) return;
+        if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
+        B.maxY += dir_y;
+        if (dir_x < 0) { tgx::swap(B.minX, B.maxX); }
+        B.maxX += dir_x;
+        const float RA2 = (R < 1) ? (4 * R * R) : (R + 1) * (R + 1);
+        const float RB2 = (R < 1) ? -1 : (R - 1) * (R - 1);
+        if (R < 1) opacity *= R;
+        int i_min = B.minX;
+        for (int j = B.minY; j != B.maxY; j += dir_y)
+        {
+            float dy2 = (j - C.y); dy2 *= dy2;
+            for (int i = i_min; i != B.maxX; i += dir_x)
+            {
+                float dx2 = (i - C.x); dx2 *= dx2;
+                const float e2 = dx2 + dy2;
+                if (e2 >= RA2) { i_min = i + dir_x; continue; }
+                if (e2 <= RB2) break;
+                const float alpha = 1.0f - fabsf(R - sqrtf(e2));
+                im.drawPixel<false>({ i,j }, color, alpha * opacity);
+            }
+        }
+        return;
+    }
+
+
+    template<typename color_t>
+    void Image<color_t>::_smoothCircle(tgx::fVec2 C, float R, color_t color, float opacity)
+    {
+        // check radius >0  and im valid...
+        _smoothQuarterCircle(im, C, R, 0, 1, 1, color, opacity);
+        _smoothQuarterCircle(im, C, R, 1, 0, 1, color, opacity);
+        _smoothQuarterCircle(im, C, R, 2, 1, 0, color, opacity);
+        _smoothQuarterCircle(im, C, R, 3, 0, 0, color, opacity);
+    }
+
+
+
+
+    //
+    //  2    x=1, y=-1  |  3   x=-1; y=-1
+    //   ---------------------------------
+    //  0    x=1, y=1   |  1   x=-1, y=1
+    template<typename color_t>
+    void Image<color_t>::_smoothWideQuarterCircle(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity)
+    {
+        if (thickness > R) thickness = R;
+        // check radius >0  and im valid...
+        const int dir_x = (quarter & 1) ? -1 : 1;
+        const int dir_y = (quarter & 2) ? -1 : 1;
+        auto B = im.imageBox();
+        B &= tgx::iBox2(
+            ((dir_x > 0) ? (int)floorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + R - 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - R + 0.5f)),
+            ((dir_y > 0) ? (int)ceilf(C.y + R - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
+        if (B.isEmpty()) return;
+        if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
+        B.maxY += dir_y;
+        if (dir_x < 0) { tgx::swap(B.minX, B.maxX); }
+        B.maxX += dir_x;
+        const float RA2 = (R < 1) ? (4 * R * R) : (R + 1) * (R + 1);
+        const float RB2 = (R < 1) ? -1 : (R - thickness) * (R - thickness);
+        if (R < 1) opacity *= R;
+        if (thickness < 0.5f) opacity *= (thickness * 2);
+        int i_min = B.minX;
+        for (int j = B.minY; j != B.maxY; j += dir_y)
+        {
+            float dy2 = (j - C.y); dy2 *= dy2;
+            for (int i = i_min; i != B.maxX; i += dir_x)
+            {
+                float dx2 = (i - C.x); dx2 *= dx2;
+                const float e2 = dx2 + dy2;
+                if (e2 >= RA2) { i_min = i + dir_x; continue; }
+                if (e2 <= RB2) break;
+                const float se = sqrtf(e2);
+                const float d2 = se - R;  const float alpha2 = (d2 > 0) ? (1.0f - d2) : 1.0f;
+                const float d1 = se - (R - thickness); const float alpha1 = (d1 < 1) ? d1 : 1.0f;
+                const float alpha = alpha1 * alpha2;
+                im.drawPixel<false>({ i,j }, color, alpha * opacity);
+                cout << alpha << "\n";
+            }
+        }
+        return;
+    }
+
+
+    template<typename color_t>
+    void Image<color_t>::_smoothWideCircle(tgx::fVec2 C, float R, float thickness, color_t color, float opacity)
+        {
+        // check radius >0  and im valid...
+        _smoothWideQuarterCircle(im, C, R, thickness, 0, 1, 1, color, opacity);
+        _smoothWideQuarterCircle(im, C, R, thickness, 1, 0, 1, color, opacity);
+        _smoothWideQuarterCircle(im, C, R, thickness, 2, 1, 0, color, opacity);
+        _smoothWideQuarterCircle(im, C, R, thickness, 3, 0, 0, color, opacity);
+        }
+
 
 
 
@@ -2627,6 +3354,31 @@ namespace tgx
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*****************************************************
     * Triangles
     ******************************************************/
@@ -2874,663 +3626,11 @@ namespace tgx
 
 
 
-    /*****************************************************
-    * Rectangles
-    ******************************************************/
 
 
 
 
-
-
-    template<typename color_t>
-    void Image<color_t>::drawRect(const iBox2& B, color_t color, float opacity)
-        {
-        if (!isValid()) return;
-        const int x = B.minX;
-        const int y = B.minY;
-        const int w = B.maxX - B.minX + 1;
-        const int h = B.maxY - B.minY + 1;
-        if ((w <= 0) || (h <= 0)) return;
-        _drawFastHLine<true>({ x,y }, w, color, opacity);
-        if (h > 1) _drawFastHLine<true>({ x, y + h - 1 }, w, color, opacity);
-        _drawFastVLine<true>({ x, y + 1 }, h - 2, color, opacity);
-        if (w > 1) _drawFastVLine<true>({ x + w - 1, y + 1 }, h - 2, color, opacity);
-        }
-
-
-
-    /** Fill a rectangle region with a single color */
-    template<typename color_t>
-    void Image<color_t>::fillRect(const iBox2 & B, color_t color, float opacity)
-        {
-        if (!isValid()) return;
-        _fillRect(B, color, opacity);
-        }
-
-
-
-    template<typename color_t>
-    void Image<color_t>::_fillRect(iBox2 B, color_t color, float opacity)
-        {
-        B &= imageBox();
-        if (B.isEmpty()) return;
-        const int sx = B.lx();
-        int sy = B.ly();
-        color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(B.minY) * TGX_CAST32(_stride);
-        if (sx == _stride) 
-            { // fast, set everything at once
-            int32_t len = TGX_CAST32(sy) * TGX_CAST32(_stride);
-            if ((opacity < 0) || (opacity > 1))
-                {
-                _fast_memset(p, color, len);
-                }
-            else
-                {
-                while (len-- > 0) { (*(p++)).blend(color, opacity); }
-                }
-            }
-        else
-            { // set each line separately
-            if ((opacity < 0) || (opacity > 1))
-                {
-                while (sy-- > 0)
-                    {
-                    _fast_memset(p, color, sx);
-                    p += _stride;
-                    }
-                }
-            else
-                {
-                while (sy-- > 0)
-                    {
-                    int len = sx;
-                    while (len-- > 0) { (*(p++)).blend(color, opacity); }
-                    p += (_stride - sx);
-                    }
-                }
-
-            }
-        }
-
-
-
-    template<typename color_t>
-    void Image<color_t>::fillRectHGradient(iBox2 B, color_t color1, color_t color2, float opacity)
-        {
-        if (!isValid()) return;
-        B &= imageBox();
-        if (B.isEmpty()) return;        
-        const int w = B.lx();
-        const uint16_t d = (uint16_t)((w > 1) ? (w - 1) : 1);
-        RGB64 c64_a(color1);    // color conversion to RGB64
-        RGB64 c64_b(color2);    //
-        const int16_t dr = (c64_b.R - c64_a.R) / d;
-        const int16_t dg = (c64_b.G - c64_a.G) / d;
-        const int16_t db = (c64_b.B - c64_a.B) / d;
-        const int16_t da = (c64_b.A - c64_a.A) / d;
-        color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(_stride) * TGX_CAST32(B.minY);
-        if ((opacity < 0) || (opacity > 1))
-            {
-            for (int h = B.ly(); h > 0; h--)
-                {
-                RGB64 c(c64_a);
-                for (int i = 0; i < w; i++)
-                    {
-                    p[i] = color_t(c);  // convert back
-                    c.R += dr;
-                    c.G += dg;
-                    c.B += db;
-                    c.A += da;
-                    }
-                p += _stride;
-                }
-            }
-        else
-            {
-            for (int h = B.ly(); h > 0; h--)
-                {
-                RGB64 c(c64_a);
-                for (int i = 0; i < w; i++)
-                    {
-                    p[i].blend(color_t(c), opacity);
-                    c.R += dr;
-                    c.G += dg;
-                    c.B += db;
-                    c.A += da;
-                    }
-                p += _stride;
-                }    
-            }
-        }
-
-
-
-    template<typename color_t>
-    void Image<color_t>::fillRectVGradient(iBox2 B, color_t color1, color_t color2, float opacity)
-        {
-        if (!isValid()) return;
-        B &= imageBox();
-        if (B.isEmpty()) return;
-        const int h = B.ly(); 
-        const uint16_t d = (uint16_t)((h > 1) ? (h - 1) : 1);
-        RGB64 c64_a(color1);    // color conversion to RGB64
-        RGB64 c64_b(color2);    //
-        const int16_t dr = (c64_b.R - c64_a.R) / d;
-        const int16_t dg = (c64_b.G - c64_a.G) / d;
-        const int16_t db = (c64_b.B - c64_a.B) / d;
-        const int16_t da = (c64_b.A - c64_a.A) / d;
-        color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(_stride) * TGX_CAST32(B.minY);
-
-        if ((opacity < 0) || (opacity > 1))
-            {
-            for (int j = h; j > 0; j--)
-                {
-                _fast_memset(p, color_t(c64_a), B.lx());
-                c64_a.R += dr;
-                c64_a.G += dg;
-                c64_a.B += db;
-                c64_a.A += da;
-                p += _stride;
-                }
-            }
-        else
-            {
-            for (int j = h; j > 0; j--)
-                {
-                int l = B.lx();
-                while (l-- > 0) { (*(p++)).blend(color_t(c64_a), opacity); }
-                c64_a.R += dr;
-                c64_a.G += dg;
-                c64_a.B += db;
-                c64_a.A += da;
-                p += _stride - B.lx();
-                }                
-            }
-        }
-
-
-
-
-    /*****************************************************
-    * Rounded rectangles
-    ******************************************************/
-
-
-    template<typename color_t>
-    void Image<color_t>::drawRoundRect(const iBox2& B, int r, color_t color, float opacity)
-        {
-        const int x = B.minX;
-        const int y = B.minY;
-        const int w = B.lx();
-        const int h = B.ly();
-        if (!isValid() || (w <= 0) || (h <= 0)) return;
-        if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
-            _drawRoundRect<false>(x, y, w, h, r, color, opacity);
-        else
-            _drawRoundRect<true>(x, y, w, h, r, color, opacity);
-        }
-
-
-    template<typename color_t>
-    template<bool CHECKRANGE> void Image<color_t>::_drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity)
-        {
-        int max_radius = ((w < h) ? w : h) / 2;
-        if (r > max_radius) r = max_radius;
-        _drawFastHLine<CHECKRANGE>( { x + r, y }, w - 2 * r, color, opacity);
-        _drawFastHLine<CHECKRANGE>({ x + r, y + h - 1 }, w - 2 * r, color, opacity);
-        _drawFastVLine<CHECKRANGE>({ x, y + r }, h - 2 * r, color, opacity);
-        _drawFastVLine<CHECKRANGE>({ x + w - 1, y + r }, h - 2 * r, color, opacity);
-        _drawCircleHelper<CHECKRANGE>(x + r, y + r, r, 1, color, opacity);
-        _drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + r, r, 2, color, opacity);
-        _drawCircleHelper<CHECKRANGE>(x + w - r - 1, y + h - r - 1, r, 4, color, opacity);
-        _drawCircleHelper<CHECKRANGE>(x + r, y + h - r - 1, r, 8, color, opacity);
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::fillRoundRect(const iBox2& B, int r, color_t color, float opacity)
-        {
-        const int x = B.minX;
-        const int y = B.minY;
-        const int w = B.lx();
-        const int h = B.ly();
-        if (!isValid() || (w <= 0) || (h <= 0)) return;
-        if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
-            _fillRoundRect<false>(x, y, w, h, r, color, opacity);
-        else
-            _fillRoundRect<true>(x, y, w, h, r, color, opacity);
-        }
-
-
-    template<typename color_t>
-    template<bool CHECKRANGE> void Image<color_t>::_fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity)
-        {
-        int max_radius = ((w < h) ? w : h) / 2;
-        if (r > max_radius) r = max_radius;
-        fillRect(iBox2(x + r, x + r + w - (2*r) - 1, y, y + h - 1), color, opacity);
-        _fillCircleHelper<CHECKRANGE>(x + w - r - 1, y + r, r, 1, h - 2 * r - 1, color, opacity);
-        _fillCircleHelper<CHECKRANGE>(x + r, y + r, r, 2, h - 2 * r - 1, color, opacity);
-        }
-
-
-
-
-    //iVec2{ x + r, y }, iVec2{ w - 2 * r, h }
-
-
-
-
-
-
-
-
-
-
-
-    /*****************************************************
-    * Circles
-    ******************************************************/
-
-
-
-    /** taken from adafruit gfx */
-    template<typename color_t>
-    template<bool CHECKRANGE> void Image<color_t>::_drawCircleHelper(int x0, int y0, int r, int cornername, color_t color, float opacity)
-        {
-        int f = 1 - r;
-        int ddF_x = 1;
-        int ddF_y = -2 * r;
-        int x = 0;
-        int y = r;
-        while (x < y - 1)
-            {
-            if (f >= 0)
-                {
-                y--;
-                ddF_y += 2;
-                f += ddF_y;
-                }
-            x++;
-            ddF_x += 2;
-            f += ddF_x;
-            if (cornername & 0x4)
-                {
-                _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, color, opacity);
-                if (x != y) _drawPixel<CHECKRANGE>({ x0 + y, y0 + x }, color, opacity);
-                }
-            if (cornername & 0x2)
-                {
-                _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, color, opacity);
-                if (x != y) _drawPixel<CHECKRANGE>({ x0 + y, y0 - x }, color, opacity);
-                }
-            if (cornername & 0x8)
-                {
-                _drawPixel<CHECKRANGE>({ x0 - y, y0 + x }, color, opacity);
-                if (x != y) _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, color, opacity);
-                }
-            if (cornername & 0x1)
-                {
-                _drawPixel<CHECKRANGE>({ x0 - y, y0 - x }, color, opacity);
-                if (x != y) _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, color, opacity);
-                }
-            }
-        }
-
-
-
-    /** taken from Adafruit GFX*/
-    template<typename color_t>
-    template<bool CHECKRANGE> void Image<color_t>::_fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color, float opacity)
-        {
-        int f = 1 - r;
-        int ddF_x = 1;
-        int ddF_y = -2 * r;
-        int x = 0;
-        int y = r;
-        int px = x;
-        int py = y;
-        delta++; // Avoid some +1's in the loop
-        while (x < y)
-            {
-            if (f >= 0)
-                {
-                y--;
-                ddF_y += 2;
-                f += ddF_y;
-                }
-            x++;
-            ddF_x += 2;
-            f += ddF_x;
-            // These checks avoid double-drawing certain lines, important
-            // for the SSD1306 library which has an INVERT drawing mode.
-            if (x < (y + 1))
-                {
-                if (corners & 1) _drawFastVLine<CHECKRANGE>({ x0 + x, y0 - y }, 2 * y + delta, color, opacity);
-                if (corners & 2) _drawFastVLine<CHECKRANGE>({ x0 - x, y0 - y }, 2 * y + delta, color, opacity);
-                }
-            if (y != py)
-                {
-                if (corners & 1) _drawFastVLine<CHECKRANGE>({ x0 + py, y0 - px }, 2 * px + delta, color, opacity);
-                if (corners & 2) _drawFastVLine<CHECKRANGE>({ x0 - py, y0 - px }, 2 * px + delta, color, opacity);
-                py = y;
-                }
-            px = x;
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-    template<typename color_t>
-    template<bool OUTLINE, bool FILL, bool CHECKRANGE> void Image<color_t>::_drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor)
-        {
-        if ((r <= 0) || (!isValid())) return;
-        if ((CHECKRANGE) && (r > 2))
-            { // circle is large enough to check first if there is something to draw.
-            if ((xm + r < 0) || (xm - r >= _lx) || (ym + r < 0) || (ym - r >= _ly)) return; // outside of image. 
-            // TODO : check if the circle completely fills the image, in this case use FillScreen()
-            }
-        switch (r)
-            {
-            case 0:
-                {
-                if (OUTLINE)
-                    {
-                    _drawPixel<CHECKRANGE>({ xm, ym }, color);
-                    }
-                else if (FILL)
-                    {
-                    _drawPixel<CHECKRANGE>({ xm, ym }, fillcolor);
-                    }
-                return;
-                }
-            case 1:
-                {
-                if (FILL)
-                    {
-                    _drawPixel<CHECKRANGE>({ xm, ym }, fillcolor);
-                    }
-                _drawPixel<CHECKRANGE>({ xm + 1, ym }, color);
-                _drawPixel<CHECKRANGE>({ xm - 1, ym }, color);
-                _drawPixel<CHECKRANGE>({ xm, ym - 1 }, color);
-                _drawPixel<CHECKRANGE>({ xm, ym + 1 }, color);
-                return;
-                }
-            }
-        int x = -r, y = 0, err = 2 - 2 * r;
-        do {
-            if (OUTLINE)
-                {
-                _drawPixel<CHECKRANGE>({ xm - x, ym + y }, color);
-                _drawPixel<CHECKRANGE>({ xm - y, ym - x }, color);
-                _drawPixel<CHECKRANGE>({ xm + x, ym - y }, color);
-                _drawPixel<CHECKRANGE>({ xm + y, ym + x }, color);
-                }
-            r = err;
-            if (r <= y)
-                {
-                if (FILL)
-                    {
-                    _drawFastHLine<CHECKRANGE>({ xm, ym + y }, -x, fillcolor);
-                    _drawFastHLine<CHECKRANGE>({ xm + x + 1, ym - y }, -x - 1, fillcolor);
-                    }
-                err += ++y * 2 + 1;
-                }
-            if (r > x || err > y)
-                {
-                err += ++x * 2 + 1;
-                if (FILL)
-                    {
-                    if (x)
-                        {
-                        _drawFastHLine<CHECKRANGE>({ xm - y + 1, ym - x }, y - 1, fillcolor);
-                        _drawFastHLine<CHECKRANGE>({ xm, ym + x }, y, fillcolor);
-                        }
-                    }
-                }
-            } while (x < 0);
-        }
-
-
-    template<typename color_t>
-    template<bool OUTLINE, bool FILL, bool CHECKRANGE> void Image<color_t>::_drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity)
-        {
-        if ((r <= 0) || (!isValid())) return;
-        if ((CHECKRANGE) && (r > 2))
-            { // circle is large enough to check first if there is something to draw.
-            if ((xm + r < 0) || (xm - r >= _lx) || (ym + r < 0) || (ym - r >= _ly)) return; // outside of image. 
-            // TODO : check if the circle completely fills the image, in this case use FillScreen()
-            }
-        switch (r)
-            {
-            case 0:
-                {
-                if (OUTLINE)
-                    {
-                    _drawPixel<CHECKRANGE>({ xm, ym }, color, opacity);
-                    }
-                else if (FILL)
-                    {
-                    _drawPixel<CHECKRANGE>({ xm, ym }, fillcolor, opacity);
-                    }
-                return;
-                }
-            case 1:
-                {
-                if (FILL)
-                    {
-                    _drawPixel<CHECKRANGE>({ xm, ym }, fillcolor, opacity);
-                    }
-                _drawPixel<CHECKRANGE>({ xm + 1, ym }, color, opacity);
-                _drawPixel<CHECKRANGE>({ xm - 1, ym }, color, opacity);
-                _drawPixel<CHECKRANGE>({ xm, ym - 1 }, color, opacity);
-                _drawPixel<CHECKRANGE>({ xm, ym + 1 }, color, opacity);
-                return;
-                }
-            }
-        int x = -r, y = 0, err = 2 - 2 * r;
-        do {
-            if (OUTLINE)
-                {
-                _drawPixel<CHECKRANGE>({ xm - x, ym + y }, color, opacity);
-                _drawPixel<CHECKRANGE>({ xm - y, ym - x }, color, opacity);
-                _drawPixel<CHECKRANGE>({ xm + x, ym - y }, color, opacity);
-                _drawPixel<CHECKRANGE>({ xm + y, ym + x }, color, opacity);
-                }
-            r = err;
-            if (r <= y)
-                {
-                if (FILL)
-                    {
-                    _drawFastHLine<CHECKRANGE>({ xm, ym + y }, -x, fillcolor, opacity);
-                    _drawFastHLine<CHECKRANGE>({ xm + x + 1, ym - y }, -x - 1, fillcolor, opacity);
-                    }
-                err += ++y * 2 + 1;
-                }
-            if (r > x || err > y)
-                {
-                err += ++x * 2 + 1;
-                if (FILL)
-                    {
-                    if (x)
-                        {
-                        _drawFastHLine<CHECKRANGE>({ xm - y + 1, ym - x }, y - 1, fillcolor, opacity);
-                        _drawFastHLine<CHECKRANGE>({ xm, ym + x }, y, fillcolor, opacity);
-                        }
-                    }
-                }
-            } while (x < 0);
-        }
-
-
-    /*****************************************************
-    * Ellipses
-    ******************************************************/
-
-
-    /** Adapted from Bodmer e_tft library. */
-    template<typename color_t>
-    template<bool OUTLINE, bool FILL, bool CHECKRANGE>
-    void Image<color_t>::_drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color)
-        {
-        if (!isValid()) return;
-        if (rx < 2) return;
-        if (ry < 2) return;
-        int32_t x, y;
-        int32_t rx2 = rx * rx;
-        int32_t ry2 = ry * ry;
-        int32_t fx2 = 4 * rx2;
-        int32_t fy2 = 4 * ry2;
-        int32_t s;
-        int yt = ry;
-        for (x = 0, y = ry, s = 2 * ry2 + rx2 * (1 - 2 * ry); ry2 * x <= rx2 * y; x++) 
-            {
-            if (OUTLINE)
-                {
-                _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, outline_color);
-                _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, outline_color);
-                if (x != 0)
-                    {
-                    _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, outline_color);
-                    _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, outline_color);
-                    }
-                }
-            if (s >= 0) 
-                {
-                s += fx2 * (1 - y);
-                y--;
-                if (FILL)
-                    {
-                    if (ry2 * x <= rx2 * y)
-                        {
-                        _drawFastHLine<CHECKRANGE>({ x0 - x, y0 - y }, x + x + 1, interior_color);
-                        _drawFastHLine<CHECKRANGE>({ x0 - x, y0 + y }, x + x + 1, interior_color);
-                        yt = y;
-                        }
-                    }
-                }
-            s += ry2 * ((4 * x) + 6);
-            }
-        
-        for (x = rx, y = 0, s = 2 * rx2 + ry2 * (1 - 2 * rx); rx2 * y <= ry2 * x; y++) 
-            {
-            if (OUTLINE)
-                {
-                _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, outline_color);
-                _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, outline_color);
-                if (y != 0)
-                    {
-                    _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, outline_color);
-                    _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, outline_color);
-                    }
-                }
-            if (FILL)
-                {
-                if (y != yt)
-                    {
-                    if (y != 0)
-                        {
-                        _drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 - y }, x + x - 1, interior_color);
-                        }
-                    _drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 + y }, x + x - 1, interior_color);
-                    }
-                }
-
-            if (s >= 0)
-                {
-                s += fy2 * (1 - x);
-                x--;
-                }
-            s += rx2 * ((4 * y) + 6);
-            }
-        }
-
-
-    /** Adapted from Bodmer e_tft library. */
-    template<typename color_t>
-    template<bool OUTLINE, bool FILL, bool CHECKRANGE>
-    void Image<color_t>::_drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity)
-        {
-        if (!isValid()) return;
-        if (rx < 2) return;
-        if (ry < 2) return;
-        int32_t x, y;
-        int32_t rx2 = rx * rx;
-        int32_t ry2 = ry * ry;
-        int32_t fx2 = 4 * rx2;
-        int32_t fy2 = 4 * ry2;
-        int32_t s;
-        int yt = ry;
-        for (x = 0, y = ry, s = 2 * ry2 + rx2 * (1 - 2 * ry); ry2 * x <= rx2 * y; x++) 
-            {
-            if (OUTLINE)
-                {
-                _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, outline_color, opacity);
-                _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, outline_color, opacity);
-                if (x != 0)
-                    {
-                    _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, outline_color, opacity);
-                    _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, outline_color, opacity);
-                    }
-                }
-            if (s >= 0) 
-                {
-                s += fx2 * (1 - y);
-                y--;
-                if (FILL)
-                    {
-                    if (ry2 * x <= rx2 * y)
-                        {
-                        _drawFastHLine<CHECKRANGE>({ x0 - x, y0 - y }, x + x + 1, interior_color, opacity);
-                        _drawFastHLine<CHECKRANGE>({ x0 - x, y0 + y }, x + x + 1, interior_color, opacity);
-                        yt = y;
-                        }
-                    }
-                }
-            s += ry2 * ((4 * x) + 6);
-            }
-        
-        for (x = rx, y = 0, s = 2 * rx2 + ry2 * (1 - 2 * rx); rx2 * y <= ry2 * x; y++) 
-            {
-            if (OUTLINE)
-                {
-                _drawPixel<CHECKRANGE>({ x0 - x, y0 - y }, outline_color, opacity);
-                _drawPixel<CHECKRANGE>({ x0 + x, y0 - y }, outline_color, opacity);
-                if (y != 0)
-                    {
-                    _drawPixel<CHECKRANGE>({ x0 - x, y0 + y }, outline_color, opacity);
-                    _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, outline_color, opacity);
-                    }
-                }
-            if (FILL)
-                {
-                if (y != yt)
-                    {
-                    if (y != 0)
-                        {
-                        _drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 - y }, x + x - 1, interior_color, opacity);
-                        }
-                    _drawFastHLine<CHECKRANGE>({ x0 - x + 1, y0 + y }, x + x - 1, interior_color, opacity);
-                    }
-                }
-
-            if (s >= 0)
-                {
-                s += fy2 * (1 - x);
-                x--;
-                }
-            s += rx2 * ((4 * y) + 6);
-            }
-        }
-
+    
 
 
 
@@ -3702,6 +3802,36 @@ namespace tgx
 
         tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture_blend_op<BLEND_OPERATOR, color_t, color_t_tex>);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
