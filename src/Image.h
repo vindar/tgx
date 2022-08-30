@@ -942,6 +942,7 @@ namespace tgx
 
 
         /*****************************************************
+        * DRAWING LINES
         * LOW QUALITY (FAST) DRAWING METHODS
         ******************************************************/
 
@@ -1025,6 +1026,7 @@ namespace tgx
 
 
         /*****************************************************
+        * DRAWING LINES
         * HIGH QUALITY (SLOW) DRAWING METHODS
         ******************************************************/
 
@@ -1074,6 +1076,145 @@ namespace tgx
         void drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, float line_width_P2, bool rounded_ends, color_t color, float opacity = 1.0f);
 
 
+
+
+
+        /********************************************************************************
+        *
+        * DRAWING RECTANGLES AND ROUNDED RECTANGLES
+        *
+        *********************************************************************************/
+
+
+        /*****************************************************
+        * DRAWING RECTANGLES AND ROUNDED RECTANGLES
+        * LOW QUALITY (FAST) DRAWING METHODS
+        ******************************************************/
+
+
+
+        /*********************************************************************
+        *
+        * drawing rectangles
+        *
+        **********************************************************************/
+
+
+        /**
+         * Draw a rectangle.
+         *
+         * @param   B       Box that delimits the rectangle to draw.
+         * @param   color   rectangle outline color.
+         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f] or negative to
+         *                  disable blending.
+        **/        
+        void drawRect(const iBox2 & B, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+  
+
+
+        /**
+         * Draw a filled rectangle.
+         *
+         * @param   B       box that delimits the rectangle to draw.
+         * @param   color   rectangle color.
+         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending.
+        **/
+        void fillRect(const iBox2 & B, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a rectangle filled with an horizontal gradient of colors
+         *
+         * @param   B           box that delimits the rectangle to draw.
+         * @param   color_left  color on the left side
+         * @param   color_right color on the right side
+         * @param   opacity     (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending.
+        **/
+        void fillRectHGradient(iBox2 B, color_t color_left, color_t color_right, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a rectangle filled with a vertical gradient of colors
+         *
+         * @param   B       box that delimits the rectangle to draw.
+         * @param   color1  color on the top side.
+         * @param   color2  color on the bottom side.
+         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending.
+        **/
+        void fillRectVGradient(iBox2 B, color_t color_top, color_t color_bottom, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a rounded rectangle in box B with corner radius r.
+         *
+         * @param   B       box that delimits the rectangle to draw.
+         * @param   r       corner radius.
+         * @param   color   rectangle color.
+         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending.
+        **/
+        void drawRoundRect(const iBox2& B, int r, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a filled rounded rectangle in box B with corner radius r.
+         *
+         * @param   B       box that delimits the rectangle to draw.
+         * @param   r       corner radius.
+         * @param   color   rectangle color.
+         * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
+         *                  blending.
+        **/
+        void fillRoundRect(const iBox2& B, int r, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+        /*****************************************************
+        * DRAWING RECTANGLES AND ROUNDED RECTANGLES
+        * HIGH QUALITY (SLOW) DRAWING METHODS
+        ******************************************************/
+
+
+        //void drawSmoothThickRect();
+
+        //void fillSmoothRect();
+
+        //void drawSmoothThickRoundRect();
+        
+        //void fillSmoothRoundRect();
+
+
+
+
+
+
+        /********************************************************************************
+        *
+        * DRAWING TRIANGLES
+        *
+        *********************************************************************************/
+
+
+
+
+
+        /********************************************************************************
+        *
+        * DRAWING QUADS
+        *
+        *********************************************************************************/
+
+
+
+
+        /********************************************************************************
+        *
+        * DRAWING CIRCLES AND ELLIPSES
+        *
+        *********************************************************************************/
 
 
 
@@ -1187,40 +1328,11 @@ namespace tgx
 
 
 
-        /********************************************************************************
-        *
-        * DRAWING RECTANGLES AND ROUNDED RECTANGLES
-        *
-        *********************************************************************************/
 
 
 
 
 
-        /********************************************************************************
-        *
-        * DRAWING TRIANGLES
-        *
-        *********************************************************************************/
-
-
-
-
-
-        /********************************************************************************
-        *
-        * DRAWING QUADS
-        *
-        *********************************************************************************/
-
-
-
-
-        /********************************************************************************
-        *
-        * DRAWING CIRCLES AND ELLIPSES
-        *
-        *********************************************************************************/
 
 
 
@@ -1253,554 +1365,6 @@ namespace tgx
         **/
         void fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
-
-
-
-
-        /*********************************************************************
-        *
-        * drawing rectangles
-        *
-        **********************************************************************/
-
-
-        /**
-         * Draw a rectangle (single pixel wide)
-         *
-         * @param   B       box that delimits the rectangle to draw.
-         * @param   color   rectangle outline color.
-         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f] or negative to
-         *                  disable blending.
-        **/
-
-        /*
-        void drawRect(const iBox2& B, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE)
-            {
-            drawRect( { B.minX, B.minY }, {B.lx(), B.ly()}, color, opacity);
-            }
-         */
-
-
-        /**
-         * Draw a rectangle (single pixel wide)
-         *
-         * @param   upper_left_pos  The upper left coord of the ranctagle.
-         * @param   dimension       The dimension (width, height)
-         * @param   color           rectangle outline color.
-         * @param   opacity         (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                          negative to disable blending.
-        **/
-        /*
-        void drawRect(iVec2 upper_left_pos, iVec2 dimension, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE)
-            {
-            const int x = upper_left_pos.x;
-            const int y = upper_left_pos.y;
-            const int w = dimension.x;
-            const int h = dimension.y;
-            drawFastHLine<true>({ x, y }, w, color, opacity);
-            if (h > 1) drawFastHLine<true>({ x, y + h - 1 }, w, color);
-            drawFastVLine<true>({ x, y + 1 }, h - 2, color);
-            if (w > 1) drawFastVLine<true>({ x + w - 1, y + 1 }, h - 2, color);
-            }
-        */
-
-
-
-        /**
-         * Draw a thick rectangle.
-         *
-         * @param   B           box that delimits the rectangle to draw.
-         * @param   thickness   thickness of the outline in pixels.
-         * @param   color       rectangle outline color.
-         * @param   opacity     (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative
-         *                      to disable blending.
-        **/
-//        void drawThickRect(const iBox2& B, int thickness, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Draw a thick rectangle.
-         *
-         * @param   upper_left_pos  The upper left coord of the ranctagle.
-         * @param   dimension       The dimension (width, height)
-         * @param   thickness       thickness of the outline in pixels.
-         * @param   color           rectangle outline color.
-         * @param   opacity         (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                          negative to disable blending.
-        **/
-//        void drawThickRect(iVec2 upper_left_pos, iVec2 dimension, int thickness, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Draw a filled rectangle.
-         *
-         * @param   B       box that delimits the rectangle to draw.
-         * @param   color   rectangle interior color.
-         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
-         *                  disable blending.
-        **/
-//        void fillRect(iBox2 B, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Draw a filled rectangle
-         *
-         * @param   upper_left_pos  The upper left coord of the ranctagle.
-         * @param   dimension       The dimension (width, height)
-         * @param   color           rectangle interior color.
-         * @param   opacity         (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                          negative to disable blending.
-        **/
-//        void fillRect(iVec2 upper_left_pos, iVec2 dimension, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Draw a rectangle filled with an horizontal gradient of colors
-         *
-         * @param   B           box that delimits the rectangle to draw.
-         * @param   color_left  color on the left side
-         * @param   color_right color on the right side
-         * @param   opacity     (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative
-         *                      to disable blending.
-        **/
-//        void fillRectHGradient(iBox2 B, color_t color_left, color_t color_right, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Draw a rectangle filled with a vertical gradient of colors
-         *
-         * @param   B       box that delimits the rectangle to draw.
-         * @param   color1  color on the left side.
-         * @param   color2  color on the right side.
-         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
-         *                  disable blending.
-        **/
-//        void fillRectVGradient(iBox2 B, color_t color_top, color_t color_bottom, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-//        void drawRoundRect();
-
-//        void fillRoundRect();
-
-//        void drawSmoothThickRoundRect();
-
-//        void fillSmoothThickRoundRect();
-
-
-
-
-
-        /**
-         * Draw a rectangle corresponding to the box B.
-         * 
-         * Blend with the current color background using opacity between 0.0f (fully transparent) and
-         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-         *
-         * @param   B       B representing the rectangle.
-         * @param   color   Color to use.
-         * @param   opacity between 0.0f (transparent) to 1.0f (fully opaque).
-        **/
-        void drawRect(const iBox2& B, color_t color, float opacity)
-            {
-            drawRect({ B.minX, B.minY }, { B.lx(), B.ly() }, color, opacity);
-            }
-
-
-        /**
-         * Draw a rectangle with given upper left corner and dimension.
-         * 
-         * Blend with the current color background using opacity between 0.0f (fully transparent) and
-         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-         *
-         * @param   upper_left_pos  Position of the upper left corner of the rectangle.
-         * @param   dimension       (width,height) of the rectangle.
-         * @param   color           color to use.
-         * @param   opacity         between 0.0f (transparent) to 1.0f (fully opaque).
-        **/
-        void drawRect(iVec2 upper_left_pos, iVec2 dimension, color_t color, float opacity)
-            {
-            const int x = upper_left_pos.x;
-            const int y = upper_left_pos.y;
-            const int w = dimension.x;
-            const int h = dimension.y;
-            drawFastHLine({ x, y }, w, color, opacity);
-            if (h > 1) drawFastHLine({ x, y + h - 1 }, w, color, opacity);
-            drawFastVLine({ x, y + 1 }, h - 2, color, opacity);
-            if (w > 1) drawFastVLine({ x + w - 1, y + 1 }, h - 2, color, opacity);
-            }
-
-
-        /**
-        * Draw a rectangle with size (w,h) and upperleft corner at (x,y)
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawRect(int x, int y, int w, int h, color_t color, float opacity)
-            {
-            drawRect({ x, y }, { w, h }, color, opacity);
-            }
-
-
-        /**
-         * Fill a rectangle region with a single color
-         *
-         * @param   B       Box representing the rectangle
-         * @param   color   The color to use
-        **/
-        void fillRect(iBox2 B, color_t color);
-
-
-        /**
-         * Fill a rectangle region with a single color
-         *
-         * @param   upper_left_pos  Position of the upper left corner of the rectangle.
-         * @param   dimension       (width,height) of the rectangle.
-         * @param   color           color to use.
-        **/
-        void fillRect(iVec2 upper_left_pos, iVec2 dimension, color_t color)
-            {
-            fillRect(iBox2(upper_left_pos.x, upper_left_pos.x + dimension.x - 1, upper_left_pos.y, upper_left_pos.y + dimension.y - 1), color);
-            }
-
-
-        /**
-        * Fill a rectangle region with a single color
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillRect(int x, int y, int w, int h, color_t color)
-            {
-            fillRect(iBox2( x, x + w - 1, y, y + h - 1 ), color);
-            }
-
-
-
-        /**
-         * Fill a rectangle region with a single color
-         * 
-         * Blend with the current color background using opacity between 0.0f (fully transparent) and
-         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-         *
-         * @param   B       An iBox2 to process.
-         * @param   color   The color.
-         * @param   opacity The opacity.
-        **/
-        void fillRect(iBox2 B, color_t color, float opacity);
-
-
-        /**
-         * Fill a rectangle region with a single color
-         * 
-         * Blend with the current color background using opacity between 0.0f (fully transparent) and
-         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-         *
-         * @param   upper_left_pos  Position of the upper left corner of the rectangle.
-         * @param   dimension       (width,height) of the rectangle.
-         * @param   color           color to use.
-         * @param   opacity         between 0.0f (transparent) to 1.0f (fully opaque).
-        **/
-        void fillRect(iVec2 upper_left_pos, iVec2 dimension, color_t color, float opacity)
-            {
-            fillRect(iBox2(upper_left_pos.x, upper_left_pos.x + dimension.x - 1, upper_left_pos.y, upper_left_pos.y + dimension.y - 1), color, opacity);
-            }
-
-
-        /**
-         * Fill a rectangle region with a single color
-         * 
-         * Blend with the current color background using opacity between 0.0f (fully transparent) and
-         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-         *
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillRect(int x, int y, int w, int h, color_t color, float opacity)
-            {
-            fillRect(iBox2( x, x + w - 1, y, y + h - 1 ), color, opacity);
-            }
-
-
-        /**
-         * Fill a rectangle with different colors for the outline and the interior
-         *
-         * @param   B               box representing the rectangle
-         * @param   color_interior  color for the interior
-         * @param   color_outline   color for the outline
-        **/
-        void fillRect(iBox2 B, color_t color_interior, color_t color_outline)
-            {
-            drawRect(B, color_outline);
-            fillRect(iBox2(B.minX + 1, B.maxX - 1, B.minY + 1, B.maxY - 1), color_interior);
-            }
-
-
-        /**
-         * Fill a rectangle with different colors for the outline and the interior
-         *
-         * @param   upper_left_pos  upper left corner of the rectangle
-         * @param   dimension       (width, height) of the rectangle
-         * @param   color_interior  color for the interior.
-         * @param   color_outline   color for the outline.
-        **/
-        void fillRect(iVec2 upper_left_pos, iVec2 dimension, color_t color_interior, color_t color_outline)
-            {
-            fillRect(iBox2(upper_left_pos.x, upper_left_pos.x + dimension.x - 1, upper_left_pos.y, upper_left_pos.y + dimension.y - 1), color_interior, color_outline);
-            }
-
-
-        /**
-        * Fill a rectangle with different colors for the outline and the interior
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillRect(int x, int y, int w, int h, color_t color_interior, color_t color_outline)
-            {
-            fillRect(iBox2( x, x + w - 1, y, y + h - 1 ), color_interior, color_outline);
-            }
-
-
-        /**
-         * Fill a rectangle with different colors for the outline and the interior
-         * 
-         * Blend with the current color background using opacity between 0.0f (fully transparent) and
-         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-         *
-         * @param   B               box representing the rectangle.
-         * @param   color_interior  color for the interior.
-         * @param   color_outline   color for the outline.
-         * @param   opacity         opacity between 0.0f (transparent) and 1.0f (opaque).
-        **/
-        void fillRect(iBox2 B, color_t color_interior, color_t color_outline, float opacity)
-            {
-            drawRect(B, color_outline, opacity);
-            fillRect(iBox2(B.minX + 1, B.maxX - 1, B.minY + 1, B.maxY - 1), color_interior, opacity);
-            }
-
-
-        /**
-         * Fill a rectangle with different colors for the outline and the interior
-         * 
-         * Blend with the current color background using opacity between 0.0f (fully transparent) and
-         * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-         *
-         * @param   upper_left_pos  upper left corner of the rectangle.
-         * @param   dimension       (width, height) of the rectangle.
-         * @param   color_interior  color for the interior.
-         * @param   color_outline   color for the outline.
-         * @param   opacity         opacity between 0.0f (transparent) and 1.0f (opaque).
-        **/
-        void fillRect(iVec2 upper_left_pos, iVec2 dimension, color_t color_interior, color_t color_outline, float opacity)
-            {
-            fillRect(iBox2(upper_left_pos.x, upper_left_pos.x + dimension.x - 1, upper_left_pos.y, upper_left_pos.y + dimension.y - 1), color_interior, color_outline, opacity);
-            }
-
-
-        /**
-        * Fill a rectangle with different colors for the outline and the interior
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillRect(int x, int y, int w, int h, color_t color_interior, color_t color_outline, float opacity)
-            {
-            fillRect(iBox2( x, x + w - 1, y, y + h - 1 ), color_interior, color_outline, opacity);
-            }
-
-
-
-        /**
-        * Draw a rounded rectangle in box B with corner radius r.
-        **/
-        void drawRoundRect(const iBox2 & B, int r, color_t color)
-            {
-            const int x = B.minX;
-            const int y = B.minY;
-            const int w = B.lx();
-            const int h = B.ly();
-            if (!isValid() || (w <= 0) || (h <= 0)) return;
-            if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
-                _drawRoundRect<false>(x, y, w, h, r, color);
-            else
-                _drawRoundRect<true>(x, y, w, h, r, color);
-            }
-
-
-        /**
-        * Draw a rounded rectangle with upper left corner (x,y), width w and 
-        * height h and with corner radius r.
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawRoundRect(int x, int y, int w, int h, int r, color_t color)
-            {
-            drawRoundRect(iBox2{ x, x + w - 1 ,y, y + h - 1 }, r, color);
-            }
-
-
-        /**
-        * Draw a rounded rectangle in box B with corner radius r.
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        void drawRoundRect(const iBox2 & B, int r, color_t color, float opacity)
-            {
-            const int x = B.minX;
-            const int y = B.minY;
-            const int w = B.lx();
-            const int h = B.ly();
-            if (!isValid() || (w <= 0) || (h <= 0)) return;
-            if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
-                _drawRoundRect<false>(x, y, w, h, r, color, opacity);
-            else
-                _drawRoundRect<true>(x, y, w, h, r, color, opacity);
-            }
-
-
-        /**
-        * Draw a rounded rectangle with upper left corner (x,y), width w and 
-        * height h and with corner radius r.
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity)
-            {
-            drawRoundRect(iBox2{ x, x + w - 1 ,y, y + h - 1 }, r, color, opacity);
-            }
-
-
-        /**
-        * Draw a filled rounded rectangle in box B with corner radius r.
-        **/
-        void fillRoundRect(const iBox2 & B, int r, color_t color)
-            {   
-            const int x = B.minX;
-            const int y = B.minY;
-            const int w = B.lx();
-            const int h = B.ly();
-            if (!isValid() || (w <= 0) || (h <= 0)) return;
-            if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
-                _fillRoundRect<false>(x, y, w, h, r, color);
-            else
-                _fillRoundRect<true>(x, y, w, h, r, color);
-            }
-
-
-        /**
-        * Draw a filled rounded rectangle with upper left corner (x,y), width w and
-        * height h and with corner radius r.
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillRoundRect(int x, int y, int w, int h, int r, color_t color)
-            {
-            fillRoundRect(iBox2{ x, x + w - 1 ,y, y + h - 1 }, r, color);
-            }
-
-
-        /**
-        * Draw a filled rounded rectangle in box B with corner radius r.
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        void fillRoundRect(const iBox2& B, int r, color_t color, float opacity)
-            {
-            const int x = B.minX;
-            const int y = B.minY;
-            const int w = B.lx();
-            const int h = B.ly();
-            if (!isValid() || (w <= 0) || (h <= 0)) return;
-            if ((x >= 0) && (x + w < _lx) && (y >= 0) && (y + h < _ly))
-                _fillRoundRect<false>(x, y, w, h, r, color, opacity);
-            else
-                _fillRoundRect<true>(x, y, w, h, r, color, opacity);
-            }
-
-
-        /**
-        * Draw a filled rounded rectangle with upper left corner (x,y), width w and 
-        * height h and with corner radius r.
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity)
-            {
-            fillRoundRect(iBox2{ x, x + w - 1 ,y, y + h - 1 }, r, color, opacity);
-            }
-
-
-
-        /**
-        * Fill a rectangle region with a horizontal color gradient between color1 and color2.
-        * color interpolation takes place in RGB color space (even if color_t is HSV).
-        **/
-        void fillRectHGradient(iBox2 B, color_t color1, color_t color2);
-
-
-        /**
-        * Fill a rectangle region with a horizontal color gradient between color1 and color2.
-        * color interpolation takes place in RGB color space (even if color_t is HSV).
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillRectHGradient(int x, int y, int w, int h, color_t color1, color_t color2)
-            {
-            fillRectHGradient(iBox2(x, x + w - 1, y, y + h - 1), color1, color2);
-            }
-
-
-        /**
-        * Fill a rectangle region with a horizontal color gradient between color1 and color2.
-        * color interpolation takes place in RGB color space (even if color_t is HSV).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        void fillRectHGradient(iBox2 B, color_t color1, color_t color2, float opacity);
-
-
-        /**
-        * Fill a rectangle region with a horizontal color gradient between color1 and color2.
-        * color interpolation takes place in RGB color space (even if color_t is HSV).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillRectHGradient(int x, int y, int w, int h, color_t color1, color_t color2, float opacity)
-            {
-            fillRectHGradient(iBox2(x, x + w - 1, y, y + h - 1), color1, color2, opacity);
-            }
-
-
-        /**
-        * Fill a rectangle region with a vertical color gradient between color1 and color2.
-        * color interpolation takes place in RGB color space (even if color_t is HSV).
-        **/
-        void fillRectVGradient(iBox2 B, color_t color1, color_t color2);
-
-
-        /**
-        * Fill a rectangle region with a vertical color gradient between color1 and color2.
-        * color interpolation takes place in RGB color space (even if color_t is HSV).
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillRectVGradient(int x, int y, int w, int h, color_t color1, color_t color2)
-            {
-            fillRectVGradient(iBox2(x, x + w - 1, y, y + h - 1), color1, color2);
-            }
-
-
-        /**
-        * Fill a rectangle region with a vertical color gradient between color1 and color2.
-        * color interpolation takes place in RGB color space (even if color_t is HSV).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        void fillRectVGradient(iBox2 B, color_t color1, color_t color2, float opacity);
-
-
-        /**
-        * Fill a rectangle region with a vertical color gradient between color1 and color2.
-        * color interpolation takes place in RGB color space (even if color_t is HSV).
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        DEPRECATED_SCALAR_PARAMS void fillRectVGradient(int x, int y, int w, int h, color_t color1, color_t color2, float opacity)
-            {
-            fillRectVGradient(iBox2(x, x + w - 1, y, y + h - 1), color1, color2, opacity);
-            }
 
 
 
@@ -2803,7 +2367,7 @@ namespace tgx
 
 
 
-private:
+// private:
 
 
 
@@ -2956,6 +2520,19 @@ private:
             }
 
 
+        template<bool CHECKRANGE = false> inline TGX_INLINE void _bseg_update_pixel(const BSeg & seg, color_t color, int32_t op, int32_t aa)
+            {
+            const int x = seg.X();
+            const int y = seg.Y();
+            if (CHECKRANGE)
+                {
+                if ((x < 0) || (y < 0) || (x >= _lx) || (y >= _ly)) return;
+                }
+            _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)].blend256(color, (uint32_t)((op * aa)>>8));
+            }
+
+
+
 
 
         template<int SIDE> void _bseg_draw_template(BSeg& seg, bool draw_first, bool draw_last, color_t color, int32_t op, bool checkrange);
@@ -2980,14 +2557,15 @@ private:
 
         /**
          * Draw the bresenham segment [P,Q| while avoiding [P,A|
-         *
+         * if drawP is set and AA on on , the pixel at P is draw using the minimum AA value.
+         * 
          *             A
          *            /
          *           /
          *          /
          *        P+-------------Q
         **/
-        void _bseg_avoid1(BSeg& PQ, BSeg& PA, bool drawQ, bool closedPA, color_t color, int side, int32_t op, bool checkrange);
+        void _bseg_avoid1(BSeg& PQ, BSeg& PA, bool drawP, bool drawQ, bool closedPA, color_t color, int side, int32_t op, bool checkrange);
 
 
          
@@ -3016,6 +2594,8 @@ private:
 
         /**
         * Draw the bresenham segment [P,Q| while avoiding [P,A| and [Q,B|
+        * if drawP is set and AA on on , the pixel at P is draw using the minimum AA value.
+        * if drawQ is set and AA on on , the pixel at Q is draw using the minimum AA value.
         *
         *     A                     B
         *      \                   /
@@ -3025,7 +2605,7 @@ private:
         *         P             Q
 
         **/
-        void _bseg_avoid11(BSeg & PQ, BSeg& PA, BSeg & QB, bool closedPA, bool closedQB, color_t color, int side, int32_t op, bool checkrange);
+        void _bseg_avoid11(BSeg & PQ, BSeg& PA, BSeg & QB, bool drawP, bool drawQ, bool closedPA, bool closedQB, color_t color, int side, int32_t op, bool checkrange);
 
 
 
@@ -3111,6 +2691,13 @@ private:
         void _bseg_fill_interior_angle_sub(int dir, int y, int ytarget, BSeg& sega, BSeg& segb, color_t color, float opacity);
 
 
+        inline float _triangleAera(fVec2 P1, fVec2 P2, fVec2 P3)
+            {
+            return P1.x * (P2.y - P3.y) + P2.x * (P3.y - P1.y) + P3.x * (P1.y - P2.y);
+            }
+
+
+        /*
         int32_t _bseg_intersect_AA(const BSeg& segPA, int side_PA, const BSeg& segPB)
             {   
             const fVec2 VA = segPA.unitVec(); 
@@ -3132,12 +2719,8 @@ private:
                 }
             return ((a < 0) ? 0 : ((a > 256) ? 256 : a));
             }
+        */
 
-
-        inline float _triangleAera(fVec2 P1, fVec2 P2, fVec2 P3)
-            {
-            return (((-P3.x) * (P3.y)) + ((P2.x) * (P2.y)) + ((P3.x - P2.x) * (P3.y + P2.y))) * 0.5f;
-            }
 
 
 
@@ -3244,6 +2827,33 @@ private:
 
 
         /***************************************
+        * RECT AND ROUNDED RECT
+        ****************************************/
+
+        void _fillRect(iBox2 B, color_t color, float opacity);
+
+
+        template<bool CHECKRANGE>
+        void _drawRoundRect(int x, int y, int w, int h, int r, color_t color);
+
+        template<bool CHECKRANGE>
+        void _drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
+
+        
+        template<bool CHECKRANGE>
+        void _fillRoundRect(int x, int y, int w, int h, int r, color_t color);
+
+        
+        template<bool CHECKRANGE>
+        void _fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
+
+
+
+
+
+
+
+        /***************************************
         * DRAWING BEZIER
         ****************************************/
 
@@ -3286,11 +2896,6 @@ private:
 
 
 
-
-
-
-
-
         void _drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity);
 
 
@@ -3313,29 +2918,11 @@ private:
         void _drawTriangle_sub(int x0, int y0, int x1, int y1, int x2, int y2, color_t interior_color, color_t outline_color, float opacity);
 
     
-        /** draw a rounded rectangle outline */
-        template<bool CHECKRANGE> 
-        void _drawRoundRect(int x, int y, int w, int h, int r, color_t color);
 
 
-        /** draw a rounded rectangle outline */
-        template<bool CHECKRANGE> 
-        void _drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
 
 
-        /** fill a rounded rectangle  */
-        template<bool CHECKRANGE> 
-        void _fillRoundRect(int x, int y, int w, int h, int r, color_t color);
 
-
-        /** fill a rounded rectangle  */
-        template<bool CHECKRANGE> 
-        void _fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
-
-
-        /** taken from Adafruit GFX library */
-        template<bool CHECKRANGE> 
-        void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color);
 
 
         /** taken from Adafruit GFX library */
@@ -3343,14 +2930,14 @@ private:
         void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color, float opacity);
 
 
-        /** taken from Adafruit GFX library */
-        template<bool CHECKRANGE> 
-        void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color);
-
 
         /** taken from Adafruit GFX library */
         template<bool CHECKRANGE> 
         void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color, float opacity);
+
+
+
+
 
 
         /** filled circle drawing method */
@@ -3361,6 +2948,9 @@ private:
         /** filled circle drawing method */
         template<bool OUTLINE, bool FILL, bool CHECKRANGE> 
         void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity);
+
+
+
 
 
         /** adapted from bodmer e_tft library */
@@ -3374,12 +2964,11 @@ private:
 
 
 
+
+
         /***************************************
         * High Quality drawing primitive
         ****************************************/
-
-
-
 
 
 
@@ -3490,6 +3079,33 @@ private:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /******************************************************************************************************************************************************
         *																				   																      *
         *                                                        TRIANGLE FILLING                                                                             *
@@ -3497,11 +3113,6 @@ private:
         *******************************************************************************************************************************************************/
 
 
-
-
-
-        public: 
-        /** Compute the signed aera of a triangle. */
 
 
 
@@ -3516,15 +3127,15 @@ private:
         void _fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
             {
             float a = _triangleAera(P1, P2, P3); // winding direction of the polygon            
-            const int w = (a > 0) ? -1 : ((a < 0) ? 1 : 0);
+            const int w = (a > 0) ? 1 : ((a < 0) ? -1 : 0);
             const int op = (int)(opacity * 256);
             BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
             BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
             BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
             _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangle 
-            _bseg_draw(seg12, true, false, color, w, op, true);
-            _bseg_avoid1(seg23, seg21, true, true, color, w, op, true);
-            _bseg_avoid11(seg31, seg32, seg12, true, true, color, w, op, true);
+            _bseg_draw(seg12, false, false, color, w, op, true);
+            _bseg_avoid1(seg23, seg21, true, false, true, color, w, op, true);
+            _bseg_avoid11(seg31, seg32, seg12, true, true, true, true, color, w, op, true);
             }
 
 
@@ -3546,7 +3157,7 @@ private:
                 return;
                 }
             const float a = _triangleAera(P1, P2, P3); // winding direction of the polygon
-            const int w = (a > 0) ? -1 : ((a < 0) ? 1 : 0);
+            const int w = (a > 0) ? 1 : ((a < 0) ? -1 : 0);
             const int op = (int)(opacity * 256);
             BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
             BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
@@ -3555,10 +3166,10 @@ private:
             BSeg seg41(P4, P1); BSeg seg14 = seg41.get_reverse();
             _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangles 
             _bseg_fill_triangle_precomputed(P1, P3, P4, seg13, seg31, seg34, seg43, seg41, seg14, color, opacity);	// fill the triangles 
-            _bseg_draw(seg12, true, true, color, w, op, true);
-            _bseg_draw(seg34, true, true, color, w, op, true);
-            _bseg_avoid11(seg41, seg43, seg12, true, true, color, w, op, true);
-            _bseg_avoid11(seg23, seg21, seg34, true, true, color, w, op, true);
+            _bseg_draw(seg12, false, false, color, w, op, true);
+            _bseg_draw(seg34, false, false, color, w, op, true);
+            _bseg_avoid11(seg41, seg43, seg12, true, true, true, true, color, w, op, true);
+            _bseg_avoid11(seg23, seg21, seg34, true, true, true, true, color, w, op, true);
             _bseg_avoid22(seg13, seg12,seg14,seg32,seg34, true, true, true, true, color, 0, op, true);
             }
 
