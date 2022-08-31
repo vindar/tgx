@@ -1279,6 +1279,32 @@ namespace tgx
 
 
         /**
+         * Draw a smooth (with anti-aliasing and sub-pixel precision) triangle
+         *
+         * @param   P1      first vertex.
+         * @param   P2      second vertex.
+         * @param   P3      third vertex.
+         * @param   color   The color.
+         * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw smooth thick triangle. The vertex coordinates (P1, P2, P3) are those for the exterior
+         * outline of the triangle and the thickness is 'inside' the triangle.
+         *
+         * @param   P1          first vertex.
+         * @param   P2          second vertex.
+         * @param   P3          third vertex.
+         * @param   thickness   The thickness. Should be >=1 otherwise use drawSmoothTriangle() instead.
+         * @param   color       The color.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color, float opacity = 1.0f);
+
+
+        /**
          * Fill smooth (with anti-aliasing and sub-pixel precision) triangle
          *
          * @param   P1      first vertex.
@@ -1347,8 +1373,27 @@ namespace tgx
 
 
 
+        /********************************************************************************
+        *
+        * DRAWING POLYGONS
+        *
+        *********************************************************************************/
 
 
+
+
+        /*****************************************************
+        * DRAWING POLYGONS
+        * LOW QUALITY (FAST) DRAWING METHODS
+        ******************************************************/
+
+
+
+
+        /*****************************************************
+        * DRAWING POLYGONS
+        * HIGH QUALITY (SLOW) DRAWING METHODS
+        ******************************************************/
 
 
 
@@ -2825,7 +2870,14 @@ private:
         void _fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity);
 
 
+        void _drawSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity);
+
+
+        void _drawSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color, float opacity);
+
+
         void _fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity);
+
 
 
 

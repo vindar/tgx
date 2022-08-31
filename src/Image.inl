@@ -2485,6 +2485,45 @@ namespace tgx
 
 
 
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _drawSmoothTriangle(P1, P2, P3, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
+        {
+        const int op = (int)(opacity * 256);
+        _bseg_draw_AA(BSeg(P1, P2), true, false, color, op, true);
+        _bseg_draw_AA(BSeg(P2, P3), true, false, color, op, true);
+        _bseg_draw_AA(BSeg(P3, P1), true, false, color, op, true);
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _drawSmoothThickTriangle(P1, P2, P3, thickness, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color, float opacity)
+        {
+
+
+        }
+
+
     template<typename color_t>
     void Image<color_t>::fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
         {
@@ -2508,6 +2547,7 @@ namespace tgx
         _bseg_avoid1(seg23, seg21, true, false, true, color, w, op, true);
         _bseg_avoid11(seg31, seg32, seg12, true, true, true, true, color, w, op, true);
         }
+
 
 
 
