@@ -1145,25 +1145,25 @@ namespace tgx
         /**
          * Draw a rounded rectangle in box B with corner radius r.
          *
-         * @param   B       box that delimits the rectangle to draw.
-         * @param   r       corner radius.
-         * @param   color   rectangle color.
-         * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
-         *                  disable blending.
+         * @param   B               box that delimits the rectangle to draw.
+         * @param   corner_radius   corner radius.
+         * @param   color           rectangle color.
+         * @param   opacity         (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending.
         **/
-        void drawRoundRect(const iBox2& B, int r, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawRoundRect(const iBox2& B, int corner_radius, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
          * Draw a filled rounded rectangle in box B with corner radius r.
          *
-         * @param   B       box that delimits the rectangle to draw.
-         * @param   r       corner radius.
-         * @param   color   rectangle color.
-         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
-         *                  disable blending.
+         * @param   B               box that delimits the rectangle to draw.
+         * @param   corner_radius   corner radius.
+         * @param   color           rectangle color.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending.
         **/
-        void fillRoundRect(const iBox2& B, int r, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillRoundRect(const iBox2& B, int corner_radius, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
 
@@ -1173,13 +1173,56 @@ namespace tgx
         ******************************************************/
 
 
-        //void drawSmoothThickRect();
+        /**
+         * Draw a filed rectangle wih sub-pixel precision and anti-aliasing.
+         * 
+         * WARNING: This is probably not the method you want to use... If you just want to draw
+         *          a rectangle use try drawRect() instead. This method is useful for creating very
+         *          smooths animations (when the rectangle moves by less than a pixel).
+         * 
+         * NOTE: Recall that pixel centers are at integer values (and the full image range is
+         *       [-0.5, lx - 0.5] x [-0.5, lx-0.5]), therefore, giving a box with integer values to this
+         *       method will create aliasing along the edges of the rectangle...
+         *
+         * @param   B       Box representing the rectngle to daw.
+         * @param   color   color.
+         * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothRect(const fBox2& B, color_t color, float opacity = 1.0f);
 
-        //void fillSmoothRect();
 
-        //void drawSmoothThickRoundRect();
-        
-        //void fillSmoothRoundRect();
+        /**
+         * Draw a smooth (i.e. anti-aliased with subpixel precision) rounded rectangle.
+         * 
+         * @param   B               Box representing the rectngle to daw.
+         * @param   corner_radius   corner radius.
+         * @param   color           color.
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothRoundRect(const fBox2& B, float corner_radius, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a smooth (i.e. anti-aliased with subpixel precision) thick rounded rectangle.
+         * 
+         * @param   B               Box representing the rectngle to daw.
+         * @param   corner_radius   corner radius.
+         * @param   thickness       thickness (should be >1, otherwise use drawSmoothRoundRect() instead)
+         * @param   color           color.
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothThickRoundRect(const fBox2& B, float corner_radius, float thickness, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a filled smooth (i.e. anti-aliased with subpixel precision) rounded rectangle.
+         * 
+         * @param   B               Box representing the rectngle to daw.
+         * @param   corner_radius   corner radius.
+         * @param   color           color.
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothRoundRect(const fBox2& B, float corner_radius, color_t color, float opacity = 1.0f);
 
 
 
@@ -1193,6 +1236,70 @@ namespace tgx
         *********************************************************************************/
 
 
+        /*****************************************************
+        * DRAWING TRIANGLES
+        * LOW QUALITY (FAST) DRAWING METHODS
+        ******************************************************/
+
+
+        /**
+         * Draw a triangle.
+         *
+         * @param   P1      first vertex.
+         * @param   P2      second vertex.
+         * @param   P3      third vertex.
+         * @param   color   The color to use.
+         * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
+         *                  blending and simply use overwrite.
+        **/
+        void drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+        /**
+         * Draw a filled triangle with possibly different colors for the outline and the interior.
+         *
+         * @param   P1              first vertex.
+         * @param   P2              second vertex.
+         * @param   P3              third vertex.
+         * @param   interior_color  color for the interior.
+         * @param   outline_color   color for the outline.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply use overwrite.
+        **/
+        void fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+
+        /*****************************************************
+        * DRAWING TRIANGLES
+        * HIGH QUALITY (SLOW) DRAWING METHODS
+        ******************************************************/
+
+
+        /**
+         * Fill smooth (with anti-aliasing and sub-pixel precision) triangle
+         *
+         * @param   P1      first vertex.
+         * @param   P2      second vertex.
+         * @param   P3      third vertex.
+         * @param   color   The color.
+         * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity = 1.0f);
+
+
+
+
+
+        /*****************************************************
+        * DRAWING TRIANGLES
+        * ADVANCED DRAWING METHODS FOR GRADIENT AND TEXTURING
+        * USING THE 3D TRIANGLE RASTERIZER BACKEND.  
+        ******************************************************/
+
+
 
 
 
@@ -1201,6 +1308,50 @@ namespace tgx
         * DRAWING QUADS
         *
         *********************************************************************************/
+
+
+
+
+        /*****************************************************
+        * DRAWING QUADS
+        * LOW QUALITY (FAST) DRAWING METHODS
+        ******************************************************/
+
+
+
+
+
+        /*****************************************************
+        * DRAWING QUADS
+        * HIGH QUALITY (SLOW) DRAWING METHODS
+        ******************************************************/
+
+
+
+        /**
+         * Fill (with anti-aliasing and sub-pixel precision) smooth quad.
+         * 
+         * The quad must be convex.
+         *
+         * @param   P1      first vertex.
+         * @param   P2      second vertex.
+         * @param   P3      third vertex.
+         * @param   P4      fourth vertex.
+         * @param   color   color.
+         * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity = 1.0f);
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1361,6 +1512,7 @@ namespace tgx
 
 
         /*****************************************************
+        * BEZIER CURVES AND SPLINES
         * LOW QUALITY (FAST) DRAWING METHODS
         ******************************************************/
 
@@ -1454,6 +1606,10 @@ namespace tgx
 
 
 
+        /*****************************************************
+        * BEZIER CURVES AND SPLINES
+        * HIGH QUALITY (VERY SLOW) DRAWING METHODS
+        ******************************************************/
 
 
 
@@ -1466,31 +1622,17 @@ namespace tgx
 
 
 
-        /**
-         * Draw a triangle.
-         *
-         * @param   P1      first vertex.
-         * @param   P2      second vertex.
-         * @param   P3      third vertex.
-         * @param   color   The color to use.
-         * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
-         *                  blending and simply use overwrite.
-        **/
-        void drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
-        /**
-         * Draw a filled triangle with possibly different colors for the outline and the interior.
-         *
-         * @param   P1              first vertex.
-         * @param   P2              second vertex.
-         * @param   P3              third vertex.
-         * @param   interior_color  color for the interior.
-         * @param   outline_color   color for the outline.
-         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                          negative to disable blending and simply use overwrite.
-        **/
-        void fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2176,7 +2318,7 @@ namespace tgx
 
 
 
-// private:
+private:
 
 
 
@@ -2187,7 +2329,6 @@ namespace tgx
     * 
     * 
     *************************************************************************************/
-
 
 
 
@@ -2500,6 +2641,7 @@ namespace tgx
         void _bseg_fill_interior_angle_sub(int dir, int y, int ytarget, BSeg& sega, BSeg& segb, color_t color, float opacity);
 
 
+        
         inline float _triangleAera(fVec2 P1, fVec2 P2, fVec2 P3)
             {
             return P1.x * (P2.y - P3.y) + P2.x * (P3.y - P1.y) + P3.x * (P1.y - P2.y);
@@ -2657,7 +2799,44 @@ namespace tgx
         void _fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
 
 
+        void _fillSmoothRect(const fBox2& B, color_t color, float opacity);
 
+
+        void _fillSmoothRoundedRect(const tgx::iBox2& B, float corner_radius, color_t color, float opacity);
+
+
+        void _drawSmoothRoundRect(const tgx::iBox2& B, float corner_radius, color_t color, float opacity);
+
+
+        void _drawSmoothWideRoundRect(const tgx::iBox2& B, float corner_radius, float thickness, color_t color, float opacity);
+
+
+
+
+
+        /***************************************
+        * TRIANGLES
+        ****************************************/
+
+
+        void _drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity);
+
+
+        void _fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity);
+
+
+        void _fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity);
+
+
+
+
+
+        /***************************************
+        * QUADS
+        ****************************************/
+
+
+        void _fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity);
 
 
 
@@ -2715,36 +2894,20 @@ namespace tgx
         void _fillSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
 
 
-        void _fillSmoothEllipse(tgx::fVec2 C, float rx, float ry, tgx::RGB32 color, float opacity);;
+        void _fillSmoothEllipse(tgx::fVec2 C, float rx, float ry, color_t color, float opacity);;
 
 
+        void _drawSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
+ 
 
+        void _drawSmoothEllipse(tgx::fVec2 C, float rx, float ry, color_t color, float opacity);
+        
 
-        /***************************************
-        * Triangles
-        ****************************************/
+        void _drawSmoothThickQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
+        
 
+        void _drawSmoothThickEllipse(tgx::fVec2 C, float rx, float ry, float thickness, color_t color, float opacity);
 
-
-
-        void _drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity);
-
-
-        /** triangle drawing method */
-        template<bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
-        void _drawTriangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t interior_color, color_t outline_color, float opacity)
-        {
-            const iBox2 B = imageBox();
-            if (B.contains(P1) && B.contains(P2) && B.contains(P3))
-                _drawTriangle_sub<false, DRAW_INTERIOR, DRAW_OUTLINE, BLEND>(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, interior_color, outline_color, opacity);
-            else
-                _drawTriangle_sub<true, DRAW_INTERIOR, DRAW_OUTLINE, BLEND>(P1.x, P1.y, P2.x, P2.y, P3.x, P3.y, interior_color, outline_color, opacity);
-        }
-
-
-        /** triangle drawing method templated on CHECKRANGE */
-        template<bool CHECKRANGE, bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
-        void _drawTriangle_sub(int x0, int y0, int x1, int y1, int x2, int y2, color_t interior_color, color_t outline_color, float opacity);
 
 
 
@@ -2758,16 +2921,16 @@ namespace tgx
 
         /** Convert to texture coordinates */
         inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size)
-        {
+            {
             return tgx::fVec2(pos.x / ((float)size.x), pos.y / ((float)size.y));
-        }
+            }
 
 
         /** Convert to viewport coordinates */
         inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size)
-        {
+            {
             return tgx::fVec2((2.0f / ((float)size.x)) * (pos.x) - 1.0f, (2.0f / ((float)size.y)) * (pos.y) - 1.0f);
-        }
+            }
 
 
 
@@ -2816,28 +2979,7 @@ namespace tgx
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
+  
 
 
 
@@ -2918,148 +3060,6 @@ namespace tgx
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /******************************************************************************************************************************************************
-        *																				   																      *
-        *                                                        TRIANGLE FILLING                                                                             *
-        *																																					  *
-        *******************************************************************************************************************************************************/
-
-
-
-
-
-        void fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity = 1.0f)
-            {
-            if (!isValid()) return;
-            if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-            _fillSmoothTriangle(P1, P2, P3, color, opacity);
-            }
-
-
-        void _fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
-            {
-            float a = _triangleAera(P1, P2, P3); // winding direction of the polygon            
-            const int w = (a > 0) ? 1 : ((a < 0) ? -1 : 0);
-            const int op = (int)(opacity * 256);
-            BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
-            BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
-            BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
-            _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangle 
-            _bseg_draw(seg12, false, false, color, w, op, true);
-            _bseg_avoid1(seg23, seg21, true, false, true, color, w, op, true);
-            _bseg_avoid11(seg31, seg32, seg12, true, true, true, true, color, w, op, true);
-            }
-
-
-
-        void fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity = 1.0f)
-            {
-            if (!isValid()) return;
-            if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-            _fillSmoothQuad(P1, P2, P3, P4, color, opacity);
-            }
-
-
-        void _fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity)
-            {
-            if (((P1.x == P2.x) && (P3.x == P4.x) && (P2.y == P3.y) && (P1.y == P4.y)) || ((P1.x == P4.x) && (P2.x == P3.x) && (P1.y == P2.y) && (P3.y == P4.y)))
-                { // quad is a box...
-                fBox2 B(tgx::min(P1.x, P3.x), tgx::max(P1.x, P3.x), tgx::min(P2.y, P4.y), tgx::max(P2.y, P4.y));
-                _fillSmoothRect(B, color, opacity);
-                return;
-                }
-            const float a = _triangleAera(P1, P2, P3); // winding direction of the polygon
-            const int w = (a > 0) ? 1 : ((a < 0) ? -1 : 0);
-            const int op = (int)(opacity * 256);
-            BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
-            BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
-            BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
-            BSeg seg34(P3, P4); BSeg seg43 = seg34.get_reverse();
-            BSeg seg41(P4, P1); BSeg seg14 = seg41.get_reverse();
-            _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangles 
-            _bseg_fill_triangle_precomputed(P1, P3, P4, seg13, seg31, seg34, seg43, seg41, seg14, color, opacity);	// fill the triangles 
-            _bseg_draw(seg12, false, false, color, w, op, true);
-            _bseg_draw(seg34, false, false, color, w, op, true);
-            _bseg_avoid11(seg41, seg43, seg12, true, true, true, true, color, w, op, true);
-            _bseg_avoid11(seg23, seg21, seg34, true, true, true, true, color, w, op, true);
-            _bseg_avoid22(seg13, seg12,seg14,seg32,seg34, true, true, true, true, color, 0, op, true);
-            }
-
-
-
-        void _fillSmoothRect(const fBox2& B, color_t color, float opacity)
-            {
-            tgx::iBox2 eB((int)floorf(B.minX + 0.5f), (int)ceilf(B.maxX - 0.5f), (int)floorf(B.minY + 0.5f), (int)ceilf(B.maxY - 0.5f));
-            const bool checkrange = (imageBox().contains(eB)) ? false : true;
-            if (eB.minX == eB.maxX)
-                { // just a vertical line
-                if (eB.minY == eB.maxY)
-                    { // single point
-                    const float aera = (B.maxX - B.minX) * (B.maxY - B.minY);
-                    _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity* aera);
-                    return;
-                    }
-                const float w = B.maxX - B.minX;
-                const float a_up = 0.5f + eB.minY - B.minY;
-                const float a_down = 0.5f + B.maxY - eB.maxY;
-                _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity * a_up * w);
-                _drawPixel(checkrange, { eB.minX, eB.maxY }, color, opacity * a_down * w);
-                _drawFastVLine(checkrange, { eB.minX, eB.minY + 1 }, eB.maxY - eB.minY - 1, color, opacity * w);
-                return;
-                }
-            if (eB.minY == eB.maxY)
-                { // just an horizontal line
-                const float h = B.maxY - B.minY;
-                const float a_left = 0.5f + eB.minX - B.minX;
-                const float a_right = 0.5f + B.maxX - eB.maxX;
-                _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity * a_left * h);
-                _drawPixel(checkrange, { eB.maxX, eB.minY }, color, opacity * a_right * h);
-                _drawFastHLine(checkrange, { eB.minX + 1, eB.minY }, eB.maxX - eB.minX - 1, color, opacity * h);
-                return;
-                }
-            fillRect(tgx::iBox2(eB.minX + 1, eB.maxX - 1, eB.minY + 1, eB.maxY - 1), color, opacity); // fill interior (may be empty)	
-            const float a_left = 0.5f + eB.minX - B.minX;
-            const float a_right = 0.5f + B.maxX - eB.maxX;
-            const float a_up = 0.5f + eB.minY - B.minY;
-            const float a_down = 0.5f + B.maxY - eB.maxY;
-            _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity * a_left * a_up);
-            _drawPixel(checkrange, { eB.minX, eB.maxY }, color, opacity * a_left * a_down);
-            _drawPixel(checkrange, { eB.maxX, eB.minY }, color, opacity * a_right * a_up);
-            _drawPixel(checkrange, { eB.maxX, eB.maxY }, color, opacity * a_right * a_down);
-            _drawFastHLine(checkrange, { eB.minX + 1, eB.minY }, eB.maxX - eB.minX - 1, color, opacity * a_up);
-            _drawFastHLine(checkrange, { eB.minX + 1, eB.maxY }, eB.maxX - eB.minX - 1, color, opacity * a_down);
-            _drawFastVLine(checkrange, { eB.minX, eB.minY + 1 }, eB.maxY - eB.minY - 1, color, opacity * a_left);
-            _drawFastVLine(checkrange, { eB.maxX, eB.minY + 1 }, eB.maxY - eB.minY - 1, color, opacity * a_right);
-            return;
-            }
 
 
 

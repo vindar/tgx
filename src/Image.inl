@@ -2213,6 +2213,205 @@ namespace tgx
 
 
 
+
+
+
+
+
+
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::fillSmoothRect(const fBox2& B, color_t color, float opacity)
+        {
+        if ((!isValid()) || (B.isEmpty())) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f; 
+        _fillSmoothRect(B, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothRoundRect(const fBox2& B, float corner_radius, color_t color, float opacity)
+        {
+        if ((!isValid()) || (B.isEmpty())) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _drawSmoothRoundRect(iBox2((int)roundf(B.minX), (int)roundf(B.maxX), (int)roundf(B.minY), (int)roundf(B.maxY)), corner_radius, color, opacity); // cheat, convert to iBox2 for the time being. todo improve this !
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothThickRoundRect(const fBox2& B, float corner_radius, float thickness, color_t color, float opacity)
+        {
+        if ((!isValid()) || (B.isEmpty())) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _drawSmoothWideRoundRect(iBox2((int)roundf(B.minX), (int)roundf(B.maxX), (int)roundf(B.minY), (int)roundf(B.maxY)), corner_radius, thickness, color, opacity); // cheat, convert to iBox2 for the time being. todo improve this !
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillSmoothRoundRect(const fBox2& B, float corner_radius, color_t color, float opacity)
+        {
+        if ((!isValid()) || (B.isEmpty())) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _fillSmoothRoundedRect(iBox2((int)roundf(B.minX), (int)roundf(B.maxX), (int)roundf(B.minY), (int)roundf(B.maxY)), corner_radius, color, opacity); // cheat, convert to iBox2 for the time being. todo improve this !
+        }
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_fillSmoothRect(const fBox2& B, color_t color, float opacity)
+        {
+        tgx::iBox2 eB((int)floorf(B.minX + 0.5f), (int)ceilf(B.maxX - 0.5f), (int)floorf(B.minY + 0.5f), (int)ceilf(B.maxY - 0.5f));
+        const bool checkrange = (imageBox().contains(eB)) ? false : true;
+        if (eB.minX == eB.maxX)
+            { // just a vertical line
+            if (eB.minY == eB.maxY)
+                { // single point
+                const float aera = (B.maxX - B.minX) * (B.maxY - B.minY);
+                _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity * aera);
+                return;
+                }
+            const float w = B.maxX - B.minX;
+            const float a_up = 0.5f + eB.minY - B.minY;
+            const float a_down = 0.5f + B.maxY - eB.maxY;
+            _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity * a_up * w);
+            _drawPixel(checkrange, { eB.minX, eB.maxY }, color, opacity * a_down * w);
+            _drawFastVLine(checkrange, { eB.minX, eB.minY + 1 }, eB.maxY - eB.minY - 1, color, opacity * w);
+            return;
+            }
+        if (eB.minY == eB.maxY)
+            { // just an horizontal line
+            const float h = B.maxY - B.minY;
+            const float a_left = 0.5f + eB.minX - B.minX;
+            const float a_right = 0.5f + B.maxX - eB.maxX;
+            _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity * a_left * h);
+            _drawPixel(checkrange, { eB.maxX, eB.minY }, color, opacity * a_right * h);
+            _drawFastHLine(checkrange, { eB.minX + 1, eB.minY }, eB.maxX - eB.minX - 1, color, opacity * h);
+            return;
+            }
+        fillRect(tgx::iBox2(eB.minX + 1, eB.maxX - 1, eB.minY + 1, eB.maxY - 1), color, opacity); // fill interior (may be empty)	
+        const float a_left = 0.5f + eB.minX - B.minX;
+        const float a_right = 0.5f + B.maxX - eB.maxX;
+        const float a_up = 0.5f + eB.minY - B.minY;
+        const float a_down = 0.5f + B.maxY - eB.maxY;
+        _drawPixel(checkrange, { eB.minX, eB.minY }, color, opacity * a_left * a_up);
+        _drawPixel(checkrange, { eB.minX, eB.maxY }, color, opacity * a_left * a_down);
+        _drawPixel(checkrange, { eB.maxX, eB.minY }, color, opacity * a_right * a_up);
+        _drawPixel(checkrange, { eB.maxX, eB.maxY }, color, opacity * a_right * a_down);
+        _drawFastHLine(checkrange, { eB.minX + 1, eB.minY }, eB.maxX - eB.minX - 1, color, opacity * a_up);
+        _drawFastHLine(checkrange, { eB.minX + 1, eB.maxY }, eB.maxX - eB.minX - 1, color, opacity * a_down);
+        _drawFastVLine(checkrange, { eB.minX, eB.minY + 1 }, eB.maxY - eB.minY - 1, color, opacity * a_left);
+        _drawFastVLine(checkrange, { eB.maxX, eB.minY + 1 }, eB.maxY - eB.minY - 1, color, opacity * a_right);
+        return;
+        }
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_fillSmoothRoundedRect(const tgx::iBox2& B, float corner_radius, color_t color, float opacity)
+        {
+        // check radius >0 and B not empty and im valid...
+        float maxl = (B.maxX - B.minX) / 2.0f;
+        float maxh = (B.maxY - B.minY) / 2.0f;
+        corner_radius = tgx::min(corner_radius, tgx::min(maxl, maxh));
+
+        const float eps = 0.5f;
+        fVec2 P1(B.minX + corner_radius - eps, B.minY + corner_radius - eps);
+        _fillSmoothQuarterCircle(P1, corner_radius, 2, false, false, color, opacity);
+
+        fVec2 P2(B.maxX - corner_radius + eps, B.minY + corner_radius - eps);
+        _fillSmoothQuarterCircle(P2, corner_radius, 3, false, false, color, opacity);
+
+        fVec2 P3(B.maxX - corner_radius + eps, B.maxY - corner_radius + eps);
+        _fillSmoothQuarterCircle(P3, corner_radius, 1, false, false, color, opacity);
+
+        fVec2 P4(B.minX + corner_radius - eps, B.maxY - corner_radius + eps);
+        _fillSmoothQuarterCircle(P4, corner_radius, 0, false, false, color, opacity);
+
+        const int x1 = (int)roundf(B.minX + corner_radius - eps);
+        const int x2 = (int)roundf(B.maxX - corner_radius + eps);
+        fillRect(iBox2(x1, x2, B.minY, B.maxY), color, opacity);
+        const int y1 = (int)roundf(B.minY + corner_radius - eps);
+        const int y2 = (int)roundf(B.maxY - corner_radius + eps);
+        fillRect(iBox2(B.minX, x1 - 1, y1, y2), color, opacity);
+        fillRect(iBox2(x2 + 1, B.maxX, y1, y2), color, opacity);
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawSmoothRoundRect(const tgx::iBox2& B, float corner_radius, color_t color, float opacity)
+        {
+        // check radius >0 and B not empty and im valid...
+        float maxl = (B.maxX - B.minX) / 2.0f;
+        float maxh = (B.maxY - B.minY) / 2.0f;
+        corner_radius = tgx::min(corner_radius, tgx::min(maxl, maxh));
+
+        const float eps = 0;
+
+        fVec2 P1(B.minX + corner_radius - eps, B.minY + corner_radius - eps);
+        _smoothQuarterCircle(P1, corner_radius, 2, false, false, color, opacity);
+
+        fVec2 P2(B.maxX - corner_radius + eps, B.minY + corner_radius - eps);
+        _smoothQuarterCircle(P2, corner_radius, 3, false, false, color, opacity);
+
+        fVec2 P3(B.maxX - corner_radius + eps, B.maxY - corner_radius + eps);
+        _smoothQuarterCircle(P3, corner_radius, 1, false, false, color, opacity);
+
+        fVec2 P4(B.minX + corner_radius - eps, B.maxY - corner_radius + eps);
+        _smoothQuarterCircle(P4, corner_radius, 0, false, false, color, opacity);
+
+        const int x1 = (int)roundf(B.minX + corner_radius - eps);
+        const int x2 = (int)roundf(B.maxX - corner_radius + eps);
+        const int y1 = (int)roundf(B.minY + corner_radius - eps);
+        const int y2 = (int)roundf(B.maxY - corner_radius + eps);
+        _drawFastHLine<true>({ x1,B.minY }, x2 - x1 + 1, color, opacity);
+        _drawFastHLine<true>({ x1, B.maxY }, x2 - x1 + 1, color, opacity);
+        _drawFastVLine<true>({ B.minX,y1 }, y2 - y1 + 1, color, opacity);
+        _drawFastVLine<true>({ B.maxX,y1 }, y2 - y1 + 1, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawSmoothWideRoundRect(const tgx::iBox2& B, float corner_radius, float thickness, color_t color, float opacity)
+        {
+        // check radius >0 and B not empty and im valid...
+        float maxl = (B.maxX - B.minX) / 2.0f;
+        float maxh = (B.maxY - B.minY) / 2.0f;
+        corner_radius = tgx::min(corner_radius, tgx::min(maxl, maxh));
+
+        const float eps = 0;
+
+        fVec2 P1(B.minX + corner_radius - eps, B.minY + corner_radius - eps);
+        _smoothWideQuarterCircle(P1, corner_radius, thickness, 2, false, false, color, opacity);
+
+        fVec2 P2(B.maxX - corner_radius + eps, B.minY + corner_radius - eps);
+        _smoothWideQuarterCircle(P2, corner_radius, thickness, 3, false, false, color, opacity);
+
+        fVec2 P3(B.maxX - corner_radius + eps, B.maxY - corner_radius + eps);
+        _smoothWideQuarterCircle(P3, corner_radius, thickness, 1, false, false, color, opacity);
+
+        fVec2 P4(B.minX + corner_radius - eps, B.maxY - corner_radius + eps);
+        _smoothWideQuarterCircle(P4, corner_radius, thickness, 0, false, false, color, opacity);
+
+        const int x1 = (int)roundf(B.minX + corner_radius - eps);
+        const int x2 = (int)roundf(B.maxX - corner_radius + eps);
+        const int y1 = (int)roundf(B.minY + corner_radius - eps);
+        const int y2 = (int)roundf(B.maxY - corner_radius + eps);
+
+        _fillSmoothRect(tgx::fBox2(x1 - 0.5f, x2 + 0.5f, B.minY - 0.5f, B.minY + thickness - 0.5f), color, opacity);
+        _fillSmoothRect(tgx::fBox2(x1 - 0.5f, x2 + 0.5f, B.maxY - thickness + 0.5f, B.maxY + 0.5f), color, opacity);
+        _fillSmoothRect(tgx::fBox2(B.minX - 0.5f, B.minX + thickness - 0.5f, y1 - 0.5f, y2 + 0.5f), color, opacity);
+        _fillSmoothRect(tgx::fBox2(B.maxX - thickness + 0.5f, B.maxX + 0.5f, y1 - 0.5f, y2 + 0.5f), color, opacity);
+        }
+
+
+
+
     /********************************************************************************
     *
     * DRAWING TRIANGLES
@@ -2224,13 +2423,91 @@ namespace tgx
 
 
 
+    template<typename color_t>
+    void Image<color_t>::drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        _drawTriangle(P1, P2, P3, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity)
+        {
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _fillTriangle(P1, P2, P3, interior_color, outline_color, opacity);
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
+        {
+        if ((opacity >= 0.0f)&&(opacity <= 1.0f))
+            {
+            const int32_t op = (int)(256 * opacity);
+            BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
+            BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
+            BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
+            _bseg_draw(seg12, false, false, color, 0, op, true);
+            _bseg_avoid1(seg23, seg21, true, false, true, color, 0, op, true);
+            _bseg_avoid11(seg31, seg32, seg12, true, true, true, true, color, 0, op, true);
+            }
+        else
+            {
+            _bseg_draw(BSeg(P1, P2), true, false, color, 0, 256, true);
+            _bseg_draw(BSeg(P2, P3), true, false, color, 0, 256, true);
+            _bseg_draw(BSeg(P3, P1), true, false, color, 0, 256, true);
+            }
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity)
+        {
+        const int op = (int)(opacity * 256);
+        BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
+        BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
+        BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
+        fVec2 fP1((float)P1.x, (float)P1.y);
+        fVec2 fP2((float)P2.x, (float)P2.y);
+        fVec2 fP3((float)P3.x, (float)P3.y);
+        _bseg_fill_triangle_precomputed(fP1, fP2, fP3, seg12, seg21, seg23, seg32, seg31, seg13, interior_color, opacity);
+        _bseg_draw(seg12, false, false, outline_color, 0, op, true);
+        _bseg_avoid1(seg23, seg21, true, false, true, outline_color, 0, op, true);
+        _bseg_avoid11(seg31, seg32, seg12, true, true, true, true, outline_color, 0, op, true);
+        }
 
 
 
 
 
 
+    template<typename color_t>
+    void Image<color_t>::fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _fillSmoothTriangle(P1, P2, P3, color, opacity);
+        }
 
+
+    template<typename color_t>
+    void Image<color_t>::_fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
+        {
+        float a = _triangleAera(P1, P2, P3); // winding direction of the polygon            
+        const int w = (a > 0) ? 1 : ((a < 0) ? -1 : 0);
+        const int op = (int)(opacity * 256);
+        BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
+        BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
+        BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
+        _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangle 
+        _bseg_draw(seg12, false, false, color, w, op, true);
+        _bseg_avoid1(seg23, seg21, true, false, true, color, w, op, true);
+        _bseg_avoid11(seg31, seg32, seg12, true, true, true, true, color, w, op, true);
+        }
 
 
 
@@ -2250,6 +2527,41 @@ namespace tgx
 
 
 
+    template<typename color_t>
+    void Image<color_t>::fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _fillSmoothQuad(P1, P2, P3, P4, color, opacity);
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity)
+        {
+        if (((P1.x == P2.x) && (P3.x == P4.x) && (P2.y == P3.y) && (P1.y == P4.y)) || ((P1.x == P4.x) && (P2.x == P3.x) && (P1.y == P2.y) && (P3.y == P4.y)))
+            { // quad is a box...
+            fBox2 B(tgx::min(P1.x, P3.x), tgx::max(P1.x, P3.x), tgx::min(P2.y, P4.y), tgx::max(P2.y, P4.y));
+            _fillSmoothRect(B, color, opacity);
+            return;
+            }
+        const float a = _triangleAera(P1, P2, P3); // winding direction of the polygon
+        const int w = (a > 0) ? 1 : ((a < 0) ? -1 : 0);
+        const int op = (int)(opacity * 256);
+        BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
+        BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
+        BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
+        BSeg seg34(P3, P4); BSeg seg43 = seg34.get_reverse();
+        BSeg seg41(P4, P1); BSeg seg14 = seg41.get_reverse();
+        _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangles 
+        _bseg_fill_triangle_precomputed(P1, P3, P4, seg13, seg31, seg34, seg43, seg41, seg14, color, opacity);	// fill the triangles 
+        _bseg_draw(seg12, false, false, color, w, op, true);
+        _bseg_draw(seg34, false, false, color, w, op, true);
+        _bseg_avoid11(seg41, seg43, seg12, true, true, true, true, color, w, op, true);
+        _bseg_avoid11(seg23, seg21, seg34, true, true, true, true, color, w, op, true);
+        _bseg_avoid22(seg13, seg12, seg14, seg32, seg34, true, true, true, true, color, 0, op, true);
+        }
 
 
 
@@ -2591,7 +2903,7 @@ namespace tgx
         {
         if ((!isValid()) || (radiuses.x <= 0) || (radiuses.y<= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        // TODO
+        _drawSmoothEllipse(center, radiuses.x, radiuses.y, color, opacity);
         }
 
 
@@ -2601,6 +2913,7 @@ namespace tgx
         if ((!isValid()) || (radiuses.x <= 0) || (radiuses.y <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         // TODO
+        _drawSmoothThickEllipse(center, radiuses.x, radiuses.y,thickness, color, opacity);
         }
 
 
@@ -2825,30 +3138,17 @@ namespace tgx
                 const float zx = fabsf(dx) * inv_rx2;
                 const float tt = 2 * tgx::max(zx, zy);
                 const float e2 = (dx2 + dy2 - 1);
-                if (e2 > tt) { i_min = i + dir_x; continue; }
-                if (e2 < -thickness * tt)
-                    {/*
-                const int h = B.maxX - dir_x - i;
-                if (h >= 0)
-                    _drawFastHLine<false>({ i,j }, h + 1, color, opacity);
-                else
-                    _drawFastHLine<false>({ B.maxX - dir_x,j },  1 - h, color, opacity);
-                    */
+                if (e2 >= tt) { i_min = i + dir_x; continue; }
+                if (e2 <= -tt)
+                    {
+                    const int h = B.maxX - dir_x - i;
+                    if (h >= 0)
+                        _drawFastHLine<false>({ i,j }, h + 1, color, opacity);
+                    else
+                        _drawFastHLine<false>({ B.maxX - dir_x,j },  1 - h, color, opacity);
                     break;
                     }
-                float alpha = 1.0f;
-                if (e2 > 0)
-                    {
-                    alpha = 1.0f - (e2 / tt);
-                    }
-                else if (e2 < (1 - thickness) * tt)
-                    {
-                    alpha = thickness + (e2 / tt);
-                    }
-
-                //const float alpha = 1.0f - fabs(e2 / (4*tt)); // single line
-                //const float alpha =  (1 -(e2/tt)) * 0.5f ; // fill
-
+                const float alpha =  (1 -(e2/tt)) * 0.5f ;
                 _drawPixel<false>({ i,j }, color, alpha * opacity);
                 }
             }
@@ -2857,8 +3157,9 @@ namespace tgx
 
 
 
+
     template<typename color_t>
-    void Image<color_t>::_fillSmoothEllipse(tgx::fVec2 C, float rx, float ry, tgx::RGB32 color, float opacity)
+    void Image<color_t>::_fillSmoothEllipse(tgx::fVec2 C, float rx, float ry, color_t color, float opacity)
         {
         _fillSmoothQuarterEllipse(C, rx, ry, 0, 1, 1, color, opacity);
         _fillSmoothQuarterEllipse(C, rx, ry, 1, 0, 1, color, opacity);
@@ -2871,7 +3172,126 @@ namespace tgx
 
 
 
+    template<typename color_t>
+    void Image<color_t>::_drawSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity)
+        {
+        const int dir_x = (quarter & 1) ? -1 : 1;
+        const int dir_y = (quarter & 2) ? -1 : 1;
+        auto B = imageBox();
 
+        B &= tgx::iBox2(
+            ((dir_x > 0) ? (int)floorf(C.x - rx + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + rx - 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - ry + 0.5f)),
+            ((dir_y > 0) ? (int)ceilf(C.y + ry - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
+        if (B.isEmpty()) return;
+        if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
+        B.maxY += dir_y;
+        if (dir_x < 0) { tgx::swap(B.minX, B.maxX); }
+        B.maxX += dir_x;
+
+        const float thickness = 1.0f;
+
+        const float inv_rx2 = 1.0f / (rx * rx);
+        const float inv_ry2 = 1.0f / (ry * ry);
+
+        int i_min = B.minX;
+        for (int j = B.minY; j != B.maxY; j += dir_y)
+            {
+            const float dy = (j - C.y);
+            const float dy2 = dy * dy * inv_ry2;
+            const float zy = fabsf(dy) * inv_ry2;
+            for (int i = i_min; i != B.maxX; i += dir_x)
+                {
+                const float dx = (i - C.x);
+                const float dx2 = dx * dx * inv_rx2;
+                const float zx = fabsf(dx) * inv_rx2;
+                const float tt = 2 * tgx::max(zx, zy);
+                const float e2 = (dx2 + dy2 - 1);
+                if (e2 >= tt) { i_min = i + dir_x; continue; }
+                if (e2 <= -tt) { break; }
+                const float alpha = 1.0f - fabs(e2 / (tt)); // single line                
+                _drawPixel<false>({ i,j }, color, alpha * opacity);
+                }
+            }
+        return;
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawSmoothEllipse(tgx::fVec2 C, float rx, float ry, color_t color, float opacity)
+        {
+        _drawSmoothQuarterEllipse(C, rx, ry, 0, 1, 1, color, opacity);
+        _drawSmoothQuarterEllipse(C, rx, ry, 1, 0, 1, color, opacity);
+        _drawSmoothQuarterEllipse(C, rx, ry, 2, 1, 0, color, opacity);
+        _drawSmoothQuarterEllipse(C, rx, ry, 3, 0, 0, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawSmoothThickQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity)
+        {
+        const int dir_x = (quarter & 1) ? -1 : 1;
+        const int dir_y = (quarter & 2) ? -1 : 1;
+        auto B = imageBox();
+
+        B &= tgx::iBox2(
+            ((dir_x > 0) ? (int)floorf(C.x - rx + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + rx - 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - ry + 0.5f)),
+            ((dir_y > 0) ? (int)ceilf(C.y + ry - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
+        if (B.isEmpty()) return;
+        if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
+        B.maxY += dir_y;
+        if (dir_x < 0) { tgx::swap(B.minX, B.maxX); }
+        B.maxX += dir_x;
+
+        const float inv_rx2 = 1.0f / (rx * rx);
+        const float inv_ry2 = 1.0f / (ry * ry);
+
+        int i_min = B.minX;
+        for (int j = B.minY; j != B.maxY; j += dir_y)
+            {
+            const float dy = (j - C.y);
+            const float dy2 = dy * dy * inv_ry2;
+            const float zy = fabsf(dy) * inv_ry2;
+            for (int i = i_min; i != B.maxX; i += dir_x)
+                {
+                const float dx = (i - C.x);
+                const float dx2 = dx * dx * inv_rx2;
+                const float zx = fabsf(dx) * inv_rx2;
+                const float tt = 2 * tgx::max(zx, zy);
+                const float e2 = (dx2 + dy2 - 1);
+                if (e2 >= tt) { i_min = i + dir_x; continue; }
+                if (e2 <= -thickness * tt)
+                    {
+                    break;
+                    }
+                float alpha = 1.0f;
+                if (e2 > 0)
+                    {
+                    alpha = 1.0f - (e2 / tt);
+                    }
+                else if (e2 < (1 - thickness) * tt)
+                    {
+                    alpha = thickness + (e2 / tt);
+                    }
+                _drawPixel<false>({ i,j }, color, alpha * opacity);
+                }
+            }
+        return;
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawSmoothThickEllipse(tgx::fVec2 C, float rx, float ry, float thickness, color_t color, float opacity)
+        {
+        _drawSmoothThickQuarterEllipse(C, rx, ry, thickness, 0, 1, 1, color, opacity);
+        _drawSmoothThickQuarterEllipse(C, rx, ry, thickness, 1, 0, 1, color, opacity);
+        _drawSmoothThickQuarterEllipse(C, rx, ry, thickness, 2, 1, 0, color, opacity);
+        _drawSmoothThickQuarterEllipse(C, rx, ry, thickness, 3, 0, 0, color, opacity);
+        }
 
 
 
@@ -3505,257 +3925,6 @@ namespace tgx
 
 
 
-
-
-
-
-
-
-
-
-    /*****************************************************
-    * Triangles
-    ******************************************************/
-
-
-
-    template<typename color_t>
-    void Image<color_t>::drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
-        {
-        if (!isValid()) return;
-        _drawTriangle(P1, P2, P3, color, opacity);
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity)
-        {
-        if (!isValid()) return;
-//        _drawTriangle<true, true, false>(P1, P2, P3, interior_color, outline_color, 1.0f);
-        }
-
-
-
-    template<typename color_t>
-    void Image<color_t>::_drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
-        {
-        if ((opacity >=0)&&(opacity<=1))
-            { // draw without overlap
-//            _bseg_draw(P1, P2, true, 0, color, blending);
-//            _bseg_avoid1(P2, P3, P1, true, true, color, blending);
-//            _bseg_avoid11(P3, P1, P2, P2, true, true, color, blending);
-            return;
-            }
-        _drawSeg(P1, true, P2, false, color, opacity);
-        _drawSeg(P2, true, P3, false, color, opacity);
-        _drawSeg(P3, true, P1, false, color, opacity);
-        }
-
-
-
-
-        /**
-         
-       
-        template<typename color_t>
-        void Image<color_t>::drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
-            {
-            _drawTriangle<false, true, true>(P1, P2, P3, color, color, opacity);
-            }
-
-
-        template<typename color_t>
-        void Image<color_t>::fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity)
-            {
-            _drawTriangle<true, true, false>(P1, P2, P3, interior_color, outline_color, 1.0f);
-            }
-
-
-        //Adapted from from adafruit gfx / Kurte ILI93412_t3n. 
-        template<typename color_t>
-        template<bool CHECKRANGE, bool DRAW_INTERIOR, bool DRAW_OUTLINE, bool BLEND>
-        void Image<color_t>::_drawTriangle_sub(int x0, int y0, int x1, int y1, int x2, int y2, color_t interior_color, color_t outline_color, float opacity)
-            {
-            int a, b, y, last;
-            if (y0 > y1)
-                {
-                swap(y0, y1);
-                swap(x0, x1);
-                }
-            if (y1 > y2)
-                {
-                swap(y2, y1);
-                swap(x2, x1);
-                }
-            if (y0 > y1)
-                {
-                swap(y0, y1);
-                swap(x0, x1);
-                }
-
-            if (y0 == y2)
-                { // triangle is just a single horizontal line
-                a = b = x0;
-                if (x1 < a) a = x1; else if (x1 > b) b = x1;
-                if (x2 < a) a = x2; else if (x2 > b) b = x2;
-                if ((!DRAW_OUTLINE) && (DRAW_INTERIOR))
-                    {
-                    if (BLEND)
-                        _drawFastHLine<CHECKRANGE>( { a, y0 }, b - a + 1, interior_color, opacity);
-                    else
-                        _drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, interior_color);
-                    }
-                if (DRAW_OUTLINE)
-                    {
-                    if (BLEND)
-                        _drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, outline_color, opacity);
-                    else
-                        _drawFastHLine<CHECKRANGE>({ a, y0 }, b - a + 1, outline_color);
-                    }
-                return;
-                }
-            int dx01 = x1 - x0, dy01 = y1 - y0, dx02 = x2 - x0, dy02 = y2 - y0,
-                dx12 = x2 - x1, dy12 = y2 - y1, sa = 0, sb = 0;
-            if (y1 == y2) last = y1; else last = y1 - 1;
-
-            if ((DRAW_OUTLINE) && (DRAW_INTERIOR) && (outline_color == interior_color))
-                {
-                for (y = y0; y <= last; y++)
-                    {
-                    a = x0 + sa / dy01;
-                    b = x0 + sb / dy02;
-                    sa += dx01;
-                    sb += dx02;
-                    if (a > b) swap(a, b);
-                    if (BLEND) _drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color, opacity); else _drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color);
-                    }
-                sa = dx12 * (y - y1);
-                sb = dx02 * (y - y0);
-                for (; y <= y2; y++)
-                    {
-                    a = x1 + sa / dy12;
-                    b = x0 + sb / dy02;
-                    sa += dx12;
-                    sb += dx02;
-                    if (a > b) swap(a, b);
-                    if (BLEND) _drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color, opacity); else _drawFastHLine<CHECKRANGE>({ a, y }, b - a + 1, interior_color);
-                    }
-                }
-            else
-                {
-                int prv_a = x0 + ((dy01 != 0) ? sa / dy01 : 0);
-                int prv_b = x0 + ((dy02 != 0) ? sb / dy02 : 0);
-                for (y = y0; y <= last; y++)
-                    {
-                    a = x0 + sa / dy01;
-                    b = x0 + sb / dy02;
-                    sa += dx01;
-                    sb += dx02;
-                    if (a > b) swap(a, b);
-
-                    const auto hha = a - prv_a;
-                    int ia, ib;
-                    if (hha == 0)
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>({ prv_a, y }, outline_color, opacity); else _drawPixel<CHECKRANGE>({ prv_a, y }, outline_color, opacity); }
-                        ia = a + 1;
-                        }
-                    else if (hha > 0)
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color); }
-                        ia = a + 1;
-                        }
-                    else
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color); }
-                        ia = prv_a;
-                        }
-
-                    const auto hhb = b - prv_b;
-                    if (hhb == 0)
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>({ prv_b, y }, outline_color, opacity); else _drawPixel<CHECKRANGE>({ prv_b, y }, outline_color, opacity); }
-                        ib = prv_b - 1;
-                        }
-                    else if (hhb > 0)
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color); }
-                        ib = prv_b;
-                        }
-                    else
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color); }
-                        ib = b - 1;
-                        }
-
-                    if ((DRAW_OUTLINE) && ((y == y2) || (y == y0)))
-                        {
-                        if (BLEND) _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color);
-                        }
-                    if ((DRAW_INTERIOR) && (y < y2) && (y > y0))
-                        {
-                        if (BLEND) _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color, opacity); else _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color);
-                        }
-                    prv_a = a;
-                    prv_b = b;
-                    }
-                sa = dx12 * (y - y1);
-                sb = dx02 * (y - y0);
-                for (; y <= y2; y++)
-                    {
-                    a = x1 + sa / dy12;
-                    b = x0 + sb / dy02;
-                    sa += dx12;
-                    sb += dx02;
-                    if (a > b) swap(a, b);
-
-                    const auto hha = a - prv_a;
-                    int ia, ib;
-                    if (hha == 0)
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>({ prv_a, y }, outline_color, opacity); else _drawPixel<CHECKRANGE>({ prv_a, y }, outline_color, opacity); }
-                        ia = a + 1;
-                        }
-                    else if (hha > 0)
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ prv_a + 1, y }, hha, outline_color); }
-                        ia = a + 1;
-                        }
-                    else
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ a, y }, -hha, outline_color); }
-                        ia = prv_a;
-                        }
-                    const auto hhb = b - prv_b;
-                    if (hhb == 0)
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawPixel<CHECKRANGE>({ prv_b, y }, outline_color, opacity); else _drawPixel<CHECKRANGE>({ prv_b, y }, outline_color, opacity); }
-                        ib = prv_b - 1;
-                        }
-                    else if (hhb > 0)
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ prv_b + 1, y }, hhb, outline_color); }
-                        ib = prv_b;
-                        }
-                    else
-                        {
-                        if (DRAW_OUTLINE) { if (BLEND) _drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ b, y }, -hhb, outline_color); }
-                        ib = b - 1;
-                        }
-                    if ((DRAW_OUTLINE) && ((y == y2) || (y == y0)))
-                        {
-                        if (BLEND) _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color, opacity); else _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, outline_color);
-                        }
-                    if ((DRAW_INTERIOR) && (y < y2) && (y > y0))
-                        {
-                        if (BLEND) _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color, opacity); else _drawFastHLine<CHECKRANGE>({ ia, y }, ib - ia + 1, interior_color);
-                        }
-                    prv_a = a;
-                    prv_b = b;
-                    }
-                }
-            }
-        */
 
 
 
