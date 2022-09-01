@@ -932,6 +932,9 @@ namespace tgx
 
 
 
+
+
+
         /********************************************************************************
         *
         * DRAWING LINES
@@ -1052,6 +1055,9 @@ namespace tgx
          * @param   opacity opacity multiplier between 0.0f and 1.0f (default).
         **/
         void drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, float line_width_P2, bool rounded_ends, color_t color, float opacity = 1.0f);
+
+
+
 
 
 
@@ -1201,6 +1207,9 @@ namespace tgx
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         void fillSmoothRoundRect(const fBox2& B, float corner_radius, color_t color, float opacity = 1.0f);
+
+
+
 
 
 
@@ -1441,7 +1450,7 @@ namespace tgx
          * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending and simply use overwrite.
         **/
-        void drawPolyLine(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawPolyline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -1489,7 +1498,7 @@ namespace tgx
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothPolyLine(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
+        void drawSmoothPolyline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
 
 
         /**
@@ -1504,7 +1513,7 @@ namespace tgx
          * @param   color           The color to use.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickPolyLine(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity = 1.0f);
+        void drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity = 1.0f);
 
 
         /**
@@ -2848,7 +2857,8 @@ private:
 
 
         
-        inline float _triangleAera(fVec2 P1, fVec2 P2, fVec2 P3)
+        template<typename T>
+        inline T _triangleAera(Vec2<T> P1, Vec2<T> P2, Vec2<T> P3)
             {
             return P1.x * (P2.y - P3.y) + P2.x * (P3.y - P1.y) + P3.x * (P1.y - P2.y);
             }
