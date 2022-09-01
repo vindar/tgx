@@ -999,28 +999,6 @@ namespace tgx
         void drawSegment(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
-        /**
-         * Draw a polyline i.e. a sequence of consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
-         *
-         * @param   nbpoints    number of points in tabPoints.
-         * @param   tabPoints   array of points.
-         * @param   color       The color to use.
-         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
-         *                      to disable blending and simply use overwrite.
-        **/
-        void drawPolyLine(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Draw a closed polygon with vertices [P0,P2, .., PN]
-         *
-         * @param   nbpoints    number of points in tabPoints.
-         * @param   tabPoints   array of points of the polygon.
-         * @param   color       The color to use.
-         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
-         *                      to disable blending and simply use overwrite.
-        **/
-        void drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
 
@@ -1319,11 +1297,21 @@ namespace tgx
 
 
 
+
+
+
         /*****************************************************
         * DRAWING TRIANGLES
         * ADVANCED DRAWING METHODS FOR GRADIENT AND TEXTURING
         * USING THE 3D TRIANGLE RASTERIZER BACKEND.  
         ******************************************************/
+
+
+
+
+
+
+
 
 
 
@@ -1344,6 +1332,34 @@ namespace tgx
         ******************************************************/
 
 
+        /**
+         * Draw a  quad.
+         *
+         * @param   P1      The first vertex.
+         * @param   P2      The second vertex.
+         * @param   P3      The third vertex.
+         * @param   P4      The fourth vertex.
+         * @param   color   The color to use.
+         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending and simply use overwrite.
+        **/
+        void drawQuad(iVec2 P1, iVec2 P2, iVec2 P3, iVec2 P4, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * draw a filled quad.
+         * 
+         * WARNING : The quad must be CONVEX !
+         *
+         * @param   P1      first vertex.
+         * @param   P2      second vertex.
+         * @param   P3      third vertex.
+         * @param   P4      fourth vertex.
+         * @param   color   color.
+         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending and simply use overwrite.
+        **/
+        void fillQuad(iVec2 P1, iVec2 P2, iVec2 P3, iVec2 P4, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
 
@@ -1353,11 +1369,39 @@ namespace tgx
         ******************************************************/
 
 
+        /**
+         * Draw a smooth (anti-aliased with sub-pixel precision) quad.
+         *
+         * @param   P1      The first vertex.
+         * @param   P2      The second vertex.
+         * @param   P3      The third vertex.
+         * @param   P4      The fourth vertex.
+         * @param   color   The color to use.
+         * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a smooth (anti-aliased with sub-pixel precision) quad.
+         * 
+         * WARNING : The quad must be CONVEX !
+         *
+         * @param   P1          The first vertex.
+         * @param   P2          The second vertex.
+         * @param   P3          The third vertex.
+         * @param   P4          The fourth vertex.
+         * @param   thickness   The thickness (going inside the polygon delimited by P1,P2,P3,P4)
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothThickQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, float thickness, color_t color, float opacity = 1.0f);
+
 
         /**
          * Fill (with anti-aliasing and sub-pixel precision) smooth quad.
          * 
-         * The quad must be convex.
+         * WARNING : The quad must be CONVEX !
          *
          * @param   P1      first vertex.
          * @param   P2      second vertex.
@@ -1375,7 +1419,7 @@ namespace tgx
 
         /********************************************************************************
         *
-        * DRAWING POLYGONS
+        * DRAWING POLYLINES AND POLYGONS
         *
         *********************************************************************************/
 
@@ -1383,17 +1427,134 @@ namespace tgx
 
 
         /*****************************************************
-        * DRAWING POLYGONS
+        * DRAWING POLYLINE AND POLYGONS
         * LOW QUALITY (FAST) DRAWING METHODS
         ******************************************************/
+
+
+        /**
+         * Draw a polyline i.e. a sequence of consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        void drawPolyLine(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a closed polygon with vertices [P0,P2, .., PN]
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points of the polygon.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        void drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * draw a Filled polygon with vertices [P0,P2, .., PN]
+         * 
+         * WARNING : The polygon must be convex !
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points of the polygon.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        void fillPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
 
 
 
 
         /*****************************************************
-        * DRAWING POLYGONS
+        * DRAWING POLYLINE AND POLYGONS
         * HIGH QUALITY (SLOW) DRAWING METHODS
         ******************************************************/
+
+
+        /**
+         * Draw a smooth (antialised with subpixel precision) polyline i.e. a sequence of consecutif
+         * segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothPolyLine(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a thick smooth (antialised with subpixel precision) polyline i.e. a sequence of
+         * consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
+         *
+         * @param   nbpoints        number of points in tabPoints.
+         * @param   tabPoints       array of points.
+         * @param   thickness       thickness of the polyline.
+         * @param   rounded_ends    True to draw rounded ends on the polyline extrmeities and false to
+         *                          draw straight ends.
+         * @param   color           The color to use.
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothThickPolyLine(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a smooth (anti-aliased with sub-pixel precision) polygon.
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points of the polygon: these points delimit the exterior
+         *                      boundary of the polygon and the thickness of the line goes 'inside' the
+         *                      polygon.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a thick smooth (anti-aliased with sub-pixel precision) polygon.
+         * 
+         * WARNING : The polygon must be convex !
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points of the polygon: these points delimit the exterior
+         *                      boundary of the polygon and the thickness of the line goes 'inside' the
+         *                      polygon.
+         * @param   thickness   The thickness.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a smooth (anti-aliased with sub-pixel precision) filled polygon.
+         * 
+         * WARNING : The polygon must be convex !
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points of the polygon: these points delimit the exterior
+         *                      boundary of the polygon and the thickness of the line goes 'inside' the
+         *                      polygon.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
+
+
+
+
+
+
 
 
 
@@ -2873,9 +3034,6 @@ private:
         void _drawSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity);
 
 
-        void _drawSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color, float opacity);
-
-
         void _fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity);
 
 
@@ -2892,6 +3050,13 @@ private:
 
 
 
+
+        /***************************************
+        * POLYGONS AND POLYLINES
+        ****************************************/
+
+
+        void _drawSmoothThickPolygon(const fVec2 tabP[], int nbPoints, float thickness, color_t color, float opacity);
 
 
 

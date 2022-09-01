@@ -1819,29 +1819,6 @@ namespace tgx
 
 
 
-    template<typename color_t>
-    void Image<color_t>::drawPolyLine(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
-        {
-        if (!isValid()) return;
-        for (int i = 0; i < nbpoints - 1; i++)
-            {
-            _drawSeg(tabPoints[i], true, tabPoints[i+1], (i == nbpoints - 2), color, opacity);
-            }
-        }
-
-
-    template<typename color_t> 
-    void Image<color_t>::drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
-        {
-        if (!isValid()) return;
-        for (int i = 0; i < nbpoints - 1; i++)
-            {
-            _drawSeg(tabPoints[i], true, tabPoints[i + 1], false, color, opacity);
-            }
-        _drawSeg(tabPoints[nbpoints - 1], true, tabPoints[0], false, color, opacity);
-        }
-
-
 
 
     /*****************************************************
@@ -2510,18 +2487,10 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::drawSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color, float opacity)
         {
-        if (!isValid()) return;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        _drawSmoothThickTriangle(P1, P2, P3, thickness, color, opacity);
+        fVec2 tab[3] = { P1,P2,P3 };
+        drawSmoothThickPolygon(3, tab, thickness, color, opacity);
         }
 
-
-    template<typename color_t>
-    void Image<color_t>::_drawSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color, float opacity)
-        {
-
-
-        }
 
 
     template<typename color_t>
@@ -2563,7 +2532,53 @@ namespace tgx
     *********************************************************************************/
 
 
+    template<typename color_t>
+    void Image<color_t>::drawQuad(iVec2 P1, iVec2 P2, iVec2 P3, iVec2 P4, color_t color, float opacity)
+        {
 
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillQuad(iVec2 P1, iVec2 P2, iVec2 P3, iVec2 P4, color_t color, float opacity)
+        {
+        if (((P1.x == P2.x) && (P3.x == P4.x) && (P2.y == P3.y) && (P1.y == P4.y)) || ((P1.x == P4.x) && (P2.x == P3.x) && (P1.y == P2.y) && (P3.y == P4.y)))
+            { // quad is a box...
+            iBox2 B(tgx::min(P1.x, P3.x), tgx::max(P1.x, P3.x), tgx::min(P2.y, P4.y), tgx::max(P2.y, P4.y));
+            _fillRect(B, color, opacity);
+            return;
+            }
+        const float a = _triangleAera(P1, P2, P3); // winding direction of the polygon
+        const int w = (a > 0) ? 1 : ((a < 0) ? -1 : 0);
+        const int op = (int)(opacity * 256);
+        BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
+        BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
+        BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
+        BSeg seg34(P3, P4); BSeg seg43 = seg34.get_reverse();
+        BSeg seg41(P4, P1); BSeg seg14 = seg41.get_reverse();
+        _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangles 
+        _bseg_fill_triangle_precomputed(P1, P3, P4, seg13, seg31, seg34, seg43, seg41, seg14, color, opacity);	// fill the triangles 
+        _bseg_draw(seg12, false, false, color, w, op, true);
+        _bseg_draw(seg34, false, false, color, w, op, true);
+        _bseg_avoid11(seg41, seg43, seg12, true, true, true, true, color, w, op, true);
+        _bseg_avoid11(seg23, seg21, seg34, true, true, true, true, color, w, op, true);
+        _bseg_avoid22(seg13, seg12, seg14, seg32, seg34, true, true, true, true, color, 0, op, true);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity)
+        {
+
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothThickQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, float thickness, color_t color, float opacity)
+        {
+        fVec2 tab[4] = { P1, P2, P3, P4 };
+        drawSmoothThickPolygon(4, tab, thickness, color, opacity);
+        }
 
 
 
@@ -2607,6 +2622,122 @@ namespace tgx
 
 
 
+
+    /********************************************************************************
+    *
+    * DRAWING POLYLINES AND POLYGONS
+    *
+    *********************************************************************************/
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::drawPolyLine(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        for (int i = 0; i < nbpoints - 1; i++)
+            {
+            _drawSeg(tabPoints[i], true, tabPoints[i+1], (i == nbpoints - 2), color, opacity);
+            }
+        }
+
+
+
+    template<typename color_t> 
+    void Image<color_t>::drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        for (int i = 0; i < nbpoints - 1; i++)
+            {
+            _drawSeg(tabPoints[i], true, tabPoints[i + 1], false, color, opacity);
+            }
+        _drawSeg(tabPoints[nbpoints - 1], true, tabPoints[0], false, color, opacity);
+        }
+
+
+
+
+
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity)
+        {
+        if ((nbpoints < 3) || (!isValid())) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _drawSmoothThickPolygon(tabPoints, nbpoints, thickness, color, opacity);
+        }
+
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawSmoothThickPolygon(const fVec2 tabP[], int nbPoints, float thickness, color_t color, float opacity)
+        {
+        // assume nbPoints > 3, valid image and opacity
+        float w = 0;
+        for (int i = 0; i < nbPoints - 2; i++)
+            {
+            w = _triangleAera(tabP[i], tabP[i + 1], tabP[i + 2]);
+            if (w != 0) break;
+            }
+        if (w == 0) return; // flat, nothing to draw..
+        int side;
+        if (w < 0)
+            {
+            side = 1;
+            thickness = -thickness;
+            }
+        else
+            {
+            side = -1;
+            }
+
+        int op = (int)(opacity * 256);
+        fVec2 P0 = tabP[0];
+        fVec2 P1 = tabP[1];
+        fVec2 P2 = tabP[2];
+        fVec2 P3 = tabP[(nbPoints > 3) ? 3 : 0];
+
+        fVec2 H0 = (P1 - P0).getRotate90().getNormalize_fast() * thickness;
+        fVec2 H1 = (P2 - P1).getRotate90().getNormalize_fast() * thickness;
+        fVec2 H2 = (P3 - P2).getRotate90().getNormalize_fast() * thickness;
+
+        fVec2 I0, I1, I2;
+        if (!I1.setAsIntersection(P0 + H0, P1 + H0, P1 + H1, P2 + H1)) return; //fail
+        if (!I2.setAsIntersection(P1 + H1, P2 + H1, P2 + H2, P3 + H2)) return; //fail
+
+        for (int i = 4; i <= nbPoints + 3; i++)
+            {
+            P0 = P1;
+            P1 = P2;
+            P2 = P3;
+            P3 = tabP[(i >= nbPoints) ? (i - nbPoints) : i];
+            H0 = H1;
+            H1 = H2;
+            I0 = I1;
+            I1 = I2;
+            H2 = (P3 - P2).getRotate90().getNormalize_fast() * thickness;
+            if (!I2.setAsIntersection(P1 + H1, P2 + H1, P2 + H2, P3 + H2)) return; //fail
+            tgx::BSeg P0P1(P0, P1); tgx::BSeg P1P0 = P0P1.get_reverse();
+            tgx::BSeg P1I1(P1, I1); tgx::BSeg I1P1 = P1I1.get_reverse();
+            tgx::BSeg I1I0(I1, I0); tgx::BSeg I0I1 = I1I0.get_reverse();
+            tgx::BSeg I0P0(I0, P0); tgx::BSeg P0I0 = I0P0.get_reverse();
+            tgx::BSeg I0P1(I0, P1); tgx::BSeg P1I0 = I0P1.get_reverse();
+            tgx::BSeg P1P2(P1, P2);
+            tgx::BSeg I1I2(I1, I2);
+            _bseg_fill_triangle_precomputed(I0, P0, P1, I0P0, P0I0, P0P1, P1P0, P1I0, I0P1, color, opacity);
+            _bseg_fill_triangle_precomputed(I0, P1, I1, I0P1, P1I0, P1I1, I1P1, I1I0, I0I1, color, opacity);
+            _bseg_avoid1(P1P0, P1P2, true, false, true, color, side, op, true);
+            _bseg_avoid1(I1I0, I1I2, true, false, true, color, -side, op, true);
+            _bseg_avoid22(P1I1, P1P0, P1P2, I1I0, I1I2, true, true, true, true, color, 0, op, true);
+            _bseg_avoid22(I0P1, I0P0, I0I1, P1P0, P1I1, true, true, true, true, color, 0, op, true);
+            }
+        }
 
 
 
