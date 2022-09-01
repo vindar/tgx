@@ -525,16 +525,16 @@ namespace tgx
 
         template<typename T> inline bool Vec2<T>::setAsIntersection(Vec2<T> LA1, Vec2<T> LA2, Vec2<T> LB1, Vec2<T> LB2)
             {
-            const T a1 = LA2.Y() - LA1.Y();
-            const T b1 = LA1.X() - LA2.X();
-            const T a2 = LB2.Y() - LB1.Y();
-            const T b2 = LB1.X() - LB2.X();
+            const T a1 = LA2.y - LA1.y;
+            const T b1 = LA1.x - LA2.x;
+            const T a2 = LB2.y - LB1.y;
+            const T b2 = LB1.x - LB2.x;
             const T delta = a1 * b2 - a2 * b1;
             if (delta == 0) { return false; }
-            const T c1 = LA1.X() * a1 + LA1.Y() * b1;
-            const T c2 = LB1.X() * a2 + LB1.Y() * b2;
-            x = ((b1 == 0) ? LA1.X() : ((b2 == 0) ? LB1.X() : (T)((b2 * c1 - b1 * c2) / delta)));   // complicated but insures perfect clipping
-            y = ((a1 == 0) ? LA1.Y() : ((a2 == 0) ? LB1.Y() : (T)((a1 * c2 - a2 * c1) / delta)));   // for horizontal and vertical lines
+            const T c1 = LA1.x * a1 + LA1.y * b1;
+            const T c2 = LB1.x * a2 + LB1.y * b2;
+            x = ((b1 == 0) ? LA1.x : ((b2 == 0) ? LB1.x : (T)((b2 * c1 - b1 * c2) / delta)));   // complicated but insures perfect clipping
+            y = ((a1 == 0) ? LA1.y : ((a2 == 0) ? LB1.y : (T)((a1 * c2 - a2 * c1) / delta)));   // for horizontal and vertical lines
             return true;
             }
 
