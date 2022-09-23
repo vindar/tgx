@@ -86,9 +86,16 @@ namespace tgx
 
 
     template<typename color_t>
-    Image<color_t> Image<color_t>::operator[](const iBox2& B) const
+    Image<color_t> Image<color_t>::operator()(const iBox2& B) const
         {
         return Image<color_t>(*this, B, true);
+        }
+
+
+    template<typename color_t>
+    Image<color_t> Image<color_t>::operator()(int min_x, int max_x, int min_y, int max_y) const
+        {
+        return Image<color_t>(*this, tgx::iBox2(min_x, max_x, min_y, max_y), true);
         }
 
 

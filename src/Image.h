@@ -283,7 +283,22 @@ namespace tgx
          *
          * @returns the sub-image delimited by B and sharing the same memory buffer. 
         **/
-        Image<color_t> operator[](const iBox2& B) const;
+        Image<color_t> operator()(const iBox2& B) const;
+
+
+        /**
+         * Return a sub-image of this image (sharing the same pixel buffer).
+         *
+         * This is the same as `getCrop(tgx::iBox2(min_x, max_x, min_y, max_x), true)` or `operator()(tgx::iBox2(min_x, max_x, min_y, max_x), true)`
+         *
+         * @param   min_x   left boundary
+         * @param   max_x   right boundary
+         * @param   min_y   top boundary
+         * @param   max_y   bottom boundary
+         *
+         * @returns the sub-image delimited the closed box iBox(min_x, max_x, min_y, max_x). 
+        **/
+        Image<color_t> operator()(int min_x, int max_x, int min_y, int max_y) const;
 
 
         /**
