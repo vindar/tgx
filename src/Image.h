@@ -261,7 +261,7 @@ namespace tgx
         /**
          * Return a sub-image of this image (sharing the same pixel buffer).
          *
-         * See also`operator[](const iBox2 &)`.
+         * See also `operator()` below.
          * 
          * @param   subbox  The region to to keep.
          * @param   clamp   (Optional) True to clamp the values of the `subbox` parameter. If set,
@@ -296,7 +296,7 @@ namespace tgx
          * @param   min_y   top boundary
          * @param   max_y   bottom boundary
          *
-         * @returns the sub-image delimited the closed box iBox(min_x, max_x, min_y, max_x). 
+         * @returns the sub-image delimited the closed box iBox(min_x, max_x, min_y, max_x) and sharing the same memory buffer. 
         **/
         Image<color_t> operator()(int min_x, int max_x, int min_y, int max_y) const;
 
@@ -387,7 +387,7 @@ namespace tgx
 
 
         /**
-         * Return the pixel buffer (const version).
+         * Return a pointer to the pixel buffer (const version).
          *
          * @returns A pointer to the start of the pixel buffer associated with this image (or nullptr if
          *          the image is invalid).
@@ -396,7 +396,7 @@ namespace tgx
 
 
         /**
-         * Return the pixel buffer.
+         * Return a pointer to the pixel buffer.
          *
          * @returns A pointer to the start of the pixel buffer associated with this image (or nullptr if
          *          the image is invalid).
@@ -442,7 +442,7 @@ namespace tgx
          * @param   pos     The position.
          * @param   color   The color to blend.
          * @param   opacity opacity multiplier from 0.0f (fully transparent) to 1.0f fully transparent.
-         *                  if negative, then simle overwrittening of color is used instead of blending.
+         *                  if negative, then simple overwrittening of color is used instead of blending.
         **/
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color, float opacity)
             {
@@ -524,9 +524,9 @@ namespace tgx
 
 
         /**
-         * Iterate over all the pixels of the image going from left to right and then from top to
-         * bottom. The callback function cb_fun is called for each pixel and must have a signature
-         * compatible with:
+         * Iterate over all the pixels of the image going from left to right (inner loop) and then from 
+         * top to bottom (outer loop). The callback function cb_fun is called for each pixel and must 
+         * have a signature compatible with:
          * 
          *  `bool cb_fun(tgx::iVec2 pos, color_t & color)`
          * 
@@ -1320,16 +1320,147 @@ namespace tgx
 
 
 
-
-
-
-
         /*****************************************************
-        * DRAWING TRIANGLES
+        * DRAWING TRIANGLES.
+        * 
         * ADVANCED DRAWING METHODS FOR GRADIENT AND TEXTURING
         * USING THE 3D TRIANGLE RASTERIZER BACKEND.  
+        * 
+         * Remarks:
+         * 
+         * 1. For all these methods, the positions are given using floating point values   
+         *    to allow for sub-pixel precision (improves the quality of animations)
+         *    
+         * 2. Sprite images and gradient colors can have different types from the destination   
+         *    (i.e. this) image.
+         *
+         * Warning: 
+         * 
+         * For particular orientations of triangles, access to texture pixels is highly non-linear. 
+         * For texture stored in flash memory, this can cause dramatic slowdown because the read cache 
+         * becomes basically useless. To overcome this problem, two solutions are possible:
+         *          
+         * a. Move the texture to a faster memory location before drawing.
+         * b. Tessellate the triangle into smaller triangles so that the memory data for each triangle   
+         *    fit into the cache.
         ******************************************************/
 
+
+
+        /**
+         * Draw a triangle with gradient color specified by the colors on its vertices.
+         * 
+         * @param   P1      First triangle vertex.
+         * @param   P2      Second triangle vertex.
+         * @param   P3      Third triangle vertex.
+         * @param   colorP1 color at the first vertex.
+         * @param   colorP2 color at the second vertex.
+         * @param   colorP3 color at the third vertex.
+         * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
+         *                  blending and simply use overwrite.
+        **/
+        template<typename color_alt>
+        void drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw textured triangle using bilinear filtering for high quality rendering.
+         *
+         * @param   src_im  the image/texture to map onto the triangle.
+         * @param   srcP1   coords of point 1 on the texture.
+         * @param   srcP2   coords of point 2 on the texture.
+         * @param   srcP3   coords of point 3 on the texture.
+         * @param   dstP1   coords of point 1 on this image.
+         * @param   dstP2   coords of point 2 on this image.
+         * @param   dstP3   coords of point 3 on this image.
+         * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
+         *                  blending and simply use overwrite.
+        **/
+        template<typename color_t_tex>
+        void drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Blend a textured triangle over this image using bilinear filtering and a custom blend operator.
+         *
+         * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
+         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended
+         * color. It must be callable in the form:
+         *
+         *       blend_op(col_src, col_dst)
+         *
+         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it
+         * must return a valid color (of any type but preferably of type color_t for best performance).         *
+         * 
+         * @param   src_im  the image/texture to map onto the triangle.
+         * @param   srcP1   coords of point 1 on the texture.
+         * @param   srcP2   coords of point 2 on the texture.
+         * @param   srcP3   coords of point 3 on the texture.
+         * @param   dstP1   coords of point 1 on this image.
+         * @param   dstP2   coords of point 2 on this image.
+         * @param   dstP3   coords of point 3 on this image.
+         * @param   blend_op    the blending operator
+        **/
+        template<typename color_t_tex, typename BLEND_OPERATOR>
+        void drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, const BLEND_OPERATOR& blend_op);
+
+
+        /**
+         * Blend textured triangle using bilinear filtering combined with a color gradient.
+         * 
+         * @param   src_im  the image/texture to map onto the triangle.
+         * @param   srcP1   coords of point 1 on the texture.
+         * @param   srcP2   coords of point 2 on the texture.
+         * @param   srcP3   coords of point 3 on the texture.
+         * @param   dstP1   coords of point 1 on this image.
+         * @param   dstP2   coords of point 2 on this image.
+         * @param   dstP3   coords of point 3 on this image.
+         * @param   C1      color gradient multiplier at point 1.
+         * @param   C2      color gradient multiplier at point 2.
+         * @param   C3      color gradient multiplier at point 3.
+         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending and simply use overwrite.
+        **/
+        template<typename color_t_tex>
+        void drawTexturedGradientTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Blend textured triangle with a transparency mask (i.e. a specific color is treated as fully transparent)
+         *
+         * @param   src_im              the image/texture to map onto the triangle.
+         * @param   transparent_color   the color considered transparent in the source texture.
+         * @param   srcP1               coords of point 1 on the texture.
+         * @param   srcP2               coords of point 2 on the texture.
+         * @param   srcP3               coords of point 3 on the texture.
+         * @param   dstP1               coords of point 1 on this image.
+         * @param   dstP2               coords of point 2 on this image.
+         * @param   dstP3               coords of point 3 on this image.
+         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
+        **/
+        template<typename color_t_tex>
+        void drawTexturedMaskedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity = 1.0f);
+
+
+        /**
+         * Blend textured triangle with a transparency mask (i.e. a specific color is treated as fully
+         * transparent) and blend it with a color gradient...
+         *
+         * @param   src_im              the image/texture to map onto the triangle.
+         * @param   transparent_color   the color considered transparent in the source texture.
+         * @param   srcP1               coords of point 1 on the texture.
+         * @param   srcP2               coords of point 2 on the texture.
+         * @param   srcP3               coords of point 3 on the texture.
+         * @param   dstP1               coords of point 1 on this image.
+         * @param   dstP2               coords of point 2 on this image.
+         * @param   dstP3               coords of point 3 on this image.
+         * @param   C1                  color gradient multiplier at point 1.
+         * @param   C2                  color gradient multiplier at point 2.
+         * @param   C3                  color gradient multiplier at point 3.
+         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
+        **/
+        template<typename color_t_tex>
+        void drawTexturedGradientMaskedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity = 1.0f);
 
 
 
@@ -1441,6 +1572,97 @@ namespace tgx
 
 
 
+        /*****************************************************
+        * DRAWING QUADS.
+        *
+        * ADVANCED DRAWING METHODS FOR GRADIENT AND TEXTURING
+        * USING THE 3D TRIANGLE RASTERIZER BACKEND.
+        *
+         * Remarks:
+         *
+         * 1. For all these methods, the positions are given using floating point values
+         *    to allow for sub-pixel precision (improves the quality of animations)
+         *
+         * 2. Sprite images and gradient colors can have different types from the destination
+         *    (i.e. this) image.
+         *
+         * Warning:
+         *
+         * For particular orientations of quads, access to texture pixels is highly non-linear.
+         * For texture stored in flash memory, this can cause dramatic slowdown because the read cache
+         * becomes basically useless. To overcome this problem, two solutions are possible:
+         *
+         * a. Move the texture to a faster memory location before drawing.
+         * b. Tessellate the triangle into smaller triangles so that the memory data for each triangle
+         *    fit into the cache.
+        ******************************************************/
+
+
+        /**
+        * Draw a quad with a gradient color specified by the color at the four vertices.
+        *
+        * See drawGradientTriangle() for details.
+        * NOTE: the vertices can be given in clockwise or counter-clockwise order.
+        **/
+        template<typename color_alt>
+        void drawGradientQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_alt colorP1, color_alt colorP2, color_alt colorP3, color_alt colorP4, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+        * Draw a textured quad using bilinear filtering.
+        *
+        * See drawTexturedTriangle() for details.
+        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
+        **/
+        template<typename color_t_tex>
+        void drawTexturedQuad(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+        * Draw a textured quad with bilinear filtering and a custom blending operator.
+        *
+        * See drawTexturedTriangle() for more details.
+        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
+        **/
+        template<typename color_t_tex, typename BLEND_OPERATOR>
+        void drawTexturedQuad(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, const BLEND_OPERATOR& blend_op);
+
+
+        /**
+        * Draw a textured quad using bilinear filtering and combined with a color gradient.
+        *
+        * See drawTexturedTriangleGradient() for details.
+        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
+        **/
+        template<typename color_t_tex>
+        void drawTexturedGradientQuad(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+        * Draw a textured quad using bilinear filtering and with a mask (i.e. a fixed transparent color).
+        *
+        * See drawTexturedTriangleMasked() for details.
+        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
+        **/
+        template<typename color_t_tex>
+        void drawTexturedMaskedQuad(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, float opacity = 1.0f);
+
+
+        /**
+        * Draw a textured quad using bilinear filtering and with a mask (i.e. a fixed transparent color) 
+        * combined with a color gradient.
+        *
+        * See drawTexturedGradientMaskedTriangle() for details.
+        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
+        **/
+        template<typename color_t_tex>
+        void drawTexturedGradientMaskedQuad(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity = 1.0f);
+
+
+
+
+
+
         /********************************************************************************
         *
         * DRAWING POLYLINES AND POLYGONS
@@ -1523,7 +1745,7 @@ namespace tgx
          * @param   nbpoints        number of points in tabPoints.
          * @param   tabPoints       array of points.
          * @param   thickness       thickness of the polyline.
-         * @param   rounded_ends    True to draw rounded ends on the polyline extrmeities and false to
+         * @param   rounded_ends    True to draw rounded ends on the polyline extremities and false to
          *                          draw straight ends.
          * @param   color           The color to use.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
@@ -1553,11 +1775,11 @@ namespace tgx
          * @param   tabPoints   array of points of the polygon: these points delimit the exterior
          *                      boundary of the polygon and the thickness of the line goes 'inside' the
          *                      polygon.
-         * @param   thickness   The thickness.
+         * @param   line_width  The thickness of the polyline
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity = 1.0f);
+        void drawSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float line_width, color_t color, float opacity = 1.0f);
 
 
         /**
@@ -1849,558 +2071,6 @@ namespace tgx
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /************************************************************************************
-        *
-        *
-        * New high quality drawing methods: anti-aliasing, bilinear filtering, subpixel precison...
-        *
-        *
-        *************************************************************************************/
-
-
-
-
-        /**
-         * Draw a triangle with gradient color specified by the colors on its vertices.
-         * 
-         * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
-         * smoother animation).
-         * 3. The color type can be different from that of this image.
-         * 4. This version does NOT use blending: pixel from the source are simply copied over this
-         * image.
-         *
-         * @tparam  color_alt   Type of the color alternate.
-         * @param   P1      First triangle vertex.
-         * @param   P2      Second triangle vertex.
-         * @param   P3      Third triangle vertex.
-         * @param   colorP1 color at the first vertex.
-         * @param   colorP2 color at the second vertex.
-         * @param   colorP3 color at the third vertex.
-        **/
-        template<typename color_alt>
-        void drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3)
-            {
-            _drawGradientTriangle<color_alt, false>(P1, P2, P3, colorP1, colorP2, colorP3, 1.0f);
-            }
-
-
-        /**
-         * Blend a triangle with gradient color specified by the colors on its vertices.
-         * 
-         * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
-         * smoother animation).
-         * 3. The color type can be different from that of this image.
-         * 4. This version uses blending, the color gradient color is blended over this image using the  
-         * alpha channel if available and multiplied by the opacity factor
-         *
-         * @tparam  color_alt   Type of the color alternate.
-         * @param   P1      First triangle vertex.
-         * @param   P2      Second triangle vertex.
-         * @param   P3      Third triangle vertex.
-         * @param   colorP1 color at the first vertex.
-         * @param   colorP2 color at the second vertex.
-         * @param   colorP3 color at the third vertex.
-         * @param   opacity The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
-        **/
-        template<typename color_alt>
-        void drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity)
-            {
-            _drawGradientTriangle<color_alt, true>(P1, P2, P3, colorP1, colorP2, colorP3, opacity);
-            }
-
-
-
-        /**
-         * Draw textured triangle (does not use blending).
-         * 
-         * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
-         * smoother animation).
-         * 2. The method use bilinear interpolation for high quality rendering.
-         * 3. The sprite image can have a different color type from this image.
-         * 4. This version does NOT use blending: pixel from the source are simply copied over this
-         * image.
-         *
-         * IMPORTANT WARNING !
-         *
-         * For certain orientation of the triangle, access to the texture pixels is highly non-linear.
-         * For texture store in flash memory, this can cause dramatic slowdown because the read cache
-         * becomes basically useless. To overcome this problem, two solutions are possible:
-         *
-         * a. Move the texture to a faster memory location before drawing.
-         *
-         * b. Tessellate the triangle into smaller triangles so that each the memory data for each
-         *    triangle can fit into the cache memory. Note that doing so will note cause any artifact
-         *    because the triangle rasterizer is "pixel perfect" so no pixel will be written twice.
-         *    However, all the small triangles must be given in the same winding direction !
-         *
-         * @param   src_im  the image/texture to map onto the triangle.
-         * @param   srcP1   coords of point 1 on the texture.
-         * @param   srcP2   coords of point 2 on the texture.
-         * @param   srcP3   coords of point 3 on the texture.
-         * @param   dstP1   coords of point 1 on this image.
-         * @param   dstP2   coords of point 2 on this image.
-         * @param   dstP3   coords of point 3 on this image.
-        **/
-        template<typename color_t_tex>
-        void drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3)
-            {
-            _drawTexturedTriangle<color_t_tex, false, false, false>(src_im, color_t_tex(), srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, color_t_tex(), color_t_tex(), color_t_tex(), 1.0f);
-            }
-
-
-        /**
-         * Blend a textured triangle over this image.
-         * 
-         * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
-         * smoother animation).
-         * 2. The method use bilinear interpolation for high quality rendering.
-         * 3. The sprite image can have a different color type from this image.
-         * 4. This version use blending and opacity.If the sprite image color type has an alpha channel,
-         * then it is used for blending and multiplied by the opacity factor(even if this image does not
-         * have an alpha channel).           *
-         * 
-         * IMPORTANT WARNING !
-         * 
-         * For certain orientation of the triangle, access to the texture pixels is highly non-linear.
-         * For texture store in flash memory, this can cause dramatic slowdown because the read cache
-         * becomes basically useless. To overcome this problem, two solutions are possible:
-         * 
-         * a. Move the texture to a faster memory location before drawing.
-         * 
-         * b. Tessellate the triangle into smaller triangles so that each the memory data for each  
-         *    triangle can fit into the cache memory. Note that doing so will note cause any artifact
-         *    because the triangle rasterizer is "pixel perfect" so no pixel will be written twice.
-         *    However, all the small triangles must be given in the same winding direction !
-         *
-         * @tparam  color_t_tex Type of the color t tex.
-         * @param   src_im  the image/texture to map onto the triangle.
-         * @param   srcP1   coords of point 1 on the texture.
-         * @param   srcP2   coords of point 2 on the texture.
-         * @param   srcP3   coords of point 3 on the texture.
-         * @param   dstP1   coords of point 1 on this image.
-         * @param   dstP2   coords of point 2 on this image.
-         * @param   dstP3   coords of point 3 on this image.
-         * @param   opacity The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
-        **/
-        template<typename color_t_tex>
-        void drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity)
-            {
-            _drawTexturedTriangle<color_t_tex, false, true, false>(src_im, color_t_tex(), srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, color_t_tex(), color_t_tex(), color_t_tex(), opacity);
-            }
- 
-
-        /**
-         * Blend a textured triangle over this image using a custom blend operator to combine to color 
-         * from the sprite with the color of this image. 
-         * 
-         * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
-         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended
-         * color.
-         *
-         * Thus, it must be callable in the form:
-         *
-         *       blend_op(col_src, col_dst)
-         *
-         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it
-         * must return a valid color (of any type but preferably of type color_t for best performance).         * 
-         * 
-         * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
-         * smoother animation).
-         * 2. The method use bilinear interpolation for high quality rendering.
-         * 3. The sprite image can have a different color type from this image.  
-         * 4. To perform "classical alpha blending", use the blitScaleRotated() method with an opacity
-         *    parameter instead as it will be faster.
-         * 
-         * IMPORTANT WARNING !
-         * 
-         * For certain orientation of the triangle, access to the texture pixels is highly non-linear.
-         * For texture store in flash memory, this can cause dramatic slowdown because the read cache
-         * becomes basically useless. To overcome this problem, two solutions are possible:
-         * 
-         * a. Move the texture to a faster memory location before drawing.
-         * 
-         * b. Tessellate the triangle into smaller triangles so that each the memory data for each  
-         *    triangle can fit into the cache memory. Note that doing so will note cause any artifact
-         *    because the triangle rasterizer is "pixel perfect" so no pixel will be written twice.
-         *    However, all the small triangles must be given in the same winding direction !
-         *
-         * @tparam  color_t_tex Type of the color t tex.
-         * @param   src_im  the image/texture to map onto the triangle.
-         * @param   srcP1   coords of point 1 on the texture.
-         * @param   srcP2   coords of point 2 on the texture.
-         * @param   srcP3   coords of point 3 on the texture.
-         * @param   dstP1   coords of point 1 on this image.
-         * @param   dstP2   coords of point 2 on this image.
-         * @param   dstP3   coords of point 3 on this image.
-         * @param   blend_op    the blending operator
-        **/
-        template<typename color_t_tex, typename BLEND_OPERATOR>
-        void drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, const BLEND_OPERATOR& blend_op);
-
-
-
-
-   
-
-        /**
-         * Draw textured triangle combined with a color gradient (does not use blending).
-         * 
-         * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
-         * smoother animation).
-         * 2. The method use bilinear interpolation for high quality rendering.
-         * 3. The sprite image can have a different color type from this image.
-         * 4. This version does NOT use blending: pixel from the source are simply copied over this
-         * image.
-         *
-         * IMPORTANT WARNING !
-         *
-         * For certain orientation of the triangle, access to the texture pixels is highly non-linear.
-         * For texture store in flash memory, this can cause dramatic slowdown because the read cache
-         * becomes basically useless. To overcome this problem, two solutions are possible:
-         *
-         * a. Move the texture to a faster memory location before drawing.
-         *
-         * b. Tessellate the triangle into smaller triangles so that each the memory data for each
-         *    triangle can fit into the cache memory. Note that doing so will note cause any artifact
-         *    because the triangle rasterizer is "pixel perfect" so no pixel will be written twice.
-         *    However, all the small triangles must be given in the same winding direction !
-         *
-         * @param   src_im  the image/texture to map onto the triangle.
-         * @param   srcP1   coords of point 1 on the texture.
-         * @param   srcP2   coords of point 2 on the texture.
-         * @param   srcP3   coords of point 3 on the texture.
-         * @param   dstP1   coords of point 1 on this image.
-         * @param   dstP2   coords of point 2 on this image.
-         * @param   dstP3   coords of point 3 on this image.
-         * @param   C1      color gradient multiplier at point 1.
-         * @param   C2      color gradient multiplier at point 2.
-         * @param   C3      color gradient multiplier at point 3.
-        **/
-        template<typename color_t_tex>
-        void drawTexturedTriangleGradient(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3)
-            {
-            _drawTexturedTriangle<color_t_tex, true, false, false>(src_im, color_t_tex(), srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, 1.0f);
-            }
-
-
-        /**
-         * Blend textured triangle combined with a color gradient (use blending).
-         * 
-         * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
-         * smoother animation).
-         * 2. The method use bilinear interpolation for high quality rendering.
-         * 3. The sprite image can have a different color type from this image.
-         * 4. This version use blending and opacity.If the sprite image color type has an alpha channel,
-         * then it is used for blending and multiplied by the opacity factor(even if this image does not
-         * have an alpha channel).           *
-         *
-         * IMPORTANT WARNING !
-         *
-         * For certain orientation of the triangle, access to the texture pixels is highly non-linear.
-         * For texture store in flash memory, this can cause dramatic slowdown because the read cache
-         * becomes basically useless. To overcome this problem, two solutions are possible:
-         *
-         * a. Move the texture to a faster memory location before drawing.
-         *
-         * b. Tessellate the triangle into smaller triangles so that each the memory data for each
-         *    triangle can fit into the cache memory. Note that doing so will note cause any artifact
-         *    because the triangle rasterizer is "pixel perfect" so no pixel will be written twice.
-         *    However, all the small triangles must be given in the same winding direction !
-         *
-         * @param   src_im  the image/texture to map onto the triangle.
-         * @param   srcP1   coords of point 1 on the texture.
-         * @param   srcP2   coords of point 2 on the texture.
-         * @param   srcP3   coords of point 3 on the texture.
-         * @param   dstP1   coords of point 1 on this image.
-         * @param   dstP2   coords of point 2 on this image.
-         * @param   dstP3   coords of point 3 on this image.
-         * @param   C1      color gradient multiplier at point 1.
-         * @param   C2      color gradient multiplier at point 2.
-         * @param   C3      color gradient multiplier at point 3.
-         * @param   opacity global opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
-        **/
-        template<typename color_t_tex>
-        void drawTexturedTriangleGradient(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity)
-            {
-            _drawTexturedTriangle<color_t_tex, true, true, false>(src_im, color_t_tex(), srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
-            }
-
-
-
-        /**
-         * Blend textured triangle with a transparency mask (i.e. a specific color is treated as fully 
-         * opaque, which is useful for drawing sprite when the source image color type does not have an 
-         * alpha channel).
-         * 
-         * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
-         * smoother animation).
-         * 2. The method use bilinear interpolation for high quality rendering.
-         * 3. The sprite image can have a different color type from this image.
-         * 4. This version use blending (if src_im has an alpha channel).
-         *
-         * IMPORTANT WARNING !
-         *
-         * For certain orientation of the triangle, access to the texture pixels is highly non-linear.
-         * For texture store in flash memory, this can cause dramatic slowdown because the read cache
-         * becomes basically useless. To overcome this problem, two solutions are possible:
-         *
-         * a. Move the texture to a faster memory location before drawing.
-         *
-         * b. Tessellate the triangle into smaller triangles so that each the memory data for each
-         *    triangle can fit into the cache memory. Note that doing so will note cause any artifact
-         *    because the triangle rasterizer is "pixel perfect" so no pixel will be written twice.
-         *    However, all the small triangles must be given in the same winding direction !
-         *
-         * @param   src_im              the image/texture to map onto the triangle.
-         * @param   transparent_color   the color considered transparent in the source texture.
-         * @param   srcP1               coords of point 1 on the texture.
-         * @param   srcP2               coords of point 2 on the texture.
-         * @param   srcP3               coords of point 3 on the texture.
-         * @param   dstP1               coords of point 1 on this image.
-         * @param   dstP2               coords of point 2 on this image.
-         * @param   dstP3               coords of point 3 on this image.
-         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f
-         *                              (opaque).
-        **/
-        template<typename color_t_tex>
-        void drawTexturedTriangleMasked(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity)
-            {
-            _drawTexturedTriangle<color_t_tex,false,true,true>(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, color_t_tex(), color_t_tex(), color_t_tex(), opacity);
-            }
-
-
-        /**
-         * Blend textured triangle with a transparency mask (i.e. a specific color is treated as fully
-         * opaque, which is useful for drawing sprite when the source image color type does not have an
-         * alpha channel). Combine the drawing with a color gradient.
-         * 
-         * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision (for
-         *    smoother animation).
-         * 2. The method use bilinear interpolation for high quality rendering.
-         * 3. The sprite image can have a different color type from this image.
-         * 4. This version use blending (if src_im has an alpha channel).
-         *
-         * IMPORTANT WARNING !
-         *
-         * For certain orientation of the triangle, access to the texture pixels is highly non-linear.
-         * For texture store in flash memory, this can cause dramatic slowdown because the read cache
-         * becomes basically useless. To overcome this problem, two solutions are possible:
-         *
-         * a. Move the texture to a faster memory location before drawing.
-         *
-         * b. Tessellate the triangle into smaller triangles so that each the memory data for each
-         *    triangle can fit into the cache memory. Note that doing so will note cause any artifact
-         *    because the triangle rasterizer is "pixel perfect" so no pixel will be written twice.
-         *    However, all the small triangles must be given in the same winding direction !
-         *
-         * @param   src_im              the image/texture to map onto the triangle.
-         * @param   transparent_color   the color considered transparent in the source texture.
-         * @param   srcP1               coords of point 1 on the texture.
-         * @param   srcP2               coords of point 2 on the texture.
-         * @param   srcP3               coords of point 3 on the texture.
-         * @param   dstP1               coords of point 1 on this image.
-         * @param   dstP2               coords of point 2 on this image.
-         * @param   dstP3               coords of point 3 on this image.
-         * @param   C1                  color gradient multiplier at point 1.
-         * @param   C2                  color gradient multiplier at point 2.
-         * @param   C3                  color gradient multiplier at point 3.
-         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f
-         *                              (opaque).
-        **/
-        template<typename color_t_tex>
-        void drawTexturedTriangleMaskedGradient(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity)
-            {
-            _drawTexturedTriangle<color_t_tex, true, true, true>(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
-            }
-
-
-
-        /**
-        * Draw a quad with a gradient color specified by the color at the four vertices. 
-        * Does not use blending
-        *
-        * See drawGradientTriangle() for details.
-        *
-        * NOTE: the vertices can be given in clockwise or counter-clockwise order.
-        **/
-        template<typename color_alt>
-        void drawGradientQuad(fVec2 P1, fVec2 P2,  fVec2 P3, fVec2 P4, color_alt colorP1, color_alt colorP2, color_alt colorP3, color_alt colorP4)
-            {
-            drawGradientTriangle(P1, P2, P3, colorP1, colorP2, colorP3);
-            drawGradientTriangle(P1, P3, P4, colorP1, colorP3, colorP4);
-            }
-
-
-        /**
-        * Draw a quad with a gradient color specified by the color at the four vertices. 
-        * Use blending
-        *
-        * See drawGradientTriangle() for details.
-        *
-        * NOTE: the vertices can be given in clockwise or counter-clockwise order.
-        **/
-        template<typename color_alt>
-        void drawGradientQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_alt colorP1, color_alt colorP2, color_alt colorP3, color_alt colorP4, float opacity)
-            {
-            drawGradientTriangle(P1, P2, P3, colorP1, colorP2, colorP3, opacity);
-            drawGradientTriangle(P1, P3, P4, colorP1, colorP3, colorP4, opacity);
-            }
-
-
-        /**
-        * Draw a textured quad (no blending).
-        * 
-        * See drawTexturedTriangle() for details.
-        * 
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
-        **/
-        template<typename color_t_tex>
-        void drawTexturedQuad(const Image<color_t_tex> & src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4)
-            {
-            drawTexturedTriangle(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3);
-            drawTexturedTriangle(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4);
-            }
-
-
-        /**
-        * Draw a textured quad (with alpha blending).
-        *
-        * See drawTexturedTriangle() for details.
-        *
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
-        **/
-        template<typename color_t_tex>
-        void drawTexturedQuad(const Image<color_t_tex> & src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, float opacity)
-            {
-            drawTexturedTriangle(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, opacity);
-            drawTexturedTriangle(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, opacity);
-            }
-
-
-        /**
-        * Draw a textured quad with a custom blending operator.
-        *
-        * See drawTexturedTriangle() for more details.
-        *
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
-        **/
-        template<typename color_t_tex, typename BLEND_OPERATOR>
-        void drawTexturedQuad(const Image<color_t_tex> & src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, const BLEND_OPERATOR& blend_op)
-            {
-            drawTexturedTriangle(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, blend_op);
-            drawTexturedTriangle(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, blend_op);
-            }
-
-
-
-
-        /**
-        * Draw a textured quad combined with a color gradient (no blending).
-        *
-        * See drawTexturedTriangleGradient() for details.
-        *
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
-        **/
-        template<typename color_t_tex>
-        void drawTexturedQuadGradient(const Image<color_t_tex> & src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4)
-            {
-            drawTexturedTriangleGradient(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3);
-            drawTexturedTriangleGradient(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, C1, C3, C4);
-            }
-
-
-        /**
-        * Draw a textured quad combined with a color gradient (with blending).
-        *
-        * See drawTexturedTriangleGradient() for details.
-        *
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
-        **/
-        template<typename color_t_tex>
-        void drawTexturedQuadGradient(const Image<color_t_tex> & src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity)
-            {
-            drawTexturedTriangleGradient(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
-            drawTexturedTriangleGradient(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, C1, C3, C4, opacity);
-            }
-
-
-        /**
-        * Draw a textured quad with a mask (i.e. a fixed transparent color).
-        *
-        * See drawTexturedTriangleMasked() for details.
-        *
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
-        **/
-        template<typename color_t_tex>
-        void drawTexturedQuadMasked(const Image<color_t_tex> & src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, float opacity)
-            {
-            drawTexturedTriangleMasked(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, opacity);
-            drawTexturedTriangleMasked(src_im, transparent_color, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, opacity);
-            }
-
-
-        /**
-        * Draw a textured quad with a mask (i.e. a fixed transparent color) and combined with a color gradient.
-        *
-        * See drawTexturedTriangleMaskedGradient() for details.
-        *
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
-        **/
-        template<typename color_t_tex>
-        void drawTexturedQuadMaskedGradient(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity)
-            {
-            drawTexturedTriangleMaskedGradient(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
-            drawTexturedTriangleMaskedGradient(src_im, transparent_color, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, C1, C3, C4, opacity);
-            }
-
-
-
-
-
     /************************************************************************************
     *
     * Drawing text 
@@ -2541,6 +2211,10 @@ namespace tgx
             {
             return _drawTextILI<true>(text, pos, col, font, start_newline_at_0, opacity);
             }
+
+
+
+
 
 
 
@@ -3062,7 +2736,21 @@ private:
         void _fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity);
 
 
+        /** 
+         * Methods using the 3D triangle rasterizer 
+         **/
 
+        /** Convert to texture coordinates */
+        inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size) { return tgx::fVec2(pos.x / ((float)size.x), pos.y / ((float)size.y)); }
+
+        /** Convert to viewport coordinates */
+        inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size) { return tgx::fVec2((2.0f / ((float)size.x)) * (pos.x) - 1.0f, (2.0f / ((float)size.y)) * (pos.y) - 1.0f); }
+
+        template<typename color_alt, bool USE_BLENDING>
+        void _drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity);
+
+        template<typename color_t_tex, bool GRADIENT, bool USE_BLENDING, bool MASKED>
+        void _drawTexturedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity);
 
 
 
@@ -3083,6 +2771,7 @@ private:
 
         void _drawSmoothThickPolygon(const fVec2 tabP[], int nbPoints, float thickness, color_t color, float opacity);
 
+        void _drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity);
 
 
 
@@ -3149,45 +2838,7 @@ private:
         
 
         void _drawSmoothThickEllipse(tgx::fVec2 C, float rx, float ry, float thickness, color_t color, float opacity);
-
-
-
-
-
-
-        /***************************************
-        * High Quality drawing primitive
-        ****************************************/
-
-
-
-        /** Convert to texture coordinates */
-        inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size)
-            {
-            return tgx::fVec2(pos.x / ((float)size.x), pos.y / ((float)size.y));
-            }
-
-
-        /** Convert to viewport coordinates */
-        inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size)
-            {
-            return tgx::fVec2((2.0f / ((float)size.x)) * (pos.x) - 1.0f, (2.0f / ((float)size.y)) * (pos.y) - 1.0f);
-            }
-
-
-
-        /** template method for drawing a 2D gradient triangle*/
-        template<typename color_alt, bool USE_BLENDING>
-        void _drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity);
-
-
-        /** template method for drawing 2D textured (possibly with gradient and mask) triangle */
-        template<typename color_t_tex, bool GRADIENT, bool USE_BLENDING, bool MASKED>
-        void _drawTexturedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity);
-
-
-
-
+        
 
         /***************************************
         * DRAWING BEZIER

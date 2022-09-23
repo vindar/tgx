@@ -604,7 +604,7 @@ namespace tgx
 
             if (USE_MASK)
                 {
-                drawTexturedQuadMasked(src_im, transparent_color, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4, opacity);
+                drawTexturedMaskedQuad(src_im, transparent_color, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4, opacity);
                 }
             else if (USE_BLENDING)
                 {
@@ -2524,6 +2524,243 @@ namespace tgx
 
 
 
+    /********************************************************************************
+    * DRAWING TRIANGLES WITH THE 3D TRIANGLE RASTERIZER.
+    *********************************************************************************/
+
+
+    template<typename color_t>
+    template<typename color_alt>
+    void Image<color_t>::drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity)
+        {
+        if ((opacity >= 0) && (opacity <= 1))
+            {
+            _drawGradientTriangle<color_alt, true>(P1, P2, P3, colorP1, colorP2, colorP3, opacity);
+            }
+        else
+            {
+            _drawGradientTriangle<color_alt, false>(P1, P2, P3, colorP1, colorP2, colorP3, 1.0f);
+            }
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_tex>
+    void Image<color_t>::drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity)
+        {
+        if ((opacity >= 0) && (opacity <= 1))
+            {
+            _drawTexturedTriangle<color_t_tex, false, true, false>(src_im, color_t_tex(), srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, color_t_tex(), color_t_tex(), color_t_tex(), opacity);
+            }
+        else
+            {
+            _drawTexturedTriangle<color_t_tex, false, false, false>(src_im, color_t_tex(), srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, color_t_tex(), color_t_tex(), color_t_tex(), 1.0f);
+            }
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_tex>
+    void Image<color_t>::drawTexturedGradientTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity)
+        {
+        if ((opacity >= 0) && (opacity <= 1))
+            {
+            _drawTexturedTriangle<color_t_tex, true, true, false>(src_im, color_t_tex(), srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
+            }
+        else
+            {
+            _drawTexturedTriangle<color_t_tex, true, false, false>(src_im, color_t_tex(), srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, 1.0f);
+            }
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_tex>
+    void Image<color_t>::drawTexturedMaskedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity)
+        {
+        _drawTexturedTriangle<color_t_tex, false, true, true>(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, color_t_tex(), color_t_tex(), color_t_tex(), opacity);
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_tex>
+    void Image<color_t>::drawTexturedGradientMaskedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity)
+        {
+        _drawTexturedTriangle<color_t_tex, true, true, true>(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
+        }
+
+
+
+
+    template<typename color_t>
+    template<typename color_t_tex, typename BLEND_OPERATOR>
+    void Image<color_t>::drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, const BLEND_OPERATOR& blend_op)
+        {
+        if ((!isValid()) || (!src_im.isValid())) return;
+        const iVec2 texdim = src_im.dim();
+        const iVec2 imdim = dim();
+        tgx::RasterizerVec4 V1, V2, V3;
+
+        const fVec2 U1 = _coord_viewport(dstP1, imdim);
+        V1.x = U1.x;
+        V1.y = U1.y;
+        V1.T = _coord_texture(srcP1, texdim);
+        V1.color = RGBf(1.0f, 1.0f, 1.0f);
+        V1.A = 1.0f;
+
+        const fVec2 U2 = _coord_viewport(dstP2, imdim);
+        V2.x = U2.x;
+        V2.y = U2.y;
+        V2.T = _coord_texture(srcP2, texdim);
+        V2.color = RGBf(1.0f, 1.0f, 1.0f);
+        V2.A = 1.0f;
+
+        const fVec2 U3 = _coord_viewport(dstP3, imdim);
+        V3.x = U3.x;
+        V3.y = U3.y;
+        V3.T = _coord_texture(srcP3, texdim);
+        V3.color = RGBf(1.0f, 1.0f, 1.0f);
+        V3.A = 1.0f;
+
+        tgx::RasterizerParams<color_t, color_t_tex, float, BLEND_OPERATOR> rparam;
+        rparam.im = this;
+        rparam.tex = &src_im;
+        rparam.p_blend_op = &blend_op;
+
+        tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture_blend_op<BLEND_OPERATOR, color_t, color_t_tex>);
+        }
+
+
+
+    template<typename color_t>
+    template<typename color_alt, bool USE_BLENDING>
+    void Image<color_t>::_drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity)
+        {
+        if (!isValid()) return;
+        const iVec2 imdim = dim();
+        tgx::RasterizerVec4 V1, V2, V3;
+
+        const fVec2 U1 = _coord_viewport(P1, imdim);
+        V1.x = U1.x;
+        V1.y = U1.y;
+        V1.color = RGBf(colorP1);
+        V1.A = colorP1.opacity();
+
+        const fVec2 U2 = _coord_viewport(P2, imdim);
+        V2.x = U2.x;
+        V2.y = U2.y;
+        V2.color = RGBf(colorP2);
+        V2.A = colorP2.opacity();
+
+        const fVec2 U3 = _coord_viewport(P3, imdim);
+        V3.x = U3.x;
+        V3.y = U3.y;
+        V3.color = RGBf(colorP3);
+        V3.A = colorP3.opacity();
+
+        tgx::RasterizerParams<color_t, color_t, float> rparam;
+        rparam.im = this;
+        rparam.tex = nullptr;
+        rparam.opacity = opacity;
+
+        if (USE_BLENDING)
+            {
+            tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_gradient<true, color_t>);
+            }
+        else
+            {
+            tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_gradient<false, color_t>);
+            }
+
+        }
+
+
+
+
+    template<typename color_t>
+    template<typename color_t_tex, bool GRADIENT, bool USE_BLENDING, bool MASKED>
+    void Image<color_t>::_drawTexturedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity)
+        {
+        if ((!isValid()) || (!src_im.isValid())) return;
+        const iVec2 texdim = src_im.dim();
+        const iVec2 imdim = dim();
+        tgx::RasterizerVec4 V1, V2, V3;
+
+        const fVec2 U1 = _coord_viewport(dstP1, imdim);
+        V1.x = U1.x;
+        V1.y = U1.y;
+        V1.T = _coord_texture(srcP1, texdim);
+        V1.color = RGBf(C1);
+        V1.A = C1.opacity();
+
+        const fVec2 U2 = _coord_viewport(dstP2, imdim);
+        V2.x = U2.x;
+        V2.y = U2.y;
+        V2.T = _coord_texture(srcP2, texdim);
+        V2.color = RGBf(C2);
+        V2.A = C2.opacity();
+
+        const fVec2 U3 = _coord_viewport(dstP3, imdim);
+        V3.x = U3.x;
+        V3.y = U3.y;
+        V3.T = _coord_texture(srcP3, texdim);
+        V3.color = RGBf(C3);
+        V3.A = C3.opacity();
+
+        tgx::RasterizerParams<color_t, color_t_tex, float> rparam;
+        rparam.im = this;
+        rparam.tex = &src_im;
+        rparam.opacity = opacity;
+        rparam.mask_color = transparent_color;
+
+        if (MASKED)
+            {
+            if (!GRADIENT)
+                {
+                tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, true, false, color_t, color_t_tex>);
+                }
+            else
+                {
+                tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, true, true, color_t, color_t_tex>);
+                }
+            }
+        else
+            {
+            if (USE_BLENDING)
+                {
+                if (!GRADIENT)
+                    {
+                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, false, false, color_t, color_t_tex>);
+                    }
+                else
+                    {
+                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, false, true, color_t, color_t_tex>);
+                    }
+                }
+            else
+                {
+                if (!GRADIENT)
+                    {
+                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<false, false, false, color_t, color_t_tex>);
+                    }
+                else
+                    {
+                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<false, false, true, color_t, color_t_tex>);
+                    }
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2647,6 +2884,65 @@ namespace tgx
         _bseg_avoid22(seg13, seg12, seg14, seg32, seg34, true, true, true, true, color, 0, op, true);
         }
 
+
+
+    /********************************************************************************
+    * DRAWING QUADS WITH THE 3D TRIANGLE RASTERIZER.
+    *********************************************************************************/
+
+
+    template<typename color_t>
+    template<typename color_alt>
+    void Image<color_t>::drawGradientQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_alt colorP1, color_alt colorP2, color_alt colorP3, color_alt colorP4, float opacity)
+        {
+        drawGradientTriangle(P1, P2, P3, colorP1, colorP2, colorP3, opacity);
+        drawGradientTriangle(P1, P3, P4, colorP1, colorP3, colorP4, opacity);
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_tex>
+    void Image<color_t>::drawTexturedQuad(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, float opacity)
+        {
+        drawTexturedTriangle(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, opacity);
+        drawTexturedTriangle(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, opacity);
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_tex, typename BLEND_OPERATOR>
+    void Image<color_t>::drawTexturedQuad(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, const BLEND_OPERATOR& blend_op)
+        {
+        drawTexturedTriangle(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, blend_op);
+        drawTexturedTriangle(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, blend_op);
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_tex>
+    void Image<color_t>::drawTexturedGradientQuad(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity)
+        {
+        drawTexturedGradientTriangle(src_im, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
+        drawTexturedGradientTriangle(src_im, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, C1, C3, C4, opacity);
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_tex>
+    void Image<color_t>::drawTexturedMaskedQuad(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, float opacity)
+        {
+        drawTexturedMaskedTriangle(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, opacity);
+        drawTexturedMaskedTriangle(src_im, transparent_color, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, opacity);
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_tex>
+    void Image<color_t>::drawTexturedGradientMaskedQuad(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity)
+        {
+        drawTexturedGradientMaskedTriangle(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
+        drawTexturedGradientMaskedTriangle(src_im, transparent_color, srcP1, srcP3, srcP4, dstP1, dstP3, dstP4, C1, C3, C4, opacity);
+        }
 
 
 
@@ -2880,6 +3176,25 @@ namespace tgx
         }
 
 
+    template<typename color_t>
+    void Image<color_t>::drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float line_width, bool rounded_ends, color_t color, float opacity)
+        {
+        if ((nbpoints < 2) || (!isValid())) return;
+        if (nbpoints == 2)
+            {
+            drawSmoothThickLine(tabPoints[0], tabPoints[1], line_width, rounded_ends, color, opacity);
+            return;
+            }
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _drawSmoothThickPolyline(tabPoints, nbpoints, thickness, rounded_ends, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::_drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity)
+        {
+
+        }
 
 
     /********************************************************************************
@@ -4212,232 +4527,6 @@ namespace tgx
         }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-    /*****************************************************
-    * High quality routines
-    ******************************************************/
-
-
-
-
-
-
-    template<typename color_t>
-    template<typename color_alt, bool USE_BLENDING>
-    void Image<color_t>::_drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity)
-        {
-        if (!isValid()) return;
-        const iVec2 imdim = dim();
-        tgx::RasterizerVec4 V1, V2, V3;
-
-        const fVec2 U1 = _coord_viewport(P1, imdim);
-        V1.x = U1.x;
-        V1.y = U1.y;
-        V1.color = RGBf(colorP1);
-        V1.A = colorP1.opacity();
-
-        const fVec2 U2 = _coord_viewport(P2, imdim);
-        V2.x = U2.x;
-        V2.y = U2.y;
-        V2.color = RGBf(colorP2);
-        V2.A = colorP2.opacity();
-
-        const fVec2 U3 = _coord_viewport(P3, imdim);
-        V3.x = U3.x;
-        V3.y = U3.y;
-        V3.color = RGBf(colorP3);
-        V3.A = colorP3.opacity();
-
-        tgx::RasterizerParams<color_t, color_t, float> rparam;
-        rparam.im = this;
-        rparam.tex = nullptr;
-        rparam.opacity = opacity;
-
-        if (USE_BLENDING)
-            {
-            tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_gradient<true,color_t>);
-            }
-        else
-            {
-            tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_gradient<false, color_t>);
-            }
-
-        }
-
-
-
-
-    template<typename color_t>
-    template<typename color_t_tex, bool GRADIENT, bool USE_BLENDING, bool MASKED>
-    void Image<color_t>::_drawTexturedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity)
-        {
-        if ((!isValid()) || (!src_im.isValid())) return;
-        const iVec2 texdim = src_im.dim();
-        const iVec2 imdim = dim();
-        tgx::RasterizerVec4 V1, V2, V3;
-
-        const fVec2 U1 = _coord_viewport(dstP1, imdim);
-        V1.x = U1.x;
-        V1.y = U1.y;
-        V1.T = _coord_texture(srcP1, texdim);
-        V1.color = RGBf(C1);
-        V1.A = C1.opacity();
-
-        const fVec2 U2 = _coord_viewport(dstP2, imdim);
-        V2.x = U2.x;
-        V2.y = U2.y;
-        V2.T = _coord_texture(srcP2, texdim);
-        V2.color = RGBf(C2);
-        V2.A = C2.opacity();
-
-        const fVec2 U3 = _coord_viewport(dstP3, imdim);
-        V3.x = U3.x;
-        V3.y = U3.y;
-        V3.T = _coord_texture(srcP3, texdim);
-        V3.color = RGBf(C3);
-        V3.A = C3.opacity();
-
-        tgx::RasterizerParams<color_t, color_t_tex, float> rparam;
-        rparam.im = this;
-        rparam.tex = &src_im;
-        rparam.opacity = opacity;
-        rparam.mask_color = transparent_color;
-
-        if (MASKED)
-            {
-            if (!GRADIENT)
-                {
-                tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, true, false, color_t, color_t_tex>);
-                }
-            else
-                {
-                tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, true, true, color_t, color_t_tex>);
-                }
-            }
-        else
-            {
-            if (USE_BLENDING)
-                {
-                if (!GRADIENT)
-                    {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, false, false, color_t, color_t_tex>);
-                    }
-                else
-                    {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, false, true, color_t, color_t_tex>);
-                    }
-                }
-            else
-                {
-                if (!GRADIENT)
-                    {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<false, false, false, color_t, color_t_tex>);
-                    }
-                else
-                    {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<false, false, true, color_t, color_t_tex>);
-                    }
-                }
-            }
-        }
-
-
-
-
-    template<typename color_t>
-    template<typename color_t_tex, typename BLEND_OPERATOR>
-    void Image<color_t>::drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, const BLEND_OPERATOR& blend_op)
-        {
-        if ((!isValid()) || (!src_im.isValid())) return;
-        const iVec2 texdim = src_im.dim();
-        const iVec2 imdim = dim();
-        tgx::RasterizerVec4 V1, V2, V3;
-
-        const fVec2 U1 = _coord_viewport(dstP1, imdim);
-        V1.x = U1.x;
-        V1.y = U1.y;
-        V1.T = _coord_texture(srcP1, texdim);
-        V1.color = RGBf(1.0f, 1.0f, 1.0f);
-        V1.A = 1.0f;
-
-        const fVec2 U2 = _coord_viewport(dstP2, imdim);
-        V2.x = U2.x;
-        V2.y = U2.y;
-        V2.T = _coord_texture(srcP2, texdim);
-        V2.color = RGBf(1.0f, 1.0f, 1.0f);
-        V2.A = 1.0f;
-
-        const fVec2 U3 = _coord_viewport(dstP3, imdim);
-        V3.x = U3.x;
-        V3.y = U3.y;
-        V3.T = _coord_texture(srcP3, texdim);
-        V3.color = RGBf(1.0f, 1.0f, 1.0f);
-        V3.A = 1.0f;
-
-        tgx::RasterizerParams<color_t, color_t_tex, float, BLEND_OPERATOR> rparam;
-        rparam.im = this;
-        rparam.tex = &src_im;
-        rparam.p_blend_op = &blend_op;
-
-        tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture_blend_op<BLEND_OPERATOR, color_t, color_t_tex>);
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
