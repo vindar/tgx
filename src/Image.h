@@ -1718,6 +1718,110 @@ namespace tgx
 
 
 
+        void test(fVec2 A, fVec2 B)
+            {
+            BSeg AB(A, B);
+
+            AB._frac = -1;
+            //AB._frac = (AB._x_major) ? (AB._dy - AB._dx) : (AB._dx - AB._dy);
+            
+            _bseg_draw(AB, true, true, RGB32_Red, 0, 256, true);
+
+            int32_t kx, ky, minleft, maxright;
+            AB.equation(kx, ky, minleft, maxright, true);
+
+            for (int i = 0; i < 320; i++)
+                {
+                for (int j = 0; j < 240; j++)
+                    {
+                    int32_t v = kx * i + ky * j; 
+
+                    if (v < minleft)
+                        {
+                        drawPixel({ i,j }, RGB32_Green, 0.5f);
+                        }
+                    else if (v > maxright)
+                        {
+                        drawPixel({ i,j }, RGB32_Blue, 0.5f);
+                        }
+                    }
+                }
+            }
+
+        void test2(fVec2 A, fVec2 B)
+            {
+
+            BSeg AB(A, B);
+
+            AB._frac = -1;
+            //AB._frac = (AB._x_major) ? (AB._dy - AB._dx) : (AB._dx - AB._dy);
+        
+
+            _bseg_draw(AB, true, true, RGB32_Red, 0, 256, true);
+
+
+            const int x = AB._x;
+            const int y = AB._y;
+            const int stepx = AB._stepx;
+            const int stepy = AB._stepy;
+            const int dx = AB._dx;
+            const int dy = AB._dy;
+            const int f = AB._frac;
+
+            for (int i = 0; i < 320; i++)
+                {
+                for (int j = 0; j < 240; j++)
+                    {
+                    int o; 
+                    if (AB.x_major())
+                        {
+                        o = f + (i - x) * (dy * stepx) - (j - y) * (dx * stepy);
+                        }
+                    else
+                        {
+                        o = f - (i - x) * (dy * stepx) + (j - y) * (dx * stepy);
+                        }
+
+                    if (AB.x_major())
+                        {
+                        int mi = (dy - dx);
+                        int ma = dy - 1;                        
+                                                                    
+                        if (o > ma)
+                            {
+                            drawPixel({ i,j }, RGB32_Green, 0.5f);
+                            }
+                        if (o < mi)
+                            {
+                            drawPixel({ i,j }, RGB32_Blue, 0.5f);
+                            }
+                        else
+                            {
+                          //  drawPixel({ i,j }, RGB32_Gray, 0.5f);
+                            }
+
+                        }
+                    else
+                        {
+                        int mi = (dx - dy);
+                        int ma = dx - 1;
+
+                        if (o >= dx)
+                            {
+                            drawPixel({ i,j }, RGB32_Green, 0.5f);
+                            }
+                        if (o < (dx - dy))
+                            {
+                            drawPixel({ i,j }, RGB32_Blue, 0.5f);
+                            }
+                        }
+                    }
+                }
+
+
+            }
+
+
 
 
         /*****************************************************

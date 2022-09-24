@@ -3186,15 +3186,89 @@ namespace tgx
             return;
             }
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        _drawSmoothThickPolyline(tabPoints, nbpoints, thickness, rounded_ends, color, opacity);
+        _drawSmoothThickPolyline(nbpoints, tabPoints, line_width, rounded_ends, color, opacity);
         }
 
 
     template<typename color_t>
-    void Image<color_t>::_drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity)
+    void Image<color_t>::_drawSmoothThickPolyline(int nbpoints, const fVec2 tabP[], float thickness, bool rounded_ends, color_t color, float opacity)
         {
+        // assume nbPoints > 3, valid image and opacity
+        int op = (int)(opacity * 256);
 
+        fVec2 P1 = tabP[0];
+        fVec2 P2 = tabP[1];
+        fVec2 H1 = (P2 - P1).getRotate90().getNormalize_fast() * thickness;
+        fVec2 I1 = P1 + H1;
+        fVec2 J1 = P1 - H1;
+
+        for (int i = 2; i <= nbpoints; i++)
+            {
+            fVec2 I0 = I1; 
+            fVec2 J0 = J1;
+            fVec2 H0 = H1;            
+            if (i == nbpoints)
+                {
+                I1 = P2 + H1;
+                J1 = P2 - H1; 
+                }
+            else
+                {
+                P1 = P2;
+                P2 = tabP[i];
+                H1 = (P2 - P1).getRotate90().getNormalize_fast() * thickness;
+                if (!I1.setAsIntersection(I0, P1 + H0, P1 + H1, P2 + H1)) return; //fail
+                if (!J1.setAsIntersection(J0, P1 - H0, P1 - H1, P2 - H1)) return; //fail
+                }          
+            tgx::BSeg J0J1(J0, J1); tgx::BSeg J1J0 = J0J1.get_reverse();
+            tgx::BSeg J1I1(J1, I1); tgx::BSeg I1J1 = J1I1.get_reverse();
+            tgx::BSeg I1I0(I1, I0); tgx::BSeg I0I1 = I1I0.get_reverse();
+            tgx::BSeg I0J0(I0, J0); tgx::BSeg J0I0 = I0J0.get_reverse();
+            tgx::BSeg I0J1(I0, J1); tgx::BSeg J1I0 = I0J1.get_reverse();
+            _bseg_fill_triangle_precomputed(I0, J0, J1, I0J0, J0I0, J0J1, J1J0, J1I0, I0J1, color, opacity);
+            _bseg_fill_triangle_precomputed(I0, J1, I1, I0J1, J1I0, J1I1, I1J1, I1I0, I0I1, color, opacity);
+            const int side = 1;
+            if (i == 2)
+                { // draw first end
+                if (rounded_ends)
+                    {
+                    _bseg_avoid11(I0J0, I0I1, J0J1, false, false, true, true, color, 0, op, true);
+                    // todo : draw half circle
+                    }
+                else
+                    {
+                    _bseg_avoid11(I0J0, I0I1, J0J1, true, true, true, true, color, side, op, true);
+                    }
+                }
+            if (i < nbpoints)
+                {
+                tgx::BSeg J1J2(J1, J1 + (P2 - P1));
+                tgx::BSeg I1I2(I1, I1 + (P2 - P1));
+                _bseg_avoid1(J1J0, J1J2, true, ((rounded_ends) && (i == 2)), true, color, -side, op, true);
+                _bseg_avoid1(I1I0, I1I2, true, ((rounded_ends) && (i == 2)), true, color, side, op, true);
+                _bseg_avoid22(I0J1, I0J0, I0I1, J1J0, J1I1, true, true, true, true, color, 0, op, true);
+                _bseg_avoid22(J1I1, J1J0, J1J2, I1I0, I1I2, true, true, true, true, color, 0, op, true);
+                }
+            else
+                {
+                _bseg_draw(J1J0,  true, false, color, -side, op, true);
+                _bseg_draw(I1I0,  true, false, color, side, op, true);
+                _bseg_avoid22(I0J1, I0J0, I0I1, J1J0, J1I1, true, true, true, true, color, 0, op, true);
+                if (rounded_ends)
+                    {
+                    _bseg_avoid11(J1I1, J1J0, I1I0, false, false, true, true, color, 0, op, true);
+                    // todo : draw half circle
+                    }
+                else
+                    {
+                    _bseg_avoid11(J1I1, J1J0, I1I0, false, false, true, true, color, side, op, true);
+                    }
+                }            
+            }
         }
+
+
+
 
 
     /********************************************************************************

@@ -74,6 +74,52 @@ namespace tgx
 			}
 
 
+
+		/* Return the equation of the line: off = kx*x + ky*y
+		*  if off < mino : we are on a pixel on the left side of the line
+		*  if off > maxo : we are on a pixel on the right side of the line
+        *  if mino <= off <= maxo : we are on the line 
+        *  
+		* if invert_dir is set, left and right sides are exchanged
+		*/
+		void equation(int32_t & kx, int32_t & ky, int32_t & mino, int32_t & maxo, bool invert_dir = false)
+			{
+			int32_t mi, ma;
+			if (_x_major)
+				{
+				kx = _dy * _stepx;
+				ky = -_dx * _stepy;
+				mi = _dy - _dx;
+				ma = _dy - 1;
+				}
+			else
+				{
+				kx = -_dy * _stepx;
+				ky = _dx * _stepy;
+				mi = _dx - _dy;
+				ma = _dx - 1;
+				}
+			int32_t o = _frac - (_x * kx) - (_y * ky);
+			bool xm = _x_major;
+			if (invert_dir) xm = (!xm);
+			if (xm)
+				{
+				kx = -kx; 
+				ky = -ky;
+				maxo = o - mi;
+				mino = o - ma;
+				}
+			else
+				{
+				mino = mi - o;
+				maxo = ma - o;
+				}
+			}
+
+
+
+
+
 		/** move on the line by one pixel. tmeplate version (for speed) */
 		template<bool X_MAJOR> inline void move()
 			{
