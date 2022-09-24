@@ -82,7 +82,7 @@ namespace tgx
         *  
 		* if invert_dir is set, left and right sides are exchanged
 		*/
-		void equation(int32_t & kx, int32_t & ky, int32_t & mino, int32_t & maxo, bool invert_dir = false)
+		void equation(int32_t & kx, int32_t & ky, int32_t & mino, int32_t & maxo, bool invert_dir = false) const
 			{
 			int32_t mi, ma;
 			if (_x_major)
