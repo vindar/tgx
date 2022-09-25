@@ -2989,11 +2989,6 @@ private:
         ****************************************/
 
 
-        void _drawSmoothThickPolygon(const fVec2 tabP[], int nbPoints, float thickness, color_t color, float opacity);
-
-        void _drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity);
-
-
 
         /***************************************
         * CIRCLES AND ELLIPSE

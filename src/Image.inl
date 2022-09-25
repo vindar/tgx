@@ -2958,20 +2958,6 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawPolyline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
-        {
-        int k = 0;
-        drawPolyline(
-            [&k, &nbpoints, &tabPoints](tgx::iVec2& P)
-                {
-                P = tabPoints[k++];
-                return (k < nbpoints);
-                },
-            color, opacity);
-        }
-
-
-    template<typename color_t>
     template<typename FUNCTOR_NEXT>
     void Image<color_t>::drawPolyline(FUNCTOR_NEXT next_point, color_t color, float opacity)
         {
@@ -2993,13 +2979,12 @@ namespace tgx
         }
 
 
-
     template<typename color_t>
-    void Image<color_t>::drawSmoothPolyline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
+    void Image<color_t>::drawPolyline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
         {
         int k = 0;
-        drawSmoothPolyline(
-            [&k, &nbpoints, &tabPoints](tgx::fVec2& P)
+        drawPolyline(
+            [&k, &nbpoints, &tabPoints](tgx::iVec2& P)
                 {
                 P = tabPoints[k++];
                 return (k < nbpoints);
@@ -3030,12 +3015,12 @@ namespace tgx
         }
 
 
-    template<typename color_t> 
-    void Image<color_t>::drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
+    template<typename color_t>
+    void Image<color_t>::drawSmoothPolyline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
         {
         int k = 0;
-        drawPolygon(
-            [&k, &nbpoints, &tabPoints](tgx::iVec2& P)
+        drawSmoothPolyline(
+            [&k, &nbpoints, &tabPoints](tgx::fVec2& P)
                 {
                 P = tabPoints[k++];
                 return (k < nbpoints);
@@ -3045,243 +3030,20 @@ namespace tgx
 
 
 
-    template<typename color_t>
-    template<typename FUNCTOR_NEXT>
-    void Image<color_t>::drawPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity)
-        {
-        if (!isValid()) return;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        const int op = (int)(opacity * 256);
-        iVec2 P, Q;
-        if (!next_point(Q)) return;
-        const iVec2 Q0 = Q; 
-        while (1)
-            {
-            P = Q;
-            if (!next_point(Q))
-                { // last point 
-                _bseg_draw(BSeg(P, Q), true, false, color, 0, op, true);
-                _bseg_draw(BSeg(Q, Q0), true, false, color, 0, op, true);
-                return;
-                }
-            _bseg_draw(BSeg(P, Q), true, false, color, 0, op, true);
-            }
-        }
 
 
 
 
-    template<typename color_t>
-    void Image<color_t>::drawSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
-        {
-        int k = 0;
-        drawSmoothPolygon(
-            [&k, &nbpoints, &tabPoints](tgx::fVec2& P)
-            {
-                P = tabPoints[k++];
-                return (k < nbpoints);
-            },
-            color, opacity);
-        }
+
 
 
     template<typename color_t>
     template<typename FUNCTOR_NEXT>
-    void Image<color_t>::drawSmoothPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity)
-        {
-        if (!isValid()) return;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        const int op = (int)(opacity * 256);
-        fVec2 P, Q;
-        if (!next_point(Q)) return;
-        const fVec2 Q0 = Q; 
-        while (1)
-            {
-            P = Q;
-            if (!next_point(Q))
-                { // last point 
-                _bseg_draw_AA(BSeg(P, Q), true, false, color, op, true);
-                _bseg_draw_AA(BSeg(Q, Q0), true, false, color, op, true);
-                return;
-                }
-            _bseg_draw_AA(BSeg(P, Q), true, false, color, op, true);
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-    template<typename color_t>
-    void Image<color_t>::fillPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
-        {   
-        if (!isValid()) return;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        const int op = (int)(opacity * 256);
-        if (nbpoints < 3) return;
-
-        fVec2 C = fVec2((float)tabPoints[0].x, (float)tabPoints[0].y);
-        for (int i = 1; i < nbpoints; i++)
-            {
-            C = C + fVec2((float)tabPoints[i].x, (float)tabPoints[i].y);
-            }
-        C = C * (1.0f / nbpoints); // center
-
-        /*
-        const float a = _triangleAera(C, tabPoints[0], tabPoints[1]);
-        if (a == 0) return; // do not draw flat polygons
-        const float w = (a > 0) ? 1: -1;
-        */
-
-        _drawPixel<true, true>( { (int)roundf(C.x),  (int)roundf(C.y) }, color, opacity);
-        for (int i = 0; i < nbpoints; i++)
-            {
-            const iVec2 iP0(tabPoints[i]);
-            const iVec2 iP1(tabPoints[(i+1) % nbpoints]);
-            const iVec2 iP2(tabPoints[(i+2) % nbpoints]);
-            const fVec2 P0((float)iP0.x, (float)iP0.y);
-            const fVec2 P1((float)iP1.x, (float)iP1.y);
-            const fVec2 P2((float)iP2.x, (float)iP2.y);
-
-            BSeg P1P2(P1, P2); auto P2P1 = P1P2.get_reverse();
-            BSeg P2C(P2, C); auto CP2 = P2C.get_reverse();
-            BSeg CP1(C, P1); auto P1C = CP1.get_reverse();
-            BSeg P1P0(P1, P0); 
-            BSeg CP0(C, P0);
-            _bseg_fill_triangle_precomputed(P1, P2, C, P1P2, P2P1, P2C, CP2, CP1, P1C, color, opacity);
-            _bseg_avoid1(P1P2, P1P0, true, false, true, color, 0, op, true);
-            _bseg_avoid22(CP1, CP0, CP2, P1P0, P1P2, true, true, true, true, color, 0, op, true);
-            }
-        }
-
-
-    template<typename color_t>
-    template<typename FUNCTOR_NEXT>
-    void Image<color_t>::fillPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity)
+    void Image<color_t>::drawSmoothThickPolyline(FUNCTOR_NEXT next_point, float thickness, bool rounded_ends, color_t color, float opacity)
         {
 
         }
 
-
-
-    template<typename color_t>
-    void Image<color_t>::drawSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity)
-        {
-        if ((nbpoints < 3) || (!isValid())) return;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        _drawSmoothThickPolygon(tabPoints, nbpoints, thickness, color, opacity);
-        }
-
-
-
-
-
-    template<typename color_t>
-    void Image<color_t>::_drawSmoothThickPolygon(const fVec2 tabP[], int nbPoints, float thickness, color_t color, float opacity)
-        {
-        // assume nbPoints > 3, valid image and opacity
-        float w = 0;
-        for (int i = 0; i < nbPoints - 2; i++)
-            {
-            w = _triangleAera(tabP[i], tabP[i + 1], tabP[i + 2]);
-            if (w != 0) break;
-            }
-        if (w == 0) return; // flat, nothing to draw..
-        int side;
-        if (w < 0)
-            {
-            side = 1;
-            thickness = -thickness;
-            }
-        else
-            {
-            side = -1;
-            }
-
-        int op = (int)(opacity * 256);
-        fVec2 P0 = tabP[0];
-        fVec2 P1 = tabP[1];
-        fVec2 P2 = tabP[2];
-        fVec2 P3 = tabP[(nbPoints > 3) ? 3 : 0];
-
-        fVec2 H0 = (P1 - P0).getRotate90().getNormalize_fast() * thickness;
-        fVec2 H1 = (P2 - P1).getRotate90().getNormalize_fast() * thickness;
-        fVec2 H2 = (P3 - P2).getRotate90().getNormalize_fast() * thickness;
-
-        fVec2 I0, I1, I2;
-        if (!I1.setAsIntersection(P0 + H0, P1 + H0, P1 + H1, P2 + H1)) return; //fail
-        if (!I2.setAsIntersection(P1 + H1, P2 + H1, P2 + H2, P3 + H2)) return; //fail
-
-        for (int i = 4; i <= nbPoints + 3; i++)
-            {
-            P0 = P1;
-            P1 = P2;
-            P2 = P3;
-            P3 = tabP[(i >= nbPoints) ? (i - nbPoints) : i];
-            H0 = H1;
-            H1 = H2;
-            I0 = I1;
-            I1 = I2;
-            H2 = (P3 - P2).getRotate90().getNormalize_fast() * thickness;
-            if (!I2.setAsIntersection(P1 + H1, P2 + H1, P2 + H2, P3 + H2)) return; //fail
-            tgx::BSeg P0P1(P0, P1); tgx::BSeg P1P0 = P0P1.get_reverse();
-            tgx::BSeg P1I1(P1, I1); tgx::BSeg I1P1 = P1I1.get_reverse();
-            tgx::BSeg I1I0(I1, I0); tgx::BSeg I0I1 = I1I0.get_reverse();
-            tgx::BSeg I0P0(I0, P0); tgx::BSeg P0I0 = I0P0.get_reverse();
-            tgx::BSeg I0P1(I0, P1); tgx::BSeg P1I0 = I0P1.get_reverse();
-            tgx::BSeg P1P2(P1, P2);
-            tgx::BSeg I1I2(I1, I2);
-            _bseg_fill_triangle_precomputed(I0, P0, P1, I0P0, P0I0, P0P1, P1P0, P1I0, I0P1, color, opacity);
-            _bseg_fill_triangle_precomputed(I0, P1, I1, I0P1, P1I0, P1I1, I1P1, I1I0, I0I1, color, opacity);
-            _bseg_avoid1(P1P0, P1P2, true, false, true, color, side, op, true);
-            _bseg_avoid1(I1I0, I1I2, true, false, true, color, -side, op, true);
-            _bseg_avoid22(P1I1, P1P0, P1P2, I1I0, I1I2, true, true, true, true, color, 0, op, true);
-            _bseg_avoid22(I0P1, I0P0, I0I1, P1P0, P1I1, true, true, true, true, color, 0, op, true);
-            }
-        }
-
-
-
-    template<typename color_t>
-    void Image<color_t>::fillSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
-        {   
-        if (!isValid()) return;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        const int op = (int)(opacity * 256);
-        if (nbpoints < 3) return;
-
-        fVec2 C = fVec2((float)tabPoints[0].x, (float)tabPoints[0].y);
-        for (int i = 1; i < nbpoints; i++)
-            {
-            C = C + fVec2((float)tabPoints[i].x, (float)tabPoints[i].y);
-            }
-        C = C * (1.0f / nbpoints); // center
-        
-        const float a = _triangleAera(C, tabPoints[0], tabPoints[1]);
-        int w = (a > 0) ? 1: ((a < 0) ?  -1 : 0);
-
-        _drawPixel<true, true>( { (int)roundf(C.x),  (int)roundf(C.y) }, color, opacity);
-        for (int i = 0; i < nbpoints; i++)
-            {
-            const fVec2 P0(tabPoints[i]);
-            const fVec2 P1(tabPoints[(i+1) % nbpoints]);
-            const fVec2 P2(tabPoints[(i+2) % nbpoints]);
-            BSeg P1P2(P1, P2); auto P2P1 = P1P2.get_reverse();
-            BSeg P2C(P2, C); auto CP2 = P2C.get_reverse();
-            BSeg CP1(C, P1); auto P1C = CP1.get_reverse();
-            BSeg P1P0(P1, P0); 
-            BSeg CP0(C, P0);
-            _bseg_fill_triangle_precomputed(P1, P2, C, P1P2, P2P1, P2C, CP2, CP1, P1C, color, opacity);
-            _bseg_avoid1(P1P2, P1P0, true, false, true, color, w, op, true);
-            _bseg_avoid22(CP1, CP0, CP2, P1P0, P1P2, true, true, true, true, color, 0, op, true);
-            }
-        }
 
 
     template<typename color_t>
@@ -3294,18 +3056,11 @@ namespace tgx
             return;
             }
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        _drawSmoothThickPolyline(nbpoints, tabPoints, line_width, rounded_ends, color, opacity);
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::_drawSmoothThickPolyline(int nbpoints, const fVec2 tabP[], float thickness, bool rounded_ends, color_t color, float opacity)
-        {
         // assume nbPoints > 3, valid image and opacity
         int op = (int)(opacity * 256);
 
-        fVec2 P1 = tabP[0];
-        fVec2 P2 = tabP[1];
+        fVec2 P1 = tabPoints[0];
+        fVec2 P2 = tabPoints[1];
         fVec2 H1 = (P2 - P1).getRotate90().getNormalize_fast() * thickness;
         fVec2 I1 = P1 + H1;
         fVec2 J1 = P1 - H1;
@@ -3323,7 +3078,7 @@ namespace tgx
             else
                 {
                 P1 = P2;
-                P2 = tabP[i];
+                P2 = tabPoints[i];
                 H1 = (P2 - P1).getRotate90().getNormalize_fast() * thickness;
                 if (!I1.setAsIntersection(I0, P1 + H0, P1 + H1, P2 + H1)) return; //fail
                 if (!J1.setAsIntersection(J0, P1 - H0, P1 - H1, P2 - H1)) return; //fail
@@ -3374,6 +3129,249 @@ namespace tgx
                 }            
             }
         }
+
+
+
+
+
+
+
+    template<typename color_t>
+    template<typename FUNCTOR_NEXT>
+    void Image<color_t>::drawPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        const int op = (int)(opacity * 256);
+        iVec2 P, Q;
+        if (!next_point(Q)) return;
+        const iVec2 Q0 = Q; 
+        while (1)
+            {
+            P = Q;
+            if (!next_point(Q))
+                { // last point 
+                _bseg_draw(BSeg(P, Q), true, false, color, 0, op, true);
+                _bseg_draw(BSeg(Q, Q0), true, false, color, 0, op, true);
+                return;
+                }
+            _bseg_draw(BSeg(P, Q), true, false, color, 0, op, true);
+            }
+        }
+
+
+    template<typename color_t> 
+    void Image<color_t>::drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
+        {
+        int k = 0;
+        drawPolygon(
+            [&k, &nbpoints, &tabPoints](tgx::iVec2& P)
+                {
+                P = tabPoints[k++];
+                return (k < nbpoints);
+                },
+            color, opacity);
+        }
+
+
+    template<typename color_t>
+    template<typename FUNCTOR_NEXT>
+    void Image<color_t>::drawSmoothPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        const int op = (int)(opacity * 256);
+        fVec2 P, Q;
+        if (!next_point(Q)) return;
+        const fVec2 Q0 = Q; 
+        while (1)
+            {
+            P = Q;
+            if (!next_point(Q))
+                { // last point 
+                _bseg_draw_AA(BSeg(P, Q), true, false, color, op, true);
+                _bseg_draw_AA(BSeg(Q, Q0), true, false, color, op, true);
+                return;
+                }
+            _bseg_draw_AA(BSeg(P, Q), true, false, color, op, true);
+            }
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
+        {
+        int k = 0;
+        drawSmoothPolygon(
+            [&k, &nbpoints, &tabPoints](tgx::fVec2& P)
+            {
+                P = tabPoints[k++];
+                return (k < nbpoints);
+            },
+            color, opacity);
+        }
+
+
+
+
+    template<typename color_t>
+    template<typename FUNCTOR_NEXT>
+    void Image<color_t>::fillPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity)
+        {
+
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
+        {   
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        const int op = (int)(opacity * 256);
+        if (nbpoints < 3) return;
+
+        fVec2 C = fVec2((float)tabPoints[0].x, (float)tabPoints[0].y);
+        for (int i = 1; i < nbpoints; i++)
+            {
+            C = C + fVec2((float)tabPoints[i].x, (float)tabPoints[i].y);
+            }
+        C = C * (1.0f / nbpoints); // center
+
+        /*
+        const float a = _triangleAera(C, tabPoints[0], tabPoints[1]);
+        if (a == 0) return; // do not draw flat polygons
+        const float w = (a > 0) ? 1: -1;
+        */
+
+        _drawPixel<true, true>( { (int)roundf(C.x),  (int)roundf(C.y) }, color, opacity);
+        for (int i = 0; i < nbpoints; i++)
+            {
+            const iVec2 iP0(tabPoints[i]);
+            const iVec2 iP1(tabPoints[(i+1) % nbpoints]);
+            const iVec2 iP2(tabPoints[(i+2) % nbpoints]);
+            const fVec2 P0((float)iP0.x, (float)iP0.y);
+            const fVec2 P1((float)iP1.x, (float)iP1.y);
+            const fVec2 P2((float)iP2.x, (float)iP2.y);
+
+            BSeg P1P2(P1, P2); auto P2P1 = P1P2.get_reverse();
+            BSeg P2C(P2, C); auto CP2 = P2C.get_reverse();
+            BSeg CP1(C, P1); auto P1C = CP1.get_reverse();
+            BSeg P1P0(P1, P0); 
+            BSeg CP0(C, P0);
+            _bseg_fill_triangle_precomputed(P1, P2, C, P1P2, P2P1, P2C, CP2, CP1, P1C, color, opacity);
+            _bseg_avoid1(P1P2, P1P0, true, false, true, color, 0, op, true);
+            _bseg_avoid22(CP1, CP0, CP2, P1P0, P1P2, true, true, true, true, color, 0, op, true);
+            }
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity)
+        {
+        if ((nbpoints < 3) || (!isValid())) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        float w = 0;
+        for (int i = 0; i < nbPoints - 2; i++)
+            {
+            w = _triangleAera(tabPoints[i], tabPoints[i + 1], tabPoints[i + 2]);
+            if (w != 0) break;
+            }
+        if (w == 0) return; // flat, nothing to draw..
+        int side;
+        if (w < 0)
+            {
+            side = 1;
+            thickness = -thickness;
+            }
+        else
+            {
+            side = -1;
+            }
+
+        int op = (int)(opacity * 256);
+        fVec2 P0 = tabPoints[0];
+        fVec2 P1 = tabPoints[1];
+        fVec2 P2 = tabPoints[2];
+        fVec2 P3 = tabPoints[(nbPoints > 3) ? 3 : 0];
+
+        fVec2 H0 = (P1 - P0).getRotate90().getNormalize_fast() * thickness;
+        fVec2 H1 = (P2 - P1).getRotate90().getNormalize_fast() * thickness;
+        fVec2 H2 = (P3 - P2).getRotate90().getNormalize_fast() * thickness;
+
+        fVec2 I0, I1, I2;
+        if (!I1.setAsIntersection(P0 + H0, P1 + H0, P1 + H1, P2 + H1)) return; //fail
+        if (!I2.setAsIntersection(P1 + H1, P2 + H1, P2 + H2, P3 + H2)) return; //fail
+
+        for (int i = 4; i <= nbPoints + 3; i++)
+            {
+            P0 = P1;
+            P1 = P2;
+            P2 = P3;
+            P3 = tabPoints[(i >= nbPoints) ? (i - nbPoints) : i];
+            H0 = H1;
+            H1 = H2;
+            I0 = I1;
+            I1 = I2;
+            H2 = (P3 - P2).getRotate90().getNormalize_fast() * thickness;
+            if (!I2.setAsIntersection(P1 + H1, P2 + H1, P2 + H2, P3 + H2)) return; //fail
+            tgx::BSeg P0P1(P0, P1); tgx::BSeg P1P0 = P0P1.get_reverse();
+            tgx::BSeg P1I1(P1, I1); tgx::BSeg I1P1 = P1I1.get_reverse();
+            tgx::BSeg I1I0(I1, I0); tgx::BSeg I0I1 = I1I0.get_reverse();
+            tgx::BSeg I0P0(I0, P0); tgx::BSeg P0I0 = I0P0.get_reverse();
+            tgx::BSeg I0P1(I0, P1); tgx::BSeg P1I0 = I0P1.get_reverse();
+            tgx::BSeg P1P2(P1, P2);
+            tgx::BSeg I1I2(I1, I2);
+            _bseg_fill_triangle_precomputed(I0, P0, P1, I0P0, P0I0, P0P1, P1P0, P1I0, I0P1, color, opacity);
+            _bseg_fill_triangle_precomputed(I0, P1, I1, I0P1, P1I0, P1I1, I1P1, I1I0, I0I1, color, opacity);
+            _bseg_avoid1(P1P0, P1P2, true, false, true, color, side, op, true);
+            _bseg_avoid1(I1I0, I1I2, true, false, true, color, -side, op, true);
+            _bseg_avoid22(P1I1, P1P0, P1P2, I1I0, I1I2, true, true, true, true, color, 0, op, true);
+            _bseg_avoid22(I0P1, I0P0, I0I1, P1P0, P1I1, true, true, true, true, color, 0, op, true);
+            }
+        }
+
+
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::fillSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
+        {   
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        const int op = (int)(opacity * 256);
+        if (nbpoints < 3) return;
+
+        fVec2 C = fVec2((float)tabPoints[0].x, (float)tabPoints[0].y);
+        for (int i = 1; i < nbpoints; i++)
+            {
+            C = C + fVec2((float)tabPoints[i].x, (float)tabPoints[i].y);
+            }
+        C = C * (1.0f / nbpoints); // center
+        
+        const float a = _triangleAera(C, tabPoints[0], tabPoints[1]);
+        int w = (a > 0) ? 1: ((a < 0) ?  -1 : 0);
+
+        _drawPixel<true, true>( { (int)roundf(C.x),  (int)roundf(C.y) }, color, opacity);
+        for (int i = 0; i < nbpoints; i++)
+            {
+            const fVec2 P0(tabPoints[i]);
+            const fVec2 P1(tabPoints[(i+1) % nbpoints]);
+            const fVec2 P2(tabPoints[(i+2) % nbpoints]);
+            BSeg P1P2(P1, P2); auto P2P1 = P1P2.get_reverse();
+            BSeg P2C(P2, C); auto CP2 = P2C.get_reverse();
+            BSeg CP1(C, P1); auto P1C = CP1.get_reverse();
+            BSeg P1P0(P1, P0); 
+            BSeg CP0(C, P0);
+            _bseg_fill_triangle_precomputed(P1, P2, C, P1P2, P2P1, P2C, CP2, CP1, P1C, color, opacity);
+            _bseg_avoid1(P1P2, P1P0, true, false, true, color, w, op, true);
+            _bseg_avoid22(CP1, CP0, CP2, P1P0, P1P2, true, true, true, true, color, 0, op, true);
+            }
+        }
+
+
 
 
 
