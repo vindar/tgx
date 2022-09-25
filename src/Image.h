@@ -1790,6 +1790,7 @@ namespace tgx
 
 
 
+
         /*****************************************************
         * DRAWING POLYGONS
         * LOW QUALITY (FAST) DRAWING METHODS
@@ -1856,8 +1857,8 @@ namespace tgx
          * - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
          *
          * WARNING:  In order to draw the polygon correctly, all points must be queried twice so that after
-         *           finishing the first iteration (by returniong false), next_point() must reset to the
-         *           first point (because and all point are queried a second time) !
+         *           finishing the first iteration (by returning false), next_point() must reset to the
+         *           first point (because and all points are queried a second time) !
          *           
          * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points
          *           (so it is ok for convex polygons...)
