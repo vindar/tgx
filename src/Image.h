@@ -1691,6 +1691,27 @@ namespace tgx
 
 
         /**
+         * Draw a polyline i.e. a sequence of consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
+         * 
+         * Points are queried in order P0, P1,... using a functor callback which must have a signature
+         * compatible with: 
+         *                 bool next_point(iVec2 & P)
+         *                 
+         * The callback must store the next point in the reference P and return:
+         * - true  if there are more point to plot after this one.
+         * - false if this is the last point.
+         *
+         * @param   next_point  callback functor that provides the list of points.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        template<typename FUNCTOR_NEXT>
+        void drawPolyline(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+        /**
          * Draw a closed polygon with vertices [P0,P2, .., PN]
          *
          * @param   nbpoints    number of points in tabPoints.
@@ -1702,8 +1723,29 @@ namespace tgx
         void drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
+
         /**
-         * draw a Filled polygon with vertices [P0,P2, .., PN]
+         * Draw a closed polygon with vertices [P0,P2, .., PN]
+         *
+         * Points are queried in order P0, P1,... using a functor callback which must have a signature
+         * compatible with:
+         *                 bool next_point(iVec2 & P)
+         *
+         * The callback must store the next point in the reference P and return:
+         * - true  if there are more point to plot after this one.
+         * - false if this is the last point
+         *
+         * @param   next_point  callback functor that provides the list of points.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        template<typename FUNCTOR_NEXT>
+        void drawPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a filled polygon with vertices [P0,P2, .., PN]
          * 
          * WARNING : The polygon must be convex !
          *
@@ -1715,6 +1757,29 @@ namespace tgx
         **/
         void fillPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
+
+        /**
+         * Draw a filled polygon with vertices [P0,P2, .., PN]
+         *
+         * Points are queried in order P0, P1,... using a functor callback which must have a signature
+         * compatible with:
+         *                 bool next_point(iVec2 & P)
+         *
+         * The callback must store the next point in the reference P and return:
+         * - true  if there are more point to plot after this one.
+         * - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
+         *
+         * WARNING:  In order to draw the polygon correctly, all points must be queried twice so that after
+         *           finishing the first iteration (by returniong false), next_point() must reset to the
+         *           first point (because and all point are queried a second time) !
+         *
+         * @param   next_point  callback functor that provides the list of points.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        template<typename FUNCTOR_NEXT>
+        void fillPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
 
@@ -1738,25 +1803,24 @@ namespace tgx
         void drawSmoothPolyline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
 
 
+        /**
+         * Draw a smooth (antialised with subpixel precision) polyline i.e. a sequence of consecutif
+         * segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
+         * 
+         * Points are queried in order P0, P1,... using a functor callback which must have a signature
+         * compatible with:
+         *                 bool next_point(fVec2 & P)
+         *
+         * The callback must store the next point in the reference P and return:
+         * - true  if there are more point to plot after this one.
+         * - false if this is the last point.
+         *
+         * @param   next_point  callback functior that privdes the list of points.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
         template<typename FUNCTOR_NEXT>
-        void drawSmoothPolyline(FUNCTOR_NEXT next_point, color_t color, float opacity = 1.0f)
-            {
-            if (!isValid()) return;
-            if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-            const int op = (int)(opacity * 256);
-            fVec2 P, Q; 
-            if (!next_point(Q)) return;
-            while(1)
-                {
-                P = Q; 
-                if (!next_point(Q))
-                    { // last point 
-                    _bseg_draw_AA(BSeg(P, Q), true, true, color, op, true);
-                    return;
-                    }
-                _bseg_draw_AA(BSeg(P, Q), true, false, color, op, true);
-                }
-            }
+        void drawSmoothPolyline(FUNCTOR_NEXT next_point, color_t color, float opacity = 1.0f);
 
 
         /**
@@ -1785,6 +1849,25 @@ namespace tgx
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         void drawSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a smooth (anti-aliased with sub-pixel precision) polygon.
+         *
+         * Points are queried in order P0, P1,... using a functor callback which must have a signature
+         * compatible with:
+         *                 bool next_point(iVec2 & P)
+         *
+         * The callback must store the next point in the reference P and return:
+         * - true  if there are more point to plot after this one.
+         * - false if this is the last point
+         *
+         * @param   next_point  callback functor that provides the list of points.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        template<typename FUNCTOR_NEXT>
+        void drawSmoothPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = 1.0f);
 
 
         /**
