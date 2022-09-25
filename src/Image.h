@@ -1673,7 +1673,7 @@ namespace tgx
 
 
         /*****************************************************
-        * DRAWING POLYLINE AND POLYGONS
+        * DRAWING POLYLINES
         * LOW QUALITY (FAST) DRAWING METHODS
         ******************************************************/
 
@@ -1711,82 +1711,9 @@ namespace tgx
 
 
 
-        /**
-         * Draw a closed polygon with vertices [P0,P2, .., PN]
-         *
-         * @param   nbpoints    number of points in tabPoints.
-         * @param   tabPoints   array of points of the polygon.
-         * @param   color       The color to use.
-         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
-         *                      to disable blending and simply use overwrite.
-        **/
-        void drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-
-        /**
-         * Draw a closed polygon with vertices [P0,P2, .., PN]
-         *
-         * Points are queried in order P0, P1,... using a functor callback which must have a signature
-         * compatible with:
-         *                 bool next_point(iVec2 & P)
-         *
-         * The callback must store the next point in the reference P and return:
-         * - true  if there are more point to plot after this one.
-         * - false if this is the last point
-         *
-         * @param   next_point  callback functor that provides the list of points.
-         * @param   color       The color to use.
-         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
-         *                      to disable blending and simply use overwrite.
-        **/
-        template<typename FUNCTOR_NEXT>
-        void drawPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Draw a filled polygon with vertices [P0,P2, .., PN]
-         * 
-         * WARNING : The polygon must be convex !
-         *
-         * @param   nbpoints    number of points in tabPoints.
-         * @param   tabPoints   array of points of the polygon.
-         * @param   color       The color to use.
-         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
-         *                      to disable blending and simply use overwrite.
-        **/
-        void fillPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Draw a filled polygon with vertices [P0,P2, .., PN]
-         *
-         * Points are queried in order P0, P1,... using a functor callback which must have a signature
-         * compatible with:
-         *                 bool next_point(iVec2 & P)
-         *
-         * The callback must store the next point in the reference P and return:
-         * - true  if there are more point to plot after this one.
-         * - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
-         *
-         * WARNING:  In order to draw the polygon correctly, all points must be queried twice so that after
-         *           finishing the first iteration (by returniong false), next_point() must reset to the
-         *           first point (because and all point are queried a second time) !
-         *
-         * @param   next_point  callback functor that provides the list of points.
-         * @param   color       The color to use.
-         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
-         *                      to disable blending and simply use overwrite.
-        **/
-        template<typename FUNCTOR_NEXT>
-        void fillPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-
-
 
         /*****************************************************
-        * DRAWING POLYLINE AND POLYGONS
+        * DRAWING POLYLINES
         * HIGH QUALITY (SLOW) DRAWING METHODS
         ******************************************************/
 
@@ -1839,6 +1766,121 @@ namespace tgx
 
 
         /**
+         * Draw a thick smooth (antialised with subpixel precision) polyline i.e. a sequence of
+         * consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
+         * 
+         * Points are queried in order P0, P1,... using a functor callback which must have a signature
+         * compatible with:
+         *                 bool next_point(fVec2 & P)
+         * 
+         * The callback must store the next point in the reference P and return:
+         * - true  if there are more point to plot after this one.
+         * - false if this is the last point.
+         *
+         * @param   next_point      callback functior that provides the list of points.
+         * @param   thickness       thickness of the polyline.
+         * @param   rounded_ends    True to draw rounded ends on the polyline extremities and false to
+         *                          draw straight ends.
+         * @param   color           The color to use.
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        template<typename FUNCTOR_NEXT>
+        void drawSmoothThickPolyline(FUNCTOR_NEXT next_point, float thickness, bool rounded_ends, color_t color, float opacity = 1.0f);
+
+
+
+
+        /*****************************************************
+        * DRAWING POLYGONS
+        * LOW QUALITY (FAST) DRAWING METHODS
+        ******************************************************/
+
+
+        /**
+         * Draw a closed polygon with vertices [P0,P2, .., PN]
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points of the polygon.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        void drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+        /**
+         * Draw a closed polygon with vertices [P0,P2, .., PN]
+         *
+         * Points are queried in order P0, P1,... using a functor callback which must have a signature
+         * compatible with:
+         *                 bool next_point(iVec2 & P)
+         *
+         * The callback must store the next point in the reference P and return:
+         * - true  if there are more point to plot after this one.
+         * - false if this is the last point
+         *
+         * @param   next_point  callback functor that provides the list of points.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        template<typename FUNCTOR_NEXT>
+        void drawPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a filled polygon with vertices [P0,P2, .., PN]
+         * 
+         * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points 
+         *           (so it is ok for convex polygons...)
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points of the polygon.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        void fillPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a filled polygon with vertices [P0,P2, .., PN]
+         *
+         * Points are queried in order P0, P1,... using a functor callback which must have a signature
+         * compatible with:
+         *                 bool next_point(iVec2 & P)
+         *
+         * The callback must store the next point in the reference P and return:
+         * - true  if there are more point to plot after this one.
+         * - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
+         *
+         * WARNING:  In order to draw the polygon correctly, all points must be queried twice so that after
+         *           finishing the first iteration (by returniong false), next_point() must reset to the
+         *           first point (because and all point are queried a second time) !
+         *           
+         * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points
+         *           (so it is ok for convex polygons...)
+         *
+         * @param   next_point  callback functor that provides the list of points.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        template<typename FUNCTOR_NEXT>
+        void fillPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+
+        /*****************************************************
+        * DRAWING POLYGONS
+        * HIGH QUALITY (SLOW) DRAWING METHODS
+        ******************************************************/
+
+
+
+        /**
          * Draw a smooth (anti-aliased with sub-pixel precision) polygon.
          *
          * @param   nbpoints    number of points in tabPoints.
@@ -1856,7 +1898,7 @@ namespace tgx
          *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with:
-         *                 bool next_point(iVec2 & P)
+         *                 bool next_point(fVec2 & P)
          *
          * The callback must store the next point in the reference P and return:
          * - true  if there are more point to plot after this one.
@@ -1873,38 +1915,118 @@ namespace tgx
         /**
          * Draw a thick smooth (anti-aliased with sub-pixel precision) polygon.
          * 
-         * WARNING : The polygon must be convex !
-         *
          * @param   nbpoints    number of points in tabPoints.
          * @param   tabPoints   array of points of the polygon: these points delimit the exterior
          *                      boundary of the polygon and the thickness of the line goes 'inside' the
          *                      polygon.
-         * @param   line_width  The thickness of the polyline
+         * @param   thickness   The thickness of the polygon boundary
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float line_width, color_t color, float opacity = 1.0f);
+        void drawSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw a thick smooth (anti-aliased with sub-pixel precision) polygon.
+         * 
+         * Points are queried in order P0, P1,... using a functor callback which must have a signature
+         * compatible with:
+         *                 bool next_point(fVec2 & P)
+         *
+         * The callback must store the next point in the reference P and return:
+         * - true  if there are more point to plot after this one.
+         * - false if this is the last point
+         *
+         * @param   next_point  callback functor that provides the list of points delimiting the outer
+         *                      boundary of the polygon.
+         * @param   tabPoints   The tab points.
+         * @param   thickness   The thickness of the polygon boundary.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        template<typename FUNCTOR_NEXT>
+        void drawSmoothThickPolygon(FUNCTOR_NEXT next_point, const fVec2 tabPoints[], float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
          * Draw a smooth (anti-aliased with sub-pixel precision) filled polygon.
-         * 
-         * WARNING : The polygon must be convex !
          *
+         * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points
+         *           (so it is ok for convex polygons...)
+         *           
          * @param   nbpoints    number of points in tabPoints.
-         * @param   tabPoints   array of points of the polygon: these points delimit the exterior
-         *                      boundary of the polygon and the thickness of the line goes 'inside' the
-         *                      polygon.
+         * @param   tabPoints   array of points of the polygon.
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         void fillSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
 
 
+        /**
+         * Draw a smooth (anti-aliased with sub-pixel precision) filled polygon.
+         *        
+         * Points are queried in order P0, P1,... using a functor callback which must have a signature
+         * compatible with:
+         *                 bool next_point(fVec2 & P)
+         *
+         * The callback must store the next point in the reference P and return:
+         * - true  if there are more point to plot after this one.
+         * - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
+         *
+         * WARNING:  In order to draw the polygon correctly, all points must be queried twice so that
+         *           after finishing the first iteration (by returniong false), next_point() must reset
+         *           to the first point (because and all point are queried a second time) !
+         *
+         * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points
+         *           (so it is ok for convex polygons...)
+         *
+         * @param   next_point  callback functor that provides the list of points delimiting the polygon.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        template<typename FUNCTOR_NEXT>
+        void fillSmoothPolygon(FUNCTOR_NEXT next_point, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
 
 
+        /**
+         * Draw a smooth (anti-aliased with sub-pixel precision) filled polygon with thick boundary.
+         *
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points of the polygon: these points delimit the exterior
+         *                      boundary of the polygon and the thickness of the line goes 'inside' the
+         *                      polygon.
+         * @param   thickness   The thickness of the polygon boundary.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity = 1.0f);
 
 
+        /**
+         * Draw a smooth (anti-aliased with sub-pixel precision) filled polygon with thick boundary.
+         * 
+         * Points are queried in order P0, P1,... using a functor callback which must have a signature
+         * compatible with:
+         *                 bool next_point(fVec2 & P)
+         * 
+         * The callback must store the next point in the reference P and return:
+         * - true  if there are more point to plot after this one.
+         * - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
+         * 
+         * WARNING:  In order to draw the polygon correctly, all points must be queried twice so that
+         *           after finishing the first iteration (by returniong false), next_point() must reset 
+         *           to the first point (because and all point are queried a second time) !
+         * 
+         * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points
+         *           (so it is ok for convex polygons...)
+         *
+         * @param   next_point  callback functor that provides the list of points delimiting the polygon outer boundary.
+         * @param   thickness   The thickness of the polygon boundary.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        template<typename FUNCTOR_NEXT>
+        void fillSmoothThickPolygon(FUNCTOR_NEXT next_point, float thickness, color_t color, float opacity = 1.0f);
 
 
 
