@@ -1738,6 +1738,27 @@ namespace tgx
         void drawSmoothPolyline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
 
 
+        template<typename FUNCTOR_NEXT>
+        void drawSmoothPolyline(FUNCTOR_NEXT next_point, color_t color, float opacity = 1.0f)
+            {
+            if (!isValid()) return;
+            if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+            const int op = (int)(opacity * 256);
+            fVec2 P, Q; 
+            if (!next_point(Q)) return;
+            while(1)
+                {
+                P = Q; 
+                if (!next_point(Q))
+                    { // last point 
+                    _bseg_draw_AA(BSeg(P, Q), true, true, color, op, true);
+                    return;
+                    }
+                _bseg_draw_AA(BSeg(P, Q), true, false, color, op, true);
+                }
+            }
+
+
         /**
          * Draw a thick smooth (antialised with subpixel precision) polyline i.e. a sequence of
          * consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
@@ -2062,12 +2083,6 @@ namespace tgx
         * BEZIER CURVES AND SPLINES
         * HIGH QUALITY (VERY SLOW) DRAWING METHODS
         ******************************************************/
-
-
-
-
-
-
 
 
 

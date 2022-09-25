@@ -3257,7 +3257,7 @@ namespace tgx
                 if (rounded_ends)
                     {
                     _bseg_avoid11(J1I1, J1J0, I1I0, false, false, true, true, color, 0, op, true);
-                    _fillSmoothCircleInterHP((I1 + J1) * 0.5f, thickness, color, opacity, J1I1, 1);
+                    _fillSmoothCircleInterHP((I1 + J1) * 0.5f, thickness, color, opacity, J1I1, -1);
                     }
                 else
                     {
