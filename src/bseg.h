@@ -100,7 +100,9 @@ namespace tgx
 				ma = _dx - 1;
 				}
 			int32_t o = _frac - (_x * kx) - (_y * ky);
-			bool xm = _x_major;
+
+			bool xm =(_stepx * _stepy) > 0;
+			if (_x_major) xm = (!xm);
 			if (invert_dir) xm = (!xm);
 			if (xm)
 				{
