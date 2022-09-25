@@ -1085,13 +1085,10 @@ namespace tgx
         *********************************************************************************/
 
 
-
-
         /*****************************************************
-        * DRAWING RECTANGLES AND ROUNDED RECTANGLES
+        * DRAWING RECTANGLES
         * LOW QUALITY (FAST) DRAWING METHODS
         ******************************************************/
-
 
 
         /**
@@ -1141,6 +1138,40 @@ namespace tgx
         void fillRectVGradient(iBox2 B, color_t color_top, color_t color_bottom, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
+
+        /*****************************************************
+        * DRAWING RECTANGLES 
+        * HIGH QUALITY DRAWING METHODS
+        ******************************************************/
+
+
+        /**
+         * Draw a filed rectangle wih sub-pixel precision and anti-aliasing.
+         *
+         * WARNING: This is probably not the method you want to use... If you just want to draw
+         *          a rectangle use try drawRect() instead. This method is useful for creating very
+         *          smooths animations (when the rectangle moves by less than a pixel).
+         *
+         * NOTE: Recall that pixel centers are at integer values (and the full image range is
+         *       [-0.5, lx - 0.5] x [-0.5, lx-0.5]), therefore, giving a box with integer values to this
+         *       method will create aliasing along the edges of the rectangle...
+         *
+         * @param   B       Box representing the rectngle to daw.
+         * @param   color   color.
+         * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothRect(const fBox2& B, color_t color, float opacity = 1.0f);
+
+
+
+
+
+        /*****************************************************
+        * DRAWING ROUNDED RECTANGLES
+        * LOW QUALITY (FAST) DRAWING METHODS
+        ******************************************************/
+
+
         /**
          * Draw a rounded rectangle in box B with corner radius r.
          *
@@ -1167,27 +1198,10 @@ namespace tgx
 
 
         /*****************************************************
-        * DRAWING RECTANGLES AND ROUNDED RECTANGLES
+        * DRAWING ROUNDED RECTANGLES
         * HIGH QUALITY (SLOW) DRAWING METHODS
         ******************************************************/
 
-
-        /**
-         * Draw a filed rectangle wih sub-pixel precision and anti-aliasing.
-         * 
-         * WARNING: This is probably not the method you want to use... If you just want to draw
-         *          a rectangle use try drawRect() instead. This method is useful for creating very
-         *          smooths animations (when the rectangle moves by less than a pixel).
-         * 
-         * NOTE: Recall that pixel centers are at integer values (and the full image range is
-         *       [-0.5, lx - 0.5] x [-0.5, lx-0.5]), therefore, giving a box with integer values to this
-         *       method will create aliasing along the edges of the rectangle...
-         *
-         * @param   B       Box representing the rectngle to daw.
-         * @param   color   color.
-         * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
-        **/
-        void fillSmoothRect(const fBox2& B, color_t color, float opacity = 1.0f);
 
 
         /**
@@ -1316,6 +1330,21 @@ namespace tgx
          * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         void fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Fill a smooth (with anti-aliasing and sub-pixel precision) triangle with a thick outline of a
+         * possibly different color.
+         *
+         * @param   P1              first vertex.
+         * @param   P2              second vertex.
+         * @param   P3              third vertex.
+         * @param   thickness       thickness of the border (going 'inside' the triangle). 
+         * @param   color_interior  interior color.
+         * @param   color_border    boundary color.
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
 
 
 
@@ -1469,9 +1498,6 @@ namespace tgx
 
 
 
-
-
-
         /********************************************************************************
         *
         * DRAWING QUADS
@@ -1568,6 +1594,22 @@ namespace tgx
         void fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity = 1.0f);
 
 
+        /**
+         * Fill a smooth (with anti-aliasing and sub-pixel precision) quad with a thick outline of a
+         * possibly different color.
+         * 
+         * WARNING : The quad must be CONVEX !
+         *
+         * @param   P1              first vertex.
+         * @param   P2              second vertex.
+         * @param   P3              third vertex.
+         * @param   P4              fourth vertex.
+         * @param   thickness       The thickness (going inside the polygon delimited by P1,P2,P3,P4)
+         * @param   color_interior  interior color.
+         * @param   color_border    boundary color.
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothThickQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
 
 
 
@@ -1657,6 +1699,9 @@ namespace tgx
         **/
         template<typename color_t_tex>
         void drawTexturedGradientMaskedQuad(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity = 1.0f);
+
+
+
 
 
 
@@ -1940,13 +1985,12 @@ namespace tgx
          *
          * @param   next_point  callback functor that provides the list of points delimiting the outer
          *                      boundary of the polygon.
-         * @param   tabPoints   The tab points.
          * @param   thickness   The thickness of the polygon boundary.
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         template<typename FUNCTOR_NEXT>
-        void drawSmoothThickPolygon(FUNCTOR_NEXT next_point, const fVec2 tabPoints[], float thickness, color_t color, float opacity = 1.0f);
+        void drawSmoothThickPolygon(FUNCTOR_NEXT next_point, float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
@@ -1986,21 +2030,22 @@ namespace tgx
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         template<typename FUNCTOR_NEXT>
-        void fillSmoothPolygon(FUNCTOR_NEXT next_point, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
+        void fillSmoothPolygon(FUNCTOR_NEXT next_point,  color_t color, float opacity = 1.0f);
 
 
         /**
          * Draw a smooth (anti-aliased with sub-pixel precision) filled polygon with thick boundary.
          *
-         * @param   nbpoints    number of points in tabPoints.
-         * @param   tabPoints   array of points of the polygon: these points delimit the exterior
-         *                      boundary of the polygon and the thickness of the line goes 'inside' the
-         *                      polygon.
-         * @param   thickness   The thickness of the polygon boundary.
-         * @param   color       The color to use.
-         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+         * @param   nbpoints        number of points in tabPoints.
+         * @param   tabPoints       array of points of the polygon: these points delimit the exterior
+         *                          boundary of the polygon and the thickness of the line goes 'inside'
+         *                          the polygon.
+         * @param   thickness       The thickness of the polygon boundary (going 'inside').
+         * @param   interior_color  color for the interior
+         * @param   border_color    color for the thick boundary
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity = 1.0f);
+        void fillSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t interior_color, color_t border_color, float opacity = 1.0f);
 
 
         /**
@@ -2021,13 +2066,17 @@ namespace tgx
          * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points
          *           (so it is ok for convex polygons...)
          *
-         * @param   next_point  callback functor that provides the list of points delimiting the polygon outer boundary.
-         * @param   thickness   The thickness of the polygon boundary.
-         * @param   color       The color to use.
-         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+         * @param   next_point      callback functor that provides the list of points delimiting the polygon outer boundary.
+         * @param   thickness       The thickness of the polygon boundary (going 'inside')
+         * @param   interior_color  color for the interior
+         * @param   border_color    color for the thick boundary
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         template<typename FUNCTOR_NEXT>
-        void fillSmoothThickPolygon(FUNCTOR_NEXT next_point, float thickness, color_t color, float opacity = 1.0f);
+        void fillSmoothThickPolygon(FUNCTOR_NEXT next_point, float thickness, color_t interior_color, color_t border_color, float opacity = 1.0f);
+
+
+
 
 
 
@@ -2044,7 +2093,7 @@ namespace tgx
 
 
         /*****************************************************
-        * DRAWING CIRCLE AND ELLIPSE
+        * DRAWING CIRCLES
         * LOW QUALITY (FAST) DRAWING METHODS
         ******************************************************/
 
@@ -2074,36 +2123,10 @@ namespace tgx
         void fillCircle(iVec2 center, int r, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
-        /**
-         * Draw an ellipse.
-         *
-         * @param   center      Circle center.
-         * @param   radiuses    radiuses along the x and y axis.
-         * @param   color       color.
-         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
-         *                      to disable blending.
-        **/
-        void drawEllipse(iVec2 center, iVec2 radiuses, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Draw a filled ellipse with possibly different colors for the outline and the interior.
-         *
-         * @param   center          Circle center.
-         * @param   radiuses        radiuses along the x and y axis.
-         * @param   interior_color  color for the interior.
-         * @param   outline_color   color for the outline.
-         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                          negative to disable blending.
-        **/
-        void fillEllipse(iVec2 center, iVec2 radiuses, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-
 
 
         /*****************************************************
-        * DRAWING CIRCLE AND ELLISPES
+        * DRAWING CIRCLES
         * HIGH QUALITY (SLOW) DRAWING METHODS
         ******************************************************/
 
@@ -2142,6 +2165,49 @@ namespace tgx
         void fillSmoothCircle(fVec2 center, float r, color_t color, float opacity = 1.0f);
 
 
+
+
+
+        /*****************************************************
+        * DRAWING ELLIPSES
+        * LOW QUALITY (FAST) DRAWING METHODS
+        ******************************************************/
+
+
+        /**
+         * Draw an ellipse.
+         *
+         * @param   center      Circle center.
+         * @param   radiuses    radiuses along the x and y axis.
+         * @param   color       color.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending.
+        **/
+        void drawEllipse(iVec2 center, iVec2 radiuses, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a filled ellipse with possibly different colors for the outline and the interior.
+         *
+         * @param   center          Circle center.
+         * @param   radiuses        radiuses along the x and y axis.
+         * @param   interior_color  color for the interior.
+         * @param   outline_color   color for the outline.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending.
+        **/
+        void fillEllipse(iVec2 center, iVec2 radiuses, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+
+        /*****************************************************
+        * DRAWING ELLISPES
+        * HIGH QUALITY (SLOW) DRAWING METHODS
+        ******************************************************/
+
+
+
         /**
          * Draw smooth (anti-aliased and with sub-pixel precision) ellipse.
          *
@@ -2174,6 +2240,20 @@ namespace tgx
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         void fillSmoothEllipse(fVec2 center, fVec2 radiuses, color_t color, float opacity = 1.0f);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
