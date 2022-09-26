@@ -125,13 +125,11 @@ namespace tgx
         template<typename> friend class Image;
 
 
-
-
-
-
-    /************************************************************************************
-    * Image members variables (16 bytes). 
-    *************************************************************************************/
+    /************************************************************************************************************
+    * 
+    * Image members variables (16 bytes).
+    * 
+    *************************************************************************************************************/
 
         color_t* _buffer;       // pointer to the pixel buffer  - nullptr if the image is invalid.
         int     _lx, _ly;       // image size  - (0,0) if the image is invalid
@@ -149,17 +147,23 @@ namespace tgx
 
 
 
-    /************************************************************************************
-    ************************************************************************************* 
-    *  CREATION OF IMAGES AND SUB-IMAGES
+
+
+    /************************************************************************************************************
+    *************************************************************************************************************
+    *************************************************************************************************************
+    * 
+    *                        CREATION OF IMAGES AND SUB-IMAGES
     * 
     * The memory buffer should be supplied at creation. Otherwise, the image is set as 
     * invalid until a valid buffer is supplied. 
     * 
-    * NOTE: the image class itsel is lightweight as it does not manage the memory buffer.
-    *       Creating image and sub-image is very fast and do not use much memory.  
-    ************************************************************************************* 
-    *************************************************************************************/
+    * NOTE: The image class itself is lightweight as it does not manage the memory buffer.
+    *       Creating image and sub-image is very fast and do not use additional memory.   
+    *       
+    *************************************************************************************************************
+    *************************************************************************************************************
+    ************************************************************************************************************/
 
 
         /** 
@@ -321,13 +325,18 @@ namespace tgx
 
 
 
-    /************************************************************************************
-    ************************************************************************************* 
+
+
+    /************************************************************************************************************
+    *************************************************************************************************************
+    *************************************************************************************************************
     * 
-    *  QUERY OF IMAGE ATTRIBUTES
-    * 
-    ************************************************************************************* 
-    *************************************************************************************/
+    *                                      QUERY OF IMAGE ATTRIBUTES
+    *       
+    *************************************************************************************************************
+    *************************************************************************************************************
+    ************************************************************************************************************/
+
 
 
         /**
@@ -407,13 +416,18 @@ namespace tgx
 
        
 
-    /************************************************************************************
-    ************************************************************************************* 
+
+
+    /************************************************************************************************************
+    *************************************************************************************************************
+    *************************************************************************************************************
     * 
-    *  DIRECT PIXEL ACCESS
-    * 
-    ************************************************************************************* 
-    *************************************************************************************/
+    *                                           DIRECT PIXEL ACCESS
+    *       
+    *************************************************************************************************************
+    *************************************************************************************************************
+    ************************************************************************************************************/
+
 
 
         /**
@@ -561,13 +575,16 @@ namespace tgx
 
 
 
-    /************************************************************************************
-    *************************************************************************************
-    *
-    * BLITTING, COPYING AND RESIZING IMAGES
-    *
-    *************************************************************************************
-    *************************************************************************************/
+    /************************************************************************************************************
+    *************************************************************************************************************
+    *************************************************************************************************************
+    * 
+    *                                 BLITTING, COPYING AND RESIZING IMAGES
+    *       
+    *************************************************************************************************************
+    *************************************************************************************************************
+    ************************************************************************************************************/
+
 
 
         /**
@@ -851,25 +868,25 @@ namespace tgx
 
 
 
-
-    /************************************************************************************
-    ************************************************************************************* 
+    /************************************************************************************************************
+    *************************************************************************************************************
+    *************************************************************************************************************
     * 
-    *  DRAWING PRIMITIVES
-    * 
-    ************************************************************************************* 
-    *************************************************************************************/
+    *                                          DRAWING PRIMITIVES
+    *       
+    *************************************************************************************************************
+    *************************************************************************************************************
+    ************************************************************************************************************/
 
 
 
-
-
-
-        /********************************************************************************
-        *
-        * FILLING (A REGION OF) AN IMAGE.
-        * 
-        *********************************************************************************/
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                             FILLING (A REGION OF) AN IMAGE.
+    *
+    ********************************************************************************************* 
+    ********************************************************************************************/
 
 
         /**
@@ -947,22 +964,21 @@ namespace tgx
 
 
 
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                                       DRAWING LINES
+    *
+    ********************************************************************************************* 
+    ********************************************************************************************/
 
 
 
-        /********************************************************************************
-        *
-        * DRAWING LINES
-        * 
-        *********************************************************************************/
-
-
-
-
-        /*****************************************************
-        * DRAWING LINES
-        * LOW QUALITY (FAST) DRAWING METHODS
-        ******************************************************/
+    /**********************************************************************
+    *                          DRAWING LINES
+    *                          
+    *                      'Low' quality methods
+    ***********************************************************************/
 
 
 
@@ -1019,12 +1035,11 @@ namespace tgx
 
 
 
-
-
-        /*****************************************************
-        * DRAWING LINES
-        * HIGH QUALITY (SLOW) DRAWING METHODS
-        ******************************************************/
+    /**********************************************************************
+    *                          DRAWING LINES
+    *                          
+    *                      'High' quality methods
+    ***********************************************************************/
 
 
 
@@ -1076,19 +1091,21 @@ namespace tgx
 
 
 
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                                    DRAWING RECTANGES
+    *
+    ********************************************************************************************* 
+    ********************************************************************************************/
 
 
-        /********************************************************************************
-        *
-        * DRAWING RECTANGLES AND ROUNDED RECTANGLES
-        *
-        *********************************************************************************/
 
-
-        /*****************************************************
-        * DRAWING RECTANGLES
-        * LOW QUALITY (FAST) DRAWING METHODS
-        ******************************************************/
+    /**********************************************************************
+    *                        DRAWING RECTANGLES
+    *
+    *                       'Low' quality methods
+    ***********************************************************************/
 
 
         /**
@@ -1100,7 +1117,18 @@ namespace tgx
          *                  disable blending.
         **/        
         void drawRect(const iBox2 & B, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-  
+
+
+        /**
+         * Draw a rectangle with a thick border.
+         *
+         * @param   B           Box that delimits the rectangle to draw.
+         * @param   thickness   thickness of the border (going 'inside the rectangle)
+         * @param   color       rectangle outline color.
+         * @param   opacity     (Optional) opacity multiplier when blending (in [0.0f, 1.0f] or negative
+         *                      to disable blending.
+        **/
+        void drawThickRect(const iBox2& B, int thickness, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -1112,6 +1140,19 @@ namespace tgx
          *                  disable blending.
         **/
         void fillRect(const iBox2 & B, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a filled rectangle with a thick border of a possibly different color.
+         *
+         * @param   B               box that delimits the rectangle to draw.
+         * @param   thickness       thickness of the border (going 'inside the rectangle)
+         * @param   color_interior  color for the rectangle interior.
+         * @param   color_border    color for the rectangle border.
+         * @param   opacity         (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending.
+        **/
+        void fillThickRect(const iBox2& B, int thickness, color_t color_interior, color_t color_border, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -1139,18 +1180,44 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * DRAWING RECTANGLES 
-        * HIGH QUALITY DRAWING METHODS
-        ******************************************************/
+
+    /**********************************************************************
+    *                        DRAWING RECTANGLES
+    *
+    *                      'High' quality methods
+    *                      
+    * WARNING: These methods are only useful for creating smooth animations
+    *          otherwise, use the 'low' quality method that will prevent 
+    *          unwanted aliasing...
+    ***********************************************************************/
+
+
+        /**
+         * Draw a filed rectangle wih sub-pixel precision and anti-aliasing and thick border.
+         * 
+         * WARNING: This is probably not the method you want to use... If you just want to draw
+         *          a nice rectangle with a thick border, try drawThickRect() instead. This method 
+         *          is useful for creating very smooths animations (when the rectangle moves by less 
+         *          than a pixel).
+         *          
+         * NOTE: Recall that pixel centers are at integer values (and the full image range is
+         *       [-0.5, lx - 0.5] x [-0.5, lx-0.5]), therefore, giving a box with integer values to this
+         *       method will create aliasing along the edges of the rectangle...
+         *
+         * @param   B           Box representing the outer boundary of the rectangle.
+         * @param   thickness   thickness of the boundary (going 'inside' the rectangle)
+         * @param   color       color to use
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothThickRect(const fBox2& B, float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
          * Draw a filed rectangle wih sub-pixel precision and anti-aliasing.
          *
          * WARNING: This is probably not the method you want to use... If you just want to draw
-         *          a rectangle use try drawRect() instead. This method is useful for creating very
-         *          smooths animations (when the rectangle moves by less than a pixel).
+         *          a nice filled rectangle use try drawRect() instead. This method is only useful 
+         *          for creating very smooths animations (when the rectangle moves by less than a pixel).
          *
          * NOTE: Recall that pixel centers are at integer values (and the full image range is
          *       [-0.5, lx - 0.5] x [-0.5, lx-0.5]), therefore, giving a box with integer values to this
@@ -1163,13 +1230,48 @@ namespace tgx
         void fillSmoothRect(const fBox2& B, color_t color, float opacity = 1.0f);
 
 
+        /**
+         * Draw a filed rectangle wih sub-pixel precision and anti-aliasing and thick border.
+         * 
+         * WARNING: This is probably not the method you want to use... If you just want to draw
+         *          a nice filled rectangle with a thick border, try fillThickRect() instead. This method
+         *          is only useful for creating very smooths animations (when the rectangle moves by less
+         *          than a pixel).
+         *
+         * NOTE: Recall that pixel centers are at integer values (and the full image range is
+         *       [-0.5, lx - 0.5] x [-0.5, lx-0.5]), therefore, giving a box with integer values to this
+         *       method will create aliasing along the edges of the rectangle...
+         *
+         * @param   B               Box representing the outer boundary of the rectangle
+         * @param   thickness       thickness of the boundary (going 'inside' the rectangle)
+         * @param   color_interior  color for the interior
+         * @param   color_border    color for the boundary
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothThickRect(const fBox2& B, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
+ 
 
 
 
-        /*****************************************************
-        * DRAWING ROUNDED RECTANGLES
-        * LOW QUALITY (FAST) DRAWING METHODS
-        ******************************************************/
+
+
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                                    DRAWING ROUNDED RECTANGES
+    *
+    ********************************************************************************************* 
+    ********************************************************************************************/
+
+
+
+
+    /**********************************************************************
+    *                     DRAWING ROUNDED RECTANGLES
+    *
+    *                      'Low' quality methods
+    ***********************************************************************/
+
 
 
         /**
@@ -1197,10 +1299,12 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * DRAWING ROUNDED RECTANGLES
-        * HIGH QUALITY (SLOW) DRAWING METHODS
-        ******************************************************/
+
+    /**********************************************************************
+    *                     DRAWING ROUNDED RECTANGLES
+    *
+    *                       'High' quality methods
+    ***********************************************************************/
 
 
 
@@ -1220,7 +1324,7 @@ namespace tgx
          * 
          * @param   B               Box representing the rectngle to daw.
          * @param   corner_radius   corner radius.
-         * @param   thickness       thickness (should be >1, otherwise use drawSmoothRoundRect() instead)
+         * @param   thickness       thickness going 'inside' the rounded rectangle (should be >1)
          * @param   color           color.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
@@ -1238,24 +1342,40 @@ namespace tgx
         void fillSmoothRoundRect(const fBox2& B, float corner_radius, color_t color, float opacity = 1.0f);
 
 
+        /**
+         * Draw a smooth (i.e. anti-aliased with subpixel precision) filled rounded rectangle with thick
+         * border of another color.
+         *
+         * @param   B               Box representing the rectngle to daw.
+         * @param   corner_radius   corner radius.
+         * @param   thickness       thickness going 'inside' the rounded rectangle (should be >1)
+         * @param   color_interior  color.
+         * @param   color_border    The color border.
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothThickRoundRect(const fBox2& B, float corner_radius, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
 
 
 
 
 
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                                    DRAWING TRIANGLES
+    *
+    *********************************************************************************************
+    ********************************************************************************************/
 
 
-        /********************************************************************************
-        *
-        * DRAWING TRIANGLES
-        *
-        *********************************************************************************/
 
 
-        /*****************************************************
-        * DRAWING TRIANGLES
-        * LOW QUALITY (FAST) DRAWING METHODS
-        ******************************************************/
+    /**********************************************************************
+    *                        DRAWING TRIANGLES
+    *
+    *                      'low' quality methods
+    ***********************************************************************/
+
 
 
         /**
@@ -1288,10 +1408,11 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * DRAWING TRIANGLES
-        * HIGH QUALITY (SLOW) DRAWING METHODS
-        ******************************************************/
+    /**********************************************************************
+    *                        DRAWING TRIANGLES
+    *
+    *                      'high' quality methods
+    ***********************************************************************/
 
 
         /**
@@ -1349,30 +1470,26 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * DRAWING TRIANGLES.
-        * 
-        * ADVANCED DRAWING METHODS FOR GRADIENT AND TEXTURING
-        * USING THE 3D TRIANGLE RASTERIZER BACKEND.  
-        * 
-         * Remarks:
-         * 
-         * 1. For all these methods, the positions are given using floating point values   
-         *    to allow for sub-pixel precision (improves the quality of animations)
-         *    
-         * 2. Sprite images and gradient colors can have different types from the destination   
-         *    (i.e. this) image.
-         *
-         * Warning: 
-         * 
-         * For particular orientations of triangles, access to texture pixels is highly non-linear. 
-         * For texture stored in flash memory, this can cause dramatic slowdown because the read cache 
-         * becomes basically useless. To overcome this problem, two solutions are possible:
-         *          
-         * a. Move the texture to a faster memory location before drawing.
-         * b. Tessellate the triangle into smaller triangles so that the memory data for each triangle   
-         *    fit into the cache.
-        ******************************************************/
+
+
+    /**********************************************************************
+    *                        DRAWING TRIANGLES
+    *
+    * ADVANCED METHODS FOR TEXTURING/GRADIENT USING THE 3D RASTERIZER BACKEND
+    *
+    * Remarks: 1. For all these methods, the positions are given using floating
+    *             point values to allow for sub-pixel precision (improves animations)
+    *          2. Sprite images and gradient colors can have different types from
+    *             the destination (i.e. this) image.
+    *
+    * Warning: For particular orientations of triangles, access to texture pixels is
+    *          highly non-linear. For texture stored in slow memory (e.g. flash), this
+    *          can cause huge slowdown because the read cache becomes basically useless.
+    *          To overcome this problem:
+    *              a. Move the texture to a faster memory location before drawing.
+    *              b. Tessellate the triangle into smaller triangles so that the
+    *                 memory data for each triangle fit into the cache.
+    ***********************************************************************/
 
 
 
@@ -1497,20 +1614,22 @@ namespace tgx
 
 
 
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                                     DRAWING QUADS
+    *
+    *********************************************************************************************
+    ********************************************************************************************/
 
-        /********************************************************************************
-        *
-        * DRAWING QUADS
-        *
-        *********************************************************************************/
 
 
+    /**********************************************************************
+    *                           DRAWING QUADS
+    *
+    *                      'low' quality methods
+    ***********************************************************************/
 
-
-        /*****************************************************
-        * DRAWING QUADS
-        * LOW QUALITY (FAST) DRAWING METHODS
-        ******************************************************/
 
 
         /**
@@ -1544,10 +1663,12 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * DRAWING QUADS
-        * HIGH QUALITY (SLOW) DRAWING METHODS
-        ******************************************************/
+
+    /**********************************************************************
+    *                           DRAWING QUADS
+    *
+    *                      'high' quality methods
+    ***********************************************************************/
 
 
         /**
@@ -1614,30 +1735,27 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * DRAWING QUADS.
-        *
-        * ADVANCED DRAWING METHODS FOR GRADIENT AND TEXTURING
-        * USING THE 3D TRIANGLE RASTERIZER BACKEND.
-        *
-         * Remarks:
-         *
-         * 1. For all these methods, the positions are given using floating point values
-         *    to allow for sub-pixel precision (improves the quality of animations)
-         *
-         * 2. Sprite images and gradient colors can have different types from the destination
-         *    (i.e. this) image.
-         *
-         * Warning:
-         *
-         * For particular orientations of quads, access to texture pixels is highly non-linear.
-         * For texture stored in flash memory, this can cause dramatic slowdown because the read cache
-         * becomes basically useless. To overcome this problem, two solutions are possible:
-         *
-         * a. Move the texture to a faster memory location before drawing.
-         * b. Tessellate the triangle into smaller triangles so that the memory data for each triangle
-         *    fit into the cache.
-        ******************************************************/
+    /**********************************************************************
+    *                            DRAWING QUADS
+    *
+    * ADVANCED METHODS FOR TEXTURING/GRADIENT USING THE 3D RASTERIZER BACKEND
+    *
+    * Remarks: 1. For all these methods, the positions are given using floating
+    *             point values to allow for sub-pixel precision (improves animations)
+    *          2. Sprite images and gradient colors can have different types from
+    *             the destination (i.e. this) image.
+    *
+    * Warning: For particular orientations of triangles, access to texture pixels is
+    *          highly non-linear. For texture stored in slow memory (e.g. flash), this
+    *          can cause huge slowdown because the read cache becomes basically useless.
+    *          To overcome this problem:
+    *              a. Move the texture to a faster memory location before drawing.
+    *              b. Tessellate the triangle into smaller triangles so that the
+    *                 memory data for each triangle fit into the cache.
+    ***********************************************************************/
+
+
+
 
 
         /**
@@ -1707,20 +1825,23 @@ namespace tgx
 
 
 
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                                    DRAWING POLYLINES
+    *
+    *********************************************************************************************
+    ********************************************************************************************/
 
-        /********************************************************************************
-        *
-        * DRAWING POLYLINES AND POLYGONS
-        *
-        *********************************************************************************/
 
 
 
+    /**********************************************************************
+    *                           DRAWING POLYLINES
+    *
+    *                        'low' quality methods
+    ***********************************************************************/
 
-        /*****************************************************
-        * DRAWING POLYLINES
-        * LOW QUALITY (FAST) DRAWING METHODS
-        ******************************************************/
 
 
         /**
@@ -1757,10 +1878,12 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * DRAWING POLYLINES
-        * HIGH QUALITY (SLOW) DRAWING METHODS
-        ******************************************************/
+    /**********************************************************************
+    *                          DRAWING POLYLINES
+    *
+    *                       'high' quality methods
+    ***********************************************************************/
+
 
 
         /**
@@ -1836,10 +1959,22 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * DRAWING POLYGONS
-        * LOW QUALITY (FAST) DRAWING METHODS
-        ******************************************************/
+
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                                    DRAWING POLYGONS
+    *
+    *********************************************************************************************
+    ********************************************************************************************/
+
+
+
+    /**********************************************************************
+    *                           DRAWING POLYGONS
+    *
+    *                        'low' quality methods
+    ***********************************************************************/
 
 
         /**
@@ -1919,10 +2054,12 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * DRAWING POLYGONS
-        * HIGH QUALITY (SLOW) DRAWING METHODS
-        ******************************************************/
+
+        /**********************************************************************
+        *                           DRAWING POLYGONS
+        *
+        *                        'high' quality methods
+        ***********************************************************************/
 
 
 
@@ -2084,18 +2221,22 @@ namespace tgx
 
 
 
-        /********************************************************************************
-        *
-        * DRAWING CIRCLES AND ELLIPSES
-        *
-        *********************************************************************************/
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                                     DRAWING CIRCLES
+    *
+    *********************************************************************************************
+    ********************************************************************************************/
 
 
 
-        /*****************************************************
-        * DRAWING CIRCLES
-        * LOW QUALITY (FAST) DRAWING METHODS
-        ******************************************************/
+
+    /**********************************************************************
+    *                           DRAWING CIRCLES
+    *
+    *                        'low' quality methods
+    ***********************************************************************/
 
 
         /**
@@ -2125,10 +2266,12 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * DRAWING CIRCLES
-        * HIGH QUALITY (SLOW) DRAWING METHODS
-        ******************************************************/
+    /**********************************************************************
+    *                           DRAWING CIRCLES
+    *
+    *                        'high' quality methods
+    ***********************************************************************/
+
 
 
         /**
@@ -2165,13 +2308,39 @@ namespace tgx
         void fillSmoothCircle(fVec2 center, float r, color_t color, float opacity = 1.0f);
 
 
+        /**
+         * Draw a filled thick smooth (anti-aliased and with sub-pixel precision) circle
+         * with different colors for the border and the interior. 
+         *
+         * @param   center          Circle center.
+         * @param   r               external radius (the internal radius is r - thickness).
+         * @param   thickness       thickness 'going inside the circle'
+         * @param   color_interior  color of the interior
+         * @param   color_border    color of the boundary
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothThickCircle(fVec2 center, float r, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
 
 
 
-        /*****************************************************
-        * DRAWING ELLIPSES
-        * LOW QUALITY (FAST) DRAWING METHODS
-        ******************************************************/
+
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                                     DRAWING ELLIPSES
+    *
+    *********************************************************************************************
+    ********************************************************************************************/
+
+
+
+
+    /**********************************************************************
+    *                           DRAWING ELLIPSES
+    *
+    *                        'low' quality methods
+    ***********************************************************************/
+
 
 
         /**
@@ -2201,10 +2370,11 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * DRAWING ELLISPES
-        * HIGH QUALITY (SLOW) DRAWING METHODS
-        ******************************************************/
+    /**********************************************************************
+    *                           DRAWING ELLIPSES
+    *
+    *                        'high' quality methods
+    ***********************************************************************/
 
 
 
@@ -2224,7 +2394,7 @@ namespace tgx
          *
          * @param   center      Ellipse center.
          * @param   radiuses    external radiuses along the x and y axis.
-         * @param   thickness   thickness: should be > 1 otherwise use drawSmoothEllipse(() instead.
+         * @param   thickness   thickness going 'inside' the ellipse
          * @param   color       color.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
@@ -2242,31 +2412,31 @@ namespace tgx
         void fillSmoothEllipse(fVec2 center, fVec2 radiuses, color_t color, float opacity = 1.0f);
 
 
+        /**
+         * Draw a filled thick smooth (anti-aliased and with sub-pixel precision) ellipse with different
+         * colors for the border and the interior.
+         *
+         * @param   center          ellipse center.
+         * @param   radiuses        radiuses along the x and y axis.
+         * @param   thickness       border thickness going 'inside' the ellipse
+         * @param   color_interior  color of the interior.
+         * @param   color_border    color of the boundary.
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothThickEllipse(fVec2 center, fVec2 radiuses, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
 
 
 
 
 
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                            DRAWING BEZIER CURVE AND SPLINES
+    *
+    *********************************************************************************************
+    ********************************************************************************************/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /********************************************************************************
-        *
-        * DRAWING BEZIER CURVES AND SPLINES
-        *
-        *********************************************************************************/
 
 
 
@@ -2365,6 +2535,7 @@ namespace tgx
 
 
 
+
         /*****************************************************
         * BEZIER CURVES AND SPLINES
         * HIGH QUALITY (VERY SLOW) DRAWING METHODS
@@ -2372,16 +2543,26 @@ namespace tgx
 
 
 
-    /************************************************************************************
+
+
+
+
+    /********************************************************************************************
+    *********************************************************************************************
     *
-    * Drawing text 
+    *                                       DRAWING TEXT
+    *
+    * supported font format:
     * 
-    * supported font format: 
     *     - AdafruitGFX            https ://glenviewsoftware.com/projects/products/adafonteditor/adafruit-gfx-font-format/
     *     - ILI9341_t3 v1          https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format
     *       and v23 (antialiased). https://github.com/projectitis/packedbdf/blob/master/packedbdf.md
-    *
-    *************************************************************************************/
+    *       
+    *********************************************************************************************
+    ********************************************************************************************/
+
+
+
 
 
         /**
@@ -2523,7 +2704,10 @@ namespace tgx
 
 
 
+
 private:
+
+
 
 
 

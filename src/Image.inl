@@ -1961,7 +1961,7 @@ namespace tgx
 
     /********************************************************************************
     *
-    * DRAWING RECTANGLES AND ROUNDED RECTANGLES
+    * DRAWING RECTANGLES
     *
     *********************************************************************************/
 
@@ -1994,6 +1994,40 @@ namespace tgx
         if (!isValid()) return;
         _fillRect(B, color, opacity);
         }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::drawThickRect(const iBox2& B, int thickness, color_t color, float opacity)
+        {
+        if (B.isEmpty() || (!isValid()) ||(thickness < 1)) return;        
+        int r = tgx::min(B.lx(), B.ly()) / 2; 
+        if (r <= 1) { fillRect(B, color, opacity); return; }
+        if (thickness > r) thickness = r; 
+        thickness--; 
+        fillRect(iBox2(B.minX, B.maxX, B.minY, B.minY + thickness), color, opacity);
+        fillRect(iBox2(B.minX, B.maxX, B.maxY - thickness, B.maxY), color, opacity);
+        fillRect(iBox2(B.minX, B.minX + thickness, B.minY + thickness + 1, B.maxY - thickness - 1), color, opacity);
+        fillRect(iBox2(B.maxX - thickness, B.maxX, B.minY + thickness + 1, B.maxY - thickness - 1), color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillThickRect(const iBox2& B, int thickness, color_t color_interior, color_t color_border, float opacity)
+        {
+        if (B.isEmpty() || (!isValid()) || (thickness < 1)) return;
+        int r = tgx::min(B.lx(), B.ly()) / 2;
+        if (r <= 1) { fillRect(B, color_interior, opacity); return; }
+        if (thickness > r) thickness = r;
+        thickness--;
+        fillRect(iBox2(B.minX, B.maxX, B.minY, B.minY + thickness), color_border, opacity);
+        fillRect(iBox2(B.minX, B.maxX, B.maxY - thickness, B.maxY), color_border, opacity);
+        fillRect(iBox2(B.minX, B.minX + thickness, B.minY + thickness + 1, B.maxY - thickness - 1), color_border, opacity);
+        fillRect(iBox2(B.maxX - thickness, B.maxX, B.minY + thickness + 1, B.maxY - thickness - 1), color_border, opacity);
+        thickness++; 
+        fillRect(iBox2(B.minX + thickness, B.maxX - thickness, B.minY + thickness, B.maxY - thickness), color_interior, opacity);
+        }
+
 
 
 
@@ -2140,6 +2174,47 @@ namespace tgx
 
 
     template<typename color_t>
+    void Image<color_t>::drawSmoothThickRect(const fBox2& B, float thickness, color_t color, float opacity)
+        {
+        if (B.isEmpty()) return;
+        drawSmoothThickQuad(fVec2(B.minX, B.minY), fVec2(B.maxX, B.minY), fVec2(B.maxX, B.maxY), fVec2(B.minX, B.maxY), thickness, color, opacity);
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::fillSmoothRect(const fBox2& B, color_t color, float opacity)
+        {
+        if ((!isValid()) || (B.isEmpty())) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _fillSmoothRect(B, color, opacity);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillSmoothThickRect(const fBox2& B, float thickness, color_t color_interior, color_t color_border, float opacity)
+        {
+        if (B.isEmpty()) return;
+        fillSmoothThickQuad(fVec2(B.minX, B.minY), fVec2(B.maxX, B.minY), fVec2(B.maxX, B.maxY), fVec2(B.minX, B.maxY), thickness, color_interior, color_border, opacity);
+        }
+
+
+
+
+
+
+
+
+    /********************************************************************************
+    *
+    * DRAWING ROUNDED RECTANGLES
+    *
+    *********************************************************************************/
+
+
+
+
+    template<typename color_t>
     void Image<color_t>::drawRoundRect(const iBox2& B, int r, color_t color, float opacity)
         {
         const int x = B.minX;
@@ -2197,25 +2272,6 @@ namespace tgx
 
 
 
-
-
-
-
-
-
-
-
-
-
-    template<typename color_t>
-    void Image<color_t>::fillSmoothRect(const fBox2& B, color_t color, float opacity)
-        {
-        if ((!isValid()) || (B.isEmpty())) return;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f; 
-        _fillSmoothRect(B, color, opacity);
-        }
-
-
     template<typename color_t>
     void Image<color_t>::drawSmoothRoundRect(const fBox2& B, float corner_radius, color_t color, float opacity)
         {
@@ -2230,6 +2286,7 @@ namespace tgx
         {
         if ((!isValid()) || (B.isEmpty())) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        if (corner_radius - thickness < 1) thickness = corner_radius - 1.0f;
         _drawSmoothWideRoundRect(iBox2((int)roundf(B.minX), (int)roundf(B.maxX), (int)roundf(B.minY), (int)roundf(B.maxY)), corner_radius, thickness, color, opacity); // cheat, convert to iBox2 for the time being. todo improve this !
         }
 
@@ -2392,6 +2449,27 @@ namespace tgx
         _fillSmoothRect(tgx::fBox2(B.minX - 0.5f, B.minX + thickness - 0.5f, y1 - 0.5f, y2 + 0.5f), color, opacity);
         _fillSmoothRect(tgx::fBox2(B.maxX - thickness + 0.5f, B.maxX + 0.5f, y1 - 0.5f, y2 + 0.5f), color, opacity);
         }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::fillSmoothThickRoundRect(const fBox2& B, float corner_radius, float thickness, color_t color_interior, color_t color_border, float opacity)
+        {
+        if (corner_radius - thickness < 1) thickness = corner_radius - 1.0f;
+        if (thickness < 1)
+            {
+            drawSmoothRoundRect(B, corner_radius, color_border, opacity);
+            fillSmoothRoundRect(fBox2(B.minX + 0.5f, B.maxX - 0.5f, B.minY + 0.5f, B.maxY - 0.5f), corner_radius, color_interior, opacity);
+            }
+        else
+            {
+            const float tt = thickness;
+            drawSmoothThickRoundRect(B, corner_radius, thickness, color_border, opacity);
+            fillSmoothRoundRect(fBox2(B.minX + tt, B.maxX - tt, B.minY + tt, B.maxY - tt), corner_radius - tt, color_interior, opacity);
+            }
+        }
+
+
 
 
 
