@@ -759,7 +759,7 @@ namespace tgx
 
         TGX_SCANFILL_PUSH(x, x, y, 1);
         TGX_SCANFILL_PUSH(x, x, y + 1, -1);
-
+        int start;
         while (TGX_SCANFILL_STACKSIZE > 0)
             {
             int x1, x2, dy;
@@ -770,7 +770,7 @@ namespace tgx
                 _drawPixel<false>({ x--, y }, new_color);
                 }
             if (x >= x1) goto TGX_SCANFILL_SKIP;
-            int start = x + 1;
+            start = x + 1;
             if (start < x1) TGX_SCANFILL_PUSH(start, x1 - 1, y, -dy); // leak on left
             x = x1 + 1;
             do

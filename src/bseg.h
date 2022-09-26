@@ -552,17 +552,17 @@ namespace tgx
 
 
 		/**
-        /* Return a normalized direction vector
+        * Return a normalized direction vector
 		* (use fast sqrt)
-		**/
+		*/
 		TGX_INLINE inline fVec2 unitVec() const
 			{
 			return fVec2((float)(_dx * _stepx), (float)(_dy * _stepy)).getNormalize_fast();
 			}
 
 		/**
-		 * Query if the line is x_major
-		 */
+		* Query if the line is x_major
+		*/
 		TGX_INLINE inline bool x_major() const { return _x_major; }
 
 
