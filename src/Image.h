@@ -2564,7 +2564,7 @@ namespace tgx
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending and simply use overwrite.
         **/
-        void drawSmoothThickQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawSmoothThickQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -2580,7 +2580,7 @@ namespace tgx
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending and simply use overwrite.
         **/
-        void drawSmoothThickCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawSmoothThickCubicBezier(fVec2 P1, fVec2 P2, fVec2 PA, fVec2 PB, float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -2603,7 +2603,7 @@ namespace tgx
          *                          negative to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawSmoothThickQuadSpline(int nbpoints, const iVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawSmoothThickQuadSpline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -2626,7 +2626,7 @@ namespace tgx
          *                          negative to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawSmoothThickCubicSpline(int nbpoints, const iVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawSmoothThickCubicSpline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -2648,7 +2648,7 @@ namespace tgx
          *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawSmoothThickClosedSpline(int nbpoints, const iVec2 tabPoints[], float thickness, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawSmoothThickClosedSpline(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -2673,7 +2673,7 @@ namespace tgx
          *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void FillSmoothClosedSpline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void FillSmoothClosedSpline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -2704,7 +2704,7 @@ namespace tgx
          *                          negative to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void FillSmoothThickClosedSpline(int nbpoints, const iVec2 tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void FillSmoothThickClosedSpline(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
 
@@ -3203,8 +3203,8 @@ private:
 
         
         template<typename T>
-        inline T _triangleAera(Vec2<T> P1, Vec2<T> P2, Vec2<T> P3)
-            {
+        static inline T _triangleAera(Vec2<T> P1, Vec2<T> P2, Vec2<T> P3)
+            { // return twice the aera of the triangle. 
             return P1.x * (P2.y - P3.y) + P2.x * (P3.y - P1.y) + P3.x * (P1.y - P2.y);
             }
 
@@ -3536,9 +3536,14 @@ private:
         template<int SPLINE_MAX_POINTS> void _drawCubicSpline(int nbpoints, const iVec2* tabPoints, bool draw_last_point, color_t color, float opacity);
 
 
+        static bool _splitRationalQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float w, fVec2& Q, fVec2& PB, float& wb);
 
+        static bool _iterRationalQuadBezier(fVec2& P, fVec2& P1, fVec2& P2, fVec2& PC, float& wc, fVec2& sP1, fVec2& sPC, float& swc, bool& done);
 
   
+        static bool _splitCubicBezier(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, fVec2& Q, fVec2& C, fVec2 & D);
+
+        static bool _iterCubicBezier(fVec2& P, fVec2& P1, fVec2& P2, fVec2& PC1, fVec2& PC2, fVec2& sP1, fVec2& sPC1, fVec2& sPC2, bool& done);
 
 
 

@@ -4635,6 +4635,9 @@ namespace tgx
 
 
 
+
+
+
     /********************************************************************************
     *
     * DRAWING BEZIER CURVES AND SPLINES
@@ -5245,6 +5248,199 @@ namespace tgx
     }
 
 
+
+
+
+
+
+
+    template<typename color_t>
+    bool Image<color_t>::_splitRationalQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float w, fVec2& Q, fVec2& PB, float& wb)
+        {
+        const int MAX_ITER = 20;    // maximum number of iteration to prevent stalling
+        const float l = 0.25f;
+        const float a = _triangleAera(P1, P2, PC);
+        if (a * a < l * (P1 - P2).norm2())
+            { // done !
+            return true;
+            }
+        float t = 0.5f;
+        int d = 0;
+        while (1)
+            {
+            float ua = (1 - t) + w * t;
+            float ub = w * (1 - t) + t;
+            float u3 = ((1 - t) * ua + t * ub);
+
+            tgx::fVec2 PA = (P1 * (1 - t) + PC * (w * t)) / ua;
+            PB = (PC * w * (1 - t) + P2 * t) / ub;
+            Q = (PA * (1 - t) * ua + PB * ub * t) / u3;
+
+            const float a = _triangleAera(P1, Q, PA);
+            const float n2 = (P1 - Q).norm2();
+            if ((n2 < 2) || (a * a < l * n2) || (d++ > MAX_ITER))
+                { // done !
+                wb = ub / sqrtf(u3);
+                return false;
+                }
+            t /= 2;
+            }
+        }
+
+
+    template<typename color_t>
+    bool Image<color_t>::_iterRationalQuadBezier(fVec2 & P, fVec2& P1, fVec2& P2, fVec2& PC, float& wc, fVec2& sP1, fVec2& sPC, float& swc, bool& done)
+        {
+        if (done)
+            {
+            P = P2;
+            P1 = sP1;
+            PC = sPC;
+            wc = swc;
+            done = false;
+            return false;
+            }
+        P = P1;
+        tgx::fVec2 Q, PB;
+        float wb;
+        if (_splitRationalQuadBezier(P1, P2, PC, wc, Q, PB, wb))
+            {
+            done = true;
+            return true;
+            }
+        P1 = Q;
+        PC = PB;
+        wc = wb;
+        return true;
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothThickQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, bool rounded_ends, color_t color, float opacity)
+        {
+        if (!isValid() || (thickness <0)) return;
+        if (wc <= 0)
+            {
+            drawSmoothThickLine(P1, P2, thickness, rounded_ends, color, opacity);
+            }
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+
+        fVec2 sP1 = P1; 
+        fVec2 sPC = PC;
+        float swc = wc;
+        bool done = false; 
+
+        if (thickness <= 1)
+            {
+            opacity *= thickness;
+            drawSmoothPolyline(
+                [&P1, &P2, &PC, &wc, &sP1, &sPC, &swc, &done](tgx::fVec2& P)
+                    {
+                    return _iterRationalQuadBezier(P, P1, P2, PC, wc, sP1, sPC, swc, done);
+                    },
+            color, opacity);
+            }
+        else
+            {
+            drawSmoothThickPolyline(            
+                [&P1, &P2, &PC, &wc, &sP1, &sPC, &swc, &done](tgx::fVec2& P)
+                    {
+                    return _iterRationalQuadBezier(P, P1, P2, PC, wc, sP1, sPC, swc, done);
+                    },
+                thickness, rounded_ends, color, opacity);
+            }
+        }
+
+
+
+
+    template<typename color_t>
+    bool Image<color_t>::_splitCubicBezier(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, fVec2& Q, fVec2& C, fVec2& D)
+        {
+        const int MAX_ITER = 20;    // maximum number of iteration to prevent stalling
+        const float l = 0.25f;        
+        const float nn = (P1 - P2).norm2();
+        const float a1 = _triangleAera(P1, P2, PC1);
+        const float a2 = _triangleAera(P1, P2, PC2);
+        if ((nn < 2) || ((a1 * a1 < l*nn)&&(a2 * a2 < l*nn))) return true;
+        float t = 0.5f;
+        int d = 0;
+        while (1)
+            {
+            const fVec2 A = (1 - t) * P1 + t * PC1; 
+            const fVec2 X = (1 - t) * PC1 + t * PC2;
+            const fVec2 B = (1 - t) * A + t * X;
+            D = (1 - t) * PC2 + t * P2;
+            C = (1 - t) * X + t * D;
+            Q = (1 - t) * B + t * C;
+            const float nn = (P1 - Q).norm2();
+            const float a1 = _triangleAera(P1, A, Q);
+            const float a2 = _triangleAera(P1, B, Q);
+            if ((nn < 2) || (d++ > MAX_ITER) || ((a1 * a1 < l*nn) && (a2 * a2 < l*nn)) ) return false;
+            t /= 2;
+            }
+        }
+
+
+    template<typename color_t>
+    bool Image<color_t>::_iterCubicBezier(fVec2& P, fVec2& P1, fVec2& P2, fVec2& PC1, fVec2& PC2, fVec2& sP1, fVec2& sPC1, fVec2& sPC2, bool& done)
+        {
+        if (done)
+            {
+            P = P2;
+            P1 = sP1;
+            PC1 = sPC1;
+            PC2 = sPC2;
+            done = false;
+            return false;
+            }
+        P = P1;
+        tgx::fVec2 Q, C, D;
+        if (_splitCubicBezier(P1, P2, PC1, PC2, Q, C, D))
+            {
+            done = true;
+            return true;
+            }
+        P1 = Q;
+        PC1 = C;
+        PC2 = D;
+        return true;
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothThickCubicBezier(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, float thickness, bool rounded_ends, color_t color, float opacity)
+        {
+        if (!isValid() || (thickness <0)) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+
+        fVec2 sP1 = P1; 
+        fVec2 sPC1 = PC1;
+        fVec2 sPC2 = PC2;
+        bool done = false; 
+
+        if (thickness <= 1)
+            {
+            opacity *= thickness;
+            drawSmoothPolyline(
+                [&P1, &P2, &PC1, &PC2, &sP1, &sPC1, &sPC2, &done](tgx::fVec2& P)
+                    {
+                    return _iterCubicBezier(P, P1, P2, PC1, PC2, sP1, sPC1, sPC2, done);
+                    },
+            color, opacity);
+            }
+        else
+            {
+            drawSmoothThickPolyline(            
+                [&P1, &P2, &PC1, &PC2, &sP1, &sPC1, &sPC2, &done](tgx::fVec2& P)
+                    {
+                    return _iterCubicBezier(P, P1, P2, PC1, PC2, sP1, sPC1, sPC2, done);
+                    },
+                thickness, rounded_ends, color, opacity);
+            }
+        }
 
 
 
