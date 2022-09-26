@@ -4559,6 +4559,78 @@ namespace tgx
 
 
 
+    template<typename color_t>
+    void Image<color_t>::_fillSmoothWideQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity)
+        {
+        const int dir_x = (quarter & 1) ? -1 : 1;
+        const int dir_y = (quarter & 2) ? -1 : 1;
+        auto B = imageBox();
+
+        B &= tgx::iBox2(
+            ((dir_x > 0) ? (int)floorf(C.x - rx + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + rx - 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - ry + 0.5f)),
+            ((dir_y > 0) ? (int)ceilf(C.y + ry - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
+        if (B.isEmpty()) return;
+        if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
+        B.maxY += dir_y;
+        if (dir_x < 0) { tgx::swap(B.minX, B.maxX); }
+        B.maxX += dir_x;
+
+        const float inv_rx2 = 1.0f / (rx * rx);
+        const float inv_ry2 = 1.0f / (ry * ry);
+
+        int i_min = B.minX;
+        for (int j = B.minY; j != B.maxY; j += dir_y)
+            {
+            const float dy = (j - C.y);
+            const float dy2 = dy * dy * inv_ry2;
+            const float zy = fabsf(dy) * inv_ry2;
+            for (int i = i_min; i != B.maxX; i += dir_x)
+                {
+                const float dx = (i - C.x);
+                const float dx2 = dx * dx * inv_rx2;
+                const float zx = fabsf(dx) * inv_rx2;
+                const float tt = 2 * tgx::max(zx, zy);
+                const float e2 = (dx2 + dy2 - 1);
+                if (e2 >= tt) { i_min = i + dir_x; continue; }
+                if (e2 <= -thickness * tt)
+                    {
+                    const int h = B.maxX - dir_x - i;
+                    if (h >= 0)
+                        _drawFastHLine<false>({ i,j }, h + 1, color_interior, opacity);
+                    else
+                        _drawFastHLine<false>({ B.maxX - dir_x,j }, 1 - h, color_interior, opacity);
+                    break;
+                    }
+                float alpha = 1.0f;
+                if (e2 > 0)
+                    {
+                    alpha = 1.0f - (e2 / tt);
+                    }
+                else if (e2 < (1 - thickness) * tt)
+                    {
+                    alpha = thickness + (e2 / tt);
+                    _drawPixel<false>({ i,j }, color_interior, (1-alpha/2) * opacity);
+                    }
+                _drawPixel<false>({ i,j }, color_border, alpha * opacity);
+                }
+            }
+        return;
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::fillSmoothThickEllipse(fVec2 center, fVec2 radiuses, float thickness, color_t color_interior, color_t color_border, float opacity)
+        {
+        if ((!isValid()) || (radiuses.x <= 0) || (radiuses.y <= 0)) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;        
+        _fillSmoothWideQuarterEllipse(center, radiuses.x, radiuses.y, thickness, 0, 1, 1, color_interior, color_border, opacity);
+        _fillSmoothWideQuarterEllipse(center, radiuses.x, radiuses.y, thickness, 1, 0, 1, color_interior, color_border, opacity);
+        _fillSmoothWideQuarterEllipse(center, radiuses.x, radiuses.y, thickness, 2, 1, 0, color_interior, color_border, opacity);
+        _fillSmoothWideQuarterEllipse(center, radiuses.x, radiuses.y, thickness, 3, 0, 0, color_interior, color_border, opacity);
+        }
 
 
 

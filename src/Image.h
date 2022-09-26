@@ -3321,7 +3321,10 @@ private:
         
 
         void _drawSmoothThickEllipse(tgx::fVec2 C, float rx, float ry, float thickness, color_t color, float opacity);
-        
+
+
+        void _fillSmoothWideQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity);
+
 
         /** Fill a quarter circle but only on the pixel delimited by the half plane x*kx + y*ky + off > 0 */        
         void _fillSmoothQuarterCircleInterHP(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int32_t kx, int32_t ky, int32_t off);
