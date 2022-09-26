@@ -3302,6 +3302,9 @@ private:
         void _smoothWideCircle(tgx::fVec2 C, float R, float thickness, color_t color, float opacity);
 
 
+        void _fillSmoothWideQuarterCircle(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity);
+
+
         void _fillSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
 
 
