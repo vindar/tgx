@@ -2651,10 +2651,60 @@ namespace tgx
         void drawSmoothThickClosedSpline(int nbpoints, const iVec2 tabPoints[], float thickness, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
+        /**
+         * Fill a region delimited by a closed  smooth (anti-aliased with sub-pixel precision) quadratic
+         * spline.
+         * 
+         * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
+         * can have. Can be increased if needed but this will increase the memory used on the stack for
+         * allocating the temporary point arrays...
+         * 
+         * WARNING : The region should be convex (or at least star-shape around center of mass)
+         *           And even for convex region, the drawing may not be perfect if there are sharp
+         *           turns... TODO : improve this !!!!
+         *
+         * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
+         *                              needed (but uses more memory on stack)
+         * @param   nbpoints    number of points in the spline Must be smaller or equal to
+         *                      SPLINE_MAX_POINTS.
+         * @param   tabPoints   the array of points to interpolate.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        template<int SPLINE_MAX_POINTS = 32>
+        void FillSmoothClosedSpline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
-
-
+        /**
+         * Fill a region delimited by a closed thick smooth (anti-aliased with sub-pixel precision)
+         * quadratic spline where the interior and (thick) boundary can have different colors.
+         * 
+         * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
+         * can have. Can be increased if needed but this will increase the memory used on the stack for
+         * allocating the temporary point arrays...
+         * 
+         * WARNING : The region should be convex (or at least star-shape around center of mass)
+         *           And even for convex region, the drawing may not be perfect if there are sharp
+         *           turns... TODO : improve this !!!!
+         *           
+         * REMARK: If the shape is irregular (i.e. not convex). it might be better to draw a thick 
+         *         curve (with radius at least 3) with drawSmoothThickClosedSpline() and then use a 
+         *         fill algorithm with the boundary color as limit to color the interior... 
+         *
+         * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
+         *                              needed (but uses more memory on stack)
+         * @param   nbpoints        number of points in the spline Must be smaller or equal to
+         *                          SPLINE_MAX_POINTS.
+         * @param   tabPoints       the array of points to interpolate.
+         * @param   thickness       thickness of the curve.
+         * @param   color_interior  The color to use.
+         * @param   color_border    The color border.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply use overwrite.
+        **/
+        template<int SPLINE_MAX_POINTS = 32>
+        void FillSmoothThickClosedSpline(int nbpoints, const iVec2 tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
 
@@ -2670,10 +2720,15 @@ namespace tgx
     *
     * supported font format:
     * 
-    *     - AdafruitGFX            https ://glenviewsoftware.com/projects/products/adafonteditor/adafruit-gfx-font-format/
-    *     - ILI9341_t3 v1          https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format
-    *       and v23 (antialiased). https://github.com/projectitis/packedbdf/blob/master/packedbdf.md
+    *     - AdafruitGFX            [https ://glenviewsoftware.com/projects/products/adafonteditor/adafruit-gfx-font-format]
+    *     - ILI9341_t3 v1          [https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format]
+    *       and v23 (antialiased). [https://github.com/projectitis/packedbdf/blob/master/packedbdf.md]
+    *    
     *       
+    * NOTE: tgx-font [https://github.com/vindar/tgx-font] contains a set of ILI9341_t3 v1 and vé (antialiased) font
+    *       that can be used directly with the methods below (and the instruction on how to convert a ttf font to this
+    *       format). 
+    * 
     *********************************************************************************************
     ********************************************************************************************/
 
