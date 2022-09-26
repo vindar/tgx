@@ -2440,10 +2440,12 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * BEZIER CURVES AND SPLINES
-        * LOW QUALITY (FAST) DRAWING METHODS
-        ******************************************************/
+    /**********************************************************************
+    *                     BEZIER CURVES AND SPLINES
+    *
+    *                        'low' quality methods
+    ***********************************************************************/
+
 
 
         /**
@@ -2483,6 +2485,8 @@ namespace tgx
          * can have. Can be increased if needed but this will increase the memory used on the stack for
          * allocating the temporary point arrays...
          *
+         * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
+         *                              needed (but uses more memory on stack)
          * @param   nbpoints        number of points in the spline Must be smaller or equal to
          *                          SPLINE_MAX_POINTS.
          * @param   tabPoints       the array of points to interpolate.
@@ -2502,7 +2506,8 @@ namespace tgx
          * can have. Can be increased if needed but this will increase the memory used on the stack for
          * allocating the temporary point arrays...
          *
-         * @tparam  SPLINE_MAX_POINTS   Type of the spline maximum points.
+         * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
+         *                              needed (but uses more memory on stack)
          * @param   nbpoints        number of points in the spline Must be smaller or equal to
          *                          SPLINE_MAX_POINTS.
          * @param   tabPoints       the array of points to interpolate.
@@ -2522,6 +2527,8 @@ namespace tgx
          * can have. Can be increased if needed but this will increase the memory used on the stack for
          * allocating the temporary point arrays...
          *
+         * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
+         *                              needed (but uses more memory on stack)
          * @param   nbpoints    number of points in the spline Must be smaller or equal to
          *                      SPLINE_MAX_POINTS.
          * @param   tabPoints   the array of points to interpolate.
@@ -2536,10 +2543,119 @@ namespace tgx
 
 
 
-        /*****************************************************
-        * BEZIER CURVES AND SPLINES
-        * HIGH QUALITY (VERY SLOW) DRAWING METHODS
-        ******************************************************/
+
+    /**********************************************************************
+    *                     BEZIER CURVES AND SPLINES
+    *
+    *                       'high' quality methods
+    ***********************************************************************/
+
+
+        /**
+         * Draw a thick smooth (anti-aliased with sub-pixel precision) quadratic (rational) Bezier curve.
+         *
+         * @param   P1              Start point.
+         * @param   P2              End point.
+         * @param   PC              Control point.
+         * @param   wc              Control point weight (must be positive). Fastest for wc=1.
+         * @param   thickness       thickness of the curve
+         * @param   rounded_ends    True to draw rounded ends and false to draw straight ends.
+         * @param   color           The color to use.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply use overwrite.
+        **/
+        void drawSmoothThickQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a thick smooth (anti-aliased with sub-pixel precision) cubic Bezier curve.
+         *
+         * @param   P1              Start point.
+         * @param   P2              End point.
+         * @param   PA              first control point.
+         * @param   PB              second control point.
+         * @param   thickness       thickness of the curve
+         * @param   rounded_ends    True to draw rounded ends and false to draw straight ends.
+         * @param   color           The color to use.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply use overwrite.
+        **/
+        void drawSmoothThickCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a thick smooth (anti-aliased with sub-pixel precision) quadratic spline interpolating
+         * between a given set of points.
+         * 
+         * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
+         * can have. Can be increased if needed but this will increase the memory used on the stack for
+         * allocating the temporary point arrays...
+         *
+         * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
+         *                              needed (but uses more memory on stack)
+         * @param   nbpoints        number of points in the spline Must be smaller or equal to
+         *                          SPLINE_MAX_POINTS.
+         * @param   tabPoints       the array of points to interpolate.
+         * @param   thickness       thickness of the curve.
+         * @param   rounded_ends    True to draw rounded ends and false to draw straight ends.
+         * @param   color           The color to use.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply use overwrite.
+        **/
+        template<int SPLINE_MAX_POINTS = 32>
+        void drawSmoothThickQuadSpline(int nbpoints, const iVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a thick smooth (anti-aliased with sub-pixel precision) cubic spline interpolating
+         * between a given set of points.
+         * 
+         * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
+         * can have. Can be increased if needed but this will increase the memory used on the stack for
+         * allocating the temporary point arrays...
+         *
+         * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
+         *                              needed (but uses more memory on stack)
+         * @param   nbpoints        number of points in the spline Must be smaller or equal to
+         *                          SPLINE_MAX_POINTS.
+         * @param   tabPoints       the array of points to interpolate.
+         * @param   thickness       thickness of the curve.
+         * @param   rounded_ends    True to draw rounded ends and false to draw straight ends.
+         * @param   color           The color to use.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply use overwrite.
+        **/
+        template<int SPLINE_MAX_POINTS = 32>
+        void drawSmoothThickCubicSpline(int nbpoints, const iVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Draw a thick smooth (anti-aliased with sub-pixel precision) closed quadratic spline
+         * interpolating between a given set of points.
+         * 
+         * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
+         * can have. Can be increased if needed but this will increase the memory used on the stack for
+         * allocating the temporary point arrays...
+         *
+         * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
+         *                              needed (but uses more memory on stack)
+         * @param   nbpoints    number of points in the spline Must be smaller or equal to
+         *                      SPLINE_MAX_POINTS.
+         * @param   tabPoints   the array of points to interpolate.
+         * @param   thickness   thickness of the curve.
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
+        **/
+        template<int SPLINE_MAX_POINTS = 32>
+        void drawSmoothThickClosedSpline(int nbpoints, const iVec2 tabPoints[], float thickness, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+
+
+
+
 
 
 
