@@ -2117,7 +2117,11 @@ namespace tgx
          *
          * The callback must store the next point in the reference P and return:
          * - true  if there are more point to plot after this one.
-         * - false if this is the last point
+         * - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
+         *
+         * WARNING:  In order to draw the polygon correctly, all points must be queried twice so that
+         *           after finishing the first iteration (by returniong false), next_point() must reset
+         *           to the first point (because and all point are queried a second time) !
          *
          * @param   next_point  callback functor that provides the list of points delimiting the outer
          *                      boundary of the polygon.
@@ -2676,7 +2680,7 @@ namespace tgx
          *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void FillSmoothClosedSpline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillSmoothClosedSpline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -2707,7 +2711,7 @@ namespace tgx
          *                          negative to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void FillSmoothThickClosedSpline(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillSmoothThickClosedSpline(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
 

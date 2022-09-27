@@ -3543,18 +3543,15 @@ namespace tgx
             }
 
         const int op = (int)(opacity * 256);
-        fVec2 C(0, 0);
         fVec2 Q;
         int nb = 0;
         bool hasmore = true;
         while (hasmore)
             {
             hasmore = next_point(Q);
-            C += Q;
             nb++;
             }
         if (nb < 3) return;
-        C = C * (1.0f / nb);
 
         fVec2 P[4];
         fVec2 sP[4];
@@ -3563,14 +3560,7 @@ namespace tgx
         next_point(P[2]); sP[2] = P[2];
         if (nb > 3) { next_point(P[3]); } else { P[3] = P[0]; } sP[3] = P[3];
 
-        const float w = _triangleAera(C, P[1], P[2]);
-        if (w == 0) return; // flat, nothing to draw..
         int side = -1;
-        if (w < 0)
-            {
-            side = 1;
-            thickness = -thickness;
-            }
 
         fVec2 H0 = (P[1] - P[0]).getRotate90().getNormalize_fast() * thickness;
         fVec2 H1 = (P[2] - P[1]).getRotate90().getNormalize_fast() * thickness;
@@ -5701,10 +5691,414 @@ namespace tgx
 
 
 
+    template<typename color_t>
+    template<int SPLINE_MAX_POINTS>
+    void Image<color_t>::drawSmoothThickClosedSpline(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
+        switch (nbpoints)
+            {
+        case 0:
+        case 1:
+            return;
+        case 2:
+            {
+            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, true, true, color, opacity);
+            return;
+            }
+        default:
+           {
+            float x[SPLINE_MAX_POINTS];
+            float y[SPLINE_MAX_POINTS];
+            for (int i = 0; i < nbpoints; i++)
+                {
+                x[i] = tabPoints[i].x;
+                y[i] = tabPoints[i].y;
+                }
+            const int n = nbpoints;
+            const float a = 0.1715728752538099f; // 3 - 2 * sqrt(2)
+            float ux = 0, uy = 0;
+            float p = 1;
+            for (int i = 1; i <= n; i++)
+                {
+                x[n - i] *= 8;
+                y[n - i] *= 8;
+                ux += (x[n - i] * p);
+                uy += (y[n - i] * p);
+                p *= (-a);
+                }
+            const float eta = a / (1 - p);
+            float xx, yy;
+            xx = a * (x[0] - (eta * ux));
+            yy = a * (y[0] - (eta * uy));
+            x[0] = xx;
+            y[0] = yy;
+            for (int i = 1; i < n; i++)
+                {
+                xx = a * (x[i] - xx);
+                yy = a * (y[i] - yy);
+                x[i] = xx;
+                y[i] = yy;
+                }
+            ux = 0, uy = 0;
+            p = 1;
+            for (int i = 0; i < n; i++)
+                {
+                ux += (x[i] * p);
+                uy += (y[i] * p);
+                p *= (-a);
+                }
+            xx = x[n - 1] - (eta * ux);
+            yy = y[n - 1] - (eta * uy);
+            x[n - 1] = xx;
+            y[n - 1] = yy;
+            for (int i = n - 2; i >= 0; i--)
+                {
+                xx = x[i] - a * xx;
+                yy = y[i] - a * yy;
+                x[i] = xx;
+                y[i] = yy;
+                }
+
+            int i = 0; 
+            bool loadstart = true; 
+            bool begin = true; 
+            fVec2 P1, P2, PC; 
+            drawSmoothThickPolygon(
+                [&](tgx::fVec2& P)
+                    {
+                    while (1)
+                        {
+                        if (loadstart)
+                            { // we are at the beginning of a new Bezier segment, load P1, P2, PC
+                            if (i == 0)
+                                {
+                                P1 = { (x[n - 1] + x[0]) / 2, (y[n - 1] + y[0]) / 2 };
+                                P2 = { (x[0] + x[1]) / 2, (y[0] + y[1]) / 2 };
+                                PC = { x[0], y[0] };
+                                }
+                            else if (i < n - 1)
+                                {
+                                P1 = { (x[i - 1] + x[i]) / 2, (y[i - 1] + y[i]) / 2 };
+                                P2 = { (x[i] + x[i + 1]) / 2, (y[i] + y[i + 1]) / 2 };
+                                PC = { x[i], y[i] };
+                                }
+                            else
+                                { // last segment
+                                P1 = { (x[n - 2] + x[n - 1]) / 2, (y[n - 2] + y[n - 1]) / 2 };
+                                P2 = { (x[n - 1] + x[0]) / 2, (y[n - 1] + y[0]) / 2 };
+                                PC = { x[n - 1], y[n - 1] };
+                                }
+                            i++;
+                            loadstart = false;
+                            }
+                        if (begin)
+                            {
+                            begin = false;
+                            continue; // skip the first point P1 as this will be the last one !
+                            }
+                        // here, we are on curve P1, P2, PC and P1 has already been plotted.                     
+                        fVec2 Q, PB;
+                        float wb;
+                        if (_splitRationalQuadBezier(P1, P2, PC, 1.0f, Q, PB, wb))
+                            { // done with this curve. 
+                            P = P2;
+                            if (i == n)
+                                { // reset because we need to go over the list of points twice
+                                i = 0;
+                                loadstart = true;
+                                begin = true;
+                                cout << "last = " << P << "\n";
+                                return false;
+                                }
+                            loadstart = true;
+                            return true;
+                            }
+                        P = Q;
+                        P1 = Q;
+                        PC = PB;
+                        return true;
+                        }
+                    },
+                thickness, color, opacity);
+            }
+            }
+        }
+
+
+    template<typename color_t>
+    template<int SPLINE_MAX_POINTS>
+    void Image<color_t>::fillSmoothClosedSpline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
+        switch (nbpoints)
+            {
+        case 0:
+        case 1:
+        case 2:         
+            return;
+        default:
+           {
+            float x[SPLINE_MAX_POINTS];
+            float y[SPLINE_MAX_POINTS];
+            for (int i = 0; i < nbpoints; i++)
+                {
+                x[i] = tabPoints[i].x;
+                y[i] = tabPoints[i].y;
+                }
+            const int n = nbpoints;
+            const float a = 0.1715728752538099f; // 3 - 2 * sqrt(2)
+            float ux = 0, uy = 0;
+            float p = 1;
+            for (int i = 1; i <= n; i++)
+                {
+                x[n - i] *= 8;
+                y[n - i] *= 8;
+                ux += (x[n - i] * p);
+                uy += (y[n - i] * p);
+                p *= (-a);
+                }
+            const float eta = a / (1 - p);
+            float xx, yy;
+            xx = a * (x[0] - (eta * ux));
+            yy = a * (y[0] - (eta * uy));
+            x[0] = xx;
+            y[0] = yy;
+            for (int i = 1; i < n; i++)
+                {
+                xx = a * (x[i] - xx);
+                yy = a * (y[i] - yy);
+                x[i] = xx;
+                y[i] = yy;
+                }
+            ux = 0, uy = 0;
+            p = 1;
+            for (int i = 0; i < n; i++)
+                {
+                ux += (x[i] * p);
+                uy += (y[i] * p);
+                p *= (-a);
+                }
+            xx = x[n - 1] - (eta * ux);
+            yy = y[n - 1] - (eta * uy);
+            x[n - 1] = xx;
+            y[n - 1] = yy;
+            for (int i = n - 2; i >= 0; i--)
+                {
+                xx = x[i] - a * xx;
+                yy = y[i] - a * yy;
+                x[i] = xx;
+                y[i] = yy;
+                }
+
+            int i = 0; 
+            bool loadstart = true; 
+            bool begin = true; 
+            fVec2 P1, P2, PC; 
+            fillSmoothPolygon(
+                [&](tgx::fVec2& P)
+                    {
+                    while (1)
+                        {
+                        if (loadstart)
+                            { // we are at the beginning of a new Bezier segment, load P1, P2, PC
+                            if (i == 0)
+                                {
+                                P1 = { (x[n - 1] + x[0]) / 2, (y[n - 1] + y[0]) / 2 };
+                                P2 = { (x[0] + x[1]) / 2, (y[0] + y[1]) / 2 };
+                                PC = { x[0], y[0] };
+                                }
+                            else if (i < n - 1)
+                                {
+                                P1 = { (x[i - 1] + x[i]) / 2, (y[i - 1] + y[i]) / 2 };
+                                P2 = { (x[i] + x[i + 1]) / 2, (y[i] + y[i + 1]) / 2 };
+                                PC = { x[i], y[i] };
+                                }
+                            else
+                                { // last segment
+                                P1 = { (x[n - 2] + x[n - 1]) / 2, (y[n - 2] + y[n - 1]) / 2 };
+                                P2 = { (x[n - 1] + x[0]) / 2, (y[n - 1] + y[0]) / 2 };
+                                PC = { x[n - 1], y[n - 1] };
+                                }
+                            i++;
+                            loadstart = false;
+                            }
+                        if (begin)
+                            {
+                            begin = false;
+                            continue; // skip the first point P1 as this will be the last one !
+                            }
+                        // here, we are on curve P1, P2, PC and P1 has already been plotted.                     
+                        fVec2 Q, PB;
+                        float wb;
+                        if (_splitRationalQuadBezier(P1, P2, PC, 1.0f, Q, PB, wb))
+                            { // done with this curve. 
+                            P = P2;
+                            if (i == n)
+                                { // reset because we need to go over the list of points twice
+                                i = 0;
+                                loadstart = true;
+                                begin = true;
+                                cout << "last = " << P << "\n";
+                                return false;
+                                }
+                            loadstart = true;
+                            return true;
+                            }
+                        P = Q;
+                        P1 = Q;
+                        PC = PB;
+                        return true;
+                        }
+                    },
+                color, opacity);
+            }
+            }
+        }
+
+
+    template<typename color_t>
+    template<int SPLINE_MAX_POINTS>
+    void Image<color_t>::fillSmoothThickClosedSpline(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity)
+        {
+        if (!isValid()) return;
+        if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
+        switch (nbpoints)
+            {
+        case 0:
+        case 1:
+        case 2:         
+            return;
+
+        default:
+           {
+            float x[SPLINE_MAX_POINTS];
+            float y[SPLINE_MAX_POINTS];
+            for (int i = 0; i < nbpoints; i++)
+                {
+                x[i] = tabPoints[i].x;
+                y[i] = tabPoints[i].y;
+                }
+            const int n = nbpoints;
+            const float a = 0.1715728752538099f; // 3 - 2 * sqrt(2)
+            float ux = 0, uy = 0;
+            float p = 1;
+            for (int i = 1; i <= n; i++)
+                {
+                x[n - i] *= 8;
+                y[n - i] *= 8;
+                ux += (x[n - i] * p);
+                uy += (y[n - i] * p);
+                p *= (-a);
+                }
+            const float eta = a / (1 - p);
+            float xx, yy;
+            xx = a * (x[0] - (eta * ux));
+            yy = a * (y[0] - (eta * uy));
+            x[0] = xx;
+            y[0] = yy;
+            for (int i = 1; i < n; i++)
+                {
+                xx = a * (x[i] - xx);
+                yy = a * (y[i] - yy);
+                x[i] = xx;
+                y[i] = yy;
+                }
+            ux = 0, uy = 0;
+            p = 1;
+            for (int i = 0; i < n; i++)
+                {
+                ux += (x[i] * p);
+                uy += (y[i] * p);
+                p *= (-a);
+                }
+            xx = x[n - 1] - (eta * ux);
+            yy = y[n - 1] - (eta * uy);
+            x[n - 1] = xx;
+            y[n - 1] = yy;
+            for (int i = n - 2; i >= 0; i--)
+                {
+                xx = x[i] - a * xx;
+                yy = y[i] - a * yy;
+                x[i] = xx;
+                y[i] = yy;
+                }
+
+            int i = 0; 
+            bool loadstart = true; 
+            bool begin = true; 
+            fVec2 P1, P2, PC; 
+            fillSmoothThickPolygon(
+                [&](tgx::fVec2& P)
+                    {
+                    while (1)
+                        {
+                        if (loadstart)
+                            { // we are at the beginning of a new Bezier segment, load P1, P2, PC
+                            if (i == 0)
+                                {
+                                P1 = { (x[n - 1] + x[0]) / 2, (y[n - 1] + y[0]) / 2 };
+                                P2 = { (x[0] + x[1]) / 2, (y[0] + y[1]) / 2 };
+                                PC = { x[0], y[0] };
+                                }
+                            else if (i < n - 1)
+                                {
+                                P1 = { (x[i - 1] + x[i]) / 2, (y[i - 1] + y[i]) / 2 };
+                                P2 = { (x[i] + x[i + 1]) / 2, (y[i] + y[i + 1]) / 2 };
+                                PC = { x[i], y[i] };
+                                }
+                            else
+                                { // last segment
+                                P1 = { (x[n - 2] + x[n - 1]) / 2, (y[n - 2] + y[n - 1]) / 2 };
+                                P2 = { (x[n - 1] + x[0]) / 2, (y[n - 1] + y[0]) / 2 };
+                                PC = { x[n - 1], y[n - 1] };
+                                }
+                            i++;
+                            loadstart = false;
+                            }
+                        if (begin)
+                            {
+                            begin = false;
+                            continue; // skip the first point P1 as this will be the last one !
+                            }
+                        // here, we are on curve P1, P2, PC and P1 has already been plotted.                     
+                        fVec2 Q, PB;
+                        float wb;
+                        if (_splitRationalQuadBezier(P1, P2, PC, 1.0f, Q, PB, wb))
+                            { // done with this curve. 
+                            P = P2;
+                            if (i == n)
+                                { // reset because we need to go over the list of points twice
+                                i = 0;
+                                loadstart = true;
+                                begin = true;
+                                cout << "last = " << P << "\n";
+                                return false;
+                                }
+                            loadstart = true;
+                            return true;
+                            }
+                        P = Q;
+                        P1 = Q;
+                        PC = PB;
+                        return true;
+                        }
+                    },
+                thickness, color_interior, color_border, opacity);
+            }
+            }
+        }
 
 
 
+    
 
+
+    
+    
+    
 
 
 
