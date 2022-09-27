@@ -3127,7 +3127,14 @@ namespace tgx
     template<typename FUNCTOR_NEXT>
     void Image<color_t>::drawSmoothThickPolyline(FUNCTOR_NEXT next_point, float line_width, bool rounded_ends, color_t color, float opacity)
         {
-        if (!isValid()) return;
+        if (!isValid() || (line_width <= 0)) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        if (line_width <= 1)
+            {
+            opacity *= line_width;
+            drawSmoothPolyline(next_point, color, opacity);
+            return;
+            }
         fVec2 P1, P2; 
         if (!next_point(P1)) return;
         if (!next_point(P2))
@@ -3136,7 +3143,6 @@ namespace tgx
             return;
             }
         float thickness = line_width / 2; 
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         int op = (int)(opacity * 256);
         fVec2 H1 = (P2 - P1).getRotate90().getNormalize_fast() * thickness;
         fVec2 I1 = P1 + H1;
@@ -3457,10 +3463,16 @@ namespace tgx
     template<typename FUNCTOR_NEXT>
     void Image<color_t>::drawSmoothThickPolygon(FUNCTOR_NEXT next_point, float thickness, color_t color, float opacity)
         {
-        if (!isValid()) return;
+        if (!isValid() || (thickness <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        const int op = (int)(opacity * 256);
+        if (thickness <= 1)
+            {
+            opacity *= thickness;
+            drawSmoothPolygon(next_point, color, opacity);
+            return;
+            }
 
+        const int op = (int)(opacity * 256);
         fVec2 C(0, 0);
         fVec2 Q;
         int nb = 0;
@@ -5288,68 +5300,35 @@ namespace tgx
         }
 
 
-    template<typename color_t>
-    bool Image<color_t>::_iterRationalQuadBezier(fVec2 & P, fVec2& P1, fVec2& P2, fVec2& PC, float& wc, fVec2& sP1, fVec2& sPC, float& swc, bool& done)
-        {
-        if (done)
-            {
-            P = P2;
-            P1 = sP1;
-            PC = sPC;
-            wc = swc;
-            done = false;
-            return false;
-            }
-        P = P1;
-        tgx::fVec2 Q, PB;
-        float wb;
-        if (_splitRationalQuadBezier(P1, P2, PC, wc, Q, PB, wb))
-            {
-            done = true;
-            return true;
-            }
-        P1 = Q;
-        PC = PB;
-        wc = wb;
-        return true;
-        }
-
-
 
     template<typename color_t>
     void Image<color_t>::drawSmoothThickQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, bool rounded_ends, color_t color, float opacity)
         {
-        if (!isValid() || (thickness <0)) return;
+        if (!isValid() || (thickness <=0)) return;
         if (wc <= 0)
             {
             drawSmoothThickLine(P1, P2, thickness, rounded_ends, color, opacity);
+            return;
             }
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-
-        fVec2 sP1 = P1; 
-        fVec2 sPC = PC;
-        float swc = wc;
         bool done = false; 
-
-        if (thickness <= 1)
-            {
-            opacity *= thickness;
-            drawSmoothPolyline(
-                [&P1, &P2, &PC, &wc, &sP1, &sPC, &swc, &done](tgx::fVec2& P)
+        drawSmoothThickPolyline(            
+            [&P1, &P2, &PC, &wc, &done](tgx::fVec2& P)
+                {
+                if (done)
                     {
-                    return _iterRationalQuadBezier(P, P1, P2, PC, wc, sP1, sPC, swc, done);
-                    },
-            color, opacity);
-            }
-        else
-            {
-            drawSmoothThickPolyline(            
-                [&P1, &P2, &PC, &wc, &sP1, &sPC, &swc, &done](tgx::fVec2& P)
-                    {
-                    return _iterRationalQuadBezier(P, P1, P2, PC, wc, sP1, sPC, swc, done);
-                    },
-                thickness, rounded_ends, color, opacity);
-            }
+                    P = P2;
+                    return false;
+                    }
+                P = P1;
+                tgx::fVec2 Q, PB;
+                float wb;
+                done = _splitRationalQuadBezier(P1, P2, PC, wc, Q, PB, wb);
+                P1 = Q;
+                PC = PB;
+                wc = wb;
+                return true;
+                },
+            thickness, rounded_ends, color, opacity);
         }
 
 
@@ -5383,68 +5362,137 @@ namespace tgx
         }
 
 
-    template<typename color_t>
-    bool Image<color_t>::_iterCubicBezier(fVec2& P, fVec2& P1, fVec2& P2, fVec2& PC1, fVec2& PC2, fVec2& sP1, fVec2& sPC1, fVec2& sPC2, bool& done)
-        {
-        if (done)
-            {
-            P = P2;
-            P1 = sP1;
-            PC1 = sPC1;
-            PC2 = sPC2;
-            done = false;
-            return false;
-            }
-        P = P1;
-        tgx::fVec2 Q, C, D;
-        if (_splitCubicBezier(P1, P2, PC1, PC2, Q, C, D))
-            {
-            done = true;
-            return true;
-            }
-        P1 = Q;
-        PC1 = C;
-        PC2 = D;
-        return true;
-        }
-
-
 
     template<typename color_t>
     void Image<color_t>::drawSmoothThickCubicBezier(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, float thickness, bool rounded_ends, color_t color, float opacity)
         {
-        if (!isValid() || (thickness <0)) return;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-
-        fVec2 sP1 = P1; 
-        fVec2 sPC1 = PC1;
-        fVec2 sPC2 = PC2;
+        if (!isValid() || (thickness <=0)) return;
         bool done = false; 
-
-        if (thickness <= 1)
-            {
-            opacity *= thickness;
-            drawSmoothPolyline(
-                [&P1, &P2, &PC1, &PC2, &sP1, &sPC1, &sPC2, &done](tgx::fVec2& P)
+        drawSmoothThickPolyline(            
+            [&P1, &P2, &PC1, &PC2, &done](tgx::fVec2& P)
+                {
+                if (done)
                     {
-                    return _iterCubicBezier(P, P1, P2, PC1, PC2, sP1, sPC1, sPC2, done);
-                    },
-            color, opacity);
-            }
-        else
-            {
-            drawSmoothThickPolyline(            
-                [&P1, &P2, &PC1, &PC2, &sP1, &sPC1, &sPC2, &done](tgx::fVec2& P)
-                    {
-                    return _iterCubicBezier(P, P1, P2, PC1, PC2, sP1, sPC1, sPC2, done);
-                    },
-                thickness, rounded_ends, color, opacity);
-            }
+                    P = P2;
+                    return false;
+                    }
+                P = P1;
+                tgx::fVec2 Q, C, D;
+                done = _splitCubicBezier(P1, P2, PC1, PC2, Q, C, D);
+                P1 = Q;
+                PC1 = C;
+                PC2 = D;
+                return true;
+                },
+            thickness, rounded_ends, color, opacity);
         }
 
 
 
 
+
+    template<typename color_t>
+    template<int SPLINE_MAX_POINTS>
+    void Image<color_t>::drawSmoothThickQuadSpline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity)
+        {
+        if (!isValid() || (thickness <= 0)) return;
+        if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
+        switch (nbpoints)
+            {
+        case 0:
+            {
+            return;
+            }
+        case 1:
+            {
+            if (rounded_ends) fillSmoothCircle(tabPoints[0], thickness, color, opacity);
+            return;
+            }
+        case 2:
+            {
+            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, rounded_ends, color, opacity);
+            return;
+            }
+        default:
+            {
+            float x[SPLINE_MAX_POINTS];
+            float y[SPLINE_MAX_POINTS];
+            for (int i = 0; i < nbpoints; i++)
+                {
+                x[i] = tabPoints[i].x;
+                y[i] = tabPoints[i].y;
+                }
+            const int n = nbpoints - 1;
+            const int M_MAX = 6;
+            float mi = 1, m[M_MAX];
+            float x0, y0, x1, y1, x2 = x[n], y2 = y[n];
+            x[1] = x0 = 8 * x[1] - 2 * x[0];
+            y[1] = y0 = 8 * y[1] - 2 * y[0];
+            for (int i = 2; i < n; i++)
+                {
+                if (i - 2 < M_MAX) m[i - 2] = mi = 1.0f / (6.0f - mi);
+                x[i] = x0 = 8 * x[i] - x0 * mi;
+                y[i] = y0 = 8 * y[i] - y0 * mi;
+                }
+            x1 = (x0 - 2 * x2) / (5.0f - mi);
+            y1 = (y0 - 2 * y2) / (5.0f - mi);
+
+
+            int i = n - 2; 
+            bool loadstart = true; 
+            bool begin = true; 
+            fVec2 P1, P2, PC; 
+
+            drawSmoothThickPolyline(
+                [&](tgx::fVec2& P)
+                    {
+                    if (loadstart)
+                        { // we are at the beginning of a new Bezier segment, load P1, P2, PC
+                        if (i > 0)
+                            {
+                            if (i <= M_MAX) mi = m[i - 1];
+                            x0 = (x[i] - x1) * mi;
+                            y0 = (y[i] - y1) * mi;
+                            P2 = { (x0 + x1) / 2, (y0 + y1) / 2 };
+                            P1 = { x2, y2 };
+                            PC = { x1, y1 };
+                            x2 = (x0 + x1) / 2; x1 = x0;
+                            y2 = (y0 + y1) / 2; y1 = y0;
+                            }
+                        else
+                            { // last segment
+                            P2 = { x[0], y[0] };
+                            P1 = { x2, y2 };
+                            PC = { x1, y1 };
+                            }                         
+                        i--; 
+                        loadstart = false; 
+                        }
+                    if (begin)
+                        {
+                        begin = false; 
+                        P = P1; 
+                        return true; 
+                        }
+                    // here, we are on curve P1, P2, PC and P1 has already been plotted.                     
+                    fVec2 Q, PB;
+                    float wb;
+                    if (_splitRationalQuadBezier(P1, P2, PC, 1.0f, Q, PB, wb))
+                        { // done with this curve. 
+                        P = P2; 
+                        if (i == -1) return false; 
+                        loadstart = true;
+                        return true;
+                        }
+                    P = Q; 
+                    P1 = Q;
+                    PC = PB;
+                    return true;
+                    },
+                thickness, rounded_ends, color, opacity);
+            }
+            }
+        }
 
 
 

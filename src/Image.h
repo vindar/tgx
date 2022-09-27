@@ -3537,13 +3537,9 @@ private:
 
 
         static bool _splitRationalQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float w, fVec2& Q, fVec2& PB, float& wb);
-
-        static bool _iterRationalQuadBezier(fVec2& P, fVec2& P1, fVec2& P2, fVec2& PC, float& wc, fVec2& sP1, fVec2& sPC, float& swc, bool& done);
-
   
         static bool _splitCubicBezier(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, fVec2& Q, fVec2& C, fVec2 & D);
 
-        static bool _iterCubicBezier(fVec2& P, fVec2& P1, fVec2& P2, fVec2& PC1, fVec2& PC2, fVec2& sP1, fVec2& sPC1, fVec2& sPC2, bool& done);
 
 
 
