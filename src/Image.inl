@@ -2665,9 +2665,9 @@ namespace tgx
         BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
         BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
         _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangle 
-        _bseg_draw(seg12, false, false, color, w, op, true);
+        _bseg_avoid1(seg12, seg13, true, false, true, color, w, op, true);
         _bseg_avoid1(seg23, seg21, true, false, true, color, w, op, true);
-        _bseg_avoid11(seg31, seg32, seg12, true, true, true, true, color, w, op, true);
+        _bseg_avoid1(seg31, seg32, true, false, true, color, w, op, true);
         }
 
 
@@ -2968,10 +2968,10 @@ namespace tgx
         BSeg seg41(P4, P1); BSeg seg14 = seg41.get_reverse();
         _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangles 
         _bseg_fill_triangle_precomputed(P1, P3, P4, seg13, seg31, seg34, seg43, seg41, seg14, color, opacity);	// fill the triangles 
-        _bseg_draw(seg12, false, false, color, 0, op, true);
-        _bseg_draw(seg34, false, false, color, 0, op, true);
-        _bseg_avoid11(seg41, seg43, seg12, true, true, true, true, color, 0, op, true);
-        _bseg_avoid11(seg23, seg21, seg34, true, true, true, true, color, 0, op, true);
+        _bseg_avoid1(seg12, seg14, true, false, true, color, 0, op, true);
+        _bseg_avoid1(seg23, seg21, true, false, true, color, 0, op, true);
+        _bseg_avoid1(seg34, seg32, true, false, true, color, 0, op, true);
+        _bseg_avoid1(seg41, seg43, true, false, true, color, 0, op, true);
         _bseg_avoid22(seg13, seg12, seg14, seg32, seg34, true, true, true, true, color, 0, op, true);
         }
 
@@ -3027,10 +3027,10 @@ namespace tgx
         BSeg seg41(P4, P1); BSeg seg14 = seg41.get_reverse();
         _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangles 
         _bseg_fill_triangle_precomputed(P1, P3, P4, seg13, seg31, seg34, seg43, seg41, seg14, color, opacity);	// fill the triangles 
-        _bseg_draw(seg12, false, false, color, w, op, true);
-        _bseg_draw(seg34, false, false, color, w, op, true);
-        _bseg_avoid11(seg41, seg43, seg12, true, true, true, true, color, w, op, true);
-        _bseg_avoid11(seg23, seg21, seg34, true, true, true, true, color, w, op, true);
+        _bseg_avoid1(seg12, seg14, true, false, true, color, w, op, true);
+        _bseg_avoid1(seg23, seg21, true, false, true, color, w, op, true);
+        _bseg_avoid1(seg34, seg32, true, false, true, color, w, op, true);
+        _bseg_avoid1(seg41, seg43, true, false, true, color, w, op, true);
         _bseg_avoid22(seg13, seg12, seg14, seg32, seg34, true, true, true, true, color, 0, op, true);
         }
 
@@ -3195,7 +3195,7 @@ namespace tgx
 
     template<typename color_t>
     template<typename FUNCTOR_NEXT>
-    void Image<color_t>::drawSmoothThickPolyline(FUNCTOR_NEXT next_point, float line_width, bool rounded_ends, color_t color, float opacity)
+    void Image<color_t>::drawSmoothThickPolyline(FUNCTOR_NEXT next_point, float line_width, bool rounded_end_P0, bool rounded_end_Pn, color_t color, float opacity)
         {
         if (!isValid() || (line_width <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -3209,7 +3209,7 @@ namespace tgx
         if (!next_point(P1)) return;
         if (!next_point(P2))
             {
-            drawSmoothThickLine(P1, P2, line_width, rounded_ends, rounded_ends, color, opacity);
+            drawSmoothThickLine(P1, P2, line_width, rounded_end_P0, rounded_end_Pn, color, opacity);
             return;
             }
         float thickness = line_width / 2; 
@@ -3248,7 +3248,7 @@ namespace tgx
             const int side = 1;
             if (first)
                 { // draw first end
-                if (rounded_ends)
+                if (rounded_end_P0)
                     {
                     _bseg_avoid11(I0J0, I0I1, J0J1, false, false, true, true, color, 0, op, true);
                     _fillSmoothCircleInterHP((I0 + J0) * 0.5f, thickness, color, opacity, I0J0, -1);
@@ -3263,7 +3263,7 @@ namespace tgx
                 _bseg_draw(J1J0,  true, false, color, -side, op, true);
                 _bseg_draw(I1I0,  true, false, color, side, op, true);
                 _bseg_avoid22(I0J1, I0J0, I0I1, J1J0, J1I1, true, true, true, true, color, 0, op, true);
-                if (rounded_ends)
+                if (rounded_end_Pn)
                     {
                     _bseg_avoid11(J1I1, J1J0, I1I0, false, false, true, true, color, 0, op, true);
                     _fillSmoothCircleInterHP((I1 + J1) * 0.5f, thickness, color, opacity, J1I1, -1);
@@ -3276,8 +3276,8 @@ namespace tgx
                 }
             tgx::BSeg J1J2(J1, J1 + (P2 - P1));
             tgx::BSeg I1I2(I1, I1 + (P2 - P1));
-            _bseg_avoid1(J1J0, J1J2, true, ((rounded_ends) && (first)), true, color, -side, op, true);
-            _bseg_avoid1(I1I0, I1I2, true, ((rounded_ends) && (first)), true, color, side, op, true);
+            _bseg_avoid1(J1J0, J1J2, true, ((rounded_end_P0) && (first)), true, color, -side, op, true);
+            _bseg_avoid1(I1I0, I1I2, true, ((rounded_end_P0) && (first)), true, color, side, op, true);
             _bseg_avoid22(I0J1, I0J0, I0I1, J1J0, J1I1, true, true, true, true, color, 0, op, true);
             _bseg_avoid22(J1I1, J1J0, J1J2, I1I0, I1I2, true, true, true, true, color, 0, op, true);
             if (!hasmore) last = true; 
@@ -3289,7 +3289,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float line_width, bool rounded_ends, color_t color, float opacity)
+    void Image<color_t>::drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float line_width, bool rounded_end_P0, bool rounded_end_Pn, color_t color, float opacity)
         {
         if ((nbpoints < 2) || (!isValid())) return;
         int k = 0;
@@ -3300,7 +3300,7 @@ namespace tgx
                 P = tabPoints[k++];
                 return (k < nbpoints);
                 },
-            line_width, rounded_ends, color, opacity);
+            line_width, rounded_end_P0, rounded_end_Pn, color, opacity);
         }
 
 
@@ -5372,12 +5372,12 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, bool rounded_ends, color_t color, float opacity)
+    void Image<color_t>::drawSmoothThickQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, bool rounded_end_P1, bool rounded_end_P2, color_t color, float opacity)
         {
         if (!isValid() || (thickness <=0)) return;
         if (wc <= 0)
             {
-            drawSmoothThickLine(P1, P2, thickness,rounded_ends, rounded_ends, color, opacity);
+            drawSmoothThickLine(P1, P2, thickness, rounded_end_P1, rounded_end_P2, color, opacity);
             return;
             }
         bool done = false; 
@@ -5398,7 +5398,7 @@ namespace tgx
                 wc = wb;
                 return true;
                 },
-            thickness, rounded_ends, color, opacity);
+            thickness, rounded_end_P1, rounded_end_P2, color, opacity);
         }
 
 
@@ -5434,7 +5434,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickCubicBezier(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, float thickness, bool rounded_ends, color_t color, float opacity)
+    void Image<color_t>::drawSmoothThickCubicBezier(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, float thickness, bool rounded_end_P1, bool rounded_end_P2, color_t color, float opacity)
         {
         if (!isValid() || (thickness <=0)) return;
         bool done = false; 
@@ -5454,7 +5454,7 @@ namespace tgx
                 PC2 = D;
                 return true;
                 },
-            thickness, rounded_ends, color, opacity);
+            thickness, rounded_end_P1, rounded_end_P2, color, opacity);
         }
 
 
@@ -5463,7 +5463,7 @@ namespace tgx
 
     template<typename color_t>
     template<int SPLINE_MAX_POINTS>
-    void Image<color_t>::drawSmoothThickQuadSpline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_ends, color_t color, float opacity)
+    void Image<color_t>::drawSmoothThickQuadSpline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_end_P1, bool rounded_end_P2, color_t color, float opacity)
         {
         if (!isValid() || (thickness <= 0)) return;
         if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
@@ -5475,12 +5475,12 @@ namespace tgx
             }
         case 1:
             {
-            if (rounded_ends) fillSmoothCircle(tabPoints[0], thickness, color, opacity);
+            if (rounded_end_P1) fillSmoothCircle(tabPoints[0], thickness, color, opacity);
             return;
             }
         case 2:
             {
-            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, rounded_ends, color, opacity);
+            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, rounded_end_P1, rounded_end_P2, color, opacity);
             return;
             }
         default:
@@ -5506,7 +5506,6 @@ namespace tgx
                 }
             x1 = (x0 - 2 * x2) / (5.0f - mi);
             y1 = (y0 - 2 * y2) / (5.0f - mi);
-
 
             int i = n - 2; 
             bool loadstart = true; 
@@ -5559,7 +5558,7 @@ namespace tgx
                     PC = PB;
                     return true;
                     },
-                thickness, rounded_ends, color, opacity);
+                thickness, rounded_end_P2, rounded_end_P1, color, opacity);
             }
             }
         }
