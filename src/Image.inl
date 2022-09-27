@@ -1836,7 +1836,6 @@ namespace tgx
 
 
 
-
     template<typename color_t>
     void Image<color_t>::drawSmoothLine(fVec2 P1, fVec2 P2, color_t color, float opacity)
         {
@@ -1847,28 +1846,99 @@ namespace tgx
         }
 
 
-
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickLine(fVec2 P1, fVec2 P2, float line_width, bool rounded_ends, color_t color, float opacity)
-        {    
-        drawSmoothWedgeLine(P1, P2, line_width, line_width, rounded_ends, color, opacity);
+    void Image<color_t>::drawSmoothThickLine(fVec2 P1, fVec2 P2, float line_width, bool rounded_ends_P1, bool rounded_ends_P2, color_t color, float opacity)
+        {  
+        if (line_width < 0) return;
+        if (line_width <= 1)
+            {
+            if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+            opacity *= line_width;
+            drawSmoothLine(P1, P2, color, opacity);
+            return; 
+            }
+        drawSmoothWedgeLine(P1, P2, line_width, rounded_ends_P1, line_width, rounded_ends_P1, color, opacity);
         }
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, float line_width_P2, bool rounded_ends, color_t color, float opacity)    
+    void Image<color_t>::drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, bool rounded_end_P1, float line_width_P2, bool rounded_end_P2, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        if (rounded_ends)
+        if (line_width_P2 < line_width_P1)
+            {
+            tgx::swap(P1, P2); 
+            tgx::swap(line_width_P1, line_width_P2);
+            tgx::swap(rounded_end_P1, rounded_end_P2);
+            }
+        if (line_width_P2 <= 0) return; 
+        if (line_width_P1 <= 1) rounded_end_P1 = true;
+        if (line_width_P2 <= 1) rounded_end_P2 = true;
+        if ((rounded_end_P1) && (rounded_end_P2))
+            { // use bodmer tft_espi implementation. 
             _drawWedgeLine(P1.x, P1.y, P2.x, P2.y, line_width_P1, line_width_P2, color, opacity);
+            return;
+            }
+        const int op = (int)(opacity * 256);
+        if (line_width_P1 <= 1)
+            { // draw triangle: here line_width_P1 <= 1 , line_width_P2 > 1 and rounded_end_P2 = true. 
+            line_width_P2 /= 2;
+            const fVec2 H = (P1 - P2).getRotate90().getNormalize() * line_width_P2;
+            const fVec2 PA = P2 + H, PB = P2 - H;
+            const int w = -1; 
+            BSeg seg1A(P1, PA); BSeg segA1 = seg1A.get_reverse();
+            BSeg seg1B(P1, PB); BSeg segB1 = seg1B.get_reverse();
+            BSeg segAB(PA, PB); BSeg segBA = segAB.get_reverse();
+            _bseg_fill_triangle_precomputed(P1, PA, PB, seg1A, segA1, segAB, segBA, segB1, seg1B, color, opacity);
+            _bseg_avoid1(seg1B, seg1A, true, false, true, color, w, op, true);
+            _bseg_avoid1(segBA, segB1, true, false, true, color, w, op, true);
+            _bseg_avoid1(segA1, segAB, true, false, true, color, w, op, true);
+            return;
+            }        
+        // here line_width_P1 > 1  and line_width_P2 > 1
+        // not both rounded ends
+        line_width_P1 /= 2; 
+        line_width_P2 /= 2;
+        const fVec2 H = (P1 - P2).getRotate90().getNormalize();
+        const fVec2 H1 = H * line_width_P1;
+        const fVec2 H2 = H * line_width_P2;
+        const fVec2 PA = P1 + H1, PB = P2 + H2, PC = P2 - H2, PD = P1 - H1;
+        const int w = 1; 
+
+        BSeg segAB(PA, PB); BSeg segBA = segAB.get_reverse();
+        BSeg segAC(PA, PC); BSeg segCA = segAC.get_reverse();
+        BSeg segBC(PB, PC); BSeg segCB = segBC.get_reverse();
+        BSeg segCD(PC, PD); BSeg segDC = segCD.get_reverse();
+        BSeg segDA(PD, PA); BSeg segAD = segDA.get_reverse();
+
+        _bseg_fill_triangle_precomputed(PA, PB, PC, segAB, segBA, segBC, segCB, segCA, segAC, color, opacity);
+        _bseg_fill_triangle_precomputed(PA, PC, PD, segAC, segCA, segCD, segDC, segDA, segAD, color, opacity);
+        _bseg_avoid22(segAC, segAB, segAD, segCB, segCD, true, true, true, true, color, 0, op, true);
+        
+        if ((!rounded_end_P1) && (!rounded_end_P2))
+            {
+            _bseg_avoid1(segAB, segAD, true, false, true, color, w, op, true);
+            _bseg_avoid1(segBC, segBA, true, false, true, color, w, op, true);
+            _bseg_avoid1(segCD, segCB, true, false, true, color, w, op, true);
+            _bseg_avoid1(segDA, segDC, true, false, true, color, w, op, true);
+            return;
+            }
+        if (rounded_end_P1)
+            {
+            _bseg_draw(segAB, true, false, color, w, op, true);
+            _bseg_avoid1(segBC, segBA, true, false, true, color, w, op, true);
+            _bseg_avoid1(segCD, segCB, true, true, true, color, w, op, true);
+            _bseg_avoid11(segDA, segDC, segAB, false, false, true, true, color, 0, op, true);
+            _fillSmoothCircleInterHP(P1, line_width_P1, color, opacity, segAD, w);            
+            }
         else
-            { 
-            const fVec2 H = (P1 - P2).getRotate90().getNormalize();
-            const fVec2 H1 = H * (line_width_P1 / 2);
-            const fVec2 H2 = H * (line_width_P2 / 2);
-            const fVec2 PA = P1 + H1, PB = P2 + H2, PC = P2 - H2, PD = P1 - H1;
-            _fillSmoothQuad(PA, PB, PC, PD, color, opacity);
+            {
+            _bseg_draw(segCD, true, false, color, w, op, true);
+            _bseg_avoid1(segDA, segDC, true, false, true, color, w, op, true);
+            _bseg_avoid1(segAB, segAD, true, true, true, color, w, op, true);
+            _bseg_avoid11(segBC, segBA, segCD, false, false, true, true, color, 0, op, true);
+            _fillSmoothCircleInterHP(P2, line_width_P2, color, opacity, segCB, w);
             }
         }
 
@@ -3139,7 +3209,7 @@ namespace tgx
         if (!next_point(P1)) return;
         if (!next_point(P2))
             {
-            drawSmoothThickLine(P1, P2, line_width, rounded_ends, color, opacity);
+            drawSmoothThickLine(P1, P2, line_width, rounded_ends, rounded_ends, color, opacity);
             return;
             }
         float thickness = line_width / 2; 
@@ -5307,7 +5377,7 @@ namespace tgx
         if (!isValid() || (thickness <=0)) return;
         if (wc <= 0)
             {
-            drawSmoothThickLine(P1, P2, thickness, rounded_ends, color, opacity);
+            drawSmoothThickLine(P1, P2, thickness,rounded_ends, rounded_ends, color, opacity);
             return;
             }
         bool done = false; 

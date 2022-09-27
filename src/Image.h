@@ -1062,29 +1062,28 @@ namespace tgx
          * @param   P1              The first point.
          * @param   P2              The second point.
          * @param   line_width      Width of the line.
-         * @param   rounded_ends    true to draw rounded ends on the line extremities
+         * @param   rounded_ends_P1 true to draw a rounded end at P1 and false for a staight end.
+         * @param   rounded_ends_P2 true to draw a rounded end at P2 and false for a staight end.
          * @param   color           color to use.
-         * @param   opacity opacity multiplier between 0.0f and 1.0f (default).
+         * @param   opacity         (Optional) opacity multiplier between 0.0f and 1.0f (default).
         **/
-        void drawSmoothThickLine(fVec2 P1, fVec2 P2, float line_width, bool rounded_ends, color_t color, float opacity = 1.0f);
+        void drawSmoothThickLine(fVec2 P1, fVec2 P2, float line_width, bool rounded_ends_P1, bool rounded_ends_P2, color_t color, float opacity = 1.0f);
 
 
         /**
          * Draw a smooth (i.e. antialiased with sub-pixel precision) wedge line from P1 to P2 with
-         * rounded ends and with respective wideness line_width_P1 and line_width_P2 at both ends.
-         * 
-         * CREDIT: code for wedge with rounded edges is adapted Bodmer TFT_eSPI library:
-         * https://github.com/Bodmer/TFT_eSPI
+         * with respective wideness line_width_P1 and line_width_P2 at both ends.
          *
          * @param   P1              first end point.
          * @param   P2              second end point.
          * @param   line_width_P1   width of the wedge at P1.
-         * @param   line_width_P2   width of the wedge at P2
-         * @param   rounded_ends    true to draw rounded ends on the extremities
+         * @param   rounded_end_P1  true to draw a rounded end at P1 and false for a staight end.
+         * @param   line_width_P2   width of the wedge at P2.
+         * @param   rounded_end_P2  true to draw a rounded end at P2 and false for a staight end.
          * @param   color           color to use.
-         * @param   opacity opacity multiplier between 0.0f and 1.0f (default).
+         * @param   opacity         (Optional) opacity multiplier between 0.0f and 1.0f (default).
         **/
-        void drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, float line_width_P2, bool rounded_ends, color_t color, float opacity = 1.0f);
+        void drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, bool rounded_end_P1, float line_width_P2, bool rounded_end_P2, color_t color, float opacity = 1.0f);
 
 
 
