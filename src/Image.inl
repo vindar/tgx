@@ -5463,7 +5463,7 @@ namespace tgx
 
     template<typename color_t>
     template<int SPLINE_MAX_POINTS>
-    void Image<color_t>::drawSmoothThickQuadSpline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_end_P1, bool rounded_end_P2, color_t color, float opacity)
+    void Image<color_t>::drawSmoothThickQuadSpline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_end_P0, bool rounded_end_Pn, color_t color, float opacity)
         {
         if (!isValid() || (thickness <= 0)) return;
         if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
@@ -5475,12 +5475,12 @@ namespace tgx
             }
         case 1:
             {
-            if (rounded_end_P1) fillSmoothCircle(tabPoints[0], thickness, color, opacity);
+            if (rounded_end_P0) fillSmoothCircle(tabPoints[0], thickness, color, opacity);
             return;
             }
         case 2:
             {
-            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, rounded_end_P1, rounded_end_P2, color, opacity);
+            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, rounded_end_P0, rounded_end_Pn, color, opacity);
             return;
             }
         default:
@@ -5558,10 +5558,157 @@ namespace tgx
                     PC = PB;
                     return true;
                     },
-                thickness, rounded_end_P2, rounded_end_P1, color, opacity);
+                thickness, rounded_end_Pn, rounded_end_P0, color, opacity);
             }
             }
         }
+
+
+
+
+
+    template<typename color_t>
+    template<int SPLINE_MAX_POINTS>
+    void Image<color_t>::drawSmoothThickCubicSpline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_end_P0, bool rounded_end_Pn, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
+        switch (nbpoints)
+            {
+        case 0:
+            {
+            return;
+            }
+        case 1:
+            {
+            if (rounded_end_P0) fillSmoothCircle(tabPoints[0], thickness, color, opacity);
+            return;
+            }
+        case 2:
+            {
+            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, rounded_end_P0, rounded_end_Pn, color, opacity);
+            return;
+            }
+        case 3:
+            {
+            drawSmoothThickQuadSpline<SPLINE_MAX_POINTS>(nbpoints, tabPoints, thickness, rounded_end_P0, rounded_end_Pn, color, opacity);
+            return;
+            }
+        default:
+            {
+            float x[SPLINE_MAX_POINTS];
+            float y[SPLINE_MAX_POINTS];
+            for (int k = 0; k < nbpoints; k++)
+                {
+                x[k] = tabPoints[k].x;
+                y[k] = tabPoints[k].y;
+                }
+            const int n = nbpoints - 1;
+
+            const int M_MAX = 6;
+            float mi = 0.25f, m[M_MAX];
+            float x3 = x[n - 1], y3 = y[n - 1], x4 = x[n], y4 = y[n];
+            float x0, y0, x1, y1, x2, y2;
+            x[1] = x0 = 12 * x[1] - 3 * x[0];
+            y[1] = y0 = 12 * y[1] - 3 * y[0];
+            for (int i = 2; i < n; i++)
+                {
+                if (i - 2 < M_MAX) m[i - 2] = mi = 0.25f / (2.0f - mi);
+                x[i] = x0 = 12 * x[i] - 2 * x0 * mi;
+                y[i] = y0 = 12 * y[i] - 2 * y0 * mi;
+                }
+            x2 = (x0 - 3 * x4) / (7 - 4 * mi);
+            y2 = (y0 - 3 * y4) / (7 - 4 * mi);
+
+            int i = n - 2;
+            bool loadstart = true;
+            bool begin = true;
+            fVec2 P1, P2, PC1, PC2;
+
+            drawSmoothThickPolyline(
+                [&](tgx::fVec2& P)
+                    {
+                    if (loadstart)
+                        { // we are at the beginning of a new Bezier segment, load P1, P2, PC1, PC2
+                        if (i == n - 2)
+                            {
+                            P2 = { x3, y3 };
+                            P1 = { x4, y4 };
+                            PC2 = { (x2 + x4) / 2, (y2 + y4) / 2 };
+                            PC1 = { x4, y4 };
+                            if (n - 3 < M_MAX) mi = m[n - 3];
+                            x1 = (x[n - 2] - 2 * x2) * mi;
+                            y1 = (y[n - 2] - 2 * y2) * mi;
+                            }
+                        else if (i > 0)
+                            {
+                            if (i <= M_MAX) mi = m[i - 1];
+                            x0 = (x[i] - 2 * x1) * mi;
+                            y0 = (y[i] - 2 * y1) * mi;
+                            x4 = (x0 + 4 * x1 + x2 + 3) / 6.0f;
+                            y4 = (y0 + 4 * y1 + y2 + 3) / 6.0f;
+                            P2 = { x4, y4 };
+                            P1 = { x3, y3 };
+                            PC2 = { (2 * x1 + x2) / 3 , (2 * y1 + y2) / 3 };
+                            PC1 = { (x1 + 2 * x2) / 3 , (y1 + 2 * y2) / 3 };
+                            x3 = x4; y3 = y4; x2 = x1; y2 = y1; x1 = x0; y1 = y0;
+                            }
+                        else if (i == 0)
+                            {              
+                            x0 = x[0]; x4 = (3 * x0 + 7 * x1 + 2 * x2 + 6) / 12.0f;
+                            y0 = y[0]; y4 = (3 * y0 + 7 * y1 + 2 * y2 + 6) / 12.0f;
+                            P2 = { x4, y4 };
+                            P1 = { x3, y3 };
+                            PC2 = { (2 * x1 + x2) / 3 , (2 * y1 + y2) / 3 };
+                            PC1 = { (x1 + 2 * x2) / 3 , (y1 + 2 * y2) / 3 };
+                            }
+                        else
+                            {
+                            P2 = { x0, y0 };
+                            P1 = { x4, y4 };
+                            PC2 = { x0, y0 };
+                            PC1 = { (x0 + x1) / 2, (y0 + y1) / 2 };
+                            }
+                        i--;
+                        loadstart = false;
+                        }
+                    if (begin)
+                        {
+                        begin = false;
+                        P = P1;
+                        return true;
+                        }
+                    // here, we are on curve P1, P2, PC1 and PC2 has already been plotted.                     
+                    fVec2 Q, C, D;
+                    if (_splitCubicBezier(P1, P2, PC1, PC2, Q, C, D))
+                        { // done with this curve. 
+                        P = P2;                   
+                        if (i == -2) return false;
+                        loadstart = true;
+                        return true;
+                        }
+                    P = Q;
+                    P1 = Q;
+                    PC1 = C;
+                    PC2 = D;
+                    return true;
+                    },
+                thickness, rounded_end_Pn, rounded_end_P0, color, opacity);
+
+            }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
