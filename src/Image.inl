@@ -6132,6 +6132,10 @@ namespace tgx
     *************************************************************************************/
 
 
+
+
+
+
     template<typename color_t>
     uint32_t Image<color_t>::_fetchbits_unsigned(const uint8_t* p, uint32_t index, uint32_t required)
         {
@@ -6201,92 +6205,61 @@ namespace tgx
         }
 
 
+
+
+
     template<typename color_t>
-    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const GFXfont& font, int * xadvance)
+    int Image<color_t>::fontHeight(const GFXfont& font)
         {
+        return font.yAdvance;
+        }
+
+
+
+    template<typename color_t>
+    int Image<color_t>::fontHeight(const ILI9341_t3_font_t& font)
+        {
+        return font.line_space;
+        }
+
+    template<typename color_t>
+    iVec2 Image<color_t>::_anchorPos(const iBox2& B, ANCHOR_LOCATION anchor)
+        {
+        iVec2 pos; 
+        if (anchor & LEFT) pos.x = B.minX; else if (anchor & RIGHT) pos.x = B.maxX; else pos.x = (B.minX + B.maxX) / 2; 
+        if (anchor & TOP) pos.y = B.minY; else if (anchor & BOTTOM) pos.y = B.maxY; else pos.y = (B.minY + B.maxY) / 2;
+        return pos; 
+        }
+
+
+
+    template<typename color_t>
+    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const GFXfont& font, ANCHOR_LOCATION anchor, int* xadvance)
+        {
+        const iVec2 startp = pos;
         uint8_t n = (uint8_t)c;
-        if ((n < font.first) || (n > font.last)) return iBox2(pos.x,pos.x,pos.y,pos.y); // nothing to draw. 
+        if ((n < font.first) || (n > font.last)) return iBox2(pos.x, pos.x, pos.y, pos.y); // nothing to draw. 
         auto& g = font.glyph[n - font.first];
         int x = pos.x + g.xOffset;
         int y = pos.y + g.yOffset;
         int sx = g.width;
         int sy = g.height;
         if (xadvance) *xadvance = g.xAdvance;
-        return iBox2(x, x + sx - 1, y, y + sy - 1);
-        }
-
-
-    template<typename color_t>
-    template<bool BLEND> iVec2 Image<color_t>::_drawCharGFX(char c, iVec2 pos, color_t col, const GFXfont& font, float opacity)
-        {
-        uint8_t n = (uint8_t)c;
-        if ((n < font.first) || (n > font.last)) return pos; // nothing to draw. 
-        auto& g = font.glyph[n - font.first];
-        if ((!isValid()) || (font.bitmap == nullptr)) return pos;
-        int x = pos.x + g.xOffset;
-        int y = pos.y + g.yOffset;
-        int sx = g.width;
-        int sy = g.height;
-        const int rsx = sx; // save the real bitmap width; 
-        int b_left, b_up;
-        if (!_clipit(x, y, sx, sy, b_left, b_up)) return iVec2(pos.x + g.xAdvance, pos.y);
-        _drawCharBitmap_1BPP<BLEND>(font.bitmap + g.bitmapOffset, rsx, b_up, b_left, sx, sy, x, y, col, opacity);
-        return iVec2(pos.x + g.xAdvance, pos.y);
-        }
-
-
-    template<typename color_t>
-    iBox2 Image<color_t>::measureText(const char* text, iVec2 pos, const GFXfont& font, bool start_newline_at_0)
-        {
-        const int startx = start_newline_at_0 ? 0 : pos.x;
-        iBox2 B;
-        B.empty();
-        const size_t l = strlen(text);
-        for (size_t i = 0; i < l; i++)
+        iBox2 & B = iBox2(x, x + sx - 1, y, y + sy - 1);        
+        if (anchor != DEFAULT_TEXT_ANCHOR)
             {
-            const char c = text[i];
-            if (c == '\n')
-                {
-                pos.x = startx;
-                pos.y += font.yAdvance;
-                }
-            else
-                {
-                int xa = 0;
-                B |= measureChar(c, pos, font, &xa);
-                pos.x += xa;
-                }
+            iVec2 pos2 = _anchorPos(B, anchor);
+            if (anchor & BASELINE) pos2.x = startp.x;
+            B += (startp - pos2);
             }
         return B; 
         }
 
 
     template<typename color_t>
-    template<bool BLEND>
-    iVec2 Image<color_t>::_drawTextGFX(const char* text, iVec2 pos, color_t col, const GFXfont& font, bool start_newline_at_0, float opacity)
+    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const ILI9341_t3_font_t & font, ANCHOR_LOCATION anchor, int* xadvance)
         {
-        const int startx = start_newline_at_0 ? 0 : pos.x;
-        const size_t l = strlen(text);
-        for (size_t i = 0; i < l; i++)
-            {
-            const char c = text[i];
-            if (c == '\n')
-                {
-                pos.x = startx;
-                pos.y += font.yAdvance;
-                }
-            else
-                {
-                pos = _drawCharGFX<BLEND>(c, pos, col, font, opacity);
-                }
-            }
-        return pos;
-        }
-
-
-    template<typename color_t>
-    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, int* xadvance)
-        {
+        const iVec2 startp = pos;
         uint8_t n = (uint8_t)c;
         if ((n >= font.index1_first) && (n <= font.index1_last))
             {
@@ -6319,7 +6292,181 @@ namespace tgx
             }
         const int x = pos.x + xoffset;
         const int y = pos.y - sy - yoffset;
-        return iBox2(x, x + sx - 1, y, y + sy - 1);
+        iBox2 B(x, x + sx - 1, y, y + sy - 1);
+        if (anchor != DEFAULT_TEXT_ANCHOR)
+            {
+            iVec2 pos2 = _anchorPos(B, anchor);
+            if (anchor & BASELINE) pos2.x = startp.x;
+            B += (startp - pos2);
+            }
+        return B;
+        }
+
+
+    template<typename color_t>
+    iBox2 Image<color_t>::measureText(const char * text, iVec2 pos, const GFXfont& font, ANCHOR_LOCATION anchor, bool wrap_text, bool start_newline_at_0)
+        {
+        const iVec2 startp = pos;
+        const int startx = start_newline_at_0 ? 0 : pos.x;
+        const int hh = fontHeight(font);
+        iBox2 B;
+        B.empty();
+        const size_t l = strlen(text);
+        for (size_t i = 0; i < l; i++)
+            {
+            const char c = text[i];
+            if (c == '\n')
+                {
+                pos.x = startx;
+                pos.y += hh;
+                }
+            else
+                {
+                int xa = 0;
+                auto U = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
+                if (pos.x + xa >= _lx)
+                    {
+                    auto pos2 = pos; 
+                    pos.x = startx;
+                    pos.y += hh;
+                    U += (pos - pos2);
+                    }
+                B |= U;
+                pos.x += xa;
+                }
+            }
+        if (anchor != DEFAULT_TEXT_ANCHOR)
+            {
+            iVec2 pos2 = _anchorPos(B, anchor);
+            if (anchor & BASELINE) pos2.x = startp.x;
+            B += (startp - pos2);
+            }
+        return B;
+        }
+
+
+    template<typename color_t>
+    iBox2 Image<color_t>::measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, ANCHOR_LOCATION anchor, bool wrap_text, bool start_newline_at_0)
+        {
+        const iVec2 startp = pos;
+        const int startx = start_newline_at_0 ? 0 : pos.x;
+        const int hh = fontHeight(font);
+        iBox2 B;
+        B.empty();
+        const size_t l = strlen(text);
+        for (size_t i = 0; i < l; i++)
+            {
+            const char c = text[i];
+            if (c == '\n')
+                {
+                pos.x = startx;
+                pos.y += hh;
+                }
+            else
+                {
+                int xa = 0;
+                auto U = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
+                if (pos.x + xa >= _lx)
+                    {
+                    auto pos2 = pos; 
+                    pos.x = startx;
+                    pos.y += hh;
+                    U += (pos - pos2);
+                    }
+                B |= U;
+                pos.x += xa;
+                }
+            }
+        if (anchor != DEFAULT_TEXT_ANCHOR)
+            {
+            iVec2 pos2 = _anchorPos(B, anchor);
+            if (anchor & BASELINE) pos2.y = startp.y;
+            B += (startp - pos2);
+            }
+        return B;
+        }
+
+
+
+    template<typename color_t>    
+    iVec2 Image<color_t>::drawChar(char c, iVec2 pos, const GFXfont& font, color_t color, float opacity, ANCHOR_LOCATION anchor)
+        {
+        if (!isValid()) return pos; 
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        if (anchor != DEFAULT_TEXT_ANCHOR)
+            {
+            auto B = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR);
+            iVec2 pos2 = _anchorPos(B, anchor);
+            pos += pos - pos2;
+            }
+        return _drawCharGFX<true>(c, pos, color, font, opacity);
+        }
+
+    template<typename color_t>
+    iVec2 Image<color_t>::drawChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity, ANCHOR_LOCATION anchor)
+        {
+        if (!isValid()) return pos; 
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        if (anchor != DEFAULT_TEXT_ANCHOR)
+            {
+            auto B = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR);
+            iVec2 pos2 = _anchorPos(B, anchor);
+            pos += pos - pos2;
+            }
+        return _drawCharILI<false>(c, pos, color, font, opacity);
+        }
+
+
+    template<typename color_t>
+    iVec2 Image<color_t>::drawText(const char* text, iVec2 pos, const GFXfont& font, color_t color, float opacity, ANCHOR_LOCATION anchor, bool wrap_text, bool start_newline_at_0)
+        {
+        if (!isValid()) return pos;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        if (anchor != DEFAULT_TEXT_ANCHOR)
+            {
+            start_newline_at_0 = false;
+            if (!(anchor & LEFT)) wrap_text = false; // cannot perform wrapping if we need to move. 
+            auto B = measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, wrap_text, start_newline_at_0);
+            iVec2 pos2 = _anchorPos(B, anchor);
+            pos += pos - pos2;
+            }
+        return _drawTextGFX<false>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
+        }
+
+
+    template<typename color_t>
+    iVec2 Image<color_t>::drawText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity, ANCHOR_LOCATION anchor, bool wrap_text, bool start_newline_at_0)
+        {
+        if (!isValid()) return pos;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        if (anchor != DEFAULT_TEXT_ANCHOR)
+            {
+            start_newline_at_0 = false;
+            if (!(anchor & LEFT)) wrap_text = false; // cannot perform wrapping if we need to move. 
+            auto B = measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, wrap_text,start_newline_at_0);
+            iVec2 pos2 = _anchorPos(B, anchor);
+            pos += pos - pos2;
+            }
+        return _drawTextILI<false>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
+        }
+
+
+    template<typename color_t>
+    template<bool BLEND> iVec2 Image<color_t>::_drawCharGFX(char c, iVec2 pos, color_t col, const GFXfont& font, float opacity)
+        {
+        uint8_t n = (uint8_t)c;
+        if ((n < font.first) || (n > font.last)) return pos; // nothing to draw. 
+        auto& g = font.glyph[n - font.first];
+        if ((!isValid()) || (font.bitmap == nullptr)) return pos;
+        int x = pos.x + g.xOffset;
+        int y = pos.y + g.yOffset;
+        int sx = g.width;
+        int sy = g.height;
+        const int rsx = sx; // save the real bitmap width; 
+        int b_left, b_up;
+        if (!_clipit(x, y, sx, sy, b_left, b_up)) return iVec2(pos.x + g.xAdvance, pos.y);
+        _drawCharBitmap_1BPP<BLEND>(font.bitmap + g.bitmapOffset, rsx, b_up, b_left, sx, sy, x, y, col, opacity);
+        return iVec2(pos.x + g.xAdvance, pos.y);
         }
 
 
@@ -6388,12 +6535,14 @@ namespace tgx
         }
 
 
+
+
     template<typename color_t>
-    iBox2 Image<color_t>::measureText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, bool start_newline_at_0)
+    template<bool BLEND>
+    iVec2 Image<color_t>::_drawTextGFX(const char* text, iVec2 pos, const GFXfont& font, color_t col, float opacity,  bool wrap, bool start_newline_at_0)
         {
+        const int hh = fontHeight(font);
         const int startx = start_newline_at_0 ? 0 : pos.x;
-        iBox2 B;
-        B.empty();
         const size_t l = strlen(text);
         for (size_t i = 0; i < l; i++)
             {
@@ -6401,23 +6550,32 @@ namespace tgx
             if (c == '\n')
                 {
                 pos.x = startx;
-                pos.y += font.line_space;
+                pos.y += hh;
                 }
             else
                 {
-                int xa = 0;
-                B |= measureChar(c, pos, font, &xa);
-                pos.x += xa;
+                if (wrap)
+                    {
+                    int xa = 0;
+                    measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
+                    if (pos.x + xa >= _lx)
+                        {
+                        pos.x = startx;
+                        pos.y += hh;
+                        }
+                    }
+                pos = _drawCharGFX<BLEND>(c, pos, col, font, opacity);
                 }
             }
-        return B;
+        return pos;
         }
 
 
     template<typename color_t>
     template<bool BLEND>
-    iVec2 Image<color_t>::_drawTextILI(const char* text, iVec2 pos, color_t col, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity)
+    iVec2 Image<color_t>::_drawTextILI(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t col, float opacity,  bool wrap, bool start_newline_at_0)
         {
+        const int hh = fontHeight(font);
         const int startx = start_newline_at_0 ? 0 : pos.x;
         const size_t l = strlen(text);
         for (size_t i = 0; i < l; i++)
@@ -6426,15 +6584,29 @@ namespace tgx
             if (c == '\n')
                 {
                 pos.x = startx;
-                pos.y += font.line_space;
+                pos.y += hh;
                 }
             else
                 {
+                if (wrap)
+                    {
+                    int xa = 0;
+                    measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
+                    if (pos.x + xa >= _lx)
+                        {
+                        pos.x = startx;
+                        pos.y += hh;
+                        }
+                    }
                 pos = _drawCharILI<BLEND>(c, pos, col, font, opacity);
                 }
             }
         return pos;
         }
+
+
+
+
 
 
     template<typename color_t>

@@ -74,10 +74,13 @@ namespace tgx
     *      top +-----------------------+
     *          |           .           |
     *          |           .           |
+    *          |           .           |
     *   center | ..................... |
-    * baseline |           .           |
+    *          |           .           |
+    * baseline | ..................... |
     *          |           .           |
     *   bottom +-----------------------+
+    *   
     *   
     *  Default location (0) is center. For example:
     *  
@@ -92,10 +95,14 @@ namespace tgx
         RIGHT = 2, 
         TOP = 4,
         BOTTOM = 8,
-        BASELINE = 16
+        BASELINE = 16,
+        DEFAULT_TEXT_ANCHOR = BASELINE | LEFT // this is the default location for text anchoring. 
         };
 
 
+
+    inline ANCHOR_LOCATION operator|(ANCHOR_LOCATION a1, ANCHOR_LOCATION a2) { return ((ANCHOR_LOCATION)((int)a1 | (int)a2)); } // enable bitwise | 
+    inline ANCHOR_LOCATION& operator|=(ANCHOR_LOCATION& a1, ANCHOR_LOCATION a2) { a1 = a1 | a2; return a1; }                    // for enum. 
 
 
 
@@ -1989,7 +1996,6 @@ namespace tgx
         void drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = 1.0f);
 
 
-//
 
         /**
          * Draw a thick smooth (antialised with subpixel precision) polyline i.e. a sequence of
@@ -2781,7 +2787,6 @@ namespace tgx
 /***********************************************************************************************************
  *                           TODO : Drawing primitive to implement next....
  * 
- * - arrow for end type
  * - Rotated Ellipse 
  * - Circle Pie, Circle Arc
  * - method for drawing intersection of half plane and circles with and without aliasing.   
@@ -2797,198 +2802,207 @@ namespace tgx
 
 
 
-    /********************************************************************************************
-    *********************************************************************************************
-    *
-    *                                       DRAWING TEXT
-    *
-    * supported font format:
-    * 
-    *     - AdafruitGFX            [https ://glenviewsoftware.com/projects/products/adafonteditor/adafruit-gfx-font-format]
-    *     - ILI9341_t3 v1          [https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format]
-    *       and v23 (antialiased). [https://github.com/projectitis/packedbdf/blob/master/packedbdf.md]
-    *    
-    *       
-    * NOTE: tgx-font [https://github.com/vindar/tgx-font] contains a set of ILI9341_t3 v1 and v2 (antialiased) font
-    *       that can be used directly with the methods below (and the instruction on how to convert a ttf font to this
-    *       format). 
-    * 
-    *********************************************************************************************
-    ********************************************************************************************/
+
+
+
+
+
+/************************************************************************************************************
+*************************************************************************************************************
+*************************************************************************************************************
+*
+*                                             DRAWING TEXT
+*                                             
+* supported font format:
+*
+* - AdafruitGFX           [https ://glenviewsoftware.com/projects/products/adafonteditor/adafruit-gfx-font-format]
+* - ILI9341_t3 v1         [https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format]
+*   and v23 (antialiased) [https://github.com/projectitis/packedbdf/blob/master/packedbdf.md]
+*
+* 
+* NOTE: tgx-font [https://github.com/vindar/tgx-font] contains a collection ILI9341_t3 v1 and v2 (antialiased) 
+*       font that can be used directly with the methods below (and the instruction on how to convert a ttf 
+*       font to  this format).
+*
+*************************************************************************************************************
+*************************************************************************************************************
+************************************************************************************************************/
+
+
 
 
         /**
-         * Return the box of pixels occupied by a character when drawn with a given font at a given
-         * position. Version for GFXFont.
-         * 
-         * NOTE: pos.y refers to the position of the BASELINE of the char/font.
+         * Query the height of a font i.e.  the number of vertical pixels between two lines of text with
+         * this font. Version for GFXFont
+         *
+         * @param   font    The font.
+         *
+         * @returns the height of the font.
+        **/
+        static int fontHeight(const GFXfont & font);
+
+
+        /**
+         * Query the height of a font i.e.  the number of vertical pixels between two lines of text with
+         * this font. Version for ILI9341_t3 font.
+         *
+         * @param   font    The font.
+         *
+         * @returns the height of the font.
+        **/
+        static int fontHeight(const ILI9341_t3_font_t& font);
+
+
+        /**
+         * Return the box of pixels occupied by a character when drawn with 'font' anchored at 'pos'.
+         * Version for GFXFont.
          *
          * @param           c           The character.
-         * @param           pos         position (left/baseline of char)
-         * @param           font        The font.
-         * @param [in,out]  xadvance    (Optional) If non-null, the number of pixel to advance
-         *                              horizontally after printed the char is stored here.
+         * @param           pos         position of the anchor point in this image.
+         * @param           font        The font to use.
+         * @param           anchor      (Optional) location of the anchor with respect to the text
+         *                              bounding box. (by default, this is the BASELINE|LEFT).
+         * @param [in,out]  xadvance    If non-null, the number of pixel to advance horizontally after
+         *                              drawing the char is stored here.
          *
-         * @returns the bounding box of pixels occupied by the char when drawn at pos.
+         * @returns the bounding box of pixels occupied by the char when its chosen anchor is at pos.
         **/
-        static iBox2 measureChar(char c, iVec2 pos, const GFXfont& font, int* xadvance = nullptr);
+        static iBox2 measureChar(char c, iVec2 pos, const GFXfont& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
 
 
         /**
-         * Return the box of pixels occupied by a character when drawn with a given font at a given
-         * position. Version for ILI9341_t3 fonts.
-         * 
-         * NOTE: pos.y refers to the position of the BASELINE of the char/font.
+         * Return the box of pixels occupied by a character when drawn with 'font' anchored at 'pos'.
+         * Version for ILI9341_t3 font.
          *
          * @param           c           The character.
-         * @param           pos         position (left/baseline of char)
-         * @param           font        The font.
-         * @param [in,out]  xadvance    (Optional) If non-null, the number of pixel to advance
-         *                              horizontally after printed the char is stored here.
+         * @param           pos         position of the anchor point in this image.
+         * @param           font        The font to use.
+         * @param           anchor      (Optional) location of the anchor with respect to the text
+         *                              bounding box. (by default, this is the BASELINE|LEFT).
+         * @param [in,out]  xadvance    If non-null, the number of pixel to advance horizontally after
+         *                              drawing the char is stored here.
          *
-         * @returns the bounding box of pixels occupied by the char when drawn at pos.
+         * @returns the bounding box of pixels occupied by the char when its chosen anchor is at pos.
         **/
-        static iBox2 measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, int* xadvance = nullptr);
+        static iBox2 measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
 
 
         /**
-         * Return the box of pixels occupied by a text when drawn with 'font' starting at position 'pos'
-         * Version for GFXFont.
-         * 
-         * NOTE: pos.y refers to the position of the BASELINE of the char/font.
+         * Return the box of pixels occupied by a text when drawn with 'font' anchored at 'pos' Version
+         * for GFXFont.
          *
          * @param   text                The text.
-         * @param   pos                 The position (left baseline of first char. of text)
-         * @param   font                The font.
-         * @param   start_newline_at_0  (Optional) True to start new line at x=0 and false to start at x=pos.x.
+         * @param   pos                 position of the anchor point in the image.
+         * @param   font                The font to use.
+         * @param   anchor              (Optional) location of the anchor with respect to the text
+         *                              bounding box. (by default, this is the BASELINE|LEFT).
          * @param   wrap_text           (Optional) True to wrap wrap text at the end of image.
+         * @param   start_newline_at_0  (Optional) True to start a new line of text at x=0 and false to
+         *                              start at x=pos.x.
          *
-         * @returns the bounding box of pixels occupied by the the text when drawn starting at pos.
+         * @returns the bounding box of pixels occupied by the text when its chosen anchor is at pos.
         **/
-        iBox2 measureText(const char * text, iVec2 pos, const GFXfont& font, bool start_newline_at_0 = false, bool wrap_text = false);
+        iBox2 measureText(const char * text, iVec2 pos, const GFXfont& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
 
 
         /**
-         * Return the box of pixels occupied by a text when drawn with 'font' starting at position 'pos'
-         * Version for GFXFont.
-         * 
-         * NOTE: pos.y refers to the position of the BASELINE of the char/font.
+         * Return the box of pixels occupied by a text when drawn with 'font' anchored at 'pos' Version
+         * for GFXFont.
          *
          * @param   text                The text.
-         * @param   pos                 The position (left baseline of first char. of text)
-         * @param   font                The font.
-         * @param   start_newline_at_0  (Optional) True to start new line at x=0 and false to start at x=pos.x.
+         * @param   pos                 position of the anchor point in the image.
+         * @param   font                The font to use.
+         * @param   anchor              (Optional) location of the anchor with respect to the text
+         *                              bounding box. (by default, this is the BASELINE|LEFT).
          * @param   wrap_text           (Optional) True to wrap wrap text at the end of image.
+         * @param   start_newline_at_0  (Optional) True to start a new line of text at x=0 and false to
+         *                              start at x=pos.x.
          *
-         * @returns the bounding box of pixels occupied by the the text when drawn starting at pos.
+         * @returns the bounding box of pixels occupied by the text when its chosen anchor is at pos.
         **/
-        iBox2 measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, bool start_newline_at_0 = false, bool wrap_text = false);
+        iBox2 measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
 
 
         /**
          * Draw a character at position pos on the image and return the position for the next character.
          * Version for GFXFont
-         * 
-         * NOTE: pos.y refers to the BASELINE of the char.
          *
          * @param   c       The character to draw.
-         * @param   pos     baseline/left position of char.
-         * @param   col     The color to use.
+         * @param   pos     position of the anchor point in the image.
          * @param   font    The font to use.
+         * @param   color   The color.
          * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
          *                  disable blending and simply use overwrite.
+         * @param   anchor  (Optional) location of the anchor with respect to the text bounding box. (by
+         *                  default, this is the BASELINE|LEFT).
          *
-         * @returns the position to draw the next char.
+         * @returns the position to draw the next char (using the same anchor location).
         **/
-        iVec2 drawChar(char c, iVec2 pos, color_t col, const GFXfont& font, float opacity = TGX_DEFAULT_BLENDING_MODE)
-            {
-            return _drawCharGFX<false>(c, pos, col, font, 1.0f);
-            }
+        iVec2 drawChar(char c, iVec2 pos, const GFXfont& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR);
 
 
         /**
          * Draw a character at position pos on the image and return the position for the next character.
-         * Version for ILI9341_t3
-         * 
-         * NOTE: pos.y refers to the BASELINE of the char.
+         * Version for ILI9341_t3 font.
          *
          * @param   c       The character to draw.
-         * @param   pos     baseline/left position of char.
-         * @param   col     The color to use.
+         * @param   pos     position of the anchor point in the image.
          * @param   font    The font to use.
-         * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
-         *                  blending and simply use overwrite.
+         * @param   color   The color.
+         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending and simply use overwrite.
+         * @param   anchor  (Optional) location of the anchor with respect to the text bounding box. (by
+         *                  default, this is the BASELINE|LEFT).
          *
-         * @returns the position to draw the next char.
+         * @returns the position to draw the next char (using the same anchor location). 
         **/
-        iVec2 drawChar(char c, iVec2 pos, color_t col, const ILI9341_t3_font_t& font, float opacity)
-            {
-            return _drawCharILI<true>(c, pos, col, font, opacity);
-            }
-
-
+        iVec2 drawChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR);
 
 
         /**
-        * Draw a  text  starting at position (x,y) on the image using an adafruit font
-        * Return the position after the last character (ie the position for the next char).
-        * All position are w.r.t. the baseline
+         * Draw a text at position pos on the image with a given font.
+         * Version for GFXFont
+         *
+         * @param   text                The text to draw.
+         * @param   pos                 position of the anchor point in the image.
+         * @param   font                The font to use.
+         * @param   color               The color.
+         * @param   opacity             (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                              negative to disable blending and simply use overwrite.
+         * @param   anchor              (Optional) location of the anchor with respect to the text
+         *                              bounding box. (by default, this is the BASELINE|LEFT).
+         * @param   wrap_text           (Optional) True to wrap wrap text at the end of image.
+         * @param   start_newline_at_0  (Optional) True to start a new line of text at x=0 and false to
+         *                              start at x=pos.x.
+         *
+         * @returns the position to draw the next char (using the same anchor location).
         **/
-        iVec2 drawText(const char* text, iVec2 pos, color_t col, const GFXfont& font, bool start_newline_at_0)
-            {
-            return _drawTextGFX<false>(text, pos, col, font, start_newline_at_0, 1.0f);
-            }
+        iVec2 drawText(const char* text, iVec2 pos, const GFXfont& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE, ANCHOR_LOCATION anchor = TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
 
 
         /**
-        * Draw a  text  starting at position (x,y) on the image using an adafruit font
-        * Return the position after the last character (ie the position for the next char).
-        * All position are w.r.t. the baseline
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         * Draw a text at position pos on the image with a given font. Version for GFXFont
+         *
+         * @param   text                The text to draw.
+         * @param   pos                 position of the anchor point in the image.
+         * @param   font                The font to use.
+         * @param   color               The color.
+         * @param   opacity             (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                              negative to disable blending and simply use overwrite.
+         * @param   anchor              (Optional) location of the anchor with respect to the text
+         *                              bounding box. (by default, this is the BASELINE|LEFT).
+         * @param   wrap_text           (Optional) True to wrap wrap text at the end of image.
+         * @param   start_newline_at_0  (Optional) True to start a new line of text at x=0 and false to
+         *                              start at x=pos.x.
+         *
+         * @returns the position to draw the next char (using the same anchor location).
         **/
-        iVec2 drawText(const char* text, iVec2 pos, color_t col, const GFXfont& font, bool start_newline_at_0, float opacity)
-            {
-            return _drawTextGFX<true>(text, pos, col, font, start_newline_at_0, opacity);
-            }
+        iVec2 drawText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE, ANCHOR_LOCATION anchor = TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
 
 
-        /**
-        * Draw a  text  starting at position (x,y) on the image using an ILI9341_t3 font
-        * Return the position after the last character (ie the position for the next char).
-        * All position are w.r.t. the baseline
-        **/
-        iVec2 drawText(const char * text, iVec2 pos, color_t col, const ILI9341_t3_font_t& font, bool start_newline_at_0)
-            {
-            return _drawTextILI<false>(text, pos, col, font, start_newline_at_0, 1.0f);
-            }
 
 
-        /**
-        * Draw a  text  starting at position (x,y) on the image using an ILI9341_t3 font
-        * Return the position after the last character (ie the position for the next char).
-        * All position are w.r.t. the baseline
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        iVec2 drawText(const char* text, iVec2 pos, color_t col, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity)
-            {
-            return _drawTextILI<true>(text, pos, col, font, start_newline_at_0, opacity);
-            }
 
-
-        
-        
-        // fontHeight()  <- return the heigh of a font. 
-        
-
-        // measureText() <- add bool wrap
-        // drawText() <- add bool wrap
-
-        // placeText(text, pos, anchorpoint, )
-        // drawTextInside(text, Box, anchor
 
 
 
@@ -3001,16 +3015,18 @@ namespace tgx
 private:
 
 
-
-
-
-    /************************************************************************************
-    * 
+    /************************************************************************************************************
+    *************************************************************************************************************
+    *************************************************************************************************************
+    *
+    *                                             IMPLEMENTATION
+    *
     * 
     * Don't you dare look below... this is private :-p
-    * 
-    * 
-    *************************************************************************************/
+    *
+    *************************************************************************************************************
+    *************************************************************************************************************
+    ************************************************************************************************************/
 
 
 
@@ -3685,16 +3701,20 @@ private:
         static uint32_t _fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required);
 
 
+        /** find the anchor location (not for baseline) */
+        static iVec2 _anchorPos(const iBox2& B, ANCHOR_LOCATION anchor);
+
+
         /** used for clipping a font bitmap */
         bool _clipit(int& x, int& y, int& sx, int& sy, int& b_left, int& b_up);
 
 
         template<bool BLEND>
-        iVec2 _drawTextGFX(const char* text, iVec2 pos, color_t col, const GFXfont& font, bool start_newline_at_0, float opacity);
+        iVec2 _drawTextGFX(const char* text, iVec2 pos, const GFXfont& font, color_t col, float opacity, bool wrap, bool start_newline_at_0);
 
 
         template<bool BLEND>
-        iVec2 _drawTextILI(const char* text, iVec2 pos, color_t col, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity);
+        iVec2 _drawTextILI(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t col, float opacity, bool wrap, bool start_newline_at_0);
 
 
         template<bool BLEND>
