@@ -5377,7 +5377,8 @@ namespace tgx
 
             const float a = _triangleAera(P1, Q, PA);
             const float n2 = (P1 - Q).norm2();
-            if ((n2 < 2) || (a * a < l * n2) || (d++ > MAX_ITER))
+            d++;
+            if ((n2 < 2) || (a * a < l * n2) || (d > MAX_ITER))
                 { // done !
                 wb = ub / sqrtf(u3);
                 return false;
@@ -5823,8 +5824,7 @@ namespace tgx
                                 { // reset because we need to go over the list of points twice
                                 i = 0;
                                 loadstart = true;
-                                begin = true;
-                                cout << "last = " << P << "\n";
+                                begin = true;                                
                                 return false;
                                 }
                             loadstart = true;
