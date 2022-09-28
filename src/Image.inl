@@ -977,10 +977,19 @@ namespace tgx
         {
         auto PQs = PQ.save();
         auto PAs = PA.save();
-        
+       
         if (drawP)
             {
-            const int32_t aa = ((side == 0) ? 256 : (tgx::min(PQ.AA(side), PA.AA(-side))));
+            int32_t aa;
+            if (side != 0)
+                {
+                int g = PQ.angle(side, PA);
+                aa = (g < 0) ? (tgx::max(PQ.AA(side), PA.AA(-side))) : (tgx::min(PQ.AA(side), PA.AA(-side)));
+                }
+            else
+                {   
+                aa = 256;
+                }
             _bseg_update_pixel<true>(PQ, color, op, aa);
             }
 
@@ -1148,6 +1157,8 @@ namespace tgx
         }
 
 
+
+
     template<typename color_t>
     void Image<color_t>::_bseg_avoid11(BSeg& PQ, BSeg& PA, BSeg& QB, bool drawP, bool drawQ, bool closedPA, bool closedQB, color_t color, int side, int32_t op, bool checkrange)
         {
@@ -1156,8 +1167,17 @@ namespace tgx
         auto QBs = QB.save();
 
         if (drawP)
-            {
-            const int32_t aa = ((side == 0) ? 256 : (tgx::min(PQ.AA(side), PA.AA(-side))));
+            {      
+            int32_t aa;
+            if (side != 0)
+                {
+                int g = PQ.angle(side, PA);
+                aa = (g < 0) ? (tgx::max(PQ.AA(side), PA.AA(-side))) : (tgx::min(PQ.AA(side), PA.AA(-side)));
+                }
+            else
+                {   
+                aa = 256;
+                }
             _bseg_update_pixel<true>(PQ, color, op, aa);
             }
         if (drawQ)
@@ -1166,7 +1186,8 @@ namespace tgx
             if (side != 0)
                 {
                 PQ.move(PQ.len());
-                aa = tgx::min(PQ.AA(side), QB.AA(side));
+                int g = PQ.angle(side, QB);          
+                aa = (g < 0) ? (tgx::max(PQ.AA(side), QB.AA(side))) : (tgx::min(PQ.AA(side), QB.AA(side)));
                 PQ.restore(PQs);
                 }
             else

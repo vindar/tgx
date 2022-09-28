@@ -74,6 +74,22 @@ namespace tgx
 			}
 
 
+		/**
+		* check whether this segment makes an obtuse angle with seg
+		* when this line is oriented accoridng to side. 
+		*
+		* this segment and seg must have the same start point. 
+		* 
+		* side should be -1 or 1
+		* returns  -1, 1 or 0. 
+		**/
+		int angle(int side, BSeg seg)
+			{
+			const iVec2 P1(_dx * _stepx, _dy * _stepy);
+			const iVec2 P2(seg._dx * seg._stepx, seg._dy * seg._stepy);
+			const auto a = ((P1.x * P2.y) - (P2.x * P1.y)) * side;
+			return (a < 0) ? -1 : ((a > 0) ? 1: 0);
+			}
 
 		/* Return the equation of the line: off = kx*x + ky*y
 		*  if off < mino : we are on a pixel on the left side of the line
