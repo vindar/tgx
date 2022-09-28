@@ -58,6 +58,11 @@ namespace tgx
         END_ARROW_3 = 3,         // medium arrow head (extends = 3 x line thickness)
         END_ARROW_4 = 4,         // large arrow head (extends = 4 x line thickness)
         END_ARROW_5 = 5,         // huge arrow head (extends = 5 x line thickness)
+        END_ARROW_SKEWED_1 = 101,  // tiny arrow head (extends = line thickness)
+        END_ARROW_SKEWED_2 = 102,  // small arrow head (extends = 2 x line thickness)
+        END_ARROW_SKEWED_3 = 103,  // medium arrow head (extends = 3 x line thickness)
+        END_ARROW_SKEWED_4 = 104,  // large arrow head (extends = 4 x line thickness)
+        END_ARROW_SKEWED_5 = 105,  // huge arrow head (extends = 5 x line thickness)
         };
         
 

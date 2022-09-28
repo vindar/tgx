@@ -1887,52 +1887,45 @@ namespace tgx
     void Image<color_t>::_drawEnd(float distAB, fVec2 A, fVec2 B, BSeg& segAB, BSeg& segBA, BSeg& segAP, BSeg& segBQ, PATH_END_TYPE end, int w, color_t color, float opacity)
         {
         const int op = (int)(opacity * 256);
-        switch(end)
+        if (end < END_STRAIGHT) return;
+        if (end == END_STRAIGHT)
             {
-            case END_STRAIGHT:
-                {
-                _bseg_avoid11(segAB, segAP, segBQ, true, true, true, true, color, -w, op, true);
-                return;
-                }
-            case END_ROUNDED:
-                {
-                _bseg_avoid11(segAB, segAP, segBQ, false, false, true, true, color, 0, op, true);
-                _drawPixel<true>(iVec2((int)(roundf(A.x)), (int)(roundf(A.y))), color, (op * segAP.AA(w) >> 8) / 256.0f);
-                _drawPixel<true>(iVec2((int)(roundf(B.x)), (int)(roundf(B.y))), color, (op * segBQ.AA(w) >> 8) / 256.0f);
-                _fillSmoothCircleInterHP((A + B) * 0.5f, distAB * 0.5f, color, opacity, segAB, w);
-                return;
-                }   
-            case END_ARROW_1:
-            case END_ARROW_2:
-            case END_ARROW_3:
-            case END_ARROW_4:
-            case END_ARROW_5:
-                {
-                const int n = ((int)(end));
-                fVec2 H = (B - A);
-                //float l = distAB * ((int)(end));
-                fVec2 E = ((A + B)*0.5f) + H.getRotate90() * ((float)(n * w)); 
-                H = H * (0.5f * n);
-                fVec2 C = A - H;
-                fVec2 D = B + H;
-                BSeg segAC(A, C); BSeg segCA = segAC.get_reverse();
-                BSeg segCE(C, E); BSeg segEC = segCE.get_reverse();
-                BSeg segEA(E, A); BSeg segAE = segEA.get_reverse();
-                BSeg segBD(B, D); BSeg segDB = segBD.get_reverse();
-                BSeg segDE(D, E); BSeg segED = segDE.get_reverse();
-                BSeg segEB(E, B); BSeg segBE = segEB.get_reverse();
-                _bseg_fill_triangle_precomputed(A, C, E, segAC, segCA, segCE, segEC, segEA, segAE, color, opacity);
-                _bseg_fill_triangle_precomputed(A, E, B, segAE, segEA, segEB, segBE, segBA, segAB, color, opacity);
-                _bseg_fill_triangle_precomputed(B, D, E, segBD, segDB, segDE, segED, segEB, segBE, color, opacity);
-                _bseg_avoid1(segAC, segAP, true, false, true, color, -w, op, true);
-                _bseg_avoid1(segCE, segCA, true, false, true, color, -w, op, true);
-                _bseg_avoid1(segED, segEC, true, false, true, color, -w, op, true);
-                _bseg_avoid11(segDB, segDE, segBQ, true, true, true, true, color, -w, op, true);
-                _bseg_avoid22(segAB, segAP, segAC, segBQ, segBD, true, true, true, true, color, 0, op, true);
-                _bseg_avoid22(segAE, segAP, segAC, segEC, segED, true, true, true, true, color, 0, op, true);
-                _bseg_avoid22(segBE, segBQ, segBD, segEA, segED, true, true, true, true, color, 0, op, true);
-                }
-             
+            _bseg_avoid11(segAB, segAP, segBQ, true, true, true, true, color, -w, op, true);
+            return;
+            }
+        if (end == END_ROUNDED)
+            {
+            _bseg_avoid11(segAB, segAP, segBQ, false, false, true, true, color, 0, op, true);
+            _drawPixel<true>(iVec2((int)(roundf(A.x)), (int)(roundf(A.y))), color, (op * segAP.AA(w) >> 8) / 256.0f);
+            _drawPixel<true>(iVec2((int)(roundf(B.x)), (int)(roundf(B.y))), color, (op * segBQ.AA(-w) >> 8) / 256.0f);
+            _fillSmoothCircleInterHP((A + B) * 0.5f, distAB * 0.5f, color, opacity, segAB, w);
+            return;
+            }   
+        if (end >= END_ARROW_1)
+            {
+            const int n = ((int)(end)) - ((end >= END_ARROW_SKEWED_1) ? (END_ARROW_SKEWED_1  - 1) : 0);
+            fVec2 H = (B - A);      
+            fVec2 V = H.getRotate90() * ((float)(n * w));
+            fVec2 E = ((A + B) * 0.5f) + V;
+            H = H * (0.5f * n);
+            fVec2 C = A - H - V * ((end >= END_ARROW_SKEWED_1) ? 0.5f : 0);
+            fVec2 D = B + H - V * ((end >= END_ARROW_SKEWED_1) ? 0.5f : 0);
+            BSeg segAC(A, C); BSeg segCA = segAC.get_reverse();
+            BSeg segCE(C, E); BSeg segEC = segCE.get_reverse();
+            BSeg segEA(E, A); BSeg segAE = segEA.get_reverse();
+            BSeg segBD(B, D); BSeg segDB = segBD.get_reverse();
+            BSeg segDE(D, E); BSeg segED = segDE.get_reverse();
+            BSeg segEB(E, B); BSeg segBE = segEB.get_reverse();
+            _bseg_fill_triangle_precomputed(A, C, E, segAC, segCA, segCE, segEC, segEA, segAE, color, opacity);
+            _bseg_fill_triangle_precomputed(A, E, B, segAE, segEA, segEB, segBE, segBA, segAB, color, opacity);
+            _bseg_fill_triangle_precomputed(B, D, E, segBD, segDB, segDE, segED, segEB, segBE, color, opacity);
+            _bseg_avoid1(segAC, segAP, true, false, true, color, -w, op, true);
+            _bseg_avoid1(segCE, segCA, true, false, true, color, -w, op, true);
+            _bseg_avoid1(segED, segEC, true, false, true, color, -w, op, true);
+            _bseg_avoid11(segDB, segDE, segBQ, true, true, true, true, color, -w, op, true);
+            _bseg_avoid22(segAB, segAP, segAC, segBQ, segBD, true, true, true, true, color, 0, op, true);
+            _bseg_avoid22(segAE, segAP, segAC, segEC, segED, true, true, true, true, color, 0, op, true);
+            _bseg_avoid22(segBE, segBQ, segBD, segEA, segED, true, true, true, true, color, 0, op, true);
             }
         }
 
@@ -1949,17 +1942,14 @@ namespace tgx
             tgx::swap(end_P1, end_P2);
             }
         if (line_width_P2 <= 0) return; 
-        if (line_width_P1 <= 1) end_P1 = END_ROUNDED;
-        if (line_width_P2 <= 1) end_P2 = END_ROUNDED;
-        if ((end_P1 == END_ROUNDED) && (end_P2 == END_ROUNDED))
-            { // use bodmer tft_espi implementation. 
-            _drawWedgeLine(P1.x, P1.y, P2.x, P2.y, line_width_P1, line_width_P2, color, opacity);
-            return;
-            }
         const int op = (int)(opacity * 256);
         if (line_width_P1 <= 1)
-            { // draw triangle: here line_width_P1 <= 1 , line_width_P2 > 1 and rounded_end_P2 = false. 
-            line_width_P2;
+            { // draw triangle: here line_width_P1 <= 1
+            if (line_width_P2 < 1)
+                {
+                drawSmoothLine(P1, P1, color, opacity * line_width_P2);
+                return;
+                }
             const fVec2 H = (P1 - P2).getRotate90().getNormalize() * (line_width_P2/2);
             const fVec2 PA = P2 + H, PB = P2 - H;
             const int w = -1; 
@@ -1973,55 +1963,32 @@ namespace tgx
             return;
             }        
         // here line_width_P1 > 1  and line_width_P2 > 1
-        // not both rounded ends
-        line_width_P1 /= 2; 
-        line_width_P2 /= 2;
         const fVec2 H = (P1 - P2).getRotate90().getNormalize();
-        const fVec2 H1 = H * line_width_P1;
-        const fVec2 H2 = H * line_width_P2;
+        const fVec2 H1 = H * (line_width_P1*0.5f);
+        const fVec2 H2 = H * (line_width_P2*0.5f);
         const fVec2 PA = P1 + H1, PB = P2 + H2, PC = P2 - H2, PD = P1 - H1;
         const int w = 1; 
-
         BSeg segAB(PA, PB); BSeg segBA = segAB.get_reverse();
         BSeg segAC(PA, PC); BSeg segCA = segAC.get_reverse();
         BSeg segBC(PB, PC); BSeg segCB = segBC.get_reverse();
         BSeg segCD(PC, PD); BSeg segDC = segCD.get_reverse();
         BSeg segDA(PD, PA); BSeg segAD = segDA.get_reverse();
-
         _bseg_fill_triangle_precomputed(PA, PB, PC, segAB, segBA, segBC, segCB, segCA, segAC, color, opacity);
         _bseg_fill_triangle_precomputed(PA, PC, PD, segAC, segCA, segCD, segDC, segDA, segAD, color, opacity);
+        _bseg_draw(segAB, false, false, color, w, op, true);
+        _bseg_draw(segCD, false, false, color, w, op, true);
         _bseg_avoid22(segAC, segAB, segAD, segCB, segCD, true, true, true, true, color, 0, op, true);
-        
-        if ((end_P1 != END_ROUNDED) && (end_P2 != END_ROUNDED))
-            {
-            _bseg_avoid1(segAB, segAD, true, false, true, color, w, op, true);
-            _bseg_avoid1(segBC, segBA, true, false, true, color, w, op, true);
-            _bseg_avoid1(segCD, segCB, true, false, true, color, w, op, true);
-            _bseg_avoid1(segDA, segDC, true, false, true, color, w, op, true);
-            return;
-            }
-        if (end_P1 == END_ROUNDED)
-            {
-            _bseg_draw(segAB, true, false, color, w, op, true);
-            _bseg_avoid1(segBC, segBA, true, false, true, color, w, op, true);
-            _bseg_avoid1(segCD, segCB, true, true, true, color, w, op, true);
-            _bseg_avoid11(segDA, segDC, segAB, false, false, true, true, color, 0, op, true);
-            _fillSmoothCircleInterHP(P1, line_width_P1, color, opacity, segAD, w);            
-            }
-        else
-            {
-            _bseg_draw(segCD, true, false, color, w, op, true);
-            _bseg_avoid1(segDA, segDC, true, false, true, color, w, op, true);
-            _bseg_avoid1(segAB, segAD, true, true, true, color, w, op, true);
-            _bseg_avoid11(segBC, segBA, segCD, false, false, true, true, color, 0, op, true);
-            _fillSmoothCircleInterHP(P2, line_width_P2, color, opacity, segCB, w);
-            }
+        _drawEnd(line_width_P1, PA, PD, segAD, segDA, segAB, segDC, end_P1, w, color, opacity);
+        _drawEnd(line_width_P2, PC, PB, segCB, segBC, segCD, segBA, end_P2, w, color, opacity);
         }
 
 
 
 
-    /** Adapted from Bodmer e_tft library. */
+    /**
+    *LEGACY METHOD : Not used anymore 
+    *Adapted from Bodmer e_tft library. 
+    **/
     template<typename color_t>
     void Image<color_t>::_drawWedgeLine(float ax, float ay, float bx, float by, float ar, float br, color_t color, float opacity)
         {
@@ -3324,36 +3291,20 @@ namespace tgx
             const int side = 1;
             if (first)
                 { // draw first end
-                if (end_P0)
-                    {
-                    _bseg_avoid11(I0J0, I0I1, J0J1, false, false, true, true, color, 0, op, true);
-                    _fillSmoothCircleInterHP((I0 + J0) * 0.5f, thickness, color, opacity, I0J0, -1);
-                    }
-                else
-                    {
-                    _bseg_avoid11(I0J0, I0I1, J0J1, true, true, true, true, color, side, op, true);
-                    }                
+                _drawEnd(line_width, I0, J0, I0J0, J0I0, I0I1, J0J1, end_P0, -side, color, opacity); 
                 }
             if (last)
                 {
-                _bseg_draw(J1J0,  true, false, color, -side, op, true);
-                _bseg_draw(I1I0,  true, false, color, side, op, true);
+                _bseg_draw(J1J0, false, false, color, -side, op, true);
+                _bseg_draw(I1I0, false, false, color, side, op, true);
                 _bseg_avoid22(I0J1, I0J0, I0I1, J1J0, J1I1, true, true, true, true, color, 0, op, true);
-                if (end_Pn)
-                    {
-                    _bseg_avoid11(J1I1, J1J0, I1I0, false, false, true, true, color, 0, op, true);
-                    _fillSmoothCircleInterHP((I1 + J1) * 0.5f, thickness, color, opacity, J1I1, -1);
-                    }
-                else
-                    {
-                    _bseg_avoid11(J1I1, J1J0, I1I0, false, false, true, true, color, side, op, true);
-                    }
+                _drawEnd(line_width, I1, J1, I1J1, J1I1, I1I0, J1J0, end_Pn, side, color, opacity);
                 return;
                 }
             tgx::BSeg J1J2(J1, J1 + (P2 - P1));
             tgx::BSeg I1I2(I1, I1 + (P2 - P1));
-            _bseg_avoid1(J1J0, J1J2, true, ((end_P0) && (first)), true, color, -side, op, true);
-            _bseg_avoid1(I1I0, I1I2, true, ((end_P0) && (first)), true, color, side, op, true);
+            _bseg_avoid1(J1J0, J1J2, true, false, true, color, -side, op, true);
+            _bseg_avoid1(I1I0, I1I2, true, false, true, color, side, op, true);
             _bseg_avoid22(I0J1, I0J0, I0I1, J1J0, J1I1, true, true, true, true, color, 0, op, true);
             _bseg_avoid22(J1I1, J1J0, J1J2, I1I0, I1I2, true, true, true, true, color, 0, op, true);
             if (!hasmore) last = true; 
@@ -5636,14 +5587,8 @@ namespace tgx
         switch (nbpoints)
             {
         case 0:
-            {
-            return;
-            }
         case 1:
-            {
-            if (rounded_end_P0) fillSmoothCircle(tabPoints[0], thickness, color, opacity);
             return;
-            }
         case 2:
             {
             drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, end_P0, end_Pn, color, opacity);
