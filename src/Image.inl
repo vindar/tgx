@@ -6324,7 +6324,7 @@ namespace tgx
                 {
                 int xa = 0;
                 auto U = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
-                if (pos.x + xa >= _lx)
+                if ((wrap_text) && (pos.x + xa >= _lx))
                     {
                     auto pos2 = pos; 
                     pos.x = startx;
@@ -6366,7 +6366,7 @@ namespace tgx
                 {
                 int xa = 0;
                 auto U = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
-                if (pos.x + xa >= _lx)
+                if ((wrap_text)&& (pos.x + xa >= _lx))
                     {
                     auto pos2 = pos; 
                     pos.x = startx;
@@ -6389,36 +6389,54 @@ namespace tgx
 
 
     template<typename color_t>    
-    iVec2 Image<color_t>::drawChar(char c, iVec2 pos, const GFXfont& font, color_t color, float opacity, ANCHOR_LOCATION anchor)
+    iVec2 Image<color_t>::drawChar(char c, iVec2 pos, const GFXfont& font, color_t color, float opacity)
         {
         if (!isValid()) return pos; 
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        /*
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
             auto B = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR);
             iVec2 pos2 = _anchorPos(B, anchor);
             pos += pos - pos2;
             }
+        */
         return _drawCharGFX<true>(c, pos, color, font, opacity);
         }
 
     template<typename color_t>
-    iVec2 Image<color_t>::drawChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity, ANCHOR_LOCATION anchor)
+    iVec2 Image<color_t>::drawChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity)
         {
         if (!isValid()) return pos; 
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        /*
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
             auto B = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR);
             iVec2 pos2 = _anchorPos(B, anchor);
             pos += pos - pos2;
             }
+        */
         return _drawCharILI<false>(c, pos, color, font, opacity);
         }
 
 
     template<typename color_t>
-    iVec2 Image<color_t>::drawText(const char* text, iVec2 pos, const GFXfont& font, color_t color, float opacity, ANCHOR_LOCATION anchor, bool wrap_text, bool start_newline_at_0)
+    iVec2 Image<color_t>::drawText(const char* text, iVec2 pos, const GFXfont& font, color_t color, float opacity)
+        {
+        return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, false, color, opacity);
+        }
+
+
+    template<typename color_t>
+    iVec2 Image<color_t>::drawText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity)
+        {
+        return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, false, color, opacity);
+        }
+
+
+    template<typename color_t>
+    iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const GFXfont& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
         {
         if (!isValid()) return pos;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -6430,12 +6448,12 @@ namespace tgx
             iVec2 pos2 = _anchorPos(B, anchor);
             pos += pos - pos2;
             }
-        return _drawTextGFX<false>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
+        return _drawTextGFX<true>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
         }
 
 
     template<typename color_t>
-    iVec2 Image<color_t>::drawText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity, ANCHOR_LOCATION anchor, bool wrap_text, bool start_newline_at_0)
+    iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
         {
         if (!isValid()) return pos;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -6447,7 +6465,7 @@ namespace tgx
             iVec2 pos2 = _anchorPos(B, anchor);
             pos += pos - pos2;
             }
-        return _drawTextILI<false>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
+        return _drawTextILI<true>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
         }
 
 
@@ -6558,7 +6576,7 @@ namespace tgx
                     {
                     int xa = 0;
                     measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
-                    if (pos.x + xa >= _lx)
+                    if ((wrap) && (pos.x + xa >= _lx))
                         {
                         pos.x = startx;
                         pos.y += hh;
@@ -6592,7 +6610,7 @@ namespace tgx
                     {
                     int xa = 0;
                     measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
-                    if (pos.x + xa >= _lx)
+                    if ((wrap) && (pos.x + xa >= _lx))
                         {
                         pos.x = startx;
                         pos.y += hh;

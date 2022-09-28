@@ -2784,6 +2784,8 @@ namespace tgx
 
 
 
+
+
 /***********************************************************************************************************
  *                           TODO : Drawing primitive to implement next....
  * 
@@ -2793,6 +2795,10 @@ namespace tgx
  * - drawing a general path, svg compatibility
  *
 ************************************************************************************************************/
+
+
+
+
 
 
 
@@ -2924,80 +2930,150 @@ namespace tgx
 
 
         /**
-         * Draw a character at position pos on the image and return the position for the next character.
-         * Version for GFXFont
+         * Draw a single character at position pos on the image and return the position for the next
+         * character. Version for GFXFont
          *
          * @param   c       The character to draw.
-         * @param   pos     position of the anchor point in the image.
+         * @param   pos     position of the anchor point in the image. This position is mapped to the
+         *                  anchor point for the character which {baseline,right}
          * @param   font    The font to use.
          * @param   color   The color.
          * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
          *                  disable blending and simply use overwrite.
-         * @param   anchor  (Optional) location of the anchor with respect to the text bounding box. (by
-         *                  default, this is the BASELINE|LEFT).
          *
-         * @returns the position to draw the next char (using the same anchor location).
+         * @returns the position to draw the next char.
         **/
-        iVec2 drawChar(char c, iVec2 pos, const GFXfont& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR);
+        iVec2 drawChar(char c, iVec2 pos, const GFXfont& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-         * Draw a character at position pos on the image and return the position for the next character.
-         * Version for ILI9341_t3 font.
+         * Draw a single character at position pos on the image and return the position for the next
+         * character. Version for ILI9341_t3 font.
          *
          * @param   c       The character to draw.
-         * @param   pos     position of the anchor point in the image.
+         * @param   pos     position of the anchor point in the image. This position is mapped to the
+         *                  anchor point for the character which {baseline,right}
          * @param   font    The font to use.
          * @param   color   The color.
          * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
          *                  disable blending and simply use overwrite.
-         * @param   anchor  (Optional) location of the anchor with respect to the text bounding box. (by
-         *                  default, this is the BASELINE|LEFT).
          *
-         * @returns the position to draw the next char (using the same anchor location). 
+         * @returns the position to draw the next char.
         **/
-        iVec2 drawChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR);
+        iVec2 drawChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-         * Draw a text at position pos on the image with a given font.
+         * Draw a text at a given position with a given font. 
          * Version for GFXFont
+         * 
+         * NOTE: use char '\n' to changes line.
          *
-         * @param   text                The text to draw.
-         * @param   pos                 position of the anchor point in the image.
-         * @param   font                The font to use.
-         * @param   color               The color.
-         * @param   opacity             (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                              negative to disable blending and simply use overwrite.
-         * @param   anchor              (Optional) location of the anchor with respect to the text
-         *                              bounding box. (by default, this is the BASELINE|LEFT).
-         * @param   wrap_text           (Optional) True to wrap wrap text at the end of image.
-         * @param   start_newline_at_0  (Optional) True to start a new line of text at x=0 and false to
-         *                              start at x=pos.x.
+         * @param   text    The text to draw.
+         * @param   pos     position of the text. This is the position of the anchor point
+         *                  (baseline/left) for the first character of the text.
+         * @param   font    The font to use.
+         * @param   color   The color.
+         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending and simply use overwrite.
          *
-         * @returns the position to draw the next char (using the same anchor location).
+         * @returns the position to use draw the next char after the text.
         **/
-        iVec2 drawText(const char* text, iVec2 pos, const GFXfont& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE, ANCHOR_LOCATION anchor = TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
+        iVec2 drawText(const char* text, iVec2 pos, const GFXfont& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
-         * Draw a text at position pos on the image with a given font. Version for GFXFont
+         * Draw a text at a given position with a given font. 
+         * Version for ILI9341_t3 font
+         * 
+         * NOTE: use char '\n' to changes line.
+         *
+         * @param   text    The text to draw.
+         * @param   pos     position of the text. This is the position of the anchor point
+         *                  (baseline/left) for the first character of the text.
+         * @param   font    The font to use.
+         * @param   color   The color.
+         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending and simply use overwrite.
+         *
+         * @returns the position to use draw the next char after the text.
+        **/
+        iVec2 drawText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Advanced drawText method. Draw a text with a given font at a given position relative to a
+         * given anchor point. Version for GFXFont
+         *
+         * NOTE: use char '\n' to changes line.
          *
          * @param   text                The text to draw.
-         * @param   pos                 position of the anchor point in the image.
+         * @param   pos                 position to draw the text. This is the postion to which will be
+         *                              mapped the selected anchor point of the text.
+         * @param   anchor              Select the anchor point in the image:
+         *                              - drawText() uses by default DEFAULT_TEXT_ANCHOR = BASELINE|LEFT  
+         *                              Possible flags: LEFT, RIGHT, CENTER, TOP, BOTTOM, BASELINE.
+         *                              CENTER is selected if no flag is specified. For example:
+         *                                  -> TOP|LEFT : pos is the top left corner of the text.
+         *                                  -> RIGHT : pos correspond to the middle/right of text.
+         *                                  -> CENTER : center of the text.
          * @param   font                The font to use.
+         * @param   wrap_text           True to wrap wrap text at the end of image. Wrapping occur per
+         *                              character (not per word).
+         * @param   start_newline_at_0  True to start a new line of text at position x=0 and false to 
+         *                              start at x=pos.x.
          * @param   color               The color.
          * @param   opacity             (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                              negative to disable blending and simply use overwrite.
-         * @param   anchor              (Optional) location of the anchor with respect to the text
-         *                              bounding box. (by default, this is the BASELINE|LEFT).
-         * @param   wrap_text           (Optional) True to wrap wrap text at the end of image.
-         * @param   start_newline_at_0  (Optional) True to start a new line of text at x=0 and false to
-         *                              start at x=pos.x.
          *
-         * @returns the position to draw the next char (using the same anchor location).
+         * @returns the position to draw the next char (when using the same anchor location).
         **/
-        iVec2 drawText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE, ANCHOR_LOCATION anchor = TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
+        iVec2 drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const GFXfont& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+        /**
+         * Advanced drawText method. Draw a text with a given font at a given position relative to a
+         * given anchor point. Version for ILI9341_t3 font.
+         *
+         * NOTE: use char '\n' to changes line.
+         *
+         * @param   text                The text to draw.
+         * @param   pos                 position to draw the text. This is the postion to which will be
+         *                              mapped the selected anchor point of the text.
+         * @param   anchor              Select the anchor point in the image:
+         *                              - drawText() uses by default DEFAULT_TEXT_ANCHOR = BASELINE|LEFT
+         *                              Possible flags: LEFT, RIGHT, CENTER, TOP, BOTTOM, BASELINE.
+         *                              CENTER is selected if no flag is specified. For example:
+         *                                  -> TOP|LEFT : pos is the top left corner of the text.
+         *                                  -> RIGHT : pos correspond to the middle/right of text.
+         *                                  -> CENTER : center of the text.
+         * @param   font                The font to use.
+         * @param   wrap_text           True to wrap wrap text at the end of image. Wrapping occur per
+         *                              character (not per word).
+         * @param   start_newline_at_0  True to start a new line of text at position x=0 and false to
+         *                              start at x=pos.x.
+         * @param   color               The color.
+         * @param   opacity             (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                              negative to disable blending and simply use overwrite.
+         *
+         * @returns the position to draw the next char (when using the same anchor location).
+        **/
+        iVec2 drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
