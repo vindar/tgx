@@ -39,7 +39,59 @@
 namespace tgx
 {
 
+
+
+
+
+    /**
+    * For some path primitive like drawSmoothThickLine(), drawSmoothThickPolyline() 
+    * it is necessary to specify how the extremities of the path should look like.
+    * 
+    * The available end types are define here:
+    **/
+    enum PATH_END_TYPE
+        {
+        STRAIGHT_END = 0,       // just draw a straight line
+        ROUND_END = 1,          // rounded end
+        ARROW_END_SMALL = 2,    // small arrow head
+        ARROW_END_MEDIUM = 3,   // medium arrow head
+        ARROW_END_BIG = 4       // big arrow head
+        };
         
+
+    /**
+    * Enum use to define the placement of an anchor point relative to a box. 
+    * Used for drawing text. 
+    * 
+    *        left       center      right
+    *      top +-----------------------+
+    *          |           .           |
+    *          |           .           |
+    *   center | ..................... |
+    * baseline |           .           |
+    *          |           .           |
+    *   bottom +-----------------------+
+    *   
+    *  Default location (0) is center. For example:
+    *  
+    *  - TOP|LEFT  -> anchor at the top left corner
+    *  - CENTER    -> anchor at the center of the box  
+    *  - RIGHT     -> anchor at the center right corner of the box
+    **/
+    enum ANCHOR_LOCATION
+        {
+        CENTER = 0,
+        LEFT = 1,
+        RIGHT = 2, 
+        TOP = 4,
+        BOTTOM = 8,
+        BASELINE = 16
+        };
+
+
+
+
+
 
     /************************************************************************************
     * Template class for an "image object" that draws into a memory buffer.   
@@ -2719,6 +2771,24 @@ namespace tgx
 
 
 
+/***********************************************************************************************************
+ *                           TODO : Drawing primitive to implement next....
+ * 
+ * - arrow for end type
+ * - Rotated Ellipse 
+ * - Circle Pie, Circle Arc
+ * - method for drawing intersection of half plane and circles with and without aliasing.   
+ * - drawing a general path, svg compatibility
+ *
+************************************************************************************************************/
+
+
+
+
+
+
+
+
 
     /********************************************************************************************
     *********************************************************************************************
@@ -2732,7 +2802,7 @@ namespace tgx
     *       and v23 (antialiased). [https://github.com/projectitis/packedbdf/blob/master/packedbdf.md]
     *    
     *       
-    * NOTE: tgx-font [https://github.com/vindar/tgx-font] contains a set of ILI9341_t3 v1 and vé (antialiased) font
+    * NOTE: tgx-font [https://github.com/vindar/tgx-font] contains a set of ILI9341_t3 v1 and v2 (antialiased) font
     *       that can be used directly with the methods below (and the instruction on how to convert a ttf font to this
     *       format). 
     * 
