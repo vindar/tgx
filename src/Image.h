@@ -2817,87 +2817,116 @@ namespace tgx
     ********************************************************************************************/
 
 
-
-
-
         /**
-        * Return the box of pixels occupied by a char 'c' when drawn with 'font' at position 'pos'
-        * position is w.r.t. the baseline
-        * if xadvance is non null, put in there the offset for printing the next char on the same line
+         * Return the box of pixels occupied by a character when drawn with a given font at a given
+         * position. Version for GFXFont.
+         * 
+         * NOTE: pos.y refers to the position of the BASELINE of the char/font.
+         *
+         * @param           c           The character.
+         * @param           pos         position (left/baseline of char)
+         * @param           font        The font.
+         * @param [in,out]  xadvance    (Optional) If non-null, the number of pixel to advance
+         *                              horizontally after printed the char is stored here.
+         *
+         * @returns the bounding box of pixels occupied by the char when drawn at pos.
         **/
         static iBox2 measureChar(char c, iVec2 pos, const GFXfont& font, int* xadvance = nullptr);
 
 
         /**
-        * Return the box of pixels occupied by a char 'c' when drawn with 'font' at position 'pos'
-        * position is w.r.t. the baseline
-        * if xadvance is non null, put in there the offset for printing the next char on the same line
+         * Return the box of pixels occupied by a character when drawn with a given font at a given
+         * position. Version for ILI9341_t3 fonts.
+         * 
+         * NOTE: pos.y refers to the position of the BASELINE of the char/font.
+         *
+         * @param           c           The character.
+         * @param           pos         position (left/baseline of char)
+         * @param           font        The font.
+         * @param [in,out]  xadvance    (Optional) If non-null, the number of pixel to advance
+         *                              horizontally after printed the char is stored here.
+         *
+         * @returns the bounding box of pixels occupied by the char when drawn at pos.
         **/
         static iBox2 measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, int* xadvance = nullptr);
 
 
         /**
-        * Return the box of pixels occupied by a text when drawn with 'font' starting at position 'pos' (w.r.t. the baseline). 
-        * If start_newline_at_0 is true, cursor restart at x=0 at newline. Otherwise, it restart at pos.x
+         * Return the box of pixels occupied by a text when drawn with 'font' starting at position 'pos'
+         * Version for GFXFont.
+         * 
+         * NOTE: pos.y refers to the position of the BASELINE of the char/font.
+         *
+         * @param   text                The text.
+         * @param   pos                 The position (left baseline of first char. of text)
+         * @param   font                The font.
+         * @param   start_newline_at_0  (Optional) True to start new line at x=0 and false to start at x=pos.x.
+         * @param   wrap_text           (Optional) True to wrap wrap text at the end of image.
+         *
+         * @returns the bounding box of pixels occupied by the the text when drawn starting at pos.
         **/
-        static iBox2 measureText(const char * text, iVec2 pos, const GFXfont& font, bool start_newline_at_0 = false);
+        iBox2 measureText(const char * text, iVec2 pos, const GFXfont& font, bool start_newline_at_0 = false, bool wrap_text = false);
 
 
         /**
-        * Return the box of pixels occupied by a text when drawn with 'font' starting at position 'pos' (w.r.t. the baseline).
-        * If start_newline_at_0 is true, cursor restart at x=0 at newline. Otherwise, it restart at pos.x
+         * Return the box of pixels occupied by a text when drawn with 'font' starting at position 'pos'
+         * Version for GFXFont.
+         * 
+         * NOTE: pos.y refers to the position of the BASELINE of the char/font.
+         *
+         * @param   text                The text.
+         * @param   pos                 The position (left baseline of first char. of text)
+         * @param   font                The font.
+         * @param   start_newline_at_0  (Optional) True to start new line at x=0 and false to start at x=pos.x.
+         * @param   wrap_text           (Optional) True to wrap wrap text at the end of image.
+         *
+         * @returns the bounding box of pixels occupied by the the text when drawn starting at pos.
         **/
-        static iBox2 measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, bool start_newline_at_0 = false);
+        iBox2 measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, bool start_newline_at_0 = false, bool wrap_text = false);
 
 
         /**
-        * Draw a character from an Adafruit font at position pos on the image. 
-        * Return the position for the next character (on the same line). 
-        * position is w.r.t. the baseline
+         * Draw a character at position pos on the image and return the position for the next character.
+         * Version for GFXFont
+         * 
+         * NOTE: pos.y refers to the BASELINE of the char.
+         *
+         * @param   c       The character to draw.
+         * @param   pos     baseline/left position of char.
+         * @param   col     The color to use.
+         * @param   font    The font to use.
+         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending and simply use overwrite.
+         *
+         * @returns the position to draw the next char.
         **/
-        iVec2 drawChar(char c, iVec2 pos, color_t col, const GFXfont& font)
+        iVec2 drawChar(char c, iVec2 pos, color_t col, const GFXfont& font, float opacity = TGX_DEFAULT_BLENDING_MODE)
             {
             return _drawCharGFX<false>(c, pos, col, font, 1.0f);
             }
 
 
         /**
-        * Draw a character from an Adafruit font at position pos on the image.
-        * Return the position for the next character (on the same line).
-        * position is w.r.t. the baseline
-        * 
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
-        **/
-        iVec2 drawChar(char c, iVec2 pos, color_t col, const GFXfont& font, float opacity)
-            {
-            return _drawCharGFX<true>(c, pos, col, font, opacity);
-            }
-
-
-        /**
-        * Draw a character from an ili9341_t3 font at position (x,y) on the image.
-        * Return the position for the next character (on the same line).
-        * position is w.r.t. the baseline
-        **/
-        iVec2 drawChar(char c, iVec2 pos, color_t col, const ILI9341_t3_font_t& font)
-            {
-            return _drawCharILI<false>(c, pos, col, font, 1.0f);
-            }
-
-
-        /**
-        * Draw a character from an ili9341_t3 font at position (x,y) on the image.
-        * Return the position for the next character (on the same line).
-        * position is w.r.t. the baseline
-        *
-        * Blend with the current color background using opacity between 0.0f (fully transparent) and
-        * 1.0f (fully opaque). If color_t has an alpha channel, it is used (and multiplied by opacity).
+         * Draw a character at position pos on the image and return the position for the next character.
+         * Version for ILI9341_t3
+         * 
+         * NOTE: pos.y refers to the BASELINE of the char.
+         *
+         * @param   c       The character to draw.
+         * @param   pos     baseline/left position of char.
+         * @param   col     The color to use.
+         * @param   font    The font to use.
+         * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
+         *                  blending and simply use overwrite.
+         *
+         * @returns the position to draw the next char.
         **/
         iVec2 drawChar(char c, iVec2 pos, color_t col, const ILI9341_t3_font_t& font, float opacity)
             {
             return _drawCharILI<true>(c, pos, col, font, opacity);
             }
+
+
 
 
         /**
