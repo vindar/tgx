@@ -51,11 +51,11 @@ namespace tgx
     **/
     enum PATH_END_TYPE
         {
-        STRAIGHT_END = 0,       // just draw a straight line
-        ROUND_END = 1,          // rounded end
-        ARROW_END_SMALL = 2,    // small arrow head
-        ARROW_END_MEDIUM = 3,   // medium arrow head
-        ARROW_END_BIG = 4       // big arrow head
+        END_STRAIGHT = 0,       // just draw a straight line
+        END_ROUNDED = 1,          // rounded end
+        END_ARROW = 2,          // medium arrow head
+        END_ARROW_SMALL = 3,    // small arrow head
+        END_ARROW_BIG = 4       // big arrow head
         };
         
 
@@ -1096,8 +1096,7 @@ namespace tgx
 
 
         /**
-         * Draw a smooth (i.e. antialiased with sub-pixel precision) line segment between two points
-         * (using Bresenham's algorithm)
+         * Draw a smooth (i.e. antialiased with sub-pixel precision) line segment between two points.
          *
          * @param   P1      The first point.
          * @param   P2      The second point.
@@ -1108,34 +1107,33 @@ namespace tgx
 
 
         /**
-         * Draw a smooth (i.e. antialiased with sub-pixel precision) thick line segment between two
-         * points (using Bresenham's algorithm)
+         * Draw a smooth (i.e. antialiased with sub-pixel precision) thick line segment between two points.
          *
-         * @param   P1              The first point.
-         * @param   P2              The second point.
-         * @param   line_width      Width of the line.
-         * @param   rounded_ends_P1 true to draw a rounded end at P1 and false for a staight end.
-         * @param   rounded_ends_P2 true to draw a rounded end at P2 and false for a staight end.
-         * @param   color           color to use.
-         * @param   opacity         (Optional) opacity multiplier between 0.0f and 1.0f (default).
+         * @param   P1          The first point.
+         * @param   P2          The second point.
+         * @param   line_width  Width of the line.
+         * @param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUND, END _ARROW... (c.f. PATH_END_TYPE enum)
+         * @param   end_P2      specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUND, END _ARROW... (c.f. PATH_END_TYPE enum)
+         * @param   color       color to use.
+         * @param   opacity     (Optional) opacity multiplier between 0.0f and 1.0f (default).
         **/
-        void drawSmoothThickLine(fVec2 P1, fVec2 P2, float line_width, bool rounded_ends_P1, bool rounded_ends_P2, color_t color, float opacity = 1.0f);
+        void drawSmoothThickLine(fVec2 P1, fVec2 P2, float line_width, PATH_END_TYPE end_P1, PATH_END_TYPE ends_P2, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (i.e. antialiased with sub-pixel precision) wedge line from P1 to P2 with
-         * with respective wideness line_width_P1 and line_width_P2 at both ends.
+         * Draw a smooth (i.e. antialiased with sub-pixel precision) wedge line from P1 to P2 with with
+         * respective wideness line_width_P1 and line_width_P2 at both ends.
          *
          * @param   P1              first end point.
          * @param   P2              second end point.
          * @param   line_width_P1   width of the wedge at P1.
-         * @param   rounded_end_P1  true to draw a rounded end at P1 and false for a staight end.
+         * @param   end_P1          specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f. PATH_END_TYPE enum)
          * @param   line_width_P2   width of the wedge at P2.
-         * @param   rounded_end_P2  true to draw a rounded end at P2 and false for a staight end.
+         * @param   end_P2          specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f. PATH_END_TYPE enum)
          * @param   color           color to use.
          * @param   opacity         (Optional) opacity multiplier between 0.0f and 1.0f (default).
         **/
-        void drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, bool rounded_end_P1, float line_width_P2, bool rounded_end_P2, color_t color, float opacity = 1.0f);
+        void drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, PATH_END_TYPE end_P1, float line_width_P2, PATH_END_TYPE end_P2, color_t color, float opacity = 1.0f);
 
 
 
@@ -1973,16 +1971,18 @@ namespace tgx
          * Draw a thick smooth (antialised with subpixel precision) polyline i.e. a sequence of
          * consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
          *
-         * @param   nbpoints        number of points in tabPoints.
-         * @param   tabPoints       array of points.
-         * @param   thickness       thickness of the polyline.
-         * @param   rounded_end_P0  true to make a rounded end at the beginning of the polyline and false for a straigth end.
-         * @param   rounded_end_Pn  true to make a rounded end at the end of the polyline and false for a straigth end.
-         * @param   color           The color to use.
-         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+         * @param   nbpoints    number of points in tabPoints.
+         * @param   tabPoints   array of points.
+         * @param   thickness   thickness of the polyline.
+          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_end_P0, bool rounded_end_Pn, color_t color, float opacity = 1.0f);
+        void drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = 1.0f);
 
+
+//
 
         /**
          * Draw a thick smooth (antialised with subpixel precision) polyline i.e. a sequence of
@@ -1996,15 +1996,15 @@ namespace tgx
          * - true  if there are more point to plot after this one.
          * - false if this is the last point.
          *
-         * @param   next_point      callback functior that provides the list of points.
-         * @param   thickness       thickness of the polyline.
-         * @param   rounded_end_P0  true to make a rounded end at the beginning of the polyline and false for a straigth end.
-         * @param   rounded_end_Pn  true to make a rounded end at the end of the polyline and false for a straigth end.
-         * @param   color           The color to use.
-         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+         * @param   next_point  callback functior that provides the list of points.
+         * @param   thickness   thickness of the polyline.
+          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         template<typename FUNCTOR_NEXT>
-        void drawSmoothThickPolyline(FUNCTOR_NEXT next_point, float thickness, bool rounded_end_P0, bool rounded_end_Pn, color_t color, float opacity = 1.0f);
+        void drawSmoothThickPolyline(FUNCTOR_NEXT next_point, float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = 1.0f);
 
 
 
@@ -2609,35 +2609,35 @@ namespace tgx
         /**
          * Draw a thick smooth (anti-aliased with sub-pixel precision) quadratic (rational) Bezier curve.
          *
-         * @param   P1              Start point.
-         * @param   P2              End point.
-         * @param   PC              Control point.
-         * @param   wc              Control point weight (must be positive). Fastest for wc=1.
-         * @param   thickness       thickness of the curve
-         * @param   rounded_end_P1  true to make a rounded end at the beginning of the curve and false for a straigth end.
-         * @param   rounded_end_P2  true to make a rounded end at the end of the curve and false for a straigth end.
-         * @param   color           The color to use.
-         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                          negative to disable blending and simply use overwrite.
+         * @param   P1          Start point.
+         * @param   P2          End point.
+         * @param   PC          Control point.
+         * @param   wc          Control point weight (must be positive). Fastest for wc=1.
+         * @param   thickness   thickness of the curve.
+          *@param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_P2      specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
         **/
-        void drawSmoothThickQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, bool rounded_end_P1, bool rounded_end_P2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawSmoothThickQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
          * Draw a thick smooth (anti-aliased with sub-pixel precision) cubic Bezier curve.
          *
-         * @param   P1              Start point.
-         * @param   P2              End point.
-         * @param   PA              first control point.
-         * @param   PB              second control point.
-         * @param   thickness       thickness of the curve
-         * @param   rounded_end_P1  true to make a rounded end at the beginning of the curve and false for a straigth end.
-         * @param   rounded_end_P2  true to make a rounded end at the end of the curve and false for a straigth end.
-         * @param   color           The color to use.
-         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                          negative to disable blending and simply use overwrite.
+         * @param   P1          Start point.
+         * @param   P2          End point.
+         * @param   PA          first control point.
+         * @param   PB          second control point.
+         * @param   thickness   thickness of the curve.
+          *@param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_P2      specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
         **/
-        void drawSmoothThickCubicBezier(fVec2 P1, fVec2 P2, fVec2 PA, fVec2 PB, float thickness, bool rounded_end_P1, bool rounded_end_P2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawSmoothThickCubicBezier(fVec2 P1, fVec2 P2, fVec2 PA, fVec2 PB, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -2650,18 +2650,18 @@ namespace tgx
          *
          * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
          *                              needed (but uses more memory on stack)
-         * @param   nbpoints        number of points in the spline Must be smaller or equal to
-         *                          SPLINE_MAX_POINTS.
-         * @param   tabPoints       the array of points to interpolate.
-         * @param   thickness       thickness of the curve.
-         * @param   rounded_end_P0  true to make a rounded end at the beginning of the curve and false for a straigth end.
-         * @param   rounded_end_Pn  true to make a rounded end at the end of the curve and false for a straigth end.
-         * @param   color           The color to use.
-         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                          negative to disable blending and simply use overwrite.
+         * @param   nbpoints    number of points in the spline Must be smaller or equal to
+         *                      SPLINE_MAX_POINTS.
+         * @param   tabPoints   the array of points to interpolate.
+         * @param   thickness   thickness of the curve.
+          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawSmoothThickQuadSpline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_end_P0, bool rounded_end_Pn, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawSmoothThickQuadSpline(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
@@ -2674,18 +2674,18 @@ namespace tgx
          *
          * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
          *                              needed (but uses more memory on stack)
-         * @param   nbpoints        number of points in the spline Must be smaller or equal to
-         *                          SPLINE_MAX_POINTS.
-         * @param   tabPoints       the array of points to interpolate.
-         * @param   thickness       thickness of the curve.
-         * @param   rounded_end_P0  true to make a rounded end at the beginning of the curve and false for a straigth end.
-         * @param   rounded_end_Pn  true to make a rounded end at the end of the curve and false for a straigth end.
-         * @param   color           The color to use.
-         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                          negative to disable blending and simply use overwrite.
+         * @param   nbpoints    number of points in the spline Must be smaller or equal to
+         *                      SPLINE_MAX_POINTS.
+         * @param   tabPoints   the array of points to interpolate.
+         * @param   thickness   thickness of the curve.
+          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+         * @param   color       The color to use.
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawSmoothThickCubicSpline(int nbpoints, const fVec2 tabPoints[], float thickness, bool rounded_end_P0, bool rounded_end_Pn, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawSmoothThickCubicSpline(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
         /**
