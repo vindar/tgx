@@ -47,7 +47,7 @@ namespace tgx
     * For some path primitive like drawSmoothThickLine(), drawSmoothThickPolyline() 
     * it is necessary to specify how the extremities of the path should look like.
     * 
-    * The available end types are define here:
+    * The available 'ends' are define here:
     **/
     enum PATH_END_TYPE
         {
@@ -2950,7 +2950,16 @@ namespace tgx
             }
 
 
+        
+        
+        // fontHeight()  <- return the heigh of a font. 
+        
 
+        // measureText() <- add bool wrap
+        // drawText() <- add bool wrap
+
+        // placeText(text, pos, anchorpoint, )
+        // drawTextInside(text, Box, anchor
 
 
 
