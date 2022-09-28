@@ -51,11 +51,13 @@ namespace tgx
     **/
     enum PATH_END_TYPE
         {
-        END_STRAIGHT = 0,       // just draw a straight line
-        END_ROUNDED = 1,          // rounded end
-        END_ARROW = 2,          // medium arrow head
-        END_ARROW_SMALL = 3,    // small arrow head
-        END_ARROW_BIG = 4       // big arrow head
+        END_STRAIGHT = -1,       // just draw a straight line
+        END_ROUNDED = 0,         // rounded end
+        END_ARROW_1 = 1,         // tiny arrow head (extends = line thickness)
+        END_ARROW_2 = 2,         // small arrow head (extends = 2 x line thickness)
+        END_ARROW_3 = 3,         // medium arrow head (extends = 3 x line thickness)
+        END_ARROW_4 = 4,         // large arrow head (extends = 4 x line thickness)
+        END_ARROW_5 = 5,         // huge arrow head (extends = 5 x line thickness)
         };
         
 
@@ -3311,7 +3313,10 @@ private:
         */
 
 
-
+        /**
+        * Draw the end of a thick line (straight, rounded or arrow). 
+        **/
+        void _drawEnd(float distAB, fVec2 A, fVec2 B, BSeg& segAB, BSeg& segBA, BSeg& segAP, BSeg& segBQ, PATH_END_TYPE end, int w, color_t color, float opacity);
 
 
 

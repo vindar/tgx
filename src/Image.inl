@@ -1861,6 +1861,61 @@ namespace tgx
         }
 
 
+
+    template<typename color_t>
+    void Image<color_t>::_drawEnd(float distAB, fVec2 A, fVec2 B, BSeg& segAB, BSeg& segBA, BSeg& segAP, BSeg& segBQ, PATH_END_TYPE end, int w, color_t color, float opacity)
+        {
+        const int op = (int)(opacity * 256);
+        switch(end)
+            {
+            case END_STRAIGHT:
+                {
+                _bseg_avoid11(segAB, segAP, segBQ, true, true, true, true, color, -w, op, true);
+                return;
+                }
+            case END_ROUNDED:
+                {
+                _bseg_avoid11(segAB, segAP, segBQ, false, false, true, true, color, 0, op, true);
+                _drawPixel<true>(iVec2((int)(roundf(A.x)), (int)(roundf(A.y))), color, (op * segAP.AA(w) >> 8) / 256.0f);
+                _drawPixel<true>(iVec2((int)(roundf(B.x)), (int)(roundf(B.y))), color, (op * segBQ.AA(w) >> 8) / 256.0f);
+                _fillSmoothCircleInterHP((A + B) * 0.5f, distAB * 0.5f, color, opacity, segAB, w);
+                return;
+                }   
+            case END_ARROW_1:
+            case END_ARROW_2:
+            case END_ARROW_3:
+            case END_ARROW_4:
+            case END_ARROW_5:
+                {
+                const int n = ((int)(end));
+                fVec2 H = (B - A);
+                //float l = distAB * ((int)(end));
+                fVec2 E = ((A + B)*0.5f) + H.getRotate90() * ((float)(n * w)); 
+                H = H * (0.5f * n);
+                fVec2 C = A - H;
+                fVec2 D = B + H;
+                BSeg segAC(A, C); BSeg segCA = segAC.get_reverse();
+                BSeg segCE(C, E); BSeg segEC = segCE.get_reverse();
+                BSeg segEA(E, A); BSeg segAE = segEA.get_reverse();
+                BSeg segBD(B, D); BSeg segDB = segBD.get_reverse();
+                BSeg segDE(D, E); BSeg segED = segDE.get_reverse();
+                BSeg segEB(E, B); BSeg segBE = segEB.get_reverse();
+                _bseg_fill_triangle_precomputed(A, C, E, segAC, segCA, segCE, segEC, segEA, segAE, color, opacity);
+                _bseg_fill_triangle_precomputed(A, E, B, segAE, segEA, segEB, segBE, segBA, segAB, color, opacity);
+                _bseg_fill_triangle_precomputed(B, D, E, segBD, segDB, segDE, segED, segEB, segBE, color, opacity);
+                _bseg_avoid1(segAC, segAP, true, false, true, color, -w, op, true);
+                _bseg_avoid1(segCE, segCA, true, false, true, color, -w, op, true);
+                _bseg_avoid1(segED, segEC, true, false, true, color, -w, op, true);
+                _bseg_avoid11(segDB, segDE, segBQ, true, true, true, true, color, -w, op, true);
+                _bseg_avoid22(segAB, segAP, segAC, segBQ, segBD, true, true, true, true, color, 0, op, true);
+                _bseg_avoid22(segAE, segAP, segAC, segEC, segED, true, true, true, true, color, 0, op, true);
+                _bseg_avoid22(segBE, segBQ, segBD, segEA, segED, true, true, true, true, color, 0, op, true);
+                }
+             
+            }
+        }
+
+
     template<typename color_t>
     void Image<color_t>::drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, PATH_END_TYPE end_P1, float line_width_P2, PATH_END_TYPE end_P2, color_t color, float opacity)
         {
@@ -1882,18 +1937,18 @@ namespace tgx
             }
         const int op = (int)(opacity * 256);
         if (line_width_P1 <= 1)
-            { // draw triangle: here line_width_P1 <= 1 , line_width_P2 > 1 and rounded_end_P2 = true. 
-            line_width_P2 /= 2;
-            const fVec2 H = (P1 - P2).getRotate90().getNormalize() * line_width_P2;
+            { // draw triangle: here line_width_P1 <= 1 , line_width_P2 > 1 and rounded_end_P2 = false. 
+            line_width_P2;
+            const fVec2 H = (P1 - P2).getRotate90().getNormalize() * (line_width_P2/2);
             const fVec2 PA = P2 + H, PB = P2 - H;
             const int w = -1; 
             BSeg seg1A(P1, PA); BSeg segA1 = seg1A.get_reverse();
             BSeg seg1B(P1, PB); BSeg segB1 = seg1B.get_reverse();
             BSeg segAB(PA, PB); BSeg segBA = segAB.get_reverse();
-            _bseg_fill_triangle_precomputed(P1, PA, PB, seg1A, segA1, segAB, segBA, segB1, seg1B, color, opacity);
+            _bseg_fill_triangle_precomputed(P1, PA, PB, seg1A, segA1, segAB, segBA, segB1, seg1B, color, opacity);            
+            _bseg_draw(seg1A, false, false, color, -w, op, true);                
             _bseg_avoid1(seg1B, seg1A, true, false, true, color, w, op, true);
-            _bseg_avoid1(segBA, segB1, true, false, true, color, w, op, true);
-            _bseg_avoid1(segA1, segAB, true, false, true, color, w, op, true);
+            _drawEnd(line_width_P2, PA, PB, segAB, segBA, segA1, segB1, end_P2, w, color, opacity);
             return;
             }        
         // here line_width_P1 > 1  and line_width_P2 > 1
