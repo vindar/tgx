@@ -5719,7 +5719,7 @@ namespace tgx
             return;
         case 2:
             {
-            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, true, true, color, opacity);
+            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, END_ROUNDED, END_ROUNDED, color, opacity);
             return;
             }
         default:
