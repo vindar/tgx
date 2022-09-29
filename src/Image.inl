@@ -4278,14 +4278,14 @@ namespace tgx
                     int o = kx * x1 + ky * j + off;
                     while (x1 <= x2)
                         {
-                        if (o > 1) _drawPixel<false>({ x1, j }, color, opacity);
+                        if (o > 0) _drawPixel<false>({ x1, j }, color, opacity);
                         o += kx;
                         x1++;
                         }
                     break;
                     }
                 int o = kx * i + ky * j + off;
-                if (o > 1)
+                if (o > 0)
                     {
                     const float alpha = RT - sqrtf(e2);
                     _drawPixel<false>({ i, j }, color, alpha * opacity);
@@ -4359,7 +4359,7 @@ namespace tgx
                     int o2 = kx2 * x1 + ky2 * j + off2;
                     while (x1 <= x2)
                         {
-                        if ((o1 > 1)&&(o2 >1)) _drawPixel<false>({x1, j}, color, opacity);
+                        if ((o1 > 0)&&(o2 >0)) _drawPixel<false>({x1, j}, color, opacity);
                         o1 += kx1;
                         o2 += kx2;
                         x1++;
@@ -4368,7 +4368,7 @@ namespace tgx
                     }
                 int o1 = kx1 * i + ky1 * j + off1;
                 int o2 = kx2 * i + ky2 * j + off2;
-                if ((o1 > 1)&&(o2 > 1))
+                if ((o1 > 0)&&(o2 > 0))
                     {
                     const float alpha = RT - sqrtf(e2);
                     _drawPixel<false>({ i, j }, color, alpha * opacity);
@@ -4504,6 +4504,7 @@ namespace tgx
 	    const fVec2 A2(center.x + r * sin(rad2), center.y - r * cos(rad2));
         BSeg seg1(center, A1);
         BSeg seg2(center, A2);
+        color_t col_origin = readPixel(seg1.pos());
         for (int i = 0; i < 4; i++)
             {
             float m, M;
@@ -4549,16 +4550,10 @@ namespace tgx
                         _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, +1);
                     }
                 }
-
             }
-        _bseg_draw(seg1, false, true, tgx::RGB32_Red, 0, op, true);
-        _bseg_avoid1(seg2, seg1, true, true, true, tgx::RGB32_Red, 0, op, true);
-        drawPixel<true>(seg1.pos(), tgx::RGB32_Black, 1.0f);
-        if (collision(*this))
-            {
-            cout << "collision\n";
-            }
-
+        drawPixel<true>(seg1.pos(), col_origin);
+        _bseg_draw(seg1, false, true, color, +1, op, true);
+        _bseg_avoid1(seg2, seg1, true, true, true, color, -1, op, true);
         }
 
 
