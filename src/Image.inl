@@ -1935,6 +1935,8 @@ namespace tgx
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        if (line_width_P2 < 1.1f) line_width_P2 += (1.1f - line_width_P2) * 0.5f; // make pointy end
+        if (line_width_P1 < 1.1f) line_width_P1 += (1.1f - line_width_P1) * 0.5f; // look better
         if (line_width_P2 < line_width_P1)
             {
             tgx::swap(P1, P2); 
