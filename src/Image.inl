@@ -4323,6 +4323,82 @@ namespace tgx
 
 
 
+
+    /********************************************************************************
+    *
+    * DRAWING ELLIPSES
+    *
+    *********************************************************************************/
+
+
+
+
+    void _rectifyAngles(float& a1, float& a2)
+        {
+        const float twopi = 6.283185307179586477f;
+        
+        bool b1 = false; 
+        if (a1 < 0) { a1 = -a1; b1 = true; }
+        a1 = fmod(a1, twopi);
+        if (b1) a1 = twopi - a1;
+
+        bool b2 = false;
+        if (a2 < 0) { a2 = -a2; b2 = true; }
+        a2 = fmod(a2, twopi);
+        if (b2) a2 = twopi - a2;
+
+        if (a2 < a1) a2 += twopi;
+        }
+
+
+
+
+    template<typename color_t>
+    void drawSmoothCircleArc(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity)
+        {
+        if (!isValid()) return;
+        _rectifyAngles(angle_start, angle_end);
+
+        int n = (angle_end - angle_start) * r * 0.5f;
+        if (n < 1) n = 1; 
+
+        const float da = angle_end - angle_start / n;
+
+        for (int i = 0; i < n; i++)
+            {
+            fVec2 P1(center.x + r * cosf(angle_start), center.y + r * sinf(angle_start));
+            fVec2 P2(center.x + r * cosf(angle_start), center.y + r * sinf(angle_start));
+            _bseg_d
+
+            }
+
+
+
+
+        }
+
+
+    template<typename color_t>
+    void drawSmoothThickCircleArc(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color, float opacity)
+        {
+
+        }
+
+
+    template<typename color_t>
+    void fillSmoothCirclePie(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity = 1.0f)
+        {
+
+        }
+
+
+    template<typename color_t>
+    void fillSmoothThickCirclePie(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color_interior, color_t color_border, float opacity)
+        {
+        }
+
+
+
     /********************************************************************************
     *
     * DRAWING ELLIPSES

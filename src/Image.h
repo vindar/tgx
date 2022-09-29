@@ -2392,6 +2392,100 @@ namespace tgx
 
 
 
+
+    /********************************************************************************************
+    *********************************************************************************************
+    *
+    *                          DRAWING CIRCLE ARCS AND CIRCLE PIES
+    *
+    *********************************************************************************************
+    ********************************************************************************************/
+
+
+        /**
+         * Draw smooth (anti-aliased and with sub-pixel precision) circle arc.
+         * 
+         * the arc is drawn moving clockwise from angle_start until reaching angle_end.
+         *   - angle = 0     <-> 12AM.
+         *   - angle = PI/2  <-> 3AM
+         *   - angle = PI    <-> 6AM
+         *   - angle = 3PI/4 <-> 9AM
+         *
+         * @param   center      circle center position.
+         * @param   r           circle radius.
+         * @param   angle_start angle in rad. of the begigining of the arc.
+         * @param   angle_end   angle in rad. of the end  of the arc.
+         * @param   color       color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothCircleArc(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Draw smooth (anti-aliased and with sub-pixel precision) thick circle arc.
+         * 
+         * the arc is drawn moving clockwise from angle_start until reaching angle_end.
+         *   - angle = 0     <-> 12AM.
+         *   - angle = PI/2  <-> 3AM
+         *   - angle = PI    <-> 6AM
+         *   - angle = 3PI/4 <-> 9AM
+         * 
+         * @param   center      circle center position.
+         * @param   r           circle radius.
+         * @param   angle_start angle in rad. of the begigining of the arc.
+         * @param   angle_end   angle in rad. of the end  of the arc.
+         * @param   thickness   The thickness of the arc, going 'inside' the circle. 
+         * @param   color       color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawSmoothThickCircleArc(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Fill a smooth (anti-aliased and with sub-pixel precision) circle pie.
+         * 
+         * the arc is drawn sweeping the circle clockwise from angle_start until reaching angle_end.
+         *   - angle = 0     <-> 12AM.
+         *   - angle = PI/2  <-> 3AM
+         *   - angle = PI    <-> 6AM
+         *   - angle = 3PI/4 <-> 9AM
+         *
+         * @param   center      circle center position.
+         * @param   r           circle radius.
+         * @param   angle_start angle in rad. of the begigining of the arc.
+         * @param   angle_end   angle in rad. of the end  of the arc.
+         * @param   color       color to use.
+         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothCirclePie(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity = 1.0f);
+
+
+        /**
+         * Fill a smooth (anti-aliased and with sub-pixel precision) thick circle pie with different
+         * colors for the interior and the boundary
+         * 
+         * the arc is drawn sweeping the circle clockwise from angle_start until reaching angle_end.
+         *   - angle = 0     <-> 12AM.
+         *   - angle = PI/2  <-> 3AM
+         *   - angle = PI    <-> 6AM
+         *   - angle = 3PI/4 <-> 9AM
+         *
+         * @param   center          circle center position.
+         * @param   r               circle radius.
+         * @param   angle_start     angle in rad. of the begigining of the arc.
+         * @param   angle_end       angle in rad. of the end  of the arc.
+         * @param   thickness       border thickness going 'inside' the circle. 
+         * @param   color_interior  color for the interior
+         * @param   color_border    color for the boundary
+         * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void fillSmoothThickCirclePie(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
+
+
+
+
+
+
     /********************************************************************************************
     *********************************************************************************************
     *
@@ -2790,7 +2884,6 @@ namespace tgx
  *                           TODO : Drawing primitive to implement next....
  * 
  * - Rotated Ellipse 
- * - Circle Pie, Circle Arc
  * - method for drawing intersection of half plane and circles with and without aliasing.   
  * - drawing a general path, svg compatibility
  *
@@ -3536,8 +3629,6 @@ private:
 
         void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity) { _bseg_draw(BSeg(P1, P2), drawP1, drawP2, color, 0, (int32_t)(opacity * 256), true); }
 
-
-        public:
 
         /** adapted from bodmer e_tft library */
         void _drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity);
