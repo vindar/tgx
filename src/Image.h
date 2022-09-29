@@ -2402,18 +2402,6 @@ namespace tgx
     ********************************************************************************************/
 
 
-        void _fillSmoothQuarterCircleInterHP2(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int32_t kx1, int32_t ky1, int32_t off1, int32_t kx2, int32_t ky2, int32_t off2);
-
-        void _fillSmoothQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
-
-        void _fillSmoothQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1);
-
-        void _fillSmoothQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, color_t color, float opacity);
-
-
-        static float _rectifyAngle(float a);
-
-
 
         /**
          * Draw smooth (anti-aliased and with sub-pixel precision) circle arc.
@@ -3776,25 +3764,64 @@ namespace tgx
 
 
 
+
+        void _drawSmoothQuarterCircle(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
+
+        void _drawSmoothThickQuarterCircle(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
+
+            
+        void _fillSmoothThickQuarterCircle(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity);
+
+        
+
         void _fillSmoothQuarterCircle(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
 
+        void _fillSmoothQuarterCircleInterHP1(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int32_t kx, int32_t ky, int32_t off);
 
-        void _fillSmoothCircle(tgx::fVec2 C, float R, color_t color, float opacity);
-
-
-        void _smoothQuarterCircle(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
-
-        
-        void _smoothCircle(tgx::fVec2 C, float R, color_t color, float opacity);
-
-        
-        void _smoothWideQuarterCircle(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
+        void _fillSmoothQuarterCircleInterHP2(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int32_t kx1, int32_t ky1, int32_t off1, int32_t kx2, int32_t ky2, int32_t off2);
 
 
-        void _smoothWideCircle(tgx::fVec2 C, float R, float thickness, color_t color, float opacity);
+        void _fillSmoothQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, color_t color, float opacity);
+
+        void _fillSmoothQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1);
+
+        void _fillSmoothQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
 
 
-        void _fillSmoothWideQuarterCircle(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity);
+        void _fillSmoothCircleInterHP(tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg, int side);
+
+
+
+
+
+
+
+
+
+        static float _rectifyAngle(float a);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         void _fillSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
@@ -3817,14 +3844,6 @@ namespace tgx
 
         void _fillSmoothWideQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity);
 
-
-        /** Fill a quarter circle but only on the pixel delimited by the half plane x*kx + y*ky + off > 0 */        
-        void _fillSmoothQuarterCircleInterHP(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int32_t kx, int32_t ky, int32_t off);
-
-        /** Fill a quarter circle but only on the pixel delimited by the half plane x*kx + y*ky + off > 0 [SLOW: TODO improve this....] */
-        void _fillSmoothCircleInterHP(tgx::fVec2 C, float R, color_t color, float opacity, int32_t kx, int32_t ky, int32_t off);
-
-        void _fillSmoothCircleInterHP(tgx::fVec2 C, float R, color_t color, float opacity, const BSeg & seg, int side);
 
 
         /***************************************
