@@ -4321,6 +4321,115 @@ namespace tgx
 
 
 
+    /* Fill a quarter circle but only on the pixel delimited by the intersetion of 2 half plane x*kx + y*ky + off > 0 */
+    template<typename color_t>
+    void Image<color_t>::_fillSmoothQuarterCircleInterHP2(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int32_t kx1, int32_t ky1, int32_t off1,int32_t kx2, int32_t ky2, int32_t off2)
+        {
+        const int dir_x = (quarter & 1) ? -1 : 1;
+        const int dir_y = (quarter & 2) ? -1 : 1;
+        auto B = imageBox();
+        B &= tgx::iBox2(
+            ((dir_x > 0) ? (int)floorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + R - 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - R + 0.5f)),
+            ((dir_y > 0) ? (int)ceilf(C.y + R - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
+        if (B.isEmpty()) return;
+        if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
+        B.maxY += dir_y;
+        if (dir_x < 0) { tgx::swap(B.minX, B.maxX); }
+        B.maxX += dir_x;
+        const float RT = (R < 0.5f) ? 4 * R * R : (R + 0.5f);
+        const float RA2 = RT * RT;
+        const float RB2 = (R < 0.5f) ? -1 : (R - 0.5f) * (R - 0.5f);
+        int i_min = B.minX;
+        for (int j = B.minY; j != B.maxY; j += dir_y)
+            {
+            float dy2 = (j - C.y); dy2 *= dy2;
+            for (int i = i_min; i != B.maxX; i += dir_x)
+                {
+                float dx2 = (i - C.x); dx2 *= dx2;
+                const float e2 = dx2 + dy2;
+                if (e2 >= RA2) { i_min = i + dir_x; continue; }
+                if (e2 <= RB2)
+                    {
+                    int x1 = i;
+                    int x2 = B.maxX - dir_x;
+                    if (x2 < x1) tgx::swap(x1, x2);
+                    int o1 = kx1 * x1 + ky1 * j + off1;
+                    int o2 = kx2 * x1 + ky2 * j + off2;
+                    while (x1 <= x2)
+                        {
+                        if ((o1 > 0)&&(o2 >0)) _drawPixel<false>({x1, j}, color, opacity);
+                        o1 += kx1;
+                        o2 += kx2;
+                        x1++;
+                        }
+                    break;
+                    }
+                int o1 = kx1 * i + ky1 * j + off1;
+                int o2 = kx2 * i + ky2 * j + off2;
+                if ((o1 > 0)&&(o2 > 0))
+                    {
+                    const float alpha = RT - sqrtf(e2);
+                    _drawPixel<false>({ i, j }, color, alpha * opacity);
+                    }
+                }
+            }
+        }
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_fillSmoothQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, color_t color, float opacity)
+        {
+        int v = 0, h = 0;
+        switch (quarter)
+            {
+            case 0: v = 1; h = 1; break;
+            case 1: v = 0; h = 1; break;
+            case 2: v = 1; h = 0; break;
+            }
+        _fillSmoothQuarterCircle(C, R, quarter, v, h, color, opacity);
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_fillSmoothQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1)
+        {
+        int32_t kx1, ky1, minleft1, maxright1;
+        seg1.equation(kx1, ky1, minleft1, maxright1, (side1 > 0));
+        int v=0, h=0;
+        switch (quarter)
+            {
+            case 0: v = 1; h = 1; break;
+            case 1: v = 0; h = 1; break;
+            case 2: v = 1; h = 0; break;
+            }
+        _fillSmoothQuarterCircleInterHP(C, R, quarter, v, h, color, opacity, kx1, ky1, -maxright1);
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::_fillSmoothQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2)
+        {
+        int32_t kx1, ky1, minleft1, maxright1;
+        int32_t kx2, ky2, minleft2, maxright2;
+        seg1.equation(kx1, ky1, minleft1, maxright1, (side1 > 0));
+        seg2.equation(kx2, ky2, minleft2, maxright2, (side2 > 0));
+        int v=0, h=0;
+        switch (quarter)
+            {
+            case 0: v = 1; h = 1; break;
+            case 1: v = 0; h = 1; break;
+            case 2: v = 1; h = 0; break;
+            }
+        _fillSmoothQuarterCircleInterHP2(C, R, quarter, v, h, color, opacity, kx1, ky1, -maxright1, kx2, ky2, -maxright2);
+        }
+
+
+
 
 
 
@@ -4332,70 +4441,112 @@ namespace tgx
 
 
 
-
-    void _rectifyAngles(float& a1, float& a2)
-        {
-        const float twopi = 6.283185307179586477f;
-        
-        bool b1 = false; 
-        if (a1 < 0) { a1 = -a1; b1 = true; }
-        a1 = fmod(a1, twopi);
-        if (b1) a1 = twopi - a1;
-
-        bool b2 = false;
-        if (a2 < 0) { a2 = -a2; b2 = true; }
-        a2 = fmod(a2, twopi);
-        if (b2) a2 = twopi - a2;
-
-        if (a2 < a1) a2 += twopi;
+    template<typename color_t>
+    float Image<color_t>::_rectifyAngle(float a)
+        {     
+        bool b = false; 
+        if (a < 0) { a = -a; b = true; }
+        a = fmodf(a, 360);
+        if (b) a = 360 - a;
+        return a;
         }
 
 
 
 
     template<typename color_t>
-    void drawSmoothCircleArc(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity)
+    void Image<color_t>::drawSmoothCircleArc(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity)
+        {
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::drawSmoothThickCircleArc(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color, float opacity)
+        {
+        }
+
+
+    template<typename color_t>
+    void Image<color_t>::fillSmoothCirclePie(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity)
         {
         if (!isValid()) return;
-        _rectifyAngles(angle_start, angle_end);
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        const int op = (int)(opacity * 256);
 
-        int n = (angle_end - angle_start) * r * 0.5f;
-        if (n < 1) n = 1; 
+	    float a1 = _rectifyAngle(angle_start);
+	    float a2 = _rectifyAngle(angle_end);
+        const float deg_to_rad = 0.01745329251f;
+	    const float rad1 = a1* deg_to_rad;
+	    const float rad2 = a2* deg_to_rad;
+	    const fVec2 A1(center.x + r * sin(rad1), center.y - r * cos(rad1));
+	    const fVec2 A2(center.x + r * sin(rad2), center.y - r * cos(rad2));
 
-        const float da = angle_end - angle_start / n;
+        BSeg seg1(center, A1);
+        BSeg seg2(center, A2);
+        _bseg_draw(seg1, false, true, color, 0, op, true);
+        _bseg_avoid1(seg2, seg1, true, true, true, color, 0, op, true);
 
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < 4; i++)
             {
-            fVec2 P1(center.x + r * cosf(angle_start), center.y + r * sinf(angle_start));
-            fVec2 P2(center.x + r * cosf(angle_start), center.y + r * sinf(angle_start));
-            _bseg_d
 
+            float m, M;
+            switch (i)
+            {
+            case 0: m = 180; M = 270; break;
+            case 1: m = 90; M = 180; break;
+            case 2: m = 270; M = 360; break;
+            default: m = 0; M = 90; break;
             }
-
-
-
-
+            bool b1 = (a1 >= m) && (a1 <= M);
+            bool b2 = (a2 >= m) && (a2 <= M);
+            if (b1 && b2)
+                { // both arrow inside. 
+                if (a1 <= a2)
+                    {
+                    _fillSmoothQuarterCircleInterHP2(i, center, r, color, opacity, seg1, 1, seg2, -1);
+                    }
+                else
+                    {
+                    _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, 1);
+                    _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg2, -1);
+                    }
+                }
+            else if (b1) _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, 1);
+            else if (b2) _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg2, -1);
+            else
+                { // no arrow inside
+                float u1 = a1 - M; if (u1 < 0) u1 += 360;
+                float u2 = a2 - M; if (u2 < 0) u2 += 360;                
+                if (u1 > u2)
+                    {                    
+                    b1 = (u1 > 225);
+                    b2 = (u2 < 45);
+                    if (b1 && b2)
+                        {
+                        _fillSmoothQuarterCircleInterHP2(i, center, r, color, opacity, seg1, 1, seg2, -1);
+                        }
+                    else if (b1) _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, 1);
+                    else if (b2) _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg2, -1);
+                    else _fillSmoothQuarterCircleInterHP0(i, center, r, color, opacity);
+                    }                    
+                }
+            }     
         }
+
+
+
+
+
 
 
     template<typename color_t>
-    void drawSmoothThickCircleArc(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color, float opacity)
-        {
-
-        }
-
-
-    template<typename color_t>
-    void fillSmoothCirclePie(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity = 1.0f)
-        {
-
-        }
-
-
-    template<typename color_t>
-    void fillSmoothThickCirclePie(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color_interior, color_t color_border, float opacity)
+    void Image<color_t>::fillSmoothThickCirclePie(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
         }
+
+
+
+
 
 
 

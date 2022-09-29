@@ -2402,6 +2402,19 @@ namespace tgx
     ********************************************************************************************/
 
 
+        void _fillSmoothQuarterCircleInterHP2(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int32_t kx1, int32_t ky1, int32_t off1, int32_t kx2, int32_t ky2, int32_t off2);
+
+        void _fillSmoothQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
+
+        void _fillSmoothQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1);
+
+        void _fillSmoothQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, color_t color, float opacity);
+
+
+        static float _rectifyAngle(float a);
+
+
+
         /**
          * Draw smooth (anti-aliased and with sub-pixel precision) circle arc.
          * 
