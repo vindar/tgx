@@ -4278,14 +4278,14 @@ namespace tgx
                     int o = kx * x1 + ky * j + off;
                     while (x1 <= x2)
                         {
-                        if (o > 0) _drawPixel<false>({ x1, j }, color, opacity);
+                        if (o > 1) _drawPixel<false>({ x1, j }, color, opacity);
                         o += kx;
                         x1++;
                         }
                     break;
                     }
                 int o = kx * i + ky * j + off;
-                if (o > 0)
+                if (o > 1)
                     {
                     const float alpha = RT - sqrtf(e2);
                     _drawPixel<false>({ i, j }, color, alpha * opacity);
@@ -4359,7 +4359,7 @@ namespace tgx
                     int o2 = kx2 * x1 + ky2 * j + off2;
                     while (x1 <= x2)
                         {
-                        if ((o1 > 0)&&(o2 >0)) _drawPixel<false>({x1, j}, color, opacity);
+                        if ((o1 > 1)&&(o2 >1)) _drawPixel<false>({x1, j}, color, opacity);
                         o1 += kx1;
                         o2 += kx2;
                         x1++;
@@ -4368,7 +4368,7 @@ namespace tgx
                     }
                 int o1 = kx1 * i + ky1 * j + off1;
                 int o2 = kx2 * i + ky2 * j + off2;
-                if ((o1 > 0)&&(o2 > 0))
+                if ((o1 > 1)&&(o2 > 1))
                     {
                     const float alpha = RT - sqrtf(e2);
                     _drawPixel<false>({ i, j }, color, alpha * opacity);
@@ -4441,6 +4441,29 @@ namespace tgx
 
 
 
+
+    inline bool collision(tgx::Image<tgx::RGB32>& im)
+        {
+        bool bug = false;
+        im.iterate(
+            [&](tgx::iVec2 pos, tgx::RGB32 col)
+            {
+                int r = (col.R > 0) ? 1 : 0;
+                int g = (col.G > 0) ? 1 : 0;
+                int b = (col.B > 0) ? 1 : 0;
+                if (r+g+b > 1)
+                    {
+                    bug = true;  return false;                   
+                    }
+                return true;
+            }
+        );
+        return bug;
+        }
+
+
+
+
     template<typename color_t>
     float Image<color_t>::_rectifyAngle(float a)
         {     
@@ -4472,7 +4495,6 @@ namespace tgx
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         const int op = (int)(opacity * 256);
-
 	    float a1 = _rectifyAngle(angle_start);
 	    float a2 = _rectifyAngle(angle_end);
         const float deg_to_rad = 0.01745329251f;
@@ -4480,57 +4502,63 @@ namespace tgx
 	    const float rad2 = a2* deg_to_rad;
 	    const fVec2 A1(center.x + r * sin(rad1), center.y - r * cos(rad1));
 	    const fVec2 A2(center.x + r * sin(rad2), center.y - r * cos(rad2));
-
         BSeg seg1(center, A1);
         BSeg seg2(center, A2);
-        _bseg_draw(seg1, false, true, color, 0, op, true);
-        _bseg_avoid1(seg2, seg1, true, true, true, color, 0, op, true);
-
         for (int i = 0; i < 4; i++)
             {
-
             float m, M;
             switch (i)
             {
-            case 0: m = 180; M = 270; break;
-            case 1: m = 90; M = 180; break;
-            case 2: m = 270; M = 360; break;
-            default: m = 0; M = 90; break;
+            case 0: m = 180; break;
+            case 1: m = 90; break;
+            case 2: m = 270; break;
+            default: m = 0; break;
             }
-            bool b1 = (a1 >= m) && (a1 <= M);
-            bool b2 = (a2 >= m) && (a2 <= M);
-            if (b1 && b2)
-                { // both arrow inside. 
-                if (a1 <= a2)
+            float u1 = a1 - m; if (u1 < 0) u1 += 360;
+            float u2 = a2 - m; if (u2 < 0) u2 += 360;
+            if (u1 <= u2)
+                {
+                if (u1 > 135) continue;
+                else
                     {
-                    _fillSmoothQuarterCircleInterHP2(i, center, r, color, opacity, seg1, 1, seg2, -1);
+                    if (u2 > 135) 
+                        _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, +1);
+                    else
+                        _fillSmoothQuarterCircleInterHP2(i, center, r, color, opacity, seg1, +1, seg2, -1);
+                    }
+                }
+            else
+                {
+                if (u1 < 135)
+                    {
+                    _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, +1);
+                    _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg2, -1);
+                    }
+                else if (u1 < 315)
+                    {
+                    if (u2 < 135)
+                        _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg2, -1);
+                    else
+                        _fillSmoothQuarterCircleInterHP0(i, center, r, color, opacity);
                     }
                 else
                     {
-                    _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, 1);
-                    _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg2, -1);
+                    if (u2 < 135)
+                        _fillSmoothQuarterCircleInterHP2(i, center, r, color, opacity, seg1, +1, seg2, -1);
+                    else
+                        _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, +1);
                     }
                 }
-            else if (b1) _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, 1);
-            else if (b2) _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg2, -1);
-            else
-                { // no arrow inside
-                float u1 = a1 - M; if (u1 < 0) u1 += 360;
-                float u2 = a2 - M; if (u2 < 0) u2 += 360;                
-                if (u1 > u2)
-                    {                    
-                    b1 = (u1 > 225);
-                    b2 = (u2 < 45);
-                    if (b1 && b2)
-                        {
-                        _fillSmoothQuarterCircleInterHP2(i, center, r, color, opacity, seg1, 1, seg2, -1);
-                        }
-                    else if (b1) _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, 1);
-                    else if (b2) _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg2, -1);
-                    else _fillSmoothQuarterCircleInterHP0(i, center, r, color, opacity);
-                    }                    
-                }
-            }     
+
+            }
+        _bseg_draw(seg1, false, true, tgx::RGB32_Red, 0, op, true);
+        _bseg_avoid1(seg2, seg1, true, true, true, tgx::RGB32_Red, 0, op, true);
+        drawPixel<true>(seg1.pos(), tgx::RGB32_Black, 1.0f);
+        if (collision(*this))
+            {
+            cout << "collision\n";
+            }
+
         }
 
 
