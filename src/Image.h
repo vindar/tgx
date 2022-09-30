@@ -1137,6 +1137,40 @@ namespace tgx
 
 
 
+    /**********************************************************************
+    *                DRAWING LINES : DEPRECATED METHODS
+    *                          
+    * These method are still available for compatibility but will be removed 
+    * 'soon'...
+    ***********************************************************************/
+
+
+        /**
+        * DEPRECATED: Use drawSmoothThickLine() instead.
+        **/
+        DEPRECATED("Use method drawSmoothThickLine() instead.") 
+        void drawWideLine(fVec2 PA, fVec2 PB, float w, color_t color, float opacity)  { drawSmoothThickLine(PA, PB, w, END_ROUNDED, END_ROUNDED, color, opacity); }
+
+
+        /**
+        * DEPRECATED: Use drawSmoothWedgeLine() instead.
+        **/
+        DEPRECATED("Use method drawSmoothWedgeLine() instead.")
+        void drawWedgeLine(fVec2 PA, fVec2 PB, float aw, float bw, color_t color, float opacity) { drawSmoothWedgeLine(PA, PB, 2*aw, END_ROUNDED, 2*bw, END_ROUNDED, color, opacity); }
+
+
+        /**
+        * DEPRECATED: Use fillSmoothCircle() instead.
+        **/
+        DEPRECATED("Use method fillSmoothCircle() instead")
+        void drawSpot(fVec2 center, float r, color_t color, float opacity) { fillSmoothCircle(center, r, color, opacity); }
+
+
+
+
+
+
+
 
 
     /********************************************************************************************
@@ -2977,6 +3011,7 @@ namespace tgx
         iBox2 measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
 
 
+
         /**
          * Draw a single character at position pos on the image and return the position for the next
          * character. Version for GFXFont
@@ -3049,6 +3084,7 @@ namespace tgx
         iVec2 drawText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
 
 
+
         /**
          * Advanced drawText method. Draw a text with a given font at a given position relative to a
          * given anchor point. Version for GFXFont
@@ -3107,6 +3143,64 @@ namespace tgx
          * @returns the position to draw the next char (when using the same anchor location).
         **/
         iVec2 drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+
+
+
+
+
+
+    /**********************************************************************
+    *                DRAWING LINES : DEPRECATED METHODS
+    *                          
+    * These method are still available for compatibility but will be removed 
+    * 'soon'...
+    ***********************************************************************/
+
+
+
+        /**
+        * DEPRECATED: Use new signature drawText(text, pos, font, color opacity) or new method drawTextEx() instead.
+        **/
+        DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
+        iVec2 drawText(const char* text, iVec2 pos, color_t color, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
+
+
+        /**
+        * DEPRECATED: Use new signature drawText(text, pos, font, color opacity) or new method drawTextEx() instead.
+        **/
+        DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
+        iVec2 drawText(const char* text, iVec2 pos, color_t color, const GFXfont& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
+
+
+        /**
+        * DEPRECATED: Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
+        **/
+        DEPRECATED("Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0)")
+        iBox2 measureText(const char* text, iVec2 pos, const GFXfont& font, bool start_newline_at_0) { return measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0); }
+
+
+        /**
+        * DEPRECATED: Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
+        **/
+        DEPRECATED("Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0)")
+        iBox2 measureText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, bool start_newline_at_0) { return measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
