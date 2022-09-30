@@ -49,7 +49,7 @@ namespace tgx
     bool Image<color_t>::_collision()
         {
         bool bug = false;
-        im.iterate(
+        iterate(
             [&](tgx::iVec2 pos, tgx::RGB32 col)
             {
                 int r = (col.R > 0) ? 1 : 0;
@@ -60,8 +60,7 @@ namespace tgx
                     bug = true;  return false;
                 }
                 return true;
-            }
-        );
+            });
         return bug;
         }
 
@@ -739,7 +738,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillScreen(color_t color)
+    void Image<color_t>::fillScreen(color_t color) 
         {
         fillRect(imageBox(), color);
         }
@@ -1517,7 +1516,7 @@ namespace tgx
     /**
     * Fill the interior of a triangle.
     * integer valued version
-    **
+    ***/
     /*    
     template<typename color_t>
     void Image<color_t>::_bseg_fill_triangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t fillcolor, float opacity)
@@ -1991,7 +1990,8 @@ namespace tgx
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         int32_t op = (int32_t)(256 * opacity);
-        _bseg_draw_AA(BSeg(P1, P2), true, true, color, op, true);
+        BSeg seg(P1, P2);
+        _bseg_draw_AA(seg, true, true, color, op, true);
         }
 
 
@@ -6506,7 +6506,6 @@ namespace tgx
                                 i = 0;
                                 loadstart = true;
                                 begin = true;
-                                cout << "last = " << P << "\n";
                                 return false;
                                 }
                             loadstart = true;
@@ -6639,7 +6638,6 @@ namespace tgx
                                 i = 0;
                                 loadstart = true;
                                 begin = true;
-                                cout << "last = " << P << "\n";
                                 return false;
                                 }
                             loadstart = true;
@@ -6798,7 +6796,7 @@ namespace tgx
         int sx = g.width;
         int sy = g.height;
         if (xadvance) *xadvance = g.xAdvance;
-        iBox2 & B = iBox2(x, x + sx - 1, y, y + sy - 1);        
+        iBox2 B = iBox2(x, x + sx - 1, y, y + sy - 1);        
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
             iVec2 pos2 = _anchorPos(B, anchor);
