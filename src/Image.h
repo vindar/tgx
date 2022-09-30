@@ -3380,7 +3380,7 @@ private:
         inline TGX_INLINE void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color, float opacity) { if (checkrange) _drawFastHLine<true>(pos, w, color, opacity); else _drawFastHLine<false>(pos, w, color, opacity); }
         inline TGX_INLINE void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color) { if (checkrange) _drawFastVLine<true>(pos, h, color); else _drawFastVLine<false>(pos, h, color); }
         inline TGX_INLINE void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color) { if (checkrange) _drawFastHLine<true>(pos, w, color); else _drawFastHLine<false>(pos, w, color); }
-        inline TGX_INLINE void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity) { _bseg_draw(BSeg(P1, P2), drawP1, drawP2, color, 0, (int32_t)(opacity * 256), true); }
+        inline TGX_INLINE void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity) { BSeg seg(P1, P2); _bseg_draw(seg, drawP1, drawP2, color, 0, (int32_t)(opacity * 256), true); }
 
 
         void _drawEnd(float distAB, fVec2 A, fVec2 B, BSeg& segAB, BSeg& segBA, BSeg& segAP, BSeg& segBQ, PATH_END_TYPE end, int w, color_t color, float opacity);
