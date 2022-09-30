@@ -3182,7 +3182,7 @@ namespace tgx
 
 
 
-//private:
+private:
 
 
     /************************************************************************************************************
@@ -3198,6 +3198,10 @@ namespace tgx
     *************************************************************************************************************
     ************************************************************************************************************/
 
+
+        /** Used for debuging.   
+            Detect a collision bug when drawing by looking for a no pure color (i.e. with at least 2 non-zero color channels */
+        bool _collision();
 
 
 
@@ -3517,29 +3521,6 @@ namespace tgx
             }
 
 
-        /*
-        int32_t _bseg_intersect_AA(const BSeg& segPA, int side_PA, const BSeg& segPB)
-            {   
-            const fVec2 VA = segPA.unitVec(); 
-            const fVec2 VB = segPB.unitVec();
-            const float w = (((-VB.x) * (VB.y)) + ((VA.x) * (VA.y)) + ((VB.x - VA.x) * (VB.y + VA.y))) * side_PA;
-            const float alpha = tgx::dotProduct(VA, VB);
-            const int32_t aaA = segPA.AA(side_PA);
-            const int32_t aaB = segPB.AA(-side_PA);
-            const int32_t minAA = tgx::min(aaA, aaB);
-            const int32_t maxAA = tgx::max(aaA, aaB);
-            int32_t a;
-            if (w >= 0)
-                { // obtuse angle
-                a = minAA * ((1 - alpha) / 2);
-                }
-            else
-                {
-                a = (int32_t)(maxAA + (minAA * ((1 + alpha) / 2)));
-                }
-            return ((a < 0) ? 0 : ((a > 256) ? 256 : a));
-            }
-        */
 
 
         /**
@@ -3631,11 +3612,10 @@ namespace tgx
         void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity) { _bseg_draw(BSeg(P1, P2), drawP1, drawP2, color, 0, (int32_t)(opacity * 256), true); }
 
 
-        /** adapted from bodmer e_tft library */
+        /** adapted from bodmer e_tft library (legacy, unused now) */
         void _drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity);
 
-
-        /** taken from bodmer e_tft library **/
+        /** taken from bodmer e_tft library (legacy, unused now) **/
         inline TGX_INLINE float _wedgeLineDistance(float pax, float pay, float bax, float bay, float dr)
             {
             float h = fmaxf(fminf((pax * bax + pay * bay) / (bax * bax + bay * bay), 1.0f), 0.0f);
@@ -3740,110 +3720,51 @@ namespace tgx
         ****************************************/
 
 
-        /** taken from Adafruit GFX library */
-        template<bool CHECKRANGE>
-        void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color, float opacity);
+        /** low quality drawing for circles */
+        template<bool CHECKRANGE>  void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color, float opacity); // adapted from Adafruit GFX library
+        template<bool CHECKRANGE>  void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color, float opacity); // adapted from Adafruit GFX library
+        template<bool OUTLINE, bool FILL, bool CHECKRANGE> void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity); // filled circle drawing method
 
 
+        /** high quality drawing for circle, arc and pie */
+        static float _rectifyAngle(float a); 
+        static void _defaultQuarterVH(int quarter, int& v, int& h);
 
-        /** taken from Adafruit GFX library */
-        template<bool CHECKRANGE>
-        void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color, float opacity);
-
-
-
-        /** filled circle drawing method */
-        template<bool OUTLINE, bool FILL, bool CHECKRANGE>
-        void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity);
-
-
-
-        /** adapted from bodmer e_tft library */
-        template<bool OUTLINE, bool FILL, bool CHECKRANGE>
-        void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity);
-
-
-
-
-        void _drawSmoothQuarterCircle(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
-
-        void _drawSmoothThickQuarterCircle(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
-
-            
-        void _fillSmoothThickQuarterCircle(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity);
-
-        
-
-        void _fillSmoothQuarterCircle(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
-
-        void _fillSmoothQuarterCircleInterHP1(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int32_t kx, int32_t ky, int32_t off);
-
-        void _fillSmoothQuarterCircleInterHP2(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int32_t kx1, int32_t ky1, int32_t off1, int32_t kx2, int32_t ky2, int32_t off2);
-
-
+        void _fillSmoothQuarterCircleInterHP_sub(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0);
         void _fillSmoothQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, color_t color, float opacity);
-
         void _fillSmoothQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1);
-
         void _fillSmoothQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
+        void _fillSmoothCircleInterHP(tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg, int side); // used to draw rounded ends
+
+        void _drawSmoothQuarterCircleInterHP_sub(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0);
+        void _drawSmoothQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, color_t color, float opacity);
+        void _drawSmoothQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1);
+        void _drawSmoothQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
+
+        void _drawSmoothThickQuarterCircleInterHP_sub(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0);
+        void _drawSmoothThickQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, float thickness, color_t color, float opacity);
+        void _drawSmoothThickQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, float thickness, color_t color, float opacity, const BSeg& seg1, int side1);
+        void _drawSmoothThickQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, float thickness, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
+
+        void _fillSmoothThickQuarterCircleInterHP_sub(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0);
+        void _fillSmoothThickQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, float thickness, color_t color_interior, color_t color_border, float opacity);
+        void _fillSmoothThickQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, float thickness, color_t color_interior, color_t color_border, float opacity, const BSeg& seg1, int side1);
+        void _fillSmoothThickQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, float thickness, color_t color_interior, color_t color_border, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
 
 
-        void _fillSmoothCircleInterHP(tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg, int side);
+        
+        /** low quality drawing for ellipses */
+        template<bool OUTLINE, bool FILL, bool CHECKRANGE> void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity); // adapted from bodmer e_tft library
 
-
-
-
-
-
-
-
-
-        static float _rectifyAngle(float a);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        void _fillSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
-
-
-        void _fillSmoothEllipse(tgx::fVec2 C, float rx, float ry, color_t color, float opacity);;
-
-
+        /** high quality drawing for ellipses */
         void _drawSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
- 
-
-        void _drawSmoothEllipse(tgx::fVec2 C, float rx, float ry, color_t color, float opacity);
-        
-
-        void _drawSmoothThickQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
-        
-
-        void _drawSmoothThickEllipse(tgx::fVec2 C, float rx, float ry, float thickness, color_t color, float opacity);
+        void _drawSmoothThickQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);        
+        void _fillSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
+        void _fillSmoothThickQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity);
 
 
-        void _fillSmoothWideQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity);
 
+       
 
 
         /***************************************
