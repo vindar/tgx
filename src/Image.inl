@@ -18,6 +18,18 @@
 #define _TGX_IMAGE_INL_
 
 
+
+
+/* TODO : Things to add to the Image class...
+ *-------------------------------------------------
+ * - drawing rotated Ellipse
+ * - drawing a general path, svg compatibility
+ *
+ */
+
+
+
+
 /************************************************************************************
 *
 * 
@@ -177,6 +189,14 @@ namespace tgx
 
 
 
+
+    template<typename color_t>
+    template<typename ITERFUN> void Image<color_t>::iterate(ITERFUN cb_fun) const
+        {
+        iterate(cb_fun, imageBox());
+        }
+
+
     template<typename color_t>
     template<typename ITERFUN> void Image<color_t>::iterate(ITERFUN cb_fun)
         {
@@ -186,19 +206,32 @@ namespace tgx
 
     template<typename color_t>
     template<typename ITERFUN> void Image<color_t>::iterate(ITERFUN cb_fun, tgx::iBox2 B)
-    {
+        {
         B &= imageBox();
         if (B.isEmpty()) return;
         for (int j = B.minY; j <= B.maxY; j++)
-        {
-            for (int i = B.minX; i <= B.maxX; i++)
             {
+            for (int i = B.minX; i <= B.maxX; i++)
+                {
                 if (!cb_fun(tgx::iVec2(i, j), operator()({ i, j }))) return;
+                }
             }
         }
-    }
 
 
+    template<typename color_t>
+    template<typename ITERFUN> void Image<color_t>::iterate(ITERFUN cb_fun, tgx::iBox2 B) const
+        {
+        B &= imageBox();
+        if (B.isEmpty()) return;
+        for (int j = B.minY; j <= B.maxY; j++)
+            {
+            for (int i = B.minX; i <= B.maxX; i++)
+                {
+                if (!cb_fun(tgx::iVec2(i, j), operator()({ i, j }))) return;
+                }
+            }
+        }
 
 
 
@@ -874,6 +907,9 @@ namespace tgx
 
 
 
+    /**
+     * Draw a Bresenham segment [P,Q|.
+    **/
     template<typename color_t>
     void Image<color_t>::_bseg_draw(BSeg& seg, bool draw_first, bool draw_last, color_t color, int side, int32_t op, bool checkrange)
         {
@@ -888,7 +924,9 @@ namespace tgx
         }
 
 
-
+    /**
+    * Draw an antialiased Bresenham segment [P,Q|.
+    **/
     template<typename color_t>
     void Image<color_t>::_bseg_draw_AA(BSeg& seg, bool draw_first, bool draw_last, color_t color, int32_t op, bool checkrange)
         {
@@ -933,7 +971,7 @@ namespace tgx
         }
 
 
-
+    /** used by _bseg_avoid1 */
     template<typename color_t>
     template<int SIDE> void Image<color_t>::_bseg_avoid1_template(BSeg& segA, bool lastA, BSeg& segB, bool lastB, color_t color, int32_t op, bool checkrange)
         {
@@ -996,7 +1034,16 @@ namespace tgx
             }
         }
 
-
+    /**
+     * Draw the bresenham segment [P,Q| while avoiding [P,A|
+     * if drawP is set and AA on on , the pixel at P is draw using the minimum AA value.
+     *
+     *             A
+     *            /
+     *           /
+     *          /
+     *        P+-------------Q
+    **/
     template<typename color_t>
     void Image<color_t>::_bseg_avoid1(BSeg& PQ, BSeg& PA, bool drawP, bool drawQ, bool closedPA, color_t color, int side, int32_t op, bool checkrange)
         {
@@ -1029,7 +1076,7 @@ namespace tgx
         }
 
 
-
+    /** Used by _bseg_avoid2 */
     template<typename color_t>
     template<int SIDE> void Image<color_t>::_bseg_avoid2_template(BSeg& segA, bool lastA, BSeg& segB, bool lastB, BSeg& segC, bool lastC, color_t color, int32_t op, bool checkrange)
         {
@@ -1097,6 +1144,16 @@ namespace tgx
         }
 
 
+    /**
+    * Draw the bresenham segment [P,Q| while avoiding [P,A| and [P,B|
+    *
+    *     A       B
+    *      \     /
+    *       \   /
+    *        \ /
+    *         +--------------
+    *         P             Q
+    **/
     template<typename color_t>
     void Image<color_t>::_bseg_avoid2(BSeg& PQ, BSeg& PA, BSeg& PB, bool drawQ, bool closedPA, bool closedPB, color_t color, int side, int32_t op, bool checkrange)
         {
@@ -1116,6 +1173,7 @@ namespace tgx
 
 
 
+    /** Used by _bseg_avoid11 */
     template<typename color_t>
     template<int SIDE> void Image<color_t>::_bseg_avoid11_template(BSeg& segA, BSeg& segB, bool lastB, BSeg& segD, bool lastD, color_t color, int32_t op, bool checkrange)
         {
@@ -1183,7 +1241,18 @@ namespace tgx
 
 
 
-
+    /**
+    * Draw the bresenham segment [P,Q| while avoiding [P,A| and [Q,B|
+    * if drawP is set and AA on on , the pixel at P is draw using the minimum AA value.
+    * if drawQ is set and AA on on , the pixel at Q is draw using the minimum AA value.
+    *
+    *     A                     B
+    *      \                   /
+    *       \                 /
+    *        \               /
+    *         +--------------
+    *         P             Q
+    **/
     template<typename color_t>
     void Image<color_t>::_bseg_avoid11(BSeg& PQ, BSeg& PA, BSeg& QB, bool drawP, bool drawQ, bool closedPA, bool closedQB, color_t color, int side, int32_t op, bool checkrange)
         {
@@ -1236,7 +1305,7 @@ namespace tgx
 
 
 
-
+    /** Used by _bseg_avoid21 */
     template<typename color_t>
     template<int SIDE> void Image<color_t>::_bseg_avoid21_template(BSeg& segA, BSeg& segB, bool lastB, BSeg& segC, bool lastC, BSeg& segD, bool lastD, color_t color, int32_t op, bool checkrange)
         {
@@ -1306,6 +1375,16 @@ namespace tgx
         }
 
 
+    /**
+    * Draw the bresenham segment [P,Q| while avoiding [P,A| , [P, B| and [Q,C|
+    *
+    *      A      B             C
+    *      \     /             /
+    *       \   /             /
+    *        \ /             /
+    *         +--------------
+    *         P             Q
+    **/
     template<typename color_t>
     void Image<color_t>::_bseg_avoid21(BSeg& PQ, BSeg& PA, BSeg& PB, BSeg& QC, bool closedPA, bool closedPB, bool closedQC, color_t color, int side, int32_t op, bool checkrange)
         {
@@ -1328,7 +1407,7 @@ namespace tgx
 
 
 
-
+    /** Used by _bseg_avoid22 */
     template<typename color_t>
     template<int SIDE> void Image<color_t>::_bseg_avoid22_template(BSeg& segA, BSeg& segB, bool lastB, BSeg& segC, bool lastC, BSeg& segD, bool lastD, BSeg& segE, bool lastE, color_t color, int32_t op, bool checkrange)
         {
@@ -1401,6 +1480,16 @@ namespace tgx
         }
 
 
+    /**
+    * Draw the bresenham segment [P,Q| while avoiding [P,A| , [P, B|,  [Q,C| and [Q,D|
+    *
+    *     A       B         C       D
+    *      \     /           \     /
+    *       \   /             \   /
+    *        \ /               \ /
+    *         +-----------------+
+    *         P                 Q
+    **/
     template<typename color_t>
     void Image<color_t>::_bseg_avoid22(BSeg& PQ, BSeg& PA, BSeg& PB, BSeg& QC, BSeg& QD, bool closedPA, bool closedPB, bool closedQC, bool closedQD, color_t color, int side, int32_t op, bool checkrange)
         {
@@ -1423,7 +1512,13 @@ namespace tgx
         }
 
 
-    /*
+
+
+    /**
+    * Fill the interior of a triangle.
+    * integer valued version
+    **
+    /*    
     template<typename color_t>
     void Image<color_t>::_bseg_fill_triangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t fillcolor, float opacity)
         {
@@ -1473,6 +1568,10 @@ namespace tgx
 
 
 
+    /**
+    * Fill the interior of a triangle.
+    * floating point version with sub pixel precision
+    **/
     template<typename color_t>
     void Image<color_t>::_bseg_fill_triangle(fVec2 fP1, fVec2 fP2, fVec2 fP3, color_t fillcolor, float opacity)
         {
@@ -1486,6 +1585,10 @@ namespace tgx
         }
 
 
+    /**
+    * Fill the interior of a triangle.
+    * floating point version with sub pixel precision and BSeg already defined
+    **/
     template<typename color_t>
     void Image<color_t>::_bseg_fill_triangle_precomputed(fVec2 fP1, fVec2 fP2, fVec2 fP3, BSeg& seg12, BSeg& seg21, BSeg& seg23, BSeg& seg32, BSeg& seg31, BSeg& seg13, color_t fillcolor, float opacity)
         {
@@ -1908,6 +2011,9 @@ namespace tgx
 
 
 
+    /**
+    * Draw the end of a thick line (straight, rounded or arrow). 
+    **/
     template<typename color_t>
     void Image<color_t>::_drawEnd(float distAB, fVec2 A, fVec2 B, BSeg& segAB, BSeg& segBA, BSeg& segAP, BSeg& segBQ, PATH_END_TYPE end, int w, color_t color, float opacity)
         {
@@ -2012,10 +2118,20 @@ namespace tgx
 
 
 
-    /**
-    *LEGACY METHOD : Not used anymore 
-    *Adapted from Bodmer e_tft library. 
-    **/
+
+
+
+    /** taken from bodmer e_tft library (legacy, unused now) **/
+    template<typename color_t>
+    float Image<color_t>::_wedgeLineDistance(float pax, float pay, float bax, float bay, float dr)
+        {
+        float h = fmaxf(fminf((pax * bax + pay * bay) / (bax * bax + bay * bay), 1.0f), 0.0f);
+        float dx = pax - bax * h, dy = pay - bay * h;
+        return tgx::fast_sqrt(dx * dx + dy * dy) + h * dr;
+        }
+
+    
+    /** Adapted from Bodmer e_tft library (legacy, not used anymore) */
     template<typename color_t>
     void Image<color_t>::_drawWedgeLine(float ax, float ay, float bx, float by, float ar, float br, color_t color, float opacity)
         {
@@ -2629,23 +2745,6 @@ namespace tgx
     void Image<color_t>::drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
         {
         if (!isValid()) return;
-        _drawTriangle(P1, P2, P3, color, opacity);
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity)
-        {
-        if (!isValid()) return;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        _fillTriangle(P1, P2, P3, interior_color, outline_color, opacity);
-        }
-
-
-
-    template<typename color_t>
-    void Image<color_t>::_drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity)
-        {
         if ((opacity >= 0.0f)&&(opacity <= 1.0f))
             {
             const int32_t op = (int)(256 * opacity);
@@ -2665,10 +2764,11 @@ namespace tgx
         }
 
 
-
     template<typename color_t>
-    void Image<color_t>::_fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity)
+    void Image<color_t>::fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity)
         {
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         const int op = (int)(opacity * 256);
         BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
         BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
@@ -2685,20 +2785,11 @@ namespace tgx
 
 
 
-
-
     template<typename color_t>
     void Image<color_t>::drawSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        _drawSmoothTriangle(P1, P2, P3, color, opacity);
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::_drawSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
-        {
         const int op = (int)(opacity * 256);
         _bseg_draw_AA(BSeg(P1, P2), true, false, color, op, true);
         _bseg_draw_AA(BSeg(P2, P3), true, false, color, op, true);
@@ -2721,13 +2812,6 @@ namespace tgx
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        _fillSmoothTriangle(P1, P2, P3, color, opacity);
-        }
-
-
-    template<typename color_t>
-    void Image<color_t>::_fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
-        {
         float a = _triangleAera(P1, P2, P3); // winding direction of the polygon            
         const int w = (a > 0) ? 1 : ((a < 0) ? -1 : 0);
         const int op = (int)(opacity * 256);
@@ -2739,8 +2823,6 @@ namespace tgx
         _bseg_avoid1(seg23, seg21, true, false, true, color, w, op, true);
         _bseg_avoid1(seg31, seg32, true, false, true, color, w, op, true);
         }
-
-
 
 
     template<typename color_t>
@@ -3073,14 +3155,6 @@ namespace tgx
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        _fillSmoothQuad(P1, P2, P3, P4, color, opacity);
-        }
-
-
-
-    template<typename color_t>
-    void Image<color_t>::_fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity)
-        {
         if (((P1.x == P2.x) && (P3.x == P4.x) && (P2.y == P3.y) && (P1.y == P4.y)) || ((P1.x == P4.x) && (P2.x == P3.x) && (P1.y == P2.y) && (P3.y == P4.y)))
             { // quad is a box...
             fBox2 B(tgx::min(P1.x, P3.x), tgx::max(P1.x, P3.x), tgx::min(P2.y, P4.y), tgx::max(P2.y, P4.y));
@@ -3103,6 +3177,7 @@ namespace tgx
         _bseg_avoid1(seg41, seg43, true, false, true, color, w, op, true);
         _bseg_avoid22(seg13, seg12, seg14, seg32, seg34, true, true, true, true, color, 0, op, true);
         }
+
 
 
 
@@ -6610,7 +6685,7 @@ namespace tgx
 
 
 
-
+    /** fetch 'required' bits from a bit array, returned as an unsigned integer  (from ili9341_t3.cpp)*/
     template<typename color_t>
     uint32_t Image<color_t>::_fetchbits_unsigned(const uint8_t* p, uint32_t index, uint32_t required)
         {
@@ -6635,6 +6710,7 @@ namespace tgx
         }
 
 
+    /** fetch 'required' bits from a bit array, returned as a signed integer (from ili9341_t3.cpp) */
     template<typename color_t>
     uint32_t Image<color_t>::_fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required)
         {
@@ -6647,6 +6723,7 @@ namespace tgx
         }
 
 
+    /** used for clipping a font bitmap */
     template<typename color_t>
     bool Image<color_t>::_clipit(int& x, int& y, int& sx, int& sy, int & b_left, int & b_up)
         {
@@ -6697,6 +6774,7 @@ namespace tgx
         return font.line_space;
         }
 
+    /** find the anchor location (but not for the baseline) */
     template<typename color_t>
     iVec2 Image<color_t>::_anchorPos(const iBox2& B, ANCHOR_LOCATION anchor)
         {
@@ -7101,7 +7179,10 @@ namespace tgx
 
 
 
-
+    /**
+     * draw a character from an ILI9341_t3 font bitmap (version 1, with line compression).
+     * The ILI9341_t3 font format is described here: https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format
+     **/
     template<typename color_t>
     template<bool BLEND>
     void Image<color_t>::_drawCharILI9341_t3(const uint8_t* bitmap, int32_t off, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)
@@ -7157,6 +7238,7 @@ namespace tgx
         }
 
 
+    /** used by _drawCharILI9341_t3 to draw a single row of a font bitmap */
     template<typename color_t>
     template<bool BLEND>
     void Image<color_t>::_drawcharline(const uint8_t* bitmap, int32_t off, color_t* p, int dx, color_t col, float opacity)
@@ -7234,6 +7316,10 @@ namespace tgx
         }
 
 
+    /**
+     * draw a 1 bit per pixel char bitmap on the image
+     * Use to draw char from Adafruit font format: https://glenviewsoftware.com/projects/products/adafonteditor/adafruit-tgx-font-format/
+     **/
     template<typename color_t>
     template<bool BLEND>
     void Image<color_t>::_drawCharBitmap_1BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy,int x, int y, color_t col, float opacity)
@@ -7349,6 +7435,9 @@ namespace tgx
         }
 
 
+    /** draw a 2 bit per pixel char bitmap on the image 
+    *  packed bdf format 23 : https://github.com/projectitis/packedbdf/blob/master/packedbdf.md
+    **/
     template<typename color_t>
     template<bool BLEND>
     void Image<color_t>::_drawCharBitmap_2BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)
@@ -7442,6 +7531,7 @@ namespace tgx
         }
 
 
+    /** draw a 4 bit per pixel char bitmap on the image */
     template<typename color_t>
     template<bool BLEND>
     void Image<color_t>::_drawCharBitmap_4BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)
@@ -7495,6 +7585,7 @@ namespace tgx
         }
 
 
+    /** draw a 8 bit per pixel char bitmap on the image */
     template<typename color_t>
     template<bool BLEND>
     void Image<color_t>::_drawCharBitmap_8BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)
