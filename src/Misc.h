@@ -53,7 +53,7 @@
     #define FLASHMEM
 #endif
 
-#define DEPRECATED(x) [[deprecated("use " #x " instead")]]
+#define DEPRECATED(X) [[deprecated(" " X " ")]]
 
 #define DEPRECATED_SCALAR_PARAMS
 //#define DEPRECATED_SCALAR_PARAMS [[deprecated("METHOD WITH SCALAR PARAMETERS WILL BE REMOVED SOON. USE THE VERSION WITH VECTOR PARAMETERS INSTEAD.")]]
