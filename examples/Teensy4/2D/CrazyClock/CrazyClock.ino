@@ -161,8 +161,8 @@ void loop()
         int y1 = (em < 1000) ? (130 * em) / 1000 - 50 : 80;
         int y2 = (em < 1000) ? 240 - (110 * em) / 1000 : 130;
         im.fillScreen(RGB565_Black);  
-        im.drawText("TGX library",iVec2{110,y1}, RGB565_Red, font_tgx_OpenSans_Bold_18, true);
-        im.drawText("Crazy clock demo",iVec2{35,y2}, RGB565_White, font_tgx_OpenSans_Bold_28, true);      
+        im.drawText("TGX library",iVec2{110,y1}, font_tgx_OpenSans_Bold_18, RGB565_Red);
+        im.drawText("Crazy clock demo",iVec2{35,y2}, font_tgx_OpenSans_Bold_28, RGB565_White);
         tft.overlayFPS(fb);
         tft.update(fb);
         yield(); // to keep the board responsive
@@ -174,8 +174,8 @@ void loop()
         {      
         float sc = 0.1f + 0.9f*t/1000.0f;
         im.fillScreen(RGB565_Black);  
-        im.drawText("TGX library",iVec2{110,80}, RGB565_Red, font_tgx_OpenSans_Bold_18, true, 1.0f - t/1000.0f);
-        im.drawText("Crazy clock demo",iVec2{35,130}, RGB565_White, font_tgx_OpenSans_Bold_28, true, 1.0f - t/1000.0f);
+        im.drawText("TGX library",iVec2{110,80}, font_tgx_OpenSans_Bold_18, RGB565_Red, 1.0f - t/1000.0f);
+        im.drawText("Crazy clock demo",iVec2{35,130}, font_tgx_OpenSans_Bold_28, RGB565_White, 1.0f - t/1000.0f);
         drawClock(200 - t/5, sc);
         drawSmallHand(t/10, sc);
         drawLongHand(t/2, sc); 
@@ -239,3 +239,4 @@ void loop()
 
 
 /** end of file */
+

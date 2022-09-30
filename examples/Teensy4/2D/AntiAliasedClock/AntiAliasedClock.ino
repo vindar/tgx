@@ -208,20 +208,20 @@ static void renderFace(float t, uint16_t faceType) {
         // draw digiclock
         drawTextCenterX(im, bufDigiClock, 210, 220, CLOCK_DIGI, DSEG7_Classic_Bold_20, 0.5f);
         // draw day
-        im.drawText(bufDay, iVec2(191, 165), CLOCK_DAY, font_tgx_OpenSans_14, false, 1.0f);
+        im.drawText(bufDay, iVec2(191, 165), font_tgx_OpenSans_14, CLOCK_DAY, 1.0f);
         // draw hour hand
         getCoord(CLOCK_R, CLOCK_Y, &xp, &yp, H_HAND_LENGTH, h_angle);
-        im.drawWideLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 8.0f, CLOCK_FG, 1.0f);
-        im.drawWideLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 4.0f, CLOCK_BG, 1.0f);
+        im.drawSmoothThickLine({ CLOCK_R, CLOCK_Y }, { xp, yp }, 8.0f, END_ROUNDED, END_ROUNDED, CLOCK_FG, 1.0f);
+        im.drawSmoothThickLine({ CLOCK_R, CLOCK_Y }, { xp, yp }, 4.0f, END_ROUNDED, END_ROUNDED, CLOCK_BG, 1.0f);
         // draw minute hand
         getCoord(CLOCK_R, CLOCK_Y, &xp, &yp, M_HAND_LENGTH, m_angle);
-        im.drawWideLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 8.0f, CLOCK_FG, 1.0f);
-        im.drawWideLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 4.0f, CLOCK_BG, 1.0f);
+        im.drawSmoothThickLine({ CLOCK_R, CLOCK_Y }, { xp, yp }, 8.0f, END_ROUNDED, END_ROUNDED, CLOCK_FG, 1.0f);
+        im.drawSmoothThickLine({ CLOCK_R, CLOCK_Y }, { xp, yp }, 4.0f, END_ROUNDED, END_ROUNDED, CLOCK_BG, 1.0f);
         // draw the central pivot circle
-        im.drawSpot({CLOCK_R, CLOCK_Y}, 8.0f, CLOCK_FG, 1.0f);
+        im.fillSmoothCircle({ CLOCK_R, CLOCK_Y }, 8.0f, CLOCK_FG, 1.0f);
         // draw the second hand
         getCoord(CLOCK_R, CLOCK_Y, &xp, &yp, S_HAND_LENGTH, s_angle);
-        im.drawWedgeLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 5.0f, 1.0f, SECCOND_FG, 1.0f);
+        im.drawSmoothWedgeLine( { CLOCK_R, CLOCK_Y }, {xp, yp}, 10.0f, END_ROUNDED, 2.0f, END_ROUNDED, SECCOND_FG, 1.0f);
         break;
 
     case 1:
@@ -230,18 +230,18 @@ static void renderFace(float t, uint16_t faceType) {
         // draw digiclock
         drawTextCenterX(im, bufDigiClock, 188, 230, CLOCK_DIGI, DSEG7_Classic_Bold_14, 0.5f);
         // draw day
-        im.drawText(bufDay, iVec2(113, 240), CLOCK_DAY, font_tgx_OpenSans_14, false, 1.0f);
+        im.drawText(bufDay, iVec2(113, 240), font_tgx_OpenSans_14, CLOCK_DAY, 1.0f);
         // draw hour hand
         getCoord(CLOCK_R, CLOCK_Y, &xp, &yp, H_HAND_LENGTH, h_angle);
-        im.drawWedgeLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 7.0f, 2.0f, RGB565_Teal, 1.0f);
+        im.drawSmoothWedgeLine( { CLOCK_R, CLOCK_Y }, {xp, yp}, 14.0f, END_ROUNDED,  4.0f, END_ROUNDED, RGB565_Teal, 1.0f);
         // draw minute hand
         getCoord(CLOCK_R, CLOCK_Y, &xp, &yp, M_HAND_LENGTH, m_angle);
-        im.drawWedgeLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 7.0f, 2.0f, RGB565_Teal, 1.0f);
+        im.drawSmoothWedgeLine({ CLOCK_R, CLOCK_Y }, { xp, yp }, 14.0f, END_ROUNDED,  4.0f, END_ROUNDED, RGB565_Teal, 1.0f);
         // draw the central pivot circle
-        im.drawSpot({CLOCK_R, CLOCK_Y}, 8.0f, CLOCK_FG, 1.0f);
+        im.fillSmoothCircle({ CLOCK_R, CLOCK_Y }, 8.0f, CLOCK_FG, 1.0f);
         // draw the econd hand
         getCoord(CLOCK_R, CLOCK_Y, &xp, &yp, S_HAND_LENGTH, s_angle);
-        im.drawWedgeLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 5.0f, 1.0f, SECCOND_FG, 1.0f);
+        im.drawSmoothWedgeLine({ CLOCK_R, CLOCK_Y }, { xp, yp }, 10.0f, END_ROUNDED, 2.0f, END_ROUNDED, SECCOND_FG, 1.0f);
         break;
 
     case 2:
@@ -250,25 +250,25 @@ static void renderFace(float t, uint16_t faceType) {
         // draw digiclock
         drawTextCenterX(im, bufDigiClock, 217, 230, CLOCK_DIGI, DSEG7_Classic_Bold_14, 0.5f);
         // draw the second pivot circle
-        im.drawSpot({64, CLOCK_Y + 1}, 4.0f, CLOCK_FG, 1.0f);
+        im.fillSmoothCircle({ 64, CLOCK_Y + 1 }, 4.0f, CLOCK_FG, 1.0f);
         // draw the second hand
         getCoord(64, CLOCK_Y + 1, &xp, &yp, 32, s_angle);
-        im.drawWedgeLine({64, CLOCK_Y + 1}, {xp, yp}, 5.0f, 1.0f, SECCOND_FG, 1.0f);
+        im.drawSmoothWedgeLine({ 64, CLOCK_Y + 1 }, { xp, yp }, 10.0f, END_ROUNDED, 2.0f, END_ROUNDED, SECCOND_FG, 1.0f);
         // draw the day pivot circle
-        im.drawSpot({175, CLOCK_Y + 1}, 4.0f, CLOCK_FG, 1.0f);
+        im.fillSmoothCircle({ 175, CLOCK_Y + 1 }, 4.0f, CLOCK_FG, 1.0f);
         // draw the day hand
         getCoord(175, CLOCK_Y + 1, &xp, &yp, 32, d_angle);
-        im.drawWedgeLine({175, CLOCK_Y + 1}, {xp, yp}, 5.0f, 1.0f, SECCOND_FG, 1.0f);
+        im.drawSmoothWedgeLine({ 175, CLOCK_Y + 1 }, { xp, yp }, 10.0f, END_ROUNDED, 2.0f, END_ROUNDED, SECCOND_FG, 1.0f);
         // draw hour hand
         getCoord(CLOCK_R, CLOCK_Y, &xp, &yp, H_HAND_LENGTH, h_angle);
-        im.drawWideLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 8.0f, RGB32(229, 157, 0), 1.0f);
-        im.drawWideLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 4.0f, RGB32(38, 35, 45), 1.0f);
+        im.drawSmoothThickLine({ CLOCK_R, CLOCK_Y }, {xp, yp}, 8.0f, END_ROUNDED, END_ROUNDED, RGB32(229, 157, 0), 1.0f);
+        im.drawSmoothThickLine({ CLOCK_R, CLOCK_Y }, { xp, yp }, 8.0f, END_ROUNDED, END_ROUNDED, RGB32(38, 35, 45), 1.0f);
         // draw minute hand
         getCoord(CLOCK_R, CLOCK_Y, &xp, &yp, M_HAND_LENGTH, m_angle);
-        im.drawWideLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 8.0f, RGB32(229, 157, 0), 1.0f);
-        im.drawWideLine({CLOCK_R, CLOCK_Y}, {xp, yp}, 4.0f, RGB32(38, 35, 45), 1.0f);
+        im.drawSmoothThickLine({ CLOCK_R, CLOCK_Y }, { xp, yp }, 14.0f, END_ROUNDED, END_ROUNDED, RGB32(229, 157, 0), 1.0f);
+        im.drawSmoothThickLine({ CLOCK_R, CLOCK_Y }, { xp, yp }, 7.0f, END_ROUNDED, END_ROUNDED, RGB32(38, 35, 45), 1.0f);
         // draw the central pivot circle
-        im.drawSpot({CLOCK_R, CLOCK_Y}, 6.0f, CLOCK_FG, 1.0f);
+        im.fillSmoothCircle({ CLOCK_R, CLOCK_Y }, 6.0f, CLOCK_FG, 1.0f);
         break;
     }
 
@@ -317,11 +317,11 @@ void getCoord(int16_t x, int16_t y, float* xp, float* yp, int16_t r, float a) {
 /// <param name="font"></param>
 /// <param name="opacity"></param>
 void drawTextCenterX(Image<RGB565> img, const char* text, int y, int w, RGB565 color, const ILI9341_t3_font_t& font, float opacity) {
-    auto b = im.measureText(text, { 0,0 }, font, false);
-    img.drawText(text, iVec2((w / 2) - b.lx() / 2, y), color, font, false, opacity);
+    auto b = im.measureText(text, { 0,0 }, font);
+    img.drawText(text, iVec2((w / 2) - b.lx() / 2, y), font, color, opacity);
 }
 void drawTextCenterX(Image<RGB565> img, const char* text, int y, int w, RGB565 color, const GFXfont& font, float opacity) {
-    auto b = im.measureText(text, { 0,0 }, font, false);
-    img.drawText(text, iVec2((w / 2) - b.lx() / 2, y), color, font, false, opacity);
+    auto b = im.measureText(text, { 0,0 }, font);
+    img.drawText(text, iVec2((w / 2) - b.lx() / 2, y), font, color, opacity);
 }
 

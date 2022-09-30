@@ -174,7 +174,7 @@ void loop()
 
 
     // info about the projection type
-    im.drawText((projtype) ? "Perspective projection" : "Orthographic projection", {3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
+    im.drawText((projtype) ? "Perspective projection" : "Orthographic projection", {3,12 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
 
     // add fps counter
     tft.overlayFPS(fb); 

@@ -76,11 +76,9 @@ using namespace tgx;
 
 
 
-// fast 60MHz SPI. 
-//
-// !!!!!!! SET A LOWER SPEED IF ARTIFACT APPEAR ON THE SCREEN, OR TRY 70MHz IF IT WORKS... !!!!!!!
-// 
-#define SPI_SPEED       60000000
+// 40MHz SPI. 
+// SET A LOWER SPEED IF ARTIFACT APPEAR ON THE SCREEN, OR TRY 60MHz (OR EVEN MORE) IF IT WORKS... !!!!!!!
+#define SPI_SPEED       40000000
 
 
 // the screen driver object
@@ -468,7 +466,7 @@ TGX_NOINLINE FLASHMEM void movie()
         float r = (1 - cosf(t * 4 * M_PI))/2;
         float op = (1 - cosf(t * 3 * M_PI))/4 + 0.2f;
 
-        marble_dma.drawSpot({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
+        marble_dma.fillSmoothCircle({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
         drawBase(true);
         drawSkyBox();
         redraw();
@@ -706,7 +704,7 @@ TGX_NOINLINE FLASHMEM void movie()
         float r = (1 - cosf(t * 4 * M_PI))/2;
         float op = (1 - cosf(t * 3 * M_PI))/4 + 0.2f;
 
-        marble_dma.drawSpot({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
+        marble_dma.fillSmoothCircle({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
         drawBase(true);
         drawSkyBox();
         redraw();
@@ -800,7 +798,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         const float l = (cosf(a/2) + 1.5) / 2.5;
 
-        tgx::fVec3 eye = { (looking_dist * l) * sinf(a), 2*climb - (a  * climb / (2*M_PI)) , (looking_dist * l) *cosf(a)};
+        tgx::fVec3 eye = { (looking_dist * l) * sinf(a), 2*climb - (a  * climb / ((float)2*M_PI)) , (looking_dist * l) *cosf(a)};
         
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
@@ -1129,8 +1127,8 @@ void intro()
         int y1 = (em < 1700) ? (130 * em) / 1700 - 50 : 80;
         int y2 = (em < 1700) ? 240 - (110 * em) / 1700 : 130;
         im.fillScreen(RGB565_Black);
-        im.drawText("TGX library", iVec2{ 110,y1 }, RGB565_Red, font_tgx_OpenSans_Bold_18, true);
-        im.drawText("Mars demo", iVec2{ 80,y2 }, RGB565_White, font_tgx_OpenSans_Bold_28, true);        
+        im.drawText("TGX library", iVec2{ 110,y1 }, font_tgx_OpenSans_Bold_18, RGB565_Red);
+        im.drawText("Mars demo", iVec2{ 80,y2 }, font_tgx_OpenSans_Bold_28, RGB565_White);
         tft.update(fb);
         yield();
         }
