@@ -2568,16 +2568,16 @@ namespace tgx
         const float eps = 0;
 
         fVec2 P1(B.minX + corner_radius - eps, B.minY + corner_radius - eps);
-        _drawSmoothThickQuarterCircleInterHP_sub(P1, corner_radius, thickness, 2, false, false, color, opacity, 0);
+        _drawSmoothThickQuarterCircleInterHPsub(P1, corner_radius, thickness, 2, false, false, color, opacity, 0);
 
         fVec2 P2(B.maxX - corner_radius + eps, B.minY + corner_radius - eps);
-        _drawSmoothThickQuarterCircleInterHP_sub(P2, corner_radius, thickness, 3, false, false, color, opacity, 0);
+        _drawSmoothThickQuarterCircleInterHPsub(P2, corner_radius, thickness, 3, false, false, color, opacity, 0);
 
         fVec2 P3(B.maxX - corner_radius + eps, B.maxY - corner_radius + eps);
-        _drawSmoothThickQuarterCircleInterHP_sub(P3, corner_radius, thickness, 1, false, false, color, opacity, 0);
+        _drawSmoothThickQuarterCircleInterHPsub(P3, corner_radius, thickness, 1, false, false, color, opacity, 0);
 
         fVec2 P4(B.minX + corner_radius - eps, B.maxY - corner_radius + eps);
-        _drawSmoothThickQuarterCircleInterHP_sub(P4, corner_radius, thickness, 0, false, false, color, opacity, 0);
+        _drawSmoothThickQuarterCircleInterHPsub(P4, corner_radius, thickness, 0, false, false, color, opacity, 0);
 
         const int x1 = (int)roundf(B.minX + corner_radius - eps);
         const int x2 = (int)roundf(B.maxX - corner_radius + eps);
@@ -3799,6 +3799,12 @@ namespace tgx
 
 
 
+
+    /********************************************
+    * DRAWING CIRCLES, LOW QUALITY
+    *********************************************/
+
+
     template<typename color_t>
     void Image<color_t>::drawCircle(iVec2 center, int r, color_t color, float opacity)
         {
@@ -3986,6 +3992,9 @@ namespace tgx
 
 
 
+    /********************************************
+    * DRAWING CIRCLES, ARC AND PIES, HIGH QUALITY
+    *********************************************/
 
 
     template<typename color_t>
@@ -4111,7 +4120,6 @@ namespace tgx
         }
 
 
-
     template<typename color_t>
     void Image<color_t>::_fillSmoothQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, color_t color, float opacity)
         {
@@ -4234,8 +4242,6 @@ namespace tgx
         col_origin.blend256(color, (op * tgx::min(seg1.AA(+1), seg2.AA(-1)))>> 8);        
         drawPixel<true>(seg1.pos(), col_origin);
         }
-
-
 
 
 
@@ -4412,22 +4418,19 @@ namespace tgx
 
 
 
-
-
-
-
-
-
-
     /* draw a thick quarter circle intersected with 0,1 or 2 half plane of equation x*kx + y*ky + off > 0  (and x*kx + y*ky + off_full > 0 for full pixel intensity). 
         2    x=1, y=-1  |  3   x=-1; y=-1
        ---------------------------------
         0    x=1, y=1   |  1   x=-1, y=1
     */
     template<typename color_t>
-    void Image<color_t>::_drawSmoothThickQuarterCircleInterHP_sub(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity,
-                                                                  int nb_planes, int32_t kx1, int32_t ky1, int32_t off1, int32_t kx2, int32_t ky2, int32_t off2)
+    void Image<color_t>::_drawSmoothThickQuarterCircleInterHPsub(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity,
+        int nb_planes, int32_t kx1, int32_t ky1, int32_t off1, int32_t off1_full, int32_t kx2, int32_t ky2, int32_t off2, int32_t off2_full)
         {
+        const int32_t df1 = off1 - off1_full + ((off1 == off1_full) ? 1 : 0);
+        const int32_t df2 = off2 - off2_full + ((off2 == off2_full) ? 1 : 0);
+        const int32_t op = (int32_t)(opacity * 256);
+
         if (thickness > R) thickness = R;
         const int dir_x = (quarter & 1) ? -1 : 1;
         const int dir_y = (quarter & 2) ? -1 : 1;
@@ -4456,22 +4459,25 @@ namespace tgx
                 const float e2 = dx2 + dy2;
                 if (e2 >= RA2) { i_min = i + dir_x; continue; }
                 if (e2 <= RB2) break;
+                float nop = opacity;
                 if (nb_planes & 2)
                     {
-                    int o1 = kx1 * i + ky1 * j + off1;
-                    int o2 = kx2 * i + ky2 * j + off2;
+                    int32_t o1 = kx1 * i + ky1 * j + off1;
+                    int32_t o2 = kx2 * i + ky2 * j + off2;
                     if ((o1 <= 0) || (o2 < 0)) continue;
+                    nop = tgx::min(opacity, tgx::min((opacity*o1)/df1, (opacity*o2)/df2));
                     }
                 else if (nb_planes & 1)
                     {
-                    int o1 = kx1 * i + ky1 * j + off1;
+                    int32_t o1 = kx1 * i + ky1 * j + off1;
                     if (o1 <= 0) continue;
+                    nop = tgx::min(opacity, (opacity * o1) / df1);
                     }
                 const float se = sqrtf(e2);
                 const float d2 = se - R;  const float alpha2 = (d2 > 0) ? (1.0f - d2) : 1.0f;
                 const float d1 = se - (R - thickness); const float alpha1 = (d1 < 1) ? d1 : 1.0f;
                 const float alpha = alpha1 * alpha2;
-                drawPixel<false>({ i,j }, color, alpha * opacity);
+                _drawPixel<false>({ i,j }, color, alpha * nop);
                 }
             }
         return;
@@ -4482,7 +4488,7 @@ namespace tgx
     void Image<color_t>::_drawSmoothThickQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, float thickness, color_t color, float opacity)
         {
         int v, h; _defaultQuarterVH(quarter, v, h);
-        _drawSmoothThickQuarterCircleInterHP_sub(C, R, thickness, quarter, v, h, color, opacity, 0);
+        _drawSmoothThickQuarterCircleInterHPsub(C, R, thickness, quarter, v, h, color, opacity, 0);
         }
 
 
@@ -4492,8 +4498,7 @@ namespace tgx
         int32_t kx1, ky1, minleft1, maxright1;
         seg1.equation(kx1, ky1, minleft1, maxright1, (side1 > 0));
         int v, h; _defaultQuarterVH(quarter, v, h);
-        //_drawSmoothThickQuarterCircleInterHP_sub(C, R, thickness, quarter, v, h, color, opacity, 1, kx1, ky1, -maxright1);  // exclude boundary lines
-        _drawSmoothThickQuarterCircleInterHP_sub(C, R, thickness, quarter, v, h, color, opacity, 1, kx1, ky1, -minleft1); // we always include the boundary lines in this case
+        _drawSmoothThickQuarterCircleInterHPsub(C, R, thickness, quarter, v, h, color, opacity, 1, kx1, ky1, -minleft1, -maxright1); // include boundary line with AA
         }
 
 
@@ -4505,8 +4510,7 @@ namespace tgx
         seg1.equation(kx1, ky1, minleft1, maxright1, (side1 > 0));
         seg2.equation(kx2, ky2, minleft2, maxright2, (side2 > 0));
         int v, h; _defaultQuarterVH(quarter, v, h);
-        //_drawSmoothThickQuarterCircleInterHP_sub(C, R, thickness, quarter, v, h, color, opacity, 2, kx1, ky1, -maxright1, kx2, ky2, -maxright2); // exclude boundary lines
-        _drawSmoothThickQuarterCircleInterHP_sub(C, R, thickness, quarter, v, h, color, opacity, 2, kx1, ky1, -minleft1, kx2, ky2, -minleft2); // we always include the boundary lines in this case
+        _drawSmoothThickQuarterCircleInterHPsub(C, R, thickness, quarter, v, h, color, opacity, 2, kx1, ky1, -minleft1, -maxright1, kx2, ky2, -minleft2, -maxright2); // include boundary lines with AA
         }
 
 
@@ -4515,10 +4519,10 @@ namespace tgx
         {
         if ((!isValid()) || (r <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;        
-        _drawSmoothThickQuarterCircleInterHP_sub(center, r, thickness, 0, 1, 1, color, opacity, 0);
-        _drawSmoothThickQuarterCircleInterHP_sub(center, r, thickness, 1, 0, 1, color, opacity, 0);
-        _drawSmoothThickQuarterCircleInterHP_sub(center, r, thickness, 2, 1, 0, color, opacity, 0);
-        _drawSmoothThickQuarterCircleInterHP_sub(center, r, thickness, 3, 0, 0, color, opacity, 0);
+        _drawSmoothThickQuarterCircleInterHPsub(center, r, thickness, 0, 1, 1, color, opacity, 0);
+        _drawSmoothThickQuarterCircleInterHPsub(center, r, thickness, 1, 0, 1, color, opacity, 0);
+        _drawSmoothThickQuarterCircleInterHPsub(center, r, thickness, 2, 1, 0, color, opacity, 0);
+        _drawSmoothThickQuarterCircleInterHPsub(center, r, thickness, 3, 0, 0, color, opacity, 0);
         }
 
 
@@ -4583,28 +4587,24 @@ namespace tgx
                     }
                 }
             }
-        //_bseg_draw(seg1, false, true, color, +1, op, true);
-        //_bseg_avoid1(seg2, seg1, true, true, true, color, -1, op, true);
-
         }
 
 
 
 
-
-
-
-
-
-    /* fill a thick quarter circle intersected with 0,1 or 2 half plane of equation x*kx + y*ky + off > 0
+    /* fill a thick quarter circle intersected with 0,1 or 2 half plane of equation x*kx + y*ky + off > 0  (and x*kx + y*ky + off_full > 0 for full pixel intensity). 
         2    x=1, y=-1  |  3   x=-1; y=-1
        ---------------------------------
         0    x=1, y=1   |  1   x=-1, y=1
     */
     template<typename color_t>
-    void Image<color_t>::_fillSmoothThickQuarterCircleInterHP_sub(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity,
-                                                       int nb_planes, int32_t kx1, int32_t ky1, int32_t off1, int32_t kx2, int32_t ky2, int32_t off2)
+    void Image<color_t>::_fillSmoothThickQuarterCircleInterHPsub(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity,
+        int nb_planes, int32_t kx1, int32_t ky1, int32_t off1, int32_t off1_full, int32_t kx2, int32_t ky2, int32_t off2, int32_t off2_full)
         {
+        const int32_t df1 = off1 - off1_full + ((off1 == off1_full) ? 1 : 0);
+        const int32_t df2 = off2 - off2_full + ((off2 == off2_full) ? 1 : 0);
+        const int32_t op = (int32_t)(opacity * 256);
+
         if (thickness > R) thickness = R;
         // check radius >0  and im valid...
         const int dir_x = (quarter & 1) ? -1 : 1;
@@ -4640,11 +4640,11 @@ namespace tgx
                     if (x2 < x1) tgx::swap(x1, x2);
                     if (nb_planes & 2)
                         {
-                        int o1 = kx1 * x1 + ky1 * j + off1;
-                        int o2 = kx2 * x1 + ky2 * j + off2;
+                        int32_t o1 = kx1 * x1 + ky1 * j + off1;
+                        int32_t o2 = kx2 * x1 + ky2 * j + off2;
                         while (x1 <= x2)
                             {
-                            if ((o1 > 0) && (o2 > 0)) _drawPixel<false>({ x1, j }, color_interior, opacity);
+                            if ((o1 > 0) && (o2 > 0))  operator()(x1, j).blend256(color_interior, ((o1 > df1) && (o2 > df2)) ? op :  tgx::min((o1 * op)/df1, (o2 * op)/ df2));
                             o1 += kx1; o2 += kx2; x1++;
                             }
                         }
@@ -4653,7 +4653,7 @@ namespace tgx
                         int o1 = kx1 * x1 + ky1 * j + off1;
                         while (x1 <= x2)
                             {
-                            if (o1 > 0) _drawPixel<false>({ x1, j }, color_interior, opacity);
+                            if (o1 > 0) operator()(x1, j).blend256(color_interior, (o1 > df1) ? op : (o1 * op) / df1);
                             o1 += kx1; x1++;
                             }
                         }
@@ -4661,29 +4661,32 @@ namespace tgx
                         {
                         while (x1 <= x2)
                             {
-                            _drawPixel<false>({ x1, j }, color_interior, opacity);
+                            operator()(x1, j).blend256(color_interior, op);
                             x1++;
                             }
                         }
                     break;
                     }
+                float nop = opacity;
                 if (nb_planes & 2)
                     {
-                    int o1 = kx1 * i + ky1 * j + off1;
-                    int o2 = kx2 * i + ky2 * j + off2;
+                    int32_t o1 = kx1 * i + ky1 * j + off1;
+                    int32_t o2 = kx2 * i + ky2 * j + off2;
                     if ((o1 <= 0) || (o2 < 0)) continue;
+                    nop = tgx::min(opacity, tgx::min((opacity*o1)/df1, (opacity*o2)/df2));
                     }
                 else if (nb_planes & 1)
                     {
-                    int o1 = kx1 * i + ky1 * j + off1;
+                    int32_t o1 = kx1 * i + ky1 * j + off1;
                     if (o1 <= 0) continue;
+                    nop = tgx::min(opacity, (opacity * o1) / df1);
                     }
                 const float se = sqrtf(e2);
                 const float d2 = se - R;  const float alpha2 = (d2 > 0) ? (1.0f - d2) : 1.0f;
                 const float d1 = se - (R - thickness); const float alpha1 = (d1 < 1) ? d1 : 1.0f;
                 const float alpha = alpha1 * alpha2;
-                if (d1 < 1.5f) drawPixel<false>({ i,j }, color_interior, (1 - d1/2) * opacity);
-                drawPixel<false>({ i,j }, color_border, alpha * opacity);                
+                if (d1 < 1.5f) _drawPixel<false>({ i,j }, color_interior, (1 - d1/2) * nop);
+                _drawPixel<false>({ i,j }, color_border, alpha * nop);                
                 }
             }
         return;
@@ -4694,7 +4697,7 @@ namespace tgx
     void Image<color_t>::_fillSmoothThickQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
         int v, h; _defaultQuarterVH(quarter, v, h);
-        _fillSmoothThickQuarterCircleInterHP_sub(C, R, thickness, quarter, v, h, color_interior, color_border, opacity, 0);
+        _fillSmoothThickQuarterCircleInterHPsub(C, R, thickness, quarter, v, h, color_interior, color_border, opacity, 0);
         }
 
 
@@ -4704,7 +4707,7 @@ namespace tgx
         int32_t kx1, ky1, minleft1, maxright1;
         seg1.equation(kx1, ky1, minleft1, maxright1, (side1 > 0));
         int v, h; _defaultQuarterVH(quarter, v, h);
-        _fillSmoothThickQuarterCircleInterHP_sub(C, R, thickness, quarter, v, h, color_interior, color_border, opacity, 1, kx1, ky1, -maxright1); // exclude boundary lines
+        _fillSmoothThickQuarterCircleInterHPsub(C, R, thickness, quarter, v, h, color_interior, color_border, opacity, 1, kx1, ky1, -minleft1, -maxright1); // include boundary lines with AA
         }
 
 
@@ -4716,7 +4719,7 @@ namespace tgx
         seg1.equation(kx1, ky1, minleft1, maxright1, (side1 > 0));
         seg2.equation(kx2, ky2, minleft2, maxright2, (side2 > 0));
         int v, h; _defaultQuarterVH(quarter, v, h);
-        _fillSmoothThickQuarterCircleInterHP_sub(C, R, thickness, quarter, v, h, color_interior, color_border, opacity, 2, kx1, ky1, -maxright1, kx2, ky2, -maxright2); // exclude boundary lines
+        _fillSmoothThickQuarterCircleInterHPsub(C, R, thickness, quarter, v, h, color_interior, color_border, opacity, 2, kx1, ky1, -minleft1, -maxright1, kx2, ky2, -minleft2, -maxright2); // include boundary line with AA
         }
 
 
@@ -4725,18 +4728,78 @@ namespace tgx
         {
         if ((!isValid()) || (r <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        _fillSmoothThickQuarterCircleInterHP_sub(center, r, thickness, 0, 1, 1, color_interior, color_border, opacity, 0);
-        _fillSmoothThickQuarterCircleInterHP_sub(center, r, thickness, 1, 0, 1, color_interior, color_border, opacity, 0);
-        _fillSmoothThickQuarterCircleInterHP_sub(center, r, thickness, 2, 1, 0, color_interior, color_border, opacity, 0);
-        _fillSmoothThickQuarterCircleInterHP_sub(center, r, thickness, 3, 0, 0, color_interior, color_border, opacity, 0);
+        _fillSmoothThickQuarterCircleInterHPsub(center, r, thickness, 0, 1, 1, color_interior, color_border, opacity, 0);
+        _fillSmoothThickQuarterCircleInterHPsub(center, r, thickness, 1, 0, 1, color_interior, color_border, opacity, 0);
+        _fillSmoothThickQuarterCircleInterHPsub(center, r, thickness, 2, 1, 0, color_interior, color_border, opacity, 0);
+        _fillSmoothThickQuarterCircleInterHPsub(center, r, thickness, 3, 0, 0, color_interior, color_border, opacity, 0);
         }
 
 
     template<typename color_t>
     void Image<color_t>::fillSmoothThickCirclePie(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
+        if (!isValid()) return;
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        const int op = (int)(opacity * 256);
+	    float a1 = _rectifyAngle(angle_start);
+	    float a2 = _rectifyAngle(angle_end);
+        const float deg_to_rad = 0.01745329251f;
+	    const float rad1 = a1* deg_to_rad;
+	    const float rad2 = a2* deg_to_rad;
+	    const fVec2 A1(center.x + r * sin(rad1), center.y - r * cos(rad1));
+	    const fVec2 A2(center.x + r * sin(rad2), center.y - r * cos(rad2));
+        BSeg seg1(center, A1);
+        BSeg seg2(center, A2);
+        color_t col_origin = readPixel(seg1.pos());
+        for (int i = 0; i < 4; i++)
+            {
+            float m;
+            switch (i)
+            {
+            case 0: m = 180; break;
+            case 1: m = 90; break;
+            case 2: m = 270; break;
+            default: m = 0; break;
+            }
+            float u1 = a1 - m; if (u1 < 0) u1 += 360;
+            float u2 = a2 - m; if (u2 < 0) u2 += 360;
+            if (u1 <= u2)
+                {
+                if (u1 > 135) continue;
+                else
+                    {
+                    if (u2 > 135) 
+                        _fillSmoothThickQuarterCircleInterHP1(i, center, r, thickness, color_interior, color_border, opacity, seg1, +1);
+                    else
+                        _fillSmoothThickQuarterCircleInterHP2(i, center, r, thickness, color_interior, color_border, opacity, seg1, +1, seg2, -1);
+                    }
+                }
+            else
+                {
+                if (u1 < 135)
+                    {
+                    _fillSmoothThickQuarterCircleInterHP1(i, center, r, thickness, color_interior, color_border, opacity, seg1, +1);
+                    _fillSmoothThickQuarterCircleInterHP1(i, center, r, thickness, color_interior, color_border, opacity, seg2, -1);
+                    }
+                else if (u1 < 315)
+                    {
+                    if (u2 < 135)
+                        _fillSmoothThickQuarterCircleInterHP1(i, center, r, thickness, color_interior, color_border, opacity, seg2, -1);
+                    else
+                        _fillSmoothThickQuarterCircleInterHP0(i, center, r, thickness, color_interior, color_border, opacity);
+                    }
+                else
+                    {
+                    if (u2 < 135)
+                        _fillSmoothThickQuarterCircleInterHP2(i, center, r, thickness, color_interior, color_border, opacity, seg1, +1, seg2, -1);
+                    else
+                        _fillSmoothThickQuarterCircleInterHP1(i, center, r, thickness, color_interior, color_border, opacity, seg1, +1);
+                    }
+                }
+            }
+        col_origin.blend256(color_interior, (op * tgx::min(seg1.AA(+1), seg2.AA(-1)))>> 8);        
+        drawPixel<true>(seg1.pos(), col_origin);
         }
-
 
 
 
@@ -4754,6 +4817,13 @@ namespace tgx
     * DRAWING ELLIPSES
     *
     *********************************************************************************/
+
+
+
+
+    /********************************************
+    * DRAWING ELLIPSES, LOW QUALITY
+    *********************************************/
 
 
     /** Adapted from Bodmer e_tft library. */
@@ -4863,6 +4933,12 @@ namespace tgx
 
 
    
+
+
+
+    /********************************************
+    * DRAWING ELLIPSES, HIGH QUALITY
+    *********************************************/
 
 
     template<typename color_t>

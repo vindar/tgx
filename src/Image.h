@@ -3741,12 +3741,12 @@ private:
         void _drawSmoothQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1);
         void _drawSmoothQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
 
-        void _drawSmoothThickQuarterCircleInterHP_sub(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0);
+        void _drawSmoothThickQuarterCircleInterHPsub(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t off1_full = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0, int32_t off2_full = 0);
         void _drawSmoothThickQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, float thickness, color_t color, float opacity);
         void _drawSmoothThickQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, float thickness, color_t color, float opacity, const BSeg& seg1, int side1);
         void _drawSmoothThickQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, float thickness, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
 
-        void _fillSmoothThickQuarterCircleInterHP_sub(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0);
+        void _fillSmoothThickQuarterCircleInterHPsub(tgx::fVec2 C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t off1_full = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0, int32_t off2_full = 0);
         void _fillSmoothThickQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, float thickness, color_t color_interior, color_t color_border, float opacity);
         void _fillSmoothThickQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, float thickness, color_t color_interior, color_t color_border, float opacity, const BSeg& seg1, int side1);
         void _fillSmoothThickQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, float thickness, color_t color_interior, color_t color_border, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
