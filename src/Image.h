@@ -532,7 +532,7 @@ namespace tgx
          * @param   color   The color.
         **/
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE>(pos, color); }
-        template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(fVec2 pos, color_t color) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE>({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, color); }
+        template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixelf(fVec2 pos, color_t color) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE>({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, color); }
 
 
         /**
@@ -546,7 +546,7 @@ namespace tgx
          *                  if negative, then simple overwrittening of color is used instead of blending.
         **/
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color, float opacity) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE,true>(pos, color, opacity); }
-        template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(fVec2 pos, color_t color, float opacity) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE, true>({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, color, opacity); }
+        template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixelf(fVec2 pos, color_t color, float opacity) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE, true>({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, color, opacity); }
 
 
 
@@ -560,7 +560,7 @@ namespace tgx
          * @returns The pixel color
         **/
         template<bool CHECKRANGE = true> TGX_INLINE inline color_t readPixel(iVec2 pos, color_t outside_color = color_t()) const { if ((CHECKRANGE) && (!isValid())) return outside_color; return _readPixel(pos, outside_color); }
-        template<bool CHECKRANGE = true> TGX_INLINE inline color_t readPixel(fVec2 pos, color_t outside_color = color_t()) const { if ((CHECKRANGE) && (!isValid())) return outside_color; return _readPixel({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, outside_color); }
+        template<bool CHECKRANGE = true> TGX_INLINE inline color_t readPixelf(fVec2 pos, color_t outside_color = color_t()) const { if ((CHECKRANGE) && (!isValid())) return outside_color; return _readPixel({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, outside_color); }
 
 
         /**
@@ -571,9 +571,7 @@ namespace tgx
          * @returns a (possibly const) reference to the pixel color.
         **/
         TGX_INLINE inline const color_t& operator()(iVec2 pos) const { return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)]; }
-        TGX_INLINE inline const color_t& operator()(fVec2 pos) const { return _buffer[TGX_CAST32(roundf(pos.x)) + TGX_CAST32(_stride) * TGX_CAST32(roundf(pos.y))]; }
         TGX_INLINE inline color_t& operator()(iVec2 pos) { return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)]; }
-        TGX_INLINE inline color_t& operator()(fVec2 pos) { return _buffer[TGX_CAST32(roundf(pos.x)) + TGX_CAST32(_stride) * TGX_CAST32(roundf(pos.y))]; }
 
 
         /**
@@ -585,9 +583,7 @@ namespace tgx
          * @returns a (possibly const) reference to the pixel color.
         **/
         TGX_INLINE inline const color_t& operator()(int x, int y) const { return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)]; }
-        TGX_INLINE inline const color_t& operator()(float x, float y) const { return _buffer[TGX_CAST32(roundf(x)) + TGX_CAST32(_stride) * TGX_CAST32(roundf(y))]; }
         TGX_INLINE inline color_t& operator()(int x, int y) { return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];}
-        TGX_INLINE inline color_t& operator()(float x, float y) { return _buffer[TGX_CAST32(roundf(x)) + TGX_CAST32(_stride) * TGX_CAST32(roundf(y))]; }
 
 
 
