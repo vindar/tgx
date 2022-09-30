@@ -3729,14 +3729,14 @@ private:
         /** high quality drawing for circle, arc and pie */
         static float _rectifyAngle(float a); 
         static void _defaultQuarterVH(int quarter, int& v, int& h);
-
-        void _fillSmoothQuarterCircleInterHP_sub(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0);
+      
+        void _fillSmoothQuarterCircleInterHPsub(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t off1_full = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0, int32_t off2_full = 0);        
         void _fillSmoothQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, color_t color, float opacity);
         void _fillSmoothQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1);
         void _fillSmoothQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
         void _fillSmoothCircleInterHP(tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg, int side); // used to draw rounded ends
 
-        void _drawSmoothQuarterCircleInterHP_sub(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0);
+        void _drawSmoothQuarterCircleInterHPsub(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t off1_full = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0, int32_t off2_full = 0);
         void _drawSmoothQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, color_t color, float opacity);
         void _drawSmoothQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1);
         void _drawSmoothQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
