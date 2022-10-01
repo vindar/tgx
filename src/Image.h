@@ -43,9 +43,9 @@ namespace tgx
 
     /**
     * For some path primitive like drawThickLineAA(), drawThickPolylineAA() 
-    * it is necessary to specify how the extremities of the path should look like.
+    * one can choose how the end of the path should look like. 
     * 
-    * The available 'ends' are define here:
+    * The available 'ends' are defined here:
     **/
     enum PATH_END_TYPE
         {
@@ -65,8 +65,7 @@ namespace tgx
         
 
     /**
-    * Enum use to define the placement of an anchor point relative to a box. 
-    * Used for drawing text. 
+    * Enum use to define the placement of an anchor point relative to a text bounding box.
     * 
     *        left       center      right
     *      top +-----------------------+
@@ -107,31 +106,25 @@ namespace tgx
 
     /***********************************************************************************************
     * 
-    * Template class for an "image object" that draws into an external memory buffer.   
-    * 
-    *   
+    * Image<color_t> : Template class for an "image object" that draws into an external memory buffer.   
+    *     
     * The class object itself is very small (16 bytes) thus image objects can easily be 
     * passed around/copied without much cost. Also, sub-images sharing the same memory 
     * buffer can be created and are useful for clipping drawing operation to a given 
     * region of the image. 
     *
-    * 
-    *         * NO MEMORY ALLOCATION IS EVER PERFORMED BY THE CLASS OR ITS METHOD. *
+    *     *** NO MEMORY ALLOCATION IS EVER PERFORMED BY THE CLASS OR ITS METHOD. ***
     *         
-    * -> Nothing happens under the hood. No dynamic allocation. It is the user's responsability to 
-    *    assign the buffer to the image.   
-    * 
-    * 
+    * -> Nothing happens under the hood;It is the user's responsability to  assign the buffer to the image.   
+    *      
     * Template parameter:
     * -------------------
     *
-    * color_t: Color type to use with the image, the memory buffer supplied should have
-    *          type color_t*. It must be one of the color types defined in color.h
-    *          Typical use:
-    *             -> favor RGB32 when running on a desktop computer.
-    *             -> favor RGB565 when running on an 32 bits MCU (Teensy, ESP32..)
+    * color_t: Color type to use with the image, the memory buffer supplied should have type color_t* 
+    *          and correct alignement. It must be one of the color types defined in color.h
+    *          Typical choice: -> color_t = RGB32 when running on a desktop computer.
+    *                          -> color_t = RGB565 when running on an MCU with limited memory (Teensy, ESP32..)
     *
-    * 
     * Image layout:
     * -------------
     *  The image in the memory buffer in made of consecutive pixel of type color_t in row major 
@@ -143,69 +136,60 @@ namespace tgx
     *                           color(x,y) = buffer[x + y * _stride].  
     *
     * The only thing that the Image object remembers is (_lx, _ly, stride) and the buffer pointer. 
-    * 
-    *
     *             
     * Remarks:
     * --------
     * 
-    * (1) When creating a new image, one can (and usually should) choose _stride = lx. 
-    *     However, allowing other stride in the class definition allows to very 
-    *     efficiently represent sub-images withut making any copy and thus enables
-    *     fast clipping of all drawing operations (sub-images are similar to Numpy
-    *     view for ndarray).
+    * (1) When creating a new image, one can (and usually should) choose _stride = lx.  However, allowing 
+    *     other stride in the class definition allows to very  efficiently represent sub-images without 
+    *     making any copy and thus enables fast clipping of all drawing operations (sub-images are similar 
+    *     to Numpy view for ndarray).
     *
-    * (2) Avoid using HSV as color type for an image: it has not been tested to work and 
-    *     using HSV colors will be very slow and take a lot of memory anyway...
+    * (2) Avoid using HSV as color type for an image: it has not been tested to work and will be very slow.
     * 
-    * (2) The library defines many drawing primitive and the user can choose between fast 
-    *     or high quality rendering. The naming of the method follow the convention:
+    * (2) The library defines many drawing primitive and the user can choose between fast or high quality 
+    *     rendering. The naming of the method follow the convention:
     *                        
-    *                        (draw/fill])(Smooth/-)([Thick)(name)
+    *                             [draw/fill][Thick/-]MethodName[AA/-]
     *     where: 
-    *     - [draw] means that the method draw a path whereas [fill] means that the method   
-    *       create a solid shape.
-    *     - [Smooth] means that the method draws with anti-aliasing and sub-pixel precision  
-    *       this provide high quality rendering (at the expense of time). In particular, 
-    *       method with [smooth] take fVec2 parameters for coordinates whereas method without
-    *       this prefix take iVec2 parameters.
-    *     - [Thick] means that the outline of the shape/path has user defined thickness and  
-    *       is not just a single pixel wide. The tichness is float so it does not need to 
-    *       be an integer but it should usually be at least 1 to get good rendering. 
+    *      [draw]  means that the method draw a path whereas [fill] means that the method create a solid 
+    *              shape.
+    *     [Thick]  means that the outline of the shape/path has user defined thickness and is not just a 
+    *              single pixel wide. The tichness is usually a float so it does not need to be an integer 
+    *              but it should be at least 1 to get good rendering.     
+    *        [AA]  means that the method is 'high quality': it is drawn with anti-aliasing and sub-pixel 
+    *              precision. Method with this suffix take fVec2 parameters for coordinates inputs whereas 
+    *              regular 'low quality' methods (without the AA suffix) take iVec2 parameters.
     *       
     *  (3) Opacity and alpha blending. 
-    *      All drawing method that take a color as parameter also take an opacity paramter
-    *      as well which allows to create transparency effect even if the color used for 
-    *      drawing do not have an alpha channel (for instance, RGB32 as an alpha channel but
-    *      RGB565 does not). 
-    *      - Passing TGX_DEFAULT_NO_BLENDING or (a negative value) for the opacity  
-    *        will usually disable blending an use simple overwritting of the destination pixel
-    *        which may be a bit faster (but not much). 
-    *      _ given a value 0 < opacity <= 1.0f will enable blending and the alpha channel of
-    *        the colors will be used if present. 
-    *          - > in particular, opacity=TGX_DEFAULT_NO_BLENDING and opacity=1.0f gives the   
-    *              same result if the color in play are opaque (which is the case when the color 
-    *              does not have an alpha channel) but give different result if the color are 
-    *              semi-transparent.
+    *      All drawing methods that take a color as parameter also take an 'opacity' float parameter which 
+    *      allows to create transparency effect even when color type used do not have an alpha channel 
+    *      (for instance, RGB32 as an alpha channel but RGB565 does not). 
+    *      - Passing TGX_DEFAULT_NO_BLENDING or (a negative value) for the opacity will usually disable 
+    *        blending the method will simply use overwritting of the destination pixel (which may be a bit 
+    *        faster but not much). 
+    *      - Passing 0.0f < opacity <= 1.0f will enable blending and the alpha channel of the colors will   
+    *        be used if present.     
+    *         Remark: using opacity=TGX_DEFAULT_NO_BLENDING and opacity=1.0f gives the same result if the 
+    *                 color in play are opaque (which is the case when the color type has no alpha channel)
+    *                 but give different result if the color are semi-transparent.
     *           
-    *  (4) As indicated in color.h. All colors with an alpha channel are assumed to have pre-
-    *      multiplied alpha and treated as such for all blending operations.
+    *  (4) As indicated in color.h. All colors with an alpha channel are assumed to have pre-multiplied 
+    *      alpha and treated as such for all blending operations.
+    *      cf: https://en.wikipedia.org/wiki/Alpha_compositing
     * 
-    *  (5) Most class methods require iVec2 parameters to specify coordinates in the image. 
-    *      Using initializer list, it is very easy to call such method without explicitly
-    *      mentioning the iVec2 type. For example, assume a function with signature 
-    *      f(iVec2 pos, int r)` then it can simply be called with f({x,y},z)' which is 
-    *      equivalent to the expression f(iVec2(x,y),z)
+    *  (5) Most methods require iVec2/fVec2 parameters to specify coordinates in the image. Using initializer 
+    *      list, it is very easy to call such method without explicitly mentioning the iVec2 type. For example, 
+    *      a function with signature f(iVec2 pos, int r) can be simply called f({x,y},z)' which is equivalent 
+    *      to the expression f(iVec2(x,y),z)
     *      
-    *      Also, some methods take an fVec2 instead of iVec2 to allow for sub-pixel precision.
-    *      In that case, it is still valid to call these method with an iVec2 since it will 
-    *      implicitly be promoted to an fVec2. For example, assume a function with signature 
-    *      `f(fVec2 pos, int r)`, then both call f({1,3},z) or  f({1.0f,3.0f},z) yield the
-    *      same result. On the other hand, you must explicitely cast to convert from fVec2 
-    *      to iVec2. 
+    *      Note also that iVec2 vector are automaticcally promoted to fVec2 vector so that calling AA method 
+    *      with sub-pixel precision is effortless even when only working with integer vectors iVec2. On the 
+    *      other hand, downgrading from fVec2 to iVec2 necessitate an explicit cast/conversion. 
     * 
-    *  (6) Use sub-image for cropping or clipping a drawing to a region of the image ! Creating
-    *      sub-image is cost-less and should be used whenever possible !
+    *  (6) Creating sub-image is costless and enables to restrict any drawing operation to any rectangular 
+    *      region of an image. This is a very powerful method: for example, it permit to draw half and quarter 
+    *      circles from the full drawCircle method !
     * 
     **********************************************************************************************/
     template<typename color_t> 
@@ -2950,7 +2934,7 @@ namespace tgx
 
 
 
-
+        
 
 
 /************************************************************************************************************
