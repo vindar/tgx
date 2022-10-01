@@ -1985,7 +1985,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothLine(fVec2 P1, fVec2 P2, color_t color, float opacity)
+    void Image<color_t>::drawLineAA(fVec2 P1, fVec2 P2, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -1996,17 +1996,17 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickLine(fVec2 P1, fVec2 P2, float line_width, PATH_END_TYPE end_P1, PATH_END_TYPE ends_P2, color_t color, float opacity)
+    void Image<color_t>::drawThickLineAA(fVec2 P1, fVec2 P2, float line_width, PATH_END_TYPE end_P1, PATH_END_TYPE ends_P2, color_t color, float opacity)
         {  
         if (line_width < 0) return;
         if (line_width <= 1)
             {
             if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
             opacity *= line_width;
-            drawSmoothLine(P1, P2, color, opacity);
+            drawLineAA(P1, P2, color, opacity);
             return; 
             }
-        drawSmoothWedgeLine(P1, P2, line_width, end_P1, line_width, end_P1, color, opacity);
+        drawWedgeLineAA(P1, P2, line_width, end_P1, line_width, end_P1, color, opacity);
         }
 
 
@@ -2062,7 +2062,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, PATH_END_TYPE end_P1, float line_width_P2, PATH_END_TYPE end_P2, color_t color, float opacity)
+    void Image<color_t>::drawWedgeLineAA(fVec2 P1, fVec2 P2, float line_width_P1, PATH_END_TYPE end_P1, float line_width_P2, PATH_END_TYPE end_P2, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -2080,7 +2080,7 @@ namespace tgx
             { // draw triangle: here line_width_P1 <= 1
             if (line_width_P2 < 1)
                 {
-                drawSmoothLine(P1, P1, color, opacity * line_width_P2);
+                drawLineAA(P1, P1, color, opacity * line_width_P2);
                 return;
                 }
             const fVec2 H = (P1 - P2).getRotate90().getNormalize() * (line_width_P2/2);
@@ -2430,16 +2430,16 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickRect(const fBox2& B, float thickness, color_t color, float opacity)
+    void Image<color_t>::drawThickRectAA(const fBox2& B, float thickness, color_t color, float opacity)
         {
         if (B.isEmpty()) return;
-        drawSmoothThickQuad(fVec2(B.minX, B.minY), fVec2(B.maxX, B.minY), fVec2(B.maxX, B.maxY), fVec2(B.minX, B.maxY), thickness, color, opacity);
+        drawThickQuadAA(fVec2(B.minX, B.minY), fVec2(B.maxX, B.minY), fVec2(B.maxX, B.maxY), fVec2(B.minX, B.maxY), thickness, color, opacity);
         }
 
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothRect(const fBox2& B, color_t color, float opacity)
+    void Image<color_t>::fillRectAA(const fBox2& B, color_t color, float opacity)
         {
         if ((!isValid()) || (B.isEmpty())) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -2448,10 +2448,10 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothThickRect(const fBox2& B, float thickness, color_t color_interior, color_t color_border, float opacity)
+    void Image<color_t>::fillThickRectAA(const fBox2& B, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
         if (B.isEmpty()) return;
-        fillSmoothThickQuad(fVec2(B.minX, B.minY), fVec2(B.maxX, B.minY), fVec2(B.maxX, B.maxY), fVec2(B.minX, B.maxY), thickness, color_interior, color_border, opacity);
+        fillThickQuadAA(fVec2(B.minX, B.minY), fVec2(B.maxX, B.minY), fVec2(B.maxX, B.maxY), fVec2(B.minX, B.maxY), thickness, color_interior, color_border, opacity);
         }
 
 
@@ -2529,7 +2529,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothRoundRect(const fBox2& B, float corner_radius, color_t color, float opacity)
+    void Image<color_t>::drawRoundRectAA(const fBox2& B, float corner_radius, color_t color, float opacity)
         {
         if ((!isValid()) || (B.isEmpty())) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -2538,7 +2538,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickRoundRect(const fBox2& B, float corner_radius, float thickness, color_t color, float opacity)
+    void Image<color_t>::drawThickRoundRectAA(const fBox2& B, float corner_radius, float thickness, color_t color, float opacity)
         {
         if ((!isValid()) || (B.isEmpty())) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -2548,7 +2548,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothRoundRect(const fBox2& B, float corner_radius, color_t color, float opacity)
+    void Image<color_t>::fillRoundRectAA(const fBox2& B, float corner_radius, color_t color, float opacity)
         {
         if ((!isValid()) || (B.isEmpty())) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -2709,19 +2709,19 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothThickRoundRect(const fBox2& B, float corner_radius, float thickness, color_t color_interior, color_t color_border, float opacity)
+    void Image<color_t>::fillThickRoundRectAA(const fBox2& B, float corner_radius, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
         if (corner_radius - thickness < 1) thickness = corner_radius - 1.0f;
         if (thickness < 1)
             {
-            drawSmoothRoundRect(B, corner_radius, color_border, opacity);
-            fillSmoothRoundRect(fBox2(B.minX + 0.5f, B.maxX - 0.5f, B.minY + 0.5f, B.maxY - 0.5f), corner_radius, color_interior, opacity);
+            drawRoundRectAA(B, corner_radius, color_border, opacity);
+            fillRoundRectAA(fBox2(B.minX + 0.5f, B.maxX - 0.5f, B.minY + 0.5f, B.maxY - 0.5f), corner_radius, color_interior, opacity);
             }
         else
             {
             const float tt = thickness;
-            drawSmoothThickRoundRect(B, corner_radius, thickness, color_border, opacity);
-            fillSmoothRoundRect(fBox2(B.minX + tt, B.maxX - tt, B.minY + tt, B.maxY - tt), corner_radius - tt, color_interior, opacity);
+            drawThickRoundRectAA(B, corner_radius, thickness, color_border, opacity);
+            fillRoundRectAA(fBox2(B.minX + tt, B.maxX - tt, B.minY + tt, B.maxY - tt), corner_radius - tt, color_interior, opacity);
             }
         }
 
@@ -2786,7 +2786,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
+    void Image<color_t>::drawTriangleAA(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -2799,16 +2799,16 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color, float opacity)
+    void Image<color_t>::drawThickTriangleAA(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color, float opacity)
         {
         fVec2 tab[3] = { P1,P2,P3 };
-        drawSmoothThickPolygon(3, tab, thickness, color, opacity);
+        drawThickPolygonAA(3, tab, thickness, color, opacity);
         }
 
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
+    void Image<color_t>::fillTriangleAA(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -2826,10 +2826,10 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color_interior, color_t color_border, float opacity)
+    void Image<color_t>::fillThickTriangleAA(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
         fVec2 P[3] = { P1, P2, P3 };
-        fillSmoothThickPolygon(3, P, thickness, color_interior, color_border, opacity);
+        fillThickPolygonAA(3, P, thickness, color_interior, color_border, opacity);
         }
 
 
@@ -3129,7 +3129,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity)
+    void Image<color_t>::drawQuadAA(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -3142,16 +3142,16 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, float thickness, color_t color, float opacity)
+    void Image<color_t>::drawThickQuadAA(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, float thickness, color_t color, float opacity)
         {
         fVec2 tab[4] = { P1, P2, P3, P4 };
-        drawSmoothThickPolygon(4, tab, thickness, color, opacity);
+        drawThickPolygonAA(4, tab, thickness, color, opacity);
         }
 
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity)
+    void Image<color_t>::fillQuadAA(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -3182,10 +3182,10 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothThickQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, float thickness, color_t color_interior, color_t color_border, float opacity)
+    void Image<color_t>::fillThickQuadAA(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
         fVec2 P[4] = { P1, P2, P3, P4 };
-        fillSmoothThickPolygon(4, P, thickness, color_interior, color_border, opacity);
+        fillThickPolygonAA(4, P, thickness, color_interior, color_border, opacity);
         }
 
 
@@ -3301,7 +3301,7 @@ namespace tgx
 
     template<typename color_t>
     template<typename FUNCTOR_NEXT>
-    void Image<color_t>::drawSmoothPolyline(FUNCTOR_NEXT next_point, color_t color, float opacity)
+    void Image<color_t>::drawPolylineAA(FUNCTOR_NEXT next_point, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -3322,11 +3322,11 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothPolyline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
+    void Image<color_t>::drawPolylineAA(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
         {
         if ((nbpoints < 2) || (!isValid())) return;
         int k = 0;
-        drawSmoothPolyline(
+        drawPolylineAA(
             [&k, &nbpoints, &tabPoints](tgx::fVec2& P)
                 {
                 if (k == nbpoints) k = 0;
@@ -3340,21 +3340,21 @@ namespace tgx
 
     template<typename color_t>
     template<typename FUNCTOR_NEXT>
-    void Image<color_t>::drawSmoothThickPolyline(FUNCTOR_NEXT next_point, float line_width, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
+    void Image<color_t>::drawThickPolylineAA(FUNCTOR_NEXT next_point, float line_width, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
         {
         if (!isValid() || (line_width <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         if (line_width <= 1)
             {
             opacity *= line_width;
-            drawSmoothPolyline(next_point, color, opacity);
+            drawPolylineAA(next_point, color, opacity);
             return;
             }
         fVec2 P1, P2; 
         if (!next_point(P1)) return;
         if (!next_point(P2))
             {
-            drawSmoothThickLine(P1, P2, line_width, end_P0, end_Pn, color, opacity);
+            drawThickLineAA(P1, P2, line_width, end_P0, end_Pn, color, opacity);
             return;
             }
         float thickness = line_width / 2; 
@@ -3418,11 +3418,11 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float line_width, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
+    void Image<color_t>::drawThickPolylineAA(int nbpoints, const fVec2 tabPoints[], float line_width, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
         {
         if ((nbpoints < 2) || (!isValid())) return;
         int k = 0;
-        drawSmoothThickPolyline(
+        drawThickPolylineAA(
             [&k, &nbpoints, &tabPoints](tgx::fVec2& P)
                 {
                 if (k == nbpoints) k = 0;
@@ -3549,7 +3549,7 @@ namespace tgx
 
     template<typename color_t>
     template<typename FUNCTOR_NEXT>
-    void Image<color_t>::drawSmoothPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity)
+    void Image<color_t>::drawPolygonAA(FUNCTOR_NEXT next_point, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -3572,11 +3572,11 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
+    void Image<color_t>::drawPolygonAA(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
         {
         if ((!isValid()) || (nbpoints < 2)) return;
         int k = 0;
-        drawSmoothPolygon(
+        drawPolygonAA(
             [&k, &nbpoints, &tabPoints](tgx::fVec2& P)
                 {
                 if (k == nbpoints) k = 0;
@@ -3590,7 +3590,7 @@ namespace tgx
 
     template<typename color_t>
     template<typename FUNCTOR_NEXT>
-    void Image<color_t>::fillSmoothPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity)
+    void Image<color_t>::fillPolygonAA(FUNCTOR_NEXT next_point, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -3643,11 +3643,11 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
+    void Image<color_t>::fillPolygonAA(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
         {   
         if ((nbpoints < 2) || (!isValid())) return;
         int k = 0;
-        fillSmoothPolygon(
+        fillPolygonAA(
             [&k, &nbpoints, &tabPoints](tgx::fVec2& P)
                 {
                 if (k == nbpoints) k = 0;
@@ -3660,14 +3660,14 @@ namespace tgx
 
     template<typename color_t>
     template<typename FUNCTOR_NEXT>
-    void Image<color_t>::drawSmoothThickPolygon(FUNCTOR_NEXT next_point, float thickness, color_t color, float opacity)
+    void Image<color_t>::drawThickPolygonAA(FUNCTOR_NEXT next_point, float thickness, color_t color, float opacity)
         {
         if (!isValid() || (thickness <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         if (thickness <= 1)
             {
             opacity *= thickness;
-            drawSmoothPolygon(next_point, color, opacity);
+            drawPolygonAA(next_point, color, opacity);
             return;
             }
 
@@ -3737,11 +3737,11 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity)
+    void Image<color_t>::drawThickPolygonAA(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity)
         {
         if ((nbpoints < 2) || (!isValid())) return;
         int k = 0;
-        drawSmoothThickPolygon(
+        drawThickPolygonAA(
             [&k, &nbpoints, &tabPoints](tgx::fVec2& P)
                 {
                 if (k == nbpoints) k = 0;
@@ -3755,7 +3755,7 @@ namespace tgx
 
     template<typename color_t>
     template<typename FUNCTOR_NEXT>
-    void Image<color_t>::fillSmoothThickPolygon(FUNCTOR_NEXT next_point, float thickness, color_t interior_color, color_t border_color, float opacity)
+    void Image<color_t>::fillThickPolygonAA(FUNCTOR_NEXT next_point, float thickness, color_t interior_color, color_t border_color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -3843,11 +3843,11 @@ namespace tgx
  
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t interior_color, color_t border_color, float opacity)
+    void Image<color_t>::fillThickPolygonAA(int nbpoints, const fVec2 tabPoints[], float thickness, color_t interior_color, color_t border_color, float opacity)
         {
         if ((nbpoints < 2) || (!isValid())) return;
         int k = 0;
-        fillSmoothThickPolygon(
+        fillThickPolygonAA(
             [&k, &nbpoints, &tabPoints](tgx::fVec2& P)
                 {
                 if (k == nbpoints) k = 0;
@@ -4241,7 +4241,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothCircle(fVec2 center, float r, color_t color, float opacity)
+    void Image<color_t>::fillCircleAA(fVec2 center, float r, color_t color, float opacity)
         {
         if ((!isValid())||(r<=0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -4253,7 +4253,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothCirclePie(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity)
+    void Image<color_t>::fillCircleSectorAA(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -4415,7 +4415,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothCircle(fVec2 center, float r, color_t color, float opacity)
+    void Image<color_t>::drawCircleAA(fVec2 center, float r, color_t color, float opacity)
         {
         if ((!isValid()) || (r <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -4427,7 +4427,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothCircleArc(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity)
+    void Image<color_t>::drawCircleArcAA(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -4590,7 +4590,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickCircle(fVec2 center, float r, float thickness, color_t color, float opacity)
+    void Image<color_t>::drawThickCircleAA(fVec2 center, float r, float thickness, color_t color, float opacity)
         {
         if ((!isValid()) || (r <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;        
@@ -4602,7 +4602,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickCircleArc(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color, float opacity)
+    void Image<color_t>::drawThickCircleArcAA(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -4799,7 +4799,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothThickCircle(fVec2 center, float r, float thickness, color_t color_interior, color_t color_border, float opacity)
+    void Image<color_t>::fillThickCircleAA(fVec2 center, float r, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
         if ((!isValid()) || (r <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -4811,7 +4811,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothThickCirclePie(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color_interior, color_t color_border, float opacity)
+    void Image<color_t>::fillThickCircleSectorAA(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -5063,7 +5063,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothEllipse(fVec2 center, fVec2 radiuses, color_t color, float opacity)
+    void Image<color_t>::drawEllipseAA(fVec2 center, fVec2 radiuses, color_t color, float opacity)
         {
         if ((!isValid()) || (radiuses.x <= 0) || (radiuses.y<= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -5130,7 +5130,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickEllipse(fVec2 center, fVec2 radiuses, float thickness, color_t color, float opacity)
+    void Image<color_t>::drawThickEllipseAA(fVec2 center, fVec2 radiuses, float thickness, color_t color, float opacity)
         {
         if ((!isValid()) || (radiuses.x <= 0) || (radiuses.y <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -5196,7 +5196,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothEllipse(fVec2 center, fVec2 radiuses, color_t color, float opacity)
+    void Image<color_t>::fillEllipseAA(fVec2 center, fVec2 radiuses, color_t color, float opacity)
         {
         if ((!isValid()) || (radiuses.x <= 0) || (radiuses.y <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -5271,7 +5271,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillSmoothThickEllipse(fVec2 center, fVec2 radiuses, float thickness, color_t color_interior, color_t color_border, float opacity)
+    void Image<color_t>::fillThickEllipseAA(fVec2 center, fVec2 radiuses, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
         if ((!isValid()) || (radiuses.x <= 0) || (radiuses.y <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;        
@@ -5940,16 +5940,16 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity)
+    void Image<color_t>::drawThickQuadBezierAA(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity)
         {
         if (!isValid() || (thickness <=0)) return;
         if (wc <= 0)
             {
-            drawSmoothThickLine(P1, P2, thickness, end_P1, end_P2, color, opacity);
+            drawThickLineAA(P1, P2, thickness, end_P1, end_P2, color, opacity);
             return;
             }
         bool done = false; 
-        drawSmoothThickPolyline(            
+        drawThickPolylineAA(            
             [&P1, &P2, &PC, &wc, &done](tgx::fVec2& P)
                 {
                 if (done)
@@ -6002,11 +6002,11 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawSmoothThickCubicBezier(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity)
+    void Image<color_t>::drawThickCubicBezierAA(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity)
         {
         if (!isValid() || (thickness <=0)) return;
         bool done = false; 
-        drawSmoothThickPolyline(            
+        drawThickPolylineAA(            
             [&P1, &P2, &PC1, &PC2, &done](tgx::fVec2& P)
                 {
                 if (done)
@@ -6031,7 +6031,7 @@ namespace tgx
 
     template<typename color_t>
     template<int SPLINE_MAX_POINTS>
-    void Image<color_t>::drawSmoothThickQuadSpline(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
+    void Image<color_t>::drawThickQuadSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
         {
         if (!isValid() || (thickness <= 0)) return;
         if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
@@ -6042,7 +6042,7 @@ namespace tgx
             return;
         case 2:
             {
-            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, end_P0, end_Pn, color, opacity);
+            drawThickLineAA(tabPoints[0], tabPoints[1], thickness, end_P0, end_Pn, color, opacity);
             return;
             }
         default:
@@ -6074,7 +6074,7 @@ namespace tgx
             bool begin = true; 
             fVec2 P1, P2, PC; 
 
-            drawSmoothThickPolyline(
+            drawThickPolylineAA(
                 [&](tgx::fVec2& P)
                     {
                     if (loadstart)
@@ -6131,7 +6131,7 @@ namespace tgx
 
     template<typename color_t>
     template<int SPLINE_MAX_POINTS>
-    void Image<color_t>::drawSmoothThickCubicSpline(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
+    void Image<color_t>::drawThickCubicSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
         {
         if (!isValid()) return;
         if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
@@ -6142,12 +6142,12 @@ namespace tgx
             return;
         case 2:
             {
-            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, end_P0, end_Pn, color, opacity);
+            drawThickLineAA(tabPoints[0], tabPoints[1], thickness, end_P0, end_Pn, color, opacity);
             return;
             }
         case 3:
             {
-            drawSmoothThickQuadSpline<SPLINE_MAX_POINTS>(nbpoints, tabPoints, thickness, end_P0, end_Pn, color, opacity);
+            drawThickQuadSplineAA<SPLINE_MAX_POINTS>(nbpoints, tabPoints, thickness, end_P0, end_Pn, color, opacity);
             return;
             }
         default:
@@ -6181,7 +6181,7 @@ namespace tgx
             bool begin = true;
             fVec2 P1, P2, PC1, PC2;
 
-            drawSmoothThickPolyline(
+            drawThickPolylineAA(
                 [&](tgx::fVec2& P)
                     {
                     if (loadstart)
@@ -6259,7 +6259,7 @@ namespace tgx
 
     template<typename color_t>
     template<int SPLINE_MAX_POINTS>
-    void Image<color_t>::drawSmoothThickClosedSpline(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity)
+    void Image<color_t>::drawThickClosedSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity)
         {
         if (!isValid()) return;
         if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
@@ -6270,7 +6270,7 @@ namespace tgx
             return;
         case 2:
             {
-            drawSmoothThickLine(tabPoints[0], tabPoints[1], thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+            drawThickLineAA(tabPoints[0], tabPoints[1], thickness, END_ROUNDED, END_ROUNDED, color, opacity);
             return;
             }
         default:
@@ -6331,7 +6331,7 @@ namespace tgx
             bool loadstart = true; 
             bool begin = true; 
             fVec2 P1, P2, PC; 
-            drawSmoothThickPolygon(
+            drawThickPolygonAA(
                 [&](tgx::fVec2& P)
                     {
                     while (1)
@@ -6394,7 +6394,7 @@ namespace tgx
 
     template<typename color_t>
     template<int SPLINE_MAX_POINTS>
-    void Image<color_t>::fillSmoothClosedSpline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
+    void Image<color_t>::fillClosedSplineAA(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
         {
         if (!isValid()) return;
         if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
@@ -6462,7 +6462,7 @@ namespace tgx
             bool loadstart = true; 
             bool begin = true; 
             fVec2 P1, P2, PC; 
-            fillSmoothPolygon(
+            fillPolygonAA(
                 [&](tgx::fVec2& P)
                     {
                     while (1)
@@ -6525,7 +6525,7 @@ namespace tgx
 
     template<typename color_t>
     template<int SPLINE_MAX_POINTS>
-    void Image<color_t>::fillSmoothThickClosedSpline(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity)
+    void Image<color_t>::fillThickClosedSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity)
         {
         if (!isValid()) return;
         if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
@@ -6594,7 +6594,7 @@ namespace tgx
             bool loadstart = true; 
             bool begin = true; 
             fVec2 P1, P2, PC; 
-            fillSmoothThickPolygon(
+            fillThickPolygonAA(
                 [&](tgx::fVec2& P)
                     {
                     while (1)

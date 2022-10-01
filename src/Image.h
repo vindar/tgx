@@ -42,7 +42,7 @@ namespace tgx
 
 
     /**
-    * For some path primitive like drawSmoothThickLine(), drawSmoothThickPolyline() 
+    * For some path primitive like drawThickLineAA(), drawThickPolylineAA() 
     * it is necessary to specify how the extremities of the path should look like.
     * 
     * The available 'ends' are define here:
@@ -340,6 +340,7 @@ namespace tgx
          * @param [in,out]  buffer  the pixel buffer.
          * @param           dim     the image dimensions.
          * @param           stride  (Optional) The stride. If not specified, the stride is set equal to.
+         *                          the image width.
         **/
         template<typename T> void set(T* buffer, iVec2 dim, int stride = -1);
 
@@ -387,12 +388,12 @@ namespace tgx
         /**
          * Return a sub-image of this image (sharing the same pixel buffer).
          *
-         * This is the same as `getCrop(tgx::iBox2(min_x, max_x, min_y, max_x), true)` or `operator()(tgx::iBox2(min_x, max_x, min_y, max_x), true)`
+         * This is the same as `getCrop(tgx::iBox2(min_x, max_x, min_y, max_x), true)` or `operator()(tgx::iBox2(min_x, max_x, min_y, max_x))`
          *
-         * @param   min_x   left boundary
-         * @param   max_x   right boundary
-         * @param   min_y   top boundary
-         * @param   max_y   bottom boundary
+         * @param   min_x   left boundary (inclusive)
+         * @param   max_x   right boundary (inclusive)
+         * @param   min_y   top boundary (inclusive)
+         * @param   max_y   bottom boundary (inclusive)
          *
          * @returns the sub-image delimited the closed box iBox(min_x, max_x, min_y, max_x) and sharing the same memory buffer. 
         **/
@@ -474,9 +475,9 @@ namespace tgx
 
 
         /**
-         * Return the image dimensions as a vector.
+         * Return the image dimensions as an iVec2
          *
-         * @returns The image dimension ({0,0} for an invalid image).
+         * @returns The image dimension (returns {0,0} for an invalid image).
         **/
         inline TGX_INLINE iVec2 dim() const { return iVec2{ _lx, _ly }; }
 
@@ -490,20 +491,12 @@ namespace tgx
 
 
         /**
-         * Return a pointer to the pixel buffer (const version).
-         *
-         * @returns A pointer to the start of the pixel buffer associated with this image (or nullptr if
-         *          the image is invalid).
-        **/
-        inline TGX_INLINE const color_t * data() const { return _buffer; }
-
-
-        /**
          * Return a pointer to the pixel buffer.
          *
          * @returns A pointer to the start of the pixel buffer associated with this image (or nullptr if
          *          the image is invalid).
         **/
+        inline TGX_INLINE const color_t * data() const { return _buffer; }
         inline TGX_INLINE color_t * data() { return _buffer; }
 
 
@@ -523,13 +516,15 @@ namespace tgx
     ************************************************************************************************************/
 
 
-
         /**
          * Set a pixel at a given position.
-         * Use template parameter to disable range check for faster access (danger!)
+         * 
+         * - the 'f' suffix is used for accessing pixel with floating point values (fVec2)
+         * instead of integer values.
          *
-         * @param   pos     The position.
-         * @param   color   The color.
+         * @tparam  CHECKRANGE  set to false to disable range checking (danger!)
+         * @param   pos         The position.
+         * @param   color       The color.
         **/
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE>(pos, color); }
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixelf(fVec2 pos, color_t color) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE>({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, color); }
@@ -537,75 +532,81 @@ namespace tgx
 
         /**
          * Blend a pixel with the current pixel color after multiplying its opacity with a given factor.
-         * If type color_t has an alpha channel, then it is used for alpha blending.
-         * Use template parameter to disable range check for faster access (danger!).
+         * 
+         * - If type color_t has an alpha channel, then it is used for alpha blending.
+         * - the 'f' suffix is used for accessing pixel with floating point values (fVec2)
+         *   instead of integer values.
          *
-         * @param   pos     The position.
-         * @param   color   The color to blend.
-         * @param   opacity opacity multiplier from 0.0f (fully transparent) to 1.0f fully transparent.
-         *                  if negative, then simple overwrittening of color is used instead of blending.
+         * @tparam  CHECKRANGE  set to false to disable range checking (danger!)
+         * @param   pos         The position.
+         * @param   color       The color to blend.
+         * @param   opacity     opacity multiplier from 0.0f (fully transparent) to 1.0f fully transparent.
+         *                      if negative, then simple overwrittening of color is used instead of blending.
         **/
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color, float opacity) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE,true>(pos, color, opacity); }
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixelf(fVec2 pos, color_t color, float opacity) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE, true>({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, color, opacity); }
 
 
-
         /**
          * Return the color of a pixel at a given position.
-         * If CHECKRANGE is true, outside_color is returned when querying outside of the image.
          *
+         * @tparam  CHECKRANGE      If set to true, outside_color is returned when querying outside of the
+         *                          image range. Otherwise nor range checking is performed (danger!)
          * @param   pos             The position.
          * @param   outside_color   (Optional) color to return when querying outside the range.
          *
-         * @returns The pixel color
+         * @returns The pixel color.
         **/
         template<bool CHECKRANGE = true> TGX_INLINE inline color_t readPixel(iVec2 pos, color_t outside_color = color_t()) const { if ((CHECKRANGE) && (!isValid())) return outside_color; return _readPixel(pos, outside_color); }
         template<bool CHECKRANGE = true> TGX_INLINE inline color_t readPixelf(fVec2 pos, color_t outside_color = color_t()) const { if ((CHECKRANGE) && (!isValid())) return outside_color; return _readPixel({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, outside_color); }
 
 
         /**
-         * Get a reference to a pixel (no range check!) 
+         * Get a reference to a pixel (no range check!)
          *
          * @param   pos The position.
          *
-         * @returns a (possibly const) reference to the pixel color.
+         * @returns a reference to the pixel color.
         **/
         TGX_INLINE inline const color_t& operator()(iVec2 pos) const { return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)]; }
         TGX_INLINE inline color_t& operator()(iVec2 pos) { return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)]; }
 
 
         /**
-         * Get a reference to a pixel (no range check!) 
+         * Get a reference to a pixel (no range check!)
          *
-         * @param   x   x-coordinate
+         * @param   x   x-coordinate.
          * @param   y   y-coordinate.
          *
-         * @returns a (possibly const) reference to the pixel color.
+         * @returns a reference to the pixel color.
         **/
         TGX_INLINE inline const color_t& operator()(int x, int y) const { return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)]; }
         TGX_INLINE inline color_t& operator()(int x, int y) { return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];}
 
 
-
         /**
-         * Iterate over all the pixels of the image going from left to right (inner loop) and then from 
-         * top to bottom (outer loop). The callback function cb_fun is called for each pixel and must 
-         * have a signature compatible with:
+         * Iterate over all the pixels of the image.
          * 
-         *  `bool cb_fun(tgx::iVec2 pos, color_t & color)`
+         * Iteration is performed from left to right (inner loop) and top to bottom (outer loop). The
+         * callback function cb_fun() is called for each pixel and must have a signature compatible with:
+         * 
+         *  `bool cb_fun(tgx::iVec2 pos, color_t &amp; color)`          (called from non-const image)
+         * or
+         *  `bool cb_fun(tgx::iVec2 pos, const color_t &amp; color)`    (call from const image)
          * 
          * where:
          * 
          * - `pos` is the position of the current pixel in the image
-         * - `color` is a (constant for the const version) reference to the current pixel color.
-         * - the callback must return true to continue the iteration and false to abort the iteration.
+         * - `color` is a reference to the current pixel color.
+         * - the callback must return true to continue the iteration and false to abort iteration.
          * 
-         * This method is particularly useful with lambdas, for example, to paint all black pixels to
-         * red in a RGB565 image `im`:
+         * Note: this method is particularly useful with lambdas, for example, to paint all black pixels
+         * to red in a RGB565 image `im`:
          * 
-         * im.iterate( [](tgx::iVec2 pos, tgx::RGB565 & color) { if (color == tgx::RGB565_Black) color = tgx::RGB565_Red; return true;});
+         *    im.iterate( [](tgx::iVec2 pos, tgx::RGB565 &amp; color)
+         *                { if (color == tgx::RGB565_Black) color = tgx::RGB565_Red; return true; } );
          *
-         * @param   cb_fun  The callback function
+         * @param   cb_fun  The callback function.
         **/
         template<typename ITERFUN> void iterate(ITERFUN cb_fun) const;
         template<typename ITERFUN> void iterate(ITERFUN cb_fun);
@@ -637,40 +638,38 @@ namespace tgx
     ************************************************************************************************************/
 
 
-
         /**
          * Blit/blend a sprite over this image at a given position.
+         * 
+         * Remark: If only part of the sprite should be blended onto this image, simply blit a sub-image
+         * of the sprite like so: 'blend(sprite(subbox),upperleftpos, blend_op)'. This is very efficient
+         * because no copy is performed when creating (shallow) sub-image.
          *
-         * @param   sprite          The sprite image to blit over this image.
+         * @param   sprite          The sprite image to blit.
          * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending and simply overwrite the spite over the
          *                          image.
         **/
-        void blit(const Image<color_t>& sprite, iVec2 upperleftpos, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void blit(const Image<color_t>& sprite, iVec2 upperleftpos, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
          * Blend a sprite at a given position on the image using a custom blending operator.
          * 
          * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
-         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended
-         * color.
+         * color of the source (sprite) pixel and the color of the destination pixel and returns the
+         * blended color. It must have a signature compatible with
          * 
-         * Thus, it must be callable in the form:
-         * 
-         *       blend_op(col_src, col_dst)
-         * 
-         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it
-         * must return a valid color (of any type but preferably of type color_t for best performance).
+         *                    color_t blend_op(color_t_src src, color_t dst)
+         *
+         * (the method can, in fact, return a color of any type but returning type color_t will improve 
+         * performance).  
          * 
          * Remarks:
-         * 
-         * 1. To perform "classical alpha blending", use the blit() method with an opacity parameter
+         * 1. The sprite can have a different color type from the image. 
+         * 2. To perform "classical alpha blending", use the blit() method with an opacity parameter
          *    instead of this method as it will be faster.
-         * 2. If only part of the sprite should be blended onto this image, one simply has to create a
-         *    temporary sub-image like so: 'blend(sprite.getCrop(subbox),upperleftpos, blend_op)'. No
-         *    copy is performed when creating (shallow) sub-image so this does not incur any slowdown.
          *
          * @param   sprite          The sprite image to blend.
          * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
@@ -681,18 +680,19 @@ namespace tgx
 
 
         /**
-         * Blend a sprite at a given position on this image with a given mask. Sprite pixels with color
-         * transparent_color` are treated as transparent hence are not copied on the image. Other pixels
-         * are blended with the destination image after being multiplied by the opacity factor.
+         * Blend a sprite at a given position on this image with a given mask.
          * 
-         * Remark: This method is especially useful when color_t does not have an alpha channel hence no
-         * predefined transparent color.
+         * Sprite pixels with color `transparent_color` are treated as transparent hence are not copied
+         * on the image. Other pixels are copied/blended with the destination image (after being
+         * multiplied by the opacity factor).
+         * 
+         * Remark: This method is especially useful when color_t does not have an alpha channel.
          *
          * @param   sprite              The sprite image to blit.
          * @param   transparent_color   The sprite color considered transparent.
          * @param   upperleftpos        Position of the upper left corner of the sprite in the image.
          * @param   opacity             (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                              negative to disable blending and simply overwrite the spite over
+         *                              negative to disable blending and simply draw the sprite over
          *                              the image.
         **/
         void blitMasked(const Image<color_t>& sprite, color_t transparent_color, iVec2 upperleftpos, float opacity = 1.0f);
@@ -702,8 +702,8 @@ namespace tgx
          * Reverse blitting. Copy part of the image into the sprite This is the inverse of the blit
          * operation.
          * 
-         * THis method can be useful to 'save' a potion of the image into a sprite before
-         * drawing/blitiing something on it...
+         * Remark: This method can be useful to 'save' a portion of the image into a sprite before
+         * drawing/blitting something on it...
          *
          * @param [in,out]  dst_sprite      The sprite to save part of this image into.
          * @param           upperleftpos    Position of the upper left corner of the sprite in the image.
@@ -712,83 +712,60 @@ namespace tgx
 
 
         /**
-         * Blit/blend a sprite onto this image after rescaling and rotation. The anchor point
-         * 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The rotation is performed
-         * in counter-clockwise direction around the anchor point.
+         * Blit/blend a sprite onto this image after rescaling and rotation.
+         * 
+         * The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The
+         * rotation is performed in counter-clockwise direction around the anchor point.
          * 
          * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision for
-         *    smoother animation.
-         * 2. The method uses bilinear interpolation for high quality rendering.
-         * 3. The sprite image can have a different color type from this image.
+         *   1. Positions are given using floating point values to allow for sub-pixel precision for
+         *      smoother animation.
+         *   2. The method uses bilinear interpolation for high quality rendering.
+         *   3. The sprite image can have a different color type from this image.
          * 
          * Note: When rotated, access to the sprite pixels colors is not linear anymore. For certain
          *       orientations, this will yield very 'irregular' access to the sprite memory locations.
-         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
-         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
-         *       (or another faster memory) before blitting...
+         *       The method will try to improve this by splitting the sprite in smaller part to improve
+         *       cache access. If this does not help, try moving the sprite to a faster memory location
          *
-         * @tparam  color_t_src Color type of the sprite image.
          * @tparam  CACHE_SIZE  Size of the MCU cache when reading from flash. This value is indicative
          *                      and used to optimize cache access to flash memory. You may try changing
          *                      the default value it if drawing takes a long time...
          * @param   src_im          The sprite image to draw.
          * @param   anchor_src      Position of the anchor point in the sprite image.
-         * @param   anchor_dst      Position of the anchor point in this (destination) image.
-         * @param   scale           Scaling factor (1.0f for no rescaling).
-         * @param   angle_degrees   The rotation angle in degrees (0 for no rotation).
-         * @param   opacity         Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
-         *                          disable blending and simply use overwrite.
+         * @param   anchor_dst      Position of the anchor point in this image.
+         * @param   scale           (Optional) Scaling factor (default 1.0f for no rescaling).
+         * @param   angle_degrees   (Optional) The rotation angle in degrees (default 0 for no rotation).
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply use overwrite.
         **/
         template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
-        void blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
+        void blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale = 1.0f, float angle_degrees = 0.0f, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
          * Blend a sprite onto this image after rescaling and rotation using a custom blending operator.
          * 
-         * The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The
-         * rotation is performed in counter-clockwise direction around the anchor point.
+         * This is the same as the method above excpet that it uses a user defined blending operator
+         * which takes as input the color of the source (sprite) pixel and the color of the destination
+         * pixel and returns the blended color. It must have a signature compatible with
          * 
-         * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
-         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended
-         * color.
+         *                    color_t blend_op(color_t_src src, color_t dst)
          * 
-         * Thus, it must be callable in the form:
+         * (the method can, in fact, return a color of any type but returning type color_t will improve
+         * performance).  
          * 
-         *       blend_op(col_src, col_dst)
-         * 
-         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it
-         * must return a valid color (of any type but preferably of type color_t for best performance).
-         * 
-         * Remarks:
-         * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision for
-         *    smoother animation.
-         * 2. The method use bilinear interpolation for high quality rendering.
-         * 3. The sprite image can have a different color type from this image.  
-         * 4. To perform "classical alpha blending", use the blitScaleRotated() method with an opacity
-         *    parameter instead as it will be faster.
-         * 
-         * Note: When rotated, access to  the sprite pixels colors is not linear anymore. For certain
-         *       orientations, this will yield very 'irregular' access to the sprite memory locations.
-         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
-         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
-         *       (or another faster memory) before blitting...
+         * See the method above for more details.
          *
-         * @tparam  color_t_src     Color type of the sprite image.
-         * @tparam  BLEND_OPERATOR  Type of the blend operator.
          * @tparam  CACHE_SIZE      Size of the MCU cache when reading from flash. This value is
          *                          indicative and used to optimize cache access to flash memory. You may
          *                          try changing the default value it if drawing takes a long time...
          * @param   src_im          The sprite image to draw.
          * @param   anchor_src      Position of the anchor point in the sprite image.
-         * @param   anchor_dst      Position of the anchor point in this (destination) image.
-         * @param   scale           Scaling factor (1.0f for no scaling).
-         * @param   angle_degrees   The rotation angle in degrees.
-         * @param   blend_op        The blending operator.
+         * @param   anchor_dst      Position of the anchor point in this image.
+         * @param   scale           Scaling factor (default 1.0f for no rescaling).
+         * @param   angle_degrees   The rotation angle in degrees (default 0 for no rotation).
+         * @param   blend_op        blending operator.
         **/
         template<typename color_t_src, typename BLEND_OPERATOR, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
         void blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, const BLEND_OPERATOR& blend_op);
@@ -796,35 +773,34 @@ namespace tgx
 
         /**
          * Blend a sprite onto this image after rescaling and rotation and use a given color which is
-         * treated as fully transparent. This is especially useful when the sprite color type does not
-         * have an alpha channel. The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im'
-         * in this image. The rotation is performed in counter-clockwise direction around the anchor
-         * point.
+         * treated as fully transparent.
+         * 
+         * The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The
+         * rotation is performed in counter-clockwise direction around the anchor point.
          * 
          * Remarks:
+         *   1. Positions are given using floating point values to allow for sub-pixel precision for
+         *      smoother animation.
+         *   2. The method uses bilinear interpolation for high quality rendering.
+         *   3. The sprite image can have a different color type from this image.
+         *   4. This method is useful when the sprite color type does not have an alpha channel.
          * 
-         * 1. The positions are given using floating point values to allow for sub-pixel precision for
-         *    smoother animation.
-         * 2. The method use bilinear interpolation for high quality rendering.
-         * 3. The sprite image can have a different color type from this image.
-         * 
-         * Note: When rotated, access to  the sprite pixels colors is not linear anymore. For certain
+         * Note: When rotated, access to the sprite pixels colors is not linear anymore. For certain
          *       orientations, this will yield very 'irregular' access to the sprite memory locations.
-         *       When using large sprites in PROGMEM, this can result in huge slowdown as caching cannot
-         *       be performed efficiently by the MCU. If this is the case, try moving the sprite to RAM
-         *       (or another faster memory) before blitting...
+         *       The method will try to improve this by splitting the sprite in smaller part to improve
+         *       cache access. If this does not help, try moving the sprite to a faster memory location
          *
-         * @tparam  color_t_src Color type of the sprite image.
          * @tparam  CACHE_SIZE  Size of the MCU cache when reading from flash. This value is indicative
          *                      and used to optimize cache access to flash memory. You may try changing
          *                      the default value it if drawing takes a long time...
          * @param   src_im              The sprite image to draw.
-         * @param   transparent_color   The transparent color.
+         * @param   transparent_color   The sprite color considered transparent.
          * @param   anchor_src          Position of the anchor point in the sprite image.
-         * @param   anchor_dst          Position of the anchor point in this (destination) image.
-         * @param   scale               Scaling factor (1.0f for no scaling).
-         * @param   angle_degrees       The rotation angle in degrees.
-         * @param   opacity             Opacity multiplier when blending (in [0.0f, 1.0f]) 
+         * @param   anchor_dst          Position of the anchor point in this image.
+         * @param   scale               Scaling factor (default 1.0f for no rescaling).
+         * @param   angle_degrees       The rotation angle in degrees (default 0 for no rotation).
+         * @param   opacity             (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                              negative to disable blending and simply use overwrite.
         **/
         template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
         void blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity = 1.0f);
@@ -833,68 +809,59 @@ namespace tgx
         /**
          * Copy (or blend) the src image onto the destination image with resizing and color conversion.
          * 
-         * Remark:
+         * Very useful for converting image of different size and color type !
          * 
+         * Remarks:
          * 1. the source image is resized to match this image size. Bilinear interpolation is used to
          *    improve quality.  
          * 2. The source and destination image may have different color type. Conversion is automatic.
-         * 
-         * Beware: This method does not check for buffer overlap between source and destination !
          *
-         * @tparam  src_color_t color type of the source image
          * @param   src_im  The image to copy into this image.
-         * @param   opacity             Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
-         *                              disable blending and simply use overwrite.
+         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
+         *                  disable blending and simply use overwrite. 
         **/
-        template<typename src_color_t> void copyFrom(const Image<src_color_t>& src_im, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
+        template<typename src_color_t> void copyFrom(const Image<src_color_t>& src_im, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
          * Blend the src image onto the destination image with resizing and color conversion.
          * 
-         * This version uses a custom blending operator to combine src over the existing image.
+         * Same as above but uses a user-defined blending operator to combine src over the existing
+         * image.
          * 
          * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
-         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended
-         * color.
-         *
-         * Thus, it must be callable in the form:
-         *
-         *       blend_op(col_src, col_dst)
-         *
-         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it
-         * must return a valid color (of any type but preferably of type color_t for best performance).
+         * color of the source (sprite) pixel and the color of the destination pixel and returns the
+         * blended color. It must have a signature compatible with
+         * 
+         *                    color_t blend_op(color_t_src src, color_t dst)
+         * 
+         * (the method can, in fact, return a color of any type but returning type color_t will improve
+         * performance).  
          * 
          * Remarks:
-         * 
          * 1. the source image is resized to match this image size. Bilinear interpolation is used to
          *    improve quality.
-         * 2. The source and destination image may have different color type. Conversion is automatic.  
-         * 3. To perform "classical alpha blending", use the copyFrom() method with an opacity parameter   
-         *    instead as it will be faster.
-         * 
-         * Beware: The method does not check for buffer overlap between source and destination !
-         *
-         * @tparam  src_color_t     color type of the source image
-         * @param   src_im          Source image to copy onto this image.
-         * @param   blend_op        The blending operator
+         * 2. The source and destination image may have different color type. Conversion is automatic.
+         * 3. To perform simple copy or classical alpha blending, use the copyFrom() method with an
+         *    opacity parameter instead as it will be faster.
+         *    
+         * @param   src_im      Source image to copy onto this image.
+         * @param   blend_op    The blending operator.
         **/
         template<typename src_color_t, typename BLEND_OPERATOR> void copyFrom(const Image<src_color_t>& src_im, const BLEND_OPERATOR& blend_op);
 
 
         /**
-         * Copy the source image pixels into this image, reducing it by half in the process. Ignore the
-         * last row/column for odd dimensions larger than 1. Resizing is done by averaging the color of
-         * the 4 neighbour pixels.
+         * Copy the source image pixels into this image, reducing it by half in the process.
          * 
-         * This image must be large enough to accomodate the reduced image otherwise do nothing. The
-         * reduced image is copied on the top left corner of this image.
+         * The method ignores the last row/column for odd dimensions larger than 1. Resizing is done by
+         * averaging the color of the 4 neighbour pixels.
          * 
-         * Return a sub-image of this image corresponding to the reduced image pixels (or an empty image
-         * if nothing was done).
+         * This image must be large enough to accomodate the reduced image otherwise the method returns
+         * without doing anything. The reduced image is copied from the top-left corner of this image.
          * 
-         * REMARK: This is an old method. Use blitScaledRotated() for a more powerful method.
+         * Remark: This is an old method. blitScaledRotated() is more powerful however this method
+         *         allows for source and destination buffer to overlap partially !
          *
          * @param   src_image   the source image.
          *
@@ -904,13 +871,12 @@ namespace tgx
 
 
         /**
-         * Reduce this image by half. Use the same memory buffer and keep the same stride. Resizing is
-         * done by averaging the color of the 4 neighbour pixels. Same as copyReduceHalf(*this)
+         * Reduce this image by half.
          * 
-         * Return a sub-image of this image corresponding to the reduced image pixels which correspond
-         * to the upper left half of this image.
+         * Use the same memory buffer and keep the same stride. Resizing is done by averaging the color
+         * of the 4 neighbour pixels. Same as copyReduceHalf(*this)
          *
-         * @returns a sub-image of this image that contains the reduce image. 
+         * @returns a sub-image of this image that contains the reduce image.
         **/
         Image<color_t> reduceHalf();
 
@@ -941,11 +907,22 @@ namespace tgx
 
 
         /**
-         * Fill the whole image with a single color
-         *
+         * Fill the whole image with a single color.
+         * 
+         * same as `clear(color)`
+         *  
          * @param   color   The color to use.
         **/
         void fillScreen(color_t color);
+
+        /**
+         * Fill the whole image with a single color
+         * 
+         * Same as `fillScreen(`color)`.
+         *
+         * @param   color   The color to use.
+        **/
+        void clear(color_t color);
 
 
         /**
@@ -970,43 +947,47 @@ namespace tgx
         void fillScreenHGradient(color_t left_color, color_t right_color);
 
 
-
-
         /**
-        * 'Flood fill' a 4-connected region of the image.
-        *
-        * Recolor the unicolor component containing position 'start_pos' with the color 'new_color'.
-        *
-        * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack.
-        * If the algorithm runs out of space, it stops without completing the filling (and return -1 to indicate failure).
-        * Otherwise, the method return the max number of bytes used on the stack during the filling.
-        *
-        * @param	start_pos   Start position. The color to replace is the color at that position.
-        * @param	new_color   New color to use
-        * @return   return the max stack used during the algorithm. Return -1 if we run out of memory (in this
-        *           case the method returns early without completing the full filling.
+         * 'Flood fill' a 4-connected region of the image.
+         * 
+         * Recolor the unicolor component containing position 'start_pos' with the color 'new_color'.
+         * 
+         * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack.
+         * If the algorithm runs out of space, it stops without completing the filling (and return -1 to
+         * indicate failure). Otherwise, the method returns the max number of bytes used on the stack
+         * during the filling.
+         *
+         * @tparam  STACK_SIZE  size allocated on the stack.
+         * @param   start_pos   Start position. The color to replace is the color at that position.
+         * @param   new_color   New color to use.
+         *
+         * @returns return the max stack used during the algorithm. Return -1 if we run out of memory (in
+         *          this case the method returns early without completing the full filling.
         **/
         template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t new_color);
 
 
-
         /**
-        * 'Flood fill' a 4-connected region of the image.
-        *
-        * Recolor the connected component containing position 'startpos' whose boundary is delimited by 'border_color'.
-        *
-        * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack.
-        * If the algorithm runs out of space, it stops without completing the filling (and return -1 to indicate failure).
-        * Otherwise, the method return the max number of bytes used on the stack during the filling.
-        *
-        * NOTE: During the algorithm, 'new_color' is treated the same as 'border_color' and will also block the
-        *       filling when encountered.
-        *
-        * @param	start_pos		Start position.
-        * @param	border_color	border color that delimits the connected component to fill.
-        * @param	new_color		New color to use
-        * @return   return the max stack used during the algorithm. Return -1 if we run out of memory (in this
-        *           case the method returns early without completing the full filling.
+         * 'Flood fill' a 4-connected region of the image.
+         * 
+         * Recolor the connected component containing position 'startpos' whose boundary is delimited by
+         * 'border_color'.
+         * 
+         * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack.
+         * If the algorithm runs out of space, it stops without completing the filling (and return -1 to
+         * indicate failure). Otherwise, the method returns the max number of bytes used on the stack
+         * during the filling.
+         * 
+         * NOTE: During the algorithm, 'new_color' is treated the same as 'border_color' and will also
+         *       block the filling procedure when encountered.
+         *
+         * @tparam  STACK_SIZE  size allocated on the stack.
+         * @param   start_pos       Start position.
+         * @param   border_color    border color that delimits the connected component to fill.
+         * @param   new_color       New color to use.
+         *
+         * @returns return the max stack used during the algorithm. Return -1 if we run out of memory (in
+         *          this case the method returns early without completing the full filling.
         **/
         template<int STACK_SIZE = 1024> int fill(iVec2 start_pos, color_t border_color, color_t new_color);
 
@@ -1040,9 +1021,9 @@ namespace tgx
          * @param   h       number of pixels in the segment.
          * @param   color   color to use.
          * @param   opacity opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
-         *                  blending.
+         *                  blending and simply use overwritting.
         **/
-        void drawFastVLine(iVec2 pos, int h, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawFastVLine(iVec2 pos, int h, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -1054,11 +1035,11 @@ namespace tgx
          * @param   opacity opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
          *                  blending and simply use overwritting.
         **/
-        void drawFastHLine(iVec2 pos, int w, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawFastHLine(iVec2 pos, int w, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
-         * Draw a line segment between two points (using Bresenham's algorithm).
+         * Draw a line segment between two points (uses Bresenham's algorithm).
          *
          * @param   P1      The first point.
          * @param   P2      The second point.
@@ -1066,7 +1047,7 @@ namespace tgx
          * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
          *                  disable blending and simply use overwritting.
         **/
-        void drawLine(iVec2 P1, iVec2 P2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawLine(iVec2 P1, iVec2 P2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -1081,7 +1062,7 @@ namespace tgx
          * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
          *                  disable blending and simply use overwritting.
         **/
-        void drawSegment(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawSegment(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -1095,44 +1076,51 @@ namespace tgx
 
 
         /**
-         * Draw a smooth (i.e. antialiased with sub-pixel precision) line segment between two points.
+         * Draw a line segment between two points.
          *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         * 
          * @param   P1      The first point.
          * @param   P2      The second point.
          * @param   color   color to use.
          * @param   opacity opacity multiplier between 0.0f and 1.0f (default).
         **/
-        void drawSmoothLine(fVec2 P1, fVec2 P2, color_t color, float opacity = 1.0f);
+        void drawLineAA(fVec2 P1, fVec2 P2, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (i.e. antialiased with sub-pixel precision) thick line segment between two points.
+         * Draw a thick line segment between two points.
+         * 
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         * 
+         * Remark: this method superseeds the old `drawWideLine()` method.
          *
          * @param   P1          The first point.
          * @param   P2          The second point.
          * @param   line_width  Width of the line.
-         * @param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUND, END _ARROW... (c.f. PATH_END_TYPE enum)
-         * @param   end_P2      specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUND, END _ARROW... (c.f. PATH_END_TYPE enum)
+         * @param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUND, END_ARROW... (c.f. PATH_END_TYPE enum)
+         * @param   ends_P2     specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUND, END_ARROW... (c.f. PATH_END_TYPE enum)
          * @param   color       color to use.
          * @param   opacity     (Optional) opacity multiplier between 0.0f and 1.0f (default).
         **/
-        void drawSmoothThickLine(fVec2 P1, fVec2 P2, float line_width, PATH_END_TYPE end_P1, PATH_END_TYPE ends_P2, color_t color, float opacity = 1.0f);
+        void drawThickLineAA(fVec2 P1, fVec2 P2, float line_width, PATH_END_TYPE end_P1, PATH_END_TYPE ends_P2, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (i.e. antialiased with sub-pixel precision) wedge line from P1 to P2 with with
-         * respective wideness line_width_P1 and line_width_P2 at both ends.
+         * Draw a from P1 to P2 with with respective wideness line_width_P1 and line_width_P2 at both ends.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   P1              first end point.
          * @param   P2              second end point.
-         * @param   line_width_P1   width of the wedge at P1.
+         * @param   line_width_P1   Width of the wedge at P1.
          * @param   end_P1          specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f. PATH_END_TYPE enum)
-         * @param   line_width_P2   width of the wedge at P2.
+         * @param   line_width_P2   Width of the wedge at P2.
          * @param   end_P2          specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f. PATH_END_TYPE enum)
          * @param   color           color to use.
          * @param   opacity         (Optional) opacity multiplier between 0.0f and 1.0f (default).
         **/
-        void drawSmoothWedgeLine(fVec2 P1, fVec2 P2, float line_width_P1, PATH_END_TYPE end_P1, float line_width_P2, PATH_END_TYPE end_P2, color_t color, float opacity = 1.0f);
+        void drawWedgeLineAA(fVec2 P1, fVec2 P2, float line_width_P1, PATH_END_TYPE end_P1, float line_width_P2, PATH_END_TYPE end_P2, color_t color, float opacity = 1.0f);
 
 
 
@@ -1141,29 +1129,29 @@ namespace tgx
     *                DRAWING LINES : DEPRECATED METHODS
     *                          
     * These method are still available for compatibility but will be removed 
-    * 'soon'...
+    * at some point...
     ***********************************************************************/
 
 
         /**
-        * DEPRECATED: Use drawSmoothThickLine() instead.
+        * DEPRECATED: Use drawThickLineAA() instead.
         **/
-        DEPRECATED("Use method drawSmoothThickLine() instead.") 
-        void drawWideLine(fVec2 PA, fVec2 PB, float w, color_t color, float opacity)  { drawSmoothThickLine(PA, PB, w, END_ROUNDED, END_ROUNDED, color, opacity); }
+        DEPRECATED("Use method drawThickLineAA() instead.") 
+        void drawWideLine(fVec2 PA, fVec2 PB, float w, color_t color, float opacity)  { drawThickLineAA(PA, PB, w, END_ROUNDED, END_ROUNDED, color, opacity); }
 
 
         /**
-        * DEPRECATED: Use drawSmoothWedgeLine() instead.
+        * DEPRECATED: Use drawWedgeLineAA() instead.
         **/
-        DEPRECATED("Use method drawSmoothWedgeLine() instead.")
-        void drawWedgeLine(fVec2 PA, fVec2 PB, float aw, float bw, color_t color, float opacity) { drawSmoothWedgeLine(PA, PB, 2*aw, END_ROUNDED, 2*bw, END_ROUNDED, color, opacity); }
+        DEPRECATED("Use method drawWedgeLineAA() instead.")
+        void drawWedgeLine(fVec2 PA, fVec2 PB, float aw, float bw, color_t color, float opacity) { drawWedgeLineAA(PA, PB, 2*aw, END_ROUNDED, 2*bw, END_ROUNDED, color, opacity); }
 
 
         /**
-        * DEPRECATED: Use fillSmoothCircle() instead.
+        * DEPRECATED: Use fillCircleAA() instead.
         **/
-        DEPRECATED("Use method fillSmoothCircle() instead")
-        void drawSpot(fVec2 center, float r, color_t color, float opacity) { fillSmoothCircle(center, r, color, opacity); }
+        DEPRECATED("Use method fillCircleAA() instead")
+        void drawSpot(fVec2 center, float r, color_t color, float opacity) { fillCircleAA(center, r, color, opacity); }
 
 
 
@@ -1198,19 +1186,19 @@ namespace tgx
          * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f] or negative to
          *                  disable blending.
         **/        
-        void drawRect(const iBox2 & B, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawRect(const iBox2 & B, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
          * Draw a rectangle with a thick border.
          *
          * @param   B           Box that delimits the rectangle to draw.
-         * @param   thickness   thickness of the border (going 'inside the rectangle)
+         * @param   thickness   thickness of the border (going 'inside' the rectangle)
          * @param   color       rectangle outline color.
          * @param   opacity     (Optional) opacity multiplier when blending (in [0.0f, 1.0f] or negative
          *                      to disable blending.
         **/
-        void drawThickRect(const iBox2& B, int thickness, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawThickRect(const iBox2& B, int thickness, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -1221,7 +1209,7 @@ namespace tgx
          * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
          *                  disable blending.
         **/
-        void fillRect(const iBox2 & B, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillRect(const iBox2 & B, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -1234,7 +1222,7 @@ namespace tgx
          * @param   opacity         (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending.
         **/
-        void fillThickRect(const iBox2& B, int thickness, color_t color_interior, color_t color_border, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillThickRect(const iBox2& B, int thickness, color_t color_interior, color_t color_border, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -1246,7 +1234,7 @@ namespace tgx
          * @param   opacity     (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending.
         **/
-        void fillRectHGradient(iBox2 B, color_t color_left, color_t color_right, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillRectHGradient(iBox2 B, color_t color_left, color_t color_right, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -1258,7 +1246,7 @@ namespace tgx
          * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
          *                  disable blending.
         **/
-        void fillRectVGradient(iBox2 B, color_t color_top, color_t color_bottom, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillRectVGradient(iBox2 B, color_t color_top, color_t color_bottom, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -1267,62 +1255,60 @@ namespace tgx
     *                        DRAWING RECTANGLES
     *
     *                      'High' quality methods
-    *                      
-    * WARNING: These methods are only useful for creating smooth animations
-    *          otherwise, use the 'low' quality method that will prevent 
-    *          unwanted aliasing...
+    *      
+    *                                      
+    * WARNING: Sub-pixel precision and anti-aliasing is usually not desirable
+    *          when drawing rectangle. Hence the method below should not be 
+    *          needed in usual circonstance but may be useful for creating 
+    *          very smooth animations (when the rectangle moves by less than
+    *          a pixel)...
+    *          
+    *          Recall that pixel centers are at integer values (and the full 
+    *          image range is [-0.5, lx - 0.5] x [-0.5, lx-0.5]), therefore, 
+    *          giving a fVec2 box with integer values to the method below will 
+    *          create aliasing along the edges of the rectangle...
+    *
     ***********************************************************************/
 
 
         /**
-         * Draw a filed rectangle wih sub-pixel precision and anti-aliasing and thick border.
+         * Draw a filled rectangle with a thick border.
          * 
-         * WARNING: This is probably not the method you want to use... If you just want to draw
-         *          a nice rectangle with a thick border, try drawThickRect() instead. This method 
-         *          is useful for creating very smooths animations (when the rectangle moves by less 
-         *          than a pixel).
-         *          
-         * NOTE: Recall that pixel centers are at integer values (and the full image range is
-         *       [-0.5, lx - 0.5] x [-0.5, lx-0.5]), therefore, giving a box with integer values to this
-         *       method will create aliasing along the edges of the rectangle...
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         * 
+         * WARNING: This is probably not the method you want to use: if you just want to draw a nice
+         *          rectangle with a thick border, try drawThickRect() instead.
          *
          * @param   B           Box representing the outer boundary of the rectangle.
          * @param   thickness   thickness of the boundary (going 'inside' the rectangle)
-         * @param   color       color to use
+         * @param   color       color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickRect(const fBox2& B, float thickness, color_t color, float opacity = 1.0f);
+        void drawThickRectAA(const fBox2& B, float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a filed rectangle wih sub-pixel precision and anti-aliasing.
+         * Draw a filled rectangle.
          *
-         * WARNING: This is probably not the method you want to use... If you just want to draw
-         *          a nice filled rectangle use try drawRect() instead. This method is only useful 
-         *          for creating very smooths animations (when the rectangle moves by less than a pixel).
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
-         * NOTE: Recall that pixel centers are at integer values (and the full image range is
-         *       [-0.5, lx - 0.5] x [-0.5, lx-0.5]), therefore, giving a box with integer values to this
-         *       method will create aliasing along the edges of the rectangle...
+         * WARNING: This is probably not the method you want to use: if you just want to draw a nice
+         *          filled rectangle, try fillRect() instead.
          *
          * @param   B       Box representing the rectngle to daw.
          * @param   color   color.
          * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothRect(const fBox2& B, color_t color, float opacity = 1.0f);
+        void fillRectAA(const fBox2& B, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a filed rectangle wih sub-pixel precision and anti-aliasing and thick border.
-         * 
-         * WARNING: This is probably not the method you want to use... If you just want to draw
-         *          a nice filled rectangle with a thick border, try fillThickRect() instead. This method
-         *          is only useful for creating very smooths animations (when the rectangle moves by less
-         *          than a pixel).
+         * Draw a filled rectangle with a thick border of a different color.
          *
-         * NOTE: Recall that pixel centers are at integer values (and the full image range is
-         *       [-0.5, lx - 0.5] x [-0.5, lx-0.5]), therefore, giving a box with integer values to this
-         *       method will create aliasing along the edges of the rectangle...
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
+         * WARNING: This is probably not the method you want to use: if you just want to draw a nice
+         *          filled rectangle with a thick border, try fillThickRect() instead.
          *
          * @param   B               Box representing the outer boundary of the rectangle
          * @param   thickness       thickness of the boundary (going 'inside' the rectangle)
@@ -1330,7 +1316,7 @@ namespace tgx
          * @param   color_border    color for the boundary
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothThickRect(const fBox2& B, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
+        void fillThickRectAA(const fBox2& B, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
  
 
 
@@ -1365,7 +1351,7 @@ namespace tgx
          * @param   opacity         (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending.
         **/
-        void drawRoundRect(const iBox2& B, int corner_radius, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawRoundRect(const iBox2& B, int corner_radius, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -1377,7 +1363,7 @@ namespace tgx
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending.
         **/
-        void fillRoundRect(const iBox2& B, int corner_radius, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillRoundRect(const iBox2& B, int corner_radius, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -1391,51 +1377,58 @@ namespace tgx
 
 
         /**
-         * Draw a smooth (i.e. anti-aliased with subpixel precision) rounded rectangle.
-         * 
-         * @param   B               Box representing the rectngle to daw.
+         * Draw a rounded rectangle.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
+         * @param   B               box that delimits the rectangle to draw.
          * @param   corner_radius   corner radius.
          * @param   color           color.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothRoundRect(const fBox2& B, float corner_radius, color_t color, float opacity = 1.0f);
+        void drawRoundRectAA(const fBox2& B, float corner_radius, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (i.e. anti-aliased with subpixel precision) thick rounded rectangle.
+         * Draw a rounded rectangle with a thick border.
          * 
-         * @param   B               Box representing the rectngle to daw.
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
+         * @param   B               box that delimits the rectangle to draw.
          * @param   corner_radius   corner radius.
          * @param   thickness       thickness going 'inside' the rounded rectangle (should be >1)
          * @param   color           color.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickRoundRect(const fBox2& B, float corner_radius, float thickness, color_t color, float opacity = 1.0f);
+        void drawThickRoundRectAA(const fBox2& B, float corner_radius, float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a filled smooth (i.e. anti-aliased with subpixel precision) rounded rectangle.
-         * 
-         * @param   B               Box representing the rectngle to daw.
+         * Draw a filled rounded rectangle.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
+         * @param   B               box that delimits the rectangle to draw.
          * @param   corner_radius   corner radius.
          * @param   color           color.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothRoundRect(const fBox2& B, float corner_radius, color_t color, float opacity = 1.0f);
+        void fillRoundRectAA(const fBox2& B, float corner_radius, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (i.e. anti-aliased with subpixel precision) filled rounded rectangle with thick
-         * border of another color.
+         * Draw a filled rounded rectangle with a thick border of another color.
          *
-         * @param   B               Box representing the rectngle to daw.
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
+         * @param   B               box that delimits the rectangle to draw.
          * @param   corner_radius   corner radius.
          * @param   thickness       thickness going 'inside' the rounded rectangle (should be >1)
          * @param   color_interior  color.
          * @param   color_border    The color border.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothThickRoundRect(const fBox2& B, float corner_radius, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
+        void fillThickRoundRectAA(const fBox2& B, float corner_radius, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
 
 
 
@@ -1470,12 +1463,12 @@ namespace tgx
          * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
          *                  blending and simply use overwrite.
         **/
-        void drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
         /**
-         * Draw a filled triangle with possibly different colors for the outline and the interior.
+         * Draw a filled triangle with different colors for the outline and the interior.
          *
          * @param   P1              first vertex.
          * @param   P2              second vertex.
@@ -1485,7 +1478,7 @@ namespace tgx
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending and simply use overwrite.
         **/
-        void fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillTriangle(const iVec2& P1, const iVec2& P2, const iVec2& P3, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -1500,31 +1493,36 @@ namespace tgx
         /**
          * Draw a smooth (with anti-aliasing and sub-pixel precision) triangle
          *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * @param   P1      first vertex.
          * @param   P2      second vertex.
          * @param   P3      third vertex.
          * @param   color   The color.
          * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity = 1.0f);
+        void drawTriangleAA(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw smooth thick triangle. The vertex coordinates (P1, P2, P3) are those for the exterior
-         * outline of the triangle and the thickness is 'inside' the triangle.
+         * Draw a triangle with a thick border.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   P1          first vertex.
          * @param   P2          second vertex.
          * @param   P3          third vertex.
-         * @param   thickness   The thickness. Should be >=1 otherwise use drawSmoothTriangle() instead.
+         * @param   thickness   The thickness (going 'inside' the triangle).
          * @param   color       The color.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color, float opacity = 1.0f);
+        void drawThickTriangleAA(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Fill smooth (with anti-aliasing and sub-pixel precision) triangle
+         * Draw a filled triangle.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   P1      first vertex.
          * @param   P2      second vertex.
@@ -1532,12 +1530,13 @@ namespace tgx
          * @param   color   The color.
          * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity = 1.0f);
+        void fillTriangleAA(fVec2 P1, fVec2 P2, fVec2 P3, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Fill a smooth (with anti-aliasing and sub-pixel precision) triangle with a thick outline of a
-         * possibly different color.
+         * Draw a filled triangle with a thick border of a different color. 
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   P1              first vertex.
          * @param   P2              second vertex.
@@ -1547,7 +1546,7 @@ namespace tgx
          * @param   color_border    boundary color.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothThickTriangle(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
+        void fillThickTriangleAA(fVec2 P1, fVec2 P2, fVec2 P3, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
 
 
 
@@ -1559,18 +1558,24 @@ namespace tgx
     *
     * ADVANCED METHODS FOR TEXTURING/GRADIENT USING THE 3D RASTERIZER BACKEND
     *
-    * Remarks: 1. For all these methods, the positions are given using floating
-    *             point values to allow for sub-pixel precision (improves animations)
-    *          2. Sprite images and gradient colors can have different types from
-    *             the destination (i.e. this) image.
+    * Remarks: 
+    * 
+    *   1. Just like the AA-suffixed methods, the methods below takes floating  
+    *      point value positions for for sub-pixel precision (but they do NOT
+    *      perform anti-aliasing). 
+    *   2. Sprite images and gradient colors can have different types from
+    *      the destination (i.e. this) image.
     *
-    * Warning: For particular orientations of triangles, access to texture pixels is
-    *          highly non-linear. For texture stored in slow memory (e.g. flash), this
-    *          can cause huge slowdown because the read cache becomes basically useless.
-    *          To overcome this problem:
-    *              a. Move the texture to a faster memory location before drawing.
-    *              b. Tessellate the triangle into smaller triangles so that the
-    *                 memory data for each triangle fit into the cache.
+    * Warning: 
+    * 
+    * For particular orientations of triangles, access to texture pixels is
+    * highly non-linear. For texture stored in slow memory (e.g. flash), this
+    * can cause huge slowdown because the read cache becomes basically useless.
+    * To overcome this problem:
+    *     a. Move the texture to a faster memory location before drawing.
+    *     b. Tessellate the triangle into smaller triangles so that the
+    *        memory data for each triangle fit into the cache.
+    *        
     ***********************************************************************/
 
 
@@ -1588,13 +1593,15 @@ namespace tgx
          *                  blending and simply use overwrite.
         **/
         template<typename color_alt>
-        void drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawGradientTriangle(fVec2 P1, fVec2 P2, fVec2 P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
-         * Draw textured triangle using bilinear filtering for high quality rendering.
+         * Draw textured triangle onto the image.
+         * 
+         * The texture is mapped onto the triangle using bilinear filtering.
          *
-         * @param   src_im  the image/texture to map onto the triangle.
+         * @param   src_im  the image texture to map onto the triangle.
          * @param   srcP1   coords of point 1 on the texture.
          * @param   srcP2   coords of point 2 on the texture.
          * @param   srcP3   coords of point 3 on the texture.
@@ -1605,22 +1612,25 @@ namespace tgx
          *                  blending and simply use overwrite.
         **/
         template<typename color_t_tex>
-        void drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawTexturedTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
-         * Blend a textured triangle over this image using bilinear filtering and a custom blend operator.
-         *
-         * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
-         * color of the source (sprite) pixel and the color of the dest. pixel and return the blended
-         * color. It must be callable in the form:
-         *
-         *       blend_op(col_src, col_dst)
-         *
-         * where `col_src` and `col_dst` are colors of respective type color_t_src and color_t and it
-         * must return a valid color (of any type but preferably of type color_t for best performance).         *
+         * Blend a textured triangle onto the image. 
          * 
-         * @param   src_im  the image/texture to map onto the triangle.
+         * The texture is mapped onto the triangle using bilinear filtering.
+         * 
+         * The method takes as input a user defined 'blending operator' with allow to create fancy
+         * effects. The blending operator 'blend_op' can be a function/functor/lambda. It takes as 
+         * input the color of the source (sprite) pixel and the color of the destination pixel and 
+         * returns the blended color. It must have a signature compatible with
+         *
+         *                    color_t blend_op(color_t_src src, color_t dst)
+         *
+         * (the method can, in fact, return a color of any type but returning type color_t will 
+         * improve performance).
+         *
+         * @param   src_im  the image texture to map onto the triangle.
          * @param   srcP1   coords of point 1 on the texture.
          * @param   srcP2   coords of point 2 on the texture.
          * @param   srcP3   coords of point 3 on the texture.
@@ -1634,7 +1644,9 @@ namespace tgx
 
 
         /**
-         * Blend textured triangle using bilinear filtering combined with a color gradient.
+         * Blend textured triangle on the image while combining it with a color gradient.
+         * 
+         * The texture is mapped onto the triangle using bilinear filtering.
          * 
          * @param   src_im  the image/texture to map onto the triangle.
          * @param   srcP1   coords of point 1 on the texture.
@@ -1650,7 +1662,7 @@ namespace tgx
          *                  disable blending and simply use overwrite.
         **/
         template<typename color_t_tex>
-        void drawTexturedGradientTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawTexturedGradientTriangle(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -1674,6 +1686,8 @@ namespace tgx
          * Blend textured triangle with a transparency mask (i.e. a specific color is treated as fully
          * transparent) and blend it with a color gradient...
          *
+         * Ok, this one is really overkill :p 
+         * 
          * @param   src_im              the image/texture to map onto the triangle.
          * @param   transparent_color   the color considered transparent in the source texture.
          * @param   srcP1               coords of point 1 on the texture.
@@ -1725,7 +1739,7 @@ namespace tgx
          * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
          *                  disable blending and simply use overwrite.
         **/
-        void drawQuad(iVec2 P1, iVec2 P2, iVec2 P3, iVec2 P4, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawQuad(iVec2 P1, iVec2 P2, iVec2 P3, iVec2 P4, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -1741,7 +1755,7 @@ namespace tgx
          * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
          *                  disable blending and simply use overwrite.
         **/
-        void fillQuad(iVec2 P1, iVec2 P2, iVec2 P3, iVec2 P4, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillQuad(iVec2 P1, iVec2 P2, iVec2 P3, iVec2 P4, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -1754,7 +1768,9 @@ namespace tgx
 
 
         /**
-         * Draw a smooth (anti-aliased with sub-pixel precision) quad.
+         * Draw a quad.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   P1      The first vertex.
          * @param   P2      The second vertex.
@@ -1763,28 +1779,30 @@ namespace tgx
          * @param   color   The color to use.
          * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity = 1.0f);
+        void drawQuadAA(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (anti-aliased with sub-pixel precision) quad.
-         * 
-         * WARNING : The quad must be CONVEX !
+         * Draw a quad with a thick border.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   P1          The first vertex.
          * @param   P2          The second vertex.
          * @param   P3          The third vertex.
          * @param   P4          The fourth vertex.
-         * @param   thickness   The thickness (going inside the polygon delimited by P1,P2,P3,P4)
+         * @param   thickness   The thickness (going 'inside' the quad)
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, float thickness, color_t color, float opacity = 1.0f);
+        void drawThickQuadAA(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Fill (with anti-aliasing and sub-pixel precision) smooth quad.
-         * 
+         * Draw a filled quad.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * WARNING : The quad must be CONVEX !
          *
          * @param   P1      first vertex.
@@ -1794,46 +1812,54 @@ namespace tgx
          * @param   color   color.
          * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity = 1.0f);
+        void fillQuadAA(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Fill a smooth (with anti-aliasing and sub-pixel precision) quad with a thick outline of a
-         * possibly different color.
-         * 
+         * Draw a filled quad with a thick border of a different color.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * WARNING : The quad must be CONVEX !
          *
          * @param   P1              first vertex.
          * @param   P2              second vertex.
          * @param   P3              third vertex.
          * @param   P4              fourth vertex.
-         * @param   thickness       The thickness (going inside the polygon delimited by P1,P2,P3,P4)
+         * @param   thickness       The thickness (going 'inside' the quad)
          * @param   color_interior  interior color.
          * @param   color_border    boundary color.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothThickQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
+        void fillThickQuadAA(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
+
 
 
 
 
     /**********************************************************************
-    *                            DRAWING QUADS
+    *                             DRAWING QUADS
     *
     * ADVANCED METHODS FOR TEXTURING/GRADIENT USING THE 3D RASTERIZER BACKEND
     *
-    * Remarks: 1. For all these methods, the positions are given using floating
-    *             point values to allow for sub-pixel precision (improves animations)
-    *          2. Sprite images and gradient colors can have different types from
-    *             the destination (i.e. this) image.
+    * Remarks: 
+    * 
+    *   1. Just like the AA-suffixed methods, the methods below takes floating  
+    *      point value positions for for sub-pixel precision (but they do NOT
+    *      perform anti-aliasing). 
+    *   2. Sprite images and gradient colors can have different types from
+    *      the destination (i.e. this) image.
     *
-    * Warning: For particular orientations of triangles, access to texture pixels is
-    *          highly non-linear. For texture stored in slow memory (e.g. flash), this
-    *          can cause huge slowdown because the read cache becomes basically useless.
-    *          To overcome this problem:
-    *              a. Move the texture to a faster memory location before drawing.
-    *              b. Tessellate the triangle into smaller triangles so that the
-    *                 memory data for each triangle fit into the cache.
+    * Warning: 
+    * 
+    * For particular orientations of triangles, access to texture pixels is
+    * highly non-linear. For texture stored in slow memory (e.g. flash), this
+    * can cause huge slowdown because the read cache becomes basically useless.
+    * To overcome this problem:
+    *     a. Move the texture to a faster memory location before drawing.
+    *     b. Tessellate the triangle into smaller triangles so that the
+    *        memory data for each triangle fit into the cache.
+    *        
     ***********************************************************************/
 
 
@@ -1841,47 +1867,42 @@ namespace tgx
         * Draw a quad with a gradient color specified by the color at the four vertices.
         *
         * See drawGradientTriangle() for details.
-        * NOTE: the vertices can be given in clockwise or counter-clockwise order.
         **/
         template<typename color_alt>
-        void drawGradientQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_alt colorP1, color_alt colorP2, color_alt colorP3, color_alt colorP4, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawGradientQuad(fVec2 P1, fVec2 P2, fVec2 P3, fVec2 P4, color_alt colorP1, color_alt colorP2, color_alt colorP3, color_alt colorP4, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
         * Draw a textured quad using bilinear filtering.
         *
         * See drawTexturedTriangle() for details.
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
         **/
         template<typename color_t_tex>
-        void drawTexturedQuad(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawTexturedQuad(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
         * Draw a textured quad with bilinear filtering and a custom blending operator.
         *
         * See drawTexturedTriangle() for more details.
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
         **/
         template<typename color_t_tex, typename BLEND_OPERATOR>
         void drawTexturedQuad(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, const BLEND_OPERATOR& blend_op);
 
 
         /**
-        * Draw a textured quad using bilinear filtering and combined with a color gradient.
+        * Draw a textured quad using bilinear filtering combined with a color gradient.
         *
-        * See drawTexturedTriangleGradient() for details.
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
+        * See drawTexturedGradientTriangle() for details.
         **/
         template<typename color_t_tex>
-        void drawTexturedGradientQuad(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawTexturedGradientQuad(const Image<color_t_tex>& src_im, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
         * Draw a textured quad using bilinear filtering and with a mask (i.e. a fixed transparent color).
         *
-        * See drawTexturedTriangleMasked() for details.
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
+        * See drawTexturedMaskedTriangle() for details.
         **/
         template<typename color_t_tex>
         void drawTexturedMaskedQuad(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, float opacity = 1.0f);
@@ -1889,10 +1910,9 @@ namespace tgx
 
         /**
         * Draw a textured quad using bilinear filtering and with a mask (i.e. a fixed transparent color) 
-        * combined with a color gradient.
+        * and combined with a color gradient.
         *
         * See drawTexturedGradientMaskedTriangle() for details.
-        * NOTE: the vertices can be given either in clockwise or counter-clockwise order.
         **/
         template<typename color_t_tex>
         void drawTexturedGradientMaskedQuad(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 srcP4, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, fVec2 dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity = 1.0f);
@@ -1932,7 +1952,7 @@ namespace tgx
          * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending and simply use overwrite.
         **/
-        void drawPolyline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawPolyline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -1940,11 +1960,11 @@ namespace tgx
          * 
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with: 
-         *                 bool next_point(iVec2 & P)
+         *                    bool next_point(iVec2 & P)
          *                 
          * The callback must store the next point in the reference P and return:
-         * - true  if there are more point to plot after this one.
-         * - false if this is the last point.
+         *    - true   if there are additional points to plot after this one.
+         *    - false  if this is the last point.
          *
          * @param   next_point  callback functor that provides the list of points.
          * @param   color       The color to use.
@@ -1952,7 +1972,7 @@ namespace tgx
          *                      to disable blending and simply use overwrite.
         **/
         template<typename FUNCTOR_NEXT>
-        void drawPolyline(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawPolyline(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -1966,40 +1986,44 @@ namespace tgx
 
 
         /**
-         * Draw a smooth (antialised with subpixel precision) polyline i.e. a sequence of consecutif
-         * segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
+         * Draw a polyline i.e. a sequence of consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
          *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         * 
          * @param   nbpoints    number of points in tabPoints.
          * @param   tabPoints   array of points.
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothPolyline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
+        void drawPolylineAA(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (antialised with subpixel precision) polyline i.e. a sequence of consecutif
-         * segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
-         * 
+         * Draw a polyline i.e. a sequence of consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with:
-         *                 bool next_point(fVec2 & P)
+         *                    bool next_point(iVec2 & P)
          *
          * The callback must store the next point in the reference P and return:
-         * - true  if there are more point to plot after this one.
-         * - false if this is the last point.
+         *    - true   if there are additional points to plot after this one.
+         *    - false  if this is the last point.
          *
          * @param   next_point  callback functior that privdes the list of points.
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         template<typename FUNCTOR_NEXT>
-        void drawSmoothPolyline(FUNCTOR_NEXT next_point, color_t color, float opacity = 1.0f);
+        void drawPolylineAA(FUNCTOR_NEXT next_point, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a thick smooth (antialised with subpixel precision) polyline i.e. a sequence of
-         * consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
+         * Draw a thick polyline i.e. a sequence of consecutif thick segments [P0,P1] , [P1,P2], 
+         * ... , [Pn-1,Pn]
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   nbpoints    number of points in tabPoints.
          * @param   tabPoints   array of points.
@@ -2009,21 +2033,23 @@ namespace tgx
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickPolyline(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = 1.0f);
+        void drawThickPolylineAA(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = 1.0f);
 
 
 
         /**
-         * Draw a thick smooth (antialised with subpixel precision) polyline i.e. a sequence of
-         * consecutif segments [P0,P1] , [P1,P2], ... , [Pn-1,Pn]
-         * 
+         * Draw a thick polyline i.e. a sequence of consecutif thick segments [P0,P1] , [P1,P2],
+         * ... , [Pn-1,Pn]
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with:
-         *                 bool next_point(fVec2 &amp; P)
-         * 
+         *                    bool next_point(iVec2 & P)
+         *
          * The callback must store the next point in the reference P and return:
-         * - true  if there are more point to plot after this one.
-         * - false if this is the last point.
+         *    - true   if there are additional points to plot after this one.
+         *    - false  if this is the last point.
          *
          * @param   next_point  callback functior that provides the list of points.
          * @param   thickness   thickness of the polyline.
@@ -2033,7 +2059,7 @@ namespace tgx
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         template<typename FUNCTOR_NEXT>
-        void drawSmoothThickPolyline(FUNCTOR_NEXT next_point, float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = 1.0f);
+        void drawThickPolylineAA(FUNCTOR_NEXT next_point, float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = 1.0f);
 
 
 
@@ -2066,8 +2092,7 @@ namespace tgx
          * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending and simply use overwrite.
         **/
-        void drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
+        void drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -2075,11 +2100,11 @@ namespace tgx
          *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with:
-         *                 bool next_point(iVec2 & P)
+         *                   bool next_point(iVec2 & P)
          *
          * The callback must store the next point in the reference P and return:
-         * - true  if there are more point to plot after this one.
-         * - false if this is the last point
+         *   - true  if there are more point to plot after this one.
+         *   - false if this is the last point
          *
          * @param   next_point  callback functor that provides the list of points.
          * @param   color       The color to use.
@@ -2087,14 +2112,13 @@ namespace tgx
          *                      to disable blending and simply use overwrite.
         **/
         template<typename FUNCTOR_NEXT>
-        void drawPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
          * Draw a filled polygon with vertices [P0,P2, .., PN]
          * 
-         * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points 
-         *           (so it is ok for convex polygons...)
+         * WARNING : The polygon must be CONVEX (or at least star-shaped from its center of mass).
          *
          * @param   nbpoints    number of points in tabPoints.
          * @param   tabPoints   array of points of the polygon.
@@ -2102,7 +2126,7 @@ namespace tgx
          * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending and simply use overwrite.
         **/
-        void fillPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -2110,18 +2134,16 @@ namespace tgx
          *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with:
-         *                 bool next_point(iVec2 & P)
+         *                   bool next_point(iVec2 & P)
          *
          * The callback must store the next point in the reference P and return:
-         * - true  if there are more point to plot after this one.
-         * - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
+         *   - true  if there are more point to plot after this one.
+         *   - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
          *
-         * WARNING:  In order to draw the polygon correctly, all points must be queried twice so that after
-         *           finishing the first iteration (by returning false), next_point() must reset to the
-         *           first point (because and all points are queried a second time) !
+         * WARNING:  In order to draw the polygon correctly, all points must be queried TWICE so 
+         *           the callback must reset to the first point after returning false. 
          *           
-         * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points
-         *           (so it is ok for convex polygons...)
+         * WARNING : The polygon must be CONVEX (or at least star-shaped from its center of mass).
          *
          * @param   next_point  callback functor that provides the list of points.
          * @param   color       The color to use.
@@ -2129,7 +2151,7 @@ namespace tgx
          *                      to disable blending and simply use overwrite.
         **/
         template<typename FUNCTOR_NEXT>
-        void fillPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -2142,80 +2164,86 @@ namespace tgx
         ***********************************************************************/
 
 
-
         /**
-         * Draw a smooth (anti-aliased with sub-pixel precision) polygon.
+         * Draw a closed polygon with vertices [P0,P2, .., PN]
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   nbpoints    number of points in tabPoints.
-         * @param   tabPoints   array of points of the polygon: these points delimit the exterior
-         *                      boundary of the polygon and the thickness of the line goes 'inside' the
-         *                      polygon.
+         * @param   tabPoints   array of points of the polygon.
          * @param   color       The color to use.
-         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
         **/
-        void drawSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
+        void drawPolygonAA(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (anti-aliased with sub-pixel precision) polygon.
+         * Draw a closed polygon with vertices [P0,P2, .., PN]
+         * 
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with:
-         *                 bool next_point(fVec2 & P)
-         *
+         *                   bool next_point(iVec2 & P)
+         * 
          * The callback must store the next point in the reference P and return:
-         * - true  if there are more point to plot after this one.
-         * - false if this is the last point
+         *   - true  if there are more point to plot after this one.
+         *   - false if this is the last point
          *
          * @param   next_point  callback functor that provides the list of points.
          * @param   color       The color to use.
-         * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
+         * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
+         *                      to disable blending and simply use overwrite.
         **/
         template<typename FUNCTOR_NEXT>
-        void drawSmoothPolygon(FUNCTOR_NEXT next_point, color_t color, float opacity = 1.0f);
+        void drawPolygonAA(FUNCTOR_NEXT next_point, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a thick smooth (anti-aliased with sub-pixel precision) polygon.
-         * 
+         * Draw a polygon with thick lines.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * @param   nbpoints    number of points in tabPoints.
-         * @param   tabPoints   array of points of the polygon: these points delimit the exterior
-         *                      boundary of the polygon and the thickness of the line goes 'inside' the
-         *                      polygon.
-         * @param   thickness   The thickness of the polygon boundary
+         * @param   tabPoints   array of points that delimit the polygon outer boundary.
+         * @param   thickness   The thickness of the polygon boundary (going inside the polygon).
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity = 1.0f);
+        void drawThickPolygonAA(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a thick smooth (anti-aliased with sub-pixel precision) polygon.
-         * 
+         * Draw a polygon with thick lines.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with:
-         *                 bool next_point(fVec2 & P)
-         *
+         *                   bool next_point(iVec2 &amp; P)
+         * 
          * The callback must store the next point in the reference P and return:
-         * - true  if there are more point to plot after this one.
-         * - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
-         *
-         * WARNING:  In order to draw the polygon correctly, all points must be queried twice so that
-         *           after finishing the first iteration (by returniong false), next_point() must reset
-         *           to the first point (because and all point are queried a second time) !
+         *   - true  if there are more point to plot after this one.
+         *   - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
+         * 
+         * WARNING:  In order to draw the polygon correctly, all points must be queried TWICE so
+         *           the callback must reset to the first point after returning false.
          *
          * @param   next_point  callback functor that provides the list of points delimiting the outer
          *                      boundary of the polygon.
-         * @param   thickness   The thickness of the polygon boundary.
+         * @param   thickness   The thickness of the polygon boundary (going inside the polygon).
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         template<typename FUNCTOR_NEXT>
-        void drawSmoothThickPolygon(FUNCTOR_NEXT next_point, float thickness, color_t color, float opacity = 1.0f);
+        void drawThickPolygonAA(FUNCTOR_NEXT next_point, float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (anti-aliased with sub-pixel precision) filled polygon.
+         * Draw a filled polygon.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points
          *           (so it is ok for convex polygons...)
@@ -2225,76 +2253,76 @@ namespace tgx
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothPolygon(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
+        void fillPolygonAA(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (anti-aliased with sub-pixel precision) filled polygon.
-         *        
+         * Draw a filled polygon.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with:
-         *                 bool next_point(fVec2 & P)
+         *                   bool next_point(iVec2 & P)
          *
          * The callback must store the next point in the reference P and return:
-         * - true  if there are more point to plot after this one.
-         * - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
+         *   - true  if there are more point to plot after this one.
+         *   - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
          *
-         * WARNING:  In order to draw the polygon correctly, all points must be queried twice so that
-         *           after finishing the first iteration (by returniong false), next_point() must reset
-         *           to the first point (because and all point are queried a second time) !
+         * WARNING:  In order to draw the polygon correctly, all points must be queried TWICE so
+         *           the callback must reset to the first point after returning false.
          *
-         * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points
-         *           (so it is ok for convex polygons...)
+         * WARNING : The polygon must be CONVEX (or at least star-shaped from its center of mass).
          *
          * @param   next_point  callback functor that provides the list of points delimiting the polygon.
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         template<typename FUNCTOR_NEXT>
-        void fillSmoothPolygon(FUNCTOR_NEXT next_point,  color_t color, float opacity = 1.0f);
+        void fillPolygonAA(FUNCTOR_NEXT next_point,  color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (anti-aliased with sub-pixel precision) filled polygon with thick boundary.
+         * Draw a filled polygon with a thick border of a different color.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   nbpoints        number of points in tabPoints.
-         * @param   tabPoints       array of points of the polygon: these points delimit the exterior
-         *                          boundary of the polygon and the thickness of the line goes 'inside'
-         *                          the polygon.
-         * @param   thickness       The thickness of the polygon boundary (going 'inside').
+         * @param   tabPoints       array of points of the polygon
+         * @param   thickness       The thickness of the polygon boundary (going 'inside' the polygon).
          * @param   interior_color  color for the interior
          * @param   border_color    color for the thick boundary
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothThickPolygon(int nbpoints, const fVec2 tabPoints[], float thickness, color_t interior_color, color_t border_color, float opacity = 1.0f);
+        void fillThickPolygonAA(int nbpoints, const fVec2 tabPoints[], float thickness, color_t interior_color, color_t border_color, float opacity = 1.0f);
 
 
         /**
-         * Draw a smooth (anti-aliased with sub-pixel precision) filled polygon with thick boundary.
-         * 
+         * Draw a filled polygon with a thick border of a different color.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with:
-         *                 bool next_point(fVec2 & P)
-         * 
+         *                   bool next_point(iVec2 & P)
+         *
          * The callback must store the next point in the reference P and return:
-         * - true  if there are more point to plot after this one.
-         * - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
-         * 
-         * WARNING:  In order to draw the polygon correctly, all points must be queried twice so that
-         *           after finishing the first iteration (by returniong false), next_point() must reset 
-         *           to the first point (because and all point are queried a second time) !
-         * 
-         * WARNING : The polygon must be star-shaped w.r.t the barycenter of its points
-         *           (so it is ok for convex polygons...)
+         *   - true  if there are more point to plot after this one.
+         *   - false if this is the last point AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !
+         *
+         * WARNING:  In order to draw the polygon correctly, all points must be queried TWICE so
+         *           the callback must reset to the first point after returning false.
+         *
+         * WARNING : The polygon must be CONVEX (or at least star-shaped from its center of mass).
          *
          * @param   next_point      callback functor that provides the list of points delimiting the polygon outer boundary.
-         * @param   thickness       The thickness of the polygon boundary (going 'inside')
+         * @param   thickness       The thickness of the polygon boundary (going 'inside' the polygon)
          * @param   interior_color  color for the interior
          * @param   border_color    color for the thick boundary
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         template<typename FUNCTOR_NEXT>
-        void fillSmoothThickPolygon(FUNCTOR_NEXT next_point, float thickness, color_t interior_color, color_t border_color, float opacity = 1.0f);
+        void fillThickPolygonAA(FUNCTOR_NEXT next_point, float thickness, color_t interior_color, color_t border_color, float opacity = 1.0f);
 
 
 
@@ -2332,11 +2360,11 @@ namespace tgx
          * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
          *                  disable blending.
         **/
-        void drawCircle(iVec2 center, int r, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawCircle(iVec2 center, int r, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
-         * Draw a filled circle with possibly distinct colors for outline and interior.
+         * Draw a filled circle with different colors for outline and interior.
          *
          * @param   center          Circle center.
          * @param   r               radius.
@@ -2345,7 +2373,7 @@ namespace tgx
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending.
         **/
-        void fillCircle(iVec2 center, int r, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillCircle(iVec2 center, int r, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -2359,42 +2387,49 @@ namespace tgx
 
 
         /**
-         * Draw smooth (anti-aliased and with sub-pixel precision) circle
+         * Draw a circle
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   center  Circle center.
          * @param   r       radius.
          * @param   color   color
          * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothCircle(fVec2 center, float r, color_t color, float opacity = 1.0f);
+        void drawCircleAA(fVec2 center, float r, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a thick smooth (anti-aliased and with sub-pixel precision) circle
+         * Draw a circle with a thick border.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   center      Circle center.
          * @param   r           external radius (the internal radius is r - thickness).
-         * @param   thickness   circle thickness. Should be > 1 otherwise use drawSmoothCircle(() instead.
+         * @param   thickness   thickness (going inside the circle).
          * @param   color       color.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickCircle(fVec2 center, float r, float thickness, color_t color, float opacity = 1.0f);
+        void drawThickCircleAA(fVec2 center, float r, float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a filled smooth (anti-aliased and with sub-pixel precision) circle
+         * Draw a filled circle
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   center  Circle center.
          * @param   r       radius.
          * @param   color   color.
          * @param   opacity (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothCircle(fVec2 center, float r, color_t color, float opacity = 1.0f);
+        void fillCircleAA(fVec2 center, float r, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a filled thick smooth (anti-aliased and with sub-pixel precision) circle
-         * with different colors for the border and the interior. 
+         * Draw a filled circle with a thick border of a different color.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   center          Circle center.
          * @param   r               external radius (the internal radius is r - thickness).
@@ -2403,7 +2438,7 @@ namespace tgx
          * @param   color_border    color of the boundary
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothThickCircle(fVec2 center, float r, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
+        void fillThickCircleAA(fVec2 center, float r, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
 
 
 
@@ -2413,15 +2448,17 @@ namespace tgx
     *********************************************************************************************
     *
     *                          DRAWING CIRCLE ARCS AND CIRCLE PIES
-    *
+    *                          
+    * Only high quality method are available. 
     *********************************************************************************************
     ********************************************************************************************/
 
 
-
         /**
-         * Draw smooth (anti-aliased and with sub-pixel precision) circle arc.
-         * 
+         * Draw a circle arc.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * the arc is drawn moving clockwise from angle_start until reaching angle_end.
          *   - angle = 0     <-> 12AM.
          *   - angle = PI/2  <-> 3AM
@@ -2430,17 +2467,19 @@ namespace tgx
          *
          * @param   center      circle center position.
          * @param   r           circle radius.
-         * @param   angle_start angle in rad. of the begigining of the arc.
-         * @param   angle_end   angle in rad. of the end  of the arc.
+         * @param   angle_start angle in degrees of the begigining of the arc.
+         * @param   angle_end   angle in degrees of the end  of the arc.
          * @param   color       color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothCircleArc(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity = 1.0f);
+        void drawCircleArcAA(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw smooth (anti-aliased and with sub-pixel precision) thick circle arc.
-         * 
+         * Draw a circle arc with a thick border.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * the arc is drawn moving clockwise from angle_start until reaching angle_end.
          *   - angle = 0     <-> 12AM.
          *   - angle = PI/2  <-> 3AM
@@ -2449,19 +2488,21 @@ namespace tgx
          * 
          * @param   center      circle center position.
          * @param   r           circle radius.
-         * @param   angle_start angle in rad. of the begigining of the arc.
-         * @param   angle_end   angle in rad. of the end  of the arc.
-         * @param   thickness   The thickness of the arc, going 'inside' the circle. 
+         * @param   angle_start angle in degrees of the begigining of the arc.
+         * @param   angle_end   angle in degrees of the end  of the arc.
+         * @param   thickness   The thickness of the arc, going 'inside' the circle.
          * @param   color       color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickCircleArc(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color, float opacity = 1.0f);
+        void drawThickCircleArcAA(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Fill a smooth (anti-aliased and with sub-pixel precision) circle pie.
-         * 
-         * the arc is drawn sweeping the circle clockwise from angle_start until reaching angle_end.
+         * Draw a filled circle sector (slice/pie). 
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
+         * the region is delimited by sweeping the circle clockwise from angle_start until reaching angle_end.
          *   - angle = 0     <-> 12AM.
          *   - angle = PI/2  <-> 3AM
          *   - angle = PI    <-> 6AM
@@ -2469,19 +2510,20 @@ namespace tgx
          *
          * @param   center      circle center position.
          * @param   r           circle radius.
-         * @param   angle_start angle in rad. of the begigining of the arc.
-         * @param   angle_end   angle in rad. of the end  of the arc.
+         * @param   angle_start angle in degrees of the begigining of the arc.
+         * @param   angle_end   angle in degrees of the end  of the arc.
          * @param   color       color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothCirclePie(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity = 1.0f);
+        void fillCircleSectorAA(fVec2 center, float r, float angle_start, float angle_end, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Fill a smooth (anti-aliased and with sub-pixel precision) thick circle pie with different
-         * colors for the interior and the boundary
+         * Draw a filled circle sector (slice/pie) with a thick border of a different color.
          * 
-         * the arc is drawn sweeping the circle clockwise from angle_start until reaching angle_end.
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         * 
+         * the region is delimited by sweeping the circle clockwise from angle_start until reaching angle_end.
          *   - angle = 0     <-> 12AM.
          *   - angle = PI/2  <-> 3AM
          *   - angle = PI    <-> 6AM
@@ -2489,14 +2531,14 @@ namespace tgx
          *
          * @param   center          circle center position.
          * @param   r               circle radius.
-         * @param   angle_start     angle in rad. of the begigining of the arc.
-         * @param   angle_end       angle in rad. of the end  of the arc.
-         * @param   thickness       border thickness going 'inside' the circle. 
-         * @param   color_interior  color for the interior
-         * @param   color_border    color for the boundary
+         * @param   angle_start     angle in degrees of the begigining of the arc.
+         * @param   angle_end       angle in degrees of the end  of the arc.
+         * @param   thickness       border thickness going 'inside' the circle.
+         * @param   color_interior  color for the interior.
+         * @param   color_border    color for the boundary.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothThickCirclePie(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
+        void fillThickCircleSectorAA(fVec2 center, float r, float angle_start, float angle_end, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
 
 
 
@@ -2531,11 +2573,11 @@ namespace tgx
          * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending.
         **/
-        void drawEllipse(iVec2 center, iVec2 radiuses, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawEllipse(iVec2 center, iVec2 radiuses, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
-         * Draw a filled ellipse with possibly different colors for the outline and the interior.
+         * Draw a filled ellipse with different colors for the outline and the interior.
          *
          * @param   center          Circle center.
          * @param   radiuses        radiuses along the x and y axis.
@@ -2544,7 +2586,7 @@ namespace tgx
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending.
         **/
-        void fillEllipse(iVec2 center, iVec2 radiuses, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillEllipse(iVec2 center, iVec2 radiuses, color_t interior_color, color_t outline_color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -2558,18 +2600,22 @@ namespace tgx
 
 
         /**
-         * Draw smooth (anti-aliased and with sub-pixel precision) ellipse.
+         * Draw an ellipse.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   center      Ellipse center.
          * @param   radiuses    radiuses along the x and y axis.
          * @param   color       color.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothEllipse(fVec2 center, fVec2 radiuses, color_t color, float opacity = 1.0f);
+        void drawEllipseAA(fVec2 center, fVec2 radiuses, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a thick smooth (anti-aliased and with sub-pixel precision) ellipse. .
+         * Draw an ellipse with a thick border.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   center      Ellipse center.
          * @param   radiuses    external radiuses along the x and y axis.
@@ -2577,23 +2623,26 @@ namespace tgx
          * @param   color       color.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawSmoothThickEllipse(fVec2 center, fVec2 radiuses, float thickness, color_t color, float opacity = 1.0f);
+        void drawThickEllipseAA(fVec2 center, fVec2 radiuses, float thickness, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a filled smooth (anti-aliased and with sub-pixel precision) ellipse.
+         * Draw a filled ellipse.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   center      Ellipse center.
          * @param   radiuses    radiuses along the x and y axis.
          * @param   color       color.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothEllipse(fVec2 center, fVec2 radiuses, color_t color, float opacity = 1.0f);
+        void fillEllipseAA(fVec2 center, fVec2 radiuses, color_t color, float opacity = 1.0f);
 
 
         /**
-         * Draw a filled thick smooth (anti-aliased and with sub-pixel precision) ellipse with different
-         * colors for the border and the interior.
+         * Draw a filled ellipse with a thick border of a different color.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   center          ellipse center.
          * @param   radiuses        radiuses along the x and y axis.
@@ -2602,7 +2651,7 @@ namespace tgx
          * @param   color_border    color of the boundary.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void fillSmoothThickEllipse(fVec2 center, fVec2 radiuses, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
+        void fillThickEllipseAA(fVec2 center, fVec2 radiuses, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
 
 
 
@@ -2633,13 +2682,13 @@ namespace tgx
          * @param   P1      Start point.
          * @param   P2      End point.
          * @param   PC      Control point.
-         * @param   wc      Control point weight (must be positive). Fastest for wc=1.
+         * @param   wc      Control point weight (must be > 0). Fastest for wc=1.
          * @param   drawP2  true to draw the endpoint P2.
          * @param   color   The color to use.
          * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
          *                  blending and simply use overwrite.
         **/
-        void drawQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, bool drawP2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, bool drawP2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -2654,15 +2703,15 @@ namespace tgx
          * @param   opacity Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
          *                  blending and simply use overwrite.
         **/
-        void drawCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, bool drawP2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawCubicBezier(iVec2 P1, iVec2 P2, iVec2 PA, iVec2 PB, bool drawP2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
          * Draw a quadratic spline interpolating between a given set of points.
          * 
          * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
-         * can have. Can be increased if needed but this will increase the memory used on the stack for
-         * allocating the temporary point arrays...
+         * can have. Can be increased if needed (but increase memory allocated on stack when the method
+         * is called).
          *
          * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
          *                              needed (but uses more memory on stack)
@@ -2675,15 +2724,15 @@ namespace tgx
          *                          negative to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawQuadSpline(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawQuadSpline(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
          * Draw a cubic spline interpolating between a given set of points. 
          * 
          * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
-         * can have. Can be increased if needed but this will increase the memory used on the stack for
-         * allocating the temporary point arrays...
+         * can have. Can be increased if needed (but increase memory allocated on stack when the method
+         * is called).
          *
          * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
          *                              needed (but uses more memory on stack)
@@ -2696,15 +2745,15 @@ namespace tgx
          *                          negative to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawCubicSpline(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawCubicSpline(int nbpoints, const iVec2 tabPoints[], bool draw_last_point, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
          * Draw a closed quadratic spline interpolating between a given set of points.
          * 
          * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
-         * can have. Can be increased if needed but this will increase the memory used on the stack for
-         * allocating the temporary point arrays...
+         * can have. Can be increased if needed (but increase memory allocated on stack when the method
+         * is called).
          *
          * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
          *                              needed (but uses more memory on stack)
@@ -2716,7 +2765,7 @@ namespace tgx
          *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawClosedSpline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawClosedSpline(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -2731,12 +2780,14 @@ namespace tgx
 
 
         /**
-         * Draw a thick smooth (anti-aliased with sub-pixel precision) quadratic (rational) Bezier curve.
+         * Draw a thick quadratic (rational) Bezier curve.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   P1          Start point.
          * @param   P2          End point.
          * @param   PC          Control point.
-         * @param   wc          Control point weight (must be positive). Fastest for wc=1.
+         * @param   wc          Control point weight (must be >0).
          * @param   thickness   thickness of the curve.
           *@param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
           *@param   end_P2      specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
@@ -2744,11 +2795,13 @@ namespace tgx
          * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending and simply use overwrite.
         **/
-        void drawSmoothThickQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawThickQuadBezierAA(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
-         * Draw a thick smooth (anti-aliased with sub-pixel precision) cubic Bezier curve.
+         * Draw a thick cubic Bezier curve.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
          *
          * @param   P1          Start point.
          * @param   P2          End point.
@@ -2761,16 +2814,17 @@ namespace tgx
          * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending and simply use overwrite.
         **/
-        void drawSmoothThickCubicBezier(fVec2 P1, fVec2 P2, fVec2 PA, fVec2 PB, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawThickCubicBezierAA(fVec2 P1, fVec2 P2, fVec2 PA, fVec2 PB, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
-         * Draw a thick smooth (anti-aliased with sub-pixel precision) quadratic spline interpolating
-         * between a given set of points.
-         * 
+         * Draw a thick quadratic spline interpolating between a given set of points.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
-         * can have. Can be increased if needed but this will increase the memory used on the stack for
-         * allocating the temporary point arrays...
+         * can have. Can be increased if needed (but increase memory allocated on stack when the method
+         * is called).
          *
          * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
          *                              needed (but uses more memory on stack)
@@ -2785,16 +2839,17 @@ namespace tgx
          *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawSmoothThickQuadSpline(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawThickQuadSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
-         * Draw a thick smooth (anti-aliased with sub-pixel precision) cubic spline interpolating
-         * between a given set of points.
-         * 
+         * Draw a thick cubic spline interpolating between a given set of points.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
-         * can have. Can be increased if needed but this will increase the memory used on the stack for
-         * allocating the temporary point arrays...
+         * can have. Can be increased if needed (but increase memory allocated on stack when the method
+         * is called).
          *
          * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
          *                              needed (but uses more memory on stack)
@@ -2809,16 +2864,17 @@ namespace tgx
          *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawSmoothThickCubicSpline(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawThickCubicSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
-         * Draw a thick smooth (anti-aliased with sub-pixel precision) closed quadratic spline
-         * interpolating between a given set of points.
-         * 
+         * Draw a thick closed quadratic spline interpolating between a given set of points.
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
-         * can have. Can be increased if needed but this will increase the memory used on the stack for
-         * allocating the temporary point arrays...
+         * can have. Can be increased if needed (but increase memory allocated on stack when the method
+         * is called).
          *
          * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
          *                              needed (but uses more memory on stack)
@@ -2831,20 +2887,21 @@ namespace tgx
          *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawSmoothThickClosedSpline(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void drawThickClosedSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
-         * Fill a region delimited by a closed  smooth (anti-aliased with sub-pixel precision) quadratic
-         * spline.
+         * Fill a region delimited by a closed quadratic spline.
          * 
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
-         * can have. Can be increased if needed but this will increase the memory used on the stack for
-         * allocating the temporary point arrays...
-         * 
-         * WARNING : The region should be convex (or at least star-shape around center of mass)
-         *           And even for convex region, the drawing may not be perfect if there are sharp
-         *           turns... TODO : improve this !!!!
+         * can have. Can be increased if needed (but increase memory allocated on stack when the method
+         * is called).
+         *
+         * WARNING : The region should be convex (or at least star-shape around center of mass).
+         *           Even for convex region, the drawing may not be perfect if there are sharp
+         *           turns. TODO : improve this somehow...
          *
          * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
          *                              needed (but uses more memory on stack)
@@ -2856,24 +2913,25 @@ namespace tgx
          *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void fillSmoothClosedSpline(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillClosedSplineAA(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
          * Fill a region delimited by a closed thick smooth (anti-aliased with sub-pixel precision)
          * quadratic spline where the interior and (thick) boundary can have different colors.
-         * 
+         *
+         * *** High quality: anti-aliasing and sub-pixel precision. ***
+         *
          * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
-         * can have. Can be increased if needed but this will increase the memory used on the stack for
-         * allocating the temporary point arrays...
-         * 
-         * WARNING : The region should be convex (or at least star-shape around center of mass)
-         *           And even for convex region, the drawing may not be perfect if there are sharp
-         *           turns... TODO : improve this !!!!
-         *           
-         * REMARK: If the shape is irregular (i.e. not convex). it might be better to draw a thick 
-         *         curve (with radius at least 3) with drawSmoothThickClosedSpline() and then use a 
-         *         fill algorithm with the boundary color as limit to color the interior... 
+         * can have. Can be increased if needed (but increase memory allocated on stack when the method
+         * is called).
+         *
+         * WARNING : The region should be convex (or at least star-shape around center of mass).
+         *           Even for convex region, the drawing may not be perfect if there are sharp
+         *           turns. TODO : improve this somehow...
+         *           -> If the shape is irregular. it might be better to draw a thick curve with
+         *           drawThickClosedSplineAA() and with thickness (at least 3) and then use 
+         *           the fill() method to color the interior.
          *
          * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
          *                              needed (but uses more memory on stack)
@@ -2887,7 +2945,7 @@ namespace tgx
          *                          negative to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void fillSmoothThickClosedSpline(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        void fillThickClosedSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -2920,35 +2978,24 @@ namespace tgx
 
 
         /**
-         * Query the height of a font i.e.  the number of vertical pixels between two lines of text with
-         * this font. Version for GFXFont
+         * Query the height of a font i.e. the number of vertical pixels between two lines of text with
+         * this font. 
          *
          * @param   font    The font.
          *
          * @returns the height of the font.
         **/
         static int fontHeight(const GFXfont & font);
-
-
-        /**
-         * Query the height of a font i.e.  the number of vertical pixels between two lines of text with
-         * this font. Version for ILI9341_t3 font.
-         *
-         * @param   font    The font.
-         *
-         * @returns the height of the font.
-        **/
         static int fontHeight(const ILI9341_t3_font_t& font);
 
 
         /**
          * Return the box of pixels occupied by a character when drawn with 'font' anchored at 'pos'.
-         * Version for GFXFont.
          *
          * @param           c           The character.
          * @param           pos         position of the anchor point in this image.
          * @param           font        The font to use.
-         * @param           anchor      (Optional) location of the anchor with respect to the text
+         * @param           anchor      (Optional) location of the anchor with respect to the char
          *                              bounding box. (by default, this is the BASELINE|LEFT).
          * @param [in,out]  xadvance    If non-null, the number of pixel to advance horizontally after
          *                              drawing the char is stored here.
@@ -2956,28 +3003,11 @@ namespace tgx
          * @returns the bounding box of pixels occupied by the char when its chosen anchor is at pos.
         **/
         static iBox2 measureChar(char c, iVec2 pos, const GFXfont& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
-
-
-        /**
-         * Return the box of pixels occupied by a character when drawn with 'font' anchored at 'pos'.
-         * Version for ILI9341_t3 font.
-         *
-         * @param           c           The character.
-         * @param           pos         position of the anchor point in this image.
-         * @param           font        The font to use.
-         * @param           anchor      (Optional) location of the anchor with respect to the text
-         *                              bounding box. (by default, this is the BASELINE|LEFT).
-         * @param [in,out]  xadvance    If non-null, the number of pixel to advance horizontally after
-         *                              drawing the char is stored here.
-         *
-         * @returns the bounding box of pixels occupied by the char when its chosen anchor is at pos.
-        **/
         static iBox2 measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
 
 
         /**
-         * Return the box of pixels occupied by a text when drawn with 'font' anchored at 'pos' Version
-         * for GFXFont.
+         * Return the box of pixels occupied by a text when drawn with 'font' anchored at 'pos'.
          *
          * @param   text                The text.
          * @param   pos                 position of the anchor point in the image.
@@ -2991,34 +3021,16 @@ namespace tgx
          * @returns the bounding box of pixels occupied by the text when its chosen anchor is at pos.
         **/
         iBox2 measureText(const char * text, iVec2 pos, const GFXfont& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
-
-
-        /**
-         * Return the box of pixels occupied by a text when drawn with 'font' anchored at 'pos' Version
-         * for GFXFont.
-         *
-         * @param   text                The text.
-         * @param   pos                 position of the anchor point in the image.
-         * @param   font                The font to use.
-         * @param   anchor              (Optional) location of the anchor with respect to the text
-         *                              bounding box. (by default, this is the BASELINE|LEFT).
-         * @param   wrap_text           (Optional) True to wrap wrap text at the end of image.
-         * @param   start_newline_at_0  (Optional) True to start a new line of text at x=0 and false to
-         *                              start at x=pos.x.
-         *
-         * @returns the bounding box of pixels occupied by the text when its chosen anchor is at pos.
-        **/
         iBox2 measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
 
 
-
         /**
          * Draw a single character at position pos on the image and return the position for the next
-         * character. Version for GFXFont
+         * character.
          *
          * @param   c       The character to draw.
-         * @param   pos     position of the anchor point in the image. This position is mapped to the
-         *                  anchor point for the character which {baseline,right}
+         * @param   pos     Location of the anchor with respect to the char bounding box. (by default,
+         *                  this is the BASELINE|LEFT).
          * @param   font    The font to use.
          * @param   color   The color.
          * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
@@ -3026,35 +3038,18 @@ namespace tgx
          *
          * @returns the position to draw the next char.
         **/
-        iVec2 drawChar(char c, iVec2 pos, const GFXfont& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        iVec2 drawChar(char c, iVec2 pos, const GFXfont& font, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+        iVec2 drawChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
-         * Draw a single character at position pos on the image and return the position for the next
-         * character. Version for ILI9341_t3 font.
-         *
-         * @param   c       The character to draw.
-         * @param   pos     position of the anchor point in the image. This position is mapped to the
-         *                  anchor point for the character which {baseline,right}
-         * @param   font    The font to use.
-         * @param   color   The color.
-         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
-         *                  disable blending and simply use overwrite.
-         *
-         * @returns the position to draw the next char.
-        **/
-        iVec2 drawChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Draw a text at a given position with a given font. 
-         * Version for GFXFont
+         * Draw a text at a given position with a given font.
          * 
          * NOTE: use char '\n' to changes line.
          *
          * @param   text    The text to draw.
-         * @param   pos     position of the text. This is the position of the anchor point
-         *                  (baseline/left) for the first character of the text.
+         * @param   pos     Location of the anchor with respect to the char bounding box. (by default,
+         *                  this is the BASELINE|LEFT).
          * @param   font    The font to use.
          * @param   color   The color.
          * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
@@ -3062,45 +3057,27 @@ namespace tgx
          *
          * @returns the position to use draw the next char after the text.
         **/
-        iVec2 drawText(const char* text, iVec2 pos, const GFXfont& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Draw a text at a given position with a given font. 
-         * Version for ILI9341_t3 font
-         * 
-         * NOTE: use char '\n' to changes line.
-         *
-         * @param   text    The text to draw.
-         * @param   pos     position of the text. This is the position of the anchor point
-         *                  (baseline/left) for the first character of the text.
-         * @param   font    The font to use.
-         * @param   color   The color.
-         * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
-         *                  disable blending and simply use overwrite.
-         *
-         * @returns the position to use draw the next char after the text.
-        **/
-        iVec2 drawText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        iVec2 drawText(const char* text, iVec2 pos, const GFXfont& font, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+        iVec2 drawText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
         /**
          * Advanced drawText method. Draw a text with a given font at a given position relative to a
-         * given anchor point. Version for GFXFont
+         * given anchor point.
          *
          * NOTE: use char '\n' to changes line.
          *
          * @param   text                The text to draw.
-         * @param   pos                 position to draw the text. This is the postion to which will be
+         * @param   pos                 position to draw the text. This is the position to which will be
          *                              mapped the selected anchor point of the text.
-         * @param   anchor              Select the anchor point in the image:
-         *                              - drawText() uses by default DEFAULT_TEXT_ANCHOR = BASELINE|LEFT  
-         *                              Possible flags: LEFT, RIGHT, CENTER, TOP, BOTTOM, BASELINE.
-         *                              CENTER is selected if no flag is specified. For example:
-         *                                  -> TOP|LEFT : pos is the top left corner of the text.
-         *                                  -> RIGHT : pos correspond to the middle/right of text.
-         *                                  -> CENTER : center of the text.
+         * @param   anchor              Select the anchor point of the text:
+         *                              - method DrawText() uses DEFAULT_TEXT_ANCHOR = BASELINE|LEFT  
+         *                              - Other possible flagsd: LEFT, RIGHT, CENTER, TOP, BOTTOM, BASELINE.
+         *                              - CENTER is selected if no flag is specified. For example:
+         *                                  - TOP|LEFT : pos is the top left corner of the text.
+         *                                  - RIGHT : pos correspond to the middle/right of text.
+         *                                  - CENTER : center of the text.
          * @param   font                The font to use.
          * @param   wrap_text           True to wrap wrap text at the end of image. Wrapping occur per
          *                              character (not per word).
@@ -3112,37 +3089,8 @@ namespace tgx
          *
          * @returns the position to draw the next char (when using the same anchor location).
         **/
-        iVec2 drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const GFXfont& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
-
-
-        /**
-         * Advanced drawText method. Draw a text with a given font at a given position relative to a
-         * given anchor point. Version for ILI9341_t3 font.
-         *
-         * NOTE: use char '\n' to changes line.
-         *
-         * @param   text                The text to draw.
-         * @param   pos                 position to draw the text. This is the postion to which will be
-         *                              mapped the selected anchor point of the text.
-         * @param   anchor              Select the anchor point in the image:
-         *                              - drawText() uses by default DEFAULT_TEXT_ANCHOR = BASELINE|LEFT
-         *                              Possible flags: LEFT, RIGHT, CENTER, TOP, BOTTOM, BASELINE.
-         *                              CENTER is selected if no flag is specified. For example:
-         *                                  -> TOP|LEFT : pos is the top left corner of the text.
-         *                                  -> RIGHT : pos correspond to the middle/right of text.
-         *                                  -> CENTER : center of the text.
-         * @param   font                The font to use.
-         * @param   wrap_text           True to wrap wrap text at the end of image. Wrapping occur per
-         *                              character (not per word).
-         * @param   start_newline_at_0  True to start a new line of text at position x=0 and false to
-         *                              start at x=pos.x.
-         * @param   color               The color.
-         * @param   opacity             (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                              negative to disable blending and simply use overwrite.
-         *
-         * @returns the position to draw the next char (when using the same anchor location).
-        **/
-        iVec2 drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_BLENDING_MODE);
+        iVec2 drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const GFXfont& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+        iVec2 drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -3150,7 +3098,7 @@ namespace tgx
 
 
     /**********************************************************************
-    *                DRAWING LINES : DEPRECATED METHODS
+    *                DRAWING TEXT : DEPRECATED METHODS
     *                          
     * These method are still available for compatibility but will be removed 
     * 'soon'...
@@ -3159,28 +3107,28 @@ namespace tgx
 
 
         /**
-        * DEPRECATED: Use new signature drawText(text, pos, font, color opacity) or new method drawTextEx() instead.
+        * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
         **/
         DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
         iVec2 drawText(const char* text, iVec2 pos, color_t color, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
 
 
         /**
-        * DEPRECATED: Use new signature drawText(text, pos, font, color opacity) or new method drawTextEx() instead.
+        * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
         **/
         DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
         iVec2 drawText(const char* text, iVec2 pos, color_t color, const GFXfont& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
 
 
         /**
-        * DEPRECATED: Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
+        * DEPRECATED: Use the new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
         **/
         DEPRECATED("Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0)")
         iBox2 measureText(const char* text, iVec2 pos, const GFXfont& font, bool start_newline_at_0) { return measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0); }
 
 
         /**
-        * DEPRECATED: Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
+        * DEPRECATED: Use the new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
         **/
         DEPRECATED("Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0)")
         iBox2 measureText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, bool start_newline_at_0) { return measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0); }

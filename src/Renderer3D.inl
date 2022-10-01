@@ -1253,9 +1253,9 @@ namespace tgx
                             }
                         else
                             {
-                            _uni.im->drawSmoothThickLine(*((fVec2*)PC0), *((fVec2*)PC1), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                            _uni.im->drawSmoothThickLine(*((fVec2*)PC1), *((fVec2*)PC2), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                            _uni.im->drawSmoothThickLine(*((fVec2*)PC2), *((fVec2*)PC0), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                            _uni.im->drawThickLineAA(*((fVec2*)PC0), *((fVec2*)PC1), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                            _uni.im->drawThickLineAA(*((fVec2*)PC1), *((fVec2*)PC2), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                            _uni.im->drawThickLineAA(*((fVec2*)PC2), *((fVec2*)PC0), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                             }
 
                     rasterize_next_wireframetriangle:
@@ -1323,7 +1323,7 @@ namespace tgx
                 }
             else
                 {
-                _uni.im->drawSmoothThickLine(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                _uni.im->drawThickLineAA(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                 }
             }
 
@@ -1379,7 +1379,7 @@ namespace tgx
                     }
                 else
                     {
-                    _uni.im->drawSmoothThickLine(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                    _uni.im->drawThickLineAA(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                     }
 
                 }            
@@ -1463,9 +1463,9 @@ namespace tgx
                 }
             else
                 {
-                _uni.im->drawSmoothThickLine(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                _uni.im->drawSmoothThickLine(H1, H2, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                _uni.im->drawSmoothThickLine(H2, H0, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                _uni.im->drawThickLineAA(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                _uni.im->drawThickLineAA(H1, H2, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                _uni.im->drawThickLineAA(H2, H0, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                 }
             }
 
@@ -1550,9 +1550,9 @@ namespace tgx
                     }
                 else
                     {
-                    _uni.im->drawSmoothThickLine(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                    _uni.im->drawSmoothThickLine(H1, H2, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                    _uni.im->drawSmoothThickLine(H2, H0, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                    _uni.im->drawThickLineAA(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                    _uni.im->drawThickLineAA(H1, H2, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                    _uni.im->drawThickLineAA(H2, H0, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                     }
 
                 }
@@ -1632,10 +1632,10 @@ namespace tgx
                 }
             else
                 {
-                _uni.im->drawSmoothThickLine(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                _uni.im->drawSmoothThickLine(H1, H2, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                _uni.im->drawSmoothThickLine(H2, H3, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                _uni.im->drawSmoothThickLine(H3, H0, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                _uni.im->drawThickLineAA(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                _uni.im->drawThickLineAA(H1, H2, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                _uni.im->drawThickLineAA(H2, H3, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                _uni.im->drawThickLineAA(H3, H0, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                 }
             }
 
@@ -1709,10 +1709,10 @@ namespace tgx
                     }
                 else
                     {
-                    _uni.im->drawSmoothThickLine(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                    _uni.im->drawSmoothThickLine(H1, H2, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                    _uni.im->drawSmoothThickLine(H2, H3, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                    _uni.im->drawSmoothThickLine(H3, H0, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                    _uni.im->drawThickLineAA(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                    _uni.im->drawThickLineAA(H1, H2, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                    _uni.im->drawThickLineAA(H2, H3, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                    _uni.im->drawThickLineAA(H3, H0, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                     }
 
                 }

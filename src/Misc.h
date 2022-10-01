@@ -68,7 +68,7 @@
 
 // Default blending operation for drawing
 // primitive: overwrite. 
-#define TGX_DEFAULT_BLENDING_MODE -1.0f
+#define TGX_DEFAULT_NO_BLENDING -1.0f
 
 
 // approximate size of the cache when reading in 
