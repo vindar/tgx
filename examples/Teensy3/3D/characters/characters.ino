@@ -193,8 +193,8 @@ void fps()
     // display 
     char buf[10];
     sprintf(buf, "%d FPS", fps);
-    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_9, false);
-    im.drawText(buf, { LX - B.lx() - 3,9 }, RGB565_Red, font_tgx_OpenSans_Bold_9,false);    
+    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_9);
+    im.drawText(buf, { LX - B.lx() - 3,9 }, font_tgx_OpenSans_Bold_9, RGB565_Red);    
     }
 
     

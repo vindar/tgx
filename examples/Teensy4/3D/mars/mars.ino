@@ -466,7 +466,7 @@ TGX_NOINLINE FLASHMEM void movie()
         float r = (1 - cosf(t * 4 * M_PI))/2;
         float op = (1 - cosf(t * 3 * M_PI))/4 + 0.2f;
 
-        marble_dma.fillSmoothCircle({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
+        marble_dma.fillCircleAA({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
         drawBase(true);
         drawSkyBox();
         redraw();
@@ -704,7 +704,7 @@ TGX_NOINLINE FLASHMEM void movie()
         float r = (1 - cosf(t * 4 * M_PI))/2;
         float op = (1 - cosf(t * 3 * M_PI))/4 + 0.2f;
 
-        marble_dma.fillSmoothCircle({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
+        marble_dma.fillCircleAA({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
         drawBase(true);
         drawSkyBox();
         redraw();
