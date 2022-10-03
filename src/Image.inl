@@ -740,8 +740,15 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::fillScreen(color_t color) 
         {
+        clear(color);
+        }
+
+    template<typename color_t>
+    void Image<color_t>::clear(color_t color)
+        {
         fillRect(imageBox(), color);
         }
+
 
 
     template<typename color_t>
