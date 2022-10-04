@@ -3282,10 +3282,12 @@ namespace tgx
             P = Q;
             if (!next_point(Q))
                 { // last point 
-                _bseg_draw(BSeg(P, Q), true, true, color, 0, op, true);
+                BSeg seg(P, Q);
+                _bseg_draw(seg, true, true, color, 0, op, true);
                 return;
                 }
-            _bseg_draw(BSeg(P, Q), true, false, color, 0, op, true);
+            BSeg seg(P, Q);
+            _bseg_draw(seg, true, false, color, 0, op, true);
             }
         }
 
@@ -3320,10 +3322,12 @@ namespace tgx
             P = Q;
             if (!next_point(Q))
                 { // last point 
-                _bseg_draw_AA(BSeg(P, Q), true, true, color, op, true);
+                BSeg seg(P, Q);
+                _bseg_draw_AA(seg, true, true, color, op, true);
                 return;
                 }
-            _bseg_draw_AA(BSeg(P, Q), true, false, color, op, true);
+            BSeg seg(P, Q);
+            _bseg_draw_AA(seg, true, false, color, op, true);
             }
         }
 
