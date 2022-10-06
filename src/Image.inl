@@ -943,7 +943,7 @@ namespace tgx
             {
             auto B = imageBox();
             seg.move_inside_box(B);
-            seg.len() = tgx::min(seg.lenght_inside_box(B), seg.len());	// truncate to stay inside the box
+            seg.len() = tgx::min(seg.lenght_inside_box(B), seg.len());	// truncate to stay inside the box          
             }
         if (seg.x_major())
             {
@@ -955,7 +955,8 @@ namespace tgx
                 const int aa2 = 256 - aa;
                 int x = seg.X(), y = seg.Y();
                 operator()(x,y).blend256(color, (uint32_t)((op * aa) >> 8));
-                operator()(x, y + dir).blend256(color, (uint32_t)((op * aa2) >> 8));
+                if ((y + dir >= 0)&&(y + dir < _ly))
+                    operator()(x, y + dir).blend256(color, (uint32_t)((op * aa2) >> 8));
                 seg.move<X_MAJOR>();
                 }
             }
@@ -969,7 +970,8 @@ namespace tgx
                 const int aa2 = 256 - aa;
                 int x = seg.X(), y = seg.Y();
                 operator()(x, y).blend256(color, (uint32_t)((op * aa) >> 8));
-                operator()(x + dir, y).blend256(color, (uint32_t)((op * aa2) >> 8));
+                if ((x + dir >= 0) && (x + dir < _lx))
+                    operator()(x + dir, y).blend256(color, (uint32_t)((op * aa2) >> 8));
                 seg.move<X_MAJOR>();
                 }
             }
@@ -2003,17 +2005,10 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawThickLineAA(fVec2 P1, fVec2 P2, float line_width, PATH_END_TYPE end_P1, PATH_END_TYPE ends_P2, color_t color, float opacity)
+    void Image<color_t>::drawThickLineAA(fVec2 P1, fVec2 P2, float line_width, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity)
         {  
         if (line_width < 0) return;
-        if (line_width <= 1)
-            {
-            if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-            opacity *= line_width;
-            drawLineAA(P1, P2, color, opacity);
-            return; 
-            }
-        drawWedgeLineAA(P1, P2, line_width, end_P1, line_width, end_P1, color, opacity);
+        drawWedgeLineAA(P1, P2, line_width, end_P1, line_width, end_P2, color, opacity);
         }
 
 
