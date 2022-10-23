@@ -36,7 +36,7 @@
 
     #define TGX_USE_FAST_INV_SQRT_TRICK
     #define TGX_USE_FAST_SQRT_TRICK     
-    #define TGX_USE_FAST_INV_TRICK
+    //#define TGX_USE_FAST_INV_TRICK  // bug and slower then regular inv anyway... 
      
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE __attribute__((noinline, noclone)) FLASHMEM
