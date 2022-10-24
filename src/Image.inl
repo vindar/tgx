@@ -373,19 +373,25 @@ namespace tgx
     bool Image<color_t>::_blitClip(const Image& sprite, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy)
         {
         if ((!sprite.isValid()) || (!isValid())) { return false; } // nothing to draw on or from
+        return _blitClip(sprite._lx, sprite._ly, dest_x, dest_y, sprite_x, sprite_y, sx, sy);
+        }
+
+
+    template<typename color_t>
+    bool Image<color_t>::_blitClip(int sprite_lx, int sprite_ly, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy)
+        {
         if (sprite_x < 0) { dest_x -= sprite_x; sx += sprite_x; sprite_x = 0; }
         if (sprite_y < 0) { dest_y -= sprite_y; sy += sprite_y; sprite_y = 0; }
         if (dest_x < 0) { sprite_x -= dest_x;   sx += dest_x; dest_x = 0; }
         if (dest_y < 0) { sprite_y -= dest_y;   sy += dest_y; dest_y = 0; }
-        if ((dest_x >= _lx) || (dest_y >= _ly) || (sprite_x >= sprite._lx) || (sprite_y >= sprite._ly)) return false;
+        if ((dest_x >= _lx) || (dest_y >= _ly) || (sprite_x >= sprite_lx) || (sprite_y >= sprite_ly)) return false;
         sx -= max(0, (dest_x + sx - _lx));
         sy -= max(0, (dest_y + sy - _ly));
-        sx -= max(0, (sprite_x + sx - sprite._lx));
-        sy -= max(0, (sprite_y + sy - sprite._ly));
+        sx -= max(0, (sprite_x + sx - sprite_lx));
+        sy -= max(0, (sprite_y + sy - sprite_ly));
         if ((sx <= 0) || (sy <= 0)) return false;
         return true;
         }
-
 
 
 
@@ -551,6 +557,245 @@ namespace tgx
                 }
             }   
         }
+
+
+
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::blitRotated(const Image<color_t> & sprite, iVec2 upperleftpos, int angle, float opacity)
+        {
+        if ((!sprite.isValid()) || (!isValid())) return; 
+        switch (angle)
+            {
+            case 0: 
+                blit(sprite, upperleftpos, opacity);
+                break;
+            case 90:
+                _blitRotated90(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, opacity);
+                break;
+            case 180:
+                _blitRotated180(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, opacity);
+                break;
+            case 270: 
+                _blitRotated270(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, opacity);
+                break;
+            default:
+                // do nothing...
+                break;
+            }
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_src, typename BLEND_OPERATOR>
+    void Image<color_t>::blitRotated(const Image<color_t_src>& sprite, iVec2 upperleftpos, int angle, const BLEND_OPERATOR& blend_op)
+        {
+        if ((!sprite.isValid()) || (!isValid())) return; 
+        switch (angle)
+            {
+            case 0: 
+                blit(sprite, upperleftpos, blend_op);
+                break;
+            case 90:
+                _blitRotated90<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
+                break;
+            case 180:
+                _blitRotated180<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
+                break;
+            case 270: 
+                _blitRotated270<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
+                break;
+            default:
+                // do nothing...
+                break;
+            }
+        }
+
+
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_blitRotated90(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
+        {      
+        if (!_blitClip(sprite._ly, sprite._lx, dest_x, dest_y, sprite_x, sprite_y, sy, sx)) return;
+        const int spx = sprite._lx - sprite_y - sx;
+        const int spy = sprite_x;                     
+        // ok draw subsprite (spx,spy) with size (sx,sy) to this image at upper left pos (dest_x, dest_y)
+        const int sp_stride = sprite._stride;
+        color_t* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
+        color_t* pdst = _buffer + TGX_CAST32(dest_x) + TGX_CAST32(dest_y) * TGX_CAST32(_stride);
+        if ((opacity < 0) || (opacity > 1))
+            {
+            for (int i = sx - 1; i >= 0; i--)
+                {
+                for (int j = 0; j < sy; j++)
+                    {
+                    *(pdst++) = psrc[i + (sp_stride * j)];
+                    }
+                pdst +=(_stride - sy);
+                }
+            }
+        else
+            {
+            const int op256 = (int)(opacity * 256);
+            for (int i = sx - 1; i >= 0; i--)
+                {
+                for (int j = 0; j < sy; j++)
+                    {
+                    (pdst++)->blend256(psrc[i + (sp_stride * j)], op256);
+                    }
+                pdst += (_stride - sy);
+                }
+            }
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_src, typename BLEND_OPERATOR>
+    void Image<color_t>::_blitRotated90(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
+        {      
+        if (!_blitClip(sprite._ly, sprite._lx, dest_x, dest_y, sprite_x, sprite_y, sy, sx)) return;
+        const int spx = sprite._lx - sprite_y - sx;
+        const int spy = sprite_x;                     
+        // ok draw subsprite (spx,spy) with size (sx,sy) to this image at upper left pos (dest_x, dest_y)
+        const int sp_stride = sprite._stride;
+        color_t* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
+        color_t* pdst = _buffer + TGX_CAST32(dest_x) + TGX_CAST32(dest_y) * TGX_CAST32(_stride);
+        for (int i = sx - 1; i >= 0; i--)
+            {
+            for (int j = 0; j < sy; j++)
+                {
+                color_t& c = *(pdst++);
+                c = (color_t)blend_op(psrc[i + (sp_stride * j)], c);
+                }
+            pdst +=(_stride - sy);
+            }
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_blitRotated180(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
+        {        
+        if (!_blitClip(sprite._lx, sprite._ly, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
+        const int spx = sprite._lx - sprite_x - sx;
+        const int spy = sprite._ly - sprite_y - sy;
+        // ok draw subsprite (spx,spy) with size (sx,sy) to this image at upper left pos (dest_x, dest_y)
+        const int sp_stride = sprite._stride;
+        color_t* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
+        color_t* pdst = _buffer + TGX_CAST32(dest_x) + TGX_CAST32(dest_y) * TGX_CAST32(_stride);
+        if ((opacity < 0) || (opacity > 1))
+            {
+            for (int j = sy - 1; j >= 0; j--)
+                {
+                for (int i = sx - 1; i >= 0; i--)
+                    {
+                    *(pdst++) = psrc[i + (sp_stride * j)];
+                    }
+                pdst += (_stride - sx);
+                }
+            } 
+        else
+            {
+            const int op256 = (int)(opacity * 256);
+            for (int j = sy - 1; j >= 0; j--)
+                {
+                for (int i = sx - 1; i >= 0; i--)
+                    {
+                    (pdst++)->blend256(psrc[i + (sp_stride * j)], op256);
+                    }
+                pdst += (_stride - sx);
+                }            
+            }
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_src, typename BLEND_OPERATOR>
+    void Image<color_t>::_blitRotated180(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
+        {        
+        if (!_blitClip(sprite._lx, sprite._ly, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
+        const int spx = sprite._lx - sprite_x - sx;
+        const int spy = sprite._ly - sprite_y - sy;
+        // ok draw subsprite (spx,spy) with size (sx,sy) to this image at upper left pos (dest_x, dest_y)
+        const int sp_stride = sprite._stride;
+        color_t* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
+        color_t* pdst = _buffer + TGX_CAST32(dest_x) + TGX_CAST32(dest_y) * TGX_CAST32(_stride);
+        for (int j = sy - 1; j >= 0; j--)
+            {
+            for (int i = sx - 1; i >= 0; i--)
+                {
+                color_t& c = *(pdst++);
+                c = (color_t)blend_op(psrc[i + (sp_stride * j)], c);
+                }
+            pdst += (_stride - sx);
+            }
+        }
+
+
+
+    template<typename color_t>
+    void Image<color_t>::_blitRotated270(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
+        {        
+        if (!_blitClip(sprite._ly, sprite._lx, dest_x, dest_y, sprite_x, sprite_y, sy, sx)) return;
+        const int spx = sprite_y;
+        const int spy = sprite._ly - sprite_x - sy;
+        // ok draw subsprite (spx,spy) with size (sx,sy) to this image at upper left pos (dest_x, dest_y)
+        const int sp_stride = sprite._stride;
+        color_t* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
+        color_t* pdst = _buffer + TGX_CAST32(dest_x) + TGX_CAST32(dest_y) * TGX_CAST32(_stride);
+        if ((opacity < 0) || (opacity > 1))
+            {
+            for (int i = 0; i < sx; i++)
+                {
+                for (int j = sy - 1; j >= 0; j--)
+                    {
+                    *(pdst++) = psrc[i + (sp_stride * j)];
+                    }
+                pdst += (_stride - sy);
+                }
+            } 
+        else
+            {
+            const int op256 = (int)(opacity * 256);
+            for (int i = 0; i < sx; i++)
+                {
+                for (int j = sy - 1; j >= 0; j--)
+                    {
+                    (pdst++)->blend256(psrc[i + (sp_stride * j)], op256);
+                    }
+                pdst += (_stride - sy);
+                }
+            }
+        }
+
+
+    template<typename color_t>
+    template<typename color_t_src, typename BLEND_OPERATOR>
+    void Image<color_t>::_blitRotated270(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
+        {        
+        if (!_blitClip(sprite._ly, sprite._lx, dest_x, dest_y, sprite_x, sprite_y, sy, sx)) return;
+        const int spx = sprite_y;
+        const int spy = sprite._ly - sprite_x - sy;
+        // ok draw subsprite (spx,spy) with size (sx,sy) to this image at upper left pos (dest_x, dest_y)
+        const int sp_stride = sprite._stride;
+        color_t* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
+        color_t* pdst = _buffer + TGX_CAST32(dest_x) + TGX_CAST32(dest_y) * TGX_CAST32(_stride);
+        for (int i = 0; i < sx; i++)
+            {
+            for (int j = sy - 1; j >= 0; j--)
+                {
+                color_t& c = *(pdst++);
+                c = (color_t)blend_op(psrc[i + (sp_stride * j)], c);
+                }
+            pdst += (_stride - sy);
+            }
+        }
+
 
 
 

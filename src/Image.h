@@ -664,6 +664,51 @@ namespace tgx
 
 
         /**
+         * Blit/blend a rotated sprite over this image at a given position.
+         * 
+         * The rotation must be only quarter turns (0, 90, 180 or 270) degree. For general blitting with 
+         * rotation, use the blitScaledRotated() method instead.
+         *
+         * @param   sprite          The sprite image to blit.
+         * @param   upperleftpos    Position inside this image of the upper left corner of the sprite (after rotation).
+         * @param   angle           Counter-clockwise angle to rotate the sprite prior to blitting. Must be either 0, 90, 180 or 270.
+         * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
+         *                          negative to disable blending and simply overwrite the spite over the
+         *                          image.
+        **/
+        void blitRotated(const Image<color_t> & sprite, iVec2 upperleftpos, int angle, float opacity = TGX_DEFAULT_NO_BLENDING);
+
+
+        /**
+         * Blend a rotated sprite over this image at a given position using a custom blending operator.
+         * 
+         * The rotation must be only quarter turns (0, 90, 180 or 270) degree. For general blitting with
+         * rotation, use the blitScaledRotated() method instead.
+         * 
+         * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
+         * color of the source (sprite) pixel and the color of the destination pixel and returns the
+         * blended color. It must have a signature compatible with
+         * 
+         *                    color_t blend_op(color_t_src src, color_t dst)
+         * 
+         * (the method can, in fact, return a color of any type but returning type color_t will improve
+         * performance).
+         * 
+         * Remarks:
+         * 1. The sprite can have a different color type from the image.
+         * 2. To perform "classical alpha blending", use the blit() method with an opacity parameter
+         *    instead of this method as it will be faster.
+         *
+         * @param   sprite          The sprite image to blit.
+         * @param   upperleftpos    Position inside this image of the upper left corner of the sprite (after rotation).
+         * @param   angle           Counter-clockwise angle to rotate the sprite prior to blitting. Must be either 0, 90, 180 or 270.
+         * @param   blend_op        The blending operator.
+        **/
+        template<typename color_t_src, typename BLEND_OPERATOR>
+        void blitRotated(const Image<color_t_src>& sprite, iVec2 upperleftpos, int angle, const BLEND_OPERATOR& blend_op);
+
+
+        /**
          * Blend a sprite at a given position on this image with a given mask.
          * 
          * Sprite pixels with color `transparent_color` are treated as transparent hence are not copied
@@ -719,7 +764,7 @@ namespace tgx
          * @param   anchor_src      Position of the anchor point in the sprite image.
          * @param   anchor_dst      Position of the anchor point in this image.
          * @param   scale           (Optional) Scaling factor (default 1.0f for no rescaling).
-         * @param   angle_degrees   (Optional) The rotation angle in degrees (default 0 for no rotation).
+         * @param   angle_degrees   (Optional) The rotation angle in degrees (counter-clockwise, default 0 for no rotation).
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending and simply use overwrite.
         **/
@@ -747,7 +792,7 @@ namespace tgx
          * @param   src_im          The sprite image to draw.
          * @param   anchor_src      Position of the anchor point in the sprite image.
          * @param   anchor_dst      Position of the anchor point in this image.
-         * @param   scale           Scaling factor (default 1.0f for no rescaling).
+         * @param   scale           Scaling factor (counter-clockwise, default 1.0f for no rescaling).
          * @param   angle_degrees   The rotation angle in degrees (default 0 for no rotation).
          * @param   blend_op        blending operator.
         **/
@@ -3177,6 +3222,7 @@ private:
         static inline void _fast_memset(color_t* p_dest, color_t color, int32_t len);
 
         bool _blitClip(const Image& sprite, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy);
+        bool _blitClip(int sprite_lx, int sprite_ly, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy);
 
         void _blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy);
         static void _blitRegion(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy) { if ((size_t)pdest <= (size_t)psrc) _blitRegionUp(pdest, dest_stride, psrc, src_stride, sx, sy); else _blitRegionDown(pdest, dest_stride, psrc, src_stride, sx, sy); }
@@ -3201,7 +3247,13 @@ private:
         template<typename color_t_src, int CACHE_SIZE, bool USE_BLENDING, bool USE_MASK, bool USE_CUSTOM_OPERATOR, typename BLEND_OPERATOR>
         void _blitScaledRotated(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity, const BLEND_OPERATOR& blend_op);
 
+        void _blitRotated90(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
+        void _blitRotated180(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
+        void _blitRotated270(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
 
+        template<typename color_t_src, typename BLEND_OPERATOR> void _blitRotated90(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op);
+        template<typename color_t_src, typename BLEND_OPERATOR> void _blitRotated180(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op);
+        template<typename color_t_src, typename BLEND_OPERATOR> void _blitRotated270(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op);
 
 
         /***************************************
