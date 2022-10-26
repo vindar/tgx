@@ -46,12 +46,11 @@ namespace tgx
     template<typename T> struct Mat4;
 
 
-    // Specializations (only floating types T make sense for matrix class).
+    // Specializations (only floating types T make sense for the matrix class).
     
-    typedef Mat4<float>   fMat4;        // floating point value 2-D vector with float precision
+    typedef Mat4<float>   fMat4;  ///< 4x4 matrix with single (float) precision
 
-    typedef Mat4<double>  dMat4;        // floating point value 2-D vector with double precision
-
+    typedef Mat4<double>  dMat4;  ///< 4x4 matrix with double precision
 
 
     // forward declaration of matrix multiplication
@@ -59,9 +58,29 @@ namespace tgx
 
 
 
-    /** 
-    * 4x4 matrix (used for representing a 3d transform). 
-    **/
+    /**
+     * 4x4 matrix template class [specializations #fMat4, #dMat4]
+     * 
+     * The class encapsulate a 4x4 matrix with element of type `T` which must be a floating point
+     * type (either `float` or `double`). Such a matrix is used in 3D grpahics to represent a
+     * transformation (translation, rotation, dilatation...).
+     *
+     * The matrix is internally represented by an public array `M[16]` in column major ordering:
+     * 
+     * ```
+     * -------------------------------
+     * | M[0] | M[4] | M[8]  | M[12] |
+     * |------|------|-------|-------|
+     * | M[1] | M[5] | M[9]  | M[13] |
+     * |------|------|-------|-------|
+     * | M[2] | M[6] | M[10] | M[14] |
+     * |------|------|-------|-------|
+     * | M[3] | M[7] | M[11] | M[15] |
+     * -------------------------------
+     * ```
+     * 
+     * @sa Vec2, Vec3, Vec4
+     */
     template<typename T> struct Mat4
         {
 
@@ -74,20 +93,22 @@ namespace tgx
         #endif
 
         // column major ordering:
-        //
         // M[0]  M[4]  M[8]   M[12]
         // M[1]  M[5]  M[9]   M[13]
         // M[2]  M[6]  M[10]  M[14]
         // M[3]  M[7]  M[11]  M[15]
-        //
         T M[16];  
 
 
-        /** default constructor, undefined values in the matrix. */
+        /** 
+         * Default constructor. **the matrix content is undefined**. 
+         */
         Mat4() {}
 
 
-        /** direct assignement from 16 values */
+        /**
+         * Constructor from explicit values.
+         */
         constexpr Mat4(T x1, T y1, T z1, T t1,
                        T x2, T y2, T z2, T t2,
                        T x3, T y3, T z3, T t3,
@@ -96,30 +117,42 @@ namespace tgx
             }
 
 
-        /** Construct from an array of T*/
+        /**
+         * Constructor from an array (with column major ordering same as `M`).
+         */
         Mat4(const T* mat) { memcpy(M, mat, 16 * sizeof(T)); }
 
 
-        /** copy ctor */
+        /**
+         * Copy constructor.
+         */
         Mat4(const Mat4 & mat) = default;
 
 
-        /** assignement operator */
+        /**
+         * Assignement operator.
+         */
         Mat4& operator=(const Mat4 & mat) = default;
 
 
-        /** implicit conversion to T* */
+        /**
+         * Implicit conversion to an array T[16]. 
+         */
         operator T*() { return M; }
 
 
-        /** set as the nul matrix */
+        /**
+         * Set as the null matrix (all coefficients equal 0). 
+         */
         void setZero()
             {
             memset(M, 0, 16 * sizeof(T));
             }
 
 
-        /** set as the identity matrix */
+        /**
+         * Set as the identity matrix.
+         */
         void setIdentity()
             {
             memset(M, 0, 16 * sizeof(T));
@@ -127,9 +160,15 @@ namespace tgx
             }
 
 
-        /** set as an orthographic matrix: 
-         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml 
-         **/
+        /**
+         * Set as an orthographic projection matrix.
+         * 
+         * c.f. https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml
+         *          
+         * @param left, right   coordinates for the left and right vertical clipping planes  
+         * @param bottom, top   coordinates for the bottom and top horizontal clipping planes.
+         * @param zNear, zFar   distances to the nearer and farther depth clipping planes.
+         */
         void setOrtho(T left, T right, T bottom, T top, T zNear, T zFar)
             {
             memset(M, 0, 16 * sizeof(T));
@@ -144,9 +183,14 @@ namespace tgx
 
 
         /**
-        * Set as a perspective matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
-        **/
+         * Set as a perspective projection matrix.
+         *
+         * c.f. https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
+         *
+         * @param left, right   coordinates for the left and right vertical clipping planes
+         * @param bottom, top   coordinates for the bottom and top horizontal clipping planes.
+         * @param zNear, zFar   distances to the nearer and farther depth clipping planes.
+         */
         void setFrustum(T left, T right, T bottom, T top, T zNear, T zFar)
             {
             memset(M, 0, 16 * sizeof(T));
@@ -161,9 +205,15 @@ namespace tgx
 
 
         /**
-        * Set as a perspective matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
-        **/
+         * Set as a perspective projection matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
+         *
+         * @param   fovy   field of view angle, in degrees, in the y direction.
+         * @param   aspect aspect ratio that determines the field of view in the x direction. The aspect ratio is the ratio of x (width) to y (height).
+         * @param   zNear  distance from the viewer to the near clipping plane.
+         * @param   zFar   distance from the viewer to the far clipping plane.
+         */
         void setPerspective(T fovy, T aspect, T zNear, T zFar)
             {
             static const T deg2rad = (T)(M_PI / 180);
@@ -177,9 +227,13 @@ namespace tgx
 
 
         /**
-        * Set as a rotation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
-        **/
+         * Set as a rotation matrix.
+         *
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
+         * 
+         * @param   angle rotation angle in degrees.
+         * @param   x,y,z coordinates of the direction vector for the rotation.
+         */
         void setRotate(T angle, T x, T y, T z)
             {
             static const T deg2rad = (T)(M_PI / 180);
@@ -207,9 +261,13 @@ namespace tgx
 
 
         /**
-        * Set as a rotation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
-        **/
+         * Set as a rotation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
+         *
+         * @param   angle rotation angle in degrees.
+         * @param   v     direction vector for the rotation.
+         */
         void setRotate(T angle, const Vec3<T> v)
             {
             setRotate(angle, v.x, v.y, v.z);
@@ -217,9 +275,13 @@ namespace tgx
 
 
         /**
-        * Multiply this matrix by a rotation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
-        **/
+         * Pre-multiply this matrix by a rotation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
+         *
+         * @param   angle rotation angle in degrees.
+         * @param   x,y,z coordinates of the direction vector for the rotation.
+         */
         void multRotate(T angle, T x, T y, T z)
             {
             Mat4 mat;
@@ -228,10 +290,15 @@ namespace tgx
             }
 
 
+ 
         /**
-        * Multiply this matrix by a rotation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
-        **/
+         * Pre-multiply this matrix by a rotation matrix.
+         *
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
+         *
+         * @param   angle rotation angle in degrees.
+         * @param   v     direction vector for the rotation.
+         */
         void multRotate(T angle, const Vec3<T> v)
             {
             multRotate(angle, v.x, v.y, v.z);
