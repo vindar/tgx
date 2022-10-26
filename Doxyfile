@@ -1005,7 +1005,14 @@ EXCLUDE_SYMBOLS        = tgx::DefaultFPType \
                          TGX_NOINLINE \
                          DEPRECATED \
                          DEPRECATED_SCALAR_PARAMS \
-                         TGX_CAST32
+                         TGX_CAST32 \
+                         TGX_ON_ARDUINO \
+                         TGX_USE_FAST_INV_SQRT_TRICK \
+                         TGX_USE_FAST_SQRT_TRICK \
+                         TGX_PROGMEM_DEFAULT_CACHE_SIZE \
+                         TGX_IS_PROGMEM \
+                         TGX_IS_EXTMEM \
+                         external_psram_size
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include
@@ -2333,7 +2340,10 @@ INCLUDE_FILE_PATTERNS  =
 # recursively expanded use the := operator instead of the = operator.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-PREDEFINED             = __cplusplus
+PREDEFINED             = __cplusplus \
+                         ARDUINO_TEENSY41 \
+                         TEENSYDUINO \
+                         ESP32
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The

@@ -69,7 +69,7 @@ namespace tgx
     * color    the object color when texturing is not used
     * 
     * ambiant_strength      reflection factor for ambiant lightning.
-    .
+    *
     * diffuse_strength      reflection factor for diffuse lightning.
     * 
     * specular_strength     reflection factor for specular lightning.
@@ -154,81 +154,83 @@ namespace tgx
     * 4/6   5/8  7/7
     * 8/7   9/4  5/5
     *
-    **/
+    */
     template<typename color_t> 
     struct Mesh3D
         {
         // make sure right away that the template parameter is admissible to prevent cryptic error message later.  
         static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in color.h");
 
-        int32_t id;                         // just in case (set to 1 for the time being). 
+        int32_t id;                     ///< Set to 1 (may change in future version).
 
-        uint16_t nb_vertices;               // number of vertices in the vertex array
-        uint16_t nb_texcoords;              // number of texture coordinates in the texcoord array
-        uint16_t nb_normals;                // number of normal vectors in the normal array
-        uint16_t nb_faces;                  // number of triangular faces in the mesh
-        uint16_t len_face;                  // number of elements (uint16_t) in the face array
+        uint16_t nb_vertices;           ///< Number of vertices in the vertex array.
+        uint16_t nb_texcoords;          ///< Number of texture coordinates in the texcoord array.
+        uint16_t nb_normals;            ///< Number of normal vectors in the normal array.
+        uint16_t nb_faces;              ///< Number of triangular faces in the mesh.
+        uint16_t len_face;              ///< Number of elements (uint16_t) in the face array.
 
-        const fVec3* vertice;               // vertex array pointer
-        const fVec2* texcoord;              // texture coord array pointer (nullptr if none)
-        const fVec3* normal;                // normal vector array pointer (nullptr if none). THE VECTOR MUST HAVE UNIT NORM !
-        const uint16_t* face;               // array of triangles pointer. format described in docstring above.
+        const fVec3* vertice;           ///< Vertex array.
+        const fVec2* texcoord;          ///< Texture coord array (nullptr if none).
+        const fVec3* normal;            ///< Normal vector array (nullptr if none). **all vectors must have unit norm**.
+        const uint16_t* face;           ///< Array of triangles (format described above).
 
-        const Image<color_t>* texture;      // the texture image (or nullptr if none)
-
-        RGBf color;                         // default color used when texturing is disabled.
-
-        float ambiant_strength;             // the object ambiant factor (how much it reflects the ambiant light component) typ. value: 0.2sf 
-        float diffuse_strength;             // the object diffuse factor (how much it reflects the diffuse light component) typ. value  0.7f 
-        float specular_strength;            // the object ambiant factor (how much it reflects the specular light component) typ value 0.5f
-        int specular_exponent;              // specular exponent. 0 to disable specular lightning, typically between 4 and 64.
-
-        const Mesh3D * next;                // next object to draw when chaining is enabled. nullptr at end of chain. 
+        const Image<color_t>* texture;  ///< Texture image (or nullptr if none).
         
-        fBox3 bounding_box;                 // object bounding box.
+        RGBf color;                     ///< Default color to use when texturing is disabled.
+
+        float ambiant_strength;         ///< Object ambiant coefficient (how much it reflects the ambiant light component). Typical value: 0.2f.
+        float diffuse_strength;         ///< Object diffuse coefficient (how much it reflects the diffuse light component). Typical value:  0.7f. 
+        float specular_strength;        ///< Object ambiant coefficient (how much it reflects the specular light component). Typical value:  0.5f.
+        int specular_exponent;          ///< Specular exponent. 0 to disable specular lightning. Typical value between 4 and 64.
+
+        const Mesh3D * next;            ///< Next object to draw when chaining is enabled. nullptr at end of chain. 
         
-        const char* name;                   // mesh name, or nullptr
+        fBox3 bounding_box;             ///< Object bounding box.
+        
+        const char* name;               ///< Mesh name, or nullptr
         };
 
 
 
 
     /**
-     * Helper method to create a "cache version" of a mesh by copying part of its data into fast
-     * memory buffers. A typical scenario for using this method is when when using a MCU with
+     * Creates a "cache version" of a mesh by copying part of its data into fast memory buffers.
+     * 
+     * A typical scenario for using this method is when when using a MCU (Teesny, ESP32..) with
      * limited RAM and slow FLASH memory.
      * 
      * The method copy as much as it can into the given RAM1/RAM2 buffers but will leave the arrays
      * that are to big in their current place. The method never 'fails' but it may return the
-     * original mesh if not caching is possible.
+     * original mesh if caching is not possible.
      * 
-     * A C-string describe which arrays should be copied and in which order:
+     * A C-string describes which arrays should be copied and in which order:
      * 
-     * "V" = vertex array. 
-     * "N" = normal array. 
-     * "T" = texture array. 
-     * "I" = texture image  
-     * "F" = face arrays.
+     * - "V" = vertex array.   
+     * - "N" = normal array.   
+     * - "T" = texture array.   
+     * - "I" = texture image  
+     * - "F" = face arrays.
      * 
-     * For example "VIT" means copy vertex arrays first, then image texture and finally texture
-     * coord (if there is still room).
+     * For example "VIT" means: "copy vertex arrays first, then image texture and finally texture
+     * coord (if there is still room)".
      * 
-     * REMARKS: 
-     *   1. the memory buffers supplied do NOT have to be be aligned, the method takes care of it.
+     * **Remarks**
      * 
-     *   2. The method also caches the sub-meshes linked after this one.
+     * 1. The memory buffers supplied do **not** need to be be aligned, the method takes care of it.
      * 
-     * @param           mesh        Pointer to the mesh to cache.
-     * @param [in,out]  ram1_buffer pointer to the first memory buffer (should have the fastest access)
-     * @param           ram1_size   size in bytes of the ram1 buffer.
-     * @param [in,out]  ram2_buffer pointer to a second memory buffer, may be nullptr.
-     * @param           ram2_size   size in bytes of the ram2 buffer or 0 if not supplied.
-     * @param           copy_order  c string that describe which array should be copied and in which order
-     * @param [in,out]  ram1_used   If non-null, the number of bytes ultimately used in ram1_buffer is put here. 
-     * @param [in,out]  ram2_used   If non-null, the number of bytes ultimately used in ram2_buffer is put here. 
+     * 2. The method also caches the sub-meshes linked after this one.
+     *
+     * @param  mesh        Pointer to the mesh to cache.
+     * @param  ram1_buffer pointer to the first memory buffer (should have the fastest access).
+     * @param  ram1_size   size in bytes of the ram1 buffer.
+     * @param  ram2_buffer pointer to a second memory buffer, may be nullptr.
+     * @param  ram2_size   size in bytes of the ram2 buffer or 0 if not supplied.
+     * @param  copy_order  (Optional) c string that describe which array should be copied and in which order.
+     * @param  ram1_used   If non-null, the number of bytes consumed in ram1_buffer is put here.
+     * @param  ram2_used   If non-null, the number of bytes consumed in ram2_buffer is put here.
      *
      * @returns The cached mesh (or the initial mesh if nothing was cached).
-    **/
+     */
     template<typename color_t> const Mesh3D<color_t> * cacheMesh(const Mesh3D<color_t> * mesh,
                                                            void * ram1_buffer, size_t ram1_size,
                                                            void * ram2_buffer, size_t ram2_size,
@@ -244,25 +246,28 @@ namespace tgx
 
 #if defined(ARDUINO_TEENSY41)
 
-    /******************************************************************************************
-    *
-    * TEENSY 4 SPECIFIC METHODS
-    *
-    *******************************************************************************************/
+//******************************************************************************************
+//
+// TEENSY 4 SPECIFIC METHODS
+//
+//******************************************************************************************
 
 
     /**
-    * Create a copy of a mesh where specified arrays in PROGMEM are copied to EXTMEM.
-    * 
-    * Of course, external ram must be present...
-    *
-    * - Only arrays in PROGMEM are copied to EXTMEM. Arrays located elsewhere are never copied. 
-    * - The source mesh must not have any part located in extmem already or the method will fail.
-    * - In practice, it is most helpful to copy textures to extmem (but not the other arrays). 
-    * 
-    * Return a pointer to the new mesh or nullptr on error (nothing is allocated in that case). 
-    * the methods also copies the sub-meshes linked to this one (via the ->next pointer).  
-    **/
+     * Create a copy of a mesh where specified arrays in PROGMEM are copied to EXTMEM.
+     * 
+     * **Defined only for Teensy 4.1**
+     * 
+     * **Remark**
+     * 1. Obviously, external RAM must be present...
+     * 2. Only arrays in PROGMEM are copied to EXTMEM. Arrays located elsewhere are not copied.
+     * 3. The source mesh must not have any part located in EXTMEM already or the method will fail.
+     * 4. In practice, it is most efficient to copy textures to EXTMEM (the other arrays provide
+     * less improvments).
+     *
+     * @returns a pointer to the new mesh or nullptr on error (nothing is allocated in that case). the
+     * methods also copies the sub-meshes linked to this one (via the ->next pointer).  
+     */
     template<typename color_t> Mesh3D<color_t>* copyMeshEXTMEM(const Mesh3D<color_t>* mesh,
                                                                 bool copy_vertices = false,
                                                                 bool copy_normals = false,
@@ -272,21 +277,26 @@ namespace tgx
 
 
     /**
-    * Delete a mesh allocated with copyMeshEXTMEM().
-    **/
+     * Delete a mesh allocated with copyMeshEXTMEM().
+     * 
+     * **Defined only for Teensy 4.1**
+     * 
+     * Delete also the linked sub-meshes is any.
+     */
     template<typename color_t> void freeMeshEXTMEM(Mesh3D<color_t>* mesh);
 
 
 
 
-    /***************************************************************
-    * NOT YET IMPLEMENTED : TODO...
-    ****************************************************************/
+//***************************************************************
+// NOT YET IMPLEMENTED : TODO...
+//***************************************************************
+
 
     /**
-    * Copy a mesh from SD to external memory, together with all its dependencies
+    * Copy a mesh from the SD to external memory, together with all its dependencies
     * (arrays, texture images and linked meshes).
-    **/
+    */
     //template<typename color_t> Mesh3D<color_t>* copyMeshFromSDToEXTMEM(const char * filename);
 
 

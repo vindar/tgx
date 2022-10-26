@@ -439,10 +439,10 @@ namespace tgx
 
 #ifdef TGX_ON_ARDUINO
 
-        /***
+        /**
         * Print a representation of the vector using a given stream object.
         *
-        * **Defined only in the Arduino environment **
+        * **Defined only in the Arduino environment**
         */
         inline void print(Stream & outputStream = Serial) const
             {
