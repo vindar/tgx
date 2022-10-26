@@ -641,6 +641,9 @@ struct RGB565
         }
 
 
+
+
+
 /**
  * Color in R8/G8/B8 format.
  * 
@@ -1129,6 +1132,9 @@ struct RGB24
                      ((int)colA.G + (int)colB.G + (int)colC.G + (int)colD.G) >> 2,
                      ((int)colA.B + (int)colB.B + (int)colC.B + (int)colD.B) >> 2);
         }
+
+
+
 
 
 /**
@@ -1749,6 +1755,8 @@ struct RGB32
                      ((int)colA.B + (int)colB.B + (int)colC.B + (int)colD.B) >> 2,
                      ((int)colA.A + (int)colB.A + (int)colC.A + (int)colD.A) >> 2);
         }
+
+
 
 
 
@@ -2381,6 +2389,9 @@ struct RGB64
         }
 
 
+
+
+
     /**
      * Color in R,G,B float format.
      * 
@@ -2800,6 +2811,9 @@ struct RGB64
         }
 
 
+
+
+
 /**
  * Color in Hue/Saturation/Value space (**experimental**).
  * 
@@ -2807,7 +2821,7 @@ struct RGB64
  * 
  * See: https://en.wikipedia.org/wiki/HSL_and_HSV
  * 
- * ** Remark ** Experimental. Operations with HSV colors are very slow. This color format should
+ * **Remark** Experimental. Operations with HSV colors are very slow. This color format should
  * not be used with the 3D rasterizer.
  */
 struct HSV
