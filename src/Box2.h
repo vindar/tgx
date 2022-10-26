@@ -82,7 +82,7 @@ namespace tgx
 
 
     /**
-     * 2D Box template class [specializations `iBox2` , `fBox2`, `dBox2`]
+     * 2D Box template class [specializations #iBox2 , #fBox2, #dBox2].
      * 
      * The class encapsulates of 4 public variables: `minX`, `maxX`, `minY`, `maxY` which delimit the 2
      * dimensional *closed* box: `[minX, maxX] x [minY, maxY]`
@@ -222,31 +222,6 @@ namespace tgx
                 {
                 return (maxY - minY); // for floating point type, return maxX - minX. 
                 }                   
-            }
-
-
-        /** 
-        * Return true if the box contains the point P.
-        **/
-        inline bool contains(const Vec2<T>& P) const
-            {
-            return(((minX <= P.x) && (P.x <= maxX)) && ((minY <= P.y) && (P.y <= maxY)));
-            }
-
-
-        /**
-         * Return true if B is included in this box.
-         * 
-         * **Convention**
-         * 
-         * 1. An empty box contains nothing.
-         * 2. A non-empty box contains any empty box.
-         **/
-        inline bool contains(const Box2<T>& B) const
-            {
-            if (isEmpty()) return false;
-            if (B.isEmpty()) return true;
-            return ((minX <= B.minX) && (maxX >= B.maxX) && (minY <= B.minY) && (maxY >= B.maxY));
             }
 
 
@@ -481,14 +456,12 @@ namespace tgx
         /**
          * Split the box in half or quarter.
          *
-         * @param   part The part or the box to keep. Must be one of `TGX_BOX2_SPLIT_UP`,
-         *               `TGX_BOX2_SPLIT_DOWN`, `TGX_BOX2_SPLIT_LEFT`, `TGX_BOX2_SPLIT_RIGHT`,
-         *               `TGX_BOX2_SPLIT_UP_LEFT`, `TGX_BOX2_SPLIT_UP_RIGHT`, `TGX_BOX2_SPLIT_DOWN_LEFT`,
-         *               `TGX_BOX2_SPLIT_DOWN_RIGHT`.
+         * @param   part The part or the box to keep. Must be one of #TGX_BOX2_SPLIT_UP,
+         *               #TGX_BOX2_SPLIT_DOWN, #TGX_BOX2_SPLIT_LEFT, #TGX_BOX2_SPLIT_RIGHT,
+         *               #TGX_BOX2_SPLIT_UP_LEFT, #TGX_BOX2_SPLIT_UP_RIGHT, #TGX_BOX2_SPLIT_DOWN_LEFT,
+         *               #TGX_BOX2_SPLIT_DOWN_RIGHT.
          *
-         * @sa  getsplit(),TGX_BOX2_SPLIT_UP,TGX_BOX2_SPLIT_DOWN,TGX_BOX2_SPLIT_LEFT,TGX_BOX2_SPLIT_RIGHT,
-         *      TGX_BOX2_SPLIT_UP_LEFT,TGX_BOX2_SPLIT_UP_RIGHT,TGX_BOX2_SPLIT_DOWN_LEFT,
-         *      TGX_BOX2_SPLIT_DOWN_RIGHT
+         * @sa  getSplit()
          */
         inline void split(int part)
             {
@@ -499,14 +472,12 @@ namespace tgx
         /**
          * Return the box splitted in half or quater.
          *
-         * @param   part The part or the box to keep. Must be one of `TGX_BOX2_SPLIT_UP`,
-         *               `TGX_BOX2_SPLIT_DOWN`, `TGX_BOX2_SPLIT_LEFT`, `TGX_BOX2_SPLIT_RIGHT`,
-         *               `TGX_BOX2_SPLIT_UP_LEFT`, `TGX_BOX2_SPLIT_UP_RIGHT`, `TGX_BOX2_SPLIT_DOWN_LEFT`,
-         *               `TGX_BOX2_SPLIT_DOWN_RIGHT`.
+         * @param   part The part or the box to keep. Must be one of #TGX_BOX2_SPLIT_UP,
+         *               #TGX_BOX2_SPLIT_DOWN, #TGX_BOX2_SPLIT_LEFT, #TGX_BOX2_SPLIT_RIGHT,
+         *               #TGX_BOX2_SPLIT_UP_LEFT, #TGX_BOX2_SPLIT_UP_RIGHT, #TGX_BOX2_SPLIT_DOWN_LEFT,
+         *               #TGX_BOX2_SPLIT_DOWN_RIGHT.
          *
-         * @sa  split(),TGX_BOX2_SPLIT_UP,TGX_BOX2_SPLIT_DOWN,TGX_BOX2_SPLIT_LEFT,TGX_BOX2_SPLIT_RIGHT,
-         *      TGX_BOX2_SPLIT_UP_LEFT,TGX_BOX2_SPLIT_UP_RIGHT,TGX_BOX2_SPLIT_DOWN_LEFT,
-         *      TGX_BOX2_SPLIT_DOWN_RIGHT
+         * @sa  split()
          */
         Box2<T> getSplit(int part) const
             {
