@@ -163,7 +163,7 @@ namespace tgx
         /**
          * Set as an orthographic projection matrix.
          * 
-         * c.f. https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml
          *          
          * @param left, right   coordinates for the left and right vertical clipping planes  
          * @param bottom, top   coordinates for the bottom and top horizontal clipping planes.
@@ -185,7 +185,7 @@ namespace tgx
         /**
          * Set as a perspective projection matrix.
          *
-         * c.f. https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
          *
          * @param left, right   coordinates for the left and right vertical clipping planes
          * @param bottom, top   coordinates for the bottom and top horizontal clipping planes.
@@ -305,11 +305,13 @@ namespace tgx
             }
 
 
-
         /**
-        * set as a translation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
-        **/
+         * Set as a translation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         *
+         * @param   x,y,z   coordinates of the translation vector. 
+         */
         void setTranslate(T x, T y, T z)
             {
             memset(M, 0, 16 * sizeof(T));
@@ -324,9 +326,12 @@ namespace tgx
 
 
         /**
-        * set as a translation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
-        **/
+         * Set as a translation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         *
+         * @param   v   the translation vector.
+         */
         void setTranslate(const Vec3<T> v)
             {
             setTranslate(v.x, v.y, v.z);
@@ -334,8 +339,11 @@ namespace tgx
 
 
         /**
-        * multiply this matrix by a translation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         * Pre-multiply this matrix by a translation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         *
+         * @param   x,y,z   coordinates of the translation vector.
         **/
         void multTranslate(T x, T y, T z)
             {
@@ -346,8 +354,11 @@ namespace tgx
 
 
         /**
-        * multiply this matrix by a translation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         * Pre-multiply this matrix by a translation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         *
+         * @param   v   the translation vector.
         **/
         void multTranslate(const Vec3<T> v)
             {
@@ -355,10 +366,12 @@ namespace tgx
             }
 
 
-
         /**
-        * set as a dilatation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         * Set as a dilatation matrix
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         *
+         * @param   x,y,z   scale factors along the x, y, and z axes respectively.   
         **/
         void setScale(T x, T y, T z)
             {
@@ -371,8 +384,11 @@ namespace tgx
 
 
         /**
-        * set as a dilatation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         * Set as a dilatation matrix
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         *
+         * @param   v   vector representing the scale factors along each axis.
         **/
         void setScale(const Vec3<T> v)
             {
@@ -381,8 +397,11 @@ namespace tgx
 
 
         /**
-        * multiply this matrix by a dilatation matrix
+        * Pre-multiply this matrix by a dilatation matrix.
+        * 
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         *
+         * @param   x,y,z   scale factors along the x, y, and z axes respectively.
         **/
         void multScale(T x, T y, T z)
             {
@@ -393,8 +412,11 @@ namespace tgx
 
 
         /**
-        * multiply this matrix by a dilatation matrix
+        * Pre-multiply this matrix by a dilatation matrix
+        * 
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         *
+         * @param   v   vector representing the scale factors along each axis.
         **/
         void multScale(const Vec3<T> v)
             {
@@ -414,13 +436,18 @@ namespace tgx
             }
 
 
-        /** 
-        * Set the matrix a camera looking at a given direction.
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
-        * The formula given by khronos is wrong ! 
-        * The cross-product of two unit vectors is not normalized LOL :-)
-        * see: https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down
-        **/
+        /**
+         * Set the matrix for a camera looking at a given direction.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
+         * 
+         * The formula given by khronos is wrong ! The cross-product of two unit vectors is not
+         * normalized. See https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down
+         *
+         * @param   eyeX, eyeY, eyeZ            position of the eye point.
+         * @param   centerX, centerY, centerZ   position of the reference point (the camera points toward this point).
+         * @param   upX, upY, upZ               direction of the up vector. 
+         */
         void setLookAt(T eyeX, T eyeY, T eyeZ, T centerX, T centerY, T centerZ, T upX, T upY, T upZ)
             {
              const Vec4<T> f = normalize(Vec4<T>{ centerX - eyeX, centerY - eyeY, centerZ - eyeZ, (T)0 });
@@ -436,9 +463,17 @@ namespace tgx
 
 
         /**
-        * Set the matrix a camera looking at a given direction.
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
-        **/
+         * Set the matrix for a camera looking at a given direction.
+         *
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
+         *
+         * The formula given by khronos is wrong ! The cross-product of two unit vectors is not
+         * normalized. See https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down
+         *
+         * @param   eye     eye position.
+         * @param   center  reference point (the camera points toward this point).
+         * @param   up      up vector.
+         */
         void setLookAt(const Vec3<T> eye, const Vec3<T> center, const Vec3<T> up)
             {
             setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, up.x, up.y, up.z);
@@ -446,8 +481,8 @@ namespace tgx
 
 
         /**
-        * Matrix-vector multiplication
-        **/
+        * Matrix-vector multiplication.
+        */
          TGX_INLINE inline Vec4<T> mult(const Vec4<T> V) const
             {
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z + M[12] * V.w,
@@ -458,8 +493,8 @@ namespace tgx
 
 
         /**
-        * Matrix-vector multiplication
-        **/
+        * Matrix-vector multiplication.
+        */
         TGX_INLINE inline Vec4<T> mult(const Vec3<T> & V, float w) const
             {
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z + M[12] * w,
@@ -470,8 +505,8 @@ namespace tgx
 
 
         /**
-        * Matrix-vector multiplication (last component w = 0)
-        **/
+        * Matrix-vector multiplication (last component of vector set to w = 0).
+        */
         TGX_INLINE inline Vec4<T> mult0(const Vec3<T> & V) const
             {
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z,
@@ -482,8 +517,8 @@ namespace tgx
 
 
         /**
-        * Matrix-vector multiplication (last component w = 1)
-        **/
+        * Matrix-vector multiplication (last component of vector set to w = 1)
+        */
         TGX_INLINE inline Vec4<T> mult1(const Vec3<T> & V) const
             {
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z + M[12],
@@ -493,18 +528,19 @@ namespace tgx
             }
 
 
-        /**
-        * Matrix multiplication : (*this ) = M * (*this) 
-        **/
-        /*
-        void operator*=(const Mat4 & M)
-            {
-            *this = (M * (*this));
-            }
-            */
+        //
+        // DO NOT DEFINE TO PREVENT ANBIGUITY ! 
+        // Matrix multiplication : (*this ) = M * (*this) 
+        //
+        //
+        //void operator*=(const Mat4 & M)
+        //    {
+        //    *this = (M * (*this));
+        //    }
+
 
         /**
-        * Scalar  multiplication 
+        * Scalar  multiplication.
         **/
         inline void operator*=(T a)
             {
@@ -514,6 +550,10 @@ namespace tgx
 
 #ifdef TGX_ON_ARDUINO
 
+
+        /**
+        * Output a representation of the matrix using a given Stream.
+        */
         inline void print(Stream & outputStream = Serial) const
             {
             outputStream.printf("%.3f  \t %.3f  \t %.3f \t  %.3f\n", M[0],M[4],M[8],M[12]);

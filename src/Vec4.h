@@ -314,17 +314,13 @@ namespace tgx
             }
 
 
-        /**
-         * unary negation operator
-         * DO NOT DEFINE FOR PROJECTIVE VECTORS 
-         * TO PREVENT SPUPID MISTAKES WHEN CASTING... 
-         **/
-        /*
-        inline Vec4 operator-() const
-            {
-            return Vec4{ -x, -y, -z, w };
-            }
-        */
+       
+      //  DO NOT DEFINE FOR PROJECTIVE VECTORS 
+      //  TO PREVENT SPUPID MISTAKES WHEN CASTING...       
+      //  inline Vec4 operator-() const
+      //      {
+      //      return Vec4{ -x, -y, -z, w };
+      //      }
 
 
         /**
