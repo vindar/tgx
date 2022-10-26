@@ -470,7 +470,7 @@ namespace tgx
 
     /**
      * Return the vector normalized to have unit norm (do nothing if the vector is 0). Use
-     * #fast_invsqrt() approxiamtion to speedup computations.
+     * fast_invsqrt() approximation to speedup computations.
      *
      * @tparam  Tfloat Floating point type used for computation (use default floating point type if
      *                 unspecified).
@@ -510,7 +510,7 @@ namespace tgx
 
 
     /**
-     * Compute the euclidian distance between two vectors. Use #fast_sqrt() approximation to speedup
+     * Compute the euclidian distance between two vectors. Use fast_sqrt() approximation to speedup
      * computations.
      *
      * @tparam  Tfloat Floating point type used for computation (use default floating point type if

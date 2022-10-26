@@ -997,7 +997,15 @@ EXCLUDE_SYMBOLS        = tgx::DefaultFPType \
                          tgx::DummyType \
                          tgx::DummyTypeBB \
                          tgx::is_same \
-                         tgx::is_color
+                         tgx::is_color \
+                         MTOOLS_TGX_EXTENSIONS \
+                         PROGMEM \
+                         FLASHMEM \
+                         TGX_INLINE \
+                         TGX_NOINLINE \
+                         DEPRECATED \
+                         DEPRECATED_SCALAR_PARAMS \
+                         TGX_CAST32
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include
