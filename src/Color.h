@@ -34,57 +34,59 @@ namespace tgx
 {
 
 
-/***********************************************************************************
-* Color types. 
-* 
-* The following color types are availaible for use with the tgx library:
-* 
-* - RGB565: 16bits, R:5 G:6 B:5 colors  
-*           no alpha channel wrapper around a uint16_t integer, aligned as uint16_t
-*           
-* - RGB24:  24bits, R:8 G:8 B:8 colors.   
-*           no alpha channel, not aligned in memory
-*           
-* - RGB32:  32bits, R:8 G:8 B:8 A:8 colors.   
-*           alpha channel, wrapper around a uint32_t integer, aligned as uint32_t
-*           
-* - RGB64:  64bits, R:16 G:16 B:16 A:16 colors.
-*           alpha channel, wrapper around a uint64_t integer, aligned as uint64_t
-*
-* - RGBf:   96bits, R:float G:float, B:float  
-*           no alpha channel, aligned as float.
-* 
-* - HSV:    96bits, H:float, S:float, V:float  
-*           hue / saturation / value color space: very slow
-*
-* 
-* REMARKS:
-* 
-* 1. RGB565, RGB32 and RGB64 are wrappers around basic integer types they can be 
-*    used as drop in remplacment of uint16_t, uint32_t and uint64_t without any 
-*    speed penalty.
-*    
-*    For example:
-*        tgx::RGB565 col(12,63,30)
-*        uint16_t v = (uint16_t)col; // <- conversion to uint16_t
-*        tgx::RGB565 col2 = tgx::RGB565(v) // <- conversion back to RGB565
-*    
-* 2. RGB32 and RGB64 have an alpha channel. The color are always assumed to have  
-*    pre-multiplied alpha. 
-*  
-* 3. Fast conversion is implemented between color types (and also integer types)   
-*    except when converting from/to HSV which is slow. 
-*    
-***********************************************************************/
+// ********************************************************************************
+// Color types. 
+//
+// The following color types are availaible for use with the tgx library:
+//
+// - RGB565: 16bits, R:5 G:6 B:5 colors  
+//           no alpha channel wrapper around a uint16_t integer, aligned as uint16_t
+//          
+// - RGB24:  24bits, R:8 G:8 B:8 colors.   
+//           no alpha channel, not aligned in memory
+//           
+// - RGB32:  32bits, R:8 G:8 B:8 A:8 colors.   
+//           alpha channel, wrapper around a uint32_t integer, aligned as uint32_t
+//          
+// - RGB64:  64bits, R:16 G:16 B:16 A:16 colors.
+//           alpha channel, wrapper around a uint64_t integer, aligned as uint64_t
+//
+// - RGBf:   96bits, R:float G:float, B:float  
+//           no alpha channel, aligned as float.
+//  
+// - HSV:    96bits, H:float, S:float, V:float  
+//           hue / saturation / value color space: very slow
+//
+//
+// REMARKS:
+//
+// 1. RGB565, RGB32 and RGB64 are wrappers around basic integer types they can be 
+//    used as drop in remplacment of uint16_t, uint32_t and uint64_t without any 
+//    speed penalty.
+//   
+//   For example:
+//       tgx::RGB565 col(12,63,30)
+//       uint16_t v = (uint16_t)col; // <- conversion to uint16_t
+//       tgx::RGB565 col2 = tgx::RGB565(v) // <- conversion back to RGB565
+//   
+// 2. RGB32 and RGB64 have an alpha channel. The color are always assumed to have  
+//    pre-multiplied alpha. 
+//  
+// 3. Fast conversion is implemented between color types (and also integer types)   
+//    except when converting from/to HSV which is slow. 
+//   
+// ********************************************************************************
 
 
-/** For each RGB color type, we decide separately whether color components 
-    are ordered in memory as R,G,B or B,G,R. 
-    default ordering can overridden be #definining the constants below before
-    including this header */
+
+
+// For each RGB color type, we decide separately whether color components 
+//  are ordered in memory as R,G,B or B,G,R. 
+//  default ordering can overridden be #definining the constants below before
+//  including this header */
 
 #ifndef TGX_RGB565_ORDER_BGR
-#define TGX_RGB565_ORDER_BGR 1      // for compatibility with adafruit and most SPI display
+#define TGX_RGB565_ORDER_BGR 1 // for compatibility with adafruit and most SPI display
 #endif
 
 #ifndef TGX_RGB24_ORDER_BGR
@@ -92,7 +94,7 @@ namespace tgx
 #endif
 
 #ifndef TGX_RGB32_ORDER_BGR
-#define TGX_RGB32_ORDER_BGR 1       // for compatibility with my mtools library.
+#define TGX_RGB32_ORDER_BGR 1  // for compatibility with my mtools library.
 #endif
 
 #ifndef TGX_RGB64_ORDER_BGR
@@ -120,7 +122,10 @@ struct RGBf;    // color in  RGB float format (4 bytes aligned).
 struct HSV;     // color in H/S/V float format (4 bytes aligned). 
 
 
-/** check if a type T is one of the color types declared above */
+
+/** 
+ * Check if a type T is one of the color types declared above 
+ */
 template<typename T> struct is_color
     {
     static const bool value = (std::is_same<T, RGB565>::value)||
@@ -133,8 +138,9 @@ template<typename T> struct is_color
 
 
 
-/** Predefined colors in RGB32 format */
-extern const RGB32 RGB32_Black;
+// Predefined colors in RGB32 format 
+
+extern const RGB32 RGB32_Black; 
 extern const RGB32 RGB32_White;
 extern const RGB32 RGB32_Red;
 extern const RGB32 RGB32_Blue;
@@ -152,11 +158,12 @@ extern const RGB32 RGB32_Teal;
 extern const RGB32 RGB32_Gray;
 extern const RGB32 RGB32_Silver;
 extern const RGB32 RGB32_Navy;
-extern const RGB32 RGB32_Transparent;   // premultiplied transarent black (0,0,0,0)
+extern const RGB32 RGB32_Transparent;   ///< premultiplied transparent black (0,0,0,0)
 
 
 
-/** Predefined colors in RGB565 format */
+// Predefined colors in RGB565 format 
+
 extern const RGB565 RGB565_Black;
 extern const RGB565 RGB565_White;
 extern const RGB565 RGB565_Red;
@@ -179,21 +186,15 @@ extern const RGB565 RGB565_Navy;
 
 
 
-/**********************************************************************
-* declaration of class RGB565
-***********************************************************************/
-
-
 /**
-* Class representing a color in R5/G6/B5 format. 
-* 
-* Occupies 2 bytes in memory (aligned as uint16_t)
-* 
-* Can be converted from/to uint16_t.
-* 
-* This type is compatible with adafruit gfx library
-* and is used with most SPI display. 
-**/
+ * Color in R5/G6/B5 format.
+ * 
+ * The object occupies 2 bytes in memory (aligned as uint16_t)
+ * 
+ * Can be converted from/to uint16_t.
+ * 
+ * This type is used mostly with MCU / embedded systems.
+ */
 struct RGB565
     {
         
@@ -203,19 +204,20 @@ struct RGB565
         #endif
         
 
-        union // dual memory representation
+        // dual memory representation
+        union
             { 
-            uint16_t val;           // as a uint16_t
-
-            struct {                // as 3 components R,G,B
+            uint16_t val; ///< color as uint16_t
+            
+            struct {                
 #if TGX_RGB565_ORDER_BGR
-                uint16_t B : 5,
-                         G : 6,
-                         R : 5; 
+                uint16_t B : 5, ///< Blue channel (5 bits)
+                         G : 6, ///< Green channel (6 bits)
+                         R : 5; ///< Red channel (5 bits)
 #else
-                uint16_t R : 5,
-                         G : 6,
-                         B : 5; 
+                uint16_t R : 5, ///< Red channel (5 bits)
+                         G : 6, ///< Green channel (6 bits)
+                         B : 5; ///< Blue channel (5 bits)
 #endif
                 }; 
             };
@@ -223,7 +225,7 @@ struct RGB565
 
         /**
         * Default ctor. Undefined color. 
-        **/
+        */
         RGB565() = default;
 
 
@@ -232,7 +234,7 @@ struct RGB565
         * No rescaling: r in 0..31
         *               g in 0..63
         *               b in 0..31
-        **/
+        */
         constexpr RGB565(int r, int g, int b) : 
                                             #if TGX_RGB565_ORDER_BGR
                                                 B((uint8_t)b), G((uint8_t)g), R((uint8_t)r)
@@ -639,25 +641,15 @@ struct RGB565
         }
 
 
-
-
-
-/**********************************************************************
-* declaration of class RGB24
-***********************************************************************/
-
-
 /**
-* Class representing a color in R8/G8/B8 format. 
-* 
-* Occupies 3 bytes in memory. No alignement
-* 
-* Remark: This color type should only be used when memory space 
-* is really tight but RGB565 does not offer enough resolution. 
-* Use RGB32 instead when possible (even if not using the alpha 
-* component) because most operation will be faster with correct 
-* 4 bytes alignment.
-**/
+ * Color in R8/G8/B8 format.
+ * 
+ * Occupies 3 bytes in memory. No alignement.
+ * 
+ * **Remark** This color type should only be used when memory space is really tight but #RGB565
+ * does not offer enough resolution. Use #RGB32 instead when possible (even if not using the
+ * alpha component) because most operations will be faster with correct 4 bytes alignment.
+ */
 struct RGB24
     {
 
@@ -672,13 +664,13 @@ struct RGB24
         // no alignement, just 3 consecutive uint8_t
 
 #if TGX_RGB24_ORDER_BGR
-        uint8_t B;
-        uint8_t G;
-        uint8_t R;
+        uint8_t B; ///< Blue channel (8bits)
+        uint8_t G; ///< Green channel (8bits)
+        uint8_t R; ///< Red channel (8bits)
 #else
-        uint8_t R;
-        uint8_t G;
-        uint8_t B;
+        uint8_t R; ///< Red channel (8bits)
+        uint8_t G; ///< Green channel (8bits)
+        uint8_t B; ///< Blue channel (8bits)
 #endif
 
 
@@ -1139,29 +1131,19 @@ struct RGB24
         }
 
 
-
-
-
-
-/**********************************************************************
-* declaration of class RGB32
-***********************************************************************/
-
-
 /**
-* Class representing a color in R8/G8/B8/(A8) format.
-*  
-* Occupies 4 bytes in memory. 
-* 
-* Can be converted from/to uint32_t.
-* 
-* the A component defaults to DEFAULT_A = 255 (fully opaque)
-* when not specified.
-* 
-* REMARK : For all drawing/blending procedure, the color is assume to have 
-*          pre-multiplied alpha. Use the premultiply() method to convert a 
-*          plain alpha color to its pre-multiplied version.
-**/
+ * Color in R8/G8/B8/A8 format.
+ * 
+ * Occupies 4 bytes in memory, aligned as uint32_t.
+ * 
+ * Can be converted from/to uint32_t.
+ * 
+ * the A component defaults to #DEFAULT_A = 255 (fully opaque) if not specified.
+ * 
+ * **REMARK** For all drawing/blending procedure, the color is assume to have pre-multiplied
+ * alpha. Use the premultiply() method to convert a plain alpha color to its pre-multiplied
+ * version (https://developer.nvidia.com/content/alpha-blending-pre-or-not-pre).
+ */
 struct RGB32
     {
 
@@ -1172,25 +1154,25 @@ struct RGB32
         #endif
 
 
-        static const uint8_t DEFAULT_A = 255; // fully opaque 
+        static const uint8_t DEFAULT_A = 255; ///< fully opaque alpha value
 
-
-        union // dual memory representation
+        // dual memory representation
+        union 
             { 
-            uint32_t val;           // as a uint32_t
+            uint32_t val;   ///< color as uint32_t
             struct 
                 {
 #if TGX_RGB32_ORDER_BGR
-                uint8_t B;          // as 4 components BGRA
-                uint8_t G;          //
-                uint8_t R;          //
-                uint8_t A;          //
+                uint8_t B;  ///< Blue channel (8bits)
+                uint8_t G;  ///< Green channel (8bits)
+                uint8_t R;  ///< Red channel (8bits)
+                uint8_t A;  ///< Alpha channel (8bits)
 
 #else
-                uint8_t R;          //
-                uint8_t G;          //
-                uint8_t B;          // as 4 components RGBA
-                uint8_t A;          //
+                uint8_t R;  ///< Red channel (8bits)
+                uint8_t G;  ///< Green channel (8bits)
+                uint8_t B;  ///< Blue channel (8bits)
+                uint8_t A;  ///< Alpha channel (8bits)
 #endif
                 }; 
             };
@@ -1770,27 +1752,19 @@ struct RGB32
 
 
 
-
-
-/**********************************************************************
-* declaration of class RGB64
-***********************************************************************/
-
-
 /**
-* Class representing a color in R16/G16/B16/(A16) format. 
-* 
-* Occupies 8 bytes in memory.
-* 
-* Can be converted from/to uint64_t.
-* 
-* the A component defaults to DEFAULT_A = 65535 (fully opaque) 
-* if not specified.
-* 
-* REMARK : For all drawing/blending procedure, the color is assume to have
-*          pre-multiplied alpha. Use the premultiply() method to convert a
-*          plain alpha color to its pre-multiplied version.
-**/
+ * Color in R16/G16/B16/A16 format.
+ * 
+ * Occupies 8 bytes in memory, aligned as uint64_t.
+ * 
+ * Can be converted from/to uint64_t.
+ * 
+ * the A component defaults to DEFAULT_A = 65535 (fully opaque) if not specified.
+ * 
+ * **REMARK** For all drawing/blending procedure, the color is assume to have pre-multiplied
+ * alpha. Use the premultiply() method to convert a plain alpha color to its pre-multiplied
+ * version (https://developer.nvidia.com/content/alpha-blending-pre-or-not-pre).
+ */
 struct RGB64
     {
 
@@ -1801,26 +1775,27 @@ struct RGB64
         #endif
         
         
-        static const uint16_t DEFAULT_A = 65535; // fully opaque. 
+        static const uint16_t DEFAULT_A = 65535;  ///< fully opaque alpha value
 
 
-        union // dual memory representation
+        // dual memory representation
+        union 
             { 
-            uint64_t val;           // as a uint32_t
+            uint64_t val;       ///< color as uint64_t
             struct 
                 {
 
 #if TGX_RGB64_ORDER_BGR
-                uint16_t B;         // as 4 components BGRA
-                uint16_t G;         //
-                uint16_t R;         //
-                uint16_t A;         //
+                uint16_t B;     ///< Blue channel (16 bits)
+                uint16_t G;     ///< Green channel (16 bits)
+                uint16_t R;     ///< Red channel (16 bits)
+                uint16_t A;     ///< Alpha channel (16 bits)
 
 #else
-                uint16_t R;         // as 4 components RGBA
-                uint16_t G;         //
-                uint16_t B;         // 
-                uint16_t A;         //
+                uint16_t R;     ///< Red channel (16 bits)
+                uint16_t G;     ///< Green channel (16 bits)
+                uint16_t B;     ///< Blue channel (16 bits)
+                uint16_t A;     ///< Alpha channel (16 bits)
 #endif
                 }; 
             };
@@ -2406,26 +2381,15 @@ struct RGB64
         }
 
 
-
-
-
-
-
-/**********************************************************************
-* declaration of class RGBf
-***********************************************************************/
-
-
     /**
-    * Class representing a color R,G,B float format.
-    * 
-    * Occupies 4*3 = 12 bytes in memory (aligned as float). 
-    * 
-    * No alpha channel. 
-    *
-    * Useful for high precision computation. 
-    * Used by the 3D rasterizer for all color/shading. 
-    **/
+     * Color in R,G,B float format.
+     * 
+     * Occupies 4*3 = 12 bytes in memory, aligned as float.
+     * 
+     * - There is no alpha channel.
+     * - Useful for high precision computation. This color format is used internally by the 3D
+     * rasterizer for all color interpolation/shading.
+     */
     struct RGBf
     {
 
@@ -2436,13 +2400,12 @@ struct RGB64
 
 
 #if TGX_RGBf_ORDER_BGR
-        float B;
-        float G;
-        float R;
+        float B;    ///< Blue channel
+        float R;    ///< Red channel
 #else 
-        float R;
-        float G;
-        float B;
+        float R;    ///< Red channel
+        float G;    ///< Green channel
+        float B;    ///< Blue channel
 #endif
 
 
@@ -2837,24 +2800,16 @@ struct RGB64
         }
 
 
-
-
-
-
-
-
-/**********************************************************************
-* declaration of class HSV
-***********************************************************************/
-
-
 /**
-* Class representing a color in Hue/Saturation/Value
-* format where each component is in float (4 bytes). 
-* see: https://en.wikipedia.org/wiki/HSL_and_HSV
-*
-* The total size of the object is 12 bytes. 
-**/
+ * Color in Hue/Saturation/Value space (**experimental**).
+ * 
+ * Each component is a float. The total size of the object is 4*3 = 12 bytes, aligned as float.
+ * 
+ * See: https://en.wikipedia.org/wiki/HSL_and_HSV
+ * 
+ * ** Remark ** Experimental. Operations with HSV colors are very slow. This color format should
+ * not be used with the 3D rasterizer.
+ */
 struct HSV
     {
 
@@ -2863,11 +2818,10 @@ struct HSV
         #include <mtools/extensions/tgx/tgx_ext_Color_HSV.inl>
         #endif
 
-
         // color components
-        float H;        // hue in [0.0f ,1.0f]
-        float S;        // saturation in [0;0f, 1.0f]
-        float V;        // value in [0.F ,1.0f]
+        float H;  ///< Hue in [0.0f ,1.0f]
+        float S;  ///< Saturation in [0;0f, 1.0f]
+        float V;  ///< Value in [0.F ,1.0f]
 
 
         /**
@@ -3187,649 +3141,12 @@ struct HSV
         }
 
 
-
-
-
-
-
-
-/**********************************************************************
-* implementation of inline method for RGB565
-***********************************************************************/
-
-
-constexpr inline RGB565::RGB565(const RGB24& c) :
-        #if TGX_RGB565_ORDER_BGR
-        B(c.B >> 3), G(c.G >> 2), R(c.R >> 3)
-        #else
-        R(c.R >> 3), G(c.G >> 2), B(c.B >> 3)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB565::RGB565(const RGB32& c) : 
-        #if TGX_RGB565_ORDER_BGR
-        B(c.B >> 3), G(c.G >> 2), R(c.R >> 3)
-        #else
-        R(c.R >> 3), G(c.G >> 2), B(c.B >> 3)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB565::RGB565(const RGB64& c) : 
-        #if TGX_RGB565_ORDER_BGR
-        B(c.B >> 11), G(c.G >> 10), R(c.R >> 11)
-        #else
-        R(c.R >> 11), G(c.G >> 10), B(c.B >> 11)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB565::RGB565(const RGBf& c) :
-    #if TGX_RGB565_ORDER_BGR
-        B((uint16_t)(c.B * 31)), G((uint16_t)(c.G *63)), R((uint16_t)(c.R * 31))
-    #else
-        R((uint16_t)(c.R * 31)), G((uint16_t)(c.G * 63)), B((uint16_t)(c.B * 31))
-    #endif
-        {
-        }
-
-
-constexpr inline RGB565::RGB565(uint32_t val) : RGB565(RGB32(val))
-        {
-        }
-
-
-constexpr inline RGB565::RGB565(uint64_t val) : RGB565(RGB64(val))
-        {
-        }
-
-
-
-inline RGB565& RGB565::operator=(const RGB24& c)
-        {
-        B = (c.B >> 3);
-        G = (c.G >> 2);
-        R = (c.R >> 3);
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(const RGB32& c)
-        {
-        B = (c.B >> 3);
-        G = (c.G >> 2);
-        R = (c.R >> 3);
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(const RGB64& c)
-        {
-        B = (c.B >> 11);
-        G = (c.G >> 10);
-        R = (c.R >> 11);
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(const RGBf& c)
-        {
-        B = (uint8_t)(c.B * 31);
-        G = (uint8_t)(c.G * 63);
-        R = (uint8_t)(c.R * 31);
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(iVec3 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(iVec4 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(fVec3 v)
-        {
-        B = (uint8_t)(v.x * 31);
-        G = (uint8_t)(v.y * 63);
-        R = (uint8_t)(v.z * 31);
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(fVec4 v)
-        {
-        B = (uint8_t)(v.x * 31);
-        G = (uint8_t)(v.y * 63);
-        R = (uint8_t)(v.z * 31);
-        return *this;
-        }
-
-
-
-
-/**********************************************************************
-* implementation of inline method for RGB24
-***********************************************************************/
-
-
-constexpr inline RGB24::RGB24(uint16_t val) : RGB24(RGB565(val)) 
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(uint32_t val) : RGB24(RGB32(val)) 
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(uint64_t val) : RGB24(RGB64(val)) 
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(const RGB565& c) :
-        #if TGX_RGB24_ORDER_BGR
-        B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2))
-        #else
-        R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2))
-        #endif
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(const RGB32& c) :
-        #if TGX_RGB24_ORDER_BGR
-        B(c.B), G(c.G), R(c.R)
-        #else
-        R(c.R), G(c.G), B(c.B)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(const RGB64& c) : 
-        #if TGX_RGB24_ORDER_BGR
-        B(c.B >> 8), G(c.G >> 8), R(c.R >> 8)
-        #else
-        R(c.R >> 8), G(c.G >> 8), B(c.B >> 8)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(const RGBf& c) :
-        #if TGX_RGB24_ORDER_BGR
-        B((uint8_t)(c.B * 255)), G((uint8_t)(c.G * 255)), R((uint8_t)(c.R * 255))
-        #else
-        R((uint8_t)(c.R * 255)), G((uint8_t)(c.G * 255)), B((uint8_t)(c.B * 255))
-        #endif
-        {
-        }
-
-
-inline RGB24& RGB24::operator=(const RGB565& c)
-        {
-        B = (((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2);
-        G = (((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4);
-        R = (((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2);
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(const RGB32& c)
-        {
-        R = c.R;
-        G = c.G;
-        B = c.B;
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(const RGB64& c)
-        {
-        R = c.R >> 8;
-        G = c.G >> 8;
-        B = c.B >> 8;
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(const RGBf& c)
-        {
-        R = (uint8_t)(c.R * 255);
-        G = (uint8_t)(c.G * 255);
-        B = (uint8_t)(c.B * 255);
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(iVec3 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(iVec4 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(fVec3 v)
-        {
-        B = (uint8_t)(v.x * 255);
-        G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(fVec4 v)
-        {
-        B = (uint8_t)(v.x * 255);
-        G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
-        return *this;
-        }
-
-
-
-
-
-
-/**********************************************************************
-* implementation of inline method for RGB32
-***********************************************************************/
-
-constexpr inline RGB32::RGB32(uint16_t val) : RGB32(RGB565(val))
-        {
-        }
-
-constexpr inline RGB32::RGB32(uint64_t val) : RGB32(RGB64(val))
-        {
-        }
-
-
-constexpr inline RGB32::RGB32(const RGB565& c) : 
-        #if TGX_RGB32_ORDER_BGR
-        B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2)), A(DEFAULT_A)
-        #else
-        R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2)), A(DEFAULT_A)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB32::RGB32(const RGB24& c) : 
-        #if TGX_RGB32_ORDER_BGR
-        B(c.B), G(c.G), R(c.R), A(DEFAULT_A)
-        #else
-        R(c.R), G(c.G), B(c.B), A(DEFAULT_A)
-        #endif  
-        {
-        }
-
-
-constexpr inline RGB32::RGB32(const RGB64& c) : 
-        #if TGX_RGB32_ORDER_BGR
-        B(c.B >> 8), G(c.G >> 8), R(c.R >> 8), A(c.A >> 8)
-        #else
-        R(c.R >> 8), G(c.G >> 8), B(c.B >> 8), A(c.A >> 8)
-        #endif  
-        {
-        }
-
-
-constexpr inline RGB32::RGB32(const RGBf& c) : 
-        #if TGX_RGB32_ORDER_BGR
-        B((uint8_t)(c.B * 255)), G((uint8_t)(c.G * 255)), R((uint8_t)(c.R * 255)), A(DEFAULT_A)
-        #else
-        R((uint8_t)(c.R * 255)), G((uint8_t)(c.G * 255)), B((uint8_t)(c.B * 255)), A(DEFAULT_A)
-        #endif  
-        {
-        }
-
-
-inline RGB32& RGB32::operator=(const RGB565& c)
-        {
-        B = (((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2);
-        G = (((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4);
-        R = (((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(const RGB24& c)
-        {
-        B = c.B;
-        G = c.G;
-        R = c.R;
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(const RGB64& c)
-        {
-        B = c.B >> 8;
-        G = c.G >> 8;
-        R = c.R >> 8;
-        A = c.A >> 8;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(const RGBf& c)
-        {
-        B = (uint8_t)(c.B * 255);
-        G = (uint8_t)(c.G * 255);
-        R = (uint8_t)(c.R * 255);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(iVec3 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(iVec4 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        A = (uint8_t)v.w;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(fVec3 v)
-        {
-        B = (uint8_t)(v.x * 255);
-        G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(fVec4 v)
-        {
-        B = (uint8_t)(v.x * 255);
-        G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
-        A = (uint8_t)(v.w * 255);
-        return *this;
-        }
-
-
-
-
-/**********************************************************************
-* implementation of inline method for RGB64
-***********************************************************************/
-
-inline RGB64::RGB64(uint16_t val) : RGB64(RGB565(val))
-        {
-        }
-
-
-inline RGB64::RGB64(uint32_t val) : RGB64(RGB32(val))
-        {
-        }
-
-
-inline RGB64::RGB64(const RGB565& c) 
-        {
-        this->operator=(c);
-        }
-
-
-inline RGB64::RGB64(const RGB24& c) 
-        {   
-        this->operator=(c);
-        }
-
-
-inline RGB64::RGB64(const RGB32& c)
-        {
-        this->operator=(c);
-        }
-
-
-inline RGB64::RGB64(const RGBf& c) 
-        {
-        this->operator=(c);
-        }
-
-
-inline RGB64& RGB64::operator=(const RGB565& c)
-        {
-        R = (((uint16_t)c.R) << 11) | (((uint16_t)c.R) << 6) | (((uint16_t)c.R) << 1) | (((uint16_t)c.R) >> 4);
-        G = (((uint16_t)c.G) << 10) | (((uint16_t)c.G) << 4) | (((uint16_t)c.G) >> 2);
-        B = (((uint16_t)c.B) << 11) | (((uint16_t)c.B) << 6) | (((uint16_t)c.B) << 1) | (((uint16_t)c.B) >> 4);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(const RGB24& c)
-        {
-        R = (((uint16_t)c.R) << 8) | ((uint16_t)c.R);
-        G = (((uint16_t)c.G) << 8) | ((uint16_t)c.G);
-        B = (((uint16_t)c.B) << 8) | ((uint16_t)c.B);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(const RGB32& c)
-        {
-        R = (((uint16_t)c.R) << 8) | ((uint16_t)c.R);
-        G = (((uint16_t)c.G) << 8) | ((uint16_t)c.G);
-        B = (((uint16_t)c.B) << 8) | ((uint16_t)c.B);
-        A = (((uint16_t)c.A) << 8) | ((uint16_t)c.A);
-        return *this;
-        }
-
-inline RGB64& RGB64::operator=(const RGBf& c)
-        {
-        B = (uint16_t)(c.B * 65535);
-        G = (uint16_t)(c.G * 65535);
-        R = (uint16_t)(c.R * 65535);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(iVec3 v)
-        {
-        R = (uint16_t)v.x;
-        G = (uint16_t)v.y;
-        B = (uint16_t)v.z;
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(iVec4 v)
-        {
-        R = (uint16_t)v.x;
-        G = (uint16_t)v.y;
-        B = (uint16_t)v.z;
-        A = (uint16_t)v.w;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(fVec3 v)
-        {
-        B = (uint16_t)(v.x * 65535);
-        G = (uint16_t)(v.y * 65535);
-        R = (uint16_t)(v.z * 65535);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(fVec4 v)
-        {
-        B = (uint16_t)(v.x * 65535);
-        G = (uint16_t)(v.y * 65535);
-        R = (uint16_t)(v.z * 65535);
-        A = (uint16_t)(v.w * 65535);
-        return *this;
-        }
-
-
-
-
-/**********************************************************************
-* implementation of inline method for RGBf
-***********************************************************************/
-
-
-constexpr inline RGBf::RGBf(uint16_t val) : RGBf(RGB565(val)) 
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(uint32_t val) : RGBf(RGB32(val)) 
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(uint64_t val) : RGBf(RGB64(val)) 
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(const RGB565& c) : 
-        #if TGX_RGBf_ORDER_BGR
-        B(c.B / 31.0f), G(c.G / 63.0f), R(c.R / 31.0f)
-        #else
-        R(c.R / 31.0f), G(c.G / 63.0f), B(c.B / 31.0f)
-        #endif
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(const RGB24& c) :
-        #if TGX_RGBf_ORDER_BGR
-        B(c.B / 255.0f), G(c.G / 255.0f), R(c.R / 255.0f)
-        #else
-        R(c.R / 255.0f), G(c.G / 255.0f), B(c.B / 255.0f)
-        #endif
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(const RGB32& c) :
-        #if TGX_RGBf_ORDER_BGR
-        B(c.B / 255.0f), G(c.G / 255.0f), R(c.R / 255.0f)
-        #else
-        R(c.R / 255.0f), G(c.G / 255.0f), B(c.B / 255.0f)
-        #endif
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(const RGB64& c) : 
-        #if TGX_RGBf_ORDER_BGR
-        B(c.B / 65535.0f), G(c.G / 65535.0f), R(c.R / 65535.0f)
-        #else
-        R(c.R / 65535.0f), G(c.G / 65535.0f), B(c.B / 65535.0f)
-        #endif
-        {
-        }
-
-
-inline RGBf& RGBf::operator=(const RGB565& c)
-        {
-        R = c.R / 31.0f;
-        G = c.G / 63.0f;
-        B = c.B / 31.0f;
-        return *this;
-        }
-
-
-inline RGBf& RGBf::operator=(const RGB24& c)
-        {
-        R = c.R / 255.0f;
-        G = c.G / 255.0f;
-        B = c.B / 255.0f;
-        return *this;
-        }
-
-
-inline RGBf& RGBf::operator=(const RGB32& c)
-        {
-        R = c.R / 255.0f;
-        G = c.G / 255.0f;
-        B = c.B / 255.0f;
-        return *this;
-        }
-
-
-inline RGBf& RGBf::operator=(const RGB64& c)
-        {
-        R = c.R / 65535.0f;
-        G = c.G / 65535.0f;
-        B = c.B / 65535.0f;
-        return *this;
-        }
-
-
-inline RGBf& RGBf::operator=(fVec3 v)
-        {
-        B = v.x;
-        G = v.y;
-        R = v.z;
-        return *this;
-        }
-
-
-inline RGBf& RGBf::operator=(fVec4 v)
-        {
-        B = v.x;
-        G = v.y;
-        R = v.z;
-        return *this;
-        }
-
-
-
-
 }
+
+
+
+#include "Color.inl"
+
 
 #endif
 
