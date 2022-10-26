@@ -441,7 +441,9 @@ namespace tgx
 
         /***
         * Print a representation of the vector using a given stream object.
-        **/
+        *
+        * **Defined only in the Arduino environment **
+        */
         inline void print(Stream & outputStream = Serial) const
             {
             outputStream.printf("[%.3f \t %.3f \t %.3f]\n", x, y, z);

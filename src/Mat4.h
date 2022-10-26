@@ -68,15 +68,15 @@ namespace tgx
      * The matrix is internally represented by an public array `M[16]` in column major ordering:
      * 
      * ```
-     * -------------------------------
+     * +-----------------------------+
      * | M[0] | M[4] | M[8]  | M[12] |
-     * |------|------|-------|-------|
+     * |------+------+-------+-------|
      * | M[1] | M[5] | M[9]  | M[13] |
-     * |------|------|-------|-------|
+     * |------+------+-------+-------|
      * | M[2] | M[6] | M[10] | M[14] |
-     * |------|------|-------|-------|
+     * |------+------+-------+-------|
      * | M[3] | M[7] | M[11] | M[15] |
-     * -------------------------------
+     * +-----------------------------+
      * ```
      * 
      * @sa Vec2, Vec3, Vec4
@@ -92,11 +92,22 @@ namespace tgx
         #include <mtools/extensions/tgx/tgx_ext_Mat4.inl>
         #endif
 
-        // column major ordering:
-        // M[0]  M[4]  M[8]   M[12]
-        // M[1]  M[5]  M[9]   M[13]
-        // M[2]  M[6]  M[10]  M[14]
-        // M[3]  M[7]  M[11]  M[15]
+
+        /**
+         * The matrix array in column major ordering:
+         * 
+         * ```
+         * +-----------------------------+
+         * | M[0] | M[4] | M[8]  | M[12] |
+         * |------+------+-------+-------|
+         * | M[1] | M[5] | M[9]  | M[13] |
+         * |------+------+-------+-------|
+         * | M[2] | M[6] | M[10] | M[14] |
+         * |------+------+-------+-------|
+         * | M[3] | M[7] | M[11] | M[15] |
+         * +-----------------------------+
+         * ```
+        **/
         T M[16];  
 
 
@@ -442,7 +453,9 @@ namespace tgx
          * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
          * 
          * The formula given by khronos is wrong ! The cross-product of two unit vectors is not
-         * normalized. See https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down
+         * normalized. 
+         *          
+         * See https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down
          *
          * @param   eyeX, eyeY, eyeZ            position of the eye point.
          * @param   centerX, centerY, centerZ   position of the reference point (the camera points toward this point).
@@ -468,7 +481,9 @@ namespace tgx
          * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
          *
          * The formula given by khronos is wrong ! The cross-product of two unit vectors is not
-         * normalized. See https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down
+         * normalized. 
+         * 
+         * See https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down
          *
          * @param   eye     eye position.
          * @param   center  reference point (the camera points toward this point).
@@ -553,6 +568,8 @@ namespace tgx
 
         /**
         * Output a representation of the matrix using a given Stream.
+        * 
+        * **Defined only in the Arduino environment **
         */
         inline void print(Stream & outputStream = Serial) const
             {
@@ -564,14 +581,13 @@ namespace tgx
 
 #endif
 
-
         };
 
 
 
     /** 
     * Matrix-vector multiplication 
-    **/
+    */
     template<typename T> TGX_INLINE inline Vec4<T> operator*(const Mat4<T> & M, const Vec4<T> V)
         {
         return Vec4<T>{ M.M[0] * V.x + M.M[4] * V.y + M.M[8] * V.z + M.M[12] * V.w,
@@ -584,7 +600,7 @@ namespace tgx
 
     /**
     * Matrix-matrix multiplication 
-    **/
+    */
     template<typename T> inline Mat4<T> operator*(const Mat4<T> & A, const Mat4<T> & B)
         {
         Mat4<T> R; 
@@ -601,8 +617,8 @@ namespace tgx
 
 
     /**
-    * Scalar-matrix multiplication 
-    **/
+     * Scalar-matrix multiplication.
+     */
     template<typename T> inline Mat4<T> operator*(T a, const Mat4<T> & m)
         {
         Mat4<T> R(m);
