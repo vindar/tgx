@@ -146,7 +146,7 @@ namespace tgx
     #define TGX_SHADER_ADD_TEXTURE_CLAMP(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_TEXTURE_CLAMP)
 
 
-    //forward declaration
+    //forward declaration    
     template<typename color_t> class Image;
 
 

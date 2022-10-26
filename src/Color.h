@@ -105,7 +105,7 @@ namespace tgx
 
 
 
-/** Forward declarations */
+// Forward declarations
 
 struct RGB565;  // color in 16-bit R5/G6/B5 format (2 bytes aligned) - convertible to/from uint16_t
 

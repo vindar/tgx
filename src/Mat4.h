@@ -35,7 +35,7 @@
 namespace tgx
 {
 
-    /** forward declaration */
+    // forward declaration
 
     template<typename T> struct Vec2;
 
@@ -46,15 +46,15 @@ namespace tgx
     template<typename T> struct Mat4;
 
 
-    /** Specializations (only floating types T make sense for matrix class). */
-
+    // Specializations (only floating types T make sense for matrix class).
+    
     typedef Mat4<float>   fMat4;        // floating point value 2-D vector with float precision
 
     typedef Mat4<double>  dMat4;        // floating point value 2-D vector with double precision
 
 
 
-    /** forward declaration of matrix multiplication*/
+    // forward declaration of matrix multiplication
     template<typename T> Mat4<T> operator*(const Mat4<T> & A, const Mat4<T> & B);
 
 

@@ -3301,7 +3301,7 @@ private:
         void _bseg_avoid22(BSeg& PQ, BSeg& PA, BSeg& PB, BSeg& QC, BSeg& QD, bool closedPA, bool closedPB, bool closedQC, bool closedQD, color_t color, int side, int32_t op, bool checkrange);
 
 
-        /** filling a triangle */
+        // filling a triangle 
 
         //void _bseg_fill_triangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t fillcolor, float opacity);
         void _bseg_fill_triangle(fVec2 fP1, fVec2 fP2, fVec2 fP3, color_t fillcolor, float opacity);
@@ -3369,7 +3369,7 @@ private:
 
         void _drawEnd(float distAB, fVec2 A, fVec2 B, BSeg& segAB, BSeg& segBA, BSeg& segAP, BSeg& segBQ, PATH_END_TYPE end, int w, color_t color, float opacity);
 
-        /** legacy (not used anymore) */
+        // legacy (not used anymore)
         void _drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity);
         float _wedgeLineDistance(float pax, float pay, float bax, float bay, float dr);
 
@@ -3381,7 +3381,7 @@ private:
         ****************************************/
 
 
-        /** low quality drawing */
+        // low quality drawing 
         void _fillRect(iBox2 B, color_t color, float opacity);
         template<bool CHECKRANGE> void _drawRoundRect(int x, int y, int w, int h, int r, color_t color);
         template<bool CHECKRANGE> void _drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);        
@@ -3389,7 +3389,7 @@ private:
         template<bool CHECKRANGE> void _fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
 
 
-        /** high quality drawing */
+        // high quality drawing
         void _fillSmoothRect(const fBox2& B, color_t color, float opacity);
         void _fillSmoothRoundedRect(const tgx::iBox2& B, float corner_radius, color_t color, float opacity);
         void _drawSmoothRoundRect(const tgx::iBox2& B, float corner_radius, color_t color, float opacity);
@@ -3402,7 +3402,7 @@ private:
         ****************************************/
 
 
-        /** methods using the 3D triangle rasterizer */        
+        // methods using the 3D triangle rasterizer        
         inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size) { return tgx::fVec2(pos.x / ((float)size.x), pos.y / ((float)size.y)); } // Convert to texture coordinates
         inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size) { return tgx::fVec2((2.0f / ((float)size.x)) * (pos.x) - 1.0f, (2.0f / ((float)size.y)) * (pos.y) - 1.0f); } // Convert to viewport coordinates
 
@@ -3428,13 +3428,13 @@ private:
         ****************************************/
 
 
-        /** low quality drawing for circles */
+        // low quality drawing for circles
         template<bool CHECKRANGE>  void _drawCircleHelper(int x0, int y0, int r, int cornername, color_t color, float opacity); // adapted from Adafruit GFX library
         template<bool CHECKRANGE>  void _fillCircleHelper(int x0, int y0, int r, int corners, int delta, color_t color, float opacity); // adapted from Adafruit GFX library
         template<bool OUTLINE, bool FILL, bool CHECKRANGE> void _drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity); // filled circle drawing method
 
 
-        /** high quality drawing for circle, arc and pie */
+        // high quality drawing for circle, arc and pie
         static float _rectifyAngle(float a); 
         static void _defaultQuarterVH(int quarter, int& v, int& h);
       
@@ -3466,10 +3466,10 @@ private:
         ****************************************/
 
         
-        /** low quality drawing for ellipses */
+        // low quality drawing for ellipses
         template<bool OUTLINE, bool FILL, bool CHECKRANGE> void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity); // adapted from bodmer e_tft library
 
-        /** high quality drawing for ellipses */
+        // high quality drawing for ellipses
         void _drawSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
         void _drawSmoothThickQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);        
         void _fillSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
@@ -3482,7 +3482,7 @@ private:
         ****************************************/
 
 
-        /** low quality Bezier curves */
+        // low quality Bezier curves
         void _plotQuadRationalBezierSeg(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const color_t color, const float opacity);
         void _plotQuadRationalBezier(const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const bool draw_P2, const color_t color, const float opacity);
         void _drawQuadBezier(iVec2 P1, iVec2 P2, iVec2 PC, float wc, bool drawP2, color_t color, float opacity);
@@ -3502,7 +3502,7 @@ private:
 
 
 
-        /** high quality Bezier curves */
+        // high quality Bezier curves
         static bool _splitRationalQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float w, fVec2& Q, fVec2& PB, float& wb);  
         static bool _splitCubicBezier(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, fVec2& Q, fVec2& C, fVec2 & D);
 

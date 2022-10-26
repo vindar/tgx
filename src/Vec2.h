@@ -30,7 +30,7 @@ namespace tgx
 {
 
 
-    /** forward declarations */
+    
 
     template<typename T> struct Vec2;
 
@@ -40,24 +40,24 @@ namespace tgx
 
 
 
-    /** Specializations */
+    // Specializations
 
-    typedef Vec2<int> iVec2;            // integer valued 2-D vector with platform int
+    typedef Vec2<int> iVec2;            // integer valued 2D vector with platform int
 
-    typedef Vec2<int16_t> iVec2_s16;    // integer valued 2-D vector with 16 bit int
+    typedef Vec2<int16_t> iVec2_s16;    // integer valued 2D vector with fixed 16 bit int
 
-    typedef Vec2<int32_t> iVec2_s32;    // integer valued 2-D vector with 32 bit int
+    typedef Vec2<int32_t> iVec2_s32;    // integer valued 2D vector with fixed 32 bit int
 
-    typedef Vec2<float>   fVec2;        // floating point value 2-D vector with float precision
+    typedef Vec2<float>   fVec2;        // floating point value 2D vector with float precision
 
-    typedef Vec2<double>  dVec2;        // floating point value 2-D vector with double precision
-
-
+    typedef Vec2<double>  dVec2;        // floating point value 2D vector with double precision
 
 
-    /********************************************
-    * template class for a 2-d vector
-    *********************************************/
+
+
+    /**
+     * Template class for 2D vector.
+     */
     template<typename T> struct Vec2
         {
 

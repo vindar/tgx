@@ -33,7 +33,7 @@ namespace tgx
 {
 
 
-    /** forward declarations */
+    // forward declarations
 
     template<typename T> struct Vec2;
     
@@ -42,7 +42,7 @@ namespace tgx
     template<typename T> struct Vec4;
 
 
-    /** Specializations */
+    // Specializations 
 
     typedef Vec3<int> iVec3;            // integer valued 2-D vector with platform int
 

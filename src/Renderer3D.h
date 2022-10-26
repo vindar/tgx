@@ -43,7 +43,7 @@
 namespace tgx
 {
 
-    /** forward declaration for the vertices and faces of the unit cube [-1,1]^3 */
+    // forward declaration for the vertices and faces of the unit cube [-1,1]^3 
     extern const tgx::fVec3 UNIT_CUBE_VERTICES[8];
     extern const uint16_t UNIT_CUBE_FACES[6*4];
 

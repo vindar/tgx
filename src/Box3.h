@@ -32,12 +32,12 @@ namespace tgx
 {
 
 
-    /** Forward declaration */
+    // Forward declaration
 
     template<typename T> struct Box3;
 
 
-    /** Specializations */
+    // Specializations
 
     typedef Box3<int> iBox3;            // integer valued box with platform int
 
