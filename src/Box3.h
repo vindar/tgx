@@ -39,7 +39,7 @@ namespace tgx
 
     // Specializations
 
-    typedef Box3<int> iBox3; ///< Integer-valued 3D box with platform int.
+    typedef Box3<int> iBox3; ///< Integer-valued 3D box
 
     typedef Box3<float> fBox3; ///< Floating point valued 3D box with single(float) precision
 

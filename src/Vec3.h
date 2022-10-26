@@ -44,22 +44,25 @@ namespace tgx
 
     // Specializations 
 
-    typedef Vec3<int> iVec3;            // integer valued 2-D vector with platform int
+    typedef Vec3<int> iVec3; ///< Integer-valued 3D vector
 
-    typedef Vec3<int16_t> iVec3_s16;    // integer valued 2-D vector with 16 bit int
+    typedef Vec3<float> fVec3; ///< Floating point valued 3D vector with single (float) precision
 
-    typedef Vec3<int32_t> iVec3_s32;    // integer valued 2-D vector with 32 bit int
-
-    typedef Vec3<float>   fVec3;        // floating point value 2-D vector with float precision
-
-    typedef Vec3<double>  dVec3;        // floating point value 2-D vector with double precision
+    typedef Vec3<double> dVec3; ///< Floating point valued 3D vector with double precision
 
 
 
 
-    /********************************************
-    * template class for a 3-d vector
-    *********************************************/
+
+    /**
+     * 3D vector template class [specializations #iVec3, #fVec3, #dVec3].
+     *
+     * The class contain three public member variables `x`, `y` and `z` which define the 3D vector `(x,y,z)`.
+     *
+     * @tparam  `T` arithmetic type of the vector (`int`, `float`...)
+     *
+     * @sa `Vec2`,`Vec4`
+     */
     template<typename T> struct Vec3 : public Vec2<T>
         {
 
@@ -74,35 +77,35 @@ namespace tgx
         using Vec2<T>::y;
 
         // and the new third coordinates
-        T z;
+        T z; ///< 'z' coordinate (third dimension)
 
 
         /**
-        * Default ctor. Uninitialized components. 
-        **/
+         * default constructor: **the vector content is undefined**.
+         */
         Vec3() {}
 
 
         /**
-        * ctor. Explicit initialization
-        **/
+         * Constructor with explicit initialization.
+         */
         constexpr Vec3(T X, T Y, T Z) : Vec2<T>(X,Y), z(Z)
             {
             }
 
 
         /**
-        * ctor from a Vec2
+         * Default copy constructor.
+         */
+        Vec3(const Vec3 & V) = default;
+
+
+        /**
+        * Constructor from a Vec2.
         **/
         constexpr Vec3(Vec2<T> V, T Z) : Vec2<T>(V), z(Z)
             {
             }
-
-
-        /**
-        * default copy ctor.
-        **/
-        Vec3(const Vec3 & V) = default;
 
 
         /**
@@ -111,25 +114,27 @@ namespace tgx
         Vec3 & operator=(const Vec3 & V) = default;
 
 
-
         /**
-        * Explicit conversion to another vector
-        **/
+         * Explicit conversion to another vector with different integral type.
+         *
+         * **Warning** the conversion of the vectors components values from type `T` to type `U` is
+         * performed with a simple C-style cast.
+         */
         template<typename U>
         explicit operator Vec3<U>() { return Vec3<U>((U)x, (U)y, (U)z); }
 
 
         /**
-        * Implicit conversion to floating point type.
+        * Implicit conversion to floating point type vector.
         **/
         operator Vec3<typename DefaultFPType<T>::fptype>() { return Vec3<typename DefaultFPType<T>::fptype>((typename DefaultFPType<T>::fptype)x, (typename DefaultFPType<T>::fptype)y, (typename DefaultFPType<T>::fptype)z); }
 
 
 
         /**
-         * Equality comparator. True if both component are equal. 
+         * Equality comparator. Return true if all components compare equal.
          **/
-        inline bool operator==(const Vec3 V) const 
+        inline bool operator==(const Vec3 V) const
             {
             return ((x == V.x) && (y == V.y) && (z == V.z));
             }
@@ -145,9 +150,9 @@ namespace tgx
 
 
         /**
-         * Less-than comparison operator. Lexicographical order.
+         * Less-than comparison operator. Use lexicographical order.
          **/
-        inline bool operator<(const Vec3 V) const 
+        inline bool operator<(const Vec3 V) const
             { 
             if (x < V.x) return true;
             if (x == V.x)
@@ -163,7 +168,7 @@ namespace tgx
 
 
         /**
-         * Less-than-or-equal comparison operator. Lexicographical order.
+         * Less-than-or-equal comparison operator. Use lexicographical order.
          **/
         inline bool operator<=(const Vec3 V) const
             {
@@ -181,7 +186,7 @@ namespace tgx
             
 
         /**
-         * Greater-than comparison operator. Lexicographical order.
+         * Greater-than comparison operator. Use lexicographical order.
          **/
         inline bool operator>(const Vec3 V) const 
             { 
@@ -190,8 +195,7 @@ namespace tgx
 
 
         /**
-         * Greater-than-or-equal comparison operator. Lexicographical order.
-         * @return true if the first parameter is greater than or equal to the second.
+         * Greater-than-or-equal comparison operator. Use lexicographical order.
          **/
         inline bool operator>=(const Vec3 V) const
             { 
@@ -222,8 +226,7 @@ namespace tgx
 
 
         /**
-         * Multiply this vector by another one. 
-         * Coordinate by coordinate multiplication.
+         * Multiply this vector by another one (coordinate by coordinate multiplication).
          **/
         inline void operator*=(const Vec3 V)
             {
@@ -234,8 +237,7 @@ namespace tgx
 
 
         /**
-         * Divide this vector by another one.
-         * Coordinate by coordinate division.
+         * Divide this vector by another one (coordinate by coordinate division).
          **/
         inline void operator/=(const Vec3 V) 
             {
@@ -298,7 +300,9 @@ namespace tgx
 
 
         /**
-         * Compute the squared euclidian norm of the vector (as type T).
+         * Compute the squared euclidian norm of the vector.
+         * 
+         * @sa norm(), norm_fast()
         **/
         inline T norm2() const
             { 
@@ -307,9 +311,13 @@ namespace tgx
 
 
         /**
-         * Compute the euclidian norm of the vector (return a Tfloat).
-        * Tfloat selects the floating point type used for computation.
-         **/
+         * Compute the euclidian norm of the vector.
+         *
+         * @tparam  Tfloat Return type also used by computation. If left unspecified, the default
+         *                 floating type is used.
+         *
+         * @sa norm_fast()
+         */
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat norm() const
             { 
             return (Tfloat)tgx::precise_sqrt((Tfloat)(x*x + y*y +z*z));
@@ -317,9 +325,14 @@ namespace tgx
 
 
         /**
-         * Compute the euclidian norm of the vector (return a Tfloat). Use fast (approx) computations.
-        * Tfloat selects the floating point type used for computation.
-         **/
+         * Compute the euclidian norm of the vector. Use the #tgx::fast_sqrt() approximation to speedup
+         * computations.
+         *
+         * @tparam  Tfloat Return type also used by computation. If left unspecified, the default
+         *                 floating type is used.
+         *
+         * @sa norm()
+         */
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat norm_fast() const
             { 
             return (Tfloat)tgx::fast_sqrt((Tfloat)(x*x + y*y +z*z));
@@ -327,9 +340,13 @@ namespace tgx
 
 
         /**
-         * Compute the inverse euclidian norm of the vector (return a Tfloat).
-        * Tfloat selects the floating point type used for computation.
-         **/
+         * Compute the inverse of the euclidian norm of the vector.
+         *
+         * @tparam  Tfloat Return type also used by computation. If left unspecified, the default
+         *                 floating type is used.
+         *
+         * @sa invnorm_fast()
+         */
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat invnorm() const
             { 
             return (Tfloat)tgx::precise_invsqrt((Tfloat)(x*x + y*y +z*z));
@@ -337,9 +354,14 @@ namespace tgx
 
 
         /**
-         * Compute the inverse euclidian norm of the vector (return a Tfloat). Use fast (approx) computations.
-        * Tfloat selects the floating point type used for computation.
-         **/
+         * Compute the inverse of the euclidian norm of the vector. Use the #tgx::fast_invsqrt()
+         * approximation to speedup computations.
+         *
+         * @tparam  Tfloat Return type also used by computation. If left unspecified, the default
+         *                 floating type is used.
+         *
+         * @sa invnorm()
+         */
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat invnorm_fast() const
             { 
             return (Tfloat)tgx::fast_invsqrt((Tfloat)(x*x + y*y +z*z));
@@ -347,9 +369,13 @@ namespace tgx
 
 
         /**
-        * Normalise the vector so that its norm is 1, does nothing if the vector is 0.
-        * Tfloat selects the floating point type used for computation.
-        **/
+         * Normalise the vector so that its norm is 1 (do nothing if the vector is 0).
+         *
+         * @tparam  Tfloat Floating point type used for computation (use default floating point type if
+         *                 unspecified).
+         *
+         * @sa normalize_fast()
+         */
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void normalize()
             { 
             Tfloat a = invnorm<Tfloat>(); 
@@ -360,9 +386,14 @@ namespace tgx
 
 
         /**
-        * Normalise the vector so that its norm is 1, does nothing if the vector is 0. Use fast (approx) computations.
-        * Tfloat selects the floating point type used for computation.
-        **/
+         * Normalise the vector so that its norm is 1 (do nothing if the vector is 0). Use
+         * #fast_invsqrt() approxiamtion to speedup computations.
+         *
+         * @tparam  Tfloat Floating point type used for computation (use default floating point type if
+         *                 unspecified).
+         *
+         * @sa normalize()
+         */
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void normalize_fast()
             { 
             Tfloat a = invnorm_fast<Tfloat>(); 
@@ -373,9 +404,13 @@ namespace tgx
 
 
         /**
-        * Return the normalize vector, return the same vector if it is 0.
-        * Tfloat selects the floating point type used for computation.
-        **/
+         * Return the vector normalized to have unit norm (do nothing if the vector is 0).
+         *
+         * @tparam  Tfloat Floating point type used for computation (use default floating point type if
+         *                 unspecified).
+         *
+         * @sa getNormalize_fast()
+         */
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Vec3<T> getNormalize() const
             { 
             Vec3<T> V(*this);
@@ -385,9 +420,14 @@ namespace tgx
 
 
         /**
-        * Return the normalize vector, return the same vector if it is 0. Use fast (approx) computations.
-        * Tfloat selects the floating point type used for computation.
-        **/
+         * Return the vector normalized to have unit norm (do nothing if the vector is 0). Use
+         * #fast_invsqrt() approxiamtion to speedup computations.
+         *
+         * @tparam  Tfloat Floating point type used for computation (use default floating point type if
+         *                 unspecified).
+         *
+         * @sa getNormalize()
+         */
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Vec3<T> getNormalize_fast() const
             { 
             Vec3<T> V(*this);
@@ -400,7 +440,7 @@ namespace tgx
 #ifdef TGX_ON_ARDUINO
 
         /***
-        * Print the vector using a given stream object.
+        * Print a representation of the vector using a given stream object.
         **/
         inline void print(Stream & outputStream = Serial) const
             {
@@ -413,125 +453,142 @@ namespace tgx
 
 
 
+    /**
+     * Return the vector normalized to have unit norm (do nothing if the vector is 0).
+     *
+     * @tparam Tfloat Floating point type used for computation (use default floating point type if
+     *                unspecified).
+     */
+    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > inline  Vec3<T> normalize(Vec3<T> V)
+        {
+        V.template normalize<Tfloat>();
+        return V;
+        }
 
 
-        /**
-        * Compute the squared euclidian distance between two vectors. Return as type T.
-        **/
-        template<typename T> inline T dist2(const Vec3<T>  V1, const Vec3<T>  V2)
-            {
-            const T xx = V1.x - V2.y;
-            const T yy = V1.y - V2.y;
-            const T zz = V1.z - V2.z;
-            return xx * xx + yy * yy + zz * zz;
-            }
+    /**
+     * Return the vector normalized to have unit norm (do nothing if the vector is 0). Use
+     * #fast_invsqrt() approxiamtion to speedup computations.
+     *
+     * @tparam  Tfloat Floating point type used for computation (use default floating point type if
+     *                 unspecified).
+     */
+    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > inline  Vec3<T> normalize_fast(Vec3<T> V)
+        {
+        V.template normalize_fast<Tfloat>();
+        return V;
+        }
 
 
-        /**
-         * Compute the euclidian distance between two vectors, return as Tfloat.
-         **/
-        template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist(Vec3<T> V1, const Vec3<T> V2)
-            {
-            const T xx = V1.x - V2.y;
-            const T yy = V1.y - V2.y;
-            const T zz = V1.z - V2.z;
-            return (Tfloat)tgx::precise_sqrt((Tfloat)(xx * xx + yy * yy + zz * zz));
-            }
+    /**
+     * Compute the squared euclidian distance between two vectors.
+     */
+    template<typename T> inline T dist2(const Vec3<T>  V1, const Vec3<T>  V2)
+        {
+        const T xx = V1.x - V2.y;
+        const T yy = V1.y - V2.y;
+        const T zz = V1.z - V2.z;
+        return xx * xx + yy * yy + zz * zz;
+        }
 
 
-        /**
-         * Compute the euclidian distance between two vectors, return as Tfloat. Use fast (approx) computations.
-         **/
-        template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist_fast(Vec3<T> V1, const Vec3<T> V2)
-            {
-            const T xx = V1.x - V2.y;
-            const T yy = V1.y - V2.y;
-            const T zz = V1.z - V2.z;
-            return (Tfloat)tgx::fast_sqrt((Tfloat)(xx * xx + yy * yy + zz * zz));
-            }
+    /**
+     * Compute the euclidian distance between two vectors.
+     *
+     * @tparam  Tfloat Floating point type used for computation (use default floating point type if
+     *                 unspecified).
+     */
+    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist(Vec3<T> V1, const Vec3<T> V2)
+        {
+        const T xx = V1.x - V2.y;
+        const T yy = V1.y - V2.y;
+        const T zz = V1.z - V2.z;
+        return (Tfloat)tgx::precise_sqrt((Tfloat)(xx * xx + yy * yy + zz * zz));
+        }
 
 
-        /**
-         * Addition operator. Coordinates by coordinates
-         **/
-        template<typename T> inline Vec3<T> operator+(Vec3<T> V1, const Vec3<T> V2) { V1 += V2; return V1; }
+    /**
+     * Compute the euclidian distance between two vectors. Use #fast_sqrt() approximation to speedup
+     * computations.
+     *
+     * @tparam  Tfloat Floating point type used for computation (use default floating point type if
+     *                 unspecified).
+     */
+    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist_fast(Vec3<T> V1, const Vec3<T> V2)
+        {
+        const T xx = V1.x - V2.y;
+        const T yy = V1.y - V2.y;
+        const T zz = V1.z - V2.z;
+        return (Tfloat)tgx::fast_sqrt((Tfloat)(xx * xx + yy * yy + zz * zz));
+        }
 
 
-        /**
-         * Substraction operator. Coordinates by coordinates
-         **/
-        template<typename T> inline Vec3<T> operator-(Vec3<T> V1, const Vec3<T> V2) { V1 -= V2; return V1; }
+    /** Addition operator. Coordinates by coordinates */
+    template<typename T> inline Vec3<T> operator+(Vec3<T> V1, const Vec3<T> V2) { V1 += V2; return V1; }
+
+    /** Substraction operator. Coordinates by coordinates */
+    template<typename T> inline Vec3<T> operator-(Vec3<T> V1, const Vec3<T> V2) { V1 -= V2; return V1; }
+
+    /** Multiplication operator. Coordinates by coordinates */
+    template<typename T> inline Vec3<T> operator*(Vec3<T> V1, const Vec3<T> V2) { V1 *= V2; return V1; }
+
+    /** Division operator. Coordinates by coordinates */
+    template<typename T> inline Vec3<T> operator/(Vec3<T> V1, const Vec3<T> V2) { V1 /= V2; return V1; }
+
+    /** Scalar addition operator */
+    template<typename T> inline Vec3<T> operator+(const T a, Vec3<T> V) { V += a; return V; }
+
+    /** Scalar addition operator */
+    template<typename T> inline Vec3<T> operator+(Vec3<T> V, const T a) { V += a; return V; }
+
+    /** Scalar substraction operator */
+    template<typename T> inline Vec3<T> operator-(const T a, Vec3<T> V) { V -= a; return V; }
+
+    /** Scalar substraction operator */
+    template<typename T> inline Vec3<T> operator-(Vec3<T> V, const T a) { V -= a; return V; }
+
+    /** Scalar multiplication operator. */
+    template<typename T> inline Vec3<T> operator*(const T a, Vec3<T> V) { V *= a; return V; }
+
+    /** Scalar multiplication operator. */
+    template<typename T> inline Vec3<T> operator*(Vec3<T> V, const T a) { V *= a; return V; }
+
+    /** Scalar division operator */
+    template<typename T> inline Vec3<T> operator/(const T a, Vec3<T> V) { V /= a; return V; }
+
+    /** Scalar division operator */
+    template<typename T> inline Vec3<T> operator/(Vec3<T> V, const T a) { V /= a; return V; }
 
 
-        /**
-         * Multiplication operator. Coordinates by coordinates
-         **/
-        template<typename T> inline Vec3<T> operator*(Vec3<T> V1, const Vec3<T> V2) { V1 *= V2; return V1; }
+    /**
+     * Return the dot product U.V between two vectors.
+     */
+    template<typename T> inline T dotProduct(const Vec3<T> U, const Vec3<T> V)
+        {
+        return U.x * V.x + U.y * V.y + U.z * V.z;
+        }
 
 
-        /**
-         * Division operator. Coordinates by coordinates
-         **/
-        template<typename T> inline Vec3<T> operator/(Vec3<T> V1, const Vec3<T> V2) { V1 /= V2; return V1; }
+    /**
+     * Return the cross product of U x V.
+     */
+    template<typename T> inline Vec3<T> crossProduct(const Vec3<T>& U, const Vec3<T>& V)
+        {
+        return Vec3<T>{ U.y* V.z - U.z * V.y,
+                        U.z* V.x - U.x * V.z,
+                        U.x* V.y - U.y * V.x };
+        }
 
 
-        /**
-         * Scalar addition operator.
-         **/
-        template<typename T> inline Vec3<T> operator+(const T a, Vec3<T> V) { V += a; return V; }
-        template<typename T> inline Vec3<T> operator+(Vec3<T> V, const T a) { V += a; return V; }
-
-
-        /**
-         * Scalar substraction operator.
-         **/
-        template<typename T> inline Vec3<T> operator-(const T a, Vec3<T> V) { V -= a; return V; }
-        template<typename T> inline Vec3<T> operator-(Vec3<T> V, const T a) { V -= a; return V; }
-
-
-        /**
-         * Scalar multiplication operator.
-         **/
-        template<typename T> inline Vec3<T> operator*(const T a, Vec3<T> V) { V *= a; return V; }
-        template<typename T> inline Vec3<T> operator*(Vec3<T> V, const T a) { V *= a; return V; }
-
-
-        /**
-         * Scalar division operator.
-         **/
-        template<typename T> inline Vec3<T> operator/(const T a, Vec3<T> V) { V /= a; return V; }
-        template<typename T> inline Vec3<T> operator/(Vec3<T> V, const T a) { V /= a; return V; }
-
-
-        /**
-         * Return the dot product U.V between two vectors.
-         **/
-        template<typename T> inline T dotProduct(const Vec3<T> U, const Vec3<T> V) 
-            { 
-            return U.x * V.x + U.y * V.y + U.z * V.z;
-            }
-
-
-        /**
-        * Return the cross product of u x v.
-        **/
-        template<typename T> inline Vec3<T> crossProduct(const Vec3<T> & U, const Vec3<T> & V) 
-            { 
-            return Vec3<T>{ U.y * V.z - U.z * V.y,
-                            U.z * V.x - U.x * V.z,
-                            U.x * V.y - U.y * V.x };
-            }
-
-
-        /**
-        * Linear interpolation: V1 + alpha(V2 - V1).
-        **/
-        template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > inline Vec3<T> lerp(Tfloat alpha, Vec3<T> V1, Vec3<T> V2)
-            {
-            return Vec3<T>{ (T)(V1.x + alpha * (V2.x - V1.x)),
-                            (T)(V1.y + alpha * (V2.y - V1.y)),
-                            (T)(V1.z + alpha * (V2.z - V1.z)) };
-            }
+    /**
+     * Linear interpolation: V1 + alpha(V2 - V1).
+     */
+    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > inline Vec3<T> lerp(Tfloat alpha, Vec3<T> V1, Vec3<T> V2)
+        {
+        return Vec3<T>{ (T)(V1.x + alpha * (V2.x - V1.x)),
+                        (T)(V1.y + alpha * (V2.y - V1.y)),
+                        (T)(V1.z + alpha * (V2.z - V1.z)) };
+        }
 
 
 }

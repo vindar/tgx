@@ -39,7 +39,7 @@ namespace tgx
 
     // Specializations
 
-    typedef Box2<int> iBox2; ///< Integer-valued 2D box with platform int.
+    typedef Box2<int> iBox2; ///< Integer-valued 2D box
 
     typedef Box2<float> fBox2; ///< Floating point valued 2D box with single(float) precision
 
@@ -249,6 +249,31 @@ namespace tgx
         inline bool operator==(const Box2<T>& B) const
             {
             return equals(B);
+            }
+
+
+        /**
+        * Return true if the box contains the point v.
+        **/
+        inline bool contains(const Vec2<T>& v) const
+            {
+            return(((minX <= v.x) && (v.x <= maxX)) && ((minY <= v.y) && (v.y <= maxY)));
+            }
+
+
+        /**
+         * Return true if B is included in this box.
+         *
+         * **Convention**
+         *
+         * 1. An empty box contains nothing.
+         * 2. A non-empty box contains any empty box.
+         **/
+        inline bool contains(const Box2<T>& B) const
+            {
+            if (isEmpty()) return false;
+            if (B.isEmpty()) return true;
+            return ((minX <= B.minX) && (maxX >= B.maxX) && (minY <= B.minY) && (maxY >= B.maxY));
             }
 
 
