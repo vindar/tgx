@@ -27,7 +27,20 @@
 namespace tgx
 {
 
-#define TGX_RASTERIZE_SUBPIXEL_BITS (6) // <- change this to adjust sub-pixel precision (between 1 and 8) 
+/**
+* Sub-pixel precision bits. 
+* 
+* Value should range between 1 and 8. Larger value provide greater resoultion and
+* possibly smoother animation but at the expense of the maximum viewport size:
+* 
+*  | subpixel bits | max viewport size LX*LY |
+*  |---------------|-------------------------|
+*  |      8        |      2048 x 2048        |
+*  |      6        |      4096 x 4096        |
+*  |      4        |      8192 x 8192        |
+*  |      2        |     16384 x 16384       |
+*/
+#define TGX_RASTERIZE_SUBPIXEL_BITS (6)
 
 #define TGX_RASTERIZE_SUBPIXEL256 (1 << TGX_RASTERIZE_SUBPIXEL_BITS)
 #define TGX_RASTERIZE_SUBPIXEL128 (1 << (TGX_RASTERIZE_SUBPIXEL_BITS -1))
@@ -37,65 +50,57 @@ namespace tgx
 
 
     /**
-    * Main method for rasterizing a triangle onto the image for 3D graphics:
+    * Fast triangle rasterizer for 3D graphics:
     *
-    * FEATURES:
+    * **Features**
     *
-    * - Pixel perfect rasterization with adjustable subpixels from 2 to 8 bits  
-    *   (set with TGX_RASTERIZE_SUBPIXEL_BITS).
-    *
+    * - Pixel perfect rasterization with adjustable subpixels from 2 to 8 bits  (set with `TGX_RASTERIZE_SUBPIXEL_BITS`).  
+    * - Top-left rule to prevent drawing pixels twice. 
     * - Tile rasterization: large viewport can be splitted in multiple sub-images.
-    *
     * - templated shader functions so to implement: z-buffer testing, shading, texturing...
     *
     * 
-    * TEMPLATE PARAMETERS :
-    *
-    * - SHADER_FUNCTION     the shader function to call.     
-    * 
-    * - RASTERIZER_PARAMS   the type of the object containing the 'uniform' data (ie data that are not   
-    *                       specific to a vertex). 
+    * @tparam SHADER_FUNCTION     the shader function to call.          
+    * @tparam RASTERIZER_PARAMS   the type of the object containing the 'uniform' data (ie data not specific to a vertex). 
     *                       
+    * @param LX, LY     Viewport size. The image itself may be smaller than the viewport and an offset may be
+    *                   specified so it is possible to draw the whole viewport  in 'tile" mode be calling this method 
+    *                   several times with different offsets. The maximum viewport size depend on `TGX_RASTERIZE_SUBPIXEL_BITS`                    
+    *                   
+    * @param V0,V1,V2   Normalized coordinates of the vertices of the triangle (x,y,z,w)  where, 'a la opengl' the viewport 
+    *                   is mapped to [-1, 1]^2. These vectors also optionally contain  the 'varying' parameters associated 
+    *                   with each vertex, namely the texture coords and the color associated with  each vertex (when applicable) 
+    *                   that are used by the shader function.
+    *                       
+    * @param offset_x, offset_y     Offset of this image inside the viewport. So the image corresponds to
+    *                               to the box `[offset_x, offset_x + im.width[x[offset_x, offset_x + im.height[`
+    *                               and only the intersection of this box with the viewport box `[0, LX[x[0, LY[`
+    *                               is drawn onto the image.
+    *
+    * @param data       'Uniform' parameters (depending on the rasterization type).
+    *
+    * @param shader_fun the shader function. see Shader.h for the implementation of classic shaders.
+    *                   
     * 
-    * PARAMETERS:
+    * **Remarks**
+    *   
+    * - Maximum viewport size depending on `TGX_RASTERIZE_SUBPIXEL_BITS`:   
+    *  ```                                 
+    *  | subpixel bits | max viewport size LX*LY |
+    *  |---------------|-------------------------|
+    *  |      8        |      2048 x 2048        |
+    *  |      6        |      4096 x 4096        |
+    *  |      4        |      8192 x 8192        |
+    *  |      2        |     16384 x 16384       |
+    *  ```
+    *  
+    * - The `(x,y)` coordinates of the vertices `V0,V1,V2` do not need to be inside the viewport `[-1,1]^2` and yet the triangle will still be
+    *   perfectly rasterized provided that they are not 'too far away'. This 'too far away' correspond to the maximum viewport size 
+    *   according to the chosen sub-pixel precision (for instance, [-2,2]^2 will work any viewport at most 1024x1024 when using 8 bits 
+    *   precision).
     *
-    * - LX, LY       the viewport size
-    *                The image itself may be smaller than the viewport and an offset may be
-    *                specified so it is possible to draw the whole viewport  in 'tile" mode
-    *                be calling this method several time with different offsets.
-    *                The maximum viewport size depend on TGX_RASTERIZE_SUBPIXEL_BITS
-    *                
-    *                 | subpixel bits | max viewport size LX*LY |
-    *                 -------------------------------------------
-    *                 |      8        |      2048 x 2048        |
-    *                 |      6        |      4096 x 4096        |
-    *                 |      4        |      8192 x 8192        |
-    *                 |      2        |     16384 x 16384       |
-
-    *
-    * - V0,V1,V2     Normalized coordinates of the vertices of the triangle (x,y,z,w)  where,
-    *                'a la opengl' the viewport is mapped to [-1, 1]^2.
-    *                These vectors also optionally contain  the 'varying' parameters associated 
-    *                with each vertex, namely the  texture coords and the color associated with 
-    *                each vertex (when applicable) that are used by the shader function.
-    *
-    *                NOTE: the (x,y) coordinates of the vertices V0,V1,V2 do not need to
-    *                be inside the viewport [-1,1]^2 and the triangle will still be
-    *                perfectly rasterized provided that they are not 'too far away'. This
-    *                'too far away' correspond to the mximum viewport size according to the 
-    *                chosen sub-pixel precision (for instance, [-2,2]^2 will work for 
-    *                any viewport at most 1024x1024 when using 8bit precision).
-    *
-    * - offset_x, offset_y  Offset of this image inside the viewport. So the image corresponds to
-    *                       to the box  [offset_x, offset_x + im.width[x[offset_x, offset_x + im.height[
-    *                       and only the intersection of this box with the viewport box [0, LX[x[0, LY[
-    *                       is drawn onto the image.
-    *
-    * - data : contain the 'uniform' parameters depending on the rasterization type.
-    *
-    * REMARKS: color are passed in RGBf format irrespectively of the image color type to improve
-    *          quality and simplify handling of different image types.
-    **/
+    * - Color are passed in RGBf format irrespectively of the image color type to improve quality and simplify handling of different image types.
+    */
     template<typename SHADER_FUNCTION, typename RASTERIZER_PARAMS> 
     void rasterizeTriangle(const int LX, const int LY, const RasterizerVec4 & V0, const RasterizerVec4 & V1, const RasterizerVec4 & V2, const int32_t offset_x, const int32_t offset_y, const RASTERIZER_PARAMS & data, SHADER_FUNCTION shader_fun)
         {

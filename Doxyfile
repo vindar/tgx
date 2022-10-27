@@ -963,9 +963,7 @@ RECURSIVE              = NO
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = src/ShaderParams.h \
-                         src/Shaders.h \
-                         src/bseg.h \
+EXCLUDE                = src/bseg.h \
                          src/Fonts.h
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
@@ -1012,7 +1010,18 @@ EXCLUDE_SYMBOLS        = tgx::DefaultFPType \
                          TGX_PROGMEM_DEFAULT_CACHE_SIZE \
                          TGX_IS_PROGMEM \
                          TGX_IS_EXTMEM \
-                         external_psram_size
+                         external_psram_size \
+                         TGX_RASTERIZE_SUBPIXEL128 \
+                         TGX_RASTERIZE_SUBPIXEL256 \
+                         TGX_RASTERIZE_MULT256 \
+                         TGX_RASTERIZE_MULT128 \
+                         TGX_RASTERIZE_DIV256 \
+                         TGX_SHADER_HAS_* \
+                         TGX_SHADER_MASK_* \
+                         TGX_SHADER_ADD_* \
+                         TGX_SHADER_REMOVE_* \
+                         UNIT_CUBE_VERTICES \
+                         UNIT_CUBE_FACES
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include

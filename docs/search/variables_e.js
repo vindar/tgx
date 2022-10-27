@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['v_0',['V',['../structtgx_1_1_h_s_v.html#a4b2f38729e777195de1eb83367db6453',1,'tgx::HSV']]],
-  ['val_1',['val',['../structtgx_1_1_r_g_b565.html#aae7e9a2e463a207f686ad0d242bd1010',1,'tgx::RGB565::val()'],['../structtgx_1_1_r_g_b32.html#a02b46abb6c4e7dc33ab010da62e67210',1,'tgx::RGB32::val()'],['../structtgx_1_1_r_g_b64.html#a6dc1d5f561be22993c1bd07c72549fd7',1,'tgx::RGB64::val()']]],
-  ['vertice_2',['vertice',['../structtgx_1_1_mesh3_d.html#a070af61061cfecff6de39aaef77a25cd',1,'tgx::Mesh3D']]]
+  ['s_0',['S',['../structtgx_1_1_h_s_v.html#a05fa29917669e11baad0b7a7bae75236',1,'tgx::HSV']]],
+  ['shader_5ftype_1',['shader_type',['../structtgx_1_1_rasterizer_params.html#ae16bdb2272b9e270f42c1f22bcd06c3b',1,'tgx::RasterizerParams']]],
+  ['specular_5fexponent_2',['specular_exponent',['../structtgx_1_1_mesh3_d.html#aa84f351c12832017904e310d916dbaba',1,'tgx::Mesh3D']]],
+  ['specular_5fstrength_3',['specular_strength',['../structtgx_1_1_mesh3_d.html#a75451ace39d84cc78754a695b9f23da6',1,'tgx::Mesh3D']]]
 ];

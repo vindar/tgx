@@ -1,4 +1,4 @@
-/** @file Shaders.h */
+/** @file ShaderParams.h */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -52,33 +52,33 @@ namespace tgx
 
 
     // Shaders for projection type : Perspective or ortho. 
-    #define TGX_SHADER_PERSPECTIVE      (1 << 0)
-    #define TGX_SHADER_ORTHO            (1 << 1)
+    #define TGX_SHADER_PERSPECTIVE      (1 << 0)    ///< enable Perspective projection
+    #define TGX_SHADER_ORTHO            (1 << 1)    ///< enable Orthographic projection
     #define TGX_SHADER_MASK_PROJECTION  (TGX_SHADER_PERSPECTIVE | TGX_SHADER_ORTHO)
 
     // Shaders for depth buffer : Zbuffer or no-Zbuffer
-    #define TGX_SHADER_NOZBUFFER        (1 << 2)
-    #define TGX_SHADER_ZBUFFER          (1 << 3)
+    #define TGX_SHADER_NOZBUFFER        (1 << 2)    ///< disable Z-buffer testing
+    #define TGX_SHADER_ZBUFFER          (1 << 3)    ///< enable Z-buffer testing
     #define TGX_SHADER_MASK_ZBUFFER     (TGX_SHADER_NOZBUFFER | TGX_SHADER_ZBUFFER)
 
     // Shaders for shading algorithm: flat, gouraud or phong
-    #define TGX_SHADER_FLAT             (1 << 4)
-    #define TGX_SHADER_GOURAUD          (1 << 5)
+    #define TGX_SHADER_FLAT             (1 << 4)    ///< enable flat shading
+    #define TGX_SHADER_GOURAUD          (1 << 5)    ///< enable Gouraud shading
     #define TGX_SHADER_MASK_SHADING     (TGX_SHADER_FLAT | TGX_SHADER_GOURAUD)
 
     // Shaders for texturing mode: no-texture, texture-wrap, texture-clamp 
-    #define TGX_SHADER_NOTEXTURE        (1 << 7)
-    #define TGX_SHADER_TEXTURE          (1 << 8)
+    #define TGX_SHADER_NOTEXTURE        (1 << 7)    ///< disable texture mapping
+    #define TGX_SHADER_TEXTURE          (1 << 8)    ///< enable texture mapping
     #define TGX_SHADER_MASK_TEXTURE     (TGX_SHADER_NOTEXTURE | TGX_SHADER_TEXTURE)
     
     // Shaders for texture quality: nearest, bilinear
-    #define TGX_SHADER_TEXTURE_NEAREST  (1 << 11)
-    #define TGX_SHADER_TEXTURE_BILINEAR (1 << 12)
+    #define TGX_SHADER_TEXTURE_NEAREST  (1 << 11)   ///< use point sampling texture mapping
+    #define TGX_SHADER_TEXTURE_BILINEAR (1 << 12)   ///< use bilinear texture sampling
     #define TGX_SHADER_MASK_TEXTURE_QUALITY (TGX_SHADER_TEXTURE_BILINEAR | TGX_SHADER_TEXTURE_NEAREST)
 
     // Shaders for texture wrapping mode: wrap , clamp
-    #define TGX_SHADER_TEXTURE_WRAP_POW2  (1 << 13)
-    #define TGX_SHADER_TEXTURE_CLAMP (1 << 14)
+    #define TGX_SHADER_TEXTURE_WRAP_POW2  (1 << 13) ///< texture has power of 2 dimensions and use wrapping at edges
+    #define TGX_SHADER_TEXTURE_CLAMP (1 << 14)      ///< texture have arbitrary dimensions and use clamping at edges
     #define TGX_SHADER_MASK_TEXTURE_MODE (TGX_SHADER_TEXTURE_WRAP_POW2 | TGX_SHADER_TEXTURE_CLAMP)
 
 
@@ -151,38 +151,38 @@ namespace tgx
 
 
     /**
-    * Vertex parameters
+    * Vertex parameters passed to the shader (**for internal use**).
     *
     * Extension of the fVec4 class that holds the 'varying' parameters (in the OpenGL sense)
-    * associated with a vertex and passed to the shader method
-    **/
+    * associated with a vertex and passed to the shader method.
+    */
     struct RasterizerVec4 : public tgx::fVec4
         {
-        tgx::RGBf   color;  // vertex color for gouraud shading (or light intensity for gouraud shading with texturing). 
-        tgx::fVec2  T;      // texture coordinates if applicable 
-        float       A;      // alpha value (if used). 
+        tgx::RGBf   color;  ///< vertex color for Gouraud shading (or light intensity for Gouraud shading with texturing). 
+        tgx::fVec2  T;      ///< texture coordinates if applicable 
+        float       A;      ///< alpha value (if used). 
         };
 
 
 
     /**
-    * Uniform parameters
+    * Uniform parameters passed to the shader (**for internal use**).
     *
     * Structure that holds the 'uniform' parameters (in opengl sense) passed
-    * to the triangle rasterizer when doing 3D rendering
+    * to the triangle rasterizer and then the shader when doing 3D rendering.
     **/
     template<typename color_t_im, typename color_t_tex, typename ZBUFFER_t, typename BLEND_OP = void> struct RasterizerParams
         {
-        RGBf                        facecolor;      // pointer to the face color (when using flat shading).  
-        float                       opacity;        // opacity multiplier (currently used only with the 2D shader)        
-        Image<color_t_im> *         im;             // pointer to the destination image to draw onto
-        ZBUFFER_t *                 zbuf;           // pointer to the z buffer (when using depth testing).
-        const Image<color_t_tex>*   tex;            // pointer to the texture (when using texturing).        
-        color_t_tex                 mask_color;     // 'transparent color' when masking is enabled (on for the 2D shader).
-        int                         shader_type;    // shader type
-        float                       wa;             // constants such that f(w) = wa * w + wb maps
-        float                       wb;             // w (= -1/z) -> float(0, 65535) for conversion to uint16_t
-        const BLEND_OP *            p_blend_op;     // pointer to the blending operator to use (only with the 2D shader)        
+        RGBf                        facecolor;      ///< pointer to the face color (when using flat shading).  
+        float                       opacity;        ///< opacity multiplier (currently used only with the 2D shader)        
+        Image<color_t_im> *         im;             ///< pointer to the destination image to draw onto
+        ZBUFFER_t *                 zbuf;           ///< pointer to the z buffer (when using depth testing).
+        const Image<color_t_tex>*   tex;            ///< pointer to the texture (when using texturing).        
+        color_t_tex                 mask_color;     ///< 'transparent color' when masking is enabled (only for the 2D shader).
+        int                         shader_type;    ///< shader type
+        float                       wa;             ///< constants such that f(w) = wa * w + wb maps w (= -1/z) to float(0, 65535) for conversion to uint16_t
+        float                       wb;             ///< constants such that f(w) = wa * w + wb maps w (= -1/z) to float(0, 65535) for conversion to uint16_t
+        const BLEND_OP *            p_blend_op;     ///< pointer to the blending operator to use (only with the 2D shader)        
         };
 
 

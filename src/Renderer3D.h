@@ -50,49 +50,43 @@ namespace tgx
 
 
     /**
-    * Class that manages the drawing of 3D objects.
+    * Class that manages a scene and draws 3D objects onto a `Image`.
     *
-    * The class create a virtual viewport and provides methods to draw 3D primitives 
-    * onto this viewport (to which is attached an Image<color_t> object)
+    * A Renderer3D objects creates a "virtual viewport" and provides a 
+    * set of methods to draw 3D primitives onto this viewport which is 
+    * then mapped to a `tgx::Image`.
     *
-    * Template parameters:
+    * @tparam LOADED_SHADERS    list of all shaders that may be used. By default, all shaders are enabled but 
+    *                           if is possible to select only a subset of shaders to improve rendering speed and 
+    *                           decrease memory usage significantly. Must a `|` combination of the following flags:
+    *                               - `TGX_SHADER_PERSPECTIVE`: enable perspective projection
+    *                               - `TGX_SHADER_ORTHO`: enable orthographic projection
+    *                               - `TGX_SHADER_NOZBUFFER`: enable rendering without using a z-buffer
+    *                               - `TGX_SHADER_ZBUFFER`: enable rendering with a z-buffer
+    *                               - `TGX_SHADER_FLAT`: enable flat shading
+    *                               - `TGX_SHADER_GOURAUD`: enable gouraud shading
+    *                               - `TGX_SHADER_NOTEXTURE`: enable rendering without texturing
+    *                               - `TGX_SHADER_TEXTURE_NEAREST`: enable rendering with texturing using point sampling
+    *                               - `TGX_SHADER_TEXTURE_BILINEAR`: enable rendering with texturing using bilinear sampling
+    *                               - `TGX_SHADER_TEXTURE_WRAP_POW2`: texture can use 'wrap around' mode with dimensions of texture being power of two.
+    *                               - `TGX_SHADER_TEXTURE_CLAMP`: texture can use 'clamping to edge' mode. 
     *
-    * - color_t : the color type for the image to draw onto.
+    * @tparam ZBUFFER_t :       Type used for storing z-buffer values. Must be either `float` or `uint16_t`. The z-buffer must be 
+    *                           as large as the image (but can be smaller than the viewport when using an offset).
+    *                               - `float`: higher quality but requires 4 bytes per pixel.
+    *                               - `uint16_t` : lower quality (z-fighting may occur) but only 2 bytes per pixel.
+    * **Remark**
+    * 
+    * If a drawing call is made that requires a disabled shader, or if the Renderer3D object state is not valid 
+    * (e.g. incorrect image size, enabled but missing z-buffer...) then the drawing operation will fails silently.
     *
-    * - LOADED_SHADERS :   
-    *  
-    *   A list of all shaders that can be used with this object. By default, all shaders are loaded. 
-    *    
-    *    -> LOADING ONLY THE REQUIRED SHADERS SAVES *A LOT* OF MEMORY SPACE AND INCREASES PERFORMANCE.
-    *                    
-    *   A combination of the following flags:
-    *                    
-    *   - TGX_SHADER_PERSPECTIVE        when set, drawing with perspective projection is allowed
-    *   - TGX_SHADER_ORTHO              when set, drawing with orthographic projection is allowed
-    *   - TGX_SHADER_NOZBUFFER          when set, drawing without using a z-buffer is allowed
-    *   - TGX_SHADER_ZBUFFER            when set, drawing while using a z-buffer is allowed
-    *   - TGX_SHADER_FLAT               when set, drawing with flat shading is allowed
-    *   - TGX_SHADER_GOURAUD            when set, drawing with gouraud shading is allowed
-    *   - TGX_SHADER_NOTEXTURE          when set, drawing without using a texture is allowed
-    *   - TGX_SHADER_TEXTURE_NEAREST    when set, drawing with a texture using nearest neighbour interpolation is allowed
-    *   - TGX_SHADER_TEXTURE_BILINEAR   when set, drawing with a texture using bilinear interpolation is allowed
-    *   - TGX_SHADER_TEXTURE_WRAP_POW2  when set, drawing with a texture using wrap around mode (with dimensions of texture being power of two) is allowed
-    *   - TGX_SHADER_TEXTURE_CLAMP      when set, drawing with a texture using clamping to edge mode is allowed
-    *                      
-    *   NOTE: if a drawing call is made that requires a disabled shader, then
-    *         the drawing operation fails silently (i.e. it is simply ignored). 
-    *         
-    *
-    * - ZBUFFER_t : type used for storing z-buffer values. Must be either `float` or `uint16_t`.
-    *               The z-buffer must be as large as the image (but can be smaller than the viewport when using an offset).
-    *               -> float : higher quality but requires 4 bytes per pixel.
-    *               -> uint16_t : lower quality (z-fighting may occur) but only 2 bytes per pixel.
-    **/
+    */
     template<typename color_t, int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float>
     class Renderer3D
     {
        
-        static const int MAXVIEWPORTDIMENSION = 2048 * (1 << ((8 - TGX_RASTERIZE_SUBPIXEL_BITS) >> 1));
+        static const int MAXVIEWPORTDIMENSION = 2048 * (1 << ((8 - TGX_RASTERIZE_SUBPIXEL_BITS) >> 1)); ///< maximum viewport size in each direction (depending on the value of TGX_RASTERIZE_SUBPIXEL_BITS). 
+
         static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in color.h");
         static_assert((std::is_same<ZBUFFER_t, float>::value) || (std::is_same<ZBUFFER_t, uint16_t>::value), "The Z-buffer type must be either float or uint16_t");
                     
@@ -128,20 +122,36 @@ namespace tgx
 
 
         /**
-        * Constructor. 
-        *
-        * Optionally set some parameters: viewport size, destination image and zbuffer (if used). 
-        **/
+         * Constructor.
+         * 
+         * Some parameters may be set right way (but they may be also set independantly later). 
+         *
+         * @param   viewportSize (Optional) Size of the viewport. See `setViewportSize()`.
+         * @param   im           (Optional) the destination image. See `setImage()`.
+         * @param   zbuffer      (Optional) the Z-buffer. See `setZbuffer()`.
+         */
         Renderer3D(const iVec2& viewportSize = {0,0}, Image<color_t> * im = nullptr, ZBUFFER_t * zbuffer = nullptr);
 
 
 
         /**
-        * Set the size of the viewport, up to 4096x4096. 
-        * The normalized coordinates in [-1,1]x[-1,1} are mapped to [0,lx-1]x[0,ly-1] just before rasterization.
+        * Set the size of the viewport.
+        * 
+        * The normalized coordinates in `[-1,1]x[-1,1]` are mapped to `[0,lx-1]x[0,ly-1]` just before rasterization.
+        * 
         * It is possible to use a viewport larger than the image drawn onto by using an offset for the image inside 
-        * the viewport in order to perform 'tile rendering'.        
-        **/
+        * the viewport in order to perform 'tile rendering'. see `setOffset()`. 
+        * 
+        * the maximum viewport size depends on `TGX_RASTERIZE_SUBPIXEL_BITS` which specifies the sub-pixel precision 
+        * value used by the 3D rasterizer:
+        * 
+        *  | subpixel bits | max viewport size LX*LY |
+        *  |---------------|-------------------------|
+        *  |      8        |      2048 x 2048        |
+        *  |      6        |      4096 x 4096        |
+        *  |      4        |      8192 x 8192        |
+        *  |      2        |     16384 x 16384       |
+        */
         void setViewportSize(int lx, int ly)
             {
             _lx = clamp(lx, 0, MAXVIEWPORTDIMENSION);
@@ -149,20 +159,27 @@ namespace tgx
             }
 
         /**
-        * Set the size of the viewport, up to 4096x4096. 
-        * Same as above but in vector form. 
-        **/
+        * Set the size of the viewport.
+        * 
+        * Same as `setViewportSize(int lx, int ly)`. 
+        */
         void setViewportSize(const iVec2& viewport_dim)
             {
             setViewportSize(viewport_dim.x, viewport_dim.y);
             }
 
 
-
         /**
-        * Set the image that will be drawn onto.
-        * The image can be smaller than the viewport.
-        **/
+         * Set the image that will be drawn onto.
+         * 
+         * **Note** 
+         * 
+         * - The image can be smaller than the viewport. In this case, use `setOffset()` to
+         *   select the portion of the viewport that will be drawn.
+         *   
+         * - Passing `nullptr` remove the current image (and disables all drawing operation  
+         *   until a new image is inserted).
+         */
         void setImage(Image<color_t>* im)
             {
             _uni.im = im;            
@@ -172,19 +189,19 @@ namespace tgx
         /**
         * Set the offset of the image relative to the viewport.
         *
-        * If the image has size (sx,sy), then during rasterization only the sub part
-        * [ox, ox + sx[x[oy, oy+sy[ of the viewport will be drawn (onto the image).
+        * If the image has size `(sx,sy)`, then during rasterization the portion 
+        * `[ox, ox + sx[x[oy, oy+sy[` of the viewport will be drawn onto the image.
         *
         * By changing the offset and redrawing several times it it possible to use an image
-        * smaller than the viewport (and thus also save on zbuffer space).
+        * smaller than the viewport (and also save on zbuffer space).
         *
         * For example, to draw a 320x240 viewport with limited amount of memory. One can use an
-        * image of size 160x120 (37.5kb) and a zbuffer of the same size (75Kb) and then call the
-        * drawing method 4 times with offset (0,0), (0,120), (160,0) and (160,120) and upload
-        * the resulting image at its correct position on the screen between each rendering.
+        * image of size 160x120 (37.5kb) and a z-buffer of the same size (35Kb for uint16_t) and 
+        * then call the drawing method 4 times with offsets (0,0), (0,120), (160,0) and (160,120) 
+        * and upload the resulting images at their correct positions on the screen between each rendering.
         *
-        * Note: do not forget to clear the z-buffer after changing the offset !
-        **/
+        * **Note** Do not forget to clear the z-buffer after changing the offset !
+        */
         void setOffset(int ox, int oy)
             {
             _ox = clamp(ox, 0, MAXVIEWPORTDIMENSION);
@@ -194,7 +211,8 @@ namespace tgx
 
         /**
         * Set the offset of the image relative to the viewport.
-        * Same as above but in vector form.
+        * 
+        * Same as `setOffset(int ox, int oy)`.
         **/
         void setOffset(const iVec2& offset)
             {
@@ -203,18 +221,24 @@ namespace tgx
 
 
         /**
-        * Set the projection matrix.
-        *
-        * This is the matrix that is used to project coordinate from
-        * 'view space' to NDC.
-        *
-        * -> When using perspective projection, the projection matrix must
-        *    store -z into the w component.
-        *
-        * IMPORTANT :In view space, the camera is assumed to be centered
-        * at the origin, looking looking toward the negative Z axis with
-        * the Y axis pointing up (as in opengl).
-        **/
+         * Set the projection matrix.
+         * 
+         * This is the matrix that is used to project coordinate from 'view space' to normalized device
+         * coordinates (NDC).
+         * 
+         * Call this method to set a "custom" projection matrix. For the usual perspective and 
+         * orthographic matrices, use instead setFrustum(), setPerspective(), setOrtho(). 
+         * 
+         * **Note**
+         * 
+         * - When using perspective projection, the projection matrix must store `-z` into the `w`
+         * component.
+         * 
+         * - In view space, the camera is assumed to be centered at the origin, looking looking toward
+         * the negative Z axis with the Y axis pointing up (as in opengl).
+         * 
+         * @sa getProjectionMatrix()
+         */
         void setProjectionMatrix(const fMat4& M)
             {
             _projM = M;

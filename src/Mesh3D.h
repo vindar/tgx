@@ -36,127 +36,7 @@
 namespace tgx
 {
 
-    /**********
-    * Structure containing the information about a 3D mesh
-    *
-    * FORMAT:
-    *
-    * vertice   the array of vertices in (x,y,z) fVec3 format.
-    *           a vertex is refered by its index in this array
-    *           -> maximum number of vertice: 32767
-    *
-    * texcoord  the array of texture coordinate in (u,v) fVec2 format
-    *           a texture coord is refered by its index in this array.
-    *           Set to nullptr (and nb_texcoords=0) if no texture are 
-    *           used with this model.
-    *           -> maximum number of texture coords: 65535
-    *
-    * normal   array of normal vectors in (x,y,z) fVec3 format
-    *          a normal vector is refered by its index in this array.
-    *          Set to nullptr if no normal vectors are defined for this 
-    *          model (so only flat shading will be available). 
-    *          -> maximum number of normal vectors: 65535
-    *          THE NORMALS MUST HAVE UNIT NORM !
-    *
-    * face     The array of triangular face.
-    *          The array is composed of uint16_t and is divided in
-    *          "chains of triangles". See below for details
-    *
-    * texture  the texture image associated with the model (if any).
-    *          nullptr if texture is not present/used currently (ok
-    *          even if the texcoord array exists).
-    *
-    * color    the object color when texturing is not used
-    * 
-    * ambiant_strength      reflection factor for ambiant lightning.
-    *
-    * diffuse_strength      reflection factor for diffuse lightning.
-    * 
-    * specular_strength     reflection factor for specular lightning.
-    * 
-    * specular_exponent     specular lightning component.
-    *
-    * next      pointer to the next mesh to draw. nullptr if none.
-    * 
-    * bounding_box  model bounding box.
-    * 
-    * name  name of the model (optional, nullptr if none). 
-    * 
-    * DESCRIPTION OF THE FACE ARRAY
-    * 
-    * the array is composed of "chains" of triangles. Each chain starts with a 
-    * uint16_t that specifies its length and is followed by a sequence of elements
-    * where each element occupies 1, 2 or 3 uint16_t. So the array takes the following 
-    * general form:
-    * 
-    * [chain 1 length = n] [elem 1] [elem 2] [elem 3]  ... [elem n+2]
-    * [chain 2 length = m] [elem 1] [elem 2] [elem 3]  ... [elem m+2]
-    *       ...
-    * [chain k length = p] [elem 1] [elem 2] [elem 3]  ... [elem p+2]
-    * [endtag = 0]
-    *
-    * - An endtag (int16_t)0 is used as a sentinel to mark the end of the array.
-    *
-    * - A chain starts with a single uint16_t [chain length] that specify
-    * the number of triangles in the chain. It is followed  by [chain length]+2
-    * "elements".
-    *
-    * A "element" represent a vertex of a triangle and occupies 1, 2 or 3 uint16_t
-    * depending on wether the  textcoord and normal arrays exist. The first uint16_t
-    * of an element is the vertex index (with the direction bit), possibly followed
-    * by the texture index (if texture array is present) and then finally followed by
-    * the normal index (if a normal array is present) i.e an element as the form:
-    *
-    *                         (if texture set) (if normal set)
-    *    1bit     15bits          (16bits)        (16bits)
-    *   [DBIT| VERTEX INDEX]  [TEXTURE INDEX]  [NORMAL INDEX]
-    *
-    * the highest bit of the first uint16_t is called the direction bit DBIT.
-    * Thus, a vertex index is stored on only 15 bit which is why the vertex array
-    * cannot contain more than 32767 indices.
-    *
-    * The first 3 elements of a chain represent the 3 vertices or the starting
-    * triangle of the chain. Their DBIT is always 0. Each subsequent element
-    * is combined with the current triangle to deduce the next triangle in the
-    * following way.
-    *
-    * Say the current triangle is [V1, V2, V3] and the next element is DBIT|V4:
-    *
-    * if DBIT = 0, then the next triangle is [V1, V3, V4]
-    * if DBIT = 1, then the next triangle is [V3, V2, V4]
-    *
-    * REMARK: the winding order of the triangle matters (for face culling)  and 
-    * that is what the DBIT is for.
-    * 
-    * EXAMPLE: We assume that texcoord = nullptr but normal != nullptr so that
-    * each element is coded on 2 uint16_t: the DBIT and vertex index on the first
-    * uint16_t and the normal index on the second uint16_t.
-    *
-    * Let us consider the following face array composed of 19 uint16_t:
-    *
-    * face = {3,0,1,2,2,4,6,32773,8,7,7,1,8,7,9,4,5,5,0}
-    *
-    * It should be read as
-    *
-    * 3               (the first chain has 3 triangles)
-    * 0/1   2/2  4/6  (first triangle with vertex 0,2,4 and normals 1,2,6)
-    * 5/8             (32773 = 32768 + 5 so DBIT = 1, second triangle)
-    * 7/7             (third triangle DBIT = 0)
-    * 1               (the second chain has a single triangle)
-    * 8/7   9/4  5/5  (the triangle of the second chain)
-    * 0               (end tag)
-    *
-    * after decoding, this gives a list of 4 triangles
-    * (with normals associated with each vertex index).
-    *
-    * 0/1   2/2  4/6
-    * 4/6   2/2  5/8
-    * 4/6   5/8  7/7
-    * 8/7   9/4  5/5
-    *
-    *****/
-
-
+    
     /**
      * 3D mesh data stucture.
      * 
@@ -164,9 +44,9 @@ namespace tgx
      * property and textures. A mesh can be rendered onto an `Image` object using the
      * `Renderer3D::drawMesh()` method.
      * 
-     * The mesh data format is designed to be compact and favour linear access and increase cache
-     * coherency so that meshes can be stored and rendered directly from "slow" memory such as FLASH
-     * on MCU.
+     * The mesh data format is designed to be compact and favors linear access to elements in order
+     * to improve cache coherency so that meshes can be stored and rendered directly from "slow" 
+     * memory such as FLASH on a MCU.
      * 
      * The Python scripts `obj_to_h` located in the `\tools` directory of the library can be used to
      * create a `Mesh3D` object directly from an .obj file.  The associated image textures (if any)
@@ -174,29 +54,99 @@ namespace tgx
      *
      * **MESH FORMAT**
      *
-     * @param vertice   Array of all the vertices of the mesh in (x,y,z) fVec3 format. A vertex is
-     *                  refered by its index in this array. Maximum number of vertices per mesh:
-     *                  32767.
+     * @param vertice   Array of all the vertices of the mesh in `(x,y,z)` `fVec3` format. A vertex is
+     *                  refered by its index in this array. **Maximum number of vertices per mesh: 32767.**
      *
-     * @param texcoord  Array of texture coordinate in (u,v) fVec2 format. A texture coord is
+     * @param texcoord  Array of texture coordinate in `(u,v)` `fVec2` format. A texture coord is
      *                  refered by its index in this array. Set to nullptr (and nb_texcoords=0) if
-     *                  the mesh has no texture. Maximum number of texture coords: 65535
+     *                  the mesh has no texture. **Maximum number of texture coords: 65535**
      *
      * @param normal    Array of normal vectors in (x,y,z) fVec3 format. A normal vector is refered
      *                  by its index in this array. Set to nullptr if no normal vectors are defined.
-     *                  **Normal vectors must have unit norm**. Maximum number of normal vectors:
-     *                  65535
+     *                  **Normal vectors must have unit norm**. **Maximum number of normal vectors: 65535**
      *
      * @param face      Array of triangular faces. The array is composed of `uint16_t` and is divided into
      *                  *chains of triangles*. See below for details.
      *
      * @param texture   image texture object associated with the mesh (or nullptr is none).
      *
-     * @param ambiant_strength,
-     *        diffuse_strength,
-     *        specular_strength,
-     *        specular_exponent the model's material properties.
-    **/
+     * @param next      pointer to the next mesh (or nullptr if none). Chaining mesh enalbe to draw complex 
+     *                  models with multiple textures images and more than 32767 vertices...
+     *
+     * 
+     * **Structure of the `face` array**.
+     * 
+     * the array is composed of "chains of triangles". Each chain starts with a `uint16_t` that
+     * specifies its length and is followed by a sequence of elements where each element occupies 1,
+     * 2 or 3 `uint16_t`. The array takes the following general form:
+     *
+     * ```
+     * [chain 1 length = n] [elem 1] [elem 2] [elem 3]  ... [elem n+2]
+     * [chain 2 length = m] [elem 1] [elem 2] [elem 3]  ... [elem m+2]
+     *       ...
+     * [chain k length = p] [elem 1] [elem 2] [elem 3]  ... [elem p+2] [endtag = 0]
+     * ```
+     *
+     * - An endtag `(int16_t)0` is used as a sentinel to mark the end of the `face` array.
+     *
+     * - Each chain starts with a single uint16_t [chain length] that specify the number of
+     *   triangles in the chain. It is followed by [chain length]+2 elements. 
+     *
+     * A "element" represent a vertex of a triangle and occupies 1, 2 or 3 `uint16_t`
+     * depending on whether the textcoord and normal arrays exist in the mesh. The first 
+     * `uint16_t` of an element is the vertex index (with a *direction bit*), then is 
+     * followed by the texture index if a texture array is present and then finally followed by
+     * the normal index if a normal array is present. 
+     * 
+     * Schematiccally:
+     *
+     *```
+     *    1bit     15bits      (16bits, opt.)   (16bits, opt.)
+     *   [DBIT| VERTEX INDEX]  [TEXTURE INDEX]  [NORMAL INDEX]
+     *```
+     * 
+     * The first 3 elements of a chain represent the 3 vertices that compose the first triangle 
+     * of the chain. Their DBIT is always 0. Each subsequent element is combined with the current 
+     * triangle to deduce the next triangle in the following way: suppose the current triangle is 
+     * `[V1, V2, V3]` and the next element is `DBIT|V4`:
+     *
+     * - if `DBIT = 0`, then the next triangle is `[V1, V3, V4]`
+     * - if `DBIT = 1`, then the next triangle is `[V3, V2, V4]`.
+     *
+     * **Example**
+     *
+     * We assume here `texcoord = nullptr` but `normal != nullptr` so that
+     * each element is coded on 2 `uint16_t`.
+     *
+     * Let us consider the following face array composed of 19 `uint16_t`:
+     *
+     * ```
+     * face = {3,0,1,2,2,4,6,32773,8,7,7,1,8,7,9,4,5,5,0}
+     *
+     * ```
+     * 
+     * It should be read as
+     *
+     * ```
+     * 3                the first chain has 3 triangles
+     * 0/1   2/2  4/6   first triangle with vertex 0,2,4 and normals 1,2,6
+     * 5/8              32773 = 32768 + 5 so DBIT = 1, second triangle
+     * 7/7              third triangle DBIT = 0
+     * 1                the second chain has a single triangle
+     * 8/7   9/4  5/5   the triangle of the second chain
+     * 0                end tag
+     * ```
+     * 
+     * after decoding, this gives a list of 4 triangles (with normals associated 
+     * with each vertex index).
+     *
+     * ```
+     * 0/1   2/2  4/6
+     * 4/6   2/2  5/8
+     * 4/6   5/8  7/7
+     * 8/7   9/4  5/5
+     * ```
+     */
     template<typename color_t> 
     struct Mesh3D
         {

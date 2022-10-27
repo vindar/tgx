@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('classtgx_1_1_renderer3_d.html',''); in
 </div><!--header-->
 <div class="contents">
 
-<p>Class that manages the drawing of 3D objects.  
+<p>Class that manages a scene and draws 3D objects onto a <code><a class="el" href="classtgx_1_1_image.html">Image</a></code>.  
  <a href="classtgx_1_1_renderer3_d.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_renderer3_d_8h_source.html">Renderer3D.h</a>&gt;</code></p>
@@ -109,10 +109,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a333d6126e522ba550b7ec8add6c600ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classtgx_1_1_renderer3_d.html#a333d6126e522ba550b7ec8add6c600ad">More...</a><br /></td></tr>
 <tr class="separator:a333d6126e522ba550b7ec8add6c600ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7222e72a480ce99a8eb3d3df2dfec0aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa">setViewportSize</a> (int lx, int ly)</td></tr>
-<tr class="memdesc:a7222e72a480ce99a8eb3d3df2dfec0aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the size of the viewport, up to 4096x4096.  <a href="classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa">More...</a><br /></td></tr>
+<tr class="memdesc:a7222e72a480ce99a8eb3d3df2dfec0aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the size of the viewport.  <a href="classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa">More...</a><br /></td></tr>
 <tr class="separator:a7222e72a480ce99a8eb3d3df2dfec0aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f1030e0892d613c3406811755bda599"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a6f1030e0892d613c3406811755bda599">setViewportSize</a> (const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;viewport_dim)</td></tr>
-<tr class="memdesc:a6f1030e0892d613c3406811755bda599"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the size of the viewport, up to 4096x4096.  <a href="classtgx_1_1_renderer3_d.html#a6f1030e0892d613c3406811755bda599">More...</a><br /></td></tr>
+<tr class="memdesc:a6f1030e0892d613c3406811755bda599"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the size of the viewport.  <a href="classtgx_1_1_renderer3_d.html#a6f1030e0892d613c3406811755bda599">More...</a><br /></td></tr>
 <tr class="separator:a6f1030e0892d613c3406811755bda599"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99e31001994fa3444b15e7037a1d5f1d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a99e31001994fa3444b15e7037a1d5f1d">setImage</a> (<a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *im)</td></tr>
 <tr class="memdesc:a99e31001994fa3444b15e7037a1d5f1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the image that will be drawn onto.  <a href="classtgx_1_1_renderer3_d.html#a99e31001994fa3444b15e7037a1d5f1d">More...</a><br /></td></tr>
@@ -416,32 +416,33 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawWireFrameCube</b>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename color_t, int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float&gt;<br />
-class tgx::Renderer3D&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;</div><p >Class that manages the drawing of 3D objects. </p>
-<p >The class create a virtual viewport and provides methods to draw 3D primitives onto this viewport (to which is attached an Image&lt;color_t&gt; object)</p>
-<p >Template parameters:</p>
-<ul>
-<li>color_t : the color type for the image to draw onto.</li>
-<li><p class="startli">LOADED_SHADERS : <br  />
-</p>
-<p class="startli">A list of all shaders that can be used with this object. By default, all shaders are loaded.</p>
-<p class="startli">-&gt; LOADING ONLY THE REQUIRED SHADERS SAVES <em>A LOT</em> OF MEMORY SPACE AND INCREASES PERFORMANCE.</p>
-<p class="startli">A combination of the following flags:</p><ul>
-<li>TGX_SHADER_PERSPECTIVE when set, drawing with perspective projection is allowed</li>
-<li>TGX_SHADER_ORTHO when set, drawing with orthographic projection is allowed</li>
-<li>TGX_SHADER_NOZBUFFER when set, drawing without using a z-buffer is allowed</li>
-<li>TGX_SHADER_ZBUFFER when set, drawing while using a z-buffer is allowed</li>
-<li>TGX_SHADER_FLAT when set, drawing with flat shading is allowed</li>
-<li>TGX_SHADER_GOURAUD when set, drawing with gouraud shading is allowed</li>
-<li>TGX_SHADER_NOTEXTURE when set, drawing without using a texture is allowed</li>
-<li>TGX_SHADER_TEXTURE_NEAREST when set, drawing with a texture using nearest neighbour interpolation is allowed</li>
-<li>TGX_SHADER_TEXTURE_BILINEAR when set, drawing with a texture using bilinear interpolation is allowed</li>
-<li>TGX_SHADER_TEXTURE_WRAP_POW2 when set, drawing with a texture using wrap around mode (with dimensions of texture being power of two) is allowed</li>
-<li>TGX_SHADER_TEXTURE_CLAMP when set, drawing with a texture using clamping to edge mode is allowed</li>
+class tgx::Renderer3D&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;</div><p >Class that manages a scene and draws 3D objects onto a <code><a class="el" href="classtgx_1_1_image.html">Image</a></code>. </p>
+<p >A <a class="el" href="classtgx_1_1_renderer3_d.html" title="Class that manages a scene and draws 3D objects onto a Image.">Renderer3D</a> objects creates a "virtual viewport" and provides a set of methods to draw 3D primitives onto this viewport which is then mapped to a <code><a class="el" href="classtgx_1_1_image.html">tgx::Image</a></code>.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">LOADED_SHADERS</td><td>list of all shaders that may be used. By default, all shaders are enabled but if is possible to select only a subset of shaders to improve rendering speed and decrease memory usage significantly. Must a <code>|</code> combination of the following flags:<ul>
+<li><code>TGX_SHADER_PERSPECTIVE</code>: enable perspective projection</li>
+<li><code>TGX_SHADER_ORTHO</code>: enable orthographic projection</li>
+<li><code>TGX_SHADER_NOZBUFFER</code>: enable rendering without using a z-buffer</li>
+<li><code>TGX_SHADER_ZBUFFER</code>: enable rendering with a z-buffer</li>
+<li><code>TGX_SHADER_FLAT</code>: enable flat shading</li>
+<li><code>TGX_SHADER_GOURAUD</code>: enable gouraud shading</li>
+<li><code>TGX_SHADER_NOTEXTURE</code>: enable rendering without texturing</li>
+<li><code>TGX_SHADER_TEXTURE_NEAREST</code>: enable rendering with texturing using point sampling</li>
+<li><code>TGX_SHADER_TEXTURE_BILINEAR</code>: enable rendering with texturing using bilinear sampling</li>
+<li><code>TGX_SHADER_TEXTURE_WRAP_POW2</code>: texture can use 'wrap around' mode with dimensions of texture being power of two.</li>
+<li><code>TGX_SHADER_TEXTURE_CLAMP</code>: texture can use 'clamping to edge' mode.</li>
 </ul>
-<p class="startli">NOTE: if a drawing call is made that requires a disabled shader, then the drawing operation fails silently (i.e. it is simply ignored).</p>
-</li>
-<li>ZBUFFER_t : type used for storing z-buffer values. Must be either <code>float</code> or <code>uint16_t</code>. The z-buffer must be as large as the image (but can be smaller than the viewport when using an offset). -&gt; float : higher quality but requires 4 bytes per pixel. -&gt; uint16_t : lower quality (z-fighting may occur) but only 2 bytes per pixel. </li>
+</td></tr>
+    <tr><td class="paramname">ZBUFFER_t</td><td>: Type used for storing z-buffer values. Must be either <code>float</code> or <code>uint16_t</code>. The z-buffer must be as large as the image (but can be smaller than the viewport when using an offset).<ul>
+<li><code>float</code>: higher quality but requires 4 bytes per pixel.</li>
+<li><code>uint16_t</code> : lower quality (z-fighting may occur) but only 2 bytes per pixel. <b>Remark</b></li>
 </ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>If a drawing call is made that requires a disabled shader, or if the <a class="el" href="classtgx_1_1_renderer3_d.html" title="Class that manages a scene and draws 3D objects onto a Image.">Renderer3D</a> object state is not valid (e.g. incorrect image size, enabled but missing z-buffer...) then the drawing operation will fails silently. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a333d6126e522ba550b7ec8add6c600ad" name="a333d6126e522ba550b7ec8add6c600ad"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a333d6126e522ba550b7ec8add6c600ad">&#9670;&#160;</a></span>Renderer3D()</h2>
@@ -478,7 +479,15 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 </div><div class="memdoc">
 
 <p>Constructor. </p>
-<p >Optionally set some parameters: viewport size, destination image and zbuffer (if used). </p>
+<p >Some parameters may be set right way (but they may be also set independantly later).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">viewportSize</td><td>(Optional) Size of the viewport. See <code><a class="el" href="classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa" title="Set the size of the viewport.">setViewportSize()</a></code>. </td></tr>
+    <tr><td class="paramname">im</td><td>(Optional) the destination image. See <code><a class="el" href="classtgx_1_1_renderer3_d.html#a99e31001994fa3444b15e7037a1d5f1d" title="Set the image that will be drawn onto.">setImage()</a></code>. </td></tr>
+    <tr><td class="paramname">zbuffer</td><td>(Optional) the Z-buffer. See <code><a class="el" href="classtgx_1_1_renderer3_d.html#a516e700a5470f52cbd9a82dd59f8c968" title="Set the zbuffer.">setZbuffer()</a></code>. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -3923,7 +3932,12 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 </div><div class="memdoc">
 
 <p>Set the image that will be drawn onto. </p>
-<p >The image can be smaller than the viewport. </p>
+<p ><b>Note</b></p>
+<ul>
+<li>The image can be smaller than the viewport. In this case, use <code><a class="el" href="classtgx_1_1_renderer3_d.html#afc1eaf179bc6573ab508ab3a7e38dab9" title="Set the offset of the image relative to the viewport.">setOffset()</a></code> to select the portion of the viewport that will be drawn.</li>
+<li>Passing <code>nullptr</code> remove the current image (and disables all drawing operation <br  />
+ until a new image is inserted). </li>
+</ul>
 
 </div>
 </div>
@@ -4264,7 +4278,7 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 </div><div class="memdoc">
 
 <p>Set the offset of the image relative to the viewport. </p>
-<p >Same as above but in vector form. </p>
+<p >Same as <code><a class="el" href="classtgx_1_1_renderer3_d.html#afc1eaf179bc6573ab508ab3a7e38dab9" title="Set the offset of the image relative to the viewport.">setOffset(int ox, int oy)</a></code>. </p>
 
 </div>
 </div>
@@ -4305,10 +4319,10 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 </div><div class="memdoc">
 
 <p>Set the offset of the image relative to the viewport. </p>
-<p >If the image has size (sx,sy), then during rasterization only the sub part [ox, ox + sx[x[oy, oy+sy[ of the viewport will be drawn (onto the image).</p>
-<p >By changing the offset and redrawing several times it it possible to use an image smaller than the viewport (and thus also save on zbuffer space).</p>
-<p >For example, to draw a 320x240 viewport with limited amount of memory. One can use an image of size 160x120 (37.5kb) and a zbuffer of the same size (75Kb) and then call the drawing method 4 times with offset (0,0), (0,120), (160,0) and (160,120) and upload the resulting image at its correct position on the screen between each rendering.</p>
-<p >Note: do not forget to clear the z-buffer after changing the offset ! </p>
+<p >If the image has size <code>(sx,sy)</code>, then during rasterization the portion <code>[ox, ox + sx[x[oy, oy+sy[</code> of the viewport will be drawn onto the image.</p>
+<p >By changing the offset and redrawing several times it it possible to use an image smaller than the viewport (and also save on zbuffer space).</p>
+<p >For example, to draw a 320x240 viewport with limited amount of memory. One can use an image of size 160x120 (37.5kb) and a z-buffer of the same size (35Kb for uint16_t) and then call the drawing method 4 times with offsets (0,0), (0,120), (160,0) and (160,120) and upload the resulting images at their correct positions on the screen between each rendering.</p>
+<p ><b>Note</b> Do not forget to clear the z-buffer after changing the offset ! </p>
 
 </div>
 </div>
@@ -4459,9 +4473,14 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 </div><div class="memdoc">
 
 <p>Set the projection matrix. </p>
-<p >This is the matrix that is used to project coordinate from 'view space' to NDC.</p>
-<p >-&gt; When using perspective projection, the projection matrix must store -z into the w component.</p>
-<p >IMPORTANT :In view space, the camera is assumed to be centered at the origin, looking looking toward the negative Z axis with the Y axis pointing up (as in opengl). </p>
+<p >This is the matrix that is used to project coordinate from 'view space' to normalized device coordinates (NDC).</p>
+<p >Call this method to set a "custom" projection matrix. For the usual perspective and orthographic matrices, use instead <a class="el" href="classtgx_1_1_renderer3_d.html#af0ae032c0be73580be8e61c53ad42545" title="Set the projection matrix as a perspective matrix https://www.khronos.org/registry/OpenGL-Refpages/gl...">setFrustum()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a8437622c6b90f9429769504848d22456" title="Set the projection matrix as a perspective matrix https://www.khronos.org/registry/OpenGL-Refpages/gl...">setPerspective()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a8ff9976b53c527e62c95be427620685f" title="Set the projection matrix as an orthographic matrix: https://www.khronos.org/registry/OpenGL-Refpages...">setOrtho()</a>.</p>
+<p ><b>Note</b></p>
+<ul>
+<li>When using perspective projection, the projection matrix must store <code>-z</code> into the <code>w</code> component.</li>
+<li>In view space, the camera is assumed to be centered at the origin, looking looking toward the negative Z axis with the Y axis pointing up (as in opengl).</li>
+</ul>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtgx_1_1_renderer3_d.html#a4bce4752b73a38862733b4f2bcb6f04f" title="Get a copy of the current projection matrix.">getProjectionMatrix()</a> </dd></dl>
 
 </div>
 </div>
@@ -4643,8 +4662,8 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 </table>
 </div><div class="memdoc">
 
-<p>Set the size of the viewport, up to 4096x4096. </p>
-<p >Same as above but in vector form. </p>
+<p>Set the size of the viewport. </p>
+<p >Same as <code><a class="el" href="classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa" title="Set the size of the viewport.">setViewportSize(int lx, int ly)</a></code>. </p>
 
 </div>
 </div>
@@ -4684,9 +4703,22 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 </table>
 </div><div class="memdoc">
 
-<p>Set the size of the viewport, up to 4096x4096. </p>
-<p >The normalized coordinates in [-1,1]x[-1,1} are mapped to [0,lx-1]x[0,ly-1] just before rasterization. It is possible to use a viewport larger than the image drawn onto by using an offset for the image inside the viewport in order to perform 'tile rendering'. <br  />
- </p>
+<p>Set the size of the viewport. </p>
+<p >The normalized coordinates in <code>[-1,1]x[-1,1]</code> are mapped to <code>[0,lx-1]x[0,ly-1]</code> just before rasterization.</p>
+<p >It is possible to use a viewport larger than the image drawn onto by using an offset for the image inside the viewport in order to perform 'tile rendering'. see <code><a class="el" href="classtgx_1_1_renderer3_d.html#afc1eaf179bc6573ab508ab3a7e38dab9" title="Set the offset of the image relative to the viewport.">setOffset()</a></code>.</p>
+<p >the maximum viewport size depends on <code>TGX_RASTERIZE_SUBPIXEL_BITS</code> which specifies the sub-pixel precision value used by the 3D rasterizer:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">subpixel bits   </th><th class="markdownTableHeadNone">max viewport size LX*LY    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">8   </td><td class="markdownTableBodyNone">2048 x 2048    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">6   </td><td class="markdownTableBodyNone">4096 x 4096    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">4   </td><td class="markdownTableBodyNone">8192 x 8192    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">2   </td><td class="markdownTableBodyNone">16384 x 16384   </td></tr>
+</table>
 
 </div>
 </div>
