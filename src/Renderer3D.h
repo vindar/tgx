@@ -248,8 +248,8 @@ namespace tgx
 
 
         /**
-        * Get a copy of the current projection matrix.
-        **/
+        * Return a copy of the current projection matrix.
+        */
         fMat4 getProjectionMatrix() const
             {
             fMat4 M = _projM;
@@ -258,8 +258,10 @@ namespace tgx
             }
 
         /**
-        * Set projection mode to orthographic (ie no z-divide)
-        **/
+        * Set projection mode to orthographic (ie no z-divide). 
+        * 
+        * This method is called automatically after `setOrtho()` so it needs only be called, when applicable, after `setProjectionMatrix()`.
+        */
         void useOrthographicProjection()
             {
             static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use useOrthographicProjection()");
@@ -270,8 +272,10 @@ namespace tgx
 
 
         /**
-        * Set projection mode to perspective (ie with z-divide)
-        **/
+        * Set projection mode to perspective (ie with z-divide).
+        * 
+        * This method is called automatically after `setPerspective()` or `setFrustum()` so it needs only be called, when applicable, after `setProjectionMatrix()`.
+        */
         void usePerspectiveProjection()
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use usePerspectiveProjection()");
@@ -282,15 +286,17 @@ namespace tgx
 
 
         /**
-         * Set the projection matrix as an orthographic matrix:
+         * Set the projection matrix as an orthographic matrix.
+         * 
          * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml
          *
-         * This method automatically switches to orthographic projection mode.
+         * This method automatically switches to orthographic projection mode by calling useOrthographicProjection().
          *
-        * IMPORTANT :In view space, the camera is assumed to be centered
-        * at the origin, looking looking toward the negative Z axis with
-        * the Y axis pointing up (as in opengl).
-         **/
+         * **Remark** In view space, the camera is assumed to be centered at the origin, looking looking toward the 
+         * negative Z axis with the Y axis pointing up (as in opengl).
+         * 
+         * @sa setFrustum(), setPerspective()
+         */
         void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use setOrtho()");
@@ -301,15 +307,17 @@ namespace tgx
 
 
         /**
-         * Set the projection matrix as a perspective matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
-        *
-         * This method automatically switches to perspective projection mode.
+         * Set the projection matrix as a perspective matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
          *
-        * IMPORTANT :In view space, the camera is assumed to be centered
-        * at the origin, looking looking toward the negative Z axis with
-        * the Y axis pointing up (as in opengl).
-        **/
+         * This method automatically switches to perspective projection mode by calling usePerspectiveProjection().
+         *
+         * **Remark** In view space, the camera is assumed to be centered at the origin, looking looking toward the
+         * negative Z axis with the Y axis pointing up (as in opengl).
+         * 
+         * @sa setOrtho(), setPerspective()
+         */
         void setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setFrustrum()");
@@ -320,15 +328,17 @@ namespace tgx
 
 
         /**
-        *  Set the projection matrix as a perspective matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
-        *
-        * This method is only available when ORTHO = false.
-        *
-        * IMPORTANT :In view space, the camera is assumed to be centered
-        * at the origin, looking looking toward the negative Z axis with
-        * the Y axis pointing up (as in opengl).
-        **/
+         *  Set the projection matrix as a perspective matrix
+         *  
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
+         *
+         * This method automatically switches to perspective projection mode by calling usePerspectiveProjection().
+         *
+         * **Remark** In view space, the camera is assumed to be centered at the origin, looking looking toward the
+         * negative Z axis with the Y axis pointing up (as in opengl).
+         * 
+         * @sa setFrustum(), setOrtho()
+         */
         void setPerspective(float fovy, float aspect, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setPerspective()");
@@ -341,18 +351,20 @@ namespace tgx
         /**
         * Set the face culling strategy.
         *
-        * - w > 0 : Vertices in front faces are ordered counter-clockwise CCW [default]. Clockwise faces are culled.
-        * - w < 0 : Vertices in front faces are ordered clockwise (CW). Counter-clockwise faces are culled.
-        * - w = 0 : Disable face culling: both clockwise and counter-clockwise faces are drawn.
+        * - `w>0`: Vertices in front faces are ordered counter-clockwise [default]. Clockwise faces are culled.
+        * - `w<0`: Vertices in front faces are ordered clockwise. Counter-clockwise faces are culled.
+        * - `w=0`: Disables face culling: both clockwise and counter-clockwise faces are drawn.
         *
-        * Remark: - When face culling is enabled (w != 0), and when gouraud shading is active, the normal vectors
-        *           supplied for the vertices must, of course, be the normal vectors for the front side of the triangle.
-        *         - When face culling is disabled (w = 0). Both face of a triangle are drawn so there is no more
-        *           notion of 'front' and 'back' face. In this case, when using gouraud shading, by convention, the
-        *           normal vector supplied must be those corresponding to the counter-clockwise face being shown
-        *           (whatever this means since these normals vector are attached to  vertices and not faces anyway,
-        *           but still...)
-        **/
+        * **Remark**
+        * 
+        * 1. When face culling is enabled (`w != 0`), and when Gouraud shading is active, the normal vectors
+        *    supplied for the vertices must be the normal vectors for the front side of the triangle.
+        * 2. When face culling is disabled (`w = 0`). Both faces of a triangle are drawn so there is no more
+        *    notion of 'front' and 'back' face. In this case, when using Gouraud shading, by convention, the
+        *    normal vector supplied must be those corresponding to the counter-clockwise face being shown
+        *    (whatever this means since these normals vector are attached to vertices and not faces anyway,
+        *    but still...)
+        */
         void setCulling(int w)
             {
             _culling_dir = (w > 0) ? 1.0f : ((w < 0) ? -1.0f : 0.0f);
@@ -360,13 +372,15 @@ namespace tgx
 
 
         /**
-        * Set the zbuffer.
+        * Set the z-buffer.
         *
-        * Warning: the zbuffer must be large enough to be used with the image that is being 
-          drawn onto. This means that we must have length >= image.width()*image.height().
+        * **Warning** the zbuffer must be large enough to be used with the image that is being 
+          drawn onto. This means that we must have length at least `image.width()*image.height()`.
         *
-        * - Setting a valid zbuffer automatically turns on z-buffering.
-        * - Removing the z-buffer (by setting it to nullptr) turns off z-buffering.
+        * **Note**
+        * 
+        * 1. Setting a valid zbuffer automatically turns on z-buffer depth test.
+        * 2. Removing the z-buffer (by setting it to `nullptr`) turns off the z-buffer depth test.
         **/
         void setZbuffer(ZBUFFER_t * zbuffer)
             {
@@ -379,11 +393,10 @@ namespace tgx
         /**
         * Clear the Zbuffer.
         *
-        * This method should be called before drawing a new frame to erase
-        * the previous zbuffer.
+        * This method must be called before drawing a new frame to erase the previous zbuffer.
         *
-        * The zbuffer is intentionally not clear between draw() calls to enable
-        * the rendering of multiple objects on the same scene.
+        * **Note** The z-buffer is intentionally not cleared between draw() calls to enable 
+        * rendering of multiple objects on the same scene.
         **/
         void clearZbuffer()
             {
@@ -396,41 +409,38 @@ namespace tgx
 
 
         /**
-        * Set the shaders to use for subsequent drawing operations. A combination of the following flags.
+        * Set the shaders to use for subsequent drawing operations. 
+        * 
+        * `shader` must be a combination of flags or'ed `|` together. 
+        * 
+        * 1. Flag for selecting the shading algorithm (see https://en.wikipedia.org/wiki/Shading):    
+        *  
+        *    - `TGX_SHADER_FLAT`   Use flat shading (i.e. uniform color on faces). This is the fastest
+        *                          drawing method but it usually gives poor results when combined with 
+        *                          texturing. Lighting transition between bright to dark aera may appear 
+        *                          to 'flicker' when color_t = RGB565 because of the limited number of 
+        *                          shades available.
+        *
+        *                          the color on the face is computed according to Phong's lightning
+        *                          model use the triangle face normals computed via crossproduct.
+        *                          https://en.wikipedia.org/wiki/Phong_reflection_model
+        *
+        *
+        *    - TGX_SHADER_GOURAUD  Give a color to the vertices and use linear interpolation to
+        *                          shade each triangle according to its vertex colors. This results in
+        *                          smoother color transitions and works well with texturing but at a
+        *                          higher CPU cost.
+        *                          
+        *                          When backface culling is enable, the normal vector must be that of
+        *                          the 'front face' (obviously). When backface culling is  disabled,
+        *                          there is no more 'front' and 'back' face: by convention, the normal
+        *                          vector supplied must then be that corresponding to the counter-
+        *                          clockwise face.
         * 
         * NOTE: If a shader flag is set with SetShaders but is disabled in the template parameter LOADED_SHADER, 
         *       then the drawing calls will silently fail (draw nothing) or, in the best case, sometime fall-back 
         *       using another shader that is loaded. 
         * 
-        * - Choosing the shading algorithm: TGX_SHADER_FLAT or TGX_SHADER_GOURAUD (see https://en.wikipedia.org/wiki/Shading)
-        *                                  
-        *     TGX_SHADER_FLAT     Use flat shading (i.e. uniform color on faces). This is the fastest
-        *                         drawing method but usually gives poor results when combined with texturing.
-        *                         Lighting transition between bright to dark aera may appear to 'flicker'
-        *                         when color_t = RGB565 because of the limited number of colors/shades
-        *                         available.
-        *
-        *                      -> the color on the face is computed according to Phong's lightning
-        *                         model use the triangle face normals computed via crossproduct.
-        *                         https://en.wikipedia.org/wiki/Phong_reflection_model
-        *                         
-        *
-        *     TGX_SHADER_GOURAUD  Give a color to each vertex and then use linear interpolation to
-        *                         shade each triangle according to its vertex colors. This results in
-        *                         smoother color transitions and works well with texturing but at a
-        *                         higher CPU cost.
-        *
-        *                      -> In order to use gouraud shading, a normal vector must be attributed
-        *                          to each vertex, which is then used to determine its color according
-        *                          to phong's lightning model.
-        *
-        *                      -> *** NORMAL VECTORS MUST ALWAYS BE NORMALIZED (UNIT LENGHT) ***
-        *
-        *                      -> When backface culling is enable, the normal vector must be that of
-        *                         the 'front face' (obviously). When backface culling is  disabled,
-        *                         there is no more 'front' and 'back' face: by convention, the normal
-        *                         vector supplied must then be that corresponding to the counter-
-        *                         clockwise face.
         *
         *  - Enabling (perspective correct) texture mapping.  
         *    Texture mapping is perspective correct and is performed in combination with TGX_SHADER_FLAT or 
