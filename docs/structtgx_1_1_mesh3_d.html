@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('structtgx_1_1_mesh3_d.html',''); initR
 </div><!--header-->
 <div class="contents">
 
-<p>Structure containing the information about a 3D mesh.  
+<p>3D mesh data stucture.  
  <a href="structtgx_1_1_mesh3_d.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_mesh3_d_8h_source.html">Mesh3D.h</a>&gt;</code></p>
@@ -183,42 +183,22 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename color_t&gt;<br />
-struct tgx::Mesh3D&lt; color_t &gt;</div><p >Structure containing the information about a 3D mesh. </p>
-<p >FORMAT:</p>
-<p >vertice the array of vertices in (x,y,z) fVec3 format. a vertex is refered by its index in this array -&gt; maximum number of vertice: 32767</p>
-<p >texcoord the array of texture coordinate in (u,v) fVec2 format a texture coord is refered by its index in this array. Set to nullptr (and nb_texcoords=0) if no texture are used with this model. -&gt; maximum number of texture coords: 65535</p>
-<p >normal array of normal vectors in (x,y,z) fVec3 format a normal vector is refered by its index in this array. Set to nullptr if no normal vectors are defined for this model (so only flat shading will be available). -&gt; maximum number of normal vectors: 65535 THE NORMALS MUST HAVE UNIT NORM !</p>
-<p >face The array of triangular face. The array is composed of uint16_t and is divided in "chains of triangles". See below for details</p>
-<p >texture the texture image associated with the model (if any). nullptr if texture is not present/used currently (ok even if the texcoord array exists).</p>
-<p >color the object color when texturing is not used</p>
-<p >ambiant_strength reflection factor for ambiant lightning.</p>
-<p >diffuse_strength reflection factor for diffuse lightning.</p>
-<p >specular_strength reflection factor for specular lightning.</p>
-<p >specular_exponent specular lightning component.</p>
-<p >next pointer to the next mesh to draw. nullptr if none.</p>
-<p >bounding_box model bounding box.</p>
-<p >name name of the model (optional, nullptr if none).</p>
-<p >DESCRIPTION OF THE FACE ARRAY</p>
-<p >the array is composed of "chains" of triangles. Each chain starts with a uint16_t that specifies its length and is followed by a sequence of elements where each element occupies 1, 2 or 3 uint16_t. So the array takes the following general form:</p>
-<p >[chain 1 length = n] [elem 1] [elem 2] [elem 3] ... [elem n+2] [chain 2 length = m] [elem 1] [elem 2] [elem 3] ... [elem m+2] ... [chain k length = p] [elem 1] [elem 2] [elem 3] ... [elem p+2] [endtag = 0]</p>
-<ul>
-<li>An endtag (int16_t)0 is used as a sentinel to mark the end of the array.</li>
-<li>A chain starts with a single uint16_t [chain length] that specify the number of triangles in the chain. It is followed by [chain length]+2 "elements".</li>
-</ul>
-<p >A "element" represent a vertex of a triangle and occupies 1, 2 or 3 uint16_t depending on wether the textcoord and normal arrays exist. The first uint16_t of an element is the vertex index (with the direction bit), possibly followed by the texture index (if texture array is present) and then finally followed by the normal index (if a normal array is present) i.e an element as the form: </p><pre class="fragment">                    (if texture set) (if normal set)
-</pre><p> 1bit 15bits (16bits) (16bits) [DBIT| VERTEX INDEX] [TEXTURE INDEX] [NORMAL INDEX]</p>
-<p >the highest bit of the first uint16_t is called the direction bit DBIT. Thus, a vertex index is stored on only 15 bit which is why the vertex array cannot contain more than 32767 indices.</p>
-<p >The first 3 elements of a chain represent the 3 vertices or the starting triangle of the chain. Their DBIT is always 0. Each subsequent element is combined with the current triangle to deduce the next triangle in the following way.</p>
-<p >Say the current triangle is [V1, V2, V3] and the next element is DBIT|V4:</p>
-<p >if DBIT = 0, then the next triangle is [V1, V3, V4] if DBIT = 1, then the next triangle is [V3, V2, V4]</p>
-<p >REMARK: the winding order of the triangle matters (for face culling) and that is what the DBIT is for.</p>
-<p >EXAMPLE: We assume that texcoord = nullptr but normal != nullptr so that each element is coded on 2 uint16_t: the DBIT and vertex index on the first uint16_t and the normal index on the second uint16_t.</p>
-<p >Let us consider the following face array composed of 19 uint16_t:</p>
-<p >face = {3,0,1,2,2,4,6,32773,8,7,7,1,8,7,9,4,5,5,0}</p>
-<p >It should be read as</p>
-<p >3 (the first chain has 3 triangles) 0/1 2/2 4/6 (first triangle with vertex 0,2,4 and normals 1,2,6) 5/8 (32773 = 32768 + 5 so DBIT = 1, second triangle) 7/7 (third triangle DBIT = 0) 1 (the second chain has a single triangle) 8/7 9/4 5/5 (the triangle of the second chain) 0 (end tag)</p>
-<p >after decoding, this gives a list of 4 triangles (with normals associated with each vertex index).</p>
-<p >0/1 2/2 4/6 4/6 2/2 5/8 4/6 5/8 7/7 8/7 9/4 5/5 </p>
+struct tgx::Mesh3D&lt; color_t &gt;</div><p >3D mesh data stucture. </p>
+<p >A <a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data stucture.">Mesh3D</a> structure contain all the informations about an object geometry, color, material property and textures. A mesh can be rendered onto an <code><a class="el" href="classtgx_1_1_image.html">Image</a></code> object using the <code><a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e" title="Draw a mesh onto the image.">Renderer3D::drawMesh()</a></code> method.</p>
+<p >The mesh data format is designed to be compact and favour linear access and increase cache coherency so that meshes can be stored and rendered directly from "slow" memory such as FLASH on MCU.</p>
+<p >The Python scripts <code>obj_to_h</code> located in the <code>\tools</code> directory of the library can be used to create a <code><a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data stucture.">Mesh3D</a></code> object directly from an .obj file. The associated image textures (if any) can be converted using the Python script <code>texture_2_h</code>.</p>
+<p ><b>MESH FORMAT</b></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vertice</td><td>Array of all the vertices of the mesh in (x,y,z) fVec3 format. A vertex is refered by its index in this array. Maximum number of vertices per mesh: 32767.</td></tr>
+    <tr><td class="paramname">texcoord</td><td>Array of texture coordinate in (u,v) fVec2 format. A texture coord is refered by its index in this array. Set to nullptr (and nb_texcoords=0) if the mesh has no texture. Maximum number of texture coords: 65535</td></tr>
+    <tr><td class="paramname">normal</td><td>Array of normal vectors in (x,y,z) fVec3 format. A normal vector is refered by its index in this array. Set to nullptr if no normal vectors are defined. <b>Normal vectors must have unit norm</b>. Maximum number of normal vectors: 65535</td></tr>
+    <tr><td class="paramname">face</td><td>Array of triangular faces. The array is composed of <code>uint16_t</code> and is divided into <em>chains of triangles</em>. See below for details.</td></tr>
+    <tr><td class="paramname">texture</td><td>image texture object associated with the mesh (or nullptr is none).</td></tr>
+    <tr><td class="paramname">ambiant_strength,diffuse_strength,specular_strength,specular_exponent</td><td>the model's material properties. </td></tr>
+  </table>
+  </dd>
+</dl>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/<a class="el" href="_mesh3_d_8h_source.html">Mesh3D.h</a></li>
 </ul>

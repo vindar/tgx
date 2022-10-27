@@ -36,7 +36,7 @@
 namespace tgx
 {
 
-    /**
+    /**********
     * Structure containing the information about a 3D mesh
     *
     * FORMAT:
@@ -154,7 +154,49 @@ namespace tgx
     * 4/6   5/8  7/7
     * 8/7   9/4  5/5
     *
-    */
+    *****/
+
+
+    /**
+     * 3D mesh data stucture.
+     * 
+     * A Mesh3D structure contain all the informations about an object geometry, color, material
+     * property and textures. A mesh can be rendered onto an `Image` object using the
+     * `Renderer3D::drawMesh()` method.
+     * 
+     * The mesh data format is designed to be compact and favour linear access and increase cache
+     * coherency so that meshes can be stored and rendered directly from "slow" memory such as FLASH
+     * on MCU.
+     * 
+     * The Python scripts `obj_to_h` located in the `\tools` directory of the library can be used to
+     * create a `Mesh3D` object directly from an .obj file.  The associated image textures (if any)
+     * can be converted using the Python script `texture_2_h`.
+     *
+     * **MESH FORMAT**
+     *
+     * @param vertice   Array of all the vertices of the mesh in (x,y,z) fVec3 format. A vertex is
+     *                  refered by its index in this array. Maximum number of vertices per mesh:
+     *                  32767.
+     *
+     * @param texcoord  Array of texture coordinate in (u,v) fVec2 format. A texture coord is
+     *                  refered by its index in this array. Set to nullptr (and nb_texcoords=0) if
+     *                  the mesh has no texture. Maximum number of texture coords: 65535
+     *
+     * @param normal    Array of normal vectors in (x,y,z) fVec3 format. A normal vector is refered
+     *                  by its index in this array. Set to nullptr if no normal vectors are defined.
+     *                  **Normal vectors must have unit norm**. Maximum number of normal vectors:
+     *                  65535
+     *
+     * @param face      Array of triangular faces. The array is composed of `uint16_t` and is divided into
+     *                  *chains of triangles*. See below for details.
+     *
+     * @param texture   image texture object associated with the mesh (or nullptr is none).
+     *
+     * @param ambiant_strength,
+     *        diffuse_strength,
+     *        specular_strength,
+     *        specular_exponent the model's material properties.
+    **/
     template<typename color_t> 
     struct Mesh3D
         {
