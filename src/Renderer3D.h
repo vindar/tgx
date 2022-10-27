@@ -213,7 +213,7 @@ namespace tgx
         * Set the offset of the image relative to the viewport.
         * 
         * Same as `setOffset(int ox, int oy)`.
-        **/
+        */
         void setOffset(const iVec2& offset)
             {
             this->setOffset(offset.x, offset.y);
@@ -381,7 +381,7 @@ namespace tgx
         * 
         * 1. Setting a valid zbuffer automatically turns on z-buffer depth test.
         * 2. Removing the z-buffer (by setting it to `nullptr`) turns off the z-buffer depth test.
-        **/
+        */
         void setZbuffer(ZBUFFER_t * zbuffer)
             {
             static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use setZbuffer()");
@@ -397,7 +397,7 @@ namespace tgx
         *
         * **Note** The z-buffer is intentionally not cleared between draw() calls to enable 
         * rendering of multiple objects on the same scene.
-        **/
+        */
         void clearZbuffer()
             {
             static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use clearZbuffer()");
@@ -411,62 +411,45 @@ namespace tgx
         /**
         * Set the shaders to use for subsequent drawing operations. 
         * 
-        * `shader` must be a combination of flags or'ed `|` together. 
-        * 
-        * 1. Flag for selecting the shading algorithm (see https://en.wikipedia.org/wiki/Shading):    
+        * **Main flags**
         *  
-        *    - `TGX_SHADER_FLAT`   Use flat shading (i.e. uniform color on faces). This is the fastest
-        *                          drawing method but it usually gives poor results when combined with 
-        *                          texturing. Lighting transition between bright to dark aera may appear 
-        *                          to 'flicker' when color_t = RGB565 because of the limited number of 
-        *                          shades available.
+        * - `TGX_SHADER_FLAT`    Use flat shading (i.e. uniform color on faces). This is the fastest
+        *                        drawing method but it usually gives poor results when combined with 
+        *                        texturing. Lighting transitions between bright to dark aera may appear 
+        *                        to flicker when using color with low resolution such as RGB565.
         *
-        *                          the color on the face is computed according to Phong's lightning
-        *                          model use the triangle face normals computed via crossproduct.
-        *                          https://en.wikipedia.org/wiki/Phong_reflection_model
-        *
-        *
-        *    - TGX_SHADER_GOURAUD  Give a color to the vertices and use linear interpolation to
-        *                          shade each triangle according to its vertex colors. This results in
-        *                          smoother color transitions and works well with texturing but at a
-        *                          higher CPU cost.
-        *                          
-        *                          When backface culling is enable, the normal vector must be that of
-        *                          the 'front face' (obviously). When backface culling is  disabled,
-        *                          there is no more 'front' and 'back' face: by convention, the normal
-        *                          vector supplied must then be that corresponding to the counter-
-        *                          clockwise face.
-        * 
-        * NOTE: If a shader flag is set with SetShaders but is disabled in the template parameter LOADED_SHADER, 
-        *       then the drawing calls will silently fail (draw nothing) or, in the best case, sometime fall-back 
-        *       using another shader that is loaded. 
-        * 
-        *
-        *  - Enabling (perspective correct) texture mapping.  
-        *    Texture mapping is perspective correct and is performed in combination with TGX_SHADER_FLAT or 
-        *    TGX_SHADER_GOURAUD. The color of a pixel in the triangle is obtained by combining to texture color 
-        *    at that pixel with the lightning at the position (according to phong's lightning model again).
+        * - `TGX_SHADER_GOURAUD` Use gouraud shading (linear interpolation of vertex colors) This results   
+        *                        in smoother color transitions and works well with texturing but is more CPU 
+        *                        intensive.
         *    
-        *    TGX_SHADER_TEXTURE   enable texture mapping. 
-        *                         -> A texture must be stored in an Image<color_t> object
-        *                         
-        *                         -> wrap mode is set with `setTextureWrappingMode()`
-        *                         
-        *                         -> drawing quality is set with `setTextureQuality()`
+        * - `TGX_SHADER_TEXTURE` enable texture mapping. A texture must be stored in an Image<color_t> object.
+        *                        - wrap mode can be set with setTextureWrappingMode() or passing along either `TGX_SHADER_TEXTURE_WRAP_POW2` or `TGX_SHADER_TEXTURE_CLAMP`.
+        *                        - drawing quality can be set with setTextureQuality() or by passing along either `TGX_SHADER_TEXTURE_NEAREST` or `TGX_SHADER_TEXTURE_BILINEAR`.
+        *                       
+        * **Remarks**
         *
-        *                         -> NOTE: Large textures stored in flash memory may be VERY slow to access when
-        *                            the texture is not read linearly which will happens for some (bad) triangle
-        *                            orientations and then cache becomes useless... This problem can be somewhat
-        *                            mitigated by:
+        * 1. If a shader flag is set with SetShaders() but is disabled in the template parameter LOADED_SHADER,
+        *    then the drawing calls will silently fail (draw nothing).
         *
-        *                            (a) splitting large textured triangles into smaller ones: then each triangle
-        *                                only accesses a small part of the texture. This helps a lot wich cache
-        *                                optimizatrion [this is why models with thousands of faces may display
-        *                                faster that a simple textured cube in some cases :-)].
+        * 
+        * 2. The color on the face (for flat shading) or on the vertices (for gouraud shading) is computed
+        *    according to Phong's lightning https://en.wikipedia.org/wiki/Phong_reflection_model.
+        *    
+        *    
+        * 3. Texture mapping is 'perspective correct' and can be done with either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD   
+        *    selected. The color of a pixel is obtained by combining to texture color at that pixel with the lightning 
+        *    at the position according to phong's lightning model.
+        *    
         *
-        *                            (b) moving the image into RAM if possible. Even moving the texture from
-        *                                FLASH to EXTMEM (if available) will usually give a great speed boost !
-        **/
+        * 4. For large textures stored in flash memory may be VERY slow to access when the texture is not 
+        *    read linearly which will happens for some (bad) triangle orientations and then cache becomes useless... 
+        *    This problem can be somewhat mitigated by:
+        *    
+        *    - splitting large textured triangles into smaller ones: then each triangle only accesses a small part 
+        *      of the texture. This helps a lot wich cache optimization (this is why models with thousands of faces 
+        *      may display faster that a simple textured cube in some cases).
+        *    - moving the image into RAM if possible. Even moving the texture from FLASH to EXTMEM (if available) will usually give a great speed boost !
+        */
         void setShaders(int shaders)
             {               
             _rectifyShaderShading(shaders);
@@ -474,16 +457,11 @@ namespace tgx
 
 
         /**
-        * Set the wrap mode when using texturing. One of:
+        * Set the wrap mode when for texturing.
         * 
-        * TGX_SHADER_TEXTURE_WRAP_POW2      Wrap around (repeat) the texture. This is the fastest mode.
-        * 
-        *                                   !!! WARNING : WHEN USING THIS FLAG, THE TEXTURE MUST HAVE DIMENSIONS 
-        *                                       THAT ARE POWER OF 2 ALONG EACH AXIS !!!
-        * 
-        * 
-        * TGX_SHADER_TEXTURE_CLAMP          Clamp to the edge. Slower than above but the texture can be any size. 
-        **/
+        * - `TGX_SHADER_TEXTURE_WRAP_POW2`:  Wrap around (repeat) the texture. This is the fastest mode but **the texture size must be a power of two along each dimension**.
+        * - `TGX_SHADER_TEXTURE_CLAMP`:      Clamp to the edge. A bit slower than above but the texture can be any size. 
+        */
         void setTextureWrappingMode(int wrap_mode)
             {
             if (TGX_SHADER_HAS_TEXTURE_CLAMP(wrap_mode))
@@ -505,14 +483,11 @@ namespace tgx
 
 
         /**
-        * Set the texturing quality. One of
+        * Set the texturing quality.
         *
-        * TGX_SHADER_TEXTURE_NEAREST      Use nearest neighbour point sampling when texturing. 
-        *                                 (fastest method).
-        *
-        * TGX_SHADER_TEXTURE_BILINEAR     Use bilinear interpolation when texturing
-        *                                 (slower but higher quality).
-        **/
+        * - `TGX_SHADER_TEXTURE_NEAREST`:    Use simple point sampling when texturing (fastest method).
+        * - `TGX_SHADER_TEXTURE_BILINEAR`:   Use bilinear interpolation when texturing (slower but higher quality).
+        */
         void setTextureQuality(int quality)
             {
             if (TGX_SHADER_HAS_TEXTURE_BILINEAR(quality))
@@ -537,7 +512,7 @@ namespace tgx
         /*****************************************************************************************
         ******************************************************************************************
         *
-        * Scene specific parameters
+        * Scene specific parameters.
         *
         * The method belows affect the rendering at the 'scene level': camera position, lightning..
         *
@@ -546,17 +521,19 @@ namespace tgx
 
 
         /**
-        * Set the view tranformation matrix.
+        * Set the view transformation matrix.
         *
-        * This matrix is used to transform vertices from world coordinates to view coordinates
-        * (ie from the point of view of the camera)
+        * This matrix is used to transform vertices from 'world coordinates' to 'view coordinates'
+        * (ie from the point of view of the camera).
         *
-        * Thus, changing this matrix changes the position of the camera in the world space.
+        * Changing this matrix changes the position of the camera in the world space.
         *
-        * IMPORTANT: In view space (i.e. after transformation), the camera is assumed to be
-        * centered at the origin, looking looking toward the negative Z axis with the Y axis
-        * pointing up (as in opengl).
-        **/
+        * **Remark** In view space (i.e. after transformation), the camera is assumed to be
+        * centered at the origin, looking toward the negative Z axis with the Y axis pointing up 
+        * (as in opengl).
+        * 
+        * @sa getViewMatrix(), setLookAt()
+        */
         void setViewMatrix(const fMat4& M)
             {
             _viewM = M;
@@ -575,8 +552,10 @@ namespace tgx
 
 
         /**
-        * Get a copy of the current view matrix
-        **/
+        * Return a copy of the current view matrix.
+        * 
+        * @sa setViewMatrix(), setLookAt()
+        */
         fMat4 getViewMatrix() const
             {
             return _viewM;
@@ -585,12 +564,15 @@ namespace tgx
 
         /**
         * Set the view matrix so that the camera is looking at a given direction.
+        * 
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
         *
-        * eye       position of the camera in world space coords.
-        * center    point the camera is looking toward in world space coords.
-        * up        vector that tells the up direction for the camera (in world space coords).
-        **/
+        * @param eyeX, eyeY, eyeZ          position of the camera in world space coords.
+        * @param centerX, centerY, centerZ point the camera is looking toward in world space coords.
+        * @param upX, upY, upZ             vector that tells the up direction for the camera (in world space coords).
+        * 
+        * @sa setViewMatrix(), getViewMatrix()
+        */
         void setLookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
             {
             fMat4 M;
@@ -601,11 +583,14 @@ namespace tgx
 
         /**
         * Set the view matrix so that the camera is looking at a given direction.
+        * 
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
         *
-        * eye       position of the camera in world space coords.
-        * center    point the camera is looking toward in world space coords.
-        * up        vector that tells the up direction for the camera (in world space coords).
+        * @param eye       position of the camera in world space coords.
+        * @param center    point the camera is looking toward in world space coords.
+        * @param up        vector that tells the up direction for the camera (in world space coords).
+        *
+        * @sa setViewMatrix(), getViewMatrix()
         **/
         void setLookAt(const fVec3 eye, const fVec3 center, const fVec3 up)
             {
@@ -614,17 +599,18 @@ namespace tgx
 
 
         /**
-        * Convert from world coord. to the standard viewport coord.
-        * 
-        * - P : point given in the word coordinate system.    
-        *
-        * Return the projection of P on the standard viewport [-1,1]^2 according 
-        * to the current position of the camera. 
-        * 
-        * Note: - the model matrix is not taken into account here.
-        *       - the .w value can be used for depth testing. 
-        **/
-        fVec4 worldToViewPort(fVec3 P)
+         * Convert from world coordinates to normalized device coordinates (NDC).
+         *
+         * @param   P   Point in the word coordinate system.
+         *
+         * @returns the coordinates of `P` on the standard viewport `[-1,1]^2` according to the current
+         *          position of the camera.
+         *          
+         * **Note**
+         * - the model matrix is not taken into account here.
+         * - the `w` value returned can be used for depth testing.
+         */
+        fVec4 worldToNDC(fVec3 P)
             {
             fVec4 Q = _projM * _viewM.mult1(P);
             if (!_ortho) Q.zdivide();
@@ -633,15 +619,16 @@ namespace tgx
 
 
         /**
-        * Convert from world coord. to the corresponding image pixel.
-        *
-        * - P : point given in the word coordinate system.
-        *
-        * Return the position of the associated pixel on the image.
-        * 
-        * Note: - the position returned may be outside of the image ! 
-        *       - return (0,0) if no image inserted. 
-        **/
+         * Convert from world coordinates to the corresponding image pixel.
+         *
+         * @param   P   Point in the word coordinate system.
+         *
+         * @returns the coordinates of the associated pixel on the image.
+         * 
+         * **Note**
+         * - The position returned may be outside of the image ! 
+         * - Returns (0,0) if no image is inserted. 
+         */
         iVec2 worldToImage(fVec3 P)
             {
             fVec4 Q = _projM * _viewM.mult1(P);
@@ -653,10 +640,14 @@ namespace tgx
 
 
         /**
-        * Set the light source direction (i.e. the direction the light points to).
-        * Direction is given in world coordinates (hence transformed by the view Matrix
-        * at rendering time so that the light does not move with the camera).
-        **/
+         * Set the light source direction.
+         * 
+         * The 3d rendered uses a single 'directional light' i.e. a light source comming from infinity (such as the sun). 
+         * 
+         * @param   direction   The direction the light point toward given in world coordinates.
+         *
+         * @sa setLight(), setLightAmbiant(), setLightDiffuse(), setLightSpecular()
+         */
         void setLightDirection(const fVec3 & direction)
             {
             _light = direction;
@@ -673,9 +664,14 @@ namespace tgx
 
 
         /**
-        * Set the scene ambiant light color
-        * (according to the Phong lightning model).
-        **/
+         * Set the scene ambiant light color.
+         *
+         * See Phong's lightning model: https://en.wikipedia.org/wiki/Phong_reflection_model.
+         * 
+         * @param   color   color for the ambiant light. 
+         *
+         * @sa setLight(), setLightDirection(), setLightDiffuse(), setLightSpecular()
+         */
         void setLightAmbiant(const RGBf & color)
             {
             _ambiantColor = color;
@@ -685,9 +681,14 @@ namespace tgx
 
 
         /**
-        * Set the scene diffuse light color
-        * (according to the Phong lightning model).
-        **/
+         * Set the scene diffuse light color.
+         * 
+         * See Phong's lightning model: https://en.wikipedia.org/wiki/Phong_reflection_model.
+         *
+         * @param   color   color for the difuse light.
+         *
+         * @sa setLight(), setLightDirection(), setLightAmbiant(), setLightSpecular()
+         */
         void setLightDiffuse(const RGBf & color)
             {
             _diffuseColor = color;
@@ -697,9 +698,14 @@ namespace tgx
 
 
         /**
-        * Set the scene specular light color
-        * (according to the Phong lightning model).
-        **/
+         * Set the scene specular light color.
+         * 
+         * See Phong's lightning model: https://en.wikipedia.org/wiki/Phong_reflection_model.
+         *
+         * @param   color   color for the specular light.
+         *                  
+         * @sa setLight(), setLightDirection(), setLightAmbiant(), setLightDiffuse()
+         */
         void setLightSpecular(const RGBf & color)
             {
             _specularColor = color;
@@ -709,8 +715,19 @@ namespace tgx
 
 
         /**
-        * Set all the parameters of the scene light source at once.
-        **/
+         * Set all the lighting parameters of the scene at once.
+         *
+         * The 3d rendered uses a single 'directional light' i.e. a light source comming from infinity (such as the sun).
+         *
+         * See Phong's lightning model: https://en.wikipedia.org/wiki/Phong_reflection_model.
+         * 
+         * @param   direction       direction the light source point toward.
+         * @param   ambiantColor    light ambiant color.
+         * @param   diffuseColor    light diffuse color.
+         * @param   specularColor   light specular color.
+         *
+         * @sa setLightDirection(), setLightAmbiant(), setLightDiffuse(), setLightSpecular()
+         */
         void setLight(const fVec3 direction, const RGBf & ambiantColor, const RGBf & diffuseColor, const RGBf & specularColor)
             {
             this->setLightDirection(direction);
@@ -735,11 +752,13 @@ namespace tgx
 
 
         /**
-        * Set the model tranformation matrix.
-        *
-        * This matrix describes the transformation from local object space to view space.
-        * (i.e. the matrix specifies the position of the object in world space).
-        **/
+         * Set the model tranformation matrix.
+         * 
+         * This matrix describes the transformation from local object space to view space. (i.e. the
+         * matrix specifies the position of the object in world space).
+         * 
+         * @sa getModelMatrix(), setModelPosScaleRot()
+         */
         void setModelMatrix(const fMat4& M)
             {
             _modelM = M;
@@ -752,25 +771,37 @@ namespace tgx
 
 
         /**
-        * Get a copy of the current model matrix
-        **/
+        * Return a copy of the current model tranformation matrix.
+        * 
+        * @sa setModelMatrix(), setModelPosScaleRot()
+        */
         fMat4  getModelMatrix() const
             {
             return _modelM;
             }
 
 
-
         /**
-        * Set the model matrix in such way that a model centered at the origin (in model coordinate) 
-        * will appear at a given position/scale/rotation on the world coordinates. 
-        *
-        * Transform are done in the following order:
-        * 
-        * (1) model is scaled in each direction in the model coord. according to 'scale'
-        * (2) model is rotated in model coord. around direction 'rot_dir' and with an angle 'rot_angle' (in degree).
-        * (3) model is translated to position 'center' in the world coord. 
-        **/
+         * Set the model tranformation matrix to move an object to a given a given location, scale and
+         * rotation.
+         * 
+         * The method is such that, if a model is initially centered around the origin in model
+         * coordinate, then it will be placed at a given position/scale/rotation in the world
+         * coordinates after multiplication by the model transformation matrix.
+         * 
+         * Transforms are done in the following order:
+         * 
+         * 1. The model is scaled in each direction in the model coord. according to `scale`
+         * 2. The model is rotated in model coord. around direction `rot_dir` and with an angle `rot_angle` (in degree).
+         * 3. The model is translated to position `center` in the world coord.
+         *
+         * @param   center      new center position after transformation.
+         * @param   scale       scaling factor in each direction.
+         * @param   rot_angle   rotation angle (in degrees).
+         * @param   rot_dir     rotation axis. 
+         *
+         * @sa  getModelMatrix(), setModelMatrix()
+         */
         void setModelPosScaleRot(const fVec3& center = fVec3{ 0,0,0 }, const fVec3& scale = fVec3(1, 1, 1), float rot_angle = 0, const fVec3& rot_dir = fVec3{ 0,1,0 })
             {
             _modelM.setScale(scale);
@@ -785,16 +816,17 @@ namespace tgx
 
 
         /**
-        * Convert from model coord. to the standard viewport coord.
+        * Convert from model coordinates to normalized device coordinates (NDC). 
         * 
-        * - P : point given in the model coordinate system.    
+        * @param P  Point given in the model coordinate system.    
         *
-        * Return the projection of P on the standard viewport [-1,1]^2 according 
-        * to the current position of the camera. 
+        * @returns the projection of `P` on the standard viewport `[-1,1]^2`` according 
+        *          to the current position of the camera. 
         * 
-        * Note:  the .w value can be used for depth testing. 
-        **/
-        fVec4 modelToViewPort(fVec3 P)
+        * **Note**
+        * - the .w value can be used for depth testing. 
+        */
+        fVec4 modelToNDC(fVec3 P)
             {
             fVec4 Q = _projM * _r_modelViewM.mult1(P);
             if (!_ortho) Q.zdivide();
@@ -803,12 +835,16 @@ namespace tgx
 
 
         /**
-        * Convert from model coord. to the corresponding image pixel.
-        *
-        * - P : point given in the model coordinate system.
-        *
-        * Return the position of the associated pixel on the image.
-        **/
+         * Convert from model coordinates to the corresponding image pixel.
+         *
+         * @param   P   Point given in the model coordinate system.
+         *
+         * @returns the position of the associated pixel on the image.
+         *          
+         * **Note**
+         * - The position returned may be outside of the image !
+         * - Returns (0,0) if no image is inserted.
+         */
         iVec2 modelToImage(fVec3 P)
             {
             fVec4 Q = _projM * _r_modelViewM.mult1(P);
@@ -820,9 +856,13 @@ namespace tgx
 
 
         /**
-        * Set the object material color.
-        * This is the color used to render the object when texturing is not used.
-        **/
+         * Set the object material color.
+         * 
+         * This is the color used to render the object when texturing is not used.
+         *
+         * @sa  setMaterialAmbiantStrength(), setMaterialDiffuseStrength(),
+         *      setMaterialSpecularStrength(), setMaterialSpecularExponent(), setMaterial()
+         */
         void setMaterialColor(RGBf color)
             {
             _color = color;
@@ -832,8 +872,13 @@ namespace tgx
 
 
         /**
-        * Set how much the object material reflects the ambient light.
-        **/
+         * Set how much the object material reflects the ambient light.
+         *
+         * @param   strenght    ambiant lightreflection strength in [0.0f,1.0f]. Default value 0.1f.
+         *
+         * @sa  setMaterialColor(), setMaterialDiffuseStrength(),
+         *      setMaterialSpecularStrength(), setMaterialSpecularExponent(), setMaterial()
+         */
         void setMaterialAmbiantStrength(float strenght = 0.1f)
             {
             _ambiantStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
@@ -843,8 +888,13 @@ namespace tgx
 
 
         /**
-        * Set how much the object material reflects the diffuse light.
-        **/
+         * Set how much the object material reflects the diffuse light.
+         *
+         * @param   strenght    diffuse light reflection strength in [0.0f,1.0f]. Default value 0.6f.
+         *                      
+         * @sa  setMaterialColor(), setMaterialAmbiantStrength(), 
+         *      setMaterialSpecularStrength(), setMaterialSpecularExponent(), setMaterial()
+         */
         void setMaterialDiffuseStrength(float strenght = 0.6f)
             {
             _diffuseStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
@@ -854,8 +904,13 @@ namespace tgx
 
 
         /**
-        * Set how much the object material reflects the specular light.
-        **/
+         * Set how much the object material reflects the specular light.
+         *
+         * @param   strenght    specular light reflection strength in [0.0f,1.0f]. Default value 0.5f.
+         *
+         * @sa  setMaterialColor(), setMaterialAmbiantStrength(), setMaterialDiffuseStrength(),
+         *      setMaterialSpecularExponent(), setMaterial()
+         */
         void setMaterialSpecularStrength(float strenght = 0.5f)
             {
             _specularStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
@@ -865,9 +920,15 @@ namespace tgx
 
 
         /**
-        * Set the object specular exponent.
-        * Between 0 (no specular lightning) and 100 (very localized/glossy).
-        **/
+         * Set the object specular exponent. 
+         * 
+         * The epxonent should be range between 0 (no specular lightning) and 100 (very localized/glossy).
+         *
+         * @param   exponent    Specular exponent in [0,100]. Default value 16. 
+         *
+         * @sa  setMaterialColor(), setMaterialAmbiantStrength(), setMaterialDiffuseStrength(),
+         *      setMaterialSpecularStrength(), setMaterial()
+         */
         void setMaterialSpecularExponent(int exponent = 16)
             {
             _specularExponent = clamp(exponent, 0, 100);
@@ -875,8 +936,17 @@ namespace tgx
 
 
         /**
-        * Set all the object material properties all at once.
-        **/
+         * Set all the object material properties at once.
+         *
+         * @param   color               The material color.
+         * @param   ambiantStrength     The ambiant light reflection strength.
+         * @param   diffuseStrength     The diffuse light reflection strength.
+         * @param   specularStrength    The specular light reflection strength.
+         * @param   specularExponent    The specular exponent.
+         *
+         * @sa  setMaterialColor(), setMaterialAmbiantStrength(), setMaterialDiffuseStrength(),
+         *      setMaterialSpecularStrength(), setMaterialSpecularExponent(),
+         */
         void setMaterial(RGBf color, float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)
             {
             this->setMaterialColor(color);
@@ -940,106 +1010,79 @@ namespace tgx
         ******************************************************************************************/
 
 
-
-
         /**
-        * Draw a mesh onto the image.
-        *
-        * ***************************************************************************************
-        * THIS IS THE FASTEST METHOD FOR DRAWING AN OBJECT AND SHOULD BE USED WHENEVER POSSIBLE.
-        * ***************************************************************************************
-        *
-        * - mesh    The mesh to draw. The meshes/vertices array/textures can be in RAM or in FLASH.
-        *           Whenever possible, put vertex array and texture in RAM (or even EXTMEM).
-        *
-        * - use_mesh_material   If true, ignore the current object material properties set in the renderer
-        *                       and use the mesh predefined material properties.
-        *                       this flag affects also all the linked meshes if draw_chained_meshes=true.
-        *
-        * - draw_chained_meshes  If true, the meshes linked to this mesh (via the ->next member) are also drawn.
-        **/
+         * Draw a Mesh3D object.
+         * 
+         * @param   mesh                The mesh to draw. 
+         * @param   use_mesh_material   True (default) to use mesh material, otherwise use the current 
+         *                              material instead. this flag affects also all the linked meshes 
+         *                              if `draw_chained_meshes=true`.
+         * @param   draw_chained_meshes True (default) to draw also the chained meshes, in any.
+         *                              
+         * **Remarks**
+         * - Drawing a mesh is the most effective way of drawing a 3D object (faster than drawing individual 
+         *   triangles/quads) so it should be the prefered method whenever working with static geometry. 
+         * - The mesh can be located in any memory region (RAM, FLASH...) but using a fast memory will   
+         *   improve renderin speed noticeably. The methods `cacheMesh()` (or `copyMeshEXTMEM()` on Teensy) are
+         *   available to copy a mesh to a faster memory location before rendering. 
+         */
         void drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material = true, bool draw_chained_meshes = true);
 
 
-
-
         /**
-        * Draw a single triangle on the image.
-        *
-        * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
-        *
-        *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (N1,N2,N3)  pointers to the normals associated with (P1, P2, P3).  
-        *               or nullptr if not using gouraud shading
-        *               
-        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * - (T1,T2,T3)  pointers to the texture coords. associated with (P1, P2, P3).  
-        *               or nullptr if not using texturing
-        *
-        * - texture     pointer to the texture image to use (or nullptr if not used)
-        *
-        *               *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        **/
+         * Draw a single triangle.
+         * 
+         * @param   P1, P2, P3  coordinates (in model space) of the triangle to draw
+         * @param   N1, N2, N3  pointers to the normals associated with `P1, P2, P3` or `nullptr` if not using Gouraud shading. 
+         * @param   T1, T2, T3  pointer to the texture coords. `nullptr` if not using texturing. 
+         * @param   texture     pointer to the texture image or `nullptr` if not using texturing. 
+         *                      
+         * **Remarks**
+         * - The triangle is drawn with the current color/material.
+         * - `P1,P2,P3` must be in the correct winding order (c.f. setCulling()).  
+         * - the normals `N1,N2,N3` are mandatory with Gouraud shading and must have unit norm.
+         */
         void drawTriangle(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3,
                           const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr,
                           const fVec2 * T1 = nullptr, const fVec2 * T2 = nullptr, const fVec2 * T3 = nullptr,
                           const Image<color_t> * texture = nullptr);
 
 
-
-
         /**
-        * Draw a single triangle on the image with a given color on each of its vertices.
-        * The color inside the triangle is obtained by linear interpolation.
-        *
-        * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
-        *
-        *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (col1,col2,col3) Colors of the vertices.
-        *
-        * - (N1,N2,N3)  normals associated with (P1, P2, P3)
-        *               or nullptr if not using gouraud shading.
-        *
-        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        **/
+         * Draw a single triangle with a given colors on each of its vertices. 
+         *
+         * @param   P1, P2, P3          coordinates (in model space) of the triangle to draw
+         * @param   col1, col2, col3    color at each vertex. 
+         * @param   N1, N2, N3          pointers to the normals associated with `P1, P2, P3` or `nullptr` if not using Gouraud shading.
+         *
+         * **Remarks**
+         * - The color inside the triangle is obtained by linear interpolation.
+         * - `P1,P2,P3` must be in the correct winding order (c.f. setCulling()).
+         * - the normals `N1,N2,N3` are mandatory with Gouraud shading and must have unit norm.
+         */
         void drawTriangleWithVertexColor(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3,
                                          const RGBf & col1, const RGBf & col2, const RGBf & col3,
                                          const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr);
 
 
-
         /**
-        * Draw a list of triangles on the image. If texture mapping is not used, then the current
-        * material color is used to draw the triangles.
-        *
-        * - nb_triangles Number of triangles to draw.
-        *
-        * - ind_vertices Array of vertex indexes. The length of the array is nb_triangles*3
-        *                and each 3 consecutive values represent a triangle.
-        *
-        *               *** MAKE SURE THAT THE TRIANGLES ARE GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - vertices     The array of vertices (given in model space).
-        *
-        * - ind_normals  array of normal indexes. If specified, the array must
-        *                have length nb_triangles*3.
-        *
-        * - normals      The array of normals vectors (in model space).
-        *
-        *                 *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * - ind_texture  array of texture indexes. If specified, the array must
-        *                have length nb_triangles*3.
-        *
-        * - textures     The array of texture coords.
-        *
-        * - texture_image The texture image to use.
-        *
-        *                 *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        **/
+         * Draw a list of triangles.
+         * 
+         * @param   nb_triangles    number of triangles to draw.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_triangles*3` and each 3 consecutive values represent a triangle.
+         * @param   vertices        The array of vertices (in model space).
+         * @param   ind_normals     Array of normal indexes. If specified, the array must have length `nb_triangles*3`.
+         * @param   normals         The array of normals vectors (in model space).
+         * @param   ind_texture     array of texture indexes. If specified, the array must have length `nb_triangles*3`.
+         * @param   textures        The array of texture coords.
+         * @param   texture_image   The texture image to use or `nullptr` if not used
+         *                          
+         * **Remarks**
+         * - If Gouraud shading is enabled, the normal vector must all have have unit norm. 
+         * - If Gouraud shading is disabled, `ind_normals` and `normals` should be set to `nullptr`.  
+         * - If texturing is disabled, `ind_texture`, `textures` and `texture_image` should be set to `nullptr`.  
+         * - If texturing is disabled, the current material color is used to draw the triangles. 
+         */
         void drawTriangles(int nb_triangles,
                            const uint16_t * ind_vertices, const fVec3 * vertices,
                            const uint16_t * ind_normals = nullptr, const fVec3* normals = nullptr,
@@ -1049,26 +1092,20 @@ namespace tgx
 
 
         /**
-        * Draw a single quad on the image.
-        *
-        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - (P1,P2,P3,P4)  coordinates (in model space) of the quad to draw
-        *
-        *                  *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (N1,N2,N3,N4)  normals associated with (P1, P2, P3, P4).
-        *                  or nullptr if not using gouraud shading
-        *
-        *                  *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * - (T1,T2,T3,T4)  texture coords. associated with (P1, P2, P3).
-        *                  or nullptr if not using texturing
-        *
-        * - texture     the texture image to use (or nullptr if unused).
-        *
-        *               *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        **/
+         * Draw a single quad.
+         *
+         * **The four vertices of the quad must be co-planar !**
+         * 
+         * @param P1, P2, P3, P4    coordinates (in model space) of the quad to draw
+         * @param N1, N2, N3, N4    pointers to the normals associated with `P1, P2, P3, P4` or `nullptr` if not using Gouraud shading.
+         * @param T1, T2, T3, T4    pointer to the texture coords. `nullptr` if not using texturing.
+         * @param texture           pointer to the texture image or `nullptr` if not using texturing.
+         *
+         * **Remarks**
+         * - The quad is drawn with the current color/material.
+         * - `P1,P2,P3,P4` must be in the correct winding order (c.f. setCulling()).
+         * - the normals `N1,N2,N3,N4` are mandatory with Gouraud shading and must have unit norm.
+         */
         void drawQuad(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3, const fVec3 & P4,
                       const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr, const fVec3 * N4 = nullptr,
                       const fVec2 * T1 = nullptr, const fVec2 * T2 = nullptr, const fVec2 * T3 = nullptr, const fVec2 * T4 = nullptr,
@@ -1077,22 +1114,20 @@ namespace tgx
 
 
         /**
-        * Draw a single quad on the image with a given color on each of its four vertices.
-        * The color inside the quad is obtained by linear interpolation.
-        *
-        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - (P1,P2,P3,P4)  coordinates (in model space) of the quad to draw
-        *
-        *               *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (col1,col2,col3,col4) Colors of the vertices
-        *
-        * - (N1,N2,N3,N4)  normals associated with (P1, P2, P3, P4).
-        *                  or nullptr if not using gouraud shading.
-        *
-        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        **/
+         * Draw a single quad with a given colors on each of its four vertices.
+         * 
+         * **The four vertices of the quad must be co-planar !**
+         *
+         * @param   P1, P2, P3,P4           coordinates (in model space) of the quad to draw
+         * @param   col1, col2, col3, col4  color at each vertex.
+         * @param   N1, N2, N3              pointers to the normals associated with `P1, P2, P3, P4` or `nullptr` if not using Gouraud shading.
+         *
+         * **Remarks**
+         * - The color inside the quad is obtained by linear interpolation.
+         * - `P1,P2,P3,P4` must be in the correct winding order (c.f. setCulling()).
+         * - the normals `N1,N2,N3,N4` are mandatory with Gouraud shading and must have unit norm.
+         *
+         */
         void drawQuadWithVertexColor(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3, const fVec3 & P4,
                                      const RGBf & col1, const RGBf & col2, const RGBf & col3, const RGBf & col4,
                                      const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr, const fVec3 * N4 = nullptr);
@@ -1100,36 +1135,26 @@ namespace tgx
 
 
 
-        /**
-        * Draw a list of quads on the image.  If texture mapping is not used, then the current
-        * material color is used to draw the triangles.
-        *
-        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - nb_quads     Number of quads to draw.
-        *
-        * - ind_vertices Array of vertex indexes. The length of the array is nb_quads*4
-        *                and each 4 consecutive values represent a quad.
-        *
-        *               *** MAKE SURE THAT THE QUADS ARE GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - vertices     The array of vertices (given in model space).
-        *
-        * - ind_normals  [Optional] array of normal indexes. If specified, the array must
-        *                have length nb_quads*4.
-        *
-        * - normals      [Optional] The array of normals vectors (in model space).
-        *
-        *                 *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * - ind_texture  [Optional] array of texture indexes. If specified, the array must
-        *                have length nb_quads*4.
-        *
-        * - textures     [Optional] The array of texture coords.
-        *
-        * - texture_image [Optional] the texture image to use.
-        *
-        *                 *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
+        /**             
+         * Draw a list of quads.
+         * 
+         * **The four vertices of a quad must always be co-planar !**
+         *
+         * @param   nb_quads        number of quads to draw.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_quads*4` and each 4 consecutive values represent a quad.
+         * @param   vertices        The array of vertices (in model space).
+         * @param   ind_normals     Array of normal indexes. If specified, the array must have length `nb_quads*4`.
+         * @param   normals         The array of normals vectors (in model space).
+         * @param   ind_texture     array of texture indexes. If specified, the array must have length `nb_quads*4`.
+         * @param   textures        The array of texture coords.
+         * @param   texture_image   The texture image to use or `nullptr` if not used
+         *
+         * **Remarks**
+         * - If Gouraud shading is enabled, the normal vector must all have have unit norm.
+         * - If Gouraud shading is disabled, `ind_normals` and `normals` should be set to `nullptr`.
+         * - If texturing is disabled, `ind_texture`, `textures` and `texture_image` should be set to `nullptr`.
+         * - If texturing is disabled, the current material color is used to draw the quads.
+         *
         **/
         void drawQuads(int nb_quads,
                        const uint16_t * ind_vertices, const fVec3 * vertices,
@@ -1153,26 +1178,30 @@ namespace tgx
 
 
         /**
-        * Draw a single pixel on the image at a given position (in model space).
-        *
-        * Use the the material color.
-        *
-        * The scene lightning is ignored.
-        **/
+         * Draw a single pixel at a given position in model space.
+         *
+         * **Remarks**
+         * - Use the material color.
+         * - The scene lightning is ignored.  
+         * 
+         * @param   pos Position (in model space).
+         */
         void drawPixel(const fVec3& pos)
             {
             _drawPixel<false>(pos, _color, 1.0f);
             }
 
 
-
         /**
-        * Draw a single pixel on the image at a given position (in model space).
-        *
-        * Use the specified color instead of the material color.
-        *
-        * The scene lightning is ignored.
-        **/
+         * Draw a single pixel at a given position in model space.
+         * 
+         * **Remarks**
+         * - Use a specified color instead of the material color.
+         * - The scene lightning is ignored.
+         *
+         * @param   pos     Position (in model space).
+         * @param   color   color to use.
+         */
         void drawPixel(const fVec3& pos, color_t color)
             {
             _drawPixel<false>(pos, color, 1.0f);
@@ -1180,12 +1209,16 @@ namespace tgx
 
 
         /**
-        * Draw a single pixel on the image at a given position (given in model space).
-        *
-        * Use the specified color and opacity and use blending
-        *         
-        * The scene lightning is ignored.
-        **/
+         * Draw a single pixel at a given position in model space.
+         * 
+         * **Remarks**
+         *  - Use blending with a given opacity factor.
+         *  - The scene lightning is ignored.
+         *
+         * @param   pos     Position (in model space).
+         * @param   color   color to use.
+         * @param   opacity opacity multiplier in `[0.0f, 1.0f]` for blending. 
+         */
         void drawPixel(const fVec3& pos, color_t color, float opacity)
             {
             _drawPixel<true>(pos, color, opacity);
@@ -1193,12 +1226,15 @@ namespace tgx
 
 
         /**
-        * Draw a list of pixels on the image at given positions (in model space).
-        *
-        * Use the material color for all pixels.
-        *
-        * The scene lightning is ignored.
-        **/
+         * Draw a list of pixels at given positions in model space.
+         * 
+         * **Remarks**
+         *  - Use the material color for all pixels.
+         *  - The scene lightning is ignored.
+         *
+         * @param   nb_pixels   number of pixels to draw.
+         * @param   pos_list    array of positions (in model space). 
+         */
         void drawPixels(int nb_pixels, const fVec3* pos_list)
             {
             _drawPixels<false, false>(nb_pixels, pos_list, nullptr, nullptr, nullptr, nullptr);
@@ -1206,13 +1242,18 @@ namespace tgx
 
 
         /**
-        * Draw a list of pixels on the image at given positions (in model space).
-        *
-        * Use a (possibly) different color for each pixel.
-        * The color are given by a palette and a list of indices (one for each pixel).
-        *
-        * The scene lightning is ignored.
-        **/
+         * Draw a list of pixels at given positions in model space with different colors
+         * 
+         * **Remarks**
+         *  - Use a specific color for each pixel. The color are given by a palette and a list of
+         *    indices (one per pixel).
+         *  - The scene lightning is ignored.
+         * 
+         * @param   nb_pixels   number of pixels to draw.
+         * @param   pos_list    array of positions (in model space).
+         * @param   colors_ind  array of color indices. 
+         * @param   colors      array of colors.
+         */
         void drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors)
             {
             _drawPixels<true,false>(nb_pixels, pos_list, colors_ind, colors, nullptr, nullptr);
@@ -1220,30 +1261,36 @@ namespace tgx
 
 
         /**
-        * Draw a list of pixels on the image at given positions (in model space).
-        *
-        * Use different color/opacity for each pixel and use blending.
-        * The color and opacities are both given by a palette and a list of indices
-        * (one for each pixel)
-        *
-        * The scene lightning parameters are ignored.
-        **/
+         * Draw a list of pixels at given positions in model space with different colors and opacities.
+         * 
+         * **Remarks**
+         *  - Use a specific color/opacity for each pixel. The color and opacities are given by palettes and lists of indices (one per pixel).
+         *  - The scene lightning is ignored.  
+         *  - opacities must have values in [0.0f, 1.0f].
+         *
+         * @param   nb_pixels       number of pixels to draw.
+         * @param   pos_list        array of positions (in model space).
+         * @param   colors_ind      array of color indices.
+         * @param   colors          array of colors.
+         * @param   opacities_ind   array of opacities indices.
+         * @param   opacities       array of opacities
+         */
         void drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             _drawPixels<true,true>(nb_pixels, pos_list, colors_ind, colors, opacities_ind, opacities);
             }
 
 
-
-
         /**
-        * Draw a dot/circle on the image at a given position (in model space)
-        * with a given radius in screen pixels.
-        *
-        * Use the the material color.
-        *
-        * The scene lightning is ignored.
-        **/
+         * Draw a dot/circle at a given position in model space
+         * 
+         * **Remarks**
+         * - Use the the material color.
+         * - The scene lightning is ignored.
+         *
+         * @param   pos Position in model space.
+         * @param   r   radius in pixels.
+         */
         void drawDot(const fVec3& pos, int r)
             {
             _drawDot<false>(pos, r, _color, 1.0f);
@@ -1251,13 +1298,16 @@ namespace tgx
 
 
         /**
-        * Draw a dot/circle on the image at a given position (in model space)
-        * with a given radius in screen pixels.
-        *
-        * Use the specified color instead of the material color.
-        *
-        * The scene lightning is ignored.
-        **/
+         * Draw a dot/circle at a given position in model space
+         * 
+         * **Remarks**
+         * - Use the specified color instead of the material color.
+         * - The scene lightning is ignored.
+         *
+         * @param   pos     Position in model space.
+         * @param   r       radius in pixels.
+         * @param   color   color to use
+         */
         void drawDot(const fVec3& pos, int r, color_t color)
             {
             _drawDot<false>(pos, r, color, 1.0f);
@@ -1265,27 +1315,34 @@ namespace tgx
 
 
         /**
-        * Draw a dot/circle on the image at a given position (in model space).
-        *
-        * Use the specified color and opacity and use blending
-        *
-        * The scene lightning is ignored.
-        **/
+         * Draw a dot/circle at a given position in model space
+         * 
+         * **Remarks**
+         * - Use the specified color and blend with a given opacity.
+         * - The scene lightning is ignored.
+         *
+         * @param   pos     Position in model space.
+         * @param   r       radius in pixels.
+         * @param   color   color to use.
+         * @param   opacity The opacity for blending in [0.0f, 1.0f].
+         */
         void drawDot(const fVec3& pos, int r, color_t color, float opacity)
             {
             _drawDot<true>(pos, r, color, opacity);
             }
 
 
-
         /**
-        * Draw a list of dots/circles on the image at given positions (in model space).
-        *
-        * Use the material color for all dot.
-        * Use the same radius for each dot.
-        *
-        * The scene lightning is ignored.
-        **/
+         * Draw a list of dots/circles at given positions in model space.
+         * 
+         * **Remarks**
+         * - Use the material color and the same radius for every dot.
+         * - The scene lightning is ignored.
+         *
+         * @param   nb_dots     number of dots to draw
+         * @param   pos_list    aray of positions in model space.
+         * @param   radius      radius in pixels
+         */
         void drawDots(int nb_dots, const fVec3* pos_list, const int radius)
             {
             _drawDots<false, false, false>(nb_dots, pos_list, nullptr, &radius, nullptr, nullptr, nullptr, nullptr);
@@ -1300,6 +1357,21 @@ namespace tgx
         *
         * The scene lightning is ignored.
         **/
+
+
+        /**
+         * Draw a list of dots/circles at given positions in model space.
+         * 
+         * **Remarks**
+         * - Use the material color.  
+         * - Use a different radius for every dot.
+         * - The scene lightning is ignored.
+         *
+         * @param   nb_dots     number of dots to draw.
+         * @param   pos_list    aray of positions in model space.
+         * @param   radius_ind  array of radius indices.
+         * @param   radius      array of radiuses.
+         */
         void drawDots(int nb_dots, const fVec3* pos_list, const int * radius_ind, const int * radius)
             {
             _drawDots<true, false,false>(nb_dots, pos_list, radius_ind, radius, nullptr, nullptr, nullptr, nullptr);
@@ -1307,13 +1379,19 @@ namespace tgx
 
 
         /**
-        * Draw a list of dots/circles on the image at given positions (in model space).
-        *
-        * Use a possible different radius for each dot
-        * Use a (possibly) different color for each dot.
-        *
-        * The scene lightning is ignored.
-        **/
+         * Draw a list of dots/circles at given positions in model space.
+         * 
+         * **Remarks**
+         * - Use a different radius and colors for every dot.
+         * - The scene lightning is ignored.
+         *
+         * @param   nb_dots     number of dots to draw.
+         * @param   pos_list    aray of positions in model space.
+         * @param   radius_ind  array of radius indices.
+         * @param   radius      array of radiuses.
+         * @param   colors_ind  array of color indices.
+         * @param   colors      array of colors.
+         */
         void drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const fVec3* colors_ind, const color_t* colors)
             {
             _drawDots<true, true,false>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, nullptr, nullptr);
@@ -1321,31 +1399,33 @@ namespace tgx
 
 
         /**
-        * Draw a list of dots/circles on the image at given positions (in model space).
-        *
-        * Use a possible different radius for each dot
-        * Use a (possibly) different color for each dot
-        * Use a (possibly) different opacity for each dot (and use blending when drawing)
-        *
-        * The scene lightning parameters are ignored.
-        **/
+         * Draw a list of dots/circles at given positions in model space.
+         * 
+         * **Remarks**
+         * - Use a different radius and colors and opacities for every dot.
+         * - The scene lightning is ignored.
+         * 
+         * @param   nb_dots         number of dots to draw.
+         * @param   pos_list        aray of positions in model space.
+         * @param   radius_ind      array of radius indices.
+         * @param   radius          array of radiuses.
+         * @param   colors_ind      array of color indices.
+         * @param   colors          array of colors.
+         * @param   opacities_ind   array of opacity indices.
+         * @param   opacities       array of opacities value in [0.0f, 1.0f].
+         */
         void drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int * colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             _drawDots<true, true,true>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, opacities_ind, opacities);
             }
 
 
-
-
-
-
-
         /**
-        * Draw the cube [-1,1]^3 (in model space). 
-        * 
-        * -> Use the Model matrix to draw a rectangle and/or choose the position 
-        *    in world coord.
-        **/
+         * Draw the unit cube `[-1,1]^3` in model space.
+         * 
+         * **Remark** The model transform matrix may be used to scale, rotate and position the cube
+         * anywhere in world space.
+         */
         void drawCube()
             {
             // set culling direction = -1 and save previous value
@@ -1358,36 +1438,47 @@ namespace tgx
             
 
 
+        
         /**
-        * draw a textured unit cube [-1,1]^3 (in model space)
-        * 
-        * -> Use the Model matrix to draw a rectangle and/or choose the position
-        *    in world coord.
-        *                                                                   H--------E
-        *                                                                   |        |
-        *                                                                   |  top   |
-        *                          H-------------E                          |        |
-        *                         /.            /|                 H--------A--------D--------E
-        *                        / .   top     / |                 |        |        |        |
-        *                       /  .          /  |                 |  left  | front  |  right |
-        *                      A------------D    |  right          |        |        |        |
-        *                      |   .        |    |                 G--------B--------C--------F
-        *                      |   G .......|....F                          |        |
-        *                      |  .         |   /                           | bottom |
-        *                      | .  front   |  /                            |        |
-        *                      |.           | /                             G--------F
-        *                      B------------C                               |        |
-        *                                                                   |  back  |
-        *                                                                   |        |
-        *                                                                   H--------E
-        *
-        * - Each face may use a different texture (or set the image to nullptr to disable texturing a face).
-        *
-        * - the texture coordinate for each face are given ordered by their name
-        *   (e.g. 'v_front_A_B_C_D' means vertex in order: A, B, C, D for the front face)
-        *
-        *    *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        */
+         * Draw a textured unit cube `[-1,1]^3` in model space.
+         * 
+         * ```
+         *                                                                   H--------E
+         *                                                                   |        |
+         *                                                                   |  top   |
+         *                          H-------------E                          |        |
+         *                         /.            /|                 H--------A--------D--------E
+         *                        / .   top     / |                 |        |        |        |
+         *                       /  .          /  |                 |  left  | front  |  right |
+         *                      A------------D    |  right          |        |        |        |
+         *                      |   .        |    |                 G--------B--------C--------F
+         *                      |   G .......|....F                          |        |
+         *                      |  .         |   /                           | bottom |
+         *                      | .  front   |  /                            |        |
+         *                      |.           | /                             G--------F
+         *                      B------------C                               |        |
+         *                                                                   |  back  |
+         *                                                                   |        |
+         *                                                                   H--------E
+         * ```
+         * 
+         * **Remarks**
+         * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
+         * - Each face may use a different texture (or set the image to `nullptr` to disable texturing a face).
+         *
+         * @param   v_front_ABCD    texture coords array for the front face in order ABCD 
+         * @param   texture_front   texture for the front face
+         * @param   v_back_EFGH     texture coords array for the back face in order EFGH 
+         * @param   texture_back    texture for the back face
+         * @param   v_top_HADE      texture coords array for the top face in order HADE
+         * @param   texture_top     texture for the top face
+         * @param   v_bottom_BGFC   texture coords array for the bottom face in order BGFC 
+         * @param   texture_bottom  texture for the bottom face
+         * @param   v_left_HGBA     texture coords array for the left face in order HGBA 
+         * @param   texture_left    texture for the left face
+         * @param   v_right_DCFE    texture coords array for the right face in order DCFE 
+         * @param   texture_right   texture for the right face
+         */
         void drawCube(
             const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
             const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
@@ -1398,12 +1489,40 @@ namespace tgx
             );
 
 
-
         /**
-        * draw a textured unit cube [-1,1]^3 (in model space)
-        *
-        * Same as above for use the whole texture image given for each face.
-        **/
+         * draw a textured unit cube [-1,1]^3 (in model space)
+         * 
+         * ```
+         *                                                                   H--------E
+         *                                                                   |        |
+         *                                                                   |  top   |
+         *                          H-------------E                          |        |
+         *                         /.            /|                 H--------A--------D--------E
+         *                        / .   top     / |                 |        |        |        |
+         *                       /  .          /  |                 |  left  | front  |  right |
+         *                      A------------D    |  right          |        |        |        |
+         *                      |   .        |    |                 G--------B--------C--------F
+         *                      |   G .......|....F                          |        |
+         *                      |  .         |   /                           | bottom |
+         *                      | .  front   |  /                            |        |
+         *                      |.           | /                             G--------F
+         *                      B------------C                               |        |
+         *                                                                   |  back  |
+         *                                                                   |        |
+         *                                                                   H--------E
+         * ```
+         *
+         * **Remarks**
+         * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
+         * - Each face uses a 'whole' image. Set the texture image to `nullptr` to disable texturing a given face.
+         *
+         * @param   texture_front   texture for the front face.
+         * @param   texture_back    texture for the back face.
+         * @param   texture_top     texture for the top face.
+         * @param   texture_bottom  texture for the bottom face.
+         * @param   texture_left    texture for the left face.
+         * @param   texture_right   texture for the right face.
+         */
         void drawCube(
             const Image<color_t>* texture_front,
             const Image<color_t>* texture_back,
@@ -1414,17 +1533,16 @@ namespace tgx
             );
 
 
-
-
-
         /**
-        * Draw a unit radius sphere centered at the origin S(0,1).
-        *
-        * Create a UV-sphere with a given number of sector and stacks.
-        *
-        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
-        *    in world coord.
-        **/
+         * Draw a unit radius sphere centered at the origin `S(0,1)` in model space.
+         * 
+         * **Remarks**
+         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere with a given number of sector and stacks.
+         *
+         * @param   nb_sectors  number of sectors of the UV sphere.
+         * @param   nb_stacks   number of stacks of the UV sphere.
+         */
         void drawSphere(int nb_sectors, int nb_stacks)
             {
             drawSphere(nb_sectors, nb_stacks, nullptr);
@@ -1432,17 +1550,17 @@ namespace tgx
 
 
         /**
-        * Draw a textured unit radius sphere centered at the origin S(0,1).
-        *
-        * Create a UV-sphere with a given number of sector and stacks.
-        *
-        * The texture is mapped using the Mercator projection. 
-        * 
-        * *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        *
-        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
-        *    in world coord.
-        **/
+         * Draw a textured unit radius sphere centered at the origin S(0,1) in model space.
+         * 
+         * **Remarks**
+         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere with a given number of sector and stacks.
+         * - The texture is mapped using the Mercator projection.
+         *
+         * @param   nb_sectors  number of sectors of the UV sphere.
+         * @param   nb_stacks   number of stacks of the UV sphere.
+         * @param   texture     The texture (mapped via Mercoator projection)
+         */
         void drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture)
             {
             _drawSphere<false,false>(nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
@@ -1450,19 +1568,19 @@ namespace tgx
 
 
         /**
-        * Draw a unit radius sphere centered at the origin S(0,1).
-        *
-        * Draw a UV-sphere where the number of sector and stacks is computed 
-        * automatically according to the apparent size on the screen.
-        * 
-        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to   
-        *   imcrease or  decrease the number of faces in the tesselation:
-        *     - quality < 1 : decrease quality but improve speed  
-        *     - quality > 1 : improve quality but decrease speed  
-        * 
-        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
-        *    in world coord.
-        **/
+         * Draw a unit radius sphere centered at the origin S(0,1) in model space.
+         * 
+         * **Remarks**
+         * - The model transform matrix may be used position the sphere anywhere in world space and
+         * change it to an ellipsoid.
+         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted
+         * automatically according to the apparent size on the screen.
+         *
+         * @param   quality Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
+         *                  - `1` : default quality  
+         *                  - `>1`: finer mesh. Improve quality but decrease speed.
+         *                  - `<1`: coarser mesh. Decrease quality but improve speed.
+         */
         void drawAdaptativeSphere(float quality = 1.0f)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
@@ -1472,23 +1590,22 @@ namespace tgx
 
 
         /**
-        * Draw a textured unit radius sphere centered at the origin S(0,1).
-        *
-        * Draw a UV-sphere where the number of sector and stacks is computed
-        * automatically according to the apparent size on the screen.
-        *
-        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to
-        *   imcrease or  decrease the number of faces in the tesselation:
-        *     - quality < 1 : decrease quality but improve speed
-        *     - quality > 1 : improve quality but decrease speed
-        *
-        * The texture is mapped using the mercator projection.
-        *
-        *  *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        *
-        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
-        *    in world coord.
-        **/
+         * Draw a textured unit radius sphere centered at the origin S(0,1) in model space.
+         * 
+         * **Remarks**
+         * - The model transform matrix may be used position the sphere anywhere in world space and
+         * change it to an ellipsoid.
+         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted
+         * automatically according to the apparent size on the screen.
+         * - the texture is mapped using the Mercator projection.
+         *
+         * @param   texture The texture image mapped via Mercator projection. 
+         * @param   quality (Optional) Quality of the mesh. Should be positive, typically between 0.5f
+         *                  and 2.0f.
+         *                  - `1` : default quality
+         *                  - `>1`: finer mesh. Improve quality but decrease speed.
+         *                  - `<1`: coarser mesh. Decrease quality but improve speed.
+         */
         void drawAdaptativeSphere(const Image<color_t>* texture, float quality = 1.0f)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen

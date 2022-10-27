@@ -63,7 +63,7 @@ var classtgx_1_1_renderer3_d =
     [ "getProjectionMatrix", "classtgx_1_1_renderer3_d.html#a4bce4752b73a38862733b4f2bcb6f04f", null ],
     [ "getViewMatrix", "classtgx_1_1_renderer3_d.html#a35bf226bb8236ad48314bca2bd0f31f8", null ],
     [ "modelToImage", "classtgx_1_1_renderer3_d.html#a27bb400f5ad09195a860f6f7ab3db71c", null ],
-    [ "modelToViewPort", "classtgx_1_1_renderer3_d.html#a689366e55dcfab2bfb516c3d17524b3a", null ],
+    [ "modelToNDC", "classtgx_1_1_renderer3_d.html#ae5e7d7c90ab94776798b8031a30235f2", null ],
     [ "setCulling", "classtgx_1_1_renderer3_d.html#a76fa32770476cd15f717d3f103fd752d", null ],
     [ "setFrustum", "classtgx_1_1_renderer3_d.html#af0ae032c0be73580be8e61c53ad42545", null ],
     [ "setImage", "classtgx_1_1_renderer3_d.html#a99e31001994fa3444b15e7037a1d5f1d", null ],
@@ -97,5 +97,5 @@ var classtgx_1_1_renderer3_d =
     [ "useOrthographicProjection", "classtgx_1_1_renderer3_d.html#acf7c15aa00b471522a50af525cf41032", null ],
     [ "usePerspectiveProjection", "classtgx_1_1_renderer3_d.html#a7bff46c6c71c78546267d7b75bb12644", null ],
     [ "worldToImage", "classtgx_1_1_renderer3_d.html#a76c4ce4af7e3c7da2e3a1a7d1d0d4f01", null ],
-    [ "worldToViewPort", "classtgx_1_1_renderer3_d.html#a3eac08822d93c5fa419d7cc566aa636d", null ]
+    [ "worldToNDC", "classtgx_1_1_renderer3_d.html#a63284e47ac2f832f122df06bcbd3193a", null ]
 ];

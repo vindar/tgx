@@ -20,7 +20,7 @@ var searchData=
   ['minz_17',['minZ',['../structtgx_1_1_box3.html#ab564725a67765f210a174ce474db60a9',1,'tgx::Box3']]],
   ['misc_2eh_18',['Misc.h',['../_misc_8h.html',1,'']]],
   ['modeltoimage_19',['modelToImage',['../classtgx_1_1_renderer3_d.html#a27bb400f5ad09195a860f6f7ab3db71c',1,'tgx::Renderer3D']]],
-  ['modeltoviewport_20',['modelToViewPort',['../classtgx_1_1_renderer3_d.html#a689366e55dcfab2bfb516c3d17524b3a',1,'tgx::Renderer3D']]],
+  ['modeltondc_20',['modelToNDC',['../classtgx_1_1_renderer3_d.html#ae5e7d7c90ab94776798b8031a30235f2',1,'tgx::Renderer3D']]],
   ['mult_21',['mult',['../structtgx_1_1_mat4.html#a7123f3d3033554ac86356b528a1ceebb',1,'tgx::Mat4::mult(const Vec3&lt; T &gt; &amp;V, float w) const'],['../structtgx_1_1_mat4.html#a6202e6d39b331c03a2d29c6bf73cc1c1',1,'tgx::Mat4::mult(const Vec4&lt; T &gt; V) const']]],
   ['mult0_22',['mult0',['../structtgx_1_1_mat4.html#a2742a4bfaff504e97eb236f7a22318f5',1,'tgx::Mat4']]],
   ['mult1_23',['mult1',['../structtgx_1_1_mat4.html#a120cc3bfae76599ef2cc18f3a11b7aa0',1,'tgx::Mat4']]],

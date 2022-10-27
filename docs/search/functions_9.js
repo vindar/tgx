@@ -7,7 +7,7 @@ var searchData=
   ['measuretext_4',['measureText',['../classtgx_1_1_image.html#aad7b60f8cf9ec28f16838c6f26324c3c',1,'tgx::Image']]],
   ['min_5',['min',['../_misc_8h.html#a12ea6daee700a17ae06fa2292ac8406d',1,'tgx']]],
   ['modeltoimage_6',['modelToImage',['../classtgx_1_1_renderer3_d.html#a27bb400f5ad09195a860f6f7ab3db71c',1,'tgx::Renderer3D']]],
-  ['modeltoviewport_7',['modelToViewPort',['../classtgx_1_1_renderer3_d.html#a689366e55dcfab2bfb516c3d17524b3a',1,'tgx::Renderer3D']]],
+  ['modeltondc_7',['modelToNDC',['../classtgx_1_1_renderer3_d.html#ae5e7d7c90ab94776798b8031a30235f2',1,'tgx::Renderer3D']]],
   ['mult_8',['mult',['../structtgx_1_1_mat4.html#a6202e6d39b331c03a2d29c6bf73cc1c1',1,'tgx::Mat4::mult(const Vec4&lt; T &gt; V) const'],['../structtgx_1_1_mat4.html#a7123f3d3033554ac86356b528a1ceebb',1,'tgx::Mat4::mult(const Vec3&lt; T &gt; &amp;V, float w) const']]],
   ['mult0_9',['mult0',['../structtgx_1_1_mat4.html#a2742a4bfaff504e97eb236f7a22318f5',1,'tgx::Mat4']]],
   ['mult1_10',['mult1',['../structtgx_1_1_mat4.html#a120cc3bfae76599ef2cc18f3a11b7aa0',1,'tgx::Mat4']]],
