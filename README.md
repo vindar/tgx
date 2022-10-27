@@ -1,7 +1,5 @@
 ***NEW IN VERSION 0.8  (8/2/2022): Added methods for drawing quadratic and cubic Bezier curves and b-spline. Added flood filling methods.***
 
-https://vindar.github.io/tgx/
-
 # TGX - a tiny/teensy graphics library
 
 <p align="center">
