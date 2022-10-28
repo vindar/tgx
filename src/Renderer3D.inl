@@ -104,6 +104,440 @@ namespace tgx
 
 
 
+
+
+
+    /********************************************************
+     * GLOBAL METHODS
+     ********************************************************/
+
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setViewportSize(int lx, int ly)
+            {
+            _lx = clamp(lx, 0, MAXVIEWPORTDIMENSION);
+            _ly = clamp(ly, 0, MAXVIEWPORTDIMENSION);
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setViewportSize(const iVec2& viewport_dim)
+            {
+            setViewportSize(viewport_dim.x, viewport_dim.y);
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setImage(Image<color_t>* im)
+            {
+            _uni.im = im;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setOffset(int ox, int oy)
+            {
+            _ox = clamp(ox, 0, MAXVIEWPORTDIMENSION);
+            _oy = clamp(oy, 0, MAXVIEWPORTDIMENSION);
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setOffset(const iVec2& offset)
+            {
+            this->setOffset(offset.x, offset.y);
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setProjectionMatrix(const fMat4& M)
+            {
+            _projM = M;
+            _projM.invertYaxis();
+            _recompute_wa_wb();
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        fMat4 Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::getProjectionMatrix() const
+            {
+            fMat4 M = _projM;
+            M.invertYaxis();
+            return M;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::useOrthographicProjection()
+            {
+            static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use useOrthographicProjection()");
+            _ortho = true;
+            _rectifyShaderOrtho();
+            _recompute_wa_wb();
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::usePerspectiveProjection()
+            {
+            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use usePerspectiveProjection()");
+            _ortho = false;
+            _rectifyShaderOrtho();
+            _recompute_wa_wb();
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
+            {
+            static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use setOrtho()");
+            _projM.setOrtho(left, right, bottom, top, zNear, zFar);
+            _projM.invertYaxis();
+            useOrthographicProjection();
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
+            {
+            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setFrustrum()");
+            _projM.setFrustum(left, right, bottom, top, zNear, zFar);
+            _projM.invertYaxis();
+            usePerspectiveProjection();
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setPerspective(float fovy, float aspect, float zNear, float zFar)
+            {
+            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setPerspective()");
+            _projM.setPerspective(fovy, aspect, zNear, zFar);
+            _projM.invertYaxis();
+            usePerspectiveProjection();
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setCulling(int w)
+            {
+            _culling_dir = (w > 0) ? 1.0f : ((w < 0) ? -1.0f : 0.0f);
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setZbuffer(ZBUFFER_t* zbuffer)
+            {
+            static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use setZbuffer()");
+            _uni.zbuf = zbuffer;
+            _rectifyShaderZbuffer();
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::clearZbuffer()
+            {
+            static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use clearZbuffer()");
+            if ((_uni.zbuf) && (_uni.im != nullptr) && (_uni.im->isValid()))
+                {
+                memset(_uni.zbuf, 0, _uni.im->lx() * _uni.im->ly() * sizeof(ZBUFFER_t));
+                }
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setShaders(int shaders)
+            {
+            _rectifyShaderShading(shaders);
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setTextureWrappingMode(int wrap_mode)
+            {
+            if (TGX_SHADER_HAS_TEXTURE_CLAMP(wrap_mode))
+                {
+                if (TGX_SHADER_HAS_TEXTURE_CLAMP(ENABLED_SHADERS))
+                    _texture_wrap_mode = TGX_SHADER_TEXTURE_CLAMP;
+                else
+                    _texture_wrap_mode = TGX_SHADER_TEXTURE_WRAP_POW2; // fallback
+                } else
+                {
+                if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(ENABLED_SHADERS))
+                    _texture_wrap_mode = TGX_SHADER_TEXTURE_WRAP_POW2;
+                else
+                    _texture_wrap_mode = TGX_SHADER_TEXTURE_CLAMP; // fallback
+                }
+                _rectifyShaderTextureWrapping();
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setTextureQuality(int quality)
+            {
+            if (TGX_SHADER_HAS_TEXTURE_BILINEAR(quality))
+                {
+                if (TGX_SHADER_HAS_TEXTURE_BILINEAR(ENABLED_SHADERS))
+                    _texture_quality = TGX_SHADER_TEXTURE_BILINEAR;
+                else
+                    _texture_quality = TGX_SHADER_TEXTURE_NEAREST; // fallback
+                } else
+                {
+                if (TGX_SHADER_HAS_TEXTURE_NEAREST(ENABLED_SHADERS))
+                    _texture_quality = TGX_SHADER_TEXTURE_NEAREST;
+                else
+                    _texture_quality = TGX_SHADER_TEXTURE_BILINEAR; // fallback
+                }
+                _rectifyShaderTextureQuality();
+            }
+
+
+
+    /********************************************************
+     * SCENE RELATED METHODS
+     ********************************************************/
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setViewMatrix(const fMat4& M)
+            {
+            _viewM = M;
+            // recompute
+            _r_modelViewM = _viewM * _modelM;
+            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
+            _r_light = _viewM.mult0(_light);
+            _r_light = -_r_light;
+            _r_light.normalize();
+            _r_light_inorm = _r_light * _r_inorm;
+            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)...
+            _r_H += _r_light;
+            _r_H.normalize();
+            _r_H_inorm = _r_H * _r_inorm;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        fMat4 Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::getViewMatrix() const
+            {
+            return _viewM;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setLookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
+            {
+            fMat4 M;
+            M.setLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+            setViewMatrix(M);
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setLookAt(const fVec3 eye, const fVec3 center, const fVec3 up)
+            {
+            setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, up.x, up.y, up.z);
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        fVec4 Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::worldToNDC(fVec3 P)
+            {
+            fVec4 Q = _projM * _viewM.mult1(P);
+            if (!_ortho) Q.zdivide();
+            return Q;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        iVec2 Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::worldToImage(fVec3 P)
+            {
+            fVec4 Q = _projM * _viewM.mult1(P);
+            if (!_ortho) Q.zdivide();
+            Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
+            Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
+            return iVec2((int)roundfp(Q.x), (int)roundfp(Q.y));
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setLightDirection(const fVec3 & direction)
+            {
+            _light = direction;
+            // recompute
+            _r_light = _viewM.mult0(_light);
+            _r_light = -_r_light;
+            _r_light.normalize();
+            _r_light_inorm = _r_light * _r_inorm;
+            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)...
+            _r_H += _r_light;
+            _r_H.normalize();
+            _r_H_inorm = _r_H * _r_inorm;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setLightAmbiant(const RGBf & color)
+            {
+            _ambiantColor = color;
+            // recompute
+            _r_ambiantColor = _ambiantColor * _ambiantStrength;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setLightDiffuse(const RGBf & color)
+            {
+            _diffuseColor = color;
+            // recompute
+            _r_diffuseColor = _diffuseColor * _diffuseStrength;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setLightSpecular(const RGBf & color)
+            {
+            _specularColor = color;
+            // recompute
+            _r_specularColor = _specularColor * _specularStrength;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setLight(const fVec3 direction, const RGBf & ambiantColor, const RGBf & diffuseColor, const RGBf & specularColor)
+            {
+            this->setLightDirection(direction);
+            this->setLightAmbiant(ambiantColor);
+            this->setLightDiffuse(diffuseColor);
+            this->setLightSpecular(specularColor);
+            }
+
+
+
+
+
+
+    /********************************************************
+     * MODEL RELATED METHODS
+     ********************************************************/
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setModelMatrix(const fMat4& M)
+            {
+            _modelM = M;
+            // recompute
+            _r_modelViewM = _viewM * _modelM;
+            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
+            _r_light_inorm = _r_light * _r_inorm;
+            _r_H_inorm = _r_H * _r_inorm;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        fMat4  Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::getModelMatrix() const
+            {
+            return _modelM;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setModelPosScaleRot(const fVec3& center, const fVec3& scale, float rot_angle, const fVec3& rot_dir)
+            {
+            _modelM.setScale(scale);
+            _modelM.multRotate(rot_angle, rot_dir);
+            _modelM.multTranslate(center);
+            // recompute
+            _r_modelViewM = _viewM * _modelM;
+            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
+            _r_light_inorm = _r_light * _r_inorm;
+            _r_H_inorm = _r_H * _r_inorm;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        fVec4 Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::modelToNDC(fVec3 P)
+            {
+            fVec4 Q = _projM * _r_modelViewM.mult1(P);
+            if (!_ortho) Q.zdivide();
+            return Q;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        iVec2 Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::modelToImage(fVec3 P)
+            {
+            fVec4 Q = _projM * _r_modelViewM.mult1(P);
+            if (!_ortho) Q.zdivide();
+            Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
+            Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
+            return iVec2(roundfp(Q.x), roundfp(Q.y));
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setMaterialColor(RGBf color)
+            {
+            _color = color;
+            // recompute
+            _r_objectColor = _color;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setMaterialAmbiantStrength(float strenght)
+            {
+            _ambiantStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
+            // recompute
+            _r_ambiantColor = _ambiantColor * _ambiantStrength;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setMaterialDiffuseStrength(float strenght)
+            {
+            _diffuseStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
+            // recompute
+            _r_diffuseColor = _diffuseColor * _diffuseStrength;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setMaterialSpecularStrength(float strenght)
+            {
+            _specularStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
+            // recompute
+            _r_specularColor = _specularColor * _specularStrength;
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setMaterialSpecularExponent(int exponent)
+            {
+            _specularExponent = clamp(exponent, 0, 100);
+            }
+
+
+        template<typename color_t, int DISABLED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, DISABLED_SHADERS, ZBUFFER_t>::setMaterial(RGBf color, float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)
+            {
+            this->setMaterialColor(color);
+            this->setMaterialAmbiantStrength(ambiantStrength);
+            this->setMaterialDiffuseStrength(diffuseStrength);
+            this->setMaterialSpecularStrength(specularStrength);
+            this->setMaterialSpecularExponent(specularExponent);
+            }
+
+
+
+
+
+
+
+
+
+
+
+
         /********************************************************
         * TRIANGLE CLIPPING
         *********************************************************/

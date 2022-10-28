@@ -109,19 +109,7 @@ namespace tgx
        public:
 
 
-
-        /*****************************************************************************************
-        ******************************************************************************************
-        *
-        * General parameters
-        *
-        * The methods below define how 3D objects are rendered onto the viewport
-        *
-        ******************************************************************************************
-        ******************************************************************************************/
-
-
-        /**
+         /**
          * Constructor.
          * 
          * Some parameters may be set right way (but they may be also set independantly later). 
@@ -132,6 +120,19 @@ namespace tgx
          */
         Renderer3D(const iVec2& viewportSize = {0,0}, Image<color_t> * im = nullptr, ZBUFFER_t * zbuffer = nullptr);
 
+
+
+
+        /*****************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Global settings.
+         *
+         * Methods related to global properties of the renderer: viewport size, zbuffer, projection type...
+         */
+        ///@{
+        /*****************************************************************************************
+        ******************************************************************************************/
 
 
         /**
@@ -152,21 +153,15 @@ namespace tgx
         *  |      4        |      8192 x 8192        |
         *  |      2        |     16384 x 16384       |
         */
-        void setViewportSize(int lx, int ly)
-            {
-            _lx = clamp(lx, 0, MAXVIEWPORTDIMENSION);
-            _ly = clamp(ly, 0, MAXVIEWPORTDIMENSION);
-            }
+        void setViewportSize(int lx, int ly);
+
 
         /**
         * Set the size of the viewport.
         * 
         * Same as `setViewportSize(int lx, int ly)`. 
         */
-        void setViewportSize(const iVec2& viewport_dim)
-            {
-            setViewportSize(viewport_dim.x, viewport_dim.y);
-            }
+        void setViewportSize(const iVec2& viewport_dim);
 
 
         /**
@@ -180,10 +175,7 @@ namespace tgx
          * - Passing `nullptr` remove the current image (and disables all drawing operation  
          *   until a new image is inserted).
          */
-        void setImage(Image<color_t>* im)
-            {
-            _uni.im = im;            
-            }
+        void setImage(Image<color_t>* im);
 
 
         /**
@@ -202,11 +194,7 @@ namespace tgx
         *
         * **Note** Do not forget to clear the z-buffer after changing the offset !
         */
-        void setOffset(int ox, int oy)
-            {
-            _ox = clamp(ox, 0, MAXVIEWPORTDIMENSION);
-            _oy = clamp(oy, 0, MAXVIEWPORTDIMENSION);
-            }
+        void setOffset(int ox, int oy);
 
 
         /**
@@ -214,10 +202,7 @@ namespace tgx
         * 
         * Same as `setOffset(int ox, int oy)`.
         */
-        void setOffset(const iVec2& offset)
-            {
-            this->setOffset(offset.x, offset.y);
-            }
+        void setOffset(const iVec2& offset);
 
 
         /**
@@ -239,36 +224,21 @@ namespace tgx
          * 
          * @sa getProjectionMatrix()
          */
-        void setProjectionMatrix(const fMat4& M)
-            {
-            _projM = M;
-            _projM.invertYaxis();
-            _recompute_wa_wb();
-            }
+        void setProjectionMatrix(const fMat4& M);
 
 
         /**
         * Return a copy of the current projection matrix.
         */
-        fMat4 getProjectionMatrix() const
-            {
-            fMat4 M = _projM;
-            M.invertYaxis();
-            return M;
-            }
+        fMat4 getProjectionMatrix() const;
+
 
         /**
         * Set projection mode to orthographic (ie no z-divide). 
         * 
         * This method is called automatically after `setOrtho()` so it needs only be called, when applicable, after `setProjectionMatrix()`.
         */
-        void useOrthographicProjection()
-            {
-            static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use useOrthographicProjection()");
-            _ortho = true;
-            _rectifyShaderOrtho();
-            _recompute_wa_wb();
-            }
+        void useOrthographicProjection();
 
 
         /**
@@ -276,13 +246,7 @@ namespace tgx
         * 
         * This method is called automatically after `setPerspective()` or `setFrustum()` so it needs only be called, when applicable, after `setProjectionMatrix()`.
         */
-        void usePerspectiveProjection()
-            {
-            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use usePerspectiveProjection()");
-            _ortho = false;
-            _rectifyShaderOrtho();
-            _recompute_wa_wb();
-            }
+        void usePerspectiveProjection();
 
 
         /**
@@ -297,13 +261,7 @@ namespace tgx
          * 
          * @sa setFrustum(), setPerspective()
          */
-        void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
-            {
-            static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use setOrtho()");
-            _projM.setOrtho(left, right, bottom, top, zNear, zFar);
-            _projM.invertYaxis();
-            useOrthographicProjection();
-            }
+        void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
 
 
         /**
@@ -318,13 +276,7 @@ namespace tgx
          * 
          * @sa setOrtho(), setPerspective()
          */
-        void setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
-            {
-            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setFrustrum()");
-            _projM.setFrustum(left, right, bottom, top, zNear, zFar);
-            _projM.invertYaxis();
-            usePerspectiveProjection();
-            }
+        void setFrustum(float left, float right, float bottom, float top, float zNear, float zFar);
 
 
         /**
@@ -339,13 +291,7 @@ namespace tgx
          * 
          * @sa setFrustum(), setOrtho()
          */
-        void setPerspective(float fovy, float aspect, float zNear, float zFar)
-            {
-            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setPerspective()");
-            _projM.setPerspective(fovy, aspect, zNear, zFar);
-            _projM.invertYaxis();
-            usePerspectiveProjection();
-            }
+        void setPerspective(float fovy, float aspect, float zNear, float zFar);
 
 
         /**
@@ -365,10 +311,7 @@ namespace tgx
         *    (whatever this means since these normals vector are attached to vertices and not faces anyway,
         *    but still...)
         */
-        void setCulling(int w)
-            {
-            _culling_dir = (w > 0) ? 1.0f : ((w < 0) ? -1.0f : 0.0f);
-            }
+        void setCulling(int w);
 
 
         /**
@@ -382,12 +325,7 @@ namespace tgx
         * 1. Setting a valid zbuffer automatically turns on z-buffer depth test.
         * 2. Removing the z-buffer (by setting it to `nullptr`) turns off the z-buffer depth test.
         */
-        void setZbuffer(ZBUFFER_t * zbuffer)
-            {
-            static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use setZbuffer()");
-            _uni.zbuf = zbuffer;
-            _rectifyShaderZbuffer();
-            }
+        void setZbuffer(ZBUFFER_t* zbuffer);
 
 
         /**
@@ -398,14 +336,7 @@ namespace tgx
         * **Note** The z-buffer is intentionally not cleared between draw() calls to enable 
         * rendering of multiple objects on the same scene.
         */
-        void clearZbuffer()
-            {
-            static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use clearZbuffer()");
-            if ((_uni.zbuf) && (_uni.im != nullptr) && (_uni.im->isValid()))
-                {
-                memset(_uni.zbuf, 0, _uni.im->lx() * _uni.im->ly() * sizeof(ZBUFFER_t));        
-                }
-            }
+        void clearZbuffer();
 
 
         /**
@@ -450,10 +381,7 @@ namespace tgx
         *      may display faster that a simple textured cube in some cases).
         *    - moving the image into RAM if possible. Even moving the texture from FLASH to EXTMEM (if available) will usually give a great speed boost !
         */
-        void setShaders(int shaders)
-            {               
-            _rectifyShaderShading(shaders);
-            }
+        void setShaders(int shaders);
 
 
         /**
@@ -462,24 +390,7 @@ namespace tgx
         * - `TGX_SHADER_TEXTURE_WRAP_POW2`:  Wrap around (repeat) the texture. This is the fastest mode but **the texture size must be a power of two along each dimension**.
         * - `TGX_SHADER_TEXTURE_CLAMP`:      Clamp to the edge. A bit slower than above but the texture can be any size. 
         */
-        void setTextureWrappingMode(int wrap_mode)
-            {
-            if (TGX_SHADER_HAS_TEXTURE_CLAMP(wrap_mode))
-                {
-                if (TGX_SHADER_HAS_TEXTURE_CLAMP(ENABLED_SHADERS))
-                    _texture_wrap_mode = TGX_SHADER_TEXTURE_CLAMP;
-                else
-                    _texture_wrap_mode = TGX_SHADER_TEXTURE_WRAP_POW2; // fallback
-                }
-            else
-                {
-                if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(ENABLED_SHADERS))
-                    _texture_wrap_mode = TGX_SHADER_TEXTURE_WRAP_POW2;
-                else
-                    _texture_wrap_mode = TGX_SHADER_TEXTURE_CLAMP; // fallback
-                }
-            _rectifyShaderTextureWrapping();
-            }
+        void setTextureWrappingMode(int wrap_mode);
 
 
         /**
@@ -488,36 +399,22 @@ namespace tgx
         * - `TGX_SHADER_TEXTURE_NEAREST`:    Use simple point sampling when texturing (fastest method).
         * - `TGX_SHADER_TEXTURE_BILINEAR`:   Use bilinear interpolation when texturing (slower but higher quality).
         */
-        void setTextureQuality(int quality)
-            {
-            if (TGX_SHADER_HAS_TEXTURE_BILINEAR(quality))
-                {
-                if (TGX_SHADER_HAS_TEXTURE_BILINEAR(ENABLED_SHADERS))
-                    _texture_quality = TGX_SHADER_TEXTURE_BILINEAR;
-                else
-                    _texture_quality = TGX_SHADER_TEXTURE_NEAREST; // fallback
-                }
-            else
-                {
-                if (TGX_SHADER_HAS_TEXTURE_NEAREST(ENABLED_SHADERS))
-                    _texture_quality = TGX_SHADER_TEXTURE_NEAREST;
-                else
-                    _texture_quality = TGX_SHADER_TEXTURE_BILINEAR; // fallback
-                }
-            _rectifyShaderTextureQuality();
-            }
+        void setTextureQuality(int quality);
 
 
 
+        ///@}
         /*****************************************************************************************
-        ******************************************************************************************
-        *
-        * Scene specific parameters.
-        *
-        * The method belows affect the rendering at the 'scene level': camera position, lightning..
-        *
-        ******************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Scene related methods.
+         *
+         * Methods related to properties specific to the scene: camera position, lightning...
+         */
+         ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
+
 
 
         /**
@@ -534,21 +431,7 @@ namespace tgx
         * 
         * @sa getViewMatrix(), setLookAt()
         */
-        void setViewMatrix(const fMat4& M)
-            {
-            _viewM = M;
-            // recompute
-            _r_modelViewM = _viewM * _modelM;
-            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
-            _r_light = _viewM.mult0(_light);
-            _r_light = -_r_light;
-            _r_light.normalize();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)...
-            _r_H += _r_light;
-            _r_H.normalize();
-            _r_H_inorm = _r_H * _r_inorm;
-            }
+        void setViewMatrix(const fMat4& M);
 
 
         /**
@@ -556,10 +439,7 @@ namespace tgx
         * 
         * @sa setViewMatrix(), setLookAt()
         */
-        fMat4 getViewMatrix() const
-            {
-            return _viewM;
-            }
+        fMat4 getViewMatrix() const;
 
 
         /**
@@ -573,12 +453,7 @@ namespace tgx
         * 
         * @sa setViewMatrix(), getViewMatrix()
         */
-        void setLookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
-            {
-            fMat4 M;
-            M.setLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
-            setViewMatrix(M);
-            }
+        void setLookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ);
 
 
         /**
@@ -592,10 +467,7 @@ namespace tgx
         *
         * @sa setViewMatrix(), getViewMatrix()
         **/
-        void setLookAt(const fVec3 eye, const fVec3 center, const fVec3 up)
-            {
-            setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, up.x, up.y, up.z);
-            }
+        void setLookAt(const fVec3 eye, const fVec3 center, const fVec3 up);
 
 
         /**
@@ -610,12 +482,7 @@ namespace tgx
          * - the model matrix is not taken into account here.
          * - the `w` value returned can be used for depth testing.
          */
-        fVec4 worldToNDC(fVec3 P)
-            {
-            fVec4 Q = _projM * _viewM.mult1(P);
-            if (!_ortho) Q.zdivide();
-            return Q;
-            }
+        fVec4 worldToNDC(fVec3 P);
 
 
         /**
@@ -629,14 +496,7 @@ namespace tgx
          * - The position returned may be outside of the image ! 
          * - Returns (0,0) if no image is inserted. 
          */
-        iVec2 worldToImage(fVec3 P)
-            {
-            fVec4 Q = _projM * _viewM.mult1(P);
-            if (!_ortho) Q.zdivide();
-            Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
-            Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
-            return iVec2((int)roundfp(Q.x), (int)roundfp(Q.y));
-            }
+        iVec2 worldToImage(fVec3 P);
 
 
         /**
@@ -648,19 +508,7 @@ namespace tgx
          *
          * @sa setLight(), setLightAmbiant(), setLightDiffuse(), setLightSpecular()
          */
-        void setLightDirection(const fVec3 & direction)
-            {
-            _light = direction;
-            // recompute
-            _r_light = _viewM.mult0(_light);
-            _r_light = -_r_light;
-            _r_light.normalize();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)...
-            _r_H += _r_light;
-            _r_H.normalize();
-            _r_H_inorm = _r_H * _r_inorm;
-            }
+        void setLightDirection(const fVec3& direction);
 
 
         /**
@@ -672,12 +520,7 @@ namespace tgx
          *
          * @sa setLight(), setLightDirection(), setLightDiffuse(), setLightSpecular()
          */
-        void setLightAmbiant(const RGBf & color)
-            {
-            _ambiantColor = color;
-            // recompute
-            _r_ambiantColor = _ambiantColor * _ambiantStrength;
-            }
+        void setLightAmbiant(const RGBf& color);
 
 
         /**
@@ -689,12 +532,7 @@ namespace tgx
          *
          * @sa setLight(), setLightDirection(), setLightAmbiant(), setLightSpecular()
          */
-        void setLightDiffuse(const RGBf & color)
-            {
-            _diffuseColor = color;
-            // recompute
-            _r_diffuseColor = _diffuseColor * _diffuseStrength;
-            }
+        void setLightDiffuse(const RGBf& color);
 
 
         /**
@@ -706,12 +544,7 @@ namespace tgx
          *                  
          * @sa setLight(), setLightDirection(), setLightAmbiant(), setLightDiffuse()
          */
-        void setLightSpecular(const RGBf & color)
-            {
-            _specularColor = color;
-            // recompute
-            _r_specularColor = _specularColor * _specularStrength;
-            }
+        void setLightSpecular(const RGBf& color);
 
 
         /**
@@ -728,28 +561,25 @@ namespace tgx
          *
          * @sa setLightDirection(), setLightAmbiant(), setLightDiffuse(), setLightSpecular()
          */
-        void setLight(const fVec3 direction, const RGBf & ambiantColor, const RGBf & diffuseColor, const RGBf & specularColor)
-            {
-            this->setLightDirection(direction);
-            this->setLightAmbiant(ambiantColor);
-            this->setLightDiffuse(diffuseColor);
-            this->setLightSpecular(specularColor);
-            }
+        void setLight(const fVec3 direction, const RGBf& ambiantColor, const RGBf& diffuseColor, const RGBf& specularColor);
 
 
 
 
+        
+        ///@}
         /*****************************************************************************************
-        ******************************************************************************************
-        *
-        * Model specific parameters.
-        *
-        * The method below apply to the (current) object being draw: position in world space,
-        * material properties...
-        *
-        ******************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Model related methods.
+         *
+         * Methods related to properties specific to the model being drawn: position, material properties...
+         */
+        ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
-
+        
+       
 
         /**
          * Set the model tranformation matrix.
@@ -759,15 +589,7 @@ namespace tgx
          * 
          * @sa getModelMatrix(), setModelPosScaleRot()
          */
-        void setModelMatrix(const fMat4& M)
-            {
-            _modelM = M;
-            // recompute
-            _r_modelViewM = _viewM * _modelM;
-            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H_inorm = _r_H * _r_inorm;
-            }
+        void setModelMatrix(const fMat4& M);
 
 
         /**
@@ -775,10 +597,7 @@ namespace tgx
         * 
         * @sa setModelMatrix(), setModelPosScaleRot()
         */
-        fMat4  getModelMatrix() const
-            {
-            return _modelM;
-            }
+        fMat4  getModelMatrix() const;
 
 
         /**
@@ -802,17 +621,7 @@ namespace tgx
          *
          * @sa  getModelMatrix(), setModelMatrix()
          */
-        void setModelPosScaleRot(const fVec3& center = fVec3{ 0,0,0 }, const fVec3& scale = fVec3(1, 1, 1), float rot_angle = 0, const fVec3& rot_dir = fVec3{ 0,1,0 })
-            {
-            _modelM.setScale(scale);
-            _modelM.multRotate(rot_angle, rot_dir);
-            _modelM.multTranslate(center);
-            // recompute
-            _r_modelViewM = _viewM * _modelM;
-            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H_inorm = _r_H * _r_inorm;
-            }
+        void setModelPosScaleRot(const fVec3& center = fVec3{ 0,0,0 }, const fVec3& scale = fVec3(1, 1, 1), float rot_angle = 0, const fVec3& rot_dir = fVec3{ 0,1,0 });
 
 
         /**
@@ -826,12 +635,7 @@ namespace tgx
         * **Note**
         * - the .w value can be used for depth testing. 
         */
-        fVec4 modelToNDC(fVec3 P)
-            {
-            fVec4 Q = _projM * _r_modelViewM.mult1(P);
-            if (!_ortho) Q.zdivide();
-            return Q;
-            }
+        fVec4 modelToNDC(fVec3 P);
 
 
         /**
@@ -845,14 +649,7 @@ namespace tgx
          * - The position returned may be outside of the image !
          * - Returns (0,0) if no image is inserted.
          */
-        iVec2 modelToImage(fVec3 P)
-            {
-            fVec4 Q = _projM * _r_modelViewM.mult1(P);
-            if (!_ortho) Q.zdivide();
-            Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
-            Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
-            return iVec2(roundfp(Q.x), roundfp(Q.y));
-            }
+        iVec2 modelToImage(fVec3 P);
 
 
         /**
@@ -863,12 +660,7 @@ namespace tgx
          * @sa  setMaterialAmbiantStrength(), setMaterialDiffuseStrength(),
          *      setMaterialSpecularStrength(), setMaterialSpecularExponent(), setMaterial()
          */
-        void setMaterialColor(RGBf color)
-            {
-            _color = color;
-            // recompute
-            _r_objectColor = _color;
-            }
+        void setMaterialColor(RGBf color);
 
 
         /**
@@ -879,12 +671,7 @@ namespace tgx
          * @sa  setMaterialColor(), setMaterialDiffuseStrength(),
          *      setMaterialSpecularStrength(), setMaterialSpecularExponent(), setMaterial()
          */
-        void setMaterialAmbiantStrength(float strenght = 0.1f)
-            {
-            _ambiantStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
-            // recompute
-            _r_ambiantColor = _ambiantColor * _ambiantStrength;
-            }
+        void setMaterialAmbiantStrength(float strenght = 0.1f);
 
 
         /**
@@ -895,12 +682,7 @@ namespace tgx
          * @sa  setMaterialColor(), setMaterialAmbiantStrength(), 
          *      setMaterialSpecularStrength(), setMaterialSpecularExponent(), setMaterial()
          */
-        void setMaterialDiffuseStrength(float strenght = 0.6f)
-            {
-            _diffuseStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
-            // recompute
-            _r_diffuseColor = _diffuseColor * _diffuseStrength;
-            }
+        void setMaterialDiffuseStrength(float strenght = 0.6f);
 
 
         /**
@@ -911,12 +693,7 @@ namespace tgx
          * @sa  setMaterialColor(), setMaterialAmbiantStrength(), setMaterialDiffuseStrength(),
          *      setMaterialSpecularExponent(), setMaterial()
          */
-        void setMaterialSpecularStrength(float strenght = 0.5f)
-            {
-            _specularStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
-            // recompute
-            _r_specularColor = _specularColor * _specularStrength;
-            }
+        void setMaterialSpecularStrength(float strenght = 0.5f);
 
 
         /**
@@ -929,10 +706,7 @@ namespace tgx
          * @sa  setMaterialColor(), setMaterialAmbiantStrength(), setMaterialDiffuseStrength(),
          *      setMaterialSpecularStrength(), setMaterial()
          */
-        void setMaterialSpecularExponent(int exponent = 16)
-            {
-            _specularExponent = clamp(exponent, 0, 100);
-            }
+        void setMaterialSpecularExponent(int exponent = 16);
 
 
         /**
@@ -947,15 +721,7 @@ namespace tgx
          * @sa  setMaterialColor(), setMaterialAmbiantStrength(), setMaterialDiffuseStrength(),
          *      setMaterialSpecularStrength(), setMaterialSpecularExponent(),
          */
-        void setMaterial(RGBf color, float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)
-            {
-            this->setMaterialColor(color);
-            this->setMaterialAmbiantStrength(ambiantStrength);
-            this->setMaterialDiffuseStrength(diffuseStrength);
-            this->setMaterialSpecularStrength(specularStrength);
-            this->setMaterialSpecularExponent(specularExponent);
-            }
-
+        void setMaterial(RGBf color, float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent);
 
 
 
@@ -1008,6 +774,21 @@ namespace tgx
         *
         ******************************************************************************************
         ******************************************************************************************/
+
+
+        
+        ///@}
+        /*****************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Drawing solid objects. 
+         *       
+         * Methods for drawing meshes, triangles and quads.
+         */
+        ///@{
+        /*****************************************************************************************
+        ******************************************************************************************/
+
 
 
         /**
@@ -1120,7 +901,7 @@ namespace tgx
          *
          * @param   P1, P2, P3,P4           coordinates (in model space) of the quad to draw
          * @param   col1, col2, col3, col4  color at each vertex.
-         * @param   N1, N2, N3              pointers to the normals associated with `P1, P2, P3, P4` or `nullptr` if not using Gouraud shading.
+         * @param   N1, N2, N3, N4          pointers to the normals associated with `P1, P2, P3, P4` or `nullptr` if not using Gouraud shading.
          *
          * **Remarks**
          * - The color inside the quad is obtained by linear interpolation.
@@ -1165,16 +946,229 @@ namespace tgx
 
 
 
-
-
+        ///@}
         /*****************************************************************************************
-        ******************************************************************************************
-        *
-        *                          Drawing simple geometric object
-        *
-        *
-        ******************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Drawing solid geometric primitives.
+         *       
+         * Methods for drawing cube and spheres. 
+         */
+        ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
+
+
+
+        /**
+         * Draw the unit cube `[-1,1]^3` in model space.
+         * 
+         * **Remark** The model transform matrix may be used to scale, rotate and position the cube
+         * anywhere in world space.
+         */
+        void drawCube()
+            {
+            // set culling direction = -1 and save previous value
+            float save_culling = _culling_dir;
+            if (_culling_dir != 0) _culling_dir = 1;
+            drawQuads(6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
+            // restore culling direction
+            _culling_dir = save_culling; 
+            }
+            
+
+
+        
+        /**
+         * Draw a textured unit cube `[-1,1]^3` in model space.
+         * 
+         * ```
+         *                                                                   H--------E
+         *                                                                   |        |
+         *                                                                   |  top   |
+         *                          H-------------E                          |        |
+         *                         /.            /|                 H--------A--------D--------E
+         *                        / .   top     / |                 |        |        |        |
+         *                       /  .          /  |                 |  left  | front  |  right |
+         *                      A------------D    |  right          |        |        |        |
+         *                      |   .        |    |                 G--------B--------C--------F
+         *                      |   G .......|....F                          |        |
+         *                      |  .         |   /                           | bottom |
+         *                      | .  front   |  /                            |        |
+         *                      |.           | /                             G--------F
+         *                      B------------C                               |        |
+         *                                                                   |  back  |
+         *                                                                   |        |
+         *                                                                   H--------E
+         * ```
+         * 
+         * **Remarks**
+         * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
+         * - Each face may use a different texture (or set the image to `nullptr` to disable texturing a face).
+         *
+         * @param   v_front_ABCD    texture coords array for the front face in order ABCD 
+         * @param   texture_front   texture for the front face
+         * @param   v_back_EFGH     texture coords array for the back face in order EFGH 
+         * @param   texture_back    texture for the back face
+         * @param   v_top_HADE      texture coords array for the top face in order HADE
+         * @param   texture_top     texture for the top face
+         * @param   v_bottom_BGFC   texture coords array for the bottom face in order BGFC 
+         * @param   texture_bottom  texture for the bottom face
+         * @param   v_left_HGBA     texture coords array for the left face in order HGBA 
+         * @param   texture_left    texture for the left face
+         * @param   v_right_DCFE    texture coords array for the right face in order DCFE 
+         * @param   texture_right   texture for the right face
+         */
+        void drawCube(
+            const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
+            const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
+            const fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
+            const fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
+            const fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
+            const fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right
+            );
+
+
+        /**
+         * draw a textured unit cube [-1,1]^3 (in model space)
+         * 
+         * ```
+         *                                                                   H--------E
+         *                                                                   |        |
+         *                                                                   |  top   |
+         *                          H-------------E                          |        |
+         *                         /.            /|                 H--------A--------D--------E
+         *                        / .   top     / |                 |        |        |        |
+         *                       /  .          /  |                 |  left  | front  |  right |
+         *                      A------------D    |  right          |        |        |        |
+         *                      |   .        |    |                 G--------B--------C--------F
+         *                      |   G .......|....F                          |        |
+         *                      |  .         |   /                           | bottom |
+         *                      | .  front   |  /                            |        |
+         *                      |.           | /                             G--------F
+         *                      B------------C                               |        |
+         *                                                                   |  back  |
+         *                                                                   |        |
+         *                                                                   H--------E
+         * ```
+         *
+         * **Remarks**
+         * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
+         * - Each face uses a 'whole' image. Set the texture image to `nullptr` to disable texturing a given face.
+         *
+         * @param   texture_front   texture for the front face.
+         * @param   texture_back    texture for the back face.
+         * @param   texture_top     texture for the top face.
+         * @param   texture_bottom  texture for the bottom face.
+         * @param   texture_left    texture for the left face.
+         * @param   texture_right   texture for the right face.
+         */
+        void drawCube(
+            const Image<color_t>* texture_front,
+            const Image<color_t>* texture_back,
+            const Image<color_t>* texture_top,
+            const Image<color_t>* texture_bottom,
+            const Image<color_t>* texture_left,
+            const Image<color_t>* texture_right
+            );
+
+
+
+        /**
+         * Draw a unit radius sphere centered at the origin `S(0,1)` in model space.
+         * 
+         * **Remarks**
+         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere with a given number of sector and stacks.
+         *
+         * @param   nb_sectors  number of sectors of the UV sphere.
+         * @param   nb_stacks   number of stacks of the UV sphere.
+         */
+        void drawSphere(int nb_sectors, int nb_stacks)
+            {
+            drawSphere(nb_sectors, nb_stacks, nullptr);
+            }
+
+
+        /**
+         * Draw a textured unit radius sphere centered at the origin S(0,1) in model space.
+         * 
+         * **Remarks**
+         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere with a given number of sector and stacks.
+         * - The texture is mapped using the Mercator projection.
+         *
+         * @param   nb_sectors  number of sectors of the UV sphere.
+         * @param   nb_stacks   number of stacks of the UV sphere.
+         * @param   texture     The texture (mapped via Mercoator projection)
+         */
+        void drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture)
+            {
+            _drawSphere<false,false>(nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
+            }
+
+
+        /**
+         * Draw a unit radius sphere centered at the origin S(0,1) in model space.
+         * 
+         * @remark
+         * - The model transform matrix may be used position the sphere anywhere in world space and
+         * change it to an ellipsoid.
+         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted
+         * automatically according to the apparent size on the screen.
+         *
+         * @param   quality Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
+         *                  - `1` : default quality  
+         *                  - `>1`: finer mesh. Improve quality but decrease speed.
+         *                  - `<1`: coarser mesh. Decrease quality but improve speed.
+         */
+        void drawAdaptativeSphere(float quality = 1.0f)
+            {
+            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
+            drawSphere(nb_stacks * 2 - 2, nb_stacks, nullptr);
+            }   
+
+
+        /**
+         * Draw a textured unit radius sphere centered at the origin S(0,1) in model space.
+         * 
+         * @remark 
+         * - The model transform matrix may be used position the sphere anywhere in world space   
+         *   and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted   
+         *   automatically according to the apparent size on the screen.
+         * - The texture is mapped using the Mercator projection.
+         *
+         * @param   texture The texture image mapped via Mercator projection. 
+         * @param   quality (Optional) Quality of the mesh. Should be positive, typically between 0.5f
+         *                  and 2.0f.
+         *                  - `1` : default quality
+         *                  - `>1`: finer mesh. Improve quality but decrease speed.
+         *                  - `<1`: coarser mesh. Decrease quality but improve speed.
+         */
+        void drawAdaptativeSphere(const Image<color_t>* texture, float quality = 1.0f)
+            {
+            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
+            drawSphere(nb_stacks * 2 - 2, nb_stacks, texture);
+            }
+
+
+
+
+        ///@}
+        /*****************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Drawing 3D point clouds
+         *       
+         * Methods for drawing pixels and dots.
+         */
+        ///@{
+        /*****************************************************************************************
+        ******************************************************************************************/
+
 
 
         /**
@@ -1420,200 +1414,6 @@ namespace tgx
             }
 
 
-        /**
-         * Draw the unit cube `[-1,1]^3` in model space.
-         * 
-         * **Remark** The model transform matrix may be used to scale, rotate and position the cube
-         * anywhere in world space.
-         */
-        void drawCube()
-            {
-            // set culling direction = -1 and save previous value
-            float save_culling = _culling_dir;
-            if (_culling_dir != 0) _culling_dir = 1;
-            drawQuads(6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
-            // restore culling direction
-            _culling_dir = save_culling; 
-            }
-            
-
-
-        
-        /**
-         * Draw a textured unit cube `[-1,1]^3` in model space.
-         * 
-         * ```
-         *                                                                   H--------E
-         *                                                                   |        |
-         *                                                                   |  top   |
-         *                          H-------------E                          |        |
-         *                         /.            /|                 H--------A--------D--------E
-         *                        / .   top     / |                 |        |        |        |
-         *                       /  .          /  |                 |  left  | front  |  right |
-         *                      A------------D    |  right          |        |        |        |
-         *                      |   .        |    |                 G--------B--------C--------F
-         *                      |   G .......|....F                          |        |
-         *                      |  .         |   /                           | bottom |
-         *                      | .  front   |  /                            |        |
-         *                      |.           | /                             G--------F
-         *                      B------------C                               |        |
-         *                                                                   |  back  |
-         *                                                                   |        |
-         *                                                                   H--------E
-         * ```
-         * 
-         * **Remarks**
-         * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
-         * - Each face may use a different texture (or set the image to `nullptr` to disable texturing a face).
-         *
-         * @param   v_front_ABCD    texture coords array for the front face in order ABCD 
-         * @param   texture_front   texture for the front face
-         * @param   v_back_EFGH     texture coords array for the back face in order EFGH 
-         * @param   texture_back    texture for the back face
-         * @param   v_top_HADE      texture coords array for the top face in order HADE
-         * @param   texture_top     texture for the top face
-         * @param   v_bottom_BGFC   texture coords array for the bottom face in order BGFC 
-         * @param   texture_bottom  texture for the bottom face
-         * @param   v_left_HGBA     texture coords array for the left face in order HGBA 
-         * @param   texture_left    texture for the left face
-         * @param   v_right_DCFE    texture coords array for the right face in order DCFE 
-         * @param   texture_right   texture for the right face
-         */
-        void drawCube(
-            const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
-            const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
-            const fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
-            const fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
-            const fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
-            const fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right
-            );
-
-
-        /**
-         * draw a textured unit cube [-1,1]^3 (in model space)
-         * 
-         * ```
-         *                                                                   H--------E
-         *                                                                   |        |
-         *                                                                   |  top   |
-         *                          H-------------E                          |        |
-         *                         /.            /|                 H--------A--------D--------E
-         *                        / .   top     / |                 |        |        |        |
-         *                       /  .          /  |                 |  left  | front  |  right |
-         *                      A------------D    |  right          |        |        |        |
-         *                      |   .        |    |                 G--------B--------C--------F
-         *                      |   G .......|....F                          |        |
-         *                      |  .         |   /                           | bottom |
-         *                      | .  front   |  /                            |        |
-         *                      |.           | /                             G--------F
-         *                      B------------C                               |        |
-         *                                                                   |  back  |
-         *                                                                   |        |
-         *                                                                   H--------E
-         * ```
-         *
-         * **Remarks**
-         * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
-         * - Each face uses a 'whole' image. Set the texture image to `nullptr` to disable texturing a given face.
-         *
-         * @param   texture_front   texture for the front face.
-         * @param   texture_back    texture for the back face.
-         * @param   texture_top     texture for the top face.
-         * @param   texture_bottom  texture for the bottom face.
-         * @param   texture_left    texture for the left face.
-         * @param   texture_right   texture for the right face.
-         */
-        void drawCube(
-            const Image<color_t>* texture_front,
-            const Image<color_t>* texture_back,
-            const Image<color_t>* texture_top,
-            const Image<color_t>* texture_bottom,
-            const Image<color_t>* texture_left,
-            const Image<color_t>* texture_right
-            );
-
-
-        /**
-         * Draw a unit radius sphere centered at the origin `S(0,1)` in model space.
-         * 
-         * **Remarks**
-         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
-         * - The mesh created is a UV-sphere with a given number of sector and stacks.
-         *
-         * @param   nb_sectors  number of sectors of the UV sphere.
-         * @param   nb_stacks   number of stacks of the UV sphere.
-         */
-        void drawSphere(int nb_sectors, int nb_stacks)
-            {
-            drawSphere(nb_sectors, nb_stacks, nullptr);
-            }
-
-
-        /**
-         * Draw a textured unit radius sphere centered at the origin S(0,1) in model space.
-         * 
-         * **Remarks**
-         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
-         * - The mesh created is a UV-sphere with a given number of sector and stacks.
-         * - The texture is mapped using the Mercator projection.
-         *
-         * @param   nb_sectors  number of sectors of the UV sphere.
-         * @param   nb_stacks   number of stacks of the UV sphere.
-         * @param   texture     The texture (mapped via Mercoator projection)
-         */
-        void drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture)
-            {
-            _drawSphere<false,false>(nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
-            }
-
-
-        /**
-         * Draw a unit radius sphere centered at the origin S(0,1) in model space.
-         * 
-         * **Remarks**
-         * - The model transform matrix may be used position the sphere anywhere in world space and
-         * change it to an ellipsoid.
-         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted
-         * automatically according to the apparent size on the screen.
-         *
-         * @param   quality Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
-         *                  - `1` : default quality  
-         *                  - `>1`: finer mesh. Improve quality but decrease speed.
-         *                  - `<1`: coarser mesh. Decrease quality but improve speed.
-         */
-        void drawAdaptativeSphere(float quality = 1.0f)
-            {
-            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
-            drawSphere(nb_stacks * 2 - 2, nb_stacks, nullptr);
-            }   
-
-
-        /**
-         * Draw a textured unit radius sphere centered at the origin S(0,1) in model space.
-         * 
-         * **Remarks**
-         * - The model transform matrix may be used position the sphere anywhere in world space and
-         * change it to an ellipsoid.
-         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted
-         * automatically according to the apparent size on the screen.
-         * - the texture is mapped using the Mercator projection.
-         *
-         * @param   texture The texture image mapped via Mercator projection. 
-         * @param   quality (Optional) Quality of the mesh. Should be positive, typically between 0.5f
-         *                  and 2.0f.
-         *                  - `1` : default quality
-         *                  - `>1`: finer mesh. Improve quality but decrease speed.
-         *                  - `<1`: coarser mesh. Decrease quality but improve speed.
-         */
-        void drawAdaptativeSphere(const Image<color_t>* texture, float quality = 1.0f)
-            {
-            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
-            drawSphere(nb_stacks * 2 - 2, nb_stacks, texture);
-            }
-
-
 
 
 
@@ -1637,6 +1437,19 @@ namespace tgx
         *  *** WIREFRAME DRAWING METHODS DO NOT TAKE LIGHTNING INTO ACCOUNT FOR LINE COLORS ***
         *  
         ******************************************************************************************
+        ******************************************************************************************/
+
+
+        ///@}
+        /*****************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Drawing wireframe objects. 
+         *       
+         * Methods for drawing wireframe meshes, triangles and quads.
+         */
+        ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
 
 
@@ -1949,13 +1762,17 @@ namespace tgx
 
 
 
+
+        ///@}
         /*****************************************************************************************
-        ******************************************************************************************
-        *
-        *                          Drawing simple geometric object in wireframe
-        *
-        *
-        ******************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Drawing wireframe geometric primitives.
+         *       
+         * Methods for drawing wireframe cube and spheres. 
+         */
+        ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
 
 
@@ -2098,7 +1915,7 @@ namespace tgx
 
 
 
-
+        ///@}
 
 
     private:

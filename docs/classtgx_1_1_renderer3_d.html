@@ -108,6 +108,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a333d6126e522ba550b7ec8add6c600ad"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a333d6126e522ba550b7ec8add6c600ad">Renderer3D</a> (const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;viewportSize={0, 0}, <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *im=nullptr, ZBUFFER_t *zbuffer=nullptr)</td></tr>
 <tr class="memdesc:a333d6126e522ba550b7ec8add6c600ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classtgx_1_1_renderer3_d.html#a333d6126e522ba550b7ec8add6c600ad">More...</a><br /></td></tr>
 <tr class="separator:a333d6126e522ba550b7ec8add6c600ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Global settings.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods related to global properties of the renderer: viewport size, zbuffer, projection type... </p>
+</div></td></tr>
 <tr class="memitem:a7222e72a480ce99a8eb3d3df2dfec0aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa">setViewportSize</a> (int lx, int ly)</td></tr>
 <tr class="memdesc:a7222e72a480ce99a8eb3d3df2dfec0aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the size of the viewport.  <a href="classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa">More...</a><br /></td></tr>
 <tr class="separator:a7222e72a480ce99a8eb3d3df2dfec0aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,6 +166,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a78f24c4f139eccc4b9a695ca681970cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a78f24c4f139eccc4b9a695ca681970cc">setTextureQuality</a> (int quality)</td></tr>
 <tr class="memdesc:a78f24c4f139eccc4b9a695ca681970cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the texturing quality.  <a href="classtgx_1_1_renderer3_d.html#a78f24c4f139eccc4b9a695ca681970cc">More...</a><br /></td></tr>
 <tr class="separator:a78f24c4f139eccc4b9a695ca681970cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Scene related methods.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods related to properties specific to the scene: camera position, lightning... </p>
+</div></td></tr>
 <tr class="memitem:a6cad095ff0d7eefbdb93ac04b6a3efff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a6cad095ff0d7eefbdb93ac04b6a3efff">setViewMatrix</a> (const <a class="el" href="_mat4_8h.html#aa543bb38f59d79a08113a6254b587322">fMat4</a> &amp;M)</td></tr>
 <tr class="memdesc:a6cad095ff0d7eefbdb93ac04b6a3efff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the view transformation matrix.  <a href="classtgx_1_1_renderer3_d.html#a6cad095ff0d7eefbdb93ac04b6a3efff">More...</a><br /></td></tr>
 <tr class="separator:a6cad095ff0d7eefbdb93ac04b6a3efff"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,6 +202,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5ad40825895c5cb3a675fb15c2035d97"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a5ad40825895c5cb3a675fb15c2035d97">setLight</a> (const <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> direction, const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;ambiantColor, const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;diffuseColor, const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;specularColor)</td></tr>
 <tr class="memdesc:a5ad40825895c5cb3a675fb15c2035d97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set all the lighting parameters of the scene at once.  <a href="classtgx_1_1_renderer3_d.html#a5ad40825895c5cb3a675fb15c2035d97">More...</a><br /></td></tr>
 <tr class="separator:a5ad40825895c5cb3a675fb15c2035d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Model related methods.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods related to properties specific to the model being drawn: position, material properties... </p>
+</div></td></tr>
 <tr class="memitem:a7ca1f0b53ca7460869fc3031f8422240"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a7ca1f0b53ca7460869fc3031f8422240">setModelMatrix</a> (const <a class="el" href="_mat4_8h.html#aa543bb38f59d79a08113a6254b587322">fMat4</a> &amp;M)</td></tr>
 <tr class="memdesc:a7ca1f0b53ca7460869fc3031f8422240"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the model tranformation matrix.  <a href="classtgx_1_1_renderer3_d.html#a7ca1f0b53ca7460869fc3031f8422240">More...</a><br /></td></tr>
 <tr class="separator:a7ca1f0b53ca7460869fc3031f8422240"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,6 +238,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5ae2f4be4d9c231fdd4f8f624a80a4e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a5ae2f4be4d9c231fdd4f8f624a80a4e8">setMaterial</a> (<a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> color, float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)</td></tr>
 <tr class="memdesc:a5ae2f4be4d9c231fdd4f8f624a80a4e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set all the object material properties at once.  <a href="classtgx_1_1_renderer3_d.html#a5ae2f4be4d9c231fdd4f8f624a80a4e8">More...</a><br /></td></tr>
 <tr class="separator:a5ae2f4be4d9c231fdd4f8f624a80a4e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing solid objects.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing meshes, triangles and quads. </p>
+</div></td></tr>
 <tr class="memitem:a0298855a66fc0063e3c935dabac4c51e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh</a> (const <a class="el" href="structtgx_1_1_mesh3_d.html">Mesh3D</a>&lt; color_t &gt; *mesh, bool use_mesh_material=true, bool draw_chained_meshes=true)</td></tr>
 <tr class="memdesc:a0298855a66fc0063e3c935dabac4c51e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a <a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data stucture.">Mesh3D</a> object.  <a href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">More...</a><br /></td></tr>
 <tr class="separator:a0298855a66fc0063e3c935dabac4c51e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -250,6 +262,33 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a01fe01f23d0925292db43938f164d5ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a01fe01f23d0925292db43938f164d5ad">drawQuads</a> (int nb_quads, const uint16_t *ind_vertices, const <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> *vertices, const uint16_t *ind_normals=nullptr, const <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> *normals=nullptr, const uint16_t *ind_texture=nullptr, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> *textures=nullptr, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_image=nullptr)</td></tr>
 <tr class="memdesc:a01fe01f23d0925292db43938f164d5ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a list of quads.  <a href="classtgx_1_1_renderer3_d.html#a01fe01f23d0925292db43938f164d5ad">More...</a><br /></td></tr>
 <tr class="separator:a01fe01f23d0925292db43938f164d5ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing solid geometric primitives.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing cube and spheres. </p>
+</div></td></tr>
+<tr class="memitem:a44f87bfade3e549ef8b3ec2468705e77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a44f87bfade3e549ef8b3ec2468705e77">drawCube</a> ()</td></tr>
+<tr class="memdesc:a44f87bfade3e549ef8b3ec2468705e77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the unit cube <code>[-1,1]^3</code> in model space.  <a href="classtgx_1_1_renderer3_d.html#a44f87bfade3e549ef8b3ec2468705e77">More...</a><br /></td></tr>
+<tr class="separator:a44f87bfade3e549ef8b3ec2468705e77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab32f027d40abe77c230d9975482d6488"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#ab32f027d40abe77c230d9975482d6488">drawCube</a> (const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_front_ABCD[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_front, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_back_EFGH[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_back, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_top_HADE[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_top, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_bottom_BGFC[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_bottom, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_left_HGBA[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_left, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_right_DCFE[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_right)</td></tr>
+<tr class="memdesc:ab32f027d40abe77c230d9975482d6488"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a textured unit cube <code>[-1,1]^3</code> in model space.  <a href="classtgx_1_1_renderer3_d.html#ab32f027d40abe77c230d9975482d6488">More...</a><br /></td></tr>
+<tr class="separator:ab32f027d40abe77c230d9975482d6488"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f4b0d511a4144826084788e5f69911a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a2f4b0d511a4144826084788e5f69911a">drawCube</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_front, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_back, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_top, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_bottom, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_left, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_right)</td></tr>
+<tr class="memdesc:a2f4b0d511a4144826084788e5f69911a"><td class="mdescLeft">&#160;</td><td class="mdescRight">draw a textured unit cube [-1,1]^3 (in model space)  <a href="classtgx_1_1_renderer3_d.html#a2f4b0d511a4144826084788e5f69911a">More...</a><br /></td></tr>
+<tr class="separator:a2f4b0d511a4144826084788e5f69911a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0737d0bed8e991bdda9c956e6842478d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a0737d0bed8e991bdda9c956e6842478d">drawSphere</a> (int nb_sectors, int nb_stacks)</td></tr>
+<tr class="memdesc:a0737d0bed8e991bdda9c956e6842478d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a unit radius sphere centered at the origin <code>S(0,1)</code> in model space.  <a href="classtgx_1_1_renderer3_d.html#a0737d0bed8e991bdda9c956e6842478d">More...</a><br /></td></tr>
+<tr class="separator:a0737d0bed8e991bdda9c956e6842478d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6fbb721753ca5a7f0f5237eb2ebbe01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#ae6fbb721753ca5a7f0f5237eb2ebbe01">drawSphere</a> (int nb_sectors, int nb_stacks, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture)</td></tr>
+<tr class="memdesc:ae6fbb721753ca5a7f0f5237eb2ebbe01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a textured unit radius sphere centered at the origin S(0,1) in model space.  <a href="classtgx_1_1_renderer3_d.html#ae6fbb721753ca5a7f0f5237eb2ebbe01">More...</a><br /></td></tr>
+<tr class="separator:ae6fbb721753ca5a7f0f5237eb2ebbe01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00c59fee77ca3d42b19d62e9eade1203"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a00c59fee77ca3d42b19d62e9eade1203">drawAdaptativeSphere</a> (float quality=1.0f)</td></tr>
+<tr class="memdesc:a00c59fee77ca3d42b19d62e9eade1203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a unit radius sphere centered at the origin S(0,1) in model space.  <a href="classtgx_1_1_renderer3_d.html#a00c59fee77ca3d42b19d62e9eade1203">More...</a><br /></td></tr>
+<tr class="separator:a00c59fee77ca3d42b19d62e9eade1203"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa9186b507df18e0df32976781d48909"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#afa9186b507df18e0df32976781d48909">drawAdaptativeSphere</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture, float quality=1.0f)</td></tr>
+<tr class="memdesc:afa9186b507df18e0df32976781d48909"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a textured unit radius sphere centered at the origin S(0,1) in model space.  <a href="classtgx_1_1_renderer3_d.html#afa9186b507df18e0df32976781d48909">More...</a><br /></td></tr>
+<tr class="separator:afa9186b507df18e0df32976781d48909"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing 3D point clouds</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing pixels and dots. </p>
+</div></td></tr>
 <tr class="memitem:a8bf2c28c514af367fd47964577f1584d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a8bf2c28c514af367fd47964577f1584d">drawPixel</a> (const <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> &amp;pos)</td></tr>
 <tr class="memdesc:a8bf2c28c514af367fd47964577f1584d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a single pixel at a given position in model space.  <a href="classtgx_1_1_renderer3_d.html#a8bf2c28c514af367fd47964577f1584d">More...</a><br /></td></tr>
 <tr class="separator:a8bf2c28c514af367fd47964577f1584d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -289,27 +328,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a31ddcca2d8bb674777bff0ba74e314b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a31ddcca2d8bb674777bff0ba74e314b2">drawDots</a> (int nb_dots, const <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> *pos_list, const int *radius_ind, const int *radius, const int *colors_ind, const color_t *colors, const int *opacities_ind, const float *opacities)</td></tr>
 <tr class="memdesc:a31ddcca2d8bb674777bff0ba74e314b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a list of dots/circles at given positions in model space.  <a href="classtgx_1_1_renderer3_d.html#a31ddcca2d8bb674777bff0ba74e314b2">More...</a><br /></td></tr>
 <tr class="separator:a31ddcca2d8bb674777bff0ba74e314b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44f87bfade3e549ef8b3ec2468705e77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a44f87bfade3e549ef8b3ec2468705e77">drawCube</a> ()</td></tr>
-<tr class="memdesc:a44f87bfade3e549ef8b3ec2468705e77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the unit cube <code>[-1,1]^3</code> in model space.  <a href="classtgx_1_1_renderer3_d.html#a44f87bfade3e549ef8b3ec2468705e77">More...</a><br /></td></tr>
-<tr class="separator:a44f87bfade3e549ef8b3ec2468705e77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab32f027d40abe77c230d9975482d6488"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#ab32f027d40abe77c230d9975482d6488">drawCube</a> (const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_front_ABCD[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_front, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_back_EFGH[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_back, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_top_HADE[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_top, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_bottom_BGFC[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_bottom, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_left_HGBA[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_left, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> v_right_DCFE[4], const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_right)</td></tr>
-<tr class="memdesc:ab32f027d40abe77c230d9975482d6488"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a textured unit cube <code>[-1,1]^3</code> in model space.  <a href="classtgx_1_1_renderer3_d.html#ab32f027d40abe77c230d9975482d6488">More...</a><br /></td></tr>
-<tr class="separator:ab32f027d40abe77c230d9975482d6488"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f4b0d511a4144826084788e5f69911a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a2f4b0d511a4144826084788e5f69911a">drawCube</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_front, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_back, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_top, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_bottom, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_left, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture_right)</td></tr>
-<tr class="memdesc:a2f4b0d511a4144826084788e5f69911a"><td class="mdescLeft">&#160;</td><td class="mdescRight">draw a textured unit cube [-1,1]^3 (in model space)  <a href="classtgx_1_1_renderer3_d.html#a2f4b0d511a4144826084788e5f69911a">More...</a><br /></td></tr>
-<tr class="separator:a2f4b0d511a4144826084788e5f69911a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0737d0bed8e991bdda9c956e6842478d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a0737d0bed8e991bdda9c956e6842478d">drawSphere</a> (int nb_sectors, int nb_stacks)</td></tr>
-<tr class="memdesc:a0737d0bed8e991bdda9c956e6842478d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a unit radius sphere centered at the origin <code>S(0,1)</code> in model space.  <a href="classtgx_1_1_renderer3_d.html#a0737d0bed8e991bdda9c956e6842478d">More...</a><br /></td></tr>
-<tr class="separator:a0737d0bed8e991bdda9c956e6842478d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6fbb721753ca5a7f0f5237eb2ebbe01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#ae6fbb721753ca5a7f0f5237eb2ebbe01">drawSphere</a> (int nb_sectors, int nb_stacks, const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture)</td></tr>
-<tr class="memdesc:ae6fbb721753ca5a7f0f5237eb2ebbe01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a textured unit radius sphere centered at the origin S(0,1) in model space.  <a href="classtgx_1_1_renderer3_d.html#ae6fbb721753ca5a7f0f5237eb2ebbe01">More...</a><br /></td></tr>
-<tr class="separator:ae6fbb721753ca5a7f0f5237eb2ebbe01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00c59fee77ca3d42b19d62e9eade1203"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a00c59fee77ca3d42b19d62e9eade1203">drawAdaptativeSphere</a> (float quality=1.0f)</td></tr>
-<tr class="memdesc:a00c59fee77ca3d42b19d62e9eade1203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a unit radius sphere centered at the origin S(0,1).  <a href="classtgx_1_1_renderer3_d.html#a00c59fee77ca3d42b19d62e9eade1203">More...</a><br /></td></tr>
-<tr class="separator:a00c59fee77ca3d42b19d62e9eade1203"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa9186b507df18e0df32976781d48909"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#afa9186b507df18e0df32976781d48909">drawAdaptativeSphere</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; *texture, float quality=1.0f)</td></tr>
-<tr class="memdesc:afa9186b507df18e0df32976781d48909"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a textured unit radius sphere centered at the origin S(0,1).  <a href="classtgx_1_1_renderer3_d.html#afa9186b507df18e0df32976781d48909">More...</a><br /></td></tr>
-<tr class="separator:afa9186b507df18e0df32976781d48909"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing wireframe objects.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing wireframe meshes, triangles and quads. </p>
+</div></td></tr>
 <tr class="memitem:ae167aca012374ff0ebd009ca3a008df9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#ae167aca012374ff0ebd009ca3a008df9">drawWireFrameMesh</a> (const <a class="el" href="structtgx_1_1_mesh3_d.html">Mesh3D</a>&lt; color_t &gt; *mesh, bool draw_chained_meshes=true)</td></tr>
 <tr class="memdesc:ae167aca012374ff0ebd009ca3a008df9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a mesh onto the image using 'wireframe' lines (FAST BUT LOW QUALITY METHOD).  <a href="classtgx_1_1_renderer3_d.html#ae167aca012374ff0ebd009ca3a008df9">More...</a><br /></td></tr>
 <tr class="separator:ae167aca012374ff0ebd009ca3a008df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -373,6 +394,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a845bbd628cfd96f379f3f23d880aa60a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_renderer3_d.html#a845bbd628cfd96f379f3f23d880aa60a">drawWireFrameQuads</a> (int nb_quads, const uint16_t *ind_vertices, const <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> *vertices, float thickness, color_t color, float opacity)</td></tr>
 <tr class="memdesc:a845bbd628cfd96f379f3f23d880aa60a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a list of quads on the image.  <a href="classtgx_1_1_renderer3_d.html#a845bbd628cfd96f379f3f23d880aa60a">More...</a><br /></td></tr>
 <tr class="separator:a845bbd628cfd96f379f3f23d880aa60a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing wireframe geometric primitives.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing wireframe cube and spheres. </p>
+</div></td></tr>
 <tr class="memitem:a1522a8010525348deefbfe92b8a9fe53"><td class="memItemLeft" align="right" valign="top"><a id="a1522a8010525348deefbfe92b8a9fe53" name="a1522a8010525348deefbfe92b8a9fe53"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>drawWireFrameCube</b> ()</td></tr>
 <tr class="memdesc:a1522a8010525348deefbfe92b8a9fe53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the cube [0,1]^3 (in model space) in wireframe (FAST BUT LOW QUALITY METHOD). <br /></td></tr>
@@ -487,9 +511,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::clearZbuffer </td>
@@ -498,11 +519,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Clear the Zbuffer. </p>
@@ -547,12 +563,15 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 </table>
 </div><div class="memdoc">
 
-<p>Draw a textured unit radius sphere centered at the origin S(0,1). </p>
-<p ><b>Remarks</b></p><ul>
-<li>The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.</li>
-<li>The mesh created is a UV-sphere and the number of sector and stacks is adjusted automatically according to the apparent size on the screen.</li>
-<li>the texture is mapped using the Mercator projection.</li>
+<p>Draw a textured unit radius sphere centered at the origin S(0,1) in model space. </p>
+<dl class="section remark"><dt>Remarks</dt><dd><ul>
+<li>The model transform matrix may be used position the sphere anywhere in world space <br  />
+ and change it to an ellipsoid.</li>
+<li>The mesh created is a UV-sphere and the number of sector and stacks is adjusted <br  />
+ automatically according to the apparent size on the screen.</li>
+<li>The texture is mapped using the Mercator projection.</li>
 </ul>
+</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">texture</td><td>The texture image mapped via Mercator projection. </td></tr>
@@ -594,11 +613,12 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 </table>
 </div><div class="memdoc">
 
-<p>Draw a unit radius sphere centered at the origin S(0,1). </p>
-<p ><b>Remarks</b></p><ul>
+<p>Draw a unit radius sphere centered at the origin S(0,1) in model space. </p>
+<dl class="section remark"><dt>Remarks</dt><dd><ul>
 <li>The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.</li>
 <li>The mesh created is a UV-sphere and the number of sector and stacks is adjusted automatically according to the apparent size on the screen.</li>
 </ul>
+</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">quality</td><td>Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.<ul>
@@ -2028,7 +2048,7 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
   <table class="params">
     <tr><td class="paramname">P1,P2,P3,P4</td><td>coordinates (in model space) of the quad to draw </td></tr>
     <tr><td class="paramname">col1,col2,col3,col4</td><td>color at each vertex. </td></tr>
-    <tr><td class="paramname">N1,N2,N3</td><td>pointers to the normals associated with <code>P1, P2, P3, P4</code> or <code>nullptr</code> if not using Gouraud shading.</td></tr>
+    <tr><td class="paramname">N1,N2,N3,N4</td><td>pointers to the normals associated with <code>P1, P2, P3, P4</code> or <code>nullptr</code> if not using Gouraud shading.</td></tr>
   </table>
   </dd>
 </dl>
@@ -3993,9 +4013,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="_mat4_8h.html#aa543bb38f59d79a08113a6254b587322">fMat4</a> <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::getModelMatrix </td>
@@ -4004,11 +4021,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Return a copy of the current model tranformation matrix. </p>
@@ -4023,9 +4035,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="_mat4_8h.html#aa543bb38f59d79a08113a6254b587322">fMat4</a> <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::getViewMatrix </td>
@@ -4034,11 +4043,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Return a copy of the current view matrix. </p>
@@ -4053,9 +4057,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::modelToImage </td>
@@ -4065,11 +4066,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Convert from model coordinates to the corresponding image pixel. </p>
@@ -4094,9 +4090,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b">fVec4</a> <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::modelToNDC </td>
@@ -4106,11 +4099,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Convert from model coordinates to normalized device coordinates (NDC). </p>
@@ -4135,9 +4123,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setCulling </td>
@@ -4147,11 +4132,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the face culling strategy. </p>
@@ -4175,9 +4155,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setFrustum </td>
@@ -4221,11 +4198,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the projection matrix as a perspective matrix. </p>
@@ -4243,9 +4215,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setImage </td>
@@ -4255,11 +4224,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the image that will be drawn onto. </p>
@@ -4279,9 +4243,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setLight </td>
@@ -4313,11 +4274,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set all the lighting parameters of the scene at once. </p>
@@ -4343,9 +4299,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setLightAmbiant </td>
@@ -4355,11 +4308,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the scene ambiant light color. </p>
@@ -4381,9 +4329,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setLightDiffuse </td>
@@ -4393,11 +4338,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the scene diffuse light color. </p>
@@ -4419,9 +4359,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setLightDirection </td>
@@ -4431,11 +4368,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the light source direction. </p>
@@ -4457,9 +4389,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setLightSpecular </td>
@@ -4469,11 +4398,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the scene specular light color. </p>
@@ -4495,9 +4419,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setLookAt </td>
@@ -4523,11 +4444,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the view matrix so that the camera is looking at a given direction. </p>
@@ -4551,9 +4467,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setLookAt </td>
@@ -4615,11 +4528,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the view matrix so that the camera is looking at a given direction. </p>
@@ -4643,9 +4551,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setMaterial </td>
@@ -4683,11 +4588,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set all the object material properties at once. </p>
@@ -4712,9 +4612,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setMaterialAmbiantStrength </td>
@@ -4724,11 +4621,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set how much the object material reflects the ambient light. </p>
@@ -4749,9 +4641,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setMaterialColor </td>
@@ -4761,11 +4650,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the object material color. </p>
@@ -4781,9 +4665,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setMaterialDiffuseStrength </td>
@@ -4793,11 +4674,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set how much the object material reflects the diffuse light. </p>
@@ -4818,9 +4694,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setMaterialSpecularExponent </td>
@@ -4830,11 +4703,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the object specular exponent. </p>
@@ -4856,9 +4724,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setMaterialSpecularStrength </td>
@@ -4868,11 +4733,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set how much the object material reflects the specular light. </p>
@@ -4893,9 +4753,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setModelMatrix </td>
@@ -4905,11 +4762,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the model tranformation matrix. </p>
@@ -4925,15 +4777,12 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setModelPosScaleRot </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> &amp;&#160;</td>
-          <td class="paramname"><em>center</em> = <code><a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a>{&#160;0,0,0&#160;}</code>, </td>
+          <td class="paramname"><em>center</em> = <code><a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a>{&#160;0,&#160;0,&#160;0&#160;}</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -4951,7 +4800,7 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> &amp;&#160;</td>
-          <td class="paramname"><em>rot_dir</em> = <code><a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a>{&#160;0,1,0&#160;}</code>&#160;</td>
+          <td class="paramname"><em>rot_dir</em> = <code><a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a>{&#160;0,&#160;1,&#160;0&#160;}</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4959,11 +4808,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the model tranformation matrix to move an object to a given a given location, scale and rotation. </p>
@@ -4994,9 +4838,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setOffset </td>
@@ -5006,11 +4847,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the offset of the image relative to the viewport. </p>
@@ -5025,9 +4861,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setOffset </td>
@@ -5047,11 +4880,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the offset of the image relative to the viewport. </p>
@@ -5069,9 +4897,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setOrtho </td>
@@ -5115,11 +4940,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the projection matrix as an orthographic matrix. </p>
@@ -5137,9 +4957,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setPerspective </td>
@@ -5171,11 +4988,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the projection matrix as a perspective matrix. </p>
@@ -5193,9 +5005,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setProjectionMatrix </td>
@@ -5205,11 +5014,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the projection matrix. </p>
@@ -5231,9 +5035,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setShaders </td>
@@ -5243,11 +5044,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the shaders to use for subsequent drawing operations. </p>
@@ -5284,9 +5080,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setTextureQuality </td>
@@ -5296,11 +5089,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the texturing quality. </p>
@@ -5318,9 +5106,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setTextureWrappingMode </td>
@@ -5330,11 +5115,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the wrap mode when for texturing. </p>
@@ -5352,9 +5132,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setViewMatrix </td>
@@ -5364,11 +5141,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the view transformation matrix. </p>
@@ -5386,9 +5158,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setViewportSize </td>
@@ -5398,11 +5167,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the size of the viewport. </p>
@@ -5417,9 +5181,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setViewportSize </td>
@@ -5439,11 +5200,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the size of the viewport. </p>
@@ -5472,9 +5228,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::setZbuffer </td>
@@ -5484,11 +5237,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the z-buffer. </p>
@@ -5508,9 +5256,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::useOrthographicProjection </td>
@@ -5519,11 +5264,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set projection mode to orthographic (ie no z-divide). </p>
@@ -5538,9 +5278,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::usePerspectiveProjection </td>
@@ -5549,11 +5286,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set projection mode to perspective (ie with z-divide). </p>
@@ -5568,9 +5300,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::worldToImage </td>
@@ -5580,11 +5309,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Convert from world coordinates to the corresponding image pixel. </p>
@@ -5609,9 +5333,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t  = float&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b">fVec4</a> <a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a>&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;::worldToNDC </td>
@@ -5621,11 +5342,6 @@ template&lt;typename color_t , int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typenam
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Convert from world coordinates to normalized device coordinates (NDC). </p>
