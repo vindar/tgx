@@ -1,6 +1,6 @@
 var classtgx_1_1_renderer3_d =
 [
-    [ "Renderer3D", "classtgx_1_1_renderer3_d.html#a333d6126e522ba550b7ec8add6c600ad", null ],
+    [ "Renderer3D", "classtgx_1_1_renderer3_d.html#a71cef7bec13ce66591e48fd0b1e57c11", null ],
     [ "clearZbuffer", "classtgx_1_1_renderer3_d.html#ad613bdffc57596703abe1a2a47583003", null ],
     [ "drawAdaptativeSphere", "classtgx_1_1_renderer3_d.html#afa9186b507df18e0df32976781d48909", null ],
     [ "drawAdaptativeSphere", "classtgx_1_1_renderer3_d.html#a00c59fee77ca3d42b19d62e9eade1203", null ],

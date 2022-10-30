@@ -153,12 +153,12 @@ namespace tgx
         static const Shader ENABLED_SHADERS = LOADED_SHADERS | (ENABLE_TEXTURING ? SHADER_TEXTURE : SHADER_NOTEXTURE); // enable texturing when at least one texturing related flag is set
         
         // check that disabled shaders do not completely disable all drawing operations.         
-        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), "At least one of the two shaders TGX_SHADER_PERSPECTIVE or TGX_SHADER_ORTHO must be enabled");        
-        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), "At least one of the two shaders TGX_SHADER_NOZBUFFER or TGX_SHADER_ZBUFFER must be enabled");        
-        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), "At least one of the two shaders TGX_SHADER_FLAT or TGX_SHADER_GOURAUD must be enabled");        
-        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), "At least one of the two shaders TGX_SHADER_TEXTURE or TGX_SHADER_NOTEXTURE must be enabled");                              
-        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders TGX_SHADER_TEXTURE_BILINEAR or TGX_SHADER_TEXTURE_NEAREST must be enabled");
-        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders TGX_SHADER_TEXTURE_WRAP_POW2 or TGX_SHADER_TEXTURE_CLAMP must be enabled");
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), "At least one of the two shaders SHADER_PERSPECTIVE or SHADER_ORTHO must be enabled");        
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), "At least one of the two shaders SHADER_NOZBUFFER or SHADER_ZBUFFER must be enabled");        
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), "At least one of the two shaders SHADER_FLAT or SHADER_GOURAUD must be enabled");        
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), "At least one of the two shaders SHADER_TEXTURE or SHADER_NOTEXTURE must be enabled");                              
+        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled");
+        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled");
 
 
 
@@ -174,7 +174,7 @@ namespace tgx
          * @param   im           (Optional) the destination image. See `setImage()`.
          * @param   zbuffer      (Optional) the Z-buffer. See `setZbuffer()`.
          */
-        Renderer3D(const iVec2& viewportSize = {0,0}, Image<color_t> * im = nullptr, ZBUFFER_t * zbuffer = nullptr);
+        TGX_NOINLINE Renderer3D(const iVec2& viewportSize = {0,0}, Image<color_t> * im = nullptr, ZBUFFER_t * zbuffer = nullptr);
 
 
 
@@ -1711,26 +1711,26 @@ namespace tgx
 
 
         /** recompute the wa and wa scaling constants. called after every change of the projection matrix or projection mode */
-        void _recompute_wa_wb();
+        TGX_NOINLINE void _recompute_wa_wb();
 
 
         /***********************************************************
         * Making sure shader flags are coherent
         ************************************************************/
 
-        void _rectifyShaderOrtho();
+        TGX_NOINLINE void _rectifyShaderOrtho();
 
 
-        void _rectifyShaderZbuffer();
+        TGX_NOINLINE void _rectifyShaderZbuffer();
 
 
-        void _rectifyShaderShading(Shader new_shaders);
+        TGX_NOINLINE void _rectifyShaderShading(Shader new_shaders);
 
 
-        void _rectifyShaderTextureWrapping();
+        TGX_NOINLINE void _rectifyShaderTextureWrapping();
 
 
-        void _rectifyShaderTextureQuality();
+        TGX_NOINLINE void _rectifyShaderTextureQuality();
        
 
        /***********************************************************
@@ -2035,7 +2035,7 @@ namespace tgx
             _precomputeSpecularTable2(exponent);
             }
 
-        void _precomputeSpecularTable2(int exponent);
+        TGX_NOINLINE void _precomputeSpecularTable2(int exponent);
 
 
         /** compute pow(x, exponent) using linear interpolation from the pre-computed table */
