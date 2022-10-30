@@ -2,17 +2,23 @@ var _shader_params_8h =
 [
     [ "tgx::RasterizerVec4", "structtgx_1_1_rasterizer_vec4.html", "structtgx_1_1_rasterizer_vec4" ],
     [ "tgx::RasterizerParams< color_t_im, color_t_tex, ZBUFFER_t, BLEND_OP >", "structtgx_1_1_rasterizer_params.html", "structtgx_1_1_rasterizer_params" ],
-    [ "TGX_SHADER_FLAT", "_shader_params_8h.html#a155bafe7f4cc14273641cf8b4d33cb20", null ],
-    [ "TGX_SHADER_GOURAUD", "_shader_params_8h.html#abb69bfbc6ac4a1b283f4f43524a33a12", null ],
-    [ "TGX_SHADER_NOTEXTURE", "_shader_params_8h.html#a59235811900473e6e14fd250b6fb9ae0", null ],
-    [ "TGX_SHADER_NOZBUFFER", "_shader_params_8h.html#a16c65a2a3ab9f7e3ed21bede8adda35a", null ],
-    [ "TGX_SHADER_ORTHO", "_shader_params_8h.html#a1251025d1623598639481d69aff8ec8d", null ],
-    [ "TGX_SHADER_PERSPECTIVE", "_shader_params_8h.html#a58898ef1a5802ca9b65d5b3c82d0c526", null ],
-    [ "TGX_SHADER_SET_FLAGS", "_shader_params_8h.html#a9de6082abdb68fe58414a01b49a049ff", null ],
-    [ "TGX_SHADER_TEXTURE", "_shader_params_8h.html#ac805c21986702d5afa60caa8deeb37af", null ],
-    [ "TGX_SHADER_TEXTURE_BILINEAR", "_shader_params_8h.html#a5444a15b7d814808ae70e6fdfdbac79e", null ],
-    [ "TGX_SHADER_TEXTURE_CLAMP", "_shader_params_8h.html#a40fb1fb3f4b75c8cb842dea2d4264653", null ],
-    [ "TGX_SHADER_TEXTURE_NEAREST", "_shader_params_8h.html#a55191c6d9d27a426a45454884cfa4d2a", null ],
-    [ "TGX_SHADER_TEXTURE_WRAP_POW2", "_shader_params_8h.html#a237bc2d1f215a794bc87b495450c1596", null ],
-    [ "TGX_SHADER_ZBUFFER", "_shader_params_8h.html#a66056c5b62c09212e8e1c7d7fd0b8ac2", null ]
+    [ "SHADER", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2", [
+      [ "SHADER_PERSPECTIVE", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2af6c0bae68ad39bd8df84f29f7f9e4cfd", null ],
+      [ "SHADER_ORTHO", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2a315d3e7a578184dabd8c62479cf746ef", null ],
+      [ "SHADER_NOZBUFFER", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2a188ed88f3548ea1f3dcced1865c1254f", null ],
+      [ "SHADER_ZBUFFER", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2a70fc14595cb1ad243553921520a1bcd7", null ],
+      [ "SHADER_FLAT", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2a2c46b631292df566e7240b2e7010fa82", null ],
+      [ "SHADER_GOURAUD", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2a0d659a982904bf68ee55bb5b93b10e69", null ],
+      [ "SHADER_NOTEXTURE", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2a612eed5a49521db755ed897ececc898f", null ],
+      [ "SHADER_TEXTURE", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2a948fe24bc5b2f298510991b6d505fcb1", null ],
+      [ "SHADER_TEXTURE_NEAREST", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2a57b5d6d50ba084c8555af3ef00dfec58", null ],
+      [ "SHADER_TEXTURE_BILINEAR", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2aa5581a155be5220223a3583b265a443c", null ],
+      [ "SHADER_TEXTURE_WRAP_POW2", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2ae79f091d5822a4c1a59a43c7ef890f4e", null ],
+      [ "SHADER_TEXTURE_CLAMP", "_shader_params_8h.html#ab63eb3b6e0a4051c9996378c8d089cb2aecffed38f41d96bb98cf0f073c199a0f", null ]
+    ] ],
+    [ "operator&", "_shader_params_8h.html#ad036769fbe36b679cf37b6da04dbf9a0", null ],
+    [ "operator&=", "_shader_params_8h.html#a182a37076be7cdb30dddad91b13fadf0", null ],
+    [ "operator|", "_shader_params_8h.html#a2ce9a60fd0cab9f6de31e5700da5ca5b", null ],
+    [ "operator|=", "_shader_params_8h.html#ab8ab94c8462e37475d84ce68273d3d75", null ],
+    [ "operator~", "_shader_params_8h.html#a63ff0c6940b682b12bff087cb063ba37", null ]
 ];

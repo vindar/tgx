@@ -90,7 +90,7 @@ Image<RGB565> im(fb, SLX, SLY);
 
 
 // only load the shaders we need.
-const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_FLAT | TGX_SHADER_GOURAUD;
+const SHADER LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_GOURAUD;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
@@ -196,12 +196,12 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
             renderer.drawWireFrameMesh(cached_mesh);
         else if (t == 1)
             {
-            renderer.setShaders(TGX_SHADER_FLAT);
+            renderer.setShaders(SHADER_FLAT);
             renderer.drawMesh(cached_mesh, false);
             }            
         else
             {
-            renderer.setShaders(TGX_SHADER_GOURAUD);
+            renderer.setShaders(SHADER_GOURAUD);
             renderer.drawMesh(cached_mesh, false);
             }
 
@@ -251,5 +251,4 @@ void loop()
 
 
 /** end of file */
-
 

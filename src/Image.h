@@ -42,64 +42,26 @@ namespace tgx
 
 
     /**
-    * For some path primitive like drawThickLineAA(), drawThickPolylineAA() 
-    * one can choose how the end of the path should look like. 
-    * 
-    * The available 'ends' are defined here:
-    **/
+    * Enumeration of end path shapes.   
+    * List the shapes that can be drawn at the end of a path. Used by methods such as `Image::drawThickLineAA()`, `Image::drawThickPolylineAA()`, `Image::drawThickQuadSplineAA()`...
+    */
     enum PATH_END_TYPE
         {
-        END_STRAIGHT = -1,       // just draw a straight line
-        END_ROUNDED = 0,         // rounded end
-        END_ARROW_1 = 1,         // tiny arrow head (extends = line thickness)
-        END_ARROW_2 = 2,         // small arrow head (extends = 2 x line thickness)
-        END_ARROW_3 = 3,         // medium arrow head (extends = 3 x line thickness)
-        END_ARROW_4 = 4,         // large arrow head (extends = 4 x line thickness)
-        END_ARROW_5 = 5,         // huge arrow head (extends = 5 x line thickness)
-        END_ARROW_SKEWED_1 = 101,  // tiny arrow head (extends = line thickness)
-        END_ARROW_SKEWED_2 = 102,  // small arrow head (extends = 2 x line thickness)
-        END_ARROW_SKEWED_3 = 103,  // medium arrow head (extends = 3 x line thickness)
-        END_ARROW_SKEWED_4 = 104,  // large arrow head (extends = 4 x line thickness)
-        END_ARROW_SKEWED_5 = 105,  // huge arrow head (extends = 5 x line thickness)
+        END_STRAIGHT = -1,          ///< straight end. 
+        END_ROUNDED = 0,            ///< rounded end.
+        END_ARROW_1 = 1,            ///< tiny arrow head [extends = line thickness]
+        END_ARROW_2 = 2,            ///< small arrow head [extends = 2 x line thickness]
+        END_ARROW_3 = 3,            ///< medium arrow head [extends = 3 x line thickness]
+        END_ARROW_4 = 4,            ///< large arrow head [extends = 4 x line thickness]
+        END_ARROW_5 = 5,            ///< huge arrow head [extends = 5 x line thickness]
+        END_ARROW_SKEWED_1 = 101,   ///< tiny skewed arrow head [extends = line thickness]
+        END_ARROW_SKEWED_2 = 102,   ///< small skewed arrow head [extends = 2 x line thickness]
+        END_ARROW_SKEWED_3 = 103,   ///< medium skewed arrow head [extends = 3 x line thickness]
+        END_ARROW_SKEWED_4 = 104,   ///< large skewed arrow head [extends = 4 x line thickness]
+        END_ARROW_SKEWED_5 = 105,   ///> huge skewed arrow head [extends = 5 x line thickness]
         };
         
 
-    /**
-    * Enum use to define the placement of an anchor point relative to a text bounding box.
-    * 
-    *        left       center      right
-    *      top +-----------------------+
-    *          |           .           |
-    *          |           .           |
-    *          |           .           |
-    *   center | ..................... |
-    *          |           .           |
-    * baseline | ..................... |
-    *          |           .           |
-    *   bottom +-----------------------+
-    *   
-    *   
-    *  Default location (0) is center. For example:
-    *  
-    *  - TOP|LEFT  -> anchor at the top left corner
-    *  - CENTER    -> anchor at the center of the box  
-    *  - RIGHT     -> anchor at the center right corner of the box
-    **/
-    enum ANCHOR_LOCATION
-        {
-        CENTER = 0,
-        LEFT = 1,
-        RIGHT = 2, 
-        TOP = 4,
-        BOTTOM = 8,
-        BASELINE = 16,
-        DEFAULT_TEXT_ANCHOR = BASELINE | LEFT // this is the default location for text anchoring. 
-        };
-
-
-
-    inline ANCHOR_LOCATION operator|(ANCHOR_LOCATION a1, ANCHOR_LOCATION a2) { return ((ANCHOR_LOCATION)((int)a1 | (int)a2)); } // enable bitwise | 
-    inline ANCHOR_LOCATION& operator|=(ANCHOR_LOCATION& a1, ANCHOR_LOCATION a2) { a1 = a1 | a2; return a1; }                    // for enum. 
 
 
 

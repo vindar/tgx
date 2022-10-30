@@ -138,7 +138,7 @@ namespace tgx
     * (e.g. incorrect image size, enabled but missing z-buffer...) then the drawing operation will fails silently.
     *
     */
-    template<typename color_t, int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float>
+    template<typename color_t, SHADER LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float>
     class Renderer3D
     {
        
@@ -148,10 +148,9 @@ namespace tgx
         static_assert((std::is_same<ZBUFFER_t, float>::value) || (std::is_same<ZBUFFER_t, uint16_t>::value), "The Z-buffer type must be either float or uint16_t");
                     
         // true if some kind of texturing may be used. 
-        static const int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (TGX_SHADER_TEXTURE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));
+        static const int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (SHADER_TEXTURE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));
         
-        static const int ENABLED_SHADERS = LOADED_SHADERS  
-                                         | (ENABLE_TEXTURING ? TGX_SHADER_TEXTURE : TGX_SHADER_NOTEXTURE); // enable texturing when at least one texturing related flag is set
+        static const SHADER ENABLED_SHADERS = LOADED_SHADERS | (ENABLE_TEXTURING ? SHADER_TEXTURE : SHADER_NOTEXTURE); // enable texturing when at least one texturing related flag is set
         
         // check that disabled shaders do not completely disable all drawing operations.         
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), "At least one of the two shaders TGX_SHADER_PERSPECTIVE or TGX_SHADER_ORTHO must be enabled");        
@@ -451,7 +450,7 @@ namespace tgx
         *      may display faster that a simple textured cube in some cases).
         *    - moving the image into RAM if possible. Even moving the texture from FLASH to EXTMEM (if available) will usually give a great speed boost !
         */
-        void setShaders(int shaders);
+        void setShaders(SHADER shaders);
 
 
         /**
@@ -461,7 +460,7 @@ namespace tgx
         *                   - `TGX_SHADER_TEXTURE_WRAP_POW2`:  Wrap around (repeat) the texture. This is the fastest mode but **the texture size must be a power of two along each dimension**.
         *                   - `TGX_SHADER_TEXTURE_CLAMP`:      Clamp to the edge. A bit slower than above but the texture can be any size. 
         */
-        void setTextureWrappingMode(int wrap_mode);
+        void setTextureWrappingMode(SHADER wrap_mode);
 
 
         /**
@@ -471,7 +470,7 @@ namespace tgx
         *                   - `TGX_SHADER_TEXTURE_NEAREST`:    Use simple point sampling when texturing (fastest method).
         *                   - `TGX_SHADER_TEXTURE_BILINEAR`:   Use bilinear interpolation when texturing (slower but higher quality).
         */
-        void setTextureQuality(int quality);
+        void setTextureQuality(SHADER quality);
 
 
 
@@ -1725,7 +1724,7 @@ namespace tgx
         void _rectifyShaderZbuffer();
 
 
-        void _rectifyShaderShading(int new_shaders);
+        void _rectifyShaderShading(SHADER new_shaders);
 
 
         void _rectifyShaderTextureWrapping();

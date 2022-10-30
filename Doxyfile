@@ -1021,7 +1021,8 @@ EXCLUDE_SYMBOLS        = tgx::DefaultFPType \
                          TGX_SHADER_ADD_* \
                          TGX_SHADER_REMOVE_* \
                          UNIT_CUBE_VERTICES \
-                         UNIT_CUBE_FACES
+                         UNIT_CUBE_FACES \
+                         TGX_SHADER_SET_FLAGS
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include

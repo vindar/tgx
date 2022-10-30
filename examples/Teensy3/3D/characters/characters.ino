@@ -69,7 +69,7 @@ Image<RGB565> * front_fb, * back_fb;
 
 
 // we only use nearest neighbour texturing for power of 2 textures, combined texturing with gouraud shading, a z buffer and perspective projection
-const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
+const SHADER LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE_NEAREST |SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
@@ -93,9 +93,9 @@ void setup()
     renderer.setPerspective(45, ((float)LX) / LY, 1.0f, 100.0f);  // set the perspective projection matrix.     
     renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflexion. 
     renderer.setCulling(1);
-    renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE);
-    renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
-    renderer.setTextureQuality(TGX_SHADER_TEXTURE_NEAREST);
+    renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE);
+    renderer.setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);
+    renderer.setTextureQuality(SHADER_TEXTURE_NEAREST);
     }
 
 

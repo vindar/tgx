@@ -34,116 +34,106 @@
 namespace tgx
 {
 
+    /**
+    * List of shaders available for 3D graphics.
+    */
+    enum SHADER
+        {
+        // Shaders for projection type : Perspective or ortho. 
+        SHADER_PERSPECTIVE = (1 << 0),          ///< enable Perspective projection
+        SHADER_ORTHO = (1 << 1),                ///< enable Orthographic projection
 
-    /** options for triangle rasterization */
+        // Shaders for depth buffer : Zbuffer or no-Zbuffer
+        SHADER_NOZBUFFER = (1 << 2),            ///< disable Z-buffer testing
+        SHADER_ZBUFFER = (1 << 3),              ///< enable Z-buffer testing
 
+        // Shaders for shading algorithm: flat, gouraud or phong
+        SHADER_FLAT = (1 << 4),                 ///< enable flat shading
+        SHADER_GOURAUD = (1 << 5),              ///< enable Gouraud shading
+
+        // Shaders for texturing mode: no-texture, texture-wrap, texture-clamp 
+        SHADER_NOTEXTURE = (1 << 7),            ///< disable texture mapping
+        SHADER_TEXTURE = (1 << 8),              ///< enable texture mapping
+
+        // Shaders for texture quality: nearest, bilinear
+        SHADER_TEXTURE_NEAREST = (1 << 11),     ///< use point sampling texture mapping
+        SHADER_TEXTURE_BILINEAR = (1 << 12),    ///< use bilinear texture sampling
+
+        // Shaders for texture wrapping mode: wrap , clamp
+        SHADER_TEXTURE_WRAP_POW2 = (1 << 13),   ///< texture has power of 2 dimensions and use wrapping at edges
+        SHADER_TEXTURE_CLAMP = (1 << 14)        ///< texture have arbitrary dimensions and use clamping at edges 
+        };
+
+
+    /** Enable bitwise `|` operator for enum */
+    inline constexpr SHADER operator|(SHADER a1, SHADER a2) { return ((SHADER)((int)a1 | (int)a2)); }
+
+    /** Enable bitwise `|=` operator for enum */
+    inline SHADER& operator|=(SHADER& a1, SHADER a2) { a1 = a1 | a2; return a1; }
+
+    /** Enable bitwise `&` operator for enum */
+    inline constexpr SHADER operator&(SHADER a1, SHADER a2) { return ((SHADER)((int)a1 & (int)a2)); }
+
+    /** Enable bitwise `&=` operator for enum */
+    inline SHADER& operator&=(SHADER& a1, SHADER a2) { a1 = a1 & a2; return a1; }
+
+    /** Enable bitwise `~` operator for enum */
+    inline constexpr SHADER operator~(SHADER a) { return (SHADER)(~((int)a)); }
+
+
+
+    #define TGX_SHADER_MASK_PROJECTION      (SHADER_PERSPECTIVE | SHADER_ORTHO)
+    #define TGX_SHADER_MASK_ZBUFFER         (SHADER_NOZBUFFER | SHADER_ZBUFFER)
+    #define TGX_SHADER_MASK_SHADING         (SHADER_FLAT | SHADER_GOURAUD)
+    #define TGX_SHADER_MASK_TEXTURE         (SHADER_NOTEXTURE | SHADER_TEXTURE)
+    #define TGX_SHADER_MASK_TEXTURE_QUALITY (SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_NEAREST)
+    #define TGX_SHADER_MASK_TEXTURE_MODE    (SHADER_TEXTURE_WRAP_POW2 | SHADER_TEXTURE_CLAMP)
+    #define TGX_SHADER_MASK_ALL             (TGX_SHADER_MASK_PROJECTION | TGX_SHADER_MASK_ZBUFFER | TGX_SHADER_MASK_SHADING | TGX_SHADER_MASK_TEXTURE | TGX_SHADER_MASK_TEXTURE_QUALITY | TGX_SHADER_MASK_TEXTURE_MODE)
 
     #define TGX_SHADER_SET_FLAGS(shader_type, flags) { shader_type = (flags); }
-
     #define TGX_SHADER_ADD_FLAGS(shader_type, flags) { shader_type |= (flags);}
-
     #define TGX_SHADER_REMOVE_FLAGS(shader_type, flags) { shader_type &= ~(flags); }
-
     #define TGX_SHADER_HAS_ONE_FLAG(shader_type, flags) (shader_type & (flags))
-
     #define TGX_SHADER_HAS_ALL_FLAGS(shader_type, flags) ((shader_type & (flags)) == flags)
-
-
-
-
-    // Shaders for projection type : Perspective or ortho. 
-    #define TGX_SHADER_PERSPECTIVE      (1 << 0)    ///< enable Perspective projection
-    #define TGX_SHADER_ORTHO            (1 << 1)    ///< enable Orthographic projection
-    #define TGX_SHADER_MASK_PROJECTION  (TGX_SHADER_PERSPECTIVE | TGX_SHADER_ORTHO)
-
-    // Shaders for depth buffer : Zbuffer or no-Zbuffer
-    #define TGX_SHADER_NOZBUFFER        (1 << 2)    ///< disable Z-buffer testing
-    #define TGX_SHADER_ZBUFFER          (1 << 3)    ///< enable Z-buffer testing
-    #define TGX_SHADER_MASK_ZBUFFER     (TGX_SHADER_NOZBUFFER | TGX_SHADER_ZBUFFER)
-
-    // Shaders for shading algorithm: flat, gouraud or phong
-    #define TGX_SHADER_FLAT             (1 << 4)    ///< enable flat shading
-    #define TGX_SHADER_GOURAUD          (1 << 5)    ///< enable Gouraud shading
-    #define TGX_SHADER_MASK_SHADING     (TGX_SHADER_FLAT | TGX_SHADER_GOURAUD)
-
-    // Shaders for texturing mode: no-texture, texture-wrap, texture-clamp 
-    #define TGX_SHADER_NOTEXTURE        (1 << 7)    ///< disable texture mapping
-    #define TGX_SHADER_TEXTURE          (1 << 8)    ///< enable texture mapping
-    #define TGX_SHADER_MASK_TEXTURE     (TGX_SHADER_NOTEXTURE | TGX_SHADER_TEXTURE)
     
-    // Shaders for texture quality: nearest, bilinear
-    #define TGX_SHADER_TEXTURE_NEAREST  (1 << 11)   ///< use point sampling texture mapping
-    #define TGX_SHADER_TEXTURE_BILINEAR (1 << 12)   ///< use bilinear texture sampling
-    #define TGX_SHADER_MASK_TEXTURE_QUALITY (TGX_SHADER_TEXTURE_BILINEAR | TGX_SHADER_TEXTURE_NEAREST)
+    #define TGX_SHADER_HAS_PERSPECTIVE(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_PERSPECTIVE))
+    #define TGX_SHADER_HAS_ORTHO(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_ORTHO))
+    #define TGX_SHADER_HAS_NOZBUFFER(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_NOZBUFFER))
+    #define TGX_SHADER_HAS_ZBUFFER(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_ZBUFFER))
+    #define TGX_SHADER_HAS_FLAT(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_FLAT))
+    #define TGX_SHADER_HAS_GOURAUD(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_GOURAUD))
+    #define TGX_SHADER_HAS_NOTEXTURE(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_NOTEXTURE))
+    #define TGX_SHADER_HAS_TEXTURE(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE))
+    #define TGX_SHADER_HAS_TEXTURE_NEAREST(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE_NEAREST))
+    #define TGX_SHADER_HAS_TEXTURE_BILINEAR(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE_BILINEAR))
+    #define TGX_SHADER_HAS_TEXTURE_WRAP_POW2(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE_WRAP_POW2))
+    #define TGX_SHADER_HAS_TEXTURE_CLAMP(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE_CLAMP))
 
-    // Shaders for texture wrapping mode: wrap , clamp
-    #define TGX_SHADER_TEXTURE_WRAP_POW2  (1 << 13) ///< texture has power of 2 dimensions and use wrapping at edges
-    #define TGX_SHADER_TEXTURE_CLAMP (1 << 14)      ///< texture have arbitrary dimensions and use clamping at edges
-    #define TGX_SHADER_MASK_TEXTURE_MODE (TGX_SHADER_TEXTURE_WRAP_POW2 | TGX_SHADER_TEXTURE_CLAMP)
+    #define TGX_SHADER_REMOVE_PERSPECTIVE(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_PERSPECTIVE)
+    #define TGX_SHADER_REMOVE_ORTHO(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_ORTHO)
+    #define TGX_SHADER_REMOVE_NOZBUFFER(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_NOZBUFFER)
+    #define TGX_SHADER_REMOVE_ZBUFFER(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_ZBUFFER)
+    #define TGX_SHADER_REMOVE_FLAT(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_FLAT)
+    #define TGX_SHADER_REMOVE_GOURAUD(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_GOURAUD)
+    #define TGX_SHADER_REMOVE_NOTEXTURE(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_NOTEXTURE)
+    #define TGX_SHADER_REMOVE_TEXTURE(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE)
+    #define TGX_SHADER_REMOVE_TEXTURE_NEAREST(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE_NEAREST)
+    #define TGX_SHADER_REMOVE_TEXTURE_BILINEAR(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE_BILINEAR)
+    #define TGX_SHADER_REMOVE_TEXTURE_WRAP_POW2(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE_WRAP_POW2)
+    #define TGX_SHADER_REMOVE_TEXTURE_CLAMP(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE_CLAMP)
 
-
-
-    // all shaders set. 
-    #define TGX_SHADER_MASK_ALL (TGX_SHADER_MASK_PROJECTION | TGX_SHADER_MASK_ZBUFFER | TGX_SHADER_MASK_SHADING | TGX_SHADER_MASK_TEXTURE | TGX_SHADER_MASK_TEXTURE_QUALITY | TGX_SHADER_MASK_TEXTURE_MODE)
-    
-
-    #define TGX_SHADER_HAS_PERSPECTIVE(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_PERSPECTIVE))
-    #define TGX_SHADER_HAS_ORTHO(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_ORTHO))
-
-    #define TGX_SHADER_HAS_NOZBUFFER(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_NOZBUFFER))
-    #define TGX_SHADER_HAS_ZBUFFER(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_ZBUFFER))
-
-    #define TGX_SHADER_HAS_FLAT(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_FLAT))
-    #define TGX_SHADER_HAS_GOURAUD(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_GOURAUD))
-
-    #define TGX_SHADER_HAS_NOTEXTURE(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_NOTEXTURE))
-    #define TGX_SHADER_HAS_TEXTURE(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_TEXTURE))
-    
-    #define TGX_SHADER_HAS_TEXTURE_NEAREST(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_TEXTURE_NEAREST))
-    #define TGX_SHADER_HAS_TEXTURE_BILINEAR(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_TEXTURE_BILINEAR))
-
-    #define TGX_SHADER_HAS_TEXTURE_WRAP_POW2(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_TEXTURE_WRAP_POW2))
-    #define TGX_SHADER_HAS_TEXTURE_CLAMP(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , TGX_SHADER_TEXTURE_CLAMP))
-
-
-
-    #define TGX_SHADER_REMOVE_PERSPECTIVE(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_PERSPECTIVE)
-    #define TGX_SHADER_REMOVE_ORTHO(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_ORTHO)
-
-    #define TGX_SHADER_REMOVE_NOZBUFFER(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_NOZBUFFER)
-    #define TGX_SHADER_REMOVE_ZBUFFER(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_ZBUFFER)
-
-    #define TGX_SHADER_REMOVE_FLAT(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_FLAT)
-    #define TGX_SHADER_REMOVE_GOURAUD(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_GOURAUD)
-
-    #define TGX_SHADER_REMOVE_NOTEXTURE(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_NOTEXTURE)
-    #define TGX_SHADER_REMOVE_TEXTURE(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_TEXTURE)
-    
-    #define TGX_SHADER_REMOVE_TEXTURE_NEAREST(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_TEXTURE_NEAREST)
-    #define TGX_SHADER_REMOVE_TEXTURE_BILINEAR(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_TEXTURE_BILINEAR)
-
-    #define TGX_SHADER_REMOVE_TEXTURE_WRAP_POW2(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_TEXTURE_WRAP_POW2)
-    #define TGX_SHADER_REMOVE_TEXTURE_CLAMP(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , TGX_SHADER_TEXTURE_CLAMP)
-
-
-
-    #define TGX_SHADER_ADD_PERSPECTIVE(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_PERSPECTIVE)
-    #define TGX_SHADER_ADD_ORTHO(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_ORTHO)
-
-    #define TGX_SHADER_ADD_NOZBUFFER(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_NOZBUFFER)
-    #define TGX_SHADER_ADD_ZBUFFER(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_ZBUFFER)
-
-    #define TGX_SHADER_ADD_FLAT(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_FLAT)
-    #define TGX_SHADER_ADD_GOURAUD(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_GOURAUD)
-
-    #define TGX_SHADER_ADD_NOTEXTURE(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_NOTEXTURE)
-    #define TGX_SHADER_ADD_TEXTURE(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_TEXTURE)
-    
-    #define TGX_SHADER_ADD_TEXTURE_NEAREST(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_TEXTURE_NEAREST)
-    #define TGX_SHADER_ADD_TEXTURE_BILINEAR(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_TEXTURE_BILINEAR)
-
-    #define TGX_SHADER_ADD_TEXTURE_WRAP_POW2(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_TEXTURE_WRAP_POW2)
-    #define TGX_SHADER_ADD_TEXTURE_CLAMP(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , TGX_SHADER_TEXTURE_CLAMP)
+    #define TGX_SHADER_ADD_PERSPECTIVE(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_PERSPECTIVE)
+    #define TGX_SHADER_ADD_ORTHO(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_ORTHO)
+    #define TGX_SHADER_ADD_NOZBUFFER(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_NOZBUFFER)
+    #define TGX_SHADER_ADD_ZBUFFER(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_ZBUFFER)
+    #define TGX_SHADER_ADD_FLAT(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_FLAT)
+    #define TGX_SHADER_ADD_GOURAUD(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_GOURAUD)
+    #define TGX_SHADER_ADD_NOTEXTURE(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_NOTEXTURE)
+    #define TGX_SHADER_ADD_TEXTURE(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE)
+    #define TGX_SHADER_ADD_TEXTURE_NEAREST(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE_NEAREST)
+    #define TGX_SHADER_ADD_TEXTURE_BILINEAR(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE_BILINEAR)
+    #define TGX_SHADER_ADD_TEXTURE_WRAP_POW2(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE_WRAP_POW2)
+    #define TGX_SHADER_ADD_TEXTURE_CLAMP(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE_CLAMP)
 
 
     //forward declaration    

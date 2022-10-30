@@ -1,15 +1,6 @@
 var _image_8h =
 [
     [ "tgx::Image< color_t >", "classtgx_1_1_image.html", "classtgx_1_1_image" ],
-    [ "ANCHOR_LOCATION", "_image_8h.html#a46ffa7b5079e94c2324bae57ba9c91d5", [
-      [ "CENTER", "_image_8h.html#a46ffa7b5079e94c2324bae57ba9c91d5a8135ab034ed0901bdb84543e2d884764", null ],
-      [ "LEFT", "_image_8h.html#a46ffa7b5079e94c2324bae57ba9c91d5afd6a2135c693b793e329422242a8c233", null ],
-      [ "RIGHT", "_image_8h.html#a46ffa7b5079e94c2324bae57ba9c91d5a8159ac2eb8ec1c71b67da71029d5341b", null ],
-      [ "TOP", "_image_8h.html#a46ffa7b5079e94c2324bae57ba9c91d5afa0e22d6ef68249280e1a69d269f3503", null ],
-      [ "BOTTOM", "_image_8h.html#a46ffa7b5079e94c2324bae57ba9c91d5a734f7f762046ce563007b96e320e107f", null ],
-      [ "BASELINE", "_image_8h.html#a46ffa7b5079e94c2324bae57ba9c91d5a1f5e14106a7fc049d4bbfd7daa810e6c", null ],
-      [ "DEFAULT_TEXT_ANCHOR", "_image_8h.html#a46ffa7b5079e94c2324bae57ba9c91d5ad8449e7e7d0d7d3cb14aa5ceef880428", null ]
-    ] ],
     [ "PATH_END_TYPE", "_image_8h.html#a4c678c7a8876d47f386fd75b62a68e57", [
       [ "END_STRAIGHT", "_image_8h.html#a4c678c7a8876d47f386fd75b62a68e57aa243118edf63d186514eec72e7035f59", null ],
       [ "END_ROUNDED", "_image_8h.html#a4c678c7a8876d47f386fd75b62a68e57a4ea9b3d56f9ad1171b43574790891a31", null ],

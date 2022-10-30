@@ -47,38 +47,93 @@ namespace tgx
 
 
 
-// Positions for an anchor point in a 2D box.
+    /**
+    * Define the placement of an anchor point inside to a box.
+    *
+    * ```
+    *        left       center      right
+    *      top +-----------------------+
+    *          |           .           |
+    *          |           .           |
+    *          |           .           |
+    *   center | ..................... |
+    *          |           .           |
+    * baseline | ..................... |
+    *          |           .           |
+    *   bottom +-----------------------+
+    * ```
+    *
+    * @remark
+    * - The default value is `CENTER` which is used when either the horizontal or vertical placement is not specified.
+    * - `BASELINE` only make sense for a 'text' bounding and a given font. Otherwise, it is ignored (and implicitly replaced by `CENTER`).
+    **/
+    enum ANCHOR_LOCATION
+        {
+        CENTER = 0,                       ///< Center (vertical/horizontal alignement). This is the default placement if not specitified.
+        LEFT = 1,                       ///< Left side (horizontal alignement)
+        RIGHT = 2,                       ///< Right side (horizontal alignement)
+        TOP = 4,                       ///< Top side (vertical alignement)
+        BOTTOM = 8,                       ///< Bottom side (vertical alignement)
+        BASELINE = 16,                      ///< Baseline height (vertical alignement). **only makes sense with a font (when drawing text), replaced by center otherwise**
+        TOPLEFT = TOP | LEFT,              ///< Top-left corner
+        TOPRIGHT = TOP | RIGHT,             ///< Top-right corner
+        BOTTOMLEFT = BOTTOM | LEFT,           ///< bottom-left corner
+        BOTTOMRIGHT = BOTTOM | RIGHT,          ///< Bottom-right corner
+        CENTERLEFT = CENTER | LEFT,           ///< center point on the left side
+        CENTERRIGHT = CENTER | RIGHT,          ///< center point on the right side 
+        CENTERTOP = CENTER | TOP,            ///< center point on the top side
+        CENTERBOTTOM = CENTER | BOTTOM,         ///< center point on the bottom side 
 
-#define TGX_BOX2_ANCHOR_XCENTER (0) ///< horizontal center anchoring 
-#define TGX_BOX2_ANCHOR_LEFT (1) ///< left anchoring
-#define TGX_BOX2_ANCHOR_RIGHT (2) ///< right anchoring
-#define TGX_BOX2_ANCHOR_YCENTER (0) ///< vertical center anchoring  
-#define TGX_BOX2_ANCHOR_TOP (4) ///< top anchoring
-#define TGX_BOX2_ANCHOR_BOTTOM (8) ///< bottom anchoring
-#define TGX_BOX2_ANCHOR_TOPLEFT  (TGX_BOX2_ANCHOR_TOP | TGX_BOX2_ANCHOR_LEFT) ///< anchor at the top left corner of the box 
-#define TGX_BOX2_ANCHOR_TOPRIGHT  (TGX_BOX2_ANCHOR_TOP | TGX_BOX2_ANCHOR_RIGHT) ///< anchor at the top right corner of the box 
-#define TGX_BOX2_ANCHOR_BOTTOMLEFT  (TGX_BOX2_ANCHOR_BOTTOM | TGX_BOX2_ANCHOR_LEFT) ///< anchor at the bottom left corner of the box 
-#define TGX_BOX2_ANCHOR_BOTTOMRIGHT  (TGX_BOX2_ANCHOR_BOTTOM | TGX_BOX2_ANCHOR_RIGHT) ///< anchor at the bottom right corner of the box 
-#define TGX_BOX2_ANCHOR_CENTER  (TGX_BOX2_ANCHOR_XCENTER | TGX_BOX2_ANCHOR_YCENTER) ///< anchor at the center of the box 
-#define TGX_BOX2_ANCHOR_CENTERLEFT  (TGX_BOX2_ANCHOR_YCENTER | TGX_BOX2_ANCHOR_LEFT) ///< anchor at the center of the left side of the box
-#define TGX_BOX2_ANCHOR_CENTERRIGHT  (TGX_BOX2_ANCHOR_YCENTER | TGX_BOX2_ANCHOR_RIGHT) ///< anchor at the center of the right side of the box
-#define TGX_BOX2_ANCHOR_CENTERTOP  (TGX_BOX2_ANCHOR_XCENTER | TGX_BOX2_ANCHOR_TOP) ///< anchor at the center of the top side of the box
-#define TGX_BOX2_ANCHOR_CENTERBOTTOM  (TGX_BOX2_ANCHOR_XCENTER | TGX_BOX2_ANCHOR_BOTTOM) ///< anchor at the center of the bottom side of the box
+        DEFAULT_TEXT_ANCHOR = BASELINE | LEFT   ///< Default location for text anchoring. 
+        };
 
 
-// Splitting a 2D box in half
- 
-#define TGX_BOX2_SPLIT_UP (1) ///< upper half
-#define TGX_BOX2_SPLIT_DOWN (3) ///< lower half
-#define TGX_BOX2_SPLIT_LEFT (4) ///< left half
-#define TGX_BOX2_SPLIT_RIGHT (12) ///< right half
+    /** Enable bitwise `|` operator for enum */
+    inline constexpr ANCHOR_LOCATION operator|(ANCHOR_LOCATION a1, ANCHOR_LOCATION a2) { return ((ANCHOR_LOCATION)((int)a1 | (int)a2)); }
 
-// Splitting a 2D box in quarter
+    /** Enable bitwise `|=` operator for enum */
+    inline ANCHOR_LOCATION& operator|=(ANCHOR_LOCATION& a1, ANCHOR_LOCATION a2) { a1 = a1 | a2; return a1; }
 
-#define TGX_BOX2_SPLIT_UP_LEFT  (TGX_BOX2_SPLIT_UP | TGX_BOX2_SPLIT_LEFT) ///< top left quarter
-#define TGX_BOX2_SPLIT_UP_RIGHT  (TGX_BOX2_SPLIT_UP | TGX_BOX2_SPLIT_RIGHT) ///< top right quarter
-#define TGX_BOX2_SPLIT_DOWN_LEFT  (TGX_BOX2_SPLIT_DOWN | TGX_BOX2_SPLIT_LEFT) ///< bottom left quarter
-#define TGX_BOX2_SPLIT_DOWN_RIGHT  (TGX_BOX2_SPLIT_DOWN | TGX_BOX2_SPLIT_RIGHT) ///< bottom right quarter
+    /** Enable bitwise `&` operator for enum */
+    inline constexpr ANCHOR_LOCATION operator&(ANCHOR_LOCATION a1, ANCHOR_LOCATION a2) { return ((ANCHOR_LOCATION)((int)a1 & (int)a2)); }
+
+    /** Enable bitwise `&=` operator for enum */
+    inline ANCHOR_LOCATION& operator&=(ANCHOR_LOCATION& a1, ANCHOR_LOCATION a2) { a1 = a1 & a2; return a1; }
+
+
+
+    /** Slipping of a box in half and quarters. */
+    enum BOX_SPLIT
+        {
+        SPLIT_LEFT          = ANCHOR_LOCATION::LEFT,        ///< left half
+        SPLIT_RIGHT         = ANCHOR_LOCATION::RIGHT,       ///< right half
+        SPLIT_TOP           = ANCHOR_LOCATION::TOP,         ///< top half
+        SPLIT_BOTTOM        = ANCHOR_LOCATION::BOTTOM,      ///< bottom half
+        SPLIT_TOPLEFT       = ANCHOR_LOCATION::TOPLEFT,     ///< top left quarter
+        SPLIT_TOPRIGHT      = ANCHOR_LOCATION::TOPRIGHT,    ///< top right quarter 
+        SPLIT_BOTTOMLEFT    = ANCHOR_LOCATION::BOTTOMLEFT,  ///< bottom left quarter
+        SPLIT_BOTTOMRIGHT   = ANCHOR_LOCATION::BOTTOMRIGHT  ///< bottom right quarter
+        };
+
+
+    /** Enable bitwise `|` operator for enum */
+    inline constexpr BOX_SPLIT operator|(BOX_SPLIT a1, BOX_SPLIT a2) { return ((BOX_SPLIT)((int)a1 | (int)a2)); }
+
+    /** Enable bitwise `|=` operator for enum */
+    inline BOX_SPLIT& operator|=(BOX_SPLIT& a1, BOX_SPLIT a2) { a1 = a1 | a2; return a1; }
+
+    /** Enable bitwise `&` operator for enum */
+    inline constexpr BOX_SPLIT operator&(BOX_SPLIT a1, BOX_SPLIT a2) { return ((BOX_SPLIT)((int)a1 & (int)a2)); }
+
+    /** Enable bitwise `&=` operator for enum */
+    inline BOX_SPLIT& operator&=(BOX_SPLIT& a1, BOX_SPLIT a2) { a1 = a1 & a2; return a1; }
+
+
+
+
+
+
+
 
 
     /**
@@ -481,14 +536,11 @@ namespace tgx
         /**
          * Split the box in half or quarter.
          *
-         * @param   part The part or the box to keep. Must be one of #TGX_BOX2_SPLIT_UP,
-         *               #TGX_BOX2_SPLIT_DOWN, #TGX_BOX2_SPLIT_LEFT, #TGX_BOX2_SPLIT_RIGHT,
-         *               #TGX_BOX2_SPLIT_UP_LEFT, #TGX_BOX2_SPLIT_UP_RIGHT, #TGX_BOX2_SPLIT_DOWN_LEFT,
-         *               #TGX_BOX2_SPLIT_DOWN_RIGHT.
+         * @param   part    The part or the box to keep. See tgx::BOX_SPLIT. 
          *
          * @sa  getSplit()
          */
-        inline void split(int part)
+        inline void split(BOX_SPLIT part)
             {
             *this = getSplit(part);
             }
@@ -497,27 +549,24 @@ namespace tgx
         /**
          * Return the box splitted in half or quater.
          *
-         * @param   part The part or the box to keep. Must be one of #TGX_BOX2_SPLIT_UP,
-         *               #TGX_BOX2_SPLIT_DOWN, #TGX_BOX2_SPLIT_LEFT, #TGX_BOX2_SPLIT_RIGHT,
-         *               #TGX_BOX2_SPLIT_UP_LEFT, #TGX_BOX2_SPLIT_UP_RIGHT, #TGX_BOX2_SPLIT_DOWN_LEFT,
-         *               #TGX_BOX2_SPLIT_DOWN_RIGHT.
+         * @param   part    The part or the box to keep. See tgx::BOX_SPLIT.
          *
          * @sa  split()
          */
-        Box2<T> getSplit(int part) const
+        Box2<T> getSplit(BOX_SPLIT part) const
             {
             const T midX = (minX + maxX)/2;
             const T midY = (minY + maxY)/2;
             switch (part)
                 {
-            case TGX_BOX2_SPLIT_UP: { return Box2<T>(minX, maxX, midY, maxY); }
-            case TGX_BOX2_SPLIT_DOWN: { return Box2<T>(minX, maxX, minY, midY); }
-            case TGX_BOX2_SPLIT_LEFT: { return Box2<T>(minX, midX, minY, maxY); }
-            case TGX_BOX2_SPLIT_RIGHT: { return Box2<T>(midX, maxX, minY, maxY); }
-            case TGX_BOX2_SPLIT_UP_LEFT: { return Box2<T>(minX, midX, midY, maxY); }
-            case TGX_BOX2_SPLIT_UP_RIGHT: { return Box2<T>(midX, maxX, midY, maxY); }
-            case TGX_BOX2_SPLIT_DOWN_LEFT: { return Box2<T>(minX, midX, minY, midY); }
-            case TGX_BOX2_SPLIT_DOWN_RIGHT: { return Box2<T>(midX, maxX, minY, midY); }
+            case SPLIT_TOP: { return Box2<T>(minX, maxX, midY, maxY); }
+            case SPLIT_BOTTOM: { return Box2<T>(minX, maxX, minY, midY); }
+            case SPLIT_LEFT: { return Box2<T>(minX, midX, minY, maxY); }
+            case SPLIT_RIGHT: { return Box2<T>(midX, maxX, minY, maxY); }
+            case SPLIT_TOPLEFT: { return Box2<T>(minX, midX, midY, maxY); }
+            case SPLIT_TOPRIGHT: { return Box2<T>(midX, maxX, midY, maxY); }
+            case SPLIT_BOTTOMLEFT: { return Box2<T>(minX, midX, minY, midY); }
+            case SPLIT_BOTTOMRIGHT: { return Box2<T>(midX, maxX, minY, midY); }
                 }
             return *this;
             }
@@ -526,27 +575,22 @@ namespace tgx
         /**
          * Return the position of an anchor point inside this box.
          *
-         * @param   anchor_pos One (or more) of the BOX2_ANCHOR_XXX constants (combined with |).
-         *
-         * @sa  TGX_BOX2_ANCHOR_XCENTER, TGX_BOX2_ANCHOR_LEFT, TGX_BOX2_ANCHOR_RIGHT,
-         *      TGX_BOX2_ANCHOR_YCENTER, TGX_BOX2_ANCHOR_TOP, TGX_BOX2_ANCHOR_BOTTOM,
-         *      TGX_BOX2_ANCHOR_TOPLEFT, TGX_BOX2_ANCHOR_TOPRIGHT, TGX_BOX2_ANCHOR_BOTTOMLEFT,
-         *      TGX_BOX2_ANCHOR_BOTTOMRIGHT, TGX_BOX2_ANCHOR_CENTER, TGX_BOX2_ANCHOR_CENTERLEFT,
-         *      TGX_BOX2_ANCHOR_CENTERRIGHT, TGX_BOX2_ANCHOR_CENTERTOP, TGX_BOX2_ANCHOR_CENTERBOTTOM
+         * @param   anchor_pos Th anchor location, see 
          */
-        Vec2<T> getAnchor(int anchor_pos) const
+        Vec2<T> getAnchor(ANCHOR_LOCATION anchor_pos) const
             {
+            anchor_pos &= (CENTER | LEFT | RIGHT | TOP | BOTTOM); // remove baseline flag
             switch (anchor_pos)
                 {
-            case TGX_BOX2_ANCHOR_TOPLEFT:       return Vec2<T>(minX, maxY);
-            case TGX_BOX2_ANCHOR_TOPRIGHT:      return Vec2<T>(maxX, maxY);
-            case TGX_BOX2_ANCHOR_BOTTOMLEFT:    return Vec2<T>(minX, minY);
-            case TGX_BOX2_ANCHOR_BOTTOMRIGHT:   return Vec2<T>(maxX, minY);
-            case TGX_BOX2_ANCHOR_CENTER:        return Vec2<T>((minX + maxX) / 2, (minY + maxY) / 2);
-            case TGX_BOX2_ANCHOR_CENTERLEFT:    return Vec2<T>(minX, (minY + maxY) / 2);
-            case TGX_BOX2_ANCHOR_CENTERRIGHT:   return Vec2<T>(maxX, (minY + maxY) / 2);
-            case TGX_BOX2_ANCHOR_CENTERTOP:     return Vec2<T>((minX + maxX) / 2, maxY);
-            case TGX_BOX2_ANCHOR_CENTERBOTTOM:  return Vec2<T>((minX + maxX) / 2, minY);
+            case TOPLEFT:       return Vec2<T>(minX, maxY);
+            case TOPRIGHT:      return Vec2<T>(maxX, maxY);
+            case BOTTOMLEFT:    return Vec2<T>(minX, minY);
+            case BOTTOMRIGHT:   return Vec2<T>(maxX, minY);
+            case CENTER:        return Vec2<T>((minX + maxX) / 2, (minY + maxY) / 2);
+            case CENTERLEFT:    return Vec2<T>(minX, (minY + maxY) / 2);
+            case CENTERRIGHT:   return Vec2<T>(maxX, (minY + maxY) / 2);
+            case CENTERTOP:     return Vec2<T>((minX + maxX) / 2, maxY);
+            case CENTERBOTTOM:  return Vec2<T>((minX + maxX) / 2, minY);
                 }
             return Vec2<T>((minX + maxX) / 2, (minY + maxY) / 2); // unknown pos returns center.
             }
