@@ -94,25 +94,64 @@ $(document).ready(function(){initNavTree('classtgx_1_1_image.html',''); initResi
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classtgx_1_1_image-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">tgx::Image&lt; color_t &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Template image class.  
+ <a href="classtgx_1_1_image.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_image_8h_source.html">Image.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a58367fcadbcba6a8ba4cf75d78e841e4"><td class="memItemLeft" align="right" valign="top"><a id="a58367fcadbcba6a8ba4cf75d78e841e4" name="a58367fcadbcba6a8ba4cf75d78e841e4"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Image</b> ()</td></tr>
-<tr class="memdesc:a58367fcadbcba6a8ba4cf75d78e841e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a default empty (invalid) image. <br /></td></tr>
+<tr class="memitem:ad461423c16cea6a0d60cdaeb58fe26ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad461423c16cea6a0d60cdaeb58fe26ef">measureText</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const GFXfont &amp;font, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor=<a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25ad8449e7e7d0d7d3cb14aa5ceef880428">DEFAULT_TEXT_ANCHOR</a>, bool wrap_text=false, bool start_newline_at_0=false)</td></tr>
+<tr class="memdesc:ad461423c16cea6a0d60cdaeb58fe26ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the box of pixels occupied by a text when drawn with 'font' anchored at 'pos'.  <a href="classtgx_1_1_image.html#ad461423c16cea6a0d60cdaeb58fe26ef">More...</a><br /></td></tr>
+<tr class="separator:ad461423c16cea6a0d60cdaeb58fe26ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae02f77d6ca5228f6192399ea85ecb3be"><td class="memItemLeft" align="right" valign="top"><a id="ae02f77d6ca5228f6192399ea85ecb3be" name="ae02f77d6ca5228f6192399ea85ecb3be"></a>
+<a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>measureText</b> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const ILI9341_t3_font_t &amp;font, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor=<a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25ad8449e7e7d0d7d3cb14aa5ceef880428">DEFAULT_TEXT_ANCHOR</a>, bool wrap_text=false, bool start_newline_at_0=false)</td></tr>
+<tr class="separator:ae02f77d6ca5228f6192399ea85ecb3be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8a7d2f9bd4c38a3aba67fa8a42ed34f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad8a7d2f9bd4c38a3aba67fa8a42ed34f">drawChar</a> (char c, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const GFXfont &amp;font, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
+<tr class="memdesc:ad8a7d2f9bd4c38a3aba67fa8a42ed34f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a single character at position pos on the image and return the position for the next character.  <a href="classtgx_1_1_image.html#ad8a7d2f9bd4c38a3aba67fa8a42ed34f">More...</a><br /></td></tr>
+<tr class="separator:ad8a7d2f9bd4c38a3aba67fa8a42ed34f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afae0944718b49ee043741a969dee0d8e"><td class="memItemLeft" align="right" valign="top"><a id="afae0944718b49ee043741a969dee0d8e" name="afae0944718b49ee043741a969dee0d8e"></a>
+<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>drawChar</b> (char c, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const ILI9341_t3_font_t &amp;font, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
+<tr class="separator:afae0944718b49ee043741a969dee0d8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02d594de3a82d4bc5a594c0982cd90a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0">drawText</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const GFXfont &amp;font, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
+<tr class="memdesc:a02d594de3a82d4bc5a594c0982cd90a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a text at a given position with a given font.  <a href="classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0">More...</a><br /></td></tr>
+<tr class="separator:a02d594de3a82d4bc5a594c0982cd90a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a51b7472e4627f9f8ce8e6b6ed4199e"><td class="memItemLeft" align="right" valign="top"><a id="a0a51b7472e4627f9f8ce8e6b6ed4199e" name="a0a51b7472e4627f9f8ce8e6b6ed4199e"></a>
+<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>drawText</b> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const ILI9341_t3_font_t &amp;font, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
+<tr class="separator:a0a51b7472e4627f9f8ce8e6b6ed4199e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95d2c7edef3e9892e8e254c24f1d08cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a95d2c7edef3e9892e8e254c24f1d08cf">drawTextEx</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor, const GFXfont &amp;font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
+<tr class="memdesc:a95d2c7edef3e9892e8e254c24f1d08cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advanced drawText method.  <a href="classtgx_1_1_image.html#a95d2c7edef3e9892e8e254c24f1d08cf">More...</a><br /></td></tr>
+<tr class="separator:a95d2c7edef3e9892e8e254c24f1d08cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc9c886722185a2e26f3b37d4d47602e"><td class="memItemLeft" align="right" valign="top"><a id="abc9c886722185a2e26f3b37d4d47602e" name="abc9c886722185a2e26f3b37d4d47602e"></a>
+<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>drawTextEx</b> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor, const ILI9341_t3_font_t &amp;font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
+<tr class="separator:abc9c886722185a2e26f3b37d4d47602e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Creation of image and sub-images.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >The memory buffer should be supplied at creation otherwise, the image is set as invalid until a valid buffer is set.</p>
+<dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
+<li>The image object does not manage the buffer memory: allocation/deallocation are the user's respnsability. <br  />
+</li>
+<li>The image class is lightweight: creating image and sub-image is very fast and requires no additional memory. <br  />
+ </li>
+</ol>
+</dd></dl>
+</div></td></tr>
+<tr class="memitem:a58367fcadbcba6a8ba4cf75d78e841e4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a58367fcadbcba6a8ba4cf75d78e841e4">Image</a> ()</td></tr>
+<tr class="memdesc:a58367fcadbcba6a8ba4cf75d78e841e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <a href="classtgx_1_1_image.html#a58367fcadbcba6a8ba4cf75d78e841e4">More...</a><br /></td></tr>
 <tr class="separator:a58367fcadbcba6a8ba4cf75d78e841e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b30a4b81b24b089a7d2d004979a3bb6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a4b30a4b81b24b089a7d2d004979a3bb6"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4b30a4b81b24b089a7d2d004979a3bb6">Image</a> (T *buffer, int <a class="el" href="classtgx_1_1_image.html#a9d703268591c2d95cc2be2427fb62a3f">lx</a>, int <a class="el" href="classtgx_1_1_image.html#a9f18af07e65db0c8afb794f295e8bb40">ly</a>, int <a class="el" href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">stride</a>=-1)</td></tr>
-<tr class="memdesc:a4b30a4b81b24b089a7d2d004979a3bb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classtgx_1_1_image.html#a4b30a4b81b24b089a7d2d004979a3bb6">More...</a><br /></td></tr>
-<tr class="separator:a4b30a4b81b24b089a7d2d004979a3bb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaea9175e0dd00e21e06b1f23e06d5632"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aaea9175e0dd00e21e06b1f23e06d5632"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aaea9175e0dd00e21e06b1f23e06d5632">Image</a> (T *buffer, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> <a class="el" href="classtgx_1_1_image.html#a7bfcd5e6f5b3b8dbeca05bac7dc0287b">dim</a>, int <a class="el" href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">stride</a>=-1)</td></tr>
-<tr class="memdesc:aaea9175e0dd00e21e06b1f23e06d5632"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classtgx_1_1_image.html#aaea9175e0dd00e21e06b1f23e06d5632">More...</a><br /></td></tr>
-<tr class="separator:aaea9175e0dd00e21e06b1f23e06d5632"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a469ae2a5df284765a6bc44bce7f803f7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a469ae2a5df284765a6bc44bce7f803f7"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a469ae2a5df284765a6bc44bce7f803f7">Image</a> (T *buffer, int <a class="el" href="classtgx_1_1_image.html#a9d703268591c2d95cc2be2427fb62a3f">lx</a>, int <a class="el" href="classtgx_1_1_image.html#a9f18af07e65db0c8afb794f295e8bb40">ly</a>, int <a class="el" href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">stride</a>=<a class="el" href="classtgx_1_1_image.html#af756f79c7bd822db4c9349046f0be937">DEFAULT_STRIDE</a>)</td></tr>
+<tr class="memdesc:a469ae2a5df284765a6bc44bce7f803f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classtgx_1_1_image.html#a469ae2a5df284765a6bc44bce7f803f7">More...</a><br /></td></tr>
+<tr class="separator:a469ae2a5df284765a6bc44bce7f803f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fa4ee0124f82af00b755d270cbc1cb8"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a3fa4ee0124f82af00b755d270cbc1cb8"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a3fa4ee0124f82af00b755d270cbc1cb8">Image</a> (T *buffer, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> <a class="el" href="classtgx_1_1_image.html#a7bfcd5e6f5b3b8dbeca05bac7dc0287b">dim</a>, int <a class="el" href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">stride</a>=<a class="el" href="classtgx_1_1_image.html#af756f79c7bd822db4c9349046f0be937">DEFAULT_STRIDE</a>)</td></tr>
+<tr class="memdesc:a3fa4ee0124f82af00b755d270cbc1cb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classtgx_1_1_image.html#a3fa4ee0124f82af00b755d270cbc1cb8">More...</a><br /></td></tr>
+<tr class="separator:a3fa4ee0124f82af00b755d270cbc1cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf5f0693710ff0664fc192e964bf9231"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#adf5f0693710ff0664fc192e964bf9231">Image</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; &amp;im, <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> subbox, bool <a class="el" href="_misc_8h.html#a23d96bd931df615f13dd9a421ef0c4a0">clamp</a>=true)</td></tr>
 <tr class="memdesc:adf5f0693710ff0664fc192e964bf9231"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classtgx_1_1_image.html#adf5f0693710ff0664fc192e964bf9231">More...</a><br /></td></tr>
 <tr class="separator:adf5f0693710ff0664fc192e964bf9231"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,16 +161,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aed5b6c351a33109970c5edeef14678bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtgx_1_1_image.html">Image</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aed5b6c351a33109970c5edeef14678bb">operator=</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; &amp;im)=default</td></tr>
 <tr class="memdesc:aed5b6c351a33109970c5edeef14678bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default assignement operator.  <a href="classtgx_1_1_image.html#aed5b6c351a33109970c5edeef14678bb">More...</a><br /></td></tr>
 <tr class="separator:aed5b6c351a33109970c5edeef14678bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f5648785ce225afcef9782616d915e7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a4f5648785ce225afcef9782616d915e7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4f5648785ce225afcef9782616d915e7">set</a> (T *buffer, int <a class="el" href="classtgx_1_1_image.html#a9d703268591c2d95cc2be2427fb62a3f">lx</a>, int <a class="el" href="classtgx_1_1_image.html#a9f18af07e65db0c8afb794f295e8bb40">ly</a>, int <a class="el" href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">stride</a>=-1)</td></tr>
-<tr class="memdesc:a4f5648785ce225afcef9782616d915e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set/update the image parameters.  <a href="classtgx_1_1_image.html#a4f5648785ce225afcef9782616d915e7">More...</a><br /></td></tr>
-<tr class="separator:a4f5648785ce225afcef9782616d915e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a291f7d3cb952624bf2101c0cc66abbc2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a291f7d3cb952624bf2101c0cc66abbc2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a291f7d3cb952624bf2101c0cc66abbc2">set</a> (T *buffer, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> <a class="el" href="classtgx_1_1_image.html#a7bfcd5e6f5b3b8dbeca05bac7dc0287b">dim</a>, int <a class="el" href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">stride</a>=-1)</td></tr>
-<tr class="memdesc:a291f7d3cb952624bf2101c0cc66abbc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set/update the image parameters.  <a href="classtgx_1_1_image.html#a291f7d3cb952624bf2101c0cc66abbc2">More...</a><br /></td></tr>
-<tr class="separator:a291f7d3cb952624bf2101c0cc66abbc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14d5fd97744c3335b775fde5ae055e02"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a14d5fd97744c3335b775fde5ae055e02"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a14d5fd97744c3335b775fde5ae055e02">set</a> (T *buffer, int <a class="el" href="classtgx_1_1_image.html#a9d703268591c2d95cc2be2427fb62a3f">lx</a>, int <a class="el" href="classtgx_1_1_image.html#a9f18af07e65db0c8afb794f295e8bb40">ly</a>, int <a class="el" href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">stride</a>=<a class="el" href="classtgx_1_1_image.html#af756f79c7bd822db4c9349046f0be937">DEFAULT_STRIDE</a>)</td></tr>
+<tr class="memdesc:a14d5fd97744c3335b775fde5ae055e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set/update the image parameters.  <a href="classtgx_1_1_image.html#a14d5fd97744c3335b775fde5ae055e02">More...</a><br /></td></tr>
+<tr class="separator:a14d5fd97744c3335b775fde5ae055e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ee4c90b993be5b826ce3faa6f64d0dd"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a8ee4c90b993be5b826ce3faa6f64d0dd"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a8ee4c90b993be5b826ce3faa6f64d0dd">set</a> (T *buffer, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> <a class="el" href="classtgx_1_1_image.html#a7bfcd5e6f5b3b8dbeca05bac7dc0287b">dim</a>, int <a class="el" href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">stride</a>=<a class="el" href="classtgx_1_1_image.html#af756f79c7bd822db4c9349046f0be937">DEFAULT_STRIDE</a>)</td></tr>
+<tr class="memdesc:a8ee4c90b993be5b826ce3faa6f64d0dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set/update the image parameters.  <a href="classtgx_1_1_image.html#a8ee4c90b993be5b826ce3faa6f64d0dd">More...</a><br /></td></tr>
+<tr class="separator:a8ee4c90b993be5b826ce3faa6f64d0dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d543dcbeddb6cd734718eb2432908c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a3d543dcbeddb6cd734718eb2432908c9">crop</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;subbox)</td></tr>
-<tr class="memdesc:a3d543dcbeddb6cd734718eb2432908c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crop this image by keeping only the region represented by subbox (intersected with the image box).  <a href="classtgx_1_1_image.html#a3d543dcbeddb6cd734718eb2432908c9">More...</a><br /></td></tr>
+<tr class="memdesc:a3d543dcbeddb6cd734718eb2432908c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crop the image.  <a href="classtgx_1_1_image.html#a3d543dcbeddb6cd734718eb2432908c9">More...</a><br /></td></tr>
 <tr class="separator:a3d543dcbeddb6cd734718eb2432908c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a946f61b7e99977ad53f732358216b46b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a946f61b7e99977ad53f732358216b46b">getCrop</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;subbox, bool <a class="el" href="_misc_8h.html#a23d96bd931df615f13dd9a421ef0c4a0">clamp</a>=true) const</td></tr>
 <tr class="memdesc:a946f61b7e99977ad53f732358216b46b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a sub-image of this image (sharing the same pixel buffer).  <a href="classtgx_1_1_image.html#a946f61b7e99977ad53f732358216b46b">More...</a><br /></td></tr>
@@ -142,6 +181,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac6d989d0bcea2c58ac12da437c4541a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ac6d989d0bcea2c58ac12da437c4541a5">operator()</a> (int min_x, int max_x, int min_y, int max_y) const</td></tr>
 <tr class="memdesc:ac6d989d0bcea2c58ac12da437c4541a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a sub-image of this image (sharing the same pixel buffer).  <a href="classtgx_1_1_image.html#ac6d989d0bcea2c58ac12da437c4541a5">More...</a><br /></td></tr>
 <tr class="separator:ac6d989d0bcea2c58ac12da437c4541a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Image attributes.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Query the state (dimension, buffer...) of the image.</p>
+<p ><br  />
+ </p>
+</div></td></tr>
 <tr class="memitem:a6fe6fb2fd7cb9cb5da5c2984420ea184"><td class="memItemLeft" align="right" valign="top">TGX_INLINE bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a6fe6fb2fd7cb9cb5da5c2984420ea184">isValid</a> () const</td></tr>
 <tr class="memdesc:a6fe6fb2fd7cb9cb5da5c2984420ea184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query if the image is valid.  <a href="classtgx_1_1_image.html#a6fe6fb2fd7cb9cb5da5c2984420ea184">More...</a><br /></td></tr>
 <tr class="separator:a6fe6fb2fd7cb9cb5da5c2984420ea184"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,6 +219,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a843d50ea744758806dc3d48a9c104db6"><td class="memItemLeft" align="right" valign="top"><a id="a843d50ea744758806dc3d48a9c104db6" name="a843d50ea744758806dc3d48a9c104db6"></a>
 TGX_INLINE color_t *&#160;</td><td class="memItemRight" valign="bottom"><b>data</b> ()</td></tr>
 <tr class="separator:a843d50ea744758806dc3d48a9c104db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Direct pixel access.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods to read/write pixels directly on the image buffer. </p>
+</div></td></tr>
 <tr class="memitem:a7abb9f8cf484610e26fe67d78cd0954d"><td class="memTemplParams" colspan="2">template&lt;bool CHECKRANGE = true&gt; </td></tr>
 <tr class="memitem:a7abb9f8cf484610e26fe67d78cd0954d"><td class="memTemplItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a7abb9f8cf484610e26fe67d78cd0954d">drawPixel</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, color_t color)</td></tr>
 <tr class="memdesc:a7abb9f8cf484610e26fe67d78cd0954d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a pixel at a given position.  <a href="classtgx_1_1_image.html#a7abb9f8cf484610e26fe67d78cd0954d">More...</a><br /></td></tr>
@@ -227,6 +274,9 @@ template&lt;typename ITERFUN &gt; </td></tr>
 template&lt;typename ITERFUN &gt; </td></tr>
 <tr class="memitem:af667ce569502d0047bbedf132acd95c4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>iterate</b> (ITERFUN cb_fun, <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">tgx::iBox2</a> B)</td></tr>
 <tr class="separator:af667ce569502d0047bbedf132acd95c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Image manipulation.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for blitting, converting, resizing and rotating images. </p>
+</div></td></tr>
 <tr class="memitem:a70a3026cb3805252d30cc51fb31ad542"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542">blit</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; &amp;sprite, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> upperleftpos, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a70a3026cb3805252d30cc51fb31ad542"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blit/blend a sprite over this image at a given position.  <a href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542">More...</a><br /></td></tr>
 <tr class="separator:a70a3026cb3805252d30cc51fb31ad542"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -273,6 +323,11 @@ template&lt;typename ITERFUN &gt; </td></tr>
 <tr class="memitem:aec06c59da548263f082134368f5202d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aec06c59da548263f082134368f5202d6">reduceHalf</a> ()</td></tr>
 <tr class="memdesc:aec06c59da548263f082134368f5202d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduce this image by half.  <a href="classtgx_1_1_image.html#aec06c59da548263f082134368f5202d6">More...</a><br /></td></tr>
 <tr class="separator:aec06c59da548263f082134368f5202d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: filling a region.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Method for filling the whole (or just a region of the) image with a given color.</p>
+<p ><br  />
+ </p>
+</div></td></tr>
 <tr class="memitem:ab126be8d4510810f3e17da14bb517ab9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ab126be8d4510810f3e17da14bb517ab9">fillScreen</a> (color_t color)</td></tr>
 <tr class="memdesc:ab126be8d4510810f3e17da14bb517ab9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the whole image with a single color.  <a href="classtgx_1_1_image.html#ab126be8d4510810f3e17da14bb517ab9">More...</a><br /></td></tr>
 <tr class="separator:ab126be8d4510810f3e17da14bb517ab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -293,6 +348,11 @@ template&lt;typename ITERFUN &gt; </td></tr>
 <tr class="memitem:aa1526bd3763cfbdc0de6b8b874efa7a7"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aa1526bd3763cfbdc0de6b8b874efa7a7">fill</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> start_pos, color_t border_color, color_t new_color)</td></tr>
 <tr class="memdesc:aa1526bd3763cfbdc0de6b8b874efa7a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">'Flood fill' a 4-connected region of the image.  <a href="classtgx_1_1_image.html#aa1526bd3763cfbdc0de6b8b874efa7a7">More...</a><br /></td></tr>
 <tr class="separator:aa1526bd3763cfbdc0de6b8b874efa7a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: lines.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing line segments.</p>
+<p ><br  />
+ </p>
+</div></td></tr>
 <tr class="memitem:a35627216d8411a54dbba33c3c43fb5a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a35627216d8411a54dbba33c3c43fb5a0">drawFastVLine</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int h, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a35627216d8411a54dbba33c3c43fb5a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw an vertical segment of h pixels starting at pos.  <a href="classtgx_1_1_image.html#a35627216d8411a54dbba33c3c43fb5a0">More...</a><br /></td></tr>
 <tr class="separator:a35627216d8411a54dbba33c3c43fb5a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -326,6 +386,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawWedgeLine</b> (<a
 void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSpot</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> center, float r, color_t color, float opacity)</td></tr>
 <tr class="memdesc:aedd4e582b945bc1bd3a2c7376a4308dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">DEPRECATED: Use <a class="el" href="classtgx_1_1_image.html#add683243410cdc8f2725ba3ae6f0cc1e" title="Draw a filled circle.">fillCircleAA()</a> instead. <br /></td></tr>
 <tr class="separator:aedd4e582b945bc1bd3a2c7376a4308dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: rectangles.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing rectangles. </p>
+</div></td></tr>
 <tr class="memitem:a18a065e3844d1a65bc3a32d86072f706"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a18a065e3844d1a65bc3a32d86072f706">drawRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a18a065e3844d1a65bc3a32d86072f706"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a rectangle.  <a href="classtgx_1_1_image.html#a18a065e3844d1a65bc3a32d86072f706">More...</a><br /></td></tr>
 <tr class="separator:a18a065e3844d1a65bc3a32d86072f706"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -353,6 +416,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSpot</b> (<a clas
 <tr class="memitem:a05e63abdfef6ce5c5a59b7875d3b5c05"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a05e63abdfef6ce5c5a59b7875d3b5c05">fillThickRectAA</a> (const <a class="el" href="_box2_8h.html#af5237584932da348a5241f13376af762">fBox2</a> &amp;B, float thickness, color_t color_interior, color_t color_border, float opacity=1.0f)</td></tr>
 <tr class="memdesc:a05e63abdfef6ce5c5a59b7875d3b5c05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled rectangle with a thick border of a different color.  <a href="classtgx_1_1_image.html#a05e63abdfef6ce5c5a59b7875d3b5c05">More...</a><br /></td></tr>
 <tr class="separator:a05e63abdfef6ce5c5a59b7875d3b5c05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: rounded rectangles.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing rounded rectangles. </p>
+</div></td></tr>
 <tr class="memitem:a901d531c6a308705cf9b1b9a0a0a7162"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a901d531c6a308705cf9b1b9a0a0a7162">drawRoundRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, int corner_radius, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a901d531c6a308705cf9b1b9a0a0a7162"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a rounded rectangle in box B with corner radius r.  <a href="classtgx_1_1_image.html#a901d531c6a308705cf9b1b9a0a0a7162">More...</a><br /></td></tr>
 <tr class="separator:a901d531c6a308705cf9b1b9a0a0a7162"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -371,6 +437,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSpot</b> (<a clas
 <tr class="memitem:ae11412542a8f725330b58b10198c83ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ae11412542a8f725330b58b10198c83ca">fillThickRoundRectAA</a> (const <a class="el" href="_box2_8h.html#af5237584932da348a5241f13376af762">fBox2</a> &amp;B, float corner_radius, float thickness, color_t color_interior, color_t color_border, float opacity=1.0f)</td></tr>
 <tr class="memdesc:ae11412542a8f725330b58b10198c83ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled rounded rectangle with a thick border of another color.  <a href="classtgx_1_1_image.html#ae11412542a8f725330b58b10198c83ca">More...</a><br /></td></tr>
 <tr class="separator:ae11412542a8f725330b58b10198c83ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: triangles.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing triangles. </p>
+</div></td></tr>
 <tr class="memitem:acfa17aae1ba6326e081682d9e8960e8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#acfa17aae1ba6326e081682d9e8960e8f">drawTriangle</a> (const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P1, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P2, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P3, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:acfa17aae1ba6326e081682d9e8960e8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a triangle.  <a href="classtgx_1_1_image.html#acfa17aae1ba6326e081682d9e8960e8f">More...</a><br /></td></tr>
 <tr class="separator:acfa17aae1ba6326e081682d9e8960e8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -413,6 +482,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSpot</b> (<a clas
 <tr class="memitem:a4f0cbbbf7e021ac3ebc78c6520951eda"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4f0cbbbf7e021ac3ebc78c6520951eda">drawTexturedGradientMaskedTriangle</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_tex &gt; &amp;src_im, color_t_tex transparent_color, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity=1.0f)</td></tr>
 <tr class="memdesc:a4f0cbbbf7e021ac3ebc78c6520951eda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blend textured triangle with a transparency mask (i.e.  <a href="classtgx_1_1_image.html#a4f0cbbbf7e021ac3ebc78c6520951eda">More...</a><br /></td></tr>
 <tr class="separator:a4f0cbbbf7e021ac3ebc78c6520951eda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: quads.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing quads. </p>
+</div></td></tr>
 <tr class="memitem:a6dd3ad9cf8aa54cbc2340446c906d00f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a6dd3ad9cf8aa54cbc2340446c906d00f">drawQuad</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P3, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P4, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a6dd3ad9cf8aa54cbc2340446c906d00f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a quad.  <a href="classtgx_1_1_image.html#a6dd3ad9cf8aa54cbc2340446c906d00f">More...</a><br /></td></tr>
 <tr class="separator:a6dd3ad9cf8aa54cbc2340446c906d00f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -455,6 +527,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSpot</b> (<a clas
 <tr class="memitem:a511347039f599f26f146b63e57014acb"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a511347039f599f26f146b63e57014acb">drawTexturedGradientMaskedQuad</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_tex &gt; &amp;src_im, color_t_tex transparent_color, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP4, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity=1.0f)</td></tr>
 <tr class="memdesc:a511347039f599f26f146b63e57014acb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a textured quad using bilinear filtering and with a mask (i.e.  <a href="classtgx_1_1_image.html#a511347039f599f26f146b63e57014acb">More...</a><br /></td></tr>
 <tr class="separator:a511347039f599f26f146b63e57014acb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: polylines.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing polylines. </p>
+</div></td></tr>
 <tr class="memitem:a94c88a9642c1c9eb662bae142e35d3c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a94c88a9642c1c9eb662bae142e35d3c7">drawPolyline</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a94c88a9642c1c9eb662bae142e35d3c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a polyline i.e.  <a href="classtgx_1_1_image.html#a94c88a9642c1c9eb662bae142e35d3c7">More...</a><br /></td></tr>
 <tr class="separator:a94c88a9642c1c9eb662bae142e35d3c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -476,6 +551,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSpot</b> (<a clas
 <tr class="memitem:aabb27aff4a3cf925518879941944f359"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aabb27aff4a3cf925518879941944f359">drawThickPolylineAA</a> (FUNCTOR_NEXT next_point, float thickness, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P0, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_Pn, color_t color, float opacity=1.0f)</td></tr>
 <tr class="memdesc:aabb27aff4a3cf925518879941944f359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a thick polyline i.e.  <a href="classtgx_1_1_image.html#aabb27aff4a3cf925518879941944f359">More...</a><br /></td></tr>
 <tr class="separator:aabb27aff4a3cf925518879941944f359"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: polygons.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing polygons. </p>
+</div></td></tr>
 <tr class="memitem:ad0e2f2ba12a7a1c9bf53ddb913d8ad69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad0e2f2ba12a7a1c9bf53ddb913d8ad69">drawPolygon</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:ad0e2f2ba12a7a1c9bf53ddb913d8ad69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed polygon with vertices [P0,P2, .., PN].  <a href="classtgx_1_1_image.html#ad0e2f2ba12a7a1c9bf53ddb913d8ad69">More...</a><br /></td></tr>
 <tr class="separator:ad0e2f2ba12a7a1c9bf53ddb913d8ad69"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -518,6 +596,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSpot</b> (<a clas
 <tr class="memitem:a4b06093f4e4ded21e7ef28639d4f35c9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4b06093f4e4ded21e7ef28639d4f35c9">fillThickPolygonAA</a> (FUNCTOR_NEXT next_point, float thickness, color_t interior_color, color_t border_color, float opacity=1.0f)</td></tr>
 <tr class="memdesc:a4b06093f4e4ded21e7ef28639d4f35c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled polygon with a thick border of a different color.  <a href="classtgx_1_1_image.html#a4b06093f4e4ded21e7ef28639d4f35c9">More...</a><br /></td></tr>
 <tr class="separator:a4b06093f4e4ded21e7ef28639d4f35c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: circles.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing circles. </p>
+</div></td></tr>
 <tr class="memitem:a294024b055161de8193f462ff5896337"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a294024b055161de8193f462ff5896337">drawCircle</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> center, int r, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a294024b055161de8193f462ff5896337"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a circle.  <a href="classtgx_1_1_image.html#a294024b055161de8193f462ff5896337">More...</a><br /></td></tr>
 <tr class="separator:a294024b055161de8193f462ff5896337"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -536,6 +617,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSpot</b> (<a clas
 <tr class="memitem:adb41ee8add6cfb3d3e595233a782b1c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#adb41ee8add6cfb3d3e595233a782b1c8">fillThickCircleAA</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> center, float r, float thickness, color_t color_interior, color_t color_border, float opacity=1.0f)</td></tr>
 <tr class="memdesc:adb41ee8add6cfb3d3e595233a782b1c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled circle with a thick border of a different color.  <a href="classtgx_1_1_image.html#adb41ee8add6cfb3d3e595233a782b1c8">More...</a><br /></td></tr>
 <tr class="separator:adb41ee8add6cfb3d3e595233a782b1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: arcs and pies.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing circles arcs and circle pies. </p>
+</div></td></tr>
 <tr class="memitem:a9640e534b3a9abd741dfef22fc4c74fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a9640e534b3a9abd741dfef22fc4c74fc">drawCircleArcAA</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> center, float r, float angle_start, float angle_end, color_t color, float opacity=1.0f)</td></tr>
 <tr class="memdesc:a9640e534b3a9abd741dfef22fc4c74fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a circle arc.  <a href="classtgx_1_1_image.html#a9640e534b3a9abd741dfef22fc4c74fc">More...</a><br /></td></tr>
 <tr class="separator:a9640e534b3a9abd741dfef22fc4c74fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -548,6 +632,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSpot</b> (<a clas
 <tr class="memitem:a50ced0ac855d93af3155aa28a07a3bca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a50ced0ac855d93af3155aa28a07a3bca">fillThickCircleSectorAA</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> center, float r, float angle_start, float angle_end, float thickness, color_t color_interior, color_t color_border, float opacity=1.0f)</td></tr>
 <tr class="memdesc:a50ced0ac855d93af3155aa28a07a3bca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled circle sector (slice/pie) with a thick border of a different color.  <a href="classtgx_1_1_image.html#a50ced0ac855d93af3155aa28a07a3bca">More...</a><br /></td></tr>
 <tr class="separator:a50ced0ac855d93af3155aa28a07a3bca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: ellipses</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing ellipses. </p>
+</div></td></tr>
 <tr class="memitem:a4d4274ed5ba69e51c27a920bb3dcfa03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4d4274ed5ba69e51c27a920bb3dcfa03">drawEllipse</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> center, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> radiuses, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a4d4274ed5ba69e51c27a920bb3dcfa03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw an ellipse.  <a href="classtgx_1_1_image.html#a4d4274ed5ba69e51c27a920bb3dcfa03">More...</a><br /></td></tr>
 <tr class="separator:a4d4274ed5ba69e51c27a920bb3dcfa03"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -566,6 +653,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSpot</b> (<a clas
 <tr class="memitem:a2c41ba465b8e7a62a90e23fa60aab955"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a2c41ba465b8e7a62a90e23fa60aab955">fillThickEllipseAA</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> center, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> radiuses, float thickness, color_t color_interior, color_t color_border, float opacity=1.0f)</td></tr>
 <tr class="memdesc:a2c41ba465b8e7a62a90e23fa60aab955"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled ellipse with a thick border of a different color.  <a href="classtgx_1_1_image.html#a2c41ba465b8e7a62a90e23fa60aab955">More...</a><br /></td></tr>
 <tr class="separator:a2c41ba465b8e7a62a90e23fa60aab955"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Drawing primitives: Bezier curves.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p >Methods for drawing quadratic, cubic Bezier curves and splines. </p>
+</div></td></tr>
 <tr class="memitem:adc5a0cfb43dc2f20c9c52a32dc26eeb5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#adc5a0cfb43dc2f20c9c52a32dc26eeb5">drawQuadBezier</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> PC, float wc, bool drawP2, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:adc5a0cfb43dc2f20c9c52a32dc26eeb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a quadratic (rational) Bezier curve.  <a href="classtgx_1_1_image.html#adc5a0cfb43dc2f20c9c52a32dc26eeb5">More...</a><br /></td></tr>
 <tr class="separator:adc5a0cfb43dc2f20c9c52a32dc26eeb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -610,412 +700,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSpot</b> (<a clas
 <tr class="memitem:abbb199e8586e739467275d7f0b44a5e4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#abbb199e8586e739467275d7f0b44a5e4">fillThickClosedSplineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:abbb199e8586e739467275d7f0b44a5e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a region delimited by a closed thick smooth (anti-aliased with sub-pixel precision) quadratic spline where the interior and (thick) boundary can have different colors.  <a href="classtgx_1_1_image.html#abbb199e8586e739467275d7f0b44a5e4">More...</a><br /></td></tr>
 <tr class="separator:abbb199e8586e739467275d7f0b44a5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad461423c16cea6a0d60cdaeb58fe26ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad461423c16cea6a0d60cdaeb58fe26ef">measureText</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const GFXfont &amp;font, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor=<a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25ad8449e7e7d0d7d3cb14aa5ceef880428">DEFAULT_TEXT_ANCHOR</a>, bool wrap_text=false, bool start_newline_at_0=false)</td></tr>
-<tr class="memdesc:ad461423c16cea6a0d60cdaeb58fe26ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the box of pixels occupied by a text when drawn with 'font' anchored at 'pos'.  <a href="classtgx_1_1_image.html#ad461423c16cea6a0d60cdaeb58fe26ef">More...</a><br /></td></tr>
-<tr class="separator:ad461423c16cea6a0d60cdaeb58fe26ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae02f77d6ca5228f6192399ea85ecb3be"><td class="memItemLeft" align="right" valign="top"><a id="ae02f77d6ca5228f6192399ea85ecb3be" name="ae02f77d6ca5228f6192399ea85ecb3be"></a>
-<a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>measureText</b> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const ILI9341_t3_font_t &amp;font, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor=<a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25ad8449e7e7d0d7d3cb14aa5ceef880428">DEFAULT_TEXT_ANCHOR</a>, bool wrap_text=false, bool start_newline_at_0=false)</td></tr>
-<tr class="separator:ae02f77d6ca5228f6192399ea85ecb3be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8a7d2f9bd4c38a3aba67fa8a42ed34f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad8a7d2f9bd4c38a3aba67fa8a42ed34f">drawChar</a> (char c, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const GFXfont &amp;font, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
-<tr class="memdesc:ad8a7d2f9bd4c38a3aba67fa8a42ed34f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a single character at position pos on the image and return the position for the next character.  <a href="classtgx_1_1_image.html#ad8a7d2f9bd4c38a3aba67fa8a42ed34f">More...</a><br /></td></tr>
-<tr class="separator:ad8a7d2f9bd4c38a3aba67fa8a42ed34f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afae0944718b49ee043741a969dee0d8e"><td class="memItemLeft" align="right" valign="top"><a id="afae0944718b49ee043741a969dee0d8e" name="afae0944718b49ee043741a969dee0d8e"></a>
-<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>drawChar</b> (char c, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const ILI9341_t3_font_t &amp;font, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
-<tr class="separator:afae0944718b49ee043741a969dee0d8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02d594de3a82d4bc5a594c0982cd90a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0">drawText</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const GFXfont &amp;font, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
-<tr class="memdesc:a02d594de3a82d4bc5a594c0982cd90a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a text at a given position with a given font.  <a href="classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0">More...</a><br /></td></tr>
-<tr class="separator:a02d594de3a82d4bc5a594c0982cd90a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a51b7472e4627f9f8ce8e6b6ed4199e"><td class="memItemLeft" align="right" valign="top"><a id="a0a51b7472e4627f9f8ce8e6b6ed4199e" name="a0a51b7472e4627f9f8ce8e6b6ed4199e"></a>
-<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>drawText</b> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const ILI9341_t3_font_t &amp;font, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
-<tr class="separator:a0a51b7472e4627f9f8ce8e6b6ed4199e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95d2c7edef3e9892e8e254c24f1d08cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a95d2c7edef3e9892e8e254c24f1d08cf">drawTextEx</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor, const GFXfont &amp;font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
-<tr class="memdesc:a95d2c7edef3e9892e8e254c24f1d08cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advanced drawText method.  <a href="classtgx_1_1_image.html#a95d2c7edef3e9892e8e254c24f1d08cf">More...</a><br /></td></tr>
-<tr class="separator:a95d2c7edef3e9892e8e254c24f1d08cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc9c886722185a2e26f3b37d4d47602e"><td class="memItemLeft" align="right" valign="top"><a id="abc9c886722185a2e26f3b37d4d47602e" name="abc9c886722185a2e26f3b37d4d47602e"></a>
-<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>drawTextEx</b> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor, const ILI9341_t3_font_t &amp;font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
-<tr class="separator:abc9c886722185a2e26f3b37d4d47602e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0ce6ea8f6621c4dd59b4f007955bd09"><td class="memItemLeft" align="right" valign="top"><a id="ab0ce6ea8f6621c4dd59b4f007955bd09" name="ab0ce6ea8f6621c4dd59b4f007955bd09"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_checkvalid</b> ()</td></tr>
-<tr class="separator:ab0ce6ea8f6621c4dd59b4f007955bd09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec53bc9aeb907a348567beab95e1e498"><td class="memItemLeft" align="right" valign="top"><a id="aec53bc9aeb907a348567beab95e1e498" name="aec53bc9aeb907a348567beab95e1e498"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>_blitClip</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a> &amp;sprite, int &amp;dest_x, int &amp;dest_y, int &amp;sprite_x, int &amp;sprite_y, int &amp;sx, int &amp;sy)</td></tr>
-<tr class="separator:aec53bc9aeb907a348567beab95e1e498"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ef2849a2c380e2322e14c82837fe505"><td class="memItemLeft" align="right" valign="top"><a id="a3ef2849a2c380e2322e14c82837fe505" name="a3ef2849a2c380e2322e14c82837fe505"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>_blitClip</b> (int sprite_lx, int sprite_ly, int &amp;dest_x, int &amp;dest_y, int &amp;sprite_x, int &amp;sprite_y, int &amp;sx, int &amp;sy)</td></tr>
-<tr class="separator:a3ef2849a2c380e2322e14c82837fe505"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46291c6d80c43ee55ee52966c381877b"><td class="memItemLeft" align="right" valign="top"><a id="a46291c6d80c43ee55ee52966c381877b" name="a46291c6d80c43ee55ee52966c381877b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_blit</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a> &amp;sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy)</td></tr>
-<tr class="separator:a46291c6d80c43ee55ee52966c381877b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af337899eca03ea57f6e8f91649d9bd26"><td class="memItemLeft" align="right" valign="top"><a id="af337899eca03ea57f6e8f91649d9bd26" name="af337899eca03ea57f6e8f91649d9bd26"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_blit</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a> &amp;sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)</td></tr>
-<tr class="separator:af337899eca03ea57f6e8f91649d9bd26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05b3fe0b5b66a9046daa04c321091715"><td class="memTemplParams" colspan="2"><a id="a05b3fe0b5b66a9046daa04c321091715" name="a05b3fe0b5b66a9046daa04c321091715"></a>
-template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </td></tr>
-<tr class="memitem:a05b3fe0b5b66a9046daa04c321091715"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_blit</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_src &gt; &amp;sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR &amp;blend_op)</td></tr>
-<tr class="separator:a05b3fe0b5b66a9046daa04c321091715"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acfb37fff66b0fd1962574635ee99037b"><td class="memItemLeft" align="right" valign="top"><a id="acfb37fff66b0fd1962574635ee99037b" name="acfb37fff66b0fd1962574635ee99037b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_blitMasked</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a> &amp;sprite, color_t transparent_color, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)</td></tr>
-<tr class="separator:acfb37fff66b0fd1962574635ee99037b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e6adbba03d8df1cb08d6dc6303c5016"><td class="memTemplParams" colspan="2"><a id="a2e6adbba03d8df1cb08d6dc6303c5016" name="a2e6adbba03d8df1cb08d6dc6303c5016"></a>
-template&lt;typename color_t_src , int CACHE_SIZE, bool USE_BLENDING, bool USE_MASK, bool USE_CUSTOM_OPERATOR, typename BLEND_OPERATOR &gt; </td></tr>
-<tr class="memitem:a2e6adbba03d8df1cb08d6dc6303c5016"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_blitScaledRotated</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_src &gt; &amp;src_im, color_t_src transparent_color, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> anchor_src, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> anchor_dst, float scale, float angle_degrees, float opacity, const BLEND_OPERATOR &amp;blend_op)</td></tr>
-<tr class="separator:a2e6adbba03d8df1cb08d6dc6303c5016"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa61c540f3055857fc29aafd15872aac1"><td class="memItemLeft" align="right" valign="top"><a id="aa61c540f3055857fc29aafd15872aac1" name="aa61c540f3055857fc29aafd15872aac1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_blitRotated90</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a> &amp;sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)</td></tr>
-<tr class="separator:aa61c540f3055857fc29aafd15872aac1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e8546a32c9e0206340650a057c2c453"><td class="memItemLeft" align="right" valign="top"><a id="a4e8546a32c9e0206340650a057c2c453" name="a4e8546a32c9e0206340650a057c2c453"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_blitRotated180</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a> &amp;sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)</td></tr>
-<tr class="separator:a4e8546a32c9e0206340650a057c2c453"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4737ed8d40011b94aa78d64e1f2b9a7"><td class="memItemLeft" align="right" valign="top"><a id="ae4737ed8d40011b94aa78d64e1f2b9a7" name="ae4737ed8d40011b94aa78d64e1f2b9a7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_blitRotated270</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a> &amp;sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)</td></tr>
-<tr class="separator:ae4737ed8d40011b94aa78d64e1f2b9a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3234c75ecaa3a724253fe96b39f2ea1"><td class="memTemplParams" colspan="2"><a id="aa3234c75ecaa3a724253fe96b39f2ea1" name="aa3234c75ecaa3a724253fe96b39f2ea1"></a>
-template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </td></tr>
-<tr class="memitem:aa3234c75ecaa3a724253fe96b39f2ea1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_blitRotated90</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a> &amp;sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR &amp;blend_op)</td></tr>
-<tr class="separator:aa3234c75ecaa3a724253fe96b39f2ea1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bb69e18e76cfca44bde2349910c02d7"><td class="memTemplParams" colspan="2"><a id="a4bb69e18e76cfca44bde2349910c02d7" name="a4bb69e18e76cfca44bde2349910c02d7"></a>
-template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </td></tr>
-<tr class="memitem:a4bb69e18e76cfca44bde2349910c02d7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_blitRotated180</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a> &amp;sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR &amp;blend_op)</td></tr>
-<tr class="separator:a4bb69e18e76cfca44bde2349910c02d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5613af648158c299128594958eac827"><td class="memTemplParams" colspan="2"><a id="ac5613af648158c299128594958eac827" name="ac5613af648158c299128594958eac827"></a>
-template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </td></tr>
-<tr class="memitem:ac5613af648158c299128594958eac827"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_blitRotated270</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a> &amp;sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR &amp;blend_op)</td></tr>
-<tr class="separator:ac5613af648158c299128594958eac827"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9abd835213b8222358d10c5f3874d83d"><td class="memTemplParams" colspan="2"><a id="a9abd835213b8222358d10c5f3874d83d" name="a9abd835213b8222358d10c5f3874d83d"></a>
-template&lt;bool UNICOLOR_COMP, int STACK_SIZE_BYTES&gt; </td></tr>
-<tr class="memitem:a9abd835213b8222358d10c5f3874d83d"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_scanfill</b> (int x, int y, color_t border_color, color_t new_color)</td></tr>
-<tr class="separator:a9abd835213b8222358d10c5f3874d83d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37ef4a3c5fea64856b195fc09d23b61a"><td class="memTemplParams" colspan="2"><a id="a37ef4a3c5fea64856b195fc09d23b61a" name="a37ef4a3c5fea64856b195fc09d23b61a"></a>
-template&lt;bool X_MAJOR, bool BLEND, int SIDE, bool CHECKRANGE = false&gt; </td></tr>
-<tr class="memitem:a37ef4a3c5fea64856b195fc09d23b61a"><td class="memTemplItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_bseg_update_pixel</b> (const BSeg &amp;seg, color_t color, int32_t op)</td></tr>
-<tr class="separator:a37ef4a3c5fea64856b195fc09d23b61a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e50746cc38f2baf3c4a236c1885187d"><td class="memTemplParams" colspan="2"><a id="a5e50746cc38f2baf3c4a236c1885187d" name="a5e50746cc38f2baf3c4a236c1885187d"></a>
-template&lt;bool CHECKRANGE = false&gt; </td></tr>
-<tr class="memitem:a5e50746cc38f2baf3c4a236c1885187d"><td class="memTemplItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_bseg_update_pixel</b> (const BSeg &amp;seg, color_t color, int32_t op, int32_t aa)</td></tr>
-<tr class="separator:a5e50746cc38f2baf3c4a236c1885187d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2628a8179d60921b187f8eebff64a8b8"><td class="memTemplParams" colspan="2"><a id="a2628a8179d60921b187f8eebff64a8b8" name="a2628a8179d60921b187f8eebff64a8b8"></a>
-template&lt;int SIDE&gt; </td></tr>
-<tr class="memitem:a2628a8179d60921b187f8eebff64a8b8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_bseg_draw_template</b> (BSeg &amp;seg, bool draw_first, bool draw_last, color_t color, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:a2628a8179d60921b187f8eebff64a8b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d6353c0b9dcee1d348b18312aec59b6"><td class="memItemLeft" align="right" valign="top"><a id="a2d6353c0b9dcee1d348b18312aec59b6" name="a2d6353c0b9dcee1d348b18312aec59b6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_draw</b> (BSeg &amp;seg, bool draw_first, bool draw_last, color_t color, int side, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:a2d6353c0b9dcee1d348b18312aec59b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9948c35be7f6e015acb05e80df66d937"><td class="memItemLeft" align="right" valign="top"><a id="a9948c35be7f6e015acb05e80df66d937" name="a9948c35be7f6e015acb05e80df66d937"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_draw_AA</b> (BSeg &amp;seg, bool draw_first, bool draw_last, color_t color, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:a9948c35be7f6e015acb05e80df66d937"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa42a97d9b93d066d2c334bc91d49cfca"><td class="memTemplParams" colspan="2"><a id="aa42a97d9b93d066d2c334bc91d49cfca" name="aa42a97d9b93d066d2c334bc91d49cfca"></a>
-template&lt;int SIDE&gt; </td></tr>
-<tr class="memitem:aa42a97d9b93d066d2c334bc91d49cfca"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_bseg_avoid1_template</b> (BSeg &amp;segA, bool lastA, BSeg &amp;segB, bool lastB, color_t color, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:aa42a97d9b93d066d2c334bc91d49cfca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad30aef65e9d88a68e85b23d807e7690e"><td class="memItemLeft" align="right" valign="top"><a id="ad30aef65e9d88a68e85b23d807e7690e" name="ad30aef65e9d88a68e85b23d807e7690e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_avoid1</b> (BSeg &amp;PQ, BSeg &amp;PA, bool drawP, bool drawQ, bool closedPA, color_t color, int side, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:ad30aef65e9d88a68e85b23d807e7690e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae454b2c4743ccc718f1ad676270d13ae"><td class="memTemplParams" colspan="2"><a id="ae454b2c4743ccc718f1ad676270d13ae" name="ae454b2c4743ccc718f1ad676270d13ae"></a>
-template&lt;int SIDE&gt; </td></tr>
-<tr class="memitem:ae454b2c4743ccc718f1ad676270d13ae"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_bseg_avoid2_template</b> (BSeg &amp;segA, bool lastA, BSeg &amp;segB, bool lastB, BSeg &amp;segC, bool lastC, color_t color, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:ae454b2c4743ccc718f1ad676270d13ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7838fc05d21d69841a2d8f15207ddd23"><td class="memItemLeft" align="right" valign="top"><a id="a7838fc05d21d69841a2d8f15207ddd23" name="a7838fc05d21d69841a2d8f15207ddd23"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_avoid2</b> (BSeg &amp;PQ, BSeg &amp;PA, BSeg &amp;PB, bool drawQ, bool closedPA, bool closedPB, color_t color, int side, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:a7838fc05d21d69841a2d8f15207ddd23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8119440196de68efd1374896db2db52"><td class="memTemplParams" colspan="2"><a id="aa8119440196de68efd1374896db2db52" name="aa8119440196de68efd1374896db2db52"></a>
-template&lt;int SIDE&gt; </td></tr>
-<tr class="memitem:aa8119440196de68efd1374896db2db52"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_bseg_avoid11_template</b> (BSeg &amp;segA, BSeg &amp;segB, bool lastB, BSeg &amp;segD, bool lastD, color_t color, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:aa8119440196de68efd1374896db2db52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba7852c326c357cf59cd498140649144"><td class="memItemLeft" align="right" valign="top"><a id="aba7852c326c357cf59cd498140649144" name="aba7852c326c357cf59cd498140649144"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_avoid11</b> (BSeg &amp;PQ, BSeg &amp;PA, BSeg &amp;QB, bool drawP, bool drawQ, bool closedPA, bool closedQB, color_t color, int side, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:aba7852c326c357cf59cd498140649144"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0751b2aceb0b08cdeec9fa731b874ed"><td class="memTemplParams" colspan="2"><a id="ab0751b2aceb0b08cdeec9fa731b874ed" name="ab0751b2aceb0b08cdeec9fa731b874ed"></a>
-template&lt;int SIDE&gt; </td></tr>
-<tr class="memitem:ab0751b2aceb0b08cdeec9fa731b874ed"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_bseg_avoid21_template</b> (BSeg &amp;segA, BSeg &amp;segB, bool lastB, BSeg &amp;segC, bool lastC, BSeg &amp;segD, bool lastD, color_t color, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:ab0751b2aceb0b08cdeec9fa731b874ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54486cba7e16361f08ca853853146215"><td class="memItemLeft" align="right" valign="top"><a id="a54486cba7e16361f08ca853853146215" name="a54486cba7e16361f08ca853853146215"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_avoid21</b> (BSeg &amp;PQ, BSeg &amp;PA, BSeg &amp;PB, BSeg &amp;QC, bool closedPA, bool closedPB, bool closedQC, color_t color, int side, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:a54486cba7e16361f08ca853853146215"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86ec2fac623c563bf06da2ed0fe41c2d"><td class="memTemplParams" colspan="2"><a id="a86ec2fac623c563bf06da2ed0fe41c2d" name="a86ec2fac623c563bf06da2ed0fe41c2d"></a>
-template&lt;int SIDE&gt; </td></tr>
-<tr class="memitem:a86ec2fac623c563bf06da2ed0fe41c2d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_bseg_avoid22_template</b> (BSeg &amp;segA, BSeg &amp;segB, bool lastB, BSeg &amp;segC, bool lastC, BSeg &amp;segD, bool lastD, BSeg &amp;segE, bool lastE, color_t color, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:a86ec2fac623c563bf06da2ed0fe41c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02c0170bfd4ae86f8d1f32bdd806e3c1"><td class="memItemLeft" align="right" valign="top"><a id="a02c0170bfd4ae86f8d1f32bdd806e3c1" name="a02c0170bfd4ae86f8d1f32bdd806e3c1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_avoid22</b> (BSeg &amp;PQ, BSeg &amp;PA, BSeg &amp;PB, BSeg &amp;QC, BSeg &amp;QD, bool closedPA, bool closedPB, bool closedQC, bool closedQD, color_t color, int side, int32_t op, bool checkrange)</td></tr>
-<tr class="separator:a02c0170bfd4ae86f8d1f32bdd806e3c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37837ba516ae7f264d0279e554a56f48"><td class="memItemLeft" align="right" valign="top"><a id="a37837ba516ae7f264d0279e554a56f48" name="a37837ba516ae7f264d0279e554a56f48"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_fill_triangle</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> fP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> fP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> fP3, color_t fillcolor, float opacity)</td></tr>
-<tr class="separator:a37837ba516ae7f264d0279e554a56f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4129c05356ccc91cf44e31243cb1b6d5"><td class="memItemLeft" align="right" valign="top"><a id="a4129c05356ccc91cf44e31243cb1b6d5" name="a4129c05356ccc91cf44e31243cb1b6d5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_fill_triangle_precomputed</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> fP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> fP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> fP3, BSeg &amp;seg12, BSeg &amp;seg21, BSeg &amp;seg23, BSeg &amp;seg32, BSeg &amp;seg31, BSeg &amp;seg13, color_t fillcolor, float opacity)</td></tr>
-<tr class="separator:a4129c05356ccc91cf44e31243cb1b6d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5af9c8d84324bfc441fcdec27fc0efb"><td class="memItemLeft" align="right" valign="top"><a id="aa5af9c8d84324bfc441fcdec27fc0efb" name="aa5af9c8d84324bfc441fcdec27fc0efb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_fill_triangle_precomputed_sub</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> fP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> fP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> fP3, BSeg &amp;seg12, BSeg &amp;seg21, BSeg &amp;seg23, BSeg &amp;seg32, BSeg &amp;seg31, BSeg &amp;seg13, color_t fillcolor, float opacity)</td></tr>
-<tr class="separator:aa5af9c8d84324bfc441fcdec27fc0efb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a1a41051ad1acb1aa4e806e95e388cd"><td class="memItemLeft" align="right" valign="top"><a id="a7a1a41051ad1acb1aa4e806e95e388cd" name="a7a1a41051ad1acb1aa4e806e95e388cd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_fill_interior_angle</b> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> Q1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> Q2, BSeg &amp;seg1, BSeg &amp;seg2, color_t color, bool fill_last, float opacity)</td></tr>
-<tr class="separator:a7a1a41051ad1acb1aa4e806e95e388cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a487501516febd637b44279c6d93c5591"><td class="memItemLeft" align="right" valign="top"><a id="a487501516febd637b44279c6d93c5591" name="a487501516febd637b44279c6d93c5591"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_bseg_fill_interior_angle_sub</b> (int dir, int y, int ytarget, BSeg &amp;sega, BSeg &amp;segb, color_t color, float opacity)</td></tr>
-<tr class="separator:a487501516febd637b44279c6d93c5591"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae00abcf97a08546e9228ca84ef801fd6"><td class="memItemLeft" align="right" valign="top"><a id="ae00abcf97a08546e9228ca84ef801fd6" name="ae00abcf97a08546e9228ca84ef801fd6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_triangle_hline</b> (int x1, int x2, const int y, color_t color, float opacity)</td></tr>
-<tr class="separator:ae00abcf97a08546e9228ca84ef801fd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60468f9396a602b2300fe6856a48d6b6"><td class="memTemplParams" colspan="2"><a id="a60468f9396a602b2300fe6856a48d6b6" name="a60468f9396a602b2300fe6856a48d6b6"></a>
-template&lt;bool CHECKRANGE, bool CHECK_VALID_BLEND = true&gt; </td></tr>
-<tr class="memitem:a60468f9396a602b2300fe6856a48d6b6"><td class="memTemplItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawPixel</b> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, color_t color, float opacity)</td></tr>
-<tr class="separator:a60468f9396a602b2300fe6856a48d6b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2da186dafcbaeb95f9827151dedd9fd"><td class="memTemplParams" colspan="2"><a id="ac2da186dafcbaeb95f9827151dedd9fd" name="ac2da186dafcbaeb95f9827151dedd9fd"></a>
-template&lt;bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:ac2da186dafcbaeb95f9827151dedd9fd"><td class="memTemplItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawPixel</b> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, color_t color)</td></tr>
-<tr class="separator:ac2da186dafcbaeb95f9827151dedd9fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28ffda68928ff32e5e07f39429d1b6ab"><td class="memItemLeft" align="right" valign="top"><a id="a28ffda68928ff32e5e07f39429d1b6ab" name="a28ffda68928ff32e5e07f39429d1b6ab"></a>
-TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawPixel</b> (bool checkrange, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, color_t color, float opacity)</td></tr>
-<tr class="separator:a28ffda68928ff32e5e07f39429d1b6ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a492eefef444e7f47135fa4a9846fa553"><td class="memItemLeft" align="right" valign="top"><a id="a492eefef444e7f47135fa4a9846fa553" name="a492eefef444e7f47135fa4a9846fa553"></a>
-TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawPixel</b> (bool checkrange, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, color_t color)</td></tr>
-<tr class="separator:a492eefef444e7f47135fa4a9846fa553"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ac18dac4401877e4e63c4422d85a343"><td class="memTemplParams" colspan="2"><a id="a9ac18dac4401877e4e63c4422d85a343" name="a9ac18dac4401877e4e63c4422d85a343"></a>
-template&lt;bool CHECKRANGE = true&gt; </td></tr>
-<tr class="memitem:a9ac18dac4401877e4e63c4422d85a343"><td class="memTemplItemLeft" align="right" valign="top">TGX_INLINE color_t&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_readPixel</b> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, color_t outside_color) const</td></tr>
-<tr class="separator:a9ac18dac4401877e4e63c4422d85a343"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c062b06ff3454ddf9fbef09129efabd"><td class="memTemplParams" colspan="2"><a id="a9c062b06ff3454ddf9fbef09129efabd" name="a9c062b06ff3454ddf9fbef09129efabd"></a>
-template&lt;bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:a9c062b06ff3454ddf9fbef09129efabd"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawFastVLine</b> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int h, color_t color, float opacity)</td></tr>
-<tr class="separator:a9c062b06ff3454ddf9fbef09129efabd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a054de48f16cda47770ba15873e9ec8ea"><td class="memTemplParams" colspan="2"><a id="a054de48f16cda47770ba15873e9ec8ea" name="a054de48f16cda47770ba15873e9ec8ea"></a>
-template&lt;bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:a054de48f16cda47770ba15873e9ec8ea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawFastHLine</b> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int w, color_t color, float opacity)</td></tr>
-<tr class="separator:a054de48f16cda47770ba15873e9ec8ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b5885c25d0e5b6cfa54d83d0ba54b8c"><td class="memTemplParams" colspan="2"><a id="a0b5885c25d0e5b6cfa54d83d0ba54b8c" name="a0b5885c25d0e5b6cfa54d83d0ba54b8c"></a>
-template&lt;bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:a0b5885c25d0e5b6cfa54d83d0ba54b8c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawFastVLine</b> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int h, color_t color)</td></tr>
-<tr class="separator:a0b5885c25d0e5b6cfa54d83d0ba54b8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ac4d6b64ad1498b251c8fc5e437da2f"><td class="memTemplParams" colspan="2"><a id="a3ac4d6b64ad1498b251c8fc5e437da2f" name="a3ac4d6b64ad1498b251c8fc5e437da2f"></a>
-template&lt;bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:a3ac4d6b64ad1498b251c8fc5e437da2f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawFastHLine</b> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int w, color_t color)</td></tr>
-<tr class="separator:a3ac4d6b64ad1498b251c8fc5e437da2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94e615c84d31af86b7a55b57819ab58d"><td class="memItemLeft" align="right" valign="top"><a id="a94e615c84d31af86b7a55b57819ab58d" name="a94e615c84d31af86b7a55b57819ab58d"></a>
-TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawFastVLine</b> (bool checkrange, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int h, color_t color, float opacity)</td></tr>
-<tr class="separator:a94e615c84d31af86b7a55b57819ab58d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add152a39a5a7ec47bc0e3f0767ca5dce"><td class="memItemLeft" align="right" valign="top"><a id="add152a39a5a7ec47bc0e3f0767ca5dce" name="add152a39a5a7ec47bc0e3f0767ca5dce"></a>
-TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawFastHLine</b> (bool checkrange, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int w, color_t color, float opacity)</td></tr>
-<tr class="separator:add152a39a5a7ec47bc0e3f0767ca5dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0392de993aaa8f255c421f0788702e1"><td class="memItemLeft" align="right" valign="top"><a id="ac0392de993aaa8f255c421f0788702e1" name="ac0392de993aaa8f255c421f0788702e1"></a>
-TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawFastVLine</b> (bool checkrange, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int h, color_t color)</td></tr>
-<tr class="separator:ac0392de993aaa8f255c421f0788702e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc0cf3dfb6b9466a06ec4d75e3cdb864"><td class="memItemLeft" align="right" valign="top"><a id="adc0cf3dfb6b9466a06ec4d75e3cdb864" name="adc0cf3dfb6b9466a06ec4d75e3cdb864"></a>
-TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawFastHLine</b> (bool checkrange, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int w, color_t color)</td></tr>
-<tr class="separator:adc0cf3dfb6b9466a06ec4d75e3cdb864"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9d44dda44873cc36edc569c9a8f04c8"><td class="memItemLeft" align="right" valign="top"><a id="ac9d44dda44873cc36edc569c9a8f04c8" name="ac9d44dda44873cc36edc569c9a8f04c8"></a>
-TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSeg</b> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, bool drawP1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, bool drawP2, color_t color, float opacity)</td></tr>
-<tr class="separator:ac9d44dda44873cc36edc569c9a8f04c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d6bf38642702d8515a313740b7a7764"><td class="memItemLeft" align="right" valign="top"><a id="a5d6bf38642702d8515a313740b7a7764" name="a5d6bf38642702d8515a313740b7a7764"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawEnd</b> (float distAB, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> A, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> B, BSeg &amp;segAB, BSeg &amp;segBA, BSeg &amp;segAP, BSeg &amp;segBQ, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end, int w, color_t color, float opacity)</td></tr>
-<tr class="separator:a5d6bf38642702d8515a313740b7a7764"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca285c58f932eb0beb2a8444ef466854"><td class="memItemLeft" align="right" valign="top"><a id="aca285c58f932eb0beb2a8444ef466854" name="aca285c58f932eb0beb2a8444ef466854"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawWedgeLine</b> (float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity)</td></tr>
-<tr class="separator:aca285c58f932eb0beb2a8444ef466854"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa04a31b9ad75bd03c1d903697c2aea9c"><td class="memItemLeft" align="right" valign="top"><a id="aa04a31b9ad75bd03c1d903697c2aea9c" name="aa04a31b9ad75bd03c1d903697c2aea9c"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>_wedgeLineDistance</b> (float pax, float pay, float bax, float bay, float dr)</td></tr>
-<tr class="separator:aa04a31b9ad75bd03c1d903697c2aea9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a137ad4c404e73e1a6b528ac5e245a784"><td class="memItemLeft" align="right" valign="top"><a id="a137ad4c404e73e1a6b528ac5e245a784" name="a137ad4c404e73e1a6b528ac5e245a784"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillRect</b> (<a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> B, color_t color, float opacity)</td></tr>
-<tr class="separator:a137ad4c404e73e1a6b528ac5e245a784"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7342b14eb332352fa7a281acc6863061"><td class="memTemplParams" colspan="2"><a id="a7342b14eb332352fa7a281acc6863061" name="a7342b14eb332352fa7a281acc6863061"></a>
-template&lt;bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:a7342b14eb332352fa7a281acc6863061"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawRoundRect</b> (int x, int y, int w, int h, int r, color_t color)</td></tr>
-<tr class="separator:a7342b14eb332352fa7a281acc6863061"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbaa630933a134f11562f02c147070c5"><td class="memTemplParams" colspan="2"><a id="abbaa630933a134f11562f02c147070c5" name="abbaa630933a134f11562f02c147070c5"></a>
-template&lt;bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:abbaa630933a134f11562f02c147070c5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawRoundRect</b> (int x, int y, int w, int h, int r, color_t color, float opacity)</td></tr>
-<tr class="separator:abbaa630933a134f11562f02c147070c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a070ea3c1ea8935ab9293f2ea50bc196a"><td class="memTemplParams" colspan="2"><a id="a070ea3c1ea8935ab9293f2ea50bc196a" name="a070ea3c1ea8935ab9293f2ea50bc196a"></a>
-template&lt;bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:a070ea3c1ea8935ab9293f2ea50bc196a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_fillRoundRect</b> (int x, int y, int w, int h, int r, color_t color)</td></tr>
-<tr class="separator:a070ea3c1ea8935ab9293f2ea50bc196a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81aeb3714fdc9ef8527800083f69427f"><td class="memTemplParams" colspan="2"><a id="a81aeb3714fdc9ef8527800083f69427f" name="a81aeb3714fdc9ef8527800083f69427f"></a>
-template&lt;bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:a81aeb3714fdc9ef8527800083f69427f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_fillRoundRect</b> (int x, int y, int w, int h, int r, color_t color, float opacity)</td></tr>
-<tr class="separator:a81aeb3714fdc9ef8527800083f69427f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae57aefa3568511550a2dc25e8739e05"><td class="memItemLeft" align="right" valign="top"><a id="aae57aefa3568511550a2dc25e8739e05" name="aae57aefa3568511550a2dc25e8739e05"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothRect</b> (const <a class="el" href="_box2_8h.html#af5237584932da348a5241f13376af762">fBox2</a> &amp;B, color_t color, float opacity)</td></tr>
-<tr class="separator:aae57aefa3568511550a2dc25e8739e05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0de34120ce1fba6d937a4f10c185d08"><td class="memItemLeft" align="right" valign="top"><a id="aa0de34120ce1fba6d937a4f10c185d08" name="aa0de34120ce1fba6d937a4f10c185d08"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothRoundedRect</b> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">tgx::iBox2</a> &amp;B, float corner_radius, color_t color, float opacity)</td></tr>
-<tr class="separator:aa0de34120ce1fba6d937a4f10c185d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc059c5574dcd0b9724e1d03d5f2c4e2"><td class="memItemLeft" align="right" valign="top"><a id="afc059c5574dcd0b9724e1d03d5f2c4e2" name="afc059c5574dcd0b9724e1d03d5f2c4e2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothRoundRect</b> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">tgx::iBox2</a> &amp;B, float corner_radius, color_t color, float opacity)</td></tr>
-<tr class="separator:afc059c5574dcd0b9724e1d03d5f2c4e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec24772225058027f833b3cfb82c69b7"><td class="memItemLeft" align="right" valign="top"><a id="aec24772225058027f833b3cfb82c69b7" name="aec24772225058027f833b3cfb82c69b7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothWideRoundRect</b> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">tgx::iBox2</a> &amp;B, float corner_radius, float thickness, color_t color, float opacity)</td></tr>
-<tr class="separator:aec24772225058027f833b3cfb82c69b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57439ab454ecb8e0114fc024acbf8e45"><td class="memItemLeft" align="right" valign="top"><a id="a57439ab454ecb8e0114fc024acbf8e45" name="a57439ab454ecb8e0114fc024acbf8e45"></a>
-TGX_INLINE <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_coord_texture</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> pos, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">tgx::iVec2</a> size)</td></tr>
-<tr class="separator:a57439ab454ecb8e0114fc024acbf8e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac10bac292f8e0771382f7a7782922841"><td class="memItemLeft" align="right" valign="top"><a id="ac10bac292f8e0771382f7a7782922841" name="ac10bac292f8e0771382f7a7782922841"></a>
-TGX_INLINE <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_coord_viewport</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> pos, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">tgx::iVec2</a> size)</td></tr>
-<tr class="separator:ac10bac292f8e0771382f7a7782922841"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabab053f7c8662255dfb92e78de15bfd"><td class="memTemplParams" colspan="2"><a id="aabab053f7c8662255dfb92e78de15bfd" name="aabab053f7c8662255dfb92e78de15bfd"></a>
-template&lt;typename color_alt , bool USE_BLENDING&gt; </td></tr>
-<tr class="memitem:aabab053f7c8662255dfb92e78de15bfd"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawGradientTriangle</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity)</td></tr>
-<tr class="separator:aabab053f7c8662255dfb92e78de15bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6574fcd3cbedd607d065509ae161714c"><td class="memTemplParams" colspan="2"><a id="a6574fcd3cbedd607d065509ae161714c" name="a6574fcd3cbedd607d065509ae161714c"></a>
-template&lt;typename color_t_tex , bool GRADIENT, bool USE_BLENDING, bool MASKED&gt; </td></tr>
-<tr class="memitem:a6574fcd3cbedd607d065509ae161714c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawTexturedTriangle</b> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_tex &gt; &amp;src_im, color_t_tex transparent_color, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity)</td></tr>
-<tr class="separator:a6574fcd3cbedd607d065509ae161714c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13a8d13c789445dcef05400f1f24f477"><td class="memTemplParams" colspan="2"><a id="a13a8d13c789445dcef05400f1f24f477" name="a13a8d13c789445dcef05400f1f24f477"></a>
-template&lt;bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:a13a8d13c789445dcef05400f1f24f477"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawCircleHelper</b> (int x0, int y0, int r, int cornername, color_t color, float opacity)</td></tr>
-<tr class="separator:a13a8d13c789445dcef05400f1f24f477"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70fa6e093b7d52cad4cc4d81ab5b01b2"><td class="memTemplParams" colspan="2"><a id="a70fa6e093b7d52cad4cc4d81ab5b01b2" name="a70fa6e093b7d52cad4cc4d81ab5b01b2"></a>
-template&lt;bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:a70fa6e093b7d52cad4cc4d81ab5b01b2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_fillCircleHelper</b> (int x0, int y0, int r, int corners, int delta, color_t color, float opacity)</td></tr>
-<tr class="separator:a70fa6e093b7d52cad4cc4d81ab5b01b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeeea9eb8314b55443a2966ad8f15716e"><td class="memTemplParams" colspan="2"><a id="aeeea9eb8314b55443a2966ad8f15716e" name="aeeea9eb8314b55443a2966ad8f15716e"></a>
-template&lt;bool OUTLINE, bool FILL, bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:aeeea9eb8314b55443a2966ad8f15716e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawFilledCircle</b> (int xm, int ym, int r, color_t color, color_t fillcolor, float opacity)</td></tr>
-<tr class="separator:aeeea9eb8314b55443a2966ad8f15716e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34b660647fc1d9f9883b5eeaceb45e5b"><td class="memItemLeft" align="right" valign="top"><a id="a34b660647fc1d9f9883b5eeaceb45e5b" name="a34b660647fc1d9f9883b5eeaceb45e5b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothQuarterCircleInterHPsub</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1=0, int32_t ky1=0, int32_t off1=0, int32_t off1_full=0, int32_t kx2=0, int32_t ky2=0, int32_t off2=0, int32_t off2_full=0)</td></tr>
-<tr class="separator:a34b660647fc1d9f9883b5eeaceb45e5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd9b398d8fd5633067b7484907eb8b3d"><td class="memItemLeft" align="right" valign="top"><a id="abd9b398d8fd5633067b7484907eb8b3d" name="abd9b398d8fd5633067b7484907eb8b3d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothQuarterCircleInterHP0</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, color_t color, float opacity)</td></tr>
-<tr class="separator:abd9b398d8fd5633067b7484907eb8b3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0afaa1268a520af903cda9b2c7c47603"><td class="memItemLeft" align="right" valign="top"><a id="a0afaa1268a520af903cda9b2c7c47603" name="a0afaa1268a520af903cda9b2c7c47603"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothQuarterCircleInterHP1</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, color_t color, float opacity, const BSeg &amp;seg1, int side1)</td></tr>
-<tr class="separator:a0afaa1268a520af903cda9b2c7c47603"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c096607048e938c486fe9329264e1f5"><td class="memItemLeft" align="right" valign="top"><a id="a3c096607048e938c486fe9329264e1f5" name="a3c096607048e938c486fe9329264e1f5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothQuarterCircleInterHP2</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, color_t color, float opacity, const BSeg &amp;seg1, int side1, const BSeg &amp;seg2, int side2)</td></tr>
-<tr class="separator:a3c096607048e938c486fe9329264e1f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fcd22accd3106e3508f2ce7b9625051"><td class="memItemLeft" align="right" valign="top"><a id="a0fcd22accd3106e3508f2ce7b9625051" name="a0fcd22accd3106e3508f2ce7b9625051"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothCircleInterHP</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, color_t color, float opacity, const BSeg &amp;seg, int side)</td></tr>
-<tr class="separator:a0fcd22accd3106e3508f2ce7b9625051"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb7114ada71bbf3cebcaa71945bd2b7d"><td class="memItemLeft" align="right" valign="top"><a id="acb7114ada71bbf3cebcaa71945bd2b7d" name="acb7114ada71bbf3cebcaa71945bd2b7d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothQuarterCircleInterHPsub</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1=0, int32_t ky1=0, int32_t off1=0, int32_t off1_full=0, int32_t kx2=0, int32_t ky2=0, int32_t off2=0, int32_t off2_full=0)</td></tr>
-<tr class="separator:acb7114ada71bbf3cebcaa71945bd2b7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2cbcf6edc1e2a0bbca89bb9ddf842b8"><td class="memItemLeft" align="right" valign="top"><a id="ac2cbcf6edc1e2a0bbca89bb9ddf842b8" name="ac2cbcf6edc1e2a0bbca89bb9ddf842b8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothQuarterCircleInterHP0</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, color_t color, float opacity)</td></tr>
-<tr class="separator:ac2cbcf6edc1e2a0bbca89bb9ddf842b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b2b2cef4952c11ba9486f368e1c8807"><td class="memItemLeft" align="right" valign="top"><a id="a8b2b2cef4952c11ba9486f368e1c8807" name="a8b2b2cef4952c11ba9486f368e1c8807"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothQuarterCircleInterHP1</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, color_t color, float opacity, const BSeg &amp;seg1, int side1)</td></tr>
-<tr class="separator:a8b2b2cef4952c11ba9486f368e1c8807"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad349bd9cfddd3200cd80fe61f8fa8173"><td class="memItemLeft" align="right" valign="top"><a id="ad349bd9cfddd3200cd80fe61f8fa8173" name="ad349bd9cfddd3200cd80fe61f8fa8173"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothQuarterCircleInterHP2</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, color_t color, float opacity, const BSeg &amp;seg1, int side1, const BSeg &amp;seg2, int side2)</td></tr>
-<tr class="separator:ad349bd9cfddd3200cd80fe61f8fa8173"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a672955668fecfd8b9203718f62b0776d"><td class="memItemLeft" align="right" valign="top"><a id="a672955668fecfd8b9203718f62b0776d" name="a672955668fecfd8b9203718f62b0776d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothThickQuarterCircleInterHPsub</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1=0, int32_t ky1=0, int32_t off1=0, int32_t off1_full=0, int32_t kx2=0, int32_t ky2=0, int32_t off2=0, int32_t off2_full=0)</td></tr>
-<tr class="separator:a672955668fecfd8b9203718f62b0776d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab98d331b29901a928e7b82fe7fdfbfcc"><td class="memItemLeft" align="right" valign="top"><a id="ab98d331b29901a928e7b82fe7fdfbfcc" name="ab98d331b29901a928e7b82fe7fdfbfcc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothThickQuarterCircleInterHP0</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, float thickness, color_t color, float opacity)</td></tr>
-<tr class="separator:ab98d331b29901a928e7b82fe7fdfbfcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac03cd53d82d5c22e2f44a9d36933c44"><td class="memItemLeft" align="right" valign="top"><a id="aac03cd53d82d5c22e2f44a9d36933c44" name="aac03cd53d82d5c22e2f44a9d36933c44"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothThickQuarterCircleInterHP1</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, float thickness, color_t color, float opacity, const BSeg &amp;seg1, int side1)</td></tr>
-<tr class="separator:aac03cd53d82d5c22e2f44a9d36933c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24bc1c5e85cd0d9a69e05a80e4773f2c"><td class="memItemLeft" align="right" valign="top"><a id="a24bc1c5e85cd0d9a69e05a80e4773f2c" name="a24bc1c5e85cd0d9a69e05a80e4773f2c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothThickQuarterCircleInterHP2</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, float thickness, color_t color, float opacity, const BSeg &amp;seg1, int side1, const BSeg &amp;seg2, int side2)</td></tr>
-<tr class="separator:a24bc1c5e85cd0d9a69e05a80e4773f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17e10b5da932109884475b4784df8c6d"><td class="memItemLeft" align="right" valign="top"><a id="a17e10b5da932109884475b4784df8c6d" name="a17e10b5da932109884475b4784df8c6d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothThickQuarterCircleInterHPsub</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity, int nb_planes, int32_t kx1=0, int32_t ky1=0, int32_t off1=0, int32_t off1_full=0, int32_t kx2=0, int32_t ky2=0, int32_t off2=0, int32_t off2_full=0)</td></tr>
-<tr class="separator:a17e10b5da932109884475b4784df8c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcc1901ebfccbd363010ebe29a773dd2"><td class="memItemLeft" align="right" valign="top"><a id="abcc1901ebfccbd363010ebe29a773dd2" name="abcc1901ebfccbd363010ebe29a773dd2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothThickQuarterCircleInterHP0</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, float thickness, color_t color_interior, color_t color_border, float opacity)</td></tr>
-<tr class="separator:abcc1901ebfccbd363010ebe29a773dd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79745195f6edcfd8cb38ec35fc62b936"><td class="memItemLeft" align="right" valign="top"><a id="a79745195f6edcfd8cb38ec35fc62b936" name="a79745195f6edcfd8cb38ec35fc62b936"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothThickQuarterCircleInterHP1</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, float thickness, color_t color_interior, color_t color_border, float opacity, const BSeg &amp;seg1, int side1)</td></tr>
-<tr class="separator:a79745195f6edcfd8cb38ec35fc62b936"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35b1c356bdd878ee05f5cb1bd5781ffd"><td class="memItemLeft" align="right" valign="top"><a id="a35b1c356bdd878ee05f5cb1bd5781ffd" name="a35b1c356bdd878ee05f5cb1bd5781ffd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothThickQuarterCircleInterHP2</b> (int quarter, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float R, float thickness, color_t color_interior, color_t color_border, float opacity, const BSeg &amp;seg1, int side1, const BSeg &amp;seg2, int side2)</td></tr>
-<tr class="separator:a35b1c356bdd878ee05f5cb1bd5781ffd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ecb0be0dc491d24c87e4c90dae0366b"><td class="memTemplParams" colspan="2"><a id="a0ecb0be0dc491d24c87e4c90dae0366b" name="a0ecb0be0dc491d24c87e4c90dae0366b"></a>
-template&lt;bool OUTLINE, bool FILL, bool CHECKRANGE&gt; </td></tr>
-<tr class="memitem:a0ecb0be0dc491d24c87e4c90dae0366b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawEllipse</b> (int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity)</td></tr>
-<tr class="separator:a0ecb0be0dc491d24c87e4c90dae0366b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7d8b422086e959fa42a95f9adb9c17e"><td class="memItemLeft" align="right" valign="top"><a id="aa7d8b422086e959fa42a95f9adb9c17e" name="aa7d8b422086e959fa42a95f9adb9c17e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothQuarterEllipse</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity)</td></tr>
-<tr class="separator:aa7d8b422086e959fa42a95f9adb9c17e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1547b26c760a52871f8dc7d5b1c3533"><td class="memItemLeft" align="right" valign="top"><a id="ad1547b26c760a52871f8dc7d5b1c3533" name="ad1547b26c760a52871f8dc7d5b1c3533"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawSmoothThickQuarterEllipse</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity)</td></tr>
-<tr class="separator:ad1547b26c760a52871f8dc7d5b1c3533"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04dd7ed04e9216b17dcfbc5d66fa3138"><td class="memItemLeft" align="right" valign="top"><a id="a04dd7ed04e9216b17dcfbc5d66fa3138" name="a04dd7ed04e9216b17dcfbc5d66fa3138"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothQuarterEllipse</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity)</td></tr>
-<tr class="separator:a04dd7ed04e9216b17dcfbc5d66fa3138"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc496b24e829efdfac3e2fa852a55f69"><td class="memItemLeft" align="right" valign="top"><a id="acc496b24e829efdfac3e2fa852a55f69" name="acc496b24e829efdfac3e2fa852a55f69"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_fillSmoothThickQuarterEllipse</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity)</td></tr>
-<tr class="separator:acc496b24e829efdfac3e2fa852a55f69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50874f6e3986bbc38cbbbbf0c101c913"><td class="memItemLeft" align="right" valign="top"><a id="a50874f6e3986bbc38cbbbbf0c101c913" name="a50874f6e3986bbc38cbbbbf0c101c913"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_plotQuadRationalBezierSeg</b> (const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const color_t color, const float opacity)</td></tr>
-<tr class="separator:a50874f6e3986bbc38cbbbbf0c101c913"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab90341c6604ee8a64c4aad4e9964ed2e"><td class="memItemLeft" align="right" valign="top"><a id="ab90341c6604ee8a64c4aad4e9964ed2e" name="ab90341c6604ee8a64c4aad4e9964ed2e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_plotQuadRationalBezier</b> (const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, float w, const bool draw_P2, const color_t color, const float opacity)</td></tr>
-<tr class="separator:ab90341c6604ee8a64c4aad4e9964ed2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0614958f2b5ef1168aa9da8c5c57b0bd"><td class="memItemLeft" align="right" valign="top"><a id="a0614958f2b5ef1168aa9da8c5c57b0bd" name="a0614958f2b5ef1168aa9da8c5c57b0bd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawQuadBezier</b> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> PC, float wc, bool drawP2, color_t color, float opacity)</td></tr>
-<tr class="separator:a0614958f2b5ef1168aa9da8c5c57b0bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accc842b35fe426bf3d1f1aa3a4b7bbea"><td class="memItemLeft" align="right" valign="top"><a id="accc842b35fe426bf3d1f1aa3a4b7bbea" name="accc842b35fe426bf3d1f1aa3a4b7bbea"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_plotCubicBezierSeg</b> (const bool checkrange, int x0, int y0, float x1, float y1, float x2, float y2, int x3, int y3, const color_t color, const float opacity)</td></tr>
-<tr class="separator:accc842b35fe426bf3d1f1aa3a4b7bbea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4132622e67ea8b300e73d0bfbbd6348"><td class="memItemLeft" align="right" valign="top"><a id="ab4132622e67ea8b300e73d0bfbbd6348" name="ab4132622e67ea8b300e73d0bfbbd6348"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_plotCubicBezier</b> (const bool checkrange, int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, bool draw_P2, const color_t color, const float opacity)</td></tr>
-<tr class="separator:ab4132622e67ea8b300e73d0bfbbd6348"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af16e7c445d2a6920d62547735b55a163"><td class="memItemLeft" align="right" valign="top"><a id="af16e7c445d2a6920d62547735b55a163" name="af16e7c445d2a6920d62547735b55a163"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_drawCubicBezier</b> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> PA, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> PB, bool drawP2, color_t color, float opacity)</td></tr>
-<tr class="separator:af16e7c445d2a6920d62547735b55a163"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad88186d9f4a320259eb5a1a73d71007d"><td class="memItemLeft" align="right" valign="top"><a id="ad88186d9f4a320259eb5a1a73d71007d" name="ad88186d9f4a320259eb5a1a73d71007d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_plotQuadSpline</b> (int n, int x[], int y[], bool draw_last, const color_t color, const float opacity)</td></tr>
-<tr class="separator:ad88186d9f4a320259eb5a1a73d71007d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74c8a9578e8cfdae9c1d5f8258b65f30"><td class="memTemplParams" colspan="2"><a id="a74c8a9578e8cfdae9c1d5f8258b65f30" name="a74c8a9578e8cfdae9c1d5f8258b65f30"></a>
-template&lt;int SPLINE_MAX_POINTS&gt; </td></tr>
-<tr class="memitem:a74c8a9578e8cfdae9c1d5f8258b65f30"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawQuadSpline</b> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> *tabPoints, bool draw_last_point, color_t color, float opacity)</td></tr>
-<tr class="separator:a74c8a9578e8cfdae9c1d5f8258b65f30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa28ad72e53c1c29ec86fa5a254c0dab2"><td class="memItemLeft" align="right" valign="top"><a id="aa28ad72e53c1c29ec86fa5a254c0dab2" name="aa28ad72e53c1c29ec86fa5a254c0dab2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_plotClosedSpline</b> (int n, int x[], int y[], const color_t color, const float opacity)</td></tr>
-<tr class="separator:aa28ad72e53c1c29ec86fa5a254c0dab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1bd11314dead1246b36a9b0871201051"><td class="memTemplParams" colspan="2"><a id="a1bd11314dead1246b36a9b0871201051" name="a1bd11314dead1246b36a9b0871201051"></a>
-template&lt;int SPLINE_MAX_POINTS&gt; </td></tr>
-<tr class="memitem:a1bd11314dead1246b36a9b0871201051"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawClosedSpline</b> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> *tabPoints, color_t color, float opacity)</td></tr>
-<tr class="separator:a1bd11314dead1246b36a9b0871201051"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ac44a8f66751ca56ffe78f8ab7fbe65"><td class="memItemLeft" align="right" valign="top"><a id="a1ac44a8f66751ca56ffe78f8ab7fbe65" name="a1ac44a8f66751ca56ffe78f8ab7fbe65"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>_plotCubicSpline</b> (int n, int x[], int y[], bool draw_last, const color_t color, const float opacity)</td></tr>
-<tr class="separator:a1ac44a8f66751ca56ffe78f8ab7fbe65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade3bb03d770f2a003d0cc883b8234bac"><td class="memTemplParams" colspan="2"><a id="ade3bb03d770f2a003d0cc883b8234bac" name="ade3bb03d770f2a003d0cc883b8234bac"></a>
-template&lt;int SPLINE_MAX_POINTS&gt; </td></tr>
-<tr class="memitem:ade3bb03d770f2a003d0cc883b8234bac"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawCubicSpline</b> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> *tabPoints, bool draw_last_point, color_t color, float opacity)</td></tr>
-<tr class="separator:ade3bb03d770f2a003d0cc883b8234bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78bbda8413a146c24ea56e55dd634af8"><td class="memItemLeft" align="right" valign="top"><a id="a78bbda8413a146c24ea56e55dd634af8" name="a78bbda8413a146c24ea56e55dd634af8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>_clipit</b> (int &amp;x, int &amp;y, int &amp;sx, int &amp;sy, int &amp;b_left, int &amp;b_up)</td></tr>
-<tr class="separator:a78bbda8413a146c24ea56e55dd634af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5cdd9d41be70521c8266f3cfe820078a"><td class="memTemplParams" colspan="2"><a id="a5cdd9d41be70521c8266f3cfe820078a" name="a5cdd9d41be70521c8266f3cfe820078a"></a>
-template&lt;bool BLEND&gt; </td></tr>
-<tr class="memitem:a5cdd9d41be70521c8266f3cfe820078a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawCharGFX</b> (char c, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, color_t col, const GFXfont &amp;font, float opacity)</td></tr>
-<tr class="separator:a5cdd9d41be70521c8266f3cfe820078a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a7b9fc662fc93c982eb69e4becaaf1c"><td class="memTemplParams" colspan="2"><a id="a1a7b9fc662fc93c982eb69e4becaaf1c" name="a1a7b9fc662fc93c982eb69e4becaaf1c"></a>
-template&lt;bool BLEND&gt; </td></tr>
-<tr class="memitem:a1a7b9fc662fc93c982eb69e4becaaf1c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawCharILI</b> (char c, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, color_t col, const ILI9341_t3_font_t &amp;font, float opacity)</td></tr>
-<tr class="separator:a1a7b9fc662fc93c982eb69e4becaaf1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fd056991595e78d8d9493fe9081e9c7"><td class="memTemplParams" colspan="2"><a id="a1fd056991595e78d8d9493fe9081e9c7" name="a1fd056991595e78d8d9493fe9081e9c7"></a>
-template&lt;bool BLEND&gt; </td></tr>
-<tr class="memitem:a1fd056991595e78d8d9493fe9081e9c7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawTextGFX</b> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const GFXfont &amp;font, color_t col, float opacity, bool wrap, bool start_newline_at_0)</td></tr>
-<tr class="separator:a1fd056991595e78d8d9493fe9081e9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a990cdebc722681f091ba67e3b1cb4011"><td class="memTemplParams" colspan="2"><a id="a990cdebc722681f091ba67e3b1cb4011" name="a990cdebc722681f091ba67e3b1cb4011"></a>
-template&lt;bool BLEND&gt; </td></tr>
-<tr class="memitem:a990cdebc722681f091ba67e3b1cb4011"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawTextILI</b> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const ILI9341_t3_font_t &amp;font, color_t col, float opacity, bool wrap, bool start_newline_at_0)</td></tr>
-<tr class="separator:a990cdebc722681f091ba67e3b1cb4011"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22f8c71c831dced2c77e2becd7d9d757"><td class="memTemplParams" colspan="2"><a id="a22f8c71c831dced2c77e2becd7d9d757" name="a22f8c71c831dced2c77e2becd7d9d757"></a>
-template&lt;bool BLEND&gt; </td></tr>
-<tr class="memitem:a22f8c71c831dced2c77e2becd7d9d757"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawCharILI9341_t3</b> (const uint8_t *bitmap, int32_t off, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)</td></tr>
-<tr class="separator:a22f8c71c831dced2c77e2becd7d9d757"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6f841ef586cb2ca9615c5f688244eef"><td class="memTemplParams" colspan="2"><a id="af6f841ef586cb2ca9615c5f688244eef" name="af6f841ef586cb2ca9615c5f688244eef"></a>
-template&lt;bool BLEND&gt; </td></tr>
-<tr class="memitem:af6f841ef586cb2ca9615c5f688244eef"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawCharBitmap_1BPP</b> (const uint8_t *bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)</td></tr>
-<tr class="separator:af6f841ef586cb2ca9615c5f688244eef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45b20502ee4b06ccd5de6a96b5ea327a"><td class="memTemplParams" colspan="2"><a id="a45b20502ee4b06ccd5de6a96b5ea327a" name="a45b20502ee4b06ccd5de6a96b5ea327a"></a>
-template&lt;bool BLEND&gt; </td></tr>
-<tr class="memitem:a45b20502ee4b06ccd5de6a96b5ea327a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawCharBitmap_2BPP</b> (const uint8_t *bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)</td></tr>
-<tr class="separator:a45b20502ee4b06ccd5de6a96b5ea327a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3dc31dbf646dbfd66474d1de551b0928"><td class="memTemplParams" colspan="2"><a id="a3dc31dbf646dbfd66474d1de551b0928" name="a3dc31dbf646dbfd66474d1de551b0928"></a>
-template&lt;bool BLEND&gt; </td></tr>
-<tr class="memitem:a3dc31dbf646dbfd66474d1de551b0928"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawCharBitmap_4BPP</b> (const uint8_t *bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)</td></tr>
-<tr class="separator:a3dc31dbf646dbfd66474d1de551b0928"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27d0a2bae2f136e85e583c6e72532d3a"><td class="memTemplParams" colspan="2"><a id="a27d0a2bae2f136e85e583c6e72532d3a" name="a27d0a2bae2f136e85e583c6e72532d3a"></a>
-template&lt;bool BLEND&gt; </td></tr>
-<tr class="memitem:a27d0a2bae2f136e85e583c6e72532d3a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawCharBitmap_8BPP</b> (const uint8_t *bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)</td></tr>
-<tr class="separator:a27d0a2bae2f136e85e583c6e72532d3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -1031,80 +715,6 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>fontHeight</b> 
 <tr class="memitem:a27794f2664180e9eef9f86013d01596a"><td class="memItemLeft" align="right" valign="top"><a id="a27794f2664180e9eef9f86013d01596a" name="a27794f2664180e9eef9f86013d01596a"></a>
 static <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>measureChar</b> (char c, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const ILI9341_t3_font_t &amp;font, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor=<a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25ad8449e7e7d0d7d3cb14aa5ceef880428">DEFAULT_TEXT_ANCHOR</a>, int *xadvance=nullptr)</td></tr>
 <tr class="separator:a27794f2664180e9eef9f86013d01596a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0238c6b996ebdf85a671574b163aaf3c"><td class="memItemLeft" align="right" valign="top"><a id="a0238c6b996ebdf85a671574b163aaf3c" name="a0238c6b996ebdf85a671574b163aaf3c"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>_fast_memset</b> (color_t *p_dest, color_t color, int32_t len)</td></tr>
-<tr class="separator:a0238c6b996ebdf85a671574b163aaf3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1a61a86ed4f5f88c73612b360eb43c1"><td class="memItemLeft" align="right" valign="top"><a id="af1a61a86ed4f5f88c73612b360eb43c1" name="af1a61a86ed4f5f88c73612b360eb43c1"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>_blitRegion</b> (color_t *pdest, int dest_stride, color_t *psrc, int src_stride, int sx, int sy)</td></tr>
-<tr class="separator:af1a61a86ed4f5f88c73612b360eb43c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd5d972cc9784f9a2602c6ae81222415"><td class="memItemLeft" align="right" valign="top"><a id="acd5d972cc9784f9a2602c6ae81222415" name="acd5d972cc9784f9a2602c6ae81222415"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>_blitRegionUp</b> (color_t *pdest, int dest_stride, color_t *psrc, int src_stride, int sx, int sy)</td></tr>
-<tr class="separator:acd5d972cc9784f9a2602c6ae81222415"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e8a3ba463f218c6bad02cc4e6dfdc2f"><td class="memItemLeft" align="right" valign="top"><a id="a0e8a3ba463f218c6bad02cc4e6dfdc2f" name="a0e8a3ba463f218c6bad02cc4e6dfdc2f"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>_blitRegionDown</b> (color_t *pdest, int dest_stride, color_t *psrc, int src_stride, int sx, int sy)</td></tr>
-<tr class="separator:a0e8a3ba463f218c6bad02cc4e6dfdc2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cfeb57e7633c6b949181b850663567f"><td class="memItemLeft" align="right" valign="top"><a id="a4cfeb57e7633c6b949181b850663567f" name="a4cfeb57e7633c6b949181b850663567f"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>_blitRegion</b> (color_t *pdest, int dest_stride, color_t *psrc, int src_stride, int sx, int sy, float opacity)</td></tr>
-<tr class="separator:a4cfeb57e7633c6b949181b850663567f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97a08fc23924566ff39be2e0ea190954"><td class="memItemLeft" align="right" valign="top"><a id="a97a08fc23924566ff39be2e0ea190954" name="a97a08fc23924566ff39be2e0ea190954"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>_blitRegionUp</b> (color_t *pdest, int dest_stride, color_t *psrc, int src_stride, int sx, int sy, float opacity)</td></tr>
-<tr class="separator:a97a08fc23924566ff39be2e0ea190954"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacb4ea40a32a3cf1ce328d4a8c77ae66"><td class="memItemLeft" align="right" valign="top"><a id="aacb4ea40a32a3cf1ce328d4a8c77ae66" name="aacb4ea40a32a3cf1ce328d4a8c77ae66"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>_blitRegionDown</b> (color_t *pdest, int dest_stride, color_t *psrc, int src_stride, int sx, int sy, float opacity)</td></tr>
-<tr class="separator:aacb4ea40a32a3cf1ce328d4a8c77ae66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43226e146eb37165c57a4fa10df79697"><td class="memTemplParams" colspan="2"><a id="a43226e146eb37165c57a4fa10df79697" name="a43226e146eb37165c57a4fa10df79697"></a>
-template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </td></tr>
-<tr class="memitem:a43226e146eb37165c57a4fa10df79697"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_blitRegion</b> (color_t *pdest, int dest_stride, color_t_src *psrc, int src_stride, int sx, int sy, const BLEND_OPERATOR &amp;blend_op)</td></tr>
-<tr class="separator:a43226e146eb37165c57a4fa10df79697"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a890d32a06ac42eb12c89977998ea2b51"><td class="memTemplParams" colspan="2"><a id="a890d32a06ac42eb12c89977998ea2b51" name="a890d32a06ac42eb12c89977998ea2b51"></a>
-template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </td></tr>
-<tr class="memitem:a890d32a06ac42eb12c89977998ea2b51"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_blitRegionUp</b> (color_t *pdest, int dest_stride, color_t_src *psrc, int src_stride, int sx, int sy, const BLEND_OPERATOR &amp;blend_op)</td></tr>
-<tr class="separator:a890d32a06ac42eb12c89977998ea2b51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ed12fa302764deda6c712a0d28e54ec"><td class="memTemplParams" colspan="2"><a id="a0ed12fa302764deda6c712a0d28e54ec" name="a0ed12fa302764deda6c712a0d28e54ec"></a>
-template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </td></tr>
-<tr class="memitem:a0ed12fa302764deda6c712a0d28e54ec"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_blitRegionDown</b> (color_t *pdest, int dest_stride, color_t_src *psrc, int src_stride, int sx, int sy, const BLEND_OPERATOR &amp;blend_op)</td></tr>
-<tr class="separator:a0ed12fa302764deda6c712a0d28e54ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a799cce194eb5550b90646f2620625dab"><td class="memItemLeft" align="right" valign="top"><a id="a799cce194eb5550b90646f2620625dab" name="a799cce194eb5550b90646f2620625dab"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>_maskRegion</b> (color_t transparent_color, color_t *pdest, int dest_stride, color_t *psrc, int src_stride, int sx, int sy, float opacity)</td></tr>
-<tr class="separator:a799cce194eb5550b90646f2620625dab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59063ac9623b8938ca756383c2a7e15d"><td class="memItemLeft" align="right" valign="top"><a id="a59063ac9623b8938ca756383c2a7e15d" name="a59063ac9623b8938ca756383c2a7e15d"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>_maskRegionUp</b> (color_t transparent_color, color_t *pdest, int dest_stride, color_t *psrc, int src_stride, int sx, int sy, float opacity)</td></tr>
-<tr class="separator:a59063ac9623b8938ca756383c2a7e15d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affe9d773cf39db427a128cbc1ae698cd"><td class="memItemLeft" align="right" valign="top"><a id="affe9d773cf39db427a128cbc1ae698cd" name="affe9d773cf39db427a128cbc1ae698cd"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>_maskRegionDown</b> (color_t transparent_color, color_t *pdest, int dest_stride, color_t *psrc, int src_stride, int sx, int sy, float opacity)</td></tr>
-<tr class="separator:affe9d773cf39db427a128cbc1ae698cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c5cbc6c38405220ceb7dd56c59797f2"><td class="memTemplParams" colspan="2"><a id="a9c5cbc6c38405220ceb7dd56c59797f2" name="a9c5cbc6c38405220ceb7dd56c59797f2"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a9c5cbc6c38405220ceb7dd56c59797f2"><td class="memTemplItemLeft" align="right" valign="top">static T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_triangleAera</b> (<a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt; P1, <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt; P2, <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt; P3)</td></tr>
-<tr class="separator:a9c5cbc6c38405220ceb7dd56c59797f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a899f0f8499f9e872e9e667cf85addf22"><td class="memItemLeft" align="right" valign="top"><a id="a899f0f8499f9e872e9e667cf85addf22" name="a899f0f8499f9e872e9e667cf85addf22"></a>
-static float&#160;</td><td class="memItemRight" valign="bottom"><b>_rectifyAngle</b> (float a)</td></tr>
-<tr class="separator:a899f0f8499f9e872e9e667cf85addf22"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab952ca4128e1799a6815da5a403fb9c1"><td class="memItemLeft" align="right" valign="top"><a id="ab952ca4128e1799a6815da5a403fb9c1" name="ab952ca4128e1799a6815da5a403fb9c1"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>_defaultQuarterVH</b> (int quarter, int &amp;v, int &amp;h)</td></tr>
-<tr class="separator:ab952ca4128e1799a6815da5a403fb9c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6143cfe0ede87e8266e2f3757e60a1aa"><td class="memItemLeft" align="right" valign="top"><a id="a6143cfe0ede87e8266e2f3757e60a1aa" name="a6143cfe0ede87e8266e2f3757e60a1aa"></a>
-static bool&#160;</td><td class="memItemRight" valign="bottom"><b>_splitRationalQuadBezier</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> PC, float w, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> &amp;Q, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> &amp;PB, float &amp;wb)</td></tr>
-<tr class="separator:a6143cfe0ede87e8266e2f3757e60a1aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4a77ee5be151c9a828843ff8d24cb5e"><td class="memItemLeft" align="right" valign="top"><a id="ab4a77ee5be151c9a828843ff8d24cb5e" name="ab4a77ee5be151c9a828843ff8d24cb5e"></a>
-static bool&#160;</td><td class="memItemRight" valign="bottom"><b>_splitCubicBezier</b> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> PC1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> PC2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> &amp;Q, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> &amp;C, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> &amp;D)</td></tr>
-<tr class="separator:ab4a77ee5be151c9a828843ff8d24cb5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4b60776c590a3895053d65e7754d01f"><td class="memItemLeft" align="right" valign="top"><a id="af4b60776c590a3895053d65e7754d01f" name="af4b60776c590a3895053d65e7754d01f"></a>
-static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_fetchbit</b> (const uint8_t *p, uint32_t index)</td></tr>
-<tr class="separator:af4b60776c590a3895053d65e7754d01f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a963898ba2fb09f272a6fb72ecc49b5a1"><td class="memItemLeft" align="right" valign="top"><a id="a963898ba2fb09f272a6fb72ecc49b5a1" name="a963898ba2fb09f272a6fb72ecc49b5a1"></a>
-static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_fetchbits_unsigned</b> (const uint8_t *p, uint32_t index, uint32_t required)</td></tr>
-<tr class="separator:a963898ba2fb09f272a6fb72ecc49b5a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaeaa67d40b8d83212fb5b542552e41ab"><td class="memItemLeft" align="right" valign="top"><a id="aaeaa67d40b8d83212fb5b542552e41ab" name="aaeaa67d40b8d83212fb5b542552e41ab"></a>
-static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_fetchbits_signed</b> (const uint8_t *p, uint32_t index, uint32_t required)</td></tr>
-<tr class="separator:aaeaa67d40b8d83212fb5b542552e41ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6026c9688176457c38f88b174bd1b13"><td class="memItemLeft" align="right" valign="top"><a id="ae6026c9688176457c38f88b174bd1b13" name="ae6026c9688176457c38f88b174bd1b13"></a>
-static <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_anchorPos</b> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor)</td></tr>
-<tr class="separator:ae6026c9688176457c38f88b174bd1b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab58fd677f1c1853a2bea0c0d7cca6b23"><td class="memTemplParams" colspan="2"><a id="ab58fd677f1c1853a2bea0c0d7cca6b23" name="ab58fd677f1c1853a2bea0c0d7cca6b23"></a>
-template&lt;bool BLEND&gt; </td></tr>
-<tr class="memitem:ab58fd677f1c1853a2bea0c0d7cca6b23"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>_drawcharline</b> (const uint8_t *bitmap, int32_t off, color_t *p, int dx, color_t col, float opacity)</td></tr>
-<tr class="separator:ab58fd677f1c1853a2bea0c0d7cca6b23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -1123,10 +733,51 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a5494351269b978f56027abe5d80eeb22"><td class="memItemLeft" align="right" valign="top"><a id="a5494351269b978f56027abe5d80eeb22" name="a5494351269b978f56027abe5d80eeb22"></a>
 <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> color_t const ILI9341_t3_font_t bool float&#160;</td><td class="memItemRight" valign="bottom"><b>opacity</b></td></tr>
 <tr class="separator:a5494351269b978f56027abe5d80eeb22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:af756f79c7bd822db4c9349046f0be937"><td class="memItemLeft" align="right" valign="top"><a id="af756f79c7bd822db4c9349046f0be937" name="af756f79c7bd822db4c9349046f0be937"></a>
+static const int&#160;</td><td class="memItemRight" valign="bottom"><b>DEFAULT_STRIDE</b> = -1</td></tr>
+<tr class="memdesc:af756f79c7bd822db4c9349046f0be937"><td class="mdescLeft">&#160;</td><td class="mdescRight">If not specified, the stride of an image is equal to its width. <br /></td></tr>
+<tr class="separator:af756f79c7bd822db4c9349046f0be937"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a4b30a4b81b24b089a7d2d004979a3bb6" name="a4b30a4b81b24b089a7d2d004979a3bb6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b30a4b81b24b089a7d2d004979a3bb6">&#9670;&#160;</a></span>Image() <span class="overload">[1/4]</span></h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename color_t&gt;<br />
+class tgx::Image&lt; color_t &gt;</div><p >Template image class. </p>
+<p ><b>This is the main image class for the TGX library</b>.</p>
+<p >An image object is a thin wrapper (only 16 bytes) around a memory buffer which defines only the type and dimension of the image. <br  />
+</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">color_t</td><td>Color type of the image. Must be one of the color type defined in <a class="el" href="_color_8h.html">Color.h</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a58367fcadbcba6a8ba4cf75d78e841e4" name="a58367fcadbcba6a8ba4cf75d78e841e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58367fcadbcba6a8ba4cf75d78e841e4">&#9670;&#160;</a></span>Image() <span class="overload">[1/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename color_t &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtgx_1_1_image.html">tgx::Image</a>&lt; color_t &gt;::Image </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Default constructor. </p>
+<p >Create a empty (invalid) image. </p>
+
+</div>
+</div>
+<a id="a469ae2a5df284765a6bc44bce7f803f7" name="a469ae2a5df284765a6bc44bce7f803f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a469ae2a5df284765a6bc44bce7f803f7">&#9670;&#160;</a></span>Image() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1157,7 +808,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>stride</em> = <code>-1</code>&#160;</td>
+          <td class="paramname"><em>stride</em> = <code><a class="el" href="classtgx_1_1_image.html#af756f79c7bd822db4c9349046f0be937">DEFAULT_STRIDE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1171,18 +822,18 @@ template&lt;typename T &gt; </div>
 <p >Creates an image with a given size and a given buffer.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">buffer</td><td>the image buffer </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">lx</td><td>the image width. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">ly</td><td>the image height. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">stride</td><td>the stride to use (equal to the image width if not specified). </td></tr>
+    <tr><td class="paramname">buffer</td><td>the image buffer. </td></tr>
+    <tr><td class="paramname">lx</td><td>the image width. </td></tr>
+    <tr><td class="paramname">ly</td><td>the image height. </td></tr>
+    <tr><td class="paramname">stride</td><td>(Optional) the stride to use (equal to the image width if not specified). </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="aaea9175e0dd00e21e06b1f23e06d5632" name="aaea9175e0dd00e21e06b1f23e06d5632"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaea9175e0dd00e21e06b1f23e06d5632">&#9670;&#160;</a></span>Image() <span class="overload">[2/4]</span></h2>
+<a id="a3fa4ee0124f82af00b755d270cbc1cb8" name="a3fa4ee0124f82af00b755d270cbc1cb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fa4ee0124f82af00b755d270cbc1cb8">&#9670;&#160;</a></span>Image() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1207,7 +858,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>stride</em> = <code>-1</code>&#160;</td>
+          <td class="paramname"><em>stride</em> = <code><a class="el" href="classtgx_1_1_image.html#af756f79c7bd822db4c9349046f0be937">DEFAULT_STRIDE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1221,9 +872,9 @@ template&lt;typename T &gt; </div>
 <p >Creates an image with a given size and a given buffer.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">buffer</td><td>the image buffer </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">dim</td><td>the image dimension (width, height) in pixels. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">stride</td><td>the stride to use (equal to the image width if not specified). </td></tr>
+    <tr><td class="paramname">buffer</td><td>the image buffer. </td></tr>
+    <tr><td class="paramname">dim</td><td>the image dimension (width, height) in pixels. </td></tr>
+    <tr><td class="paramname">stride</td><td>the stride to use (equal to the image width if not specified). </td></tr>
   </table>
   </dd>
 </dl>
@@ -1231,7 +882,7 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <a id="adf5f0693710ff0664fc192e964bf9231" name="adf5f0693710ff0664fc192e964bf9231"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf5f0693710ff0664fc192e964bf9231">&#9670;&#160;</a></span>Image() <span class="overload">[3/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#adf5f0693710ff0664fc192e964bf9231">&#9670;&#160;</a></span>Image() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1278,7 +929,7 @@ template&lt;typename color_t &gt; </div>
 </div>
 </div>
 <a id="a2db3c8b090abcb70d3f3d922ee01ebbd" name="a2db3c8b090abcb70d3f3d922ee01ebbd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2db3c8b090abcb70d3f3d922ee01ebbd">&#9670;&#160;</a></span>Image() <span class="overload">[4/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2db3c8b090abcb70d3f3d922ee01ebbd">&#9670;&#160;</a></span>Image() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1304,7 +955,7 @@ template&lt;typename color_t &gt; </div>
 </div><div class="memdoc">
 
 <p>Default copy constructor. </p>
-<p >Copy is shallow: both images share the same memory buffer.</p>
+<p ><b>Copy is shallow</b>: both images share the same memory buffer.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">im</td><td>The source image. </td></tr>
@@ -2056,7 +1707,8 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Crop this image by keeping only the region represented by subbox (intersected with the image box). </p>
+<p>Crop the image. </p>
+<p >Crop this image keeping only the region represented by subbox intersected with the image box.</p>
 <p >This operation does not change the underlying pixel buffer: it simply replaces this image by a sub-image of itself (with different dimension/stride).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -9511,7 +9163,7 @@ template&lt;typename color_t &gt; </div>
 </div><div class="memdoc">
 
 <p>Default assignement operator. </p>
-<p >Copy is shallow: both images share the same memory buffer.</p>
+<p ><b>Copy is shallow</b>: both images share the same memory buffer.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">im</td><td>The source image.</td></tr>
@@ -9601,8 +9253,8 @@ template&lt;typename color_t &gt; </div>
 
 </div>
 </div>
-<a id="a4f5648785ce225afcef9782616d915e7" name="a4f5648785ce225afcef9782616d915e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f5648785ce225afcef9782616d915e7">&#9670;&#160;</a></span>set() <span class="overload">[1/2]</span></h2>
+<a id="a14d5fd97744c3335b775fde5ae055e02" name="a14d5fd97744c3335b775fde5ae055e02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14d5fd97744c3335b775fde5ae055e02">&#9670;&#160;</a></span>set() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -9633,7 +9285,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>stride</em> = <code>-1</code>&#160;</td>
+          <td class="paramname"><em>stride</em> = <code><a class="el" href="classtgx_1_1_image.html#af756f79c7bd822db4c9349046f0be937">DEFAULT_STRIDE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -9646,18 +9298,18 @@ template&lt;typename T &gt; </div>
 <p>Set/update the image parameters. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">buffer</td><td>the pixel buffer. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">lx</td><td>image width. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">ly</td><td>image height. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">stride</td><td>(Optional) The stride. If not specified, the stride is set equal to the image width. </td></tr>
+    <tr><td class="paramname">buffer</td><td>the pixel buffer. </td></tr>
+    <tr><td class="paramname">lx</td><td>image width. </td></tr>
+    <tr><td class="paramname">ly</td><td>image height. </td></tr>
+    <tr><td class="paramname">stride</td><td>(Optional) The stride. If not specified, the stride is set equal to the image width. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a291f7d3cb952624bf2101c0cc66abbc2" name="a291f7d3cb952624bf2101c0cc66abbc2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a291f7d3cb952624bf2101c0cc66abbc2">&#9670;&#160;</a></span>set() <span class="overload">[2/2]</span></h2>
+<a id="a8ee4c90b993be5b826ce3faa6f64d0dd" name="a8ee4c90b993be5b826ce3faa6f64d0dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ee4c90b993be5b826ce3faa6f64d0dd">&#9670;&#160;</a></span>set() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -9682,7 +9334,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>stride</em> = <code>-1</code>&#160;</td>
+          <td class="paramname"><em>stride</em> = <code><a class="el" href="classtgx_1_1_image.html#af756f79c7bd822db4c9349046f0be937">DEFAULT_STRIDE</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -9695,9 +9347,9 @@ template&lt;typename T &gt; </div>
 <p>Set/update the image parameters. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">buffer</td><td>the pixel buffer. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">dim</td><td>the image dimensions. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">stride</td><td>(Optional) The stride. If not specified, the stride is set equal to. the image width. </td></tr>
+    <tr><td class="paramname">buffer</td><td>the pixel buffer. </td></tr>
+    <tr><td class="paramname">dim</td><td>the image dimensions. </td></tr>
+    <tr><td class="paramname">stride</td><td>(Optional) The stride. If not specified, the stride is set equal to the image width. </td></tr>
   </table>
   </dd>
 </dl>
@@ -9722,7 +9374,7 @@ template&lt;typename color_t &gt; </div>
 </div><div class="memdoc">
 
 <p>Set the image as invalid. </p>
-<p >Note: It is the user responsibility to manage the memory allocated for the pixel buffer (if required). No deallocation is performed here. </p>
+<p ><b>Note</b> It is the user responsibility to manage the memory allocated for the pixel buffer (if required). No deallocation is performed here. </p>
 
 </div>
 </div>

@@ -19,7 +19,11 @@
 #ifndef _TGX_FONTS_H_
 #define _TGX_FONTS_H_
 
+#include <stdint.h>
 #include "Misc.h"
+#include "Vec2.h"
+#include "Box2.h"
+
 
 /****************************************************************************
 * FONT FORMATS
@@ -46,7 +50,6 @@
 #ifndef _GFXFONT_H_
 #define _GFXFONT_H_
 
-#include <stdint.h>
 
 
 // Font data stored PER GLYPH
@@ -115,6 +118,61 @@ typedef struct {
 
 
 typedef ILI9341_t3_font_t packedbdf_t;
+
+
+
+namespace tgx
+    {
+
+
+    /**
+     * Query the height of a font.
+     *  
+     * @param   font    The font.
+     *
+     * @returns The number of vertical pixels between two lines of text with this font.
+    **/
+    int fontHeight(const GFXfont& font);
+    int fontHeight(const ILI9341_t3_font_t& font);
+
+
+    /**
+     * Compute the bounding box of a character.
+     *  
+     * the box of pixels occupied by a character when drawn with 'font' anchored at 'pos'.
+     *
+     * @param           c           The character.
+     * @param           pos         position of the anchor point.
+     * @param           font        The font to use.
+     * @param           anchor      location of the anchor with respect to the char bounding box. (by default, this is the BASELINE|LEFT).
+     * @param [in,out]  xadvance    If non-null, the number of pixel to advance horizontally after drawing the char is stored here.
+     *
+     * @returns the bounding box of pixels occupied by the char when its chosen anchor is at pos.
+    **/
+    iBox2 measureChar(char c, iVec2 pos, const GFXfont& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
+    iBox2 measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
+
+
+
+
+
+    namespace tgx_internals
+        {
+
+        /** fetch a single bit from a bit array. Used to decode ILI9341_t3 format */
+        inline uint32_t fetchbit(const uint8_t* p, uint32_t index) { return (p[index >> 3] & (0x80 >> (index & 7))); } //fetch a single bit from a bit array. (from ili9341_t3.cpp)        
+
+        /** fetch 'required' bits from a bit array, returned as an unsigned integer. Used to decode ILI9341_t3 format */
+        uint32_t fetchbits_unsigned(const uint8_t* p, uint32_t index, uint32_t required);
+
+        /** fetch 'required' bits from a bit array, returned as an signed integer. Used to decode ILI9341_t3 format */
+        uint32_t fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required);
+
+        }
+
+    }
+
+
 
 
 #endif 

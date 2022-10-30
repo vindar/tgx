@@ -422,17 +422,19 @@ namespace tgx
         * 
         * @param shaders    flags to use (or'ed together with `|`).
         *                    
+        * See enum tgx::Shader for a complete list of flags.                    
+        * 
         * **Main flags**
         *  
-        * - `TGX_SHADER_FLAT`    Use flat shading (i.e. uniform color on faces). This is the fastest drawing method but it usually gives poor results when combined with 
+        * - `SHADER_FLAT`:     Use flat shading (i.e. uniform color on faces). This is the fastest drawing method but it usually gives poor results when combined with 
         *   texturing. Lighting transitions between bright to dark aera may appear to flicker when using color with low resolution such as RGB565.
         *
-        * - `TGX_SHADER_GOURAUD` Use gouraud shading (linear interpolation of vertex colors) This results in smoother color transitions and works well with texturing but is more CPU 
+        * - `SHADER_GOURAUD`:  Use gouraud shading (linear interpolation of vertex colors) This results in smoother color transitions and works well with texturing but is more CPU 
         *    intensive.
         *    
-        * - `TGX_SHADER_TEXTURE` enable texture mapping. A texture must be stored in an Image<color_t> object.
-        *                        - wrap mode can be set with setTextureWrappingMode() or passing along either `TGX_SHADER_TEXTURE_WRAP_POW2` or `TGX_SHADER_TEXTURE_CLAMP`.
-        *                        - drawing quality can be set with setTextureQuality() or by passing along either `TGX_SHADER_TEXTURE_NEAREST` or `TGX_SHADER_TEXTURE_BILINEAR`.
+        * - `SHADER_TEXTURE`:  enable texture mapping. A texture must be stored in an Image<color_t> object.
+        *                      - wrap mode can be set with setTextureWrappingMode() or passing along either `SHADER_TEXTURE_WRAP_POW2` or `SHADER_TEXTURE_CLAMP`.
+        *                      - drawing quality can be set with setTextureQuality() or by passing along either `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`.
         *
         * @remark                     
         * 1. If a shader flag is set with SetShaders() but is disabled in the template parameter LOADED_SHADER,
@@ -457,8 +459,8 @@ namespace tgx
         * Set the wrap mode when for texturing.
         * 
         * @param wrap_mode  Wrapping mode flag:
-        *                   - `TGX_SHADER_TEXTURE_WRAP_POW2`:  Wrap around (repeat) the texture. This is the fastest mode but **the texture size must be a power of two along each dimension**.
-        *                   - `TGX_SHADER_TEXTURE_CLAMP`:      Clamp to the edge. A bit slower than above but the texture can be any size. 
+        *                   - `SHADER_TEXTURE_WRAP_POW2`:  Wrap around (repeat) the texture. This is the fastest mode but **the texture size must be a power of two along each dimension**.
+        *                   - `SHADER_TEXTURE_CLAMP`:      Clamp to the edge. A bit slower than above but the texture can be any size. 
         */
         void setTextureWrappingMode(Shader wrap_mode);
 
@@ -467,8 +469,8 @@ namespace tgx
         * Set the texturing quality.
         * 
         * @param quality    Texture quality flag:
-        *                   - `TGX_SHADER_TEXTURE_NEAREST`:    Use simple point sampling when texturing (fastest method).
-        *                   - `TGX_SHADER_TEXTURE_BILINEAR`:   Use bilinear interpolation when texturing (slower but higher quality).
+        *                   - `SHADER_TEXTURE_NEAREST`:    Use simple point sampling when texturing (fastest method).
+        *                   - `SHADER_TEXTURE_BILINEAR`:   Use bilinear interpolation when texturing (slower but higher quality).
         */
         void setTextureQuality(Shader quality);
 

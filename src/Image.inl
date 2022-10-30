@@ -6933,45 +6933,6 @@ namespace tgx
 
 
 
-
-    /** fetch 'required' bits from a bit array, returned as an unsigned integer  (from ili9341_t3.cpp)*/
-    template<typename color_t>
-    uint32_t Image<color_t>::_fetchbits_unsigned(const uint8_t* p, uint32_t index, uint32_t required)
-        {
-        uint32_t val;
-        uint8_t* s = (uint8_t*)&p[index >> 3];
-    #ifdef UNALIGNED_IS_SAFE        // is this defined anywhere ? 
-        val = *(uint32_t*)s; // read 4 bytes - unaligned is ok
-        val = __builtin_bswap32(val); // change to big-endian order
-    #else
-        val = s[0] << 24;
-        val |= (s[1] << 16);
-        val |= (s[2] << 8);
-        val |= s[3];
-    #endif
-        val <<= (index & 7); // shift out used bits
-        if (32 - (index & 7) < required) 
-            { // need to get more bits
-            val |= (s[4] >> (8 - (index & 7)));
-            }
-        val >>= (32 - required); // right align the bits
-        return val;
-        }
-
-
-    /** fetch 'required' bits from a bit array, returned as a signed integer (from ili9341_t3.cpp) */
-    template<typename color_t>
-    uint32_t Image<color_t>::_fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required)
-        {
-        uint32_t val = _fetchbits_unsigned(p, index, required);
-        if (val & (1 << (required - 1))) 
-            {
-            return (int32_t)val - (1 << required);
-            }
-        return (int32_t)val;
-        }
-
-
     /** used for clipping a font bitmap */
     template<typename color_t>
     bool Image<color_t>::_clipit(int& x, int& y, int& sx, int& sy, int & b_left, int & b_up)
@@ -7012,7 +6973,7 @@ namespace tgx
     template<typename color_t>
     int Image<color_t>::fontHeight(const GFXfont& font)
         {
-        return font.yAdvance;
+        return tgx::fontHeight(font);
         }
 
 
@@ -7020,88 +6981,21 @@ namespace tgx
     template<typename color_t>
     int Image<color_t>::fontHeight(const ILI9341_t3_font_t& font)
         {
-        return font.line_space;
+        return tgx::fontHeight(font);
         }
-
-    /** find the anchor location (but not for the baseline) */
-    template<typename color_t>
-    iVec2 Image<color_t>::_anchorPos(const iBox2& B, Anchor anchor)
-        {
-        iVec2 pos; 
-        if (anchor & LEFT) pos.x = B.minX; else if (anchor & RIGHT) pos.x = B.maxX; else pos.x = (B.minX + B.maxX) / 2; 
-        if (anchor & TOP) pos.y = B.minY; else if (anchor & BOTTOM) pos.y = B.maxY; else pos.y = (B.minY + B.maxY) / 2;
-        return pos; 
-        }
-
 
 
     template<typename color_t>
     iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const GFXfont& font, Anchor anchor, int* xadvance)
         {
-        const iVec2 startp = pos;
-        uint8_t n = (uint8_t)c;
-        if ((n < font.first) || (n > font.last)) return iBox2(pos.x, pos.x, pos.y, pos.y); // nothing to draw. 
-        auto& g = font.glyph[n - font.first];
-        int x = pos.x + g.xOffset;
-        int y = pos.y + g.yOffset;
-        int sx = g.width;
-        int sy = g.height;
-        if (xadvance) *xadvance = g.xAdvance;
-        iBox2 B = iBox2(x, x + sx - 1, y, y + sy - 1);        
-        if (anchor != DEFAULT_TEXT_ANCHOR)
-            {
-            iVec2 pos2 = _anchorPos(B, anchor);
-            if (anchor & BASELINE) pos2.x = startp.x;
-            B += (startp - pos2);
-            }
-        return B; 
+        return tgx::measureChar(c, pos, font, anchor, xadvance);
         }
 
 
     template<typename color_t>
     iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const ILI9341_t3_font_t & font, Anchor anchor, int* xadvance)
         {
-        const iVec2 startp = pos;
-        uint8_t n = (uint8_t)c;
-        if ((n >= font.index1_first) && (n <= font.index1_last))
-            {
-            n -= font.index1_first;
-            }
-        else if ((n >= font.index2_first) && (n <= font.index2_last))
-            {
-            n = (n - font.index2_first) + (font.index1_last - font.index1_first + 1);
-            }
-        else
-            { // no char to draw
-            return iBox2(); // nothing to draw. 
-            }
-        uint8_t* data = (uint8_t*)font.data + _fetchbits_unsigned(font.index, (n * font.bits_index), font.bits_index);
-        int32_t off = 0;
-        uint32_t encoding = _fetchbits_unsigned(data, off, 3);
-        if (encoding != 0) return  pos; // wrong/unsupported format
-        off += 3;
-        const int sx = (int)_fetchbits_unsigned(data, off, font.bits_width);
-        off += font.bits_width;
-        const int sy = (int)_fetchbits_unsigned(data, off, font.bits_height);
-        off += font.bits_height;
-        const int xoffset = (int)_fetchbits_signed(data, off, font.bits_xoffset);
-        off += font.bits_xoffset;
-        const int yoffset = (int)_fetchbits_signed(data, off, font.bits_yoffset);
-        off += font.bits_yoffset;
-        if (xadvance)
-            {
-            *xadvance = (int)_fetchbits_unsigned(data, off, font.bits_delta);
-            }
-        const int x = pos.x + xoffset;
-        const int y = pos.y - sy - yoffset;
-        iBox2 B(x, x + sx - 1, y, y + sy - 1);
-        if (anchor != DEFAULT_TEXT_ANCHOR)
-            {
-            iVec2 pos2 = _anchorPos(B, anchor);
-            if (anchor & BASELINE) pos2.x = startp.x;
-            B += (startp - pos2);
-            }
-        return B;
+        return tgx::measureChar(c, pos, font, anchor, xadvance);
         }
 
 
@@ -7139,7 +7033,7 @@ namespace tgx
             }
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
-            iVec2 pos2 = _anchorPos(B, anchor);
+            iVec2 pos2 = B.getAnchor(anchor);
             if (anchor & BASELINE) pos2.x = startp.x;
             B += (startp - pos2);
             }
@@ -7181,7 +7075,7 @@ namespace tgx
             }
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
-            iVec2 pos2 = _anchorPos(B, anchor);
+            iVec2 pos2 = B.getAnchor(anchor);
             if (anchor & BASELINE) pos2.y = startp.y;
             B += (startp - pos2);
             }
@@ -7199,7 +7093,7 @@ namespace tgx
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
             auto B = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR);
-            iVec2 pos2 = _anchorPos(B, anchor);
+            iVec2 pos2 = B.getAnchor(anchor);
             pos += pos - pos2;
             }
         */
@@ -7215,7 +7109,7 @@ namespace tgx
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
             auto B = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR);
-            iVec2 pos2 = _anchorPos(B, anchor);
+            iVec2 pos2 = B.getAnchor(anchor);
             pos += pos - pos2;
             }
         */
@@ -7247,7 +7141,7 @@ namespace tgx
             start_newline_at_0 = false;
             if (!(anchor & LEFT)) wrap_text = false; // cannot perform wrapping if we need to move. 
             auto B = measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, wrap_text, start_newline_at_0);
-            iVec2 pos2 = _anchorPos(B, anchor);
+            iVec2 pos2 = B.getAnchor(anchor);
             pos += pos - pos2;
             }
         return _drawTextGFX<true>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
@@ -7264,7 +7158,7 @@ namespace tgx
             start_newline_at_0 = false;
             if (!(anchor & LEFT)) wrap_text = false; // cannot perform wrapping if we need to move. 
             auto B = measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, wrap_text,start_newline_at_0);
-            iVec2 pos2 = _anchorPos(B, anchor);
+            iVec2 pos2 = B.getAnchor(anchor);
             pos += pos - pos2;
             }
         return _drawTextILI<true>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
@@ -7308,20 +7202,20 @@ namespace tgx
             { // no char to draw
             return pos;
             }
-        uint8_t * data = (uint8_t *)font.data + _fetchbits_unsigned(font.index, (n*font.bits_index), font.bits_index);
+        uint8_t * data = (uint8_t *)font.data + tgx_internals::fetchbits_unsigned(font.index, (n*font.bits_index), font.bits_index);
         int32_t off = 0; 
-        uint32_t encoding = _fetchbits_unsigned(data, off, 3);
+        uint32_t encoding = tgx_internals::fetchbits_unsigned(data, off, 3);
         if (encoding != 0) return  pos; // wrong/unsupported format
         off += 3;
-        int sx = (int)_fetchbits_unsigned(data, off, font.bits_width);
+        int sx = (int)tgx_internals::fetchbits_unsigned(data, off, font.bits_width);
         off += font.bits_width;         
-        int sy = (int)_fetchbits_unsigned(data, off, font.bits_height);
+        int sy = (int)tgx_internals::fetchbits_unsigned(data, off, font.bits_height);
         off += font.bits_height;            
-        const int xoffset = (int)_fetchbits_signed(data, off, font.bits_xoffset);
+        const int xoffset = (int)tgx_internals::fetchbits_signed(data, off, font.bits_xoffset);
         off += font.bits_xoffset;
-        const int yoffset = (int)_fetchbits_signed(data, off, font.bits_yoffset);
+        const int yoffset = (int)tgx_internals::fetchbits_signed(data, off, font.bits_yoffset);
         off += font.bits_yoffset;
-        const int delta = (int)_fetchbits_unsigned(data, off, font.bits_delta);
+        const int delta = (int)tgx_internals::fetchbits_unsigned(data, off, font.bits_delta);
         off += font.bits_delta;
         int x = pos.x + xoffset;
         int y = pos.y - sy - yoffset;
@@ -7439,9 +7333,9 @@ namespace tgx
         uint32_t rl = 0; // number of line repeat remaining. 
         while (b_up > 0)
             { // need to skip lines
-            if (_fetchbit(bitmap, off++))
+            if (tgx_internals::fetchbit(bitmap, off++))
                 { // this is a repeating line
-                int n = (int)_fetchbits_unsigned(bitmap, off, 3) + 2; // number of repetition
+                int n = (int)tgx_internals::fetchbits_unsigned(bitmap, off, 3) + 2; // number of repetition
                 if (n <= b_up) 
                     {  
                     b_up -= n;
@@ -7466,9 +7360,9 @@ namespace tgx
             { // iterate over lines to draw
             if (rl == 0)
                 { // need to read the line header. 
-                if (_fetchbit(bitmap, off++))
+                if (tgx_internals::fetchbit(bitmap, off++))
                     { // repeating line
-                    rl = _fetchbits_unsigned(bitmap, off, 3) + 2; // number of repetition
+                    rl = tgx_internals::fetchbits_unsigned(bitmap, off, 3) + 2; // number of repetition
                     off += 3; // go the the beginning of the line pixels
                     }
                 else

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['safemultb_0',['safeMultB',['../_misc_8h.html#a2e813ebb271d39da4f92c63d87decc11',1,'tgx']]],
-  ['set_1',['set',['../classtgx_1_1_image.html#a291f7d3cb952624bf2101c0cc66abbc2',1,'tgx::Image::set(T *buffer, iVec2 dim, int stride=-1)'],['../classtgx_1_1_image.html#a4f5648785ce225afcef9782616d915e7',1,'tgx::Image::set(T *buffer, int lx, int ly, int stride=-1)']]],
+  ['set_1',['set',['../classtgx_1_1_image.html#a8ee4c90b993be5b826ce3faa6f64d0dd',1,'tgx::Image::set(T *buffer, iVec2 dim, int stride=DEFAULT_STRIDE)'],['../classtgx_1_1_image.html#a14d5fd97744c3335b775fde5ae055e02',1,'tgx::Image::set(T *buffer, int lx, int ly, int stride=DEFAULT_STRIDE)']]],
   ['setasintersection_2',['setAsIntersection',['../structtgx_1_1_vec2.html#afa8ff02b55c55bf3c296fcb80675bad6',1,'tgx::Vec2']]],
   ['setculling_3',['setCulling',['../classtgx_1_1_renderer3_d.html#a76fa32770476cd15f717d3f103fd752d',1,'tgx::Renderer3D']]],
   ['setfrustum_4',['setFrustum',['../structtgx_1_1_mat4.html#a8f023a5d8bb793c6411a74a57c92e161',1,'tgx::Mat4::setFrustum()'],['../classtgx_1_1_renderer3_d.html#af0ae032c0be73580be8e61c53ad42545',1,'tgx::Renderer3D::setFrustum()']]],

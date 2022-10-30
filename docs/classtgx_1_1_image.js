@@ -1,8 +1,8 @@
 var classtgx_1_1_image =
 [
     [ "Image", "classtgx_1_1_image.html#a58367fcadbcba6a8ba4cf75d78e841e4", null ],
-    [ "Image", "classtgx_1_1_image.html#a4b30a4b81b24b089a7d2d004979a3bb6", null ],
-    [ "Image", "classtgx_1_1_image.html#aaea9175e0dd00e21e06b1f23e06d5632", null ],
+    [ "Image", "classtgx_1_1_image.html#a469ae2a5df284765a6bc44bce7f803f7", null ],
+    [ "Image", "classtgx_1_1_image.html#a3fa4ee0124f82af00b755d270cbc1cb8", null ],
     [ "Image", "classtgx_1_1_image.html#adf5f0693710ff0664fc192e964bf9231", null ],
     [ "Image", "classtgx_1_1_image.html#a2db3c8b090abcb70d3f3d922ee01ebbd", null ],
     [ "blit", "classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542", null ],
@@ -142,8 +142,8 @@ var classtgx_1_1_image =
     [ "operator=", "classtgx_1_1_image.html#aed5b6c351a33109970c5edeef14678bb", null ],
     [ "readPixel", "classtgx_1_1_image.html#a31d1ea8d424eefcf8b30889d429db6a6", null ],
     [ "reduceHalf", "classtgx_1_1_image.html#aec06c59da548263f082134368f5202d6", null ],
-    [ "set", "classtgx_1_1_image.html#a4f5648785ce225afcef9782616d915e7", null ],
-    [ "set", "classtgx_1_1_image.html#a291f7d3cb952624bf2101c0cc66abbc2", null ],
+    [ "set", "classtgx_1_1_image.html#a14d5fd97744c3335b775fde5ae055e02", null ],
+    [ "set", "classtgx_1_1_image.html#a8ee4c90b993be5b826ce3faa6f64d0dd", null ],
     [ "setInvalid", "classtgx_1_1_image.html#a4d9fb81a7daea71a80213f3aa5dbbb18", null ],
     [ "stride", "classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6", null ],
     [ "width", "classtgx_1_1_image.html#a5b34e7bc794df9e0d21c051dfe1d75a4", null ]
