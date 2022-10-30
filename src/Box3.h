@@ -437,7 +437,7 @@ namespace tgx
         /**
         * Translate this box by a given vector.
         **/
-        inline void operator+=(Vec3<T>  V)
+        inline void operator+=(const Vec3<T> & V)
             {
             minX += V.x;
             maxX += V.x;
@@ -451,7 +451,7 @@ namespace tgx
         /**
         * Return this box translated by v.
         **/
-        inline Box3<T> operator+(Vec3<T>  V) const
+        inline Box3<T> operator+(const Vec3<T> & V) const
             {
             return Box3<T>(minX + V.x, maxX + V.x, minY + V.y, maxY + V.y, minZ + V.z, maxZ + V.z);
             }
@@ -460,7 +460,7 @@ namespace tgx
         /**
         * Translate the box by a given vector (substracted)
         **/
-        inline void operator-=(Vec3<T> V)
+        inline void operator-=(const Vec3<T> & V)
             {
             minX -= V.x;
             maxX -= V.x;
@@ -474,7 +474,7 @@ namespace tgx
         /**
         * Return this box translated by v (substracted).
         **/
-        inline Box3<T> operator-(Vec3<T> V) const
+        inline Box3<T> operator-(const Vec3<T> & V) const
             {
             return Box3<T>(minX - V.x, maxX - V.x, minY - V.y, maxY - V.y, minZ - V.z, maxZ - V.z);
             }
