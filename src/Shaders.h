@@ -1680,7 +1680,7 @@ namespace tgx
 
 
     /**
-    * META-SHADER THAT DISPATCH TO THE CORRECT SHADER ABOVE (IF ENABLED).
+    * META-Shader THAT DISPATCH TO THE CORRECT Shader ABOVE (IF ENABLED).
     **/
     template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t> void shader_select(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,

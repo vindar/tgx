@@ -87,7 +87,7 @@ DMAMEM uint16_t zbuf[SLX * SLY];
 Image<RGB565> im(fb, SLX, SLY);
 
 // we only use Gouraud shading with perspective projection and a z-buffer
-const SHADER LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD;
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;

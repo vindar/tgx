@@ -69,7 +69,7 @@ Image<RGB565> * front_fb, * back_fb;
 
 
 // we only use nearest neighbour texturing for power of 2 textures, combined texturing with gouraud shading, a z buffer and perspective projection
-const SHADER LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE_NEAREST |SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE_NEAREST |SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;

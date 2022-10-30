@@ -45,7 +45,7 @@ namespace tgx
     * Enumeration of end path shapes.   
     * List the shapes that can be drawn at the end of a path. Used by methods such as `Image::drawThickLineAA()`, `Image::drawThickPolylineAA()`, `Image::drawThickQuadSplineAA()`...
     */
-    enum PATH_END_TYPE
+    enum EndPath
         {
         END_STRAIGHT = -1,          ///< straight end. 
         END_ROUNDED = 0,            ///< rounded end.
@@ -1089,12 +1089,12 @@ namespace tgx
          * @param   P1          The first point.
          * @param   P2          The second point.
          * @param   line_width  Width of the line.
-         * @param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUND, END_ARROW... (c.f. PATH_END_TYPE enum)
-         * @param   ends_P2     specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUND, END_ARROW... (c.f. PATH_END_TYPE enum)
+         * @param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUND, END_ARROW... (c.f. EndPath enum)
+         * @param   ends_P2     specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUND, END_ARROW... (c.f. EndPath enum)
          * @param   color       color to use.
          * @param   opacity     (Optional) opacity multiplier between 0.0f and 1.0f (default).
         **/
-        void drawThickLineAA(fVec2 P1, fVec2 P2, float line_width, PATH_END_TYPE end_P1, PATH_END_TYPE ends_P2, color_t color, float opacity = 1.0f);
+        void drawThickLineAA(fVec2 P1, fVec2 P2, float line_width, EndPath end_P1, EndPath ends_P2, color_t color, float opacity = 1.0f);
 
 
         /**
@@ -1105,13 +1105,13 @@ namespace tgx
          * @param   P1              first end point.
          * @param   P2              second end point.
          * @param   line_width_P1   Width of the wedge at P1.
-         * @param   end_P1          specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f. PATH_END_TYPE enum)
+         * @param   end_P1          specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f. EndPath enum)
          * @param   line_width_P2   Width of the wedge at P2.
-         * @param   end_P2          specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f. PATH_END_TYPE enum)
+         * @param   end_P2          specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f. EndPath enum)
          * @param   color           color to use.
          * @param   opacity         (Optional) opacity multiplier between 0.0f and 1.0f (default).
         **/
-        void drawWedgeLineAA(fVec2 P1, fVec2 P2, float line_width_P1, PATH_END_TYPE end_P1, float line_width_P2, PATH_END_TYPE end_P2, color_t color, float opacity = 1.0f);
+        void drawWedgeLineAA(fVec2 P1, fVec2 P2, float line_width_P1, EndPath end_P1, float line_width_P2, EndPath end_P2, color_t color, float opacity = 1.0f);
 
 
 
@@ -2019,12 +2019,12 @@ namespace tgx
          * @param   nbpoints    number of points in tabPoints.
          * @param   tabPoints   array of points.
          * @param   thickness   thickness of the polyline.
-          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
-          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
+          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
-        void drawThickPolylineAA(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = 1.0f);
+        void drawThickPolylineAA(int nbpoints, const fVec2 tabPoints[], float thickness, EndPath end_P0, EndPath end_Pn, color_t color, float opacity = 1.0f);
 
 
 
@@ -2044,13 +2044,13 @@ namespace tgx
          *
          * @param   next_point  callback functior that provides the list of points.
          * @param   thickness   thickness of the polyline.
-          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
-          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
+          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier in [0.0f, 1.0f].
         **/
         template<typename FUNCTOR_NEXT>
-        void drawThickPolylineAA(FUNCTOR_NEXT next_point, float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = 1.0f);
+        void drawThickPolylineAA(FUNCTOR_NEXT next_point, float thickness, EndPath end_P0, EndPath end_Pn, color_t color, float opacity = 1.0f);
 
 
 
@@ -2780,13 +2780,13 @@ namespace tgx
          * @param   PC          Control point.
          * @param   wc          Control point weight (must be >0).
          * @param   thickness   thickness of the curve.
-          *@param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
-          *@param   end_P2      specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
+          *@param   end_P2      specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending and simply use overwrite.
         **/
-        void drawThickQuadBezierAA(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+        void drawThickQuadBezierAA(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, EndPath end_P1, EndPath end_P2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -2799,13 +2799,13 @@ namespace tgx
          * @param   PA          first control point.
          * @param   PB          second control point.
          * @param   thickness   thickness of the curve.
-          *@param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
-          *@param   end_P2      specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_P1      specify how the extremity P1 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
+          *@param   end_P2      specify how the extremity P2 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending and simply use overwrite.
         **/
-        void drawThickCubicBezierAA(fVec2 P1, fVec2 P2, fVec2 PA, fVec2 PB, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+        void drawThickCubicBezierAA(fVec2 P1, fVec2 P2, fVec2 PA, fVec2 PB, float thickness, EndPath end_P1, EndPath end_P2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -2823,14 +2823,14 @@ namespace tgx
          *                      SPLINE_MAX_POINTS.
          * @param   tabPoints   the array of points to interpolate.
          * @param   thickness   thickness of the curve.
-          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
-          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
+          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawThickQuadSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+        void drawThickQuadSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, EndPath end_P0, EndPath end_Pn, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -2848,14 +2848,14 @@ namespace tgx
          *                      SPLINE_MAX_POINTS.
          * @param   tabPoints   the array of points to interpolate.
          * @param   thickness   thickness of the curve.
-          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
-          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.PATH_END_TYPE enum)
+          *@param   end_P0      specify how the extremity P0 should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
+          *@param   end_Pn      specify how the extremity Pn should be drawn END_STRAIGHT, END_ROUNDED, END_ARROW... (c.f.EndPath enum)
          * @param   color       The color to use.
          * @param   opacity     (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative
          *                      to disable blending and simply use overwrite.
         **/
         template<int SPLINE_MAX_POINTS = 32>
-        void drawThickCubicSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+        void drawThickCubicSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, EndPath end_P0, EndPath end_Pn, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -2993,8 +2993,8 @@ namespace tgx
          *
          * @returns the bounding box of pixels occupied by the char when its chosen anchor is at pos.
         **/
-        static iBox2 measureChar(char c, iVec2 pos, const GFXfont& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
-        static iBox2 measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
+        static iBox2 measureChar(char c, iVec2 pos, const GFXfont& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
+        static iBox2 measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
 
 
         /**
@@ -3011,8 +3011,8 @@ namespace tgx
          *
          * @returns the bounding box of pixels occupied by the text when its chosen anchor is at pos.
         **/
-        iBox2 measureText(const char * text, iVec2 pos, const GFXfont& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
-        iBox2 measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, ANCHOR_LOCATION anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
+        iBox2 measureText(const char * text, iVec2 pos, const GFXfont& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
+        iBox2 measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
 
 
         /**
@@ -3080,8 +3080,8 @@ namespace tgx
          *
          * @returns the position to draw the next char (when using the same anchor location).
         **/
-        iVec2 drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const GFXfont& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
-        iVec2 drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+        iVec2 drawTextEx(const char* text, iVec2 pos, Anchor anchor, const GFXfont& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+        iVec2 drawTextEx(const char* text, iVec2 pos, Anchor anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
@@ -3329,7 +3329,7 @@ private:
         inline TGX_INLINE void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity) { BSeg seg(P1, P2); _bseg_draw(seg, drawP1, drawP2, color, 0, (int32_t)(opacity * 256), true); }
 
 
-        void _drawEnd(float distAB, fVec2 A, fVec2 B, BSeg& segAB, BSeg& segBA, BSeg& segAP, BSeg& segBQ, PATH_END_TYPE end, int w, color_t color, float opacity);
+        void _drawEnd(float distAB, fVec2 A, fVec2 B, BSeg& segAB, BSeg& segBA, BSeg& segAP, BSeg& segBQ, EndPath end, int w, color_t color, float opacity);
 
         // legacy (not used anymore)
         void _drawWedgeLine(float ax, float ay, float bx, float by, float aw, float bw, color_t color, float opacity);
@@ -3479,7 +3479,7 @@ private:
         static uint32_t _fetchbits_unsigned(const uint8_t* p, uint32_t index, uint32_t required);        
         static uint32_t _fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required);
         
-        static iVec2 _anchorPos(const iBox2& B, ANCHOR_LOCATION anchor);
+        static iVec2 _anchorPos(const iBox2& B, Anchor anchor);
         
         bool _clipit(int& x, int& y, int& sx, int& sy, int& b_left, int& b_up);
 

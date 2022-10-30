@@ -94,7 +94,7 @@ Image<RGB565> texture(texture_data, tex_size, tex_size);
 
 
 // we only use bilinear texturing for power of 2 texture, combined texturing with flat shading, a z buffer and both perspective and orthographic projection
-const SHADER LOADED_SHADERS = SHADER_ORTHO | SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADERS = SHADER_ORTHO | SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;

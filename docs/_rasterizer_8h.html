@@ -238,7 +238,7 @@ template&lt;typename SHADER_FUNCTION , typename RASTERIZER_PARAMS &gt; </div>
     <tr><td class="paramname">V0,V1,V2</td><td>Normalized coordinates of the vertices of the triangle (x,y,z,w) where, 'a la opengl' the viewport is mapped to [-1, 1]^2. These vectors also optionally contain the 'varying' parameters associated with each vertex, namely the texture coords and the color associated with each vertex (when applicable) that are used by the shader function.</td></tr>
     <tr><td class="paramname">offset_x,offset_y</td><td>Offset of this image inside the viewport. So the image corresponds to to the box <code>[offset_x, offset_x + im.width[x[offset_x, offset_x + im.height[</code> and only the intersection of this box with the viewport box <code>[0, LX[x[0, LY[</code> is drawn onto the image.</td></tr>
     <tr><td class="paramname">data</td><td>'Uniform' parameters (depending on the rasterization type).</td></tr>
-    <tr><td class="paramname">shader_fun</td><td>the shader function. see Shader.h for the implementation of classic shaders.</td></tr>
+    <tr><td class="paramname">shader_fun</td><td>the shader function. see <a class="el" href="_shaders_8h.html">Shaders.h</a> for the implementation of classic shaders.</td></tr>
   </table>
   </dd>
 </dl>

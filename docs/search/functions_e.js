@@ -30,9 +30,9 @@ var searchData=
   ['setprojectionmatrix_27',['setProjectionMatrix',['../classtgx_1_1_renderer3_d.html#af0c31304f8ec4425401629a7846adff5',1,'tgx::Renderer3D']]],
   ['setrotate_28',['setRotate',['../structtgx_1_1_mat4.html#ad7e8ba53545bc825d11ebf30ffb6b64a',1,'tgx::Mat4::setRotate(T angle, const Vec3&lt; T &gt; v)'],['../structtgx_1_1_mat4.html#a7b4b318e743ae3bdcc341233bcdc1906',1,'tgx::Mat4::setRotate(T angle, T x, T y, T z)']]],
   ['setscale_29',['setScale',['../structtgx_1_1_mat4.html#a3b007479b9654809689f7ae4c506da20',1,'tgx::Mat4::setScale(T x, T y, T z)'],['../structtgx_1_1_mat4.html#a4b17405fbd68245b0ad8a9d208250486',1,'tgx::Mat4::setScale(const Vec3&lt; T &gt; v)']]],
-  ['setshaders_30',['setShaders',['../classtgx_1_1_renderer3_d.html#a73048ff91febdc5f6adfe1ea457cfffa',1,'tgx::Renderer3D']]],
-  ['settexturequality_31',['setTextureQuality',['../classtgx_1_1_renderer3_d.html#a28a5dfe1453d0bd6a52d8048224daf79',1,'tgx::Renderer3D']]],
-  ['settexturewrappingmode_32',['setTextureWrappingMode',['../classtgx_1_1_renderer3_d.html#afd9fd67455ce6fac2ece82551901a0d7',1,'tgx::Renderer3D']]],
+  ['setshaders_30',['setShaders',['../classtgx_1_1_renderer3_d.html#a2547893a21094d5f23473ca8d3f7ee36',1,'tgx::Renderer3D']]],
+  ['settexturequality_31',['setTextureQuality',['../classtgx_1_1_renderer3_d.html#af16b835173d22fc203451cd205cb2d34',1,'tgx::Renderer3D']]],
+  ['settexturewrappingmode_32',['setTextureWrappingMode',['../classtgx_1_1_renderer3_d.html#a5eb0863850052e0f5d4c4156cdd5e8b4',1,'tgx::Renderer3D']]],
   ['settranslate_33',['setTranslate',['../structtgx_1_1_mat4.html#a72f0745d34ca940f9afb427f8d8fc987',1,'tgx::Mat4::setTranslate(T x, T y, T z)'],['../structtgx_1_1_mat4.html#a3973769e07cd17b862dffc4348836377',1,'tgx::Mat4::setTranslate(const Vec3&lt; T &gt; v)']]],
   ['settransparent_34',['setTransparent',['../structtgx_1_1_r_g_b32.html#a3f3cffdf35164231afc2dbb21c09a206',1,'tgx::RGB32::setTransparent()'],['../structtgx_1_1_r_g_b64.html#afb16a51916812f69e5242ab3d36abeb3',1,'tgx::RGB64::setTransparent()']]],
   ['setviewmatrix_35',['setViewMatrix',['../classtgx_1_1_renderer3_d.html#a6cad095ff0d7eefbdb93ac04b6a3efff',1,'tgx::Renderer3D']]],
@@ -56,7 +56,7 @@ var searchData=
   ['shader_5fgouraud_5fzbuffer_53',['shader_Gouraud_Zbuffer',['../_shaders_8h.html#ab3eb9c728ca31d2c0e57a368358f06ac',1,'tgx']]],
   ['shader_5fselect_54',['shader_select',['../_shaders_8h.html#a0156b833b42cbd95e25e3bfc6c0297ba',1,'tgx']]],
   ['shaderclip_55',['shaderclip',['../_shaders_8h.html#ad3d496bf8979b0ceaed986aacbf3a5f2',1,'tgx']]],
-  ['split_56',['split',['../structtgx_1_1_box2.html#a12061a0d8c6424403512e77193d02b39',1,'tgx::Box2']]],
+  ['split_56',['split',['../structtgx_1_1_box2.html#a284b9bd7abd0045737145b516c802ae5',1,'tgx::Box2']]],
   ['stride_57',['stride',['../classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6',1,'tgx::Image']]],
   ['swap_58',['swap',['../_misc_8h.html#a27467fcbd225285d7fb240b325d5211a',1,'tgx']]]
 ];

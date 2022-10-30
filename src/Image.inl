@@ -2250,7 +2250,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawThickLineAA(fVec2 P1, fVec2 P2, float line_width, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity)
+    void Image<color_t>::drawThickLineAA(fVec2 P1, fVec2 P2, float line_width, EndPath end_P1, EndPath end_P2, color_t color, float opacity)
         {  
         if (line_width < 0) return;
         drawWedgeLineAA(P1, P2, line_width, end_P1, line_width, end_P2, color, opacity);
@@ -2262,7 +2262,7 @@ namespace tgx
     * Draw the end of a thick line (straight, rounded or arrow). 
     **/
     template<typename color_t>
-    void Image<color_t>::_drawEnd(float distAB, fVec2 A, fVec2 B, BSeg& segAB, BSeg& segBA, BSeg& segAP, BSeg& segBQ, PATH_END_TYPE end, int w, color_t color, float opacity)
+    void Image<color_t>::_drawEnd(float distAB, fVec2 A, fVec2 B, BSeg& segAB, BSeg& segBA, BSeg& segAP, BSeg& segBQ, EndPath end, int w, color_t color, float opacity)
         {
         const int op = (int)(opacity * 256);
         if (end < END_STRAIGHT) return;
@@ -2309,7 +2309,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawWedgeLineAA(fVec2 P1, fVec2 P2, float line_width_P1, PATH_END_TYPE end_P1, float line_width_P2, PATH_END_TYPE end_P2, color_t color, float opacity)
+    void Image<color_t>::drawWedgeLineAA(fVec2 P1, fVec2 P2, float line_width_P1, EndPath end_P1, float line_width_P2, EndPath end_P2, color_t color, float opacity)
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -3591,7 +3591,7 @@ namespace tgx
 
     template<typename color_t>
     template<typename FUNCTOR_NEXT>
-    void Image<color_t>::drawThickPolylineAA(FUNCTOR_NEXT next_point, float line_width, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
+    void Image<color_t>::drawThickPolylineAA(FUNCTOR_NEXT next_point, float line_width, EndPath end_P0, EndPath end_Pn, color_t color, float opacity)
         {
         if (!isValid() || (line_width <= 0)) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -3669,7 +3669,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawThickPolylineAA(int nbpoints, const fVec2 tabPoints[], float line_width, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
+    void Image<color_t>::drawThickPolylineAA(int nbpoints, const fVec2 tabPoints[], float line_width, EndPath end_P0, EndPath end_Pn, color_t color, float opacity)
         {
         if ((nbpoints < 2) || (!isValid())) return;
         int k = 0;
@@ -6191,7 +6191,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawThickQuadBezierAA(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity)
+    void Image<color_t>::drawThickQuadBezierAA(fVec2 P1, fVec2 P2, fVec2 PC, float wc, float thickness, EndPath end_P1, EndPath end_P2, color_t color, float opacity)
         {
         if (!isValid() || (thickness <=0)) return;
         if (wc <= 0)
@@ -6253,7 +6253,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawThickCubicBezierAA(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, float thickness, PATH_END_TYPE end_P1, PATH_END_TYPE end_P2, color_t color, float opacity)
+    void Image<color_t>::drawThickCubicBezierAA(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, float thickness, EndPath end_P1, EndPath end_P2, color_t color, float opacity)
         {
         if (!isValid() || (thickness <=0)) return;
         bool done = false; 
@@ -6282,7 +6282,7 @@ namespace tgx
 
     template<typename color_t>
     template<int SPLINE_MAX_POINTS>
-    void Image<color_t>::drawThickQuadSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
+    void Image<color_t>::drawThickQuadSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, EndPath end_P0, EndPath end_Pn, color_t color, float opacity)
         {
         if (!isValid() || (thickness <= 0)) return;
         if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
@@ -6382,7 +6382,7 @@ namespace tgx
 
     template<typename color_t>
     template<int SPLINE_MAX_POINTS>
-    void Image<color_t>::drawThickCubicSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, PATH_END_TYPE end_P0, PATH_END_TYPE end_Pn, color_t color, float opacity)
+    void Image<color_t>::drawThickCubicSplineAA(int nbpoints, const fVec2 tabPoints[], float thickness, EndPath end_P0, EndPath end_Pn, color_t color, float opacity)
         {
         if (!isValid()) return;
         if (nbpoints > SPLINE_MAX_POINTS) nbpoints = SPLINE_MAX_POINTS;
@@ -7025,7 +7025,7 @@ namespace tgx
 
     /** find the anchor location (but not for the baseline) */
     template<typename color_t>
-    iVec2 Image<color_t>::_anchorPos(const iBox2& B, ANCHOR_LOCATION anchor)
+    iVec2 Image<color_t>::_anchorPos(const iBox2& B, Anchor anchor)
         {
         iVec2 pos; 
         if (anchor & LEFT) pos.x = B.minX; else if (anchor & RIGHT) pos.x = B.maxX; else pos.x = (B.minX + B.maxX) / 2; 
@@ -7036,7 +7036,7 @@ namespace tgx
 
 
     template<typename color_t>
-    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const GFXfont& font, ANCHOR_LOCATION anchor, int* xadvance)
+    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const GFXfont& font, Anchor anchor, int* xadvance)
         {
         const iVec2 startp = pos;
         uint8_t n = (uint8_t)c;
@@ -7059,7 +7059,7 @@ namespace tgx
 
 
     template<typename color_t>
-    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const ILI9341_t3_font_t & font, ANCHOR_LOCATION anchor, int* xadvance)
+    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const ILI9341_t3_font_t & font, Anchor anchor, int* xadvance)
         {
         const iVec2 startp = pos;
         uint8_t n = (uint8_t)c;
@@ -7106,7 +7106,7 @@ namespace tgx
 
 
     template<typename color_t>
-    iBox2 Image<color_t>::measureText(const char * text, iVec2 pos, const GFXfont& font, ANCHOR_LOCATION anchor, bool wrap_text, bool start_newline_at_0)
+    iBox2 Image<color_t>::measureText(const char * text, iVec2 pos, const GFXfont& font, Anchor anchor, bool wrap_text, bool start_newline_at_0)
         {
         const iVec2 startp = pos;
         const int startx = start_newline_at_0 ? 0 : pos.x;
@@ -7148,7 +7148,7 @@ namespace tgx
 
 
     template<typename color_t>
-    iBox2 Image<color_t>::measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, ANCHOR_LOCATION anchor, bool wrap_text, bool start_newline_at_0)
+    iBox2 Image<color_t>::measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor, bool wrap_text, bool start_newline_at_0)
         {
         const iVec2 startp = pos;
         const int startx = start_newline_at_0 ? 0 : pos.x;
@@ -7238,7 +7238,7 @@ namespace tgx
 
 
     template<typename color_t>
-    iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const GFXfont& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
+    iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, Anchor anchor, const GFXfont& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
         {
         if (!isValid()) return pos;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -7255,7 +7255,7 @@ namespace tgx
 
 
     template<typename color_t>
-    iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, ANCHOR_LOCATION anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
+    iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, Anchor anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
         {
         if (!isValid()) return pos;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;

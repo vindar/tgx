@@ -33,7 +33,7 @@ namespace tgx
     *********************************************************/
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::Renderer3D(const iVec2& viewportSize, Image<color_t> * im, ZBUFFER_t * zbuffer) : _currentpow(-1), _uni(), _culling_dir(1)
             {                        
             _shaders = 0;             
@@ -76,7 +76,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_precomputeSpecularTable2(int exponent)
             {
             _currentpow = exponent;
@@ -113,7 +113,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setViewportSize(int lx, int ly)
             {
             _lx = clamp(lx, 0, MAXVIEWPORTDIMENSION);
@@ -121,21 +121,21 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setViewportSize(const iVec2& viewport_dim)
             {
             setViewportSize(viewport_dim.x, viewport_dim.y);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setImage(Image<color_t>* im)
             {
             _uni.im = im;
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setOffset(int ox, int oy)
             {
             _ox = clamp(ox, 0, MAXVIEWPORTDIMENSION);
@@ -143,14 +143,14 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setOffset(const iVec2& offset)
             {
             this->setOffset(offset.x, offset.y);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setProjectionMatrix(const fMat4& M)
             {
             _projM = M;
@@ -159,7 +159,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         fMat4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::getProjectionMatrix() const
             {
             fMat4 M = _projM;
@@ -168,7 +168,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::useOrthographicProjection()
             {
             static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use useOrthographicProjection()");
@@ -178,7 +178,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::usePerspectiveProjection()
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use usePerspectiveProjection()");
@@ -188,7 +188,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use setOrtho()");
@@ -198,7 +198,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setFrustrum()");
@@ -208,7 +208,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setPerspective(float fovy, float aspect, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setPerspective()");
@@ -218,14 +218,14 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setCulling(int w)
             {
             _culling_dir = (w > 0) ? 1.0f : ((w < 0) ? -1.0f : 0.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setZbuffer(ZBUFFER_t* zbuffer)
             {
             static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use setZbuffer()");
@@ -234,7 +234,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::clearZbuffer()
             {
             static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use clearZbuffer()");
@@ -245,15 +245,15 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setShaders(SHADER shaders)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setShaders(Shader shaders)
             {
             _rectifyShaderShading(shaders);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setTextureWrappingMode(SHADER wrap_mode)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setTextureWrappingMode(Shader wrap_mode)
             {
             if (TGX_SHADER_HAS_TEXTURE_CLAMP(wrap_mode))
                 {
@@ -272,8 +272,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setTextureQuality(SHADER quality)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setTextureQuality(Shader quality)
             {
             if (TGX_SHADER_HAS_TEXTURE_BILINEAR(quality))
                 {
@@ -298,7 +298,7 @@ namespace tgx
      ********************************************************/
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setViewMatrix(const fMat4& M)
             {
             _viewM = M;
@@ -316,14 +316,14 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         fMat4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::getViewMatrix() const
             {
             return _viewM;
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
             {
             fMat4 M;
@@ -332,14 +332,14 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLookAt(const fVec3 eye, const fVec3 center, const fVec3 up)
             {
             setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, up.x, up.y, up.z);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         fVec4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::worldToNDC(fVec3 P)
             {
             fVec4 Q = _projM * _viewM.mult1(P);
@@ -348,7 +348,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         iVec2 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::worldToImage(fVec3 P)
             {
             fVec4 Q = _projM * _viewM.mult1(P);
@@ -359,7 +359,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLightDirection(const fVec3 & direction)
             {
             _light = direction;
@@ -375,7 +375,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLightAmbiant(const RGBf & color)
             {
             _ambiantColor = color;
@@ -384,7 +384,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLightDiffuse(const RGBf & color)
             {
             _diffuseColor = color;
@@ -393,7 +393,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLightSpecular(const RGBf & color)
             {
             _specularColor = color;
@@ -402,7 +402,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLight(const fVec3 direction, const RGBf & ambiantColor, const RGBf & diffuseColor, const RGBf & specularColor)
             {
             this->setLightDirection(direction);
@@ -421,7 +421,7 @@ namespace tgx
      ********************************************************/
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setModelMatrix(const fMat4& M)
             {
             _modelM = M;
@@ -433,14 +433,14 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         fMat4  Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::getModelMatrix() const
             {
             return _modelM;
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setModelPosScaleRot(const fVec3& center, const fVec3& scale, float rot_angle, const fVec3& rot_dir)
             {
             _modelM.setScale(scale);
@@ -454,7 +454,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         fVec4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::modelToNDC(fVec3 P)
             {
             fVec4 Q = _projM * _r_modelViewM.mult1(P);
@@ -463,7 +463,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         iVec2 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::modelToImage(fVec3 P)
             {
             fVec4 Q = _projM * _r_modelViewM.mult1(P);
@@ -474,7 +474,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterialColor(RGBf color)
             {
             _color = color;
@@ -483,7 +483,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterialAmbiantStrength(float strenght)
             {
             _ambiantStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
@@ -492,7 +492,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterialDiffuseStrength(float strenght)
             {
             _diffuseStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
@@ -501,7 +501,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterialSpecularStrength(float strenght)
             {
             _specularStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
@@ -510,14 +510,14 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterialSpecularExponent(int exponent)
             {
             _specularExponent = clamp(exponent, 0, 100);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterial(RGBf color, float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)
             {
             this->setMaterialColor(color);
@@ -543,7 +543,7 @@ namespace tgx
         *********************************************************/
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_triangleClip1in(int shader, tgx::fVec4 CP,
             float cp1, float cp2, float cp3,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
@@ -575,7 +575,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_triangleClip2in(int shader, tgx::fVec4 CP,
             float cp1, float cp2, float cp3,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
@@ -612,7 +612,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         int Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_triangleClip(int shader, tgx::fVec4 CP, float off,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
@@ -668,7 +668,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawTriangleClipped(const int RASTER_TYPE,
             const fVec4* Q0, const fVec4* Q1, const fVec4* Q2,
             const fVec3* N0, const fVec3* N1, const fVec3* N2,
@@ -742,7 +742,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawTriangleClippedSub(const int RASTER_TYPE, const int plane, const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3)
             {
                     
@@ -873,7 +873,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawTriangle(const int RASTER_TYPE,
                            const fVec3 * P0, const fVec3 * P1, const fVec3 * P2,
                            const fVec3 * N0, const fVec3 * N1, const fVec3 * N2,
@@ -990,7 +990,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawQuad(const int RASTER_TYPE,
             const fVec3* P0, const fVec3* P1, const fVec3* P2, const fVec3* P3,
             const fVec3* N0, const fVec3* N1, const fVec3* N2, const fVec3* N3,
@@ -1131,7 +1131,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material, bool draw_chained_meshes)
             {
             if (!_validDraw()) return;
@@ -1169,7 +1169,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>  TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>  TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawMesh(const int RASTER_TYPE, const Mesh3D<color_t>* mesh)
             {
             _uni.shader_type = RASTER_TYPE;
@@ -1348,7 +1348,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3,
                 const fVec3* N1, const fVec3* N2, const fVec3* N3,
                 const fVec2* T1, const fVec2* T2, const fVec2* T3,
@@ -1364,7 +1364,7 @@ namespace tgx
                 }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawTriangleWithVertexColor(const fVec3& P1, const fVec3& P2, const fVec3& P3,
                 const RGBf& col1, const RGBf& col2, const RGBf& col3,
                 const fVec3* N1, const fVec3* N2, const fVec3* N3)
@@ -1387,7 +1387,7 @@ namespace tgx
                 }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawTriangles(int nb_triangles,
             const uint16_t* ind_vertices, const fVec3* vertices,
             const uint16_t* ind_normals, const fVec3* normals,
@@ -1453,7 +1453,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
             const fVec3* N1, const fVec3* N2, const fVec3* N3, const fVec3* N4,
             const fVec2* T1, const fVec2* T2, const fVec2* T3, const fVec2* T4,
@@ -1469,7 +1469,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawQuadWithVertexColor(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
             const RGBf& col1, const RGBf& col2, const RGBf& col3, const RGBf& col4,
             const fVec3* N1, const fVec3* N2, const fVec3* N3, const fVec3* N4)
@@ -1492,7 +1492,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawQuads(int nb_quads,
             const uint16_t* ind_vertices, const fVec3* vertices,
             const uint16_t* ind_normals, const fVec3* normals,
@@ -1567,105 +1567,105 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes)
             {
             _drawWireFrameMesh<true>(mesh, draw_chained_meshes, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness, color_t color, float opacity)
             {
             _drawWireFrameMesh<false>(mesh, draw_chained_meshes, color, opacity, thickness);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLine(const fVec3& P1, const fVec3& P2)
             {
             _drawWireFrameLine<true>(P1, P2, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness, color_t color, float opacity)
             {
             _drawWireFrameLine<false>(P1, P2, color, opacity, thickness);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices)
             {
             _drawWireFrameLines<true>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
             _drawWireFrameLines<false>(nb_lines, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3)
             {
             _drawWireFrameTriangle<true>(P1, P2, P3, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness, color_t color, float opacity)
             {
             _drawWireFrameTriangle<false>(P1, P2, P3, color, opacity, thickness);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices)
             {
             _drawWireFrameTriangles<true>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
             _drawWireFrameTriangles<false>(nb_triangles, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
             {
             _drawWireFrameQuad<true>(P1, P2, P3, P4, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness, color_t color, float opacity)
             {
             _drawWireFrameQuad<false>(P1, P2, P3, P4, color, opacity, thickness);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices)
             {
             _drawWireFrameQuads<true>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
             _drawWireFrameQuads<false>(nb_quads, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness)
             {
@@ -1810,7 +1810,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness)
             {
@@ -1862,7 +1862,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
@@ -1920,7 +1920,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness)
             {
@@ -2004,7 +2004,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
@@ -2093,7 +2093,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness)
             {
@@ -2174,7 +2174,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
@@ -2260,7 +2260,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool USE_BLENDING> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawPixel(const fVec3& pos, color_t color, float opacity)
             {
@@ -2284,7 +2284,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool USE_COLORS, bool USE_BLENDING> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
@@ -2330,28 +2330,28 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawPixel(const fVec3& pos)
             {
             _drawPixel<false>(pos, _color, 1.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawPixel(const fVec3& pos, color_t color, float opacity)
             {
             _drawPixel<true>(pos, color, opacity);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawPixels(int nb_pixels, const fVec3* pos_list)
             {
             _drawPixels<false, false>(nb_pixels, pos_list, nullptr, nullptr, nullptr, nullptr);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             _drawPixels<true, true>(nb_pixels, pos_list, colors_ind, colors, opacities_ind, opacities);
@@ -2360,7 +2360,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool USE_BLENDING> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawDot(const fVec3& pos, int r, color_t color, float opacity)
             {
@@ -2395,7 +2395,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool USE_RADIUS, bool USE_COLORS, bool USE_BLENDING> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
@@ -2458,7 +2458,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> 
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> 
         template<bool CHECKRANGE, bool USE_BLENDING> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawCircleZbuf(int xm, int ym, int r, color_t color, float opacity, float z)
             { 
@@ -2529,21 +2529,21 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawDot(const fVec3& pos, int r)
             {
             _drawDot<false>(pos, r, _color, 1.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawDot(const fVec3& pos, int r, color_t color, float opacity)
             {
             _drawDot<true>(pos, r, color, opacity);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawDots(int nb_dots, const fVec3* pos_list, const int radius)
             {
             _drawDots<false, false, false>(nb_dots, pos_list, nullptr, &radius, nullptr, nullptr, nullptr, nullptr);
@@ -2554,7 +2554,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             _drawDots<true, true, true>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, opacities_ind, opacities);
@@ -2564,7 +2564,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         float Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_unitSphereScreenDiameter()
             {
             const float ONEOVERSQRT2 = 0.70710678118f;
@@ -2585,7 +2585,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawCube()
             {
             // set culling direction = -1 and save previous value
@@ -2598,7 +2598,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawCube(
             const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
             const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
@@ -2635,7 +2635,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawCube(
             const Image<color_t>* texture_front,
             const Image<color_t>* texture_back,
@@ -2700,21 +2700,21 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawSphere(int nb_sectors, int nb_stacks)
             {
             drawSphere(nb_sectors, nb_stacks, nullptr);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture)
             {
             _drawSphere<false, false>(nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawAdaptativeSphere(float quality)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
@@ -2723,7 +2723,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawAdaptativeSphere(const Image<color_t>* texture, float quality)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
@@ -2732,7 +2732,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool WIREFRAME, bool DRAWFAST> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
             {
@@ -2910,7 +2910,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameCube()
             {
             // set culling direction = 1 and save previous value
@@ -2922,7 +2922,7 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameCube(float thickness, color_t color, float opacity)
             {
             // set culling direction = 1 and save previous value
@@ -2934,21 +2934,21 @@ namespace tgx
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameSphere(int nb_sectors, int nb_stacks)
             {
             _drawSphere<true, true>(nb_sectors, nb_stacks, nullptr, 1.0f, color_t(_color), 1.0f);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity)
             {
             _drawSphere<true,false>(nb_sectors, nb_stacks, nullptr, thickness, color, opacity);
             }
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameAdaptativeSphere(float quality)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
@@ -2957,7 +2957,7 @@ namespace tgx
             }   
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameAdaptativeSphere(float quality, float thickness, color_t color, float opacity)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
@@ -2982,7 +2982,7 @@ namespace tgx
                 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_recompute_wa_wb()
             {
             if (_ortho)
@@ -3015,7 +3015,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_rectifyShaderOrtho()
             {
             if (_ortho)
@@ -3032,7 +3032,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_rectifyShaderZbuffer()
             {
             if (_uni.zbuf)
@@ -3049,8 +3049,8 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_rectifyShaderShading(SHADER new_shaders)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_rectifyShaderShading(Shader new_shaders)
             {
             if (TGX_SHADER_HAS_GOURAUD(new_shaders))
                 {
@@ -3099,7 +3099,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_rectifyShaderTextureWrapping()
             {
             if (_texture_wrap_mode == SHADER_TEXTURE_WRAP_POW2)
@@ -3116,7 +3116,7 @@ namespace tgx
 
 
 
-        template<typename color_t, SHADER LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_rectifyShaderTextureQuality()
             {
             if (_texture_quality == SHADER_TEXTURE_BILINEAR)

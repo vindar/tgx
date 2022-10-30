@@ -39,16 +39,16 @@ namespace tgx
 
     // Specializations
 
-    typedef Box2<int> iBox2; ///< Integer-valued 2D box
+    typedef Box2<int> iBox2; ///< Integer-valued 2D box.
 
-    typedef Box2<float> fBox2; ///< Floating point valued 2D box with single(float) precision
+    typedef Box2<float> fBox2; ///< Floating point valued 2D box with single (float) precision.
 
-    typedef Box2<double> dBox2; ///< Floating point valued 2D box with double precision
+    typedef Box2<double> dBox2; ///< Floating point valued 2D box with double precision.
 
 
 
     /**
-    * Define the placement of an anchor point inside to a box.
+    * Define the placement of an anchor point inside a box.
     *
     * ```
     *        left       center      right
@@ -65,73 +65,67 @@ namespace tgx
     *
     * @remark
     * - The default value is `CENTER` which is used when either the horizontal or vertical placement is not specified.
-    * - `BASELINE` only make sense for a 'text' bounding and a given font. Otherwise, it is ignored (and implicitly replaced by `CENTER`).
+    * - `BASELINE` only make sense for a text bounding and a given font. Otherwise, it is ignored (and implicitly replaced by `CENTER`).
     **/
-    enum ANCHOR_LOCATION
+    enum Anchor
         {
-        CENTER = 0,                       ///< Center (vertical/horizontal alignement). This is the default placement if not specitified.
-        LEFT = 1,                       ///< Left side (horizontal alignement)
-        RIGHT = 2,                       ///< Right side (horizontal alignement)
-        TOP = 4,                       ///< Top side (vertical alignement)
-        BOTTOM = 8,                       ///< Bottom side (vertical alignement)
-        BASELINE = 16,                      ///< Baseline height (vertical alignement). **only makes sense with a font (when drawing text), replaced by center otherwise**
-        TOPLEFT = TOP | LEFT,              ///< Top-left corner
-        TOPRIGHT = TOP | RIGHT,             ///< Top-right corner
-        BOTTOMLEFT = BOTTOM | LEFT,           ///< bottom-left corner
-        BOTTOMRIGHT = BOTTOM | RIGHT,          ///< Bottom-right corner
-        CENTERLEFT = CENTER | LEFT,           ///< center point on the left side
-        CENTERRIGHT = CENTER | RIGHT,          ///< center point on the right side 
-        CENTERTOP = CENTER | TOP,            ///< center point on the top side
+        CENTER = 0,                             ///< Center (vertical/horizontal alignement). This is the default placement if not specitified.
+        LEFT = 1,                               ///< Left side (horizontal alignement)
+        RIGHT = 2,                              ///< Right side (horizontal alignement)
+        TOP = 4,                                ///< Top side (vertical alignement)
+        BOTTOM = 8,                             ///< Bottom side (vertical alignement)
+        BASELINE = 16,                          ///< Baseline height (vertical alignement). **only makes sense with a font (when drawing text), replaced by center otherwise**
+        TOPLEFT = TOP | LEFT,                   ///< Top-left corner
+        TOPRIGHT = TOP | RIGHT,                 ///< Top-right corner
+        BOTTOMLEFT = BOTTOM | LEFT,             ///< bottom-left corner
+        BOTTOMRIGHT = BOTTOM | RIGHT,           ///< Bottom-right corner
+        CENTERLEFT = CENTER | LEFT,             ///< center point on the left side
+        CENTERRIGHT = CENTER | RIGHT,           ///< center point on the right side 
+        CENTERTOP = CENTER | TOP,               ///< center point on the top side
         CENTERBOTTOM = CENTER | BOTTOM,         ///< center point on the bottom side 
-
         DEFAULT_TEXT_ANCHOR = BASELINE | LEFT   ///< Default location for text anchoring. 
         };
 
 
-    /** Enable bitwise `|` operator for enum */
-    inline constexpr ANCHOR_LOCATION operator|(ANCHOR_LOCATION a1, ANCHOR_LOCATION a2) { return ((ANCHOR_LOCATION)((int)a1 | (int)a2)); }
+    /** Enable bitwise `|` operator for enum Anchor. */
+    inline constexpr Anchor operator|(Anchor a1, Anchor a2) { return ((Anchor)((int)a1 | (int)a2)); }
 
-    /** Enable bitwise `|=` operator for enum */
-    inline ANCHOR_LOCATION& operator|=(ANCHOR_LOCATION& a1, ANCHOR_LOCATION a2) { a1 = a1 | a2; return a1; }
+    /** Enable bitwise `|=` operator for enum Anchor. */
+    inline Anchor& operator|=(Anchor& a1, Anchor a2) { a1 = a1 | a2; return a1; }
 
-    /** Enable bitwise `&` operator for enum */
-    inline constexpr ANCHOR_LOCATION operator&(ANCHOR_LOCATION a1, ANCHOR_LOCATION a2) { return ((ANCHOR_LOCATION)((int)a1 & (int)a2)); }
+    /** Enable bitwise `&` operator for enum Anchor. */
+    inline constexpr Anchor operator&(Anchor a1, Anchor a2) { return ((Anchor)((int)a1 & (int)a2)); }
 
-    /** Enable bitwise `&=` operator for enum */
-    inline ANCHOR_LOCATION& operator&=(ANCHOR_LOCATION& a1, ANCHOR_LOCATION a2) { a1 = a1 & a2; return a1; }
+    /** Enable bitwise `&=` operator for enum Anchor. */
+    inline Anchor& operator&=(Anchor& a1, Anchor a2) { a1 = a1 & a2; return a1; }
 
 
 
-    /** Slipping of a box in half and quarters. */
-    enum BOX_SPLIT
+    /** Splitting of a box in half and quarters. */
+    enum BoxSplit
         {
-        SPLIT_LEFT          = ANCHOR_LOCATION::LEFT,        ///< left half
-        SPLIT_RIGHT         = ANCHOR_LOCATION::RIGHT,       ///< right half
-        SPLIT_TOP           = ANCHOR_LOCATION::TOP,         ///< top half
-        SPLIT_BOTTOM        = ANCHOR_LOCATION::BOTTOM,      ///< bottom half
-        SPLIT_TOPLEFT       = ANCHOR_LOCATION::TOPLEFT,     ///< top left quarter
-        SPLIT_TOPRIGHT      = ANCHOR_LOCATION::TOPRIGHT,    ///< top right quarter 
-        SPLIT_BOTTOMLEFT    = ANCHOR_LOCATION::BOTTOMLEFT,  ///< bottom left quarter
-        SPLIT_BOTTOMRIGHT   = ANCHOR_LOCATION::BOTTOMRIGHT  ///< bottom right quarter
+        SPLIT_LEFT          = Anchor::LEFT,        ///< left half
+        SPLIT_RIGHT         = Anchor::RIGHT,       ///< right half
+        SPLIT_TOP           = Anchor::TOP,         ///< top half
+        SPLIT_BOTTOM        = Anchor::BOTTOM,      ///< bottom half
+        SPLIT_TOPLEFT       = Anchor::TOPLEFT,     ///< top left quarter
+        SPLIT_TOPRIGHT      = Anchor::TOPRIGHT,    ///< top right quarter 
+        SPLIT_BOTTOMLEFT    = Anchor::BOTTOMLEFT,  ///< bottom left quarter
+        SPLIT_BOTTOMRIGHT   = Anchor::BOTTOMRIGHT  ///< bottom right quarter
         };
 
 
-    /** Enable bitwise `|` operator for enum */
-    inline constexpr BOX_SPLIT operator|(BOX_SPLIT a1, BOX_SPLIT a2) { return ((BOX_SPLIT)((int)a1 | (int)a2)); }
+    /** Enable bitwise `|` operator for enum BoxSplit.*/
+    inline constexpr BoxSplit operator|(BoxSplit a1, BoxSplit a2) { return ((BoxSplit)((int)a1 | (int)a2)); }
 
-    /** Enable bitwise `|=` operator for enum */
-    inline BOX_SPLIT& operator|=(BOX_SPLIT& a1, BOX_SPLIT a2) { a1 = a1 | a2; return a1; }
+    /** Enable bitwise `|=` operator for enum BoxSplit.*/
+    inline BoxSplit& operator|=(BoxSplit& a1, BoxSplit a2) { a1 = a1 | a2; return a1; }
 
-    /** Enable bitwise `&` operator for enum */
-    inline constexpr BOX_SPLIT operator&(BOX_SPLIT a1, BOX_SPLIT a2) { return ((BOX_SPLIT)((int)a1 & (int)a2)); }
+    /** Enable bitwise `&` operator for enum BoxSplit.*/
+    inline constexpr BoxSplit operator&(BoxSplit a1, BoxSplit a2) { return ((BoxSplit)((int)a1 & (int)a2)); }
 
-    /** Enable bitwise `&=` operator for enum */
-    inline BOX_SPLIT& operator&=(BOX_SPLIT& a1, BOX_SPLIT a2) { a1 = a1 & a2; return a1; }
-
-
-
-
-
+    /** Enable bitwise `&=` operator for enum BoxSplit.*/
+    inline BoxSplit& operator&=(BoxSplit& a1, BoxSplit a2) { a1 = a1 & a2; return a1; }
 
 
 
@@ -536,11 +530,11 @@ namespace tgx
         /**
          * Split the box in half or quarter.
          *
-         * @param   part    The part or the box to keep. See tgx::BOX_SPLIT. 
+         * @param   part    The part or the box to keep. See tgx::BoxSplit. 
          *
          * @sa  getSplit()
          */
-        inline void split(BOX_SPLIT part)
+        inline void split(BoxSplit part)
             {
             *this = getSplit(part);
             }
@@ -549,11 +543,11 @@ namespace tgx
         /**
          * Return the box splitted in half or quater.
          *
-         * @param   part    The part or the box to keep. See tgx::BOX_SPLIT.
+         * @param   part    The part or the box to keep. See tgx::BoxSplit.
          *
          * @sa  split()
          */
-        Box2<T> getSplit(BOX_SPLIT part) const
+        Box2<T> getSplit(BoxSplit part) const
             {
             const T midX = (minX + maxX)/2;
             const T midY = (minY + maxY)/2;
@@ -577,7 +571,7 @@ namespace tgx
          *
          * @param   anchor_pos Th anchor location, see 
          */
-        Vec2<T> getAnchor(ANCHOR_LOCATION anchor_pos) const
+        Vec2<T> getAnchor(Anchor anchor_pos) const
             {
             anchor_pos &= (CENTER | LEFT | RIGHT | TOP | BOTTOM); // remove baseline flag
             switch (anchor_pos)

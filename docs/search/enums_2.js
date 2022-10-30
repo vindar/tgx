@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['path_5fend_5ftype_0',['PATH_END_TYPE',['../_image_8h.html#a4c678c7a8876d47f386fd75b62a68e57',1,'tgx']]]
+  ['endpath_0',['EndPath',['../_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b',1,'tgx']]]
 ];

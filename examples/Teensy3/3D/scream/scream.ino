@@ -50,7 +50,7 @@ uint16_t zbuf[LX * LY]; // zbuffer in 16 bits precision
 Image<RGB565> * front_fb, * back_fb; 
 
 // only load the shaders we need.
-const SHADER LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE_NEAREST |SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE_NEAREST |SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;

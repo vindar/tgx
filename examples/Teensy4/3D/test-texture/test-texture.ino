@@ -86,7 +86,7 @@ Image<RGB565> im(fb, SLX, SLY);
 
 
 // only load the shaders we need (note that TGX_SHADER_NOTEXTURE is needed in order to draw without texturing !). 
-const SHADER LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
@@ -108,7 +108,7 @@ const tgx::Mesh3D<tgx::RGB565> * cached_mesh; // pointer to the currently cached
 /**
 * Overlay some info about the current mesh on the screen
 **/
-void drawInfo(tgx::Image<tgx::RGB565>& im, SHADER shader, const tgx::Mesh3D<tgx::RGB565> & mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
+void drawInfo(tgx::Image<tgx::RGB565>& im, Shader shader, const tgx::Mesh3D<tgx::RGB565> & mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
     {
     // count the number of triangles in the mesh (by iterating over linked meshes)
     const Mesh3D<RGB565> * m = &mesh;
@@ -188,7 +188,7 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
         int part = (em * 3) / maxT;
  
         // choose the shader to use
-        SHADER shader = (part == 0) ? SHADER_GOURAUD : ((part == 1) ? (SHADER_GOURAUD | SHADER_TEXTURE_NEAREST) : (SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR));
+        Shader shader = (part == 0) ? SHADER_GOURAUD : ((part == 1) ? (SHADER_GOURAUD | SHADER_TEXTURE_NEAREST) : (SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR));
 
         renderer.setShaders(shader);
 

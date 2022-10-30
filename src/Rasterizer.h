@@ -79,7 +79,7 @@ namespace tgx
     *
     * @param data       'Uniform' parameters (depending on the rasterization type).
     *
-    * @param shader_fun the shader function. see Shader.h for the implementation of classic shaders.
+    * @param shader_fun the shader function. see Shaders.h for the implementation of classic shaders.
     *                   
     * 
     * **Remarks**

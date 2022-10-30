@@ -37,7 +37,7 @@ namespace tgx
     /**
     * List of shaders available for 3D graphics.
     */
-    enum SHADER
+    enum Shader
         {
         // Shaders for projection type : Perspective or ortho. 
         SHADER_PERSPECTIVE = (1 << 0),          ///< enable Perspective projection
@@ -66,19 +66,19 @@ namespace tgx
 
 
     /** Enable bitwise `|` operator for enum */
-    inline constexpr SHADER operator|(SHADER a1, SHADER a2) { return ((SHADER)((int)a1 | (int)a2)); }
+    inline constexpr Shader operator|(Shader a1, Shader a2) { return ((Shader)((int)a1 | (int)a2)); }
 
     /** Enable bitwise `|=` operator for enum */
-    inline SHADER& operator|=(SHADER& a1, SHADER a2) { a1 = a1 | a2; return a1; }
+    inline Shader& operator|=(Shader& a1, Shader a2) { a1 = a1 | a2; return a1; }
 
     /** Enable bitwise `&` operator for enum */
-    inline constexpr SHADER operator&(SHADER a1, SHADER a2) { return ((SHADER)((int)a1 & (int)a2)); }
+    inline constexpr Shader operator&(Shader a1, Shader a2) { return ((Shader)((int)a1 & (int)a2)); }
 
     /** Enable bitwise `&=` operator for enum */
-    inline SHADER& operator&=(SHADER& a1, SHADER a2) { a1 = a1 & a2; return a1; }
+    inline Shader& operator&=(Shader& a1, Shader a2) { a1 = a1 & a2; return a1; }
 
     /** Enable bitwise `~` operator for enum */
-    inline constexpr SHADER operator~(SHADER a) { return (SHADER)(~((int)a)); }
+    inline constexpr Shader operator~(Shader a) { return (Shader)(~((int)a)); }
 
 
 

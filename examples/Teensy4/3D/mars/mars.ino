@@ -105,7 +105,7 @@ DMAMEM uint16_t zbuf[SLX * SLY];
 Image<RGB565> im(fb, SLX, SLY);
 
 // all the shaders we will use with the renderer
-const SHADER LOADED_SHADER = SHADER_ZBUFFER | SHADER_PERSPECTIVE | SHADER_GOURAUD | SHADER_FLAT | SHADER_NOTEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADER = SHADER_ZBUFFER | SHADER_PERSPECTIVE | SHADER_GOURAUD | SHADER_FLAT | SHADER_NOTEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2;
 
 // the 3D renderer object.
 Renderer3D<RGB565, LOADED_SHADER, uint16_t> renderer;
@@ -294,7 +294,7 @@ TGX_NOINLINE FLASHMEM void drawBase(bool use_dma_tex = false)
     }
 
 
-TGX_NOINLINE void drawSphere(const SHADER shader, const Image<RGB565> * texture = nullptr)
+TGX_NOINLINE void drawSphere(const Shader shader, const Image<RGB565> * texture = nullptr)
     {
      renderer.setCulling(1);     
     if (texture)
