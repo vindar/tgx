@@ -82,11 +82,7 @@ improve rendering speed when reading large image in flash... Can use large value
 // c++, no plain c
 #ifdef __cplusplus
 
-
 #define DEPRECATED(X) [[deprecated(" " X " ")]]
-
-#define DEPRECATED_SCALAR_PARAMS
-//#define DEPRECATED_SCALAR_PARAMS [[deprecated("METHOD WITH SCALAR PARAMETERS WILL BE REMOVED SOON. USE THE VERSION WITH VECTOR PARAMETERS INSTEAD.")]]
 
 
 // check that int is at least 4 bytes. 

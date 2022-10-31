@@ -304,7 +304,7 @@ namespace tgx
          * a sub-image of itself (with different dimension/stride).
          *
          * @param   subbox  The region to to keep.
-        **/
+         */
         void crop(const iBox2& subbox);
 
 
@@ -320,7 +320,7 @@ namespace tgx
          *                  then an empty image is returned.
          *
          * @returns the cropped image.
-        **/
+         */
         Image<color_t> getCrop(const iBox2& subbox, bool clamp = true) const;
 
 
@@ -332,7 +332,7 @@ namespace tgx
          * @param   B  box that delimit the sub-image inside this image. 
          *
          * @returns the sub-image delimited by B and sharing the same memory buffer. 
-        **/
+         */
         Image<color_t> operator()(const iBox2& B) const;
 
 
@@ -347,7 +347,7 @@ namespace tgx
          * @param   max_y   bottom boundary (inclusive)
          *
          * @returns the sub-image delimited the closed box iBox(min_x, max_x, min_y, max_x) and sharing the same memory buffer. 
-        **/
+         */
         Image<color_t> operator()(int min_x, int max_x, int min_y, int max_y) const;
 
 
@@ -378,7 +378,7 @@ namespace tgx
         /**
         * Set the image as invalid.
         *
-        * **Note** It is the user responsibility to manage the memory allocated for the pixel buffer (if required). No deallocation is performed here.
+        * @note It is the user responsibility to manage the memory allocated for the pixel buffer (if required). No deallocation is performed here.
         */
         void setInvalid();
 
@@ -387,7 +387,7 @@ namespace tgx
          * Return the image width. Same as lx().
          *
          * @returns The image width (0 for an invalid image).
-        **/
+         */
         inline TGX_INLINE int width() const { return _lx; }
 
 
@@ -395,7 +395,7 @@ namespace tgx
          * Return the image width. Same as width().
          *
          * @returns The image width (0 for an invalid image).
-        **/
+         */
         inline TGX_INLINE int lx() const { return _lx; }
 
 
@@ -403,7 +403,7 @@ namespace tgx
          * Return the image height. Same as ly().
          *
          * @returns The image height (0 for an invalid image).
-        **/
+         */
         inline TGX_INLINE int height() const { return _ly; }
 
 
@@ -411,7 +411,7 @@ namespace tgx
          * Return the image height. Same as height().
          *
          * @returns The image height (0 for an invalid image).
-        **/
+         */
         inline TGX_INLINE int ly() const { return _ly; }
 
 
@@ -419,7 +419,7 @@ namespace tgx
          * Return the image stride.
          *
          * @returns The stride  (0 for an invalid image).
-        **/
+         */
         inline TGX_INLINE int stride() const { return _stride; }
 
 
@@ -427,7 +427,7 @@ namespace tgx
          * Return the image dimensions as an iVec2
          *
          * @returns The image dimension (returns {0,0} for an invalid image).
-        **/
+         */
         inline TGX_INLINE iVec2 dim() const { return iVec2{ _lx, _ly }; }
 
 
@@ -435,17 +435,27 @@ namespace tgx
          * Return the image dimension as a box.
          *
          * @returns a box of the form {0, width-1, 0 height-1 } or an empty box if the image is invalid.
-        **/
+         */
         inline TGX_INLINE iBox2 imageBox() const { return iBox2(0, _lx - 1, 0, _ly - 1); }
 
 
         /**
          * Return a pointer to the pixel buffer.
+         * 
+         * const overload.
          *
-         * @returns A pointer to the start of the pixel buffer associated with this image (or nullptr if
-         *          the image is invalid).
-        **/
+         * @returns A const pointer to the start of the pixel buffer associated with this image (or nullptr if the image is invalid).
+         */
         inline TGX_INLINE const color_t * data() const { return _buffer; } 
+
+
+        /**
+         * Return a pointer to the pixel buffer.
+         *
+         * non-const overload. 
+         * 
+         * @returns A pointer to the start of the pixel buffer associated with this image (or nullptr if the image is invalid).
+         */
         inline TGX_INLINE color_t * data() { return _buffer; }
 
 
@@ -472,32 +482,53 @@ namespace tgx
 
         /**
          * Set a pixel at a given position.
-         * 
-         * - the 'f' suffix is used for accessing pixel with floating point values (fVec2)
-         * instead of integer values.
          *
          * @tparam  CHECKRANGE  set to false to disable range checking (danger!)
-         * @param   pos         The position.
-         * @param   color       The color.
-        **/
+         * @param   pos         position.
+         * @param   color       color to set.
+         */
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE>(pos, color); }
+
+
+        /**
+         * Set a pixel at a given position (floating point coord).
+         * 
+         * @remark Version for floating point value coordinates. Recall that the image range is `[-0.5f, lx-0.5f]x[-0.5f,lx-0.5f]` and center of pixels are on the interger lattice. 
+         * 
+         * @tparam  CHECKRANGE  set to false to disable range checking (danger!)
+         * @param   pos     position given as a floating point value vector.  
+         * @param   color   color to set.
+         */
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixelf(fVec2 pos, color_t color) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE>({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, color); }
 
 
         /**
-         * Blend a pixel with the current pixel color after multiplying its opacity with a given factor.
+         * Blend a pixel with the current pixel color.
          * 
-         * - If type color_t has an alpha channel, then it is used for alpha blending.
-         * - the 'f' suffix is used for accessing pixel with floating point values (fVec2)
-         *   instead of integer values.
+         * @remark If type color_t has an alpha channel, then it is used for alpha blending.
          *
          * @tparam  CHECKRANGE  set to false to disable range checking (danger!)
          * @param   pos         The position.
          * @param   color       The color to blend.
          * @param   opacity     opacity multiplier from 0.0f (fully transparent) to 1.0f fully transparent.
-         *                      if negative, then simple overwrittening of color is used instead of blending.
-        **/
+         *                      if negative, then simple overwriting of color is used instead of blending.
+         */
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color, float opacity) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE,true>(pos, color, opacity); }
+        
+        
+        /**
+         * Blend a pixel with the current pixel color (floating point coord).
+         * 
+         * @remark 
+         * - Version for floating point value coordinates. Recall that the image range is `[-0.5f, lx-0.5f]x[-0.5f,lx-0.5f]` and center of pixels are on the interger lattice.
+         * - If type color_t has an alpha channel, then it is used for alpha blending.
+         *
+         * @tparam  CHECKRANGE  set to false to disable range checking (danger!)
+         * @param   pos         The position given as a floating point value vector.
+         * @param   color       The color to blend.
+         * @param   opacity     opacity multiplier from 0.0f (fully transparent) to 1.0f fully transparent.
+         *                      if negative, then simple overwriting of color is used instead of blending.
+         */
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixelf(fVec2 pos, color_t color, float opacity) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE, true>({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, color, opacity); }
 
 
@@ -506,47 +537,87 @@ namespace tgx
          *
          * @tparam  CHECKRANGE      If set to true, outside_color is returned when querying outside of the
          *                          image range. Otherwise nor range checking is performed (danger!)
-         * @param   pos             The position.
+         * @param   pos             The position to read. 
          * @param   outside_color   (Optional) color to return when querying outside the range.
          *
          * @returns The pixel color.
-        **/
+         */
         template<bool CHECKRANGE = true> TGX_INLINE inline color_t readPixel(iVec2 pos, color_t outside_color = color_t()) const { if ((CHECKRANGE) && (!isValid())) return outside_color; return _readPixel(pos, outside_color); }
+
+
+        /**
+         * Return the color of a pixel at a given position (floating point coord).
+         *
+         * @remark Version for floating point value coordinates. Recall that the image range is `[-0.5f, lx-0.5f]x[-0.5f,lx-0.5f]` and center of pixels are on the interger lattice.
+         *         
+         * @tparam  CHECKRANGE      If set to true, outside_color is returned when querying outside of the
+         *                          image range. Otherwise nor range checking is performed (danger!)
+         * @param   pos             The position to read given as a floating point value vector.
+         * @param   outside_color   (Optional) color to return when querying outside the range.
+         *
+         * @returns The pixel color.
+         */
         template<bool CHECKRANGE = true> TGX_INLINE inline color_t readPixelf(fVec2 pos, color_t outside_color = color_t()) const { if ((CHECKRANGE) && (!isValid())) return outside_color; return _readPixel({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, outside_color); }
 
 
         /**
          * Get a reference to a pixel (no range check!)
          *
+         * const overload.
+         * 
+         * @param   pos The position.
+         *
+         * @returns a const reference to the pixel color.
+         */
+        TGX_INLINE inline const color_t& operator()(iVec2 pos) const { return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)]; }
+        
+        /**
+         * Get a reference to a pixel (no range check!)
+         *
+         * non-const overload.
+         * 
          * @param   pos The position.
          *
          * @returns a reference to the pixel color.
-        **/
-        TGX_INLINE inline const color_t& operator()(iVec2 pos) const { return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)]; }
+         */
         TGX_INLINE inline color_t& operator()(iVec2 pos) { return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)]; }
 
 
         /**
          * Get a reference to a pixel (no range check!)
          *
+         * const overload.
+         * 
+         * @param   x   x-coordinate.
+         * @param   y   y-coordinate.
+         *
+         * @returns a const reference to the pixel color.
+         */
+        TGX_INLINE inline const color_t& operator()(int x, int y) const { return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)]; }
+
+
+        /**
+         * Get a reference to a pixel (no range check!)
+         *
+         * non-const overload.
+         * 
          * @param   x   x-coordinate.
          * @param   y   y-coordinate.
          *
          * @returns a reference to the pixel color.
-        **/
-        TGX_INLINE inline const color_t& operator()(int x, int y) const { return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)]; }
+         */
         TGX_INLINE inline color_t& operator()(int x, int y) { return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];}
 
 
         /**
          * Iterate over all the pixels of the image.
          * 
+         * non-const overload.
+         * 
          * Iteration is performed from left to right (inner loop) and top to bottom (outer loop). The
          * callback function cb_fun() is called for each pixel and must have a signature compatible with:
          * 
-         *  `bool cb_fun(tgx::iVec2 pos, color_t &amp; color)`          (called from non-const image)
-         * or
-         *  `bool cb_fun(tgx::iVec2 pos, const color_t &amp; color)`    (call from const image)
+         * `bool cb_fun(tgx::iVec2 pos, color_t & color)` 
          * 
          * where:
          * 
@@ -554,27 +625,65 @@ namespace tgx
          * - `color` is a reference to the current pixel color.
          * - the callback must return true to continue the iteration and false to abort iteration.
          * 
-         * Note: this method is particularly useful with lambdas, for example, to paint all black pixels
-         * to red in a RGB565 image `im`:
+         * @remark this method is particularly useful with lambdas, for example, to paint all black pixels
+         * to red in a tgx::Image<tgx::RGB565> image `im`:
+         * ```
+         * im.iterate( [](tgx::iVec2 pos, tgx::RGB565 & color)
+         *               { if (color == tgx::RGB565_Black) color = tgx::RGB565_Red; return true; } );
+         * ```
          * 
-         *    im.iterate( [](tgx::iVec2 pos, tgx::RGB565 &amp; color)
-         *                { if (color == tgx::RGB565_Black) color = tgx::RGB565_Red; return true; } );
-         *
          * @param   cb_fun  The callback function.
-        **/
-        template<typename ITERFUN> void iterate(ITERFUN cb_fun) const;
+         */
         template<typename ITERFUN> void iterate(ITERFUN cb_fun);
 
 
         /**
-         * Same as above but iterate only over the pixels inside the sub-box B (intersected with the
-         * image box).
+         * Iterate over all the pixels of the image.
+         *
+         * const overload.
+         * 
+         * Iteration is performed from left to right (inner loop) and top to bottom (outer loop). The
+         * callback function cb_fun() is called for each pixel and must have a signature compatible with:
+         *
+         * `bool cb_fun(tgx::iVec2 pos, const color_t & color)`
+         * 
+         * see void iterate(ITERFUN cb_fun) for details.
+         *
+         * @param   cb_fun  The callback function.
+         */
+        template<typename ITERFUN> void iterate(ITERFUN cb_fun) const;
+
+
+        /**
+         * Iterate over the pixel of the image inside a given region.
+         * 
+         * non-const overload.
+         * 
+         * The method calls the callback function for each pixel inside `B` (intersected with `imageBox()`). 
+         * 
+         * See void iterate(ITERFUN cb_fun) for details.
          *
          * @param   cb_fun  The callback function.
          * @param   B       The sub-box to iterate inside.
-        **/
-        template<typename ITERFUN> void iterate(ITERFUN cb_fun, tgx::iBox2 B) const;
+         */
         template<typename ITERFUN> void iterate(ITERFUN cb_fun, tgx::iBox2 B);
+
+
+        /**
+         * Iterate over the pixel of the image inside a given region.
+         * 
+         * const overload.
+         * 
+         * The method calls the callback function for each pixel inside `B` (intersected with `imageBox()`). 
+         * 
+         * See void iterate(ITERFUN cb_fun) for details.
+         *
+         * @param   cb_fun  The callback function.
+         * @param   B       The sub-box to iterate inside.
+         */
+        template<typename ITERFUN> void iterate(ITERFUN cb_fun, tgx::iBox2 B) const;
+
+
 
 
 
@@ -3006,16 +3115,16 @@ namespace tgx
 
 
 
-    ///@}
      
-    
+
+    ///@}
     //*************************************************************************************************************
     //*************************************************************************************************************
     //*************************************************************************************************************
     /**
     * @name Drawing primitives: Text
     *
-    * Methods for drawing text onto the image. The following font format are supported:
+    * Methods for drawing text onto the image. The following font formats are supported:
     *
     * - AdafruitGFX                     (https://glenviewsoftware.com/projects/products/adafonteditor/adafruit-gfx-font-format)
     * - ILI9341_t3 v1                   (https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format)
@@ -3024,27 +3133,47 @@ namespace tgx
     * @note tgx-font (https://github.com/vindar/tgx-font) contains a collection ILI9341_t3 v1 and v2 (antialiased) fonts
     *       that can be used directly with the methods below (and the instruction on how to convert a ttf font to  this format).
     */
+    ///@{
     //*************************************************************************************************************
     //*************************************************************************************************************
     //*************************************************************************************************************
-
 
 
 
         /**
-         * Query the height of a font i.e. the number of vertical pixels between two lines of text with
-         * this font. 
+         * Query the height of a font.
+         * 
+         * overload for GFXfont.
+         * 
+         * @remark this method simply forwards the calls `tgx::fontHeight(const GFXfont & font)`.
          *
          * @param   font    The font.
          *
-         * @returns the height of the font.
-        **/
-        static int fontHeight(const GFXfont & font);
-        static int fontHeight(const ILI9341_t3_font_t& font);
+         * @returns the number of vertical pixels between two lines of text with this font.
+         */
+        int fontHeight(const GFXfont & font) const;
 
 
         /**
-         * Return the box of pixels occupied by a character when drawn with 'font' anchored at 'pos'.
+         * Query the height of a font
+         *
+         * overload for ILI9341_t3_font_t.
+         *
+         * @remark this method simply forwards the calls `tgx::fontHeight(const ILI9341_t3_font_t& font)`.
+         *
+         * @param   font    The font.
+         *
+         * @returns the number of vertical pixels between two lines of text with this font.
+         */
+        int fontHeight(const ILI9341_t3_font_t& font) const;
+
+
+        /**
+         * Compute the bounding box of a character.
+         * 
+         * overload for ILI9341_t3_font_t.
+         *
+         * @remark this method simply forwards the calls `tgx::measureChar(char c, iVec2 pos, const GFXfont& font, Anchor anchor, int* xadvance)`.
          *
          * @param           c           The character.
          * @param           pos         position of the anchor point in this image.
@@ -3054,14 +3183,35 @@ namespace tgx
          * @param [in,out]  xadvance    If non-null, the number of pixel to advance horizontally after
          *                              drawing the char is stored here.
          *
-         * @returns the bounding box of pixels occupied by the char when its chosen anchor is at pos.
-        **/
-        static iBox2 measureChar(char c, iVec2 pos, const GFXfont& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
-        static iBox2 measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr);
+         * @returns the bounding box of pixels occupied by the char draw with `font `when its chosen anchor is at `pos`.
+         */
+        iBox2 measureChar(char c, iVec2 pos, const GFXfont& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr) const;
 
 
         /**
-         * Return the box of pixels occupied by a text when drawn with 'font' anchored at 'pos'.
+         * Compute the bounding box of a character.
+         * 
+         * overload for ILI9341_t3_font_t.
+         *
+         * @remark this method simply forwards the calls `tgx::measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor, int* xadvance)`.
+         *
+         * @param           c           The character.
+         * @param           pos         position of the anchor point in this image.
+         * @param           font        The font to use.
+         * @param           anchor      (Optional) location of the anchor with respect to the char
+         *                              bounding box. (by default, this is the BASELINE|LEFT).
+         * @param [in,out]  xadvance    If non-null, the number of pixel to advance horizontally after
+         *                              drawing the char is stored here.
+         *
+         * @returns the bounding box of pixels occupied by the char draw with `font `when its chosen anchor is at `pos`.
+         */
+        iBox2 measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, int* xadvance = nullptr) const;
+
+
+        /**
+         * Compute the bounding box of a text.
+         *
+         * overload for GFXfont.
          *
          * @param   text                The text.
          * @param   pos                 position of the anchor point in the image.
@@ -3072,10 +3222,28 @@ namespace tgx
          * @param   start_newline_at_0  (Optional) True to start a new line of text at x=0 and false to
          *                              start at x=pos.x.
          *
-         * @returns the bounding box of pixels occupied by the text when its chosen anchor is at pos.
-        **/
-        iBox2 measureText(const char * text, iVec2 pos, const GFXfont& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
-        iBox2 measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false);
+         * @returns the bounding box of pixels occupied by the `text` draw with `font` when its chosen anchor is at `pos`.
+         */
+        iBox2 measureText(const char * text, iVec2 pos, const GFXfont& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false) const;
+
+
+        /**
+         * Compute the bounding box of a text.
+         *
+         * overload for ILI9341_t3_font_t.
+         *
+         * @param   text                The text.
+         * @param   pos                 position of the anchor point in the image.
+         * @param   font                The font to use.
+         * @param   anchor              (Optional) location of the anchor with respect to the text
+         *                              bounding box. (by default, this is the BASELINE|LEFT).
+         * @param   wrap_text           (Optional) True to wrap wrap text at the end of image.
+         * @param   start_newline_at_0  (Optional) True to start a new line of text at x=0 and false to
+         *                              start at x=pos.x.
+         *
+         * @returns the bounding box of pixels occupied by the `text` draw with `font` when its chosen anchor is at `pos`.
+         */
+        iBox2 measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor = DEFAULT_TEXT_ANCHOR, bool wrap_text = false, bool start_newline_at_0 = false) const;
 
 
         /**
@@ -3142,52 +3310,51 @@ namespace tgx
          *                              negative to disable blending and simply use overwrite.
          *
          * @returns the position to draw the next char (when using the same anchor location).
-        **/
+         */
         iVec2 drawTextEx(const char* text, iVec2 pos, Anchor anchor, const GFXfont& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
         iVec2 drawTextEx(const char* text, iVec2 pos, Anchor anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 
 
+    //**********************************************************************
+    //                DRAWING TEXT : DEPRECATED METHODS
+    //                          
+    // These method are still available for compatibility but will be removed 
+    // 'soon'...
+    //**********************************************************************
 
-
-    /**********************************************************************
-    *                DRAWING TEXT : DEPRECATED METHODS
-    *                          
-    * These method are still available for compatibility but will be removed 
-    * 'soon'...
-    ***********************************************************************/
-
-
+#ifndef DOXYGEN_EXCLUDE
 
         /**
         * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
-        **/
+        */
         DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
         iVec2 drawText(const char* text, iVec2 pos, color_t color, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
 
 
         /**
         * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
-        **/
+        */
         DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
         iVec2 drawText(const char* text, iVec2 pos, color_t color, const GFXfont& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
 
 
         /**
         * DEPRECATED: Use the new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
-        **/
+        */
         DEPRECATED("Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0)")
         iBox2 measureText(const char* text, iVec2 pos, const GFXfont& font, bool start_newline_at_0) { return measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0); }
 
 
         /**
         * DEPRECATED: Use the new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
-        **/
+        */
         DEPRECATED("Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0)")
         iBox2 measureText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, bool start_newline_at_0) { return measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0); }
 
 
+#endif
 
 
 
@@ -3198,6 +3365,8 @@ namespace tgx
 
 
 
+
+    ///@}
 
 
     //**************************************************************************************************************************************************

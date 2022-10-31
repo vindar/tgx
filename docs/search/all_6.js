@@ -12,5 +12,7 @@ var searchData=
   ['getprojectionmatrix_9',['getProjectionMatrix',['../classtgx_1_1_renderer3_d.html#a4bce4752b73a38862733b4f2bcb6f04f',1,'tgx::Renderer3D']]],
   ['getrotate90_10',['getRotate90',['../structtgx_1_1_vec2.html#a0e7fdb36c34634adee5419874414fb98',1,'tgx::Vec2']]],
   ['getsplit_11',['getSplit',['../structtgx_1_1_box2.html#a4383407599d505c3304471d6acf14ce8',1,'tgx::Box2']]],
-  ['getviewmatrix_12',['getViewMatrix',['../classtgx_1_1_renderer3_d.html#a35bf226bb8236ad48314bca2bd0f31f8',1,'tgx::Renderer3D']]]
+  ['getviewmatrix_12',['getViewMatrix',['../classtgx_1_1_renderer3_d.html#a35bf226bb8236ad48314bca2bd0f31f8',1,'tgx::Renderer3D']]],
+  ['gfxfont_13',['GFXfont',['../struct_g_f_xfont.html',1,'']]],
+  ['glyph_14',['glyph',['../struct_g_f_xfont.html#af63d88fa053c9a634e86eab7c96db290',1,'GFXfont']]]
 ];

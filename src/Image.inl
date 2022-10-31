@@ -6971,7 +6971,7 @@ namespace tgx
 
 
     template<typename color_t>
-    int Image<color_t>::fontHeight(const GFXfont& font)
+    int Image<color_t>::fontHeight(const GFXfont& font) const
         {
         return tgx::fontHeight(font);
         }
@@ -6979,28 +6979,28 @@ namespace tgx
 
 
     template<typename color_t>
-    int Image<color_t>::fontHeight(const ILI9341_t3_font_t& font)
+    int Image<color_t>::fontHeight(const ILI9341_t3_font_t& font) const
         {
         return tgx::fontHeight(font);
         }
 
 
     template<typename color_t>
-    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const GFXfont& font, Anchor anchor, int* xadvance)
+    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const GFXfont& font, Anchor anchor, int* xadvance) const
         {
         return tgx::measureChar(c, pos, font, anchor, xadvance);
         }
 
 
     template<typename color_t>
-    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const ILI9341_t3_font_t & font, Anchor anchor, int* xadvance)
+    iBox2 Image<color_t>::measureChar(char c, iVec2 pos, const ILI9341_t3_font_t & font, Anchor anchor, int* xadvance) const
         {
         return tgx::measureChar(c, pos, font, anchor, xadvance);
         }
 
 
     template<typename color_t>
-    iBox2 Image<color_t>::measureText(const char * text, iVec2 pos, const GFXfont& font, Anchor anchor, bool wrap_text, bool start_newline_at_0)
+    iBox2 Image<color_t>::measureText(const char * text, iVec2 pos, const GFXfont& font, Anchor anchor, bool wrap_text, bool start_newline_at_0) const
         {
         const iVec2 startp = pos;
         const int startx = start_newline_at_0 ? 0 : pos.x;
@@ -7042,7 +7042,7 @@ namespace tgx
 
 
     template<typename color_t>
-    iBox2 Image<color_t>::measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor, bool wrap_text, bool start_newline_at_0)
+    iBox2 Image<color_t>::measureText(const char * text, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor, bool wrap_text, bool start_newline_at_0) const
         {
         const iVec2 startp = pos;
         const int startx = start_newline_at_0 ? 0 : pos.x;

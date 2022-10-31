@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['z_0',['z',['../structtgx_1_1_vec3.html#a3c29adeab28353c9a4e66b8cfe4eda21',1,'tgx::Vec3']]],
-  ['zbuf_1',['zbuf',['../structtgx_1_1_rasterizer_params.html#a852bb875e128ffde4c88764754093c8c',1,'tgx::RasterizerParams']]]
+  ['y_0',['y',['../structtgx_1_1_vec2.html#a3cdfd98bbf0ed03d5c7ba54eea0c8001',1,'tgx::Vec2']]],
+  ['yadvance_1',['yAdvance',['../struct_g_f_xfont.html#ac2c2f0184b810a562be808fbb98822fa',1,'GFXfont']]]
 ];

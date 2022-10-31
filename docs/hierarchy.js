@@ -3,7 +3,9 @@ var hierarchy =
     [ "tgx::Box2< T >", "structtgx_1_1_box2.html", null ],
     [ "tgx::Box3< T >", "structtgx_1_1_box3.html", null ],
     [ "tgx::Box3< float >", "structtgx_1_1_box3.html", null ],
+    [ "GFXfont", "struct_g_f_xfont.html", null ],
     [ "tgx::HSV", "structtgx_1_1_h_s_v.html", null ],
+    [ "ILI9341_t3_font_t", "struct_i_l_i9341__t3__font__t.html", null ],
     [ "tgx::Image< color_t >", "classtgx_1_1_image.html", null ],
     [ "tgx::Image< color_t_im >", "classtgx_1_1_image.html", null ],
     [ "tgx::Image< color_t_tex >", "classtgx_1_1_image.html", null ],
@@ -27,6 +29,5 @@ var hierarchy =
         [ "tgx::Vec4< T >", "structtgx_1_1_vec4.html", null ]
       ] ]
     ] ],
-    [ "tgx::Vec2< float >", "structtgx_1_1_vec2.html", null ],
-    [ "tgx::Vec2< int >", "structtgx_1_1_vec2.html", null ]
+    [ "tgx::Vec2< float >", "structtgx_1_1_vec2.html", null ]
 ];

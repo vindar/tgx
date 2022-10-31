@@ -963,8 +963,7 @@ RECURSIVE              = NO
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = src/bseg.h \
-                         src/Fonts.h
+EXCLUDE                = src/bseg.h
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
@@ -1024,7 +1023,15 @@ EXCLUDE_SYMBOLS        = tgx::DefaultFPType \
                          UNIT_CUBE_FACES \
                          TGX_SHADER_SET_FLAGS \
                          TGX_NOINLINE \
-                         TGX_INLINE
+                         TGX_INLINE \
+                         _GFXFONT_H_ \
+                         _ILI9341_FONTS_H_ \
+                         tgx_internals::* \
+                         fetchbits_unsigned \
+                         fetchbits_signed \
+                         fetchbit \
+                         GFXglyph \
+                         packedbdf_t
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include
@@ -2355,7 +2362,9 @@ INCLUDE_FILE_PATTERNS  =
 PREDEFINED             = __cplusplus \
                          ARDUINO_TEENSY41 \
                          TEENSYDUINO \
-                         ESP32
+                         ESP32 \
+                         DOXYGEN_EXCLUDE \
+                         DEPRACATED(X):=
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The

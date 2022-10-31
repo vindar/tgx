@@ -18,5 +18,7 @@ var annotated_dup =
       [ "Vec2", "structtgx_1_1_vec2.html", "structtgx_1_1_vec2" ],
       [ "Vec3", "structtgx_1_1_vec3.html", "structtgx_1_1_vec3" ],
       [ "Vec4", "structtgx_1_1_vec4.html", "structtgx_1_1_vec4" ]
-    ] ]
+    ] ],
+    [ "GFXfont", "struct_g_f_xfont.html", "struct_g_f_xfont" ],
+    [ "ILI9341_t3_font_t", "struct_i_l_i9341__t3__font__t.html", "struct_i_l_i9341__t3__font__t" ]
 ];
