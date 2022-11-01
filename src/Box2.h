@@ -131,7 +131,7 @@ namespace tgx
 
 
     /**
-     * 2D Box template class [specializations #iBox2 , #fBox2, #dBox2].
+     * Generic 2D Box [specializations #iBox2 , #fBox2, #dBox2].
      * 
      * The class encapsulates of 4 public variables: `minX`, `maxX`, `minY`, `maxY` which delimit the 2
      * dimensional *closed* box: `[minX, maxX] x [minY, maxY]`

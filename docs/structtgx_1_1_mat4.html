@@ -99,7 +99,7 @@ $(document).ready(function(){initNavTree('structtgx_1_1_mat4.html',''); initResi
 </div><!--header-->
 <div class="contents">
 
-<p>4x4 matrix template class [specializations <a class="el" href="_mat4_8h.html#aa543bb38f59d79a08113a6254b587322" title="4x4 matrix with single (float) precision">fMat4</a>, <a class="el" href="_mat4_8h.html#a4c41e3c61c5f3997bbd85cc47bce9b4c" title="4x4 matrix with double precision">dMat4</a>]  
+<p>Generic 4x4 matrix [specializations <a class="el" href="_mat4_8h.html#aa543bb38f59d79a08113a6254b587322" title="4x4 matrix with single (float) precision">fMat4</a>, <a class="el" href="_mat4_8h.html#a4c41e3c61c5f3997bbd85cc47bce9b4c" title="4x4 matrix with double precision">dMat4</a>].  
  <a href="structtgx_1_1_mat4.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_mat4_8h_source.html">Mat4.h</a>&gt;</code></p>
@@ -224,7 +224,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
-struct tgx::Mat4&lt; T &gt;</div><p >4x4 matrix template class [specializations <a class="el" href="_mat4_8h.html#aa543bb38f59d79a08113a6254b587322" title="4x4 matrix with single (float) precision">fMat4</a>, <a class="el" href="_mat4_8h.html#a4c41e3c61c5f3997bbd85cc47bce9b4c" title="4x4 matrix with double precision">dMat4</a>] </p>
+struct tgx::Mat4&lt; T &gt;</div><p >Generic 4x4 matrix [specializations <a class="el" href="_mat4_8h.html#aa543bb38f59d79a08113a6254b587322" title="4x4 matrix with single (float) precision">fMat4</a>, <a class="el" href="_mat4_8h.html#a4c41e3c61c5f3997bbd85cc47bce9b4c" title="4x4 matrix with double precision">dMat4</a>]. </p>
 <p >The class encapsulate a 4x4 matrix with element of type <code>T</code> which must be a floating point type (either <code>float</code> or <code>double</code>). Such a matrix is used in 3D grpahics to represent a transformation (translation, rotation, dilatation...).</p>
 <p >The matrix is internally represented by an public array <code>M[16]</code> in column major ordering:</p>
 <div class="fragment"><div class="line">+-----------------------------+</div>
@@ -237,7 +237,7 @@ struct tgx::Mat4&lt; T &gt;</div><p >4x4 matrix template class [specializations 
 <div class="line">| <a class="code hl_variable" href="structtgx_1_1_mat4.html#af073688b88d40378504b7d22dd4195c7">M</a>[3] | <a class="code hl_variable" href="structtgx_1_1_mat4.html#af073688b88d40378504b7d22dd4195c7">M</a>[7] | <a class="code hl_variable" href="structtgx_1_1_mat4.html#af073688b88d40378504b7d22dd4195c7">M</a>[11] | <a class="code hl_variable" href="structtgx_1_1_mat4.html#af073688b88d40378504b7d22dd4195c7">M</a>[15] |</div>
 <div class="line">+-----------------------------+</div>
 <div class="ttc" id="astructtgx_1_1_mat4_html_af073688b88d40378504b7d22dd4195c7"><div class="ttname"><a href="structtgx_1_1_mat4.html#af073688b88d40378504b7d22dd4195c7">tgx::Mat4::M</a></div><div class="ttdeci">T M[16]</div><div class="ttdoc">The matrix array in column major ordering:</div><div class="ttdef"><b>Definition:</b> Mat4.h:111</div></div>
-</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_vec2.html" title="2D vector template class [specializations iVec2, fVec2, dVec2].">Vec2</a>, <a class="el" href="structtgx_1_1_vec3.html" title="3D vector template class [specializations iVec3, fVec3, dVec3].">Vec3</a>, <a class="el" href="structtgx_1_1_vec4.html" title="4D vector template class [specializations iVec4, fVec4, dVec4].">Vec4</a> </dd></dl>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_vec2.html" title="Generic 2D vector [specializations iVec2, fVec2, dVec2].">Vec2</a>, <a class="el" href="structtgx_1_1_vec3.html" title="Generic 3D vector [specializations iVec3, fVec3, dVec3].">Vec3</a>, <a class="el" href="structtgx_1_1_vec4.html" title="Geenric 4D vector [specializations iVec4, fVec4, dVec4].">Vec4</a> </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa305d81f15b22fb1fbab7310821ac8a5" name="aa305d81f15b22fb1fbab7310821ac8a5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa305d81f15b22fb1fbab7310821ac8a5">&#9670;&#160;</a></span>Mat4()</h2>

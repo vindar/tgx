@@ -64,7 +64,7 @@ namespace tgx
 
      
     /**
-     * Template image class.
+     * Image class [**MAIN CLASS FOR THE 2D API**].
      *
      * **This is the main image class for the TGX library**.
      * 

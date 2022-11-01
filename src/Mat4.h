@@ -59,7 +59,7 @@ namespace tgx
 
 
     /**
-     * 4x4 matrix template class [specializations #fMat4, #dMat4]
+     * Generic 4x4 matrix [specializations #fMat4, #dMat4]
      * 
      * The class encapsulate a 4x4 matrix with element of type `T` which must be a floating point
      * type (either `float` or `double`). Such a matrix is used in 3D grpahics to represent a

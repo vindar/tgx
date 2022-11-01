@@ -1033,7 +1033,9 @@ EXCLUDE_SYMBOLS        = tgx::DefaultFPType \
                          GFXglyph \
                          packedbdf_t \
                          tgx::RasterizerParams \
-                         tgx::RasterizerVec4
+                         tgx::RasterizerVec4 \
+                         UNIT_CUBE_NORMALS \
+                         UNIT_CUBE_FACES_NORMALS
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include

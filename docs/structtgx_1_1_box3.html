@@ -99,7 +99,7 @@ $(document).ready(function(){initNavTree('structtgx_1_1_box3.html',''); initResi
 </div><!--header-->
 <div class="contents">
 
-<p>3D Box template class [specializations <a class="el" href="_box3_8h.html#a4dfbc3f0cd5d42d458c4908888036faf" title="Integer-valued 3D box.">iBox3</a>, <a class="el" href="_box3_8h.html#a8285b14fd9a9384343096eac6dd03e6a" title="Floating point valued 3D box with single(float) precision.">fBox3</a>, <a class="el" href="_box3_8h.html#aae1062df32f7d1e352abad8ad8d088e4" title="Floating point valued 3D box with double precision.">dBox3</a>].  
+<p>Generic 3D Box [specializations <a class="el" href="_box3_8h.html#a4dfbc3f0cd5d42d458c4908888036faf" title="Integer-valued 3D box.">iBox3</a>, <a class="el" href="_box3_8h.html#a8285b14fd9a9384343096eac6dd03e6a" title="Floating point valued 3D box with single(float) precision.">fBox3</a>, <a class="el" href="_box3_8h.html#aae1062df32f7d1e352abad8ad8d088e4" title="Floating point valued 3D box with double precision.">dBox3</a>].  
  <a href="structtgx_1_1_box3.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_box3_8h_source.html">Box3.h</a>&gt;</code></p>
@@ -273,7 +273,7 @@ T&#160;</td><td class="memItemRight" valign="bottom"><b>maxZ</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
-struct tgx::Box3&lt; T &gt;</div><p >3D Box template class [specializations <a class="el" href="_box3_8h.html#a4dfbc3f0cd5d42d458c4908888036faf" title="Integer-valued 3D box.">iBox3</a>, <a class="el" href="_box3_8h.html#a8285b14fd9a9384343096eac6dd03e6a" title="Floating point valued 3D box with single(float) precision.">fBox3</a>, <a class="el" href="_box3_8h.html#aae1062df32f7d1e352abad8ad8d088e4" title="Floating point valued 3D box with double precision.">dBox3</a>]. </p>
+struct tgx::Box3&lt; T &gt;</div><p >Generic 3D Box [specializations <a class="el" href="_box3_8h.html#a4dfbc3f0cd5d42d458c4908888036faf" title="Integer-valued 3D box.">iBox3</a>, <a class="el" href="_box3_8h.html#a8285b14fd9a9384343096eac6dd03e6a" title="Floating point valued 3D box with single(float) precision.">fBox3</a>, <a class="el" href="_box3_8h.html#aae1062df32f7d1e352abad8ad8d088e4" title="Floating point valued 3D box with double precision.">dBox3</a>]. </p>
 <p >The class encapsulates of 6 public variables: <code>minX</code>, <code>maxX</code>, <code>minY</code>, <code>maxY</code>, <code>minZ</code>, <code>maxZ</code> which delimit the 3 dimensional <em>closed</em> box: <code>[minX, maxX] x [minY, maxY] x [minZ, maxZ]</code></p>
 <ol type="1">
 <li>the box is empty if <code>maxX</code> &lt; <code>minX</code> or if <code>maxY</code> &lt; <code>minY</code> or if <code>maxZ</code> &lt; <code>minZ</code>.</li>

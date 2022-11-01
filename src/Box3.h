@@ -47,7 +47,7 @@ namespace tgx
 
 
     /**
-     * 3D Box template class [specializations #iBox3, #fBox3, #dBox3].
+     * Generic 3D Box [specializations #iBox3, #fBox3, #dBox3].
      * 
      * The class encapsulates of 6 public variables: `minX`, `maxX`, `minY`, `maxY`, `minZ`, `maxZ`
      * which delimit the 3 dimensional *closed* box: `[minX, maxX] x [minY, maxY] x [minZ, maxZ]`

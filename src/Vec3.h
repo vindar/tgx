@@ -55,7 +55,7 @@ namespace tgx
 
 
     /**
-     * 3D vector template class [specializations #iVec3, #fVec3, #dVec3].
+     * Generic 3D vector [specializations #iVec3, #fVec3, #dVec3].
      *
      * The class contain three public member variables `x`, `y` and `z` which define the 3D vector `(x,y,z)`.
      *

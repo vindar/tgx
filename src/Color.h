@@ -2798,13 +2798,14 @@ struct RGB64
 
 
 /**
- * Color in Hue/Saturation/Value space (**experimental**).
+ * Color in H/S/V format [**experimental**].
  * 
- * Each component is a float. The total size of the object is 4*3 = 12 bytes, aligned as float.
+ * The color is stored in Hue/Saturation/Value color space. Each component is a float in `[0,1.0f]`.
+ * The total size of the object is 4*3 = 12 bytes, aligned as float.
  * 
  * See: https://en.wikipedia.org/wiki/HSL_and_HSV
  * 
- * **Remark** Experimental. Operations with HSV colors are very slow. This color format should
+ * @warning **Experimental** Operations with HSV colors are very slow. This color format should
  * not be used with the 3D rasterizer.
  */
 struct HSV

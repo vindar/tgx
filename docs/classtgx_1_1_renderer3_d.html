@@ -99,7 +99,7 @@ $(document).ready(function(){initNavTree('classtgx_1_1_renderer3_d.html',''); in
 </div><!--header-->
 <div class="contents">
 
-<p>Class that manages a scene and draws 3D objects onto a <code><a class="el" href="classtgx_1_1_image.html" title="Template image class.">Image</a></code>.  
+<p>Class for drawing 3D objects onto a <code><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">Image</a></code> [<b>MAIN CLASS FOR THE 3D API</b>].  
  <a href="classtgx_1_1_renderer3_d.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_renderer3_d_8h_source.html">Renderer3D.h</a>&gt;</code></p>
@@ -242,7 +242,7 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >Methods for drawing meshes, triangles and quads.</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>Normal vector are mandatory when using Gouraud shadding and must be normalized (unit lenght).</li>
-<li>Texture dimension must be power of two when using flag <code>TGX_SHADER_TEXTURE_WRAP_POW2</code>. <br  />
+<li>Texture dimension must be power of two when using flag <code>SHADER_TEXTURE_WRAP_POW2</code>. <br  />
 </li>
 <li>Triangle and quads must be given in the correct winding order. The 4 vertices of a quads must be co-planar. <br  />
 </li>
@@ -301,7 +301,7 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >Methods for drawing wireframe meshes, triangles and quads.</p>
 <p >Two versions for each method :</p><ol type="1">
 <li>Fast but low quality drawing.</li>
-<li>Slow but high quality drawin (adjustable thickness, alpha-blending, anti-aliasing). <br  />
+<li>Slow but high quality drawing (adjustable thickness, alpha-blending, anti-aliasing). <br  />
 </li>
 </ol>
 <dl class="section remark"><dt>Remarks</dt><dd>Wireframe methods do not take the scene lightning into account. </dd></dl>
@@ -407,22 +407,22 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename color_t, <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">Shader</a> LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float&gt;<br />
-class tgx::Renderer3D&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;</div><p >Class that manages a scene and draws 3D objects onto a <code><a class="el" href="classtgx_1_1_image.html" title="Template image class.">Image</a></code>. </p>
-<p >A <a class="el" href="classtgx_1_1_renderer3_d.html" title="Class that manages a scene and draws 3D objects onto a Image.">Renderer3D</a> objects creates a "virtual viewport" and provides a set of methods to draw 3D primitives onto this viewport which is then mapped to a <code><a class="el" href="classtgx_1_1_image.html" title="Template image class.">tgx::Image</a></code>.</p>
+class tgx::Renderer3D&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;</div><p >Class for drawing 3D objects onto a <code><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">Image</a></code> [<b>MAIN CLASS FOR THE 3D API</b>]. </p>
+<p >A <a class="el" href="classtgx_1_1_renderer3_d.html" title="Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].">Renderer3D</a> objects creates a "virtual viewport" and provides a set of methods to manage a scene and draw 3D primitives onto this viewport which is then mapped to a <code><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">tgx::Image</a></code>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">LOADED_SHADERS</td><td>list of all shaders that may be used. By default, all shaders are enabled but if is possible to select only a subset of shaders to improve rendering speed and decrease memory usage significantly. Must a <code>|</code> combination of the following flags:<ul>
-<li><code>TGX_SHADER_PERSPECTIVE</code>: enable perspective projection</li>
-<li><code>TGX_SHADER_ORTHO</code>: enable orthographic projection</li>
-<li><code>TGX_SHADER_NOZBUFFER</code>: enable rendering without using a z-buffer</li>
-<li><code>TGX_SHADER_ZBUFFER</code>: enable rendering with a z-buffer</li>
-<li><code>TGX_SHADER_FLAT</code>: enable flat shading</li>
-<li><code>TGX_SHADER_GOURAUD</code>: enable gouraud shading</li>
-<li><code>TGX_SHADER_NOTEXTURE</code>: enable rendering without texturing</li>
-<li><code>TGX_SHADER_TEXTURE_NEAREST</code>: enable rendering with texturing using point sampling</li>
-<li><code>TGX_SHADER_TEXTURE_BILINEAR</code>: enable rendering with texturing using bilinear sampling</li>
-<li><code>TGX_SHADER_TEXTURE_WRAP_POW2</code>: texture can use 'wrap around' mode with dimensions of texture being power of two.</li>
-<li><code>TGX_SHADER_TEXTURE_CLAMP</code>: texture can use 'clamping to edge' mode.</li>
+<li><code>SHADER_PERSPECTIVE</code>: enable perspective projection</li>
+<li><code>SHADER_ORTHO</code>: enable orthographic projection</li>
+<li><code>SHADER_NOZBUFFER</code>: enable rendering without using a z-buffer</li>
+<li><code>SHADER_ZBUFFER</code>: enable rendering with a z-buffer</li>
+<li><code>SHADER_FLAT</code>: enable flat shading</li>
+<li><code>SHADER_GOURAUD</code>: enable gouraud shading</li>
+<li><code>SHADER_NOTEXTURE</code>: enable rendering without texturing</li>
+<li><code>SHADER_TEXTURE_NEAREST</code>: enable rendering with texturing using point sampling</li>
+<li><code>SHADER_TEXTURE_BILINEAR</code>: enable rendering with texturing using bilinear sampling</li>
+<li><code>SHADER_TEXTURE_WRAP_POW2</code>: texture can use 'wrap around' mode with dimensions of texture being power of two.</li>
+<li><code>SHADER_TEXTURE_CLAMP</code>: texture can use 'clamping to edge' mode.</li>
 </ul>
 </td></tr>
     <tr><td class="paramname">ZBUFFER_t</td><td>: Type used for storing z-buffer values. Must be either <code>float</code> or <code>uint16_t</code>. The z-buffer must be as large as the image (but can be smaller than the viewport when using an offset).<ul>
@@ -433,7 +433,17 @@ class tgx::Renderer3D&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;</div><p >Class
   </table>
   </dd>
 </dl>
-<dl class="section remark"><dt>Remarks</dt><dd>If a drawing call is made that requires a disabled shader, or if the <a class="el" href="classtgx_1_1_renderer3_d.html" title="Class that manages a scene and draws 3D objects onto a Image.">Renderer3D</a> object state is not valid (e.g. incorrect image size, enabled but missing z-buffer...) then the drawing operation will fails silently. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd></dd></dl>
+<ol type="1">
+<li>If a drawing call is made that requires a shader that was not enabled in the template parameter <code>LOADED_SHADERS</code> or if the <a class="el" href="classtgx_1_1_renderer3_d.html" title="Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].">Renderer3D</a> object state is not valid (e.g. incorrect image size, enabled but missing z-buffer...) then the operation will fails silently. In particular, if drawing without a Z-buffer is performed, the flag <code>SHADER_NOZBUFFER</code> <b>must</b> be set in LOADED_SHADERS. Similarly, if drawing without texturing is performed, the flag <code>SHADER_NOTEXTURE</code> <b>must</b> be set in LOADED_SHADERS.</li>
+<li>Z-buffer testing is enabled as soon as a valid z-buffer is provided (with <code><a class="el" href="classtgx_1_1_renderer3_d.html#a516e700a5470f52cbd9a82dd59f8c968" title="Set the z-buffer.">Renderer3D::setZbuffer()</a></code>). Do not forget to erase the z-buffer with <code><a class="el" href="classtgx_1_1_renderer3_d.html#ad613bdffc57596703abe1a2a47583003" title="Clear the Zbuffer.">Renderer3D::clearZbuffer()</a></code> at the start of a new frame.</li>
+<li>Normal vectors are mandatory when using Gouraud shading and must always be normalized (unit lenght) !</li>
+<li>Texture dimensions must be powers of two when flag <code>SHADER_TEXTURE_WRAP_POW2</code> is set.</li>
+<li>Back-face culling is set with <code><a class="el" href="classtgx_1_1_renderer3_d.html#a76fa32770476cd15f717d3f103fd752d" title="Set the face culling strategy.">Renderer3D::setCulling()</a></code>. Triangles and quads must then be provided in the choosen winding order.</li>
+<li>It is more efficient to use methods that draws several primitives at once rather than issuing multiple commands for drawing triangle/quads. For static geometry, <code><a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e" title="Draw a Mesh3D object.">Renderer3D::drawMesh()</a></code> should be use whenever possible insteaed of <code><a class="el" href="classtgx_1_1_renderer3_d.html#a01fe01f23d0925292db43938f164d5ad" title="Draw a collection of quads.">Renderer3D::drawQuads()</a></code>, <code><a class="el" href="classtgx_1_1_renderer3_d.html#ad54f3bb4aedeeee2efbb8aa9956bf17a" title="Draw a collection of triangles.">Renderer3D::drawTriangles()</a></code>...</li>
+<li>Wireframe drawing with 'high quality' is (currently) very slow. Use 'low quality' drawing if speed is required. <br  />
+ </li>
+</ol>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a71cef7bec13ce66591e48fd0b1e57c11" name="a71cef7bec13ce66591e48fd0b1e57c11"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a71cef7bec13ce66591e48fd0b1e57c11">&#9670;&#160;</a></span>Renderer3D()</h2>
@@ -1102,7 +1112,7 @@ template&lt;typename color_t , <a class="el" href="_shader_params_8h.html#ab8454
 <ol type="1">
 <li>If a shader flag is set with SetShaders() but is disabled in the template parameter LOADED_SHADER, then the drawing calls will silently fail (draw nothing).</li>
 <li>The color on the face (for flat shading) or on the vertices (for gouraud shading) is computed according to Phong's lightning <a href="https://en.wikipedia.org/wiki/Phong_reflection_model">https://en.wikipedia.org/wiki/Phong_reflection_model</a>.</li>
-<li>Texture mapping is 'perspective correct' and can be done with either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD <br  />
+<li>Texture mapping is 'perspective correct' and can be done with either SHADER_FLAT or SHADER_GOURAUD <br  />
  selected. The color of a pixel is obtained by combining to texture color at that pixel with the lightning at the position according to phong's lightning model.</li>
 <li>For large textures stored in flash memory may be VERY slow to access when the texture is not read linearly which will happens for some (bad) triangle orientations and then cache becomes useless... This problem can be somewhat mitigated by:<ul>
 <li>splitting large textured triangles into smaller ones: then each triangle only accesses a small part of the texture. This helps a lot wich cache optimization (this is why models with thousands of faces may display faster that a simple textured cube in some cases).</li>

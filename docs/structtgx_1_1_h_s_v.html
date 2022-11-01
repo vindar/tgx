@@ -99,7 +99,7 @@ $(document).ready(function(){initNavTree('structtgx_1_1_h_s_v.html',''); initRes
 </div><!--header-->
 <div class="contents">
 
-<p>Color in Hue/Saturation/Value space (<b>experimental</b>).  
+<p>Color in H/S/V format [<b>experimental</b>].  
  <a href="structtgx_1_1_h_s_v.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_color_8h_source.html">Color.h</a>&gt;</code></p>
@@ -235,10 +235,10 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>V</b></td></tr>
 <tr class="separator:a4b2f38729e777195de1eb83367db6453"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Color in Hue/Saturation/Value space (<b>experimental</b>). </p>
-<p >Each component is a float. The total size of the object is 4*3 = 12 bytes, aligned as float.</p>
+<div class="textblock"><p >Color in H/S/V format [<b>experimental</b>]. </p>
+<p >The color is stored in Hue/Saturation/Value color space. Each component is a float in <code>[0,1.0f]</code>. The total size of the object is 4*3 = 12 bytes, aligned as float.</p>
 <p >See: <a href="https://en.wikipedia.org/wiki/HSL_and_HSV">https://en.wikipedia.org/wiki/HSL_and_HSV</a></p>
-<p ><b>Remark</b> Experimental. Operations with <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in Hue/Saturation/Value space (experimental).">HSV</a> colors are very slow. This color format should not be used with the 3D rasterizer. </p>
+<dl class="section warning"><dt>Warning</dt><dd><b>Experimental</b> Operations with <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in H/S/V format [experimental].">HSV</a> colors are very slow. This color format should not be used with the 3D rasterizer. </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab65750bf824b89d648bdf2bf044c5a59" name="ab65750bf824b89d648bdf2bf044c5a59"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab65750bf824b89d648bdf2bf044c5a59">&#9670;&#160;</a></span>HSV() <span class="overload">[1/3]</span></h2>
@@ -388,7 +388,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>V</b></td></tr>
 </div><div class="memdoc">
 
 <p>alpha-blend <code>fg_col</code> over this one with a given opacity in the range 0.0f (fully transparent) to 1.0f (fully opaque). </p>
-<p >Blending is done by converting the color to RGB space, then alpha blending, and then converting back to <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in Hue/Saturation/Value space (experimental).">HSV</a>.</p>
+<p >Blending is done by converting the color to RGB space, then alpha blending, and then converting back to <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in H/S/V format [experimental].">HSV</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fg_col</td><td>The foreground color. </td></tr>
@@ -434,7 +434,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>V</b></td></tr>
 </div><div class="memdoc">
 
 <p>alpha-blend <code>fg_col</code> over this one with a given opacity in the integer range 0 (fully transparent) to 256 (fully opaque). </p>
-<p >Blending is done by converting the color to RGB space, then alpha blending, and then converting back to <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in Hue/Saturation/Value space (experimental).">HSV</a>.</p>
+<p >Blending is done by converting the color to RGB space, then alpha blending, and then converting back to <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in H/S/V format [experimental].">HSV</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fg_col</td><td>The foreground color. </td></tr>

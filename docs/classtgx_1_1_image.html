@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('classtgx_1_1_image.html',''); initResi
 </div><!--header-->
 <div class="contents">
 
-<p>Template image class.  
+<p><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">Image</a> class [<b>MAIN CLASS FOR THE 2D API</b>].  
  <a href="classtgx_1_1_image.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_image_8h_source.html">Image.h</a>&gt;</code></p>
@@ -730,7 +730,7 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>DEFAULT_S
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename color_t&gt;<br />
-class tgx::Image&lt; color_t &gt;</div><p >Template image class. </p>
+class tgx::Image&lt; color_t &gt;</div><p ><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">Image</a> class [<b>MAIN CLASS FOR THE 2D API</b>]. </p>
 <p ><b>This is the main image class for the TGX library</b>.</p>
 <p >An image object is a thin wrapper (only 16 bytes) around a memory buffer which defines the type and dimension of the image.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -743,14 +743,14 @@ class tgx::Image&lt; color_t &gt;</div><p >Template image class. </p>
   </table>
   </dd>
 </dl>
-<p><b><a class="el" href="classtgx_1_1_image.html" title="Template image class.">Image</a> memory layout</b></p>
+<p><b><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">Image</a> memory layout</b></p>
 <p >The image in the memory buffer in made of consecutive pixel of type color_t in row major order but with a stride which may be larger than the image width (i.e. row lenght).</p>
 <p >Pixels are ordered from the top left <code>(0,0)</code> to the bottom right <code>(_lx-1, _ly-1)</code> and the position of pixel <code>(x,y)</code> in the buffer is given by the formula: </p><div class="fragment"><div class="line">pixel(x,y) = buffer[x + y * _stride].</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><b>No memory allocation is ever perfomed by the <a class="el" href="classtgx_1_1_image.html" title="Template image class.">Image</a> class. It is the sole user repsonsability to allocated et free the pixel buffer</b></dd></dl>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><b>No memory allocation is ever perfomed by the <a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">Image</a> class. It is the sole user repsonsability to allocated et free the pixel buffer</b></dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd></dd></dl>
 <ol type="1">
 <li>When creating a new image, one can (and usually should) choose <code>_stride = lx</code>. However, allowing other strides in the class definition allows to efficiently represent sub-images without making a copy and thus enables fast clipping of all drawing operations (sub-images are similar to Numpy view for ndarray).</li>
-<li>Avoid using <code><a class="el" href="structtgx_1_1_h_s_v.html" title="Color in Hue/Saturation/Value space (experimental).">HSV</a></code> as color type for an image: it has not been tested to work and will be very slow.</li>
+<li>Avoid using <code><a class="el" href="structtgx_1_1_h_s_v.html" title="Color in H/S/V format [experimental].">HSV</a></code> as color type for an image: it has not been tested to work and will be very slow.</li>
 <li><p class="startli">The library defines many drawing primitives with naming convention: </p><div class="fragment"><div class="line">[draw/<a class="code hl_function" href="classtgx_1_1_image.html#a2a2f1a3381d697f8863277f36f60efdb">fill</a>][Thick/-]MethodName[AA/-]</div>
 <div class="ttc" id="aclasstgx_1_1_image_html_a2a2f1a3381d697f8863277f36f60efdb"><div class="ttname"><a href="classtgx_1_1_image.html#a2a2f1a3381d697f8863277f36f60efdb">tgx::Image::fill</a></div><div class="ttdeci">int fill(iVec2 start_pos, color_t new_color)</div><div class="ttdoc">'Flood fill' a 4-connected region of the image.</div></div>
 </div><!-- fragment --><p> where</p><ul>
@@ -2174,7 +2174,7 @@ template&lt;typename ITERFUN &gt; </div>
 <dl class="section remark"><dt>Remarks</dt><dd>this method is particularly useful with lambdas, for example, to paint all black pixels to red in a tgx::Image&lt;tgx::RGB565&gt; image <code>im</code>: <div class="fragment"><div class="line">im.iterate( [](<a class="code hl_struct" href="structtgx_1_1_vec2.html">tgx::iVec2</a> pos, <a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> &amp; color)</div>
 <div class="line">              { <span class="keywordflow">if</span> (color == tgx::RGB565_Black) color = tgx::RGB565_Red; <span class="keywordflow">return</span> <span class="keyword">true</span>; } );</div>
 <div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:199</div></div>
-<div class="ttc" id="astructtgx_1_1_vec2_html"><div class="ttname"><a href="structtgx_1_1_vec2.html">tgx::Vec2</a></div><div class="ttdoc">2D vector template class [specializations iVec2, fVec2, dVec2].</div><div class="ttdef"><b>Definition:</b> Vec2.h:61</div></div>
+<div class="ttc" id="astructtgx_1_1_vec2_html"><div class="ttname"><a href="structtgx_1_1_vec2.html">tgx::Vec2</a></div><div class="ttdoc">Generic 2D vector [specializations iVec2, fVec2, dVec2].</div><div class="ttdef"><b>Definition:</b> Vec2.h:61</div></div>
 </div><!-- fragment --></dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -3111,7 +3111,7 @@ template&lt;typename color_t &gt; </div>
 </div><div class="memdoc">
 
 <p>Fill the whole image with a vertical color gradient between two colors. </p>
-<p >Interpolation takes place in RGB color space (even if color_t is <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in Hue/Saturation/Value space (experimental).">HSV</a>).</p>
+<p >Interpolation takes place in RGB color space (even if color_t is <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in H/S/V format [experimental].">HSV</a>).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">top_color</td><td>color at the top of the image. </td></tr>
@@ -3151,7 +3151,7 @@ template&lt;typename color_t &gt; </div>
 </div><div class="memdoc">
 
 <p>Fill the whole screen with an horizontal color gradient between two colors. </p>
-<p >Interpolation takes place in RGB color space (even if color_t is <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in Hue/Saturation/Value space (experimental).">HSV</a>).</p>
+<p >Interpolation takes place in RGB color space (even if color_t is <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in H/S/V format [experimental].">HSV</a>).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">left_color</td><td>color on the left side of the image. </td></tr>

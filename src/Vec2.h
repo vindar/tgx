@@ -49,7 +49,7 @@ namespace tgx
 
 
     /**
-     * 2D vector template class [specializations #iVec2, #fVec2, #dVec2].
+     * Generic 2D vector [specializations #iVec2, #fVec2, #dVec2].
      *
      * The class contain two public member variables `x` and `y` which define the 2D vector `(x,y)`.
      * 

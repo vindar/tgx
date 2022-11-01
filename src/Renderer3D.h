@@ -44,100 +44,66 @@
 
 
 
-
-        /*****************************************************************************************
-        ******************************************************************************************
-        *
-        *                                  Drawing methods
-        *
-        ******************************************************************************************
-        *
-        * Methods to draw primitives (triangles/quads/meshes) onto the viewport.
-        *
-        * (1) The rasterizer uses the shaders set with setShaders(). If the requested shaders cannot
-        *     be used because they are disabled in the template parameter DISABLED_SHADERS or because
-        *     the correct parameters are not supplied (e.g.  no normals for Gouraud shading or no image
-        *     for texturing) then the drawing operation silently fails and return without drawing anything
-        *     (in the best case, it may fall back using another shader).
-        *
-        *     -> *** NORMAL VECTORS MUST ALWAYS BE NORMALIZED (UNIT LENGHT) ***
-        *
-        *     -> *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        *
-        *
-        * (2) Depth testing is automatically performed when a z-buffer is available.
-        *
-        *     -> ***  DO NOT FORGET TO CLEAR THE ZBUFFER WITH clearZbuffer() BEFORE DRAWING A NEW SCENE ***
-        *
-        *
-        * (3) Back face culling is automatically performed if enabled (via the setCulling() method)
-        *
-        *     -> *** TRIANGLES/QUADS MUST BE GIVEN TO THE DRAWING METHOD IN THEIR CORRECT WINDING ORDER ***
-        *
-        *
-        * (4) It is much more efficient to use methods that draws several primitives at once than issuing
-        *     multiple drawing commands for single triangles/quads. Use the following methods by order of
-        *    preferences:
-        *
-        *    1 - drawMesh() is the 'most optimized' method and the one that will usually give the faster
-        *        rendering so it should be used whenever possible (for static geometry).
-        *
-        *    3 - and drawQuads() Not as fast a drawing a mesh.
-        *
-        *    3 - drawTriangles() Even slower than the methods above.
-        *
-        *    4 - drawTriangle() / drawQuad()  Should only be used for drawing single triangles/quads
-        *                                     slowest method because each draw call has an additional
-        *                                     overhead.
-        *
-        ******************************************************************************************
-        ******************************************************************************************/
-
-
-
-
-
-
 namespace tgx
 {
 
     // forward declaration for the vertices and faces of the unit cube [-1,1]^3 
+     
     extern const tgx::fVec3 UNIT_CUBE_VERTICES[8];
     extern const tgx::fVec3 UNIT_CUBE_NORMALS[6];
     extern const uint16_t UNIT_CUBE_FACES[6*4];   
     extern const uint16_t UNIT_CUBE_FACES_NORMALS[6 * 4];
 
 
+
     /**
-    * Class that manages a scene and draws 3D objects onto a `Image`.
+    * Class for drawing 3D objects onto a `Image` [**MAIN CLASS FOR THE 3D API**].
     *
-    * A Renderer3D objects creates a "virtual viewport" and provides a 
-    * set of methods to draw 3D primitives onto this viewport which is 
-    * then mapped to a `tgx::Image`.
+    * A Renderer3D objects creates a "virtual viewport" and provides a set of methods to manage a scene and
+    * draw 3D primitives onto this viewport which is  then mapped to a `tgx::Image`.
     *
     * @tparam LOADED_SHADERS    list of all shaders that may be used. By default, all shaders are enabled but 
     *                           if is possible to select only a subset of shaders to improve rendering speed and 
     *                           decrease memory usage significantly. Must a `|` combination of the following flags:
-    *                               - `TGX_SHADER_PERSPECTIVE`: enable perspective projection
-    *                               - `TGX_SHADER_ORTHO`: enable orthographic projection
-    *                               - `TGX_SHADER_NOZBUFFER`: enable rendering without using a z-buffer
-    *                               - `TGX_SHADER_ZBUFFER`: enable rendering with a z-buffer
-    *                               - `TGX_SHADER_FLAT`: enable flat shading
-    *                               - `TGX_SHADER_GOURAUD`: enable gouraud shading
-    *                               - `TGX_SHADER_NOTEXTURE`: enable rendering without texturing
-    *                               - `TGX_SHADER_TEXTURE_NEAREST`: enable rendering with texturing using point sampling
-    *                               - `TGX_SHADER_TEXTURE_BILINEAR`: enable rendering with texturing using bilinear sampling
-    *                               - `TGX_SHADER_TEXTURE_WRAP_POW2`: texture can use 'wrap around' mode with dimensions of texture being power of two.
-    *                               - `TGX_SHADER_TEXTURE_CLAMP`: texture can use 'clamping to edge' mode. 
+    *                               - `SHADER_PERSPECTIVE`: enable perspective projection
+    *                               - `SHADER_ORTHO`: enable orthographic projection
+    *                               - `SHADER_NOZBUFFER`: enable rendering without using a z-buffer
+    *                               - `SHADER_ZBUFFER`: enable rendering with a z-buffer
+    *                               - `SHADER_FLAT`: enable flat shading
+    *                               - `SHADER_GOURAUD`: enable gouraud shading
+    *                               - `SHADER_NOTEXTURE`: enable rendering without texturing
+    *                               - `SHADER_TEXTURE_NEAREST`: enable rendering with texturing using point sampling
+    *                               - `SHADER_TEXTURE_BILINEAR`: enable rendering with texturing using bilinear sampling
+    *                               - `SHADER_TEXTURE_WRAP_POW2`: texture can use 'wrap around' mode with dimensions of texture being power of two.
+    *                               - `SHADER_TEXTURE_CLAMP`: texture can use 'clamping to edge' mode. 
     *
     * @tparam ZBUFFER_t :       Type used for storing z-buffer values. Must be either `float` or `uint16_t`. The z-buffer must be 
     *                           as large as the image (but can be smaller than the viewport when using an offset).
     *                               - `float`: higher quality but requires 4 bytes per pixel.
     *                               - `uint16_t` : lower quality (z-fighting may occur) but only 2 bytes per pixel.
     * @remark
-    * If a drawing call is made that requires a disabled shader, or if the Renderer3D object state is not valid 
-    * (e.g. incorrect image size, enabled but missing z-buffer...) then the drawing operation will fails silently.
+    *          
+    * 1. If a drawing call is made that requires a shader that was not enabled in the template parameter `LOADED_SHADERS` or
+    *    if the Renderer3D object state is not valid (e.g. incorrect image size, enabled but missing z-buffer...) then the operation
+    *    will fails silently. In particular, if drawing without a Z-buffer is performed, the flag `SHADER_NOZBUFFER` **must** be set
+    *    in LOADED_SHADERS. Similarly, if drawing without texturing is performed, the flag `SHADER_NOTEXTURE` **must** be set in LOADED_SHADERS.
     *
+    * 2. Z-buffer testing is enabled as soon as a valid z-buffer is provided (with `Renderer3D::setZbuffer()`).
+    *    Do not forget to erase the z-buffer with `Renderer3D::clearZbuffer()` at the start of a new frame.
+    *    
+    * 3. Normal vectors are mandatory when using Gouraud shading and must always be normalized (unit lenght) !
+    *
+    * 4. Texture dimensions must be powers of two when flag `SHADER_TEXTURE_WRAP_POW2` is set.
+    * 
+    * 5. Back-face culling is set with `Renderer3D::setCulling()`. Triangles and quads must then be provided in the
+    *    choosen winding order. 
+    *    
+    * 6. It is more efficient to use methods that draws several primitives at once rather than issuing
+    *    multiple commands for drawing triangle/quads. For static geometry, `Renderer3D::drawMesh()` should be
+    *    use whenever possible insteaed of `Renderer3D::drawQuads()`, `Renderer3D::drawTriangles()`...
+    *    
+    * 7. Wireframe drawing with 'high quality' is (currently) very slow. Use 'low quality' drawing if speed is required.    
+    * 
     */
     template<typename color_t, Shader LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float>
     class Renderer3D
@@ -442,7 +408,7 @@ namespace tgx
         *    then the drawing calls will silently fail (draw nothing).
         * 2. The color on the face (for flat shading) or on the vertices (for gouraud shading) is computed
         *    according to Phong's lightning https://en.wikipedia.org/wiki/Phong_reflection_model.
-        * 3. Texture mapping is 'perspective correct' and can be done with either TGX_SHADER_FLAT or TGX_SHADER_GOURAUD   
+        * 3. Texture mapping is 'perspective correct' and can be done with either SHADER_FLAT or SHADER_GOURAUD   
         *    selected. The color of a pixel is obtained by combining to texture color at that pixel with the lightning 
         *    at the position according to phong's lightning model.
         * 4. For large textures stored in flash memory may be VERY slow to access when the texture is not 
@@ -823,7 +789,7 @@ namespace tgx
          * 
          * @remark
          * 1. Normal vector are mandatory when using Gouraud shadding and must be normalized (unit lenght).
-         * 2. Texture dimension must be power of two when using flag `TGX_SHADER_TEXTURE_WRAP_POW2`.  
+         * 2. Texture dimension must be power of two when using flag `SHADER_TEXTURE_WRAP_POW2`.  
          * 3. Triangle and quads must be given in the correct winding order. The 4 vertices of a quads must be co-planar.  
          * 4. The fastest method to display 'static' geometry is to use the drawMesh() method. Other methods are slower and should be reserved for 'dynamic' geometry.  
          * 5. Do not forget to clear the z-buffer with `clearZbuffer()` at the beggining of each new frame. 
@@ -1189,7 +1155,7 @@ namespace tgx
          *
          * Two versions for each method :
          * 1. Fast but low quality drawing.
-         * 2. Slow but high quality drawin (adjustable thickness, alpha-blending, anti-aliasing).  
+         * 2. Slow but high quality drawing (adjustable thickness, alpha-blending, anti-aliasing).  
          * 
          * @remark Wireframe methods do not take the scene lightning into account. 
          */

@@ -56,7 +56,7 @@ namespace tgx
 
 
     /**
-     * 4D vector template class [specializations #iVec4, #fVec4, #dVec4].
+     * Geenric 4D vector [specializations #iVec4, #fVec4, #dVec4].
      *
      * The class contain four public member variables `x`, `y`, `z` and `w` which define the 3D vector `(x,y,z,w)`.
      *
