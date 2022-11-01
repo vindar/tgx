@@ -2591,7 +2591,7 @@ namespace tgx
             // set culling direction = -1 and save previous value
             float save_culling = _culling_dir;
             if (_culling_dir != 0) _culling_dir = 1;
-            drawQuads(6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
+            drawQuads(6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES, UNIT_CUBE_FACES_NORMALS, UNIT_CUBE_NORMALS);
             // restore culling direction
             _culling_dir = save_culling;
             }

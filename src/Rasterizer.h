@@ -40,7 +40,7 @@ namespace tgx
 *  |      4        |      8192 x 8192        |
 *  |      2        |     16384 x 16384       |
 */
-#define TGX_RASTERIZE_SUBPIXEL_BITS (6)
+#define TGX_RASTERIZE_SUBPIXEL_BITS (4)
 
 #define TGX_RASTERIZE_SUBPIXEL256 (1 << TGX_RASTERIZE_SUBPIXEL_BITS)
 #define TGX_RASTERIZE_SUBPIXEL128 (1 << (TGX_RASTERIZE_SUBPIXEL_BITS -1))

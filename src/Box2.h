@@ -585,6 +585,7 @@ namespace tgx
             case CENTERRIGHT:   return Vec2<T>(maxX, (minY + maxY) / 2);
             case CENTERTOP:     return Vec2<T>((minX + maxX) / 2, maxY);
             case CENTERBOTTOM:  return Vec2<T>((minX + maxX) / 2, minY);
+            default: break;
                 }
             return Vec2<T>((minX + maxX) / 2, (minY + maxY) / 2); // unknown pos returns center.
             }
