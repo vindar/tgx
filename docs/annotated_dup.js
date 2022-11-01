@@ -7,8 +7,6 @@ var annotated_dup =
       [ "Image", "classtgx_1_1_image.html", "classtgx_1_1_image" ],
       [ "Mat4", "structtgx_1_1_mat4.html", "structtgx_1_1_mat4" ],
       [ "Mesh3D", "structtgx_1_1_mesh3_d.html", "structtgx_1_1_mesh3_d" ],
-      [ "RasterizerParams", "structtgx_1_1_rasterizer_params.html", "structtgx_1_1_rasterizer_params" ],
-      [ "RasterizerVec4", "structtgx_1_1_rasterizer_vec4.html", "structtgx_1_1_rasterizer_vec4" ],
       [ "Renderer3D", "classtgx_1_1_renderer3_d.html", "classtgx_1_1_renderer3_d" ],
       [ "RGB24", "structtgx_1_1_r_g_b24.html", "structtgx_1_1_r_g_b24" ],
       [ "RGB32", "structtgx_1_1_r_g_b32.html", "structtgx_1_1_r_g_b32" ],

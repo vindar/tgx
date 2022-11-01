@@ -24,10 +24,11 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;0.8</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.0</span>
    </div>
-   <div id="projectbrief">Tiny Graphics Library</div>
+   <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
  </tr>
  </tbody>
@@ -593,8 +594,8 @@ static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>DEFA
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a78427c0dadcc6f5c3ab10affcce4c427" name="a78427c0dadcc6f5c3ab10affcce4c427"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78427c0dadcc6f5c3ab10affcce4c427">&#9670;&#160;</a></span>blend() <span class="overload">[1/2]</span></h2>
+<a id="a2446767efaaa0cc767ff4f64f679259e" name="a2446767efaaa0cc767ff4f64f679259e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2446767efaaa0cc767ff4f64f679259e">&#9670;&#160;</a></span>operator iVec3()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -603,10 +604,66 @@ static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>DEFA
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void tgx::RGB64::blend </td>
+          <td class="memname">tgx::RGB64::operator <a class="el" href="_vec3_8h.html#a3d74576a897ad4d7dc0c7bd5ca7e1071">iVec3</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
-          <td class="paramname"><em>fg_col</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Cast into an <a class="el" href="_vec3_8h.html#a3d74576a897ad4d7dc0c7bd5ca7e1071" title="Integer-valued 3D vector.">iVec3</a> with components (x=R, y=G, z=B) in [0,65535]. </p>
+<p >Component A is ignored. </p>
+
+</div>
+</div>
+<a id="a36bc7d1eeff4b62c124bd039e663b491" name="a36bc7d1eeff4b62c124bd039e663b491"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36bc7d1eeff4b62c124bd039e663b491">&#9670;&#160;</a></span>operator fVec3()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">tgx::RGB64::operator <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Cast into an <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2" title="Floating point valued 3D vector with single (float) precision.">fVec3</a> with components (x=R, y=G, z=B) in [0.0f, 1.0f]. </p>
+<p >Component A is ignored. </p>
+
+</div>
+</div>
+<a id="a889105d5aeb9ad231fd1c35f3d162d91" name="a889105d5aeb9ad231fd1c35f3d162d91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a889105d5aeb9ad231fd1c35f3d162d91">&#9670;&#160;</a></span>operator=() <span class="overload">[1/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a> &amp;&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -617,19 +674,150 @@ static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>DEFA
 </table>
 </div><div class="memdoc">
 
-<p>alpha-blend <code>fg_col</code> over this one. </p>
-<p ><b>WARNING</b> The color fg_col is assumed to have pre-multiplied alpha.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">fg_col</td><td>The foreground color. The alpha channel of the color is used for blending. </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Assignement operator from a <a class="el" href="structtgx_1_1_r_g_b24.html" title="Color in R8/G8/B8 format.">RGB24</a> color. </p>
+<p >Component A is set to DEFAULT_A. </p>
+
+</div>
+</div>
+<a id="a5ce56d1ced38f1957bc94191642fec31" name="a5ce56d1ced38f1957bc94191642fec31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ce56d1ced38f1957bc94191642fec31">&#9670;&#160;</a></span>operator=() <span class="overload">[2/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assignement operator from a <a class="el" href="structtgx_1_1_r_g_b24.html" title="Color in R8/G8/B8 format.">RGB24</a> color. </p>
+<p >Component A is set to DEFAULT_A. </p>
+
+</div>
+</div>
+<a id="a6e7f1ce1924e15bcd994fa34c671e04e" name="a6e7f1ce1924e15bcd994fa34c671e04e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e7f1ce1924e15bcd994fa34c671e04e">&#9670;&#160;</a></span>operator=() <span class="overload">[3/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assignement operator from a <a class="el" href="structtgx_1_1_r_g_bf.html" title="Color in R,G,B float format.">RGBf</a> color. </p>
+<p >Component A is set to DEFAULT_A. </p>
+
+</div>
+</div>
+<a id="a56359a995787675b667bee8a681d0662" name="a56359a995787675b667bee8a681d0662"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56359a995787675b667bee8a681d0662">&#9670;&#160;</a></span>operator=() <span class="overload">[4/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp;&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Assignement operator from a <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in Hue/Saturation/Value space (experimental).">HSV</a> color. </p>
+<p >Component A is set to DEFAULT_A. </p>
+
+</div>
+</div>
+<a id="a8888b7782786cc29c1de6c4c26be6f9c" name="a8888b7782786cc29c1de6c4c26be6f9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8888b7782786cc29c1de6c4c26be6f9c">&#9670;&#160;</a></span>operator=() <span class="overload">[5/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="_vec3_8h.html#a3d74576a897ad4d7dc0c7bd5ca7e1071">iVec3</a>&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assignement operator from a <a class="el" href="_vec3_8h.html#a3d74576a897ad4d7dc0c7bd5ca7e1071" title="Integer-valued 3D vector.">iVec3</a> with components (x=R, y=G, z=B) in [0,65535]. </p>
+<p >Component A is set to DEFAULT_A. </p>
+
+</div>
+</div>
+<a id="a444ed6d962272612ea938dd32ee6113f" name="a444ed6d962272612ea938dd32ee6113f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a444ed6d962272612ea938dd32ee6113f">&#9670;&#160;</a></span>operator=() <span class="overload">[6/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a>&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assignement operator from a <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2" title="Floating point valued 3D vector with single (float) precision.">fVec3</a> with components (x=R, y=G, z=B) in [0.0f,1.0f]. </p>
+<p >Component A is set to DEFAULT_A. </p>
 
 </div>
 </div>
 <a id="a29489aa0b075d6e5f6ed0dcf454336e3" name="a29489aa0b075d6e5f6ed0dcf454336e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29489aa0b075d6e5f6ed0dcf454336e3">&#9670;&#160;</a></span>blend() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a29489aa0b075d6e5f6ed0dcf454336e3">&#9670;&#160;</a></span>blend() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -766,8 +954,8 @@ static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>DEFA
 
 </div>
 </div>
-<a id="a6c7090055f22a911e7feb7a4d958fea7" name="a6c7090055f22a911e7feb7a4d958fea7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c7090055f22a911e7feb7a4d958fea7">&#9670;&#160;</a></span>getMultOpacity()</h2>
+<a id="a78427c0dadcc6f5c3ab10affcce4c427" name="a78427c0dadcc6f5c3ab10affcce4c427"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78427c0dadcc6f5c3ab10affcce4c427">&#9670;&#160;</a></span>blend() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -776,10 +964,10 @@ static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>DEFA
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> tgx::RGB64::getMultOpacity </td>
+          <td class="memname">void tgx::RGB64::blend </td>
           <td>(</td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>op</em></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
+          <td class="paramname"><em>fg_col</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -790,8 +978,14 @@ static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>DEFA
 </table>
 </div><div class="memdoc">
 
-<p>Return a copy of this color with opacity multiplied by a given factor in [0.0f, 1.0f]. </p>
-<p >This method assumes (and returns) a color with pre-multiplied alpha. </p>
+<p>alpha-blend <code>fg_col</code> over this one. </p>
+<p ><b>WARNING</b> The color fg_col is assumed to have pre-multiplied alpha.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fg_col</td><td>The foreground color. The alpha channel of the color is used for blending. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -837,257 +1031,6 @@ static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>DEFA
 
 <p>Multiply each color component by a given factor m/256 with m in [0,256]. </p>
 <p >Component A is left unchanged. </p>
-
-</div>
-</div>
-<a id="a30db7295ffbf31b20812a2bb056f5f5d" name="a30db7295ffbf31b20812a2bb056f5f5d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30db7295ffbf31b20812a2bb056f5f5d">&#9670;&#160;</a></span>multOpacity()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tgx::RGB64::multOpacity </td>
-          <td>(</td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>op</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Multiply the opacity of the color by a given factor in [0.0f, 1.0f]. </p>
-<p >This method assumes (and returns) a color with pre-multiplied alpha. </p>
-
-</div>
-</div>
-<a id="a36bc7d1eeff4b62c124bd039e663b491" name="a36bc7d1eeff4b62c124bd039e663b491"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36bc7d1eeff4b62c124bd039e663b491">&#9670;&#160;</a></span>operator fVec3()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">tgx::RGB64::operator <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Cast into an <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2" title="Floating point valued 3D vector with single (float) precision.">fVec3</a> with components (x=R, y=G, z=B) in [0.0f, 1.0f]. </p>
-<p >Component A is ignored. </p>
-
-</div>
-</div>
-<a id="a2446767efaaa0cc767ff4f64f679259e" name="a2446767efaaa0cc767ff4f64f679259e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2446767efaaa0cc767ff4f64f679259e">&#9670;&#160;</a></span>operator iVec3()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">tgx::RGB64::operator <a class="el" href="_vec3_8h.html#a3d74576a897ad4d7dc0c7bd5ca7e1071">iVec3</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Cast into an <a class="el" href="_vec3_8h.html#a3d74576a897ad4d7dc0c7bd5ca7e1071" title="Integer-valued 3D vector.">iVec3</a> with components (x=R, y=G, z=B) in [0,65535]. </p>
-<p >Component A is ignored. </p>
-
-</div>
-</div>
-<a id="a56359a995787675b667bee8a681d0662" name="a56359a995787675b667bee8a681d0662"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56359a995787675b667bee8a681d0662">&#9670;&#160;</a></span>operator=() <span class="overload">[1/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp;&#160;</td>
-          <td class="paramname"><em>c</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Assignement operator from a <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in Hue/Saturation/Value space (experimental).">HSV</a> color. </p>
-<p >Component A is set to DEFAULT_A. </p>
-
-</div>
-</div>
-<a id="a5ce56d1ced38f1957bc94191642fec31" name="a5ce56d1ced38f1957bc94191642fec31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ce56d1ced38f1957bc94191642fec31">&#9670;&#160;</a></span>operator=() <span class="overload">[2/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
-          <td class="paramname"><em>c</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Assignement operator from a <a class="el" href="structtgx_1_1_r_g_b24.html" title="Color in R8/G8/B8 format.">RGB24</a> color. </p>
-<p >Component A is set to DEFAULT_A. </p>
-
-</div>
-</div>
-<a id="a889105d5aeb9ad231fd1c35f3d162d91" name="a889105d5aeb9ad231fd1c35f3d162d91"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a889105d5aeb9ad231fd1c35f3d162d91">&#9670;&#160;</a></span>operator=() <span class="overload">[3/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a> &amp;&#160;</td>
-          <td class="paramname"><em>c</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Assignement operator from a <a class="el" href="structtgx_1_1_r_g_b24.html" title="Color in R8/G8/B8 format.">RGB24</a> color. </p>
-<p >Component A is set to DEFAULT_A. </p>
-
-</div>
-</div>
-<a id="a6e7f1ce1924e15bcd994fa34c671e04e" name="a6e7f1ce1924e15bcd994fa34c671e04e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e7f1ce1924e15bcd994fa34c671e04e">&#9670;&#160;</a></span>operator=() <span class="overload">[4/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
-          <td class="paramname"><em>c</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Assignement operator from a <a class="el" href="structtgx_1_1_r_g_bf.html" title="Color in R,G,B float format.">RGBf</a> color. </p>
-<p >Component A is set to DEFAULT_A. </p>
-
-</div>
-</div>
-<a id="a444ed6d962272612ea938dd32ee6113f" name="a444ed6d962272612ea938dd32ee6113f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a444ed6d962272612ea938dd32ee6113f">&#9670;&#160;</a></span>operator=() <span class="overload">[5/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a>&#160;</td>
-          <td class="paramname"><em>v</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Assignement operator from a <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2" title="Floating point valued 3D vector with single (float) precision.">fVec3</a> with components (x=R, y=G, z=B) in [0.0f,1.0f]. </p>
-<p >Component A is set to DEFAULT_A. </p>
-
-</div>
-</div>
-<a id="a8888b7782786cc29c1de6c4c26be6f9c" name="a8888b7782786cc29c1de6c4c26be6f9c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8888b7782786cc29c1de6c4c26be6f9c">&#9670;&#160;</a></span>operator=() <span class="overload">[6/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp; tgx::RGB64::operator= </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="_vec3_8h.html#a3d74576a897ad4d7dc0c7bd5ca7e1071">iVec3</a>&#160;</td>
-          <td class="paramname"><em>v</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Assignement operator from a <a class="el" href="_vec3_8h.html#a3d74576a897ad4d7dc0c7bd5ca7e1071" title="Integer-valued 3D vector.">iVec3</a> with components (x=R, y=G, z=B) in [0,65535]. </p>
-<p >Component A is set to DEFAULT_A. </p>
 
 </div>
 </div>
@@ -1146,6 +1089,64 @@ static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>DEFA
 <p>Change the opacity of the color to a given value in [0.0f, 1.0f]. </p>
 <p >This method assumes (and returns) a color with pre-multiplied alpha.</p>
 <p ><b>Remark</b> Use <a class="el" href="structtgx_1_1_r_g_b64.html#a30db7295ffbf31b20812a2bb056f5f5d" title="Multiply the opacity of the color by a given factor in [0.0f, 1.0f].">multOpacity()</a> instead whenever possible because it is faster. </p>
+
+</div>
+</div>
+<a id="a30db7295ffbf31b20812a2bb056f5f5d" name="a30db7295ffbf31b20812a2bb056f5f5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30db7295ffbf31b20812a2bb056f5f5d">&#9670;&#160;</a></span>multOpacity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tgx::RGB64::multOpacity </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>op</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Multiply the opacity of the color by a given factor in [0.0f, 1.0f]. </p>
+<p >This method assumes (and returns) a color with pre-multiplied alpha. </p>
+
+</div>
+</div>
+<a id="a6c7090055f22a911e7feb7a4d958fea7" name="a6c7090055f22a911e7feb7a4d958fea7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c7090055f22a911e7feb7a4d958fea7">&#9670;&#160;</a></span>getMultOpacity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> tgx::RGB64::getMultOpacity </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>op</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return a copy of this color with opacity multiplied by a given factor in [0.0f, 1.0f]. </p>
+<p >This method assumes (and returns) a color with pre-multiplied alpha. </p>
 
 </div>
 </div>

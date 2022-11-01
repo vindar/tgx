@@ -24,10 +24,11 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;0.8</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.0</span>
    </div>
-   <div id="projectbrief">Tiny Graphics Library</div>
+   <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
  </tr>
  </tbody>
@@ -269,8 +270,8 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a614df67aa530e5c1d380415c7c90220a" name="a614df67aa530e5c1d380415c7c90220a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a614df67aa530e5c1d380415c7c90220a">&#9670;&#160;</a></span>multRotate() <span class="overload">[1/2]</span></h2>
+<a id="aa427edd629ed08570dd5c8207a78db2e" name="aa427edd629ed08570dd5c8207a78db2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa427edd629ed08570dd5c8207a78db2e">&#9670;&#160;</a></span>setOrtho()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -281,16 +282,40 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multRotate </td>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setOrtho </td>
           <td>(</td>
           <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>angle</em>, </td>
+          <td class="paramname"><em>left</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>v</em>&#160;</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>right</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>bottom</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>top</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>zNear</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>zFar</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -305,286 +330,17 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Pre-multiply this matrix by a rotation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml</a></p>
+<p>Set as an orthographic projection matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">angle</td><td>rotation angle in degrees. </td></tr>
-    <tr><td class="paramname">v</td><td>direction vector for the rotation. </td></tr>
+    <tr><td class="paramname">left,right</td><td>coordinates for the left and right vertical clipping planes <br  />
+ </td></tr>
+    <tr><td class="paramname">bottom,top</td><td>coordinates for the bottom and top horizontal clipping planes. </td></tr>
+    <tr><td class="paramname">zNear,zFar</td><td>distances to the nearer and farther depth clipping planes. </td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a3eefaaff522de695542b78773a1c4739" name="a3eefaaff522de695542b78773a1c4739"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3eefaaff522de695542b78773a1c4739">&#9670;&#160;</a></span>multRotate() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multRotate </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>angle</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>y</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>z</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Pre-multiply this matrix by a rotation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">angle</td><td>rotation angle in degrees. </td></tr>
-    <tr><td class="paramname">x,y,z</td><td>coordinates of the direction vector for the rotation. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a27e9d40089202832309eb96f39c43ac9" name="a27e9d40089202832309eb96f39c43ac9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27e9d40089202832309eb96f39c43ac9">&#9670;&#160;</a></span>multScale() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multScale </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>v</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Pre-multiply this matrix by a dilatation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">v</td><td>vector representing the scale factors along each axis. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a74effc96cd08d20a0a25d98bfc6549c0" name="a74effc96cd08d20a0a25d98bfc6549c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74effc96cd08d20a0a25d98bfc6549c0">&#9670;&#160;</a></span>multScale() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multScale </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>y</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>z</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Pre-multiply this matrix by a dilatation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">x,y,z</td><td>scale factors along the x, y, and z axes respectively. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ac3cab97a72c32caa9b9340473cf72bb9" name="ac3cab97a72c32caa9b9340473cf72bb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3cab97a72c32caa9b9340473cf72bb9">&#9670;&#160;</a></span>multTranslate() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multTranslate </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>v</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Pre-multiply this matrix by a translation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">v</td><td>the translation vector. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a92aeb4ffcd35c1fd5abe692dd26250f9" name="a92aeb4ffcd35c1fd5abe692dd26250f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92aeb4ffcd35c1fd5abe692dd26250f9">&#9670;&#160;</a></span>multTranslate() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multTranslate </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>y</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>z</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Pre-multiply this matrix by a translation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">x,y,z</td><td>coordinates of the translation vector. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a7cb00300b2c6ea5f4b10760b1a98148f" name="a7cb00300b2c6ea5f4b10760b1a98148f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7cb00300b2c6ea5f4b10760b1a98148f">&#9670;&#160;</a></span>print()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::print </td>
-          <td>(</td>
-          <td class="paramtype">Stream &amp;&#160;</td>
-          <td class="paramname"><em>outputStream</em> = <code>Serial</code></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Output a representation of the matrix using a given Stream. </p>
-<p >**Defined only in the Arduino environment ** </p>
 
 </div>
 </div>
@@ -661,8 +417,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="ac1296fe897141966e80bdd680c217e5d" name="ac1296fe897141966e80bdd680c217e5d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1296fe897141966e80bdd680c217e5d">&#9670;&#160;</a></span>setLookAt() <span class="overload">[1/2]</span></h2>
+<a id="a1d162f853afbd66782cd6589596770b6" name="a1d162f853afbd66782cd6589596770b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d162f853afbd66782cd6589596770b6">&#9670;&#160;</a></span>setPerspective()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -673,22 +429,28 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setLookAt </td>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setPerspective </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>eye</em>, </td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>fovy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>center</em>, </td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>aspect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>up</em>&#160;</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>zNear</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>zFar</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -703,15 +465,591 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Set the matrix for a camera looking at a given direction. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml</a></p>
-<p >The formula given by khronos is wrong ! The cross-product of two unit vectors is not normalized.</p>
-<p >See <a href="https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down">https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down</a></p>
+<p>Set as a perspective projection matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">eye</td><td>eye position. </td></tr>
-    <tr><td class="paramname">center</td><td>reference point (the camera points toward this point). </td></tr>
-    <tr><td class="paramname">up</td><td>up vector. </td></tr>
+    <tr><td class="paramname">fovy</td><td>field of view angle, in degrees, in the y direction. </td></tr>
+    <tr><td class="paramname">aspect</td><td>aspect ratio that determines the field of view in the x direction. The aspect ratio is the ratio of x (width) to y (height). </td></tr>
+    <tr><td class="paramname">zNear</td><td>distance from the viewer to the near clipping plane. </td></tr>
+    <tr><td class="paramname">zFar</td><td>distance from the viewer to the far clipping plane. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7b4b318e743ae3bdcc341233bcdc1906" name="a7b4b318e743ae3bdcc341233bcdc1906"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b4b318e743ae3bdcc341233bcdc1906">&#9670;&#160;</a></span>setRotate() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setRotate </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>angle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set as a rotation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">angle</td><td>rotation angle in degrees. </td></tr>
+    <tr><td class="paramname">x,y,z</td><td>coordinates of the direction vector for the rotation. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad7e8ba53545bc825d11ebf30ffb6b64a" name="ad7e8ba53545bc825d11ebf30ffb6b64a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7e8ba53545bc825d11ebf30ffb6b64a">&#9670;&#160;</a></span>setRotate() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setRotate </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>angle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>v</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set as a rotation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">angle</td><td>rotation angle in degrees. </td></tr>
+    <tr><td class="paramname">v</td><td>direction vector for the rotation. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3eefaaff522de695542b78773a1c4739" name="a3eefaaff522de695542b78773a1c4739"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3eefaaff522de695542b78773a1c4739">&#9670;&#160;</a></span>multRotate() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multRotate </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>angle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pre-multiply this matrix by a rotation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">angle</td><td>rotation angle in degrees. </td></tr>
+    <tr><td class="paramname">x,y,z</td><td>coordinates of the direction vector for the rotation. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a614df67aa530e5c1d380415c7c90220a" name="a614df67aa530e5c1d380415c7c90220a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a614df67aa530e5c1d380415c7c90220a">&#9670;&#160;</a></span>multRotate() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multRotate </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>angle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>v</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pre-multiply this matrix by a rotation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">angle</td><td>rotation angle in degrees. </td></tr>
+    <tr><td class="paramname">v</td><td>direction vector for the rotation. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a72f0745d34ca940f9afb427f8d8fc987" name="a72f0745d34ca940f9afb427f8d8fc987"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72f0745d34ca940f9afb427f8d8fc987">&#9670;&#160;</a></span>setTranslate() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setTranslate </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set as a translation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x,y,z</td><td>coordinates of the translation vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3973769e07cd17b862dffc4348836377" name="a3973769e07cd17b862dffc4348836377"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3973769e07cd17b862dffc4348836377">&#9670;&#160;</a></span>setTranslate() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setTranslate </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set as a translation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>the translation vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a92aeb4ffcd35c1fd5abe692dd26250f9" name="a92aeb4ffcd35c1fd5abe692dd26250f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92aeb4ffcd35c1fd5abe692dd26250f9">&#9670;&#160;</a></span>multTranslate() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multTranslate </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pre-multiply this matrix by a translation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x,y,z</td><td>coordinates of the translation vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac3cab97a72c32caa9b9340473cf72bb9" name="ac3cab97a72c32caa9b9340473cf72bb9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3cab97a72c32caa9b9340473cf72bb9">&#9670;&#160;</a></span>multTranslate() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multTranslate </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pre-multiply this matrix by a translation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>the translation vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3b007479b9654809689f7ae4c506da20" name="a3b007479b9654809689f7ae4c506da20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b007479b9654809689f7ae4c506da20">&#9670;&#160;</a></span>setScale() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setScale </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set as a dilatation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x,y,z</td><td>scale factors along the x, y, and z axes respectively. <br  />
+ </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4b17405fbd68245b0ad8a9d208250486" name="a4b17405fbd68245b0ad8a9d208250486"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b17405fbd68245b0ad8a9d208250486">&#9670;&#160;</a></span>setScale() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setScale </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set as a dilatation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>vector representing the scale factors along each axis. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a74effc96cd08d20a0a25d98bfc6549c0" name="a74effc96cd08d20a0a25d98bfc6549c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74effc96cd08d20a0a25d98bfc6549c0">&#9670;&#160;</a></span>multScale() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multScale </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pre-multiply this matrix by a dilatation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x,y,z</td><td>scale factors along the x, y, and z axes respectively. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a27e9d40089202832309eb96f39c43ac9" name="a27e9d40089202832309eb96f39c43ac9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27e9d40089202832309eb96f39c43ac9">&#9670;&#160;</a></span>multScale() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::multScale </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pre-multiply this matrix by a dilatation matrix. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>vector representing the scale factors along each axis. </td></tr>
   </table>
   </dd>
 </dl>
@@ -719,7 +1057,7 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <a id="a559673dc298b417ba65468510c291c93" name="a559673dc298b417ba65468510c291c93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a559673dc298b417ba65468510c291c93">&#9670;&#160;</a></span>setLookAt() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a559673dc298b417ba65468510c291c93">&#9670;&#160;</a></span>setLookAt() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -811,8 +1149,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="aa427edd629ed08570dd5c8207a78db2e" name="aa427edd629ed08570dd5c8207a78db2e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa427edd629ed08570dd5c8207a78db2e">&#9670;&#160;</a></span>setOrtho()</h2>
+<a id="ac1296fe897141966e80bdd680c217e5d" name="ac1296fe897141966e80bdd680c217e5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1296fe897141966e80bdd680c217e5d">&#9670;&#160;</a></span>setLookAt() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -823,303 +1161,22 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setOrtho </td>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setLookAt </td>
           <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>left</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>right</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>bottom</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>top</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>zNear</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>zFar</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set as an orthographic projection matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">left,right</td><td>coordinates for the left and right vertical clipping planes <br  />
- </td></tr>
-    <tr><td class="paramname">bottom,top</td><td>coordinates for the bottom and top horizontal clipping planes. </td></tr>
-    <tr><td class="paramname">zNear,zFar</td><td>distances to the nearer and farther depth clipping planes. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a1d162f853afbd66782cd6589596770b6" name="a1d162f853afbd66782cd6589596770b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d162f853afbd66782cd6589596770b6">&#9670;&#160;</a></span>setPerspective()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setPerspective </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>fovy</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>aspect</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>zNear</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>zFar</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set as a perspective projection matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">fovy</td><td>field of view angle, in degrees, in the y direction. </td></tr>
-    <tr><td class="paramname">aspect</td><td>aspect ratio that determines the field of view in the x direction. The aspect ratio is the ratio of x (width) to y (height). </td></tr>
-    <tr><td class="paramname">zNear</td><td>distance from the viewer to the near clipping plane. </td></tr>
-    <tr><td class="paramname">zFar</td><td>distance from the viewer to the far clipping plane. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ad7e8ba53545bc825d11ebf30ffb6b64a" name="ad7e8ba53545bc825d11ebf30ffb6b64a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7e8ba53545bc825d11ebf30ffb6b64a">&#9670;&#160;</a></span>setRotate() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setRotate </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>angle</em>, </td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>eye</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>v</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set as a rotation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">angle</td><td>rotation angle in degrees. </td></tr>
-    <tr><td class="paramname">v</td><td>direction vector for the rotation. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a7b4b318e743ae3bdcc341233bcdc1906" name="a7b4b318e743ae3bdcc341233bcdc1906"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b4b318e743ae3bdcc341233bcdc1906">&#9670;&#160;</a></span>setRotate() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setRotate </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>angle</em>, </td>
+          <td class="paramname"><em>center</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>y</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>z</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set as a rotation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">angle</td><td>rotation angle in degrees. </td></tr>
-    <tr><td class="paramname">x,y,z</td><td>coordinates of the direction vector for the rotation. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a4b17405fbd68245b0ad8a9d208250486" name="a4b17405fbd68245b0ad8a9d208250486"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b17405fbd68245b0ad8a9d208250486">&#9670;&#160;</a></span>setScale() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setScale </td>
-          <td>(</td>
           <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>v</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set as a dilatation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">v</td><td>vector representing the scale factors along each axis. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a3b007479b9654809689f7ae4c506da20" name="a3b007479b9654809689f7ae4c506da20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b007479b9654809689f7ae4c506da20">&#9670;&#160;</a></span>setScale() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setScale </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>y</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>z</em>&#160;</td>
+          <td class="paramname"><em>up</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1134,20 +1191,23 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Set as a dilatation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml</a></p>
+<p>Set the matrix for a camera looking at a given direction. </p>
+<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml</a></p>
+<p >The formula given by khronos is wrong ! The cross-product of two unit vectors is not normalized.</p>
+<p >See <a href="https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down">https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x,y,z</td><td>scale factors along the x, y, and z axes respectively. <br  />
- </td></tr>
+    <tr><td class="paramname">eye</td><td>eye position. </td></tr>
+    <tr><td class="paramname">center</td><td>reference point (the camera points toward this point). </td></tr>
+    <tr><td class="paramname">up</td><td>up vector. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a3973769e07cd17b862dffc4348836377" name="a3973769e07cd17b862dffc4348836377"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3973769e07cd17b862dffc4348836377">&#9670;&#160;</a></span>setTranslate() <span class="overload">[1/2]</span></h2>
+<a id="a7cb00300b2c6ea5f4b10760b1a98148f" name="a7cb00300b2c6ea5f4b10760b1a98148f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cb00300b2c6ea5f4b10760b1a98148f">&#9670;&#160;</a></span>print()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1158,11 +1218,11 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setTranslate </td>
+          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::print </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>v</em></td><td>)</td>
-          <td></td>
+          <td class="paramtype">Stream &amp;&#160;</td>
+          <td class="paramname"><em>outputStream</em> = <code>Serial</code></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1172,67 +1232,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Set as a translation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">v</td><td>the translation vector. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a72f0745d34ca940f9afb427f8d8fc987" name="a72f0745d34ca940f9afb427f8d8fc987"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72f0745d34ca940f9afb427f8d8fc987">&#9670;&#160;</a></span>setTranslate() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_mat4.html">tgx::Mat4</a>&lt; T &gt;::setTranslate </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>y</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>z</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set as a translation matrix. </p>
-<p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">x,y,z</td><td>coordinates of the translation vector. </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Output a representation of the matrix using a given Stream. </p>
+<p >**Defined only in the Arduino environment ** </p>
 
 </div>
 </div>

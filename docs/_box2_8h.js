@@ -1,9 +1,9 @@
 var _box2_8h =
 [
     [ "tgx::Box2< T >", "structtgx_1_1_box2.html", "structtgx_1_1_box2" ],
-    [ "dBox2", "_box2_8h.html#aea171a93782651238cda14fb943584fa", null ],
-    [ "fBox2", "_box2_8h.html#af5237584932da348a5241f13376af762", null ],
     [ "iBox2", "_box2_8h.html#a13665af6261a105d3a8bf65396833df8", null ],
+    [ "fBox2", "_box2_8h.html#af5237584932da348a5241f13376af762", null ],
+    [ "dBox2", "_box2_8h.html#aea171a93782651238cda14fb943584fa", null ],
     [ "Anchor", "_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25", [
       [ "CENTER", "_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25a8135ab034ed0901bdb84543e2d884764", null ],
       [ "LEFT", "_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25afd6a2135c693b793e329422242a8c233", null ],
@@ -31,12 +31,12 @@ var _box2_8h =
       [ "SPLIT_BOTTOMLEFT", "_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5aa9cf56917f2eb40ad84b81950c59f4ee", null ],
       [ "SPLIT_BOTTOMRIGHT", "_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5a2a0a3190ac2bdf8310b305c05345fe16", null ]
     ] ],
-    [ "operator&", "_box2_8h.html#a88fe89753ec8f1ca8011d8c579dd7373", null ],
-    [ "operator&", "_box2_8h.html#adde5c67c69a168d036d0dd7a7439ab21", null ],
-    [ "operator&=", "_box2_8h.html#aeea20278830ec3fc3ce7b8d89bf09ae8", null ],
-    [ "operator&=", "_box2_8h.html#a939cd6bfa1795f89ed4abb85de091c1e", null ],
     [ "operator|", "_box2_8h.html#a7ba9c528d0b86fbfdab26059dcbdb69b", null ],
-    [ "operator|", "_box2_8h.html#afefe99ebbe32539f4424cbbb8cfde631", null ],
     [ "operator|=", "_box2_8h.html#a79891b68c4fa63443a7bd2d744cc501e", null ],
-    [ "operator|=", "_box2_8h.html#a6adfe1b841f4b083d1db4079705badb9", null ]
+    [ "operator&", "_box2_8h.html#a88fe89753ec8f1ca8011d8c579dd7373", null ],
+    [ "operator&=", "_box2_8h.html#aeea20278830ec3fc3ce7b8d89bf09ae8", null ],
+    [ "operator|", "_box2_8h.html#afefe99ebbe32539f4424cbbb8cfde631", null ],
+    [ "operator|=", "_box2_8h.html#a6adfe1b841f4b083d1db4079705badb9", null ],
+    [ "operator&", "_box2_8h.html#adde5c67c69a168d036d0dd7a7439ab21", null ],
+    [ "operator&=", "_box2_8h.html#a939cd6bfa1795f89ed4abb85de091c1e", null ]
 ];

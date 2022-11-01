@@ -24,10 +24,11 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;0.8</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.0</span>
    </div>
-   <div id="projectbrief">Tiny Graphics Library</div>
+   <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
  </tr>
  </tbody>
@@ -310,6 +311,48 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>V</b></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="af2ed7a554e91b4f7f2f34a2bedd0064d" name="af2ed7a554e91b4f7f2f34a2bedd0064d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2ed7a554e91b4f7f2f34a2bedd0064d">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp; tgx::HSV::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Assignement operator from a <a class="el" href="structtgx_1_1_r_g_b32.html" title="Color in R8/G8/B8/A8 format.">RGB32</a> color. </p>
+<p >The component A is ignored. </p>
+
+</div>
+</div>
+<a id="a06a6d671c3ed7cd174acc26987d3b82c" name="a06a6d671c3ed7cd174acc26987d3b82c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06a6d671c3ed7cd174acc26987d3b82c">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp; tgx::HSV::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Assignement operator from a <a class="el" href="structtgx_1_1_r_g_b64.html" title="Color in R16/G16/B16/A16 format.">RGB64</a> color. </p>
+<p >The component A is ignored. </p>
+
+</div>
+</div>
 <a id="a1a42f497a259df13da4681f1c31439f1" name="a1a42f497a259df13da4681f1c31439f1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1a42f497a259df13da4681f1c31439f1">&#9670;&#160;</a></span>blend()</h2>
 
@@ -499,76 +542,6 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>V</b></td></tr>
 
 </div>
 </div>
-<a id="a27e5249a8da032ec63e421aeed4af41c" name="a27e5249a8da032ec63e421aeed4af41c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27e5249a8da032ec63e421aeed4af41c">&#9670;&#160;</a></span>opacity()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float tgx::HSV::opacity </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Dummy function for compatibility with color types having an alpha channel. </p>
-<p >Return 1.0f (fully opaque) </p>
-
-</div>
-</div>
-<a id="af2ed7a554e91b4f7f2f34a2bedd0064d" name="af2ed7a554e91b4f7f2f34a2bedd0064d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2ed7a554e91b4f7f2f34a2bedd0064d">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp; tgx::HSV::operator= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
-          <td class="paramname"><em>c</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Assignement operator from a <a class="el" href="structtgx_1_1_r_g_b32.html" title="Color in R8/G8/B8/A8 format.">RGB32</a> color. </p>
-<p >The component A is ignored. </p>
-
-</div>
-</div>
-<a id="a06a6d671c3ed7cd174acc26987d3b82c" name="a06a6d671c3ed7cd174acc26987d3b82c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06a6d671c3ed7cd174acc26987d3b82c">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp; tgx::HSV::operator= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
-          <td class="paramname"><em>c</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Assignement operator from a <a class="el" href="structtgx_1_1_r_g_b64.html" title="Color in R16/G16/B16/A16 format.">RGB64</a> color. </p>
-<p >The component A is ignored. </p>
-
-</div>
-</div>
 <a id="aec1017d4ddc7f20dcd93129ee9b87228" name="aec1017d4ddc7f20dcd93129ee9b87228"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aec1017d4ddc7f20dcd93129ee9b87228">&#9670;&#160;</a></span>premultiply()</h2>
 
@@ -594,6 +567,34 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>V</b></td></tr>
 
 <p>Dummy function for compatibility with color types having an alpha channel. </p>
 <p >Does nothing since the color is always fully opaque. </p>
+
+</div>
+</div>
+<a id="a27e5249a8da032ec63e421aeed4af41c" name="a27e5249a8da032ec63e421aeed4af41c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27e5249a8da032ec63e421aeed4af41c">&#9670;&#160;</a></span>opacity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float tgx::HSV::opacity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Dummy function for compatibility with color types having an alpha channel. </p>
+<p >Return 1.0f (fully opaque) </p>
 
 </div>
 </div>

@@ -24,10 +24,11 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;0.8</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.0</span>
    </div>
-   <div id="projectbrief">Tiny Graphics Library</div>
+   <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
  </tr>
  </tbody>
@@ -288,252 +289,6 @@ struct tgx::Box2&lt; T &gt;</div><p >2D Box template class [specializations <a c
 </dl>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8" title="Integer-valued 2D box.">iBox2</a></code>,<code><a class="el" href="_box2_8h.html#af5237584932da348a5241f13376af762" title="Floating point valued 2D box with single (float) precision.">fBox2</a></code>,<code><a class="el" href="_box2_8h.html#aea171a93782651238cda14fb943584fa" title="Floating point valued 2D box with double precision.">dBox2</a></code> </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="adac41c4fd202491200376fc62dd473ce" name="adac41c4fd202491200376fc62dd473ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adac41c4fd202491200376fc62dd473ce">&#9670;&#160;</a></span>contains()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::contains </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>B</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return true if B is included in this box. </p>
-<p ><b>Convention</b></p>
-<ol type="1">
-<li>An empty box contains nothing.</li>
-<li>A non-empty box contains any empty box. </li>
-</ol>
-
-</div>
-</div>
-<a id="a45485df97962eb6593eb9ddae191d579" name="a45485df97962eb6593eb9ddae191d579"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45485df97962eb6593eb9ddae191d579">&#9670;&#160;</a></span>down()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::down </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Move the box down by 1/10th of its height. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a5279b00aeaf6aa25f7aa28043ef0c1f3" title="Move the box up by 1/10th of its height.">up()</a>,<a class="el" href="structtgx_1_1_box2.html#a42d414472ce877beff9bafc7ae627862" title="Move the box to the left by 1/10th of its width.">left()</a>,<a class="el" href="structtgx_1_1_box2.html#adcce003a1ef0862b87a08927812c85c8" title="Move the box to the right by 1/10th of its width.">right()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a16dc3a51e6cac2897a57d43486e997fe" name="a16dc3a51e6cac2897a57d43486e997fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a16dc3a51e6cac2897a57d43486e997fe">&#9670;&#160;</a></span>equals()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::equals </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>B</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return true if the boxes are equal. </p>
-<p ><b>Convention</b> Two empty boxes always compare equal.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a2a3b648a8d4296bbe7b0a4636c2288a9" title="Return true if the boxes are equal.">operator==()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a4c56f3a8e6f200502de433bd980b7f37" name="a4c56f3a8e6f200502de433bd980b7f37"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c56f3a8e6f200502de433bd980b7f37">&#9670;&#160;</a></span>getAnchor()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getAnchor </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a>&#160;</td>
-          <td class="paramname"><em>anchor_pos</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return the position of an anchor point inside this box. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">anchor_pos</td><td>Th anchor location, see </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a710d4bfd732883bdf6f75f9d3d956185" name="a710d4bfd732883bdf6f75f9d3d956185"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a710d4bfd732883bdf6f75f9d3d956185">&#9670;&#160;</a></span>getEnclosedWithSameRatioAs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getEnclosedWithSameRatioAs </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>B</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Return the largest box with the same <code><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a></code> as box <code>B</code> that is centered and enclosed inside this box. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a>,<a class="el" href="structtgx_1_1_box2.html#ad7490851bbc073d6ae089bd3609888a9" title="Return the smallest box with the same ratio() as box B that contains this box in its center.">getEnclosingWithSameRatioAs()</a> </dd></dl>
-
-</div>
-</div>
-<a id="ad7490851bbc073d6ae089bd3609888a9" name="ad7490851bbc073d6ae089bd3609888a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7490851bbc073d6ae089bd3609888a9">&#9670;&#160;</a></span>getEnclosingWithSameRatioAs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getEnclosingWithSameRatioAs </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>B</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Return the smallest box with the same <code><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a></code> as box <code>B</code> that contains this box in its center. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a>,<a class="el" href="structtgx_1_1_box2.html#a710d4bfd732883bdf6f75f9d3d956185" title="Return the largest box with the same ratio() as box B that is centered and enclosed inside this box.">getEnclosedWithSameRatioAs()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a4383407599d505c3304471d6acf14ce8" name="a4383407599d505c3304471d6acf14ce8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4383407599d505c3304471d6acf14ce8">&#9670;&#160;</a></span>getSplit()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getSplit </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5">BoxSplit</a>&#160;</td>
-          <td class="paramname"><em>part</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return the box splitted in half or quater. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">part</td><td>The part or the box to keep. See <a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5" title="Splitting of a box in half and quarters.">tgx::BoxSplit</a>.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a284b9bd7abd0045737145b516c802ae5" title="Split the box in half or quarter.">split()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a42d414472ce877beff9bafc7ae627862" name="a42d414472ce877beff9bafc7ae627862"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42d414472ce877beff9bafc7ae627862">&#9670;&#160;</a></span>left()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::left </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Move the box to the left by 1/10th of its width. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a5279b00aeaf6aa25f7aa28043ef0c1f3" title="Move the box up by 1/10th of its height.">up()</a>,<a class="el" href="structtgx_1_1_box2.html#a45485df97962eb6593eb9ddae191d579" title="Move the box down by 1/10th of its height.">down()</a>,<a class="el" href="structtgx_1_1_box2.html#adcce003a1ef0862b87a08927812c85c8" title="Move the box to the right by 1/10th of its width.">right()</a> </dd></dl>
-
-</div>
-</div>
 <a id="ab32b1bb2e59b82bb87d0e87d850a3874" name="ab32b1bb2e59b82bb87d0e87d850a3874"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab32b1bb2e59b82bb87d0e87d850a3874">&#9670;&#160;</a></span>lx()</h2>
 
@@ -604,6 +359,250 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a16dc3a51e6cac2897a57d43486e997fe" name="a16dc3a51e6cac2897a57d43486e997fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16dc3a51e6cac2897a57d43486e997fe">&#9670;&#160;</a></span>equals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::equals </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>B</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return true if the boxes are equal. </p>
+<p ><b>Convention</b> Two empty boxes always compare equal.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a2a3b648a8d4296bbe7b0a4636c2288a9" title="Return true if the boxes are equal.">operator==()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a2a3b648a8d4296bbe7b0a4636c2288a9" name="a2a3b648a8d4296bbe7b0a4636c2288a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a3b648a8d4296bbe7b0a4636c2288a9">&#9670;&#160;</a></span>operator==()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>B</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return true if the boxes are equal. </p>
+<p ><b>Convention</b> Two empty boxes always compare equal.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a16dc3a51e6cac2897a57d43486e997fe" title="Return true if the boxes are equal.">equals()</a> </dd></dl>
+
+</div>
+</div>
+<a id="adac41c4fd202491200376fc62dd473ce" name="adac41c4fd202491200376fc62dd473ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adac41c4fd202491200376fc62dd473ce">&#9670;&#160;</a></span>contains()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::contains </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>B</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return true if B is included in this box. </p>
+<p ><b>Convention</b></p>
+<ol type="1">
+<li>An empty box contains nothing.</li>
+<li>A non-empty box contains any empty box. </li>
+</ol>
+
+</div>
+</div>
+<a id="a712775d2befd914012d8e5f95778ba15" name="a712775d2befd914012d8e5f95778ba15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a712775d2befd914012d8e5f95778ba15">&#9670;&#160;</a></span>operator&gt;=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::operator&gt;= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>B</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return true if B is included in this box. </p>
+<p ><b>Convention</b></p>
+<ol type="1">
+<li>An empty box contains nothing.</li>
+<li>A non-empty box contains any empty box. <br  />
+</li>
+</ol>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#abf74bfc3a197249ff7cb1cbc067386f5" title="Return true if the box contains the point v.">contains()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a7a116ff44602e834d272dd4deef6d0e0" name="a7a116ff44602e834d272dd4deef6d0e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a116ff44602e834d272dd4deef6d0e0">&#9670;&#160;</a></span>operator&lt;=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::operator&lt;= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>B</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return true if this box is included in B. </p>
+<p ><b>Convention</b></p>
+<ol type="1">
+<li>An empty box contains nothing.</li>
+<li>A non-empty box contains any empty box.</li>
+</ol>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#abf74bfc3a197249ff7cb1cbc067386f5" title="Return true if the box contains the point v.">contains()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a59e21fd0605cb671be44a9576649f28b" name="a59e21fd0605cb671be44a9576649f28b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59e21fd0605cb671be44a9576649f28b">&#9670;&#160;</a></span>operator&gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::operator&gt; </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>B</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return true if B is <em>strictly</em> included in this box (i.e. </p>
+<p >contained but not equal).</p>
+<p ><b>Convention</b></p>
+<ol type="1">
+<li>An empty box contains nothing.</li>
+<li>A non-empty box contains any empty box. </li>
+</ol>
+
+</div>
+</div>
+<a id="a6ee5eef030c34062dc4829930b1e5be3" name="a6ee5eef030c34062dc4829930b1e5be3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ee5eef030c34062dc4829930b1e5be3">&#9670;&#160;</a></span>operator&lt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::operator&lt; </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>B</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return true if this box is <em>strictly</em> included inside B (i.e. </p>
+<p >contained but not equal).</p>
+<p ><b>Convention</b></p>
+<ol type="1">
+<li>An empty box contains nothing.</li>
+<li>A non-empty box contains any empty box. </li>
+</ol>
+
+</div>
+</div>
 <a id="a194303806a678a2e26fe1a9a222504ba" name="a194303806a678a2e26fe1a9a222504ba"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a194303806a678a2e26fe1a9a222504ba">&#9670;&#160;</a></span>operator&amp;()</h2>
 
@@ -666,8 +665,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a6ee5eef030c34062dc4829930b1e5be3" name="a6ee5eef030c34062dc4829930b1e5be3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ee5eef030c34062dc4829930b1e5be3">&#9670;&#160;</a></span>operator&lt;()</h2>
+<a id="a284b9bd7abd0045737145b516c802ae5" name="a284b9bd7abd0045737145b516c802ae5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a284b9bd7abd0045737145b516c802ae5">&#9670;&#160;</a></span>split()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -678,11 +677,11 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::operator&lt; </td>
+          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::split </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>B</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype"><a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5">BoxSplit</a>&#160;</td>
+          <td class="paramname"><em>part</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -692,18 +691,19 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Return true if this box is <em>strictly</em> included inside B (i.e. </p>
-<p >contained but not equal).</p>
-<p ><b>Convention</b></p>
-<ol type="1">
-<li>An empty box contains nothing.</li>
-<li>A non-empty box contains any empty box. </li>
-</ol>
+<p>Split the box in half or quarter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">part</td><td>The part or the box to keep. See <a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5" title="Splitting of a box in half and quarters.">tgx::BoxSplit</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a4383407599d505c3304471d6acf14ce8" title="Return the box splitted in half or quater.">getSplit()</a> </dd></dl>
 
 </div>
 </div>
-<a id="a7a116ff44602e834d272dd4deef6d0e0" name="a7a116ff44602e834d272dd4deef6d0e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a116ff44602e834d272dd4deef6d0e0">&#9670;&#160;</a></span>operator&lt;=()</h2>
+<a id="a4383407599d505c3304471d6acf14ce8" name="a4383407599d505c3304471d6acf14ce8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4383407599d505c3304471d6acf14ce8">&#9670;&#160;</a></span>getSplit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -714,10 +714,10 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::operator&lt;= </td>
+          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getSplit </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>B</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5">BoxSplit</a>&#160;</td>
+          <td class="paramname"><em>part</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -728,18 +728,19 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Return true if this box is included in B. </p>
-<p ><b>Convention</b></p>
-<ol type="1">
-<li>An empty box contains nothing.</li>
-<li>A non-empty box contains any empty box.</li>
-</ol>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#abf74bfc3a197249ff7cb1cbc067386f5" title="Return true if the box contains the point v.">contains()</a> </dd></dl>
+<p>Return the box splitted in half or quater. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">part</td><td>The part or the box to keep. See <a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5" title="Splitting of a box in half and quarters.">tgx::BoxSplit</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a284b9bd7abd0045737145b516c802ae5" title="Split the box in half or quarter.">split()</a> </dd></dl>
 
 </div>
 </div>
-<a id="a2a3b648a8d4296bbe7b0a4636c2288a9" name="a2a3b648a8d4296bbe7b0a4636c2288a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a3b648a8d4296bbe7b0a4636c2288a9">&#9670;&#160;</a></span>operator==()</h2>
+<a id="a4c56f3a8e6f200502de433bd980b7f37" name="a4c56f3a8e6f200502de433bd980b7f37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c56f3a8e6f200502de433bd980b7f37">&#9670;&#160;</a></span>getAnchor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -750,10 +751,10 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::operator== </td>
+          <td class="memname"><a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getAnchor </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>B</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a>&#160;</td>
+          <td class="paramname"><em>anchor_pos</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -764,82 +765,13 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Return true if the boxes are equal. </p>
-<p ><b>Convention</b> Two empty boxes always compare equal.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a16dc3a51e6cac2897a57d43486e997fe" title="Return true if the boxes are equal.">equals()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a59e21fd0605cb671be44a9576649f28b" name="a59e21fd0605cb671be44a9576649f28b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a59e21fd0605cb671be44a9576649f28b">&#9670;&#160;</a></span>operator&gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::operator&gt; </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>B</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return true if B is <em>strictly</em> included in this box (i.e. </p>
-<p >contained but not equal).</p>
-<p ><b>Convention</b></p>
-<ol type="1">
-<li>An empty box contains nothing.</li>
-<li>A non-empty box contains any empty box. </li>
-</ol>
-
-</div>
-</div>
-<a id="a712775d2befd914012d8e5f95778ba15" name="a712775d2befd914012d8e5f95778ba15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a712775d2befd914012d8e5f95778ba15">&#9670;&#160;</a></span>operator&gt;=()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::operator&gt;= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>B</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return true if B is included in this box. </p>
-<p ><b>Convention</b></p>
-<ol type="1">
-<li>An empty box contains nothing.</li>
-<li>A non-empty box contains any empty box. <br  />
-</li>
-</ol>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#abf74bfc3a197249ff7cb1cbc067386f5" title="Return true if the box contains the point v.">contains()</a> </dd></dl>
+<p>Return the position of an anchor point inside this box. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">anchor_pos</td><td>Th anchor location, see </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -880,8 +812,8 @@ template&lt;typename Tfloat  = DefaultFPType&lt;T&gt;&gt; </div>
 
 </div>
 </div>
-<a id="adcce003a1ef0862b87a08927812c85c8" name="adcce003a1ef0862b87a08927812c85c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adcce003a1ef0862b87a08927812c85c8">&#9670;&#160;</a></span>right()</h2>
+<a id="a8314257e9cd3948730aa550b38c19130" name="a8314257e9cd3948730aa550b38c19130"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8314257e9cd3948730aa550b38c19130">&#9670;&#160;</a></span>zoomOut()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -892,7 +824,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::right </td>
+          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::zoomOut </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -905,75 +837,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Move the box to the right by 1/10th of its width. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a5279b00aeaf6aa25f7aa28043ef0c1f3" title="Move the box up by 1/10th of its height.">up()</a>,<a class="el" href="structtgx_1_1_box2.html#a45485df97962eb6593eb9ddae191d579" title="Move the box down by 1/10th of its height.">down()</a>,<a class="el" href="structtgx_1_1_box2.html#a42d414472ce877beff9bafc7ae627862" title="Move the box to the left by 1/10th of its width.">left()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a284b9bd7abd0045737145b516c802ae5" name="a284b9bd7abd0045737145b516c802ae5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a284b9bd7abd0045737145b516c802ae5">&#9670;&#160;</a></span>split()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::split </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5">BoxSplit</a>&#160;</td>
-          <td class="paramname"><em>part</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Split the box in half or quarter. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">part</td><td>The part or the box to keep. See <a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5" title="Splitting of a box in half and quarters.">tgx::BoxSplit</a>.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a4383407599d505c3304471d6acf14ce8" title="Return the box splitted in half or quater.">getSplit()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a5279b00aeaf6aa25f7aa28043ef0c1f3" name="a5279b00aeaf6aa25f7aa28043ef0c1f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5279b00aeaf6aa25f7aa28043ef0c1f3">&#9670;&#160;</a></span>up()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::up </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Move the box up by 1/10th of its height. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a45485df97962eb6593eb9ddae191d579" title="Move the box down by 1/10th of its height.">down()</a>,<a class="el" href="structtgx_1_1_box2.html#a42d414472ce877beff9bafc7ae627862" title="Move the box to the left by 1/10th of its width.">left()</a>,<a class="el" href="structtgx_1_1_box2.html#adcce003a1ef0862b87a08927812c85c8" title="Move the box to the right by 1/10th of its width.">right()</a> </dd></dl>
+<p>Zoom outside the box (ie increase its size by 1/10th). </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#af1b72fd0224e486fa640ca0df1c63c09" title="Zoom inside the box (ie decrease its size by 1/8th).">zoomIn()</a> </dd></dl>
 
 </div>
 </div>
@@ -1007,8 +872,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a8314257e9cd3948730aa550b38c19130" name="a8314257e9cd3948730aa550b38c19130"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8314257e9cd3948730aa550b38c19130">&#9670;&#160;</a></span>zoomOut()</h2>
+<a id="a42d414472ce877beff9bafc7ae627862" name="a42d414472ce877beff9bafc7ae627862"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42d414472ce877beff9bafc7ae627862">&#9670;&#160;</a></span>left()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1019,7 +884,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::zoomOut </td>
+          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::left </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1032,8 +897,144 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Zoom outside the box (ie increase its size by 1/10th). </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#af1b72fd0224e486fa640ca0df1c63c09" title="Zoom inside the box (ie decrease its size by 1/8th).">zoomIn()</a> </dd></dl>
+<p>Move the box to the left by 1/10th of its width. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a5279b00aeaf6aa25f7aa28043ef0c1f3" title="Move the box up by 1/10th of its height.">up()</a>,<a class="el" href="structtgx_1_1_box2.html#a45485df97962eb6593eb9ddae191d579" title="Move the box down by 1/10th of its height.">down()</a>,<a class="el" href="structtgx_1_1_box2.html#adcce003a1ef0862b87a08927812c85c8" title="Move the box to the right by 1/10th of its width.">right()</a> </dd></dl>
+
+</div>
+</div>
+<a id="adcce003a1ef0862b87a08927812c85c8" name="adcce003a1ef0862b87a08927812c85c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcce003a1ef0862b87a08927812c85c8">&#9670;&#160;</a></span>right()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::right </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move the box to the right by 1/10th of its width. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a5279b00aeaf6aa25f7aa28043ef0c1f3" title="Move the box up by 1/10th of its height.">up()</a>,<a class="el" href="structtgx_1_1_box2.html#a45485df97962eb6593eb9ddae191d579" title="Move the box down by 1/10th of its height.">down()</a>,<a class="el" href="structtgx_1_1_box2.html#a42d414472ce877beff9bafc7ae627862" title="Move the box to the left by 1/10th of its width.">left()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a5279b00aeaf6aa25f7aa28043ef0c1f3" name="a5279b00aeaf6aa25f7aa28043ef0c1f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5279b00aeaf6aa25f7aa28043ef0c1f3">&#9670;&#160;</a></span>up()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::up </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move the box up by 1/10th of its height. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a45485df97962eb6593eb9ddae191d579" title="Move the box down by 1/10th of its height.">down()</a>,<a class="el" href="structtgx_1_1_box2.html#a42d414472ce877beff9bafc7ae627862" title="Move the box to the left by 1/10th of its width.">left()</a>,<a class="el" href="structtgx_1_1_box2.html#adcce003a1ef0862b87a08927812c85c8" title="Move the box to the right by 1/10th of its width.">right()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a45485df97962eb6593eb9ddae191d579" name="a45485df97962eb6593eb9ddae191d579"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45485df97962eb6593eb9ddae191d579">&#9670;&#160;</a></span>down()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::down </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move the box down by 1/10th of its height. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a5279b00aeaf6aa25f7aa28043ef0c1f3" title="Move the box up by 1/10th of its height.">up()</a>,<a class="el" href="structtgx_1_1_box2.html#a42d414472ce877beff9bafc7ae627862" title="Move the box to the left by 1/10th of its width.">left()</a>,<a class="el" href="structtgx_1_1_box2.html#adcce003a1ef0862b87a08927812c85c8" title="Move the box to the right by 1/10th of its width.">right()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a710d4bfd732883bdf6f75f9d3d956185" name="a710d4bfd732883bdf6f75f9d3d956185"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a710d4bfd732883bdf6f75f9d3d956185">&#9670;&#160;</a></span>getEnclosedWithSameRatioAs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getEnclosedWithSameRatioAs </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>B</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the largest box with the same <code><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a></code> as box <code>B</code> that is centered and enclosed inside this box. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a>,<a class="el" href="structtgx_1_1_box2.html#ad7490851bbc073d6ae089bd3609888a9" title="Return the smallest box with the same ratio() as box B that contains this box in its center.">getEnclosingWithSameRatioAs()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ad7490851bbc073d6ae089bd3609888a9" name="ad7490851bbc073d6ae089bd3609888a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7490851bbc073d6ae089bd3609888a9">&#9670;&#160;</a></span>getEnclosingWithSameRatioAs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getEnclosingWithSameRatioAs </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>B</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the smallest box with the same <code><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a></code> as box <code>B</code> that contains this box in its center. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a>,<a class="el" href="structtgx_1_1_box2.html#a710d4bfd732883bdf6f75f9d3d956185" title="Return the largest box with the same ratio() as box B that is centered and enclosed inside this box.">getEnclosedWithSameRatioAs()</a> </dd></dl>
 
 </div>
 </div>

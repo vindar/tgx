@@ -24,10 +24,11 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;0.8</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.0</span>
    </div>
-   <div id="projectbrief">Tiny Graphics Library</div>
+   <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
  </tr>
  </tbody>
@@ -392,8 +393,8 @@ const RGB565&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::RGB565_N
 <tr class="separator:a3a3ac956216c3ec1e6916a05951e07df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a19a3e7e9942a900108834949dbf658d3" name="a19a3e7e9942a900108834949dbf658d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19a3e7e9942a900108834949dbf658d3">&#9670;&#160;</a></span>interpolate()</h2>
+<a id="af862a858d80f44a5ee670d4579188e57" name="af862a858d80f44a5ee670d4579188e57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af862a858d80f44a5ee670d4579188e57">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -402,22 +403,40 @@ const RGB565&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::RGB565_N
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">RGBf tgx::interpolate </td>
+          <td class="memname">RGB565 tgx::interpolateColorsTriangle </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a> &amp;&#160;</td>
           <td class="paramname"><em>col1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a> &amp;&#160;</td>
           <td class="paramname"><em>col2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>alpha</em>&#160;</td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a> &amp;&#160;</td>
+          <td class="paramname"><em>col3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>totC</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -432,220 +451,13 @@ const RGB565&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::RGB565_N
 </table>
 </div><div class="memdoc">
 
-<p>Interpolate between 2 colors. </p>
-<p >Return the color col1 + alpha*(col2 - col1) </p>
+<p>Interpolate between 3 colors. </p>
+<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
 
-</div>
-</div>
-<a id="a9afb46ee1c2be71027b1df03a96b49cf" name="a9afb46ee1c2be71027b1df03a96b49cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9afb46ee1c2be71027b1df03a96b49cf">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[1/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">HSV tgx::interpolateColorsBilinear </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp;&#160;</td>
-          <td class="paramname"><em>C00</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp;&#160;</td>
-          <td class="paramname"><em>C10</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp;&#160;</td>
-          <td class="paramname"><em>C01</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp;&#160;</td>
-          <td class="paramname"><em>C11</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ax</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ay</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Bilinear interpolation between 4 colors. </p>
-<p >Return the bilinear interpolation of four neighouring pixels in an image with respect to position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum coord. in direction x and y, as illustrated in the drawing below:</p>
-<div class="fragment"><div class="line">C01          C11</div>
-<div class="line"> </div>
-<div class="line"> --ax--X</div>
-<div class="line">       |</div>
-<div class="line">       ay</div>
-<div class="line">C00    |     C10</div>
-</div><!-- fragment --> 
-</div>
-</div>
-<a id="afe82fc1756db971e42c292d356822b3c" name="afe82fc1756db971e42c292d356822b3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe82fc1756db971e42c292d356822b3c">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[2/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">RGB24 tgx::interpolateColorsBilinear </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
-          <td class="paramname"><em>C00</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
-          <td class="paramname"><em>C10</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
-          <td class="paramname"><em>C01</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
-          <td class="paramname"><em>C11</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ax</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ay</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Bilinear interpolation between 4 colors. </p>
-<p >Return the bilinear interpolation of four neighouring pixels in an image with respect to position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum coord. in direction x and y, as illustrated in the drawing below:</p>
-<div class="fragment"><div class="line">C01          C11</div>
-<div class="line"> </div>
-<div class="line"> --ax--X</div>
-<div class="line">       |</div>
-<div class="line">       ay</div>
-<div class="line">C00    |     C10</div>
-</div><!-- fragment --> 
-</div>
-</div>
-<a id="aea389ae22129a2534aca905d82be680c" name="aea389ae22129a2534aca905d82be680c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea389ae22129a2534aca905d82be680c">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[3/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">RGB32 tgx::interpolateColorsBilinear </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
-          <td class="paramname"><em>C00</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
-          <td class="paramname"><em>C10</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
-          <td class="paramname"><em>C01</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
-          <td class="paramname"><em>C11</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ax</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ay</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Bilinear interpolation between 4 colors. </p>
-<p >Return the bilinear interpolation of four neighouring pixels in an image with respect to position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum coord. in direction x and y, as illustrated in the drawing below:</p>
-<div class="fragment"><div class="line">C01          C11</div>
-<div class="line"> </div>
-<div class="line"> --ax--X</div>
-<div class="line">       |</div>
-<div class="line">       ay</div>
-<div class="line">C00    |     C10</div>
-</div><!-- fragment --> 
 </div>
 </div>
 <a id="ae1f43def913bf4b048a9d06cfc74a6e9" name="ae1f43def913bf4b048a9d06cfc74a6e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1f43def913bf4b048a9d06cfc74a6e9">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[4/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1f43def913bf4b048a9d06cfc74a6e9">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -711,522 +523,6 @@ const RGB565&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::RGB565_N
 <div class="line">       ay</div>
 <div class="line">C00    |     C10</div>
 </div><!-- fragment --> 
-</div>
-</div>
-<a id="ab576d7d4d95a4ea122569e90c4f49653" name="ab576d7d4d95a4ea122569e90c4f49653"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab576d7d4d95a4ea122569e90c4f49653">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[5/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">RGB64 tgx::interpolateColorsBilinear </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
-          <td class="paramname"><em>C00</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
-          <td class="paramname"><em>C10</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
-          <td class="paramname"><em>C01</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
-          <td class="paramname"><em>C11</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ax</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ay</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Bilinear interpolation between 4 colors. </p>
-<p >Return the bilinear interpolation of four neighouring pixels in an image with respect to position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum coord. in direction x and y, as illustrated in the drawing below:</p>
-<div class="fragment"><div class="line">C01          C11</div>
-<div class="line"> </div>
-<div class="line"> --ax--X</div>
-<div class="line">       |</div>
-<div class="line">       ay</div>
-<div class="line">C00    |     C10</div>
-</div><!-- fragment --> 
-</div>
-</div>
-<a id="a281926600c868039df5304dd8a13fc46" name="a281926600c868039df5304dd8a13fc46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a281926600c868039df5304dd8a13fc46">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[6/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">RGBf tgx::interpolateColorsBilinear </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
-          <td class="paramname"><em>C00</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
-          <td class="paramname"><em>C10</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
-          <td class="paramname"><em>C01</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
-          <td class="paramname"><em>C11</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ax</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ay</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Bilinear interpolation between 4 colors. </p>
-<p >Return the bilinear interpolation of four neighouring pixels in an image with respect to position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum coord. in direction x and y, as illustrated in the drawing below:</p>
-<div class="fragment"><div class="line">C01          C11</div>
-<div class="line"> </div>
-<div class="line"> --ax--X</div>
-<div class="line">       |</div>
-<div class="line">       ay</div>
-<div class="line">C00    |     C10</div>
-</div><!-- fragment --> 
-</div>
-</div>
-<a id="a48f8d4b7f74365e35fb28b245f47dce5" name="a48f8d4b7f74365e35fb28b245f47dce5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a48f8d4b7f74365e35fb28b245f47dce5">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[1/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">RGB24 tgx::interpolateColorsTriangle </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
-          <td class="paramname"><em>col1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
-          <td class="paramname"><em>col2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
-          <td class="paramname"><em>col3</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int32_t&#160;</td>
-          <td class="paramname"><em>totC</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Interpolate between 3 colors. </p>
-<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
-
-</div>
-</div>
-<a id="aef131ae1850983cc237705a5e4e871d9" name="aef131ae1850983cc237705a5e4e871d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef131ae1850983cc237705a5e4e871d9">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[2/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">RGB32 tgx::interpolateColorsTriangle </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
-          <td class="paramname"><em>col1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
-          <td class="paramname"><em>col2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
-          <td class="paramname"><em>col3</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int32_t&#160;</td>
-          <td class="paramname"><em>totC</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Interpolate between 3 colors. </p>
-<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
-
-</div>
-</div>
-<a id="af862a858d80f44a5ee670d4579188e57" name="af862a858d80f44a5ee670d4579188e57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af862a858d80f44a5ee670d4579188e57">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[3/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">RGB565 tgx::interpolateColorsTriangle </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a> &amp;&#160;</td>
-          <td class="paramname"><em>col1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a> &amp;&#160;</td>
-          <td class="paramname"><em>col2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a> &amp;&#160;</td>
-          <td class="paramname"><em>col3</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int32_t&#160;</td>
-          <td class="paramname"><em>totC</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Interpolate between 3 colors. </p>
-<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
-
-</div>
-</div>
-<a id="a1106ca43490dda34bbcff8b12674a483" name="a1106ca43490dda34bbcff8b12674a483"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1106ca43490dda34bbcff8b12674a483">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[4/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">RGB64 tgx::interpolateColorsTriangle </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
-          <td class="paramname"><em>col1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
-          <td class="paramname"><em>col2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
-          <td class="paramname"><em>col3</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int32_t&#160;</td>
-          <td class="paramname"><em>totC</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Interpolate between 3 colors. </p>
-<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
-
-</div>
-</div>
-<a id="a1e41d896002e6c76a9bc7c55328957ad" name="a1e41d896002e6c76a9bc7c55328957ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e41d896002e6c76a9bc7c55328957ad">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[5/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">RGBf tgx::interpolateColorsTriangle </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
-          <td class="paramname"><em>col1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
-          <td class="paramname"><em>col2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
-          <td class="paramname"><em>col3</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>totC</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Interpolate between 3 colors. </p>
-<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
-
-</div>
-</div>
-<a id="a024d9632b8aed323786a666c3d4b94af" name="a024d9632b8aed323786a666c3d4b94af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a024d9632b8aed323786a666c3d4b94af">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[6/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">HSV tgx::interpolateColorsTriangle </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structtgx_1_1_h_s_v.html">HSV</a>&#160;</td>
-          <td class="paramname"><em>col1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structtgx_1_1_h_s_v.html">HSV</a>&#160;</td>
-          <td class="paramname"><em>col2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>C2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structtgx_1_1_h_s_v.html">HSV</a>&#160;</td>
-          <td class="paramname"><em>col3</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t&#160;</td>
-          <td class="paramname"><em>totC</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Interpolate between 3 colors. </p>
-<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
-
 </div>
 </div>
 <a id="a9b45975452e862a4d7c8a0bc9cd67968" name="a9b45975452e862a4d7c8a0bc9cd67968"></a>
@@ -1317,6 +613,711 @@ const RGB565&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::RGB565_N
 <p>Return the average color between 4 colors. </p>
 <p >TODO : make it faster </p>
 
+</div>
+</div>
+<a id="a48f8d4b7f74365e35fb28b245f47dce5" name="a48f8d4b7f74365e35fb28b245f47dce5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48f8d4b7f74365e35fb28b245f47dce5">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[2/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RGB24 tgx::interpolateColorsTriangle </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
+          <td class="paramname"><em>col1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
+          <td class="paramname"><em>col2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
+          <td class="paramname"><em>col3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>totC</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Interpolate between 3 colors. </p>
+<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
+
+</div>
+</div>
+<a id="afe82fc1756db971e42c292d356822b3c" name="afe82fc1756db971e42c292d356822b3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe82fc1756db971e42c292d356822b3c">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[2/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RGB24 tgx::interpolateColorsBilinear </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
+          <td class="paramname"><em>C00</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
+          <td class="paramname"><em>C10</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
+          <td class="paramname"><em>C01</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a> &amp;&#160;</td>
+          <td class="paramname"><em>C11</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>ax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>ay</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Bilinear interpolation between 4 colors. </p>
+<p >Return the bilinear interpolation of four neighouring pixels in an image with respect to position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum coord. in direction x and y, as illustrated in the drawing below:</p>
+<div class="fragment"><div class="line">C01          C11</div>
+<div class="line"> </div>
+<div class="line"> --ax--X</div>
+<div class="line">       |</div>
+<div class="line">       ay</div>
+<div class="line">C00    |     C10</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="aef131ae1850983cc237705a5e4e871d9" name="aef131ae1850983cc237705a5e4e871d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef131ae1850983cc237705a5e4e871d9">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[3/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RGB32 tgx::interpolateColorsTriangle </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
+          <td class="paramname"><em>col1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
+          <td class="paramname"><em>col2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
+          <td class="paramname"><em>col3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>totC</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Interpolate between 3 colors. </p>
+<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
+
+</div>
+</div>
+<a id="aea389ae22129a2534aca905d82be680c" name="aea389ae22129a2534aca905d82be680c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea389ae22129a2534aca905d82be680c">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[3/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RGB32 tgx::interpolateColorsBilinear </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
+          <td class="paramname"><em>C00</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
+          <td class="paramname"><em>C10</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
+          <td class="paramname"><em>C01</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a> &amp;&#160;</td>
+          <td class="paramname"><em>C11</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>ax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>ay</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Bilinear interpolation between 4 colors. </p>
+<p >Return the bilinear interpolation of four neighouring pixels in an image with respect to position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum coord. in direction x and y, as illustrated in the drawing below:</p>
+<div class="fragment"><div class="line">C01          C11</div>
+<div class="line"> </div>
+<div class="line"> --ax--X</div>
+<div class="line">       |</div>
+<div class="line">       ay</div>
+<div class="line">C00    |     C10</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="a1106ca43490dda34bbcff8b12674a483" name="a1106ca43490dda34bbcff8b12674a483"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1106ca43490dda34bbcff8b12674a483">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[4/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RGB64 tgx::interpolateColorsTriangle </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
+          <td class="paramname"><em>col1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
+          <td class="paramname"><em>col2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
+          <td class="paramname"><em>col3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>totC</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Interpolate between 3 colors. </p>
+<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
+
+</div>
+</div>
+<a id="ab576d7d4d95a4ea122569e90c4f49653" name="ab576d7d4d95a4ea122569e90c4f49653"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab576d7d4d95a4ea122569e90c4f49653">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[4/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RGB64 tgx::interpolateColorsBilinear </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
+          <td class="paramname"><em>C00</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
+          <td class="paramname"><em>C10</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
+          <td class="paramname"><em>C01</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
+          <td class="paramname"><em>C11</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>ax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>ay</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Bilinear interpolation between 4 colors. </p>
+<p >Return the bilinear interpolation of four neighouring pixels in an image with respect to position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum coord. in direction x and y, as illustrated in the drawing below:</p>
+<div class="fragment"><div class="line">C01          C11</div>
+<div class="line"> </div>
+<div class="line"> --ax--X</div>
+<div class="line">       |</div>
+<div class="line">       ay</div>
+<div class="line">C00    |     C10</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="a19a3e7e9942a900108834949dbf658d3" name="a19a3e7e9942a900108834949dbf658d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19a3e7e9942a900108834949dbf658d3">&#9670;&#160;</a></span>interpolate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RGBf tgx::interpolate </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramname"><em>col1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramname"><em>col2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>alpha</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Interpolate between 2 colors. </p>
+<p >Return the color col1 + alpha*(col2 - col1) </p>
+
+</div>
+</div>
+<a id="a1e41d896002e6c76a9bc7c55328957ad" name="a1e41d896002e6c76a9bc7c55328957ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e41d896002e6c76a9bc7c55328957ad">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[5/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RGBf tgx::interpolateColorsTriangle </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramname"><em>col1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramname"><em>col2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramname"><em>col3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>totC</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Interpolate between 3 colors. </p>
+<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
+
+</div>
+</div>
+<a id="a281926600c868039df5304dd8a13fc46" name="a281926600c868039df5304dd8a13fc46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a281926600c868039df5304dd8a13fc46">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[5/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RGBf tgx::interpolateColorsBilinear </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramname"><em>C00</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramname"><em>C10</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramname"><em>C01</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramname"><em>C11</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>ax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>ay</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Bilinear interpolation between 4 colors. </p>
+<p >Return the bilinear interpolation of four neighouring pixels in an image with respect to position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum coord. in direction x and y, as illustrated in the drawing below:</p>
+<div class="fragment"><div class="line">C01          C11</div>
+<div class="line"> </div>
+<div class="line"> --ax--X</div>
+<div class="line">       |</div>
+<div class="line">       ay</div>
+<div class="line">C00    |     C10</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="a024d9632b8aed323786a666c3d4b94af" name="a024d9632b8aed323786a666c3d4b94af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a024d9632b8aed323786a666c3d4b94af">&#9670;&#160;</a></span>interpolateColorsTriangle() <span class="overload">[6/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">HSV tgx::interpolateColorsTriangle </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtgx_1_1_h_s_v.html">HSV</a>&#160;</td>
+          <td class="paramname"><em>col1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtgx_1_1_h_s_v.html">HSV</a>&#160;</td>
+          <td class="paramname"><em>col2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>C2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtgx_1_1_h_s_v.html">HSV</a>&#160;</td>
+          <td class="paramname"><em>col3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>totC</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Interpolate between 3 colors. </p>
+<p >Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC. </p>
+
+</div>
+</div>
+<a id="a9afb46ee1c2be71027b1df03a96b49cf" name="a9afb46ee1c2be71027b1df03a96b49cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9afb46ee1c2be71027b1df03a96b49cf">&#9670;&#160;</a></span>interpolateColorsBilinear() <span class="overload">[6/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">HSV tgx::interpolateColorsBilinear </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp;&#160;</td>
+          <td class="paramname"><em>C00</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp;&#160;</td>
+          <td class="paramname"><em>C10</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp;&#160;</td>
+          <td class="paramname"><em>C01</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp;&#160;</td>
+          <td class="paramname"><em>C11</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>ax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>ay</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Bilinear interpolation between 4 colors. </p>
+<p >Return the bilinear interpolation of four neighouring pixels in an image with respect to position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum coord. in direction x and y, as illustrated in the drawing below:</p>
+<div class="fragment"><div class="line">C01          C11</div>
+<div class="line"> </div>
+<div class="line"> --ax--X</div>
+<div class="line">       |</div>
+<div class="line">       ay</div>
+<div class="line">C00    |     C10</div>
+</div><!-- fragment --> 
 </div>
 </div>
 </div><!-- contents -->

@@ -24,10 +24,11 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;0.8</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.0</span>
    </div>
-   <div id="projectbrief">Tiny Graphics Library</div>
+   <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
  </tr>
  </tbody>
@@ -357,175 +358,6 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8f2554dc0ad01ca41973193804200a65" name="a8f2554dc0ad01ca41973193804200a65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f2554dc0ad01ca41973193804200a65">&#9670;&#160;</a></span>blend()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tgx::RGBf::blend </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
-          <td class="paramname"><em>fg_col</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>alpha</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>alpha-blend <code>fg_col</code> over this one with a given opacity in the range 0.0f (fully transparent) to 1.0f (fully opaque). </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">fg_col</td><td>The foreground color. </td></tr>
-    <tr><td class="paramname">alpha</td><td>The opacity/alpha multiplier in [0.0f, 1.0f]. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ab0f2200f7a5c97a6153182b6dcd8620e" name="ab0f2200f7a5c97a6153182b6dcd8620e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0f2200f7a5c97a6153182b6dcd8620e">&#9670;&#160;</a></span>blend256()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tgx::RGBf::blend256 </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
-          <td class="paramname"><em>fg_col</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>alpha</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>alpha-blend <code>fg_col</code> over this one with a given opacity in the integer range 0 (fully transparent) to 256 (fully opaque). </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">fg_col</td><td>The foreground color. </td></tr>
-    <tr><td class="paramname">alpha</td><td>The opacity/alpha multiplier in [0,256]. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a86fd04fb2424c04f2fb7f13d282e75f3" name="a86fd04fb2424c04f2fb7f13d282e75f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86fd04fb2424c04f2fb7f13d282e75f3">&#9670;&#160;</a></span>mult256()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tgx::RGBf::mult256 </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>mr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>mg</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>mb</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>ma</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>multiply each color component by a given factor m/256 with m in [0,256]. </p>
-<p >Parameter ma is ignored since there is not alpha channel. </p>
-
-</div>
-</div>
-<a id="a99a9a67bde4681f0183cbba019cf92d8" name="a99a9a67bde4681f0183cbba019cf92d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a99a9a67bde4681f0183cbba019cf92d8">&#9670;&#160;</a></span>opacity()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float tgx::RGBf::opacity </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Dummy function for compatibility with color types having an alpha channel. </p>
-<p >Return 1.0f (fully opaque) </p>
-
-</div>
-</div>
 <a id="a9468bc4a324612dec803c381b46211bf" name="a9468bc4a324612dec803c381b46211bf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9468bc4a324612dec803c381b46211bf">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
 
@@ -584,6 +416,147 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
 
 </div>
 </div>
+<a id="ab0f2200f7a5c97a6153182b6dcd8620e" name="ab0f2200f7a5c97a6153182b6dcd8620e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0f2200f7a5c97a6153182b6dcd8620e">&#9670;&#160;</a></span>blend256()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tgx::RGBf::blend256 </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a> &amp;&#160;</td>
+          <td class="paramname"><em>fg_col</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>alpha</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>alpha-blend <code>fg_col</code> over this one with a given opacity in the integer range 0 (fully transparent) to 256 (fully opaque). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fg_col</td><td>The foreground color. </td></tr>
+    <tr><td class="paramname">alpha</td><td>The opacity/alpha multiplier in [0,256]. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8f2554dc0ad01ca41973193804200a65" name="a8f2554dc0ad01ca41973193804200a65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f2554dc0ad01ca41973193804200a65">&#9670;&#160;</a></span>blend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tgx::RGBf::blend </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
+          <td class="paramname"><em>fg_col</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>alpha</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>alpha-blend <code>fg_col</code> over this one with a given opacity in the range 0.0f (fully transparent) to 1.0f (fully opaque). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fg_col</td><td>The foreground color. </td></tr>
+    <tr><td class="paramname">alpha</td><td>The opacity/alpha multiplier in [0.0f, 1.0f]. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a86fd04fb2424c04f2fb7f13d282e75f3" name="a86fd04fb2424c04f2fb7f13d282e75f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86fd04fb2424c04f2fb7f13d282e75f3">&#9670;&#160;</a></span>mult256()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tgx::RGBf::mult256 </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>mr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>mg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>mb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ma</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>multiply each color component by a given factor m/256 with m in [0,256]. </p>
+<p >Parameter ma is ignored since there is not alpha channel. </p>
+
+</div>
+</div>
 <a id="acd46972ad6cc337c9d03f8705260d295" name="acd46972ad6cc337c9d03f8705260d295"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acd46972ad6cc337c9d03f8705260d295">&#9670;&#160;</a></span>premultiply()</h2>
 
@@ -609,6 +582,34 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
 
 <p>Dummy function for compatibility with color types having an alpha channel. </p>
 <p >Does nothing since the color is always fully opaque. </p>
+
+</div>
+</div>
+<a id="a99a9a67bde4681f0183cbba019cf92d8" name="a99a9a67bde4681f0183cbba019cf92d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99a9a67bde4681f0183cbba019cf92d8">&#9670;&#160;</a></span>opacity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float tgx::RGBf::opacity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Dummy function for compatibility with color types having an alpha channel. </p>
+<p >Return 1.0f (fully opaque) </p>
 
 </div>
 </div>

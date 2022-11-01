@@ -24,10 +24,11 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;0.8</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.0</span>
    </div>
-   <div id="projectbrief">Tiny Graphics Library</div>
+   <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
  </tr>
  </tbody>
@@ -218,33 +219,23 @@ template&lt;typename T , typename Tfloat  = typename DefaultFPType&lt;T&gt;::fpt
 <tr class="separator:a7325880238f88d232c33e15a51a94489"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a08e47b6838c5cacad5b61df7e995e0dc" name="a08e47b6838c5cacad5b61df7e995e0dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08e47b6838c5cacad5b61df7e995e0dc">&#9670;&#160;</a></span>crossProduct()</h2>
+<a id="a46f708500c558ad919067cf9dd9e0f29" name="a46f708500c558ad919067cf9dd9e0f29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46f708500c558ad919067cf9dd9e0f29">&#9670;&#160;</a></span>normalize()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T &gt; </div>
+template&lt;typename T , typename Tfloat  = typename DefaultFPType&lt;T&gt;::fptype&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">T tgx::crossProduct </td>
+          <td class="memname">Vec2&lt; T &gt; tgx::normalize </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>U</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>V</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>V</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -254,8 +245,50 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Return the cross product UxV (i.e. </p>
-<p >the determinant of the 2 row vector matrix [U V]). </p>
+<p>Return the vector normalized to have unit norm (do nothing if the vector is 0). </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Tfloat</td><td>Floating point type used for computation (use default floating point type if unspecified). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="afb5340b7bf736b058e666da0aef01856" name="afb5340b7bf736b058e666da0aef01856"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb5340b7bf736b058e666da0aef01856">&#9670;&#160;</a></span>normalize_fast()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Tfloat  = typename DefaultFPType&lt;T&gt;::fptype&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vec2&lt; T &gt; tgx::normalize_fast </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>V</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the vector normalized to have unit norm (do nothing if the vector is 0). </p>
+<p >Use fast_invsqrt() approximation to speedup computations.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Tfloat</td><td>Floating point type used for computation (use default floating point type if unspecified). </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -333,120 +366,6 @@ template&lt;typename T , typename Tfloat  = typename DefaultFPType&lt;T&gt;::fpt
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a46f708500c558ad919067cf9dd9e0f29" name="a46f708500c558ad919067cf9dd9e0f29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46f708500c558ad919067cf9dd9e0f29">&#9670;&#160;</a></span>normalize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T , typename Tfloat  = typename DefaultFPType&lt;T&gt;::fptype&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Vec2&lt; T &gt; tgx::normalize </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>V</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return the vector normalized to have unit norm (do nothing if the vector is 0). </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Tfloat</td><td>Floating point type used for computation (use default floating point type if unspecified). </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="afb5340b7bf736b058e666da0aef01856" name="afb5340b7bf736b058e666da0aef01856"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb5340b7bf736b058e666da0aef01856">&#9670;&#160;</a></span>normalize_fast()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T , typename Tfloat  = typename DefaultFPType&lt;T&gt;::fptype&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Vec2&lt; T &gt; tgx::normalize_fast </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>V</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return the vector normalized to have unit norm (do nothing if the vector is 0). </p>
-<p >Use fast_invsqrt() approximation to speedup computations.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Tfloat</td><td>Floating point type used for computation (use default floating point type if unspecified). </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a5634186c30207fb019ce90031573969c" name="a5634186c30207fb019ce90031573969c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5634186c30207fb019ce90031573969c">&#9670;&#160;</a></span>operator*()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Vec2&lt; T &gt; tgx::operator* </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>V1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>V2</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Multiplication operator. </p>
-<p >Coordinates by coordinates </p>
 
 </div>
 </div>
@@ -532,6 +451,47 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a5634186c30207fb019ce90031573969c" name="a5634186c30207fb019ce90031573969c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5634186c30207fb019ce90031573969c">&#9670;&#160;</a></span>operator*()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vec2&lt; T &gt; tgx::operator* </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>V1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>V2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Multiplication operator. </p>
+<p >Coordinates by coordinates </p>
+
+</div>
+</div>
 <a id="a88ef97229f577018934d79c2f008414d" name="a88ef97229f577018934d79c2f008414d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a88ef97229f577018934d79c2f008414d">&#9670;&#160;</a></span>operator/()</h2>
 
@@ -570,6 +530,47 @@ template&lt;typename T &gt; </div>
 
 <p>Division operator. </p>
 <p >Coordinates by coordinates </p>
+
+</div>
+</div>
+<a id="a08e47b6838c5cacad5b61df7e995e0dc" name="a08e47b6838c5cacad5b61df7e995e0dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08e47b6838c5cacad5b61df7e995e0dc">&#9670;&#160;</a></span>crossProduct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T tgx::crossProduct </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>U</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>V</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the cross product UxV (i.e. </p>
+<p >the determinant of the 2 row vector matrix [U V]). </p>
 
 </div>
 </div>
