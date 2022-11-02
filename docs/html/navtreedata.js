@@ -25,6 +25,13 @@
 var NAVTREE =
 [
   [ "TGX", "index.html", [
+    [ "About the library", "index.html#about", null ],
+    [ "Getting started", "index.html#getting_started", null ],
+    [ "References", "index.html#References", null ],
+    [ "Tutorial: basic concepts", "md_docs_intro_concepts.html", null ],
+    [ "Tutorial: the 2D API.", "md_docs_intro_api_2_d.html", null ],
+    [ "Tutorial: the 3D API.", "md_docs_intro_api_3_d.html", null ],
+    [ "Todo List", "todo.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -50,8 +57,8 @@ var NAVTREEINDEX =
 "_box2_8h.html",
 "_vec3_8h.html#aa66986f6d4db428a3fca04c45507c860",
 "classtgx_1_1_renderer3_d.html#a8ff9976b53c527e62c95be427620685f",
-"structtgx_1_1_mat4.html#a4b17405fbd68245b0ad8a9d208250486",
-"structtgx_1_1_r_g_b64.html#a9e3b3d6835f7a2e3dfe378717e8eb00d"
+"structtgx_1_1_mat4.html#a1d162f853afbd66782cd6589596770b6",
+"structtgx_1_1_r_g_b64.html#a889105d5aeb9ad231fd1c35f3d162d91"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

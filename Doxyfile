@@ -908,8 +908,12 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ./src/
-
+INPUT                  = ./docs/intro_concepts.md \
+                         ./docs/mainpage.md \
+                         ./docs/intro_api_2D.md \
+                         ./docs/intro_api_3D.md \
+                         ./src/
+                         
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
 # libiconv (or the iconv built into libc) for the transcoding. See the libiconv
