@@ -34,6 +34,36 @@ namespace tgx
         }
 
 
+
+    /**
+    * For test purposes... 
+    **/
+    template<typename color_t, typename ZBUFFER_t>
+    void shader_test(const int32_t& offset, const int32_t& lx, const int32_t& ly,
+        const int32_t& dx1, const int32_t& dy1, int32_t O1, const tgx::RasterizerVec4& fP1,
+        const int32_t& dx2, const int32_t& dy2, int32_t O2, const tgx::RasterizerVec4& fP2,
+        const int32_t& dx3, const int32_t& dy3, int32_t O3, const tgx::RasterizerVec4& fP3,
+        const tgx::RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+        {
+        color_t col = (color_t)data.facecolor;
+        color_t* buf = data.im->data() + offset;
+        const int32_t stride = data.im->stride();
+        for (int y = 0; y < ly; y++)
+            {
+            for (int x = 0; x < lx; x++)
+                {
+                const int32_t o1 = O1 + dx1 * x + dy1 * y;
+                const int32_t o2 = O2 + dx2 * x + dy2 * y;
+                const int32_t o3 = O3 + dx3 * x + dy3 * y;
+                if ((o1 >= 0) && (o2 >= 0) && (o3 >= 0))
+                    {
+                    buf[x + stride * y].blend256(col, 128);                
+                    }
+                }
+            }
+        }
+
+
     /**
     * FLAT SHADING (NO ZBUFFER)
     **/
@@ -94,6 +124,7 @@ namespace tgx
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
                 buf[bx] = col;
+                //buf[bx].blend256(col, 128) // for testing. 
                 C2 += dx2;
                 C3 += dx3;
                 bx++;
