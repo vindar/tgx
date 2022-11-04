@@ -4584,7 +4584,7 @@ namespace tgx
         {
         const int32_t df1 = off1 - off1_full + ((off1 == off1_full) ? 1 : 0);
         const int32_t df2 = off2 - off2_full + ((off2 == off2_full) ? 1 : 0);
-        const int32_t op = (int32_t)(opacity * 256);
+//        const int32_t op = (int32_t)(opacity * 256);
 
         const int dir_x = (quarter & 1) ? -1 : 1;
         const int dir_y = (quarter & 2) ? -1 : 1;
@@ -4682,7 +4682,7 @@ namespace tgx
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        const int op = (int)(opacity * 256);
+        //const int op = (int)(opacity * 256);
 	    float a1 = _rectifyAngle(angle_start);
 	    float a2 = _rectifyAngle(angle_end);
         const float deg_to_rad = 0.01745329251f;
@@ -4755,7 +4755,7 @@ namespace tgx
         {
         const int32_t df1 = off1 - off1_full + ((off1 == off1_full) ? 1 : 0);
         const int32_t df2 = off2 - off2_full + ((off2 == off2_full) ? 1 : 0);
-        const int32_t op = (int32_t)(opacity * 256);
+        //const int32_t op = (int32_t)(opacity * 256);
 
         if (thickness > R) thickness = R;
         const int dir_x = (quarter & 1) ? -1 : 1;
@@ -4857,7 +4857,7 @@ namespace tgx
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        const int op = (int)(opacity * 256);
+        //const int op = (int)(opacity * 256);
 	    float a1 = _rectifyAngle(angle_start);
 	    float a2 = _rectifyAngle(angle_end);
         const float deg_to_rad = 0.01745329251f;
