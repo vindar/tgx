@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"structtgx_1_1_r_g_b64.html#a8888b7782786cc29c1de6c4c26be6f9c":[7,0,0,10,28],
 "structtgx_1_1_r_g_b64.html#a889105d5aeb9ad231fd1c35f3d162d91":[7,0,0,10,23],
 "structtgx_1_1_r_g_b64.html#a88a19a7c6a2586a2f49e753a93e22d27":[7,0,0,10,35],
 "structtgx_1_1_r_g_b64.html#a8bfce1cbc35d1bde033b27d68f8f2ec3":[7,0,0,10,5],

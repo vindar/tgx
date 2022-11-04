@@ -1,6 +1,7 @@
 var _shaders_8h =
 [
     [ "shaderclip", "_shaders_8h.html#ad3d496bf8979b0ceaed986aacbf3a5f2", null ],
+    [ "shader_test", "_shaders_8h.html#a0043fb8c7c0ad9eeab9a6d24a5f26b14", null ],
     [ "shader_Flat", "_shaders_8h.html#a22fc822afe3f2be64f7963a0a9dafefb", null ],
     [ "shader_Gouraud", "_shaders_8h.html#a3b2d646bc3f2fb1896f0b10ba4e30c68", null ],
     [ "shader_Flat_Texture", "_shaders_8h.html#a29f7464d24eb1021e412d1c0621e6ecd", null ],

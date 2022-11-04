@@ -101,8 +101,9 @@ About the library</h1>
 <ul>
 <li>Hardware agnostic: the library simply draws on a memory framebuffer.</li>
 <li>Minimum RAM usage and no dynamic allocation.</li>
-<li>Complete 2D API.</li>
-<li>COmplete 3D API.</li>
+<li>Extensive 2D API.</li>
+<li>Extensive 3D API.</li>
+<li>...</li>
 </ul>
 <h1><a class="anchor" id="getting_started"></a>
 Getting started</h1>
@@ -111,13 +112,37 @@ Getting started</h1>
 <li><a class="el" href="md_docs_intro_api_2_d.html#intro_api_2D">Using the 2D API.</a></li>
 <li><a class="el" href="md_docs_intro_api_3_d.html#intro_api_3D">Using the 3D API.</a></li>
 </ol>
+<dl class="section note"><dt>Note</dt><dd>Do not forget to look at the examples located in <code>\examples</code> subfolder of the library !</dd></dl>
 <h1><a class="anchor" id="References"></a>
 References</h1>
-<ul>
-<li><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">tgx::Image</a></li>
-<li><a class="el" href="structtgx_1_1_box2.html" title="Generic 2D Box [specializations iBox2 , fBox2, dBox2].">tgx::Box2</a></li>
-<li><a class="el" href="structtgx_1_1_vec2.html#a57dcee254e0e7e23ea2087924b0d1697" title="Compute the squared euclidian norm of the vector.">tgx::Vec2::norm2()</a> </li>
-</ul>
+<p ><b>Basic classes (2D graphics)</b></p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"></th><th class="markdownTableHeadNone"></th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Main image object   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">tgx::Image</a>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Color types   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_r_g_b565.html" title="Color in R5/G6/B5 format.">tgx::RGB565</a>,<a class="el" href="structtgx_1_1_r_g_b32.html" title="Color in R8/G8/B8/A8 format.">tgx::RGB32</a>,<a class="el" href="structtgx_1_1_r_g_b24.html" title="Color in R8/G8/B8 format.">tgx::RGB24</a>,<a class="el" href="structtgx_1_1_r_g_bf.html" title="Color in R,G,B float format.">tgx::RGBf</a>,<a class="el" href="structtgx_1_1_r_g_b64.html" title="Color in R16/G16/B16/A16 format.">tgx::RGB64</a>,<a class="el" href="structtgx_1_1_h_s_v.html" title="Color in H/S/V format [experimental].">tgx::HSV</a>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">2D vectors   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_vec2.html" title="Generic 2D vector [specializations iVec2, fVec2, dVec2].">tgx::Vec2</a>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">2D box   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_box2.html" title="Generic 2D Box [specializations iBox2 , fBox2, dBox2].">tgx::Box2</a>   </td></tr>
+</table>
+<p ><b>Additional classes specific to drawing 3D graphics</b></p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"></th><th class="markdownTableHeadNone"></th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Main class for drawing a 3D scene   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html" title="Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].">tgx::Renderer3D</a>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">3D model class   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data stucture.">tgx::Mesh3D</a>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">3D Box   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_box3.html" title="Generic 3D Box [specializations iBox3, fBox3, dBox3].">tgx::Box3</a>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">3D and 4D vectors   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_vec3.html" title="Generic 3D vector [specializations iVec3, fVec3, dVec3].">tgx::Vec3</a>, <a class="el" href="structtgx_1_1_vec4.html" title="Geenric 4D vector [specializations iVec4, fVec4, dVec4].">tgx::Vec4</a>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">4x4 matrix for 3D (quaternions)   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_mat4.html" title="Generic 4x4 matrix [specializations fMat4, dMat4].">tgx::Mat4</a>   </td></tr>
+</table>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
