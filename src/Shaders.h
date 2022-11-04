@@ -45,7 +45,7 @@ namespace tgx
         const int32_t& dx3, const int32_t& dy3, int32_t O3, const tgx::RasterizerVec4& fP3,
         const tgx::RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
-        color_t col = (color_t)tgx::RGB32_Blue; //data.facecolor; 
+        color_t col = (color_t)tgx::RGB32_Red; //data.facecolor; 
         color_t* buf = data.im->data() + offset;
         const int32_t stride = data.im->stride();
         for (int y = 0; y < ly; y++)
@@ -157,7 +157,9 @@ namespace tgx
         const color_t col3 = (color_t)fP3.color;
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         while ((uintptr_t)(buf) < end)
             { // iterate over scanlines
@@ -231,7 +233,10 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
+
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -310,7 +315,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -381,7 +386,9 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -469,7 +476,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -547,7 +554,9 @@ namespace tgx
         const int32_t zstride = data.im->lx();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float wa = data.wa;
         const float wb = data.wb;
@@ -599,7 +608,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            const int32_t C1 = O1 + (dx1 * bx);
+            const int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a)) + wb;
@@ -651,7 +660,9 @@ namespace tgx
         const color_t col3 = (color_t)fP3.color;
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float wa = data.wa;
         const float wb = data.wb;
@@ -703,7 +714,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            const int32_t C1 = O1 + (dx1 * bx);
+            const int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a)) + wb;
@@ -755,7 +766,9 @@ namespace tgx
         const int32_t zstride = data.im->lx();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -836,7 +849,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -920,7 +933,9 @@ namespace tgx
         const int32_t zstride = data.im->lx();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -1008,7 +1023,7 @@ namespace tgx
                     }
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -1088,7 +1103,9 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
 
@@ -1161,7 +1178,7 @@ namespace tgx
                     }
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
 
@@ -1228,7 +1245,9 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
 
@@ -1310,7 +1329,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
                 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
 
@@ -1388,7 +1407,9 @@ namespace tgx
         const int32_t zstride = data.im->lx();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -1469,7 +1490,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -1553,7 +1574,9 @@ namespace tgx
         const int32_t zstride = data.im->lx();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -1642,7 +1665,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -1939,7 +1962,9 @@ namespace tgx
         const RGB32 col3 = RGB64(fP3.color.R, fP3.color.G, fP3.color.B, fP3.A);
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         while ((uintptr_t)(buf) < end)
             { // iterate over scanlines
@@ -2023,7 +2048,9 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
 
@@ -2110,7 +2137,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
                 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
 
@@ -2223,7 +2250,9 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
 
@@ -2293,7 +2322,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
                 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
 
