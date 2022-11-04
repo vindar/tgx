@@ -40,7 +40,7 @@ namespace tgx
 *  |      4        |      8192 x 8192        |
 *  |      2        |     16384 x 16384       |
 */
-#define TGX_RASTERIZE_SUBPIXEL_BITS (2)
+#define TGX_RASTERIZE_SUBPIXEL_BITS (6)
 
 #define TGX_RASTERIZE_SUBPIXEL256 (1 << TGX_RASTERIZE_SUBPIXEL_BITS)
 #define TGX_RASTERIZE_SUBPIXEL128 (1 << (TGX_RASTERIZE_SUBPIXEL_BITS -1))
@@ -120,7 +120,7 @@ namespace tgx
         const bool c32 = ((uMx - umx < 32768) && (uMy - umy < 32768));
         int32_t a; 
         if (c32)
-            { // 32bit computation
+            { // 32 bits computation
             a  = (((sP2.x - P0.x) * (sP1.y - P0.y)) - ((sP2.y - P0.y) * (sP1.x - P0.x))); // aera
             if (a == 0) return; // do not draw flat triangles
             }
@@ -169,7 +169,7 @@ namespace tgx
         int32_t O1, O2, O3;
 
         if (c32)
-            { // 32 bits computations
+            { // 32 bits computation
             O1 = ((us - P0.x) * dx1) + ((vs - P0.y) * dy1);
             if ((dx1 < 0) || ((dx1 == 0) && (dy1 < 0))) O1--; // top left rule (beware, changes total aera).
 
@@ -187,7 +187,7 @@ namespace tgx
             dy3 *= (TGX_RASTERIZE_SUBPIXEL256);
             }
         else
-            { // 64 bits computations
+            { // 64 bits computation
             int64_t dO1 = (((int64_t)(us - P0.x)) * ((int64_t)dx1)) + (((int64_t)(vs - P0.y)) * ((int64_t)dy1));
             if ((dx1 < 0) || ((dx1 == 0) && (dy1 < 0))) dO1--; // top left rule (beware, changes total aera).
             O1 = (dO1 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO1)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO1 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
@@ -201,7 +201,8 @@ namespace tgx
             O3 = (dO3 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO3)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO3 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
             }
 
-//        if (O1 + O2 + O3 == 0) { return; }
+        // beware that O1 + O2 + O3 = 0 is possible now (but still should not discard the triangle)
+        // must be dealt with inside the shader
 
         if (sx == 1)
             {
