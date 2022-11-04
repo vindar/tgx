@@ -45,7 +45,7 @@ namespace tgx
         const int32_t& dx3, const int32_t& dy3, int32_t O3, const tgx::RasterizerVec4& fP3,
         const tgx::RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
-        color_t col = (color_t)data.facecolor;
+        color_t col = (color_t)tgx::RGB32_Blue; //data.facecolor; 
         color_t* buf = data.im->data() + offset;
         const int32_t stride = data.im->stride();
         for (int y = 0; y < ly; y++)
