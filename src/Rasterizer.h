@@ -40,7 +40,7 @@ namespace tgx
 *  |      4        |      8192 x 8192        |
 *  |      2        |     16384 x 16384       |
 */
-#define TGX_RASTERIZE_SUBPIXEL_BITS (4)
+#define TGX_RASTERIZE_SUBPIXEL_BITS (2)
 
 #define TGX_RASTERIZE_SUBPIXEL256 (1 << TGX_RASTERIZE_SUBPIXEL_BITS)
 #define TGX_RASTERIZE_SUBPIXEL128 (1 << (TGX_RASTERIZE_SUBPIXEL_BITS -1))
@@ -109,14 +109,32 @@ namespace tgx
         const float mx = (float)(TGX_RASTERIZE_MULT128(LX));
         const float my = (float)(TGX_RASTERIZE_MULT128(LY));
         const iVec2  P0((int32_t)floorf(V0.x * mx), (int32_t)floorf(V0.y * my));
-
         const iVec2 sP1((int32_t)floorf(V1.x * mx), (int32_t)floorf(V1.y * my));
         const iVec2 sP2((int32_t)floorf(V2.x * mx), (int32_t)floorf(V2.y * my));
 
-        int32_t xmin = (min(min(P0.x, sP1.x), sP2.x) + TGX_RASTERIZE_MULT128(LX)) / TGX_RASTERIZE_SUBPIXEL256; // use division and not bitshift  
-        int32_t xmax = (max(max(P0.x, sP1.x), sP2.x) + TGX_RASTERIZE_MULT128(LX)) / TGX_RASTERIZE_SUBPIXEL256; // in case values are negative.
-        int32_t ymin = (min(min(P0.y, sP1.y), sP2.y) + TGX_RASTERIZE_MULT128(LY)) / TGX_RASTERIZE_SUBPIXEL256; //
-        int32_t ymax = (max(max(P0.y, sP1.y), sP2.y) + TGX_RASTERIZE_MULT128(LY)) / TGX_RASTERIZE_SUBPIXEL256; //
+        const int32_t umx = min(min(P0.x, sP1.x), sP2.x);
+        const int32_t uMx = max(max(P0.x, sP1.x), sP2.x);
+        const int32_t umy = min(min(P0.y, sP1.y), sP2.y);
+        const int32_t uMy = max(max(P0.y, sP1.y), sP2.y);
+
+        const bool c32 = ((uMx - umx < 32768) && (uMy - umy < 32768));
+        int32_t a; 
+        if (c32)
+            { // 32bit computation
+            a  = (((sP2.x - P0.x) * (sP1.y - P0.y)) - ((sP2.y - P0.y) * (sP1.x - P0.x))); // aera
+            if (a == 0) return; // do not draw flat triangles
+            }
+        else
+            { // 64 bits computations
+            int64_t a64 = (((int64_t)(sP2.x - P0.x)) * ((int64_t)(sP1.y - P0.y))) - (((int64_t)(sP2.y - P0.y)) * ((int64_t)(sP1.x - P0.x))); // aera
+            if (a64 == 0) return; // do not draw flat triangles
+            a = (a64 > 0) ? 1 : -1; // real aera value does not matter, onlythe sign
+            }         
+        
+        int32_t xmin = (umx + TGX_RASTERIZE_MULT128(LX)) / TGX_RASTERIZE_SUBPIXEL256; // use division and not bitshift  
+        int32_t xmax = (uMx + TGX_RASTERIZE_MULT128(LX)) / TGX_RASTERIZE_SUBPIXEL256; // in case values are negative.
+        int32_t ymin = (umy + TGX_RASTERIZE_MULT128(LY)) / TGX_RASTERIZE_SUBPIXEL256; //
+        int32_t ymax = (uMy + TGX_RASTERIZE_MULT128(LY)) / TGX_RASTERIZE_SUBPIXEL256; //
 
         // intersect the sub-image with the triangle bounding box.          
         int32_t sx = data.im->lx();
@@ -130,10 +148,6 @@ namespace tgx
         if (oy + sy > ymax) { sy = ymax - oy + 1; }
         if (sy <= 0) return;
 
-        const int64_t a = (((int64_t)(sP2.x - P0.x)) * ((int64_t)(sP1.y - P0.y))) - (((int64_t)(sP2.y - P0.y)) * ((int64_t)(sP1.x - P0.x))); // aera
-
-        if (a == 0) return; // do not draw flat triangles
-
         const RasterizerVec4& fP1 = (a > 0) ? V1 : V2;
         const RasterizerVec4& fP2 = (a > 0) ? V2 : V1;
         const iVec2& P1 = (a > 0) ? sP1 : sP2;
@@ -145,25 +159,49 @@ namespace tgx
         ox -= offset_x;
         oy -= offset_y;
 
-        const int32_t dx1 = P1.y - P0.y;
-        const int32_t dy1 = P0.x - P1.x;
-        int64_t dO1 = (((int64_t)(us - P0.x)) * ((int64_t)dx1)) + (((int64_t)(vs - P0.y)) * ((int64_t)dy1));
-        if ((dx1 < 0) || ((dx1 == 0) && (dy1 < 0))) dO1--; // top left rule (beware, changes total aera).
-        int32_t O1 = (dO1 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO1)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO1 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
+        int32_t dx1 = P1.y - P0.y;
+        int32_t dy1 = P0.x - P1.x;
+        int32_t dx2 = P2.y - P1.y;
+        int32_t dy2 = P1.x - P2.x;
+        int32_t dx3 = P0.y - P2.y;
+        int32_t dy3 = P2.x - P0.x;
 
-        const int32_t dx2 = P2.y - P1.y;
-        const int32_t dy2 = P1.x - P2.x;
-        int64_t dO2 = (((int64_t)(us - P1.x)) * ((int64_t)dx2)) + (((int64_t)(vs - P1.y)) * ((int64_t)dy2));
-        if ((dx2 < 0) || ((dx2 == 0) && (dy2 < 0))) dO2--; // top left rule (beware, changes total aera).  
-        int32_t O2 = (dO2 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO2)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO2 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
+        int32_t O1, O2, O3;
 
-        const int32_t dx3 = P0.y - P2.y;
-        const int32_t dy3 = P2.x - P0.x;
-        int64_t dO3 = (((int64_t)(us - P2.x)) * ((int64_t)dx3)) + (((int64_t)(vs - P2.y)) * ((int64_t)dy3));
-        if ((dx3 < 0) || ((dx3 == 0) && (dy3 < 0))) dO3--; // top left rule (beware, changes total aera).  
-        int32_t O3 = (dO3 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO3)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO3 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
+        if (c32)
+            { // 32 bits computations
+            O1 = ((us - P0.x) * dx1) + ((vs - P0.y) * dy1);
+            if ((dx1 < 0) || ((dx1 == 0) && (dy1 < 0))) O1--; // top left rule (beware, changes total aera).
 
-        if (O1 + O2 + O3 == 0) return; // do not draw flat triangles
+            O2 = ((us - P1.x) * dx2) + ((vs - P1.y) * dy2);
+            if ((dx2 < 0) || ((dx2 == 0) && (dy2 < 0))) O2--; // top left rule (beware, changes total aera).  
+
+            O3 = ((us - P2.x) * dx3) + ((vs - P2.y) * dy3);
+            if ((dx3 < 0) || ((dx3 == 0) && (dy3 < 0))) O3--; // top left rule (beware, changes total aera).  
+
+            dx1 *= (TGX_RASTERIZE_SUBPIXEL256);
+            dy1 *= (TGX_RASTERIZE_SUBPIXEL256);
+            dx2 *= (TGX_RASTERIZE_SUBPIXEL256);
+            dy2 *= (TGX_RASTERIZE_SUBPIXEL256);
+            dx3 *= (TGX_RASTERIZE_SUBPIXEL256);
+            dy3 *= (TGX_RASTERIZE_SUBPIXEL256);
+            }
+        else
+            { // 64 bits computations
+            int64_t dO1 = (((int64_t)(us - P0.x)) * ((int64_t)dx1)) + (((int64_t)(vs - P0.y)) * ((int64_t)dy1));
+            if ((dx1 < 0) || ((dx1 == 0) && (dy1 < 0))) dO1--; // top left rule (beware, changes total aera).
+            O1 = (dO1 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO1)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO1 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
+
+            int64_t dO2 = (((int64_t)(us - P1.x)) * ((int64_t)dx2)) + (((int64_t)(vs - P1.y)) * ((int64_t)dy2));
+            if ((dx2 < 0) || ((dx2 == 0) && (dy2 < 0))) dO2--; // top left rule (beware, changes total aera).  
+            O2 = (dO2 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO2)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO2 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
+
+            int64_t dO3 = (((int64_t)(us - P2.x)) * ((int64_t)dx3)) + (((int64_t)(vs - P2.y)) * ((int64_t)dy3));
+            if ((dx3 < 0) || ((dx3 == 0) && (dy3 < 0))) dO3--; // top left rule (beware, changes total aera).  
+            O3 = (dO3 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO3)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO3 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
+            }
+
+//        if (O1 + O2 + O3 == 0) { return; }
 
         if (sx == 1)
             {
@@ -190,8 +228,9 @@ namespace tgx
             if (sx == 0) return;
             }
 
+        
         if (dx1 > 0)
-            {
+            {            
             shader_fun(ox + (data.im->stride() * oy), sx, sy,
                 dx1, dy1, O1, fP2,
                 dx2, dy2, O2, V0,
