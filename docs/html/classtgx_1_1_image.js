@@ -61,11 +61,8 @@ var classtgx_1_1_image =
     [ "drawLine", "classtgx_1_1_image.html#a58d25cf25063f4654f40ffd27047b6aa", null ],
     [ "drawSegment", "classtgx_1_1_image.html#aea9227b744818b67d5ad8a516e33267f", null ],
     [ "drawLineAA", "classtgx_1_1_image.html#a007e67be4591db9d048b0e039fcd9c0b", null ],
-    [ "drawThickLineAA", "classtgx_1_1_image.html#a2f443f70bbd27a237f54c34a1d8ffd45", null ],
+    [ "drawThickLineAA", "classtgx_1_1_image.html#a78cf70663974df19ce7fe119b934ecf0", null ],
     [ "drawWedgeLineAA", "classtgx_1_1_image.html#ab38ad3252029c3091e3daf1fc39fc941", null ],
-    [ "drawWideLine", "classtgx_1_1_image.html#a4412793c474e518c2a96126849d3bf47", null ],
-    [ "drawWedgeLine", "classtgx_1_1_image.html#aeef0b8af6bb6ad81792a1c97795cbd10", null ],
-    [ "drawSpot", "classtgx_1_1_image.html#aedd4e582b945bc1bd3a2c7376a4308dc", null ],
     [ "drawRect", "classtgx_1_1_image.html#a18a065e3844d1a65bc3a32d86072f706", null ],
     [ "drawThickRect", "classtgx_1_1_image.html#a352f4dc22d83c2530a2608a4b9015065", null ],
     [ "fillRect", "classtgx_1_1_image.html#a8e71e57a7067f87a68c8c6e9c5d3c4d2", null ],
@@ -158,6 +155,9 @@ var classtgx_1_1_image =
     [ "measureText", "classtgx_1_1_image.html#abfc2c7a0fa10aac9e11fa9632b535c8a", null ],
     [ "measureText", "classtgx_1_1_image.html#a766c9b7ddaf96a98948d9a3ccf01b03b", null ],
     [ "drawChar", "classtgx_1_1_image.html#ad8a7d2f9bd4c38a3aba67fa8a42ed34f", null ],
+    [ "drawChar", "classtgx_1_1_image.html#afae0944718b49ee043741a969dee0d8e", null ],
     [ "drawText", "classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0", null ],
-    [ "drawTextEx", "classtgx_1_1_image.html#a95d2c7edef3e9892e8e254c24f1d08cf", null ]
+    [ "drawText", "classtgx_1_1_image.html#a0a51b7472e4627f9f8ce8e6b6ed4199e", null ],
+    [ "drawTextEx", "classtgx_1_1_image.html#a95d2c7edef3e9892e8e254c24f1d08cf", null ],
+    [ "drawTextEx", "classtgx_1_1_image.html#abc9c886722185a2e26f3b37d4d47602e", null ]
 ];

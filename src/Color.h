@@ -1647,7 +1647,7 @@ struct RGB32
         *
         * This method assumes (and returns) a color with pre-multiplied alpha.
         */
-        RGB32 getMultOpacity(float op)
+        RGB32 getMultOpacity(float op) const
             {
             // faster
             uint32_t o = (uint32_t)(256 * op);
@@ -1657,7 +1657,6 @@ struct RGB32
             uint32_t srb = o * rb;
             sag = sag & 0xFF00FF00;
             srb = (srb >> 8) & 0x00FF00FF;
-            val = (sag | srb);
             return RGB32(sag | srb);
             }
 
@@ -2278,7 +2277,7 @@ struct RGB64
         *
         * This method assumes (and returns) a color with pre-multiplied alpha.
         */
-        RGB64 getMultOpacity(float op)
+        RGB64 getMultOpacity(float op) const
             {
             return RGB64((int)(R * op), (int)(G * op), (int)(B * op), (int)(A * op));
             }

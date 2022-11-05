@@ -51,7 +51,7 @@ var structtgx_1_1_r_g_b32 =
     [ "opacity", "structtgx_1_1_r_g_b32.html#aec709f35a3242f6d65822168906acd08", null ],
     [ "setOpacity", "structtgx_1_1_r_g_b32.html#aeab4ea818cfd65a8d512aaf2460e72c3", null ],
     [ "multOpacity", "structtgx_1_1_r_g_b32.html#ae975978678ddb6ffdbeaa833148ef13f", null ],
-    [ "getMultOpacity", "structtgx_1_1_r_g_b32.html#ac5ef8a7528bac6f9ee4458c58da2a9f6", null ],
+    [ "getMultOpacity", "structtgx_1_1_r_g_b32.html#a3bbc8afe02b2223caa3ba9484bd5b66c", null ],
     [ "setOpaque", "structtgx_1_1_r_g_b32.html#a34b7a24016f78c2d4fcbbc7b45146fae", null ],
     [ "setTransparent", "structtgx_1_1_r_g_b32.html#a3f3cffdf35164231afc2dbb21c09a206", null ],
     [ "val", "structtgx_1_1_r_g_b32.html#a02b46abb6c4e7dc33ab010da62e67210", null ],
