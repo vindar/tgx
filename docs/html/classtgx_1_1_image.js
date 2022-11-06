@@ -50,6 +50,7 @@ var classtgx_1_1_image =
     [ "copyFrom", "classtgx_1_1_image.html#a425f901094fe9d6526fb746216319036", null ],
     [ "copyReduceHalf", "classtgx_1_1_image.html#ab1f64acc0c408c1b901f43ae80a0a57d", null ],
     [ "reduceHalf", "classtgx_1_1_image.html#aec06c59da548263f082134368f5202d6", null ],
+    [ "convert", "classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8", null ],
     [ "fillScreen", "classtgx_1_1_image.html#ab126be8d4510810f3e17da14bb517ab9", null ],
     [ "clear", "classtgx_1_1_image.html#a81816066e883c3d17f13b4bdef22b8c1", null ],
     [ "fillScreenVGradient", "classtgx_1_1_image.html#a74c74b64b26ca9befa59ed9f5467e88b", null ],

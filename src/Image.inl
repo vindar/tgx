@@ -955,7 +955,28 @@ namespace tgx
 
 
 
-
+    template<typename color_t>
+    template<typename color_dst>
+    Image<color_dst> Image<color_t>::convert()
+        {
+        static_assert((sizeof(color_t) % sizeof(color_dst)) == 0, "Cannot convert image in place: the size of 'color_dest' must divides that of 'color_t'.");
+        const int stride = (_stride == _lx) ? _stride : (_stride * (int)(sizeof(color_t) / sizeof(color_dst)));
+        if ((!std::is_same<color_t, color_dst>::value)&&(isValid()))
+            {
+            color_t* p = _buffer;
+            color_dst* q = (color_dst*)_buffer;
+            for (int j = 0; j < _ly; j++)
+                {
+                for (int i = 0; i < _lx; i++)
+                    {
+                    (*q++) = (color_dst)(*p++);
+                    }
+                q += (stride - _lx);
+                p += (_stride - _lx);
+                }
+            }
+        return Image<color_dst>((color_dst*)_buffer, _lx, _ly, stride);
+        }
 
 
 

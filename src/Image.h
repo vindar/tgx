@@ -718,7 +718,7 @@ namespace tgx
         /**
          * Blit/blend a rotated sprite over this image at a given position.
          * 
-         * The rotation must be only quarter turns (0, 90, 180 or 270) degree. For general blitting with
+         * The rotation must be only quarter turns (0, 90, 180 or 270) degree. For blitting with arbitrary
          * rotation, use the blitScaledRotated() method instead.
          *
          * @param   sprite          The sprite image to blit.
@@ -734,7 +734,7 @@ namespace tgx
         /**
          * Blend a rotated sprite over this image at a given position using a custom blending operator.
          * 
-         * The rotation must be only quarter turns (0, 90, 180 or 270) degree. For general blitting with
+         * The rotation must be only quarter turns (0, 90, 180 or 270) degree. For blitting with arbitrary
          * rotation, use the blitScaledRotated() method instead.
          * 
          * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
@@ -961,7 +961,25 @@ namespace tgx
         Image<color_t> reduceHalf();
 
 
-
+        /**
+         * Convert this image to another type.
+         * 
+         * Performs 'in place' conversion of the image using the same memory buffer.
+         * 
+         * @note The image returned may have a different stride from this image !
+         * 
+         * @warning 
+         * 1. In place conversion only possible if `sizeof(color_dst)` divides `sizeof(color_t)`. Otherwise
+         * a compile time error is raised. For conversion between any two color types, one can use `copyFrom()`.
+         * 2. When the method returns, this image dimensions/stride are not unchange but the content of its memory
+         * buffer has been modified. 
+         * 
+         * @tparam  color_dst   Color type to convert the image into.
+         *
+         * @returns A new image with the same content and using the same memory framebuffer but converted to type `color_dest`.
+         */
+        template<typename color_dst>
+        Image<color_dst> convert();
 
 
 

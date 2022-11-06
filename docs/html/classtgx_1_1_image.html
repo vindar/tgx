@@ -297,6 +297,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aec06c59da548263f082134368f5202d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aec06c59da548263f082134368f5202d6">reduceHalf</a> ()</td></tr>
 <tr class="memdesc:aec06c59da548263f082134368f5202d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduce this image by half.  <a href="classtgx_1_1_image.html#aec06c59da548263f082134368f5202d6">More...</a><br /></td></tr>
 <tr class="separator:aec06c59da548263f082134368f5202d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9613250401a0fe1d6283e81070e99ee8"><td class="memTemplParams" colspan="2">template&lt;typename color_dst &gt; </td></tr>
+<tr class="memitem:a9613250401a0fe1d6283e81070e99ee8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_dst &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">convert</a> ()</td></tr>
+<tr class="memdesc:a9613250401a0fe1d6283e81070e99ee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert this image to another type.  <a href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">More...</a><br /></td></tr>
+<tr class="separator:a9613250401a0fe1d6283e81070e99ee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: filling a region.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >Method for filling the whole (or just a region of the) image with a given color.</p>
 <p ><br  />
@@ -2487,7 +2491,7 @@ template&lt;typename color_t &gt; </div>
 </div><div class="memdoc">
 
 <p>Blit/blend a rotated sprite over this image at a given position. </p>
-<p >The rotation must be only quarter turns (0, 90, 180 or 270) degree. For general blitting with rotation, use the <a class="el" href="classtgx_1_1_image.html#a8cd4a1aaf63b59d5803fc759dd64711c" title="Blit/blend a sprite onto this image after rescaling and rotation.">blitScaledRotated()</a> method instead.</p>
+<p >The rotation must be only quarter turns (0, 90, 180 or 270) degree. For blitting with arbitrary rotation, use the <a class="el" href="classtgx_1_1_image.html#a8cd4a1aaf63b59d5803fc759dd64711c" title="Blit/blend a sprite onto this image after rescaling and rotation.">blitScaledRotated()</a> method instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sprite</td><td>The sprite image to blit. </td></tr>
@@ -2543,7 +2547,7 @@ template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </div>
 </div><div class="memdoc">
 
 <p>Blend a rotated sprite over this image at a given position using a custom blending operator. </p>
-<p >The rotation must be only quarter turns (0, 90, 180 or 270) degree. For general blitting with rotation, use the <a class="el" href="classtgx_1_1_image.html#a8cd4a1aaf63b59d5803fc759dd64711c" title="Blit/blend a sprite onto this image after rescaling and rotation.">blitScaledRotated()</a> method instead.</p>
+<p >The rotation must be only quarter turns (0, 90, 180 or 270) degree. For blitting with arbitrary rotation, use the <a class="el" href="classtgx_1_1_image.html#a8cd4a1aaf63b59d5803fc759dd64711c" title="Blit/blend a sprite onto this image after rescaling and rotation.">blitScaledRotated()</a> method instead.</p>
 <p >The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the color of the source (sprite) pixel and the color of the destination pixel and returns the blended color. It must have a signature compatible with </p><pre class="fragment">               color_t blend_op(color_t_src src, color_t dst)
 </pre><p> (the method can, in fact, return a color of any type but returning type color_t will improve performance).</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
@@ -3063,6 +3067,43 @@ template&lt;typename color_t &gt; </div>
 <p>Reduce this image by half. </p>
 <p >Use the same memory buffer and keep the same stride. Resizing is done by averaging the color of the 4 neighbour pixels.</p>
 <dl class="section return"><dt>Returns</dt><dd>a sub-image of this image that contains the reduce image. </dd></dl>
+
+</div>
+</div>
+<a id="a9613250401a0fe1d6283e81070e99ee8" name="a9613250401a0fe1d6283e81070e99ee8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9613250401a0fe1d6283e81070e99ee8">&#9670;&#160;</a></span>convert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename color_t &gt; </div>
+<div class="memtemplate">
+template&lt;typename color_dst &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_dst &gt; <a class="el" href="classtgx_1_1_image.html">tgx::Image</a>&lt; color_t &gt;::convert </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert this image to another type. </p>
+<p >Performs 'in place' conversion of the image using the same memory buffer.</p>
+<dl class="section note"><dt>Note</dt><dd>The image returned may have a different stride from this image !</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd><ol type="1">
+<li>In place conversion only possible if <code>sizeof(color_dst)</code> divides <code>sizeof(color_t)</code>. Otherwise a compile time error is raised. For conversion between any two color types, one can use <code><a class="el" href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae" title="Copy (or blend) the src image onto the destination image with resizing and color conversion.">copyFrom()</a></code>.</li>
+<li>When the method returns, this image dimensions/stride are not unchange but the content of its memory buffer has been modified.</li>
+</ol>
+</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">color_dst</td><td>Color type to convert the image into.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new image with the same content and using the same memory framebuffer but converted to type <code>color_dest</code>. </dd></dl>
 
 </div>
 </div>
