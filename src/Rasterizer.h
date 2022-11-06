@@ -1,4 +1,7 @@
-/** @file Rasterizer.h */
+/**   
+ * @file Rasterizer.h 
+ * 3D triangle rasterizer function. 
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -30,8 +33,8 @@ namespace tgx
 /**
 * Sub-pixel precision bits. 
 * 
-* Value should range between 1 and 8. Larger value provide greater resoultion and
-* possibly smoother animation but at the expense of the maximum viewport size:
+* Value should range between 1 and 8. Larger value provide greater resolution and
+* smoother animation but at the expense of the maximum viewport size:
 * 
 *  | subpixel bits | max viewport size LX*LY |
 *  |---------------|-------------------------|
@@ -82,7 +85,7 @@ namespace tgx
     * @param shader_fun the shader function. see Shaders.h for the implementation of classic shaders.
     *                   
     * 
-    * **Remarks**
+    * @remark
     *   
     * - Maximum viewport size depending on `TGX_RASTERIZE_SUBPIXEL_BITS`:   
     *  ```                                 
@@ -201,8 +204,8 @@ namespace tgx
             O3 = (dO3 >= 0) ? ((int32_t)TGX_RASTERIZE_DIV256(dO3)) : -((int32_t)TGX_RASTERIZE_DIV256(-dO3 + (TGX_RASTERIZE_SUBPIXEL256 - 1)));
             }
 
-        // beware that O1 + O2 + O3 = 0 is possible now (but still should not discard the triangle)
-        // must be dealt with inside the shader
+        // beware that O1 + O2 + O3 = 0 is possible now but still we should not discard the triangle:
+        // this case must be dealt with inside the shader...
 
         if (sx == 1)
             {

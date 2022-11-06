@@ -1,4 +1,7 @@
-/** @file ShaderParams.h */
+/**   
+ * @file ShaderParams.h
+ * Triangle shader parameters.
+ */
 //
 // Copyright 2020 Arvind Singh
 //

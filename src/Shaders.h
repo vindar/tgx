@@ -1,4 +1,7 @@
-/** @file Shaders.h */
+/**   
+ * @file Shaders.h 
+ * Triangle shader functions. 
+ */
 //
 // Copyright 2020 Arvind Singh
 //

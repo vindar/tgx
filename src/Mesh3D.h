@@ -1,4 +1,7 @@
-/** @file Mesh3D.h */
+/**   
+ * @file Mesh3D.h 
+ * 3D model mesh class. 
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -206,10 +209,8 @@ namespace tgx
      * For example "VIT" means: "copy vertex arrays first, then image texture and finally texture
      * coord (if there is still room)".
      * 
-     * **Remarks**
-     * 
+     * @remark
      * 1. The memory buffers supplied do **not** need to be be aligned, the method takes care of it.
-     * 
      * 2. The method also caches the sub-meshes linked after this one.
      *
      * @param  mesh        Pointer to the mesh to cache.
@@ -248,9 +249,9 @@ namespace tgx
     /**
      * Create a copy of a mesh where specified arrays in PROGMEM are copied to EXTMEM.
      * 
-     * **Defined only for Teensy 4.1**
+     * @attention This method is defined only for Teensy 4.1
      * 
-     * **Remark**
+     * @remark
      * 1. Obviously, external RAM must be present...
      * 2. Only arrays in PROGMEM are copied to EXTMEM. Arrays located elsewhere are not copied.
      * 3. The source mesh must not have any part located in EXTMEM already or the method will fail.
@@ -271,9 +272,9 @@ namespace tgx
     /**
      * Delete a mesh allocated with copyMeshEXTMEM().
      * 
-     * **Defined only for Teensy 4.1**
+     * @attention This method is defined only for Teensy 4.1
      * 
-     * Delete also the linked sub-meshes is any.
+     * Deletes also the linked sub-meshes is any.
      */
     template<typename color_t> void freeMeshEXTMEM(Mesh3D<color_t>* mesh);
 

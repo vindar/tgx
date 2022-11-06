@@ -1,4 +1,7 @@
-/** @file Renderer3D.h */
+/**   
+ * @file Renderer3D.h 
+ * Class that manages a 3D scene. 
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -465,8 +468,8 @@ namespace tgx
         *
         * Changing this matrix changes the position of the camera in the world space.
         *
-        * **Remark** In view space (i.e. after transformation), the camera is assumed to be
-        * centered at the origin, looking toward the negative Z axis with the Y axis pointing up 
+        * @remark In view space (i.e. after transformation), the camera is assumed to be
+        * centered at the origin, looking toward the negative Z axis with the Y axis pointing up
         * (as in opengl).
         * 
         * @param M the view matrix to use (a copy is made).

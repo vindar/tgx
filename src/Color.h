@@ -1,4 +1,7 @@
-/** @file Color.h */
+/**   
+ * @file Color.h 
+ * Color classes [RGB565, RGB24, RGB32, RGB64, RGBf, HSV].
+ */
 //
 // Copyright 2020 Arvind Singh
 //

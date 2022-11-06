@@ -772,7 +772,7 @@ class tgx::Image&lt; color_t &gt;</div><p ><a class="el" href="classtgx_1_1_imag
 <p >An image object is a thin wrapper (only 16 bytes) around a memory buffer which defines the type and dimension of the image.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">color_t</td><td>Color type of the image. Must be one of the color type defined in <a class="el" href="_color_8h.html">Color.h</a>. Typical choice:<ul>
+    <tr><td class="paramname">color_t</td><td>Color type of the image. Must be one of the color type defined in <a class="el" href="_color_8h.html" title="Color classes [RGB565, RGB24, RGB32, RGB64, RGBf, HSV].">Color.h</a>. Typical choice:<ul>
 <li><code><a class="el" href="structtgx_1_1_r_g_b32.html" title="Color in R8/G8/B8/A8 format.">RGB32</a></code> when running on a desktop computer.</li>
 <li><code><a class="el" href="structtgx_1_1_r_g_b565.html" title="Color in R5/G6/B5 format.">RGB565</a></code> when running on an MCU with limited memory (Teensy 4, ESP32..)</li>
 </ul>
@@ -805,7 +805,7 @@ class tgx::Image&lt; color_t &gt;</div><p ><a class="el" href="classtgx_1_1_imag
 <li>Passing <code>0.0f &lt; opacity &lt;= 1.0f</code> will enable blending and the alpha channel of the colors will be used if present.</li>
 </ul>
 </li>
-<li>As indicated in <a class="el" href="_color_8h.html">color.h</a>. <b>All colors with an alpha channel are assumed to have pre-multiplied alpha</b> and treated as such for all blending operations cf: <a href="https://en.wikipedia.org/wiki/Alpha_compositing">https://en.wikipedia.org/wiki/Alpha_compositing</a></li>
+<li>As indicated in <a class="el" href="_color_8h.html" title="Color classes [RGB565, RGB24, RGB32, RGB64, RGBf, HSV].">color.h</a>. <b>All colors with an alpha channel are assumed to have pre-multiplied alpha</b> and treated as such for all blending operations cf: <a href="https://en.wikipedia.org/wiki/Alpha_compositing">https://en.wikipedia.org/wiki/Alpha_compositing</a></li>
 <li><p class="startli">Most methods take <code>iVec2</code>/<code>fVec2</code> parameters to specify coordinates in the image. Using initializer list, it is very easy to call such method without explicitly mentioning the <code>iVec2</code>/<code>fVec2</code> type. For example, a function with signature <code>f(iVec2 pos, int r)</code> can be simply called <code>f({x,y},z)</code> which is equivalent to the expression <code>f(iVec2(x,y),z)</code>.</p>
 <dl class="section note"><dt>Note</dt><dd><code>iVec2</code> vectors are automatically promoted to <code>fVec2</code> vectors so calling a method with sub-pixel precision is transparent when working with integer vectors <code>iVec2</code>. On the other hand, downgrading from <code>fVec2</code> to <code>iVec2</code> requires an explicit cast.</dd></dl>
 </li>
@@ -2210,8 +2210,8 @@ template&lt;typename ITERFUN &gt; </div>
 </ul>
 <dl class="section remark"><dt>Remarks</dt><dd>this method is particularly useful with lambdas, for example, to paint all black pixels to red in a tgx::Image&lt;tgx::RGB565&gt; image <code>im</code>: <div class="fragment"><div class="line">im.iterate( [](<a class="code hl_struct" href="structtgx_1_1_vec2.html">tgx::iVec2</a> pos, <a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> &amp; color)</div>
 <div class="line">              { <span class="keywordflow">if</span> (color == tgx::RGB565_Black) color = tgx::RGB565_Red; <span class="keywordflow">return</span> <span class="keyword">true</span>; } );</div>
-<div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:199</div></div>
-<div class="ttc" id="astructtgx_1_1_vec2_html"><div class="ttname"><a href="structtgx_1_1_vec2.html">tgx::Vec2</a></div><div class="ttdoc">Generic 2D vector [specializations iVec2, fVec2, dVec2].</div><div class="ttdef"><b>Definition:</b> Vec2.h:61</div></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:202</div></div>
+<div class="ttc" id="astructtgx_1_1_vec2_html"><div class="ttname"><a href="structtgx_1_1_vec2.html">tgx::Vec2</a></div><div class="ttdoc">Generic 2D vector [specializations iVec2, fVec2, dVec2].</div><div class="ttdef"><b>Definition:</b> Vec2.h:64</div></div>
 </div><!-- fragment --></dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

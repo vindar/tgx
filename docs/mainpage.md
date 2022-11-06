@@ -10,7 +10,7 @@ The library is hardware agnostic. It runs on both microprocessor and microcontol
 
 - Hardware agnostic: the library simply draws on a memory framebuffer.
 - Minimum RAM usage and no dynamic allocation. 
-- No external dependency (and no stl): just include the .cpp files to your project and your are set!
+- No external dependency (and no STL): just include the .h and .cpp files to your project and your are set!
 - Library in Arduino friendly format. 
 - Mutiple color formats: `RGB565`,  `RGB24`, `RGB32`, `RGB64`, `RGBf`, `HSV`
 - `Image` class that encapsulates a buffer and allows the creation of sub-images for clipping any drawing operations.    
@@ -21,7 +21,7 @@ The library is hardware agnostic. It runs on both microprocessor and microcontol
     - All drawings operations support alpha-blending. 
     - Most drawing methods come in two flavours: a 'fast' method and a 'high quality' which is slower but draws using anti-aliasing and sub-pixel precision.     
 - Extensive 3D API.
-    - Optimized 'pixel perfect' trinagle rasterizer with adjustable sub-pixel precision. 
+    - Optimized 'pixel perfect' triangle rasterizer with adjustable sub-pixel precision. 
     - Depth buffer testing (selectable 16 bits or 32 bits precision).
     - Multiple drawing mode: Wireframe (low quality), Wireframe (high quality) and solid (i.e. with shaders). 
     - Flat and Gouraud Shading

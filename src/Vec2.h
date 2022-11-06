@@ -1,4 +1,7 @@
-/** @file Vec2.h */
+/**   
+ * @file Vec2.h 
+ * 2D vector. 
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -51,7 +54,7 @@ namespace tgx
     /**
      * Generic 2D vector [specializations #iVec2, #fVec2, #dVec2].
      *
-     * The class contain two public member variables `x` and `y` which define the 2D vector `(x,y)`.
+     * The class contains two public member variables `x` and `y` which define the 2D vector `(x,y)`.
      * 
      * @tparam  `T` arithmetic type of the vector (`int`, `float`...)
      *
@@ -97,7 +100,7 @@ namespace tgx
         /**
          * Explicit conversion to another vector with different integral type.
          *
-         * **Warning** the conversion of the vectors components values from type `T` to type `U` is
+         * @warning the conversion of the vectors components values from type `T` to type `U` is
          * performed with a simple C-style cast.
          */
         template<typename U>
@@ -410,9 +413,9 @@ namespace tgx
          * Determine which half-space delimited by the line (LA,LB) the point represented by this vector
          * belongs.
          * 
-         * - Return 1 if this point is on the left of the oriented line (LA -> LB).  
-         * - Return -1 if this point is on the right of the oriented line (LA -> LB).
-         * - Return 0 if this point is located on oriented the line (LA , LB).
+         * - Returns 1 if this point is on the left of the oriented line (LA -> LB).  
+         * - Returns -1 if this point is on the right of the oriented line (LA -> LB).
+         * - Returns 0 if this point is located on oriented the line (LA , LB).
          */
         inline int leftOf(Vec2<T> LA, Vec2<T> LB) const;
 
@@ -434,7 +437,7 @@ namespace tgx
         /**
         * Print a representation of the vector using a given stream object.
         *
-        * **Defined only in the Arduino environment**
+        * @attention Defined only in the Arduino environment.
         */
         inline void print(Stream & outputStream = Serial) const
             {

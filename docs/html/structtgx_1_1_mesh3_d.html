@@ -223,7 +223,7 @@ struct tgx::Mesh3D&lt; color_t &gt;</div><p >3D mesh data stucture. </p>
 <p >We assume here <code>texcoord = nullptr</code> but <code>normal != nullptr</code> so that each element is coded on 2 <code>uint16_t</code>.</p>
 <p >Let us consider the following face array composed of 19 <code>uint16_t</code>:</p>
 <div class="fragment"><div class="line"><a class="code hl_variable" href="structtgx_1_1_mesh3_d.html#ad88b21201134a76b31e577921201e04e">face</a> = {3,0,1,2,2,4,6,32773,8,7,7,1,8,7,9,4,5,5,0}</div>
-<div class="ttc" id="astructtgx_1_1_mesh3_d_html_ad88b21201134a76b31e577921201e04e"><div class="ttname"><a href="structtgx_1_1_mesh3_d.html#ad88b21201134a76b31e577921201e04e">tgx::Mesh3D::face</a></div><div class="ttdeci">const uint16_t * face</div><div class="ttdoc">Array of triangles (format described above).</div><div class="ttdef"><b>Definition:</b> Mesh3D.h:167</div></div>
+<div class="ttc" id="astructtgx_1_1_mesh3_d_html_ad88b21201134a76b31e577921201e04e"><div class="ttname"><a href="structtgx_1_1_mesh3_d.html#ad88b21201134a76b31e577921201e04e">tgx::Mesh3D::face</a></div><div class="ttdeci">const uint16_t * face</div><div class="ttdoc">Array of triangles (format described above).</div><div class="ttdef"><b>Definition:</b> Mesh3D.h:170</div></div>
 </div><!-- fragment --><p >It should be read as</p>
 <div class="fragment"><div class="line">3                the first chain has 3 triangles</div>
 <div class="line">0/1   2/2  4/6   first triangle with vertex 0,2,4 and normals 1,2,6</div>

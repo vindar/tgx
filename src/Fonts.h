@@ -1,4 +1,9 @@
-/** @file Fonts.h */
+/**
+ * @file Fonts.h
+ * Define the GFXFont anf ILI9341_t3 font format if needed. 
+ * 
+ * @warning If used, the Adafruit and GFX library should be included before including this header !
+ */
 //
 // Copyright 2021 Arvind Singh
 //

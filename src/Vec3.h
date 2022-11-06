@@ -1,4 +1,7 @@
-/** @file Vec3.h */
+/**   
+ * @file Vec3.h 
+ * 3D vector.
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -57,7 +60,7 @@ namespace tgx
     /**
      * Generic 3D vector [specializations #iVec3, #fVec3, #dVec3].
      *
-     * The class contain three public member variables `x`, `y` and `z` which define the 3D vector `(x,y,z)`.
+     * The class contains three public member variables `x`, `y` and `z` which define the 3D vector `(x,y,z)`.
      *
      * @tparam  `T` arithmetic type of the vector (`int`, `float`...)
      *
@@ -117,7 +120,7 @@ namespace tgx
         /**
          * Explicit conversion to another vector with different integral type.
          *
-         * **Warning** the conversion of the vectors components values from type `T` to type `U` is
+         * @warning the conversion of the vectors components values from type `T` to type `U` is
          * performed with a simple C-style cast.
          */
         template<typename U>
@@ -442,7 +445,7 @@ namespace tgx
         /**
         * Print a representation of the vector using a given stream object.
         *
-        * **Defined only in the Arduino environment**
+        * @attention Defined only in the Arduino environment.
         */
         inline void print(Stream & outputStream = Serial) const
             {

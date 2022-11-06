@@ -275,10 +275,9 @@ T&#160;</td><td class="memItemRight" valign="bottom"><b>maxZ</b></td></tr>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
 struct tgx::Box3&lt; T &gt;</div><p >Generic 3D Box [specializations <a class="el" href="_box3_8h.html#a4dfbc3f0cd5d42d458c4908888036faf" title="Integer-valued 3D box.">iBox3</a>, <a class="el" href="_box3_8h.html#a8285b14fd9a9384343096eac6dd03e6a" title="Floating point valued 3D box with single(float) precision.">fBox3</a>, <a class="el" href="_box3_8h.html#aae1062df32f7d1e352abad8ad8d088e4" title="Floating point valued 3D box with double precision.">dBox3</a>]. </p>
 <p >The class encapsulates of 6 public variables: <code>minX</code>, <code>maxX</code>, <code>minY</code>, <code>maxY</code>, <code>minZ</code>, <code>maxZ</code> which delimit the 3 dimensional <em>closed</em> box: <code>[minX, maxX] x [minY, maxY] x [minZ, maxZ]</code></p>
-<ol type="1">
-<li>the box is empty if <code>maxX</code> &lt; <code>minX</code> or if <code>maxY</code> &lt; <code>minY</code> or if <code>maxZ</code> &lt; <code>minZ</code>.</li>
-<li><b>Warning</b> Some methods compute things differently depending whether T is an integral or a floating point value type.</li>
-</ol>
+<p >The box is empty if <code>maxX</code> &lt; <code>minX</code> or if <code>maxY</code> &lt; <code>minY</code> or if <code>maxZ</code> &lt; <code>minZ</code>. <br  />
+</p>
+<dl class="section warning"><dt>Warning</dt><dd>Some methods compute things differently depending whether T is an integral or a floating point value type.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>arithmetic type of the box (<code>int</code>, <code>float</code>...)</td></tr>
@@ -313,11 +312,11 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return the box width. </p>
-<p ><b>Warning</b> The width is computed differently depending on whether <code>T</code> is of floating point or integral type.</p>
-<ul>
+<dl class="section warning"><dt>Warning</dt><dd>The width is computed differently depending on whether <code>T</code> is of floating point or integral type.<ul>
 <li>If <code>T</code> is floating point, the method returns <code>maxX - minX</code>.</li>
 <li>If <code>T</code> is integral, the method returns <code>maxX - minX + 1</code> (number of horizontal points in the closed box). </li>
 </ul>
+</dd></dl>
 
 </div>
 </div>
@@ -347,11 +346,11 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return the box height. </p>
-<p ><b>Warning</b> The height is computed differently depending on whether <code>T</code> is of floating point or integral type.</p>
-<ul>
+<dl class="section warning"><dt>Warning</dt><dd>The height is computed differently depending on whether <code>T</code> is of floating point or integral type.<ul>
 <li>If <code>T</code> is floating point, the method returns <code>maxY - minY</code>.</li>
 <li>If <code>T</code> is integral, the method returns <code>maxY - minY + 1</code> (number of vertical points in the closed box). </li>
 </ul>
+</dd></dl>
 
 </div>
 </div>
@@ -381,11 +380,11 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return the box depth. </p>
-<p ><b>Warning</b> The depth is computed differently depending on whether <code>T</code> is of floating point or integral type.</p>
-<ul>
+<dl class="section warning"><dt>Warning</dt><dd>The depth is computed differently depending on whether <code>T</code> is of floating point or integral type.<ul>
 <li>If <code>T</code> is floating point, the method returns <code>maxZ - minZ</code>.</li>
 <li>If <code>T</code> is integral, the method returns <code>maxZ - minZ + 1</code> (number of vertical points in the closed box). </li>
 </ul>
+</dd></dl>
 
 </div>
 </div>
@@ -416,7 +415,7 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return true if the boxes are equal. </p>
-<p ><b>Convention</b> Two empty boxes always compare equal.</p>
+<dl class="section note"><dt>Note</dt><dd>Two empty boxes always compare equal.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box3.html#ac0580b18c7fddadc2e76218914c88d63" title="Return true if the boxes are equal.">operator==()</a> </dd></dl>
 
 </div>
@@ -448,7 +447,7 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return true if the boxes are equal. </p>
-<p ><b>Convention</b> Two empty boxes always compare equal.</p>
+<dl class="section note"><dt>Note</dt><dd>Two empty boxes always compare equal.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box3.html#a393fdbff0b933bd39ef1084280da589a" title="Return true if the boxes are equal.">equals()</a> </dd></dl>
 
 </div>
@@ -480,11 +479,11 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return true if B is included in this box. </p>
-<p ><b>Convention</b></p>
-<ol type="1">
+<dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>An empty box contains nothing.</li>
 <li>A non-empty box contains any empty box. </li>
 </ol>
+</dd></dl>
 
 </div>
 </div>
@@ -515,11 +514,11 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return true if B is included in this box. </p>
-<p ><b>Convention</b></p>
-<ol type="1">
+<dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>An empty box contains nothing.</li>
 <li>A non-empty box contains any empty box.</li>
 </ol>
+</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box3.html#a9cc5c4921b2c869356da1c7ab79fd673" title="Return true if the box contains the point v.">contains()</a> </dd></dl>
 
 </div>
@@ -551,11 +550,11 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return true if this box is included in B. </p>
-<p ><b>Convention</b></p>
-<ol type="1">
+<dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>An empty box contains nothing.</li>
 <li>A non-empty box contains any empty box.</li>
 </ol>
+</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box3.html#a9cc5c4921b2c869356da1c7ab79fd673" title="Return true if the box contains the point v.">contains()</a> </dd></dl>
 
 </div>
@@ -588,11 +587,11 @@ template&lt;typename T &gt; </div>
 
 <p>Return true if B is <em>strictly</em> included in this box (i.e. </p>
 <p >contained but not equal).</p>
-<p ><b>Convention</b></p>
-<ol type="1">
+<dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>An empty box contains nothing.</li>
 <li>A non-empty box contains any empty box. </li>
 </ol>
+</dd></dl>
 
 </div>
 </div>
@@ -624,11 +623,11 @@ template&lt;typename T &gt; </div>
 
 <p>Return true if this box is <em>strictly</em> included inside B (i.e. </p>
 <p >contained but not equal).</p>
-<p ><b>Convention</b></p>
-<ol type="1">
+<dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>An empty box contains nothing.</li>
 <li>A non-empty box contains any empty box. </li>
 </ol>
+</dd></dl>
 
 </div>
 </div>

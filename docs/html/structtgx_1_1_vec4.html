@@ -508,7 +508,7 @@ T&#160;</td><td class="memItemRight" valign="bottom"><b>y</b></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
 struct tgx::Vec4&lt; T &gt;</div><p >Geenric 4D vector [specializations <a class="el" href="_vec4_8h.html#a767d23fc10e8df67c0a72a621acb4267" title="Integer-valued 4D vector.">iVec4</a>, <a class="el" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b" title="Floating point valued 4D vector with single (float) precision.">fVec4</a>, <a class="el" href="_vec4_8h.html#a493c41f7bd1fd73236a6c2c2232dda33" title="Floating point valued 4D vector with double precision.">dVec4</a>]. </p>
-<p >The class contain four public member variables <code>x</code>, <code>y</code>, <code>z</code> and <code>w</code> which define the 3D vector <code>(x,y,z,w)</code>.</p>
+<p >The class contains four public member variables <code>x</code>, <code>y</code>, <code>z</code> and <code>w</code> which define the 3D vector <code>(x,y,z,w)</code>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">`T`</td><td>arithmetic type of the vector (<code>int</code>, <code>float</code>...)</td></tr>
@@ -545,7 +545,7 @@ template&lt;typename U &gt; </div>
 </div><div class="memdoc">
 
 <p>Explicit conversion to another vector with different integral type. </p>
-<p ><b>Warning</b> the conversion of the vectors components values from type <code>T</code> to type <code>U</code> is performed with a simple C-style cast. </p>
+<dl class="section warning"><dt>Warning</dt><dd>The conversion of the vectors components values from type <code>T</code> to type <code>U</code> is performed with a simple C-style cast. </dd></dl>
 
 </div>
 </div>
@@ -1232,7 +1232,7 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Print a representation of the vector using a given stream object. </p>
-<p >**Defined only in the Arduino environment ** </p>
+<dl class="section attention"><dt>Attention</dt><dd>Defined only in the Arduino environment. </dd></dl>
 
 </div>
 </div>

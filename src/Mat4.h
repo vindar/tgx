@@ -1,4 +1,7 @@
-/** @file Mat4.h */
+/**   
+ * @file Mat4.h 
+ * 4x4 matrix class.
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -569,7 +572,7 @@ namespace tgx
         /**
         * Output a representation of the matrix using a given Stream.
         * 
-        * **Defined only in the Arduino environment **
+        * @attention Defined only in the Arduino environment.
         */
         inline void print(Stream & outputStream = Serial) const
             {

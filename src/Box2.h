@@ -1,4 +1,7 @@
-/** @file Box2.h */
+/**   
+ * @file Box2.h 
+ * 2D box class
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -136,9 +139,9 @@ namespace tgx
      * The class encapsulates of 4 public variables: `minX`, `maxX`, `minY`, `maxY` which delimit the 2
      * dimensional *closed* box: `[minX, maxX] x [minY, maxY]`
      * 
-     * 1. the box is empty if `maxX` < `minX` or if `maxY` < `minY`.
-     * 2. **Warning** Some methods compute things differently  depending whether T is an integral or
-     * a floating point  value type.
+     * The box is empty if `maxX` < `minX` or if `maxY` < `minY`.
+     * 
+     * @warning Some methods compute things differently  depending whether T is an integral or a floating point  value type.
      * 
      * @tparam  `T` arithmetic type of the box (`int`, `float`...)
      *              
@@ -231,12 +234,10 @@ namespace tgx
         /**
          * Return the box width.
          * 
-         * **Warning** The width is computed differently depending on whether `T` is of floating point
-         * or integral type.
-         * 
-         * - If `T` is floating point, the method returns `maxX - minX`.  
-         * - If `T` is integral, the method returns `maxX - minX + 1` (number of horizontal points in
-         * the closed box).
+         * @warning The width is computed differently depending on whether `T` is of floating point
+         *          or integral type.
+         *          - If `T` is floating point, the method returns `maxX - minX`.  
+         *          - If `T` is integral, the method returns `maxX - minX + 1` (number of horizontal points in the closed box).
          */
         inline T lx() const 
             {
@@ -254,12 +255,10 @@ namespace tgx
         /**
          * Return the box height.
          * 
-         * **Warning** The height is computed differently depending on whether `T` is of floating point
-         * or integral type.
-         * 
-         * - If `T` is floating point, the method returns `maxY - minY`.  
-         * - If `T` is integral, the method returns `maxY - minY + 1` (number of vertical points in the
-         * closed box).
+         * @warning The height is computed differently depending on whether `T` is of floating point
+         *          or integral type.
+         *          - If `T` is floating point, the method returns `maxY - minY`.  
+         *          - If `T` is integral, the method returns `maxY - minY + 1` (number of vertical points in the closed box).
          */
         inline T ly() const
             {
@@ -277,7 +276,7 @@ namespace tgx
         /**
         * Return true if the boxes are equal.
         * 
-        * **Convention** Two empty boxes always compare equal. 
+        * @note Two empty boxes always compare equal. 
         * 
         * @see operator==()
         **/
@@ -291,7 +290,7 @@ namespace tgx
         /**
         * Return true if the boxes are equal.
         *
-        * **Convention** Two empty boxes always compare equal.
+        * @note Two empty boxes always compare equal.
         * 
         * @see equals()
         **/
@@ -313,8 +312,7 @@ namespace tgx
         /**
          * Return true if B is included in this box.
          *
-         * **Convention**
-         *
+         * @note
          * 1. An empty box contains nothing.
          * 2. A non-empty box contains any empty box.
          **/
@@ -329,8 +327,7 @@ namespace tgx
         /**
         * Return true if B is included in this box.
         *
-        * **Convention**
-        *
+        * @note
         * 1. An empty box contains nothing.
         * 2. A non-empty box contains any empty box.  
         * 
@@ -345,8 +342,7 @@ namespace tgx
         /**
         * Return true if this box is included in B.
         *
-        * **Convention**
-        *
+        * @note
         * 1. An empty box contains nothing.
         * 2. A non-empty box contains any empty box.
         *
@@ -361,8 +357,7 @@ namespace tgx
         /**
         * Return true if B is *strictly* included in this box (i.e. contained but not equal).
         *
-        * **Convention**
-        *
+        * @note
         * 1. An empty box contains nothing.
         * 2. A non-empty box contains any empty box.
         **/
@@ -375,8 +370,7 @@ namespace tgx
         /**
         * Return true if this box is *strictly* included inside B (i.e. contained but not equal).
         *
-        * **Convention**
-        *
+        * @note
         * 1. An empty box contains nothing.
         * 2. A non-empty box contains any empty box.
         **/

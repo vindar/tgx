@@ -1,4 +1,7 @@
-/** @file Misc.h */
+/**   
+ * @file Misc.h
+ * Utility/miscellaneous functions used throughout the library. 
+ */
 //
 // Copyright 2020 Arvind Singh
 //

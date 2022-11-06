@@ -97,6 +97,9 @@ $(document).ready(function(){initNavTree('_rasterizer_8h.html',''); initResizabl
   <div class="headertitle"><div class="title">Rasterizer.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>3D triangle rasterizer function.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="_shader_params_8h_source.html">ShaderParams.h</a>&quot;</code><br />
 </div>
 <p><a href="_rasterizer_8h_source.html">Go to the source code of this file.</a></p>
@@ -114,7 +117,9 @@ Functions</h2></td></tr>
 <tr class="memdesc:a4cd2f1a2d5b322ad6585cb696fd4b715"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fast triangle rasterizer for 3D graphics:  <a href="_rasterizer_8h.html#a4cd2f1a2d5b322ad6585cb696fd4b715">More...</a><br /></td></tr>
 <tr class="separator:a4cd2f1a2d5b322ad6585cb696fd4b715"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >3D triangle rasterizer function. </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a2579259e42dd339f48fa4fda493e6043" name="a2579259e42dd339f48fa4fda493e6043"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2579259e42dd339f48fa4fda493e6043">&#9670;&#160;</a></span>TGX_RASTERIZE_SUBPIXEL_BITS</h2>
 
@@ -128,7 +133,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Sub-pixel precision bits. </p>
-<p >Value should range between 1 and 8. Larger value provide greater resoultion and possibly smoother animation but at the expense of the maximum viewport size:</p>
+<p >Value should range between 1 and 8. Larger value provide greater resolution and smoother animation but at the expense of the maximum viewport size:</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">subpixel bits   </th><th class="markdownTableHeadNone">max viewport size LX*LY    </th></tr>
@@ -239,11 +244,11 @@ template&lt;typename SHADER_FUNCTION , typename RASTERIZER_PARAMS &gt; </div>
     <tr><td class="paramname">V0,V1,V2</td><td>Normalized coordinates of the vertices of the triangle (x,y,z,w) where, 'a la opengl' the viewport is mapped to [-1, 1]^2. These vectors also optionally contain the 'varying' parameters associated with each vertex, namely the texture coords and the color associated with each vertex (when applicable) that are used by the shader function.</td></tr>
     <tr><td class="paramname">offset_x,offset_y</td><td>Offset of this image inside the viewport. So the image corresponds to to the box <code>[offset_x, offset_x + im.width[x[offset_x, offset_x + im.height[</code> and only the intersection of this box with the viewport box <code>[0, LX[x[0, LY[</code> is drawn onto the image.</td></tr>
     <tr><td class="paramname">data</td><td>'Uniform' parameters (depending on the rasterization type).</td></tr>
-    <tr><td class="paramname">shader_fun</td><td>the shader function. see <a class="el" href="_shaders_8h.html">Shaders.h</a> for the implementation of classic shaders.</td></tr>
+    <tr><td class="paramname">shader_fun</td><td>the shader function. see <a class="el" href="_shaders_8h.html" title="Triangle shader functions.">Shaders.h</a> for the implementation of classic shaders.</td></tr>
   </table>
   </dd>
 </dl>
-<p><b>Remarks</b></p>
+<dl class="section remark"><dt>Remarks</dt><dd></dd></dl>
 <ul>
 <li>Maximum viewport size depending on <code>TGX_RASTERIZE_SUBPIXEL_BITS</code>: <br  />
  <div class="fragment"><div class="line">| subpixel bits | max viewport size LX*LY |</div>

@@ -277,10 +277,8 @@ T&#160;</td><td class="memItemRight" valign="bottom"><b>maxY</b></td></tr>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
 struct tgx::Box2&lt; T &gt;</div><p >Generic 2D Box [specializations <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8" title="Integer-valued 2D box.">iBox2</a> , <a class="el" href="_box2_8h.html#af5237584932da348a5241f13376af762" title="Floating point valued 2D box with single (float) precision.">fBox2</a>, <a class="el" href="_box2_8h.html#aea171a93782651238cda14fb943584fa" title="Floating point valued 2D box with double precision.">dBox2</a>]. </p>
 <p >The class encapsulates of 4 public variables: <code>minX</code>, <code>maxX</code>, <code>minY</code>, <code>maxY</code> which delimit the 2 dimensional <em>closed</em> box: <code>[minX, maxX] x [minY, maxY]</code></p>
-<ol type="1">
-<li>the box is empty if <code>maxX</code> &lt; <code>minX</code> or if <code>maxY</code> &lt; <code>minY</code>.</li>
-<li><b>Warning</b> Some methods compute things differently depending whether T is an integral or a floating point value type.</li>
-</ol>
+<p >The box is empty if <code>maxX</code> &lt; <code>minX</code> or if <code>maxY</code> &lt; <code>minY</code>.</p>
+<dl class="section warning"><dt>Warning</dt><dd>Some methods compute things differently depending whether T is an integral or a floating point value type.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">`T`</td><td>arithmetic type of the box (<code>int</code>, <code>float</code>...)</td></tr>
@@ -315,12 +313,12 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return the box width. </p>
-<p ><b>Warning</b> The width is computed differently depending on whether <code>T</code> is of floating point or integral type.</p>
-<ul>
+<dl class="section warning"><dt>Warning</dt><dd>The width is computed differently depending on whether <code>T</code> is of floating point or integral type.<ul>
 <li>If <code>T</code> is floating point, the method returns <code>maxX - minX</code>. <br  />
 </li>
 <li>If <code>T</code> is integral, the method returns <code>maxX - minX + 1</code> (number of horizontal points in the closed box). </li>
 </ul>
+</dd></dl>
 
 </div>
 </div>
@@ -350,12 +348,12 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return the box height. </p>
-<p ><b>Warning</b> The height is computed differently depending on whether <code>T</code> is of floating point or integral type.</p>
-<ul>
+<dl class="section warning"><dt>Warning</dt><dd>The height is computed differently depending on whether <code>T</code> is of floating point or integral type.<ul>
 <li>If <code>T</code> is floating point, the method returns <code>maxY - minY</code>. <br  />
 </li>
 <li>If <code>T</code> is integral, the method returns <code>maxY - minY + 1</code> (number of vertical points in the closed box). </li>
 </ul>
+</dd></dl>
 
 </div>
 </div>
@@ -386,7 +384,7 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return true if the boxes are equal. </p>
-<p ><b>Convention</b> Two empty boxes always compare equal.</p>
+<dl class="section note"><dt>Note</dt><dd>Two empty boxes always compare equal.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a2a3b648a8d4296bbe7b0a4636c2288a9" title="Return true if the boxes are equal.">operator==()</a> </dd></dl>
 
 </div>
@@ -418,7 +416,7 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return true if the boxes are equal. </p>
-<p ><b>Convention</b> Two empty boxes always compare equal.</p>
+<dl class="section note"><dt>Note</dt><dd>Two empty boxes always compare equal.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a16dc3a51e6cac2897a57d43486e997fe" title="Return true if the boxes are equal.">equals()</a> </dd></dl>
 
 </div>
@@ -450,11 +448,11 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return true if B is included in this box. </p>
-<p ><b>Convention</b></p>
-<ol type="1">
+<dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>An empty box contains nothing.</li>
 <li>A non-empty box contains any empty box. </li>
 </ol>
+</dd></dl>
 
 </div>
 </div>
@@ -485,12 +483,12 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return true if B is included in this box. </p>
-<p ><b>Convention</b></p>
-<ol type="1">
+<dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>An empty box contains nothing.</li>
 <li>A non-empty box contains any empty box. <br  />
 </li>
 </ol>
+</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#abf74bfc3a197249ff7cb1cbc067386f5" title="Return true if the box contains the point v.">contains()</a> </dd></dl>
 
 </div>
@@ -522,11 +520,11 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return true if this box is included in B. </p>
-<p ><b>Convention</b></p>
-<ol type="1">
+<dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>An empty box contains nothing.</li>
 <li>A non-empty box contains any empty box.</li>
 </ol>
+</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#abf74bfc3a197249ff7cb1cbc067386f5" title="Return true if the box contains the point v.">contains()</a> </dd></dl>
 
 </div>
@@ -559,11 +557,11 @@ template&lt;typename T &gt; </div>
 
 <p>Return true if B is <em>strictly</em> included in this box (i.e. </p>
 <p >contained but not equal).</p>
-<p ><b>Convention</b></p>
-<ol type="1">
+<dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>An empty box contains nothing.</li>
 <li>A non-empty box contains any empty box. </li>
 </ol>
+</dd></dl>
 
 </div>
 </div>
@@ -595,11 +593,11 @@ template&lt;typename T &gt; </div>
 
 <p>Return true if this box is <em>strictly</em> included inside B (i.e. </p>
 <p >contained but not equal).</p>
-<p ><b>Convention</b></p>
-<ol type="1">
+<dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>An empty box contains nothing.</li>
 <li>A non-empty box contains any empty box. </li>
 </ol>
+</dd></dl>
 
 </div>
 </div>

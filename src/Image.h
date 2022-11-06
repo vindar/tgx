@@ -1,4 +1,7 @@
-/** @file Image.h */
+/**   
+ * @file Image.h 
+ * Main image class. 
+ */
 //
 // Copyright 2020 Arvind Singh
 //
