@@ -10,15 +10,18 @@ if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
 endif ()
 
-# add TGX...
+# add TGX
 include_directories("../../../src/")
 file(GLOB tgx_SRC "../../../src/*.cpp") 
 
-# ...and the project files...
+# add the project files.
 file(GLOB project_SRC "buddha.h" "buddhaOnCPU.cpp")
 
-# to the build. 
+# build an executable
 add_executable("${PROJECT_NAME}" ${project_SRC} ${tgx_SRC})
+
+# override default behaviour and use R/G/B order to match CImg's color channels ordering. 
+add_compile_definitions(TGX_RGB32_ORDER_BGR=0)
 
 # set the project as the default startup project in visual studio.
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT "${PROJECT_NAME}")
