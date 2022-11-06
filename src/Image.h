@@ -166,10 +166,10 @@ namespace tgx
     /**
     * @name Creation of image and sub-images. 
     *
-    * The memory buffer should be supplied at creation otherwise, the image is set as invalid until a valid buffer is set.
+    * If the memory buffer is not supplied at creation, the image is marked as invalid until a buffer is set.
     *
     * @remark 
-    * 1. The image object does not manage the buffer memory: allocation/deallocation are the user's respnsability.  
+    * 1. The image object does not manage the buffer memory: **memory allocation/deallocation is the user's respnsability.**  
     * 2. The image class is lightweight: creating image and sub-image is very fast and requires no additional memory.  
     * 
     */

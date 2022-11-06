@@ -106,9 +106,9 @@ $(document).ready(function(){initNavTree('classtgx_1_1_image.html',''); initResi
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Creation of image and sub-images.</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p >The memory buffer should be supplied at creation otherwise, the image is set as invalid until a valid buffer is set.</p>
+<tr><td colspan="2"><div class="groupText"><p >If the memory buffer is not supplied at creation, the image is marked as invalid until a buffer is set.</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
-<li>The image object does not manage the buffer memory: allocation/deallocation are the user's respnsability. <br  />
+<li>The image object does not manage the buffer memory: <b>memory allocation/deallocation is the user's respnsability.</b> <br  />
 </li>
 <li>The image class is lightweight: creating image and sub-image is very fast and requires no additional memory. <br  />
  </li>

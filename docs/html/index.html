@@ -96,20 +96,20 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="about"></a>
 About the library</h1>
-<p >TGX is a tiny but full featured C++ library for drawing 2D and 3D graphics onto a memory framebuffer. The library is hardware agnostic. It runs on both microprocessor and microcontollers but specifically targets 'powerful' 32 bits MCUs such as ESP32, RP2040, Teensy 3/4...</p>
+<p >TGX is a tiny but full featured C++ library for drawing 2D and 3D graphics onto a memory framebuffer. The library runs on both microprocessor and microcontollers but specifically targets 'powerful' 32 bits MCUs such as ESP32, RP2040, Teensy 3/4...</p>
 <p ><b>Features</b></p>
 <ul>
 <li>Hardware agnostic: the library simply draws on a memory framebuffer.</li>
-<li>Minimum RAM usage and no dynamic allocation.</li>
+<li>Optimized RAM usage and no dynamic allocation.</li>
 <li>No external dependency (and no STL): just include the .h and .cpp files to your project and your are set!</li>
 <li>Library in Arduino friendly format.</li>
-<li>Mutiple color formats: <code>RGB565</code>, <code>RGB24</code>, <code>RGB32</code>, <code>RGB64</code>, <code>RGBf</code>, <code>HSV</code></li>
+<li>Mutiple color formats supported: <code>RGB565</code>, <code>RGB24</code>, <code>RGB32</code>, <code>RGB64</code>, <code>RGBf</code>, <code>HSV</code></li>
 <li><code>Image</code> class that encapsulates a buffer and allows the creation of sub-images for clipping any drawing operations. <br  />
 </li>
 <li>Extensive 2D API:<ul>
-<li>Methods for converting, blittings copying, resizing sprites with high quality (bilinear filtering, sub-pixel precision).</li>
-<li>Methods for drawing lines, polylines, polygons, triangle, rectangles, rounded rectangles, quads, circles arc, ellipses, Bezier curve and slines !</li>
-<li>Methods for drawing Text, using regular Adafruit font, ILI9341_t3 font or special anti-aliased ILI9341_t3 v21 fonts.</li>
+<li>Methods for converting, blittings, copying and resizing sprites with high quality (bilinear filtering, sub-pixel precision).</li>
+<li>Methods for drawing lines, polylines, polygons, triangles, rectangles, rounded rectangles, quads, circles, arcs, ellipses, Bezier curve and splines !</li>
+<li>Methods for drawing Text with support for multiple font formats.</li>
 <li>All drawings operations support alpha-blending.</li>
 <li>Most drawing methods come in two flavours: a 'fast' method and a 'high quality' which is slower but draws using anti-aliasing and sub-pixel precision. <br  />
 </li>
@@ -118,15 +118,15 @@ About the library</h1>
 <li>Extensive 3D API.<ul>
 <li>Optimized 'pixel perfect' triangle rasterizer with adjustable sub-pixel precision.</li>
 <li>Depth buffer testing (selectable 16 bits or 32 bits precision).</li>
-<li>Multiple drawing mode: Wireframe (low quality), Wireframe (high quality) and solid (i.e. with shaders).</li>
-<li>Flat and Gouraud Shading</li>
-<li>Phong lightning's model with separate ambient/diffuse/specular color components</li>
+<li>Multiple drawing modes: wireframe (selectable low/high quality) and solid (i.e. with shaders).</li>
+<li>Flat and Gouraud Shading.</li>
+<li>Phong lightning's model with separate ambient/diffuse/specular color components.</li>
 <li>Per object material properties.</li>
-<li>Perspective-correct texture mapping with selectable point sampling / bilinear filtering and muliple wrapping mode.</li>
-<li>Perspective and Orthographic projection.</li>
+<li>Perspective-correct texture mapping with selectable point sampling/bilinear filtering and multiple wrapping modes.</li>
+<li>Perspective and orthographic projections.</li>
 <li>Optional backface culling.</li>
-<li>Tile rasterization: it is possible to render only part of the viewport at a time to save RAM.</li>
-<li>Templates classes for all the needed maths: Vec2, Vec3, Vec4 (vectors), Mat4 (4x4 matrix) and Box2, Box3 (boxes).</li>
+<li>Tile rasterization: it is possible to render the viewport in multiple passes to save RAM.</li>
+<li>Templates classes for all the needed maths: <code>Vec2</code>, <code>Vec3</code>, <code>Vec4</code> (vectors), <code>Mat4</code> (4x4 matrix) and <code>Box2</code>, <code>Box3</code> (boxes).</li>
 <li>Optimized mesh data format: meshes and textures can be read directly from flash memory to save RAM.</li>
 <li>Python scripts for easy conversion of texture images and 3D meshes (in Wavefront's .obj format) into C files.</li>
 </ul>
