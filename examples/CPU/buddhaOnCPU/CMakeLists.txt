@@ -14,7 +14,7 @@
 #
 # 3. Build the example using the generated project files.
 #    - On Windows: open the Visual Studio solution file "buddhaOnCPU.sln" and 
-#                  build the library from within the IDE.  
+#                  build the example from within the IDE.  
 #    - On Linux/MacOS: use the 'make' command to build the example. 
 #
 ###############################################################################
