@@ -1,20 +1,23 @@
-/**  
+/********************************************************************************
  * @file buddhaOnCPU.cpp 
  *
- * Example: using the TGX to draw a 3D mesh on a CPU. 
+ * Example: using the TGX to draw a 3D mesh.
  * 
  * For Windows/Linuc/MacOS.
  * 
- * Building the example (with CMake):
+ * Building the example:
  * 1. Install CMake (version 3.10 later). 
- * 2. Open a shell/terminal inside '\buddhaOnCPU' directory
+ * 2. Open a shell/terminal inside this directory
  * 3. enter the following command at the prompt:
  *     mkdir build
  *     cd build
  *     cmake ..
- *
- * This will create the project files into the /build directory.
- */
+ * 4. This will create the project files into the /build directory
+ *    which can then be used to build the example.
+ *    - On Windows: open the Visual Studio solution file "buddhaOnCPU.sln" and 
+ *                  build the example from within the IDE.  
+ *    - On Linux/MacOS: use the 'make' command to build the example. 
+ *******************************************************************************/
 
 
 // The CImg library is used only to create a window and display the image.
