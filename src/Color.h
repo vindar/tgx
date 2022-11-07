@@ -40,7 +40,7 @@ namespace tgx
 // ********************************************************************************
 // Color types. 
 //
-// The following color types are availaible for use with the tgx library:
+// The following color types are available for use with the tgx library:
 //
 // - RGB565: 16bits, R:5 G:6 B:5 colors  
 //           no alpha channel wrapper around a uint16_t integer, aligned as uint16_t

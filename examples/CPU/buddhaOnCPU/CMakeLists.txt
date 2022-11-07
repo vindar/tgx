@@ -1,5 +1,11 @@
 ################################################
 # CMakeLists for project: buddhaOnCPU
+#
+# Bulding the example: Open a terminal/shell
+# mkdir build
+# cd build
+# cmake ..
+
 ################################################
 cmake_minimum_required(VERSION 3.10)
 
