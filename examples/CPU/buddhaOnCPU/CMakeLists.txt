@@ -38,8 +38,8 @@ file(GLOB project_SRC "buddha.h" "buddhaOnCPU.cpp")
 # build an executable
 add_executable("${PROJECT_NAME}" ${project_SRC} ${tgx_SRC})
 
-# CImg needs X11 on Linux
-if (UNIX AND NOT APPLE)
+# CImg needs X11 on Linux/MacOS
+if (UNIX)
     find_package(X11)
     if (X11_FOUND)
         target_link_libraries(${PROJECT_NAME} PUBLIC ${X11_LIBRARIES})
