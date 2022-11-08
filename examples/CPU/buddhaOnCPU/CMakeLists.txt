@@ -4,19 +4,30 @@
 #                    CMakeList for project: buddhaOnCPU 
 # 
 # Building the example (Windows/Linux/MacOS).
+# For Windows/Linuc/MacOS.
 #
-# 1. Install CMake 3.10 (or later). 
+# Building the example:
 #
-# 2. Open a terminal/shell in this directory and type:
-#      mkdir build
-#      cd build
-#      cmake ..
+# 1. Install CMake (version 3.10 later). 
 #
-# 3. Build the example using the generated project files.
-#    - On Windows: open the Visual Studio solution file "buddhaOnCPU.sln" and 
-#                  build the example from within the IDE.  
-#    - On Linux/MacOS: use the 'make' command to build the example. 
+# 2. Open a shell/terminal inside the directory that contains this file. 
 #
+# 3. Install CImg (only for Linux/MacOS)
+#    - If on Linux/Debian, run: "sudo apt install cimg-dev"
+#    - If on MacOS/homebrew, run: "brew install cimg"
+#
+# 4. run the following commands:
+#       mkdir build
+#       cd build
+#       cmake ..
+#
+# 4. This will create the project files into the /build directory which can now 
+#    be used to build the example. .
+#
+#    -> On Windows. Open the Visual Studio solution file "buddhaOnCPU.sln" and 
+#       build the example from within the IDE. 
+# 
+#    -> On Linux/MacOS. Run "make" to build the example. 
 ###############################################################################
 ###############################################################################
 cmake_minimum_required(VERSION 3.10)
