@@ -28,7 +28,7 @@ var NAVTREE =
     [ "About the library", "index.html#about", null ],
     [ "Getting started", "index.html#getting_started", null ],
     [ "References", "index.html#References", null ],
-    [ "Tutorial: basic concepts", "md_docs_intro_concepts.html", null ],
+    [ "Installation.", "md_docs_intro_concepts.html", null ],
     [ "Tutorial: the 2D API.", "md_docs_intro_api_2_d.html", null ],
     [ "Tutorial: the 3D API.", "md_docs_intro_api_3_d.html", null ],
     [ "Todo List", "todo.html", null ],
