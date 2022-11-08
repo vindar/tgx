@@ -36,7 +36,7 @@ file(GLOB tgx_SRC "../../../src/*.cpp")
 file(GLOB project_SRC "buddha.h" "buddhaOnCPU.cpp")
 
 # build an executable
-add_executable("${PROJECT_NAME}" ${project_SRC} ${tgx_SRC})
+add_executable(${PROJECT_NAME} ${project_SRC} ${tgx_SRC})
 
 # CImg needs X11 on Linux/MacOS
 if (UNIX)
@@ -49,6 +49,7 @@ if (UNIX)
     endif ()
 endif ()
 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 # override default behaviour and use R/G/B order to match CImg's color channels ordering. 
 add_compile_definitions(TGX_RGB32_ORDER_BGR=0)
