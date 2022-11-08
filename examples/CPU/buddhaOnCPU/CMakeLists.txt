@@ -38,6 +38,18 @@ file(GLOB project_SRC "buddha.h" "buddhaOnCPU.cpp")
 # build an executable
 add_executable("${PROJECT_NAME}" ${project_SRC} ${tgx_SRC})
 
+# CImg needs X11 on Linux
+if (UNIX AND NOT APPLE)
+    find_package(X11)
+    if (X11_FOUND)
+        target_link_libraries(${PROJECT_NAME} PUBLIC ${X11_LIBRARIES})
+        target_include_directories(${PROJECT_NAME} PUBLIC ${X11_INCLUDE_DIR})
+    else()
+        message(FATAL_ERROR "CImg requires X11 on Linux. Please install it with something like 'sudo apt install cimg-dev' or 'sudo apt install libx11-dev'...")
+    endif ()
+endif ()
+
+
 # override default behaviour and use R/G/B order to match CImg's color channels ordering. 
 add_compile_definitions(TGX_RGB32_ORDER_BGR=0)
 
