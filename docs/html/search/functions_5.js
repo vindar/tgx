@@ -1,7 +1,7 @@
 var searchData=
 [
   ['getanchor_0',['getAnchor',['../structtgx_1_1_box2.html#a4c56f3a8e6f200502de433bd980b7f37',1,'tgx::Box2']]],
-  ['getcrop_1',['getCrop',['../classtgx_1_1_image.html#a946f61b7e99977ad53f732358216b46b',1,'tgx::Image']]],
+  ['getcrop_1',['getCrop',['../classtgx_1_1_image.html#a5fd91f6ec1804de22f1586867fcc6e61',1,'tgx::Image']]],
   ['getenclosedwithsameratioas_2',['getEnclosedWithSameRatioAs',['../structtgx_1_1_box2.html#a710d4bfd732883bdf6f75f9d3d956185',1,'tgx::Box2']]],
   ['getenclosingwithsameratioas_3',['getEnclosingWithSameRatioAs',['../structtgx_1_1_box2.html#ad7490851bbc073d6ae089bd3609888a9',1,'tgx::Box2']]],
   ['getmodelmatrix_4',['getModelMatrix',['../classtgx_1_1_renderer3_d.html#a92666f8cccbb7233cae2fc07322efcc3',1,'tgx::Renderer3D']]],

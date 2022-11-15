@@ -2,7 +2,7 @@ var searchData=
 [
   ['g_0',['G',['../structtgx_1_1_r_g_b565.html#a82b12f6f32e77ee85cea983a1bcaedc3',1,'tgx::RGB565::G()'],['../structtgx_1_1_r_g_b24.html#ac2f130079d53edbf0bd17698b0230fdf',1,'tgx::RGB24::G()'],['../structtgx_1_1_r_g_b32.html#ab405d6e1eac86b84beaa6176483a2f79',1,'tgx::RGB32::G()'],['../structtgx_1_1_r_g_b64.html#a7faa9472cf530d1d86add5686ed89207',1,'tgx::RGB64::G()'],['../structtgx_1_1_r_g_bf.html#aa9931b4a3c1221d6690bfaf6fb97beea',1,'tgx::RGBf::G()']]],
   ['getanchor_1',['getAnchor',['../structtgx_1_1_box2.html#a4c56f3a8e6f200502de433bd980b7f37',1,'tgx::Box2']]],
-  ['getcrop_2',['getCrop',['../classtgx_1_1_image.html#a946f61b7e99977ad53f732358216b46b',1,'tgx::Image']]],
+  ['getcrop_2',['getCrop',['../classtgx_1_1_image.html#a5fd91f6ec1804de22f1586867fcc6e61',1,'tgx::Image']]],
   ['getenclosedwithsameratioas_3',['getEnclosedWithSameRatioAs',['../structtgx_1_1_box2.html#a710d4bfd732883bdf6f75f9d3d956185',1,'tgx::Box2']]],
   ['getenclosingwithsameratioas_4',['getEnclosingWithSameRatioAs',['../structtgx_1_1_box2.html#ad7490851bbc073d6ae089bd3609888a9',1,'tgx::Box2']]],
   ['getmodelmatrix_5',['getModelMatrix',['../classtgx_1_1_renderer3_d.html#a92666f8cccbb7233cae2fc07322efcc3',1,'tgx::Renderer3D']]],

@@ -214,12 +214,8 @@ namespace tgx
          *
          * @param   im      The source image.
          * @param   subbox  The region of the source image to use for this image.
-         * @param   clamp   (Optional) True to clamp the values of the `subbox` parameter. If set,
-         *                  `subbox` is intersected with the source image box to create a valid region.
-         *                  Otherwise, and if `subbox` does not fit inside the source image box, then an
-         *                  empty image is created.
          */
-        Image(const Image<color_t>& im, iBox2 subbox, bool clamp = true);
+        Image(const Image<color_t>& im, iBox2 subbox);
 
 
         /**
@@ -284,20 +280,16 @@ namespace tgx
          * See also `operator()` below.
          * 
          * @param   subbox  The region to to keep.
-         * @param   clamp   (Optional) True to clamp the values of the `subbox` parameter. If set,
-         *                  `subbox` is intersected with this image box to create a valid region.
-         *                  Otherwise, and if `subbox` does not fit inside the source image box, 
-         *                  then an empty image is returned.
          *
          * @returns the cropped image.
          */
-        Image<color_t> getCrop(const iBox2& subbox, bool clamp = true) const;
+        Image<color_t> getCrop(const iBox2& subbox) const;
 
 
         /**
          * Return a sub-image of this image (sharing the same pixel buffer).
          * 
-         * This is the same as `getCrop(B, true)`
+         * This is the same as `getCrop(B)`
          *
          * @param   B  box that delimit the sub-image inside this image. 
          *
@@ -309,7 +301,7 @@ namespace tgx
         /**
          * Return a sub-image of this image (sharing the same pixel buffer).
          *
-         * This is the same as `getCrop(tgx::iBox2(min_x, max_x, min_y, max_x), true)` or `operator()(tgx::iBox2(min_x, max_x, min_y, max_x))`
+         * This is the same as `getCrop(tgx::iBox2(min_x, max_x, min_y, max_x))` or `operator()(tgx::iBox2(min_x, max_x, min_y, max_x))`
          *
          * @param   min_x   left boundary (inclusive)
          * @param   max_x   right boundary (inclusive)

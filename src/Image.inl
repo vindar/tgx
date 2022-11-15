@@ -110,43 +110,36 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::crop(const iBox2& subbox)
         {
-        *this = Image<color_t>(*this, subbox, true);
+        *this = Image<color_t>(*this, subbox);
         }
 
 
     template<typename color_t>
-    Image<color_t> Image<color_t>::getCrop(const iBox2& subbox, bool clamp) const
+    Image<color_t> Image<color_t>::getCrop(const iBox2& subbox) const
         {
-        return Image<color_t>(*this, subbox, clamp);
+        return Image<color_t>(*this, subbox);
         }
 
 
     template<typename color_t>
     Image<color_t> Image<color_t>::operator()(const iBox2& B) const
         {
-        return Image<color_t>(*this, B, true);
+        return Image<color_t>(*this, B);
         }
 
 
     template<typename color_t>
     Image<color_t> Image<color_t>::operator()(int min_x, int max_x, int min_y, int max_y) const
         {
-        return Image<color_t>(*this, tgx::iBox2(min_x, max_x, min_y, max_y), true);
+        return Image<color_t>(*this, tgx::iBox2(min_x, max_x, min_y, max_y));
         }
 
 
     template<typename color_t>
-    Image<color_t>::Image(const Image<color_t> & im, iBox2 subbox, bool clamp)
+    Image<color_t>::Image(const Image<color_t> & im, iBox2 subbox)
         {
-        if (!im.isValid()) { setInvalid();  return; }
-        if (clamp)
-            {
-            subbox &= im.imageBox();
-            }
-        else
-            {
-            if (!(im.imageBox().contains(subbox))) { setInvalid(); return; }
-            }
+        if (!im.isValid()) { setInvalid();  return; }       
+        subbox &= im.imageBox();
         if (subbox.isEmpty()) { setInvalid(); return; }
         _lx = subbox.lx();
         _ly = subbox.ly();
@@ -813,7 +806,7 @@ namespace tgx
             if (src_image._ly == 1)
                 { // stupid case 
                 _buffer[0] = src_image._buffer[0];
-                return Image<color_t>(*this, iBox2(0, 0, 0, 0), false);
+                return Image<color_t>(*this, iBox2(0, 0, 0, 0));
                 }
             if (_ly < (src_image._ly >> 1)) { return Image<color_t>(); }
             const color_t * p_src = src_image._buffer;
@@ -825,7 +818,7 @@ namespace tgx
                 p_dest += _stride;
                 p_src += (src_image._stride*2);
                 }
-            return Image<color_t>(*this, iBox2(0, 0, 0, (src_image._ly >> 1) - 1), false);
+            return Image<color_t>(*this, iBox2(0, 0, 0, (src_image._ly >> 1) - 1));
             }
         if (src_image._ly == 1)
             {
@@ -839,7 +832,7 @@ namespace tgx
                 p_dest++;
                 p_src += 2;
                 }
-            return Image<color_t>(*this, iBox2(0, (src_image._lx >> 1) - 1, 0, 0), false);
+            return Image<color_t>(*this, iBox2(0, (src_image._lx >> 1) - 1, 0, 0));
             }
         // source image dimension is strictly larger than 1 in each directions.
         if ((_lx < (src_image._lx >> 1)) || (_ly < (src_image._ly >> 1))) { return Image<color_t>(); }
@@ -856,7 +849,7 @@ namespace tgx
                 p_src += 2;
                 }
             }
-        return Image<color_t>(*this, iBox2(0, (src_image._lx >> 1) - 1, 0, (src_image._ly >> 1) - 1), false);
+        return Image<color_t>(*this, iBox2(0, (src_image._lx >> 1) - 1, 0, (src_image._ly >> 1) - 1));
         }
 
 
