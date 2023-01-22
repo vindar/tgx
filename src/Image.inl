@@ -529,8 +529,9 @@ namespace tgx
                 {
                 drawPixel<false>(x--, y, new_color);
                 }
+            int start;
             if (x >= x1) goto TGX_SCANFILL_SKIP;
-            int start = x + 1;
+            start = x + 1;
             if (start < x1) TGX_SCANFILL_PUSH(start, x1 - 1, y, -dy); // leak on left
             x = x1 + 1;
             do
