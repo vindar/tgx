@@ -21,9 +21,17 @@
 using namespace tgx;
 
 // meshes (stored in PROGMEM)
-#include "3Dmodels/spot/spot.h"
-#include "3Dmodels/bob/bob.h"
-#include "3Dmodels/blub/blub.h"
+#if __has_include("spot.h")
+    // Arduino IDE stupidly flattens the example directory tree...
+    #include "spot.h"
+    #include "bob.h"
+    #include "blub.h"
+#else 
+    // ok, use the normal path
+    #include "3Dmodels/spot/spot.h"
+    #include "3Dmodels/bob/bob.h"
+    #include "3Dmodels/blub/blub.h"
+#endif
 
 
 //

@@ -24,7 +24,7 @@
 using namespace tgx;
 
 // the mesh to display
-#include "3Dmodels/buddha/buddha.h"
+#include "buddha.h"
 
 
 //

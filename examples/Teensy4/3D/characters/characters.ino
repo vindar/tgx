@@ -21,19 +21,43 @@ using namespace tgx;
 
 
 // meshes (stored in PROGMEM) for Teensy 4.0 and 4.1
-#include "3Dmodels/nanosuit/nanosuit.h"
-#include "3Dmodels/R2D2/R2D2.h"
+#if __has_include("nanosuit.h")
+    // Arduino IDE stupidly flattens the example directory tree...
+    #include "nanosuit.h"
+    #include "R2D2.h"
+#else 
+    // ok, use the normal path
+    #include "3Dmodels/nanosuit/nanosuit.h"
+    #include "3Dmodels/R2D2/R2D2.h"    
+#endif
+
+
 
 // additional meshes for Teensy 4.1 / MicroMod since it has more flash. 
 #if defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSY_MICROMOD)
-#include "3Dmodels/elementalist/elementalist.h"
-#include "3Dmodels/sinbad/sinbad.h"
-#include "3Dmodels/cyborg/cyborg.h"
-#include "3Dmodels/dennis/dennis.h"
-#include "3Dmodels/manga3/manga3.h"
-#include "3Dmodels/naruto/naruto.h"
-#include "3Dmodels/stormtrooper/stormtrooper.h"
+
+#if __has_include("elementalist.h")
+    // Arduino IDE stupidly flattens the example directory tree...
+    #include "elementalist.h"
+    #include "sinbad.h"
+    #include "cyborg.h"
+    #include "dennis.h"
+    #include "manga3.h"
+    #include "naruto.h"
+    #include "stormtrooper.h"
+#else 
+    // ok, use the normal path
+    #include "3Dmodels/elementalist/elementalist.h"
+    #include "3Dmodels/sinbad/sinbad.h"
+    #include "3Dmodels/cyborg/cyborg.h"
+    #include "3Dmodels/dennis/dennis.h"
+    #include "3Dmodels/manga3/manga3.h"
+    #include "3Dmodels/naruto/naruto.h"
+    #include "3Dmodels/stormtrooper/stormtrooper.h"
 #endif
+
+#endif
+
 
 
 //

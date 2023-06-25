@@ -39,7 +39,15 @@
 #include "mars_right.h"
 #include "mars_bottom.h"
 #include "mars_top_neb.h"
-#include "falcon/falcon_vs.h"
+#if __has_include("falcon_vs.h")
+    // Arduino IDE stupidly flattens the example directory tree...
+    #include "falcon_vs.h"
+#else 
+    // ok, use the normal path
+    #include "falcon/falcon_vs.h"
+#endif
+
+
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
@@ -338,7 +346,7 @@ void loadFalconTexture()
     tgx::fVec3* va = (tgx::fVec3*)(dma_buf + (128 * 256));
     memcpy(va, falcon_vs_vert_array, sizeof(falcon_vs_vert_array));
 
-    tgx::fVec3* vt = (tgx::fVec3*)(dma_buf + (128 * 256) + (sizeof(falcon_vs_vert_array) + 3)/4);
+    tgx::fVec2* vt = (tgx::fVec2*)(dma_buf + (128 * 256) + (sizeof(falcon_vs_vert_array) + 3)/4);
     memcpy(vt, falcon_vs_tex_array, sizeof(falcon_vs_tex_array));
 
     tgx::fVec3* vn = (tgx::fVec3*)(dma_buf + (128 * 256) + (sizeof(falcon_vs_vert_array) + 3)/4 + (sizeof(falcon_vs_tex_array) + 3)/4);
@@ -798,7 +806,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         const float l = (cosf(a/2) + 1.5) / 2.5;
 
-        tgx::fVec3 eye = { (looking_dist * l) * sinf(a), 2*climb - (a  * climb / ((float)2*M_PI)) , (looking_dist * l) *cosf(a)};
+        tgx::fVec3 eye = { (looking_dist * l) * sinf(a), 2*climb - (a  * climb / ((float)(2*M_PI))) , (looking_dist * l) *cosf(a)};
         
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
@@ -850,7 +858,10 @@ TGX_NOINLINE FLASHMEM void movie()
         }
 
     // allumage et depart
-    falcon_vs_15.texture = &Engine02_texture;
+    tgx::Mesh3D<tgx::RGB565> * meshF = &falcon_vs_1;
+    for(int b=1; b<15; b++) { meshF = (tgx::Mesh3D<tgx::RGB565>*)meshF->next; } // find falcon_vs_15 (but may have been copied in EXTMEM)
+    meshF->texture = &Engine02_texture; // turn on the engines !
+
     start(2.5); // 2.5
     while (ongoing())
         {

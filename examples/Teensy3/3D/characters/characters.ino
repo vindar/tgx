@@ -31,9 +31,9 @@
 
 
 // 3D models to draw
-#include "3Dmodels/stormtrooper/stormtrooper.h"
+#include "stormtrooper.h"
 #if TWO_MODELS
-#include "3DModels/cyborg/cyborg.h" // only for teensy 3.6 / 4 / 4.1
+#include "cyborg.h" // only for teensy 3.6 / 4 / 4.1
 #endif
 
 
