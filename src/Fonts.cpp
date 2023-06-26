@@ -71,12 +71,12 @@ namespace tgx
             }
         else
             { // no char to draw
-            return iBox2(); // nothing to draw. 
+            return iBox2(pos.x,pos.x,pos.y,pos.y); // nothing to draw. 
             }
         uint8_t* data = (uint8_t*)font.data + tgx_internals::fetchbits_unsigned(font.index, (n * font.bits_index), font.bits_index);
         int32_t off = 0;
         uint32_t encoding = tgx_internals::fetchbits_unsigned(data, off, 3);
-        if (encoding != 0) return  pos; // wrong/unsupported format
+        if (encoding != 0) return  iBox2(pos.x,pos.x,pos.y,pos.y); // wrong/unsupported format
         off += 3;
         const int sx = (int)tgx_internals::fetchbits_unsigned(data, off, font.bits_width);
         off += font.bits_width;
