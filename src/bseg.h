@@ -21,6 +21,11 @@
 // only C++, no plain C
 #ifdef __cplusplus
 
+// mtools extension (if available).  
+#if (MTOOLS_TGX_EXTENSIONS)
+#include <cmath>
+#endif
+
 
 #include "Misc.h"
 #include "Vec2.h"
@@ -470,7 +475,7 @@ namespace tgx
 				_len = 0;
 				return;
 				}
-			else if ((adx > ady) || ((adx == ady) && (abs(fdx) > abs(fdy)))) // (abs(fdx) > abs(fdy))
+			else if ((adx > ady) || ((adx == ady) && (fabsf(fdx) > fabsf(fdy)))) // (abs(fdx) > abs(fdy))
 				{ // x major
 				_x_major = true;
 				const float mul = fdy / fdx;
