@@ -566,6 +566,32 @@ namespace tgx
             }
 
 
+
+        /**
+        * Transpose the matrix (in place)
+        **/
+        inline void transpose()
+            {
+            tgx::swap(M[4],M[1]); 
+            tgx::swap(M[8],M[2]); 
+            tgx::swap(M[12],M[3]); 
+            tgx::swap(M[13],M[7]); 
+            tgx::swap(M[14],M[11]); 
+            tgx::swap(M[9],M[6]); 
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
 #ifdef TGX_ON_ARDUINO
 
 
@@ -628,6 +654,9 @@ namespace tgx
         for (int i = 0; i < 16; i++) { R.M[i] *= a; }
         return R;
         }
+
+
+
 
 
 
