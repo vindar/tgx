@@ -34,7 +34,7 @@
 
 
 
-#if defined(TEENSYDUINO) || defined(ESP32)
+#if defined(TEENSYDUINO) || defined(ESP32) || defined(ARDUINO_ARCH_STM32)
     #include "Arduino.h" // include Arduino to get PROGMEM macro and others
     #define TGX_ON_ARDUINO
 

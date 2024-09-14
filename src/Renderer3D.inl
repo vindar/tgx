@@ -683,11 +683,11 @@ namespace tgx
             const float cu = (_ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, *Q0);
             if (cu * _culling_dir > 0) return; // skip triangle !
             
-            RasterizerVec4 PC0,PC1,PC2;
+            RasterizerVec4 PPC0,PPC1,PPC2;
 
-            *((fVec4*)&PC0) = _projM * (*Q0);
-            *((fVec4*)&PC1) = _projM * (*Q1);
-            *((fVec4*)&PC2) = _projM * (*Q2);
+            *((fVec4*)&PPC0) = _projM * (*Q0);
+            *((fVec4*)&PPC1) = _projM * (*Q1);
+            *((fVec4*)&PPC2) = _projM * (*Q2);
 
 
             // compute phong lightning
@@ -702,15 +702,15 @@ namespace tgx
 
                 if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
-                    PC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
-                    PC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
-                    PC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
+                    PPC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
+                    PPC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
+                    PPC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
                     }
                 else
                     {
-                    PC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm), col0);
-                    PC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm), col1);
-                    PC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm), col2);
+                    PPC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm), col0);
+                    PPC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm), col1);
+                    PPC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm), col2);
                     }
                 }
             else
@@ -725,20 +725,20 @@ namespace tgx
                     {
                     _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
                     }
-                PC0.color = _uni.facecolor; // unneeded but
-                PC1.color = _uni.facecolor; // does no harm
-                PC2.color = _uni.facecolor; // and remove a warning
+                PPC0.color = _uni.facecolor; // unneeded but
+                PPC1.color = _uni.facecolor; // does no harm
+                PPC2.color = _uni.facecolor; // and remove a warning
                 }
 
             if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                 { // store texture vectors if needed
-                PC0.T = *T0;
-                PC1.T = *T1;
-                PC2.T = *T2;
+                PPC0.T = *T0;
+                PPC1.T = *T1;
+                PPC2.T = *T2;
                 }
 
-            // ok, now PC0, PC1 and PC2 contain the points in NDC coord with associated color and texture indices, let's go (recursively) !
-            _drawTriangleClippedSub(RASTER_TYPE, 0, PC0, PC1, PC2); 
+            // ok, now PPC0, PPC1 and PPC2 contain the points in NDC coord with associated color and texture indices, let's go (recursively) !
+            _drawTriangleClippedSub(RASTER_TYPE, 0, PPC0, PPC1, PPC2); 
             }
 
 
@@ -893,41 +893,41 @@ namespace tgx
             const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
             if (cu * _culling_dir > 0) return; // skip triangle !
 
-            RasterizerVec4 PC0, PC1, PC2;
+            RasterizerVec4 PPC0, PPC1, PPC2;
 
             // test if clipping is needed
-            (*((fVec4*)&PC0)) = _projM * Q0;
-            (*((fVec4*)&PC1)) = _projM * Q1;
-            (*((fVec4*)&PC2)) = _projM * Q2;
+            (*((fVec4*)&PPC0)) = _projM * Q0;
+            (*((fVec4*)&PPC1)) = _projM * Q1;
+            (*((fVec4*)&PPC2)) = _projM * Q2;
 
             if (ortho) 
                 { 
-                PC0.w = 1.0f - PC0.z; 
-                PC1.w = 1.0f - PC1.z;
-                PC2.w = 1.0f - PC2.z;
+                PPC0.w = 1.0f - PPC0.z; 
+                PPC1.w = 1.0f - PPC1.z;
+                PPC2.w = 1.0f - PPC2.z;
                 } 
             else 
                 { 
-                PC0.zdivide(); 
-                PC1.zdivide();
-                PC2.zdivide();
+                PPC0.zdivide(); 
+                PPC1.zdivide();
+                PPC2.zdivide();
                 }
 
             const float CLIPBOUND_XY = _clipbound_xy();
 
-            bool needclip = (PC0.x < -CLIPBOUND_XY) | (PC0.x > CLIPBOUND_XY)
-                          | (PC0.y < -CLIPBOUND_XY) | (PC0.y > CLIPBOUND_XY)
-                          | (PC0.z < -1) | (PC0.z > 1) | (PC0.w <= 0)                    
-                          | (PC1.x < -CLIPBOUND_XY) | (PC1.x > CLIPBOUND_XY)
-                          | (PC1.y < -CLIPBOUND_XY) | (PC1.y > CLIPBOUND_XY)
-                          | (PC1.z < -1) | (PC1.z > 1) | (PC1.w <= 0)           
-                          | (PC2.x < -CLIPBOUND_XY) | (PC2.x > CLIPBOUND_XY)
-                          | (PC2.y < -CLIPBOUND_XY) | (PC2.y > CLIPBOUND_XY)
-                          | (PC2.z < -1) | (PC2.z > 1) | (PC2.w <= 0);
+            bool needclip = (PPC0.x < -CLIPBOUND_XY) | (PPC0.x > CLIPBOUND_XY)
+                          | (PPC0.y < -CLIPBOUND_XY) | (PPC0.y > CLIPBOUND_XY)
+                          | (PPC0.z < -1) | (PPC0.z > 1) | (PPC0.w <= 0)                    
+                          | (PPC1.x < -CLIPBOUND_XY) | (PPC1.x > CLIPBOUND_XY)
+                          | (PPC1.y < -CLIPBOUND_XY) | (PPC1.y > CLIPBOUND_XY)
+                          | (PPC1.z < -1) | (PPC1.z > 1) | (PPC1.w <= 0)           
+                          | (PPC2.x < -CLIPBOUND_XY) | (PPC2.x > CLIPBOUND_XY)
+                          | (PPC2.y < -CLIPBOUND_XY) | (PPC2.y > CLIPBOUND_XY)
+                          | (PPC2.z < -1) | (PPC2.z > 1) | (PPC2.w <= 0);
 
             if (needclip)
                 {// test if we can discard the triangle immediately
-                if (!_discardTriangle(PC0, PC1, PC2))
+                if (!_discardTriangle(PPC0, PPC1, PPC2))
                     { // no, so we use the slow version where we perform clipping.
                     _drawTriangleClipped(RASTER_TYPE, 
                                          &Q0, &Q1, &Q2, // vertices are sent after modelview mult.
@@ -950,15 +950,15 @@ namespace tgx
 
                 if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
-                    PC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
-                    PC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
-                    PC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
+                    PPC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
+                    PPC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
+                    PPC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
                     }
                 else
                     {
-                    PC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm),Vcol0);
-                    PC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm),Vcol1);
-                    PC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm),Vcol2);
+                    PPC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm),Vcol0);
+                    PPC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm),Vcol1);
+                    PPC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm),Vcol2);
                     }
                 }
             else
@@ -977,13 +977,13 @@ namespace tgx
 
             if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                 { // store texture vectors if needed
-                PC0.T = *T0;
-                PC1.T = *T1;
-                PC2.T = *T2;
+                PPC0.T = *T0;
+                PPC1.T = *T1;
+                PPC2.T = *T2;
                 }
 
             // go rasterize !          
-            rasterizeTriangle(_lx, _ly, PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+            rasterizeTriangle(_lx, _ly, PPC0, PPC1, PPC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
 
             return;
             }
@@ -1013,47 +1013,47 @@ namespace tgx
 
             const fVec4 Q3 = _r_modelViewM.mult1(*P3); // compute fourth point
 
-            RasterizerVec4 PC0, PC1, PC2, PC3;
+            RasterizerVec4 PPC0, PPC1, PPC2, PPC3;
 
             // test if clipping is needed
-            (*((fVec4*)&PC0)) = _projM * Q0;
-            (*((fVec4*)&PC1)) = _projM * Q1;
-            (*((fVec4*)&PC2)) = _projM * Q2;
-            (*((fVec4*)&PC3)) = _projM * Q3;
+            (*((fVec4*)&PPC0)) = _projM * Q0;
+            (*((fVec4*)&PPC1)) = _projM * Q1;
+            (*((fVec4*)&PPC2)) = _projM * Q2;
+            (*((fVec4*)&PPC3)) = _projM * Q3;
 
             if (ortho)
                 { 
-                PC0.w = 1.0f - PC0.z; 
-                PC1.w = 1.0f - PC1.z;
-                PC2.w = 1.0f - PC2.z;
-                PC3.w = 1.0f - PC3.z;
+                PPC0.w = 1.0f - PPC0.z; 
+                PPC1.w = 1.0f - PPC1.z;
+                PPC2.w = 1.0f - PPC2.z;
+                PPC3.w = 1.0f - PPC3.z;
                 } 
             else 
                 { 
-                PC0.zdivide(); 
-                PC1.zdivide();
-                PC2.zdivide();
-                PC3.zdivide();
+                PPC0.zdivide(); 
+                PPC1.zdivide();
+                PPC2.zdivide();
+                PPC3.zdivide();
                 }
 
             const float CLIPBOUND_XY = _clipbound_xy();
 
-            bool needclip = (PC0.x < -CLIPBOUND_XY) | (PC0.x > CLIPBOUND_XY)
-                     | (PC0.y < -CLIPBOUND_XY) | (PC0.y > CLIPBOUND_XY)
-                     | (PC0.z < -1) | (PC0.z > 1) | (PC0.w <= 0)
-                     | (PC1.x < -CLIPBOUND_XY) | (PC1.x > CLIPBOUND_XY)
-                     | (PC1.y < -CLIPBOUND_XY) | (PC1.y > CLIPBOUND_XY)
-                     | (PC1.z < -1) | (PC1.z > 1) | (PC1.w <= 0)
-                     | (PC2.x < -CLIPBOUND_XY) | (PC2.x > CLIPBOUND_XY)
-                     | (PC2.y < -CLIPBOUND_XY) | (PC2.y > CLIPBOUND_XY)
-                     | (PC2.z < -1) | (PC2.z > 1) | (PC2.w <= 0)
-                     | (PC3.x < -CLIPBOUND_XY) | (PC3.x > CLIPBOUND_XY)
-                     | (PC3.y < -CLIPBOUND_XY) | (PC3.y > CLIPBOUND_XY)
-                     | (PC3.z < -1) | (PC3.z > 1) | (PC3.w <= 0);
+            bool needclip = (PPC0.x < -CLIPBOUND_XY) | (PPC0.x > CLIPBOUND_XY)
+                     | (PPC0.y < -CLIPBOUND_XY) | (PPC0.y > CLIPBOUND_XY)
+                     | (PPC0.z < -1) | (PPC0.z > 1) | (PPC0.w <= 0)
+                     | (PPC1.x < -CLIPBOUND_XY) | (PPC1.x > CLIPBOUND_XY)
+                     | (PPC1.y < -CLIPBOUND_XY) | (PPC1.y > CLIPBOUND_XY)
+                     | (PPC1.z < -1) | (PPC1.z > 1) | (PPC1.w <= 0)
+                     | (PPC2.x < -CLIPBOUND_XY) | (PPC2.x > CLIPBOUND_XY)
+                     | (PPC2.y < -CLIPBOUND_XY) | (PPC2.y > CLIPBOUND_XY)
+                     | (PPC2.z < -1) | (PPC2.z > 1) | (PPC2.w <= 0)
+                     | (PPC3.x < -CLIPBOUND_XY) | (PPC3.x > CLIPBOUND_XY)
+                     | (PPC3.y < -CLIPBOUND_XY) | (PPC3.y > CLIPBOUND_XY)
+                     | (PPC3.z < -1) | (PPC3.z > 1) | (PPC3.w <= 0);
 
             if (needclip)
                 {// test if we can discard some triangles of the quad immediately
-                if (!_discardTriangle(PC0, PC1, PC2))
+                if (!_discardTriangle(PPC0, PPC1, PPC2))
                     {// slow version where we perform clipping.
                     _drawTriangleClipped(RASTER_TYPE, 
                                          &Q0, &Q1, &Q2, // vertices are sent after modelview mult.
@@ -1061,7 +1061,7 @@ namespace tgx
                                          T0, T1, T2,
                                          Vcol0, Vcol1, Vcol2);
                     }
-                if (!_discardTriangle(PC0, PC2, PC3))
+                if (!_discardTriangle(PPC0, PPC2, PPC3))
                     {// slow version where we perform clipping.
                     _drawTriangleClipped(RASTER_TYPE, 
                                          &Q0, &Q2, &Q3, // vertices are sent after modelview mult.
@@ -1085,17 +1085,17 @@ namespace tgx
 
                 if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
-                    PC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
-                    PC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
-                    PC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
-                    PC3.color = _phong<true>(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm));
+                    PPC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
+                    PPC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
+                    PPC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
+                    PPC3.color = _phong<true>(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm));
                     }
                 else
                     {
-                    PC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm), Vcol0);
-                    PC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm), Vcol1);
-                    PC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm), Vcol2);
-                    PC3.color = _phong(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm), Vcol3);
+                    PPC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm), Vcol0);
+                    PPC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm), Vcol1);
+                    PPC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm), Vcol2);
+                    PPC3.color = _phong(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm), Vcol3);
                     }
                 }
             else
@@ -1114,15 +1114,15 @@ namespace tgx
 
             if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                 { // store texture vectors if needed
-                PC0.T = *T0;
-                PC1.T = *T1;
-                PC2.T = *T2;
-                PC3.T = *T3;
+                PPC0.T = *T0;
+                PPC1.T = *T1;
+                PPC2.T = *T2;
+                PPC3.T = *T3;
                 }
 
             // go rasterize !
-            rasterizeTriangle(_lx, _ly, PC0, PC1, PC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
-            rasterizeTriangle(_lx, _ly, PC0, PC2, PC3, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+            rasterizeTriangle(_lx, _ly, PPC0, PPC1, PPC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+            rasterizeTriangle(_lx, _ly, PPC0, PPC2, PPC3, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
             
             return;
             }
@@ -1195,9 +1195,9 @@ namespace tgx
             _uni.tex = (const Image<color_t>*)mesh->texture;
 
             ExtVec4 QQA, QQB, QQC;
-            ExtVec4* PC0 = &QQA;
-            ExtVec4* PC1 = &QQB;
-            ExtVec4* PC2 = &QQC;
+            ExtVec4* PPC0 = &QQA;
+            ExtVec4* PPC1 = &QQB;
+            ExtVec4* PPC2 = &QQC;
 
             int nbt;
             while ((nbt = *(face++)) > 0)
@@ -1205,73 +1205,73 @@ namespace tgx
 
                 // load the first triangle
                 const uint16_t v0 = *(face++);
-                if (TEXTURE) PC0->indt = *(face++); else { if (tab_tex) face++; }
-                if (GOURAUD) PC0->indn = *(face++); else { if (tab_norm) face++; }
+                if (TEXTURE) PPC0->indt = *(face++); else { if (tab_tex) face++; }
+                if (GOURAUD) PPC0->indn = *(face++); else { if (tab_norm) face++; }
 
                 const uint16_t v1 = *(face++);
-                if (TEXTURE) PC1->indt = *(face++); else { if (tab_tex) face++; }
-                if (GOURAUD) PC1->indn = *(face++); else { if (tab_norm) face++; }
+                if (TEXTURE) PPC1->indt = *(face++); else { if (tab_tex) face++; }
+                if (GOURAUD) PPC1->indn = *(face++); else { if (tab_norm) face++; }
 
                 const uint16_t v2 = *(face++);
-                if (TEXTURE) PC2->indt = *(face++); else { if (tab_tex) face++; }
-                if (GOURAUD) PC2->indn = *(face++); else { if (tab_norm) face++; }
+                if (TEXTURE) PPC2->indt = *(face++); else { if (tab_tex) face++; }
+                if (GOURAUD) PPC2->indn = *(face++); else { if (tab_norm) face++; }
 
                 // compute vertices position because we are sure we will need them...
-                PC2->P = _r_modelViewM.mult1(tab_vert[v2]);
-                PC0->P = _r_modelViewM.mult1(tab_vert[v0]);
-                PC1->P = _r_modelViewM.mult1(tab_vert[v1]);
+                PPC2->P = _r_modelViewM.mult1(tab_vert[v2]);
+                PPC0->P = _r_modelViewM.mult1(tab_vert[v0]);
+                PPC1->P = _r_modelViewM.mult1(tab_vert[v1]);
 
                 // ...but use lazy computation of other vertex attributes
-                PC0->missedP = true;
-                PC1->missedP = true;
-                PC2->missedP = true;
+                PPC0->missedP = true;
+                PPC1->missedP = true;
+                PPC2->missedP = true;
 
                 while (1)
                     {
                     // face culling
-                    fVec3 faceN = crossProduct(PC1->P - PC0->P, PC2->P - PC0->P);
-                    const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PC0->P);
+                    fVec3 faceN = crossProduct(PPC1->P - PPC0->P, PPC2->P - PPC0->P);
+                    const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PPC0->P);
                     if (cu * _culling_dir > 0) goto rasterize_next_triangle; // skip triangle !
                     // triangle is not culled
 
-                    *((fVec4*)PC2) = _projM * PC2->P;
-                    if (ortho) { PC2->w = 1.0f - PC2->z; } else { PC2->zdivide(); }
+                    *((fVec4*)PPC2) = _projM * PPC2->P;
+                    if (ortho) { PPC2->w = 1.0f - PPC2->z; } else { PPC2->zdivide(); }
 
-                    if (PC0->missedP)
+                    if (PPC0->missedP)
                         {
-                        *((fVec4*)PC0) = _projM * PC0->P;
-                        if (ortho) { PC0->w = 1.0f - PC0->z; } else { PC0->zdivide(); }
+                        *((fVec4*)PPC0) = _projM * PPC0->P;
+                        if (ortho) { PPC0->w = 1.0f - PPC0->z; } else { PPC0->zdivide(); }
                         }
-                    if (PC1->missedP)
+                    if (PPC1->missedP)
                         {
-                        *((fVec4*)PC1) = _projM * PC1->P;
-                        if (ortho) { PC1->w = 1.0f - PC1->z; } else { PC1->zdivide(); }
+                        *((fVec4*)PPC1) = _projM * PPC1->P;
+                        if (ortho) { PPC1->w = 1.0f - PPC1->z; } else { PPC1->zdivide(); }
                         }
                         
                     // test if triangle must be clipped                                         
                     if (cliptestneeded)
                         {
                         const float CLIPBOUND_XY = _clipbound_xy();
-                        const bool needclip = (PC2->P.z >= 0)
-                            | (PC2->x < -CLIPBOUND_XY) | (PC2->x > CLIPBOUND_XY)
-                            | (PC2->y < -CLIPBOUND_XY) | (PC2->y > CLIPBOUND_XY)
-                            | (PC2->z < -1) | (PC2->z > 1)                      
-                            | (PC0->P.z >= 0)
-                            | (PC0->x < -CLIPBOUND_XY) | (PC0->x > CLIPBOUND_XY)
-                            | (PC0->y < -CLIPBOUND_XY) | (PC0->y > CLIPBOUND_XY)
-                            | (PC0->z < -1) | (PC0->z > 1)
-                            | (PC1->P.z >= 0)
-                            | (PC1->x < -CLIPBOUND_XY) | (PC1->x > CLIPBOUND_XY)
-                            | (PC1->y < -CLIPBOUND_XY) | (PC1->y > CLIPBOUND_XY)
-                            | (PC1->z < -1) | (PC1->z > 1);
+                        const bool needclip = (PPC2->P.z >= 0)
+                            | (PPC2->x < -CLIPBOUND_XY) | (PPC2->x > CLIPBOUND_XY)
+                            | (PPC2->y < -CLIPBOUND_XY) | (PPC2->y > CLIPBOUND_XY)
+                            | (PPC2->z < -1) | (PPC2->z > 1)                      
+                            | (PPC0->P.z >= 0)
+                            | (PPC0->x < -CLIPBOUND_XY) | (PPC0->x > CLIPBOUND_XY)
+                            | (PPC0->y < -CLIPBOUND_XY) | (PPC0->y > CLIPBOUND_XY)
+                            | (PPC0->z < -1) | (PPC0->z > 1)
+                            | (PPC1->P.z >= 0)
+                            | (PPC1->x < -CLIPBOUND_XY) | (PPC1->x > CLIPBOUND_XY)
+                            | (PPC1->y < -CLIPBOUND_XY) | (PPC1->y > CLIPBOUND_XY)
+                            | (PPC1->z < -1) | (PPC1->z > 1);
                         if (needclip)
                             { // need cliiping, test is we can just discard the triangle if not shown on screen
-                            if (!_discardTriangle(*((fVec4*)PC0), *((fVec4*)PC1), *((fVec4*)PC2)))
+                            if (!_discardTriangle(*((fVec4*)PPC0), *((fVec4*)PPC1), *((fVec4*)PPC2)))
                                 { // no, use the slow drawing method with clipping
                                 _drawTriangleClipped(RASTER_TYPE,
-                                                &(PC0->P), &(PC1->P), &(PC2->P),
-                                                ((GOURAUD) ? tab_norm + PC0->indn : nullptr), ((GOURAUD) ? tab_norm + PC1->indn : nullptr), ((GOURAUD) ? tab_norm + PC2->indn : nullptr),                                
-                                                ((TEXTURE) ? tab_tex + PC0->indt : nullptr), ((TEXTURE) ? tab_tex + PC1->indt : nullptr), ((TEXTURE) ? tab_tex + PC2->indt : nullptr),
+                                                &(PPC0->P), &(PPC1->P), &(PPC2->P),
+                                                ((GOURAUD) ? tab_norm + PPC0->indn : nullptr), ((GOURAUD) ? tab_norm + PPC1->indn : nullptr), ((GOURAUD) ? tab_norm + PPC2->indn : nullptr),                                
+                                                ((TEXTURE) ? tab_tex + PPC0->indt : nullptr), ((TEXTURE) ? tab_tex + PPC1->indt : nullptr), ((TEXTURE) ? tab_tex + PPC2->indt : nullptr),
                                                 _uni.facecolor, _uni.facecolor, _uni.facecolor);
                                 }
                             goto rasterize_next_triangle;
@@ -1284,27 +1284,27 @@ namespace tgx
 
                         // reverse normal only when culling is disabled (and we assume in this case that normals are given for the CCW face).
                         const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
-                        if (PC0->missedP)
+                        if (PPC0->missedP)
                             {
-                            PC0->N = _r_modelViewM.mult0(tab_norm[PC0->indn]);
+                            PPC0->N = _r_modelViewM.mult0(tab_norm[PPC0->indn]);
                             if (TEXTURE)
-                                PC0->color = _phong<true>(icu * dotProduct(PC0->N, _r_light_inorm), icu * dotProduct(PC0->N, _r_H_inorm));
+                                PPC0->color = _phong<true>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
                             else
-                                PC0->color = _phong<false>(icu * dotProduct(PC0->N, _r_light_inorm), icu * dotProduct(PC0->N, _r_H_inorm));
+                                PPC0->color = _phong<false>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
                             }
-                        if (PC1->missedP)
+                        if (PPC1->missedP)
                             {
-                            PC1->N = _r_modelViewM.mult0(tab_norm[PC1->indn]);
+                            PPC1->N = _r_modelViewM.mult0(tab_norm[PPC1->indn]);
                             if (TEXTURE)
-                                PC1->color = _phong<true>(icu * dotProduct(PC1->N, _r_light_inorm), icu * dotProduct(PC1->N, _r_H_inorm));
+                                PPC1->color = _phong<true>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
                             else
-                                PC1->color = _phong<false>(icu * dotProduct(PC1->N, _r_light_inorm), icu * dotProduct(PC1->N, _r_H_inorm));
+                                PPC1->color = _phong<false>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
                             }
-                        PC2->N = _r_modelViewM.mult0(tab_norm[PC2->indn]);
+                        PPC2->N = _r_modelViewM.mult0(tab_norm[PPC2->indn]);
                         if (TEXTURE)
-                            PC2->color = _phong<true>(icu * dotProduct(PC2->N, _r_light_inorm), icu * dotProduct(PC2->N, _r_H_inorm));
+                            PPC2->color = _phong<true>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
                         else
-                            PC2->color = _phong<false>(icu * dotProduct(PC2->N, _r_light_inorm), icu * dotProduct(PC2->N, _r_H_inorm));
+                            PPC2->color = _phong<false>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
 
                         }
                     else
@@ -1319,15 +1319,15 @@ namespace tgx
 
                     if (TEXTURE)
                         { // compute texture vectors if needed
-                        if (PC0->missedP) { PC0->T = tab_tex[PC0->indt]; }
-                        if (PC1->missedP) { PC1->T = tab_tex[PC1->indt]; }
-                        PC2->T = tab_tex[PC2->indt];
+                        if (PPC0->missedP) { PPC0->T = tab_tex[PPC0->indt]; }
+                        if (PPC1->missedP) { PPC1->T = tab_tex[PPC1->indt]; }
+                        PPC2->T = tab_tex[PPC2->indt];
                         }
 
                     // attributes are now all up to date
-                    PC0->missedP = false;
-                    PC1->missedP = false;
-                    PC2->missedP = false;
+                    PPC0->missedP = false;
+                    PPC1->missedP = false;
+                    PPC2->missedP = false;
 
                     // go rasterize !                   
                     rasterizeTriangle(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
@@ -1338,11 +1338,11 @@ namespace tgx
 
                     // get the next triangle
                     const uint16_t nv2 = *(face++);
-                    swap(((nv2 & 32768) ? PC0 : PC1), PC2);
-                    if (TEXTURE) PC2->indt = *(face++); else { if (tab_tex) face++; }
-                    if (GOURAUD) PC2->indn = *(face++);  else { if (tab_norm) face++; }
-                    PC2->P = _r_modelViewM.mult1(tab_vert[nv2 & 32767]);
-                    PC2->missedP = true;
+                    swap(((nv2 & 32768) ? PPC0 : PPC1), PPC2);
+                    if (TEXTURE) PPC2->indt = *(face++); else { if (tab_tex) face++; }
+                    if (GOURAUD) PPC2->indn = *(face++);  else { if (tab_norm) face++; }
+                    PPC2->P = _r_modelViewM.mult1(tab_vert[nv2 & 32767]);
+                    PPC2->missedP = true;
                     }
                 }
             }
@@ -1691,9 +1691,9 @@ namespace tgx
                 const uint16_t* face = mesh->face;      // array of triangles
 
                 ExtVec4 QQA, QQB, QQC;
-                ExtVec4* PC0 = &QQA;
-                ExtVec4* PC1 = &QQB;
-                ExtVec4* PC2 = &QQC;
+                ExtVec4* PPC0 = &QQA;
+                ExtVec4* PPC1 = &QQB;
+                ExtVec4* PPC2 = &QQC;
 
                 int nbt;
                 while ((nbt = *(face++)) > 0)
@@ -1713,58 +1713,58 @@ namespace tgx
                     if (tab_norm) face++;
 
                     // compute vertices position because we are sure we will need them...
-                    PC2->P = _r_modelViewM.mult1(tab_vert[v2]);
-                    PC0->P = _r_modelViewM.mult1(tab_vert[v0]);
-                    PC1->P = _r_modelViewM.mult1(tab_vert[v1]);
+                    PPC2->P = _r_modelViewM.mult1(tab_vert[v2]);
+                    PPC0->P = _r_modelViewM.mult1(tab_vert[v0]);
+                    PPC1->P = _r_modelViewM.mult1(tab_vert[v1]);
 
                     // ...but use lazy computation of other vertex attributes
-                    PC0->missedP = true;
-                    PC1->missedP = true;
-                    PC2->missedP = true;
+                    PPC0->missedP = true;
+                    PPC1->missedP = true;
+                    PPC2->missedP = true;
 
                     while (1)
                         {
                         // face culling
-                        fVec3 faceN = crossProduct(PC1->P - PC0->P, PC2->P - PC0->P);
-                        const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PC0->P);
+                        fVec3 faceN = crossProduct(PPC1->P - PPC0->P, PPC2->P - PPC0->P);
+                        const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PPC0->P);
                         if (cu * _culling_dir > 0) goto rasterize_next_wireframetriangle; // skip triangle !
 
 
                         // triangle is not culled
-                        *((fVec4*)PC2) = _projM * PC2->P;                        
-                        if (ortho) { PC2->w = 1.0f - PC2->z; } else { PC2->zdivide(); }
-                        *((fVec4*)PC2) = M.mult1(*((fVec4*)PC2));
+                        *((fVec4*)PPC2) = _projM * PPC2->P;                        
+                        if (ortho) { PPC2->w = 1.0f - PPC2->z; } else { PPC2->zdivide(); }
+                        *((fVec4*)PPC2) = M.mult1(*((fVec4*)PPC2));
 
-                        if (PC0->missedP)
+                        if (PPC0->missedP)
                             {
-                            *((fVec4*)PC0) = _projM * PC0->P;                            
-                            if (ortho) { PC0->w = 1.0f - PC0->z; } else { PC0->zdivide(); }
-                            *((fVec4*)PC0) = M.mult1(*((fVec4*)PC0));
+                            *((fVec4*)PPC0) = _projM * PPC0->P;                            
+                            if (ortho) { PPC0->w = 1.0f - PPC0->z; } else { PPC0->zdivide(); }
+                            *((fVec4*)PPC0) = M.mult1(*((fVec4*)PPC0));
                             }
-                        if (PC1->missedP)
+                        if (PPC1->missedP)
                             {
-                            *((fVec4*)PC1) = _projM * PC1->P;
-                            if (ortho) { PC1->w = 1.0f - PC1->z; } else { PC1->zdivide(); }
-                            *((fVec4*)PC1) = M.mult1(*((fVec4*)PC1));
+                            *((fVec4*)PPC1) = _projM * PPC1->P;
+                            if (ortho) { PPC1->w = 1.0f - PPC1->z; } else { PPC1->zdivide(); }
+                            *((fVec4*)PPC1) = M.mult1(*((fVec4*)PPC1));
                             }
 
                         // attributes are now all up to date
-                        PC0->missedP = false;
-                        PC1->missedP = false;
-                        PC2->missedP = false;
+                        PPC0->missedP = false;
+                        PPC1->missedP = false;
+                        PPC2->missedP = false;
 
                         // clip test
-                        if ((PC0->P.z >= 0) || (PC0->z < -1) || (PC0->z > 1) 
-                         || (PC1->P.z >= 0) || (PC1->z < -1) || (PC1->z > 1) 
-                         || (PC2->P.z >= 0) || (PC2->z < -1) || (PC2->z > 1))
+                        if ((PPC0->P.z >= 0) || (PPC0->z < -1) || (PPC0->z > 1) 
+                         || (PPC1->P.z >= 0) || (PPC1->z < -1) || (PPC1->z > 1) 
+                         || (PPC2->P.z >= 0) || (PPC2->z < -1) || (PPC2->z > 1))
                             goto rasterize_next_wireframetriangle;
 
                         // draw triangle                       
                         if (DRAW_FAST)
                             {
-                            iVec2 PP0(*((fVec2*)PC0));
-                            iVec2 PP1(*((fVec2*)PC1));
-                            iVec2 PP2(*((fVec2*)PC2));
+                            iVec2 PP0(*((fVec2*)PPC0));
+                            iVec2 PP1(*((fVec2*)PPC1));
+                            iVec2 PP2(*((fVec2*)PPC2));
                             if (PP0 == PP1) 
                                 {
                                 _uni.im->drawLine(PP0, PP2, color);
@@ -1786,9 +1786,9 @@ namespace tgx
                             }
                         else
                             {
-                            _uni.im->drawThickLineAA(*((fVec2*)PC0), *((fVec2*)PC1), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                            _uni.im->drawThickLineAA(*((fVec2*)PC1), *((fVec2*)PC2), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
-                            _uni.im->drawThickLineAA(*((fVec2*)PC2), *((fVec2*)PC0), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                            _uni.im->drawThickLineAA(*((fVec2*)PPC0), *((fVec2*)PPC1), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                            _uni.im->drawThickLineAA(*((fVec2*)PPC1), *((fVec2*)PPC2), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                            _uni.im->drawThickLineAA(*((fVec2*)PPC2), *((fVec2*)PPC0), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                             }
 
                     rasterize_next_wireframetriangle:
@@ -1797,11 +1797,11 @@ namespace tgx
 
                         // get the next triangle
                         const uint16_t nv2 = *(face++);
-                        swap(((nv2 & 32768) ? PC0 : PC1), PC2);
+                        swap(((nv2 & 32768) ? PPC0 : PPC1), PPC2);
                         if (tab_tex) face++;
                         if (tab_norm) face++;
-                        PC2->P = _r_modelViewM.mult1(tab_vert[nv2 & 32767]);
-                        PC2->missedP = true;
+                        PPC2->P = _r_modelViewM.mult1(tab_vert[nv2 & 32767]);
+                        PPC2->missedP = true;
                         }
                     }
                 mesh = ((draw_chained_meshes) ? mesh->next : nullptr);

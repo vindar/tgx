@@ -3724,7 +3724,7 @@ private:
 
         // high quality Bezier curves
         static bool _splitRationalQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float w, fVec2& Q, fVec2& PB, float& wb);  
-        static bool _splitCubicBezier(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, fVec2& Q, fVec2& C, fVec2 & D);
+        static bool _splitCubicBezier(fVec2 P1, fVec2 P2, fVec2 PPC1, fVec2 PPC2, fVec2& Q, fVec2& C, fVec2 & D);
 
 
 

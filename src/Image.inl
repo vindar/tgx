@@ -6238,22 +6238,22 @@ namespace tgx
 
 
     template<typename color_t>
-    bool Image<color_t>::_splitCubicBezier(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, fVec2& Q, fVec2& C, fVec2& D)
+    bool Image<color_t>::_splitCubicBezier(fVec2 P1, fVec2 P2, fVec2 PPC1, fVec2 PPC2, fVec2& Q, fVec2& C, fVec2& D)
         {
         const int MAX_ITER = 20;    // maximum number of iteration to prevent stalling
         const float l = 0.25f;        
         const float nn = (P1 - P2).norm2();
-        const float a1 = _triangleAera(P1, P2, PC1);
-        const float a2 = _triangleAera(P1, P2, PC2);
+        const float a1 = _triangleAera(P1, P2, PPC1);
+        const float a2 = _triangleAera(P1, P2, PPC2);
         if ((nn < 2) || ((a1 * a1 < l*nn)&&(a2 * a2 < l*nn))) return true;
         float t = 0.5f;
         int d = 0;
         while (1)
             {
-            const fVec2 A = (1 - t) * P1 + t * PC1; 
-            const fVec2 X = (1 - t) * PC1 + t * PC2;
+            const fVec2 A = (1 - t) * P1 + t * PPC1; 
+            const fVec2 X = (1 - t) * PPC1 + t * PPC2;
             const fVec2 B = (1 - t) * A + t * X;
-            D = (1 - t) * PC2 + t * P2;
+            D = (1 - t) * PPC2 + t * P2;
             C = (1 - t) * X + t * D;
             Q = (1 - t) * B + t * C;
             const float nn = (P1 - Q).norm2();
@@ -6267,12 +6267,12 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::drawThickCubicBezierAA(fVec2 P1, fVec2 P2, fVec2 PC1, fVec2 PC2, float thickness, EndPath end_P1, EndPath end_P2, color_t color, float opacity)
+    void Image<color_t>::drawThickCubicBezierAA(fVec2 P1, fVec2 P2, fVec2 PPC1, fVec2 PPC2, float thickness, EndPath end_P1, EndPath end_P2, color_t color, float opacity)
         {
         if (!isValid() || (thickness <=0)) return;
         bool done = false; 
         drawThickPolylineAA(            
-            [&P1, &P2, &PC1, &PC2, &done](tgx::fVec2& P)
+            [&P1, &P2, &PPC1, &PPC2, &done](tgx::fVec2& P)
                 {
                 if (done)
                     {
@@ -6281,10 +6281,10 @@ namespace tgx
                     }
                 P = P1;
                 tgx::fVec2 Q, C, D;
-                done = _splitCubicBezier(P1, P2, PC1, PC2, Q, C, D);
+                done = _splitCubicBezier(P1, P2, PPC1, PPC2, Q, C, D);
                 P1 = Q;
-                PC1 = C;
-                PC2 = D;
+                PPC1 = C;
+                PPC2 = D;
                 return true;
                 },
             thickness, end_P1, end_P2, color, opacity);
@@ -6444,19 +6444,19 @@ namespace tgx
             int i = n - 2;
             bool loadstart = true;
             bool begin = true;
-            fVec2 P1, P2, PC1, PC2;
+            fVec2 P1, P2, PPC1, PPC2;
 
             drawThickPolylineAA(
                 [&](tgx::fVec2& P)
                     {
                     if (loadstart)
-                        { // we are at the beginning of a new Bezier segment, load P1, P2, PC1, PC2
+                        { // we are at the beginning of a new Bezier segment, load P1, P2, PPC1, PPC2
                         if (i == n - 2)
                             {
                             P2 = { x3, y3 };
                             P1 = { x4, y4 };
-                            PC2 = { (x2 + x4) / 2, (y2 + y4) / 2 };
-                            PC1 = { x4, y4 };
+                            PPC2 = { (x2 + x4) / 2, (y2 + y4) / 2 };
+                            PPC1 = { x4, y4 };
                             if (n - 3 < M_MAX) mi = m[n - 3];
                             x1 = (x[n - 2] - 2 * x2) * mi;
                             y1 = (y[n - 2] - 2 * y2) * mi;
@@ -6470,8 +6470,8 @@ namespace tgx
                             y4 = (y0 + 4 * y1 + y2 + 3) / 6.0f;
                             P2 = { x4, y4 };
                             P1 = { x3, y3 };
-                            PC2 = { (2 * x1 + x2) / 3 , (2 * y1 + y2) / 3 };
-                            PC1 = { (x1 + 2 * x2) / 3 , (y1 + 2 * y2) / 3 };
+                            PPC2 = { (2 * x1 + x2) / 3 , (2 * y1 + y2) / 3 };
+                            PPC1 = { (x1 + 2 * x2) / 3 , (y1 + 2 * y2) / 3 };
                             x3 = x4; y3 = y4; x2 = x1; y2 = y1; x1 = x0; y1 = y0;
                             }
                         else if (i == 0)
@@ -6480,15 +6480,15 @@ namespace tgx
                             y0 = y[0]; y4 = (3 * y0 + 7 * y1 + 2 * y2 + 6) / 12.0f;
                             P2 = { x4, y4 };
                             P1 = { x3, y3 };
-                            PC2 = { (2 * x1 + x2) / 3 , (2 * y1 + y2) / 3 };
-                            PC1 = { (x1 + 2 * x2) / 3 , (y1 + 2 * y2) / 3 };
+                            PPC2 = { (2 * x1 + x2) / 3 , (2 * y1 + y2) / 3 };
+                            PPC1 = { (x1 + 2 * x2) / 3 , (y1 + 2 * y2) / 3 };
                             }
                         else
                             {
                             P2 = { x0, y0 };
                             P1 = { x4, y4 };
-                            PC2 = { x0, y0 };
-                            PC1 = { (x0 + x1) / 2, (y0 + y1) / 2 };
+                            PPC2 = { x0, y0 };
+                            PPC1 = { (x0 + x1) / 2, (y0 + y1) / 2 };
                             }
                         i--;
                         loadstart = false;
@@ -6499,9 +6499,9 @@ namespace tgx
                         P = P1;
                         return true;
                         }
-                    // here, we are on curve P1, P2, PC1 and PC2 has already been plotted.                     
+                    // here, we are on curve P1, P2, PPC1 and PPC2 has already been plotted.                     
                     fVec2 Q, C, D;
-                    if (_splitCubicBezier(P1, P2, PC1, PC2, Q, C, D))
+                    if (_splitCubicBezier(P1, P2, PPC1, PPC2, Q, C, D))
                         { // done with this curve. 
                         P = P2;                   
                         if (i == -2) return false;
@@ -6510,8 +6510,8 @@ namespace tgx
                         }
                     P = Q;
                     P1 = Q;
-                    PC1 = C;
-                    PC2 = D;
+                    PPC1 = C;
+                    PPC2 = D;
                     return true;
                     },
                 thickness, end_Pn, end_P0, color, opacity);
