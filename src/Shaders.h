@@ -2065,18 +2065,6 @@ namespace tgx
         const RGBf& cf1 = (RGBf)fP1.color;
         const RGBf& cf2 = (RGBf)fP2.color;
         const RGBf& cf3 = (RGBf)fP3.color;
-        const int fP1R = (int)(256 * cf1.R);
-        const int fP1G = (int)(256 * cf1.G);
-        const int fP1B = (int)(256 * cf1.B);
-        const int fP1A = (int)(256 * fP1.A);
-        const int fP21R = (int)(256 * (cf2.R - cf1.R));
-        const int fP21G = (int)(256 * (cf2.G - cf1.G));
-        const int fP21B = (int)(256 * (cf2.B - cf1.B));
-        const int fP21A = (int)(256 * (fP2.A - fP1.A));
-        const int fP31R = (int)(256 * (cf3.R - cf1.R));
-        const int fP31G = (int)(256 * (cf3.G - cf1.G));
-        const int fP31B = (int)(256 * (cf3.B - cf1.B));
-        const int fP31A = (int)(256 * (fP3.A - fP1.A));
 
         // the texture coord
         fVec2 T1 = fP1.T;
@@ -2182,10 +2170,14 @@ namespace tgx
 
                     if (USE_GRADIENT)
                         {
-                        const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-                        const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-                        const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
-                        const int a = fP1A + ((C2 * fP21A + C3 * fP31A) / aera);
+                        const int sC2 = C2;
+                        const int sC3 = C3;
+                        const int sC1 = aera - C3 - C2;
+                        const float m = 256.0f / aera;
+                        const int r = (sC1 * cf1.R + sC2 * cf2.R + sC3 * cf3.R) * m;
+                        const int g = (sC1 * cf1.G + sC2 * cf2.G + sC3 * cf3.G) * m;
+                        const int b = (sC1 * cf1.B + sC2 * cf2.B + sC3 * cf3.B) * m;
+                        const int a = (sC1 * fP1.A + sC2 * fP2.A + sC3 * fP3.A) * m;
                         col.mult256(r, g, b, a);
                         }
                     if (USE_BLENDING)
@@ -2204,10 +2196,14 @@ namespace tgx
                     color_t_tex col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);
                     if (USE_GRADIENT)
                         {
-                        const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-                        const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-                        const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
-                        const int a = fP1A + ((C2 * fP21A + C3 * fP31A) / aera);
+                        const int sC2 = C2;
+                        const int sC3 = C3;
+                        const int sC1 = aera - C3 - C2;
+                        const float m = 256.0f / aera;
+                        const int r = (sC1 * cf1.R + sC2 * cf2.R + sC3 * cf3.R) * m;
+                        const int g = (sC1 * cf1.G + sC2 * cf2.G + sC3 * cf3.G) * m;
+                        const int b = (sC1 * cf1.B + sC2 * cf2.B + sC3 * cf3.B) * m;
+                        const int a = (sC1 * fP1.A + sC2 * fP2.A + sC3 * fP3.A) * m;
                         col.mult256(r, g, b, a);
                         }
                     if (USE_BLENDING)
