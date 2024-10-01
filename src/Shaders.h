@@ -163,6 +163,7 @@ namespace tgx
         const int32_t pa = O1 + O2 + O3;
         const int32_t E = ((pa == 0) ? 1 : 0);
         const int32_t aera = pa + E;
+        const int shiftC = (aera > (1 << 22)) ? 10 : 0; // prevent overflow during color interpolation
 
         while ((uintptr_t)(buf) < end)
             { // iterate over scanlines
@@ -207,7 +208,7 @@ namespace tgx
             int32_t C3 = O3 + (dx3 * bx);
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
-                buf[bx] = interpolateColorsTriangle(col2, C2, col3, C3, col1, aera);
+                buf[bx] = interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC, col1, aera >> shiftC);
                 C2 += dx2;
                 C3 += dx3;
                 bx++;
@@ -666,6 +667,7 @@ namespace tgx
         const int32_t pa = O1 + O2 + O3;
         const int32_t E = ((pa == 0) ? 1 : 0);
         const int32_t aera = pa + E;
+        const int shiftC = (aera > (1 << 22)) ? 10 : 0; // prevent overflow during color interpolation
 
         const float wa = data.wa;
         const float wb = data.wb;
@@ -729,7 +731,7 @@ namespace tgx
                 if (W < aa)
                     {
                     W = aa;
-                    buf[bx] = interpolateColorsTriangle(col2, C2, col3, C3, col1, aera);
+                    buf[bx] = interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC, col1, aera >> shiftC);
                     }
                 C2 += dx2;
                 C3 += dx3;
@@ -1968,6 +1970,7 @@ namespace tgx
         const int32_t pa = O1 + O2 + O3;
         const int32_t E = ((pa == 0) ? 1 : 0);
         const int32_t aera = pa + E;
+        const int shiftC = (aera > (1 << 22)) ? 10 : 0; // prevent overflow during color interpolation
 
         while ((uintptr_t)(buf) < end)
             { // iterate over scanlines
@@ -2015,12 +2018,12 @@ namespace tgx
                 if (USE_BLENDING)
                     {
                     RGB32 c(buf[bx]); // could use RGB64 instead but would be slower
-                    c.blend(interpolateColorsTriangle(col2, C2, col3, C3, col1, aera), data.opacity);
+                    c.blend(interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC, col1, aera >> shiftC), data.opacity);
                     buf[bx] = color_t_im(c);
                     }
                 else
                     {
-                    buf[bx] = color_t_im(interpolateColorsTriangle(col2, C2, col3, C3, col1, aera));
+                    buf[bx] = color_t_im(interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC, col1, aera >> shiftC));
                     }
                 C2 += dx2;
                 C3 += dx3;
