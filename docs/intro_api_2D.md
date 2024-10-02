@@ -3,6 +3,9 @@
 
 
 
+
+---
+
 # Filling the screen. 
 
 ![test_screen_filling](../test_screen_filling.png)   
@@ -25,6 +28,9 @@ im2.fillScreenHGradient(tgx::RGB32_Green, tgx::RGB32_Orange); // fill with horiz
 - \ref tgx::Image::fillScreenHGradient "fillScreenHGradient()" : fill the image with an horizontal gradient between two colors.
 
 
+
+
+---
 
 # Reading/writing pixels
 
@@ -52,6 +58,9 @@ for (int i = 0; i < 310; i += 15) {
 
 
 
+
+---
+
 # Flood-filling a region 
 
 ![test_region_filling](../test_region_filling.png)
@@ -74,6 +83,9 @@ im.fill({ 0,0 }, tgx::RGB32_Olive);                    // fill starting {0,0}
 
 
 
+
+---
+
 # drawing horizontal and vertical lines
 
 ![test_vhlines](../test_vhlines.png)
@@ -95,6 +107,9 @@ for (int i = 0; i < 20; i++) {
 
     
 	
+
+---
+
 # drawing lines
 
 ![test_lines](../test_lines.png)
@@ -117,6 +132,9 @@ im.drawWedgeLineAA({ 300, 220 }, { 150, 100 }, 10, tgx::END_ARROW_1, 20, tgx::EN
 - \ref tgx::Image::drawWedgeLineAA "drawWedgeLineAA()" : draw a line segment with anti-aliasing with vraying thickness, specify how the ends look like (rounded, flat, arrows...)
 
 
+
+
+---
 
 # drawing rectangles
 
@@ -147,6 +165,9 @@ See also \ref tgx::Image::drawThickRectAA "drawThickRectAA()", \ref tgx::Image::
 
 
 
+
+---
+
 # drawing rounded rectangles
 
 ![test_rounded_rectangles](../test_rounded_rectangles.png)
@@ -168,6 +189,9 @@ im.fillThickRoundRectAA({ 100, 250, 60, 200 }, 10, 5, tgx::RGB32_Gray, tgx::RGB3
 - \ref tgx::Image::fillRoundRectAA "fillRoundRectAA()" : draw a filled rectangle with rounded corners, with anti-aliasing. 
 - \ref tgx::Image::fillThickRoundRectAA "fillThickRoundRectAA()" : draw a filled rectangle  with rounded corners and thick outline of a different color, with anti-aliasing.
 
+
+
+---
 
 # drawing triangles
 
@@ -195,6 +219,10 @@ im.fillThickTriangleAA({ 130,200 }, { 280, 110 }, {250, 170}, 5, tgx::RGB32_Lime
 - \ref tgx::Image::fillThickTriangleAA "fillThickTriangleAA()" : draw a filled triangle  with a thick outline of a different color, with anti-aliasing.
 
 
+
+
+---
+
 # drawing triangles (advanced)
 
 ![test_triangles_advanced](../test_triangles_advanced.png)
@@ -215,6 +243,11 @@ im.drawTexturedGradientTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 } , { 120, 230
 - \ref tgx::Image::drawTexturedGradientTriangle "drawTexturedGradientTriangle()" : draw a filled trinagle with both texture mapping and gradient color. 
 
 See also \ref tgx::Image::drawTexturedMaskedTriangle "drawTexturedMaskedTriangle()", \ref tgx::Image::drawTexturedGradientMaskedTriangle "drawTexturedGradientMaskedTriangle()" for additonal masking features. 
+
+
+
+
+---
 
 # drawing quads
 
@@ -242,6 +275,10 @@ im.fillThickQuadAA({ 130,200 }, { 160, 140 }, { 230, 100 }, { 250, 170 } , 5, tg
 - \ref tgx::Image::fillThickQuadAA "fillThickQuadAA()" : draw a filled quad with a thick outline of a different color, with anti-aliasing.
 
 
+
+
+---
+
 # drawing quads (advanced)
 
 ![test_quad_advanced](../test_quad_advanced.png)
@@ -263,6 +300,9 @@ im.drawTexturedGradientQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 12
 
 See also \ref tgx::Image::drawTexturedMaskedQuad "drawTexturedMaskedQuad()", \ref tgx::Image::drawTexturedGradientMaskedQuad "drawTexturedGradientMaskedQuad()" for additonal masking features. 
 
+
+
+---
 
 # drawing polylines
 
@@ -289,6 +329,9 @@ im.drawThickPolylineAA(6, tabPoints3, 12, tgx::END_ARROW_1, tgx::END_ROUNDED, tg
 - \ref tgx::Image::drawThickPolylineAA "drawThickPolylineAA()" : draw a thick polyline with anti-aliasing and specify how the ending look like. 
 
 	
+
+---
+
 # drawing polygons
 	
 ![test_polygons](../test_polygons.png)
@@ -327,6 +370,9 @@ im.fillThickPolygonAA(6, tabPoints6, 10, tgx::RGB32_Purple, tgx::RGB32_Orange, 0
 
 
 
+
+---
+
 # drawing circles
 
 ![test_circles](../test_circles.png)
@@ -351,6 +397,10 @@ im.fillThickCircleAA({160,160}, 55, 8, tgx::RGB32_Teal, tgx::RGB32_Orange, 0.5f)
 - \ref tgx::Image::drawThickCircleAA "drawThickCircleAA()" : draw a circle with thick outline, with anti-aliasing.
 - \ref tgx::Image::fillCircleAA "fillCircleAA()" : draw a filled circle, with anti-aliasing.
 - \ref tgx::Image::fillThickCircleAA "fillThickCircleAA()" : draw a filled circle with thick outline, with anti-aliasing.
+
+
+
+---
 
 # drawing ellipses
 
@@ -379,6 +429,9 @@ im.fillThickEllipseAA({ 160,160 }, { 55, 65 }, 8, tgx::RGB32_Teal, tgx::RGB32_Or
 
 
 
+
+---
+
 # drawing circle arcs and pies
 
 ![test_arc_pies](../test_arc_pies.png)
@@ -402,6 +455,9 @@ im.fillThickCircleSectorAA({230, 120}, 100, 140, 340, 10, tgx::RGB32_Olive, tgx:
 
 
 
+
+---
+
 # drawing Bezier curves
 
 ![test_bezier_curves](../test_bezier_curves.png)
@@ -413,12 +469,19 @@ tgx::RGB32 buffer[320*240];					  //
 tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
 im.clear(tgx::RGB32_Black);					  //
 
-im.drawQuadBezier({ 10, 10 }, { 250, 180 }, {280, 20}, 1.0f, true, tgx::RGB32_White); // simple white quadratic bezier curve, full opacity
-im.drawCubicBezier({ 10, 40 }, { 280, 50 }, { 20, 80 }, { 300, 200 }, true, tgx::RGB32_Green); // simple green cubic bezier curve, full opacity
-im.drawThickQuadBezierAA({ 30, 150 }, { 300, 20 }, {0,0}, 2.0f, 10, tgx::END_STRAIGHT, tgx::END_ROUNDED, tgx::RGB32_Red, 0.5f); // 10 pixels thick red quadratic bezier curve, 50% opacity, with anti-aliasing
-im.drawThickCubicBezierAA({ 80, 80 }, { 305, 150 }, { 0, 240 }, {290, 240}, 10, tgx::END_ARROW_5, tgx::END_ARROW_SKEWED_2, tgx::RGB32_Orange, 0.5f); // 10 pixels thick orange cubic bezier curve, 50% opacity, with anti-aliasing
+im.drawQuadBezier({ 10, 10 }, { 250, 180 }, {280, 20}, 1.0f, true, tgx::RGB32_White); // simple quadratic bezier curve
+im.drawCubicBezier({ 10, 40 }, { 280, 50 }, { 20, 80 }, { 300, 200 }, true, tgx::RGB32_Green); // simple cubic bezier curve
+im.drawThickQuadBezierAA({ 30, 150 }, { 300, 20 }, {0,0}, 2.0f, 10, tgx::END_STRAIGHT, tgx::END_ROUNDED, tgx::RGB32_Red, 0.5f); // thick quadratic bezier curve, with AA, 50% opacity.
+im.drawThickCubicBezierAA({ 80, 80 }, { 305, 150 }, { 0, 240 }, {290, 240}, 10, tgx::END_ARROW_5, tgx::END_ARROW_SKEWED_2, tgx::RGB32_Orange, 0.5f); // thick cubic bezier curve, with AA, 50% opacity.
 ~~~
 **Methods:**
+- \ref tgx::Image::drawQuadBezier "drawQuadBezier()" : draw a quadratic Bezier curve.
+- \ref tgx::Image::drawCubicBezier "drawCubicBezier()" : draw a cubic Bezier curve.
+- \ref tgx::Image::drawThickQuadBezierAA "drawThickQuadBezierAA()" : draw a thick quadratic Bezier curve, with AA
+- \ref tgx::Image::drawThickCubicBezierAA "drawThickCubicBezierAA()" : draw a thick cubic Bezier curve, with AA. 
+
+
+---
 
 # drawing splines
 
@@ -432,35 +495,52 @@ tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 const tgx::iVec2 tabPoints1[] = { {30, 10}, {10, 40}, {40, 70}, {10, 100}, {60, 130}, {10, 160}, {80, 190}, {10, 220} };
-im.drawQuadSpline(8, tabPoints1, true, tgx::RGB32_White); // simple white quadratic spline, full opacity
+im.drawQuadSpline(8, tabPoints1, true, tgx::RGB32_White); // simple quadratic spline
     
 const tgx::iVec2 tabPoints2[] = { {10, 10}, {50, 40}, {10, 70}, {70, 100}, {10, 130}, {90, 160}, {10, 190}, {120, 220} };
-im.drawCubicSpline(8, tabPoints2, true, tgx::RGB32_Red); // simple red cubic spline, full opacity
+im.drawCubicSpline(8, tabPoints2, true, tgx::RGB32_Red); // simple cubic spline
 
 const tgx::fVec2 tabPoints3[] = { {70, 10}, {40, 40}, {80, 70}, {30, 100}, {120, 130}, {60, 160}, {150, 190}, {80, 220} };
-im.drawThickQuadSplineAA(8, tabPoints3, 5, tgx::END_ROUNDED, tgx::END_ROUNDED, tgx::RGB32_Yellow, 0.5f); // 5 pixels thick yellow quadratic spline, 50% opacity, with anti-aliasing
+im.drawThickQuadSplineAA(8, tabPoints3, 5, tgx::END_ROUNDED, tgx::END_ROUNDED, tgx::RGB32_Yellow, 0.5f); // thick quadratic spline, 50% opacity, with AA
 
 const tgx::fVec2 tabPoints4[] = { {60, 20}, {120, 40}, {50, 70}, {130, 100}, {60, 130}, {110, 160}, {70, 190}, {60, 220} };
-im.drawThickCubicSplineAA(8, tabPoints4, 6, tgx::END_ARROW_3, tgx::END_ARROW_SKEWED_3, tgx::RGB32_Green, 0.5f); // 6 pixels thick silver cubic spline, 50% opacity
+im.drawThickCubicSplineAA(8, tabPoints4, 6, tgx::END_ARROW_3, tgx::END_ARROW_SKEWED_3, tgx::RGB32_Green, 0.5f); // thick cubic spline, 50% opacity, with AA
 
 const tgx::fVec2 tabPoints5[] = { {140, 20}, {160, 10}, {200, 50}, {250, 20}, {300, 100}, {250, 160}, {200, 100}, {160, 150} };
-im.drawThickClosedSplineAA(8, tabPoints5, 12, tgx::RGB32_Blue); // 12 pixels thick blue closed spline, full opacity, with anti-aliasing
+im.drawThickClosedSplineAA(8, tabPoints5, 12, tgx::RGB32_Blue); // thick closed spline, with AA
 
 const tgx::iVec2 tabPoints6[] = { {240, 10}, {310, 50}, {200, 130} };
-im.drawClosedSpline(3, tabPoints6, tgx::RGB32_Magenta, 0.5f); // magenta closed spline, 50% opacity
+im.drawClosedSpline(3, tabPoints6, tgx::RGB32_Magenta, 0.5f); // simple closed spline, 50% opacity
 
 const tgx::fVec2 tabPoints7[] = { {300, 220}, {240, 220}, {240, 180}, {300, 190} };
-im.fillClosedSplineAA(4, tabPoints7, tgx::RGB32_Cyan); // cyan filled closed spline, full opacity, with anti-aliasing
+im.fillClosedSplineAA(4, tabPoints7, tgx::RGB32_Cyan); // interior filled closed spline, with AA
 
 const tgx::fVec2 tabPoints8[] = { {150, 210}, {160, 150}, {250, 120}, {280, 150}, {260, 190} };
-im.fillThickClosedSplineAA(5, tabPoints8, 5, tgx::RGB32_Gray ,tgx::RGB32_Red, 0.5f); // gray filled, 5 pixels thick red closed spline, 50% opacity, with anti-aliasing
+im.fillThickClosedSplineAA(5, tabPoints8, 5, tgx::RGB32_Gray ,tgx::RGB32_Red, 0.5f); // interior filled thick closed spline, 50% opacity, with AA
 ~~~
 **Methods:**
+- \ref tgx::Image::drawQuadSpline "drawQuadSpline()" : draw a simple quadratic spline
+- \ref tgx::Image::drawCubicSpline "drawCubicSpline()" : draw a simple cubic spline
+- \ref tgx::Image::drawThickQuadSplineAA "drawThickQuadSplineAA()" : draw a thick quadratic spline, with AA
+- \ref tgx::Image::drawThickCubicSplineAA "drawThickCubicSplineAA()" : draw a thick cubic spline, with AA
+- \ref tgx::Image::drawThickClosedSplineAA "drawThickClosedSplineAA()" : draw a thick closed spline, with AA
+- \ref tgx::Image::drawClosedSpline "drawClosedSpline()" : draw a simple thick closed spline
+- \ref tgx::Image::fillClosedSplineAA "fillClosedSplineAA()" : draw a closed spline and fill its interior, with AA
+- \ref tgx::Image::fillThickClosedSplineAA "fillThickClosedSplineAA()" : draw a  thick closed spline and fill its interior, with AA
+
+
+---
+
 
 # drawing text
 
 ![test_text](../test_text.png)
 
+*additional includes for the text fonts*
+~~~{.cpp}
+#include "font_tgx_Arial.h"
+#include "font_tgx_OpenSans.h"
+~~~
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -531,7 +611,47 @@ anchor_point = { 160, 165 };
 im.drawTextEx("CENTER", anchor_point, font_tgx_OpenSans_10, tgx::Anchor::CENTER, true, true, tgx::RGB32_Red);
 im.fillCircleAA(anchor_point, 1.5, tgx::RGB32_Green);
 ~~~
+
+The TGX library support font using:
+- AdafruitGFX format:                   (https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts)
+- ILI9341_t3 v1 format                  (https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format)
+- ILI9341_t3 v23 format (antialiased)   (https://github.com/projectitis/packedbdf/blob/master/packedbdf.md)
+
+@note tgx-font (https://github.com/vindar/tgx-font) contains a collection ILI9341_t3 v1 and v2 (antialiased) fonts 
+that can be used directly with the methods below (and the instruction on how to convert a ttf font to  this format).
+
+The following fonts are already packaged with TGX but must be included explicitely in the project when used:
+- *Arial* (non AA font): `#include "font_tgx_Arial.h"` 
+- *Arial Bold* (non AA font): `#include "font_tgx_Arial_Bold.h"`
+- *OpenSans* (AA font): `#include "font_tgx_OpenSans.h"`
+- *OpenSans Bold* (AA font): `#include "font_tgx_OpenSans_Bold.h"`
+- *OpenSans Italic* (AA font): `#include "font_tgx_OpenSans_Italic.h"`
+
+Each font above is avaailble in fontsize: 8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14pt, 16pt, 18pt, 20pt, 24pt, 28pt, 32pt, 40pt, 48pt, 60pt, 72pt, 96pt.
+
+
 **Methods:**
+- \ref tgx::Image::drawText "drawText()" : draw a text using a given font. simple method
+- \ref tgx::Image::drawTextEx "drawTextEx()" : draw a text using a given font. Extended method with anchor placement (c.f. \ref tgx::Anchor).
+- \ref tgx::Image::measureText "measureText()" : compute the bounding box of a text (fast, does not draw it)
+- \ref tgx::Image::measureChar "measureChar()" : compute the bounding box of a character (fast, does not draw it)
+
+
+
+section: copy, blitting, subimage
+
+section: misc
+
+
+
+image type, view (shared buffer) et copy. 
+
+color types
+
+opacity, blending
+
+ivec et positionning 
+
 
 
 
