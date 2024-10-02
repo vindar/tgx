@@ -28,6 +28,11 @@ im2.fillScreenHGradient(tgx::RGB32_Green, tgx::RGB32_Orange); // fill with horiz
 - \ref tgx::Image::fillScreenHGradient "fillScreenHGradient()" : fill the image with an horizontal gradient between two colors.
 
 
+---
+
+# Blitting sprites
+
+
 
 
 ---
@@ -638,19 +643,12 @@ Each font above is avaailble in fontsize: 8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14pt
 
 
 
-section: copy, blitting, subimage
+# drawing text with truetype fonts 
 
-section: misc
+use TakkaO's Openfont renderer
 
+TODO
 
-
-image type, view (shared buffer) et copy. 
-
-color types
-
-opacity, blending
-
-ivec et positionning 
 
 
 

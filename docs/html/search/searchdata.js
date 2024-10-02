@@ -8,7 +8,7 @@ var indexSectionsWithContent =
   5: "dfi",
   6: "abes",
   7: "bcdelrst",
-  8: "t",
+  8: "mt",
   9: "itu"
 };
 

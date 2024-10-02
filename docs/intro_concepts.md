@@ -4,7 +4,7 @@ The library is cross-platform: it can used on on CPU or on an embedded platform 
 
 It is written in pure C++ and all the sources are located in the `/src` subdirectory. This folder contains both the header files (`.h`) and the implementation files (`.cpp`, `.inl`). 
 
-*The library has no any external dependency.*
+*The library has no external dependency.*
 
 ## Using TGX on a microcontroller (Arduino)
 
@@ -24,12 +24,12 @@ There are two options:
 
 - **Manually adding the library code directly to a project.**  
 
-  </br>
+  
   
     1. Copy all the files from the `\src` directory directly into the target project directory.
     2. Reference all TGX's `.cpp` files to be compiled together with the project's source files.  
   
-</br>
+
 
 - **Building a library file.**  
 

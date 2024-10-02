@@ -96,7 +96,7 @@ $(document).ready(function(){initNavTree('md_docs_intro_concepts.html',''); init
 <div class="contents">
 <div class="textblock"><p ><a class="anchor" id="intro_concepts"></a> The library is cross-platform: it can used on on CPU or on an embedded platform with the Arduino framework.</p>
 <p >It is written in pure C++ and all the sources are located in the <code>/src</code> subdirectory. This folder contains both the header files (<code>.h</code>) and the implementation files (<code>.cpp</code>, <code>.inl</code>).</p>
-<p ><em>The library has no any external dependency.</em></p>
+<p ><em>The library has no external dependency.</em></p>
 <h2><a class="anchor" id="autotoc_md0"></a>
 Using TGX on a microcontroller (Arduino)</h2>
 <ul>
@@ -111,16 +111,13 @@ Using TGX on a microcontroller (Arduino)</h2>
 Using TGX on a desktop computer (Windows/Linux/MacOS)</h2>
 <p >There are two options:</p>
 <ul>
-<li><p class="startli"><b>Manually adding the library code directly to a project.</b> <br  />
-</p>
+<li><b>Manually adding the library code directly to a project.</b> <br  />
 <ol type="1">
 <li>Copy all the files from the <code>\src</code> directory directly into the target project directory.</li>
 <li>Reference all TGX's <code>.cpp</code> files to be compiled together with the project's source files. <br  />
 </li>
 </ol>
 </li>
-</ul>
-<ul>
 <li><p class="startli"><b>Building a library file.</b> <br  />
 </p>
 <p class="startli">Alternatively, it is possible to build a standalone library file. A CMake configuration <code>CMakeLists.txt</code> is provided at the root of the library: <br  />

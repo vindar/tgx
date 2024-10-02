@@ -107,7 +107,7 @@ static_assert(sizeof(int) >= 4, "The TGX library only works on 32 bits or 64 bit
 #endif
 
 #ifndef M_PI
-#define M_PI       3.14159265358979323846
+#define M_PI       3.14159265358979323846  ///< define Pi in case math.h is not yet included.
 #endif
 
 

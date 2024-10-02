@@ -101,6 +101,7 @@ var menudata={children:[
 {text:"File Members",url:"globals.html",children:[
 {text:"All",url:"globals.html",children:[
 {text:"f",url:"globals.html#index_f"},
+{text:"m",url:"globals.html#index_m"},
 {text:"t",url:"globals.html#index_t"}]},
 {text:"Variables",url:"globals_vars.html",children:[
 {text:"f",url:"globals_vars.html#index_f"}]},

@@ -910,10 +910,11 @@ WARN_LOGFILE           =
 
 INPUT                  = ./docs/intro_concepts.md \
                          ./docs/mainpage.md \
+                         ./docs/intro_tgximage.md \
                          ./docs/intro_api_2D.md \
                          ./docs/intro_api_3D.md \
                          ./src/
-                         
+
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
 # libiconv (or the iconv built into libc) for the transcoding. See the libiconv

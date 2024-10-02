@@ -2,6 +2,7 @@ var _misc_8h =
 [
     [ "TGX_SINGLE_PRECISION_COMPUTATIONS", "_misc_8h.html#a78253ceb4e0c2b6a3714006768f62dcb", null ],
     [ "TGX_DEFAULT_NO_BLENDING", "_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901", null ],
+    [ "M_PI", "_misc_8h.html#ae71449b1cc6e6250b91f539153a7a0d3", null ],
     [ "swap", "_misc_8h.html#a27467fcbd225285d7fb240b325d5211a", null ],
     [ "min", "_misc_8h.html#a12ea6daee700a17ae06fa2292ac8406d", null ],
     [ "max", "_misc_8h.html#a1ce60a3bfbebc3297f7e421906fd1bc0", null ],

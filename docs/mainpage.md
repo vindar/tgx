@@ -41,7 +41,7 @@ The library runs on both microprocessor and microcontollers but specifically tar
 @section getting_started Getting started
 
 1. @ref intro_concepts "Installation"
-2. @ref intro_image "Image class and memory layout"
+2. @ref intro_tgximage "The Image class"
 3. @ref intro_api_2D "Using the 2D API."
 4. @ref intro_api_3D "Using the 3D API."
 
