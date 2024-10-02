@@ -9,17 +9,17 @@ The library runs on both microprocessor and microcontollers but specifically tar
 
 - Hardware agnostic: the library simply draws on a memory framebuffer.
 - Optimized RAM usage and no dynamic allocation. 
-- No external dependency (and no STL): just include the .h and .cpp files to your project and your are set!
+- No external dependency (and no STL dependency): just include the `.h` and `.cpp` files to your project and your are set!
 - Library in Arduino friendly format. 
-- Mutiple color formats supported: `RGB565`,  `RGB24`, `RGB32`, `RGB64`, `RGBf`, `HSV`
-- `Image` class that encapsulates a buffer and allows the creation of sub-images for clipping any drawing operations.    
-- Extensive 2D API: 
+- Mutiple color formats supported: \ref tgx::RGB565 "RGB565",  \ref tgx::RGB24 "RGB24", \ref tgx::RGB32 "RGB32", \ref tgx::RGB64 "RGB64", \ref tgx::RGBf "RGBf", \ref tgx::HSV "HSV"
+- \ref tgx::Image "Image" class that encapsulates a memory buffer and allows the creation of sub-images for clipping any drawing operations.    
+- **Extensive 2D API:** 
     - Methods for converting, blittings, copying and resizing sprites with high quality (bilinear filtering, sub-pixel precision). 
     - Methods for drawing lines, polylines, polygons, triangles, rectangles, rounded rectangles, quads, circles, arcs, ellipses, Bezier curve and splines ! 
     - Methods for drawing Text with support for multiple font formats.
     - All drawings operations support alpha-blending. 
-    - Most drawing methods come in two flavours: a 'fast' method and a 'high quality' which is slower but draws using anti-aliasing and sub-pixel precision.     
-- Extensive 3D API.
+    - Many drawing methods come in two flavours: fast' methods and 'high quality' methods which is slower but draws using anti-aliasing and/or sub-pixel precision.     
+- **Extensive 3D API:**
     - Optimized 'pixel perfect' triangle rasterizer with adjustable sub-pixel precision. 
     - Depth buffer testing (selectable 16 bits or 32 bits precision).
     - Multiple drawing modes: wireframe (selectable low/high quality) and solid (i.e. with shaders). 
@@ -30,20 +30,20 @@ The library runs on both microprocessor and microcontollers but specifically tar
     - Perspective and orthographic projections.
     - Optional backface culling.
     - Tile rasterization: it is possible to render the viewport in multiple passes to save RAM. 
-    - Templates classes for all the needed maths: `Vec2`, `Vec3`, `Vec4` (vectors), `Mat4` (4x4 matrix) and `Box2`, `Box3` (boxes).
-    - Optimized mesh data format: meshes and textures can be read directly from flash memory to save RAM.
-    - Python scripts for easy conversion of texture images and 3D meshes (in Wavefront's .obj format) into C files.
+    - Templates classes for all the needed maths: \ref tgx::Vec2 "Vec2", \ref tgx::Vec3 "Vec3", \ref tgx::Vec4 "Vec4" (vectors), \ref tgx::Mat4 "Mat4" (4x4 matrix) and \ref tgx::Box2 "Box2", \ref tgx::Box3 "Box3" (boxes).
+    - Optimized \ref tgx::Mesh3D "mesh" data format: meshes and textures can be read directly from flash memory to save RAM.
+    - Python scripts provided for easy conversion of texture images and 3D meshes from Wavefront's .obj format into C files.
     
     
     
-    
-    
+      
     
 @section getting_started Getting started
 
 1. @ref intro_concepts "Installation"
-2. @ref intro_api_2D "Using the 2D API."
-3. @ref intro_api_3D "Using the 3D API."
+2. @ref intro_image "Image class and memory layout"
+3. @ref intro_api_2D "Using the 2D API."
+4. @ref intro_api_3D "Using the 3D API."
 
 
 

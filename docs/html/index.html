@@ -101,21 +101,21 @@ About the library</h1>
 <ul>
 <li>Hardware agnostic: the library simply draws on a memory framebuffer.</li>
 <li>Optimized RAM usage and no dynamic allocation.</li>
-<li>No external dependency (and no STL): just include the .h and .cpp files to your project and your are set!</li>
+<li>No external dependency (and no STL dependency): just include the <code>.h</code> and <code>.cpp</code> files to your project and your are set!</li>
 <li>Library in Arduino friendly format.</li>
-<li>Mutiple color formats supported: <code>RGB565</code>, <code>RGB24</code>, <code>RGB32</code>, <code>RGB64</code>, <code>RGBf</code>, <code>HSV</code></li>
-<li><code>Image</code> class that encapsulates a buffer and allows the creation of sub-images for clipping any drawing operations. <br  />
+<li>Mutiple color formats supported: <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a>, <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a>, <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a>, <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a>, <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a>, <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a></li>
+<li><a class="el" href="classtgx_1_1_image.html">Image</a> class that encapsulates a memory buffer and allows the creation of sub-images for clipping any drawing operations. <br  />
 </li>
-<li>Extensive 2D API:<ul>
+<li><b>Extensive 2D API:</b><ul>
 <li>Methods for converting, blittings, copying and resizing sprites with high quality (bilinear filtering, sub-pixel precision).</li>
 <li>Methods for drawing lines, polylines, polygons, triangles, rectangles, rounded rectangles, quads, circles, arcs, ellipses, Bezier curve and splines !</li>
 <li>Methods for drawing Text with support for multiple font formats.</li>
 <li>All drawings operations support alpha-blending.</li>
-<li>Most drawing methods come in two flavours: a 'fast' method and a 'high quality' which is slower but draws using anti-aliasing and sub-pixel precision. <br  />
+<li>Many drawing methods come in two flavours: fast' methods and 'high quality' methods which is slower but draws using anti-aliasing and/or sub-pixel precision. <br  />
 </li>
 </ul>
 </li>
-<li>Extensive 3D API.<ul>
+<li><b>Extensive 3D API:</b><ul>
 <li>Optimized 'pixel perfect' triangle rasterizer with adjustable sub-pixel precision.</li>
 <li>Depth buffer testing (selectable 16 bits or 32 bits precision).</li>
 <li>Multiple drawing modes: wireframe (selectable low/high quality) and solid (i.e. with shaders).</li>
@@ -126,9 +126,9 @@ About the library</h1>
 <li>Perspective and orthographic projections.</li>
 <li>Optional backface culling.</li>
 <li>Tile rasterization: it is possible to render the viewport in multiple passes to save RAM.</li>
-<li>Templates classes for all the needed maths: <code>Vec2</code>, <code>Vec3</code>, <code>Vec4</code> (vectors), <code>Mat4</code> (4x4 matrix) and <code>Box2</code>, <code>Box3</code> (boxes).</li>
-<li>Optimized mesh data format: meshes and textures can be read directly from flash memory to save RAM.</li>
-<li>Python scripts for easy conversion of texture images and 3D meshes (in Wavefront's .obj format) into C files.</li>
+<li>Templates classes for all the needed maths: <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>, <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>, <a class="el" href="structtgx_1_1_vec4.html">Vec4</a> (vectors), <a class="el" href="structtgx_1_1_mat4.html">Mat4</a> (4x4 matrix) and <a class="el" href="structtgx_1_1_box2.html">Box2</a>, <a class="el" href="structtgx_1_1_box3.html">Box3</a> (boxes).</li>
+<li>Optimized <a class="el" href="structtgx_1_1_mesh3_d.html">mesh</a> data format: meshes and textures can be read directly from flash memory to save RAM.</li>
+<li>Python scripts provided for easy conversion of texture images and 3D meshes from Wavefront's .obj format into C files.</li>
 </ul>
 </li>
 </ul>
@@ -136,6 +136,7 @@ About the library</h1>
 Getting started</h1>
 <ol type="1">
 <li><a class="el" href="md_docs_intro_concepts.html#intro_concepts">Installation</a></li>
+<li>Image class and memory layout</li>
 <li><a class="el" href="md_docs_intro_api_2_d.html#intro_api_2D">Using the 2D API.</a></li>
 <li><a class="el" href="md_docs_intro_api_3_d.html#intro_api_3D">Using the 3D API.</a></li>
 </ol>

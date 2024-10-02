@@ -16,7 +16,5 @@ var searchData=
   ['top_13',['TOP',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25afa0e22d6ef68249280e1a69d269f3503',1,'tgx']]],
   ['topleft_14',['TOPLEFT',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25a5d63db503eeb72cf0ffb70ab48431c3b',1,'tgx']]],
   ['topright_15',['TOPRIGHT',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25a6ea6a055de1df58cc6e094685ea16ae5',1,'tgx']]],
-  ['transpose_16',['transpose',['../structtgx_1_1_mat4.html#a2f153b9f2c36d9421acdf96174de6711',1,'tgx::Mat4']]],
-  ['tutorial_3a_20the_202d_20api_2e_17',['Tutorial: the 2D API.',['../md_docs_intro_api_2_d.html',1,'']]],
-  ['tutorial_3a_20the_203d_20api_2e_18',['Tutorial: the 3D API.',['../md_docs_intro_api_3_d.html',1,'']]]
+  ['transpose_16',['transpose',['../structtgx_1_1_mat4.html#a2f153b9f2c36d9421acdf96174de6711',1,'tgx::Mat4']]]
 ];

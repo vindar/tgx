@@ -29,7 +29,7 @@ var NAVTREE =
     [ "Getting started", "index.html#getting_started", null ],
     [ "References", "index.html#References", null ],
     [ "Installation.", "md_docs_intro_concepts.html", null ],
-    [ "Tutorial: the 2D API.", "md_docs_intro_api_2_d.html", [
+    [ "Using the 2D API.", "md_docs_intro_api_2_d.html", [
       [ "Filling the screen.", "md_docs_intro_api_2_d.html#autotoc_md3", null ],
       [ "Reading/writing pixels", "md_docs_intro_api_2_d.html#autotoc_md5", null ],
       [ "Flood-filling a region", "md_docs_intro_api_2_d.html#autotoc_md7", null ],
@@ -50,7 +50,7 @@ var NAVTREE =
       [ "drawing splines", "md_docs_intro_api_2_d.html#autotoc_md37", null ],
       [ "drawing text", "md_docs_intro_api_2_d.html#autotoc_md39", null ]
     ] ],
-    [ "Tutorial: the 3D API.", "md_docs_intro_api_3_d.html", null ],
+    [ "Using the 3D API.", "md_docs_intro_api_3_d.html", null ],
     [ "Todo List", "todo.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
