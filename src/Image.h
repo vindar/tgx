@@ -60,7 +60,7 @@ namespace tgx
         END_ARROW_SKEWED_2 = 102,   ///< small skewed arrow head [extends = 2 x line thickness]
         END_ARROW_SKEWED_3 = 103,   ///< medium skewed arrow head [extends = 3 x line thickness]
         END_ARROW_SKEWED_4 = 104,   ///< large skewed arrow head [extends = 4 x line thickness]
-        END_ARROW_SKEWED_5 = 105,   ///> huge skewed arrow head [extends = 5 x line thickness]
+        END_ARROW_SKEWED_5 = 105,   ///< huge skewed arrow head [extends = 5 x line thickness]
         };
         
 
@@ -3308,8 +3308,8 @@ namespace tgx
          * @param   text                The text to draw.
          * @param   pos                 position to draw the text. This is the position to which will be
          *                              mapped the selected anchor point of the text.
-         * @param   anchor              Select the anchor point of the text c.f. enum tgx::Anchor (the `drawText()` methods uses `BASELINE|LEFT`). 
          * @param   font                The font to use.
+         * @param   anchor              Select the anchor point of the text c.f. enum tgx::Anchor (the `drawText()` methods uses `BASELINE|LEFT`). 
          * @param   wrap_text           True to wrap wrap text at the end of image. Wrapping occur per
          *                              character (not per word).
          * @param   start_newline_at_0  True to start a new line of text at position x=0 and false to
@@ -3320,7 +3320,7 @@ namespace tgx
          *
          * @returns the position to draw the next char (when using the same anchor location).
          */
-        iVec2 drawTextEx(const char* text, iVec2 pos, Anchor anchor, const GFXfont& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+        iVec2 drawTextEx(const char* text, iVec2 pos, const GFXfont& font, Anchor anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
@@ -3334,8 +3334,8 @@ namespace tgx
          * @param   text                The text to draw.
          * @param   pos                 position to draw the text. This is the position to which will be
          *                              mapped the selected anchor point of the text.
-         * @param   anchor              Select the anchor point of the text c.f. enum tgx::Anchor (the `drawText()` methods uses `BASELINE|LEFT`). 
          * @param   font                The font to use.
+         * @param   anchor              Select the anchor point of the text c.f. enum tgx::Anchor (the `drawText()` methods uses `BASELINE|LEFT`). 
          * @param   wrap_text           True to wrap wrap text at the end of image. Wrapping occur per
          *                              character (not per word).
          * @param   start_newline_at_0  True to start a new line of text at position x=0 and false to
@@ -3346,7 +3346,7 @@ namespace tgx
          *
          * @returns the position to draw the next char (when using the same anchor location).
          */
-        iVec2 drawTextEx(const char* text, iVec2 pos, Anchor anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+        iVec2 drawTextEx(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
 

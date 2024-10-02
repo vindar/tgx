@@ -2174,10 +2174,10 @@ namespace tgx
                         const int sC3 = C3;
                         const int sC1 = aera - C3 - C2;
                         const float m = 256.0f / aera;
-                        const int r = (sC1 * cf1.R + sC2 * cf2.R + sC3 * cf3.R) * m;
-                        const int g = (sC1 * cf1.G + sC2 * cf2.G + sC3 * cf3.G) * m;
-                        const int b = (sC1 * cf1.B + sC2 * cf2.B + sC3 * cf3.B) * m;
-                        const int a = (sC1 * fP1.A + sC2 * fP2.A + sC3 * fP3.A) * m;
+                        const int r = (int)((sC1 * cf1.R + sC2 * cf2.R + sC3 * cf3.R) * m);
+                        const int g = (int)((sC1 * cf1.G + sC2 * cf2.G + sC3 * cf3.G) * m);
+                        const int b = (int)((sC1 * cf1.B + sC2 * cf2.B + sC3 * cf3.B) * m);
+                        const int a = (int)((sC1 * fP1.A + sC2 * fP2.A + sC3 * fP3.A) * m);
                         col.mult256(r, g, b, a);
                         }
                     if (USE_BLENDING)
@@ -2200,10 +2200,10 @@ namespace tgx
                         const int sC3 = C3;
                         const int sC1 = aera - C3 - C2;
                         const float m = 256.0f / aera;
-                        const int r = (sC1 * cf1.R + sC2 * cf2.R + sC3 * cf3.R) * m;
-                        const int g = (sC1 * cf1.G + sC2 * cf2.G + sC3 * cf3.G) * m;
-                        const int b = (sC1 * cf1.B + sC2 * cf2.B + sC3 * cf3.B) * m;
-                        const int a = (sC1 * fP1.A + sC2 * fP2.A + sC3 * fP3.A) * m;
+                        const int r = (int)((sC1 * cf1.R + sC2 * cf2.R + sC3 * cf3.R) * m);
+                        const int g = (int)((sC1 * cf1.G + sC2 * cf2.G + sC3 * cf3.G) * m);
+                        const int b = (int)((sC1 * cf1.B + sC2 * cf2.B + sC3 * cf3.B) * m);
+                        const int a = (int)((sC1 * fP1.A + sC2 * fP2.A + sC3 * fP3.A) * m);
                         col.mult256(r, g, b, a);
                         }
                     if (USE_BLENDING)

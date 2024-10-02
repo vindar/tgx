@@ -7134,19 +7134,19 @@ namespace tgx
     template<typename color_t>
     iVec2 Image<color_t>::drawText(const char* text, iVec2 pos, const GFXfont& font, color_t color, float opacity)
         {
-        return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, false, color, opacity);
+        return drawTextEx(text, pos, font, DEFAULT_TEXT_ANCHOR, false, false, color, opacity);
         }
 
 
     template<typename color_t>
     iVec2 Image<color_t>::drawText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity)
         {
-        return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, false, color, opacity);
+        return drawTextEx(text, pos, font, DEFAULT_TEXT_ANCHOR, false, false, color, opacity);
         }
 
 
     template<typename color_t>
-    iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, Anchor anchor, const GFXfont& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
+    iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, const GFXfont& font, Anchor anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
         {
         if (!isValid()) return pos;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -7163,7 +7163,7 @@ namespace tgx
 
 
     template<typename color_t>
-    iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, Anchor anchor, const ILI9341_t3_font_t& font, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
+    iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
         {
         if (!isValid()) return pos;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;

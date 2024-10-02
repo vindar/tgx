@@ -31,6 +31,7 @@ var structtgx_1_1_mat4 =
     [ "mult0", "structtgx_1_1_mat4.html#a2742a4bfaff504e97eb236f7a22318f5", null ],
     [ "mult1", "structtgx_1_1_mat4.html#a120cc3bfae76599ef2cc18f3a11b7aa0", null ],
     [ "operator*=", "structtgx_1_1_mat4.html#abaa09d41d5a5a2d80546045098db1794", null ],
+    [ "transpose", "structtgx_1_1_mat4.html#a2f153b9f2c36d9421acdf96174de6711", null ],
     [ "print", "structtgx_1_1_mat4.html#a7cb00300b2c6ea5f4b10760b1a98148f", null ],
     [ "M", "structtgx_1_1_mat4.html#af073688b88d40378504b7d22dd4195c7", null ]
 ];

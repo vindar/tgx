@@ -159,6 +159,6 @@ var classtgx_1_1_image =
     [ "drawChar", "classtgx_1_1_image.html#afae0944718b49ee043741a969dee0d8e", null ],
     [ "drawText", "classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0", null ],
     [ "drawText", "classtgx_1_1_image.html#a0a51b7472e4627f9f8ce8e6b6ed4199e", null ],
-    [ "drawTextEx", "classtgx_1_1_image.html#a95d2c7edef3e9892e8e254c24f1d08cf", null ],
-    [ "drawTextEx", "classtgx_1_1_image.html#abc9c886722185a2e26f3b37d4d47602e", null ]
+    [ "drawTextEx", "classtgx_1_1_image.html#a6495b751001b95f32e9b219d69369caf", null ],
+    [ "drawTextEx", "classtgx_1_1_image.html#aa978df96aebf8d150988001ae5463c8f", null ]
 ];

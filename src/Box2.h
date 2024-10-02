@@ -570,15 +570,15 @@ namespace tgx
             anchor_pos &= (CENTER | LEFT | RIGHT | TOP | BOTTOM); // remove baseline flag
             switch (anchor_pos)
                 {
-            case TOPLEFT:       return Vec2<T>(minX, maxY);
-            case TOPRIGHT:      return Vec2<T>(maxX, maxY);
-            case BOTTOMLEFT:    return Vec2<T>(minX, minY);
-            case BOTTOMRIGHT:   return Vec2<T>(maxX, minY);
+            case TOPLEFT:       return Vec2<T>(minX, minY);
+            case TOPRIGHT:      return Vec2<T>(maxX, minY);
+            case BOTTOMLEFT:    return Vec2<T>(minX, maxY);
+            case BOTTOMRIGHT:   return Vec2<T>(maxX, maxY);
             case CENTER:        return Vec2<T>((minX + maxX) / 2, (minY + maxY) / 2);
             case CENTERLEFT:    return Vec2<T>(minX, (minY + maxY) / 2);
             case CENTERRIGHT:   return Vec2<T>(maxX, (minY + maxY) / 2);
-            case CENTERTOP:     return Vec2<T>((minX + maxX) / 2, maxY);
-            case CENTERBOTTOM:  return Vec2<T>((minX + maxX) / 2, minY);
+            case CENTERTOP:     return Vec2<T>((minX + maxX) / 2, minY);
+            case CENTERBOTTOM:  return Vec2<T>((minX + maxX) / 2, maxY);
             default: break;
                 }
             return Vec2<T>((minX + maxX) / 2, (minY + maxY) / 2); // unknown pos returns center.
