@@ -2,7 +2,9 @@
 
 
 
+**Below is a description, with examples, of most 2D drawing primitives implemented in TGX.** 
 
+- For additional details, look directly into the main header file \ref Image.h
 
 ---
 

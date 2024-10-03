@@ -1,5 +1,4 @@
-@page intro_tgximage The Image class. 
-
+@page intro_basic Basic concepts. 
 
 
 # Colors types

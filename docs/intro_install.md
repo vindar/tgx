@@ -1,8 +1,8 @@
-@page intro_concepts Installation. 
+@page intro_install Installation. 
 
-The library is cross-platform: it can used on on CPU or on an embedded platform with the Arduino framework. 
+The library is cross-platform: it can used on on CPU or on an embedded platform together with [PlatformIO](https://platformio.org/) or the [Arduino framework](https://www.arduino.cc/). 
 
-It is written in pure C++ and all the sources are located in the `/src` subdirectory. This folder contains both the header files (`.h`) and the implementation files (`.cpp`, `.inl`). 
+It is written in pure C++ and all the sources are located in the `/src` subdirectory. This source folder contains both the header files (`.h`) and the implementation files (`.cpp`, `.inl`). 
 
 *The library has no external dependency.*
 
@@ -12,6 +12,7 @@ It is written in pure C++ and all the sources are located in the `/src` subdirec
 - **With the Arduino IDE.**
 
   Install the library directly from within the library manager of the IDE: `[Sketch] > [Include Library] > [Manage Libraries]` and then search for 'TGX' and install the latest version. 
+
 
 - **With PlaftormIO.**
 
@@ -23,8 +24,6 @@ It is written in pure C++ and all the sources are located in the `/src` subdirec
 There are two options: 
 
 - **Manually adding the library code directly to a project.**  
-
-  
   
     1. Copy all the files from the `\src` directory directly into the target project directory.
     2. Reference all TGX's `.cpp` files to be compiled together with the project's source files.  
@@ -34,7 +33,7 @@ There are two options:
 - **Building a library file.**  
 
   Alternatively, it is possible to build a standalone library file. A CMake configuration `CMakeLists.txt` is provided at the root of the library:  
-    1. Install CMake 3.10 (or later).
+    1. Install [CMake](https://cmake.org/) (version 3.10 or later).
     2. Open a terminal/shell at the library root folder and type:
         - `mkdir build`
         - `cd build`

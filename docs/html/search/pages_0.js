@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['installation_2e_0',['Installation.',['../md_docs_intro_concepts.html',1,'']]]
+  ['basic_20concepts_2e_0',['Basic concepts.',['../md_docs_intro_basic.html',1,'']]]
 ];

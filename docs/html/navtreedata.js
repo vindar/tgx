@@ -28,12 +28,12 @@ var NAVTREE =
     [ "About the library", "index.html#about", null ],
     [ "Getting started", "index.html#getting_started", null ],
     [ "References", "index.html#References", null ],
-    [ "Installation.", "md_docs_intro_concepts.html", null ],
-    [ "The Image class.", "md_docs_intro_tgximage.html", [
-      [ "Colors types", "md_docs_intro_tgximage.html#autotoc_md2", null ],
-      [ "Memory layout / sub-images", "md_docs_intro_tgximage.html#autotoc_md3", null ],
-      [ "Vectors and Boxes", "md_docs_intro_tgximage.html#autotoc_md4", null ],
-      [ "Copying and converting images.", "md_docs_intro_tgximage.html#autotoc_md5", null ]
+    [ "Installation.", "md_docs_intro_install.html", null ],
+    [ "Basic concepts.", "md_docs_intro_basic.html", [
+      [ "Colors types", "md_docs_intro_basic.html#autotoc_md2", null ],
+      [ "Memory layout / sub-images", "md_docs_intro_basic.html#autotoc_md3", null ],
+      [ "Vectors and Boxes", "md_docs_intro_basic.html#autotoc_md4", null ],
+      [ "Copying and converting images.", "md_docs_intro_basic.html#autotoc_md5", null ]
     ] ],
     [ "Using the 2D API.", "md_docs_intro_api_2_d.html", [
       [ "Filling the screen.", "md_docs_intro_api_2_d.html#autotoc_md7", null ],
