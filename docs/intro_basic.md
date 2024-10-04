@@ -51,9 +51,34 @@ tgx::RGB565_Green; //  green color in RGB565
 For additional details on color manipulations, look directly into the color classes definitions in \ref color.h. 
 
 
+## blending and opacity parameter. 
+
+Color types \ref tgx::RGB32 and \ref tgx::RGB64 have an alpha channel which is used for alpha-blending during drawing operation. 
+
+\note Colors with an alpha channel are always assumed to have [pre-multiplied alpha](https://en.wikipedia.org/wiki/Alpha_compositing). 
+
+Other color type do not have an alpha channel but the library still support rudimentary blending operations thanks to the (optional) `opacity` parameter added to all drawing primitives. This parameter ranges in `[0.0f, 1.0f]` with
+- `opacity = 1.0f`: fully opaque drawing. This is the default value when the parameter is omited.
+- `opacity = 0.0f`: fully transparent drawing (so this draws nothing).
+
+Example:
+~~~{.cpp}
+
+// assume below that `im` is a tgx::Image<tgx::RGB565> object
+// the method Image::drawLine has signature  drawLine(iVec2 P1, iVec2 P2, color_t color, float opacity). 
+
+im.drawLine({10, 20}, {30, 40}, tgx::RGB565_Red); // draw a fully opaque red line from (10,20) to (30, 40).
+
+im.drawLine({10, 20}, {30, 40}, tgx::RGB565_Red, 0.5f); // here opacity=0.5f so we draw a half-transparent red line instead.
+
+~~~
+
+
+---
+
 # Image class, memory layout and sub-images
 
-An image object is lightweight structure (only 16 bytes in memory) similar to a Numpy view in Python. The object records:
+An image object is a lightweight structure (only 16 bytes in memory) similar to a Numpy view in Python. The object records:
 - the dimension of the image (`lx`, `ly`).
 - a pointer to the memory buffer `buffer[]` of pixel colors of type `color_t` (the template color type of the image). 
 - a `stride` value that is the number of pixels per image row (which may be larger than `ly` when working with sub-images). 
@@ -92,6 +117,8 @@ See also: \ref tgx::Image::set() "Image::set()", \ref tgx::Image::crop() "Image:
 
 @note Creating image/sub-image is very fast and cost free so the user should not refrain from creating Image/sub-images whenever needed ! It is the most efficient solution to clip/restrict any drawing operation to a given (rectangular) region of an image. 
 
+---
+
 # Vectors and Boxes
 
 The tgx library defines classes for 2D vectors and boxes:
@@ -101,25 +128,52 @@ The tgx library defines classes for 2D vectors and boxes:
 - \ref tgx::iBox2 : integer-valued 2D box. **Used to represent a rectangular region insid an image**
 - \ref tgx::fBox2 : floating point-valued 2D box. **represent a rectangular region insid an image when using sub-pixel precision**
 
-3D variants are also available: \ref tgx::iVec3, \ref tgx::fVec3, \ref tgx::iBox3, \ref tgx::fBox3 c.f. the 3D API for details. 
+@note 3D variants are also available: \ref tgx::iVec3, \ref tgx::fVec3, \ref tgx::iBox3, \ref tgx::fBox3 c.f. the 3D API for more details. 
 
+@warning Pixel adressing varies slightly when using integer valued coordinates vs floating point valued coordinates.
+- **Integer valued cordinate**: `iVec2(i,j)` represents the location of the pixel `(i,j)` in the image 
+- **Floating point valued coordinates**: `fVec2(i,j)` represents the **center** of pixel `(i,j)` in the image. The pixel itself is a unit lenght square box centered around this location i.e. represented by `fBox2( i-0.5f, i+0.5f, j-0.5f, j+0.5f)`. In this case, the whole image (of size `(lx,ly)`) corresponds to the box `fBox2( 0.5f, lx - 0.5f, -0.5f, ly - 0.5f)`.
+
+Vector and boxes support the usual operations (arithmetics, copy, type conversion...). 
+Most drawing methods take vectors and boxes as input parameters instead of scalar. using initializer lists make use of those types straighforward.  
+
+Example:
+~~~{.cpp}
+tgx::iVec2 v1(10, 30); // integer valued vector (10,30)
+
+tgx::fVec2 v2 = v1; // conversion: floating point valued vector (10.0f, 30.0f)
+
+float x = 2.0f;
+tgx::fVec2 v3 = { x, 7 }; // construct the vector from an initializer list. vector (2.0f, 7.0f)
+    
+(v2 + v3) * 3.0f; // usual maths operations are  available...
+
+v3.x = 4; // direct access to coordinate values v3 is now (2.0f, 4.0f)
+
+tgx::iBox2 B(40, 80, 20, 30); // format (minx, maxx, miny, maxy) -> integer valued box [40,80]x[20,30]
+
+// assume below that `im` is a tgx::Image<tgx::RGB32> object
+// method `Image::drawCircle(iVec2 center, int r, color_t color, float opacity)` takes integer value parameters. 
+im.drawCircle(v1, 12, tgx::RGB32_Red); // draw a red circle centered at v1 = (10, 30) of radius 12. 
+
+// method `Image::drawCircleAA(fVec2 center, float r, color_t color, float opacity)` takes floating point valued parameters for sub-pixel precision: 
+im.drawCircleAA({50.0f, 60.0f} , 11.5f, tgx::RGB32_Red); // draw a blue circle centered at (50.0f, 60.0f) of radius 11.5f. Use an initalizer list to define the center. 
+
+// method `Image::fillRect(const iBox2 & B, color_t color, float opacity)` takes an integer valued box as input parameter.
+im.fillRect(B, tgx::RGB32_Black); // draw a filled black box [40, 80]x[20,30]
+im.fillRect({50, 60 , 70, 80}, tgx::RGB32_Black); // using an initializer list: draw a filled black box [50, 60]x[70,80]
+
+~~~
+
+
+---
 
 
 # Copying/converting images. 
 
 
-# blending and opacity parameter. 
 
 
-section: copy, blitting, subimage
-
-section: misc
-
-image type, view (shared buffer) et copy. 
-
-color types
-
-opacity, blending
 
 ivec et positionning 
 
