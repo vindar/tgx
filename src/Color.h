@@ -2400,6 +2400,7 @@ struct RGB64
 
 #if TGX_RGBf_ORDER_BGR
         float B;    ///< Blue channel
+        float G;    ///< Green channel        
         float R;    ///< Red channel
 #else 
         float R;    ///< Red channel

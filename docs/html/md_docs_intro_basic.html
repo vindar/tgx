@@ -94,9 +94,40 @@ $(document).ready(function(){initNavTree('md_docs_intro_basic.html',''); initRes
   <div class="headertitle"><div class="title">Basic concepts. </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><a class="anchor" id="intro_basic"></a></p>
+<div class="textblock"><p ><a class="anchor" id="intro_basic"></a> The TGX library's main class is the <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> class which, as its name suggests, encapsulate an <b>image</b>, that is a rectangular array of <b>pixels</b> of a given <b>color</b> type. The library provides many methods to alter an image, i.e. change the color of its pixels by providing an extensive set of 2D and 3D drawing procedures.</p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Colors types</h1>
+<p >The library defines the following color classes</p>
+<ul>
+<li><a class="el" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> : 16 bits colors: 5 bits red, 6 bits green, 5 bits blue. <em>Aligned as and convertible to <code>uint16_t</code>.</em> <b>Note: Preferred type when working with embedded platforms/MCUs</b>. <br  />
+</li>
+<li><a class="el" href="structtgx_1_1_r_g_b24.html">tgx::RGB24</a> : 24 bits color: 8 bits red, 8 bits: green, 8 bits blue. <em>No alignement</em>.</li>
+<li><a class="el" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> : 32 bits color: 8 bits red, 8 bits: green, 8 bits blue. 8 bits (pre-multipled) Alpha channel. <em>Aligned as and convertible to <code>uint32_t</code></em>. <b>Note: Preferred type when working on CPUs, using blending/alpha channel</b>.</li>
+<li><a class="el" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a> : 96 bits floating point color: 32 bits red (float), 32 bits green (float), 32 bits blue (float). <em>Aligned as <code>float</code>, no alpha channel</em>. <b>Note: Used in the 3D API / Rasterizer. Convertible to other color type without precision loss</b>. <br  />
+</li>
+<li><a class="el" href="structtgx_1_1_r_g_b64.html">tgx::RGB64</a> : 64 bits color: 16 bits red, 16 bits: green, 16 bits blue. 16 bits (pre-multiplied) Alpha channel. <em>Aligned as and convertible to <code>uint64_t</code></em>. <b>Experimental, favor RGB32 or RGBf instead whenever possible</b>.</li>
+<li><a class="el" href="structtgx_1_1_h_s_v.html">tgx::HSV</a> : 96 bits colors: 16 bits Hue, 16 bits Saturation, 16 bits Values. <em>Partial support only</em>. <b>Slow, use only to convert between color space but not for 2D/3D drawing operations</b>. <br  />
+</li>
+</ul>
+<p >Color types are handled just like usual basic type <code>int</code> , <code>char</code>... Any color type can be converted into any other color type.</p>
+<p >Examples: </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> color1; <span class="comment">// create a 16 bits color, undefined value</span></div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> color2(8, 32, 16); <span class="comment">// create a 16 bits color and set the color channels: 8 red (5bits), 32 green (6bits), 16 blue (5bits)</span></div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> color3(0.25f, 0.5f, 0.5f); <span class="comment">// the same as color2 but defined with floats in [0.0f,1.0f] (works for any color type, irrespective of the channel color depths) </span></div>
+<div class="line"> </div>
+<div class="line">uint16_t c2 = (uint16_t)color3; <span class="comment">// conversion to uint16_t. </span></div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> color4 = c2; <span class="comment">// create 16 bit color from uint16_t.</span></div>
+<div class="line"> </div>
+<div class="line">int8_t R = color3.<a class="code hl_variable" href="structtgx_1_1_r_g_b565.html#ad4158f42b011e2cbf5f2308d9a651e1c">R</a>; <span class="comment">//   </span></div>
+<div class="line">int8_t G = color3.G; <span class="comment">// access the raw channel values  </span></div>
+<div class="line">int8_t B = color3.B; <span class="comment">//   </span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> color4(color2) <span class="comment">// conversion: create a RGB32 color from RGB565, this yields RGB32(64, 128, 128, 255) - the alpha channel is set to fully opaque.</span></div>
+<div class="line">color4.<a class="code hl_function" href="structtgx_1_1_r_g_b565.html#a49fc50a8dc77f6f1014bcdb9f72ee3c5">setOpacity</a>(0.5f); <span class="comment">// adjust the alpha channel in order to make the color half transparent. Other channels are alos multiplied accordingly since we use pre-multiplied alpha. </span></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b32_html"><div class="ttname"><a href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a></div><div class="ttdoc">Color in R8/G8/B8/A8 format.</div><div class="ttdef"><b>Definition:</b> Color.h:1162</div></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:202</div></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b565_html_a49fc50a8dc77f6f1014bcdb9f72ee3c5"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html#a49fc50a8dc77f6f1014bcdb9f72ee3c5">tgx::RGB565::setOpacity</a></div><div class="ttdeci">void setOpacity(float op)</div><div class="ttdoc">Dummy function for compatibility with color types having an alpha channel.</div><div class="ttdef"><b>Definition:</b> Color.h:562</div></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b565_html_ad4158f42b011e2cbf5f2308d9a651e1c"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html#ad4158f42b011e2cbf5f2308d9a651e1c">tgx::RGB565::R</a></div><div class="ttdeci">uint16_t R</div><div class="ttdoc">Red channel (5 bits)</div><div class="ttdef"><b>Definition:</b> Color.h:219</div></div>
+</div><!-- fragment --><p >For more details about colors, see the file <a class="el" href="_color_8h.html">color.h</a>.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Memory layout / sub-images</h1>
 <h1><a class="anchor" id="autotoc_md4"></a>
