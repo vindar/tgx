@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"structtgx_1_1_r_g_b32.html#aa217131d7008f9dcc822aeb8d23a2c3f":[8,0,0,8,43],
 "structtgx_1_1_r_g_b32.html#aa2703cb49642e6c69017d709544e772e":[8,0,0,8,38],
 "structtgx_1_1_r_g_b32.html#aa4c7516824d5f171362c2967a2cd6cd1":[8,0,0,8,23],
 "structtgx_1_1_r_g_b32.html#aa686d44a6f3826125f96444c1afae5d6":[8,0,0,8,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "structtgx_1_1_vec4.html":[8,0,0,14],
 "structtgx_1_1_vec4.html#a072a301a7968fb71b3605d6d9309e5e2":[8,0,0,14,20],
 "structtgx_1_1_vec4.html#a17e8436c8e5daf50f72a69a54f2e5d67":[8,0,0,14,9],
-"structtgx_1_1_vec4.html#a1ebff10e7fbc0bc081af4cdc0fd10088":[8,0,0,14,16],
-"structtgx_1_1_vec4.html#a24cc93bb10f7595d12456a736016c376":[8,0,0,14,33]
+"structtgx_1_1_vec4.html#a1ebff10e7fbc0bc081af4cdc0fd10088":[8,0,0,14,16]
 };

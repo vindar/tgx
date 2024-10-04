@@ -95,18 +95,21 @@ $(document).ready(function(){initNavTree('md_docs_intro_basic.html',''); initRes
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p ><a class="anchor" id="intro_basic"></a> The TGX library's main class is the <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> class which, as its name suggests, encapsulate an <b>image</b>, that is a rectangular array of <b>pixels</b> of a given <b>color</b> type. The library provides many methods to alter an image, i.e. change the color of its pixels by providing an extensive set of 2D and 3D drawing procedures.</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<p >All methods/classes are defined inside the <code>tgx</code> namespace. To use the library, just include "tgx.h": </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="tgx_8h.html">tgx.h</a>&quot;</span></div>
+<div class="line"><span class="keyword">using namespace </span>tgx; <span class="comment">// optional, so we no not need to prefix all methods by tgx::</span></div>
+<div class="ttc" id="atgx_8h_html"><div class="ttname"><a href="tgx_8h.html">tgx.h</a></div><div class="ttdoc">Main header file.</div></div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
 Colors types</h1>
-<p >The library defines the following color classes</p>
+<p >The library defines several color classes</p>
 <ul>
-<li><a class="el" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> : 16 bits colors: 5 bits red, 6 bits green, 5 bits blue. <em>Aligned as and convertible to <code>uint16_t</code>.</em> <b>Note: Preferred type when working with embedded platforms/MCUs</b>. <br  />
+<li><a class="el" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> : 16 bits colors: 5 bits red, 6 bits green, 5 bits blue. <em>Aligned as and convertible to <code>uint16_t</code>.</em> <b>Preferred type when working with embedded platforms/MCUs</b>. <br  />
 </li>
 <li><a class="el" href="structtgx_1_1_r_g_b24.html">tgx::RGB24</a> : 24 bits color: 8 bits red, 8 bits: green, 8 bits blue. <em>No alignement</em>.</li>
-<li><a class="el" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> : 32 bits color: 8 bits red, 8 bits: green, 8 bits blue. 8 bits (pre-multipled) Alpha channel. <em>Aligned as and convertible to <code>uint32_t</code></em>. <b>Note: Preferred type when working on CPUs, using blending/alpha channel</b>.</li>
-<li><a class="el" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a> : 96 bits floating point color: 32 bits red (float), 32 bits green (float), 32 bits blue (float). <em>Aligned as <code>float</code>, no alpha channel</em>. <b>Note: Used in the 3D API / Rasterizer. Convertible to other color type without precision loss</b>. <br  />
+<li><a class="el" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> : 32 bits color: 8 bits red, 8 bits: green, 8 bits blue. 8 bits (pre-multipled) Alpha channel. <em>Aligned as and convertible to <code>uint32_t</code></em>. <b>Useful for blending</b>.</li>
+<li><a class="el" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a> : 96 bits floating point color: 32 bits red (float), 32 bits green (float), 32 bits blue (float). <em>Aligned as <code>float</code>, no alpha channel</em>. <b>Used in the 3D API</b>. <br  />
 </li>
-<li><a class="el" href="structtgx_1_1_r_g_b64.html">tgx::RGB64</a> : 64 bits color: 16 bits red, 16 bits: green, 16 bits blue. 16 bits (pre-multiplied) Alpha channel. <em>Aligned as and convertible to <code>uint64_t</code></em>. <b>Experimental, favor RGB32 or RGBf instead whenever possible</b>.</li>
-<li><a class="el" href="structtgx_1_1_h_s_v.html">tgx::HSV</a> : 96 bits colors: 16 bits Hue, 16 bits Saturation, 16 bits Values. <em>Partial support only</em>. <b>Slow, use only to convert between color space but not for 2D/3D drawing operations</b>. <br  />
+<li><a class="el" href="structtgx_1_1_r_g_b64.html">tgx::RGB64</a> : 64 bits color: 16 bits red, 16 bits: green, 16 bits blue. 16 bits (pre-multiplied) Alpha channel. <em>Aligned as and convertible to <code>uint64_t</code></em>. <b>Experimental, use RGB32 or RGBf if instead</b>.</li>
+<li><a class="el" href="structtgx_1_1_h_s_v.html">tgx::HSV</a> : 96 bits colors: 16 bits Hue, 16 bits Saturation, 16 bits Values. <em>Partial support only</em>. <b>Slow, use only to convert between color space, not for drawing operations</b>. <br  />
 </li>
 </ul>
 <p >Color types are handled just like usual basic type <code>int</code> , <code>char</code>... Any color type can be converted into any other color type.</p>
@@ -117,23 +120,71 @@ Colors types</h1>
 <div class="line">uint16_t c2 = (uint16_t)color3; <span class="comment">// conversion to uint16_t. </span></div>
 <div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> color4 = c2; <span class="comment">// create 16 bit color from uint16_t.</span></div>
 <div class="line"> </div>
-<div class="line">int8_t R = color3.<a class="code hl_variable" href="structtgx_1_1_r_g_b565.html#ad4158f42b011e2cbf5f2308d9a651e1c">R</a>; <span class="comment">//   </span></div>
-<div class="line">int8_t G = color3.G; <span class="comment">// access the raw channel values  </span></div>
-<div class="line">int8_t B = color3.B; <span class="comment">//   </span></div>
+<div class="line">int8_t R = color4.<a class="code hl_variable" href="structtgx_1_1_r_g_b565.html#ad4158f42b011e2cbf5f2308d9a651e1c">R</a>; <span class="comment">//   </span></div>
+<div class="line">int8_t G = color4.<a class="code hl_variable" href="structtgx_1_1_r_g_b565.html#a82b12f6f32e77ee85cea983a1bcaedc3">G</a>; <span class="comment">// access the raw channels values  </span></div>
+<div class="line">int8_t B = color4.<a class="code hl_variable" href="structtgx_1_1_r_g_b565.html#afcd4a24a75a0ec4e349eec5fdf53d3e0">B</a>; <span class="comment">//   </span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> color4(color2) <span class="comment">// conversion: create a RGB32 color from RGB565, this yields RGB32(64, 128, 128, 255) - the alpha channel is set to fully opaque.</span></div>
-<div class="line">color4.<a class="code hl_function" href="structtgx_1_1_r_g_b565.html#a49fc50a8dc77f6f1014bcdb9f72ee3c5">setOpacity</a>(0.5f); <span class="comment">// adjust the alpha channel in order to make the color half transparent. Other channels are alos multiplied accordingly since we use pre-multiplied alpha. </span></div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> color5(color2); <span class="comment">// conversion: create a RGB32 color from RGB565, this yields RGB32(64, 128, 128, 255) - the alpha channel is set to fully opaque.</span></div>
+<div class="line">color5.setOpacity(0.5f); <span class="comment">// adjust the alpha channel in order to make the color half transparent. Other channels are multiplied accordingly (pre-multiplied alpha). </span></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b32_html"><div class="ttname"><a href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a></div><div class="ttdoc">Color in R8/G8/B8/A8 format.</div><div class="ttdef"><b>Definition:</b> Color.h:1162</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:202</div></div>
-<div class="ttc" id="astructtgx_1_1_r_g_b565_html_a49fc50a8dc77f6f1014bcdb9f72ee3c5"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html#a49fc50a8dc77f6f1014bcdb9f72ee3c5">tgx::RGB565::setOpacity</a></div><div class="ttdeci">void setOpacity(float op)</div><div class="ttdoc">Dummy function for compatibility with color types having an alpha channel.</div><div class="ttdef"><b>Definition:</b> Color.h:562</div></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b565_html_a82b12f6f32e77ee85cea983a1bcaedc3"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html#a82b12f6f32e77ee85cea983a1bcaedc3">tgx::RGB565::G</a></div><div class="ttdeci">uint16_t G</div><div class="ttdoc">Green channel (6 bits)</div><div class="ttdef"><b>Definition:</b> Color.h:218</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b565_html_ad4158f42b011e2cbf5f2308d9a651e1c"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html#ad4158f42b011e2cbf5f2308d9a651e1c">tgx::RGB565::R</a></div><div class="ttdeci">uint16_t R</div><div class="ttdoc">Red channel (5 bits)</div><div class="ttdef"><b>Definition:</b> Color.h:219</div></div>
-</div><!-- fragment --><p >For more details about colors, see the file <a class="el" href="_color_8h.html">color.h</a>.</p>
+<div class="ttc" id="astructtgx_1_1_r_g_b565_html_afcd4a24a75a0ec4e349eec5fdf53d3e0"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html#afcd4a24a75a0ec4e349eec5fdf53d3e0">tgx::RGB565::B</a></div><div class="ttdeci">uint16_t B</div><div class="ttdoc">Blue channel (5 bits)</div><div class="ttdef"><b>Definition:</b> Color.h:217</div></div>
+</div><!-- fragment --><p >Predefined colors, <em>Black</em>, <em>White</em>, <em>Blue</em>, <em>Green</em>, <em>Purple</em>, <em>Orange</em>, <em>Cyan</em>, <em>Lime</em>, <em>Salmon</em>, <em>Maroon</em>, <em>Yellow</em>, <em>Magenta</em>, <em>Olive</em>, <em>Teal</em>, <em>Gray</em>, <em>Silver</em>, <em>Navy</em>, <em>Transparent</em>.</p>
+<p >Example: </p><div class="fragment"><div class="line">tgx::RGB32_Yellow; <span class="comment">// yellow color in RGB32 </span></div>
+<div class="line">tgx::RGB565_Green; <span class="comment">//  green color in RGB565</span></div>
+</div><!-- fragment --><p >For additional details on color manipulations, look directly into the color classes definitions in <a class="el" href="_color_8h.html">color.h</a>.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
-Memory layout / sub-images</h1>
+Image class, memory layout and sub-images</h1>
+<p >An image object is lightweight structure (only 16 bytes in memory) similar to a Numpy view in Python. The object records:</p><ul>
+<li>the dimension of the image (<code>lx</code>, <code>ly</code>).</li>
+<li>a pointer to the memory buffer <code>buffer[]</code> of pixel colors of type <code>color_t</code> (the template color type of the image).</li>
+<li>a <code>stride</code> value that is the number of pixels per image row (which may be larger than <code>ly</code> when working with sub-images).</li>
+</ul>
+<p >In particular, <b>the image object does not contain the pixels buffer itself</b> but only a pointer to its memory location. Therefore, several images can reference the same memory buffer: this permits to create images/sub-images that share the same pixels buffer.</p>
+<p >The position of a pixel in a image is,</p>
+<p ><code>Pixel(i, j) = buffer[i + stride*j]</code></p>
+<p >for 0 &le; <code>i</code> &lt; <code>lx</code> and 0 &le; <code>j</code> &lt; <code>ly</code>.</p>
+<p >Example </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buff[320*240];  <span class="comment">// memory buffer for a 320x240 image in RGB32 color format.</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> im0; <span class="comment">// create an empty (invalid) image of type RGB32. </span></div>
+<div class="line">im0.<a class="code hl_function" href="classtgx_1_1_image.html#a14d5fd97744c3335b775fde5ae055e02">set</a>(buff, 320,240) <span class="comment">// set the image pixel buffer and dimension (default stride  = ly). </span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> im1(buff, 320,240); <span class="comment">// construct and set the image parameter at the same time (same as im0)</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> im2 = im({20, 50, 100, 200}); <span class="comment">// create a sub-image restricted ot the region [20,50]x[100,200] of im2. </span></div>
+<div class="line"> </div>
+<div class="line">im0.<a class="code hl_function" href="classtgx_1_1_image.html#a9d703268591c2d95cc2be2427fb62a3f">lx</a>(); <span class="comment">// width of im1, here it is 320; </span></div>
+<div class="line">im2.<a class="code hl_function" href="classtgx_1_1_image.html#a9f18af07e65db0c8afb794f295e8bb40">ly</a>(); <span class="comment">// height of im2, here it is 101 = 200 - 100 + 1</span></div>
+<div class="line"> </div>
+<div class="line">im0.<a class="code hl_function" href="classtgx_1_1_image.html#a1bbdc9ae869755206d2d132a33596018">data</a>(); <span class="comment">// return the adress of the buffer (here = buff)</span></div>
+<div class="line">im2.<a class="code hl_function" href="classtgx_1_1_image.html#a1bbdc9ae869755206d2d132a33596018">data</a>(); <span class="comment">// return the adress of the buffer (here = buff + 20 + 100*stride)</span></div>
+<div class="line"> </div>
+<div class="line">im0.<a class="code hl_function" href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">stride</a>(); <span class="comment">// im1 stride, (here = 320)</span></div>
+<div class="line">im2.<a class="code hl_function" href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">stride</a>(); <span class="comment">// im2 stride, (here = 320 same as im1)</span></div>
+<div class="ttc" id="aclasstgx_1_1_image_html"><div class="ttname"><a href="classtgx_1_1_image.html">tgx::Image</a></div><div class="ttdoc">Image class [MAIN CLASS FOR THE 2D API].</div><div class="ttdef"><b>Definition:</b> Image.h:143</div></div>
+<div class="ttc" id="aclasstgx_1_1_image_html_a069d9b0ad0ffc0fe83aa73b4df198dc6"><div class="ttname"><a href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">tgx::Image::stride</a></div><div class="ttdeci">TGX_INLINE int stride() const</div><div class="ttdoc">Return the image stride.</div><div class="ttdef"><b>Definition:</b> Image.h:385</div></div>
+<div class="ttc" id="aclasstgx_1_1_image_html_a14d5fd97744c3335b775fde5ae055e02"><div class="ttname"><a href="classtgx_1_1_image.html#a14d5fd97744c3335b775fde5ae055e02">tgx::Image::set</a></div><div class="ttdeci">void set(T *buffer, int lx, int ly, int stride=DEFAULT_STRIDE)</div><div class="ttdoc">Set/update the image parameters.</div></div>
+<div class="ttc" id="aclasstgx_1_1_image_html_a1bbdc9ae869755206d2d132a33596018"><div class="ttname"><a href="classtgx_1_1_image.html#a1bbdc9ae869755206d2d132a33596018">tgx::Image::data</a></div><div class="ttdeci">TGX_INLINE const color_t * data() const</div><div class="ttdoc">Return a pointer to the pixel buffer.</div><div class="ttdef"><b>Definition:</b> Image.h:411</div></div>
+<div class="ttc" id="aclasstgx_1_1_image_html_a9d703268591c2d95cc2be2427fb62a3f"><div class="ttname"><a href="classtgx_1_1_image.html#a9d703268591c2d95cc2be2427fb62a3f">tgx::Image::lx</a></div><div class="ttdeci">TGX_INLINE int lx() const</div><div class="ttdoc">Return the image width.</div><div class="ttdef"><b>Definition:</b> Image.h:361</div></div>
+<div class="ttc" id="aclasstgx_1_1_image_html_a9f18af07e65db0c8afb794f295e8bb40"><div class="ttname"><a href="classtgx_1_1_image.html#a9f18af07e65db0c8afb794f295e8bb40">tgx::Image::ly</a></div><div class="ttdeci">TGX_INLINE int ly() const</div><div class="ttdoc">Return the image height.</div><div class="ttdef"><b>Definition:</b> Image.h:377</div></div>
+</div><!-- fragment --><p >See also: <a class="el" href="classtgx_1_1_image.html#a14d5fd97744c3335b775fde5ae055e02">Image::set()</a>, <a class="el" href="classtgx_1_1_image.html#a3d543dcbeddb6cd734718eb2432908c9">Image::crop()</a>, <a class="el" href="classtgx_1_1_image.html#a5fd91f6ec1804de22f1586867fcc6e61">Image::getCrop()</a>, <a class="el" href="classtgx_1_1_image.html#a5fd606e68501756f668430c6f1972672">Image::operator()</a>, <a class="el" href="classtgx_1_1_image.html#a6fe6fb2fd7cb9cb5da5c2984420ea184">Image::isValid()</a>, <a class="el" href="classtgx_1_1_image.html#a4d9fb81a7daea71a80213f3aa5dbbb18">Image::setInvalid()</a>, <a class="el" href="classtgx_1_1_image.html#a89021aa0f6408e702be35ae342d6e190">Image::imageBox()</a>.</p>
+<dl class="section note"><dt>Note</dt><dd>Creating image/sub-image is very fast and cost free so the user should not refrain from creating Image/sub-images whenever needed ! It is the most efficient solution to clip/restrict any drawing operation to a given (rectangular) region of an image.</dd></dl>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Vectors and Boxes</h1>
+<p >The tgx library defines classes for 2D vectors and boxes:</p>
+<ul>
+<li><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">tgx::iVec2</a> : integer-valued 2D vector. ** Use for pixel location in images**</li>
+<li><a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">tgx::fVec2</a> : floating point-valued 2D vector. <b>Used for pixel location in images when using sub-pixel precision</b></li>
+<li><a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">tgx::iBox2</a> : integer-valued 2D box. <b>Used to represent a rectangular region insid an image</b></li>
+<li><a class="el" href="_box2_8h.html#af5237584932da348a5241f13376af762">tgx::fBox2</a> : floating point-valued 2D box. <b>represent a rectangular region insid an image when using sub-pixel precision</b></li>
+</ul>
+<p >3D variants are also available: <a class="el" href="_vec3_8h.html#a3d74576a897ad4d7dc0c7bd5ca7e1071">tgx::iVec3</a>, <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">tgx::fVec3</a>, <a class="el" href="_box3_8h.html#a4dfbc3f0cd5d42d458c4908888036faf">tgx::iBox3</a>, <a class="el" href="_box3_8h.html#a8285b14fd9a9384343096eac6dd03e6a">tgx::fBox3</a> c.f. the 3D API for details.</p>
 <h1><a class="anchor" id="autotoc_md5"></a>
-Copying and converting images.</h1>
+Copying/converting images.</h1>
+<h1><a class="anchor" id="autotoc_md6"></a>
+blending and opacity parameter.</h1>
 <p >section: copy, blitting, subimage</p>
 <p >section: misc</p>
 <p >image type, view (shared buffer) et copy.</p>
