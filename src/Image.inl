@@ -3018,9 +3018,12 @@ namespace tgx
             }
         else
             {
-            _bseg_draw(BSeg(P1, P2), true, false, color, 0, 256, true);
-            _bseg_draw(BSeg(P2, P3), true, false, color, 0, 256, true);
-            _bseg_draw(BSeg(P3, P1), true, false, color, 0, 256, true);
+            auto bsP1P2 = BSeg(P1, P2);
+            _bseg_draw(bsP1P2, true, false, color, 0, 256, true);
+            auto bsP2P3 = BSeg(P2, P3);
+            _bseg_draw(bsP2P3, true, false, color, 0, 256, true);
+            auto bsP3P1 = BSeg(P3, P1);
+            _bseg_draw(bsP3P1, true, false, color, 0, 256, true);
             }
         }
 
@@ -3052,9 +3055,12 @@ namespace tgx
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         const int op = (int)(opacity * 256);
-        _bseg_draw_AA(BSeg(P1, P2), true, false, color, op, true);
-        _bseg_draw_AA(BSeg(P2, P3), true, false, color, op, true);
-        _bseg_draw_AA(BSeg(P3, P1), true, false, color, op, true);
+        auto bsP1P2 = BSeg(P1, P2);
+        _bseg_draw_AA(bsP1P2, true, false, color, op, true);
+        auto bsP2P3 = BSeg(P2, P3);
+        _bseg_draw_AA(bsP2P3, true, false, color, op, true);
+        auto bsP3P1 = BSeg(P3, P1);
+        _bseg_draw_AA(bsP3P1, true, false, color, op, true);
         }
 
 
@@ -3827,11 +3833,14 @@ namespace tgx
             P = Q;
             if (!next_point(Q))
                 { // last point 
-                _bseg_draw_AA(BSeg(P, Q), true, false, color, op, true);
-                _bseg_draw_AA(BSeg(Q, Q0), true, false, color, op, true);
+                auto bsPQ = BSeg(P, Q);
+                _bseg_draw_AA(bsPQ, true, false, color, op, true);
+                auto bsQQ0 = BSeg(Q, Q0);
+                _bseg_draw_AA(bsQQ0, true, false, color, op, true);
                 return;
                 }
-            _bseg_draw_AA(BSeg(P, Q), true, false, color, op, true);
+            auto bsPQ = BSeg(P, Q);
+            _bseg_draw_AA(bsPQ, true, false, color, op, true);
             }
         }
 
