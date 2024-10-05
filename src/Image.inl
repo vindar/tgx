@@ -3360,10 +3360,14 @@ namespace tgx
             }
         else
             {
-            _bseg_draw(BSeg(P1, P2), true, false, color, 0, 256, true);
-            _bseg_draw(BSeg(P2, P3), true, false, color, 0, 256, true);
-            _bseg_draw(BSeg(P3, P4), true, false, color, 0, 256, true);
-            _bseg_draw(BSeg(P4, P1), true, false, color, 0, 256, true);
+            auto bsP1P2 = BSeg(P1, P2);
+            _bseg_draw(bsP1P2, true, false, color, 0, 256, true);
+            auto bsP2P3 = BSeg(P2, P3);
+            _bseg_draw(bsP2P3, true, false, color, 0, 256, true);
+            auto bsP3P4 = BSeg(P3, P4);
+            _bseg_draw(bsP3P4, true, false, color, 0, 256, true);
+            auto bsP4P1 = BSeg(P4, P1);
+            _bseg_draw(bsP4P1, true, false, color, 0, 256, true);
             }
         }
 
@@ -3401,10 +3405,14 @@ namespace tgx
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         int op = (int)(256 * opacity);
-        _bseg_draw_AA(BSeg(P1, P2), true, false, color, op, true);
-        _bseg_draw_AA(BSeg(P2, P3), true, false, color, op, true);
-        _bseg_draw_AA(BSeg(P3, P4), true, false, color, op, true);
-        _bseg_draw_AA(BSeg(P4, P1), true, false, color, op, true);
+        auto bsP1P2 = BSeg(P1, P2);
+        _bseg_draw_AA(bsP1P2, true, false, color, op, true);
+        auto bsP2P3 = BSeg(P2, P3);
+        _bseg_draw_AA(bsP2P3, true, false, color, op, true);
+        auto bsP3P4 = BSeg(P3, P4);
+        _bseg_draw_AA(bsP3P4, true, false, color, op, true);
+        auto bsP4P1 = BSeg(P4, P1);
+        _bseg_draw_AA(bsP4P1, true, false, color, op, true);
         }
 
 
@@ -3723,11 +3731,14 @@ namespace tgx
             P = Q;
             if (!next_point(Q))
                 { // last point 
-                _bseg_draw(BSeg(P, Q), true, false, color, 0, op, true);
-                _bseg_draw(BSeg(Q, Q0), true, false, color, 0, op, true);
+                auto bsPQ = BSeg(P, Q);
+                _bseg_draw(bsPQ, true, false, color, 0, op, true);
+                auto bsQQ0 = BSeg(Q, Q0);
+                _bseg_draw(bsQQ0, true, false, color, 0, op, true);
                 return;
                 }
-            _bseg_draw(BSeg(P, Q), true, false, color, 0, op, true);
+            auto bsPQ = BSeg(P, Q);
+            _bseg_draw(bsPQ, true, false, color, 0, op, true);
             }
         }
 
@@ -5308,7 +5319,7 @@ namespace tgx
         if (dir_x < 0) { tgx::swap(B.minX, B.maxX); }
         B.maxX += dir_x;
 
-        const float thickness = 1.0f;
+//        const float thickness = 1.0f;
 
         const float inv_rx2 = 1.0f / (rx * rx);
         const float inv_ry2 = 1.0f / (ry * ry);
@@ -5433,7 +5444,7 @@ namespace tgx
         if (dir_x < 0) { tgx::swap(B.minX, B.maxX); }
         B.maxX += dir_x;
 
-        const float thickness = 4.0f;
+        //const float thickness = 4.0f;
 
         const float inv_rx2 = 1.0f / (rx * rx);
         const float inv_ry2 = 1.0f / (ry * ry);

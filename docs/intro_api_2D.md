@@ -240,6 +240,11 @@ tgx::RGB32 buffer[320*240];					  //
 tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
 im.clear(tgx::RGB32_Black);					  //
 
+tgx::RGB32 buf[50 * 50]; // memory for texture image
+tgx::Image<tgx::RGB32> tex(buf, 50, 50); // the texture image...
+tex.clear(tgx::RGB32_Blue); // ... has blue background ..
+tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB32_Red, tgx::RGB32_Green); // ...and red-filled circle with green outline in the center. 
+
 im.drawTexturedTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 10, 10 }, { 100, 20 }, { 30, 100 }); // textured triangle, full opacity
 im.drawGradientTriangle({ 20, 140 }, { 160, 50 }, {230, 200}, tgx::RGB32_Blue, tgx::RGB32_Orange, tgx::RGB32_Black); // gradient triangle, full opacity. 
 im.drawTexturedGradientTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 } , { 120, 230 }, { 300, 20 }, { 280, 170 }, tgx::RGB32_Red, tgx::RGB32_Green, tgx::RGB32_Blue, 0.5f); // texture triangle with color gradient. half opacity.
