@@ -6691,8 +6691,8 @@ namespace tgx
             return;
         default:
            {
-            float x[SPLINE_MAX_POINTS];
-            float y[SPLINE_MAX_POINTS];
+            float x[SPLINE_MAX_POINTS] = {0};
+            float y[SPLINE_MAX_POINTS] = {0};
             for (int i = 0; i < nbpoints; i++)
                 {
                 x[i] = tabPoints[i].x;
@@ -6823,8 +6823,8 @@ namespace tgx
 
         default:
            {
-            float x[SPLINE_MAX_POINTS];
-            float y[SPLINE_MAX_POINTS];
+            float x[SPLINE_MAX_POINTS] = {0};
+            float y[SPLINE_MAX_POINTS] = {0};
             for (int i = 0; i < nbpoints; i++)
                 {
                 x[i] = tabPoints[i].x;
@@ -6964,6 +6964,24 @@ namespace tgx
     * 
     *************************************************************************************/
 
+
+
+    template<typename color_t>
+    template<typename T> void Image<color_t>::setTakkaoOFR(T& ofr, float opacity)
+            {
+            if ((opacity >= 0) && (opacity < 1))
+                {
+                ofr.set_drawPixel([&](int32_t x, int32_t y, uint16_t c) { drawPixel({ x,y }, color_t(RGB565(c)), opacity); return; });
+                ofr.set_drawFastHLine([&](int32_t x, int32_t y, int32_t w, uint16_t c) { drawFastHLine({ x,y }, w, color_t(RGB565(c)), opacity); return; });
+                } 
+            else
+                {
+                ofr.set_drawPixel([&](int32_t x, int32_t y, uint16_t c) { drawPixel({ x,y }, color_t(RGB565(c))); return; });
+                ofr.set_drawFastHLine([&](int32_t x, int32_t y, int32_t w, uint16_t c) { drawFastHLine({ x,y }, w, color_t(RGB565(c))); return; });
+                }
+            ofr.set_startWrite([&](void) { return; });
+            ofr.set_endWrite([&](void) { return; });
+            }
 
 
 

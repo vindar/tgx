@@ -160,6 +160,7 @@ namespace tgx
 
 
 
+
     //*************************************************************************************************************
     //*************************************************************************************************************
     //*************************************************************************************************************
@@ -3347,6 +3348,41 @@ namespace tgx
          * @returns the position to draw the next char (when using the same anchor location).
          */
         iVec2 drawTextEx(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
+
+
+
+
+
+    ///@}
+    //*************************************************************************************************************
+    //*************************************************************************************************************
+    //*************************************************************************************************************
+    /**
+    * @name Truetype font rendering via Takkao's OpenFontRenderer library.
+    *
+    * https://github.com/takkaO/OpenFontRender. 
+    *       
+    */
+    ///@{
+    //*************************************************************************************************************
+    //*************************************************************************************************************
+    //*************************************************************************************************************
+
+
+
+        /**
+         * Link the image with Takkoa's OpenFontRenderer library : https://github.com/takkaO/OpenFontRender
+         *
+         * @tparam  T   type of the font renderer i.e. here it is `OpenFontRender` for Takkao's library. 
+         * @param [in,out]  ofr     The font renderer object to link with.
+         * @param           opacity (Optional) Opacity multiplier (in [0.0f, 1.0f]) used when drawing the font. 
+         */
+        template<typename T> void setTakkaoOFR(T& ofr, float opacity = TGX_DEFAULT_NO_BLENDING);
+
+
+
+
+
 
 
 
