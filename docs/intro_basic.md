@@ -135,7 +135,7 @@ The tgx library defines classes for 2D vectors and boxes:
 - **Floating point valued coordinates**: `fVec2(i,j)` represents the **center** of pixel `(i,j)` in the image. The pixel itself is a unit lenght square box centered around this location i.e. represented by `fBox2( i-0.5f, i+0.5f, j-0.5f, j+0.5f)`. In this case, the whole image (of size `(lx,ly)`) corresponds to the box `fBox2( 0.5f, lx - 0.5f, -0.5f, ly - 0.5f)`.
 
 Vector and boxes support the usual operations (arithmetics, copy, type conversion...). 
-Most drawing methods take vectors and boxes as input parameters instead of scalar. using initializer lists make use of those types straighforward.  
+Most drawing methods take vectors and boxes as input parameters instead of scalar: using initializer lists make use of those types straighforward.  
 
 Example:
 ~~~{.cpp}
@@ -171,6 +171,13 @@ im.fillRect({50, 60 , 70, 80}, tgx::RGB32_Black); // using an initializer list: 
 
 # Copying/converting images. 
 
+
+# interfacing with other libraries. 
+
+- pngdec
+- tjpg
+- takkao openfontrender
+- AnimatedGif
 
 
 
