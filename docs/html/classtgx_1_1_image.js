@@ -160,5 +160,6 @@ var classtgx_1_1_image =
     [ "drawText", "classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0", null ],
     [ "drawText", "classtgx_1_1_image.html#a0a51b7472e4627f9f8ce8e6b6ed4199e", null ],
     [ "drawTextEx", "classtgx_1_1_image.html#a6495b751001b95f32e9b219d69369caf", null ],
-    [ "drawTextEx", "classtgx_1_1_image.html#aa978df96aebf8d150988001ae5463c8f", null ]
+    [ "drawTextEx", "classtgx_1_1_image.html#aa978df96aebf8d150988001ae5463c8f", null ],
+    [ "setTakkaoOFR", "classtgx_1_1_image.html#a9609a7df4e4d2e771aa7668b97a61d31", null ]
 ];

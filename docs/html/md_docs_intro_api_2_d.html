@@ -281,6 +281,11 @@ drawing triangles (advanced)</h1>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> im(buffer, 320, 240);  <span class="comment">// create a black 320x240 image. </span></div>
 <div class="line">im.clear(tgx::RGB32_Black);                   <span class="comment">//</span></div>
 <div class="line"> </div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buf[50 * 50]; <span class="comment">// memory for texture image</span></div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> tex(buf, 50, 50); <span class="comment">// the texture image...</span></div>
+<div class="line">tex.clear(tgx::RGB32_Blue); <span class="comment">// ... has blue background ..</span></div>
+<div class="line">tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB32_Red, tgx::RGB32_Green); <span class="comment">// ...and red-filled circle with green outline in the center. </span></div>
+<div class="line"> </div>
 <div class="line">im.drawTexturedTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 10, 10 }, { 100, 20 }, { 30, 100 }); <span class="comment">// textured triangle, full opacity</span></div>
 <div class="line">im.drawGradientTriangle({ 20, 140 }, { 160, 50 }, {230, 200}, <a class="code hl_variable" href="_color_8h.html#a104b07f7b610b4062eb41af9ab85f046">tgx::RGB32_Blue</a>, <a class="code hl_variable" href="_color_8h.html#a4797620ab64671168c8c67fb5c324bdb">tgx::RGB32_Orange</a>, <a class="code hl_variable" href="_color_8h.html#a1e688542f09375307545639f49ac8d99">tgx::RGB32_Black</a>); <span class="comment">// gradient triangle, full opacity. </span></div>
 <div class="line">im.drawTexturedGradientTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 } , { 120, 230 }, { 300, 20 }, { 280, 170 }, <a class="code hl_variable" href="_color_8h.html#a3cf013ec1fa56751bb229035ef718aba">tgx::RGB32_Red</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>, <a class="code hl_variable" href="_color_8h.html#a104b07f7b610b4062eb41af9ab85f046">tgx::RGB32_Blue</a>, 0.5f); <span class="comment">// texture triangle with color gradient. half opacity.</span></div>

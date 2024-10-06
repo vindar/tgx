@@ -1,11 +1,11 @@
 @page intro_basic Basic concepts. 
 
 The TGX library's main class is the \ref tgx::Image class which, as its name suggests, encapsulate an **image**, that is a rectangular array of **pixels** of a given **color** type. 
-The library provides many methods to alter an image, i.e. change the color of its pixels by providing an extensive set of 2D and 3D drawing procedures. 
+The library provides an extensive set of 2D and 3D drawing procedures to operates on image objects. 
 
 All methods/classes are defined inside the `tgx` namespace. To use the library, just include "tgx.h":
 ~~~{.cpp}
-#include "tgx.h"
+#include <tgx.h>
 using namespace tgx; // optional, so we no not need to prefix all methods by tgx::
 ~~~
 
@@ -53,11 +53,11 @@ For additional details on color manipulations, look directly into the color clas
 
 ## blending and opacity parameter. 
 
-Color types \ref tgx::RGB32 and \ref tgx::RGB64 have an alpha channel which is used for alpha-blending during drawing operation. 
+Color types \ref tgx::RGB32 and \ref tgx::RGB64 have an alpha channel which is used for alpha-blending during drawing operations. 
 
 \note Colors with an alpha channel are always assumed to have [pre-multiplied alpha](https://en.wikipedia.org/wiki/Alpha_compositing). 
 
-Other color type do not have an alpha channel but the library still support rudimentary blending operations thanks to the (optional) `opacity` parameter added to all drawing primitives. This parameter ranges in `[0.0f, 1.0f]` with
+Other color type do not have an alpha channel but the library still support simple blending operations through the (optional) `opacity` parameter added to all drawing primitives. This parameter ranges in `[0.0f, 1.0f]` with
 - `opacity = 1.0f`: fully opaque drawing. This is the default value when the parameter is omited.
 - `opacity = 0.0f`: fully transparent drawing (so this draws nothing).
 
@@ -115,7 +115,7 @@ im2.stride(); // im2 stride, (here = 320 same as im1)
 
 See also: \ref tgx::Image::set() "Image::set()", \ref tgx::Image::crop() "Image::crop()", \ref tgx::Image::getCrop() "Image::getCrop()", \ref tgx::Image::operator()() "Image::operator()", \ref tgx::Image::isValid() "Image::isValid()", \ref tgx::Image::setInvalid() "Image::setInvalid()", \ref tgx::Image::imageBox() "Image::imageBox()". 
 
-@note Creating image/sub-image is very fast and cost free so the user should not refrain from creating Image/sub-images whenever needed ! It is the most efficient solution to clip/restrict any drawing operation to a given (rectangular) region of an image. 
+@note Creating image/sub-image is very fast and "cost free" so one should not refrain from creating Image/sub-images whenever needed ! It is the most efficient solution to clip/restrict any drawing operation to a given (rectangular) region of an image. 
 
 ---
 
