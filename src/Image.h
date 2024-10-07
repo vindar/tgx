@@ -3377,10 +3377,23 @@ namespace tgx
          * @param [in,out]  ofr     The font renderer object to link with.
          * @param           opacity (Optional) Opacity multiplier (in [0.0f, 1.0f]) used when drawing the font. 
          */
-        template<typename T> void setTakkaoOFR(T& ofr, float opacity = TGX_DEFAULT_NO_BLENDING);
-
-
-
+        template<typename T> void setTakkaoOFR(T& ofr, float opacity = TGX_DEFAULT_NO_BLENDING)
+            { 
+            // for some strange reason, cannot put this method inside the .inl file when compiling with arduino IDE... 
+            // must have something to do with Arduino's mangling of .ino file...
+            if ((opacity >= 0) && (opacity < 1))
+                {
+                ofr.set_drawPixel([&](int32_t x, int32_t y, uint16_t c) { drawPixel({ x,y }, color_t(RGB565(c)), opacity); return; });
+                ofr.set_drawFastHLine([&](int32_t x, int32_t y, int32_t w, uint16_t c) { drawFastHLine({ x,y }, w, color_t(RGB565(c)), opacity); return; });
+                } 
+            else
+                {
+                ofr.set_drawPixel([&](int32_t x, int32_t y, uint16_t c) { drawPixel({ x,y }, color_t(RGB565(c))); return; });
+                ofr.set_drawFastHLine([&](int32_t x, int32_t y, int32_t w, uint16_t c) { drawFastHLine({ x,y }, w, color_t(RGB565(c))); return; });
+                }
+            ofr.set_startWrite([&](void) { return; });
+            ofr.set_endWrite([&](void) { return; });
+            }
 
 
 

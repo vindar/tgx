@@ -6966,25 +6966,6 @@ namespace tgx
 
 
 
-    template<typename color_t>
-    template<typename T> void Image<color_t>::setTakkaoOFR(T& ofr, float opacity)
-            {
-            if ((opacity >= 0) && (opacity < 1))
-                {
-                ofr.set_drawPixel([&](int32_t x, int32_t y, uint16_t c) { drawPixel({ x,y }, color_t(RGB565(c)), opacity); return; });
-                ofr.set_drawFastHLine([&](int32_t x, int32_t y, int32_t w, uint16_t c) { drawFastHLine({ x,y }, w, color_t(RGB565(c)), opacity); return; });
-                } 
-            else
-                {
-                ofr.set_drawPixel([&](int32_t x, int32_t y, uint16_t c) { drawPixel({ x,y }, color_t(RGB565(c))); return; });
-                ofr.set_drawFastHLine([&](int32_t x, int32_t y, int32_t w, uint16_t c) { drawFastHLine({ x,y }, w, color_t(RGB565(c))); return; });
-                }
-            ofr.set_startWrite([&](void) { return; });
-            ofr.set_endWrite([&](void) { return; });
-            }
-
-
-
     /** used for clipping a font bitmap */
     template<typename color_t>
     bool Image<color_t>::_clipit(int& x, int& y, int& sx, int& sy, int & b_left, int & b_up)
