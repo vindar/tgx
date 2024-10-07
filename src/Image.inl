@@ -38,9 +38,12 @@
 * 
 *************************************************************************************/
 namespace tgx
-{
+    {
 
-    
+
+
+
+#if ((__has_include(<PNGDec.h>)) || (__has_include("PNGDec.h")))
 
 
     /***********************************
@@ -99,7 +102,7 @@ namespace tgx
                     for (int x = 0; x < lx; x++)
                         {
                         if ((x & 7) == 0) { c = *s++; }
-                        if (skipx <= 0) { (*pDest++).blend((color_t)((c & 0x80) ? RGB32_White : RGB32_Black), op); }  else { skipx--; }
+                        if (skipx <= 0) { (*pDest++).blend((color_t)((c & 0x80) ? RGB32_White : RGB32_Black), op); } else { skipx--; }
                         c <<= 1;
                         }
                     break;
@@ -111,7 +114,7 @@ namespace tgx
             {
             for (int x = 0; x < lx; x++)
                 {
-                if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)s[0], (int)s[1], (int)s[2])), op); }  else { skipx--; }
+                if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)s[0], (int)s[1], (int)s[2])), op); } else { skipx--; }
                 s += 3;
                 }
             break;
@@ -121,7 +124,7 @@ namespace tgx
             {
             for (int x = 0; x < lx; x++)
                 {
-                if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)s[0], (int)s[1], (int)s[2])), op255 * s[3]); }  else { skipx--; }
+                if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)s[0], (int)s[1], (int)s[2])), op255 * s[3]); } else { skipx--; }
                 s += 4;
                 }
             break;
@@ -140,7 +143,7 @@ namespace tgx
                         c = *s++;
                         int a = pDraw->pPalette[768 + c]; // get alpha
                         pPal = &pDraw->pPalette[c * 3];
-                        if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op255 * a); }  else { skipx--; }
+                        if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op255 * a); } else { skipx--; }
                         }
                     } else
                     {
@@ -148,7 +151,7 @@ namespace tgx
                         {
                         c = *s++;
                         pPal = &pDraw->pPalette[c * 3];
-                        if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op); }  else { skipx--; }
+                        if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op); } else { skipx--; }
                         }
                     }
                     break;
@@ -159,11 +162,11 @@ namespace tgx
                     {
                     c = *s++;
                     pPal = &pDraw->pPalette[(c >> 4) * 3];
-                    if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op); }  else { skipx--; }
+                    if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op); } else { skipx--; }
                     if ((x + 1) < lx)
                         {
                         pPal = &pDraw->pPalette[(c & 0xf) * 3];
-                        if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op); }  else { skipx--; }
+                        if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op); } else { skipx--; }
                         }
                     }
                 break;
@@ -178,7 +181,7 @@ namespace tgx
                         if ((x + j) < lx)
                             {
                             pPal = &pDraw->pPalette[(c >> 6) * 3];
-                            if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op); }  else { skipx--; }
+                            if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op); } else { skipx--; }
                             }
                         c <<= 2;
                         }
@@ -191,7 +194,7 @@ namespace tgx
                     {
                     if ((x & 7) == 0) { c = *s++; }
                     pPal = &pDraw->pPalette[(c >> 7) * 3];
-                    if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op); }  else { skipx--; }
+                    if (skipx <= 0) { (*pDest++).blend((color_t)(RGB32((int)pPal[0], (int)pPal[1], (int)pPal[2])), op); } else { skipx--; }
                     c <<= 1;
                     }
                 break;
@@ -220,54 +223,71 @@ namespace tgx
 
     template<typename PNG_T, typename PNGDraw_T> TGX_NOINLINE void PNGDraw(PNGDraw_T* pDraw)
         {
-        _PNGDecWrapper * pWrapper = (_PNGDecWrapper*)pDraw->pUser;
+        _PNGDecWrapper* pWrapper = (_PNGDecWrapper*)pDraw->pUser;
         const int skip = max(-pWrapper->pos.x, 0);
         const int x = max(pWrapper->pos.x, 0);
         const int y = pDraw->y + pWrapper->pos.y;
         switch (pWrapper->imgType)
             {
             case id_color_type<RGB565>::value:
-                {
-                Image<RGB565>* im = (Image<RGB565>*)pWrapper->pImg;
-                if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, RGB565>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
-                break;
-                }
+            {
+            Image<RGB565>* im = (Image<RGB565>*)pWrapper->pImg;
+            if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, RGB565>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
+            break;
+            }
             case id_color_type<RGB24>::value:
-                {
-                Image<RGB24>* im = (Image<RGB24>*)pWrapper->pImg;
-                if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, RGB24>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
-                break;
-                }
+            {
+            Image<RGB24>* im = (Image<RGB24>*)pWrapper->pImg;
+            if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, RGB24>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
+            break;
+            }
             case id_color_type<RGB32>::value:
-                {
-                Image<RGB32>* im = (Image<RGB32>*)pWrapper->pImg;
-                if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, RGB32>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
-                break;
-                }
+            {
+            Image<RGB32>* im = (Image<RGB32>*)pWrapper->pImg;
+            if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, RGB32>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
+            break;
+            }
             case id_color_type<RGB64>::value:
-                {
-                Image<RGB64>* im = (Image<RGB64>*)pWrapper->pImg;
-                if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, RGB64>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
-                break;
-                }
+            {
+            Image<RGB64>* im = (Image<RGB64>*)pWrapper->pImg;
+            if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, RGB64>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
+            break;
+            }
             case id_color_type<RGBf>::value:
-                {
-                Image<RGBf>* im = (Image<RGBf>*)pWrapper->pImg;
-                if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, RGBf>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
-                break;
-                }
+            {
+            Image<RGBf>* im = (Image<RGBf>*)pWrapper->pImg;
+            if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, RGBf>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
+            break;
+            }
             case id_color_type<HSV>::value:
-                {
-                Image<HSV>* im = (Image<HSV>*)pWrapper->pImg;
-                if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, HSV>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
-                break;
-                }
+            {
+            Image<HSV>* im = (Image<HSV>*)pWrapper->pImg;
+            if (((y >= 0) && (y < im->height())) && (x < im->width())) _pngdec_color_convert<PNGDraw_T, HSV>(skip, im->width() - x, pDraw, im->data() + x + (y * im->stride()), pWrapper->opacity);
+            break;
+            }
             }
         }
 
+// convenience macro
+#define TGX_PNGDraw     (tgx::PNGDraw<PNG>)
 
-    // convienience macro
-    #define TGX_PNGDraw     (tgx::PNGDraw<PNG>)
+
+#else
+
+    template<typename PNG_T, typename PNGDraw_T> TGX_NOINLINE void PNGDraw(PNGDraw_T* pDraw)
+        {
+        }
+
+template<typename color_t>
+template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, iVec2 topleft, float opacity)
+        {
+        static_assert(false, "PNGDec library not found. Please include PNGDec.h in your project.");
+        }
+
+// convenience macro
+#define TGX_PNGDraw     (tgx::PNGDraw<int>)
+
+#endif
 
 
 

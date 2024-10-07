@@ -3397,6 +3397,9 @@ namespace tgx
 
 
 
+
+
+
         /**
          * Decode a PNG image into this image using the PNGDec library: https://github.com/bitbank2/PNGdec/
          
@@ -3413,6 +3416,8 @@ namespace tgx
          * @returns The error code associated with the PNG.decode() method. (0 in case of success, 1000 if this image is invalid).
          */
         template<typename PNG_T> int PNGDecode(PNG_T& png, iVec2 topleft = iVec2(0, 0), float opacity = 1.0f);
+
+
 
 
 
