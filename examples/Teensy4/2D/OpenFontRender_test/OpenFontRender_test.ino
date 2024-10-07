@@ -2,7 +2,7 @@
 *
 * tgx library: 2D API
 *
-* This example show how to use Takkao's OpenFont Renderer to 
+* This example show how to use Takkao's OpenFontRender library to
 * render text using TrueType fonts.
 *
 * EXAMPLE FOR TEENSY 4 / 4.1
@@ -60,24 +60,17 @@ using namespace tgx;
 //#define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
 
 
-#define SPI_SPEED       40000000
+#define SPI_SPEED       30000000
 
 // the screen driver object
 ILI9341_T4::ILI9341Driver tft(PIN_CS, PIN_DC, PIN_SCK, PIN_MOSI, PIN_MISO, PIN_RESET, PIN_TOUCH_CS, PIN_TOUCH_IRQ);
-
-// 2 x 10K diff buffers (used by tft) for differential updates (in DMAMEM)
-DMAMEM ILI9341_T4::DiffBuffStatic<6000> diff1;
-DMAMEM ILI9341_T4::DiffBuffStatic<6000> diff2;
 
 // screen dimension (landscape mode)
 static const int SLX = 320;
 static const int SLY = 240;
 
-// main screen framebuffer (150K in DTCM for fastest access)
-DMAMEM uint16_t fb[SLX * SLY];
-
-// internal framebuffer (150K in DMAMEM) used by the ILI9431_T4 library for double buffering.
-DMAMEM uint16_t internal_fb[SLX * SLY];
+// screen framebuffer
+uint16_t fb[SLX * SLY];
 
 // image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
@@ -93,18 +86,9 @@ void setup()
     tft.output(&Serial);
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED));
-
-    // ok. turn on backlight
     pinMode(PIN_BACKLIGHT, OUTPUT);
     digitalWrite(PIN_BACKLIGHT, HIGH);
-
-    // setup the screen driver 
-    tft.setRotation(3); // portrait mode
-    tft.setFramebuffer(internal_fb); // double buffering
-    tft.setDiffBuffers(&diff1, &diff2); // 2 diff buffers
-    tft.setDiffGap(4); // small gap
-    tft.setRefreshRate(140); // refresh at 60hz
-    tft.setVSyncSpacing(2);
+    tft.setRotation(3); // landscape mode
 
     // Load the font and check it can be read OK
     if (ofr.loadFont(NotoSans_Bold, sizeof(NotoSans_Bold))) 
@@ -112,7 +96,6 @@ void setup()
         Serial.println("Initialise error");
         while (1) { delay(1); }
         }
-
     }
 
 

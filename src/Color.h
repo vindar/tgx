@@ -126,18 +126,32 @@ struct HSV;     // color in H/S/V float format (4 bytes aligned).
 
 
 
+
+/**
+ * Integer that identifies the color type (0 if not a color)
+ */
+template<typename T> struct id_color_type
+    {
+    static const int value =
+        (std::is_same<T, RGB565>::value) ? 1 : (
+        (std::is_same<T, RGB24>::value) ? 2 : (
+        (std::is_same<T, RGB32>::value) ? 3 : (
+        (std::is_same<T, RGB64>::value) ? 4 : (
+        (std::is_same<T, RGBf>::value) ? 5 : (
+        (std::is_same<T, HSV>::value) ? 6 : 0)))));
+    };
+
+
 /** 
  * Check if a type T is one of the color types declared above 
  */
 template<typename T> struct is_color
     {
-    static const bool value = (std::is_same<T, RGB565>::value)||
-                              (std::is_same<T, RGB24>::value) ||
-                              (std::is_same<T, RGB32>::value) ||
-                              (std::is_same<T, RGB64>::value) ||
-                              (std::is_same<T, RGBf>::value) ||
-                              (std::is_same<T, HSV>::value);
+    static const bool value = (id_color_type<T>::value != 0);
     };
+
+
+
 
 
 

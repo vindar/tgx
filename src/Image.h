@@ -3397,7 +3397,22 @@ namespace tgx
 
 
 
-
+        /**
+         * Decode a PNG image into this image using the PNGDec library: https://github.com/bitbank2/PNGdec/
+         
+         * The image is cropped if it does not fit completely into this image. 
+         *
+         * @tparam  PNG_T   Type of the PNG decoder i.e. here it is `PNG` from BitBank2's PNGDec library
+         * @param [in,out]  png     The PNG decoder object. TGX must have been link previously with this object when calling 
+         *                          one of the `open` methods by passing `TGX_PNGDraw` as argument for the PNGDraw callback. 
+         *                          
+         * @param           topleft (Optional) Position of the top-left corner of the PNG inside this image. 
+         *                          May be outside the image boundary and the PNG will be cropped accordingly. 
+         * @param           opacity (Optional) Opacity multiplier when blending in [0.0f, 1.0f].
+         *
+         * @returns The error code associated with the PNG.decode() method. (0 in case of success, 1000 if this image is invalid).
+         */
+        template<typename PNG_T> int PNGDecode(PNG_T& png, iVec2 topleft = iVec2(0, 0), float opacity = 1.0f);
 
 
 
