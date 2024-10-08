@@ -125,17 +125,18 @@ The tgx library defines classes for 2D vectors and boxes:
 
 - \ref tgx::iVec2 : integer-valued 2D vector. ** Use for pixel location in images**
 - \ref tgx::fVec2 : floating point-valued 2D vector. **Used for pixel location in images when using sub-pixel precision**
-- \ref tgx::iBox2 : integer-valued 2D box. **Used to represent a rectangular region insid an image**
-- \ref tgx::fBox2 : floating point-valued 2D box. **represent a rectangular region insid an image when using sub-pixel precision**
+- \ref tgx::iBox2 : integer-valued 2D box. **Used to represent a rectangular region inside an image**
+- \ref tgx::fBox2 : floating point-valued 2D box. **represent a rectangular region inside an image when using sub-pixel precision**
 
 @note 3D variants are also available: \ref tgx::iVec3, \ref tgx::fVec3, \ref tgx::iBox3, \ref tgx::fBox3 c.f. the 3D API for more details. 
 
 @warning Pixel adressing varies slightly when using integer valued coordinates vs floating point valued coordinates.
-- **Integer valued cordinate**: `iVec2(i,j)` represents the location of the pixel `(i,j)` in the image 
-- **Floating point valued coordinates**: `fVec2(i,j)` represents the **center** of pixel `(i,j)` in the image. The pixel itself is a unit lenght square box centered around this location i.e. represented by `fBox2( i-0.5f, i+0.5f, j-0.5f, j+0.5f)`. In this case, the whole image (of size `(lx,ly)`) corresponds to the box `fBox2( 0.5f, lx - 0.5f, -0.5f, ly - 0.5f)`.
+- **Integer valued cordinates**: `iVec2(i,j)` represents the location of the pixel `(i,j)` in the image and the whole image corresponds to the (integer valued) box `iBox2(0, lx - 1, 0, ly - 1)`.
+- **Floating point valued coordinates**: `fVec2(i,j)` represents the **center** of pixel `(i,j)` in the image. The pixel itself is a unit lenght square box centered around this location i.e. represented by `fBox2( i-0.5f, i+0.5f, j-0.5f, j+0.5f)`. In this case, the whole image (of size `(lx,ly)`) corresponds to the (floating point valued) box `fBox2( 0.5f, lx - 0.5f, -0.5f, ly - 0.5f)`.
 
-Vector and boxes support the usual operations (arithmetics, copy, type conversion...). 
-Most drawing methods take vectors and boxes as input parameters instead of scalar: using initializer lists make use of those types straighforward.  
+Vector and boxes support the usual operations: arithmetics, copy, type conversion...
+
+Most drawing methods take vectors and boxes as input parameters instead of scalars. Using initializer lists makes the code more readable: we can simply write `{10, 20}` instead of `tgx::iVec2(10, 20)`. 
 
 Example:
 ~~~{.cpp}

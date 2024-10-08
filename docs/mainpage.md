@@ -19,6 +19,11 @@ The library runs on both microprocessor and microcontollers but specifically tar
     - Methods for drawing Text with support for multiple font formats with anti-aliasing
     - Alpha-blending supported for all drawings operations. 
     - Several drawing methods come in two flavours: fast' methods and 'high quality' methods which are slower but draw using anti-aliasing and/or sub-pixel precision.     
+    - Easy interfacing with other libraries for
+        - drawing text with TrueType font using the [OpenFontRender library](https://github.com/takkaO/OpenFontRender)
+        - drawing JPEG images using the [JPEGDEC library](https://github.com/bitbank2/JPEGDEC)
+        - drawing PNG images using the [PNGdec library](https://github.com/bitbank2/PNGdec)
+        - drawing (animated) GIF images using the [AnimatedGIF library](https://github.com/bitbank2/AnimatedGIF)
 - **Extensive 3D API:**
     - Optimized 'pixel perfect' triangle rasterizer with adjustable sub-pixel precision. 
     - Depth buffer testing (selectable 16 bits or 32 bits precision).

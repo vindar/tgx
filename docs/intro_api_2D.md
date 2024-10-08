@@ -650,7 +650,14 @@ Each font above is avaailble in fontsize: 8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14pt
 
 
 
-# drawing text with truetype fonts 
+# drawing text with TrueType fonts 
+
+# drawing PNG images
+
+# drawing JPEG images
+
+# drawing GIF images
+
 
 use TakkaO's Openfont renderer
 

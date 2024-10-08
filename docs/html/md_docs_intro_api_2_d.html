@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('md_docs_intro_api_2_d.html',''); initR
 <li>For additional details, look directly into the main header file <a class="el" href="_image_8h.html">Image.h</a></li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md11"></a>
+<h1><a class="anchor" id="autotoc_md12"></a>
 Filling the screen.</h1>
 <p ><img src="../test_screen_filling.png" alt="test_screen_filling" class="inline"/> <br  />
 </p>
@@ -113,7 +113,7 @@ Filling the screen.</h1>
 <div class="line"><span class="keyword">auto</span> im2 = im(214, 320, 0, 240);                              <span class="comment">// create subimage = right third of the image</span></div>
 <div class="line">im2.fillScreenHGradient(tgx::RGB32_Green, tgx::RGB32_Orange); <span class="comment">// fill with horizontal gradient from green to orange</span></div>
 <div class="ttc" id="aclasstgx_1_1_image_html"><div class="ttname"><a href="classtgx_1_1_image.html">tgx::Image</a></div><div class="ttdoc">Image class [MAIN CLASS FOR THE 2D API].</div><div class="ttdef"><b>Definition:</b> Image.h:143</div></div>
-<div class="ttc" id="astructtgx_1_1_r_g_b32_html"><div class="ttname"><a href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a></div><div class="ttdoc">Color in R8/G8/B8/A8 format.</div><div class="ttdef"><b>Definition:</b> Color.h:1162</div></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b32_html"><div class="ttname"><a href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a></div><div class="ttdoc">Color in R8/G8/B8/A8 format.</div><div class="ttdef"><b>Definition:</b> Color.h:1176</div></div>
 </div><!-- fragment --><p> <b>Methods:</b></p><ul>
 <li><a class="el" href="classtgx_1_1_image.html#a81816066e883c3d17f13b4bdef22b8c1">clear()</a> : set all pixels of the image with the same color.</li>
 <li><a class="el" href="classtgx_1_1_image.html#ab126be8d4510810f3e17da14bb517ab9">fillScreen()</a> : same as clear().</li>
@@ -121,10 +121,10 @@ Filling the screen.</h1>
 <li><a class="el" href="classtgx_1_1_image.html#a95a7689a2be90f61e5b8738acc445d9d">fillScreenHGradient()</a> : fill the image with an horizontal gradient between two colors.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md13"></a>
+<h1><a class="anchor" id="autotoc_md14"></a>
 Blitting sprites</h1>
 <hr  />
-<h1><a class="anchor" id="autotoc_md15"></a>
+<h1><a class="anchor" id="autotoc_md16"></a>
 Reading/writing pixels</h1>
 <p ><img src="../test_points.png" alt="test_points" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -147,7 +147,7 @@ Reading/writing pixels</h1>
 <li><a class="el" href="classtgx_1_1_image.html#a56eca61edba23f1abfb74b9a52f4cb06">operator()</a> : direct access to the pixel color memory location (read/write).</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md17"></a>
+<h1><a class="anchor" id="autotoc_md18"></a>
 Flood-filling a region</h1>
 <p ><img src="../test_region_filling.png" alt="test_region_filling" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -166,7 +166,7 @@ Flood-filling a region</h1>
 <li><a class="el" href="classtgx_1_1_image.html#aa1526bd3763cfbdc0de6b8b874efa7a7">fill(start_pos, border_color, new_color)</a> : fill a region delimited by a given color.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md19"></a>
+<h1><a class="anchor" id="autotoc_md20"></a>
 drawing horizontal and vertical lines</h1>
 <p ><img src="../test_vhlines.png" alt="test_vhlines" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -182,7 +182,7 @@ drawing horizontal and vertical lines</h1>
 <li><a class="el" href="classtgx_1_1_image.html#a469410b578753d8d0ae5b7c8204efe50">drawFastHLine()</a> : draw an horizontal line segment.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md21"></a>
+<h1><a class="anchor" id="autotoc_md22"></a>
 drawing lines</h1>
 <p ><img src="../test_lines.png" alt="test_lines" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -205,7 +205,7 @@ drawing lines</h1>
 <li><a class="el" href="classtgx_1_1_image.html#ab38ad3252029c3091e3daf1fc39fc941">drawWedgeLineAA()</a> : draw a line segment with anti-aliasing with vraying thickness, specify how the ends look like (rounded, flat, arrows...)</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md23"></a>
+<h1><a class="anchor" id="autotoc_md24"></a>
 drawing rectangles</h1>
 <p ><img src="../test_rectangles.png" alt="test_rectangles" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -232,7 +232,7 @@ drawing rectangles</h1>
 </ul>
 <p >See also <a class="el" href="classtgx_1_1_image.html#a3ba400a6857ceb68d19f02cd50355027">drawThickRectAA()</a>, <a class="el" href="classtgx_1_1_image.html#a313f32df53f761c7f83793271d50fba1">drawThickRectAA()</a>, <a class="el" href="classtgx_1_1_image.html#a05e63abdfef6ce5c5a59b7875d3b5c05">drawThickRectAA()</a> (useful for smooth animation but not for static display).</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md25"></a>
+<h1><a class="anchor" id="autotoc_md26"></a>
 drawing rounded rectangles</h1>
 <p ><img src="../test_rounded_rectangles.png" alt="test_rounded_rectangles" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -250,7 +250,7 @@ drawing rounded rectangles</h1>
 <li><a class="el" href="classtgx_1_1_image.html#ae11412542a8f725330b58b10198c83ca">fillThickRoundRectAA()</a> : draw a filled rectangle with rounded corners and thick outline of a different color, with anti-aliasing.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md27"></a>
+<h1><a class="anchor" id="autotoc_md28"></a>
 drawing triangles</h1>
 <p ><img src="../test_triangles.png" alt="test_triangles" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -274,7 +274,7 @@ drawing triangles</h1>
 <li><a class="el" href="classtgx_1_1_image.html#ad5bc7675918586e2cc5f53d5501b5af6">fillThickTriangleAA()</a> : draw a filled triangle with a thick outline of a different color, with anti-aliasing.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md29"></a>
+<h1><a class="anchor" id="autotoc_md30"></a>
 drawing triangles (advanced)</h1>
 <p ><img src="../test_triangles_advanced.png" alt="test_triangles_advanced" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -297,7 +297,7 @@ drawing triangles (advanced)</h1>
 </ul>
 <p >See also <a class="el" href="classtgx_1_1_image.html#a6daf96f99c5806b6af17390cc644703a">drawTexturedMaskedTriangle()</a>, <a class="el" href="classtgx_1_1_image.html#a4f0cbbbf7e021ac3ebc78c6520951eda">drawTexturedGradientMaskedTriangle()</a> for additonal masking features.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md31"></a>
+<h1><a class="anchor" id="autotoc_md32"></a>
 drawing quads</h1>
 <p ><img src="../test_quads.png" alt="test_quads" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -319,7 +319,7 @@ drawing quads</h1>
 <li><a class="el" href="classtgx_1_1_image.html#ab3f31e694c4753e5863ba923d3577776">fillThickQuadAA()</a> : draw a filled quad with a thick outline of a different color, with anti-aliasing.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md33"></a>
+<h1><a class="anchor" id="autotoc_md34"></a>
 drawing quads (advanced)</h1>
 <p ><img src="../test_quad_advanced.png" alt="test_quad_advanced" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -337,7 +337,7 @@ drawing quads (advanced)</h1>
 </ul>
 <p >See also <a class="el" href="classtgx_1_1_image.html#aad463dcf29b1e1ea8827b6ec8d678e6a">drawTexturedMaskedQuad()</a>, <a class="el" href="classtgx_1_1_image.html#a511347039f599f26f146b63e57014acb">drawTexturedGradientMaskedQuad()</a> for additonal masking features.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md35"></a>
+<h1><a class="anchor" id="autotoc_md36"></a>
 drawing polylines</h1>
 <p ><img src="../test_polylines.png" alt="test_polylines" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -359,7 +359,7 @@ drawing polylines</h1>
 <li><a class="el" href="classtgx_1_1_image.html#ac11812aa29ca96aa0d8ca962fce581df">drawThickPolylineAA()</a> : draw a thick polyline with anti-aliasing and specify how the ending look like.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md37"></a>
+<h1><a class="anchor" id="autotoc_md38"></a>
 drawing polygons</h1>
 <p ><img src="../test_polygons.png" alt="test_polygons" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -392,7 +392,7 @@ drawing polygons</h1>
 <li><a class="el" href="classtgx_1_1_image.html#af72a0b6f12aa27fe378b97fc59c8f767">fillThickPolygonAA()</a> : draw a filled polygon with thick outline, with anti-aliasing.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md39"></a>
+<h1><a class="anchor" id="autotoc_md40"></a>
 drawing circles</h1>
 <p ><img src="../test_circles.png" alt="test_circles" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -415,7 +415,7 @@ drawing circles</h1>
 <li><a class="el" href="classtgx_1_1_image.html#adb41ee8add6cfb3d3e595233a782b1c8">fillThickCircleAA()</a> : draw a filled circle with thick outline, with anti-aliasing.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md41"></a>
+<h1><a class="anchor" id="autotoc_md42"></a>
 drawing ellipses</h1>
 <p ><img src="../test_ellipses.png" alt="test_ellipses" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -437,7 +437,7 @@ drawing ellipses</h1>
 <li><a class="el" href="classtgx_1_1_image.html#a2c41ba465b8e7a62a90e23fa60aab955">fillThickEllipseAA()</a> : draw a filled ellipse with thick outline, with anti-aliasing.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md43"></a>
+<h1><a class="anchor" id="autotoc_md44"></a>
 drawing circle arcs and pies</h1>
 <p ><img src="../test_arc_pies.png" alt="test_arc_pies" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -455,7 +455,7 @@ drawing circle arcs and pies</h1>
 <li><a class="el" href="classtgx_1_1_image.html#a50ced0ac855d93af3155aa28a07a3bca">fillThickCircleSectorAA()</a> : draw a circle sector (pie) with thick outline (circle arc), with AA.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md45"></a>
+<h1><a class="anchor" id="autotoc_md46"></a>
 drawing Bezier curves</h1>
 <p ><img src="../test_bezier_curves.png" alt="test_bezier_curves" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -475,7 +475,7 @@ drawing Bezier curves</h1>
 <li><a class="el" href="classtgx_1_1_image.html#a4cec6cabb220c2bd8cc6e4d6fe606719">drawThickCubicBezierAA()</a> : draw a thick cubic Bezier curve, with AA.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md47"></a>
+<h1><a class="anchor" id="autotoc_md48"></a>
 drawing splines</h1>
 <p ><img src="../test_splines.png" alt="test_splines" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -516,7 +516,7 @@ drawing splines</h1>
 <li><a class="el" href="classtgx_1_1_image.html#abbb199e8586e739467275d7f0b44a5e4">fillThickClosedSplineAA()</a> : draw a thick closed spline and fill its interior, with AA</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md49"></a>
+<h1><a class="anchor" id="autotoc_md50"></a>
 drawing text</h1>
 <p ><img src="../test_text.png" alt="test_text" class="inline"/></p>
 <p ><em>additional includes for the text fonts</em> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="font__tgx___arial_8h.html">font_tgx_Arial.h</a>&quot;</span></div>
@@ -616,8 +616,14 @@ drawing text</h1>
 <li><a class="el" href="classtgx_1_1_image.html#abfc2c7a0fa10aac9e11fa9632b535c8a">measureText()</a> : compute the bounding box of a text (fast, does not draw it)</li>
 <li><a class="el" href="classtgx_1_1_image.html#aa42488f709d7294c5dcb107cb4616626">measureChar()</a> : compute the bounding box of a character (fast, does not draw it)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md50"></a>
-drawing text with truetype fonts</h1>
+<h1><a class="anchor" id="autotoc_md51"></a>
+drawing text with TrueType fonts</h1>
+<h1><a class="anchor" id="autotoc_md52"></a>
+drawing PNG images</h1>
+<h1><a class="anchor" id="autotoc_md53"></a>
+drawing JPEG images</h1>
+<h1><a class="anchor" id="autotoc_md54"></a>
+drawing GIF images</h1>
 <p >use TakkaO's Openfont renderer</p>
 <p >TODO </p>
 </div></div><!-- contents -->

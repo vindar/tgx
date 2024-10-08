@@ -1000,6 +1000,7 @@ EXCLUDE_SYMBOLS        = tgx::DefaultFPType \
                          tgx::DummyTypeBB \
                          tgx::is_same \
                          tgx::is_color \
+                         tgx::id_color_type \
                          MTOOLS_TGX_EXTENSIONS \
                          PROGMEM \
                          FLASHMEM \

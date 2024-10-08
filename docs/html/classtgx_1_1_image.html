@@ -761,13 +761,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa978df96aebf8d150988001ae5463c8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aa978df96aebf8d150988001ae5463c8f">drawTextEx</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_i_l_i9341__t3__font__t.html">ILI9341_t3_font_t</a> &amp;font, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:aa978df96aebf8d150988001ae5463c8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advanced drawText method.  <a href="classtgx_1_1_image.html#aa978df96aebf8d150988001ae5463c8f">More...</a><br /></td></tr>
 <tr class="separator:aa978df96aebf8d150988001ae5463c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Truetype font rendering via Takkao's OpenFOntRenderer library.</div></td></tr>
+<tr><td colspan="2"><div class="groupHeader">Truetype font rendering via Takkao's OpenFontRenderer library.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p ><a href="https://github.com/takkaO/OpenFontRender">https://github.com/takkaO/OpenFontRender</a>. </p>
 </div></td></tr>
 <tr class="memitem:a9609a7df4e4d2e771aa7668b97a61d31"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a9609a7df4e4d2e771aa7668b97a61d31"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a9609a7df4e4d2e771aa7668b97a61d31">setTakkaoOFR</a> (T &amp;ofr, float opacity=<a class="el" href="_misc_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a9609a7df4e4d2e771aa7668b97a61d31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Link the image with Takkoa's OpenFontRenderer library : <a href="https://github.com/takkaO/OpenFontRender">https://github.com/takkaO/OpenFontRender</a>.  <a href="classtgx_1_1_image.html#a9609a7df4e4d2e771aa7668b97a61d31">More...</a><br /></td></tr>
 <tr class="separator:a9609a7df4e4d2e771aa7668b97a61d31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a077be1a8bdfd1d67ef2788f6e515157c"><td class="memTemplParams" colspan="2">template&lt;typename PNG_T &gt; </td></tr>
+<tr class="memitem:a077be1a8bdfd1d67ef2788f6e515157c"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a077be1a8bdfd1d67ef2788f6e515157c">PNGDecode</a> (PNG_T &amp;png, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> topleft=<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>(0, 0), float opacity=1.0f)</td></tr>
+<tr class="memdesc:a077be1a8bdfd1d67ef2788f6e515157c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode a PNG image into this image using the PNGDec library: <a href="https://github.com/bitbank2/PNGdec/">https://github.com/bitbank2/PNGdec/</a>.  <a href="classtgx_1_1_image.html#a077be1a8bdfd1d67ef2788f6e515157c">More...</a><br /></td></tr>
+<tr class="separator:a077be1a8bdfd1d67ef2788f6e515157c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae83fd55040b78f8b4f55be84b7a27cfd"><td class="memTemplParams" colspan="2">template&lt;typename JPEG_T &gt; </td></tr>
+<tr class="memitem:ae83fd55040b78f8b4f55be84b7a27cfd"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ae83fd55040b78f8b4f55be84b7a27cfd">JPEGDecode</a> (JPEG_T &amp;jpeg, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> topleft=<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>(0, 0), int options=0, float opacity=1.0f)</td></tr>
+<tr class="memdesc:ae83fd55040b78f8b4f55be84b7a27cfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode a JPEG image into this image using the JPEGDEC library: <a href="https://github.com/bitbank2/JPEGDEC/">https://github.com/bitbank2/JPEGDEC/</a>.  <a href="classtgx_1_1_image.html#ae83fd55040b78f8b4f55be84b7a27cfd">More...</a><br /></td></tr>
+<tr class="separator:ae83fd55040b78f8b4f55be84b7a27cfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -2203,7 +2211,7 @@ template&lt;typename ITERFUN &gt; </div>
 </ul>
 <dl class="section remark"><dt>Remarks</dt><dd>this method is particularly useful with lambdas, for example, to paint all black pixels to red in a tgx::Image&lt;tgx::RGB565&gt; image <code>im</code>: <div class="fragment"><div class="line">im.iterate( [](<a class="code hl_struct" href="structtgx_1_1_vec2.html">tgx::iVec2</a> pos, <a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> &amp; color)</div>
 <div class="line">              { <span class="keywordflow">if</span> (color == tgx::RGB565_Black) color = tgx::RGB565_Red; <span class="keywordflow">return</span> <span class="keyword">true</span>; } );</div>
-<div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:202</div></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:216</div></div>
 <div class="ttc" id="astructtgx_1_1_vec2_html"><div class="ttname"><a href="structtgx_1_1_vec2.html">tgx::Vec2</a></div><div class="ttdoc">Generic 2D vector [specializations iVec2, fVec2, dVec2].</div><div class="ttdef"><b>Definition:</b> Vec2.h:64</div></div>
 </div><!-- fragment --></dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -2425,7 +2433,8 @@ template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </div>
 </pre><p> (the method can, in fact, return a color of any type but returning type color_t will improve performance).</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>The sprite can have a different color type from the image.</li>
-<li>To perform "classical alpha blending", use the <a class="el" href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542" title="Blit/blend a sprite over this image at a given position.">blit()</a> method with an opacity parameter instead of this method as it will be faster.</li>
+<li>To perform "classical alpha blending" with images of the same color format, use the <a class="el" href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542" title="Blit/blend a sprite over this image at a given position.">blit()</a> <br  />
+ method with an opacity parameter instead of this method as it will be a little faster.</li>
 </ol>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -2541,7 +2550,7 @@ template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </div>
 </pre><p> (the method can, in fact, return a color of any type but returning type color_t will improve performance).</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>The sprite can have a different color type from the image.</li>
-<li>To perform "classical alpha blending", use the <a class="el" href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542" title="Blit/blend a sprite over this image at a given position.">blit()</a> method with an opacity parameter instead of this method as it will be faster.</li>
+<li>To perform "classical alpha blending" with images of the same color format, use the <a class="el" href="classtgx_1_1_image.html#ae64e40a38c12fc9abbe886626de89b8c" title="Blit/blend a rotated sprite over this image at a given position.">blitRotated()</a> method with an opacity parameter instead of this method as it will be a little faster.</li>
 </ol>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -2936,7 +2945,7 @@ template&lt;typename src_color_t &gt; </div>
 </div><div class="memdoc">
 
 <p>Copy (or blend) the src image onto the destination image with resizing and color conversion. </p>
-<p >Very useful for converting image of different size and color type !</p>
+<p >Useful for converting image of different size and color type !</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>the source image is resized to match this image size. Bilinear interpolation is used to improve quality. <br  />
 </li>
@@ -2991,7 +3000,9 @@ template&lt;typename src_color_t , typename BLEND_OPERATOR &gt; </div>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>the source image is resized to match this image size. Bilinear interpolation is used to improve quality.</li>
 <li>The source and destination image may have different color type. Conversion is automatic.</li>
-<li>To perform simple copy or classical alpha blending, use the <a class="el" href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae" title="Copy (or blend) the src image onto the destination image with resizing and color conversion.">copyFrom()</a> method with an opacity parameter instead as it will be faster.</li>
+</ol>
+<ol type="1">
+<li>To perform "classical alpha blending" with images of the same color format, use the <a class="el" href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae" title="Copy (or blend) the src image onto the destination image with resizing and color conversion.">copyFrom()</a> method with an opacity parameter instead of this method as it will be a little faster.</li>
 </ol>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -10319,6 +10330,9 @@ template&lt;typename color_t &gt; </div>
 template&lt;typename color_t &gt; </div>
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classtgx_1_1_image.html">tgx::Image</a>&lt; color_t &gt;::setTakkaoOFR </td>
@@ -10338,6 +10352,11 @@ template&lt;typename T &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Link the image with Takkoa's OpenFontRenderer library : <a href="https://github.com/takkaO/OpenFontRender">https://github.com/takkaO/OpenFontRender</a>. </p>
@@ -10354,6 +10373,125 @@ template&lt;typename T &gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a077be1a8bdfd1d67ef2788f6e515157c" name="a077be1a8bdfd1d67ef2788f6e515157c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a077be1a8bdfd1d67ef2788f6e515157c">&#9670;&#160;</a></span>PNGDecode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename color_t &gt; </div>
+<div class="memtemplate">
+template&lt;typename PNG_T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classtgx_1_1_image.html">tgx::Image</a>&lt; color_t &gt;::PNGDecode </td>
+          <td>(</td>
+          <td class="paramtype">PNG_T &amp;&#160;</td>
+          <td class="paramname"><em>png</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td>
+          <td class="paramname"><em>topleft</em> = <code><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>(0,&#160;0)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code>1.0f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Decode a PNG image into this image using the PNGDec library: <a href="https://github.com/bitbank2/PNGdec/">https://github.com/bitbank2/PNGdec/</a>. </p>
+<p >The image is cropped if it does not fit completely into this image.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">PNG_T</td><td>Type of the PNG decoder i.e. here it is <code>PNG</code> from BitBank2's PNGDec library. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">png</td><td>The PNG decoder object. TGX must have been linked previously with this object when calling one of the <code>open</code> methods by passing <code>TGX_PNGDraw</code> as argument for the PNGDraw callback. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">topleft</td><td>(Optional) Position of the top-left corner of the PNG inside this image. May be outside the image boundary and the PNG will be cropped accordingly. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">opacity</td><td>(Optional) Opacity multiplier when blending in [0.0f, 1.0f].</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The error code associated with the PNG.decode() method. (0 in case of success, 1000 if this image is invalid). </dd></dl>
+
+</div>
+</div>
+<a id="ae83fd55040b78f8b4f55be84b7a27cfd" name="ae83fd55040b78f8b4f55be84b7a27cfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae83fd55040b78f8b4f55be84b7a27cfd">&#9670;&#160;</a></span>JPEGDecode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename color_t &gt; </div>
+<div class="memtemplate">
+template&lt;typename JPEG_T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classtgx_1_1_image.html">tgx::Image</a>&lt; color_t &gt;::JPEGDecode </td>
+          <td>(</td>
+          <td class="paramtype">JPEG_T &amp;&#160;</td>
+          <td class="paramname"><em>jpeg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td>
+          <td class="paramname"><em>topleft</em> = <code><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>(0,&#160;0)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>options</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code>1.0f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Decode a JPEG image into this image using the JPEGDEC library: <a href="https://github.com/bitbank2/JPEGDEC/">https://github.com/bitbank2/JPEGDEC/</a>. </p>
+<p >The image is cropped if it does not fit completely into this image.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">JPEG_T</td><td>Type of the JPEG decoder i.e. here it is <code>JPEGDEC</code> from BitBank2's JPEGDEC library. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">jpeg</td><td>The JPEG decoder object. TGX must have been linked previously with this object when calling one of the <code>open</code> methods by passing <code>TGX_JPEGDraw</code> as argument for the JPEGDraw callback. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">topleft</td><td>(Optional) Position of the top-left corner of the PNG inside this image. May be outside the image boundary and the PNG will be cropped accordingly. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">options</td><td>(Optional) Options to pass to the decoder. See the JPEGDEC library for the list of options available (currently: JPEG_AUTO_ROTATE, JPEG_SCALE_HALF, JPEG_SCALE_QUARTER, JPEG_SCALE_EIGHTH, JPEG_LE_PIXELS, JPEG_EXIF_THUMBNAIL, JPEG_LUMA_ONLY). Set this to 0 for default option. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">opacity</td><td>(Optional) Opacity multiplier when blending in [0.0f, 1.0f].</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The error code associated with the jpeg.decode() method. (0 in case of success, 1000 if this image is invalid). </dd></dl>
 
 </div>
 </div>
