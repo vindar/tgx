@@ -3448,6 +3448,9 @@ namespace tgx
          * Decode a PNG image into this image using the PNGDec library:
          * https://github.com/bitbank2/PNGdec/
          * 
+         * This method is a wrapper around the `PNG.decode()` method from the PNGDec library and takes
+         * the same arguments and return values.
+         * 
          * The image is cropped if it does not fit completely into this image.
          *
          * @tparam  PNG_T   Type of the PNG decoder i.e. here it is `PNG` from BitBank2's PNGDec library.
@@ -3465,10 +3468,12 @@ namespace tgx
         template<typename PNG_T> int PNGDecode(PNG_T& png, iVec2 topleft = iVec2(0, 0), float opacity = 1.0f);
 
 
-
         /**
          * Decode a JPEG image into this image using the JPEGDEC library:
          * https://github.com/bitbank2/JPEGDEC/
+         * 
+         * This method is a wrapper around the `JPEGDEC.decode()` method from the JPEGDEC library and
+         * takes the same arguments and return values.
          * 
          * The image is cropped if it does not fit completely into this image.
          *
@@ -3477,8 +3482,8 @@ namespace tgx
          * @param [in,out]  jpeg    The JPEG decoder object. TGX must have been linked previously with
          *                          this object when calling one of the `open` methods by passing
          *                          `TGX_JPEGDraw` as argument for the JPEGDraw callback.
-         * @param           topleft (Optional) Position of the top-left corner of the PNG inside this
-         *                          image. May be outside the image boundary and the PNG will be cropped
+         * @param           topleft (Optional) Position of the top-left corner of the JPEG inside this
+         *                          image. May be outside the image boundary and the JPEG will be cropped
          *                          accordingly.
          * @param           options (Optional) Options to pass to the decoder. See the JPEGDEC library
          *                          for the list of options available (currently: JPEG_AUTO_ROTATE,
@@ -3492,6 +3497,35 @@ namespace tgx
          */
         template<typename JPEG_T> int JPEGDecode(JPEG_T& jpeg, iVec2 topleft = iVec2(0, 0), int options = 0, float opacity = 1.0f);
 
+
+        /**
+         * Decode a (possibly animated) GIF image into this image using the AnimatedGIF library:
+         * https://github.com/bitbank2/AnimatedGIF/
+         * 
+         * This method is a wrapper around the `JPEGDEC.playFrame()` method from the AnimatedGIF library
+         * and takes the same arguments and return values.
+         * 
+         * - In the case of animated GIF. Each call to the method draws the nexct frame. The method
+         *   returns 1 when there is still another frame to draw, 0 when finished. See the
+         *   `gif.playFrame()` method from the AnimatedGIF library for additional details.
+         * 
+         * - The image is cropped if it does not fit completely into this image.
+         *
+         * @tparam  GIF_T   Type of the GIF decoder i.e. here it is `AnimatedGIF` from BitBank2's
+         *                  AnimatedGIF library.
+         * @param [in,out]  gif     The GIF decoder object. TGX must have been linked previously with
+         *                           this object when calling one of the `open` methods by passing
+         *                           `TGX_GIFDraw` as argument for the GIFDraw callback.
+         * @param           topleft (Optional) Position of the top-left corner of the GIF inside this
+         *                          image. May be outside the image boundary and the GIF will be cropped
+         *                          accordingly.
+         * @param           opacity (Optional) Opacity multiplier when blending in [0.0f, 1.0f]. NOTE:
+         *                          only opaque mode (opacity=1.0f) is supported for GIF animation.
+         *
+         * @returns The error code associated with the gif.playFrame() method. (0 in case of success,
+         *          1000 if this image is invalid).
+         */
+        template<typename GIF_T> int GIFplayFrame(GIF_T& gif, iVec2 topleft = iVec2(0, 0), float opacity = 1.0f);
 
 
 

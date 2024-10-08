@@ -472,6 +472,196 @@ namespace tgx
 
 
 
+/***********************************
+ * 
+ * Interfacing with the AnimatedGIF library
+ *
+ ************************************/
+/*
+#ifndef TGX_HAS_ANIMATEDGIF
+    #if (__has_include(<AnimatedGIF.h>))
+        #include <AnimatedGIF.h>
+        #define TGX_HAS_ANIMATEDGIF 1
+    #elif (__has_include("AnimatedGIF.h"))
+        #include "AnimatedGIF.h"
+        #define TGX_HAS_ANIMATEDGIF 1
+    #else
+        #define TGX_HAS_ANIMATEDGIF 0
+    #endif
+#endif
+*/
+
+namespace tgx
+    {
+
+    struct _GIFWrapper
+        {
+        int imgType;
+        float opacity;
+        iVec2 pos;
+        void* pGIF; // pointer to the GIF object
+        void* pImg; // pointer to the image object
+        };
+
+
+    template<typename color_t>
+    template<typename GIF_T> TGX_NOINLINE int Image<color_t>::GIFplayFrame(GIF_T& gif, iVec2 topleft, float opacity)
+        {  
+        if (!isValid()) return 1000; // nothing to draw
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _JPEGDECWrapper wrap;
+        wrap.imgType = id_color_type<color_t>::value;
+        wrap.pJPEG = (void*)(&gif);
+        wrap.pImg = (void*)this;
+        wrap.pos = topleft;
+        wrap.opacity = opacity;
+        return gif.playFrame(false, nullptr, (void*)(&wrap));
+        }
+
+
+
+    template<typename color_t, typename GIFDraw_T> TGX_NOINLINE void gif_decode(Image<color_t>* im, GIFDraw_T* pDraw)
+        {
+        _JPEGDECWrapper* pWrapper = (_JPEGDECWrapper*)pDraw->pUser;
+        const float op = pWrapper->opacity;
+        int iWidth = pDraw->iWidth;
+        uint8_t* s = pDraw->pPixels;
+
+        int x0 = pDraw->iX + pWrapper->pos.x; 
+        int y0 = pDraw->iY + pWrapper->pos.y + pDraw->y;
+
+        if ((y0 < 0) || (y0 >= im->height())) return;
+        if (x0 < 0) { iWidth += x0; s -= x0; x0 = 0; }
+        if (x0 + iWidth > im->width()) { iWidth = im->width() - x0; }
+        if ((x0 >= im->width()) || (iWidth < 1)) return;
+        // ok, we can draw now
+
+        const uint16_t* usPalette = pDraw->pPalette;       // the 565 palette if non null
+        const uint8_t* usPalette24 = pDraw->pPalette24;    // the RGB888 palette if non null
+        
+        const uint8_t ucTransparent = pDraw->ucTransparent; // transparent color index
+        const uint8_t ucBackground = pDraw->ucBackground;   // background color index
+
+        if (pDraw->ucDisposalMethod == 2) // restore to background color
+            {
+            for (int x = 0; x < iWidth; x++)
+                {
+                if (s[x] == ucTransparent) s[x] = ucBackground;
+                }
+            pDraw->ucHasTransparency = 0;
+            }
+
+        color_t * d = im->data() + x0 + (y0 * im->stride()); // destination
+
+        if (usPalette24)
+            { // we use the RGB888 palette for better quality
+            if (pDraw->ucHasTransparency)
+                {
+                if (op >= 1)
+                    {
+                    for (int x = 0; x < iWidth; x++)
+                        {
+                        const uint8_t c = s[x];
+                        if (c != ucTransparent)
+                            {
+                            const int ind = c * 3;
+                            d[x] = (color_t)(tgx::RGB32((int)usPalette24[ind + 0], (int)usPalette24[ind + 1], (int)usPalette24[ind + 2]));
+                            }
+                        }
+                    }
+                else
+                    {
+                    for (int x = 0; x < iWidth; x++)
+                        {
+                        const uint8_t c = s[x];
+                        if (c != ucTransparent)
+                            {
+                            const int ind = c * 3;
+                            d[x].blend((color_t)(tgx::RGB32((int)usPalette24[ind + 0], (int)usPalette24[ind + 1], (int)usPalette24[ind + 2])), op);
+                            }
+                        }
+                    }
+                } 
+            else
+                {
+                if (op >= 1)
+                    {
+                    for (int x = 0; x < iWidth; x++)
+                        {
+                        const int ind = s[x] * 3;
+                        d[x] = (color_t)(tgx::RGB32((int)usPalette24[ind + 0], (int)usPalette24[ind + 1], (int)usPalette24[ind + 2]));
+                        }
+                    }
+                else
+                    {
+                    for (int x = 0; x < iWidth; x++)
+                        {
+                        const int ind = s[x] * 3;
+                        d[x].blend((color_t)(tgx::RGB32((int)usPalette24[ind + 0], (int)usPalette24[ind + 1], (int)usPalette24[ind + 2])), op);
+                        }
+                    }
+                }
+            } 
+        else if (usPalette)
+                { // use the RGB565 palette
+                if (pDraw->ucHasTransparency)
+                    {
+                    if (op >= 1)
+                        {
+                        for (int x = 0; x < iWidth; x++)
+                            {
+                            const uint8_t c = *s++;
+                            if (c != ucTransparent) { d[x] = (color_t)(RGB565(usPalette[c])); }
+                            }
+                        }
+                    else
+                        {
+                        for (int x = 0; x < iWidth; x++)
+                            {
+                            const uint8_t c = *s++;
+                            if (c != ucTransparent) { d[x].blend((color_t)(RGB565(usPalette[c])),op); }
+                            }
+                        }
+                    } 
+                else
+                    {
+                    if (op >= 1)
+                        {
+                        for (int x = 0; x < iWidth; x++) { d[x] = (color_t)(RGB565(usPalette[*s++])); }
+                        }
+                    else
+                        {
+                        for (int x = 0; x < iWidth; x++) { d[x].blend((color_t)(RGB565(usPalette[*s++])),op); }
+                        }
+                    }
+                }
+            return;
+        }
+
+
+    template<typename GIF_T, typename GIFDraw_T> TGX_NOINLINE void GIFDraw(GIFDraw_T* pDraw)
+        {
+        _JPEGDECWrapper* pWrapper = (_JPEGDECWrapper*)pDraw->pUser;
+        switch (pWrapper->imgType)
+            {
+            case id_color_type<RGB565>::value: { gif_decode(((Image<RGB565>*)pWrapper->pImg), pDraw); break; }
+            case id_color_type<RGB24>::value: { gif_decode(((Image<RGB24>*)pWrapper->pImg), pDraw); break; }
+            case id_color_type<RGB32>::value: { gif_decode(((Image<RGB32>*)pWrapper->pImg), pDraw); break; }
+            case id_color_type<RGB64>::value: { gif_decode(((Image<RGB64>*)pWrapper->pImg), pDraw); break; }
+            case id_color_type<RGBf>::value: { gif_decode(((Image<RGBf>*)pWrapper->pImg), pDraw); break; }
+            case id_color_type<HSV>::value: { gif_decode(((Image<HSV>*)pWrapper->pImg), pDraw); break; }
+            }
+        return;
+        }
+
+
+
+    // convenience macro
+    #define TGX_GIFDraw     (tgx::GIFDraw<AnimatedGIF>)
+
+    }
+
+
 
 
 
