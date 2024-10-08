@@ -37,18 +37,32 @@
 * 
 * 
 *************************************************************************************/
+
+
+
+
+/***********************************
+ * 
+ * Interfacing with the PNGdec library
+ *
+ ************************************/
+
+#ifndef TGX_HAS_PNGdec
+    #if (__has_include(<PNGdec.h>))
+        #include <PNGdec.h>
+        #define TGX_HAS_PNGdec 1
+    #elif (__has_include("PNGdec.h"))
+        #include "PNGdec.h"
+        #define TGX_HAS_PNGdec 1
+    #else
+        #define TGX_HAS_PNGdec 0
+    #endif
+#endif
+#if TGX_HAS_PNGdec
+
 namespace tgx
     {
 
-
-
-
-#if ((__has_include(<PNGDec.h>)) || (__has_include("PNGDec.h")))
-
-
-    /***********************************
-    Interfacing with the PNGDec library
-    ************************************/
     struct _PNGDecWrapper
         {
         int imgType;
@@ -59,16 +73,14 @@ namespace tgx
         };
 
 
-
     template<typename PNGDraw_T, typename color_t>
     TGX_NOINLINE void _pngdec_color_convert(int skipx, int lx, PNGDraw_T* pDraw, color_t* pDest, float op)
         {
-
-        const int TGX_PNG_PIXEL_GRAYSCALE = 0;          // taken from enum source pixel type
-        const int TGX_PNG_PIXEL_TRUECOLOR = 2;          // in PNGdec.h
-        const int TGX_PNG_PIXEL_INDEXED = 3;            //
-        const int TGX_PNG_PIXEL_GRAY_ALPHA = 4;         //
-        const int TGX_PNG_PIXEL_TRUECOLOR_ALPHA = 6;    //
+        const int TGX_PNG_PIXEL_GRAYSCALE = PNG_PIXEL_GRAYSCALE;                // taken from enum source pixel type
+        const int TGX_PNG_PIXEL_TRUECOLOR = PNG_PIXEL_TRUECOLOR;                // in PNGdec.h
+        const int TGX_PNG_PIXEL_INDEXED = PNG_PIXEL_INDEXED;                    //
+        const int TGX_PNG_PIXEL_GRAY_ALPHA = PNG_PIXEL_GRAY_ALPHA;              //
+        const int TGX_PNG_PIXEL_TRUECOLOR_ALPHA = PNG_PIXEL_TRUECOLOR_ALPHA;    //
 
         lx = tgx::min(lx, pDraw->iWidth);
         uint8_t c = 0, a, * pPal, * s = pDraw->pPixels;
@@ -268,24 +280,32 @@ namespace tgx
             }
         }
 
-// convenience macro
-#define TGX_PNGDraw     (tgx::PNGDraw<PNG>)
+    // convenience macro
+    #define TGX_PNGDraw     (tgx::PNGDraw<PNG>)
 
+    }
 
 #else
 
+namespace tgx
+    {
+
     template<typename PNG_T, typename PNGDraw_T> TGX_NOINLINE void PNGDraw(PNGDraw_T* pDraw)
         {
+        return;
         }
 
-template<typename color_t>
-template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, iVec2 topleft, float opacity)
+    template<typename color_t>
+    template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, iVec2 topleft, float opacity)
         {
-        static_assert(false, "PNGDec library not found. Please include PNGDec.h in your project.");
+        static_assert((std::is_same<PNG_T, tgx::DummyType<2> >::value), "PNGDec library not found. Please include PNGDec.h in your project.");
+        return 1000; 
         }
 
-// convenience macro
-#define TGX_PNGDraw     (tgx::PNGDraw<int>)
+    // convenience macro
+    #define TGX_PNGDraw     (tgx::PNGDraw< DummyType<1> >)
+
+    }
 
 #endif
 
@@ -295,6 +315,215 @@ template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, 
 
 
 
+
+/***********************************
+ * 
+ * Interfacing with the JPEGDEC library
+ *
+ ************************************/
+#ifndef TGX_HAS_JPEGDEC
+    #if (__has_include(<JPEGDEC.h>))
+        #include <JPEGDEC.h>
+        #define TGX_HAS_JPEGDEC 1
+    #elif (__has_include("JPEGDEC.h"))
+        #include "JPEGDEC.h"
+        #define TGX_HAS_JPEGDEC 1
+    #elif (__has_include(<JPEGDec.h>))
+        #include <JPEGDec.h>
+        #define TGX_HAS_JPEGDEC 1
+    #elif (__has_include("JPEGDec.h"))
+        #include "JPEGDec.h"
+        #define TGX_HAS_JPEGDEC 1
+    #else
+        #define TGX_HAS_JPEGDEC 0
+    #endif
+#endif
+#if TGX_HAS_JPEGDEC
+
+
+namespace tgx
+    {
+
+    struct _JPEGDECWrapper
+        {
+        int imgType;
+        float opacity;
+        iVec2 pos;
+        void* pJPEG; // pointer to the JPEG object
+        void* pImg; // pointer to the image object
+        };
+
+
+
+    template<typename color_t>
+    template<typename JPEG_T> TGX_NOINLINE int Image<color_t>::JPEGDecode(JPEG_T& jpeg, iVec2 topleft, int options, float opacity)
+        {
+        if (!isValid()) return 1000; // nothing to draw
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        _JPEGDECWrapper wrap;
+        wrap.imgType = id_color_type<color_t>::value;
+        wrap.pJPEG = (void*)(&jpeg);
+        wrap.pImg = (void*)this;
+        wrap.pos = topleft;
+        wrap.opacity = opacity;
+        jpeg.setUserPointer((void*)(&wrap));
+        jpeg.setPixelType((wrap.imgType == id_color_type<RGB565>::value) ? RGB565_LITTLE_ENDIAN : RGB8888);
+        return jpeg.decode(0, 0, options);
+        }
+
+
+
+
+
+    template<typename JPEGDraw_T, typename color_t>
+    TGX_NOINLINE void _jpegdec_color_convert8888(int x, int y, JPEGDraw_T* pDraw, Image<color_t> * im, float op)
+        {
+        uint8_t* p = (uint8_t*)pDraw->pPixels;
+        x += pDraw->x; 
+        y += pDraw->y;
+        if ((op >= 1.0f) && ((x >= 0) && (x + pDraw->iWidth <= im->width())) && ((y >= 0) && (y + pDraw->iHeight <= im->height())))
+            { // faster
+            color_t * fb = im->data() + x + (y * im->stride());
+            const int str = im->stride();
+            for (int j = 0; j < pDraw->iHeight; j++)
+                {
+                for (int i = 0; i < pDraw->iWidth; i++)
+                    {
+                    fb[i+ str*j] = (color_t)(RGB32(p[2], p[1], p[0]));
+                    p += 4;
+                    }
+                }
+            }
+        else
+            { // slow but safe
+            for (int j = 0; j < pDraw->iHeight; j++)
+                {
+                for (int i = 0; i < pDraw->iWidth; i++)
+                    {
+                    im->template drawPixel<true>({ x + i, y + j }, (color_t)(RGB32(p[2], p[1], p[0])), op);
+                    p += 4;
+                    }
+                }
+            }
+        }
+
+
+    template<typename JPEGDraw_T>
+    TGX_NOINLINE void _jpegdec_color_convert565(int x, int y, JPEGDraw_T* pDraw, Image<RGB565>* im, float op)
+        {
+        x += pDraw->x;
+        y += pDraw->y;
+        uint16_t* p = pDraw->pPixels;
+        if ((op >= 1.0f) && (((x >= 0) && (x + pDraw->iWidth <= im->width())) && ((y >= 0) && (y + pDraw->iHeight <= im->height()))))
+            {
+            uint16_t * fb = (uint16_t*)im->data() + x + (y * im->stride());
+            const int str = im->stride();
+            for (int j = 0; j < pDraw->iHeight; j++)
+                {
+                for (int i = 0; i < pDraw->iWidth; i++)
+                    {
+                    fb[i + str * j] = *(p++);
+                    }
+                }
+            } 
+        else
+            {
+            for (int j = 0; j < pDraw->iHeight; j++)
+                {
+                for (int i = 0; i < pDraw->iWidth; i++)
+                    {
+                    im->template drawPixel<true>({ x + i, y + j }, RGB565(*(p++)), op);
+                    }
+                }
+            }
+        }
+
+
+
+    template<typename JPEG_T, typename JPEGDraw_T> TGX_NOINLINE int JPEGDraw(JPEGDraw_T* pDraw)
+        {
+        _JPEGDECWrapper* pWrapper = (_JPEGDECWrapper*)pDraw->pUser;
+        switch (pWrapper->imgType)
+            {
+            case id_color_type<RGB565>::value:
+                {
+                Image<RGB565>* im = (Image<RGB565>*)pWrapper->pImg;
+                _jpegdec_color_convert565(pWrapper->pos.x, pWrapper->pos.y, pDraw, im, pWrapper->opacity);
+                break;
+                }
+            case id_color_type<RGB24>::value:
+                {
+                Image<RGB24>* im = (Image<RGB24>*)pWrapper->pImg;
+                _jpegdec_color_convert8888(pWrapper->pos.x, pWrapper->pos.y, pDraw, im, pWrapper->opacity);
+                break;
+                }
+            case id_color_type<RGB32>::value:
+                {
+                Image<RGB32>* im = (Image<RGB32>*)pWrapper->pImg;
+                _jpegdec_color_convert8888(pWrapper->pos.x, pWrapper->pos.y, pDraw, im, pWrapper->opacity);
+                break;
+                }
+            case id_color_type<RGB64>::value:
+                {
+                Image<RGB64>* im = (Image<RGB64>*)pWrapper->pImg;
+                _jpegdec_color_convert8888(pWrapper->pos.x, pWrapper->pos.y, pDraw, im, pWrapper->opacity);
+                break;
+                }
+            case id_color_type<RGBf>::value:
+                {
+                Image<RGBf>* im = (Image<RGBf>*)pWrapper->pImg;
+                _jpegdec_color_convert8888(pWrapper->pos.x, pWrapper->pos.y, pDraw, im, pWrapper->opacity);
+                break;
+                }
+            case id_color_type<HSV>::value:
+                {
+                Image<HSV>* im = (Image<HSV>*)pWrapper->pImg;
+                _jpegdec_color_convert8888(pWrapper->pos.x, pWrapper->pos.y, pDraw, im, pWrapper->opacity);
+                break;
+                }
+            }
+        return 1;
+        }
+
+
+
+    // convenience macro
+    #define TGX_JPEGDraw     (tgx::JPEGDraw<JPEGDEC>)
+
+    }
+
+#else
+
+namespace tgx
+    {
+
+    template<typename JPEG_T, typename JPEGDraw_T> TGX_NOINLINE int JPEGDraw(JPEGDraw_T* pDraw)
+        {
+        return 0; 
+        }
+
+    template<typename color_t>
+    template<typename JPEG_T> TGX_NOINLINE int Image<color_t>::JPEGDecode(JPEG_T& jpeg, iVec2 topleft, int options, float opacity)
+        {
+        static_assert((std::is_same<JPEG_T, tgx::DummyType<2> >::value), "JPEGDEC library not found. Please include JPEGDEC.h in your project.");
+        return 1000; 
+        }
+
+    // convenience macro
+    #define TGX_JPEGDraw     (tgx::JPEGDraw< DummyType<1> >)
+
+    }
+
+#endif
+
+
+
+
+
+
+
+namespace tgx
+    {
 
 
     /** Used for debuging.   
@@ -509,7 +738,7 @@ template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, 
     template<typename color_t_src, typename BLEND_OPERATOR>
     void Image<color_t>::blit(const Image<color_t_src>& sprite, iVec2 upperleftpos, const BLEND_OPERATOR& blend_op)
         {
-        _blit(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), blend_op);
+        _blit<color_t_src,BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite.lx(), sprite.ly(), blend_op);
         }
 
 
@@ -617,7 +846,7 @@ template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, 
 
     
     template<typename color_t>
-    bool Image<color_t>::_blitClip(const Image& sprite, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy)
+    template<typename color_t_src> bool Image<color_t>::_blitClip(const Image<color_t_src> & sprite, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy)
         {
         if ((!sprite.isValid()) || (!isValid())) { return false; } // nothing to draw on or from
         return _blitClip(sprite._lx, sprite._ly, dest_x, dest_y, sprite_x, sprite_y, sx, sy);
@@ -772,7 +1001,7 @@ template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, 
     void Image<color_t>::_blit(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
         {
         if (!_blitClip(sprite, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
-        _blitRegion(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, blend_op);
+        _blitRegion<color_t_src, BLEND_OPERATOR>(_buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, blend_op);
         }
 
     template<typename color_t>
@@ -782,7 +1011,7 @@ template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, 
         for (int j = 0; j < sy; j++)
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            color_t_src* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
             for (int i = 0; i < sx; i++) 
                 { 
                 pdest2[i] = (color_t)blend_op(psrc2[i], pdest2[i]);
@@ -797,7 +1026,7 @@ template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, 
         for (int j = sy - 1; j >= 0; j--)
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
-            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            color_t_src * psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
             for (int i = sx - 1; i >= 0; i--) 
                 {
                 pdest2[i] = (color_t)blend_op(psrc2[i], pdest2[i]);
@@ -847,13 +1076,13 @@ template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, 
                 blit(sprite, upperleftpos, blend_op);
                 break;
             case 90:
-                _blitRotated90<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
+                _blitRotated90blend<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
                 break;
             case 180:
-                _blitRotated180<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
+                _blitRotated180blend<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
                 break;
             case 270: 
-                _blitRotated270<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
+                _blitRotated270blend<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
                 break;
             default:
                 // do nothing...
@@ -903,15 +1132,15 @@ template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, 
 
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
-    void Image<color_t>::_blitRotated90(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
+    void Image<color_t>::_blitRotated90blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
         {      
         if (!_blitClip(sprite._ly, sprite._lx, dest_x, dest_y, sprite_x, sprite_y, sy, sx)) return;
         const int spx = sprite._lx - sprite_y - sx;
         const int spy = sprite_x;                     
         // ok draw subsprite (spx,spy) with size (sx,sy) to this image at upper left pos (dest_x, dest_y)
         const int sp_stride = sprite._stride;
-        color_t* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
-        color_t* pdst = _buffer + TGX_CAST32(dest_x) + TGX_CAST32(dest_y) * TGX_CAST32(_stride);
+        color_t_src* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
+        color_t * pdst = _buffer + TGX_CAST32(dest_x) + TGX_CAST32(dest_y) * TGX_CAST32(_stride);
         for (int i = sx - 1; i >= 0; i--)
             {
             for (int j = 0; j < sy; j++)
@@ -963,14 +1192,14 @@ template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, 
 
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
-    void Image<color_t>::_blitRotated180(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
+    void Image<color_t>::_blitRotated180blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
         {        
         if (!_blitClip(sprite._lx, sprite._ly, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
         const int spx = sprite._lx - sprite_x - sx;
         const int spy = sprite._ly - sprite_y - sy;
         // ok draw subsprite (spx,spy) with size (sx,sy) to this image at upper left pos (dest_x, dest_y)
         const int sp_stride = sprite._stride;
-        color_t* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
+        color_t_src* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
         color_t* pdst = _buffer + TGX_CAST32(dest_x) + TGX_CAST32(dest_y) * TGX_CAST32(_stride);
         for (int j = sy - 1; j >= 0; j--)
             {
@@ -1023,14 +1252,14 @@ template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, 
 
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
-    void Image<color_t>::_blitRotated270(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
+    void Image<color_t>::_blitRotated270blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
         {        
         if (!_blitClip(sprite._ly, sprite._lx, dest_x, dest_y, sprite_x, sprite_y, sy, sx)) return;
         const int spx = sprite_y;
         const int spy = sprite._ly - sprite_x - sy;
         // ok draw subsprite (spx,spy) with size (sx,sy) to this image at upper left pos (dest_x, dest_y)
         const int sp_stride = sprite._stride;
-        color_t* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
+        color_t_src* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
         color_t* pdst = _buffer + TGX_CAST32(dest_x) + TGX_CAST32(dest_y) * TGX_CAST32(_stride);
         for (int i = 0; i < sx; i++)
             {

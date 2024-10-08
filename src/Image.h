@@ -697,8 +697,8 @@ namespace tgx
          * 
          * @remark
          * 1. The sprite can have a different color type from the image. 
-         * 2. To perform "classical alpha blending", use the blit() method with an opacity parameter
-         *    instead of this method as it will be faster.
+         * 2. To perform "classical alpha blending" with images of the same color format, use the blit()   
+         *    method with an opacity parameter instead of this method as it will be a little faster.
          *
          * @param   sprite          The sprite image to blend.
          * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
@@ -741,8 +741,8 @@ namespace tgx
          * 
          * @remark
          * 1. The sprite can have a different color type from the image.
-         * 2. To perform "classical alpha blending", use the blit() method with an opacity parameter
-         *    instead of this method as it will be faster.
+         * 2. To perform "classical alpha blending" with images of the same color format, use the blitRotated()
+         *    method with an opacity parameter instead of this method as it will be a little faster.
          *
          * @param   sprite          The sprite image to blit.
          * @param   upperleftpos    Position inside this image of the upper left corner of the sprite (after rotation).
@@ -883,7 +883,7 @@ namespace tgx
         /**
          * Copy (or blend) the src image onto the destination image with resizing and color conversion.
          * 
-         * Very useful for converting image of different size and color type !
+         * Useful for converting image of different size and color type !
          * 
          * @remark
          * 1. the source image is resized to match this image size. Bilinear interpolation is used to
@@ -916,9 +916,9 @@ namespace tgx
          * 1. the source image is resized to match this image size. Bilinear interpolation is used to
          *    improve quality.
          * 2. The source and destination image may have different color type. Conversion is automatic.
-         * 3. To perform simple copy or classical alpha blending, use the copyFrom() method with an
-         *    opacity parameter instead as it will be faster.
-         *    
+         * 2. To perform "classical alpha blending" with images of the same color format, use the copyFrom()
+         *    method with an opacity parameter instead of this method as it will be a little faster.
+         *
          * @param   src_im      Source image to copy onto this image.
          * @param   blend_op    The blending operator.
          */
@@ -3396,27 +3396,53 @@ namespace tgx
             }
 
 
-
+        /**
+         * Decode a PNG image into this image using the PNGDec library:
+         * https://github.com/bitbank2/PNGdec/
+         * 
+         * The image is cropped if it does not fit completely into this image.
+         *
+         * @tparam  PNG_T   Type of the PNG decoder i.e. here it is `PNG` from BitBank2's PNGDec library.
+         * @param [in,out]  png     The PNG decoder object. TGX must have been linked previously with
+         *                          this object when calling one of the `open` methods by passing
+         *                          `TGX_PNGDraw` as argument for the PNGDraw callback.
+         * @param           topleft (Optional) Position of the top-left corner of the PNG inside this
+         *                          image. May be outside the image boundary and the PNG will be cropped
+         *                          accordingly.
+         * @param           opacity (Optional) Opacity multiplier when blending in [0.0f, 1.0f].
+         *
+         * @returns The error code associated with the PNG.decode() method. (0 in case of success, 1000
+         *          if this image is invalid).
+         */
+        template<typename PNG_T> int PNGDecode(PNG_T& png, iVec2 topleft = iVec2(0, 0), float opacity = 1.0f);
 
 
 
         /**
-         * Decode a PNG image into this image using the PNGDec library: https://github.com/bitbank2/PNGdec/
-         
-         * The image is cropped if it does not fit completely into this image. 
+         * Decode a JPEG image into this image using the JPEGDEC library:
+         * https://github.com/bitbank2/JPEGDEC/
+         * 
+         * The image is cropped if it does not fit completely into this image.
          *
-         * @tparam  PNG_T   Type of the PNG decoder i.e. here it is `PNG` from BitBank2's PNGDec library
-         * @param [in,out]  png     The PNG decoder object. TGX must have been link previously with this object when calling 
-         *                          one of the `open` methods by passing `TGX_PNGDraw` as argument for the PNGDraw callback. 
-         *                          
-         * @param           topleft (Optional) Position of the top-left corner of the PNG inside this image. 
-         *                          May be outside the image boundary and the PNG will be cropped accordingly. 
+         * @tparam  JPEG_T  Type of the JPEG decoder i.e. here it is `JPEGDEC` from BitBank2's JPEGDEC
+         *                  library.
+         * @param [in,out]  jpeg    The JPEG decoder object. TGX must have been linked previously with
+         *                          this object when calling one of the `open` methods by passing
+         *                          `TGX_JPEGDraw` as argument for the JPEGDraw callback.
+         * @param           topleft (Optional) Position of the top-left corner of the PNG inside this
+         *                          image. May be outside the image boundary and the PNG will be cropped
+         *                          accordingly.
+         * @param           options (Optional) Options to pass to the decoder. See the JPEGDEC library
+         *                          for the list of options available (currently: JPEG_AUTO_ROTATE,
+         *                          JPEG_SCALE_HALF, JPEG_SCALE_QUARTER, JPEG_SCALE_EIGHTH,
+         *                          JPEG_LE_PIXELS, JPEG_EXIF_THUMBNAIL, JPEG_LUMA_ONLY). Set this to 0
+         *                          for default option.
          * @param           opacity (Optional) Opacity multiplier when blending in [0.0f, 1.0f].
          *
-         * @returns The error code associated with the PNG.decode() method. (0 in case of success, 1000 if this image is invalid).
+         * @returns The error code associated with the jpeg.decode() method. (0 in case of success, 1000
+         *          if this image is invalid).
          */
-        template<typename PNG_T> int PNGDecode(PNG_T& png, iVec2 topleft = iVec2(0, 0), float opacity = 1.0f);
-
+        template<typename JPEG_T> int JPEGDecode(JPEG_T& jpeg, iVec2 topleft = iVec2(0, 0), int options = 0, float opacity = 1.0f);
 
 
 
@@ -3510,7 +3536,7 @@ private:
 
         static inline void _fast_memset(color_t* p_dest, color_t color, int32_t len);
 
-        bool _blitClip(const Image& sprite, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy);
+        template<typename color_t_src> bool _blitClip(const Image<color_t_src>& sprite, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy);
         bool _blitClip(int sprite_lx, int sprite_ly, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy);
 
         void _blit(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy);
@@ -3540,9 +3566,9 @@ private:
         void _blitRotated180(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
         void _blitRotated270(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
 
-        template<typename color_t_src, typename BLEND_OPERATOR> void _blitRotated90(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op);
-        template<typename color_t_src, typename BLEND_OPERATOR> void _blitRotated180(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op);
-        template<typename color_t_src, typename BLEND_OPERATOR> void _blitRotated270(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op);
+        template<typename color_t_src, typename BLEND_OPERATOR> void _blitRotated90blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op);
+        template<typename color_t_src, typename BLEND_OPERATOR> void _blitRotated180blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op);
+        template<typename color_t_src, typename BLEND_OPERATOR> void _blitRotated270blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op);
 
 
         /***************************************
