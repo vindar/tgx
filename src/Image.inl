@@ -1195,13 +1195,13 @@ namespace tgx
             case 0: 
                 blit(sprite, upperleftpos, opacity);
                 break;
-            case 90:
+            case 270: // changed because we go clockwise instead of counterclockwise
                 _blitRotated90(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, opacity);
                 break;
             case 180:
                 _blitRotated180(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, opacity);
                 break;
-            case 270: 
+            case 90: // changed because we go clockwise instead of counterclockwise
                 _blitRotated270(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, opacity);
                 break;
             default:
@@ -1221,13 +1221,13 @@ namespace tgx
             case 0: 
                 blit(sprite, upperleftpos, blend_op);
                 break;
-            case 90:
+            case 270: // changed because we go clockwise instead of counterclockwise
                 _blitRotated90blend<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
                 break;
             case 180:
                 _blitRotated180blend<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
                 break;
-            case 270: 
+            case 90:  // changed because we go clockwise instead of counterclockwise
                 _blitRotated270blend<color_t_src, BLEND_OPERATOR>(sprite, upperleftpos.x, upperleftpos.y, 0, 0, sprite._lx, sprite._ly, blend_op);
                 break;
             default:

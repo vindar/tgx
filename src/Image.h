@@ -716,7 +716,7 @@ namespace tgx
          *
          * @param   sprite          The sprite image to blit.
          * @param   upperleftpos    Position inside this image of the upper left corner of the sprite (after rotation).
-         * @param   angle           Counter-clockwise angle to rotate the sprite prior to blitting. Must be either 0, 90, 180 or 270.
+         * @param   angle           Clockwise angle to rotate the sprite prior to blitting. In degrees. Must be either 0, 90, 180 or 270.
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending and simply overwrite the spite over the
          *                          image.
@@ -746,7 +746,7 @@ namespace tgx
          *
          * @param   sprite          The sprite image to blit.
          * @param   upperleftpos    Position inside this image of the upper left corner of the sprite (after rotation).
-         * @param   angle           Counter-clockwise angle to rotate the sprite prior to blitting. Must be either 0, 90, 180 or 270.
+         * @param   angle           Clockwise angle to rotate the sprite prior to blitting.  In degrees. Must be either 0, 90, 180 or 270.
          * @param   blend_op        The blending operator.
          */
         template<typename color_t_src, typename BLEND_OPERATOR>
@@ -789,7 +789,7 @@ namespace tgx
          * Blit/blend a sprite onto this image after rescaling and rotation.
          * 
          * The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The
-         * rotation is performed in counter-clockwise direction around the anchor point.
+         * rotation is performed in clockwise direction around the anchor point.
          * 
          * @remark
          *   1. Positions are given using floating point values to allow for sub-pixel precision for
@@ -809,7 +809,7 @@ namespace tgx
          * @param   anchor_src      Position of the anchor point in the sprite image.
          * @param   anchor_dst      Position of the anchor point in this image.
          * @param   scale           (Optional) Scaling factor (default 1.0f for no rescaling).
-         * @param   angle_degrees   (Optional) The rotation angle in degrees (counter-clockwise, default 0 for no rotation).
+         * @param   angle_degrees   (Optional) The rotation angle in degrees (clockwise, default 0 for no rotation).
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                          negative to disable blending and simply use overwrite.
          */
@@ -837,8 +837,8 @@ namespace tgx
          * @param   src_im          The sprite image to draw.
          * @param   anchor_src      Position of the anchor point in the sprite image.
          * @param   anchor_dst      Position of the anchor point in this image.
-         * @param   scale           Scaling factor (counter-clockwise, default 1.0f for no rescaling).
-         * @param   angle_degrees   The rotation angle in degrees (default 0 for no rotation).
+         * @param   scale           Scaling factor (1.0f for no rescaling).
+         * @param   angle_degrees   The rotation angle in degrees (clockwise, default 0 for no rotation).
          * @param   blend_op        blending operator.
          */
         template<typename color_t_src, typename BLEND_OPERATOR, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
@@ -850,7 +850,7 @@ namespace tgx
          * treated as fully transparent.
          * 
          * The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The
-         * rotation is performed in counter-clockwise direction around the anchor point.
+         * rotation is performed in clockwise direction around the anchor point.
          * 
          * @remark
          *   1. Positions are given using floating point values to allow for sub-pixel precision for
@@ -872,7 +872,7 @@ namespace tgx
          * @param   anchor_src          Position of the anchor point in the sprite image.
          * @param   anchor_dst          Position of the anchor point in this image.
          * @param   scale               Scaling factor (default 1.0f for no rescaling).
-         * @param   angle_degrees       The rotation angle in degrees (default 0 for no rotation).
+         * @param   angle_degrees       The rotation angle in degrees (clockwise, default 0 for no rotation).
          * @param   opacity             (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
          *                              negative to disable blending and simply use overwrite.
          */

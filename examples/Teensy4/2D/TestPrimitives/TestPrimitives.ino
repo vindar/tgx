@@ -2,7 +2,8 @@
 *
 * TGX library.
 *
-* This example show how to call the 2D drawing methods.
+* This example show how to call (most of) the 2D drawing methods
+* of the tgx library. 
 *
 * EXAMPLE FOR TEENSY 4 / 4.1
 *
@@ -12,7 +13,7 @@
 
 
 // This example runs on teensy 4.0/4.1 with ILI9341 via SPI. 
-// the screen driver library : https://github.com/vindar/ILI9341_T4
+// install from arduino's library manager or from https://github.com/vindar/ILI9341_T4
 #include <ILI9341_T4.h> 
 
 // the tgx library 
@@ -21,7 +22,7 @@
 // font used
 #include <font_tgx_OpenSans_Bold.h>
 #include "font_tgx_OpenSans.h"
-#include "font_tgx_Arial.h"
+#include "font_tgx_Arial_Bold.h"
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
@@ -40,21 +41,6 @@ using namespace tgx;
 #define PIN_BACKLIGHT 255   // optional, set this only if the screen LED pin is connected directly to the Teensy.
 #define PIN_TOUCH_IRQ 255   // optional. set this only if the touchscreen is connected on the same SPI bus
 #define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
-
-
-//
-// ALTERNATE WIRING USING SPI 1 ON TEENSY 4/4.1 
-//
-//#define PIN_SCK     27      // mandatory 
-//#define PIN_MISO    1       // mandatory
-//#define PIN_MOSI    26      // mandatory
-//#define PIN_DC      0       // mandatory, can be any pin but using pin 0 (or 38 on T4.1) provides greater performance
-
-//#define PIN_CS      30      // optional (but recommended), can be any pin.  
-//#define PIN_RESET   29      // optional (but recommended), can be any pin.  
-//#define PIN_BACKLIGHT 255   // optional, set this only if the screen LED pin is connected directly to the Teensy. 
-//#define PIN_TOUCH_IRQ 255   // optional. set this only if the touchscreen is connected on the same SPI bus
-//#define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
 
 
 #define SPI_SPEED       40000000
@@ -81,8 +67,9 @@ Image<RGB565> im(fb, SLX, SLY);
 
 
 
-
+//
 // testing method for reading and writing pixels
+//
 void test_read_write_pixels()
     {
     im.clear(tgx::RGB565_Black); // set the image fully black
@@ -96,7 +83,9 @@ void test_read_write_pixels()
     }
 
 
+//
 // testing methods for filling an image
+//
 void test_filling()
     {
     im.fillScreen(tgx::RGB565_Black); 							  // same as im.clear(tgx::RGB565_Black);
@@ -107,7 +96,9 @@ void test_filling()
     }
 
 
+//
 // testing methods for flood-filling a region
+//
 void test_floodfilling()
     {
     im.clear(tgx::RGB565_Black);
@@ -118,7 +109,36 @@ void test_floodfilling()
     }
 
 
+//
+// testing methods for blitting sprites/images. 
+//
+void test_blitting()
+    {
+
+    // create a sprite
+    tgx::RGB565 buf[120 * 40]; // memory for the sprite image
+    tgx::Image<tgx::RGB565> sprite(buf, 120, 40); // the sprite image...
+    sprite.clear(tgx::RGB565_Green); // ... has green background
+    sprite.fillCircle({ 20, 20 }, 13, tgx::RGB565_Black, tgx::RGB565_Black); // ... a black circle
+    sprite.drawTextEx("Sprite", {76, 20}, font_tgx_Arial_Bold_20, tgx::Anchor::CENTER, false, false, tgx::RGB565_Black); // ... and a black text "sprite".
+
+    im.fillScreenHGradient(tgx::RGB565_Blue, tgx::RGB565_Red); // fill the screen with horizontal gradient from green to orange
+
+    im.blit(sprite, { 10, 10 });  // simple blitting
+
+    im.blitRotated(sprite, { 10, 80 }, 270, 0.25f); // blit the sprite rotated by 270 degrees clockwise, 0.25% opacity
+
+    im.blitMasked(sprite, tgx::RGB565_Black, {120,60}); // blit the sprite with black as a the transparent color.
+
+    im.blitScaledRotated(sprite, {60, 20}, { 100, 160 }, 0.6f, 60.0f, 0.5f); // blit the sprite scaled at 0.6, rotated by 60 degrees, half opacity
+
+    im.blitScaledRotatedMasked(sprite, tgx::RGB565_Green, { 60, 20 }, {230, 160}, 1.5f, -25.0f); // blit the sprite scaled at 1.5, rotated by -25 degrees, with green set as the transparent color.
+    }
+
+
+//
 // testing methods for drawing horizontal and vertical lines
+// 
 void test_hvlines()
     {
     im.clear(tgx::RGB565_Black);
@@ -129,7 +149,9 @@ void test_hvlines()
     }
 
 
+//
 // testing methods for drawing lines
+// 
 void test_lines()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -140,7 +162,9 @@ void test_lines()
     }
 
 
+//
 // testing methods for drawing rectangles
+// 
 void test_rectangles()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -153,7 +177,9 @@ void test_rectangles()
     }
 
 
+//
 // testing methods for drawing rounded rectangles
+// 
 void test_rounded_rectangles()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -164,7 +190,9 @@ void test_rounded_rectangles()
     }
 
 
+//
 // testing methods for drawing triangles
+// 
 void test_triangles()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -177,7 +205,9 @@ void test_triangles()
     }
 
 
+//
 // testing methods for drawing triangles (advanced methods using the 3D rasterizer)
+// 
 void test_triangles_advanced()
     {
     tgx::RGB565 buf[50 * 50]; // memory for texture image
@@ -192,7 +222,9 @@ void test_triangles_advanced()
     }
 
 
+//
 // testing methods for drawing quads
+// 
 void test_quads()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -205,7 +237,9 @@ void test_quads()
     }
 
 
+//
 // testing methods for drawing quads  (advanced methods using the 3D rasterizer)
+// 
 void test_quads_advanced()
     {
     tgx::RGB565 buf[50 * 50]; // memory for texture image
@@ -220,7 +254,9 @@ void test_quads_advanced()
     }
 
 
+//
 // testing methods for drawing polylines
+// 
 void test_polylines()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -236,7 +272,9 @@ void test_polylines()
     }
 
 
+//
 // testing methods for drawing polygons
+// 
 void test_polygons()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -261,7 +299,9 @@ void test_polygons()
     }
 
 
+//
 // testing methods for drawing circles
+// 
 void test_circles()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -274,7 +314,9 @@ void test_circles()
     }
 
 
+//
 // testing methods for drawing ellipses
+// 
 void test_ellipses()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -287,7 +329,9 @@ void test_ellipses()
     }
 
 
+//
 // testing methods for drawing arcs and pies
+// 
 void test_arcs_pies()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -298,8 +342,9 @@ void test_arcs_pies()
     }
 
 
-
+//
 // testing methods for drawing Bezier curves
+// 
 void test_bezier()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -310,7 +355,9 @@ void test_bezier()
     }
 
 
+//
 // testing methods for drawing splines
+// 
 void test_splines()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -341,13 +388,15 @@ void test_splines()
     }
 
 
+//
 // testing methods for drawing text
+// 
 void test_text()
     {
     im.clear(tgx::RGB565_Black);
 
     // drawing text: the anchor point use the baseline. 
-    im.drawText("non-AA font are ugly...", { 5, 10 }, font_tgx_Arial_8, tgx::RGB565_Blue); // a non AA font
+    im.drawText("non-AA font are ugly...", { 5, 10 }, font_tgx_Arial_Bold_8, tgx::RGB565_Blue); // a non AA font
     
     im.drawText("AA font, 9pt", { 5, 25 }, font_tgx_OpenSans_9, tgx::RGB565_Green);     // AA font, 9pt
     im.drawText("AA font, 10pt", { 5, 40 }, font_tgx_OpenSans_10, tgx::RGB565_Green);   // AA font, 10pt
@@ -411,6 +460,8 @@ void test_text()
     }
 
 
+
+
 void setup()
     {    
     Serial.begin(9600); 
@@ -433,6 +484,8 @@ void setup()
     }
 
 
+
+// add a subtitle, display the image and wait for 2 seconds
 void displayAndWait(const char* title)
     {    
     tgx::iBox2 bb = im.measureText(title, { 2, 237 }, font_tgx_OpenSans_14, tgx::Anchor::BOTTOMLEFT, false, false);
@@ -453,6 +506,9 @@ void loop()
 
     test_floodfilling();
     displayAndWait("test: flood-filling...");
+
+    test_blitting();
+    displayAndWait("test: blitting sprites...");
 
     test_hvlines();
     displayAndWait("test: drawing vertical/horizontal lines...");
@@ -500,7 +556,8 @@ void loop()
     displayAndWait("test: drawing splines...");
     
     test_text();
-    displayAndWait("test: drawing text...");    
+    displayAndWait("test: drawing text...");  
+
     }
 
 
