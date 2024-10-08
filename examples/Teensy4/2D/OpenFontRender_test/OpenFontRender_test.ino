@@ -5,24 +5,31 @@
 * This example show how to use Takkao's OpenFontRender library to
 * render text using TrueType fonts.
 *
+* -> Install OpenFontRender from https://github.com/takkaO/OpenFontRender/
+*
 * EXAMPLE FOR TEENSY 4 / 4.1
 *
 * DISPLAY: ILI9341 (320x240)
 *
-* REQUIRES INSTALLING TAKKAO'S OFR LIBRARY: https://github.com/takkaO/OpenFontRender/
 ********************************************************************/
 
 
-// This example runs on teensy 4.0/4.1 with ILI9341 via SPI. 
-// the screen driver library : https://github.com/vindar/ILI9341_T4
+//
+// This example runs on teensy 4.0/4.1 with an ILI9341 screen connected via SPI. 
+//
+
+// the screen driver library:
+// Install it from Arduino's library manager or download directly from https://github.com/vindar/ILI9341_T4
 #include <ILI9341_T4.h> 
 
 // the tgx library 
 #include <tgx.h> 
 
-// Install OpenFontRender from: https://github.com/takkaO/OpenFontRender/
+// OpenFontRender library
+// Install it from https://github.com/takkaO/OpenFontRender/
 #include <OpenFontRender.h> 
 
+// the TrueType font we will draw with. 
 #include "NotoSans_Bold.h" 
 
 
@@ -45,22 +52,7 @@ using namespace tgx;
 #define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
 
 
-//
-// ALTERNATE WIRING USING SPI 1 ON TEENSY 4/4.1 
-//
-//#define PIN_SCK     27      // mandatory 
-//#define PIN_MISO    1       // mandatory
-//#define PIN_MOSI    26      // mandatory
-//#define PIN_DC      0       // mandatory, can be any pin but using pin 0 (or 38 on T4.1) provides greater performance
-
-//#define PIN_CS      30      // optional (but recommended), can be any pin.  
-//#define PIN_RESET   29      // optional (but recommended), can be any pin.  
-//#define PIN_BACKLIGHT 255   // optional, set this only if the screen LED pin is connected directly to the Teensy. 
-//#define PIN_TOUCH_IRQ 255   // optional. set this only if the touchscreen is connected on the same SPI bus
-//#define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
-
-
-#define SPI_SPEED       30000000
+#define SPI_SPEED       40000000
 
 // the screen driver object
 ILI9341_T4::ILI9341Driver tft(PIN_CS, PIN_DC, PIN_SCK, PIN_MOSI, PIN_MISO, PIN_RESET, PIN_TOUCH_CS, PIN_TOUCH_IRQ);
@@ -75,8 +67,8 @@ uint16_t fb[SLX * SLY];
 // image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
 
-
-OpenFontRender ofr; // the font drawer object
+// the font drawer object
+OpenFontRender ofr; 
 
 
 void setup()

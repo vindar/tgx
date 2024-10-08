@@ -553,7 +553,9 @@ namespace tgx
 
         color_t * d = im->data() + x0 + (y0 * im->stride()); // destination
 
-        if (usPalette24)
+        bool useP888 = false;
+
+        if (useP888)
             { // we use the RGB888 palette for better quality
             if (pDraw->ucHasTransparency)
                 {
@@ -602,40 +604,40 @@ namespace tgx
                     }
                 }
             } 
-        else if (usPalette)
-                { // use the RGB565 palette
-                if (pDraw->ucHasTransparency)
+        else
+            { // use the RGB565 palette
+            if (pDraw->ucHasTransparency)
+                {
+                if (op >= 1)
                     {
-                    if (op >= 1)
+                    for (int x = 0; x < iWidth; x++)
                         {
-                        for (int x = 0; x < iWidth; x++)
-                            {
-                            const uint8_t c = *s++;
-                            if (c != ucTransparent) { d[x] = (color_t)(RGB565(usPalette[c])); }
-                            }
-                        }
-                    else
-                        {
-                        for (int x = 0; x < iWidth; x++)
-                            {
-                            const uint8_t c = *s++;
-                            if (c != ucTransparent) { d[x].blend((color_t)(RGB565(usPalette[c])),op); }
-                            }
-                        }
-                    } 
-                else
-                    {
-                    if (op >= 1)
-                        {
-                        for (int x = 0; x < iWidth; x++) { d[x] = (color_t)(RGB565(usPalette[*s++])); }
-                        }
-                    else
-                        {
-                        for (int x = 0; x < iWidth; x++) { d[x].blend((color_t)(RGB565(usPalette[*s++])),op); }
+                        const uint8_t c = *s++;
+                        if (c != ucTransparent) { d[x] = (color_t)(RGB565(usPalette[c])); }
                         }
                     }
+                else
+                    {
+                    for (int x = 0; x < iWidth; x++)
+                        {
+                        const uint8_t c = *s++;
+                        if (c != ucTransparent) { d[x].blend((color_t)(RGB565(usPalette[c])),op); }
+                        }
+                    }
+                } 
+            else
+                {
+                if (op >= 1)
+                    {
+                    for (int x = 0; x < iWidth; x++) { d[x] = (color_t)(RGB565(usPalette[*s++])); }
+                    }
+                else
+                    {
+                    for (int x = 0; x < iWidth; x++) { d[x].blend((color_t)(RGB565(usPalette[*s++])),op); }
+                    }
                 }
-            return;
+            }
+        return;
         }
 
 

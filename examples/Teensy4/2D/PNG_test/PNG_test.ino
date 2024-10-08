@@ -13,14 +13,19 @@
 ********************************************************************/
 
 
-// This example runs on teensy 4.0/4.1 with ILI9341 via SPI. 
-// the screen driver library : https://github.com/vindar/ILI9341_T4
+//
+// This example runs on teensy 4.0/4.1 with an ILI9341 screen connected via SPI. 
+//
+
+// the screen driver library:
+// Install it from Arduino's library manager or download directly from https://github.com/vindar/ILI9341_T4
 #include <ILI9341_T4.h> 
 
 // the tgx library 
 #include <tgx.h> 
 
-// the PNG decoder library: install library manager or https://github.com/bitbank2/PNGdec
+// the PNG decoder library
+// install from Arduino's library manager or directly from https://github.com/bitbank2/PNGdec
 #include <PNGdec.h> 
 
 // the octocat image we will draw from memory
@@ -41,20 +46,6 @@
 #define PIN_TOUCH_IRQ 255   // optional. set this only if the touchscreen is connected on the same SPI bus
 #define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
 
-//
-// ALTERNATE WIRING USING SPI 1 ON TEENSY 4/4.1 
-//
-//#define PIN_SCK     27      // mandatory 
-//#define PIN_MISO    1       // mandatory
-//#define PIN_MOSI    26      // mandatory
-//#define PIN_DC      0       // mandatory, can be any pin but using pin 0 (or 38 on T4.1) provides greater performance
-
-//#define PIN_CS      30      // optional (but recommended), can be any pin.  
-//#define PIN_RESET   29      // optional (but recommended), can be any pin.  
-//#define PIN_BACKLIGHT 255   // optional, set this only if the screen LED pin is connected directly to the Teensy. 
-//#define PIN_TOUCH_IRQ 255   // optional. set this only if the touchscreen is connected on the same SPI bus
-//#define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
-
 
 #define SPI_SPEED       30000000
 
@@ -72,7 +63,8 @@ uint16_t fb[SLX * SLY];
 tgx::Image<tgx::RGB565> im(fb, SLX, SLY);
 
 
-PNG png; // PNG decoder object from PNGDec
+// PNG decoder object from PNGDec
+PNG png; 
 
 
 void setup()
