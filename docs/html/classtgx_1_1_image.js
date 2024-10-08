@@ -163,5 +163,6 @@ var classtgx_1_1_image =
     [ "drawTextEx", "classtgx_1_1_image.html#aa978df96aebf8d150988001ae5463c8f", null ],
     [ "setTakkaoOFR", "classtgx_1_1_image.html#a9609a7df4e4d2e771aa7668b97a61d31", null ],
     [ "PNGDecode", "classtgx_1_1_image.html#a077be1a8bdfd1d67ef2788f6e515157c", null ],
-    [ "JPEGDecode", "classtgx_1_1_image.html#ae83fd55040b78f8b4f55be84b7a27cfd", null ]
+    [ "JPEGDecode", "classtgx_1_1_image.html#ae83fd55040b78f8b4f55be84b7a27cfd", null ],
+    [ "GIFplayFrame", "classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5", null ]
 ];

@@ -11,5 +11,6 @@ var searchData=
   ['getprojectionmatrix_8',['getProjectionMatrix',['../classtgx_1_1_renderer3_d.html#a4bce4752b73a38862733b4f2bcb6f04f',1,'tgx::Renderer3D']]],
   ['getrotate90_9',['getRotate90',['../structtgx_1_1_vec2.html#a0e7fdb36c34634adee5419874414fb98',1,'tgx::Vec2']]],
   ['getsplit_10',['getSplit',['../structtgx_1_1_box2.html#a4383407599d505c3304471d6acf14ce8',1,'tgx::Box2']]],
-  ['getviewmatrix_11',['getViewMatrix',['../classtgx_1_1_renderer3_d.html#a35bf226bb8236ad48314bca2bd0f31f8',1,'tgx::Renderer3D']]]
+  ['getviewmatrix_11',['getViewMatrix',['../classtgx_1_1_renderer3_d.html#a35bf226bb8236ad48314bca2bd0f31f8',1,'tgx::Renderer3D']]],
+  ['gifplayframe_12',['GIFplayFrame',['../classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5',1,'tgx::Image']]]
 ];

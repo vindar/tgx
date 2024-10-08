@@ -14,5 +14,6 @@ var searchData=
   ['getsplit_11',['getSplit',['../structtgx_1_1_box2.html#a4383407599d505c3304471d6acf14ce8',1,'tgx::Box2']]],
   ['getviewmatrix_12',['getViewMatrix',['../classtgx_1_1_renderer3_d.html#a35bf226bb8236ad48314bca2bd0f31f8',1,'tgx::Renderer3D']]],
   ['gfxfont_13',['GFXfont',['../struct_g_f_xfont.html',1,'']]],
-  ['glyph_14',['glyph',['../struct_g_f_xfont.html#af63d88fa053c9a634e86eab7c96db290',1,'GFXfont']]]
+  ['gifplayframe_14',['GIFplayFrame',['../classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5',1,'tgx::Image']]],
+  ['glyph_15',['glyph',['../struct_g_f_xfont.html#af63d88fa053c9a634e86eab7c96db290',1,'GFXfont']]]
 ];

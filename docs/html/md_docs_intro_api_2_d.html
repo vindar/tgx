@@ -122,9 +122,6 @@ Filling the screen.</h1>
 </ul>
 <hr  />
 <h1><a class="anchor" id="autotoc_md14"></a>
-Blitting sprites</h1>
-<hr  />
-<h1><a class="anchor" id="autotoc_md16"></a>
 Reading/writing pixels</h1>
 <p ><img src="../test_points.png" alt="test_points" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -147,7 +144,7 @@ Reading/writing pixels</h1>
 <li><a class="el" href="classtgx_1_1_image.html#a56eca61edba23f1abfb74b9a52f4cb06">operator()</a> : direct access to the pixel color memory location (read/write).</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md18"></a>
+<h1><a class="anchor" id="autotoc_md16"></a>
 Flood-filling a region</h1>
 <p ><img src="../test_region_filling.png" alt="test_region_filling" class="inline"/></p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -165,6 +162,36 @@ Flood-filling a region</h1>
 <li><a class="el" href="classtgx_1_1_image.html#a2a2f1a3381d697f8863277f36f60efdb">fill(start_pos, new_color)</a> : fill a connected componenet with a given color.</li>
 <li><a class="el" href="classtgx_1_1_image.html#aa1526bd3763cfbdc0de6b8b874efa7a7">fill(start_pos, border_color, new_color)</a> : fill a region delimited by a given color.</li>
 </ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md18"></a>
+Blitting sprites</h1>
+<p ><img src="../test_blitting.png" alt="test_blitting" class="inline"/></p>
+<p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><span class="comment">// create a sprite: </span></div>
+<div class="line"><span class="comment">// #include &lt;font_tgx_OpenSans_Bold.h&gt; is needed to use the font_tgx_Arial_Bold_20. </span></div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buf[120 * 40]; <span class="comment">// memory for the sprite image</span></div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> sprite(buf, 120, 40); <span class="comment">// the sprite image...</span></div>
+<div class="line">sprite.clear(tgx::RGB32_Green); <span class="comment">// ... has green background</span></div>
+<div class="line">sprite.fillCircle({ 20, 20 }, 13, tgx::RGB32_Black, tgx::RGB32_Black); <span class="comment">// ... a black circle</span></div>
+<div class="line">sprite.drawTextEx(<span class="stringliteral">&quot;Sprite&quot;</span>, { 76, 20 }, <a class="code hl_variable" href="font__tgx___arial___bold_8h.html#abdf4be3aa39662e07d15057dac010212">font_tgx_Arial_Bold_20</a>, tgx::Anchor::CENTER, <span class="keyword">false</span>, <span class="keyword">false</span>, <a class="code hl_variable" href="_color_8h.html#a1e688542f09375307545639f49ac8d99">tgx::RGB32_Black</a>); <span class="comment">// ... and a black text &quot;sprite&quot;.</span></div>
+<div class="line"> </div>
+<div class="line">im.fillScreenHGradient(tgx::RGB32_Blue, tgx::RGB32_Red); <span class="comment">// fill the screen with horizontal gradient from green to orange</span></div>
+<div class="line"> </div>
+<div class="line">im.blit(sprite, { 10, 10 });  <span class="comment">// simple blitting</span></div>
+<div class="line">im.blitRotated(sprite, { 10, 80 }, 270, 0.25f); <span class="comment">// blit the sprite rotated by 270 degrees clockwise, 0.25% opacity</span></div>
+<div class="line">im.blitMasked(sprite, tgx::RGB32_Black, { 120,60 }); <span class="comment">// blit the sprite with black as a the transparent color.</span></div>
+<div class="line">im.blitScaledRotated(sprite, { 60, 20 }, { 100, 160 }, 0.6f, 60.0f, 0.5f); <span class="comment">// blit the sprite scaled at 0.6, rotated by 60 degrees, half opacity</span></div>
+<div class="line">im.blitScaledRotatedMasked(sprite, tgx::RGB32_Green, { 60, 20 }, { 230, 160 }, 1.5f, -25.0f); <span class="comment">// blit the sprite scaled at 1.5, rotated by -25 degrees, with green set as the transparent color.</span></div>
+<div class="ttc" id="a_color_8h_html_a1e688542f09375307545639f49ac8d99"><div class="ttname"><a href="_color_8h.html#a1e688542f09375307545639f49ac8d99">tgx::RGB32_Black</a></div><div class="ttdeci">const RGB32 RGB32_Black</div><div class="ttdoc">Color black in RGB32 format.</div></div>
+<div class="ttc" id="afont__tgx___arial___bold_8h_html_abdf4be3aa39662e07d15057dac010212"><div class="ttname"><a href="font__tgx___arial___bold_8h.html#abdf4be3aa39662e07d15057dac010212">font_tgx_Arial_Bold_20</a></div><div class="ttdeci">const ILI9341_t3_font_t font_tgx_Arial_Bold_20</div><div class="ttdoc">Arial font (bold) 20pt.</div></div>
+</div><!-- fragment --><p> <b>Methods:</b></p><ul>
+<li><a class="el" href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542">blit(sprite, pos, opacity)</a> : blit a sprite image onto the image.</li>
+<li><a class="el" href="classtgx_1_1_image.html#ae64e40a38c12fc9abbe886626de89b8c">blitRotated(sprite, pos, angle, opacity)</a> : rotate a sprite (by quarter turns) and then blit it onto the image.</li>
+<li><a class="el" href="classtgx_1_1_image.html#a611faa1ee9f0c2c97561ff4fbeba1658">blitMasked(sprite, mask_color, pos, opacity)</a> : blit a sprite onto the image with one color set as transparent.</li>
+<li><a class="el" href="classtgx_1_1_image.html#a8cd4a1aaf63b59d5803fc759dd64711c">blitScaledRotated(sprite, pos_src, pos_dst, scale, angle, opacity)</a> : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image.</li>
+<li><a class="el" href="classtgx_1_1_image.html#ab6838094c8ac811a72dbeeffb7c51bc8">blitScaledRotatedMasked(sprite, mask_color, pos_src, pos_dst, scale, angle, opacity)</a> : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image with one color set as transparent.</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>All the blit methods above also have an 'advanced' version which takes as input a user-defined blending operator instead of the opacity parameter and can operate on sprites with different color types than the destination image. see <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> for details...</dd></dl>
+<p>See also <a class="el" href="classtgx_1_1_image.html#ab252fa2ceb311770d698a8b9a1f52bef">blitBackward()</a> and methods for image copy/resizing/type conversion <a class="el" href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae">copyFrom()</a>, <a class="el" href="classtgx_1_1_image.html#ab1f64acc0c408c1b901f43ae80a0a57d">copyReduceHalf()</a>, <a class="el" href="classtgx_1_1_image.html#aec06c59da548263f082134368f5202d6">reduceHalf()</a> and <a class="el" href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">convert()</a></p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md20"></a>
 drawing horizontal and vertical lines</h1>
@@ -289,7 +316,6 @@ drawing triangles (advanced)</h1>
 <div class="line">im.drawTexturedTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 10, 10 }, { 100, 20 }, { 30, 100 }); <span class="comment">// textured triangle, full opacity</span></div>
 <div class="line">im.drawGradientTriangle({ 20, 140 }, { 160, 50 }, {230, 200}, <a class="code hl_variable" href="_color_8h.html#a104b07f7b610b4062eb41af9ab85f046">tgx::RGB32_Blue</a>, <a class="code hl_variable" href="_color_8h.html#a4797620ab64671168c8c67fb5c324bdb">tgx::RGB32_Orange</a>, <a class="code hl_variable" href="_color_8h.html#a1e688542f09375307545639f49ac8d99">tgx::RGB32_Black</a>); <span class="comment">// gradient triangle, full opacity. </span></div>
 <div class="line">im.drawTexturedGradientTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 } , { 120, 230 }, { 300, 20 }, { 280, 170 }, <a class="code hl_variable" href="_color_8h.html#a3cf013ec1fa56751bb229035ef718aba">tgx::RGB32_Red</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>, <a class="code hl_variable" href="_color_8h.html#a104b07f7b610b4062eb41af9ab85f046">tgx::RGB32_Blue</a>, 0.5f); <span class="comment">// texture triangle with color gradient. half opacity.</span></div>
-<div class="ttc" id="a_color_8h_html_a1e688542f09375307545639f49ac8d99"><div class="ttname"><a href="_color_8h.html#a1e688542f09375307545639f49ac8d99">tgx::RGB32_Black</a></div><div class="ttdeci">const RGB32 RGB32_Black</div><div class="ttdoc">Color black in RGB32 format.</div></div>
 </div><!-- fragment --><p> <b>Methods:</b> these methods make use of the 3D rasterizer:</p><ul>
 <li><a class="el" href="classtgx_1_1_image.html#af79825fb258532b4ff4e1326c06e972f">drawTexturedTriangle()</a> : draw a filled triangle with texture mapping.</li>
 <li><a class="el" href="classtgx_1_1_image.html#ad60369023e154acb41fc08d9c0ba262c">drawGradientTriangle()</a> : draw a filled triangle with gradient color (i.e. Gouraud shading)</li>

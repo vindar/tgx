@@ -32,12 +32,6 @@ im2.fillScreenHGradient(tgx::RGB32_Green, tgx::RGB32_Orange); // fill with horiz
 
 ---
 
-# Blitting sprites
-
-
-
-
----
 
 # Reading/writing pixels
 
@@ -88,8 +82,40 @@ im.fill({ 0,0 }, tgx::RGB32_Olive);                    // fill starting {0,0}
 - \ref tgx::Image<color_t>::fill(tgx::iVec2, color_t, color_t) "fill(start_pos, border_color, new_color)" :  fill a region delimited by a given color. 
  
 
+---
 
+# Blitting sprites
 
+![test_blitting](../test_blitting.png)
+
+*Code used to generate the image:* 
+~~~{.cpp}
+    // create a sprite: 
+    // #include <font_tgx_OpenSans_Bold.h> is needed to use the font_tgx_Arial_Bold_20. 
+    tgx::RGB32 buf[120 * 40]; // memory for the sprite image
+    tgx::Image<tgx::RGB32> sprite(buf, 120, 40); // the sprite image...
+    sprite.clear(tgx::RGB32_Green); // ... has green background
+    sprite.fillCircle({ 20, 20 }, 13, tgx::RGB32_Black, tgx::RGB32_Black); // ... a black circle
+    sprite.drawTextEx("Sprite", { 76, 20 }, font_tgx_Arial_Bold_20, tgx::Anchor::CENTER, false, false, tgx::RGB32_Black); // ... and a black text "sprite".
+
+    im.fillScreenHGradient(tgx::RGB32_Blue, tgx::RGB32_Red); // fill the screen with horizontal gradient from green to orange
+
+    im.blit(sprite, { 10, 10 });  // simple blitting
+    im.blitRotated(sprite, { 10, 80 }, 270, 0.25f); // blit the sprite rotated by 270 degrees clockwise, 0.25% opacity
+    im.blitMasked(sprite, tgx::RGB32_Black, { 120,60 }); // blit the sprite with black as a the transparent color.
+    im.blitScaledRotated(sprite, { 60, 20 }, { 100, 160 }, 0.6f, 60.0f, 0.5f); // blit the sprite scaled at 0.6, rotated by 60 degrees, half opacity
+    im.blitScaledRotatedMasked(sprite, tgx::RGB32_Green, { 60, 20 }, { 230, 160 }, 1.5f, -25.0f); // blit the sprite scaled at 1.5, rotated by -25 degrees, with green set as the transparent color.
+~~~
+**Methods:** 
+- \ref tgx::Image<color_t>::blit() "blit(sprite, pos, opacity)" : blit a sprite image onto the image. 
+- \ref tgx::Image<color_t>::blitRotated() "blitRotated(sprite, pos, angle, opacity)" : rotate a sprite (by quarter turns) and then blit it onto the image. 
+- \ref tgx::Image<color_t>::blitMasked() "blitMasked(sprite, mask_color, pos, opacity)" : blit a sprite onto the image with one color set as transparent. 
+- \ref tgx::Image<color_t>::blitScaledRotated() "blitScaledRotated(sprite, pos_src, pos_dst, scale, angle, opacity)" : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image. 
+- \ref tgx::Image<color_t>::blitScaledRotatedMasked() "blitScaledRotatedMasked(sprite, mask_color, pos_src, pos_dst, scale, angle, opacity)" : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image with one color set as transparent. 
+
+@note All the blit methods above also have an 'advanced' version which takes as input a user-defined blending operator instead of the opacity parameter and can operate on sprites with different color types than the destination image. see \ref tgx::Image for details...
+
+See also \ref tgx::Image<color_t>::blitBackward() "blitBackward()" and methods for image copy/resizing/type conversion \ref tgx::Image<color_t>::copyFrom() "copyFrom()", \ref tgx::Image<color_t>::copyReduceHalf() "copyReduceHalf()",  \ref tgx::Image<color_t>::reduceHalf() "reduceHalf()" and \ref tgx::Image<color_t>::convert() "convert()"
 
 ---
 

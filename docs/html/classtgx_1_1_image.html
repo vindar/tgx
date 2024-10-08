@@ -774,6 +774,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae83fd55040b78f8b4f55be84b7a27cfd"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ae83fd55040b78f8b4f55be84b7a27cfd">JPEGDecode</a> (JPEG_T &amp;jpeg, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> topleft=<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>(0, 0), int options=0, float opacity=1.0f)</td></tr>
 <tr class="memdesc:ae83fd55040b78f8b4f55be84b7a27cfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode a JPEG image into this image using the JPEGDEC library: <a href="https://github.com/bitbank2/JPEGDEC/">https://github.com/bitbank2/JPEGDEC/</a>.  <a href="classtgx_1_1_image.html#ae83fd55040b78f8b4f55be84b7a27cfd">More...</a><br /></td></tr>
 <tr class="separator:ae83fd55040b78f8b4f55be84b7a27cfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa3e95f25f3533ebc2e4d50041d98fc5"><td class="memTemplParams" colspan="2">template&lt;typename GIF_T &gt; </td></tr>
+<tr class="memitem:afa3e95f25f3533ebc2e4d50041d98fc5"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5">GIFplayFrame</a> (GIF_T &amp;gif, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> topleft=<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>(0, 0), float opacity=1.0f)</td></tr>
+<tr class="memdesc:afa3e95f25f3533ebc2e4d50041d98fc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode a (possibly animated) GIF image into this image using the AnimatedGIF library: <a href="https://github.com/bitbank2/AnimatedGIF/">https://github.com/bitbank2/AnimatedGIF/</a>.  <a href="classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5">More...</a><br /></td></tr>
+<tr class="separator:afa3e95f25f3533ebc2e4d50041d98fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -2492,7 +2496,7 @@ template&lt;typename color_t &gt; </div>
   <table class="params">
     <tr><td class="paramname">sprite</td><td>The sprite image to blit. </td></tr>
     <tr><td class="paramname">upperleftpos</td><td>Position inside this image of the upper left corner of the sprite (after rotation). </td></tr>
-    <tr><td class="paramname">angle</td><td>Counter-clockwise angle to rotate the sprite prior to blitting. Must be either 0, 90, 180 or 270. </td></tr>
+    <tr><td class="paramname">angle</td><td>Clockwise angle to rotate the sprite prior to blitting. In degrees. Must be either 0, 90, 180 or 270. </td></tr>
     <tr><td class="paramname">opacity</td><td>(Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply overwrite the spite over the image. </td></tr>
   </table>
   </dd>
@@ -2555,7 +2559,7 @@ template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </div>
   <table class="params">
     <tr><td class="paramname">sprite</td><td>The sprite image to blit. </td></tr>
     <tr><td class="paramname">upperleftpos</td><td>Position inside this image of the upper left corner of the sprite (after rotation). </td></tr>
-    <tr><td class="paramname">angle</td><td>Counter-clockwise angle to rotate the sprite prior to blitting. Must be either 0, 90, 180 or 270. </td></tr>
+    <tr><td class="paramname">angle</td><td>Clockwise angle to rotate the sprite prior to blitting. In degrees. Must be either 0, 90, 180 or 270. </td></tr>
     <tr><td class="paramname">blend_op</td><td>The blending operator. </td></tr>
   </table>
   </dd>
@@ -2714,7 +2718,7 @@ template&lt;typename color_t_src , int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SI
 </div><div class="memdoc">
 
 <p>Blit/blend a sprite onto this image after rescaling and rotation. </p>
-<p >The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The rotation is performed in counter-clockwise direction around the anchor point.</p>
+<p >The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The rotation is performed in clockwise direction around the anchor point.</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>Positions are given using floating point values to allow for sub-pixel precision for smoother animation.</li>
 <li>The method uses bilinear interpolation for high quality rendering.</li>
@@ -2734,7 +2738,7 @@ template&lt;typename color_t_src , int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SI
     <tr><td class="paramname">anchor_src</td><td>Position of the anchor point in the sprite image. </td></tr>
     <tr><td class="paramname">anchor_dst</td><td>Position of the anchor point in this image. </td></tr>
     <tr><td class="paramname">scale</td><td>(Optional) Scaling factor (default 1.0f for no rescaling). </td></tr>
-    <tr><td class="paramname">angle_degrees</td><td>(Optional) The rotation angle in degrees (counter-clockwise, default 0 for no rotation). </td></tr>
+    <tr><td class="paramname">angle_degrees</td><td>(Optional) The rotation angle in degrees (clockwise, default 0 for no rotation). </td></tr>
     <tr><td class="paramname">opacity</td><td>(Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply use overwrite. </td></tr>
   </table>
   </dd>
@@ -2812,8 +2816,8 @@ template&lt;typename color_t_src , typename BLEND_OPERATOR , int CACHE_SIZE = TG
     <tr><td class="paramname">src_im</td><td>The sprite image to draw. </td></tr>
     <tr><td class="paramname">anchor_src</td><td>Position of the anchor point in the sprite image. </td></tr>
     <tr><td class="paramname">anchor_dst</td><td>Position of the anchor point in this image. </td></tr>
-    <tr><td class="paramname">scale</td><td>Scaling factor (counter-clockwise, default 1.0f for no rescaling). </td></tr>
-    <tr><td class="paramname">angle_degrees</td><td>The rotation angle in degrees (default 0 for no rotation). </td></tr>
+    <tr><td class="paramname">scale</td><td>Scaling factor (1.0f for no rescaling). </td></tr>
+    <tr><td class="paramname">angle_degrees</td><td>The rotation angle in degrees (clockwise, default 0 for no rotation). </td></tr>
     <tr><td class="paramname">blend_op</td><td>blending operator. </td></tr>
   </table>
   </dd>
@@ -2882,7 +2886,7 @@ template&lt;typename color_t_src , int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SI
 </div><div class="memdoc">
 
 <p>Blend a sprite onto this image after rescaling and rotation and use a given color which is treated as fully transparent. </p>
-<p >The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The rotation is performed in counter-clockwise direction around the anchor point.</p>
+<p >The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The rotation is performed in clockwise direction around the anchor point.</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>Positions are given using floating point values to allow for sub-pixel precision for smoother animation.</li>
 <li>The method uses bilinear interpolation for high quality rendering.</li>
@@ -2904,7 +2908,7 @@ template&lt;typename color_t_src , int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SI
     <tr><td class="paramname">anchor_src</td><td>Position of the anchor point in the sprite image. </td></tr>
     <tr><td class="paramname">anchor_dst</td><td>Position of the anchor point in this image. </td></tr>
     <tr><td class="paramname">scale</td><td>Scaling factor (default 1.0f for no rescaling). </td></tr>
-    <tr><td class="paramname">angle_degrees</td><td>The rotation angle in degrees (default 0 for no rotation). </td></tr>
+    <tr><td class="paramname">angle_degrees</td><td>The rotation angle in degrees (clockwise, default 0 for no rotation). </td></tr>
     <tr><td class="paramname">opacity</td><td>(Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply use overwrite. </td></tr>
   </table>
   </dd>
@@ -10411,6 +10415,7 @@ template&lt;typename PNG_T &gt; </div>
 </div><div class="memdoc">
 
 <p>Decode a PNG image into this image using the PNGDec library: <a href="https://github.com/bitbank2/PNGdec/">https://github.com/bitbank2/PNGdec/</a>. </p>
+<p >This method is a wrapper around the <code>PNG.decode()</code> method from the PNGDec library and takes the same arguments and return values.</p>
 <p >The image is cropped if it does not fit completely into this image.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -10473,6 +10478,7 @@ template&lt;typename JPEG_T &gt; </div>
 </div><div class="memdoc">
 
 <p>Decode a JPEG image into this image using the JPEGDEC library: <a href="https://github.com/bitbank2/JPEGDEC/">https://github.com/bitbank2/JPEGDEC/</a>. </p>
+<p >This method is a wrapper around the <code>JPEGDEC.decode()</code> method from the JPEGDEC library and takes the same arguments and return values.</p>
 <p >The image is cropped if it does not fit completely into this image.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -10483,13 +10489,73 @@ template&lt;typename JPEG_T &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">jpeg</td><td>The JPEG decoder object. TGX must have been linked previously with this object when calling one of the <code>open</code> methods by passing <code>TGX_JPEGDraw</code> as argument for the JPEGDraw callback. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">topleft</td><td>(Optional) Position of the top-left corner of the PNG inside this image. May be outside the image boundary and the PNG will be cropped accordingly. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">topleft</td><td>(Optional) Position of the top-left corner of the JPEG inside this image. May be outside the image boundary and the JPEG will be cropped accordingly. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">options</td><td>(Optional) Options to pass to the decoder. See the JPEGDEC library for the list of options available (currently: JPEG_AUTO_ROTATE, JPEG_SCALE_HALF, JPEG_SCALE_QUARTER, JPEG_SCALE_EIGHTH, JPEG_LE_PIXELS, JPEG_EXIF_THUMBNAIL, JPEG_LUMA_ONLY). Set this to 0 for default option. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">opacity</td><td>(Optional) Opacity multiplier when blending in [0.0f, 1.0f].</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The error code associated with the jpeg.decode() method. (0 in case of success, 1000 if this image is invalid). </dd></dl>
+
+</div>
+</div>
+<a id="afa3e95f25f3533ebc2e4d50041d98fc5" name="afa3e95f25f3533ebc2e4d50041d98fc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa3e95f25f3533ebc2e4d50041d98fc5">&#9670;&#160;</a></span>GIFplayFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename color_t &gt; </div>
+<div class="memtemplate">
+template&lt;typename GIF_T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classtgx_1_1_image.html">tgx::Image</a>&lt; color_t &gt;::GIFplayFrame </td>
+          <td>(</td>
+          <td class="paramtype">GIF_T &amp;&#160;</td>
+          <td class="paramname"><em>gif</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td>
+          <td class="paramname"><em>topleft</em> = <code><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>(0,&#160;0)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code>1.0f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Decode a (possibly animated) GIF image into this image using the AnimatedGIF library: <a href="https://github.com/bitbank2/AnimatedGIF/">https://github.com/bitbank2/AnimatedGIF/</a>. </p>
+<p >This method is a wrapper around the <code>JPEGDEC.playFrame()</code> method from the AnimatedGIF library and takes the same arguments and return values.</p>
+<ul>
+<li>In the case of animated GIF. Each call to the method draws the nexct frame. The method returns 1 when there is still another frame to draw, 0 when finished. See the <code>gif.playFrame()</code> method from the AnimatedGIF library for additional details.</li>
+<li>The image is cropped if it does not fit completely into this image.</li>
+</ul>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">GIF_T</td><td>Type of the GIF decoder i.e. here it is <code>AnimatedGIF</code> from BitBank2's AnimatedGIF library. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">gif</td><td>The GIF decoder object. TGX must have been linked previously with this object when calling one of the <code>open</code> methods by passing <code>TGX_GIFDraw</code> as argument for the GIFDraw callback. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">topleft</td><td>(Optional) Position of the top-left corner of the GIF inside this image. May be outside the image boundary and the GIF will be cropped accordingly. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">opacity</td><td>(Optional) Opacity multiplier when blending in [0.0f, 1.0f]. NOTE: only opaque mode (opacity=1.0f) is supported for GIF animation.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The error code associated with the gif.playFrame() method. (0 in case of success, 1000 if this image is invalid). </dd></dl>
 
 </div>
 </div>

@@ -40,9 +40,9 @@ var NAVTREE =
     ] ],
     [ "Using the 2D API.", "md_docs_intro_api_2_d.html", [
       [ "Filling the screen.", "md_docs_intro_api_2_d.html#autotoc_md12", null ],
-      [ "Blitting sprites", "md_docs_intro_api_2_d.html#autotoc_md14", null ],
-      [ "Reading/writing pixels", "md_docs_intro_api_2_d.html#autotoc_md16", null ],
-      [ "Flood-filling a region", "md_docs_intro_api_2_d.html#autotoc_md18", null ],
+      [ "Reading/writing pixels", "md_docs_intro_api_2_d.html#autotoc_md14", null ],
+      [ "Flood-filling a region", "md_docs_intro_api_2_d.html#autotoc_md16", null ],
+      [ "Blitting sprites", "md_docs_intro_api_2_d.html#autotoc_md18", null ],
       [ "drawing horizontal and vertical lines", "md_docs_intro_api_2_d.html#autotoc_md20", null ],
       [ "drawing lines", "md_docs_intro_api_2_d.html#autotoc_md22", null ],
       [ "drawing rectangles", "md_docs_intro_api_2_d.html#autotoc_md24", null ],
@@ -90,10 +90,10 @@ var NAVTREEINDEX =
 [
 "_box2_8h.html",
 "_vec3_8h.html#a7c1bcc71ce9d57db1da42ed72267a2e0",
-"classtgx_1_1_renderer3_d.html#a7bff46c6c71c78546267d7b75bb12644",
-"structtgx_1_1_box2.html#a2ddd7c6289617624a33547e9bd62dd00",
-"structtgx_1_1_r_g_b32.html#a758286fb93d8203281bd363925477dec",
-"structtgx_1_1_vec3.html#aeb181e1af9c233bfc22694eb98c88d2a"
+"classtgx_1_1_renderer3_d.html#a7bb17f3177a24fbeccbb0d8a801aef88",
+"structtgx_1_1_box2.html#a2a3b648a8d4296bbe7b0a4636c2288a9",
+"structtgx_1_1_r_g_b32.html#a6ee73ea2a437b6486cbf9de706c465ae",
+"structtgx_1_1_vec3.html#ae1520853bed24f302b71d4916e4b05a8"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
