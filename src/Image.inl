@@ -47,6 +47,7 @@
  *
  ************************************/
 
+/*
 #ifndef TGX_HAS_PNGdec
     #if (__has_include(<PNGdec.h>))
         #include <PNGdec.h>
@@ -58,7 +59,7 @@
         #define TGX_HAS_PNGdec 0
     #endif
 #endif
-#if TGX_HAS_PNGdec
+*/
 
 namespace tgx
     {
@@ -76,11 +77,11 @@ namespace tgx
     template<typename PNGDraw_T, typename color_t>
     TGX_NOINLINE void _pngdec_color_convert(int skipx, int lx, PNGDraw_T* pDraw, color_t* pDest, float op)
         {
-        const int TGX_PNG_PIXEL_GRAYSCALE = PNG_PIXEL_GRAYSCALE;                // taken from enum source pixel type
-        const int TGX_PNG_PIXEL_TRUECOLOR = PNG_PIXEL_TRUECOLOR;                // in PNGdec.h
-        const int TGX_PNG_PIXEL_INDEXED = PNG_PIXEL_INDEXED;                    //
-        const int TGX_PNG_PIXEL_GRAY_ALPHA = PNG_PIXEL_GRAY_ALPHA;              //
-        const int TGX_PNG_PIXEL_TRUECOLOR_ALPHA = PNG_PIXEL_TRUECOLOR_ALPHA;    //
+        const int TGX_PNG_PIXEL_GRAYSCALE = 0;                 // taken from enum source pixel type
+        const int TGX_PNG_PIXEL_TRUECOLOR = 2;                 // in PNGdec.h
+        const int TGX_PNG_PIXEL_INDEXED = 3;                   //
+        const int TGX_PNG_PIXEL_GRAY_ALPHA = 4;                //
+        const int TGX_PNG_PIXEL_TRUECOLOR_ALPHA = 6;           //
 
         lx = tgx::min(lx, pDraw->iWidth);
         uint8_t c = 0, a, * pPal, * s = pDraw->pPixels;
@@ -285,33 +286,6 @@ namespace tgx
 
     }
 
-#else
-
-namespace tgx
-    {
-
-    template<typename PNG_T, typename PNGDraw_T> TGX_NOINLINE void PNGDraw(PNGDraw_T* pDraw)
-        {
-        return;
-        }
-
-    template<typename color_t>
-    template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, iVec2 topleft, float opacity)
-        {
-        static_assert((std::is_same<PNG_T, tgx::DummyType<2> >::value), "PNGDec library not found. Please include PNGDec.h in your project.");
-        return 1000; 
-        }
-
-    // convenience macro
-    #define TGX_PNGDraw     (tgx::PNGDraw< DummyType<1> >)
-
-    }
-
-#endif
-
-
-
-
 
 
 
@@ -321,6 +295,7 @@ namespace tgx
  * Interfacing with the JPEGDEC library
  *
  ************************************/
+/*
 #ifndef TGX_HAS_JPEGDEC
     #if (__has_include(<JPEGDEC.h>))
         #include <JPEGDEC.h>
@@ -338,8 +313,7 @@ namespace tgx
         #define TGX_HAS_JPEGDEC 0
     #endif
 #endif
-#if TGX_HAS_JPEGDEC
-
+*/
 
 namespace tgx
     {
@@ -358,6 +332,9 @@ namespace tgx
     template<typename color_t>
     template<typename JPEG_T> TGX_NOINLINE int Image<color_t>::JPEGDecode(JPEG_T& jpeg, iVec2 topleft, int options, float opacity)
         {
+        const int TGX_RGB565_LITTLE_ENDIAN = 0;     //  taken from JPEGDEC.h
+        const int TGX_RGB8888 = 2;                  //        
+
         if (!isValid()) return 1000; // nothing to draw
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         _JPEGDECWrapper wrap;
@@ -367,7 +344,7 @@ namespace tgx
         wrap.pos = topleft;
         wrap.opacity = opacity;
         jpeg.setUserPointer((void*)(&wrap));
-        jpeg.setPixelType((wrap.imgType == id_color_type<RGB565>::value) ? RGB565_LITTLE_ENDIAN : RGB8888);
+        jpeg.setPixelType((wrap.imgType == id_color_type<RGB565>::value) ? TGX_RGB565_LITTLE_ENDIAN : TGX_RGB8888);
         return jpeg.decode(0, 0, options);
         }
 
@@ -492,29 +469,6 @@ namespace tgx
 
     }
 
-#else
-
-namespace tgx
-    {
-
-    template<typename JPEG_T, typename JPEGDraw_T> TGX_NOINLINE int JPEGDraw(JPEGDraw_T* pDraw)
-        {
-        return 0; 
-        }
-
-    template<typename color_t>
-    template<typename JPEG_T> TGX_NOINLINE int Image<color_t>::JPEGDecode(JPEG_T& jpeg, iVec2 topleft, int options, float opacity)
-        {
-        static_assert((std::is_same<JPEG_T, tgx::DummyType<2> >::value), "JPEGDEC library not found. Please include JPEGDEC.h in your project.");
-        return 1000; 
-        }
-
-    // convenience macro
-    #define TGX_JPEGDraw     (tgx::JPEGDraw< DummyType<1> >)
-
-    }
-
-#endif
 
 
 

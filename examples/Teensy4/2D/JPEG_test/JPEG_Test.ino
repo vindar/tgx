@@ -21,7 +21,7 @@
 #include <tgx.h> 
 
 // the JPEG decoder library: install library manager or https://github.com/bitbank2/JPEGDEC
-#include <JPEGdec.h>
+#include <JPEGDEC.h>
 
 // the jpeg image we will display
 #include "batman.h" 

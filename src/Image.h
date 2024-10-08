@@ -3353,14 +3353,62 @@ namespace tgx
 
 
 
+#ifndef DOXYGEN_EXCLUDE
+
+
+
+    ///@}
+    //*************************************************************************************************************
+    /**
+    * @name Drawing primitives: Text DEPRECATED METHODS.
+    *
+    * @warning These method are still available for compatibility but will be removed 'soon'...
+    */
+    //*************************************************************************************************************
+    ///@{
+
+
+        /**
+        * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
+        */
+        DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
+        iVec2 drawText(const char* text, iVec2 pos, color_t color, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
+
+
+        /**
+        * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
+        */
+        DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
+        iVec2 drawText(const char* text, iVec2 pos, color_t color, const GFXfont& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
+
+
+        /**
+        * DEPRECATED: Use the new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
+        */
+        DEPRECATED("Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0)")
+        iBox2 measureText(const char* text, iVec2 pos, const GFXfont& font, bool start_newline_at_0) { return measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0); }
+
+
+        /**
+        * DEPRECATED: Use the new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
+        */
+        DEPRECATED("Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0)")
+        iBox2 measureText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, bool start_newline_at_0) { return measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0); }
+
+
+#endif
+
+
+
+
+
     ///@}
     //*************************************************************************************************************
     //*************************************************************************************************************
     //*************************************************************************************************************
     /**
-    * @name Truetype font rendering via Takkao's OpenFontRenderer library.
+    * @name Extensions. Interfacing TGX with other libraries.
     *
-    * https://github.com/takkaO/OpenFontRender. 
     *       
     */
     ///@{
@@ -3443,58 +3491,6 @@ namespace tgx
          *          if this image is invalid).
          */
         template<typename JPEG_T> int JPEGDecode(JPEG_T& jpeg, iVec2 topleft = iVec2(0, 0), int options = 0, float opacity = 1.0f);
-
-
-
-
-#ifndef DOXYGEN_EXCLUDE
-
-
-
-    ///@}
-    //*************************************************************************************************************
-    /**
-    * @name Drawing primitives: Text DEPRECATED METHODS.
-    *
-    * @warning These method are still available for compatibility but will be removed 'soon'...
-    */
-    //*************************************************************************************************************
-    ///@{
-
-
-        /**
-        * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
-        */
-        DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
-        iVec2 drawText(const char* text, iVec2 pos, color_t color, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
-
-
-        /**
-        * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
-        */
-        DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
-        iVec2 drawText(const char* text, iVec2 pos, color_t color, const GFXfont& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
-
-
-        /**
-        * DEPRECATED: Use the new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
-        */
-        DEPRECATED("Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0)")
-        iBox2 measureText(const char* text, iVec2 pos, const GFXfont& font, bool start_newline_at_0) { return measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0); }
-
-
-        /**
-        * DEPRECATED: Use the new signature measureText(text,pos,font,anchor, wrap, newline_at_0) instead.
-        */
-        DEPRECATED("Use new signature measureText(text,pos,font,anchor, wrap, newline_at_0)")
-        iBox2 measureText(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, bool start_newline_at_0) { return measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0); }
-
-
-#endif
-
-
-
-
 
 
 
