@@ -2,8 +2,12 @@
 
 ***NEW VERSION 1.0.1***
 
-- **Bad news**:  Many API breaking change.
-- **Good news**:  A full documentation is now available at https://vindar.github.io/tgx/
+- **Bad news**:  Many API breaking change, especially with the 2D API...
+- **Good news**:
+     - A full documentation is now available at https://vindar.github.io/tgx/
+     - Speed improvement for 3D mesh rendering. 
+     - Added new 2D drawing primitives and improved quality rendering of previous ones.
+       
 
 <p align="center">
 <img src="./tgx.jpg" height="300" />
