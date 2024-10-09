@@ -26,9 +26,9 @@ using namespace tgx;
 // Pinout, hardware SPI0
 #define TFT_MOSI  11
 #define TFT_SCK   13
-#define TFT_DC   9 
-#define TFT_CS   10 
-#define TFT_RST  8
+#define TFT_DC   10 
+#define TFT_CS   9 
+#define TFT_RST  6
 
 
 // the screen driver: here using a small 160x128 pixels ST7735 screen
