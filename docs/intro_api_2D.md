@@ -676,21 +676,166 @@ Each font above is avaailble in fontsize: 8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14pt
 - \ref tgx::Image::measureChar "measureChar()" : compute the bounding box of a character (fast, does not draw it)
 
 
+---
+
 
 @section sec_extensions TGX extensions via external librairies
 
+TGX implements bindings that makes it very easy to use external libraries to add new capabilities to the Image class, such as displaying classic image format (PNG, GIF, JPEG) and TrueType fonts... 
+
 @subsection subsec_openfontrender drawing text with TrueType fonts 
+
+Install Takkao's **OpenRenderFont** library from  https://github.com/takkaO/OpenFontRender/.
+
+We just need to include both libraries into the project to activate the bindings between TGX and OpenFontRender:
+~~~{.cpp}
+#include <tgx.h>
+#include <OpenFontRender.h>
+~~~
+Now, we can bind any `OpenFontRender` object to an image with the method: \ref tgx::Image<color_t>::setOpenFontRender() "Image::setOpenFontRender(ofr)" and subsequently use the OpenFontRender library as usual. All texts written with `ofr` will automatically be drawn onto the selected image. 
+
+Example:
+~~~{.cpp}
+// create a 100x50 image in RGB565 color format. 
+tgx::RGB565 buf[100*50];
+tgx::Image<tgx::RGB565> im(buf, 100, 50);
+im.clear(tgx::RGB565_Black); // clear to full black
+
+// create a font rendering object
+OpenFontRender ofr; 
+
+// we link it wih image im
+im.setOpenFontRender(ofr); 
+
+// set up the font rendering object properties before drawing
+ofr.loadFont(NotoSans_Bold, sizeof(NotoSans_Bold))  // assume here that NotoSans_Bold is a Truetype font in memory. 
+ofr.setFontColor((uint16_t)tgx::RGB565_Yellow, (uint16_t)tgx::RGB565_Black); // set foreground and background colors for drawing text
+ofr.setCursor(10, 20); // Set the cursor position
+ofr.setFontSize(15); // set font size. 
+
+// and let's draw text !
+ofr.cprintf("Hello World"); // -> drawing in done ont im. 
+~~~
+
+@note A complete example is available in the subfolder `/examples/Teensy4/OpenFontRender_test/`. 
+
+
+Check the [OpenfontRender documentation](https://github.com/takkaO/OpenFontRender/blob/master/README.md) for additional details.
+
 
 @subsection subsec_PNGdec drawing PNG images
 
+Install Bitbank2's **PNGdec** library from the Arduino library manager / platformio of directly from https://github.com/bitbank2/PNGdec/.
+
+We just need to include both libraries into the project to activate the bindings between TGX and PNGdec:
+~~~{.cpp}
+#include <tgx.h>
+#include <PNGdec.h>
+~~~
+Now, we can bind any `PNG` decoder object tgx images by providing it with the generic callback `TGX_PNGDraw` and then we can susequently decode PNGs using the \ref tgx::Image<color_t>::PNGDecode "Image::PNGDecode()" method. 
+
+Example:
+~~~{.cpp}
+// create a 150x100 image in RGB565 color format. 
+tgx::RGB565 buf[150*100];
+tgx::Image<tgx::RGB565> im(buf, 150, 100);
+im.clear(tgx::RGB565_Black); // clear to full black
+
+// PNG decoder object from PNGdec library
+PNG png; 
+
+// Load the png image "octocat_4bpp" stored in RAM and link the decoder to TGX
+// -> note that 'TGX_PNGDraw' is passed as callback parameter.
+png.openRAM((uint8_t*)octocat_4bpp, sizeof(octocat_4bpp), TGX_PNGDraw); 
+
+// Draw the PNG onto im, with half opacity and upper left corner at pos (20, 10) inside im. 
+im.PNGDecode(png, {20, 10}, 0.5f);
+~~~
+
+@note A complete example is available in the subfolder `/examples/Teensy4/PNG_test/`. 
+
+Check the [PNGdec documentation](https://github.com/bitbank2/PNGdec/wiki) for additional details.
+
+
 @subsection subsec_JPEGDEC drawing JPEG images
+
+Install Bitbank2's **JPEGDEC** library from the Arduino library manager / platformio of directly from https://github.com/bitbank2/JPEGDEC.
+
+We just need to include both libraries into the project to activate the bindings between TGX and JPEGDEC:
+~~~{.cpp}
+#include <tgx.h>
+#include <JPEGDEC.h>
+~~~
+Now, we can bind any `JPEGDEC` decoder object tgx images by providing it with the generic callback `TGX_JPEGDraw` and then we can susequently decode JPEGs using the \ref tgx::Image<color_t>::JPEGDecode "Image::JPEGDecode()" method. 
+
+Example:
+~~~{.cpp}
+// create a 150x100 image in RGB565 color format. 
+tgx::RGB565 buf[150*100];
+tgx::Image<tgx::RGB565> im(buf, 150, 100);
+im.clear(tgx::RGB565_Black); // clear to full black
+
+// JPEG decoder object from JPEGDEC library
+JPEGDEC jpeg; 
+
+// Load the jpeg image "batman" stored in RAM and link the decoder to TGX
+// -> note that 'TGX_JPEGDraw' is passed as callback parameter.
+jpeg.openRAM((uint8_t*)batman, sizeof(batman), TGX_JPEGDraw); 
+
+// Draw the JPEG onto im at half scale, half opacity and upper left corner at pos (20, 10) inside im. 
+im.JPEGDecode(png, {20, 10}, JPEG_SCALE_HALF, 0.5f);
+
+~~~
+
+@note A complete example is available in the subfolder `/examples/Teensy4/JPEG_test/`. 
+
+Check the [JPEGDEC documentation](https://github.com/bitbank2/JPEGDEC/wiki) for additional details.
+
+
+
 
 @subsection subsec_AnimateGIF drawing GIF images
 
+Install Bitbank2's **AnimateGIF** library from the Arduino library manager / platformio of directly from https://github.com/bitbank2/AnimatedGIF
+
+We just need to include both libraries into the project to activate the bindings between TGX and AnimateGIF:
+~~~{.cpp}
+#include <tgx.h>
+#include <AnimateGIF.h>
+~~~
+Now, we can bind any `AnimateGIF` decoder object to tgx images by providing it with the generic callback `TGX_GIFDraw` and then we can susequently decode GIFs using the \ref tgx::Image<color_t>::GIFplayFrame() "Image::GIFplayFrame()" method. 
+
+This method simply wraps around the `playFrame()` method fom the animateGIF library and can be called repeatedly to display successives frame in case of an animated GIF. 
+
+Example:
+
+~~~{.cpp}
+// create a 150x100 image in RGB565 color format. 
+tgx::RGB565 buf[150*100];
+tgx::Image<tgx::RGB565> im(buf, 150, 100);
+im.clear(tgx::RGB565_Black); // clear to full black
+
+// GIF decoder object from AnimateGIF library
+AnimatedGIF gif;
+
+// Load the GIF image "earth_128x128" stored in RAM and link the decoder to TGX
+// -> note that 'TGX_GIFDraw' is passed as callback parameter.
+gif.open((uint8_t*)earth_128x128, sizeof(earth_128x128), TGX_GIFDraw); 
+
+// Draw the GIF onto im with upper left corner at pos (20, 10) inside im. 
+im.GIFplayFrame(gif, { 20, 10 }); 
+
+// we can call im.GIFplayFrame(gif, { 20, 10 }) again to draw the next frame if it is an animated GIF... 
+~~~
+
+@note A complete example is available in the subfolder `/examples/Teensy4/GIF_test/`. 
+
+Check the [AnimateGIf documentation](https://github.com/bitbank2/AnimatedGIF/wiki) for additional details.
 
 
 
 
+---
 
 
 

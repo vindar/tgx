@@ -3419,13 +3419,13 @@ namespace tgx
 
 
         /**
-         * Link the image with Takkoa's OpenFontRenderer library : https://github.com/takkaO/OpenFontRender
+         * Link the image with Takkoa's OpenFontRender library : https://github.com/takkaO/OpenFontRender
          *
          * @tparam  T   type of the font renderer i.e. here it is `OpenFontRender` for Takkao's library. 
          * @param [in,out]  ofr     The font renderer object to link with.
          * @param           opacity (Optional) Opacity multiplier (in [0.0f, 1.0f]) used when drawing the font. 
          */
-        template<typename T> void setTakkaoOFR(T& ofr, float opacity = TGX_DEFAULT_NO_BLENDING)
+        template<typename T> void setOpenFontRender(T& ofr, float opacity = TGX_DEFAULT_NO_BLENDING)
             { 
             // for some strange reason, cannot put this method inside the .inl file when compiling with arduino IDE... 
             // must have something to do with Arduino's mangling of .ino file...

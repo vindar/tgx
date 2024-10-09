@@ -644,17 +644,111 @@ drawing text</h2>
 <li><a class="el" href="classtgx_1_1_image.html#abfc2c7a0fa10aac9e11fa9632b535c8a">measureText()</a> : compute the bounding box of a text (fast, does not draw it)</li>
 <li><a class="el" href="classtgx_1_1_image.html#aa42488f709d7294c5dcb107cb4616626">measureChar()</a> : compute the bounding box of a character (fast, does not draw it)</li>
 </ul>
+<hr  />
 <h1><a class="anchor" id="sec_extensions"></a>
 TGX extensions via external librairies</h1>
+<p >TGX implements bindings that makes it very easy to use external libraries to add new capabilities to the Image class, such as displaying classic image format (PNG, GIF, JPEG) and TrueType fonts...</p>
 <h2><a class="anchor" id="subsec_openfontrender"></a>
 drawing text with TrueType fonts</h2>
+<p >Install Takkao's <b>OpenRenderFont</b> library from <a href="https://github.com/takkaO/OpenFontRender/">https://github.com/takkaO/OpenFontRender/</a>.</p>
+<p >We just need to include both libraries into the project to activate the bindings between TGX and OpenFontRender: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;OpenFontRender.h&gt;</span></div>
+<div class="ttc" id="atgx_8h_html"><div class="ttname"><a href="tgx_8h.html">tgx.h</a></div><div class="ttdoc">Main header file.</div></div>
+</div><!-- fragment --><p> Now, we can bind any <code>OpenFontRender</code> object to an image with the method: <a class="el" href="classtgx_1_1_image.html#a501bd842e7c783deaf4f0c0f7832f376">Image::setOpenFontRender(ofr)</a> and subsequently use the OpenFontRender library as usual. All texts written with <code>ofr</code> will automatically be drawn onto the selected image.</p>
+<p >Example: </p><div class="fragment"><div class="line"><span class="comment">// create a 100x50 image in RGB565 color format. </span></div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> buf[100*50];</div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> im(buf, 100, 50);</div>
+<div class="line">im.clear(tgx::RGB565_Black); <span class="comment">// clear to full black</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// create a font rendering object</span></div>
+<div class="line">OpenFontRender ofr; </div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// we link it wih image im</span></div>
+<div class="line">im.setOpenFontRender(ofr); </div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// set up the font rendering object properties before drawing</span></div>
+<div class="line">ofr.loadFont(NotoSans_Bold, <span class="keyword">sizeof</span>(NotoSans_Bold))  <span class="comment">// assume here that NotoSans_Bold is a Truetype font in memory. </span></div>
+<div class="line">ofr.setFontColor((uint16_t)tgx::RGB565_Yellow, (uint16_t)tgx::RGB565_Black); <span class="comment">// set foreground and background colors for drawing text</span></div>
+<div class="line">ofr.setCursor(10, 20); <span class="comment">// Set the cursor position</span></div>
+<div class="line">ofr.setFontSize(15); <span class="comment">// set font size. </span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// and let&#39;s draw text !</span></div>
+<div class="line">ofr.cprintf(<span class="stringliteral">&quot;Hello World&quot;</span>); <span class="comment">// -&gt; drawing in done ont im. </span></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:216</div></div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>A complete example is available in the subfolder <code>/examples/Teensy4/OpenFontRender_test/</code>.</dd></dl>
+<p>Check the <a href="https://github.com/takkaO/OpenFontRender/blob/master/README.md">OpenfontRender documentation</a> for additional details.</p>
 <h2><a class="anchor" id="subsec_PNGdec"></a>
 drawing PNG images</h2>
+<p >Install Bitbank2's <b>PNGdec</b> library from the Arduino library manager / platformio of directly from <a href="https://github.com/bitbank2/PNGdec/">https://github.com/bitbank2/PNGdec/</a>.</p>
+<p >We just need to include both libraries into the project to activate the bindings between TGX and PNGdec: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;PNGdec.h&gt;</span></div>
+</div><!-- fragment --><p> Now, we can bind any <code>PNG</code> decoder object tgx images by providing it with the generic callback <code>TGX_PNGDraw</code> and then we can susequently decode PNGs using the <a class="el" href="classtgx_1_1_image.html#a077be1a8bdfd1d67ef2788f6e515157c">Image::PNGDecode()</a> method.</p>
+<p >Example: </p><div class="fragment"><div class="line"><span class="comment">// create a 150x100 image in RGB565 color format. </span></div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> buf[150*100];</div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> im(buf, 150, 100);</div>
+<div class="line">im.clear(tgx::RGB565_Black); <span class="comment">// clear to full black</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// PNG decoder object from PNGdec library</span></div>
+<div class="line">PNG png; </div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Load the png image &quot;octocat_4bpp&quot; stored in RAM and link the decoder to TGX</span></div>
+<div class="line"><span class="comment">// -&gt; note that &#39;TGX_PNGDraw&#39; is passed as callback parameter.</span></div>
+<div class="line">png.openRAM((uint8_t*)octocat_4bpp, <span class="keyword">sizeof</span>(octocat_4bpp), TGX_PNGDraw); </div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Draw the PNG onto im, with half opacity and upper left corner at pos (20, 10) inside im. </span></div>
+<div class="line">im.PNGDecode(png, {20, 10}, 0.5f);</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>A complete example is available in the subfolder <code>/examples/Teensy4/PNG_test/</code>.</dd></dl>
+<p>Check the <a href="https://github.com/bitbank2/PNGdec/wiki">PNGdec documentation</a> for additional details.</p>
 <h2><a class="anchor" id="subsec_JPEGDEC"></a>
 drawing JPEG images</h2>
+<p >Install Bitbank2's <b>JPEGDEC</b> library from the Arduino library manager / platformio of directly from <a href="https://github.com/bitbank2/JPEGDEC">https://github.com/bitbank2/JPEGDEC</a>.</p>
+<p >We just need to include both libraries into the project to activate the bindings between TGX and JPEGDEC: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;JPEGDEC.h&gt;</span></div>
+</div><!-- fragment --><p> Now, we can bind any <code>JPEGDEC</code> decoder object tgx images by providing it with the generic callback <code>TGX_JPEGDraw</code> and then we can susequently decode JPEGs using the <a class="el" href="classtgx_1_1_image.html#ae83fd55040b78f8b4f55be84b7a27cfd">Image::JPEGDecode()</a> method.</p>
+<p >Example: </p><div class="fragment"><div class="line"><span class="comment">// create a 150x100 image in RGB565 color format. </span></div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> buf[150*100];</div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> im(buf, 150, 100);</div>
+<div class="line">im.clear(tgx::RGB565_Black); <span class="comment">// clear to full black</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// JPEG decoder object from JPEGDEC library</span></div>
+<div class="line">JPEGDEC jpeg; </div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Load the jpeg image &quot;batman&quot; stored in RAM and link the decoder to TGX</span></div>
+<div class="line"><span class="comment">// -&gt; note that &#39;TGX_JPEGDraw&#39; is passed as callback parameter.</span></div>
+<div class="line">jpeg.openRAM((uint8_t*)batman, <span class="keyword">sizeof</span>(batman), TGX_JPEGDraw); </div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Draw the JPEG onto im at half scale, half opacity and upper left corner at pos (20, 10) inside im. </span></div>
+<div class="line">im.JPEGDecode(png, {20, 10}, JPEG_SCALE_HALF, 0.5f);</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>A complete example is available in the subfolder <code>/examples/Teensy4/JPEG_test/</code>.</dd></dl>
+<p>Check the <a href="https://github.com/bitbank2/JPEGDEC/wiki">JPEGDEC documentation</a> for additional details.</p>
 <h2><a class="anchor" id="subsec_AnimateGIF"></a>
 drawing GIF images</h2>
-</div></div><!-- contents -->
+<p >Install Bitbank2's <b>AnimateGIF</b> library from the Arduino library manager / platformio of directly from <a href="https://github.com/bitbank2/AnimatedGIF">https://github.com/bitbank2/AnimatedGIF</a></p>
+<p >We just need to include both libraries into the project to activate the bindings between TGX and AnimateGIF: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;AnimateGIF.h&gt;</span></div>
+</div><!-- fragment --><p> Now, we can bind any <code>AnimateGIF</code> decoder object to tgx images by providing it with the generic callback <code>TGX_GIFDraw</code> and then we can susequently decode GIFs using the <a class="el" href="classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5">Image::GIFplayFrame()</a> method.</p>
+<p >This method simply wraps around the <code>playFrame()</code> method fom the animateGIF library and can be called repeatedly to display successives frame in case of an animated GIF.</p>
+<p >Example:</p>
+<div class="fragment"><div class="line"><span class="comment">// create a 150x100 image in RGB565 color format. </span></div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> buf[150*100];</div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> im(buf, 150, 100);</div>
+<div class="line">im.clear(tgx::RGB565_Black); <span class="comment">// clear to full black</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// GIF decoder object from AnimateGIF library</span></div>
+<div class="line">AnimatedGIF gif;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Load the GIF image &quot;earth_128x128&quot; stored in RAM and link the decoder to TGX</span></div>
+<div class="line"><span class="comment">// -&gt; note that &#39;TGX_GIFDraw&#39; is passed as callback parameter.</span></div>
+<div class="line">gif.open((uint8_t*)earth_128x128, <span class="keyword">sizeof</span>(earth_128x128), TGX_GIFDraw); </div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Draw the GIF onto im with upper left corner at pos (20, 10) inside im. </span></div>
+<div class="line">im.GIFplayFrame(gif, { 20, 10 }); </div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// we can call im.GIFplayFrame(gif, { 20, 10 }) again to draw the next frame if it is an animated GIF... </span></div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>A complete example is available in the subfolder <code>/examples/Teensy4/GIF_test/</code>.</dd></dl>
+<p>Check the <a href="https://github.com/bitbank2/AnimatedGIF/wiki">AnimateGIf documentation</a> for additional details.</p>
+<hr  />
+ </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->

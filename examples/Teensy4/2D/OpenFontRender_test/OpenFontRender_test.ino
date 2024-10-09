@@ -108,7 +108,7 @@ void renderTTF(const char* str)
 void loop()
     {
 
-    im.setTakkaoOFR(ofr, op); // link the image to the OpenFontRender object and set the opacity
+    im.setOpenFontRender(ofr, op); // link the image to the OpenFontRender object and set the opacity
     im.clear(RGB565_Black); // clear the image fully black    
 
     op -= 0.005f; 
