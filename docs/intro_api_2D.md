@@ -1,14 +1,15 @@
 @page intro_api_2D Using the 2D API.
 
 
-
 **Below is a description, with examples, of most 2D drawing primitives implemented in TGX.** 
 
 - For additional details, look directly into the main header file \ref Image.h
+- Do not forget to check the examples located in the `/examples/`  subdirectory of the library. In particular, the example `TestPrimitives` contains all the code list below. 
 
----
+@section sec_2Dprimitives 2D Drawing methods. 
 
-# Filling the screen. 
+
+@subsection subsec_filling Filling the screen. 
 
 ![test_screen_filling](../test_screen_filling.png)   
 
@@ -33,7 +34,7 @@ im2.fillScreenHGradient(tgx::RGB32_Green, tgx::RGB32_Orange); // fill with horiz
 ---
 
 
-# Reading/writing pixels
+@subsection subsec_rwpixels Reading/writing pixels
 
 ![test_points](../test_points.png)
 
@@ -62,7 +63,7 @@ for (int i = 0; i < 310; i += 15) {
 
 ---
 
-# Flood-filling a region 
+@subsection subsec_floodfill Flood-filling a region 
 
 ![test_region_filling](../test_region_filling.png)
 
@@ -84,7 +85,7 @@ im.fill({ 0,0 }, tgx::RGB32_Olive);                    // fill starting {0,0}
 
 ---
 
-# Blitting sprites
+@subsection subsec_blitting Blitting sprites
 
 ![test_blitting](../test_blitting.png)
 
@@ -119,7 +120,7 @@ See also \ref tgx::Image<color_t>::blitBackward() "blitBackward()" and methods f
 
 ---
 
-# drawing horizontal and vertical lines
+@subsection subsec_vhlines drawing horizontal and vertical lines
 
 ![test_vhlines](../test_vhlines.png)
 
@@ -143,7 +144,7 @@ for (int i = 0; i < 20; i++) {
 
 ---
 
-# drawing lines
+@subsection subsec_lines drawing lines
 
 ![test_lines](../test_lines.png)
 
@@ -169,7 +170,7 @@ im.drawWedgeLineAA({ 300, 220 }, { 150, 100 }, 10, tgx::END_ARROW_1, 20, tgx::EN
 
 ---
 
-# drawing rectangles
+@subsection subsec_rect drawing rectangles
 
 ![test_rectangles](../test_rectangles.png)
 
@@ -201,7 +202,7 @@ See also \ref tgx::Image::drawThickRectAA "drawThickRectAA()", \ref tgx::Image::
 
 ---
 
-# drawing rounded rectangles
+@subsection subsec_roundrect drawing rounded rectangles
 
 ![test_rounded_rectangles](../test_rounded_rectangles.png)
 
@@ -226,7 +227,7 @@ im.fillThickRoundRectAA({ 100, 250, 60, 200 }, 10, 5, tgx::RGB32_Gray, tgx::RGB3
 
 ---
 
-# drawing triangles
+@subsection subsec_triangles drawing triangles
 
 ![test_triangles](../test_triangles.png)
 
@@ -256,7 +257,7 @@ im.fillThickTriangleAA({ 130,200 }, { 280, 110 }, {250, 170}, 5, tgx::RGB32_Lime
 
 ---
 
-# drawing triangles (advanced)
+@subsection subsec_triangles_advanced drawing triangles (advanced)
 
 ![test_triangles_advanced](../test_triangles_advanced.png)
 
@@ -287,7 +288,7 @@ See also \ref tgx::Image::drawTexturedMaskedTriangle "drawTexturedMaskedTriangle
 
 ---
 
-# drawing quads
+@subsection subsec_quads drawing quads
 
 ![test_quads](../test_quads.png)
 
@@ -317,7 +318,7 @@ im.fillThickQuadAA({ 130,200 }, { 160, 140 }, { 230, 100 }, { 250, 170 } , 5, tg
 
 ---
 
-# drawing quads (advanced)
+@subsection subsec_quads_advanced drawing quads (advanced)
 
 ![test_quad_advanced](../test_quad_advanced.png)
 
@@ -342,7 +343,7 @@ See also \ref tgx::Image::drawTexturedMaskedQuad "drawTexturedMaskedQuad()", \re
 
 ---
 
-# drawing polylines
+@subsection subsec_polylines drawing polylines
 
 ![test_polylines](../test_polylines.png)
     
@@ -370,7 +371,7 @@ im.drawThickPolylineAA(6, tabPoints3, 12, tgx::END_ARROW_1, tgx::END_ROUNDED, tg
 
 ---
 
-# drawing polygons
+@subsection subsec_polygons drawing polygons
 	
 ![test_polygons](../test_polygons.png)
 
@@ -411,7 +412,7 @@ im.fillThickPolygonAA(6, tabPoints6, 10, tgx::RGB32_Purple, tgx::RGB32_Orange, 0
 
 ---
 
-# drawing circles
+@subsection subsec_circles drawing circles
 
 ![test_circles](../test_circles.png)
 
@@ -440,7 +441,7 @@ im.fillThickCircleAA({160,160}, 55, 8, tgx::RGB32_Teal, tgx::RGB32_Orange, 0.5f)
 
 ---
 
-# drawing ellipses
+@subsection subsec_ellipses drawing ellipses
 
 ![test_ellipses](../test_ellipses.png)
 
@@ -470,7 +471,7 @@ im.fillThickEllipseAA({ 160,160 }, { 55, 65 }, 8, tgx::RGB32_Teal, tgx::RGB32_Or
 
 ---
 
-# drawing circle arcs and pies
+@subsection subsec_arcpies drawing circle arcs and pies
 
 ![test_arc_pies](../test_arc_pies.png)
 
@@ -496,7 +497,7 @@ im.fillThickCircleSectorAA({230, 120}, 100, 140, 340, 10, tgx::RGB32_Olive, tgx:
 
 ---
 
-# drawing Bezier curves
+@subsection subsec_bezier drawing Bezier curves
 
 ![test_bezier_curves](../test_bezier_curves.png)
 
@@ -521,7 +522,7 @@ im.drawThickCubicBezierAA({ 80, 80 }, { 305, 150 }, { 0, 240 }, {290, 240}, 10, 
 
 ---
 
-# drawing splines
+@subsection subsec_splines drawing splines
 
 ![test_splines](../test_splines.png)
 
@@ -570,7 +571,7 @@ im.fillThickClosedSplineAA(5, tabPoints8, 5, tgx::RGB32_Gray ,tgx::RGB32_Red, 0.
 ---
 
 
-# drawing text
+@subsection subsec_text drawing text
 
 ![test_text](../test_text.png)
 
@@ -676,20 +677,15 @@ Each font above is avaailble in fontsize: 8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14pt
 
 
 
-# drawing text with TrueType fonts 
+@section sec_extensions TGX extensions via external librairies
 
-# drawing PNG images
+@subsection subsec_openfontrender drawing text with TrueType fonts 
 
-# drawing JPEG images
+@subsection subsec_PNGdec drawing PNG images
 
-# drawing GIF images
+@subsection subsec_JPEGDEC drawing JPEG images
 
-
-use TakkaO's Openfont renderer
-
-TODO
-
-
+@subsection subsec_AnimateGIF drawing GIF images
 
 
 

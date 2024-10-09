@@ -83,8 +83,9 @@ An image object is a lightweight structure (only 16 bytes in memory) similar to 
 - a pointer to the memory buffer `buffer[]` of pixel colors of type `color_t` (the template color type of the image). 
 - a `stride` value that is the number of pixels per image row (which may be larger than `ly` when working with sub-images). 
 
-In particular, **the image object does not contain the pixels buffer itself** but only a pointer to its memory location. Therefore, several images 
-can reference the same memory buffer: this permits to create images/sub-images that share the same pixels buffer.
+In particular, **the image object does not contain the pixels buffer itself** but only a pointer to its memory location. **As a general rule, the TGX library never perform any dynamic memory allocation**. 
+
+Several images can reference the same memory buffer (or a part of it). Creating images/sub-images that share the same pixels buffer is useful to restrict drawing operations to a given rectangular region 
 
 The position of a pixel in a image is,
 
@@ -163,26 +164,87 @@ im.drawCircleAA({50.0f, 60.0f} , 11.5f, tgx::RGB32_Red); // draw a blue circle c
 // method `Image::fillRect(const iBox2 & B, color_t color, float opacity)` takes an integer valued box as input parameter.
 im.fillRect(B, tgx::RGB32_Black); // draw a filled black box [40, 80]x[20,30]
 im.fillRect({50, 60 , 70, 80}, tgx::RGB32_Black); // using an initializer list: draw a filled black box [50, 60]x[70,80]
-
 ~~~
 
 
 ---
 
 
-# Copying/converting images. 
+# Storing image in .cpp files
+
+The memory buffer that an image points to may reside in flash/ROM and it if possible to define 'const' image directly in `.cpp` files for easy inclusion in a project. 
+
+For example, the 10x10 image
+
+![smiley_icon](../smileybig.png)   
+
+Can be stored as:
+
+~~~{.cpp}
+// macro to make the array more readable/compact.  
+#define C(val) tgx::RGB565((uint16_t)val)
+
+// image data, the PROGMEM keyword is to insure that the image is store in FLASH memory. 
+const tgx::RGB565 smiley_data[] PROGMEM = {
+C(0xffff), C(0xffff), C(0xf714), C(0xe609), C(0xdd40), C(0xdd40), C(0xe609), C(0xf714), C(0xffff), C(0xffff),
+C(0xffff), C(0xee8f), C(0xddc6), C(0xeef1), C(0xfffb), C(0xfffb), C(0xeef1), C(0xddc6), C(0xee8f), C(0xffff),
+C(0xeef4), C(0xdda5), C(0xf775), C(0xffd8), C(0xffd8), C(0xffd8), C(0xffd8), C(0xf775), C(0xdda5), C(0xeef4),
+C(0xd5a9), C(0xee8d), C(0xff94), C(0x9b20), C(0xff94), C(0xff94), C(0x9b20), C(0xff94), C(0xee8d), C(0xd5a9),
+C(0xc4a0), C(0xff50), C(0xff50), C(0xff50), C(0xff50), C(0xff50), C(0xff50), C(0xff50), C(0xff50), C(0xc4a0),
+C(0xbc60), C(0xff0b), C(0xff0b), C(0xff0b), C(0xff0b), C(0xff0b), C(0xff0b), C(0xff0b), C(0xff0b), C(0xbc60),
+C(0xc4e8), C(0xe5c4), C(0xfea6), C(0xaba0), C(0xfea6), C(0xfea6), C(0xaba0), C(0xfea6), C(0xe5c4), C(0xc4e8),
+C(0xd612), C(0xc481), C(0xf622), C(0xdd40), C(0x9b20), C(0x9b20), C(0xdd40), C(0xf622), C(0xc481), C(0xd612),
+C(0xf79e), C(0xc54d), C(0xbc60), C(0xdd60), C(0xfe40), C(0xfe40), C(0xdd60), C(0xbc60), C(0xc54d), C(0xf79e),
+C(0xffff), C(0xef7d), C(0xcdd2), C(0xb4a8), C(0xaba0), C(0xaba0), C(0xb4a8), C(0xcdd2), C(0xef7d), C(0xffff) };
+
+// image object, 10x10 image with smiley_data as pixel buffer. 
+const tgx::Image<tgx::RGB565> smiley(smiley_data, 10, 10);
+~~~
+
+The `/tools/` subdirectory of the library contain the Python script `image_converter.py` which allows to easily convert an image from a classical format (jpeg/png/bmp...) into a .cpp file.
+
+@note It is also easy to directly load PNG, JPEG and GIF images (which may be stored in RAM/FLASH or on another media such as a SD card) by using bindings between TGX and external libraries. See section \ref sec_extensions for more details. 
 
 
-# interfacing with other libraries. 
 
-- pngdec
-- tjpg
-- takkao openfontrender
-- AnimatedGif
+# Copying/converting images to different color types. 
+
+Recall that a \ref tgx::Image object is just a view into a buffer of pixels of a given color type. Thus, copies of image object are shallow (they share the same image buffer / same color type). 
+
+- Method \ref tgx::Image<color_t>::copyFrom() "Image<color_t>::copyFrom(src_im, opacity)" can be used to create deep copy of images and it can also change the color type and resize them (using bilinear interpolation). 
+- Method \ref tgx::Image<color_t>::convert() "Image<color_t>::convert<color_dst>()" can be used to change the color type of an image "in place". 
+
+~~~{.cpp}
+tgx::RGB32 buf1[100*100]; // buffer for a 100x100 image in RGB32 color format
+tgx::Image<tgx::RGB32> im1(buf1, LX, LY); // image that encapsulates the pixel buffer buf1
+    
+// ... draw some things on im...
+    
+tgx::RGB24 buf2[50 * 50]; // buffer for a 50x50 image in RGB24 color format
+tgx::Image<tgx::RGB24> im2(buf2, 50, 50); // image that encapsulates the pixel buffer buf2
+
+// copy the content of im1/buf1 into im2/buf2, resize and perform color conversion automatically !   
+im2.copyFrom(im1);
+
+// we can directly change the color type of im1 in place from RGB32 to RGB565
+tgx::Image<tgx::RGB565> im3 = im1.convert<tgx::RGB565>();
+
+// ok, now im3 has the same content as im1 had, but in RGB565 color format. 
+// Beware that im1 now contains 'garbage' (seen as RGB32 data) but writing 
+// on im1 will change the content of im3 as they share the same buffer !
+
+~~~
 
 
 
 
-ivec et positionning 
+# Drawing things on an images...
 
-A faire. 
+Here comes the good part ! Now that can can create and manipulate images, we obviously want to draw thing on them !
+
+TGX defines many primitives to draw shapes (such as lines, rectangle, circles, bezier curves), to blit sprites or write text... As well as a simple (but full-featured!) 3D engine. 
+
+- **Details for 2D drawing are provided in** @ref intro_api_2D "the 2D API tutorial"
+- **Details for 3D drawing are provided in** @ref intro_api_3D "the 3D API tutorial"
+
+

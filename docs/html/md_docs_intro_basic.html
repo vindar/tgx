@@ -158,7 +158,8 @@ Image class, memory layout and sub-images</h1>
 <li>a pointer to the memory buffer <code>buffer[]</code> of pixel colors of type <code>color_t</code> (the template color type of the image).</li>
 <li>a <code>stride</code> value that is the number of pixels per image row (which may be larger than <code>ly</code> when working with sub-images).</li>
 </ul>
-<p >In particular, <b>the image object does not contain the pixels buffer itself</b> but only a pointer to its memory location. Therefore, several images can reference the same memory buffer: this permits to create images/sub-images that share the same pixels buffer.</p>
+<p >In particular, <b>the image object does not contain the pixels buffer itself</b> but only a pointer to its memory location. <b>As a general rule, the TGX library never perform any dynamic memory allocation</b>.</p>
+<p >Several images can reference the same memory buffer (or a part of it). Creating images/sub-images that share the same pixels buffer is useful to restrict drawing operations to a given rectangular region</p>
 <p >The position of a pixel in a image is,</p>
 <p ><code>Pixel(i, j) = buffer[i + stride*j]</code></p>
 <p >for 0 &le; <code>i</code> &lt; <code>lx</code> and 0 &le; <code>j</code> &lt; <code>ly</code>.</p>
@@ -235,17 +236,67 @@ Vectors and Boxes</h1>
 <div class="ttc" id="astructtgx_1_1_vec2_html_a0dd3317719c780a7614027f9b50edb17"><div class="ttname"><a href="structtgx_1_1_vec2.html#a0dd3317719c780a7614027f9b50edb17">tgx::Vec2::x</a></div><div class="ttdeci">T x</div><div class="ttdoc">'x' coordinate (first dimension)</div><div class="ttdef"><b>Definition:</b> Vec2.h:72</div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md9"></a>
-Copying/converting images.</h1>
+Storing image in .cpp files</h1>
+<p >The memory buffer that an image points to may reside in flash/ROM and it if possible to define 'const' image directly in <code>.cpp</code> files for easy inclusion in a project.</p>
+<p >For example, the 10x10 image</p>
+<p ><img src="../smileybig.png" alt="smiley_icon" class="inline"/> <br  />
+</p>
+<p >Can be stored as:</p>
+<div class="fragment"><div class="line"><span class="comment">// macro to make the array more readable/compact.  </span></div>
+<div class="line"><span class="preprocessor">#define C(val) tgx::RGB565((uint16_t)val)</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// image data, the PROGMEM keyword is to insure that the image is store in FLASH memory. </span></div>
+<div class="line"><span class="keyword">const</span> <a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> smiley_data[] PROGMEM = {</div>
+<div class="line">C(0xffff), C(0xffff), C(0xf714), C(0xe609), C(0xdd40), C(0xdd40), C(0xe609), C(0xf714), C(0xffff), C(0xffff),</div>
+<div class="line">C(0xffff), C(0xee8f), C(0xddc6), C(0xeef1), C(0xfffb), C(0xfffb), C(0xeef1), C(0xddc6), C(0xee8f), C(0xffff),</div>
+<div class="line">C(0xeef4), C(0xdda5), C(0xf775), C(0xffd8), C(0xffd8), C(0xffd8), C(0xffd8), C(0xf775), C(0xdda5), C(0xeef4),</div>
+<div class="line">C(0xd5a9), C(0xee8d), C(0xff94), C(0x9b20), C(0xff94), C(0xff94), C(0x9b20), C(0xff94), C(0xee8d), C(0xd5a9),</div>
+<div class="line">C(0xc4a0), C(0xff50), C(0xff50), C(0xff50), C(0xff50), C(0xff50), C(0xff50), C(0xff50), C(0xff50), C(0xc4a0),</div>
+<div class="line">C(0xbc60), C(0xff0b), C(0xff0b), C(0xff0b), C(0xff0b), C(0xff0b), C(0xff0b), C(0xff0b), C(0xff0b), C(0xbc60),</div>
+<div class="line">C(0xc4e8), C(0xe5c4), C(0xfea6), C(0xaba0), C(0xfea6), C(0xfea6), C(0xaba0), C(0xfea6), C(0xe5c4), C(0xc4e8),</div>
+<div class="line">C(0xd612), C(0xc481), C(0xf622), C(0xdd40), C(0x9b20), C(0x9b20), C(0xdd40), C(0xf622), C(0xc481), C(0xd612),</div>
+<div class="line">C(0xf79e), C(0xc54d), C(0xbc60), C(0xdd60), C(0xfe40), C(0xfe40), C(0xdd60), C(0xbc60), C(0xc54d), C(0xf79e),</div>
+<div class="line">C(0xffff), C(0xef7d), C(0xcdd2), C(0xb4a8), C(0xaba0), C(0xaba0), C(0xb4a8), C(0xcdd2), C(0xef7d), C(0xffff) };</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// image object, 10x10 image with smiley_data as pixel buffer. </span></div>
+<div class="line"><span class="keyword">const</span> <a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> smiley(smiley_data, 10, 10);</div>
+</div><!-- fragment --><p >The <code>/tools/</code> subdirectory of the library contain the Python script <code>image_converter.py</code> which allows to easily convert an image from a classical format (jpeg/png/bmp...) into a .cpp file.</p>
+<dl class="section note"><dt>Note</dt><dd>It is also easy to directly load PNG, JPEG and GIF images (which may be stored in RAM/FLASH or on another media such as a SD card) by using bindings between TGX and external libraries. See section <a class="el" href="md_docs_intro_api_2_d.html#sec_extensions">TGX extensions via external librairies</a> for more details.</dd></dl>
 <h1><a class="anchor" id="autotoc_md10"></a>
-interfacing with other libraries.</h1>
+Copying/converting images to different color types.</h1>
+<p >Recall that a <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> object is just a view into a buffer of pixels of a given color type. Thus, copies of image object are shallow (they share the same image buffer / same color type).</p>
 <ul>
-<li>pngdec</li>
-<li>tjpg</li>
-<li>takkao openfontrender</li>
-<li>AnimatedGif</li>
+<li>Method <a class="el" href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae">Image&lt;color_t&gt;::copyFrom(src_im, opacity)</a> can be used to create deep copy of images and it can also change the color type and resize them (using bilinear interpolation).</li>
+<li>Method <a class="el" href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">Image&lt;color_t&gt;::convert&lt;color_dst&gt;()</a> can be used to change the color type of an image "in place".</li>
 </ul>
-<p >ivec et positionning</p>
-<p >A faire. </p>
+<div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buf1[100*100]; <span class="comment">// buffer for a 100x100 image in RGB32 color format</span></div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> im1(buf1, LX, LY); <span class="comment">// image that encapsulates the pixel buffer buf1</span></div>
+<div class="line">    </div>
+<div class="line"><span class="comment">// ... draw some things on im...</span></div>
+<div class="line">    </div>
+<div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b24.html">tgx::RGB24</a> buf2[50 * 50]; <span class="comment">// buffer for a 50x50 image in RGB24 color format</span></div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB24&gt;</a> im2(buf2, 50, 50); <span class="comment">// image that encapsulates the pixel buffer buf2</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// copy the content of im1/buf1 into im2/buf2, resize and perform color conversion automatically !   </span></div>
+<div class="line">im2.<a class="code hl_function" href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae">copyFrom</a>(im1);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// we can directly change the color type of im1 in place from RGB32 to RGB565</span></div>
+<div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> im3 = im1.<a class="code hl_function" href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">convert</a>&lt;<a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a>&gt;();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// ok, now im3 has the same content as im1 had, but in RGB565 color format. </span></div>
+<div class="line"><span class="comment">// Beware that im1 now contains &#39;garbage&#39; (seen as RGB32 data) but writing </span></div>
+<div class="line"><span class="comment">// on im1 will change the content of im3 as they share the same buffer !</span></div>
+<div class="ttc" id="aclasstgx_1_1_image_html_a9613250401a0fe1d6283e81070e99ee8"><div class="ttname"><a href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">tgx::Image::convert</a></div><div class="ttdeci">Image&lt; color_dst &gt; convert()</div><div class="ttdoc">Convert this image to another type.</div></div>
+<div class="ttc" id="aclasstgx_1_1_image_html_aa6957f8982ec8fe73bf5e31b2ffe74ae"><div class="ttname"><a href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae">tgx::Image::copyFrom</a></div><div class="ttdeci">void copyFrom(const Image&lt; src_color_t &gt; &amp;src_im, float opacity=TGX_DEFAULT_NO_BLENDING)</div><div class="ttdoc">Copy (or blend) the src image onto the destination image with resizing and color conversion.</div></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b24_html"><div class="ttname"><a href="structtgx_1_1_r_g_b24.html">tgx::RGB24</a></div><div class="ttdoc">Color in R8/G8/B8 format.</div><div class="ttdef"><b>Definition:</b> Color.h:681</div></div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md11"></a>
+Drawing things on an images...</h1>
+<p >Here comes the good part ! Now that can can create and manipulate images, we obviously want to draw thing on them !</p>
+<p >TGX defines many primitives to draw shapes (such as lines, rectangle, circles, bezier curves), to blit sprites or write text... As well as a simple (but full-featured!) 3D engine.</p>
+<ul>
+<li><b>Details for 2D drawing are provided in</b> <a class="el" href="md_docs_intro_api_2_d.html#intro_api_2D">the 2D API tutorial</a></li>
+<li><b>Details for 3D drawing are provided in</b> <a class="el" href="md_docs_intro_api_3_d.html#intro_api_3D">the 3D API tutorial</a> </li>
+</ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

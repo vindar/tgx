@@ -35,34 +35,39 @@ var NAVTREE =
       ] ],
       [ "Image class, memory layout and sub-images", "md_docs_intro_basic.html#autotoc_md5", null ],
       [ "Vectors and Boxes", "md_docs_intro_basic.html#autotoc_md7", null ],
-      [ "Copying/converting images.", "md_docs_intro_basic.html#autotoc_md9", null ],
-      [ "interfacing with other libraries.", "md_docs_intro_basic.html#autotoc_md10", null ]
+      [ "Storing image in .cpp files", "md_docs_intro_basic.html#autotoc_md9", null ],
+      [ "Copying/converting images to different color types.", "md_docs_intro_basic.html#autotoc_md10", null ],
+      [ "Drawing things on an images...", "md_docs_intro_basic.html#autotoc_md11", null ]
     ] ],
     [ "Using the 2D API.", "md_docs_intro_api_2_d.html", [
-      [ "Filling the screen.", "md_docs_intro_api_2_d.html#autotoc_md12", null ],
-      [ "Reading/writing pixels", "md_docs_intro_api_2_d.html#autotoc_md14", null ],
-      [ "Flood-filling a region", "md_docs_intro_api_2_d.html#autotoc_md16", null ],
-      [ "Blitting sprites", "md_docs_intro_api_2_d.html#autotoc_md18", null ],
-      [ "drawing horizontal and vertical lines", "md_docs_intro_api_2_d.html#autotoc_md20", null ],
-      [ "drawing lines", "md_docs_intro_api_2_d.html#autotoc_md22", null ],
-      [ "drawing rectangles", "md_docs_intro_api_2_d.html#autotoc_md24", null ],
-      [ "drawing rounded rectangles", "md_docs_intro_api_2_d.html#autotoc_md26", null ],
-      [ "drawing triangles", "md_docs_intro_api_2_d.html#autotoc_md28", null ],
-      [ "drawing triangles (advanced)", "md_docs_intro_api_2_d.html#autotoc_md30", null ],
-      [ "drawing quads", "md_docs_intro_api_2_d.html#autotoc_md32", null ],
-      [ "drawing quads (advanced)", "md_docs_intro_api_2_d.html#autotoc_md34", null ],
-      [ "drawing polylines", "md_docs_intro_api_2_d.html#autotoc_md36", null ],
-      [ "drawing polygons", "md_docs_intro_api_2_d.html#autotoc_md38", null ],
-      [ "drawing circles", "md_docs_intro_api_2_d.html#autotoc_md40", null ],
-      [ "drawing ellipses", "md_docs_intro_api_2_d.html#autotoc_md42", null ],
-      [ "drawing circle arcs and pies", "md_docs_intro_api_2_d.html#autotoc_md44", null ],
-      [ "drawing Bezier curves", "md_docs_intro_api_2_d.html#autotoc_md46", null ],
-      [ "drawing splines", "md_docs_intro_api_2_d.html#autotoc_md48", null ],
-      [ "drawing text", "md_docs_intro_api_2_d.html#autotoc_md50", null ],
-      [ "drawing text with TrueType fonts", "md_docs_intro_api_2_d.html#autotoc_md51", null ],
-      [ "drawing PNG images", "md_docs_intro_api_2_d.html#autotoc_md52", null ],
-      [ "drawing JPEG images", "md_docs_intro_api_2_d.html#autotoc_md53", null ],
-      [ "drawing GIF images", "md_docs_intro_api_2_d.html#autotoc_md54", null ]
+      [ "2D Drawing methods.", "md_docs_intro_api_2_d.html#sec_2Dprimitives", [
+        [ "Filling the screen.", "md_docs_intro_api_2_d.html#subsec_filling", null ],
+        [ "Reading/writing pixels", "md_docs_intro_api_2_d.html#subsec_rwpixels", null ],
+        [ "Flood-filling a region", "md_docs_intro_api_2_d.html#subsec_floodfill", null ],
+        [ "Blitting sprites", "md_docs_intro_api_2_d.html#subsec_blitting", null ],
+        [ "drawing horizontal and vertical lines", "md_docs_intro_api_2_d.html#subsec_vhlines", null ],
+        [ "drawing lines", "md_docs_intro_api_2_d.html#subsec_lines", null ],
+        [ "drawing rectangles", "md_docs_intro_api_2_d.html#subsec_rect", null ],
+        [ "drawing rounded rectangles", "md_docs_intro_api_2_d.html#subsec_roundrect", null ],
+        [ "drawing triangles", "md_docs_intro_api_2_d.html#subsec_triangles", null ],
+        [ "drawing triangles (advanced)", "md_docs_intro_api_2_d.html#subsec_triangles_advanced", null ],
+        [ "drawing quads", "md_docs_intro_api_2_d.html#subsec_quads", null ],
+        [ "drawing quads (advanced)", "md_docs_intro_api_2_d.html#subsec_quads_advanced", null ],
+        [ "drawing polylines", "md_docs_intro_api_2_d.html#subsec_polylines", null ],
+        [ "drawing polygons", "md_docs_intro_api_2_d.html#subsec_polygons", null ],
+        [ "drawing circles", "md_docs_intro_api_2_d.html#subsec_circles", null ],
+        [ "drawing ellipses", "md_docs_intro_api_2_d.html#subsec_ellipses", null ],
+        [ "drawing circle arcs and pies", "md_docs_intro_api_2_d.html#subsec_arcpies", null ],
+        [ "drawing Bezier curves", "md_docs_intro_api_2_d.html#subsec_bezier", null ],
+        [ "drawing splines", "md_docs_intro_api_2_d.html#subsec_splines", null ],
+        [ "drawing text", "md_docs_intro_api_2_d.html#subsec_text", null ]
+      ] ],
+      [ "TGX extensions via external librairies", "md_docs_intro_api_2_d.html#sec_extensions", [
+        [ "drawing text with TrueType fonts", "md_docs_intro_api_2_d.html#subsec_openfontrender", null ],
+        [ "drawing PNG images", "md_docs_intro_api_2_d.html#subsec_PNGdec", null ],
+        [ "drawing JPEG images", "md_docs_intro_api_2_d.html#subsec_JPEGDEC", null ],
+        [ "drawing GIF images", "md_docs_intro_api_2_d.html#subsec_AnimateGIF", null ]
+      ] ]
     ] ],
     [ "Using the 3D API.", "md_docs_intro_api_3_d.html", null ],
     [ "Classes", "annotated.html", [
@@ -91,9 +96,9 @@ var NAVTREEINDEX =
 "_box2_8h.html",
 "_vec3_8h.html#a7c1bcc71ce9d57db1da42ed72267a2e0",
 "classtgx_1_1_renderer3_d.html#a7bb17f3177a24fbeccbb0d8a801aef88",
-"structtgx_1_1_box2.html#a2a3b648a8d4296bbe7b0a4636c2288a9",
-"structtgx_1_1_r_g_b32.html#a6ee73ea2a437b6486cbf9de706c465ae",
-"structtgx_1_1_vec3.html#ae1520853bed24f302b71d4916e4b05a8"
+"structtgx_1_1_box2.html#a24d72d9ac6cd12bc216de9be36b00ffd",
+"structtgx_1_1_r_g_b32.html#a677765b5345c4f9e1e940d3c6e8bba81",
+"structtgx_1_1_vec3.html#aad43bc6a7548cba572645c3e064118ca"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
