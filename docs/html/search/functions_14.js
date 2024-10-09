@@ -1,6 +1,0 @@
-var searchData=
-[
-  ['zdivide_0',['zdivide',['../structtgx_1_1_vec4.html#ac63692579926c0f915b20e433a22f122',1,'tgx::Vec4']]],
-  ['zoomin_1',['zoomIn',['../structtgx_1_1_box2.html#af1b72fd0224e486fa640ca0df1c63c09',1,'tgx::Box2::zoomIn()'],['../structtgx_1_1_box3.html#a42ee70b4500d220b34a2064669559607',1,'tgx::Box3::zoomIn()']]],
-  ['zoomout_2',['zoomOut',['../structtgx_1_1_box2.html#a8314257e9cd3948730aa550b38c19130',1,'tgx::Box2::zoomOut()'],['../structtgx_1_1_box3.html#a18ebc2537dd2d218f6c4e6e743fa8a43',1,'tgx::Box3::zoomOut()']]]
-];
