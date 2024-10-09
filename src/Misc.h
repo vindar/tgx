@@ -161,6 +161,11 @@ namespace tgx
     template <typename T> struct is_same<T, T> { static const bool value = true; };
 
 
+    /** little endian / big endian conversion */
+    TGX_INLINE inline uint16_t BigEndian16(uint16_t v)
+        {
+        return __builtin_bswap16(v); 
+        }
 
 
     /** Baby let me swap you one more time... */

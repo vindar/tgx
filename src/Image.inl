@@ -524,7 +524,7 @@ namespace tgx
         {
 
         const int TGX_GIF_PALETTE_RGB565_LE = 0; // taken from AnimatedGIF.h
-        const int TGX_GIF_PALETTE_RGB565_BE = 1; // 
+        const int TGX_GIF_PALETTE_RGB565_BE = 1; // taken from AnimatedGIF.h
 
         _JPEGDECWrapper* pWrapper = (_JPEGDECWrapper*)pDraw->pUser;
         const float op = pWrapper->opacity;
@@ -558,7 +558,7 @@ namespace tgx
         color_t * d = im->data() + x0 + (y0 * im->stride()); // destination
 
         // switch depending on the palette type available
-        if ((pDraw->ucPaletteType == TGX_GIF_PALETTE_RGB565_LE)|| (pDraw->ucPaletteType == TGX_GIF_PALETTE_RGB565_BE))
+        if (pDraw->ucPaletteType == TGX_GIF_PALETTE_RGB565_LE)
             { // use the RGB565 palette
             if (pDraw->ucHasTransparency)
                 {
@@ -588,6 +588,36 @@ namespace tgx
                 else
                     {
                     for (int x = 0; x < iWidth; x++) { d[x].blend((color_t)(RGB565(usPalette[*s++])),op); }
+                    }
+                }
+            }
+        else if (pDraw->ucPaletteType == TGX_GIF_PALETTE_RGB565_BE)
+            { // use the RGB565 palette in big endian ordering
+            if (pDraw->ucHasTransparency)
+                {
+                if (op >= 1)
+                    {
+                    for (int x = 0; x < iWidth; x++)
+                        {
+                        const uint8_t c = *s++;
+                        if (c != ucTransparent) { d[x] = (color_t)(RGB565(tgx::BigEndian16(usPalette[c]))); }
+                        }
+                    } else
+                    {
+                    for (int x = 0; x < iWidth; x++)
+                        {
+                        const uint8_t c = *s++;
+                        if (c != ucTransparent) { d[x].blend((color_t)(RGB565(tgx::BigEndian16(usPalette[c]))), op); }
+                        }
+                    }
+                } else
+                {
+                if (op >= 1)
+                    {
+                    for (int x = 0; x < iWidth; x++) { d[x] = (color_t)(RGB565(tgx::BigEndian16(usPalette[*s++]))); }
+                    } else
+                    {
+                    for (int x = 0; x < iWidth; x++) { d[x].blend((color_t)(RGB565(tgx::BigEndian16(usPalette[*s++]))), op); }
                     }
                 }
             }
