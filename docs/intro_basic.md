@@ -216,7 +216,7 @@ Recall that a \ref tgx::Image object is just a view into a buffer of pixels of a
 
 ~~~{.cpp}
 tgx::RGB32 buf1[100*100]; // buffer for a 100x100 image in RGB32 color format
-tgx::Image<tgx::RGB32> im1(buf1, LX, LY); // image that encapsulates the pixel buffer buf1
+tgx::Image<tgx::RGB32> im1(buf1, 100, 100); // image that encapsulates the pixel buffer buf1
     
 // ... draw some things on im...
     
