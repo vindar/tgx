@@ -1,4 +1,7 @@
-/** @file Box3.h */
+/**   
+ * @file Box3.h 
+ * 3D box class
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -32,38 +35,34 @@ namespace tgx
 {
 
 
-    /** Forward declaration */
+    // Forward declaration
 
     template<typename T> struct Box3;
 
 
-    /** Specializations */
+    // Specializations
 
-    typedef Box3<int> iBox3;            // integer valued box with platform int
+    typedef Box3<int> iBox3; ///< Integer-valued 3D box
 
-    typedef Box3<int16_t> iBox3_s16;    // integer box with 16-bit int
+    typedef Box3<float> fBox3; ///< Floating point valued 3D box with single(float) precision
 
-    typedef Box3<int32_t> iBox3_s32;    // integer box with 32 bit int
-
-    typedef Box3<float>   fBox3;        // floating-point valued box with float precision
-
-    typedef Box3<double>  dBox3;        // floating-point valued box with double precision
+    typedef Box3<double> dBox3; ///< Floating point valued 3D box with double precision
 
 
-
-
-    /***************************************************************
-    * Template class for a 3D box.
-    *
-    * Consist only of 4 public variables: minX, maxX, minY, maxY, minZ, maxZ
-    * which represent the 3-dimensional closed box:
-    *              [minX, maxX] x [minY, maxY] x [minZ, maxZ]
-    *
-    * - the box is empty if maxX < minX or if maxY < minY or if maxZ < minZ.
-    *
-    * - Caution ! Some methods compute things differently  depending
-    * on whether T is an integral or a floating point  value type.
-    ***************************************************************/
+    /**
+     * Generic 3D Box [specializations #iBox3, #fBox3, #dBox3].
+     * 
+     * The class encapsulates of 6 public variables: `minX`, `maxX`, `minY`, `maxY`, `minZ`, `maxZ`
+     * which delimit the 3 dimensional *closed* box: `[minX, maxX] x [minY, maxY] x [minZ, maxZ]`
+     * 
+     * The box is empty if `maxX` < `minX` or if `maxY` < `minY` or if `maxZ` < `minZ`.  
+     * 
+     * @warning Some methods compute things differently  depending whether T is an integral or a floating point  value type.
+     *
+     * @tparam  T arithmetic type of the box (`int`, `float`...)
+     *
+     * @sa  `iBox3`,`fBox3`,`dBox3`
+     */
     template<typename T> struct Box3
     {
         
@@ -73,66 +72,71 @@ namespace tgx
         #endif        
 
         // box dimension: [minX, maxX] x [minY, maxY] x [minZ, maxZ]
-        // the box is closed !
-        T minX, maxX, minY, maxY, minZ, maxZ;
+
+        T minX; ///< min horizontal (X) value (inclusive)
+        T maxX; ///< max horizontal (X) value (inclusive)
+        T minY; ///< min vertical (Y) value (inclusive)
+        T maxY; ///< max vertical (Y) value (inclusive)
+        T minZ; ///< min depth (Z) value (inclusive)
+        T maxZ; ///< max depth (Z) value (inclusive)
 
 
-        /** 
-        * default ctor: an uninitialized box. Undefined contents for max performance.  
-        **/
+        /**
+         * default constructor: **the box content is undefined**.
+         */
         constexpr Box3()
             {
             }
 
 
-        /** 
-        * ctor with explicit dimensions. 
-        **/
+        /**
+         * Constructor with explicit dimensions.
+         */
         constexpr Box3(const T minx, const T maxx, const T miny, const T maxy, const T minz, const T maxz) : minX(minx), maxX(maxx), minY(miny), maxY(maxy), minZ(minz), maxZ(maxz)
             {
             }
 
 
-        /** 
-        * ctor: box containing a single point
-        **/
+        /**
+         * Construct a box representing a single point.
+         */
         constexpr Box3(const Vec3<T>& v) : minX(v.x), maxX(v.x), minY(v.y), maxY(v.y), minZ(v.z), maxZ(v.z)
             {
             }
 
 
-        /** 
-        * default copy ctor.
-        **/
+        /**
+        * default copy constructor.
+        */
         Box3(const Box3<T>& B) = default;
 
 
-        /** 
-        * default assignement operator. 
-        **/
+        /**
+        * default assignement operator.
+        */
         Box3<T>& operator=(const Box3<T>& B) = default;
 
 
         /**
-        * Explicit conversion to another box type
-        **/
+        * Explicit conversion to another box type.
+        */
         template<typename U>
         explicit operator Box3<U>() { return Box3<U>((U)minX, (U)maxX, (U)minY, (U)maxY, (U)minZ, (U)maxZ); }
 
 
         /**
-        * Implicit conversion to floating point type.
-        **/
+        * Implicit conversion to floating-point type.
+        */
         operator Box3<typename DefaultFPType<T>::fptype>() { return Box3<typename DefaultFPType<T>::fptype>((typename DefaultFPType<T>::fptype)minX, (typename DefaultFPType<T>::fptype)maxX, (typename DefaultFPType<T>::fptype)minY, (typename DefaultFPType<T>::fptype)maxY, (typename DefaultFPType<T>::fptype)minZ, (typename DefaultFPType<T>::fptype)maxZ); }
 
 
-        /** 
-        * Return true if the box is empty. 
-        **/
+        /**
+        * Return true if the box is empty.
+        */
         constexpr inline bool isEmpty() const { return ((maxX < minX) || (maxY < minY) || (maxZ < minZ)); }
 
 
-        /** 
+        /**
         * Make the box empty.
         **/
         void empty()
@@ -146,12 +150,14 @@ namespace tgx
             }
 
 
-        /** 
-         * Return the box width. Result differs depending wether T is integer or floating point type:
-         * - if T is floating point: return maxX - minX.
-         * - if T is integral: return maxX - minX + 1 (number of horizontal points in the closed box).
-         **/
-        inline T lx() const 
+        /**
+         * Return the box width.
+         *
+         * @warning The width is computed differently depending on whether `T` is of floating point or integral type.
+         *          - If `T` is floating point, the method returns `maxX - minX`.
+         *          - If `T` is integral, the method returns `maxX - minX + 1` (number of horizontal points in the closed box).
+         */
+        inline T lx() const
             {
             if (std::is_integral<T>::value) // compiler optimize this away. 
                 {
@@ -164,11 +170,13 @@ namespace tgx
             }
 
 
-        /** 
-        * Return the box height. Result differs depending wether T is integer or floating point type 
-        * -if T is floating point : return maxY - minY.
-        * -if T is integral : return maxY - minY + 1 (number of vertical points in the closed box).
-        **/
+        /**
+         * Return the box height.
+         *
+         * @warning The height is computed differently depending on whether `T` is of floating point or integral type.
+         *          - If `T` is floating point, the method returns `maxY - minY`.
+         *          - If `T` is integral, the method returns `maxY - minY + 1` (number of vertical points in the closed box).
+         */
         inline T ly() const
             {
             if (std::is_integral<T>::value) // compiler optimize this away. 
@@ -182,11 +190,13 @@ namespace tgx
             }
 
 
-        /** 
-        * Return the box depth. Result differs depending wether T is integer or floating point type 
-        * -if T is floating point : return maxZ - minZ.
-        * -if T is integral : return maxZ - minZ + 1 (number of depth points in the closed box).
-        **/
+        /**
+         * Return the box depth.
+         *
+         * @warning The depth is computed differently depending on whether `T` is of floating point or integral type.
+         *          - If `T` is floating point, the method returns `maxZ - minZ`.
+         *          - If `T` is integral, the method returns `maxZ - minZ + 1` (number of vertical points in the closed box).
+         */
         inline T lz() const
             {
             if (std::is_integral<T>::value) // compiler optimize this away. 
@@ -200,8 +210,35 @@ namespace tgx
             }
 
 
-        /** 
-        * returns true if the box contains point v 
+        /**
+        * Return true if the boxes are equal.
+        *
+        * @note Two empty boxes always compare equal.
+        *
+        * @see operator==()
+        **/
+        inline bool equals(const Box3<T>& B) const
+            {
+            if (isEmpty()) { return B.isEmpty(); }
+            return ((minX == B.minX) && (maxX == B.maxX) && (minY == B.minY) && (maxY == B.maxY) && (minZ == B.minZ) && (maxZ == B.maxZ));
+            }
+
+
+        /**
+        * Return true if the boxes are equal.
+        *
+        * @note Two empty boxes always compare equal.
+        *
+        * @see equals()
+        **/
+        inline bool operator==(const Box3<T>& B) const
+            {
+            return equals(B);
+            }
+
+
+        /**
+        * Return true if the box contains the point v.
         **/
         inline bool contains(const Vec3<T>& v) const
             {
@@ -210,9 +247,11 @@ namespace tgx
 
 
         /**
-         * returns true if B is included in this box.
-         * rule 1) An empty box contains nothing.
-         * rule 2) a non-empty box contains any empty box.
+         * Return true if B is included in this box.
+         *
+         * @note
+         * 1. An empty box contains nothing.
+         * 2. A non-empty box contains any empty box.
          **/
         inline bool contains(const Box3<T>& B) const
             {
@@ -223,27 +262,13 @@ namespace tgx
 
 
         /**
-        * Return true if the boxes are equal.
-        * rule 1) two empty boxes always compare equal.
-        **/
-        inline bool equals(const Box3<T>& B) const
-            {
-            if (isEmpty()) { return B.isEmpty(); }
-            return ((minX == B.minX) && (maxX == B.maxX) && (minY == B.minY) && (maxY == B.maxY) && (minZ == B.minZ) && (maxZ == B.maxZ));
-            }
-
-
-        /**
-        * same as equals(B)
-        **/
-        inline bool operator==(const Box3<T>& B) const
-            {
-            return equals(B);
-            }
-
-
-        /**
-        * same as contains(B)
+        * Return true if B is included in this box.
+        *
+        * @note
+        * 1. An empty box contains nothing.
+        * 2. A non-empty box contains any empty box.
+        *
+        * @see contains()
         **/
         inline bool operator>=(const Box3<T>& B) const
             {
@@ -252,7 +277,13 @@ namespace tgx
 
 
         /**
-        * same as B.contains(*this)
+        * Return true if this box is included in B.
+        *
+        * @note
+        * 1. An empty box contains nothing.
+        * 2. A non-empty box contains any empty box.
+        *
+        * @see contains()
         **/
         inline bool operator<=(const Box3<T>& B) const
             {
@@ -261,7 +292,11 @@ namespace tgx
 
 
         /**
-        * check if this box strictly contains B (ie contains it but is not equal).
+        * Return true if B is *strictly* included in this box (i.e. contained but not equal).
+        *
+        * @note
+        * 1. An empty box contains nothing.
+        * 2. A non-empty box contains any empty box.
         **/
         inline bool operator>(const Box3<T>& B) const
             {
@@ -270,7 +305,11 @@ namespace tgx
 
 
         /**
-        * check if B strictly contains this box (ie contains it but is not equal).
+        * Return true if this box is *strictly* included inside B (i.e. contained but not equal).
+        *
+        * @note
+        * 1. An empty box contains nothing.
+        * 2. A non-empty box contains any empty box.
         **/
         inline bool operator<(const Box3<T>& B) const
             {
@@ -279,7 +318,7 @@ namespace tgx
 
 
         /**
-         * Return the intersection of 2 boxes.
+         * Return the intersection of this box and B. This may return an empty box.
          **/
         inline Box3<T> operator&(const Box3<T>& B) const
             {
@@ -306,8 +345,7 @@ namespace tgx
 
 
         /**
-        * Intersect this box with box B.
-        * May yield an empty box.
+        * Intersect this box with box B. May create an empty box.
         **/
         inline void operator&=(const Box3<T>& B)
             {
@@ -316,7 +354,7 @@ namespace tgx
 
 
         /**
-        * Return the smallest box containing both boxes
+        * Return the smallest box containing both this box and B.
         **/
         inline Box3<T> operator|(const Box3<T>& B) const
             {
@@ -386,9 +424,9 @@ namespace tgx
 
 
         /**
-        * Translate the box by a given vector
+        * Translate this box by a given vector.
         **/
-        inline void operator+=(Vec3<T>  V)
+        inline void operator+=(const Vec3<T> & V)
             {
             minX += V.x;
             maxX += V.x;
@@ -402,16 +440,16 @@ namespace tgx
         /**
         * Return this box translated by v.
         **/
-        inline Box3<T> operator+(Vec3<T>  V) const
+        inline Box3<T> operator+(const Vec3<T> & V) const
             {
             return Box3<T>(minX + V.x, maxX + V.x, minY + V.y, maxY + V.y, minZ + V.z, maxZ + V.z);
             }
 
 
         /**
-        * Translate the box by a given vector
+        * Translate the box by a given vector (substracted)
         **/
-        inline void operator-=(Vec3<T> V)
+        inline void operator-=(const Vec3<T> & V)
             {
             minX -= V.x;
             maxX -= V.x;
@@ -423,16 +461,16 @@ namespace tgx
 
 
         /**
-        * Return this box translated by v.
+        * Return this box translated by v (substracted).
         **/
-        inline Box3<T> operator-(Vec3<T> V) const
+        inline Box3<T> operator-(const Vec3<T> & V) const
             {
             return Box3<T>(minX - V.x, maxX - V.x, minY - V.y, maxY - V.y, minZ - V.z, maxZ - V.z);
             }
 
 
         /**
-        * Return the center of the box. 
+        * Return the position of the box center as a 3 dimensional vector.
         **/
         Vec3<T> center() const
             {
@@ -441,7 +479,9 @@ namespace tgx
 
 
         /**
-        * Zoom outside the box (i.e. increase radius by 1/10th).
+        * Zoom outside the box (ie increase its size by 1/10th).
+        *
+        * @sa zoomIn()
         **/
         void zoomOut()
             {
@@ -458,7 +498,9 @@ namespace tgx
 
 
         /**
-        * Zoom inside the box (i.e. decrease radius by 1/8th).
+        * Zoom inside the box (ie decrease its size by 1/8th).
+        *
+        * @sa zoomOut()
         **/
         void zoomIn()
             {
@@ -475,7 +517,9 @@ namespace tgx
 
 
         /**
-        * Move the box left by 1/10th of its width.
+        * Move the box to the left by 1/10th of its width.
+        *
+        * @sa up(),down(),right(),front(),back()
         **/
         void left()
             {
@@ -486,7 +530,9 @@ namespace tgx
 
 
         /**
-        * Move the box right by 1/10th of its width.
+        * Move the box to the right by 1/10th of its width.
+        *
+        * @sa up(),down(),left(),front(),back()
         **/
         void right()
             {
@@ -497,7 +543,9 @@ namespace tgx
 
 
         /**
-        * Move the rectangle up by 1/10th of its height.
+        * Move the box up by 1/10th of its height.
+        *
+        * @sa down(),left(),right(),front(),back()
         **/
         void up()
             {
@@ -508,7 +556,9 @@ namespace tgx
 
 
         /**
-        * Move the rectangle down by 1/10th of its height.
+        * Move the box down by 1/10th of its height.
+        *
+        * @sa up(),left(),right(),front(),back()
         **/
         void down()
             {
@@ -519,7 +569,9 @@ namespace tgx
 
 
         /**
-        * Move the rectangle front by 1/10th of its height.
+        * Move the box front by 1/10th of its height.
+        *
+        * @sa up(),down(),left(),right(),back()
         **/
         void front()
             {
@@ -530,7 +582,9 @@ namespace tgx
 
 
         /**
-        * Move the rectangle back by 1/10th of its height.
+        * Move the box back by 1/10th of its height.
+        *
+        * @sa up(),down(),left(),right(),front()
         **/
         void back()
             {

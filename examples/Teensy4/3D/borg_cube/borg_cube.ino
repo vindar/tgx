@@ -94,7 +94,7 @@ Image<RGB565> texture(texture_data, tex_size, tex_size);
 
 
 // we only use bilinear texturing for power of 2 texture, combined texturing with flat shading, a z buffer and both perspective and orthographic projection
-const int LOADED_SHADERS = TGX_SHADER_ORTHO | TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_FLAT | TGX_SHADER_TEXTURE_BILINEAR |TGX_SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADERS = SHADER_ORTHO | SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
@@ -127,9 +127,9 @@ void setup()
     renderer.setImage(&im);
     renderer.setZbuffer(zbuf);
     renderer.setCulling(1);
-    renderer.setTextureQuality(TGX_SHADER_TEXTURE_BILINEAR);
-    renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
-    renderer.setShaders(TGX_SHADER_FLAT | TGX_SHADER_TEXTURE );
+    renderer.setTextureQuality(SHADER_TEXTURE_BILINEAR);
+    renderer.setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);
+    renderer.setShaders(SHADER_FLAT | SHADER_TEXTURE );
     renderer.setPerspective(45, ratio, 1.0f, 100.0f);
     
     // initial texture color
@@ -174,7 +174,7 @@ void loop()
 
 
     // info about the projection type
-    im.drawText((projtype) ? "Perspective projection" : "Orthographic projection", {3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
+    im.drawText((projtype) ? "Perspective projection" : "Orthographic projection", {3,12 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
 
     // add fps counter
     tft.overlayFPS(fb); 

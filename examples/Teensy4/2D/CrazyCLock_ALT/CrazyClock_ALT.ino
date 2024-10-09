@@ -3,7 +3,7 @@
 * tgx library: Crazy clock demo.
 *
 * This example show how to use blitting of rotated/rescaled sprites
-* with transparency. 
+* with transparency.
 *
 * EXAMPLE FOR TEENSY 4 / 4.1
 *
@@ -89,43 +89,43 @@ Image<RGB565> im(fb, SLX, SLY);
 
 
 /* draw the clock with given angle, scale and opacity */
-void drawClock(float angle, float scale= 1.0f, float opacity = 1.0f)
-    {
+void drawClock(float angle, float scale = 1.0f, float opacity = 1.0f)
+{
     if (opacity == 1.0f)
-        { // the clock does not use trnasparency so we can use the faster method when opacity = 1.0f 
-        im.blitScaledRotated(green, { 120,120 }, { 160,120 }, scale, angle);  
-        }
-    else 
-        {
-        im.blitScaledRotated(green, { 120,120 }, { 160,120 }, scale, angle, opacity);  
-        }
-    } 
+    { // the clock does not use trnasparency so we can use the faster method when opacity = 1.0f 
+        im.blitScaledRotated(green, { 120,120 }, { 160,120 }, scale, angle);
+    }
+    else
+    {
+        im.blitScaledRotated(green, { 120,120 }, { 160,120 }, scale, angle, opacity);
+    }
+}
 
 
 /* draw the small hand with given angle, scale and opacity */
-void drawSmallHand(float angle, float scale= 1.0f, float opacity = 1.0f)
-    { 
+void drawSmallHand(float angle, float scale = 1.0f, float opacity = 1.0f)
+{
     // always use the method with blending, even when opacity = 1.0f because the hand has transparency
     im.blitScaledRotated(small_hand, { 22,117 }, { 160,120 }, 0.55f * scale, angle, opacity);
-    } 
+}
 
 
 /* draw long hand with given angle, scale and opacity */
-void drawLongHand(float angle, float scale= 1.0f, float opacity = 1.0f)
-    {
+void drawLongHand(float angle, float scale = 1.0f, float opacity = 1.0f)
+{
     // always use the method with blending, even when opacity = 1.0f because the hand has transparency
     im.blitScaledRotated(long_hand, { 14,197 }, { 160,120 }, 0.5f * scale, angle, opacity);
-    } 
+}
 
 
 
 
 void setup()
-    {
+{
     Serial.begin(9600);
 
     // output debug infos to serial port. 
-    tft.output(&Serial);                
+    tft.output(&Serial);
 
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED));
@@ -141,14 +141,14 @@ void setup()
     tft.setDiffGap(4); // small gap
     tft.setRefreshRate(140); // refresh at 60hz
     tft.setVSyncSpacing(2);
-    }
+}
 
 
 
 
 
 // used to keep track of the elapsed time
-elapsedMillis em;  
+elapsedMillis em;
 
 
 void loop()
@@ -157,80 +157,81 @@ void loop()
 
     // PART 0 : title
     em = 0;
-    while(em < 3000)
-        {
+    while (em < 3000)
+    {
         int y1 = (em < 1000) ? (130 * em) / 1000 - 50 : 80;
         int y2 = (em < 1000) ? 240 - (110 * em) / 1000 : 130;
-        im.fillScreen(RGB565_Black);  
-        im.drawText("TGX library",iVec2{110,y1}, RGB565_Red, font_tgx_OpenSans_Bold_18, true);
-        im.drawText("Crazy clock demo",iVec2{35,y2}, RGB565_White, font_tgx_OpenSans_Bold_28, true);      
+        im.fillScreen(RGB565_Black);
+        im.drawText("TGX library", iVec2{ 110,y1 }, font_tgx_OpenSans_Bold_18, RGB565_Red);
+        im.drawText("Crazy clock demo", iVec2{ 35,y2 }, font_tgx_OpenSans_Bold_28, RGB565_White);
         tft.update(fb);
         yield(); // to keep the board responsive
-        }
+    }
 
     // PART 1 : the clock appears. 
     em = 0;
     while ((t = em) < 1000)
-        {      
-        float sc = 0.1f + 0.9f*t/1000.0f;
-        im.fillScreen(RGB565_Black);  
-        im.drawText("TGX library",iVec2{110,80}, RGB565_Red, font_tgx_OpenSans_Bold_18, true, 1.0f - t/1000.0f);
-        im.drawText("Crazy clock demo",iVec2{35,130}, RGB565_White, font_tgx_OpenSans_Bold_28, true, 1.0f - t/1000.0f);
-        drawClock(200 - t/5, sc);
-        drawSmallHand(t/10, sc);
-        drawLongHand(t/2, sc); 
+    {
+        float sc = 0.1f + 0.9f * t / 1000.0f;
+        im.fillScreen(RGB565_Black);
+        im.drawText("TGX library", iVec2{ 110,80 }, font_tgx_OpenSans_Bold_18, RGB565_Red, 1.0f - t / 1000.0f);
+        im.drawText("Crazy clock demo", iVec2{ 35,130 }, font_tgx_OpenSans_Bold_28, RGB565_White, 1.0f - t / 1000.0f);
+        drawClock(200 - t / 5, sc);
+        drawSmallHand(t / 10, sc);
+        drawLongHand(t / 2, sc);
         tft.update(fb);
         yield(); // to keep the board responsive
-        }
+    }
 
     // PART 2: rotation
     em = 0;
     while ((t = em) < 10000)
-        {
-        im.fillScreen(RGB565_Black);  
+    {
+        im.fillScreen(RGB565_Black);
         drawClock(0, 1.0f);
-        drawSmallHand(100 +360*sin(t / 1500.0f), 1.0f);
-        drawLongHand(500*cos(t / 5000.0f), 1.0f); 
-        tft.update(fb);              
+        drawSmallHand(100 + 360 * sin(t / 1500.0f), 1.0f);
+        drawLongHand(500 * cos(t / 5000.0f), 1.0f);
+        tft.update(fb);
         yield(); // to keep the board responsive
-        }  
+    }
 
-   // PART 3: changing hands sizes
+    // PART 3: changing hands sizes
     while ((t = em) < 20000)
-        {
-        im.fillScreen(RGB565_Black);  
+    {
+        im.fillScreen(RGB565_Black);
         drawClock(0, 1.0f);
-        drawSmallHand(100 +360*sin(t / 1500.0f), 0.292893 + abs(sin( 0.7853981 + (t-10000.0f) / 3000.0f)));
-        drawLongHand(500*cos(t / 5000.0f), 0.292893 + abs(cos( 0.7853981 + (t-10000.0f) / 3000.0f))); 
-        tft.update(fb);              
+        drawSmallHand(100 + 360 * sin(t / 1500.0f), 0.292893 + abs(sin(0.7853981 + (t - 10000.0f) / 3000.0f)));
+        drawLongHand(500 * cos(t / 5000.0f), 0.292893 + abs(cos(0.7853981 + (t - 10000.0f) / 3000.0f)));
+        tft.update(fb);
         yield(); // to keep the board responsive
-        }      
+    }
 
-   // PART 4: rotating the whole clock
+    // PART 4: rotating the whole clock
     while ((t = em) < 35000)
-        {
-        im.fillScreen(RGB565_Black);  
-        drawClock( 150.0f*sin((t-20000.0f) / 2000.0f), 1.0f);
-        drawSmallHand(100 +360*sin(t / 1500.0f), 0.292893 + abs(sin( 0.7853981 + (t-10000.0f) / 3000.0f)));
-        drawLongHand(500*cos(t / 5000.0f), 0.292893 + abs(cos( 0.7853981 + (t-10000.0f) / 3000.0f))); 
-        tft.update(fb);              
+    {
+        im.fillScreen(RGB565_Black);
+        drawClock(150.0f * sin((t - 20000.0f) / 2000.0f), 1.0f);
+        drawSmallHand(100 + 360 * sin(t / 1500.0f), 0.292893 + abs(sin(0.7853981 + (t - 10000.0f) / 3000.0f)));
+        drawLongHand(500 * cos(t / 5000.0f), 0.292893 + abs(cos(0.7853981 + (t - 10000.0f) / 3000.0f)));
+        tft.update(fb);
         yield(); // to keep the board responsive
-        }  
+    }
 
     // PART 5: fading
     while ((t = em) < 40000)
-        {
-        im.fillScreen(RGB565_Black);  
-        drawClock( 150.0f*sin((t-20000.0f) / 2000.0f), 1.0f - (t - 35000.0f)/5000.0f, 1.0f - (t - 35000.0f)/5000.0f);
-        drawSmallHand(100 +360*sin(t / 1500.0f), 0.292893 + abs(sin( 0.7853981 + (t-10000.0f) / 3000.0f)), 1.0f - (t - 35000.0f)/5000.0f);
-        drawLongHand(500*cos(t / 5000.0f), 0.292893 + abs(cos( 0.7853981 + (t-10000.0f) / 3000.0f)), 1.0f - (t - 35000.0f)/5000.0f); 
-        tft.update(fb);              
+    {
+        im.fillScreen(RGB565_Black);
+        drawClock(150.0f * sin((t - 20000.0f) / 2000.0f), 1.0f - (t - 35000.0f) / 5000.0f, 1.0f - (t - 35000.0f) / 5000.0f);
+        drawSmallHand(100 + 360 * sin(t / 1500.0f), 0.292893 + abs(sin(0.7853981 + (t - 10000.0f) / 3000.0f)), 1.0f - (t - 35000.0f) / 5000.0f);
+        drawLongHand(500 * cos(t / 5000.0f), 0.292893 + abs(cos(0.7853981 + (t - 10000.0f) / 3000.0f)), 1.0f - (t - 35000.0f) / 5000.0f);
+        tft.update(fb);
         yield();
-        }  
+    }
 
     // wait a bit before starting over.
-     delay(2000);
-    }
+    delay(2000);
+}
 
 
 /** end of file */
+

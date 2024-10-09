@@ -50,7 +50,7 @@ uint16_t zbuf[LX * LY]; // zbuffer in 16 bits precision
 Image<RGB565> * front_fb, * back_fb; 
 
 // only load the shaders we need.
-const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_NOTEXTURE | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE_NEAREST |SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
@@ -195,8 +195,8 @@ void fps()
     // display 
     char buf[10];
     sprintf(buf, "%d FPS", fps);
-    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_9, false);
-    im.drawText(buf, { LX - B.lx() - 3,9 }, RGB565_Red, font_tgx_OpenSans_Bold_9,false);    
+    auto B = im.measureText(buf, { 0,0 }, font_tgx_OpenSans_Bold_9);
+    im.drawText(buf, { LX - B.lx() - 3,9 }, font_tgx_OpenSans_Bold_9, RGB565_Red);    
     }
 
 
@@ -310,9 +310,9 @@ void setup()
     renderer.setPerspective(45, ((float)LX) / LY, 0.1f, 50.0f);  // set the perspective projection matrix. 
     renderer.setCulling(0); // in case we see below the sheet. 
     renderer.setImage(currentFB());
-    renderer.setTextureQuality(TGX_SHADER_TEXTURE_NEAREST);
-    renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);        
-    renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE);
+    renderer.setTextureQuality(SHADER_TEXTURE_NEAREST);
+    renderer.setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);        
+    renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE);
     
     fMat4 MV;
     MV.setIdentity();
@@ -349,4 +349,3 @@ void loop()
        
 
 /** end of file */
-

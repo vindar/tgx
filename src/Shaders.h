@@ -1,4 +1,7 @@
-/** @file Shaders.h */
+/**   
+ * @file Shaders.h 
+ * Triangle shader functions. 
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -31,6 +34,36 @@ namespace tgx
     inline TGX_INLINE int shaderclip(int v, int maxv)
         {
         return ((v < 0) ? 0 : ((v > maxv) ? maxv : v));
+        }
+
+
+
+    /**
+    * For test purposes... 
+    **/
+    template<typename color_t, typename ZBUFFER_t>
+    void shader_test(const int32_t& offset, const int32_t& lx, const int32_t& ly,
+        const int32_t& dx1, const int32_t& dy1, int32_t O1, const tgx::RasterizerVec4& fP1,
+        const int32_t& dx2, const int32_t& dy2, int32_t O2, const tgx::RasterizerVec4& fP2,
+        const int32_t& dx3, const int32_t& dy3, int32_t O3, const tgx::RasterizerVec4& fP3,
+        const tgx::RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+        {
+        color_t col = (color_t)tgx::RGB32_Red; //data.facecolor; 
+        color_t* buf = data.im->data() + offset;
+        const int32_t stride = data.im->stride();
+        for (int y = 0; y < ly; y++)
+            {
+            for (int x = 0; x < lx; x++)
+                {
+                const int32_t o1 = O1 + dx1 * x + dy1 * y;
+                const int32_t o2 = O2 + dx2 * x + dy2 * y;
+                const int32_t o3 = O3 + dx3 * x + dy3 * y;
+                if ((o1 >= 0) && (o2 >= 0) && (o3 >= 0))
+                    {
+                    buf[x + stride * y].blend256(col, 128);                
+                    }
+                }
+            }
         }
 
 
@@ -94,6 +127,7 @@ namespace tgx
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
                 buf[bx] = col;
+                //buf[bx].blend256(col, 128) // for testing. 
                 C2 += dx2;
                 C3 += dx3;
                 bx++;
@@ -126,7 +160,10 @@ namespace tgx
         const color_t col3 = (color_t)fP3.color;
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
+        const int shiftC = (aera > (1 << 22)) ? 10 : 0; // prevent overflow during color interpolation
 
         while ((uintptr_t)(buf) < end)
             { // iterate over scanlines
@@ -171,7 +208,7 @@ namespace tgx
             int32_t C3 = O3 + (dx3 * bx);
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
-                buf[bx] = interpolateColorsTriangle(col2, C2, col3, C3, col1, aera);
+                buf[bx] = interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC, col1, aera >> shiftC);
                 C2 += dx2;
                 C3 += dx3;
                 bx++;
@@ -200,7 +237,10 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
+
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -279,7 +319,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -350,7 +390,9 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -438,7 +480,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -516,7 +558,9 @@ namespace tgx
         const int32_t zstride = data.im->lx();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float wa = data.wa;
         const float wb = data.wb;
@@ -568,7 +612,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            const int32_t C1 = O1 + (dx1 * bx);
+            const int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a)) + wb;
@@ -620,7 +664,10 @@ namespace tgx
         const color_t col3 = (color_t)fP3.color;
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
+        const int shiftC = (aera > (1 << 22)) ? 10 : 0; // prevent overflow during color interpolation
 
         const float wa = data.wa;
         const float wb = data.wb;
@@ -672,7 +719,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            const int32_t C1 = O1 + (dx1 * bx);
+            const int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a)) + wb;
@@ -684,7 +731,7 @@ namespace tgx
                 if (W < aa)
                     {
                     W = aa;
-                    buf[bx] = interpolateColorsTriangle(col2, C2, col3, C3, col1, aera);
+                    buf[bx] = interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC, col1, aera >> shiftC);
                     }
                 C2 += dx2;
                 C3 += dx3;
@@ -724,7 +771,9 @@ namespace tgx
         const int32_t zstride = data.im->lx();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -805,7 +854,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -889,7 +938,9 @@ namespace tgx
         const int32_t zstride = data.im->lx();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -977,7 +1028,7 @@ namespace tgx
                     }
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -1057,7 +1108,9 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
 
@@ -1130,7 +1183,7 @@ namespace tgx
                     }
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
 
@@ -1197,7 +1250,9 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
 
@@ -1279,7 +1334,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
                 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
 
@@ -1357,7 +1412,9 @@ namespace tgx
         const int32_t zstride = data.im->lx();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -1438,7 +1495,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -1522,7 +1579,9 @@ namespace tgx
         const int32_t zstride = data.im->lx();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
         const float fP1a = fP1.w * invaera;
@@ -1611,7 +1670,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
             float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
@@ -1680,7 +1739,7 @@ namespace tgx
 
 
     /**
-    * META-SHADER THAT DISPATCH TO THE CORRECT SHADER ABOVE (IF ENABLED).
+    * META-Shader THAT DISPATCH TO THE CORRECT Shader ABOVE (IF ENABLED).
     **/
     template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t> void shader_select(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
@@ -1908,7 +1967,10 @@ namespace tgx
         const RGB32 col3 = RGB64(fP3.color.R, fP3.color.G, fP3.color.B, fP3.A);
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
+        const int shiftC = (aera > (1 << 22)) ? 10 : 0; // prevent overflow during color interpolation
 
         while ((uintptr_t)(buf) < end)
             { // iterate over scanlines
@@ -1956,12 +2018,12 @@ namespace tgx
                 if (USE_BLENDING)
                     {
                     RGB32 c(buf[bx]); // could use RGB64 instead but would be slower
-                    c.blend(interpolateColorsTriangle(col2, C2, col3, C3, col1, aera), data.opacity);
+                    c.blend(interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC, col1, aera >> shiftC), data.opacity);
                     buf[bx] = color_t_im(c);
                     }
                 else
                     {
-                    buf[bx] = color_t_im(interpolateColorsTriangle(col2, C2, col3, C3, col1, aera));
+                    buf[bx] = color_t_im(interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC, col1, aera >> shiftC));
                     }
                 C2 += dx2;
                 C3 += dx3;
@@ -1992,7 +2054,9 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
 
@@ -2001,18 +2065,6 @@ namespace tgx
         const RGBf& cf1 = (RGBf)fP1.color;
         const RGBf& cf2 = (RGBf)fP2.color;
         const RGBf& cf3 = (RGBf)fP3.color;
-        const int fP1R = (int)(256 * cf1.R);
-        const int fP1G = (int)(256 * cf1.G);
-        const int fP1B = (int)(256 * cf1.B);
-        const int fP1A = (int)(256 * fP1.A);
-        const int fP21R = (int)(256 * (cf2.R - cf1.R));
-        const int fP21G = (int)(256 * (cf2.G - cf1.G));
-        const int fP21B = (int)(256 * (cf2.B - cf1.B));
-        const int fP21A = (int)(256 * (fP2.A - fP1.A));
-        const int fP31R = (int)(256 * (cf3.R - cf1.R));
-        const int fP31G = (int)(256 * (cf3.G - cf1.G));
-        const int fP31B = (int)(256 * (cf3.B - cf1.B));
-        const int fP31A = (int)(256 * (fP3.A - fP1.A));
 
         // the texture coord
         fVec2 T1 = fP1.T;
@@ -2079,7 +2131,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
                 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
 
@@ -2118,10 +2170,14 @@ namespace tgx
 
                     if (USE_GRADIENT)
                         {
-                        const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-                        const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-                        const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
-                        const int a = fP1A + ((C2 * fP21A + C3 * fP31A) / aera);
+                        const int sC2 = C2;
+                        const int sC3 = C3;
+                        const int sC1 = aera - C3 - C2;
+                        const float m = 256.0f / aera;
+                        const int r = (int)((sC1 * cf1.R + sC2 * cf2.R + sC3 * cf3.R) * m);
+                        const int g = (int)((sC1 * cf1.G + sC2 * cf2.G + sC3 * cf3.G) * m);
+                        const int b = (int)((sC1 * cf1.B + sC2 * cf2.B + sC3 * cf3.B) * m);
+                        const int a = (int)((sC1 * fP1.A + sC2 * fP2.A + sC3 * fP3.A) * m);
                         col.mult256(r, g, b, a);
                         }
                     if (USE_BLENDING)
@@ -2140,10 +2196,14 @@ namespace tgx
                     color_t_tex col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);
                     if (USE_GRADIENT)
                         {
-                        const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-                        const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-                        const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
-                        const int a = fP1A + ((C2 * fP21A + C3 * fP31A) / aera);
+                        const int sC2 = C2;
+                        const int sC3 = C3;
+                        const int sC1 = aera - C3 - C2;
+                        const float m = 256.0f / aera;
+                        const int r = (int)((sC1 * cf1.R + sC2 * cf2.R + sC3 * cf3.R) * m);
+                        const int g = (int)((sC1 * cf1.G + sC2 * cf2.G + sC3 * cf3.G) * m);
+                        const int b = (int)((sC1 * cf1.B + sC2 * cf2.B + sC3 * cf3.B) * m);
+                        const int a = (int)((sC1 * fP1.A + sC2 * fP2.A + sC3 * fP3.A) * m);
                         col.mult256(r, g, b, a);
                         }
                     if (USE_BLENDING)
@@ -2192,7 +2252,9 @@ namespace tgx
         const int32_t stride = data.im->stride();
 
         const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t aera = O1 + O2 + O3;
+        const int32_t pa = O1 + O2 + O3;
+        const int32_t E = ((pa == 0) ? 1 : 0);
+        const int32_t aera = pa + E;
 
         const float invaera = fast_inv((float)aera);
 
@@ -2262,7 +2324,7 @@ namespace tgx
                 bx = max(bx, ((-O3 + dx3 - 1) / dx3));
                 }
                 
-            int32_t C1 = O1 + (dx1 * bx);
+            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
 

@@ -22,11 +22,22 @@ using namespace tgx;
 
 
 // meshes (stored in PROGMEM)
-#include "3Dmodels/teapot/teapot.h"
-#include "3Dmodels/skull/skull.h"
-#include "3Dmodels/suzanne/suzanne.h"
-#include "3Dmodels/bunny/bunny.h"
-#include "3Dmodels/dragon/dragon.h"
+#if __has_include("teapot.h")
+    // Arduino IDE stupidly flattens the example directory tree...
+    #include "teapot.h"
+    #include "skull.h"
+    #include "suzanne.h"
+    #include "bunny.h"
+    #include "dragon.h"
+#else 
+    // ok, use the normal path
+    #include "3Dmodels/teapot/teapot.h"
+    #include "3Dmodels/skull/skull.h"
+    #include "3Dmodels/suzanne/suzanne.h"
+    #include "3Dmodels/bunny/bunny.h"
+    #include "3Dmodels/dragon/dragon.h"
+#endif
+
 
 
 //
@@ -90,7 +101,7 @@ Image<RGB565> im(fb, SLX, SLY);
 
 
 // only load the shaders we need.
-const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_FLAT | TGX_SHADER_GOURAUD;
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_GOURAUD;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
@@ -126,11 +137,11 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int t, const tgx::Mesh3D<tgx::RGB565>
         }
     // display some info 
     char buf[80];
-    im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
+    im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     sprintf(buf, "%d triangles", nbt);
-    im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
+    im.drawText(buf, { 3,SLY - 21 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     sprintf(buf, "%s", (t == 0) ? "Wireframe" : ((t == 1) ? "Flat shading" : "Gouraud shading"));
-    im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
+    im.drawText(buf, { 3, SLY - 5 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     }
 
 
@@ -196,12 +207,12 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, float tilt = 0.0f)
             renderer.drawWireFrameMesh(cached_mesh);
         else if (t == 1)
             {
-            renderer.setShaders(TGX_SHADER_FLAT);
+            renderer.setShaders(SHADER_FLAT);
             renderer.drawMesh(cached_mesh, false);
             }            
         else
             {
-            renderer.setShaders(TGX_SHADER_GOURAUD);
+            renderer.setShaders(SHADER_GOURAUD);
             renderer.drawMesh(cached_mesh, false);
             }
 
@@ -251,5 +262,4 @@ void loop()
 
 
 /** end of file */
-
 

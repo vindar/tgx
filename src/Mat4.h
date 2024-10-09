@@ -1,4 +1,7 @@
-/** @file Mat4.h */
+/**   
+ * @file Mat4.h 
+ * 4x4 matrix class.
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -35,7 +38,7 @@
 namespace tgx
 {
 
-    /** forward declaration */
+    // forward declaration
 
     template<typename T> struct Vec2;
 
@@ -46,22 +49,41 @@ namespace tgx
     template<typename T> struct Mat4;
 
 
-    /** Specializations (only floating types T make sense for matrix class). */
+    // Specializations (only floating types T make sense for the matrix class).
+    
+    typedef Mat4<float>   fMat4;  ///< 4x4 matrix with single (float) precision
 
-    typedef Mat4<float>   fMat4;        // floating point value 2-D vector with float precision
-
-    typedef Mat4<double>  dMat4;        // floating point value 2-D vector with double precision
+    typedef Mat4<double>  dMat4;  ///< 4x4 matrix with double precision
 
 
-
-    /** forward declaration of matrix multiplication*/
+    // forward declaration of matrix multiplication
     template<typename T> Mat4<T> operator*(const Mat4<T> & A, const Mat4<T> & B);
 
 
 
-    /** 
-    * 4x4 matrix (used for representing a 3d transform). 
-    **/
+    /**
+     * Generic 4x4 matrix [specializations #fMat4, #dMat4]
+     * 
+     * The class encapsulate a 4x4 matrix with element of type `T` which must be a floating point
+     * type (either `float` or `double`). Such a matrix is used in 3D grpahics to represent a
+     * transformation (translation, rotation, dilatation...).
+     *
+     * The matrix is internally represented by an public array `M[16]` in column major ordering:
+     * 
+     * ```
+     * +-----------------------------+
+     * | M[0] | M[4] | M[8]  | M[12] |
+     * |------+------+-------+-------|
+     * | M[1] | M[5] | M[9]  | M[13] |
+     * |------+------+-------+-------|
+     * | M[2] | M[6] | M[10] | M[14] |
+     * |------+------+-------+-------|
+     * | M[3] | M[7] | M[11] | M[15] |
+     * +-----------------------------+
+     * ```
+     * 
+     * @sa Vec2, Vec3, Vec4
+     */
     template<typename T> struct Mat4
         {
 
@@ -73,21 +95,34 @@ namespace tgx
         #include <mtools/extensions/tgx/tgx_ext_Mat4.inl>
         #endif
 
-        // column major ordering:
-        //
-        // M[0]  M[4]  M[8]   M[12]
-        // M[1]  M[5]  M[9]   M[13]
-        // M[2]  M[6]  M[10]  M[14]
-        // M[3]  M[7]  M[11]  M[15]
-        //
+
+        /**
+         * The matrix array in column major ordering:
+         * 
+         * ```
+         * +-----------------------------+
+         * | M[0] | M[4] | M[8]  | M[12] |
+         * |------+------+-------+-------|
+         * | M[1] | M[5] | M[9]  | M[13] |
+         * |------+------+-------+-------|
+         * | M[2] | M[6] | M[10] | M[14] |
+         * |------+------+-------+-------|
+         * | M[3] | M[7] | M[11] | M[15] |
+         * +-----------------------------+
+         * ```
+        **/
         T M[16];  
 
 
-        /** default constructor, undefined values in the matrix. */
+        /** 
+         * Default constructor. **the matrix content is undefined**. 
+         */
         Mat4() {}
 
 
-        /** direct assignement from 16 values */
+        /**
+         * Constructor from explicit values.
+         */
         constexpr Mat4(T x1, T y1, T z1, T t1,
                        T x2, T y2, T z2, T t2,
                        T x3, T y3, T z3, T t3,
@@ -96,30 +131,42 @@ namespace tgx
             }
 
 
-        /** Construct from an array of T*/
+        /**
+         * Constructor from an array (with column major ordering same as `M`).
+         */
         Mat4(const T* mat) { memcpy(M, mat, 16 * sizeof(T)); }
 
 
-        /** copy ctor */
+        /**
+         * Copy constructor.
+         */
         Mat4(const Mat4 & mat) = default;
 
 
-        /** assignement operator */
+        /**
+         * Assignement operator.
+         */
         Mat4& operator=(const Mat4 & mat) = default;
 
 
-        /** implicit conversion to T* */
+        /**
+         * Implicit conversion to an array T[16]. 
+         */
         operator T*() { return M; }
 
 
-        /** set as the nul matrix */
+        /**
+         * Set as the null matrix (all coefficients equal 0). 
+         */
         void setZero()
             {
             memset(M, 0, 16 * sizeof(T));
             }
 
 
-        /** set as the identity matrix */
+        /**
+         * Set as the identity matrix.
+         */
         void setIdentity()
             {
             memset(M, 0, 16 * sizeof(T));
@@ -127,9 +174,15 @@ namespace tgx
             }
 
 
-        /** set as an orthographic matrix: 
-         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml 
-         **/
+        /**
+         * Set as an orthographic projection matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml
+         *          
+         * @param left, right   coordinates for the left and right vertical clipping planes  
+         * @param bottom, top   coordinates for the bottom and top horizontal clipping planes.
+         * @param zNear, zFar   distances to the nearer and farther depth clipping planes.
+         */
         void setOrtho(T left, T right, T bottom, T top, T zNear, T zFar)
             {
             memset(M, 0, 16 * sizeof(T));
@@ -144,9 +197,14 @@ namespace tgx
 
 
         /**
-        * Set as a perspective matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
-        **/
+         * Set as a perspective projection matrix.
+         *
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
+         *
+         * @param left, right   coordinates for the left and right vertical clipping planes
+         * @param bottom, top   coordinates for the bottom and top horizontal clipping planes.
+         * @param zNear, zFar   distances to the nearer and farther depth clipping planes.
+         */
         void setFrustum(T left, T right, T bottom, T top, T zNear, T zFar)
             {
             memset(M, 0, 16 * sizeof(T));
@@ -161,9 +219,15 @@ namespace tgx
 
 
         /**
-        * Set as a perspective matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
-        **/
+         * Set as a perspective projection matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
+         *
+         * @param   fovy   field of view angle, in degrees, in the y direction.
+         * @param   aspect aspect ratio that determines the field of view in the x direction. The aspect ratio is the ratio of x (width) to y (height).
+         * @param   zNear  distance from the viewer to the near clipping plane.
+         * @param   zFar   distance from the viewer to the far clipping plane.
+         */
         void setPerspective(T fovy, T aspect, T zNear, T zFar)
             {
             static const T deg2rad = (T)(M_PI / 180);
@@ -177,9 +241,13 @@ namespace tgx
 
 
         /**
-        * Set as a rotation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
-        **/
+         * Set as a rotation matrix.
+         *
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
+         * 
+         * @param   angle rotation angle in degrees.
+         * @param   x,y,z coordinates of the direction vector for the rotation.
+         */
         void setRotate(T angle, T x, T y, T z)
             {
             static const T deg2rad = (T)(M_PI / 180);
@@ -207,9 +275,13 @@ namespace tgx
 
 
         /**
-        * Set as a rotation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
-        **/
+         * Set as a rotation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
+         *
+         * @param   angle rotation angle in degrees.
+         * @param   v     direction vector for the rotation.
+         */
         void setRotate(T angle, const Vec3<T> v)
             {
             setRotate(angle, v.x, v.y, v.z);
@@ -217,9 +289,13 @@ namespace tgx
 
 
         /**
-        * Multiply this matrix by a rotation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
-        **/
+         * Pre-multiply this matrix by a rotation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
+         *
+         * @param   angle rotation angle in degrees.
+         * @param   x,y,z coordinates of the direction vector for the rotation.
+         */
         void multRotate(T angle, T x, T y, T z)
             {
             Mat4 mat;
@@ -228,21 +304,28 @@ namespace tgx
             }
 
 
+ 
         /**
-        * Multiply this matrix by a rotation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
-        **/
+         * Pre-multiply this matrix by a rotation matrix.
+         *
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
+         *
+         * @param   angle rotation angle in degrees.
+         * @param   v     direction vector for the rotation.
+         */
         void multRotate(T angle, const Vec3<T> v)
             {
             multRotate(angle, v.x, v.y, v.z);
             }
 
 
-
         /**
-        * set as a translation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
-        **/
+         * Set as a translation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         *
+         * @param   x,y,z   coordinates of the translation vector. 
+         */
         void setTranslate(T x, T y, T z)
             {
             memset(M, 0, 16 * sizeof(T));
@@ -257,9 +340,12 @@ namespace tgx
 
 
         /**
-        * set as a translation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
-        **/
+         * Set as a translation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         *
+         * @param   v   the translation vector.
+         */
         void setTranslate(const Vec3<T> v)
             {
             setTranslate(v.x, v.y, v.z);
@@ -267,8 +353,11 @@ namespace tgx
 
 
         /**
-        * multiply this matrix by a translation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         * Pre-multiply this matrix by a translation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         *
+         * @param   x,y,z   coordinates of the translation vector.
         **/
         void multTranslate(T x, T y, T z)
             {
@@ -279,8 +368,11 @@ namespace tgx
 
 
         /**
-        * multiply this matrix by a translation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         * Pre-multiply this matrix by a translation matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTranslate.xml
+         *
+         * @param   v   the translation vector.
         **/
         void multTranslate(const Vec3<T> v)
             {
@@ -288,10 +380,12 @@ namespace tgx
             }
 
 
-
         /**
-        * set as a dilatation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         * Set as a dilatation matrix
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         *
+         * @param   x,y,z   scale factors along the x, y, and z axes respectively.   
         **/
         void setScale(T x, T y, T z)
             {
@@ -304,8 +398,11 @@ namespace tgx
 
 
         /**
-        * set as a dilatation matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         * Set as a dilatation matrix
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         *
+         * @param   v   vector representing the scale factors along each axis.
         **/
         void setScale(const Vec3<T> v)
             {
@@ -314,8 +411,11 @@ namespace tgx
 
 
         /**
-        * multiply this matrix by a dilatation matrix
+        * Pre-multiply this matrix by a dilatation matrix.
+        * 
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         *
+         * @param   x,y,z   scale factors along the x, y, and z axes respectively.
         **/
         void multScale(T x, T y, T z)
             {
@@ -326,8 +426,11 @@ namespace tgx
 
 
         /**
-        * multiply this matrix by a dilatation matrix
+        * Pre-multiply this matrix by a dilatation matrix
+        * 
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml
+         *
+         * @param   v   vector representing the scale factors along each axis.
         **/
         void multScale(const Vec3<T> v)
             {
@@ -347,13 +450,20 @@ namespace tgx
             }
 
 
-        /** 
-        * Set the matrix a camera looking at a given direction.
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
-        * The formula given by khronos is wrong ! 
-        * The cross-product of two unit vectors is not normalized LOL :-)
-        * see: https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down
-        **/
+        /**
+         * Set the matrix for a camera looking at a given direction.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
+         * 
+         * The formula given by khronos is wrong ! The cross-product of two unit vectors is not
+         * normalized. 
+         *          
+         * See https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down
+         *
+         * @param   eyeX, eyeY, eyeZ            position of the eye point.
+         * @param   centerX, centerY, centerZ   position of the reference point (the camera points toward this point).
+         * @param   upX, upY, upZ               direction of the up vector. 
+         */
         void setLookAt(T eyeX, T eyeY, T eyeZ, T centerX, T centerY, T centerZ, T upX, T upY, T upZ)
             {
              const Vec4<T> f = normalize(Vec4<T>{ centerX - eyeX, centerY - eyeY, centerZ - eyeZ, (T)0 });
@@ -369,9 +479,19 @@ namespace tgx
 
 
         /**
-        * Set the matrix a camera looking at a given direction.
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
-        **/
+         * Set the matrix for a camera looking at a given direction.
+         *
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
+         *
+         * The formula given by khronos is wrong ! The cross-product of two unit vectors is not
+         * normalized. 
+         * 
+         * See https://stackoverflow.com/questions/30409318/lookat-matrix-distorts-when-looking-up-or-down
+         *
+         * @param   eye     eye position.
+         * @param   center  reference point (the camera points toward this point).
+         * @param   up      up vector.
+         */
         void setLookAt(const Vec3<T> eye, const Vec3<T> center, const Vec3<T> up)
             {
             setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, up.x, up.y, up.z);
@@ -379,8 +499,8 @@ namespace tgx
 
 
         /**
-        * Matrix-vector multiplication
-        **/
+        * Matrix-vector multiplication.
+        */
          TGX_INLINE inline Vec4<T> mult(const Vec4<T> V) const
             {
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z + M[12] * V.w,
@@ -391,8 +511,8 @@ namespace tgx
 
 
         /**
-        * Matrix-vector multiplication
-        **/
+        * Matrix-vector multiplication.
+        */
         TGX_INLINE inline Vec4<T> mult(const Vec3<T> & V, float w) const
             {
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z + M[12] * w,
@@ -403,8 +523,8 @@ namespace tgx
 
 
         /**
-        * Matrix-vector multiplication (last component w = 0)
-        **/
+        * Matrix-vector multiplication (last component of vector set to w = 0).
+        */
         TGX_INLINE inline Vec4<T> mult0(const Vec3<T> & V) const
             {
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z,
@@ -415,8 +535,8 @@ namespace tgx
 
 
         /**
-        * Matrix-vector multiplication (last component w = 1)
-        **/
+        * Matrix-vector multiplication (last component of vector set to w = 1)
+        */
         TGX_INLINE inline Vec4<T> mult1(const Vec3<T> & V) const
             {
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z + M[12],
@@ -426,18 +546,19 @@ namespace tgx
             }
 
 
-        /**
-        * Matrix multiplication : (*this ) = M * (*this) 
-        **/
-        /*
-        void operator*=(const Mat4 & M)
-            {
-            *this = (M * (*this));
-            }
-            */
+        //
+        // DO NOT DEFINE TO PREVENT ANBIGUITY ! 
+        // Matrix multiplication : (*this ) = M * (*this) 
+        //
+        //
+        //void operator*=(const Mat4 & M)
+        //    {
+        //    *this = (M * (*this));
+        //    }
+
 
         /**
-        * Scalar  multiplication 
+        * Scalar  multiplication.
         **/
         inline void operator*=(T a)
             {
@@ -445,8 +566,40 @@ namespace tgx
             }
 
 
+
+        /**
+        * Transpose the matrix (in place)
+        **/
+        inline void transpose()
+            {
+            tgx::swap(M[4],M[1]); 
+            tgx::swap(M[8],M[2]); 
+            tgx::swap(M[12],M[3]); 
+            tgx::swap(M[13],M[7]); 
+            tgx::swap(M[14],M[11]); 
+            tgx::swap(M[9],M[6]); 
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
 #ifdef TGX_ON_ARDUINO
 
+
+        /**
+        * Output a representation of the matrix using a given Stream.
+        * 
+        * @attention Defined only in the Arduino environment.
+        */
         inline void print(Stream & outputStream = Serial) const
             {
             outputStream.printf("%.3f  \t %.3f  \t %.3f \t  %.3f\n", M[0],M[4],M[8],M[12]);
@@ -457,14 +610,13 @@ namespace tgx
 
 #endif
 
-
         };
 
 
 
     /** 
     * Matrix-vector multiplication 
-    **/
+    */
     template<typename T> TGX_INLINE inline Vec4<T> operator*(const Mat4<T> & M, const Vec4<T> V)
         {
         return Vec4<T>{ M.M[0] * V.x + M.M[4] * V.y + M.M[8] * V.z + M.M[12] * V.w,
@@ -477,7 +629,7 @@ namespace tgx
 
     /**
     * Matrix-matrix multiplication 
-    **/
+    */
     template<typename T> inline Mat4<T> operator*(const Mat4<T> & A, const Mat4<T> & B)
         {
         Mat4<T> R; 
@@ -494,14 +646,17 @@ namespace tgx
 
 
     /**
-    * Scalar-matrix multiplication 
-    **/
+     * Scalar-matrix multiplication.
+     */
     template<typename T> inline Mat4<T> operator*(T a, const Mat4<T> & m)
         {
         Mat4<T> R(m);
         for (int i = 0; i < 16; i++) { R.M[i] *= a; }
         return R;
         }
+
+
+
 
 
 

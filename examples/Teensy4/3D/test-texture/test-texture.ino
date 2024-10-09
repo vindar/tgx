@@ -21,9 +21,17 @@
 using namespace tgx;
 
 // meshes (stored in PROGMEM)
-#include "3Dmodels/spot/spot.h"
-#include "3Dmodels/bob/bob.h"
-#include "3Dmodels/blub/blub.h"
+#if __has_include("spot.h")
+    // Arduino IDE stupidly flattens the example directory tree...
+    #include "spot.h"
+    #include "bob.h"
+    #include "blub.h"
+#else 
+    // ok, use the normal path
+    #include "3Dmodels/spot/spot.h"
+    #include "3Dmodels/bob/bob.h"
+    #include "3Dmodels/blub/blub.h"
+#endif
 
 
 //
@@ -86,7 +94,7 @@ Image<RGB565> im(fb, SLX, SLY);
 
 
 // only load the shaders we need (note that TGX_SHADER_NOTEXTURE is needed in order to draw without texturing !). 
-const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_NOTEXTURE | TGX_SHADER_TEXTURE_BILINEAR | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
@@ -108,7 +116,7 @@ const tgx::Mesh3D<tgx::RGB565> * cached_mesh; // pointer to the currently cached
 /**
 * Overlay some info about the current mesh on the screen
 **/
-void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RGB565> & mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
+void drawInfo(tgx::Image<tgx::RGB565>& im, Shader shader, const tgx::Mesh3D<tgx::RGB565> & mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
     {
     // count the number of triangles in the mesh (by iterating over linked meshes)
     const Mesh3D<RGB565> * m = &mesh;
@@ -120,11 +128,11 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
         }
     // display some info 
     char buf[80];
-    im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
+    im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     sprintf(buf, "%d triangles", nbt);
-    im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-    sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE_BILINEAR ? " / texturing (bilinear)" : (shader & TGX_SHADER_TEXTURE_NEAREST ? " / texturing (nearest neighbour)" : "")));
-    im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
+    im.drawText(buf, { 3,SLY - 21 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
+    sprintf(buf, "%s%s", (shader & SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & SHADER_TEXTURE_BILINEAR ? " / texturing (bilinear)" : (shader & SHADER_TEXTURE_NEAREST ? " / texturing (nearest neighbour)" : "")));
+    im.drawText(buf, { 3, SLY - 5 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     }
     
 
@@ -157,7 +165,7 @@ void setup()
     renderer.setPerspective(45, ((float)SLX) / SLY, 1.0f, 100.0f);  // set the perspective projection matrix. 
     renderer.setMaterial(RGBf(0.75f, 0.75f, 0.75f), 0.15f, 0.7f, 0.7f, 32);   
     renderer.setCulling(1);
-    renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
+    renderer.setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);
     }
 
 
@@ -188,7 +196,7 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
         int part = (em * 3) / maxT;
  
         // choose the shader to use
-        int shader = (part == 0) ? TGX_SHADER_GOURAUD : ((part == 1) ? (TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST) : (TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_BILINEAR));
+        Shader shader = (part == 0) ? SHADER_GOURAUD : ((part == 1) ? (SHADER_GOURAUD | SHADER_TEXTURE_NEAREST) : (SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR));
 
         renderer.setShaders(shader);
 
@@ -223,4 +231,3 @@ void loop()
 
 
 /** end of file */
-

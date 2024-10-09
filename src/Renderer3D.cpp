@@ -59,6 +59,17 @@ namespace tgx
         {-1,1,-1}     //H = 7
         };
 
+    const tgx::fVec3 UNIT_CUBE_NORMALS[6] =
+        {
+        {0,0,1},
+        {0,0,-1},
+        {0,1,0},
+        {0,-1,0},
+        {-1,0,0},        
+        {1,0,0}        
+        };
+
+
     const uint16_t UNIT_CUBE_FACES[6 * 4] =
         {
         0,1,2,3, // front   ABCD
@@ -68,6 +79,17 @@ namespace tgx
         7,6,1,0, // left    HGBA
         3,2,5,4  // right   DCFE
         };
+
+    const uint16_t UNIT_CUBE_FACES_NORMALS[6 * 4] =
+        {
+        0,0,0,0, // front   ABCD
+        1,1,1,1, // back    EFGH
+        2,2,2,2, // top     HADE
+        3,3,3,3, // bottom  BGFC
+        4,4,4,4, // left    HGBA
+        5,5,5,5  // right   DCFE
+        };
+
 
 
 }

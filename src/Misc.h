@@ -1,4 +1,7 @@
-/** @file Misc.h */
+/**   
+ * @file Misc.h
+ * Utility/miscellaneous functions used throughout the library. 
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -30,13 +33,14 @@
 #endif
 
 
-#if defined(TEENSYDUINO) || defined(ESP32)
+
+#if defined(TEENSYDUINO) || defined(ESP32) || defined(ARDUINO_ARCH_STM32)
     #include "Arduino.h" // include Arduino to get PROGMEM macro and others
     #define TGX_ON_ARDUINO
 
     #define TGX_USE_FAST_INV_SQRT_TRICK
     #define TGX_USE_FAST_SQRT_TRICK     
-    #define TGX_USE_FAST_INV_TRICK
+    //#define TGX_USE_FAST_INV_TRICK  // bug and slower then regular inv anyway... 
      
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE __attribute__((noinline, noclone)) FLASHMEM
@@ -53,40 +57,40 @@
     #define FLASHMEM
 #endif
 
-#define DEPRECATED(x) [[deprecated("use " #x " instead")]]
 
-#define DEPRECATED_SCALAR_PARAMS
-//#define DEPRECATED_SCALAR_PARAMS [[deprecated("METHOD WITH SCALAR PARAMETERS WILL BE REMOVED SOON. USE THE VERSION WITH VECTOR PARAMETERS INSTEAD.")]]
-
-
-/* Set this to 1 to use float as the default floating point type 
-   and set it to 0 to use double precision instead. */
+/*  */
 #ifndef TGX_SINGLE_PRECISION_COMPUTATIONS
-    #define TGX_SINGLE_PRECISION_COMPUTATIONS 1  
+    #define TGX_SINGLE_PRECISION_COMPUTATIONS 1  ///< Set this to 1 to use float as the default floating point type and set it to 0 to use double precision instead.
 #endif
 
+ 
+#define TGX_DEFAULT_NO_BLENDING -1.0f ///< Default blending operation for drawing primitive: overwrite instead of blending. 
 
-
-// approximate size of the cache when reading in 
-// PROGMEM. This value is used to try to optimize 
-// cache read to improve rendering speed when reading
-// large image in flash...
-// On teensy 4, 8K give good results...
 
 #if defined(TEENSYDUINO) || defined(ESP32)
-// On teensy, 8K give good results...
-#define TGX_PROGMEM_DEFAULT_CACHE_SIZE 8192
+/* Size of the cache when reading in PROGMEM. This value is used to try to optimize cache read to
+improve rendering speed when reading large image in flash... On teensy, 8K give good results.*/
+#define TGX_PROGMEM_DEFAULT_CACHE_SIZE 8192 
 #else 
-// make it bigger on CPU...
+/* Size of the cache when reading in PROGMEM. This value is used to try to optimize cache read to
+improve rendering speed when reading large image in flash... Can use large value on CPU.*/
 #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 262144
 #endif
 
-// macro to cast indexes as 32bit when doing pointer arithmetic
-#define TGX_CAST32(a)   ((int32_t)a)
+
+/** macro to cast indexes as 32bit when doing pointer arithmetic */
+#define TGX_CAST32(a)   ((int32_t)(a))
 
 
 // c++, no plain c
 #ifdef __cplusplus
+
+#define DEPRECATED(X) [[deprecated(" " X " ")]]
+
+
+// check that int is at least 4 bytes. 
+static_assert(sizeof(int) >= 4, "The TGX library only works on 32 bits or 64 bits architecture. Sorry!");
+
 
 
 #if defined(ARDUINO_TEENSY41)
@@ -102,6 +106,10 @@
 
 #endif
 
+#ifndef M_PI
+#define M_PI       3.14159265358979323846  ///< define Pi in case math.h is not yet included.
+#endif
+
 
 namespace tgx
 {
@@ -109,9 +117,9 @@ namespace tgx
 
     /** 
     * Dummy type identified by an integer. 
-    * Use to bypass partial template specialization
-    * by using method overloading instead....
-    **/
+    * 
+    * Use to bypass partial template specialization by using method overloading instead....
+    */
     template<int N> struct DummyType
         {
         // nothing here :-)
@@ -119,10 +127,10 @@ namespace tgx
 
 
     /**
-    * Dummy type identified by two booleans
-    * Use to bypass partial template specialization
-    * by using method overloading instead....
-    **/
+    * Dummy type identified by two booleans.
+    * 
+    * Use to bypass partial template specialization by using method overloading instead....
+    */
     template<bool BB1, bool BB2> struct DummyTypeBB
         {
         // nothing here :-)
@@ -133,9 +141,9 @@ namespace tgx
     template<typename T = int> struct DefaultFPType
         {
 #if TGX_SINGLE_PRECISION_COMPUTATIONS
-        typedef float fptype;   // use float as default floating point type
+        typedef float fptype;   ///< use float as default floating point type
 #else
-        typedef double fptype;  // use double as default floating point type
+        typedef double fptype;  ///< use double as default floating point type
 #endif
         };
 
@@ -153,40 +161,48 @@ namespace tgx
     template <typename T> struct is_same<T, T> { static const bool value = true; };
 
 
+    /** little endian / big endian conversion */
+    TGX_INLINE inline uint16_t BigEndian16(uint16_t v)
+        {
+#ifdef __GNUC__
+        return __builtin_bswap16(v); 
+#else
+        return ((v >> 8) | (v << 8));
+#endif
+        }
 
 
-    /** baby let me swap you one more time... */
+    /** Baby let me swap you one more time... */
     template<typename T> TGX_INLINE inline void swap(T& a, T& b) { T c(a); a = b; b = c; }
 
 
-    /** don't know why but much faster than fminf for floats.. */
+    /** Don't know why but faster than fminf() for floats. */
     template<typename T> TGX_INLINE inline T min(const T & a, const T & b) { return((a < b) ? a : b); }
 
     
-    /** don't know why but much faster than fmaxf for floats.. */
+    /** Don't know why but much faster than fmaxf() for floats. */
     template<typename T> TGX_INLINE inline T max(const T & a, const T & b) { return((a > b) ? a : b); }
 
         
-    /** template clamp version */
+    /** Template clamp version */
     template<typename T> TGX_INLINE inline T clamp(const T & v, const T & vmin, const T & vmax)
         {
         return max(vmin, min(vmax, v));
         }
 
 
-    /** rounding for floats */
+    /** Rounding for floats */
     TGX_INLINE inline float roundfp(const float f) { return roundf(f);  }
     
 
-    /** ...and rounding for doubles with the same name */
+    /** Rounding for doubles */
     TGX_INLINE inline double roundfp(const double f) { return round(f); }
 
 
 
     /**
-     * Return a value smaller or equal to B such that the multiplication
-     * by A is safe (no overflow with int32).
-     **/
+     * Return a value smaller or equal to B such that the multiplication by A is safe (no overflow with int32).
+     */
     TGX_INLINE inline int32_t safeMultB(int32_t A, int32_t B)
         {
         if ((A == 0) || (B == 0)) return B;
@@ -197,7 +213,9 @@ namespace tgx
 
 
 
-
+    /**
+    * Fast (approximate) computation of 1/x. Version for float.
+    */
     TGX_INLINE inline float fast_inv(float x)
         {
 #if defined (TGX_USE_FAST_INV_TRICK)            
@@ -219,6 +237,9 @@ namespace tgx
         }
 
 
+    /**
+    * Fast (approximate) computation of 1/x. Version for double.
+    */
     TGX_INLINE inline double fast_inv(double x)
         {
         // do not use fast approximation for double type.             
@@ -227,18 +248,27 @@ namespace tgx
 
 
 
+    /**
+    * Compute the square root of a float (exact computation). 
+    */
     TGX_INLINE inline float precise_sqrt(float x)
         {
         return sqrtf(x);
         }
 
 
+    /**
+    * Compute the square root of a double (exact computation).
+    */
     TGX_INLINE inline double precise_sqrt(double x)
         {
         return sqrt(x);
         }
 
 
+    /**
+    * Compute a fast approximation of the square root of a float.
+    */
     TGX_INLINE inline float fast_sqrt(float x)
         {
 #if defined (TGX_USE_FAST_SQRT_TRICK)            
@@ -260,6 +290,9 @@ namespace tgx
         }
 
 
+    /**
+    * Compute a fast approximation of the square root of a double.
+    */
     TGX_INLINE inline double fast_sqrt(double x)
         {
         // do not use fast approximation for double type.             
@@ -267,7 +300,9 @@ namespace tgx
         }
 
 
-
+    /**
+    * Compute the inverse square root of a float (exact computation).
+    */
     TGX_INLINE inline float precise_invsqrt(float x)
         {
         const float s = sqrtf(x);
@@ -275,20 +310,24 @@ namespace tgx
         }
 
 
+    /**
+    * Compute the inverse square root of a double (exact computation).
+    */
     TGX_INLINE inline double precise_invsqrt(double x)
         {
         const double s = sqrt(x);
         return (s == 0) ? 1.0 : (1.0 / sqrt(s));
         }
 
-
-
     
+    /**
+    * Compute a fast approximation of the inverse square root of a float.
+    */
     TGX_INLINE inline float fast_invsqrt(float x)
         {            
 #if defined (TGX_USE_FAST_INV_SQRT_TRICK)            
-        // fast reciprocal square root: https://en.wikipedia.org/wiki/Fast_inverse_square_root
-        // code from https://github.com/JarkkoPFC/meshlete/blob/master/src/core/math/fast_math.inl
+        // fast reciprocal square root : https://en.wikipedia.org/wiki/Fast_inverse_square_root
+        //github.com/JarkkoPFC/meshlete/blob/master/src/core/math/fast_math.inl
         union
             {
             float f;
@@ -307,6 +346,9 @@ namespace tgx
         }
 
    
+    /**
+    * Compute a fast approximation of the inverse square root of a float.
+    */
     TGX_INLINE inline double fast_invsqrt(double x)
         {            
         // do not use fast approximation for double type.             

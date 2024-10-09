@@ -21,19 +21,43 @@ using namespace tgx;
 
 
 // meshes (stored in PROGMEM) for Teensy 4.0 and 4.1
-#include "3Dmodels/nanosuit/nanosuit.h"
-#include "3Dmodels/R2D2/R2D2.h"
+#if __has_include("nanosuit.h")
+    // Arduino IDE stupidly flattens the example directory tree...
+    #include "nanosuit.h"
+    #include "R2D2.h"
+#else 
+    // ok, use the normal path
+    #include "3Dmodels/nanosuit/nanosuit.h"
+    #include "3Dmodels/R2D2/R2D2.h"    
+#endif
+
+
 
 // additional meshes for Teensy 4.1 / MicroMod since it has more flash. 
 #if defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSY_MICROMOD)
-#include "3Dmodels/elementalist/elementalist.h"
-#include "3Dmodels/sinbad/sinbad.h"
-#include "3Dmodels/cyborg/cyborg.h"
-#include "3Dmodels/dennis/dennis.h"
-#include "3Dmodels/manga3/manga3.h"
-#include "3Dmodels/naruto/naruto.h"
-#include "3Dmodels/stormtrooper/stormtrooper.h"
+
+#if __has_include("elementalist.h")
+    // Arduino IDE stupidly flattens the example directory tree...
+    #include "elementalist.h"
+    #include "sinbad.h"
+    #include "cyborg.h"
+    #include "dennis.h"
+    #include "manga3.h"
+    #include "naruto.h"
+    #include "stormtrooper.h"
+#else 
+    // ok, use the normal path
+    #include "3Dmodels/elementalist/elementalist.h"
+    #include "3Dmodels/sinbad/sinbad.h"
+    #include "3Dmodels/cyborg/cyborg.h"
+    #include "3Dmodels/dennis/dennis.h"
+    #include "3Dmodels/manga3/manga3.h"
+    #include "3Dmodels/naruto/naruto.h"
+    #include "3Dmodels/stormtrooper/stormtrooper.h"
 #endif
+
+#endif
+
 
 
 //
@@ -97,14 +121,14 @@ Image<RGB565> im(fb, SLX, SLY);
 
 
 // we only use nearest neighbour texturing for power of 2 textures, combined texturing with gouraud shading, a z buffer and perspective projection
-const int LOADED_SHADERS = TGX_SHADER_PERSPECTIVE | TGX_SHADER_ZBUFFER | TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST |TGX_SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
 
 
 // shaders to use
-const int shader = TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2;
+const Shader shader = SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2;
 
 
 // list of meshes to display
@@ -205,11 +229,11 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RG
         }
     // display some info 
     char buf[80];
-    im.drawText((mesh->name != nullptr ? mesh->name : "[unnamed mesh]"), { 3,12 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
+    im.drawText((mesh->name != nullptr ? mesh->name : "[unnamed mesh]"), { 3,12 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     sprintf(buf, "%d triangles", nbt);
-    im.drawText(buf, { 3,SLY - 21 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
-    sprintf(buf, "%s%s", (shader & TGX_SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & TGX_SHADER_TEXTURE_NEAREST ? " / texturing" : ""));
-    im.drawText(buf, { 3, SLY - 5 }, RGB565_Red, font_tgx_OpenSans_Bold_10, false);
+    im.drawText(buf, { 3,SLY - 21 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
+    sprintf(buf, "%s%s", (shader & SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & SHADER_TEXTURE_NEAREST ? " / texturing" : ""));
+    im.drawText(buf, { 3, SLY - 5 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     }
 
 
@@ -311,4 +335,3 @@ void loop()
 
 
 /** end of file */
-

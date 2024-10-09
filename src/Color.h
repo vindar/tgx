@@ -1,4 +1,7 @@
-/** @file Color.h */
+/**   
+ * @file Color.h 
+ * Color classes [RGB565, RGB24, RGB32, RGB64, RGBf, HSV].
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -34,78 +37,80 @@ namespace tgx
 {
 
 
-/***********************************************************************************
-* Color types. 
-* 
-* The following color types are availaible for use with the tgx library:
-* 
-* - RGB565: 16bits, R:5 G:6 B:5 colors  
-*           no alpha channel wrapper around a uint16_t integer, aligned as uint16_t
-*           
-* - RGB24:  24bits, R:8 G:8 B:8 colors.   
-*           no alpha channel, not aligned in memory
-*           
-* - RGB32:  32bits, R:8 G:8 B:8 A:8 colors.   
-*           alpha channel, wrapper around a uint32_t integer, aligned as uint32_t
-*           
-* - RGB64:  64bits, R:16 G:16 B:16 A:16 colors.
-*           alpha channel, wrapper around a uint64_t integer, aligned as uint64_t
-*
-* - RGBf:   96bits, R:float G:float, B:float  
-*           no alpha channel, aligned as float.
-* 
-* - HSV:    96bits, H:float, S:float, V:float  
-*           hue / saturation / value color space: very slow
-*
-* 
-* REMARKS:
-* 
-* 1. RGB565, RGB32 and RGB64 are wrappers around basic integer types they can be 
-*    used as drop in remplacment of uint16_t, uint32_t and uint64_t without any 
-*    speed penalty.
-*    
-*    For example:
-*        tgx::RGB565 col(12,63,30)
-*        uint16_t v = (uint16_t)col; // <- conversion to uint16_t
-*        tgx::RGB565 col2 = tgx::RGB565(v) // <- conversion back to RGB565
-*    
-* 2. RGB32 and RGB64 have an alpha channel. The color are always assumed to have  
-*    pre-multiplied alpha. 
-*  
-* 3. Fast conversion is implemented between color types (and also integer types)   
-*    except when converting from/to HSV which is slow. 
-*    
-***********************************************************************/
+// ********************************************************************************
+// Color types. 
+//
+// The following color types are available for use with the tgx library:
+//
+// - RGB565: 16bits, R:5 G:6 B:5 colors  
+//           no alpha channel wrapper around a uint16_t integer, aligned as uint16_t
+//          
+// - RGB24:  24bits, R:8 G:8 B:8 colors.   
+//           no alpha channel, not aligned in memory
+//           
+// - RGB32:  32bits, R:8 G:8 B:8 A:8 colors.   
+//           alpha channel, wrapper around a uint32_t integer, aligned as uint32_t
+//          
+// - RGB64:  64bits, R:16 G:16 B:16 A:16 colors.
+//           alpha channel, wrapper around a uint64_t integer, aligned as uint64_t
+//
+// - RGBf:   96bits, R:float G:float, B:float  
+//           no alpha channel, aligned as float.
+//  
+// - HSV:    96bits, H:float, S:float, V:float  
+//           hue / saturation / value color space: very slow
+//
+//
+// REMARKS:
+//
+// 1. RGB565, RGB32 and RGB64 are wrappers around basic integer types they can be 
+//    used as drop in remplacment of uint16_t, uint32_t and uint64_t without any 
+//    speed penalty.
+//   
+//   For example:
+//       tgx::RGB565 col(12,63,30)
+//       uint16_t v = (uint16_t)col; // <- conversion to uint16_t
+//       tgx::RGB565 col2 = tgx::RGB565(v) // <- conversion back to RGB565
+//   
+// 2. RGB32 and RGB64 have an alpha channel. The color are always assumed to have  
+//    pre-multiplied alpha. 
+//  
+// 3. Fast conversion is implemented between color types (and also integer types)   
+//    except when converting from/to HSV which is slow. 
+//   
+// ********************************************************************************
 
 
-/** For each RGB color type, we decide separately whether color components 
-    are ordered in memory as R,G,B or B,G,R. 
-    default ordering can overridden be #definining the constants below before
-    including this header */
+
+
+// For each RGB color type, we decide separately whether color components 
+// are ordered in memory as R,G,B or B,G,R. 
+// The default ordering below can overridden be #definining the constants 
+// before including this header 
 
 #ifndef TGX_RGB565_ORDER_BGR
-#define TGX_RGB565_ORDER_BGR 1      // for compatibility with adafruit and most SPI display
+#define TGX_RGB565_ORDER_BGR 1  ///< color ordering for RGB565 (default B,G,R for compatibility with adafruit and most SPI display)
 #endif
 
 #ifndef TGX_RGB24_ORDER_BGR
-#define TGX_RGB24_ORDER_BGR 0
+#define TGX_RGB24_ORDER_BGR 0   ///< color ordering for RGB24 (default R,G,B)
 #endif
 
 #ifndef TGX_RGB32_ORDER_BGR
-#define TGX_RGB32_ORDER_BGR 1       // for compatibility with my mtools library.
+#define TGX_RGB32_ORDER_BGR 1   ///< color ordering for RGB565 (default B,G,R for compatibility with the mtools library)
 #endif
 
 #ifndef TGX_RGB64_ORDER_BGR
-#define TGX_RGB64_ORDER_BGR 0
+#define TGX_RGB64_ORDER_BGR 0   ///< color ordering for RGB64 (default R,G,B)
 #endif
 
 #ifndef TGX_RGBf_ORDER_BGR
-#define TGX_RGBf_ORDER_BGR 0
+#define TGX_RGBf_ORDER_BGR 0    ///< color ordering for RGBf (default R,G,B)
 #endif
 
 
 
-/** Forward declarations */
+// Forward declarations
 
 struct RGB565;  // color in 16-bit R5/G6/B5 format (2 bytes aligned) - convertible to/from uint16_t
 
@@ -120,80 +125,93 @@ struct RGBf;    // color in  RGB float format (4 bytes aligned).
 struct HSV;     // color in H/S/V float format (4 bytes aligned). 
 
 
-/** check if a type T is one of the color types declared above */
+
+
+/**
+ * Integer that identifies the color type (0 if not a color)
+ */
+template<typename T> struct id_color_type
+    {
+    static const int value =
+        (std::is_same<T, RGB565>::value) ? 1 : (
+        (std::is_same<T, RGB24>::value) ? 2 : (
+        (std::is_same<T, RGB32>::value) ? 3 : (
+        (std::is_same<T, RGB64>::value) ? 4 : (
+        (std::is_same<T, RGBf>::value) ? 5 : (
+        (std::is_same<T, HSV>::value) ? 6 : 0)))));
+    };
+
+
+/** 
+ * Check if a type T is one of the color types declared above 
+ */
 template<typename T> struct is_color
     {
-    static const bool value = (std::is_same<T, RGB565>::value)||
-                              (std::is_same<T, RGB24>::value) ||
-                              (std::is_same<T, RGB32>::value) ||
-                              (std::is_same<T, RGB64>::value) ||
-                              (std::is_same<T, RGBf>::value) ||
-                              (std::is_same<T, HSV>::value);
+    static const bool value = (id_color_type<T>::value != 0);
     };
 
 
 
-/** Predefined colors in RGB32 format */
-extern const RGB32 RGB32_Black;
-extern const RGB32 RGB32_White;
-extern const RGB32 RGB32_Red;
-extern const RGB32 RGB32_Blue;
-extern const RGB32 RGB32_Green;
-extern const RGB32 RGB32_Purple;
-extern const RGB32 RGB32_Orange;
-extern const RGB32 RGB32_Cyan;
-extern const RGB32 RGB32_Lime;
-extern const RGB32 RGB32_Salmon;
-extern const RGB32 RGB32_Maroon;
-extern const RGB32 RGB32_Yellow;
-extern const RGB32 RGB32_Magenta;
-extern const RGB32 RGB32_Olive;
-extern const RGB32 RGB32_Teal;
-extern const RGB32 RGB32_Gray;
-extern const RGB32 RGB32_Silver;
-extern const RGB32 RGB32_Navy;
-extern const RGB32 RGB32_Transparent;   // premultiplied transarent black (0,0,0,0)
 
 
 
-/** Predefined colors in RGB565 format */
-extern const RGB565 RGB565_Black;
-extern const RGB565 RGB565_White;
-extern const RGB565 RGB565_Red;
-extern const RGB565 RGB565_Blue;
-extern const RGB565 RGB565_Green;
-extern const RGB565 RGB565_Purple;
-extern const RGB565 RGB565_Orange;
-extern const RGB565 RGB565_Cyan;
-extern const RGB565 RGB565_Lime;
-extern const RGB565 RGB565_Salmon;
-extern const RGB565 RGB565_Maroon;
-extern const RGB565 RGB565_Yellow;
-extern const RGB565 RGB565_Magenta;
-extern const RGB565 RGB565_Olive;
-extern const RGB565 RGB565_Teal;
-extern const RGB565 RGB565_Gray;
-extern const RGB565 RGB565_Silver;
-extern const RGB565 RGB565_Navy;
+// Predefined colors in RGB32 format 
+
+extern const RGB32 RGB32_Black;         ///< Color black in RGB32 format.
+extern const RGB32 RGB32_White;         ///< Color white in RGB32 format.
+extern const RGB32 RGB32_Red;           ///< Color red in RGB32 format.
+extern const RGB32 RGB32_Blue;          ///< Color blue in RGB32 format.
+extern const RGB32 RGB32_Green;         ///< Color green in RGB32 format.
+extern const RGB32 RGB32_Purple;        ///< Color purple in RGB32 format.
+extern const RGB32 RGB32_Orange;        ///< Color orange in RGB32 format.
+extern const RGB32 RGB32_Cyan;          ///< Color cyan in RGB32 format.
+extern const RGB32 RGB32_Lime;          ///< Color lime in RGB32 format.
+extern const RGB32 RGB32_Salmon;        ///< Color salmon in RGB32 format.
+extern const RGB32 RGB32_Maroon;        ///< Color maroon in RGB32 format.
+extern const RGB32 RGB32_Yellow;        ///< Color yellow in RGB32 format.
+extern const RGB32 RGB32_Magenta;       ///< Color majenta in RGB32 format.
+extern const RGB32 RGB32_Olive;         ///< Color olive in RGB32 format.
+extern const RGB32 RGB32_Teal;          ///< Color teal in RGB32 format.
+extern const RGB32 RGB32_Gray;          ///< Color gray in RGB32 format.
+extern const RGB32 RGB32_Silver;        ///< Color silver in RGB32 format.
+extern const RGB32 RGB32_Navy;          ///< Color navy in RGB32 format.
+extern const RGB32 RGB32_Transparent;   ///< premultiplied transparent black (0,0,0,0)
 
 
 
+// Predefined colors in RGB565 format 
 
-/**********************************************************************
-* declaration of class RGB565
-***********************************************************************/
+extern const RGB565 RGB565_Black;       ///< Color black in RGB565 format.
+extern const RGB565 RGB565_White;       ///< Color white in RGB565 format.
+extern const RGB565 RGB565_Red;         ///< Color red in RGB565 format.
+extern const RGB565 RGB565_Blue;        ///< Color blue in RGB565 format.
+extern const RGB565 RGB565_Green;       ///< Color green in RGB565 format.
+extern const RGB565 RGB565_Purple;      ///< Color purple in RGB565 format.
+extern const RGB565 RGB565_Orange;      ///< Color orange in RGB565 format.
+extern const RGB565 RGB565_Cyan;        ///< Color cyan in RGB565 format.
+extern const RGB565 RGB565_Lime;        ///< Color lime in RGB565 format.
+extern const RGB565 RGB565_Salmon;      ///< Color salmon in RGB565 format.
+extern const RGB565 RGB565_Maroon;      ///< Color maroon in RGB565 format.
+extern const RGB565 RGB565_Yellow;      ///< Color yellow in RGB565 format.
+extern const RGB565 RGB565_Magenta;     ///< Color majenta in RGB565 format.
+extern const RGB565 RGB565_Olive;       ///< Color olive in RGB565 format.
+extern const RGB565 RGB565_Teal;        ///< Color teal in RGB565 format.
+extern const RGB565 RGB565_Gray;        ///< Color gray in RGB565 format.
+extern const RGB565 RGB565_Silver;      ///< Color silver in RGB565 format.
+extern const RGB565 RGB565_Navy;        ///< Color navy in RGB565 format.
+
+
 
 
 /**
-* Class representing a color in R5/G6/B5 format. 
-* 
-* Occupies 2 bytes in memory (aligned as uint16_t)
-* 
-* Can be converted from/to uint16_t.
-* 
-* This type is compatible with adafruit gfx library
-* and is used with most SPI display. 
-**/
+ * Color in R5/G6/B5 format.
+ * 
+ * The object occupies 2 bytes in memory (aligned as uint16_t)
+ * 
+ * Can be converted from/to uint16_t.
+ * 
+ * This type is used mostly with MCU / embedded systems.
+ */
 struct RGB565
     {
         
@@ -203,36 +221,38 @@ struct RGB565
         #endif
         
 
-        union // dual memory representation
+        // dual memory representation
+        union
             { 
-            uint16_t val;           // as a uint16_t
-
-            struct {                // as 3 components R,G,B
+            uint16_t val; ///< color as uint16_t
+            
+            struct {                
 #if TGX_RGB565_ORDER_BGR
-                uint16_t B : 5,
-                         G : 6,
-                         R : 5; 
+                uint16_t B : 5, ///< Blue channel (5 bits)
+                         G : 6, ///< Green channel (6 bits)
+                         R : 5; ///< Red channel (5 bits)
 #else
-                uint16_t R : 5,
-                         G : 6,
-                         B : 5; 
+                uint16_t R : 5, ///< Red channel (5 bits)
+                         G : 6, ///< Green channel (6 bits)
+                         B : 5; ///< Blue channel (5 bits)
 #endif
                 }; 
             };
 
 
         /**
-        * Default ctor. Undefined color. 
-        **/
+        * Default constructor. ** color is undefined ***
+        */
         RGB565() = default;
 
 
         /**
-        * Ctor from raw R,G,B value. 
-        * No rescaling: r in 0..31
-        *               g in 0..63
-        *               b in 0..31
-        **/
+         * Constructor from R,G,B values.
+         *
+         * @param   r   in [0,31]
+         * @param   g   in [0,63]
+         * @param   b   in [0,31]
+         */
         constexpr RGB565(int r, int g, int b) : 
                                             #if TGX_RGB565_ORDER_BGR
                                                 B((uint8_t)b), G((uint8_t)g), R((uint8_t)r)
@@ -243,25 +263,31 @@ struct RGB565
 
 
         /**
-        * Ctor from a iVec3 vector with component ordering: R, G, B
-        * No rescaling: r in 0..31
-        *               g in 0..63
-        *               b in 0..31
-        **/
+         * Constructor from a #iVec3 vector (x=R, y=G, z=B).
+         *
+         * - red componenent v.x in [0,31]
+         * - green componenent v.y in [0,63]  
+         * - blue componenent v.z in [0,31]
+         */
         constexpr RGB565(iVec3 v) : RGB565(v.x, v.y, v.z)       
         {}
 
 
         /**
-        * Ctor from a iVec4, (same as using iVec3: the 4th vector component is ignored).
-        **/
+        * Constructor from an #iVec4 vector (x=R, y=G, z=B, w=ignored).
+        * 
+        * - red componenent v.x in [0,31]
+        * - green componenent v.y in [0,63]
+        * - blue componenent v.z in [0,31]  
+        * - v.w is ignored
+        */
         constexpr RGB565(iVec4 v) : RGB565(v.x, v.y, v.z)
         {}
 
         
         /**
-        * Ctor from float r,g,b in [0.0f, 1.0f].
-        **/
+        * Constructor from float r,g,b in [0.0f, 1.0f].
+        */
         RGB565(float r, float g, float b) : 
                                             #if TGX_RGB565_ORDER_BGR
                                                 B((uint8_t)(b * 31)),
@@ -276,166 +302,160 @@ struct RGB565
 
 
         /**
-        * Ctor from a fVec3 vector with component ordering: R, G, B in [0.0f, 1.0f].
-        **/
+        * Constructor from a #fVec3 vector with components (x=R, y=G, z=B) in [0.0f, 1.0f].
+        */
         RGB565(fVec3 v) : RGB565(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a fVec4, (same as using fVec3: the 4th vector component is ignored).
-        **/
+        * Constructor from a #fVec4 vector with components (x=R, y=G, z=B, w=ignored) in [0.0f, 1.0f].
+        */
         RGB565(fVec4 v) : RGB565(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a uint16_t.
-        **/
+        * Constructor from a uint16_t.
+        */
         constexpr RGB565(uint16_t c) : val(c) {}
 
 
         /**
-        * Ctor from a uint32_t (seen as RGB32).
-        **/
+        * Constructor from a uint32_t (seen as RGB32).
+        */
         constexpr inline RGB565(uint32_t val);
 
 
         /**
-        * Ctor from a uint64_t (seen as RGB64).
-        **/
+        * Constructor from a uint64_t (seen as RGB64).
+        */
         constexpr inline RGB565(uint64_t val);
 
 
         /**
-        * Default Copy ctor
-        **/
+        * Default Copy constructor
+        */
         constexpr RGB565(const RGB565&) = default;
 
 
         /**
-        * Ctor from a RGB24 color.
-        **/
+        * Constructor from a RGB24 color.
+        */
         constexpr inline RGB565(const RGB24& c);
 
 
         /**
-        * Ctor from a RGB32 color.
-        * the A component is ignored
-        **/
+        * Constructor from a RGB32 color. The component A is ignored
+        */
         constexpr inline RGB565(const RGB32& c);
 
 
         /**
-        * Ctor from a RGB64 color.
-        * the A component is ignored
-        **/
+        * Constructor from a RGB64 color. The component A is ignored
+        */
         constexpr inline RGB565(const RGB64& c);
 
 
         /**
-        * Ctor from a RGBf color.
-        **/
+        * Constructor from a RGBf color.
+        */
         constexpr inline RGB565(const RGBf & c);
 
 
         /**
-        * Ctor from a HSV color.
-        **/
+        * Constructor from a HSV color.
+        */
         RGB565(const HSV& c);
 
 
         /**
-        * Cast into a uint16_t (non const reference version)
-        **/
+        * Cast into a uint16_t (non-const reference version)
+        */
         explicit operator uint16_t&()  { return val; }
 
 
         /**
         * Cast into a uint16_t (const reference version)
-        **/
+        */
         explicit operator const uint16_t& () const { return val; }
 
 
         /**
-        * Cast into an iVec3. raw values.
-        **/
+        * Cast into an #iVec3 vector. raw values.
+        */
         explicit operator iVec3() const { return iVec3(R, G, B); }
 
 
         /**
-        * Cast into an fVec3. Values in [0.0f, 1.0f].
-        **/
+        * Cast into an #fVec3 vector. Values in [0.0f, 1.0f].
+        */
         explicit operator fVec3() const { return fVec3(R / 31.0f, G / 63.0f , B / 31.0f); }
 
 
         /**
-        * Default assignement operator 
-        **/ 
+        * Default assignement operator.
+        */ 
         RGB565& operator=(const RGB565&) = default;
 
 
         /**
-        * Assignement operator from a RGB24 color
-        **/
+        * Assignement operator from a RGB24 color.
+        */
         inline RGB565& operator=(const RGB24& c);
 
 
         /**
-        * Assignement operator from a RGB32 color
-        * the A component is ignored
-        **/
+        * Assignement operator from a RGB32 color. The component A is ignored
+        */
         inline RGB565& operator=(const RGB32& c);
 
 
         /**
-        * Assignement operator from a RGB64 color
-        * the A component is ignored
-        **/
+        * Assignement operator from a RGB64 color. The component A is ignored
+        */
         inline RGB565& operator=(const RGB64& c);
 
 
         /**
         * Assignement operator from a RGBf color
-        **/
+        */
         inline RGB565& operator=(const RGBf& c);
 
 
         /**
         * Assignement operator from a HSV color
-        **/
+        */
         RGB565& operator=(const HSV& c);
 
 
         /**
-        * Assignement operator from a vector.
-        * raw value (no conversion).
-        **/
+        * Assignement operator from an #iVec3 vector. Raw values (no conversion).
+        */
         inline RGB565& operator=(iVec3 v);
 
 
         /**
-        * Assignement operator from a vector. 4th component is ignored
-        * raw value (no conversion).
-        **/
+        * Assignement operator from a #iVec4. The `w` component is ignored. Raw values (no conversion).
+        */
         inline RGB565& operator=(iVec4 v);
 
 
         /**
-        * Assignement operator from a vector. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a #fVec3. All values in [0.0f, 1.0f].
+        */
         inline RGB565& operator=(fVec3 v);
 
 
         /**
-        * Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a #fVec4. the `w` component is ignored. All values in [0.0f, 1.0f].
+        */
         inline RGB565& operator=(fVec4 v);
 
 
         /**
         * Add another color, component by component.
-        **/
+        */
         void operator+=(const RGB565& c)
             {
             R += c.R;
@@ -446,7 +466,7 @@ struct RGB565
 
         /**
         * Substract another color, component by component.
-        **/
+        */
         void operator-=(const RGB565& c)
             {
             R -= c.R;
@@ -457,7 +477,7 @@ struct RGB565
 
         /**
         * Equality comparator
-        **/
+        */
         constexpr bool operator==(const RGB565& c) const
             {
             return(val == c.val);
@@ -466,7 +486,7 @@ struct RGB565
 
         /**
         * Inequality comparator
-        **/
+        */
         constexpr bool operator!=(const RGB565& c) const
             {
             return !(*this == c);
@@ -476,15 +496,14 @@ struct RGB565
         /**
          * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
          * to 1.0f (fully opaque).
-         * 
+         *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0.0f,1.0f].
-        **/
+         */
         inline void blend(RGB565 fg_col, float alpha)
             {
             blend256(fg_col, (uint32_t)(alpha * 256));
             }
-
 
 
         /**
@@ -493,7 +512,7 @@ struct RGB565
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,256].
-        **/
+         */
         inline void blend256(const RGB565 & fg_col, uint32_t alpha)
             {       
             const uint32_t a = (alpha >> 3); // map to 0 - 32.
@@ -505,8 +524,8 @@ struct RGB565
 
 
         /**
-        * multiply each color component by a given factor x/256 with x in [0,256]
-        **/
+         * Multiply each color component by a given factor m/256 with m in [0,256]
+         */
         inline void mult256(int mr, int mg, int mb)
             {
             R = (R * mr) >> 8;
@@ -516,9 +535,10 @@ struct RGB565
 
 
         /**
-        * multiply each color component by a given factor x/256 with x in [0,256]
-        * component A is ignored since there is not alpha channel
-        **/
+        * Multiply each color component by a given factor x/256 with x in [0,256].
+        * 
+        * Parameter ma is ignored since there is not alpha channel.
+        */
         inline void mult256(int mr, int mg, int mb, int ma)
             {
             mult256(mr, mg, mb);
@@ -529,7 +549,7 @@ struct RGB565
         * Dummy function for compatibility with color types having an alpha channel.
         * 
         * Does nothing since the color is always fully opaque. 
-        **/
+        */
         inline void premultiply()
             {
             // nothing here. 
@@ -538,10 +558,10 @@ struct RGB565
 
 
         /**
-        * Dummy function for compatibility with color types having an alpha channel.
-        *
-        * Return 1.0f (fully opaque)
-        **/
+         * Dummy function for compatibility with color types having an alpha channel.
+         * 
+         * Return 1.0f (fully opaque)
+         */
         float opacity() const
             {
             return 1.0f;
@@ -549,10 +569,10 @@ struct RGB565
 
 
         /**
-        * Dummy function for compatibility with color types having an alpha channel.
-        *
-        * Does nothing since the color is always fully opaque.
-        **/
+         * Dummy function for compatibility with color types having an alpha channel.
+         * 
+         * Does nothing since the color is always fully opaque.
+         */
         void setOpacity(float op)
             {
             // nothing here. 
@@ -566,7 +586,7 @@ struct RGB565
     /**
     * Interpolate between 3 colors. 
     * 
-    * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
+    * Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC.
     **/
     inline RGB565 interpolateColorsTriangle(const RGB565 & col1, int32_t C1, const  RGB565 & col2, int32_t C2, const  RGB565 & col3, const int32_t totC)
         {       
@@ -583,17 +603,21 @@ struct RGB565
     
 
     /**
-    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
-    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
-    * the mininum coord. in direction x and y, as illustrated in the drawing below:
-    *
-    *  C01          C11
-    *                
-    *   --ax--X
-    *         |
-    *         ay
-    *  C00    |     C10
-    **/
+     * Bilinear interpolation between 4 colors.
+     * 
+     * Return the bilinear interpolation of four neighouring pixels in an image with respect to
+     * position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum
+     * coord. in direction x and y, as illustrated in the drawing below:
+     * 
+     *```
+     *  C01          C11
+     * 
+     *   --ax--X
+     *         |
+     *         ay
+     *  C00    |     C10
+     *```
+     */
     inline RGB565 interpolateColorsBilinear(const RGB565 & C00, const RGB565 & C10, const RGB565 & C01, const RGB565 & C11, const float ax, const float ay)
             {
             /* flotating point version, slower...
@@ -616,9 +640,10 @@ struct RGB565
 
 
     /**
-    * Return the "mean" color between colA and colB.
+    * Return the average color between colA and colB.
+    * 
     * TODO : make it faster
-    **/
+    */
     inline RGB565 meanColor(RGB565 colA, RGB565 colB)
         {
         return RGB565( ((int)colA.R + (int)colB.R) >> 1, 
@@ -628,9 +653,10 @@ struct RGB565
 
 
     /**
-    * Return the "mean" color between 4 colors.
+    * Return the average color between 4 colors.
+    * 
     * TODO : make it faster
-    **/
+    */
     inline RGB565 meanColor(RGB565 colA, RGB565 colB, RGB565 colC, RGB565 colD)
         {
         return RGB565(((int)colA.R + (int)colB.R + (int)colC.R + (int)colD.R) >> 2,
@@ -642,22 +668,15 @@ struct RGB565
 
 
 
-/**********************************************************************
-* declaration of class RGB24
-***********************************************************************/
-
-
 /**
-* Class representing a color in R8/G8/B8 format. 
-* 
-* Occupies 3 bytes in memory. No alignement
-* 
-* Remark: This color type should only be used when memory space 
-* is really tight but RGB565 does not offer enough resolution. 
-* Use RGB32 instead when possible (even if not using the alpha 
-* component) because most operation will be faster with correct 
-* 4 bytes alignment.
-**/
+ * Color in R8/G8/B8 format.
+ * 
+ * Occupies 3 bytes in memory. No alignement.
+ * 
+ * **Remark** This color type should only be used when memory space is really tight but RGB565
+ * does not offer enough resolution. Use RGB32 instead when possible (even if not using the
+ * alpha component) because most operations will be faster with correct 4 bytes alignment.
+ */
 struct RGB24
     {
 
@@ -672,27 +691,26 @@ struct RGB24
         // no alignement, just 3 consecutive uint8_t
 
 #if TGX_RGB24_ORDER_BGR
-        uint8_t B;
-        uint8_t G;
-        uint8_t R;
+        uint8_t B; ///< Blue channel (8bits)
+        uint8_t G; ///< Green channel (8bits)
+        uint8_t R; ///< Red channel (8bits)
 #else
-        uint8_t R;
-        uint8_t G;
-        uint8_t B;
+        uint8_t R; ///< Red channel (8bits)
+        uint8_t G; ///< Green channel (8bits)
+        uint8_t B; ///< Blue channel (8bits)
 #endif
 
 
 
         /**
-        * Default ctor. Undefined color. 
-        **/
+        * Default contructor. **Color is undefined**.
+        */
         RGB24() = default;
 
 
         /**
-        * Ctor from raw R,G,B value. 
-        * No rescaling. All value in [0,255].
-        **/
+        * Constructor from raw r,g,b values in [0,255].
+        */
         constexpr RGB24(int r, int g, int b) : 
                                             #if TGX_RGB24_ORDER_BGR
                                                 B((uint8_t)b), G((uint8_t)g), R((uint8_t)r)
@@ -704,23 +722,22 @@ struct RGB24
 
 
         /**
-        * Ctor from a iVec3 with component order R,G,B.
-        * No rescaling. All value in [0,255].
-        **/
+        * Constructor from a #iVec3 with component (x=R, y=G, z=B). All values in [0,255].
+        */
         constexpr RGB24(iVec3 v) : RGB24(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a iVec4, (same as using iVec3: the 4th vector component is ignored).
-        **/
+        * Constructor from a #iVec4 with component (x=R, y=G, z=B, w=ignored). All values in [0,255].
+        */
         constexpr RGB24(iVec4 v) : RGB24(v.x, v.y, v.z)
         {}
 
         
         /**
-        * Ctor from float r,g,b in [0.0f, 1.0f].
-        **/
+        * Constructor from float r,g,b in [0.0f, 1.0f].
+        */
         RGB24(float r, float g, float b) : 
                                             #if TGX_RGB24_ORDER_BGR
                                                 B((uint8_t)(b * 255)),
@@ -735,160 +752,154 @@ struct RGB24
 
 
         /**
-        * Ctor from a fVec3, component order R, G, B in [0.0f, 1.0f].
-        **/
+        * Constructor from a #fVec3 with component (x=R, y=G, z=B) in [0.0f, 1.0f].
+        */
         RGB24(fVec3 v) : RGB24(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a fVec4, (same as using fVec3: the 4th vector component is ignored).
-        **/
+        * Constructor from a #fVec3 with component (x=R, y=G, z=B, w=ignored) in [0.0f, 1.0f].
+        */
         RGB24(fVec4 v) : RGB24(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a pointer to 3 bytes in the following order: R,G,B. 
-        **/
+        * Constructor from a uint8_t pointer to 3 bytes in the following order: R,G,B. 
+        */
         constexpr RGB24(uint8_t * p) : R(p[0]), G(p[1]), B(p[2]) {}
 
 
         /**
-        * Default Copy ctor
-        **/
+        * Default Copy constructor.
+        */
         RGB24(const RGB24&) = default;
 
 
         /**
-        * Ctor from a uint16_t (seen as RGB565).
-        **/
+        * Constructor from a uint16_t (seen as RGB565).
+        */
         constexpr inline RGB24(uint16_t c);
 
 
         /**
-        * Ctor from a uint32_t (seen as RGB32).
-        **/
+        * Constructor from a uint32_t (seen as RGB32).
+        */
         constexpr inline RGB24(uint32_t c);
 
 
         /**
-        * Ctor from a uint64_t (seen as RGB64).
-        **/
+        * Constructor from a uint64_t (seen as RGB64).
+        */
         constexpr inline RGB24(uint64_t c);
 
 
         /**
-        * Ctor from a RGB24 color.
-        **/
+        * Constructor from a RGB24 color.
+        */
         constexpr inline RGB24(const RGB565& c);
 
 
         /**
-        * Ctor from a RGB32 color.
-        * the A component is ignored
-        **/
+        * Constructor from a RGB32 color. The component A is ignored
+        */
         constexpr inline RGB24(const RGB32& c);
 
 
         /**
-        * Ctor from a RGB64 color.
-        * the A component is ignored
-        **/
+        * Constructor from a RGB64 color. The component A is ignored
+        */
         constexpr inline RGB24(const RGB64& c);
 
 
         /**
-        * Ctor from a RGBf color.
-        **/
+        * Constructor from a RGBf color.
+        */
         constexpr inline RGB24(const RGBf& c);
 
 
         /**
-        * Ctor from a HSV color.
-        **/
+        * Constructor from a HSV color.
+        */
         RGB24(const HSV& c);
 
 
         /**
-        * Cast into an iVec3. raw values.
-        **/
+        * Cast into an #iVec3. Raw values in [0,255].
+        */
         explicit operator iVec3() const { return iVec3(R, G, B); }
 
 
         /**
-        * Cast into an fVec3. Values in [0.0f, 1.0f].
-        **/
+        * Cast into an #fVec3. Values in [0.0f, 1.0f].
+        */
         explicit operator fVec3() const { return fVec3(R / 255.0f, G / 255.0f, B / 255.0f); }
 
 
         /**
-        * Default assignement operator 
-        **/ 
+        * Default assignement operator.
+        */ 
         RGB24& operator=(const RGB24&) = default;
 
 
         /**
-        * Assignement operator from a RGB565 color
-        **/
+        * Assignement operator from a RGB565 color.
+        */
         inline RGB24& operator=(const RGB565& c);
 
 
         /**
-        * Assignement operator from a RGB32 color
-        * the A component is ignored
-        **/
+        * Assignement operator from a RGB32 color. The component A is ignored.
+        */
         inline RGB24& operator=(const RGB32& c);
 
 
         /**
-        * Assignement operator from a RGB64 color
-        * the A component is ignored
-        **/
+        * Assignement operator from a RGB64 color. The component A is ignored.
+        */
         inline RGB24& operator=(const RGB64& c);
 
 
         /**
-        * Assignement operator from a RGBf color
-        **/
+        * Assignement operator from a RGBf color.
+        */
         inline RGB24& operator=(const RGBf& c);
 
 
         /**
-        * Assignement operator from a HSV color
-        **/
+        * Assignement operator from a HSV color.
+        */
         RGB24& operator=(const HSV& c);
 
 
         /**
-        * Assignement operator from a vector.
-        * raw value (no conversion).
-        **/
+        * Assignement operator from a #iVec3 vector (x=R, y=G, z=B). Raw values.
+        */
         inline RGB24& operator=(iVec3 v);
 
 
         /**
-        * Assignement operator from a vector. 4th component is ignored
-        * raw value (no conversion).
-        **/
+        * Assignement operator from a #iVec4 vector (x=R, y=G, z=B, w=ignored). Raw values.
+        */
         inline RGB24& operator=(iVec4 v);
 
 
         /**
-        * Assignement operator from a vector. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a #fVec3 vector (x=R, y=G, z=B). All values in [0.0f, 1.0f].
+        */
         inline RGB24& operator=(fVec3 v);
 
 
         /**
-        * Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a #fVec4 vector (x=R, y=G, z=B, w=ignored). All values in [0.0f, 1.0f].
+        */
         inline RGB24& operator=(fVec4 v);
 
 
         /**
         * Add another color, component by component.
-        **/
+        */
         void operator+=(const RGB24 & c)
             {
             R += c.R;
@@ -899,7 +910,7 @@ struct RGB24
 
         /**
         * Substract another color, component by component.
-        **/
+        */
         void operator-=(const RGB24& c)
             {
             R -= c.R;
@@ -910,7 +921,7 @@ struct RGB24
 
         /**
         * Add the scalar value v to each component
-        **/
+        */
         void operator+=(uint8_t v)
             {
             R += v;
@@ -921,7 +932,7 @@ struct RGB24
 
         /**
          * Substract the scalar value v to each component
-         **/
+         */
         void operator-=(uint8_t v)
             {
             R -= v;
@@ -932,7 +943,7 @@ struct RGB24
 
         /**
         * Multiply each component by the scalar value v.
-        **/
+        */
         void operator*=(uint8_t v)
             {
             R *= v;
@@ -943,7 +954,7 @@ struct RGB24
 
         /**
         * Multiply each component by the scalar (floating point) value v.
-        **/
+        */
         void operator*=(float v)
             {
             R = (uint8_t)(R * v);
@@ -953,7 +964,7 @@ struct RGB24
 
         /**
         * Divide each component by the scalar value v.
-        **/
+        */
         void operator/=(uint8_t v)
             {
             R /= v;
@@ -963,7 +974,7 @@ struct RGB24
 
         /**
         * Divide each component by the scalar (floating point value) v.
-        **/
+        */
         void operator/=(float v)
             {
             R = (uint8_t)(R / v);
@@ -973,8 +984,8 @@ struct RGB24
 
 
         /**
-        * Equality comparator
-        **/
+        * Equality comparator.
+        */
         constexpr bool operator==(const RGB24& c) const
             {
             return((R == c.R) && (G == c.G) && (B == c.B));
@@ -982,8 +993,8 @@ struct RGB24
 
 
         /**
-        * Inequality comparator
-        **/
+        * Inequality comparator.
+        */
         constexpr bool operator!=(const RGB24& c) const
             {
             return !(*this == c);
@@ -993,10 +1004,10 @@ struct RGB24
         /**
          * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
          * to 1.0f (fully opaque).
-         * 
+         *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0.0f, 1.0f].
-        **/
+         */
         inline void blend(const RGB24 & fg_col, float alpha)
             {
             blend256(fg_col, (uint32_t)(alpha * 256));
@@ -1009,7 +1020,7 @@ struct RGB24
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0, 256].
-        **/
+         */
         inline void blend256(const RGB24& fg_col, uint32_t alpha)
             {
             const uint16_t a = (uint16_t)alpha;
@@ -1021,8 +1032,8 @@ struct RGB24
 
 
         /**
-        * multiply each color component by a given factor x/256 with x in [0,256]
-        **/
+        * Multiply each color component by a given factor m/256 with m in [0,256]
+        */
         inline void mult256(int mr, int mg, int mb)
             {
             R = (R * mr) >> 8;
@@ -1032,9 +1043,10 @@ struct RGB24
 
 
         /**
-        * multiply each color component by a given factor x/256 with x in [0,256]
-        * component A is ignored since there is not alpha channel
-        **/
+        * Multiply each color component by a given factor m/256 with m in [0,256]
+        * 
+        * Parameter ma is ignored since there is not alpha channel.
+        */
         inline void mult256(int mr, int mg, int mb, int ma)
             {
             mult256(mr, mg, mb);
@@ -1045,7 +1057,7 @@ struct RGB24
         * Dummy function for compatibility with color types having an alpha channel.
         * 
         * Does nothing since the color is always fully opaque. 
-        **/
+        */
         inline void premultiply()
             {
             // nothing here. 
@@ -1057,7 +1069,7 @@ struct RGB24
         * Dummy function for compatibility with color types having an alpha channel.
         *
         * Return 1.0f (fully opaque)
-        **/
+        */
         float opacity() const
             {
             return 1.0f;
@@ -1068,7 +1080,7 @@ struct RGB24
         * Dummy function for compatibility with color types having an alpha channel.
         *
         * Does nothing since the color is always fully opaque.
-        **/
+        */
         void setOpacity(float op)
             {
             // nothing here. 
@@ -1083,7 +1095,7 @@ struct RGB24
     /**
     * Interpolate between 3 colors.
     *
-    * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
+    * Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC.
     **/
     inline RGB24 interpolateColorsTriangle(const RGB24& col1, int32_t C1, const  RGB24& col2, int32_t C2, const  RGB24& col3, const int32_t totC)
         {
@@ -1092,18 +1104,23 @@ struct RGB24
                      (int)(col3.B + (C1 * (col1.B - col3.B) + C2 * (col2.B - col3.B)) / totC));
         }
 
+
     /**
-    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
-    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
-    * the mininum coord. in direction x and y, as illustrated in the drawing below:
-    *
-    *  C01          C11
-    *                
-    *   --ax--X
-    *         |
-    *         ay
-    *  C00    |     C10
-    **/
+     * Bilinear interpolation between 4 colors.
+     *
+     * Return the bilinear interpolation of four neighouring pixels in an image with respect to
+     * position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum
+     * coord. in direction x and y, as illustrated in the drawing below:
+     *
+     *```
+     *  C01          C11
+     *
+     *   --ax--X
+     *         |
+     *         ay
+     *  C00    |     C10
+     *```
+     */
     inline RGB24 interpolateColorsBilinear(const RGB24 & C00, const RGB24 & C10, const RGB24 & C01, const RGB24 & C11, const float ax, const float ay)
             {           
             const int iax = (int)(ax * 256);
@@ -1118,8 +1135,8 @@ struct RGB24
 
 
     /**
-    * Return the "mean" color between colA and colB.
-    **/
+    * Return the average color between colA and colB.
+    */
     inline RGB24 meanColor(const RGB24 & colA, const RGB24 & colB)
         {
         return RGB24(((int)colA.R + (int)colB.R) >> 1,
@@ -1129,8 +1146,8 @@ struct RGB24
 
 
     /**
-    * Return the "mean" color between 4 colors.
-    **/
+    * Return the average color between 4 colors.
+    */
     inline RGB24 meanColor(const RGB24& colA, const RGB24& colB, const RGB24& colC, const RGB24& colD)
         {
         return RGB24(((int)colA.R + (int)colB.R + (int)colC.R + (int)colD.R) >> 2,
@@ -1142,26 +1159,19 @@ struct RGB24
 
 
 
-
-/**********************************************************************
-* declaration of class RGB32
-***********************************************************************/
-
-
 /**
-* Class representing a color in R8/G8/B8/(A8) format.
-*  
-* Occupies 4 bytes in memory. 
-* 
-* Can be converted from/to uint32_t.
-* 
-* the A component defaults to DEFAULT_A = 255 (fully opaque)
-* when not specified.
-* 
-* REMARK : For all drawing/blending procedure, the color is assume to have 
-*          pre-multiplied alpha. Use the premultiply() method to convert a 
-*          plain alpha color to its pre-multiplied version.
-**/
+ * Color in R8/G8/B8/A8 format.
+ * 
+ * Occupies 4 bytes in memory, aligned as uint32_t.
+ * 
+ * Can be converted from/to uint32_t.
+ * 
+ * the component A defaults to #DEFAULT_A = 255 (fully opaque) if not specified.
+ * 
+ * **Remark** For all drawing/blending operations, the color is assume to have pre-multiplied
+ * alpha. Use the premultiply() method to convert a plain alpha color to its pre-multiplied
+ * version (https://developer.nvidia.com/content/alpha-blending-pre-or-not-pre).
+ */
 struct RGB32
     {
 
@@ -1172,40 +1182,39 @@ struct RGB32
         #endif
 
 
-        static const uint8_t DEFAULT_A = 255; // fully opaque 
+        static const uint8_t DEFAULT_A = 255; ///< fully opaque alpha value
 
-
-        union // dual memory representation
+        // dual memory representation
+        union 
             { 
-            uint32_t val;           // as a uint32_t
+            uint32_t val;   ///< color as uint32_t
             struct 
                 {
 #if TGX_RGB32_ORDER_BGR
-                uint8_t B;          // as 4 components BGRA
-                uint8_t G;          //
-                uint8_t R;          //
-                uint8_t A;          //
+                uint8_t B;  ///< Blue channel (8bits)
+                uint8_t G;  ///< Green channel (8bits)
+                uint8_t R;  ///< Red channel (8bits)
+                uint8_t A;  ///< Alpha channel (8bits)
 
 #else
-                uint8_t R;          //
-                uint8_t G;          //
-                uint8_t B;          // as 4 components RGBA
-                uint8_t A;          //
+                uint8_t R;  ///< Red channel (8bits)
+                uint8_t G;  ///< Green channel (8bits)
+                uint8_t B;  ///< Blue channel (8bits)
+                uint8_t A;  ///< Alpha channel (8bits)
 #endif
                 }; 
             };
 
 
         /**
-        * Default ctor. Undefined color. 
-        **/
+        * Default constructor. **Color is undefined**. 
+        */
         RGB32() = default;
 
 
         /**
-        * Ctor from raw R,G,B, A value. 
-        * No rescaling. All values in [0,255].
-        **/
+        * Constructor from raw r,g,b,a values. All values in [0,255].
+        */
         constexpr RGB32(int r, int g, int b, int a = DEFAULT_A) : 
                                                             #if TGX_RGB32_ORDER_BGR
                                                                 B((uint8_t)b), G((uint8_t)g), R((uint8_t)r), A((uint8_t)a)
@@ -1214,25 +1223,25 @@ struct RGB32
                                                             #endif
         {}
 
+
         /**
-        * Ctor from a fVec3, component order R, G, B. Component A is set to its default value
-        * No rescaling. All values in [0,255].
-        **/
+         * Constructor from a #fVec3 with components (x=R, y=G, z=B) in [0,255]. Component A is set to
+         * DEFAULT_A (opaque).
+         */
         constexpr RGB32(iVec3 v) : RGB32(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a fVec4, component order R, G, B, A.
-        * No rescaling. All values in [0,255].
-        **/
+         * Constructor from a #fVec4 with components (x=R, y=G, z=B, w=A) in [0,255].
+         */
         constexpr RGB32(iVec4 v) : RGB32(v.x, v.y, v.z, v.w)
         {}
 
 
         /**
-        * Ctor from float r,g,b in [0.0f, 1.0f].
-        **/
+         * Constructor from float r,g,b,a in [0.0f, 1.0f].  If unspecified, component A is set to DEFAULT_A. 
+         */
         RGB32(float r, float g, float b, float a = -1.0f) : 
                                                             #if TGX_RGB32_ORDER_BGR
                                                                 B((uint8_t)(b * 255)),
@@ -1249,182 +1258,173 @@ struct RGB32
 
 
         /**
-        * Ctor from a fVec3, component order R, G, B in [0.0f, 1.0f], A is set to its default value
-        **/
+         * Constructor from a #fVec3 with components (x=R, y=G, z=B) in [0.0f, 1.0f]. Component A is set
+         * to DEFAULT_A (opaque).
+         */
         RGB32(fVec3 v) : RGB32(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a fVec4, component order R, G, B, A in [0.0f, 1.0f].
-        **/
+        * Constructor from a #fVec4 with components (x=R, y=G, z=B, w=A) in [0.0f, 1.0f].
+        */
         RGB32(fVec4 v) : RGB32(v.x, v.y, v.z, v.w)
         {}
 
 
         /**
-        * Ctor from a uint32_t.
-        **/
+        * Constructor from a uint32_t.
+        */
         constexpr RGB32(uint32_t c) : val(c) {}
 
 
         /**
-        * Ctor from a uint16_t (seen as RGB565).
-        **/
+        * Constructor from a uint16_t (seen as RGB565). Component A is set to DEFAULT_A.
+        */
         constexpr inline RGB32(uint16_t val);
 
 
         /**
-        * Ctor from a uint64_t (seen as RGB64).
-        **/
+        * Constructor from a uint64_t (seen as RGB64). 
+        */
         constexpr inline RGB32(uint64_t val);
 
 
         /**
-        * Default Copy ctor
-        **/
+        * Default Copy constructor.
+        */
         RGB32(const RGB32&) = default;
 
 
         /**
-        * Ctor from a RGB565 color.
-        * A component is set to DEFAULT_A
-        **/
+        * Constructor from a RGB565 color. Component A is set to DEFAULT_A.
+        */
         constexpr inline RGB32(const RGB565& c);
 
 
         /**
-        * Ctor from a RGB24 color.
-        * A component is set to DEFAULT_A
-        **/
+        * Constructor from a RGB24 color. Component A is set to DEFAULT_A.
+        */
         constexpr inline RGB32(const RGB24& c);
 
 
         /**
-        * Ctor from a RGB64 color.
-        **/
+        * Constructor from a RGB64 color.
+        */
         constexpr inline RGB32(const RGB64& c);
 
 
         /**
-        * Ctor from a RGBf color.
-        * A component is set to DEFAULT_A
-        **/
+        * Constructor from a RGBf color. Component A is set to DEFAULT_A.
+        */
         constexpr inline RGB32(const RGBf& c);
 
 
         /**
-        * Ctor from a HSV color.
-        * A component is set to DEFAULT_A
-        **/
+        * Constructor from a HSV color. Component A is set to DEFAULT_A.
+        */
         RGB32(const HSV& c);
 
 
         /**
-        * Cast into a uint32_t (non const reference version)
-        **/
+        * Cast into a uint32_t (non-const reference version)
+        */
         explicit operator uint32_t&()  { return val; }
 
 
         /**
         * Cast into a uint32_t (const reference version)
-        **/
+        */
         explicit operator const uint32_t& () const { return val; }
 
 
         /**
-        * Cast into an iVec3. raw values (component A is ignored).
-        **/
+        * Cast into an #iVec3. Raw values (component A is ignored).
+        */
         explicit operator iVec3() const { return iVec3(R, G, B); }
 
 
         /**
-        * Cast into an fVec3. Values in [0.0f, 1.0f] (component A is ignored).
-        **/
+        * Cast into an #fVec3. Values in [0.0f, 1.0f] (component A is ignored).
+        */
         explicit operator fVec3() const { return fVec3(R / 255.0f, G / 255.0f, B / 255.0f); }
 
 
         /**
-        * Cast into an iVec4. raw values.
-        **/
+        * Cast into an #iVec4. Raw values.
+        */
         explicit operator iVec4() const { return iVec4(R, G, B, A); }
 
 
         /**
-        * Cast into an fVec4. Values in [0.0f, 1.0f].
-        **/
+        * Cast into an #fVec4. Values in [0.0f, 1.0f].
+        */
         explicit operator fVec4() const { return fVec4(R / 255.0f, G / 255.0f, B / 255.0f, A / 255.0f); }
 
 
         /**
         * Default assignement operator 
-        **/ 
+        */ 
         RGB32& operator=(const RGB32&) = default;
 
 
         /**
-        * Assignement operator from a RGB24 color
-        * A component is set to DEFAULT_A
-        **/
+        * Assignement operator from a RGB565 color. Component A is set to DEFAULT_A.
+        */
         inline RGB32& operator=(const RGB565& c);
 
 
         /**
-        * Assignement operator from a RGB24 color
-        * A component is set to DEFAULT_A
-        **/
+        * Assignement operator from a RGB24 color. Component A is set to DEFAULT_A.
+        */
         inline RGB32& operator=(const RGB24& c);
 
 
         /**
         * Assignement operator from a RGB64 color
-        **/
+        */
         inline RGB32& operator=(const RGB64& c);
 
 
         /**
-        * Assignement operator from a RGBf color
-        * A component is set to DEFAULT_A
-        **/
+        * Assignement operator from a RGBf color. Component A is set to DEFAULT_A.
+        */
         inline RGB32& operator=(const RGBf& c);
 
 
         /**
-        * Assignement operator from a HSV color
-        * A component is set to DEFAULT_A
-        **/
+        * Assignement operator from a HSV color. Component A is set to DEFAULT_A.
+        */
         RGB32& operator=(const HSV& c);
 
 
         /**
-        * Assignement operator from a vector.
-        * raw value (no conversion).
-        **/
+        * Assignement operator from a vector (x=R, y=G, z=B). Raw values. Component A is set to DEFAULT_A.
+        */
         inline RGB32& operator=(iVec3 v);
 
 
         /**
-        * Assignement operator from a vector. 4th component is ignored
-        * raw value (no conversion).
-        **/
+        * Assignement operator from a vector (x=R, y=G, z=B, w=A). Raw values.
+        */
         inline RGB32& operator=(iVec4 v);
 
 
         /**
-        * Assignement operator from a vector. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a vector (x=R, y=G, z=B) in [0.0f, 1.0f]. Component A is set to DEFAULT_A.
+        */
         inline RGB32& operator=(fVec3 v);
 
 
         /**
-        * Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a vector (x=R, y=G, z=B, w=A) in [0.0f, 1.0f].
+        */
         inline RGB32& operator=(fVec4 v);
 
 
         /**
         * Add another color, component by component (including alpha channel).
-        **/
+        */
         void operator+=(const RGB32& c)
             {
             R += c.R;
@@ -1436,7 +1436,7 @@ struct RGB32
 
         /**
         * Substract another color, component by component (including alpha channel).
-        **/
+        */
         void operator-=(const RGB32& c)
             {
             R -= c.R;
@@ -1448,7 +1448,7 @@ struct RGB32
 
         /**
         * Add the scalar value v to each component (including alpha channel).
-        **/
+        */
         void operator+=(uint8_t v)
             {
             R += v;
@@ -1460,7 +1460,7 @@ struct RGB32
 
         /**
          * Substract the scalar value v to each component (including alpha channel).
-         **/
+         */
         void operator-=(uint8_t v)
             {
             R -= v;
@@ -1472,7 +1472,7 @@ struct RGB32
 
         /**
         * Multiply each component by the scalar value v (including alpha channel).
-        **/
+        */
         void operator*=(uint8_t v)
             {
             R *= v;
@@ -1484,7 +1484,7 @@ struct RGB32
 
         /**
         * Multiply each component by the scalar (floating point) value v (including alpha channel).
-        **/
+        */
         void operator*=(float v)
             {
             R = (uint8_t)(R * v);
@@ -1495,7 +1495,7 @@ struct RGB32
 
         /**
         * Divide each component by the scalar value v (including alpha channel).
-        **/
+        */
         void operator/=(uint8_t v)
             {
             R /= v;
@@ -1506,7 +1506,7 @@ struct RGB32
 
         /**
         * Divide each component by the scalar (floating point value) v, including the alpha channel.
-        **/
+        */
         void operator/=(float v)
             {
             R = (uint8_t)(R / v);
@@ -1517,8 +1517,8 @@ struct RGB32
 
 
         /**
-        * Equality comparator
-        **/
+        * Equality comparator.
+        */
         constexpr bool operator==(const RGB32& c) const
             {
             return(val == c.val);
@@ -1526,8 +1526,8 @@ struct RGB32
 
 
         /**
-        * Inequality comparator
-        **/
+        * Inequality comparator.
+        */
         constexpr bool operator!=(const RGB32& c) const
             {
             return !(*this == c);
@@ -1538,11 +1538,11 @@ struct RGB32
          * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
          * to 1.0f (fully opaque).
          * 
-         * *** WARNING The color fg_col is assumed to have pre-multiplied alpha. *** 
+         * **WARNING** The color fg_col is assumed to have pre-multiplied alpha.
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   Additional opacity/alpha multiplier in [0.0f,1.0f].
-        **/
+         */
         inline void blend(const RGB32 & fg_col, float alpha)
             {
             blend256(fg_col, (uint32_t)(alpha * 256));
@@ -1552,12 +1552,12 @@ struct RGB32
         /**
          * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
          * to 1.0f (fully opaque).
-         *
-         * *** WARNING The color fg_col is assumed to have pre-multiplied alpha. ***
+         * 
+         * **WARNING** The color fg_col is assumed to have pre-multiplied alpha.
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,256].
-        **/
+         */
         inline void blend256(const RGB32 & fg_col, uint32_t alpha)
             {
             // below is the correct alpha blending with pre-multiplied alpha
@@ -1573,11 +1573,11 @@ struct RGB32
         /**
          * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
          * to 1.0f (fully opaque).
-         *
-         * *** WARNING The color fg_col is assumed to have pre-multiplied alpha. ***
          * 
+         * **WARNING** The color fg_col is assumed to have pre-multiplied alpha.
+         *
          * @param   fg_col  The foreground color. The alpha channel of the color is used for blending.
-        **/
+         */
         inline void blend(RGB32 fg_col)
             {
             blend256(fg_col, 256);  
@@ -1585,8 +1585,8 @@ struct RGB32
 
 
         /**
-        * multiply each color component by a given factor x/256 with x in [0,256]
-        **/
+         * Multiply each color component by a given factor m/256 with m in [0,256] except the A component.
+         */
         inline void mult256(int mr, int mg, int mb)
             {
             R = (R * mr) >> 8;
@@ -1596,8 +1596,8 @@ struct RGB32
 
 
         /**
-        * multiply each color component by a given factor x/256 with x in [0,256]
-        **/
+        * Multiply each color component by a given factor m/256 with m in [0,256]
+        */
         inline void mult256(int mr, int mg, int mb, int ma)
             {
             R = (R * mr) >> 8;
@@ -1608,12 +1608,12 @@ struct RGB32
 
 
         /**
-        * Convert the color from plain alpha to pre-multiplied alpha.
-        * 
-        * REMARK: Normally, all colors type in TGX should have pre-multiplied alpha. 
-        * Thus, this method should only be used when loading a color from external data 
-        * (a png image for example) where the colors are not initially pre-multiplied. 
-        **/
+         * Convert the color from plain alpha to pre-multiplied alpha.
+         * 
+         * **Remark** All colors type in TGX should have pre-multiplied alpha. This method should only
+         * be used when loading a color from external data (a png image for example) where the colors
+         * are not initially pre-multiplied.
+         */
         inline void premultiply()
             {
             R = (uint8_t)((((uint16_t)R) * A) / 255);
@@ -1622,11 +1622,10 @@ struct RGB32
             }
 
 
-
         /**
-        * Return the opacity (alpha channel value) of this color
-        * in the range [0,1] (0=fully transparent, 1=fully opaque).
-        **/
+         * Return the opacity (alpha channel value) of this color in the range [0,1] (0=fully
+         * transparent, 1=fully opaque).
+         */
         float opacity() const
             {
             return (((float)A)/ 255.0f);
@@ -1634,12 +1633,12 @@ struct RGB32
 
 
         /**
-        * Change the opacity of the color to a given value in [0.0f, 1.0f]
+        * Change the opacity of the color to a given value in [0.0f, 1.0f].
         * 
         * This method assumes (and returns) a color with pre-multiplied alpha.
         * 
-        * REMARK: Use multOpacity() instead whenever possible because it is faster. 
-        **/
+        * **Remark** Use method multOpacity() instead whenever possible because it is faster. 
+        */
         void setOpacity(float op)
             {
             // slow version
@@ -1650,10 +1649,10 @@ struct RGB32
 
 
         /**
-        * Multiply the opacity of the color by a given factor in [0.0f, 1.0f]
+        * Multiply the opacity of the color by a given factor in [0.0f, 1.0f].
         * 
         * This method assumes (and returns) a color with pre-multiplied alpha.
-        **/
+        */
         void multOpacity(float op)
             {
             *this = getMultOpacity(op);
@@ -1661,11 +1660,11 @@ struct RGB32
 
 
         /**
-        * Return a copy of this color with opacity multiplied by a given factor in [0.0f, 1.0f]
+        * Return a copy of this color with opacity multiplied by a given factor in [0.0f, 1.0f].
         *
         * This method assumes (and returns) a color with pre-multiplied alpha.
-        **/
-        RGB32 getMultOpacity(float op)
+        */
+        RGB32 getMultOpacity(float op) const
             {
             // faster
             uint32_t o = (uint32_t)(256 * op);
@@ -1675,14 +1674,13 @@ struct RGB32
             uint32_t srb = o * rb;
             sag = sag & 0xFF00FF00;
             srb = (srb >> 8) & 0x00FF00FF;
-            val = (sag | srb);
             return RGB32(sag | srb);
             }
 
 
         /**
         * Set the alpha channel of the color to fully opaque.
-        **/
+        */
         void setOpaque()
             {
             setOpacity(1.0f);
@@ -1691,7 +1689,7 @@ struct RGB32
 
         /**
         * Set the alpha channel of the color to fully transparent.
-        **/
+        */
         void setTransparent()
             {
             R = 0;
@@ -1708,8 +1706,8 @@ struct RGB32
     /**
     * Interpolate between 3 colors.
     *
-    * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
-    **/
+    * Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC.
+    */
     inline RGB32 interpolateColorsTriangle(const RGB32& col1, int32_t C1, const  RGB32& col2, int32_t C2, const  RGB32& col3, const int32_t totC)
         {
         return RGB32((int)(col3.R + (C1 * (col1.R - col3.R) + C2 * (col2.R - col3.R)) / totC),
@@ -1720,17 +1718,21 @@ struct RGB32
 
 
     /**
-    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
-    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
-    * the mininum coord. in direction x and y, as illustrated in the drawing below:
-    *
-    *  C01          C11
-    *                
-    *   --ax--X
-    *         |
-    *         ay
-    *  C00    |     C10
-    **/
+     * Bilinear interpolation between 4 colors.
+     *
+     * Return the bilinear interpolation of four neighouring pixels in an image with respect to
+     * position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum
+     * coord. in direction x and y, as illustrated in the drawing below:
+     *
+     *```
+     *  C01          C11
+     *
+     *   --ax--X
+     *         |
+     *         ay
+     *  C00    |     C10
+     *```
+     */
     inline RGB32 interpolateColorsBilinear(const RGB32 & C00, const RGB32 & C10, const RGB32 & C01, const RGB32 & C11, const float ax, const float ay)
             {           
             const int iax = (int)(ax * 256);
@@ -1746,8 +1748,8 @@ struct RGB32
 
 
     /**
-    * Return the "mean" color between colA and colB.
-    **/
+    * Return the average color between colA and colB.
+    */
     inline RGB32 meanColor(RGB32 colA, RGB32 colB)
         {
         return RGB32(((int)colA.R + (int)colB.R) >> 1,
@@ -1758,8 +1760,8 @@ struct RGB32
 
 
     /**
-    * Return the "mean" color between 4 colors
-    **/
+    * Return the average color between 4 colors.
+    */
     inline RGB32 meanColor(RGB32 colA, RGB32 colB, RGB32 colC, RGB32 colD)
         {
         return RGB32(((int)colA.R + (int)colB.R + (int)colC.R + (int)colD.R) >> 2,
@@ -1772,25 +1774,19 @@ struct RGB32
 
 
 
-/**********************************************************************
-* declaration of class RGB64
-***********************************************************************/
-
-
 /**
-* Class representing a color in R16/G16/B16/(A16) format. 
-* 
-* Occupies 8 bytes in memory.
-* 
-* Can be converted from/to uint64_t.
-* 
-* the A component defaults to DEFAULT_A = 65535 (fully opaque) 
-* if not specified.
-* 
-* REMARK : For all drawing/blending procedure, the color is assume to have
-*          pre-multiplied alpha. Use the premultiply() method to convert a
-*          plain alpha color to its pre-multiplied version.
-**/
+ * Color in R16/G16/B16/A16 format.
+ * 
+ * Occupies 8 bytes in memory, aligned as uint64_t.
+ * 
+ * Can be converted from/to uint64_t.
+ * 
+ * the component A defaults to DEFAULT_A = 65535 (fully opaque) if not specified.
+ * 
+ * **REMARK** For all drawing/blending procedure, the color is assume to have pre-multiplied
+ * alpha. Use the premultiply() method to convert a plain alpha color to its pre-multiplied
+ * version (https://developer.nvidia.com/content/alpha-blending-pre-or-not-pre).
+ */
 struct RGB64
     {
 
@@ -1801,41 +1797,41 @@ struct RGB64
         #endif
         
         
-        static const uint16_t DEFAULT_A = 65535; // fully opaque. 
+        static const uint16_t DEFAULT_A = 65535;  ///< fully opaque alpha value
 
 
-        union // dual memory representation
+        // dual memory representation
+        union 
             { 
-            uint64_t val;           // as a uint32_t
+            uint64_t val;       ///< color as uint64_t
             struct 
                 {
 
 #if TGX_RGB64_ORDER_BGR
-                uint16_t B;         // as 4 components BGRA
-                uint16_t G;         //
-                uint16_t R;         //
-                uint16_t A;         //
+                uint16_t B;     ///< Blue channel (16 bits)
+                uint16_t G;     ///< Green channel (16 bits)
+                uint16_t R;     ///< Red channel (16 bits)
+                uint16_t A;     ///< Alpha channel (16 bits)
 
 #else
-                uint16_t R;         // as 4 components RGBA
-                uint16_t G;         //
-                uint16_t B;         // 
-                uint16_t A;         //
+                uint16_t R;     ///< Red channel (16 bits)
+                uint16_t G;     ///< Green channel (16 bits)
+                uint16_t B;     ///< Blue channel (16 bits)
+                uint16_t A;     ///< Alpha channel (16 bits)
 #endif
                 }; 
             };
 
 
         /**
-        * Default ctor. Undefined color. 
-        **/
+        * Default constructor. **Color is undefined**
+        */
         RGB64() = default;
 
 
         /**
-        * Ctor from raw R,G,B, A value. 
-        * No rescaling. All values in [0,65535].
-        **/
+        * Constructor from raw r,g,b,a value in [0,65535].
+        */
         constexpr RGB64(int r, int g, int b, int a = DEFAULT_A) :       
                                                                 #if TGX_RGB64_ORDER_BGR
                                                                     B((uint16_t)b), G((uint16_t)g), R((uint16_t)r), A((uint16_t)a) 
@@ -1846,24 +1842,22 @@ struct RGB64
 
 
         /**
-        * Ctor from a iVec3, A is set to its default value
-        * No rescaling. All values in [0,65535].
-        **/
+        * Constructor from a #iVec3 with components (x=R, y=G, z=B) in [0,65535]. Component A is set to DEFAULT_A.
+        */
         constexpr RGB64(iVec3 v) : RGB64(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a iVec4.
-        * No rescaling. All values in [0,65535].
-        **/
+        * Constructor from a #iVec4 with components (x=R, y=G, z=B, w=A) in [0,65535].
+        */
         constexpr RGB64(iVec4 v) : RGB64(v.x, v.y, v.z, v.w)
         {}
 
 
         /**
-        * Ctor from float r,g,b in [0.0f, 1.0f].
-        **/
+        * Constructor from float r,g,b,a in [0.0f, 1.0f]. If unspecified, component A is set to DEFAULT_A. 
+        */
         RGB64(float r, float g, float b, float a = -1.0f) : 
                                                             #if TGX_RGB64_ORDER_BGR
                                                                 B((uint16_t)(b * 65535)), 
@@ -1880,181 +1874,172 @@ struct RGB64
 
 
         /**
-        * Ctor from a fVec3, component order R, G, B in [0.0f, 1.0f], A is set to its default value
-        **/
+        * Constructor from a #fVec3 with components (x=R, y=G, z=B) in [0.0f, 1.0f]. Component A is set to DEFAULT_A.
+        */
         RGB64(fVec3 v) : RGB64(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a fVec4, component order R, G, B, A in [0.0f, 1.0f].
-        **/
+        * Constructor from a #fVec4 with components (x=R, y=G, z=B, w=A) in [0.0f, 1.0f].
+        */
         RGB64(fVec4 v) : RGB64(v.x, v.y, v.z, v.w)
         {}
 
 
         /**
-        * Ctor from a uint64_t.
-        **/
+        * Constructor from a uint64_t.
+        */
         constexpr inline RGB64(uint64_t c) : val(c) {}
 
 
         /**
-        * Ctor from a uint16_t (seen as RGB565).
-        **/
+        * Constructor from a uint16_t (seen as RGB565).
+        */
         inline RGB64(uint16_t val);
 
 
         /**
-        * Ctor from a uint32_t (seen as RGB32).
-        **/
+        * Constructor from a uint32_t (seen as RGB32).
+        */
         inline RGB64(uint32_t val);
 
 
         /**
-        * Default Copy ctor
-        **/
+        * Default Copy ctor.
+        */
         RGB64(const RGB64&) = default;
 
 
         /**
-        * Ctor from a RGB565 color.
-        * A component is set to DEFAULT_A
-        **/
+        * Constructor from a RGB565 color. Component A is set to DEFAULT_A.
+        */
         inline RGB64(const RGB565& c);
 
 
         /**
-        * Ctor from a RGB24 color.
-        * A component is set to DEFAULT_A
-        **/
+        * Constructor from a RGB24 color. Component A is set to DEFAULT_A.
+        */
         inline RGB64(const RGB24& c);
 
 
         /**
-        * Ctor from a RGB32 color.
-        **/
+        * Constructor from a RGB32 color.
+        */
         inline RGB64(const RGB32& c);
 
 
         /**
-        * Ctor from a RGBf color.
-        **/
+        * Constructor from a RGBf color. Component A is set to DEFAULT_A.
+        */
         inline RGB64(const RGBf& c);
 
 
         /**
-        * Ctor from a HSV color.
-        * A component is set to DEFAULT_A
-        **/
+        * Constructor from a HSV color. Component A is set to DEFAULT_A
+        */
         RGB64(const HSV& c);
 
 
         /**
-        * Cast into a uint64_t (non const reference version)
-        **/
+        * Cast into a uint64_t (non-const reference version)
+        */
         explicit operator uint64_t&()  { return val; }
 
 
         /**
         * Cast into a uint64_t (const reference version)
-        **/
+        */
         explicit operator const uint64_t&() const { return val; }
 
 
         /**
-        * Cast into an iVec3. raw values (component A is ignored).
-        **/
+        * Cast into an #iVec3 with components (x=R, y=G, z=B) in [0,65535]. Component A is ignored.
+        */
         explicit operator iVec3() const { return iVec3(R, G, B); }
 
 
         /**
-        * Cast into an fVec3. Values in [0.0f, 1.0f] (component A is ignored).
-        **/
+        * Cast into an #fVec3 with components (x=R, y=G, z=B) in [0.0f, 1.0f]. Component A is ignored.
+        */
         explicit operator fVec3() const { return fVec3(R / 65535.0f, G / 65535.0f, B / 65535.0f); }
 
 
         /**
-        * Cast into an iVec4. raw values.
-        **/
+        * Cast into an #iVec4 with components (x=R, y=G, z=B, w=A) in [0,65535].
+        */
         explicit operator iVec4() const { return iVec4(R, G, B, A); }
 
 
         /**
-        * Cast into an fVec4. Values in [0.0f, 1.0f].
-        **/
+        * Cast into an #fVec4 with components (x=R, y=G, z=B, w=A) in [0.0f, 1.0f].
+        */
         explicit operator fVec4() const { return fVec4(R / 65535.0f, G / 65535.0f, B / 65535.0f, A / 65535.0f); }
 
 
         /**
-        * Default assignement operator 
-        **/ 
+        * Default assignement operator.
+        */ 
         RGB64& operator=(const RGB64&) = default;
 
 
         /**
-        * Assignement operator from a RGB24 color
-        * A component is set to DEFAULT_A
-        **/
+        * Assignement operator from a RGB24 color. Component A is set to DEFAULT_A.
+        */
         inline RGB64& operator=(const RGB565& c);
 
 
         /**
-        * Assignement operator from a RGB24 color
-        * A component is set to DEFAULT_A
-        **/
+        * Assignement operator from a RGB24 color. Component A is set to DEFAULT_A.
+        */
         inline RGB64& operator=(const RGB24& c);
 
 
         /**
-        * Assignement operator from a RGB32 color
-        **/
+        * Assignement operator from a RGB32 color.
+        */
         inline RGB64& operator=(const RGB32& c);
 
 
         /**
-        * Assignement operator from a RGBf color
-        * A component is set to DEFAULT_A
-        **/
+        * Assignement operator from a RGBf color. Component A is set to DEFAULT_A.
+        */
         inline RGB64& operator=(const RGBf& c);
 
 
         /**
-        * Assignement operator from a HSV color
-        * A component is set to DEFAULT_A
-        **/
+        * Assignement operator from a HSV color. Component A is set to DEFAULT_A.
+        */
         RGB64& operator=(const HSV& c);
 
 
         /**
-        * Assignement operator from a vector.
-        * raw value (no conversion).
-        **/
+        * Assignement operator from a #iVec3 with components (x=R, y=G, z=B) in [0,65535]. Component A is set to DEFAULT_A.
+        */
         inline RGB64& operator=(iVec3 v);
 
 
         /**
-        * Assignement operator from a vector. 4th component is ignored
-        * raw value (no conversion).
-        **/
+        * Assignement operator from a #iVec4 with components (x=R, y=G, z=B, w=A) in [0,65535].
+        */
         inline RGB64& operator=(iVec4 v);
 
 
         /**
-        * Assignement operator from a vector. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a #fVec3 with components (x=R, y=G, z=B) in [0.0f,1.0f]. Component A is set to DEFAULT_A.
+        */
         inline RGB64& operator=(fVec3 v);
 
 
         /**
-        * Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a #fVec3 with components (x=R, y=G, z=B, w=A) in [0.0f,1.0f].
+        */
         inline RGB64& operator=(fVec4 v);
 
 
         /**
         * Add another color, component by component, including the alpha channel.
-        **/
+        */
         void operator+=(const RGB64& c)
             {
             R += c.R;
@@ -2066,7 +2051,7 @@ struct RGB64
 
         /**
         * Substract another color, component by component, including the alpha channel.
-        **/
+        */
         void operator-=(const RGB64& c)
             {
             R -= c.R;
@@ -2078,7 +2063,7 @@ struct RGB64
 
         /**
         * Add the scalar value v to each component, including the alpha channel.
-        **/
+        */
         void operator+=(uint16_t v)
             {
             R += v;
@@ -2090,7 +2075,7 @@ struct RGB64
 
         /**
          * Substract the scalar value v to each component, including the alpha channel.
-         **/
+         */
         void operator-=(uint16_t v)
             {
             R -= v;
@@ -2102,7 +2087,7 @@ struct RGB64
 
         /**
         * Multiply each component by the scalar value v, including the alpha channel.
-        **/
+        */
         void operator*=(uint16_t v)
             {
             R *= v;
@@ -2114,7 +2099,7 @@ struct RGB64
 
         /**
         * Multiply each component by the scalar (floating point) value v, including the alpha channel.
-        **/
+        */
         void operator*=(float v)
             {
             R = (uint16_t)(R * v);
@@ -2125,7 +2110,7 @@ struct RGB64
 
         /**
         * Divide each component by the scalar value v, including the alpha channel.
-        **/
+        */
         void operator/=(uint16_t v)
             {
             R /= v;
@@ -2136,7 +2121,7 @@ struct RGB64
 
         /**
         * Divide each component by the scalar (floating point value) v, including the alpha channel.
-        **/
+        */
         void operator/=(float v)
             {
             R = (uint16_t)(R / v);
@@ -2147,8 +2132,8 @@ struct RGB64
 
 
         /**
-        * Equality comparator
-        **/
+        * Equality comparator.
+        */
         constexpr bool operator==(const RGB64& c) const
             {
             return(val == c.val);
@@ -2156,25 +2141,23 @@ struct RGB64
 
 
         /**
-        * Inequality comparator
-        **/
+        * Inequality comparator.
+        */
         constexpr bool operator!=(const RGB64& c) const
             {
             return !(*this == c);
             }
 
 
-
-
         /**
          * alpha-blend `fg_col` over this one with a given opacity in the range 0.0f (fully transparent)
          * to 1.0f (fully opaque).
-         *
-         * *** WARNING: The color fg_col is assumed to have pre-multiplied alpha. ***
+         * 
+         * **WARNING** The color fg_col is assumed to have pre-multiplied alpha.
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   Additional opacity/alpha multiplier in [0.0f,1.0f].
-        **/
+         */
         inline void blend(const RGB64& fg_col, float alpha)
             {
             blend65536(fg_col, (uint32_t)(alpha * 65536));
@@ -2184,12 +2167,12 @@ struct RGB64
         /**
          * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
          * transparent) to 256 (fully opaque).
-         *
-         * *** WARNING The color fg_col is assumed o have pre-multiplied alpha. ***
+         * 
+         * **WARNING** The color fg_col is assumed o have pre-multiplied alpha.
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,256].
-        **/
+         */
         inline void blend256(const RGB64 & fg_col, uint32_t alpha)
             {
             blend65536(fg_col, (alpha << 8));
@@ -2199,12 +2182,12 @@ struct RGB64
         /**
          * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
          * transparent) to 65536 (fully opaque).
-         *
-         * *** WARNING The color fg_col is assumed to have pre-multiplied alpha. ***
+         * 
+         * **WARNING** The color fg_col is assumed to have pre-multiplied alpha.
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,65536].
-        **/
+         */
         inline void blend65536(RGB64 fg_col, uint32_t alpha)
             {            
             // correct version where 'alpha' is interpolated normally but 'A' is only multiplied 
@@ -2220,12 +2203,11 @@ struct RGB64
 
         /**
          * alpha-blend `fg_col` over this one.
-         *
-         * *** WARNING The color fg_col is assumed to have pre-multiplied alpha. ***
+         * 
+         * **WARNING** The color fg_col is assumed to have pre-multiplied alpha.
          *
          * @param   fg_col  The foreground color. The alpha channel of the color is used for blending.
-         *                  .
-        **/
+         */
         inline void blend(const RGB64 & fg_col)
             {
             blend65536(fg_col, 65536); 
@@ -2233,8 +2215,8 @@ struct RGB64
 
 
         /**
-        * multiply each color component by a given factor x/256 with x in [0,256].
-        **/
+         * Multiply each color component by a given factor m/256 with m in [0,256]. Component A is left unchanged.
+         */
         inline void mult256(int mr, int mg, int mb)
             {
             R = (R * mr) >> 8;
@@ -2244,7 +2226,7 @@ struct RGB64
 
 
         /**
-        * multiply each color component by a given factor x/256 with x in [0,256].
+        * Multiply each color component by a given factor m/256 with m in [0,256].
         **/
         inline void mult256(int mr, int mg, int mb, int ma)
             {
@@ -2256,12 +2238,12 @@ struct RGB64
 
 
         /**
-        * Convert the color from plain alpha to pre-multiplied alpha.
-        *
-        * REMARK: Normally, all colors type in TGX should have pre-multiplied alpha.
-        * Thus, this method should only be used when loading a color from external data
-        * (a png image for example) where the colors are not initially pre-multiplied.
-        **/
+         * Convert the color from plain alpha to pre-multiplied alpha.
+         * 
+         * **Remark** All colors type in TGX should have pre-multiplied alpha. This method should only
+         * be used when loading a color from external data (a png image for example) where the colors
+         * are not initially pre-multiplied.
+         */
         inline void premultiply()
             {
             R = (uint16_t)((((uint32_t)R) * A) / 65535);
@@ -2270,11 +2252,10 @@ struct RGB64
             }
 
 
-
         /**
-        * Return the opacity (alpha channel value) of this color
-        * in the range [0,1] (0=fully transparent, 1=fully opaque).
-        **/
+         * Return the opacity (alpha channel value) of this color in the range [0,1] (0=fully
+         * transparent, 1=fully opaque).
+         */
         float opacity() const
             {
             return (((float)A) / 65535.0f);
@@ -2282,12 +2263,12 @@ struct RGB64
 
 
         /**
-        * Change the opacity of the color to a given value in [0.0f, 1.0f]
+        * Change the opacity of the color to a given value in [0.0f, 1.0f].
         *
         * This method assumes (and returns) a color with pre-multiplied alpha.
         *
-        * REMARK: Use multOpacity() instead whenever possible because it is faster.
-        **/
+        * **Remark** Use multOpacity() instead whenever possible because it is faster.
+        */
         void setOpacity(float op)
             {
             // slow version
@@ -2298,10 +2279,10 @@ struct RGB64
 
 
         /**
-        * Multiply the opacity of the color by a given factor in [0.0f, 1.0f]
+        * Multiply the opacity of the color by a given factor in [0.0f, 1.0f].
         *
         * This method assumes (and returns) a color with pre-multiplied alpha.
-        **/
+        */
         void multOpacity(float op)
             {
             *this = getMultOpacity(op);
@@ -2309,11 +2290,11 @@ struct RGB64
 
 
         /**
-        * Return a copy of this color with opacity multiplied by a given factor in [0.0f, 1.0f]
+        * Return a copy of this color with opacity multiplied by a given factor in [0.0f, 1.0f].
         *
         * This method assumes (and returns) a color with pre-multiplied alpha.
-        **/
-        RGB64 getMultOpacity(float op)
+        */
+        RGB64 getMultOpacity(float op) const
             {
             return RGB64((int)(R * op), (int)(G * op), (int)(B * op), (int)(A * op));
             }
@@ -2321,7 +2302,7 @@ struct RGB64
 
         /**
         * Set the alpha channel of the color to fully opaque.
-        **/
+        */
         void setOpaque()
             {
             setOpacity(1.0f);
@@ -2330,7 +2311,7 @@ struct RGB64
 
         /**
         * Set the alpha channel of the color to fully transparent.
-        **/
+        */
         void setTransparent()
             {
             R = 0;
@@ -2348,8 +2329,8 @@ struct RGB64
     /**
     * Interpolate between 3 colors.
     *
-    * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
-    **/
+    * Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC.
+    */
     inline RGB64 interpolateColorsTriangle(const RGB64& col1, int32_t C1, const  RGB64& col2, int32_t C2, const  RGB64& col3, const int32_t totC)
         {
         // forward to RGB32 (, maybe improve this but is it worth it, the method is never used ?)
@@ -2358,17 +2339,21 @@ struct RGB64
 
 
     /**
-    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
-    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
-    * the mininum coord. in direction x and y, as illustrated in the drawing below:
-    *
-    *  C01          C11
-    *                
-    *   --ax--X
-    *         |
-    *         ay
-    *  C00    |     C10
-    **/
+     * Bilinear interpolation between 4 colors.
+     *
+     * Return the bilinear interpolation of four neighouring pixels in an image with respect to
+     * position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum
+     * coord. in direction x and y, as illustrated in the drawing below:
+     *
+     *```
+     *  C01          C11
+     *
+     *   --ax--X
+     *         |
+     *         ay
+     *  C00    |     C10
+     *```
+     */
     inline RGB64 interpolateColorsBilinear(const RGB64 & C00, const RGB64 & C10, const RGB64 & C01, const RGB64 & C11, const float ax, const float ay)
             {
             // let's use floating point version for max accuraccy, RGB64 is slow anyway...
@@ -2383,8 +2368,8 @@ struct RGB64
 
 
     /**
-    * Return the "mean" color between colA and colB.
-    **/
+    * Return the average color between colA and colB.
+    */
     inline RGB64 meanColor(const RGB64 & colA, const RGB64 & colB)
         {
         return RGB64(((int)colA.R + (int)colB.R) >> 1,
@@ -2395,8 +2380,8 @@ struct RGB64
 
 
     /**
-    * Return the "mean" color between 4 colors.
-    **/
+    * Return the average color between 4 colors.
+    */
     inline RGB64 meanColor(const RGB64& colA, const RGB64& colB, const RGB64& colC, const RGB64& colD)
         {
         return RGB64(((int)colA.R + (int)colB.R + (int)colC.R + (int)colD.R) >> 2,
@@ -2409,23 +2394,15 @@ struct RGB64
 
 
 
-
-
-/**********************************************************************
-* declaration of class RGBf
-***********************************************************************/
-
-
     /**
-    * Class representing a color R,G,B float format.
-    * 
-    * Occupies 4*3 = 12 bytes in memory (aligned as float). 
-    * 
-    * No alpha channel. 
-    *
-    * Useful for high precision computation. 
-    * Used by the 3D rasterizer for all color/shading. 
-    **/
+     * Color in R,G,B float format.
+     * 
+     * Occupies 4*3 = 12 bytes in memory, aligned as float.
+     * 
+     * - There is no alpha channel.
+     * - Useful for high precision computation. This color format is used internally by the 3D
+     * rasterizer for all color interpolation/shading.
+     */
     struct RGBf
     {
 
@@ -2436,24 +2413,24 @@ struct RGB64
 
 
 #if TGX_RGBf_ORDER_BGR
-        float B;
-        float G;
-        float R;
+        float B;    ///< Blue channel
+        float G;    ///< Green channel        
+        float R;    ///< Red channel
 #else 
-        float R;
-        float G;
-        float B;
+        float R;    ///< Red channel
+        float G;    ///< Green channel
+        float B;    ///< Blue channel
 #endif
 
 
         /**
-        * Default ctor. Undefined color.
-        **/
+        * Default constructor. **Color is undefined**.
+        */
         RGBf() = default;
 
 
         /**
-        * Ctor from raw R,G,B values in [0.0f, 1.0f]
+        * Constructor from raw r,g,b values in [0.0f, 1.0f]
         **/
         constexpr RGBf(float r, float g, float b) :
         #if TGX_RGBf_ORDER_BGR
@@ -2465,134 +2442,130 @@ struct RGB64
 
 
         /**
-        * Ctor from a fVec3, component order R, G, B in [0.0f, 1.0f]
-        **/
+        * Constructor from a #fVec3 with components (x=R, y=G, z=B) in [0.0f, 1.0f].
+        */
         constexpr RGBf(fVec3 v) : RGBf(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a fVec4, (same as using fVec3: the 4th vector component is ignored).
-        **/
+        * Constructor from a #fVec4 with components (x=R, y=G, z=B, w=ignored) in [0.0f, 1.0f].
+        */
         constexpr RGBf(fVec4 v) : RGBf(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a uint16_t (seen as RGB565).
-        **/
+        * Constructor from a uint16_t (seen as RGB565).
+        */
         constexpr inline RGBf(uint16_t val);
 
 
         /**
-        * Ctor from a uint32_t.
-        **/
+        * Constructor from a uint32_t (seen as RGB32, the A component is ignored).
+        */
         constexpr inline RGBf(uint32_t val);
 
 
         /**
-        * Ctor from a uint64_t (seen as RGB64).
-        **/
+        * Constructor from a uint64_t (seen as RGB64, the A component is ignored).
+        */
         constexpr inline RGBf(uint64_t val);
 
 
         /**
-        * Default Copy ctor
-        **/
+        * Default Copy constructor.
+        */
         constexpr RGBf(const RGBf&) = default;
 
 
         /**
-        * Ctor from a RGB565 color.
-        **/
+        * Constructor from a RGB565 color.
+        */
         constexpr inline RGBf(const RGB565& c);
 
 
         /**
-        * Ctor from a RGB24 color.
-        **/
+        * Constructor from a RGB24 color.
+        */
         constexpr inline RGBf(const RGB24& c);
 
 
         /**
-        * Ctor from a RGB32 color.
-        * the A component is ignored
-        **/
+        * Constructor from a RGB32 color. The A component of c is ignored.
+        */
         constexpr inline RGBf(const RGB32& c);
 
 
         /**
-        * Ctor from a RGB64 color.
-        * the A component is ignored
-        **/
+        * Constructor from a RGB64 color. The A component of c is ignored.
+        */
         constexpr inline RGBf(const RGB64& c);
 
 
         /**
-        * Ctor from a HSV color.
-        **/
+        * Constructor from a HSV color.
+        */
         RGBf(const HSV& c);
 
 
         /**
-        * Cast into an fVec3. Values in [0.0f, 1.0f].
-        **/
+        * Cast into an #fVec3 in [0.0f, 1.0f].
+        */
         explicit operator fVec3() const { return fVec3(R, G, B); }
 
 
         /**
-        * Default assignement operator
-        **/
+        * Default assignement operator.
+        */
         RGBf& operator=(const RGBf&) = default;
 
 
         /**
-        * Assignement operator from a RGB565 color
-        **/
+        * Assignement operator from a RGB565 color.
+        */
         inline RGBf& operator=(const RGB565& c);
 
 
         /**
-        * Assignement operator from a RGB24 color
-        **/
+        * Assignement operator from a RGB24 color.
+        */
         inline RGBf& operator=(const RGB24& c);
 
 
         /**
-        * Assignement operator from a RGB32 color
-        * the A component is ignored
-        **/
+        * Assignement operator from a RGB32 color. The component A is ignored.
+        */
         inline RGBf& operator=(const RGB32& c);
 
 
         /**
-        * Assignement operator from a RGB64 color
-        * the A component is ignored
-        **/
+        * Assignement operator from a RGB64 color. The component A is ignored.
+        */
         inline RGBf& operator=(const RGB64& c);
 
 
         /**
-        * Assignement operator from a HSV color
-        **/
+        * Assignement operator from a HSV color.
+        */
         RGBf& operator=(const HSV& c);
 
 
         /**
-        * Assignement operator from a vector. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a #fVec3 with components (x=R, y=G, z=B) in [0.0f, 1.0f].
+        */
         inline RGBf& operator=(fVec3 v);
 
 
         /**
-        * Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a #fVec4 with components (x=R, y=G, z=B, w=ignored) in [0.0f, 1.0f].
+        */
         inline RGBf& operator=(fVec4 v);
 
 
         /**
         * Add another color, component by component.
-        **/
+        */
         void operator+=(const RGBf& c)
             {
             R += c.R;
@@ -2603,7 +2576,7 @@ struct RGB64
 
         /**
         * Substract another color, component by component.
-        **/
+        */
         void operator-=(const RGBf& c)
             {
             R -= c.R;
@@ -2614,7 +2587,7 @@ struct RGB64
 
         /**
         * Multiply each channel by the same channel on c. 
-        **/
+        */
         inline void operator*=(const RGBf & c)
             {
             R *= c.R;
@@ -2623,9 +2596,8 @@ struct RGB64
             }
 
         /**
-        * Return the color obtained by multipliying the channels 
-        * of both colors together.
-        **/
+        * Return the color obtained by multipliying the channels of both colors together.
+        */
         inline RGBf operator*(const RGBf & c) const 
             {
             return RGBf(R * c.R, G * c.G, B * c.B);
@@ -2633,7 +2605,7 @@ struct RGB64
 
         /**
         * Multiply each channel by a constant
-        **/
+        */
         inline void operator*=(float a)
             {
             R *= a;
@@ -2643,9 +2615,8 @@ struct RGB64
 
 
         /**
-        * Return the color where all components are 
-        * multiplied by a
-        **/
+        * Return the color where all components are multiplied by a
+        */
         inline RGBf operator*(float a) const
             {
             return RGBf(R * a, G * a, B * a);
@@ -2653,8 +2624,8 @@ struct RGB64
     
 
         /**
-        * Equality comparator
-        **/
+        * Equality comparator.
+        */
         constexpr bool operator==(const RGBf & c) const
             {
             return((R == c.R)&&(G == c.G)&&(B == c.B));
@@ -2662,8 +2633,8 @@ struct RGB64
 
 
         /**
-        * Inequality comparator
-        **/
+        * Inequality comparator.
+        */
         constexpr bool operator!=(const RGBf & c) const
             {
             return !(*this == c);
@@ -2671,8 +2642,8 @@ struct RGB64
 
 
         /**
-        * Clamp color channel to [0,1]
-        **/
+        * Clamp all color channel to [0.0f,1.0f].
+        */
         inline void clamp()
             {
             R = tgx::clamp(R, 0.0f, 1.0f);
@@ -2681,15 +2652,13 @@ struct RGB64
             }
 
 
-
-
         /**
          * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
          * transparent) to 256 (fully opaque).
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,256].
-        **/
+         */
         inline void blend256(const RGB64& fg_col, uint32_t alpha)
             {
             blend(fg_col, alpha / 256.0f);
@@ -2702,7 +2671,7 @@ struct RGB64
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0.0f, 1.0f].
-        **/
+         */
         inline void blend(const RGBf & fg_col, float alpha)
             {
             R += (fg_col.R - R) * alpha;
@@ -2712,8 +2681,8 @@ struct RGB64
 
 
         /**
-        * multiply each color component by a given factor x/256 with x in [0,256].
-        **/
+        * multiply each color component by a given factor m/256 with m in [0,256].
+        */
         inline void mult256(int mr, int mg, int mb)
             {
             R = (R * mr)/256;
@@ -2723,9 +2692,9 @@ struct RGB64
 
 
         /**
-        * multiply each color component by a given factor x/256 with x in [0,256]
-        * component A is ignored since there is not alpha channel
-        **/
+         * multiply each color component by a given factor m/256 with m in [0,256]. Parameter ma is
+         * ignored since there is not alpha channel.
+         */
         inline void mult256(int mr, int mg, int mb, int ma)
             {
             mult256(mr, mg, mb);
@@ -2736,7 +2705,7 @@ struct RGB64
         * Dummy function for compatibility with color types having an alpha channel.
         * 
         * Does nothing since the color is always fully opaque. 
-        **/
+        */
         inline void premultiply()
             {
             // nothing here. 
@@ -2748,7 +2717,7 @@ struct RGB64
         * Dummy function for compatibility with color types having an alpha channel.
         *
         * Return 1.0f (fully opaque)
-        **/
+        */
         float opacity() const
             {
             return 1.0f;
@@ -2759,7 +2728,7 @@ struct RGB64
         * Dummy function for compatibility with color types having an alpha channel.
         *
         * Does nothing since the color is always fully opaque.
-        **/
+        */
         void setOpacity(float op)
             {
             // nothing here. 
@@ -2770,11 +2739,12 @@ struct RGB64
     };
 
 
+
     /**
     * Interpolate between 2 colors.
     *
     * Return the color  col1 + alpha*(col2 - col1)
-    **/
+    */
     inline RGBf interpolate(const RGBf& col1, const  RGBf& col2, float alpha)
         {
         return RGBf(col1.R + alpha * (col2.R - col1.R),
@@ -2784,10 +2754,10 @@ struct RGB64
 
 
     /**
-    * Interpolate between 3 colors.
-    *
-    * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
-    **/
+     * Interpolate between 3 colors.
+     * 
+     * Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC.
+     */
     inline RGBf interpolateColorsTriangle(const RGBf & col1, int32_t C1, const  RGBf & col2, int32_t C2, const  RGBf & col3, int32_t totC)
         {
         return RGBf(col3.R + (C1 * (col1.R - col3.R) + C2 * (col2.R - col3.R)) / totC,
@@ -2797,17 +2767,21 @@ struct RGB64
 
 
     /**
-    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
-    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
-    * the mininum coord. in direction x and y, as illustrated in the drawing below:
-    *
-    *  C01          C11
-    *                
-    *   --ax--X
-    *         |
-    *         ay
-    *  C00    |     C10
-    **/
+     * Bilinear interpolation between 4 colors.
+     *
+     * Return the bilinear interpolation of four neighouring pixels in an image with respect to
+     * position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum
+     * coord. in direction x and y, as illustrated in the drawing below:
+     *
+     *```
+     *  C01          C11
+     *
+     *   --ax--X
+     *         |
+     *         ay
+     *  C00    |     C10
+     *```
+     */
     inline RGBf interpolateColorsBilinear(const RGBf & C00, const RGBf & C10, const RGBf & C01, const RGBf & C11, const float ax, const float ay)
             {
             const float rax = 1.0f - ax;
@@ -2820,8 +2794,8 @@ struct RGB64
             
             
     /**
-    * Return the "mean" color between colA and colB.
-    **/
+    * Return the average color between colA and colB.
+    */
     inline RGBf meanColor(const RGBf & colA, const  RGBf & colB)
         {
         return RGBf((colA.R + colB.R)/2, (colA.G + colB.G)/2, (colA.B + colB.B)/2);
@@ -2829,8 +2803,8 @@ struct RGB64
 
 
     /**
-    * Return the "mean" color between 4 colors.
-    **/
+    * Return the average color between 4 colors.
+    */
     inline RGBf meanColor(const RGBf & colA, const  RGBf & colB, const  RGBf & colC, const  RGBf & colD)
         {
         return RGBf((colA.R + colB.R + colC.R + colD.R) / 4, (colA.G + colB.G + colC.G + colD.G) / 4, (colA.B + colB.B + colC.B + colD.B) / 4);
@@ -2840,21 +2814,17 @@ struct RGB64
 
 
 
-
-
-
-/**********************************************************************
-* declaration of class HSV
-***********************************************************************/
-
-
 /**
-* Class representing a color in Hue/Saturation/Value
-* format where each component is in float (4 bytes). 
-* see: https://en.wikipedia.org/wiki/HSL_and_HSV
-*
-* The total size of the object is 12 bytes. 
-**/
+ * Color in H/S/V format [**experimental**].
+ * 
+ * The color is stored in Hue/Saturation/Value color space. Each component is a float in `[0,1.0f]`.
+ * The total size of the object is 4*3 = 12 bytes, aligned as float.
+ * 
+ * See: https://en.wikipedia.org/wiki/HSL_and_HSV
+ * 
+ * @warning **Experimental** Operations with HSV colors are very slow. This color format should
+ * not be used with the 3D rasterizer.
+ */
 struct HSV
     {
 
@@ -2863,143 +2833,137 @@ struct HSV
         #include <mtools/extensions/tgx/tgx_ext_Color_HSV.inl>
         #endif
 
-
         // color components
-        float H;        // hue in [0.0f ,1.0f]
-        float S;        // saturation in [0;0f, 1.0f]
-        float V;        // value in [0.F ,1.0f]
+        float H;  ///< Hue in [0.0f ,1.0f]
+        float S;  ///< Saturation in [0;0f, 1.0f]
+        float V;  ///< Value in [0.F ,1.0f]
 
 
         /**
-        * Default ctor. Undefined color.
-        **/
+        * Default constructor. **Color is undefined**.
+        */
         HSV() = default;
 
 
         /**
-        * Ctor from raw H, S, V values in [0.0f, 1.0f]
-        **/
+        * Constructor from raw h, s, v values in [0.0f, 1.0f]
+        */
         constexpr HSV(float h, float s, float v) : H(h), S(s), V(v) {}
 
 
         /**
-        * Ctor from a fVec3, component order H, S, V in [0.0f, 1.0f].
-        **/
+        * Constructor from a #fVec3 with components (x=H, y=S, z=V) in [0.0f, 1.0f].
+        */
         constexpr HSV(fVec3 v) : HSV(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Ctor from a fVec4, (same as using fVec3: the 4th vector component is ignored).
-        **/
+        * Constructor from a #fVec4  with components (x=H, y=S, z=V, w=ignored) in [0.0f, 1.0f].
+        */
         constexpr HSV(fVec4 v) : HSV(v.x, v.y, v.z)
         {}
 
 
         /**
-        * Default Copy ctor
-        **/
+        * Default Copy constructor.
+        */
         HSV(const HSV&) = default;
 
 
         /**
-        * Ctor from a uint16_t (seen as RGB565).
-        **/
+        * Constructor from a uint16_t (seen as RGB565).
+        */
         HSV(uint16_t val);
 
 
         /**
-        * Ctor from a uint32_t (seen as RGB32).
-        **/
+        * Constructor from a uint32_t (seen as RGB32, component A is ignored).
+        */
         HSV(uint32_t val);
 
 
         /**
-        * Ctor from a uint64_t (seen as RGB64).
-        **/
+        * Constructor from a uint64_t (seen as RGB64, component A is ignored).
+        */
         HSV(uint64_t val);
 
 
         /**
-        * Ctor from a RGB565 color.
-        **/
+        * Constructor from a RGB565 color.
+        */
         HSV(const RGB565& c);
 
 
         /**
-        * Ctor from a RGB24 color.
-        **/
+        * Constructor from a RGB24 color.
+        */
         HSV(const RGB24 & c);
 
 
         /**
-        * Ctor from a RGB32 color.
-        * the A component is ignored
-        **/
+        * Constructor from a RGB32 color. The component A is ignored.
+        */
         HSV(const RGB32 & c);
 
 
         /**
-        * Ctor from a RGB64 color.
-        * the A component is ignored
-        **/
+        * Constructor from a RGB64 color. The component A is ignored.
+        */
         HSV(const RGB64 & c);
 
 
         /**
-        * Ctor from a RGBf color.
-        **/
+        * Constructor from a RGBf color.
+        */
         HSV(const RGBf& c);
 
 
         /**
-        * Cast into an fVec3. Values in [0.0f, 1.0f].
-        **/
+        * Cast into an #fVec3 with components (x=H, y=S, z=V) in [0.0f, 1.0f].
+        */
         explicit operator fVec3() const { return fVec3(H, S, V); }
 
 
         /** 
-        * Default assignement operator
-        **/
+        * Default assignement operator.
+        */
         HSV& operator=(const HSV&) = default;
 
 
         /**
-        * Assignement operator from a RGB565 color
-        **/
+        * Assignement operator from a RGB565 color.
+        */
         HSV& operator=(const RGB565& c);
 
 
         /**
-        * Assignement operator from a RGB24 color
-        **/
+        * Assignement operator from a RGB24 color.
+        */
         HSV& operator=(const RGB24 & c);
 
 
         /**
-        * Assignement operator from a RGB32 color
-        * the A component is ignored
-        **/
+        * Assignement operator from a RGB32 color. The component A is ignored.
+        */
         HSV& operator=(const RGB32 & c);
 
 
         /**
-        * Assignement operator from a RGB64 color
-        * the A component is ignored
-        **/
+        * Assignement operator from a RGB64 color. The component A is ignored.
+        */
         HSV& operator=(const RGB64 & c);
 
 
         /**
-        * Assignement operator from a RGBf color
-        * the A component is ignored
-        **/
+        * Assignement operator from a RGBf color.
+        */
         HSV& operator=(const RGBf& c);
 
 
         /**
-        * Assignement operator from a vector. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a #fVec3 with components (x=H, y=S, z=V) in [0.0f, 1.0f].
+        */
         inline HSV& operator=(fVec3 v)
             {
             H = v.x;
@@ -3010,8 +2974,8 @@ struct HSV
 
 
         /**
-        * Assignement operator from a vector. 4th component is ignored. All values in [0.0f, 1.0f].
-        **/
+        * Assignement operator from a #fVec4 with components (x=H, y=S, z=V, w=ignored) in [0.0f, 1.0f].
+        */
         inline HSV& operator=(fVec4 v)
             {
             H = v.x;
@@ -3022,8 +2986,8 @@ struct HSV
 
 
         /**
-        * Equality comparator
-        **/
+        * Equality comparator.
+        */
         constexpr bool operator==(const HSV & c) const
             {
             return((H == c.H)&&(S == c.S)&&(V == c.V));
@@ -3031,8 +2995,8 @@ struct HSV
 
 
         /**
-        * Inequality comparator
-        **/
+        * Inequality comparator.
+        */
         constexpr bool operator!=(const HSV & c) const
             {
             return !(*this == c);
@@ -3044,11 +3008,11 @@ struct HSV
          * to 1.0f (fully opaque).
          * 
          * Blending is done by converting the color to RGB space, then alpha blending, and then
-         * converting back to HSV
+         * converting back to HSV.
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0.0f, 1.0f].
-        **/
+         */
         inline void blend(const HSV & fg_col, float alpha)
             {
             // is there a natural blending formula in HSV space ? 
@@ -3062,13 +3026,13 @@ struct HSV
         /**
          * alpha-blend `fg_col` over this one with a given opacity in the integer range 0 (fully
          * transparent) to 256 (fully opaque).
-         *
+         * 
          * Blending is done by converting the color to RGB space, then alpha blending, and then
-         * converting back to HSV
+         * converting back to HSV.
          *
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0, 256].
-         **/
+         */
         inline void blend256(const HSV & fg_col, uint32_t alpha)
             {
             blend(fg_col, (alpha / 256.0f));
@@ -3076,11 +3040,11 @@ struct HSV
 
 
         /**
-        * multiply each color component by factor (x/256) with x in [0,256].
-        * 
-        * Uses the R,G,B components for compatibility (and just forward to the
-        * corresponding RGBf method). 
-        **/
+         * Multiply each color component by factor (m/256) with m in [0,256].
+         * 
+         * Uses the R,G,B components for compatibility (and just forward to the corresponding RGBf
+         * method).
+         */
         inline void mult256(int mr, int mg, int mb)
             {
             RGBf c = RGBf(*this); 
@@ -3090,9 +3054,12 @@ struct HSV
 
 
         /**
-        * multiply each color component by a given factor x/256 with x in [0,256]
-        * component A is ignored since there is not alpha channel
-        **/
+         * Multiply each color component by a given factor x/256 with x in [0,256]. Parameter ma is
+         * ignored since there is not alpha channel.
+         * 
+         * Uses the R,G,B components for compatibility (and just forward to the corresponding RGBf
+         * method).
+         */
         inline void mult256(int mr, int mg, int mb, int ma)
             {
             mult256(mr, mg, mb);
@@ -3103,7 +3070,7 @@ struct HSV
         * Dummy function for compatibility with color types having an alpha channel.
         * 
         * Does nothing since the color is always fully opaque. 
-        **/
+        */
         inline void premultiply()
             {
             // nothing here. 
@@ -3115,7 +3082,7 @@ struct HSV
         * Dummy function for compatibility with color types having an alpha channel.
         *
         * Return 1.0f (fully opaque)
-        **/
+        */
         float opacity() const
             {
             return 1.0f;
@@ -3126,7 +3093,7 @@ struct HSV
         * Dummy function for compatibility with color types having an alpha channel.
         *
         * Does nothing since the color is always fully opaque.
-        **/
+        */
         void setOpacity(float op)
             {
             // nothing here. 
@@ -3140,8 +3107,8 @@ struct HSV
     /**
     * Interpolate between 3 colors.
     *
-    * Return the color  (c1*col1 + c2*col2 + (totc-c1-c2)*col3)/totc
-    **/
+    * Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC.
+    */
     inline HSV interpolateColorsTriangle(HSV col1, int32_t C1, HSV col2, int32_t C2, HSV col3, int32_t totC)
         {
         return HSV(interpolateColorsTriangle(RGBf(col1), C1, RGBf(col2), C2, RGBf(col3), totC));
@@ -3149,17 +3116,21 @@ struct HSV
 
 
     /**
-    * Return the bilinear interpolation of four neighouring pixels in an image with respect 
-    * to position X where ax and ay are in [0.0f,1.0f] and represent the distance to 
-    * the mininum coord. in direction x and y, as illustrated in the drawing below:
-    *
-    *  C01          C11
-    *                
-    *   --ax--X
-    *         |
-    *         ay
-    *  C00    |     C10
-    **/
+     * Bilinear interpolation between 4 colors.
+     *
+     * Return the bilinear interpolation of four neighouring pixels in an image with respect to
+     * position X where ax and ay are in [0.0f,1.0f] and represent the distance to the mininum
+     * coord. in direction x and y, as illustrated in the drawing below:
+     *
+     *```
+     *  C01          C11
+     *
+     *   --ax--X
+     *         |
+     *         ay
+     *  C00    |     C10
+     *```
+     */
     inline HSV interpolateColorsBilinear(const HSV & C00, const HSV & C10, const HSV & C01, const HSV & C11, const float ax, const float ay)
         {
         // just forward to RGBf          ..
@@ -3168,8 +3139,8 @@ struct HSV
             
 
     /**
-    * Return the "mean" color between colA and colB.
-    **/
+    * Return the average color between colA and colB.
+    */
     inline HSV meanColor(const  HSV & colA, const  HSV & colB)
         {
         // hum.. what does that mean in HSV, let's do it in RGB color space instead
@@ -3178,8 +3149,8 @@ struct HSV
 
 
     /**
-    * Return the "mean" color between 4 colors
-    **/
+    * Return the average color between 4 colors.
+    */
     inline HSV meanColor(const  HSV& colA, const  HSV& colB, const  HSV& colC, const  HSV& colD)
         {
         // hum.. what does that mean in HSV, let's do it in RGB color space instead
@@ -3187,649 +3158,12 @@ struct HSV
         }
 
 
-
-
-
-
-
-
-/**********************************************************************
-* implementation of inline method for RGB565
-***********************************************************************/
-
-
-constexpr inline RGB565::RGB565(const RGB24& c) :
-        #if TGX_RGB565_ORDER_BGR
-        B(c.B >> 3), G(c.G >> 2), R(c.R >> 3)
-        #else
-        R(c.R >> 3), G(c.G >> 2), B(c.B >> 3)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB565::RGB565(const RGB32& c) : 
-        #if TGX_RGB565_ORDER_BGR
-        B(c.B >> 3), G(c.G >> 2), R(c.R >> 3)
-        #else
-        R(c.R >> 3), G(c.G >> 2), B(c.B >> 3)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB565::RGB565(const RGB64& c) : 
-        #if TGX_RGB565_ORDER_BGR
-        B(c.B >> 11), G(c.G >> 10), R(c.R >> 11)
-        #else
-        R(c.R >> 11), G(c.G >> 10), B(c.B >> 11)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB565::RGB565(const RGBf& c) :
-    #if TGX_RGB565_ORDER_BGR
-        B((uint16_t)(c.B * 31)), G((uint16_t)(c.G *63)), R((uint16_t)(c.R * 31))
-    #else
-        R((uint16_t)(c.R * 31)), G((uint16_t)(c.G * 63)), B((uint16_t)(c.B * 31))
-    #endif
-        {
-        }
-
-
-constexpr inline RGB565::RGB565(uint32_t val) : RGB565(RGB32(val))
-        {
-        }
-
-
-constexpr inline RGB565::RGB565(uint64_t val) : RGB565(RGB64(val))
-        {
-        }
-
-
-
-inline RGB565& RGB565::operator=(const RGB24& c)
-        {
-        B = (c.B >> 3);
-        G = (c.G >> 2);
-        R = (c.R >> 3);
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(const RGB32& c)
-        {
-        B = (c.B >> 3);
-        G = (c.G >> 2);
-        R = (c.R >> 3);
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(const RGB64& c)
-        {
-        B = (c.B >> 11);
-        G = (c.G >> 10);
-        R = (c.R >> 11);
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(const RGBf& c)
-        {
-        B = (uint8_t)(c.B * 31);
-        G = (uint8_t)(c.G * 63);
-        R = (uint8_t)(c.R * 31);
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(iVec3 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(iVec4 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(fVec3 v)
-        {
-        B = (uint8_t)(v.x * 31);
-        G = (uint8_t)(v.y * 63);
-        R = (uint8_t)(v.z * 31);
-        return *this;
-        }
-
-
-inline RGB565& RGB565::operator=(fVec4 v)
-        {
-        B = (uint8_t)(v.x * 31);
-        G = (uint8_t)(v.y * 63);
-        R = (uint8_t)(v.z * 31);
-        return *this;
-        }
-
-
-
-
-/**********************************************************************
-* implementation of inline method for RGB24
-***********************************************************************/
-
-
-constexpr inline RGB24::RGB24(uint16_t val) : RGB24(RGB565(val)) 
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(uint32_t val) : RGB24(RGB32(val)) 
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(uint64_t val) : RGB24(RGB64(val)) 
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(const RGB565& c) :
-        #if TGX_RGB24_ORDER_BGR
-        B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2))
-        #else
-        R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2))
-        #endif
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(const RGB32& c) :
-        #if TGX_RGB24_ORDER_BGR
-        B(c.B), G(c.G), R(c.R)
-        #else
-        R(c.R), G(c.G), B(c.B)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(const RGB64& c) : 
-        #if TGX_RGB24_ORDER_BGR
-        B(c.B >> 8), G(c.G >> 8), R(c.R >> 8)
-        #else
-        R(c.R >> 8), G(c.G >> 8), B(c.B >> 8)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB24::RGB24(const RGBf& c) :
-        #if TGX_RGB24_ORDER_BGR
-        B((uint8_t)(c.B * 255)), G((uint8_t)(c.G * 255)), R((uint8_t)(c.R * 255))
-        #else
-        R((uint8_t)(c.R * 255)), G((uint8_t)(c.G * 255)), B((uint8_t)(c.B * 255))
-        #endif
-        {
-        }
-
-
-inline RGB24& RGB24::operator=(const RGB565& c)
-        {
-        B = (((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2);
-        G = (((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4);
-        R = (((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2);
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(const RGB32& c)
-        {
-        R = c.R;
-        G = c.G;
-        B = c.B;
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(const RGB64& c)
-        {
-        R = c.R >> 8;
-        G = c.G >> 8;
-        B = c.B >> 8;
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(const RGBf& c)
-        {
-        R = (uint8_t)(c.R * 255);
-        G = (uint8_t)(c.G * 255);
-        B = (uint8_t)(c.B * 255);
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(iVec3 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(iVec4 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(fVec3 v)
-        {
-        B = (uint8_t)(v.x * 255);
-        G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
-        return *this;
-        }
-
-
-inline RGB24& RGB24::operator=(fVec4 v)
-        {
-        B = (uint8_t)(v.x * 255);
-        G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
-        return *this;
-        }
-
-
-
-
-
-
-/**********************************************************************
-* implementation of inline method for RGB32
-***********************************************************************/
-
-constexpr inline RGB32::RGB32(uint16_t val) : RGB32(RGB565(val))
-        {
-        }
-
-constexpr inline RGB32::RGB32(uint64_t val) : RGB32(RGB64(val))
-        {
-        }
-
-
-constexpr inline RGB32::RGB32(const RGB565& c) : 
-        #if TGX_RGB32_ORDER_BGR
-        B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2)), A(DEFAULT_A)
-        #else
-        R((((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2)), G((((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4)), B((((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2)), A(DEFAULT_A)
-        #endif
-        {
-        }
-
-
-constexpr inline RGB32::RGB32(const RGB24& c) : 
-        #if TGX_RGB32_ORDER_BGR
-        B(c.B), G(c.G), R(c.R), A(DEFAULT_A)
-        #else
-        R(c.R), G(c.G), B(c.B), A(DEFAULT_A)
-        #endif  
-        {
-        }
-
-
-constexpr inline RGB32::RGB32(const RGB64& c) : 
-        #if TGX_RGB32_ORDER_BGR
-        B(c.B >> 8), G(c.G >> 8), R(c.R >> 8), A(c.A >> 8)
-        #else
-        R(c.R >> 8), G(c.G >> 8), B(c.B >> 8), A(c.A >> 8)
-        #endif  
-        {
-        }
-
-
-constexpr inline RGB32::RGB32(const RGBf& c) : 
-        #if TGX_RGB32_ORDER_BGR
-        B((uint8_t)(c.B * 255)), G((uint8_t)(c.G * 255)), R((uint8_t)(c.R * 255)), A(DEFAULT_A)
-        #else
-        R((uint8_t)(c.R * 255)), G((uint8_t)(c.G * 255)), B((uint8_t)(c.B * 255)), A(DEFAULT_A)
-        #endif  
-        {
-        }
-
-
-inline RGB32& RGB32::operator=(const RGB565& c)
-        {
-        B = (((uint8_t)c.B) << 3) | (((uint8_t)c.B) >> 2);
-        G = (((uint8_t)c.G) << 2) | (((uint8_t)c.G) >> 4);
-        R = (((uint8_t)c.R) << 3) | (((uint8_t)c.R) >> 2);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(const RGB24& c)
-        {
-        B = c.B;
-        G = c.G;
-        R = c.R;
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(const RGB64& c)
-        {
-        B = c.B >> 8;
-        G = c.G >> 8;
-        R = c.R >> 8;
-        A = c.A >> 8;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(const RGBf& c)
-        {
-        B = (uint8_t)(c.B * 255);
-        G = (uint8_t)(c.G * 255);
-        R = (uint8_t)(c.R * 255);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(iVec3 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(iVec4 v)
-        {
-        R = (uint8_t)v.x;
-        G = (uint8_t)v.y;
-        B = (uint8_t)v.z;
-        A = (uint8_t)v.w;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(fVec3 v)
-        {
-        B = (uint8_t)(v.x * 255);
-        G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB32& RGB32::operator=(fVec4 v)
-        {
-        B = (uint8_t)(v.x * 255);
-        G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
-        A = (uint8_t)(v.w * 255);
-        return *this;
-        }
-
-
-
-
-/**********************************************************************
-* implementation of inline method for RGB64
-***********************************************************************/
-
-inline RGB64::RGB64(uint16_t val) : RGB64(RGB565(val))
-        {
-        }
-
-
-inline RGB64::RGB64(uint32_t val) : RGB64(RGB32(val))
-        {
-        }
-
-
-inline RGB64::RGB64(const RGB565& c) 
-        {
-        this->operator=(c);
-        }
-
-
-inline RGB64::RGB64(const RGB24& c) 
-        {   
-        this->operator=(c);
-        }
-
-
-inline RGB64::RGB64(const RGB32& c)
-        {
-        this->operator=(c);
-        }
-
-
-inline RGB64::RGB64(const RGBf& c) 
-        {
-        this->operator=(c);
-        }
-
-
-inline RGB64& RGB64::operator=(const RGB565& c)
-        {
-        R = (((uint16_t)c.R) << 11) | (((uint16_t)c.R) << 6) | (((uint16_t)c.R) << 1) | (((uint16_t)c.R) >> 4);
-        G = (((uint16_t)c.G) << 10) | (((uint16_t)c.G) << 4) | (((uint16_t)c.G) >> 2);
-        B = (((uint16_t)c.B) << 11) | (((uint16_t)c.B) << 6) | (((uint16_t)c.B) << 1) | (((uint16_t)c.B) >> 4);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(const RGB24& c)
-        {
-        R = (((uint16_t)c.R) << 8) | ((uint16_t)c.R);
-        G = (((uint16_t)c.G) << 8) | ((uint16_t)c.G);
-        B = (((uint16_t)c.B) << 8) | ((uint16_t)c.B);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(const RGB32& c)
-        {
-        R = (((uint16_t)c.R) << 8) | ((uint16_t)c.R);
-        G = (((uint16_t)c.G) << 8) | ((uint16_t)c.G);
-        B = (((uint16_t)c.B) << 8) | ((uint16_t)c.B);
-        A = (((uint16_t)c.A) << 8) | ((uint16_t)c.A);
-        return *this;
-        }
-
-inline RGB64& RGB64::operator=(const RGBf& c)
-        {
-        B = (uint16_t)(c.B * 65535);
-        G = (uint16_t)(c.G * 65535);
-        R = (uint16_t)(c.R * 65535);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(iVec3 v)
-        {
-        R = (uint16_t)v.x;
-        G = (uint16_t)v.y;
-        B = (uint16_t)v.z;
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(iVec4 v)
-        {
-        R = (uint16_t)v.x;
-        G = (uint16_t)v.y;
-        B = (uint16_t)v.z;
-        A = (uint16_t)v.w;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(fVec3 v)
-        {
-        B = (uint16_t)(v.x * 65535);
-        G = (uint16_t)(v.y * 65535);
-        R = (uint16_t)(v.z * 65535);
-        A = DEFAULT_A;
-        return *this;
-        }
-
-
-inline RGB64& RGB64::operator=(fVec4 v)
-        {
-        B = (uint16_t)(v.x * 65535);
-        G = (uint16_t)(v.y * 65535);
-        R = (uint16_t)(v.z * 65535);
-        A = (uint16_t)(v.w * 65535);
-        return *this;
-        }
-
-
-
-
-/**********************************************************************
-* implementation of inline method for RGBf
-***********************************************************************/
-
-
-constexpr inline RGBf::RGBf(uint16_t val) : RGBf(RGB565(val)) 
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(uint32_t val) : RGBf(RGB32(val)) 
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(uint64_t val) : RGBf(RGB64(val)) 
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(const RGB565& c) : 
-        #if TGX_RGBf_ORDER_BGR
-        B(c.B / 31.0f), G(c.G / 63.0f), R(c.R / 31.0f)
-        #else
-        R(c.R / 31.0f), G(c.G / 63.0f), B(c.B / 31.0f)
-        #endif
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(const RGB24& c) :
-        #if TGX_RGBf_ORDER_BGR
-        B(c.B / 255.0f), G(c.G / 255.0f), R(c.R / 255.0f)
-        #else
-        R(c.R / 255.0f), G(c.G / 255.0f), B(c.B / 255.0f)
-        #endif
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(const RGB32& c) :
-        #if TGX_RGBf_ORDER_BGR
-        B(c.B / 255.0f), G(c.G / 255.0f), R(c.R / 255.0f)
-        #else
-        R(c.R / 255.0f), G(c.G / 255.0f), B(c.B / 255.0f)
-        #endif
-        {
-        }
-
-
-constexpr inline RGBf::RGBf(const RGB64& c) : 
-        #if TGX_RGBf_ORDER_BGR
-        B(c.B / 65535.0f), G(c.G / 65535.0f), R(c.R / 65535.0f)
-        #else
-        R(c.R / 65535.0f), G(c.G / 65535.0f), B(c.B / 65535.0f)
-        #endif
-        {
-        }
-
-
-inline RGBf& RGBf::operator=(const RGB565& c)
-        {
-        R = c.R / 31.0f;
-        G = c.G / 63.0f;
-        B = c.B / 31.0f;
-        return *this;
-        }
-
-
-inline RGBf& RGBf::operator=(const RGB24& c)
-        {
-        R = c.R / 255.0f;
-        G = c.G / 255.0f;
-        B = c.B / 255.0f;
-        return *this;
-        }
-
-
-inline RGBf& RGBf::operator=(const RGB32& c)
-        {
-        R = c.R / 255.0f;
-        G = c.G / 255.0f;
-        B = c.B / 255.0f;
-        return *this;
-        }
-
-
-inline RGBf& RGBf::operator=(const RGB64& c)
-        {
-        R = c.R / 65535.0f;
-        G = c.G / 65535.0f;
-        B = c.B / 65535.0f;
-        return *this;
-        }
-
-
-inline RGBf& RGBf::operator=(fVec3 v)
-        {
-        B = v.x;
-        G = v.y;
-        R = v.z;
-        return *this;
-        }
-
-
-inline RGBf& RGBf::operator=(fVec4 v)
-        {
-        B = v.x;
-        G = v.y;
-        R = v.z;
-        return *this;
-        }
-
-
-
-
 }
+
+
+
+#include "Color.inl"
+
 
 #endif
 

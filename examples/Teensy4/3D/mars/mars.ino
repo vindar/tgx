@@ -39,7 +39,15 @@
 #include "mars_right.h"
 #include "mars_bottom.h"
 #include "mars_top_neb.h"
-#include "falcon/falcon_vs.h"
+#if __has_include("falcon_vs.h")
+    // Arduino IDE stupidly flattens the example directory tree...
+    #include "falcon_vs.h"
+#else 
+    // ok, use the normal path
+    #include "falcon/falcon_vs.h"
+#endif
+
+
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
@@ -76,11 +84,9 @@ using namespace tgx;
 
 
 
-// fast 60MHz SPI. 
-//
-// !!!!!!! SET A LOWER SPEED IF ARTIFACT APPEAR ON THE SCREEN, OR TRY 70MHz IF IT WORKS... !!!!!!!
-// 
-#define SPI_SPEED       60000000
+// 40MHz SPI. 
+// SET A LOWER SPEED IF ARTIFACT APPEAR ON THE SCREEN, OR TRY 60MHz (OR EVEN MORE) IF IT WORKS... !!!!!!!
+#define SPI_SPEED       40000000
 
 
 // the screen driver object
@@ -107,7 +113,7 @@ DMAMEM uint16_t zbuf[SLX * SLY];
 Image<RGB565> im(fb, SLX, SLY);
 
 // all the shaders we will use with the renderer
-const int LOADED_SHADER = TGX_SHADER_ZBUFFER | TGX_SHADER_PERSPECTIVE | TGX_SHADER_GOURAUD | TGX_SHADER_FLAT | TGX_SHADER_NOTEXTURE |TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_BILINEAR | TGX_SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADER = SHADER_ZBUFFER | SHADER_PERSPECTIVE | SHADER_GOURAUD | SHADER_FLAT | SHADER_NOTEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2;
 
 // the 3D renderer object.
 Renderer3D<RGB565, LOADED_SHADER, uint16_t> renderer;
@@ -161,7 +167,7 @@ TGX_NOINLINE FLASHMEM void setup()
     renderer.setImage(&im);
     renderer.setZbuffer(zbuf);
     renderer.setPerspective(50, ratio, 10.0f, 8000.0f);
-    renderer.setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
+    renderer.setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);
 
     // set the lighning direction (to match the sun position in the skybox). 
     tgx::fVec3 lightdir(-0.40f, -0.30f, 1.0f);
@@ -264,7 +270,7 @@ TGX_NOINLINE FLASHMEM void drawSkyBox()
     renderer.setMaterialDiffuseStrength(0.0f);
     renderer.setMaterialSpecularStrength(0.0f);
     renderer.setModelPosScaleRot({ 0,skybox_ref_height,0 }, { skybox_size,skybox_size,skybox_size }, 180 , { 0,1,0 } );
-    renderer.setShaders(TGX_SHADER_FLAT | TGX_SHADER_TEXTURE_NEAREST);
+    renderer.setShaders(SHADER_FLAT | SHADER_TEXTURE_NEAREST);
     renderer.drawCube(&mars_front, &mars_back, &mars_top_neb, &mars_bottom, &mars_left, &mars_right);
     }
 
@@ -276,7 +282,7 @@ TGX_NOINLINE FLASHMEM void drawBase(bool use_dma_tex = false)
     renderer.setMaterialAmbiantStrength(0.2f);
     renderer.setMaterialDiffuseStrength(0.9f);
     renderer.setMaterialSpecularStrength(0.4f);
-    renderer.setShaders(TGX_SHADER_FLAT | TGX_SHADER_TEXTURE_BILINEAR | TGX_SHADER_TEXTURE_WRAP_POW2);
+    renderer.setShaders(SHADER_FLAT | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2);
 
     const float aa = -0.05;
     const float ee = 0.01;
@@ -296,7 +302,7 @@ TGX_NOINLINE FLASHMEM void drawBase(bool use_dma_tex = false)
     }
 
 
-TGX_NOINLINE void drawSphere(const int shader, const Image<RGB565> * texture = nullptr)
+TGX_NOINLINE void drawSphere(const Shader shader, const Image<RGB565> * texture = nullptr)
     {
      renderer.setCulling(1);     
     if (texture)
@@ -340,7 +346,7 @@ void loadFalconTexture()
     tgx::fVec3* va = (tgx::fVec3*)(dma_buf + (128 * 256));
     memcpy(va, falcon_vs_vert_array, sizeof(falcon_vs_vert_array));
 
-    tgx::fVec3* vt = (tgx::fVec3*)(dma_buf + (128 * 256) + (sizeof(falcon_vs_vert_array) + 3)/4);
+    tgx::fVec2* vt = (tgx::fVec2*)(dma_buf + (128 * 256) + (sizeof(falcon_vs_vert_array) + 3)/4);
     memcpy(vt, falcon_vs_tex_array, sizeof(falcon_vs_tex_array));
 
     tgx::fVec3* vn = (tgx::fVec3*)(dma_buf + (128 * 256) + (sizeof(falcon_vs_vert_array) + 3)/4 + (sizeof(falcon_vs_tex_array) + 3)/4);
@@ -468,7 +474,7 @@ TGX_NOINLINE FLASHMEM void movie()
         float r = (1 - cosf(t * 4 * M_PI))/2;
         float op = (1 - cosf(t * 3 * M_PI))/4 + 0.2f;
 
-        marble_dma.drawSpot({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
+        marble_dma.fillCircleAA({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
         drawBase(true);
         drawSkyBox();
         redraw();
@@ -546,7 +552,7 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.setMaterialDiffuseStrength(0.5f);
         renderer.setMaterialSpecularStrength(0.9f);
         renderer.setMaterialColor(tgx::RGBf(0, 0, 1));
-        drawSphere(TGX_SHADER_GOURAUD);
+        drawSphere(SHADER_GOURAUD);
 
         
         if (a < 1)
@@ -589,7 +595,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setMaterialDiffuseStrength(0.5f);
             renderer.setMaterialSpecularStrength(0.9f);
             renderer.setMaterialColor(tgx::RGBf(0, 0, 1));
-            drawSphere(TGX_SHADER_GOURAUD);
+            drawSphere(SHADER_GOURAUD);
             }
         else if (t < 0.50)
             {
@@ -606,7 +612,7 @@ TGX_NOINLINE FLASHMEM void movie()
             //renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST);
             //renderer.drawMesh(&falcon_1, true, true);
 
-            drawSphere(TGX_SHADER_GOURAUD);
+            drawSphere(SHADER_GOURAUD);
             }
 
         else if (t < 0.66)
@@ -620,7 +626,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setMaterialDiffuseStrength(0.8f * a);
             renderer.setMaterialSpecularStrength(0.9f * a);
 
-            drawSphere(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_BILINEAR | TGX_SHADER_TEXTURE_WRAP_POW2, &earth_small);
+            drawSphere(SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
             }
         else 
             {
@@ -632,7 +638,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setMaterialDiffuseStrength(0.8f);
             renderer.setMaterialSpecularStrength(0.9f);
 
-            drawSphere(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_BILINEAR | TGX_SHADER_TEXTURE_WRAP_POW2, &earth_small);
+            drawSphere(SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
             }
 
 
@@ -667,7 +673,7 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.setMaterialDiffuseStrength(0.8f);
         renderer.setMaterialSpecularStrength(0.9f);        
 
-        drawSphere(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_BILINEAR | TGX_SHADER_TEXTURE_WRAP_POW2, &earth_small);
+        drawSphere(SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
         drawSkyBox();
 
         redraw();
@@ -706,7 +712,7 @@ TGX_NOINLINE FLASHMEM void movie()
         float r = (1 - cosf(t * 4 * M_PI))/2;
         float op = (1 - cosf(t * 3 * M_PI))/4 + 0.2f;
 
-        marble_dma.drawSpot({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
+        marble_dma.fillCircleAA({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
         drawBase(true);
         drawSkyBox();
         redraw();
@@ -771,7 +777,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
-        renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2);
+        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
         renderer.drawMesh(&falcon_vs_1, true, true);
 
         if (a < 1)
@@ -800,7 +806,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         const float l = (cosf(a/2) + 1.5) / 2.5;
 
-        tgx::fVec3 eye = { (looking_dist * l) * sinf(a), 2*climb - (a  * climb / (2*M_PI)) , (looking_dist * l) *cosf(a)};
+        tgx::fVec3 eye = { (looking_dist * l) * sinf(a), 2*climb - (a  * climb / ((float)(2*M_PI))) , (looking_dist * l) *cosf(a)};
         
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
@@ -809,7 +815,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
-        renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2);
+        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
         renderer.drawMesh(&falcon_vs_1, true, true);
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
@@ -839,7 +845,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
-        renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2);
+        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
         
         renderer.drawMesh(&falcon_vs_1, true, true);
 
@@ -852,7 +858,10 @@ TGX_NOINLINE FLASHMEM void movie()
         }
 
     // allumage et depart
-    falcon_vs_15.texture = &Engine02_texture;
+    tgx::Mesh3D<tgx::RGB565> * meshF = &falcon_vs_1;
+    for(int b=1; b<15; b++) { meshF = (tgx::Mesh3D<tgx::RGB565>*)meshF->next; } // find falcon_vs_15 (but may have been copied in EXTMEM)
+    meshF->texture = &Engine02_texture; // turn on the engines !
+
     start(2.5); // 2.5
     while (ongoing())
         {
@@ -869,7 +878,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
-        renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2);
+        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
         
         renderer.drawMesh(&falcon_vs_1, true, true);
 
@@ -907,7 +916,7 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.setModelMatrix(M);
 
         renderer.setCulling(1);
-        renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2);
+        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
         renderer.drawMesh(&falcon_vs_1, true, true);
 
@@ -948,7 +957,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setModelMatrix(M);
 
             renderer.setCulling(1);
-            renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2);
+            renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
             renderer.drawMesh(&falcon_vs_1, true, true);
 
@@ -992,7 +1001,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setModelMatrix(M);
 
             renderer.setCulling(1);
-            renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2);
+            renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
             renderer.drawMesh(&falcon_vs_1, true, true);
 
@@ -1038,7 +1047,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setModelMatrix(M);
 
             renderer.setCulling(1);
-            renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST | TGX_SHADER_TEXTURE_WRAP_POW2);
+            renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
             renderer.drawMesh(&falcon_vs_1, true, true);
 
@@ -1051,7 +1060,7 @@ TGX_NOINLINE FLASHMEM void movie()
         }
     }
 
-    falcon_vs_15.texture = &Engine01_texture;
+    meshF->texture = &Engine01_texture; // turn off the engines !   
     }
 
 
@@ -1129,8 +1138,8 @@ void intro()
         int y1 = (em < 1700) ? (130 * em) / 1700 - 50 : 80;
         int y2 = (em < 1700) ? 240 - (110 * em) / 1700 : 130;
         im.fillScreen(RGB565_Black);
-        im.drawText("TGX library", iVec2{ 110,y1 }, RGB565_Red, font_tgx_OpenSans_Bold_18, true);
-        im.drawText("Mars demo", iVec2{ 80,y2 }, RGB565_White, font_tgx_OpenSans_Bold_28, true);        
+        im.drawText("TGX library", iVec2{ 110,y1 }, font_tgx_OpenSans_Bold_18, RGB565_Red);
+        im.drawText("Mars demo", iVec2{ 80,y2 }, font_tgx_OpenSans_Bold_28, RGB565_White);
         tft.update(fb);
         yield();
         }

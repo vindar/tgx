@@ -378,7 +378,7 @@ namespace tgx
     template<typename color_t> void freeMeshEXTMEM(Mesh3D<color_t>* mesh)
         {
         _MapPtr map;
-        while (TGX_IS_EXTMEM(mesh))
+        while ((mesh != nullptr) && (TGX_IS_EXTMEM(mesh)))
             {
             if (TGX_IS_EXTMEM(mesh->vertice)) map.free(mesh->vertice);
             if (TGX_IS_EXTMEM(mesh->texcoord)) map.free(mesh->texcoord);
@@ -464,7 +464,7 @@ namespace tgx
                     }
                 }
 
-            if (mesh->next == nullptr) return new_mesh;
+            if (mesh->next == nullptr) {cur_mesh->next = nullptr; return new_mesh;}
             if (TGX_IS_EXTMEM(mesh->next)) { map.freeAll(); return nullptr; }
             Mesh3D<color_t>* next_cur_mesh = (Mesh3D<color_t>*)map.malloc(mesh->next, sizeof(Mesh3D<color_t>));
             if (next_cur_mesh == nullptr) return nullptr;

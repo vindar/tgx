@@ -1,4 +1,8 @@
-/** @file tgx.h */
+/**
+ * @file tgx.h 
+ * Main header file. 
+ * Includes all the other headers needed to use the library inside a project. 
+ */
 //
 // Copyright 2020 Arvind Singh
 //

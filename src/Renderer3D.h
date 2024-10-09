@@ -1,4 +1,7 @@
-/** @file Renderer3D.h */
+/**   
+ * @file Renderer3D.h 
+ * Class that manages a 3D scene. 
+ */
 //
 // Copyright 2020 Arvind Singh
 //
@@ -40,972 +43,840 @@
 
 
 
+
+
+
+
 namespace tgx
 {
 
-    /** forward declaration for the vertices and faces of the unit cube [-1,1]^3 */
+    // forward declaration for the vertices and faces of the unit cube [-1,1]^3 
+     
     extern const tgx::fVec3 UNIT_CUBE_VERTICES[8];
-    extern const uint16_t UNIT_CUBE_FACES[6*4];
+    extern const tgx::fVec3 UNIT_CUBE_NORMALS[6];
+    extern const uint16_t UNIT_CUBE_FACES[6*4];   
+    extern const uint16_t UNIT_CUBE_FACES_NORMALS[6 * 4];
 
 
 
     /**
-    * Class that manages the drawing of 3D objects.
+    * Class for drawing 3D objects onto a `Image` [**MAIN CLASS FOR THE 3D API**].
     *
-    * The class create a virtual viewport and provides methods to draw 3D primitives 
-    * onto this viewport (to which is attached an Image<color_t> object)
+    * A Renderer3D objects creates a "virtual viewport" and provides a set of methods to manage a scene and
+    * draw 3D primitives onto this viewport which is  then mapped to a `tgx::Image`.
     *
-    * Template parameters:
+    * @tparam LOADED_SHADERS    list of all shaders that may be used. By default, all shaders are enabled but 
+    *                           if is possible to select only a subset of shaders to improve rendering speed and 
+    *                           decrease memory usage significantly. Must a `|` combination of the following flags:
+    *                               - `SHADER_PERSPECTIVE`: enable perspective projection
+    *                               - `SHADER_ORTHO`: enable orthographic projection
+    *                               - `SHADER_NOZBUFFER`: enable rendering without using a z-buffer
+    *                               - `SHADER_ZBUFFER`: enable rendering with a z-buffer
+    *                               - `SHADER_FLAT`: enable flat shading
+    *                               - `SHADER_GOURAUD`: enable gouraud shading
+    *                               - `SHADER_NOTEXTURE`: enable rendering without texturing
+    *                               - `SHADER_TEXTURE_NEAREST`: enable rendering with texturing using point sampling
+    *                               - `SHADER_TEXTURE_BILINEAR`: enable rendering with texturing using bilinear sampling
+    *                               - `SHADER_TEXTURE_WRAP_POW2`: texture can use 'wrap around' mode with dimensions of texture being power of two.
+    *                               - `SHADER_TEXTURE_CLAMP`: texture can use 'clamping to edge' mode. 
     *
-    * - color_t : the color type for the image to draw onto.
+    * @tparam ZBUFFER_t :       Type used for storing z-buffer values. Must be either `float` or `uint16_t`. The z-buffer must be 
+    *                           as large as the image (but can be smaller than the viewport when using an offset).
+    *                               - `float`: higher quality but requires 4 bytes per pixel.
+    *                               - `uint16_t` : lower quality (z-fighting may occur) but only 2 bytes per pixel.
+    * @remark
+    *          
+    * 1. If a drawing call is made that requires a shader that was not enabled in the template parameter `LOADED_SHADERS` or
+    *    if the Renderer3D object state is not valid (e.g. incorrect image size, enabled but missing z-buffer...) then the operation
+    *    will fails silently. In particular, if drawing without a Z-buffer is performed, the flag `SHADER_NOZBUFFER` **must** be set
+    *    in LOADED_SHADERS. Similarly, if drawing without texturing is performed, the flag `SHADER_NOTEXTURE` **must** be set in LOADED_SHADERS.
     *
-    * - LOADED_SHADERS :   
-    *  
-    *   A list of all shaders that can be used with this object. By default, all shaders are loaded. 
+    * 2. Z-buffer testing is enabled as soon as a valid z-buffer is provided (with `Renderer3D::setZbuffer()`).
+    *    Do not forget to erase the z-buffer with `Renderer3D::clearZbuffer()` at the start of a new frame.
     *    
-    *    -> LOADING ONLY THE REQUIRED SHADERS SAVES *A LOT* OF MEMORY SPACE AND INCREASES PERFORMANCE.
-    *                    
-    *   A combination of the following flags:
-    *                    
-    *   - TGX_SHADER_PERSPECTIVE        when set, drawing with perspective projection is allowed
-    *   - TGX_SHADER_ORTHO              when set, drawing with orthographic projection is allowed
-    *   - TGX_SHADER_NOZBUFFER          when set, drawing without using a z-buffer is allowed
-    *   - TGX_SHADER_ZBUFFER            when set, drawing while using a z-buffer is allowed
-    *   - TGX_SHADER_FLAT               when set, drawing with flat shading is allowed
-    *   - TGX_SHADER_GOURAUD            when set, drawing with gouraud shading is allowed
-    *   - TGX_SHADER_NOTEXTURE          when set, drawing without using a texture is allowed
-    *   - TGX_SHADER_TEXTURE_NEAREST    when set, drawing with a texture using nearest neighbour interpolation is allowed
-    *   - TGX_SHADER_TEXTURE_BILINEAR   when set, drawing with a texture using bilinear interpolation is allowed
-    *   - TGX_SHADER_TEXTURE_WRAP_POW2  when set, drawing with a texture using wrap around mode (with dimensions of texture being power of two) is allowed
-    *   - TGX_SHADER_TEXTURE_CLAMP      when set, drawing with a texture using clamping to edge mode is allowed
-    *                      
-    *   NOTE: if a drawing call is made that requires a disabled shader, then
-    *         the drawing operation fails silently (i.e. it is simply ignored). 
-    *         
+    * 3. Normal vectors are mandatory when using Gouraud shading and must always be normalized (unit lenght) !
     *
-    * - ZBUFFER_t : type used for storing z-buffer values. Must be either `float` or `uint16_t`.
-    *               The z-buffer must be as large as the image (but can be smaller than the viewport when using an offset).
-    *               -> float : higher quality but requires 4 bytes per pixel.
-    *               -> uint16_t : lower quality (z-fighting may occur) but only 2 bytes per pixel.
-    **/
-    template<typename color_t, int LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float>
+    * 4. Texture dimensions must be powers of two when flag `SHADER_TEXTURE_WRAP_POW2` is set.
+    * 
+    * 5. Back-face culling is set with `Renderer3D::setCulling()`. Triangles and quads must then be provided in the
+    *    choosen winding order. 
+    *    
+    * 6. It is more efficient to use methods that draws several primitives at once rather than issuing
+    *    multiple commands for drawing triangle/quads. For static geometry, `Renderer3D::drawMesh()` should be
+    *    use whenever possible insteaed of `Renderer3D::drawQuads()`, `Renderer3D::drawTriangles()`...
+    *    
+    * 7. Wireframe drawing with 'high quality' is (currently) very slow. Use 'low quality' drawing if speed is required.    
+    * 
+    */
+    template<typename color_t, Shader LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float>
     class Renderer3D
     {
        
-        static const int MAXVIEWPORTDIMENSION = 2048 * (1 << ((8 - TGX_RASTERIZE_SUBPIXEL_BITS) >> 1));
+
+        static constexpr int MAXVIEWPORTDIMENSION = 2048 * (1 << ((8 - TGX_RASTERIZE_SUBPIXEL_BITS) >> 1)); ///< maximum viewport size in each direction (depending on the value of TGX_RASTERIZE_SUBPIXEL_BITS). 
+
         static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in color.h");
         static_assert((std::is_same<ZBUFFER_t, float>::value) || (std::is_same<ZBUFFER_t, uint16_t>::value), "The Z-buffer type must be either float or uint16_t");
                     
         // true if some kind of texturing may be used. 
-        static const int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (TGX_SHADER_TEXTURE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));
+        static constexpr int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (SHADER_TEXTURE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));
         
-        static const int ENABLED_SHADERS = LOADED_SHADERS  
-                                         | (ENABLE_TEXTURING ? TGX_SHADER_TEXTURE : TGX_SHADER_NOTEXTURE); // enable texturing when at least one texturing related flag is set
+        static constexpr Shader ENABLED_SHADERS = LOADED_SHADERS | (ENABLE_TEXTURING ? SHADER_TEXTURE : SHADER_NOTEXTURE); // enable texturing when at least one texturing related flag is set
         
         // check that disabled shaders do not completely disable all drawing operations.         
-        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), "At least one of the two shaders TGX_SHADER_PERSPECTIVE or TGX_SHADER_ORTHO must be enabled");        
-        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), "At least one of the two shaders TGX_SHADER_NOZBUFFER or TGX_SHADER_ZBUFFER must be enabled");        
-        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), "At least one of the two shaders TGX_SHADER_FLAT or TGX_SHADER_GOURAUD must be enabled");        
-        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), "At least one of the two shaders TGX_SHADER_TEXTURE or TGX_SHADER_NOTEXTURE must be enabled");                              
-        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders TGX_SHADER_TEXTURE_BILINEAR or TGX_SHADER_TEXTURE_NEAREST must be enabled");
-        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders TGX_SHADER_TEXTURE_WRAP_POW2 or TGX_SHADER_TEXTURE_CLAMP must be enabled");
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), "At least one of the two shaders SHADER_PERSPECTIVE or SHADER_ORTHO must be enabled");        
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), "At least one of the two shaders SHADER_NOZBUFFER or SHADER_ZBUFFER must be enabled");        
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), "At least one of the two shaders SHADER_FLAT or SHADER_GOURAUD must be enabled");        
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), "At least one of the two shaders SHADER_TEXTURE or SHADER_NOTEXTURE must be enabled");                              
+        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled");
+        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled");
 
 
 
        public:
 
 
+         /**
+         * Constructor.
+         * 
+         * Some parameters may be set right way (but they may be also set independantly later). 
+         *
+         * @param   viewportSize (Optional) Size of the viewport. See `setViewportSize()`.
+         * @param   im           (Optional) the destination image. See `setImage()`.
+         * @param   zbuffer      (Optional) the Z-buffer. See `setZbuffer()`.
+         */
+        TGX_NOINLINE Renderer3D(const iVec2& viewportSize = {0,0}, Image<color_t> * im = nullptr, ZBUFFER_t * zbuffer = nullptr);
+
+
+
 
         /*****************************************************************************************
-        ******************************************************************************************
-        *
-        * General parameters
-        *
-        * The methods below define how 3D objects are rendered onto the viewport
-        *
-        ******************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Global settings.
+         *
+         * Methods use to query and set the global parameters of the renderer: viewport size, zbuffer, projection type...
+         */
+        ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
 
 
         /**
-        * Constructor. 
-        *
-        * Optionally set some parameters: viewport size, destination image and zbuffer (if used). 
-        **/
-        Renderer3D(const iVec2& viewportSize = {0,0}, Image<color_t> * im = nullptr, ZBUFFER_t * zbuffer = nullptr);
-
-
-
-        /**
-        * Set the size of the viewport, up to 4096x4096. 
-        * The normalized coordinates in [-1,1]x[-1,1} are mapped to [0,lx-1]x[0,ly-1] just before rasterization.
+        * Set the size of the viewport.
+        * 
+        * The normalized coordinates in `[-1,1]x[-1,1]` are mapped to `[0,lx-1]x[0,ly-1]` just before rasterization.
+        * 
         * It is possible to use a viewport larger than the image drawn onto by using an offset for the image inside 
-        * the viewport in order to perform 'tile rendering'.        
-        **/
-        void setViewportSize(int lx, int ly)
-            {
-            _lx = clamp(lx, 0, MAXVIEWPORTDIMENSION);
-            _ly = clamp(ly, 0, MAXVIEWPORTDIMENSION);
-            }
-
-        /**
-        * Set the size of the viewport, up to 4096x4096. 
-        * Same as above but in vector form. 
-        **/
-        void setViewportSize(const iVec2& viewport_dim)
-            {
-            setViewportSize(viewport_dim.x, viewport_dim.y);
-            }
-
+        * the viewport in order to perform 'tile rendering'. see `setOffset()`. 
+        * 
+        * the maximum viewport size depends on `TGX_RASTERIZE_SUBPIXEL_BITS` which specifies the sub-pixel precision 
+        * value used by the 3D rasterizer:
+        * 
+        *  | subpixel bits | max viewport size LX*LY |
+        *  |---------------|-------------------------|
+        *  |      8        |      2048 x 2048        |
+        *  |      6        |      4096 x 4096        |
+        *  |      4        |      8192 x 8192        |
+        *  |      2        |     16384 x 16384       |
+        *  
+        * @param lx, ly     The viewport size.
+        */
+        void setViewportSize(int lx, int ly);
 
 
         /**
-        * Set the image that will be drawn onto.
-        * The image can be smaller than the viewport.
+         * Set the size of the viewport.
+         * 
+         * Same as `setViewportSize(int lx, int ly)`.
+         *
+         * @param viewport_dim  The viewport size.
         **/
-        void setImage(Image<color_t>* im)
-            {
-            _uni.im = im;            
-            }
+        void setViewportSize(const iVec2& viewport_dim);
+
+
+        /**
+         * Set the image that will be drawn onto.
+         * 
+         * @remark
+         * - The image can be smaller than the viewport. In this case, use `setOffset()` to
+         *   select the portion of the viewport that will be drawn.
+         * - Passing `nullptr` remove the current image (and disables all drawing operation  
+         *   until a new image is inserted).
+         *   
+         * @param im    the image to draw onto for subsequent renderings. 
+         */
+        void setImage(Image<color_t>* im);
 
 
         /**
         * Set the offset of the image relative to the viewport.
         *
-        * If the image has size (sx,sy), then during rasterization only the sub part
-        * [ox, ox + sx[x[oy, oy+sy[ of the viewport will be drawn (onto the image).
+        * If the image has size `(sx,sy)`, then during rasterization the portion 
+        * `[ox, ox + sx[x[oy, oy+sy[` of the viewport will be drawn onto the image.
         *
         * By changing the offset and redrawing several times it it possible to use an image
-        * smaller than the viewport (and thus also save on zbuffer space).
+        * smaller than the viewport (and also save on zbuffer space).
         *
         * For example, to draw a 320x240 viewport with limited amount of memory. One can use an
-        * image of size 160x120 (37.5kb) and a zbuffer of the same size (75Kb) and then call the
-        * drawing method 4 times with offset (0,0), (0,120), (160,0) and (160,120) and upload
-        * the resulting image at its correct position on the screen between each rendering.
+        * image of size 160x120 (37.5kb) and a z-buffer of the same size (35Kb for uint16_t) and 
+        * then call the drawing method 4 times with offsets (0,0), (0,120), (160,0) and (160,120) 
+        * and upload the resulting images at their correct positions on the screen between each rendering.
         *
-        * Note: do not forget to clear the z-buffer after changing the offset !
-        **/
-        void setOffset(int ox, int oy)
-            {
-            _ox = clamp(ox, 0, MAXVIEWPORTDIMENSION);
-            _oy = clamp(oy, 0, MAXVIEWPORTDIMENSION);
-            }
+        * 0warning Do not forget to clear the z-buffer after changing the offset !
+        * 
+        * @param ox, oy     Offset of the image inside the viewport.
+        */
+        void setOffset(int ox, int oy);
 
 
         /**
         * Set the offset of the image relative to the viewport.
-        * Same as above but in vector form.
-        **/
-        void setOffset(const iVec2& offset)
-            {
-            this->setOffset(offset.x, offset.y);
-            }
+        * 
+        * Same as `setOffset(int ox, int oy)`.
+        * 
+        * @param offset     Offset of the image inside the viewport. 
+        */
+        void setOffset(const iVec2& offset);
 
 
         /**
-        * Set the projection matrix.
-        *
-        * This is the matrix that is used to project coordinate from
-        * 'view space' to NDC.
-        *
-        * -> When using perspective projection, the projection matrix must
-        *    store -z into the w component.
-        *
-        * IMPORTANT :In view space, the camera is assumed to be centered
-        * at the origin, looking looking toward the negative Z axis with
-        * the Y axis pointing up (as in opengl).
-        **/
-        void setProjectionMatrix(const fMat4& M)
-            {
-            _projM = M;
-            _projM.invertYaxis();
-            _recompute_wa_wb();
-            }
+         * Set the projection matrix.
+         * 
+         * This is the matrix that is used to project coordinate from 'view space' to normalized device
+         * coordinates (NDC).
+         * 
+         * Call this method to set a "custom" projection matrix. For the usual perspective and 
+         * orthographic matrices, use instead setFrustum(), setPerspective(), setOrtho(). 
+         * 
+         * @param M the projection matrix to use (an internal copy is made).  
+         * 
+         * @remark
+         * - When using perspective projection, the projection matrix must store `-z` into the `w` component.
+         * - In view space, the camera is assumed to be centered at the origin, looking looking toward the negative Z axis with the Y axis pointing up (as in opengl).
+         * 
+         * @sa getProjectionMatrix()
+         */
+        void setProjectionMatrix(const fMat4& M);
 
 
         /**
-        * Get a copy of the current projection matrix.
+         * Return the current projection matrix.
+         *
+         * @returns A copy ot hte current projection matrix.
         **/
-        fMat4 getProjectionMatrix() const
-            {
-            fMat4 M = _projM;
-            M.invertYaxis();
-            return M;
-            }
-
-        /**
-        * Set projection mode to orthographic (ie no z-divide)
-        **/
-        void useOrthographicProjection()
-            {
-            static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use useOrthographicProjection()");
-            _ortho = true;
-            _rectifyShaderOrtho();
-            _recompute_wa_wb();
-            }
+        fMat4 getProjectionMatrix() const;
 
 
         /**
-        * Set projection mode to perspective (ie with z-divide)
-        **/
-        void usePerspectiveProjection()
-            {
-            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use usePerspectiveProjection()");
-            _ortho = false;
-            _rectifyShaderOrtho();
-            _recompute_wa_wb();
-            }
+        * Set projection mode to orthographic (ie no z-divide). 
+        * 
+        * @remark This method is called automatically after `setOrtho()` so it needs only be called, when applicable, after `setProjectionMatrix()`.
+        */
+        void useOrthographicProjection();
 
 
         /**
-         * Set the projection matrix as an orthographic matrix:
+        * Set projection mode to perspective (ie with z-divide).
+        * 
+        * @remark This method is called automatically after `setPerspective()` or `setFrustum()` so it needs only be called, when applicable, after `setProjectionMatrix()`.
+        */
+        void usePerspectiveProjection();
+
+
+        /**
+         * Set the projection matrix as an orthographic matrix.
+         * 
          * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml
          *
-         * This method automatically switches to orthographic projection mode.
+         * This method automatically switches to orthographic projection mode by calling useOrthographicProjection().
          *
-        * IMPORTANT :In view space, the camera is assumed to be centered
-        * at the origin, looking looking toward the negative Z axis with
-        * the Y axis pointing up (as in opengl).
-         **/
-        void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
-            {
-            static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use setOrtho()");
-            _projM.setOrtho(left, right, bottom, top, zNear, zFar);
-            _projM.invertYaxis();
-            useOrthographicProjection();
-            }
+         * @remark In view space, the camera is assumed to be centered at the origin, looking looking toward the 
+         * negative Z axis with the Y axis pointing up (as in opengl).
+         * 
+         * @param left, right   coordinates for the left and right vertical clipping planes
+         * @param bottom, top   coordinates for the bottom and top horizontal clipping planes.
+         * @param zNear, zFar   distances to the nearer and farther depth clipping planes.
+         *
+         * @sa setFrustum(), setPerspective(), , Mat4::setOrtho()
+         */
+        void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
 
 
         /**
-         * Set the projection matrix as a perspective matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
-        *
-         * This method automatically switches to perspective projection mode.
+         * Set the projection matrix as a perspective matrix.
+         * 
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glFrustum.xml
          *
-        * IMPORTANT :In view space, the camera is assumed to be centered
-        * at the origin, looking looking toward the negative Z axis with
-        * the Y axis pointing up (as in opengl).
-        **/
-        void setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
-            {
-            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setFrustrum()");
-            _projM.setFrustum(left, right, bottom, top, zNear, zFar);
-            _projM.invertYaxis();
-            usePerspectiveProjection();
-            }
+         * This method automatically switches to perspective projection mode by calling usePerspectiveProjection().
+         *
+         * @remark In view space, the camera is assumed to be centered at the origin, looking looking toward the
+         * negative Z axis with the Y axis pointing up (as in opengl).
+         * 
+         * @param left, right   coordinates for the left and right vertical clipping planes
+         * @param bottom, top   coordinates for the bottom and top horizontal clipping planes.
+         * @param zNear, zFar   distances to the nearer and farther depth clipping planes.
+         *
+         * @sa setOrtho(), setPerspective(), Mat4::setFrustum()
+         */
+        void setFrustum(float left, float right, float bottom, float top, float zNear, float zFar);
 
 
         /**
-        *  Set the projection matrix as a perspective matrix
-        * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
-        *
-        * This method is only available when ORTHO = false.
-        *
-        * IMPORTANT :In view space, the camera is assumed to be centered
-        * at the origin, looking looking toward the negative Z axis with
-        * the Y axis pointing up (as in opengl).
-        **/
-        void setPerspective(float fovy, float aspect, float zNear, float zFar)
-            {
-            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setPerspective()");
-            _projM.setPerspective(fovy, aspect, zNear, zFar);
-            _projM.invertYaxis();
-            usePerspectiveProjection();
-            }
+         *  Set the projection matrix as a perspective matrix
+         *  
+         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
+         *
+         * This method automatically switches to perspective projection mode by calling usePerspectiveProjection().
+         *
+         * @remark In view space, the camera is assumed to be centered at the origin, looking looking toward the
+         * negative Z axis with the Y axis pointing up (as in opengl).
+         * 
+         * @param   fovy   field of view angle, in degrees, in the y direction.
+         * @param   aspect aspect ratio that determines the field of view in the x direction. The aspect ratio is the ratio of x (width) to y (height).
+         * @param   zNear  distance from the viewer to the near clipping plane.
+         * @param   zFar   distance from the viewer to the far clipping plane.
+         *
+         * @sa setFrustum(), setOrtho(), Mat4::setPerspective()
+         */
+        void setPerspective(float fovy, float aspect, float zNear, float zFar);
 
 
         /**
         * Set the face culling strategy.
         *
-        * - w > 0 : Vertices in front faces are ordered counter-clockwise CCW [default]. Clockwise faces are culled.
-        * - w < 0 : Vertices in front faces are ordered clockwise (CW). Counter-clockwise faces are culled.
-        * - w = 0 : Disable face culling: both clockwise and counter-clockwise faces are drawn.
+        * @param w  Culling direction
+        *           - `w>0`: Vertices in front faces are ordered counter-clockwise [default]. Clockwise faces are culled.
+        *           - `w<0`: Vertices in front faces are ordered clockwise. Counter-clockwise faces are culled.
+        *           - `w=0`: Disables face culling: both clockwise and counter-clockwise faces are drawn.
         *
-        * Remark: - When face culling is enabled (w != 0), and when gouraud shading is active, the normal vectors
-        *           supplied for the vertices must, of course, be the normal vectors for the front side of the triangle.
-        *         - When face culling is disabled (w = 0). Both face of a triangle are drawn so there is no more
-        *           notion of 'front' and 'back' face. In this case, when using gouraud shading, by convention, the
-        *           normal vector supplied must be those corresponding to the counter-clockwise face being shown
-        *           (whatever this means since these normals vector are attached to  vertices and not faces anyway,
-        *           but still...)
-        **/
-        void setCulling(int w)
-            {
-            _culling_dir = (w > 0) ? 1.0f : ((w < 0) ? -1.0f : 0.0f);
-            }
+        * @remark
+        * 1. When face culling is enabled (`w != 0`), and when Gouraud shading is active, the normal vectors
+        *    supplied for the vertices must be the normal vectors for the front side of the triangle.
+        * 2. When face culling is disabled (`w = 0`). Both faces of a triangle are drawn so there is no more
+        *    notion of 'front' and 'back' face. In this case, when using Gouraud shading, by convention, the
+        *    normal vector supplied must be those corresponding to the counter-clockwise face being shown
+        *    (whatever this means since these normals vector are attached to vertices and not faces anyway,
+        *    but still...)
+        */
+        void setCulling(int w);
 
 
         /**
-        * Set the zbuffer.
+        * Set the z-buffer.
         *
-        * Warning: the zbuffer must be large enough to be used with the image that is being 
-          drawn onto. This means that we must have length >= image.width()*image.height().
+        * @warning The zbuffer must be large enough to be used with the image that is being drawn 
+        * onto. This means that we must have length at least `image.width()*image.height()`.
         *
-        * - Setting a valid zbuffer automatically turns on z-buffering.
-        * - Removing the z-buffer (by setting it to nullptr) turns off z-buffering.
-        **/
-        void setZbuffer(ZBUFFER_t * zbuffer)
-            {
-            static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use setZbuffer()");
-            _uni.zbuf = zbuffer;
-            _rectifyShaderZbuffer();
-            }
+        * @param zbuffer    pointer to the z-buffer to use from now one (replace the previous one if any) or nullptr. 
+        * 
+        * @remark
+        * 1. Setting a valid zbuffer automatically turns on z-buffer depth test.
+        * 2. Removing the z-buffer (by setting it to `nullptr`) turns off the z-buffer depth test.
+        */
+        void setZbuffer(ZBUFFER_t* zbuffer);
 
 
         /**
         * Clear the Zbuffer.
         *
-        * This method should be called before drawing a new frame to erase
-        * the previous zbuffer.
+        * This method must be called before drawing a new frame to erase the previous zbuffer.
         *
-        * The zbuffer is intentionally not clear between draw() calls to enable
-        * the rendering of multiple objects on the same scene.
-        **/
-        void clearZbuffer()
-            {
-            static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use clearZbuffer()");
-            if ((_uni.zbuf) && (_uni.im != nullptr) && (_uni.im->isValid()))
-                {
-                memset(_uni.zbuf, 0, _uni.im->lx() * _uni.im->ly() * sizeof(ZBUFFER_t));        
-                }
-            }
+        * @remark The z-buffer is intentionally not cleared between draw() calls to enable 
+        * rendering of multiple objects on the same scene.
+        */
+        void clearZbuffer();
 
 
         /**
-        * Set the shaders to use for subsequent drawing operations. A combination of the following flags.
+        * Set the shaders to use for subsequent drawing operations. 
         * 
-        * NOTE: If a shader flag is set with SetShaders but is disabled in the template parameter LOADED_SHADER, 
-        *       then the drawing calls will silently fail (draw nothing) or, in the best case, sometime fall-back 
-        *       using another shader that is loaded. 
+        * @param shaders    flags to use (or'ed together with `|`).
+        *                    
+        * See enum tgx::Shader for a complete list of flags.                    
         * 
-        * - Choosing the shading algorithm: TGX_SHADER_FLAT or TGX_SHADER_GOURAUD (see https://en.wikipedia.org/wiki/Shading)
-        *                                  
-        *     TGX_SHADER_FLAT     Use flat shading (i.e. uniform color on faces). This is the fastest
-        *                         drawing method but usually gives poor results when combined with texturing.
-        *                         Lighting transition between bright to dark aera may appear to 'flicker'
-        *                         when color_t = RGB565 because of the limited number of colors/shades
-        *                         available.
+        * **Main flags**
+        *  
+        * - `SHADER_FLAT`:     Use flat shading (i.e. uniform color on faces). This is the fastest drawing method but it usually gives poor results when combined with 
+        *   texturing. Lighting transitions between bright to dark aera may appear to flicker when using color with low resolution such as RGB565.
         *
-        *                      -> the color on the face is computed according to Phong's lightning
-        *                         model use the triangle face normals computed via crossproduct.
-        *                         https://en.wikipedia.org/wiki/Phong_reflection_model
-        *                         
-        *
-        *     TGX_SHADER_GOURAUD  Give a color to each vertex and then use linear interpolation to
-        *                         shade each triangle according to its vertex colors. This results in
-        *                         smoother color transitions and works well with texturing but at a
-        *                         higher CPU cost.
-        *
-        *                      -> In order to use gouraud shading, a normal vector must be attributed
-        *                          to each vertex, which is then used to determine its color according
-        *                          to phong's lightning model.
-        *
-        *                      -> *** NORMAL VECTORS MUST ALWAYS BE NORMALIZED (UNIT LENGHT) ***
-        *
-        *                      -> When backface culling is enable, the normal vector must be that of
-        *                         the 'front face' (obviously). When backface culling is  disabled,
-        *                         there is no more 'front' and 'back' face: by convention, the normal
-        *                         vector supplied must then be that corresponding to the counter-
-        *                         clockwise face.
-        *
-        *  - Enabling (perspective correct) texture mapping.  
-        *    Texture mapping is perspective correct and is performed in combination with TGX_SHADER_FLAT or 
-        *    TGX_SHADER_GOURAUD. The color of a pixel in the triangle is obtained by combining to texture color 
-        *    at that pixel with the lightning at the position (according to phong's lightning model again).
+        * - `SHADER_GOURAUD`:  Use gouraud shading (linear interpolation of vertex colors) This results in smoother color transitions and works well with texturing but is more CPU 
+        *    intensive.
         *    
-        *    TGX_SHADER_TEXTURE   enable texture mapping. 
-        *                         -> A texture must be stored in an Image<color_t> object
-        *                         
-        *                         -> wrap mode is set with `setTextureWrappingMode()`
-        *                         
-        *                         -> drawing quality is set with `setTextureQuality()`
+        * - `SHADER_TEXTURE`:  enable texture mapping. A texture must be stored in an Image<color_t> object.
+        *                      - wrap mode can be set with setTextureWrappingMode() or passing along either `SHADER_TEXTURE_WRAP_POW2` or `SHADER_TEXTURE_CLAMP`.
+        *                      - drawing quality can be set with setTextureQuality() or by passing along either `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`.
         *
-        *                         -> NOTE: Large textures stored in flash memory may be VERY slow to access when
-        *                            the texture is not read linearly which will happens for some (bad) triangle
-        *                            orientations and then cache becomes useless... This problem can be somewhat
-        *                            mitigated by:
-        *
-        *                            (a) splitting large textured triangles into smaller ones: then each triangle
-        *                                only accesses a small part of the texture. This helps a lot wich cache
-        *                                optimizatrion [this is why models with thousands of faces may display
-        *                                faster that a simple textured cube in some cases :-)].
-        *
-        *                            (b) moving the image into RAM if possible. Even moving the texture from
-        *                                FLASH to EXTMEM (if available) will usually give a great speed boost !
-        **/
-        void setShaders(int shaders)
-            {               
-            _rectifyShaderShading(shaders);
-            }
+        * @remark                     
+        * 1. If a shader flag is set with SetShaders() but is disabled in the template parameter LOADED_SHADER,
+        *    then the drawing calls will silently fail (draw nothing).
+        * 2. The color on the face (for flat shading) or on the vertices (for gouraud shading) is computed
+        *    according to Phong's lightning https://en.wikipedia.org/wiki/Phong_reflection_model.
+        * 3. Texture mapping is 'perspective correct' and can be done with either SHADER_FLAT or SHADER_GOURAUD   
+        *    selected. The color of a pixel is obtained by combining to texture color at that pixel with the lightning 
+        *    at the position according to phong's lightning model.
+        * 4. For large textures stored in flash memory may be VERY slow to access when the texture is not 
+        *    read linearly which will happens for some (bad) triangle orientations and then cache becomes useless... 
+        *    This problem can be somewhat mitigated by:
+        *    - splitting large textured triangles into smaller ones: then each triangle only accesses a small part 
+        *      of the texture. This helps a lot wich cache optimization (this is why models with thousands of faces 
+        *      may display faster that a simple textured cube in some cases).
+        *    - moving the image into RAM if possible. Even moving the texture from FLASH to EXTMEM (if available) will usually give a great speed boost !
+        */
+        void setShaders(Shader shaders);
 
 
         /**
-        * Set the wrap mode when using texturing. One of:
+        * Set the wrap mode when for texturing.
         * 
-        * TGX_SHADER_TEXTURE_WRAP_POW2      Wrap around (repeat) the texture. This is the fastest mode.
-        * 
-        *                                   !!! WARNING : WHEN USING THIS FLAG, THE TEXTURE MUST HAVE DIMENSIONS 
-        *                                       THAT ARE POWER OF 2 ALONG EACH AXIS !!!
-        * 
-        * 
-        * TGX_SHADER_TEXTURE_CLAMP          Clamp to the edge. Slower than above but the texture can be any size. 
-        **/
-        void setTextureWrappingMode(int wrap_mode)
-            {
-            if (TGX_SHADER_HAS_TEXTURE_CLAMP(wrap_mode))
-                {
-                if (TGX_SHADER_HAS_TEXTURE_CLAMP(ENABLED_SHADERS))
-                    _texture_wrap_mode = TGX_SHADER_TEXTURE_CLAMP;
-                else
-                    _texture_wrap_mode = TGX_SHADER_TEXTURE_WRAP_POW2; // fallback
-                }
-            else
-                {
-                if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(ENABLED_SHADERS))
-                    _texture_wrap_mode = TGX_SHADER_TEXTURE_WRAP_POW2;
-                else
-                    _texture_wrap_mode = TGX_SHADER_TEXTURE_CLAMP; // fallback
-                }
-            _rectifyShaderTextureWrapping();
-            }
+        * @param wrap_mode  Wrapping mode flag:
+        *                   - `SHADER_TEXTURE_WRAP_POW2`:  Wrap around (repeat) the texture. This is the fastest mode but **the texture size must be a power of two along each dimension**.
+        *                   - `SHADER_TEXTURE_CLAMP`:      Clamp to the edge. A bit slower than above but the texture can be any size. 
+        */
+        void setTextureWrappingMode(Shader wrap_mode);
 
 
         /**
-        * Set the texturing quality. One of
-        *
-        * TGX_SHADER_TEXTURE_NEAREST      Use nearest neighbour point sampling when texturing. 
-        *                                 (fastest method).
-        *
-        * TGX_SHADER_TEXTURE_BILINEAR     Use bilinear interpolation when texturing
-        *                                 (slower but higher quality).
-        **/
-        void setTextureQuality(int quality)
-            {
-            if (TGX_SHADER_HAS_TEXTURE_BILINEAR(quality))
-                {
-                if (TGX_SHADER_HAS_TEXTURE_BILINEAR(ENABLED_SHADERS))
-                    _texture_quality = TGX_SHADER_TEXTURE_BILINEAR;
-                else
-                    _texture_quality = TGX_SHADER_TEXTURE_NEAREST; // fallback
-                }
-            else
-                {
-                if (TGX_SHADER_HAS_TEXTURE_NEAREST(ENABLED_SHADERS))
-                    _texture_quality = TGX_SHADER_TEXTURE_NEAREST;
-                else
-                    _texture_quality = TGX_SHADER_TEXTURE_BILINEAR; // fallback
-                }
-            _rectifyShaderTextureQuality();
-            }
+        * Set the texturing quality.
+        * 
+        * @param quality    Texture quality flag:
+        *                   - `SHADER_TEXTURE_NEAREST`:    Use simple point sampling when texturing (fastest method).
+        *                   - `SHADER_TEXTURE_BILINEAR`:   Use bilinear interpolation when texturing (slower but higher quality).
+        */
+        void setTextureQuality(Shader quality);
 
 
 
+        ///@}
         /*****************************************************************************************
-        ******************************************************************************************
-        *
-        * Scene specific parameters
-        *
-        * The method belows affect the rendering at the 'scene level': camera position, lightning..
-        *
-        ******************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Scene related methods.
+         *
+         * Methods related to properties specific to the scene: camera position, lightning...
+         */
+         ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
 
 
+
         /**
-        * Set the view tranformation matrix.
+        * Set the view transformation matrix.
         *
-        * This matrix is used to transform vertices from world coordinates to view coordinates
-        * (ie from the point of view of the camera)
+        * This matrix is used to transform vertices from 'world coordinates' to 'view coordinates'
+        * (ie from the point of view of the camera).
         *
-        * Thus, changing this matrix changes the position of the camera in the world space.
+        * Changing this matrix changes the position of the camera in the world space.
         *
-        * IMPORTANT: In view space (i.e. after transformation), the camera is assumed to be
-        * centered at the origin, looking looking toward the negative Z axis with the Y axis
-        * pointing up (as in opengl).
-        **/
-        void setViewMatrix(const fMat4& M)
-            {
-            _viewM = M;
-            // recompute
-            _r_modelViewM = _viewM * _modelM;
-            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
-            _r_light = _viewM.mult0(_light);
-            _r_light = -_r_light;
-            _r_light.normalize();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)...
-            _r_H += _r_light;
-            _r_H.normalize();
-            _r_H_inorm = _r_H * _r_inorm;
-            }
+        * @remark In view space (i.e. after transformation), the camera is assumed to be
+        * centered at the origin, looking toward the negative Z axis with the Y axis pointing up
+        * (as in opengl).
+        * 
+        * @param M the view matrix to use (a copy is made).
+        *          
+        * @sa getViewMatrix(), setLookAt()
+        */
+        void setViewMatrix(const fMat4& M);
 
 
         /**
-        * Get a copy of the current view matrix
+         * Return the current view matrix.
+         *
+         * @returns a copy of the view matrix.
+         *
+         * @sa  setViewMatrix(), setLookAt()
         **/
-        fMat4 getViewMatrix() const
-            {
-            return _viewM;
-            }
+        fMat4 getViewMatrix() const;
 
 
         /**
         * Set the view matrix so that the camera is looking at a given direction.
+        * 
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
         *
-        * eye       position of the camera in world space coords.
-        * center    point the camera is looking toward in world space coords.
-        * up        vector that tells the up direction for the camera (in world space coords).
-        **/
-        void setLookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
-            {
-            fMat4 M;
-            M.setLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
-            setViewMatrix(M);
-            }
+        * @param eyeX, eyeY, eyeZ          position of the camera in world space coords.
+        * @param centerX, centerY, centerZ point the camera is looking toward in world space coords.
+        * @param upX, upY, upZ             vector that tells the up direction for the camera (in world space coords).
+        * 
+        * @sa setViewMatrix(), getViewMatrix(), Mat4::setLookAt()
+        */
+        void setLookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ);
 
 
         /**
         * Set the view matrix so that the camera is looking at a given direction.
+        * 
         * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
         *
-        * eye       position of the camera in world space coords.
-        * center    point the camera is looking toward in world space coords.
-        * up        vector that tells the up direction for the camera (in world space coords).
-        **/
-        void setLookAt(const fVec3 eye, const fVec3 center, const fVec3 up)
-            {
-            setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, up.x, up.y, up.z);
-            }
-
-
-        /**
-        * Convert from world coord. to the standard viewport coord.
-        * 
-        * - P : point given in the word coordinate system.    
+        * @param eye       position of the camera in world space coords.
+        * @param center    point the camera is looking toward in world space coords.
+        * @param up        vector that tells the up direction for the camera (in world space coords).
         *
-        * Return the projection of P on the standard viewport [-1,1]^2 according 
-        * to the current position of the camera. 
-        * 
-        * Note: - the model matrix is not taken into account here.
-        *       - the .w value can be used for depth testing. 
+        * @sa setViewMatrix(), getViewMatrix(), Mat4::setLookAt()
         **/
-        fVec4 worldToViewPort(fVec3 P)
-            {
-            fVec4 Q = _projM * _viewM.mult1(P);
-            if (!_ortho) Q.zdivide();
-            return Q;
-            }
+        void setLookAt(const fVec3 eye, const fVec3 center, const fVec3 up);
 
 
         /**
-        * Convert from world coord. to the corresponding image pixel.
-        *
-        * - P : point given in the word coordinate system.
-        *
-        * Return the position of the associated pixel on the image.
-        * 
-        * Note: - the position returned may be outside of the image ! 
-        *       - return (0,0) if no image inserted. 
-        **/
-        iVec2 worldToImage(fVec3 P)
-            {
-            fVec4 Q = _projM * _viewM.mult1(P);
-            if (!_ortho) Q.zdivide();
-            Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
-            Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
-            return iVec2((int)roundfp(Q.x), (int)roundfp(Q.y));
-            }
+         * Convert from world coordinates to normalized device coordinates (NDC).
+         *
+         * @param   P   Point in the word coordinate system.
+         *
+         * @returns the coordinates of `P` on the standard viewport `[-1,1]^2` according to the current
+         *          position of the camera.
+         *          
+         * @remark
+         * - the model matrix is not taken into account here.
+         * - the `w` value returned can be used for depth testing.
+         */
+        fVec4 worldToNDC(fVec3 P);
 
 
         /**
-        * Set the light source direction (i.e. the direction the light points to).
-        * Direction is given in world coordinates (hence transformed by the view Matrix
-        * at rendering time so that the light does not move with the camera).
-        **/
-        void setLightDirection(const fVec3 & direction)
-            {
-            _light = direction;
-            // recompute
-            _r_light = _viewM.mult0(_light);
-            _r_light = -_r_light;
-            _r_light.normalize();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)...
-            _r_H += _r_light;
-            _r_H.normalize();
-            _r_H_inorm = _r_H * _r_inorm;
-            }
+         * Convert from world coordinates to the corresponding image pixel.
+         *
+         * @param   P   Point in the word coordinate system.
+         *
+         * @returns the coordinates of the associated pixel on the image.
+         * 
+         * @remark
+         * - The position returned may be outside of the image !
+         * - Returns (0,0) if no image is inserted. 
+         */
+        iVec2 worldToImage(fVec3 P);
 
 
         /**
-        * Set the scene ambiant light color
-        * (according to the Phong lightning model).
-        **/
-        void setLightAmbiant(const RGBf & color)
-            {
-            _ambiantColor = color;
-            // recompute
-            _r_ambiantColor = _ambiantColor * _ambiantStrength;
-            }
+         * Set the light source direction.
+         * 
+         * The 3d rendered uses a single 'directional light' i.e. a light source comming from infinity (such as the sun). 
+         * 
+         * @param   direction   The direction the light point toward given in world coordinates.
+         *
+         * @sa setLight(), setLightAmbiant(), setLightDiffuse(), setLightSpecular()
+         */
+        void setLightDirection(const fVec3& direction);
 
 
         /**
-        * Set the scene diffuse light color
-        * (according to the Phong lightning model).
-        **/
-        void setLightDiffuse(const RGBf & color)
-            {
-            _diffuseColor = color;
-            // recompute
-            _r_diffuseColor = _diffuseColor * _diffuseStrength;
-            }
+         * Set the scene ambiant light color.
+         *
+         * See Phong's lightning model: https://en.wikipedia.org/wiki/Phong_reflection_model.
+         * 
+         * @param   color   color for the ambiant light. 
+         *
+         * @sa setLight(), setLightDirection(), setLightDiffuse(), setLightSpecular()
+         */
+        void setLightAmbiant(const RGBf& color);
 
 
         /**
-        * Set the scene specular light color
-        * (according to the Phong lightning model).
-        **/
-        void setLightSpecular(const RGBf & color)
-            {
-            _specularColor = color;
-            // recompute
-            _r_specularColor = _specularColor * _specularStrength;
-            }
+         * Set the scene diffuse light color.
+         * 
+         * See Phong's lightning model: https://en.wikipedia.org/wiki/Phong_reflection_model.
+         *
+         * @param   color   color for the difuse light.
+         *
+         * @sa setLight(), setLightDirection(), setLightAmbiant(), setLightSpecular()
+         */
+        void setLightDiffuse(const RGBf& color);
 
 
         /**
-        * Set all the parameters of the scene light source at once.
-        **/
-        void setLight(const fVec3 direction, const RGBf & ambiantColor, const RGBf & diffuseColor, const RGBf & specularColor)
-            {
-            this->setLightDirection(direction);
-            this->setLightAmbiant(ambiantColor);
-            this->setLightDiffuse(diffuseColor);
-            this->setLightSpecular(specularColor);
-            }
+         * Set the scene specular light color.
+         * 
+         * See Phong's lightning model: https://en.wikipedia.org/wiki/Phong_reflection_model.
+         *
+         * @param   color   color for the specular light.
+         *                  
+         * @sa setLight(), setLightDirection(), setLightAmbiant(), setLightDiffuse()
+         */
+        void setLightSpecular(const RGBf& color);
+
+
+        /**
+         * Set all the lighting parameters of the scene at once.
+         *
+         * The 3d rendered uses a single 'directional light' i.e. a light source comming from infinity (such as the sun).
+         *
+         * See Phong's lightning model: https://en.wikipedia.org/wiki/Phong_reflection_model.
+         * 
+         * @param   direction       direction the light source point toward.
+         * @param   ambiantColor    light ambiant color.
+         * @param   diffuseColor    light diffuse color.
+         * @param   specularColor   light specular color.
+         *
+         * @sa setLightDirection(), setLightAmbiant(), setLightDiffuse(), setLightSpecular()
+         */
+        void setLight(const fVec3 direction, const RGBf& ambiantColor, const RGBf& diffuseColor, const RGBf& specularColor);
 
 
 
 
+        
+        ///@}
         /*****************************************************************************************
-        ******************************************************************************************
-        *
-        * Model specific parameters.
-        *
-        * The method below apply to the (current) object being draw: position in world space,
-        * material properties...
-        *
-        ******************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Model related methods.
+         *
+         * Methods related to properties specific to the model being drawn: position, material properties...
+         */
+        ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
+        
+       
+
+        /**
+         * Set the model tranformation matrix.
+         * 
+         * This matrix describes the transformation from local object space to view space. (i.e. the
+         * matrix specifies the position of the object in world space).
+         * 
+         * @param M the new model transformation matrix (a copy is made).
+         * 
+         * @sa getModelMatrix(), setModelPosScaleRot()
+         */
+        void setModelMatrix(const fMat4& M);
 
 
         /**
-        * Set the model tranformation matrix.
-        *
-        * This matrix describes the transformation from local object space to view space.
-        * (i.e. the matrix specifies the position of the object in world space).
+         * Return the model tranformation matrix.
+         *
+         * @returns a copy of the current model tranformation matrix.
+         *
+         * @sa  setModelMatrix(), setModelPosScaleRot()
         **/
-        void setModelMatrix(const fMat4& M)
-            {
-            _modelM = M;
-            // recompute
-            _r_modelViewM = _viewM * _modelM;
-            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H_inorm = _r_H * _r_inorm;
-            }
+        fMat4  getModelMatrix() const;
 
 
         /**
-        * Get a copy of the current model matrix
-        **/
-        fMat4  getModelMatrix() const
-            {
-            return _modelM;
-            }
-
+         * Set the model tranformation matrix to move an object to a given a given location, scale and
+         * rotation.
+         * 
+         * The method is such that, if a model is initially centered around the origin in model
+         * coordinate, then it will be placed at a given position/scale/rotation in the world
+         * coordinates after multiplication by the model transformation matrix.
+         * 
+         * Transforms are done in the following order:
+         * 
+         * 1. The model is scaled in each direction in the model coord. according to `scale`
+         * 2. The model is rotated in model coord. around direction `rot_dir` and with an angle `rot_angle` (in degree).
+         * 3. The model is translated to position `center` in the world coord.
+         *
+         * @param   center      new center position after transformation.
+         * @param   scale       scaling factor in each direction.
+         * @param   rot_angle   rotation angle (in degrees).
+         * @param   rot_dir     rotation axis. 
+         *
+         * @sa  getModelMatrix(), setModelMatrix()
+         */
+        void setModelPosScaleRot(const fVec3& center = fVec3{ 0,0,0 }, const fVec3& scale = fVec3(1, 1, 1), float rot_angle = 0, const fVec3& rot_dir = fVec3{ 0,1,0 });
 
 
         /**
-        * Set the model matrix in such way that a model centered at the origin (in model coordinate) 
-        * will appear at a given position/scale/rotation on the world coordinates. 
-        *
-        * Transform are done in the following order:
+        * Convert from model coordinates to normalized device coordinates (NDC). 
         * 
-        * (1) model is scaled in each direction in the model coord. according to 'scale'
-        * (2) model is rotated in model coord. around direction 'rot_dir' and with an angle 'rot_angle' (in degree).
-        * (3) model is translated to position 'center' in the world coord. 
-        **/
-        void setModelPosScaleRot(const fVec3& center = fVec3{ 0,0,0 }, const fVec3& scale = fVec3(1, 1, 1), float rot_angle = 0, const fVec3& rot_dir = fVec3{ 0,1,0 })
-            {
-            _modelM.setScale(scale);
-            _modelM.multRotate(rot_angle, rot_dir);
-            _modelM.multTranslate(center);
-            // recompute
-            _r_modelViewM = _viewM * _modelM;
-            _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H_inorm = _r_H * _r_inorm;
-            }
-
-
-        /**
-        * Convert from model coord. to the standard viewport coord.
+        * @param P  Point given in the model coordinate system.    
+        *
+        * @returns the projection of `P` on the standard viewport `[-1,1]^2`` according 
+        *          to the current position of the camera. 
         * 
-        * - P : point given in the model coordinate system.    
-        *
-        * Return the projection of P on the standard viewport [-1,1]^2 according 
-        * to the current position of the camera. 
-        * 
-        * Note:  the .w value can be used for depth testing. 
-        **/
-        fVec4 modelToViewPort(fVec3 P)
-            {
-            fVec4 Q = _projM * _r_modelViewM.mult1(P);
-            if (!_ortho) Q.zdivide();
-            return Q;
-            }
+        * @remark the .w value can be used for depth testing.
+        */
+        fVec4 modelToNDC(fVec3 P);
 
 
         /**
-        * Convert from model coord. to the corresponding image pixel.
-        *
-        * - P : point given in the model coordinate system.
-        *
-        * Return the position of the associated pixel on the image.
-        **/
-        iVec2 modelToImage(fVec3 P)
-            {
-            fVec4 Q = _projM * _r_modelViewM.mult1(P);
-            if (!_ortho) Q.zdivide();
-            Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
-            Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
-            return iVec2(roundfp(Q.x), roundfp(Q.y));
-            }
+         * Convert from model coordinates to the corresponding image pixel.
+         *
+         * @param   P   Point given in the model coordinate system.
+         *
+         * @returns the position of the associated pixel on the image.
+         *          
+         * @remark
+         * - The position returned may be outside of the image !
+         * - Returns (0,0) if no image is inserted.
+         */
+        iVec2 modelToImage(fVec3 P);
 
 
         /**
-        * Set the object material color.
-        * This is the color used to render the object when texturing is not used.
+         * Set the object material color.
+         * 
+         * This is the color used to render the object when texturing is not used.
+         *
+         * @param   color   The material color.
+         *
+         * @sa  setMaterialAmbiantStrength(), setMaterialDiffuseStrength(), setMaterialSpecularStrength(),
+         *      setMaterialSpecularExponent(), setMaterial()
         **/
-        void setMaterialColor(RGBf color)
-            {
-            _color = color;
-            // recompute
-            _r_objectColor = _color;
-            }
+        void setMaterialColor(RGBf color);
 
 
         /**
-        * Set how much the object material reflects the ambient light.
-        **/
-        void setMaterialAmbiantStrength(float strenght = 0.1f)
-            {
-            _ambiantStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
-            // recompute
-            _r_ambiantColor = _ambiantColor * _ambiantStrength;
-            }
+         * Set how much the object material reflects the ambient light.
+         *
+         * @param   strenght    ambiant lightreflection strength in [0.0f,1.0f]. Default value 0.1f.
+         *
+         * @sa  setMaterialColor(), setMaterialDiffuseStrength(),
+         *      setMaterialSpecularStrength(), setMaterialSpecularExponent(), setMaterial()
+         */
+        void setMaterialAmbiantStrength(float strenght = 0.1f);
 
 
         /**
-        * Set how much the object material reflects the diffuse light.
-        **/
-        void setMaterialDiffuseStrength(float strenght = 0.6f)
-            {
-            _diffuseStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
-            // recompute
-            _r_diffuseColor = _diffuseColor * _diffuseStrength;
-            }
+         * Set how much the object material reflects the diffuse light.
+         *
+         * @param   strenght    diffuse light reflection strength in [0.0f,1.0f]. Default value 0.6f.
+         *                      
+         * @sa  setMaterialColor(), setMaterialAmbiantStrength(), 
+         *      setMaterialSpecularStrength(), setMaterialSpecularExponent(), setMaterial()
+         */
+        void setMaterialDiffuseStrength(float strenght = 0.6f);
 
 
         /**
-        * Set how much the object material reflects the specular light.
-        **/
-        void setMaterialSpecularStrength(float strenght = 0.5f)
-            {
-            _specularStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
-            // recompute
-            _r_specularColor = _specularColor * _specularStrength;
-            }
+         * Set how much the object material reflects the specular light.
+         *
+         * @param   strenght    specular light reflection strength in [0.0f,1.0f]. Default value 0.5f.
+         *
+         * @sa  setMaterialColor(), setMaterialAmbiantStrength(), setMaterialDiffuseStrength(),
+         *      setMaterialSpecularExponent(), setMaterial()
+         */
+        void setMaterialSpecularStrength(float strenght = 0.5f);
 
 
         /**
-        * Set the object specular exponent.
-        * Between 0 (no specular lightning) and 100 (very localized/glossy).
-        **/
-        void setMaterialSpecularExponent(int exponent = 16)
-            {
-            _specularExponent = clamp(exponent, 0, 100);
-            }
+         * Set the object specular exponent. 
+         * 
+         * The epxonent should be range between 0 (no specular lightning) and 100 (very localized/glossy).
+         *
+         * @param   exponent    Specular exponent in [0,100]. Default value 16. 
+         *
+         * @sa  setMaterialColor(), setMaterialAmbiantStrength(), setMaterialDiffuseStrength(),
+         *      setMaterialSpecularStrength(), setMaterial()
+         */
+        void setMaterialSpecularExponent(int exponent = 16);
 
 
         /**
-        * Set all the object material properties all at once.
-        **/
-        void setMaterial(RGBf color, float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)
-            {
-            this->setMaterialColor(color);
-            this->setMaterialAmbiantStrength(ambiantStrength);
-            this->setMaterialDiffuseStrength(diffuseStrength);
-            this->setMaterialSpecularStrength(specularStrength);
-            this->setMaterialSpecularExponent(specularExponent);
-            }
+         * Set all the object material properties at once.
+         *
+         * @param   color               The material color.
+         * @param   ambiantStrength     The ambiant light reflection strength.
+         * @param   diffuseStrength     The diffuse light reflection strength.
+         * @param   specularStrength    The specular light reflection strength.
+         * @param   specularExponent    The specular exponent.
+         *
+         * @sa  setMaterialColor(), setMaterialAmbiantStrength(), setMaterialDiffuseStrength(),
+         *      setMaterialSpecularStrength(), setMaterialSpecularExponent(),
+         */
+        void setMaterial(RGBf color, float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent);
 
 
 
 
 
 
+
+        
+        ///@}
         /*****************************************************************************************
-        ******************************************************************************************
-        *
-        *                                  Drawing methods
-        *
-        ******************************************************************************************
-        *
-        * Methods to draw primitives (triangles/quads/meshes) onto the viewport.
-        *
-        * (1) The rasterizer uses the shaders set with setShaders(). If the requested shaders cannot
-        *     be used because they are disabled in the template parameter DISABLED_SHADERS or because 
-        *     the correct parameters are not supplied (e.g.  no normals for Gouraud shading or no image 
-        *     for texturing) then the drawing operation silently fails and return without drawing anything
-        *     (in the best case, it may fall back using another shader).
-        *
-        *     -> *** NORMAL VECTORS MUST ALWAYS BE NORMALIZED (UNIT LENGHT) ***
-        *       
-        *     -> *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        *
-        *
-        * (2) Depth testing is automatically performed when a z-buffer is available.
-        *
-        *     -> ***  DO NOT FORGET TO CLEAR THE ZBUFFER WITH clearZbuffer() BEFORE DRAWING A NEW SCENE ***
-        *
-        *
-        * (3) Back face culling is automatically performed if enabled (via the setCulling() method)
-        *
-        *     -> *** TRIANGLES/QUADS MUST BE GIVEN TO THE DRAWING METHOD IN THEIR CORRECT WINDING ORDER ***
-        *
-        *
-        * (4) It is much more efficient to use methods that draws several primitives at once than issuing
-        *     multiple drawing commands for single triangles/quads. Use the following methods by order of
-        *    preferences:
-        *
-        *    1 - drawMesh() is the 'most optimized' method and the one that will usually give the faster
-        *        rendering so it should be used whenever possible (for static geometry).
-        *
-        *    3 - and drawQuads() Not as fast a drawing a mesh.
-        *
-        *    3 - drawTriangles() Even slower than the methods above.
-        *
-        *    4 - drawTriangle() / drawQuad()  Should only be used for drawing single triangles/quads
-        *                                     slowest method because each draw call has an additional
-        *                                     overhead.
-        *
-        ******************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Drawing solid geometric primitives. 
+         *       
+         * Methods for drawing meshes, triangles and quads.
+         * 
+         * @remark
+         * 1. Normal vector are mandatory when using Gouraud shadding and must be normalized (unit lenght).
+         * 2. Texture dimension must be power of two when using flag `SHADER_TEXTURE_WRAP_POW2`.  
+         * 3. Triangle and quads must be given in the correct winding order. The 4 vertices of a quads must be co-planar.  
+         * 4. The fastest method to display 'static' geometry is to use the drawMesh() method. Other methods are slower and should be reserved for 'dynamic' geometry.  
+         * 5. Do not forget to clear the z-buffer with `clearZbuffer()` at the beggining of each new frame. 
+         */
+        ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
 
 
 
-
         /**
-        * Draw a mesh onto the image.
-        *
-        * ***************************************************************************************
-        * THIS IS THE FASTEST METHOD FOR DRAWING AN OBJECT AND SHOULD BE USED WHENEVER POSSIBLE.
-        * ***************************************************************************************
-        *
-        * - mesh    The mesh to draw. The meshes/vertices array/textures can be in RAM or in FLASH.
-        *           Whenever possible, put vertex array and texture in RAM (or even EXTMEM).
-        *
-        * - use_mesh_material   If true, ignore the current object material properties set in the renderer
-        *                       and use the mesh predefined material properties.
-        *                       this flag affects also all the linked meshes if draw_chained_meshes=true.
-        *
-        * - draw_chained_meshes  If true, the meshes linked to this mesh (via the ->next member) are also drawn.
-        **/
+         * Draw a Mesh3D object.
+         * 
+         * @param   mesh                The mesh to draw. 
+         * @param   use_mesh_material   True (default) to use mesh material, otherwise use the current 
+         *                              material instead. this flag affects also all the linked meshes 
+         *                              if `draw_chained_meshes=true`.
+         * @param   draw_chained_meshes True (default) to draw also the chained meshes, in any.
+         *                              
+         * @remark
+         * - Drawing a mesh is the most effective way of drawing a 3D object (faster than drawing individual
+         *   triangles/quads) so it should be the prefered method whenever working with static geometry. 
+         * - The mesh can be located in any memory region (RAM, FLASH...) but using a fast memory will   
+         *   improve renderin speed noticeably. The methods `cacheMesh()` (or `copyMeshEXTMEM()` on Teensy) are
+         *   available to copy a mesh to a faster memory location before rendering. 
+         */
         void drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material = true, bool draw_chained_meshes = true);
 
 
-
-
         /**
-        * Draw a single triangle on the image.
-        *
-        * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
-        *
-        *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (N1,N2,N3)  pointers to the normals associated with (P1, P2, P3).  
-        *               or nullptr if not using gouraud shading
-        *               
-        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * - (T1,T2,T3)  pointers to the texture coords. associated with (P1, P2, P3).  
-        *               or nullptr if not using texturing
-        *
-        * - texture     pointer to the texture image to use (or nullptr if not used)
-        *
-        *               *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        **/
+         * Draw a single triangle.
+         * 
+         * @param   P1, P2, P3  coordinates (in model space) of the triangle to draw
+         * @param   N1, N2, N3  pointers to the normals associated with `P1, P2, P3` or `nullptr` if not using Gouraud shading. 
+         * @param   T1, T2, T3  pointer to the texture coords. `nullptr` if not using texturing. 
+         * @param   texture     pointer to the texture image or `nullptr` if not using texturing. 
+         *                      
+         * @remark
+         * - The triangle is drawn with the current color/material.
+         * - `P1,P2,P3` must be in the correct winding order (c.f. setCulling()).  
+         * - the normals `N1,N2,N3` are mandatory with Gouraud shading and must have unit norm.
+         */
         void drawTriangle(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3,
                           const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr,
                           const fVec2 * T1 = nullptr, const fVec2 * T2 = nullptr, const fVec2 * T3 = nullptr,
                           const Image<color_t> * texture = nullptr);
 
 
-
-
         /**
-        * Draw a single triangle on the image with a given color on each of its vertices.
-        * The color inside the triangle is obtained by linear interpolation.
-        *
-        * - (P1,P2,P3)  coordinates (in model space) of the triangle to draw
-        *
-        *               *** MAKE SURE THAT THE TRIANGLE IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (col1,col2,col3) Colors of the vertices.
-        *
-        * - (N1,N2,N3)  normals associated with (P1, P2, P3)
-        *               or nullptr if not using gouraud shading.
-        *
-        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        **/
+         * Draw a single triangle with a given colors on each of its vertices. 
+         *
+         * @param   P1, P2, P3          coordinates (in model space) of the triangle to draw
+         * @param   col1, col2, col3    color at each vertex. 
+         * @param   N1, N2, N3          pointers to the normals associated with `P1, P2, P3` or `nullptr` if not using Gouraud shading.
+         *
+         * @remark
+         * - The color inside the triangle is obtained by linear interpolation.
+         * - `P1,P2,P3` must be in the correct winding order (c.f. setCulling()).
+         * - the normals `N1,N2,N3` are mandatory with Gouraud shading and must have unit norm.
+         */
         void drawTriangleWithVertexColor(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3,
                                          const RGBf & col1, const RGBf & col2, const RGBf & col3,
                                          const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr);
 
 
-
         /**
-        * Draw a list of triangles on the image. If texture mapping is not used, then the current
-        * material color is used to draw the triangles.
-        *
-        * - nb_triangles Number of triangles to draw.
-        *
-        * - ind_vertices Array of vertex indexes. The length of the array is nb_triangles*3
-        *                and each 3 consecutive values represent a triangle.
-        *
-        *               *** MAKE SURE THAT THE TRIANGLES ARE GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - vertices     The array of vertices (given in model space).
-        *
-        * - ind_normals  array of normal indexes. If specified, the array must
-        *                have length nb_triangles*3.
-        *
-        * - normals      The array of normals vectors (in model space).
-        *
-        *                 *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * - ind_texture  array of texture indexes. If specified, the array must
-        *                have length nb_triangles*3.
-        *
-        * - textures     The array of texture coords.
-        *
-        * - texture_image The texture image to use.
-        *
-        *                 *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        **/
+         * Draw a collection of triangles.
+         * 
+         * @param   nb_triangles    number of triangles to draw.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_triangles*3` and each 3 consecutive values represent a triangle.
+         * @param   vertices        The array of vertices (in model space).
+         * @param   ind_normals     Array of normal indexes. If specified, the array must have length `nb_triangles*3`.
+         * @param   normals         The array of normals vectors (in model space).
+         * @param   ind_texture     array of texture indexes. If specified, the array must have length `nb_triangles*3`.
+         * @param   textures        The array of texture coords.
+         * @param   texture_image   The texture image to use or `nullptr` if not used
+         *                          
+         * @remark
+         * - If Gouraud shading is enabled, the normal vector must all have have unit norm.
+         * - If Gouraud shading is disabled, `ind_normals` and `normals` should be set to `nullptr`.  
+         * - If texturing is disabled, `ind_texture`, `textures` and `texture_image` should be set to `nullptr`.  
+         * - If texturing is disabled, the current material color is used to draw the triangles. 
+         */
         void drawTriangles(int nb_triangles,
                            const uint16_t * ind_vertices, const fVec3 * vertices,
                            const uint16_t * ind_normals = nullptr, const fVec3* normals = nullptr,
@@ -1015,26 +886,20 @@ namespace tgx
 
 
         /**
-        * Draw a single quad on the image.
-        *
-        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - (P1,P2,P3,P4)  coordinates (in model space) of the quad to draw
-        *
-        *                  *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (N1,N2,N3,N4)  normals associated with (P1, P2, P3, P4).
-        *                  or nullptr if not using gouraud shading
-        *
-        *                  *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * - (T1,T2,T3,T4)  texture coords. associated with (P1, P2, P3).
-        *                  or nullptr if not using texturing
-        *
-        * - texture     the texture image to use (or nullptr if unused).
-        *
-        *               *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        **/
+         * Draw a single quad.
+         *
+         * **The four vertices of the quad must be co-planar !**
+         * 
+         * @param P1, P2, P3, P4    coordinates (in model space) of the quad to draw
+         * @param N1, N2, N3, N4    pointers to the normals associated with `P1, P2, P3, P4` or `nullptr` if not using Gouraud shading.
+         * @param T1, T2, T3, T4    pointer to the texture coords. `nullptr` if not using texturing.
+         * @param texture           pointer to the texture image or `nullptr` if not using texturing.
+         *
+         * @remark
+         * - The quad is drawn with the current color/material.
+         * - `P1,P2,P3,P4` must be in the correct winding order (c.f. setCulling()).
+         * - the normals `N1,N2,N3,N4` are mandatory with Gouraud shading and must have unit norm.
+         */
         void drawQuad(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3, const fVec3 & P4,
                       const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr, const fVec3 * N4 = nullptr,
                       const fVec2 * T1 = nullptr, const fVec2 * T2 = nullptr, const fVec2 * T3 = nullptr, const fVec2 * T4 = nullptr,
@@ -1043,22 +908,20 @@ namespace tgx
 
 
         /**
-        * Draw a single quad on the image with a given color on each of its four vertices.
-        * The color inside the quad is obtained by linear interpolation.
-        *
-        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - (P1,P2,P3,P4)  coordinates (in model space) of the quad to draw
-        *
-        *               *** MAKE SURE THAT THE QUAD IS GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - (col1,col2,col3,col4) Colors of the vertices
-        *
-        * - (N1,N2,N3,N4)  normals associated with (P1, P2, P3, P4).
-        *                  or nullptr if not using gouraud shading.
-        *
-        *               *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        **/
+         * Draw a single quad with a given colors on each of its four vertices.
+         * 
+         * **The four vertices of the quad must be co-planar !**
+         *
+         * @param   P1, P2, P3,P4           coordinates (in model space) of the quad to draw
+         * @param   col1, col2, col3, col4  color at each vertex.
+         * @param   N1, N2, N3, N4          pointers to the normals associated with `P1, P2, P3, P4` or `nullptr` if not using Gouraud shading.
+         *
+         * @remark
+         * - The color inside the quad is obtained by linear interpolation.
+         * - `P1,P2,P3,P4` must be in the correct winding order (c.f. setCulling()).
+         * - the normals `N1,N2,N3,N4` are mandatory with Gouraud shading and must have unit norm.
+         *
+         */
         void drawQuadWithVertexColor(const fVec3 & P1, const fVec3 & P2, const fVec3 & P3, const fVec3 & P4,
                                      const RGBf & col1, const RGBf & col2, const RGBf & col3, const RGBf & col4,
                                      const fVec3 * N1 = nullptr, const fVec3 * N2 = nullptr, const fVec3 * N3 = nullptr, const fVec3 * N4 = nullptr);
@@ -1066,36 +929,25 @@ namespace tgx
 
 
 
-        /**
-        * Draw a list of quads on the image.  If texture mapping is not used, then the current
-        * material color is used to draw the triangles.
-        *
-        *     *** THE 4 VERTEX OF A QUAD MUST ALWAYS BE CO-PLANAR ***
-        *
-        * - nb_quads     Number of quads to draw.
-        *
-        * - ind_vertices Array of vertex indexes. The length of the array is nb_quads*4
-        *                and each 4 consecutive values represent a quad.
-        *
-        *               *** MAKE SURE THAT THE QUADS ARE GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - vertices     The array of vertices (given in model space).
-        *
-        * - ind_normals  [Optional] array of normal indexes. If specified, the array must
-        *                have length nb_quads*4.
-        *
-        * - normals      [Optional] The array of normals vectors (in model space).
-        *
-        *                 *** THE NORMAL VECTORS MUST HAVE UNIT NORM ***
-        *
-        * - ind_texture  [Optional] array of texture indexes. If specified, the array must
-        *                have length nb_quads*4.
-        *
-        * - textures     [Optional] The array of texture coords.
-        *
-        * - texture_image [Optional] the texture image to use.
-        *
-        *                 *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
+        /**             
+         * Draw a collection of quads.
+         * 
+         * **The four vertices of a quad must always be co-planar !**
+         *
+         * @param   nb_quads        number of quads to draw.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_quads*4` and each 4 consecutive values represent a quad.
+         * @param   vertices        The array of vertices (in model space).
+         * @param   ind_normals     Array of normal indexes. If specified, the array must have length `nb_quads*4`.
+         * @param   normals         The array of normals vectors (in model space).
+         * @param   ind_texture     array of texture indexes. If specified, the array must have length `nb_quads*4`.
+         * @param   textures        The array of texture coords.
+         * @param   texture_image   The texture image to use or `nullptr` if not used
+         *
+         * @remark
+         * - If Gouraud shading is enabled, the normal vector must all have have unit norm.
+         * - If Gouraud shading is disabled, `ind_normals` and `normals` should be set to `nullptr`.
+         * - If texturing is disabled, `ind_texture`, `textures` and `texture_image` should be set to `nullptr`.
+         * - If texturing is disabled, the current material color is used to draw the quads.
         **/
         void drawQuads(int nb_quads,
                        const uint16_t * ind_vertices, const fVec3 * vertices,
@@ -1106,254 +958,70 @@ namespace tgx
 
 
 
-
-
+        ///@}
         /*****************************************************************************************
-        ******************************************************************************************
-        *
-        *                          Drawing simple geometric object
-        *
-        *
-        ******************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Drawing solid basic shapes.
+         *       
+         * Methods for drawing cube and spheres. 
+         */
+        ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
 
 
-        /**
-        * Draw a single pixel on the image at a given position (in model space).
-        *
-        * Use the the material color.
-        *
-        * The scene lightning is ignored.
-        **/
-        void drawPixel(const fVec3& pos)
-            {
-            _drawPixel<false>(pos, _color, 1.0f);
-            }
-
-
 
         /**
-        * Draw a single pixel on the image at a given position (in model space).
-        *
-        * Use the specified color instead of the material color.
-        *
-        * The scene lightning is ignored.
-        **/
-        void drawPixel(const fVec3& pos, color_t color)
-            {
-            _drawPixel<false>(pos, color, 1.0f);
-            }
-
-
-        /**
-        * Draw a single pixel on the image at a given position (given in model space).
-        *
-        * Use the specified color and opacity and use blending
-        *         
-        * The scene lightning is ignored.
-        **/
-        void drawPixel(const fVec3& pos, color_t color, float opacity)
-            {
-            _drawPixel<true>(pos, color, opacity);
-            }
-
-
-        /**
-        * Draw a list of pixels on the image at given positions (in model space).
-        *
-        * Use the material color for all pixels.
-        *
-        * The scene lightning is ignored.
-        **/
-        void drawPixels(int nb_pixels, const fVec3* pos_list)
-            {
-            _drawPixels<false, false>(nb_pixels, pos_list, nullptr, nullptr, nullptr, nullptr);
-            }
-
-
-        /**
-        * Draw a list of pixels on the image at given positions (in model space).
-        *
-        * Use a (possibly) different color for each pixel.
-        * The color are given by a palette and a list of indices (one for each pixel).
-        *
-        * The scene lightning is ignored.
-        **/
-        void drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors)
-            {
-            _drawPixels<true,false>(nb_pixels, pos_list, colors_ind, colors, nullptr, nullptr);
-            }
-
-
-        /**
-        * Draw a list of pixels on the image at given positions (in model space).
-        *
-        * Use different color/opacity for each pixel and use blending.
-        * The color and opacities are both given by a palette and a list of indices
-        * (one for each pixel)
-        *
-        * The scene lightning parameters are ignored.
-        **/
-        void drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
-            {
-            _drawPixels<true,true>(nb_pixels, pos_list, colors_ind, colors, opacities_ind, opacities);
-            }
-
-
-
-
-        /**
-        * Draw a dot/circle on the image at a given position (in model space)
-        * with a given radius in screen pixels.
-        *
-        * Use the the material color.
-        *
-        * The scene lightning is ignored.
-        **/
-        void drawDot(const fVec3& pos, int r)
-            {
-            _drawDot<false>(pos, r, _color, 1.0f);
-            }
-
-
-        /**
-        * Draw a dot/circle on the image at a given position (in model space)
-        * with a given radius in screen pixels.
-        *
-        * Use the specified color instead of the material color.
-        *
-        * The scene lightning is ignored.
-        **/
-        void drawDot(const fVec3& pos, int r, color_t color)
-            {
-            _drawDot<false>(pos, r, color, 1.0f);
-            }
-
-
-        /**
-        * Draw a dot/circle on the image at a given position (in model space).
-        *
-        * Use the specified color and opacity and use blending
-        *
-        * The scene lightning is ignored.
-        **/
-        void drawDot(const fVec3& pos, int r, color_t color, float opacity)
-            {
-            _drawDot<true>(pos, r, color, opacity);
-            }
-
-
-
-        /**
-        * Draw a list of dots/circles on the image at given positions (in model space).
-        *
-        * Use the material color for all dot.
-        * Use the same radius for each dot.
-        *
-        * The scene lightning is ignored.
-        **/
-        void drawDots(int nb_dots, const fVec3* pos_list, const int radius)
-            {
-            _drawDots<false, false, false>(nb_dots, pos_list, nullptr, &radius, nullptr, nullptr, nullptr, nullptr);
-            }
-
-
-        /**
-        * Draw a list of dots/circles on the image at given positions (in model space).
-        *
-        * Use the material color for all dot.
-        * Use a possible different radius for each dot.
-        *
-        * The scene lightning is ignored.
-        **/
-        void drawDots(int nb_dots, const fVec3* pos_list, const int * radius_ind, const int * radius)
-            {
-            _drawDots<true, false,false>(nb_dots, pos_list, radius_ind, radius, nullptr, nullptr, nullptr, nullptr);
-            }
-
-
-        /**
-        * Draw a list of dots/circles on the image at given positions (in model space).
-        *
-        * Use a possible different radius for each dot
-        * Use a (possibly) different color for each dot.
-        *
-        * The scene lightning is ignored.
-        **/
-        void drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const fVec3* colors_ind, const color_t* colors)
-            {
-            _drawDots<true, true,false>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, nullptr, nullptr);
-            }
-
-
-        /**
-        * Draw a list of dots/circles on the image at given positions (in model space).
-        *
-        * Use a possible different radius for each dot
-        * Use a (possibly) different color for each dot
-        * Use a (possibly) different opacity for each dot (and use blending when drawing)
-        *
-        * The scene lightning parameters are ignored.
-        **/
-        void drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int * colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
-            {
-            _drawDots<true, true,true>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, opacities_ind, opacities);
-            }
-
-
-
-
-
-
-
-        /**
-        * Draw the cube [-1,1]^3 (in model space). 
-        * 
-        * -> Use the Model matrix to draw a rectangle and/or choose the position 
-        *    in world coord.
-        **/
-        void drawCube()
-            {
-            // set culling direction = -1 and save previous value
-            float save_culling = _culling_dir;
-            if (_culling_dir != 0) _culling_dir = 1;
-            drawQuads(6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
-            // restore culling direction
-            _culling_dir = save_culling; 
-            }
+         * Draw the unit cube `[-1,1]^3` in model space.
+         * 
+         * @remark The model transform matrix may be used to scale, rotate and position the cube
+         * anywhere in world space.
+         */
+        void drawCube();
             
-
-
+        
         /**
-        * draw a textured unit cube [-1,1]^3 (in model space)
-        * 
-        * -> Use the Model matrix to draw a rectangle and/or choose the position
-        *    in world coord.
-        *                                                                   H--------E
-        *                                                                   |        |
-        *                                                                   |  top   |
-        *                          H-------------E                          |        |
-        *                         /.            /|                 H--------A--------D--------E
-        *                        / .   top     / |                 |        |        |        |
-        *                       /  .          /  |                 |  left  | front  |  right |
-        *                      A------------D    |  right          |        |        |        |
-        *                      |   .        |    |                 G--------B--------C--------F
-        *                      |   G .......|....F                          |        |
-        *                      |  .         |   /                           | bottom |
-        *                      | .  front   |  /                            |        |
-        *                      |.           | /                             G--------F
-        *                      B------------C                               |        |
-        *                                                                   |  back  |
-        *                                                                   |        |
-        *                                                                   H--------E
-        *
-        * - Each face may use a different texture (or set the image to nullptr to disable texturing a face).
-        *
-        * - the texture coordinate for each face are given ordered by their name
-        *   (e.g. 'v_front_A_B_C_D' means vertex in order: A, B, C, D for the front face)
-        *
-        *    *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        */
+         * Draw a textured unit cube `[-1,1]^3` in model space.
+         * 
+         * ```
+         *                                                                   H--------E
+         *                                                                   |        |
+         *                                                                   |  top   |
+         *                          H-------------E                          |        |
+         *                         /.            /|                 H--------A--------D--------E
+         *                        / .   top     / |                 |        |        |        |
+         *                       /  .          /  |                 |  left  | front  |  right |
+         *                      A------------D    |  right          |        |        |        |
+         *                      |   .        |    |                 G--------B--------C--------F
+         *                      |   G .......|....F                          |        |
+         *                      |  .         |   /                           | bottom |
+         *                      | .  front   |  /                            |        |
+         *                      |.           | /                             G--------F
+         *                      B------------C                               |        |
+         *                                                                   |  back  |
+         *                                                                   |        |
+         *                                                                   H--------E
+         * ```
+         * 
+         * @remark
+         * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
+         * - Each face may use a different texture (or set the image to `nullptr` to disable texturing a face).  
+         * - This method is useful for drawing a sky-box. 
+         *
+         * @param   v_front_ABCD    texture coords array for the front face in order ABCD 
+         * @param   texture_front   texture for the front face
+         * @param   v_back_EFGH     texture coords array for the back face in order EFGH 
+         * @param   texture_back    texture for the back face
+         * @param   v_top_HADE      texture coords array for the top face in order HADE
+         * @param   texture_top     texture for the top face
+         * @param   v_bottom_BGFC   texture coords array for the bottom face in order BGFC 
+         * @param   texture_bottom  texture for the bottom face
+         * @param   v_left_HGBA     texture coords array for the left face in order HGBA 
+         * @param   texture_left    texture for the left face
+         * @param   v_right_DCFE    texture coords array for the right face in order DCFE 
+         * @param   texture_right   texture for the right face
+         */
         void drawCube(
             const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
             const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
@@ -1364,12 +1032,41 @@ namespace tgx
             );
 
 
-
         /**
-        * draw a textured unit cube [-1,1]^3 (in model space)
-        *
-        * Same as above for use the whole texture image given for each face.
-        **/
+         * draw a textured unit cube [-1,1]^3 (in model space)
+         * 
+         * ```
+         *                                                                   H--------E
+         *                                                                   |        |
+         *                                                                   |  top   |
+         *                          H-------------E                          |        |
+         *                         /.            /|                 H--------A--------D--------E
+         *                        / .   top     / |                 |        |        |        |
+         *                       /  .          /  |                 |  left  | front  |  right |
+         *                      A------------D    |  right          |        |        |        |
+         *                      |   .        |    |                 G--------B--------C--------F
+         *                      |   G .......|....F                          |        |
+         *                      |  .         |   /                           | bottom |
+         *                      | .  front   |  /                            |        |
+         *                      |.           | /                             G--------F
+         *                      B------------C                               |        |
+         *                                                                   |  back  |
+         *                                                                   |        |
+         *                                                                   H--------E
+         * ```
+         *
+         * @remark
+         * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
+         * - Each face uses a 'whole' image. Set the texture image to `nullptr` to disable texturing a given face.
+         * - This method is useful for drawing a sky-box.
+         *
+         * @param   texture_front   texture for the front face.
+         * @param   texture_back    texture for the back face.
+         * @param   texture_top     texture for the top face.
+         * @param   texture_bottom  texture for the bottom face.
+         * @param   texture_left    texture for the left face.
+         * @param   texture_right   texture for the right face.
+         */
         void drawCube(
             const Image<color_t>* texture_front,
             const Image<color_t>* texture_back,
@@ -1381,570 +1078,578 @@ namespace tgx
 
 
 
+        /**
+         * Draw a unit radius sphere centered at the origin `S(0,1)` in model space.
+         * 
+         * @remark
+         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere with a given number of sector and stacks.
+         *
+         * @param   nb_sectors  number of sectors of the UV sphere.
+         * @param   nb_stacks   number of stacks of the UV sphere.
+         */
+        void drawSphere(int nb_sectors, int nb_stacks);
 
 
         /**
-        * Draw a unit radius sphere centered at the origin S(0,1).
-        *
-        * Create a UV-sphere with a given number of sector and stacks.
-        *
-        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
-        *    in world coord.
-        **/
-        void drawSphere(int nb_sectors, int nb_stacks)
-            {
-            drawSphere(nb_sectors, nb_stacks, nullptr);
-            }
+         * Draw a textured unit radius sphere centered at the origin S(0,1) in model space.
+         * 
+         * @remark
+         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere with a given number of sector and stacks.
+         * - The texture is mapped using the Mercator projection.
+         *
+         * @param   nb_sectors  number of sectors of the UV sphere.
+         * @param   nb_stacks   number of stacks of the UV sphere.
+         * @param   texture     The texture (mapped via Mercoator projection)
+         */
+        void drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture);
 
 
         /**
-        * Draw a textured unit radius sphere centered at the origin S(0,1).
-        *
-        * Create a UV-sphere with a given number of sector and stacks.
-        *
-        * The texture is mapped using the Mercator projection. 
-        * 
-        * *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        *
-        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
-        *    in world coord.
-        **/
-        void drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture)
-            {
-            _drawSphere<false,false>(nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
-            }
+         * Draw a unit radius sphere centered at the origin S(0,1) in model space.
+         * 
+         * @remark
+         * - The model transform matrix may be used position the sphere anywhere in world space and
+         * change it to an ellipsoid.
+         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted
+         * automatically according to the apparent size on the screen.
+         *
+         * @param   quality Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
+         *                  - `1` : default quality  
+         *                  - `>1`: finer mesh. Improve quality but decrease speed.
+         *                  - `<1`: coarser mesh. Decrease quality but improve speed.
+         */
+        void drawAdaptativeSphere(float quality = 1.0f);
 
 
         /**
-        * Draw a unit radius sphere centered at the origin S(0,1).
-        *
-        * Draw a UV-sphere where the number of sector and stacks is computed 
-        * automatically according to the apparent size on the screen.
-        * 
-        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to   
-        *   imcrease or  decrease the number of faces in the tesselation:
-        *     - quality < 1 : decrease quality but improve speed  
-        *     - quality > 1 : improve quality but decrease speed  
-        * 
-        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
-        *    in world coord.
-        **/
-        void drawAdaptativeSphere(float quality = 1.0f)
-            {
-            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
-            drawSphere(nb_stacks * 2 - 2, nb_stacks, nullptr);
-            }   
-
-
-        /**
-        * Draw a textured unit radius sphere centered at the origin S(0,1).
-        *
-        * Draw a UV-sphere where the number of sector and stacks is computed
-        * automatically according to the apparent size on the screen.
-        *
-        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to
-        *   imcrease or  decrease the number of faces in the tesselation:
-        *     - quality < 1 : decrease quality but improve speed
-        *     - quality > 1 : improve quality but decrease speed
-        *
-        * The texture is mapped using the mercator projection.
-        *
-        *  *** TEXTURE DIMENSIONS MUST BE POWERS OF 2 WHEN USING 'FAST' WRAP MODE FOR TEXTURING ****
-        *
-        * -> Use the Model matrix to draw an ellipsoid instead and/or choose the position
-        *    in world coord.
-        **/
-        void drawAdaptativeSphere(const Image<color_t>* texture, float quality = 1.0f)
-            {
-            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
-            drawSphere(nb_stacks * 2 - 2, nb_stacks, texture);
-            }
+         * Draw a textured unit radius sphere centered at the origin S(0,1) in model space.
+         * 
+         * @remark 
+         * - The model transform matrix may be used position the sphere anywhere in world space   
+         *   and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted   
+         *   automatically according to the apparent size on the screen.
+         * - The texture is mapped using the Mercator projection.
+         *
+         * @param   texture The texture image mapped via Mercator projection. 
+         * @param   quality (Optional) Quality of the mesh. Should be positive, typically between 0.5f
+         *                  and 2.0f.
+         *                  - `1` : default quality
+         *                  - `>1`: finer mesh. Improve quality but decrease speed.
+         *                  - `<1`: coarser mesh. Decrease quality but improve speed.
+         */
+        void drawAdaptativeSphere(const Image<color_t>* texture, float quality = 1.0f);
 
 
 
 
 
 
+
+
+        ///@}
         /*****************************************************************************************
-        ******************************************************************************************
-        *
-        *                            WireFrame drawing methods
-        *
-        * Each methods comes in two flavors: without or with a specified line thickness.
-        * 
-        * - methods without thickness are fast but are not accurate (single pixel line, without  
-        *   blending, anti-aliasing or sub-pixel precision.
-        * 
-        * - methods with a thickness specified are currently VERY SLOW (even slower than texturing!)   
-        *   but the line is drawn in high quality, using anti-aliasing, sub-pixel precision, blending
-        *   and the given thickness in pixels (a positive float value).
-        * 
-        *  *** WIREFRAME DRAWING METHODS DO NOT USE DEPTH TESTING (even if a z-buffer is on) ***
-        *  
-        *  *** WIREFRAME DRAWING METHODS DO NOT TAKE LIGHTNING INTO ACCOUNT FOR LINE COLORS ***
-        *  
-        ******************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Drawing wireframe geometric primitives. 
+         *       
+         * Methods for drawing wireframe meshes, triangles and quads.
+         *
+         * Two versions for each method :
+         * 1. Fast but low quality drawing.
+         * 2. Slow but high quality drawing (adjustable thickness, alpha-blending, anti-aliasing).  
+         * 
+         * @remark Wireframe methods do not take the scene lightning into account. 
+         */
+        ///@{
+        /*****************************************************************************************
+        ******************************************************************************************/
+
+
+
+        /**
+         * Draw a mesh in wireframe [*low quality*].
+         * 
+         * @remark
+         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - The mesh is drawn with the current material color (not that of the mesh). This method does not
+         *   require a zbuffer but back face culling is used if it is enabled.
+         *
+         * @param   mesh                The mesh to draw
+         * @param   draw_chained_meshes True to draw also the chained meshes.
+        **/
+        void drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes = true);
+
+
+        /**
+         * Draw a mesh in wireframe [*high quality*].
+         * 
+         * @remark
+         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing. 
+         * - This method does not require a zbuffer but back face culling is used if it is enabled.
+         *
+         * @warning This method is very slow (may be slower that solid drawing) !  
+         * 
+         * @param   mesh                The mesh to draw
+         * @param   draw_chained_meshes True to draw also the chained meshes.
+         * @param   thickness           thickness of the lines.
+         * @param   color               color to use.
+         * @param   opacity             opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness, color_t color, float opacity);
+
+
+        /**
+         * Draw a wireframe line segment [*low quality*].
+         * 
+         * @remark
+         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - The line is drawn with the current material color.
+         *
+         * @param   P1,P2  endpoints in model space.
+        **/
+        void drawWireFrameLine(const fVec3& P1, const fVec3& P2);
+
+
+        /**
+         * Draw a wireframe line segment [*high quality*].
+         *
+         * @remark This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         *         
+         * @warning This method is very slow (may be slower that solid drawing) !
+         *
+         * @param   P1,P2       endpoints in model space.
+         * @param   thickness   thickness of the line
+         * @param   color       color to use
+         * @param   opacity     opacity multiplier in [0.0f, 1.0f]
+        **/
+        void drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness, color_t color, float opacity);
+
+
+        /**
+         * Draw a collection of wireframe line segments [*low quality*].
+         * 
+         * @remark
+         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - The lines are drawn with the current material color.
+         *
+         * @param   nb_lines        number of lines to draw
+         * @param   ind_vertices    array of vertex indices. The length of the array is `nb_lines*2` and each 2 consecutive values represent a line segment.
+         * @param   vertices        The array of vertices in model space.
+        **/
+        void drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices);
+
+
+        /**
+         * Draw a collection of wireframe line segments [*high quality*].
+         * 
+         * @remark This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         *
+         * @warning This method is very slow (may be slower that solid drawing) !
+         *
+         * @param   nb_lines        number of lines to draw
+         * @param   ind_vertices    array of vertex indices. The length of the array is `nb_lines*2` and each 2 consecutive values represent a line segment.
+         * @param   vertices        The array of vertices in model space.
+         * @param   thickness       thickness of the lines
+         * @param   color           color to use
+         * @param   opacity         opacity multiplier in [0.0f, 1.0f]
+        **/
+        void drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity);
+
+
+        /**
+         * Draw a wireframe triangle [*low quality*].
+         *
+         * @remark
+         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - The lines are drawn with the current material color.  
+         * - This method does not use the z-buffer but backface culling is used if enabled. 
+         *
+         * @param   P1, P2, P3      the triangle vertices in model space.
+        **/
+        void drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3);
+
+
+        /**
+         * Draw a wireframe triangle [*high quality*].
+         *
+         * @remark 
+         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - This method does not use the z-buffer but backface culling is used if enabled.
+         *
+         * @warning This method is very slow (may be slower that solid drawing) !
+         *
+         * @param   P1, P2, P3      triangle vertices in model space.
+         * @param   thickness       thickness of the lines
+         * @param   color           color to use
+         * @param   opacity         opacity multiplier in [0.0f, 1.0f]
+        **/
+        void drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness, color_t color, float opacity);
+
+
+        /**
+         * Draw a collection of wireframe triangles [*low quality*].
+         *
+         * @remark
+         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - The lines are drawn with the current material color.
+         * - This method does not use the z-buffer but backface culling is used if enabled.  
+         * 
+         * @param   nb_triangles    number of triangles to draw. 
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_triangles*3` and each 3 consecutive values represent a triangle.
+         * @param   vertices        Array of vertices in model space. 
+        **/
+        void drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices);
+
+
+        /**
+         * Draw a collection of wireframe triangles [*high quality*].
+         *
+         * @remark
+         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - This method does not use the z-buffer but backface culling is used if enabled.
+         *
+         * @warning This method is very slow (may be slower that solid drawing) !
+         *
+         * @param   nb_triangles    number of triangles to draw.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_triangles*3` and each 3 consecutive values represent a triangle.
+         * @param   vertices        Array of vertices in model space.
+         * @param   thickness       thickness of the lines
+         * @param   color           color to use
+         * @param   opacity         opacity multiplier in [0.0f, 1.0f]
+        **/
+        void drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity);
+
+
+        /**
+         * Draw a wireframe quad [*low quality*].
+         *
+         * @remark
+         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - The lines are drawn with the current material color.
+         * - This method does not use the z-buffer but backface culling is used if enabled.  
+         * - The four vertices of the quads must be co-planar. 
+         *
+         * @param   P1, P2, P3,P4       the quad vertices in model space.
+        **/
+        void drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4);
+
+
+        /**
+         * Draw a wireframe quad [*high quality*].
+         *
+         * @remark
+         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - This method does not use the z-buffer but backface culling is used if enabled.
+         * - The four vertices of the quads must be co-planar.
+         *
+         * @warning This method is very slow (may be slower that solid drawing) !
+         *
+         * @param   P1, P2, P3,P4       the quad vertices in model space.
+         * @param   thickness           thickness of the lines
+         * @param   color               color to use
+         * @param   opacity             opacity multiplier in [0.0f, 1.0f]
+         */
+        void drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness, color_t color, float opacity);
+
+
+        /**
+         * Draw a collection of wireframe quads [*low quality*].
+         *
+         * @remark
+         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - The lines are drawn with the current material color.
+         * - This method does not use the z-buffer but backface culling is used if enabled.
+         * - The four vertices of the quads must be co-planar.
+         *
+         * @param   nb_quads        number of quads to draw.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_quads*4` and each 4 consecutive values represent a quad.
+         * @param   vertices        Array of vertices in model space.
+         */
+        void drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices);
+
+
+        /**
+         * Draw a collection of wireframe quads [*high quality*].
+         * 
+         * @remark
+         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - This method does not use the z-buffer but backface culling is used if enabled.
+         * - The four vertices of the quads must be co-planar.
+         *
+         * @warning This method is very slow (may be slower that solid drawing) !
+         *
+         * @param   nb_quads        number of quads to draw.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_quads*4` and each 4 consecutive values represent a quad.
+         * @param   vertices        Array of vertices in model space.
+         * @param   thickness       thickness of the lines
+         * @param   color           color to use
+         * @param   opacity         opacity multiplier in [0.0f, 1.0f]
+         */
+        void drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity);
+
+
+
+
+        ///@}
+        /*****************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Drawing basic shapes in wireframe.
+         *       
+         * Methods for drawing wireframe cubes and spheres. 
+         * 
+         * Two versions for each method :
+         * 1. Fast but low quality drawing.  
+         * 2. Slow but high quality drawin (adjustable thickness, alpha-blending, anti-aliasing).     
+         *
+         * @remark Wireframe methods do not take the scene lightning into account.
+         */
+        ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
 
 
         /**
-        * Draw a mesh onto the image using 'wireframe' lines (FAST BUT LOW QUALITY METHOD). 
-        * 
-        * The mesh is drawn with the current material color (not that of the mesh). This method does not 
-        * require a zbuffer but back face culling is used if it is enabled.
-        *
-        * - mesh:    The mesh to draw. The meshes/vertices array/textures can be in RAM or in FLASH.
-        *           Whenever possible, put vertex array and texture in RAM (or even EXTMEM).
-        *
-        * - draw_chained_meshes:  If true, the meshes linked to this mesh (via the ->next member) are also drawn.
+         * Draw the wireframe cube [0,1]^3 (in model space) [*low quality*].
+         *
+         * @remark
+         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
+         */
+        void drawWireFrameCube();
+
+
+        /**
+         * Draw the wireframe cube [0,1]^3 (in model space) [*high quality*].
+         *
+         * @remark
+         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.  
+         *
+         * @warning This method is very slow (may be slower that solid drawing) !
+         *
+         * @param   thickness       thickness of the lines
+         * @param   color           color to use
+         * @param   opacity         opacity multiplier in [0.0f, 1.0f]
+         */
+        void drawWireFrameCube(float thickness, color_t color, float opacity);
+
+
+        /**
+         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*low quality*].
+         * 
+         * @remark
+         * - Create a UV-sphere with a given number of sector and stacks.
+         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         *
+         * @param   nb_sectors  number of sectors in the UV sphere.
+         * @param   nb_stacks   number of stacks in the UV sphere.
+         */
+        void drawWireFrameSphere(int nb_sectors, int nb_stacks);
+
+
+        /**
+         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*high quality*].
+         *
+         * @remark
+         * - Create a UV-sphere with a given number of sector and stacks.
+         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         *
+         * @warning This method is very slow (may be slower that solid drawing) !
+         * 
+         * @param   nb_sectors      number of sectors in the UV sphere.
+         * @param   nb_stacks       number of stacks in the UV sphere.
+         * @param   thickness       thickness of the lines
+         * @param   color           color to use
+         * @param   opacity         opacity multiplier in [0.0f, 1.0f]
         **/
-        void drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes = true)
-            {
-            _drawWireFrameMesh<true>(mesh, draw_chained_meshes, color_t(_color), 1.0f, 1.0f);
-            }
+        void drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity);
 
 
         /**
-        * Draw a mesh onto the image using 'wireframe' lines (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        * 
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/        
-        void drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness)
-            {
-            _drawWireFrameMesh<false>(mesh, draw_chained_meshes, color_t(_color), 1.0f, thickness);
-            }
-            
-
-        /**
-        * Draw a mesh onto the image using 'wireframe' lines (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        * Also set the color and opacity for blending instead of using the material color.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/        
-        void drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness, color_t color, float opacity)
-            {
-            _drawWireFrameMesh<false>(mesh, draw_chained_meshes, color, opacity, thickness);
-            }
-            
-
-        /**
-        * Draw a 'wireframe' 3D line segment  (FAST BUT LOW QUALITY METHOD).
-        *
-        * the line is drawn with the current material color. This method does not require a zbuffer.
-        *
-        * - (P1, P2) coordinates (in model space) of the segment to draw.
-        **/
-        void drawWireFrameLine(const fVec3& P1, const fVec3& P2)
-            {
-            _drawWireFrameLine<true>(P1, P2, color_t(_color), 1.0f, 1.0f);
-            }
+         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*low quality*].
+         * 
+         * @remark
+         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted automatically according to the apparent size on the screen.
+         *
+         * @param quality   Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
+         *                  - `1` : default quality
+         *                  - `>1`: finer mesh. Improve quality but decrease speed.
+         *                  - `<1`: coarser mesh. Decrease quality but improve speed.
+         */
+        void drawWireFrameAdaptativeSphere(float quality = 1.0f);
 
 
         /**
-        * Draw a 'wireframe' 3D line segment. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness)
-            {
-            _drawWireFrameLine<false>(P1, P2, color_t(_color), 1.0f, thickness);
-            }
-
-
-        /**
-        * Draw a 'wireframe' 3D line segment. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        * Also set the color and opacity for blending instead of using the material color.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness, color_t color, float opacity)
-            {
-            _drawWireFrameLine<false>(P1, P2, color, opacity, thickness);
-            }
-
-
-        /**
-        * Draw a list of wireframe lines on the image (FAST BUT LOW QUALITY METHOD). 
-        * the lines are drawn with the current material color. This method does not require a zbuffer.
-        *
-        * - nb_lines Number of lines to draw.
-        *
-        * - ind_vertices Array of vertex indexes. The length of the array is nb_lines*2
-        *                and each 2 consecutive values represent a line segment.
-        *
-        * - vertices     The array of vertices (given in model space).
-        **/
-        void drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices)
-            {
-            _drawWireFrameLines<true>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
-            }
-
-
-        /**
-        * Draw a list of wireframe lines on the image. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
-            {
-            _drawWireFrameLines<false>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
-            }
-
-
-        /**
-        * Draw a list of wireframe lines on the image. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        * Also set the color and opacity for blending instead of using the material color.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
-            {
-            _drawWireFrameLines<false>(nb_lines, ind_vertices, vertices, color, opacity, thickness);
-            }
-
-
-        /**
-        * Draw a 'wireframe' triangle (FAST BUT LOW QUALITY METHOD).
-        *
-        * the triangle is drawn with the current material color. This method does not require a zbuffer
-        * but back face culling is used (if enabled).
-        *
-        * - (P1, P2, P3) coordinates (in model space) of the triangle to draw.
-        **/
-        void drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3)
-            {
-            _drawWireFrameTriangle<true>(P1, P2, P3, color_t(_color), 1.0f, 1.0f);
-            }
-
-
-        /**
-        * Draw a 'wireframe' triangle. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness)
-            {
-            _drawWireFrameTriangle<false>(P1, P2, P3, color_t(_color), 1.0f, thickness);
-            }
-    
-
-        /**
-        * Draw a 'wireframe' triangle. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        * Also set the color and opacity for blending instead of using the material color.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness, color_t color, float opacity)
-            {
-            _drawWireFrameTriangle<false>(P1, P2, P3, color, opacity, thickness);
-            }
-
-
-        /**
-        * Draw a list of wireframe triangles on the image (FAST BUT LOW QUALITY METHOD).
-        * 
-        * the triangles are drawn with the current material color. This method does not require a zbuffer.
-        * but back face culling is used (if enabled).
-        * 
-        * - nb_triangles Number of triangles to draw.
-        *
-        * - ind_vertices Array of vertex indexes. The length of the array is nb_triangles*3
-        *                and each 3 consecutive values represent a triangle.
-        *
-        *               *** MAKE SURE THAT THE TRIANGLES ARE GIVEN WITH THE CORRECT WINDING ORDER ***
-        *
-        * - vertices     The array of vertices (given in model space).
-        **/
-        void drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices)
-            {
-            _drawWireFrameTriangles<true>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
-            }
-
-
-        /**
-        * Draw a list of wireframe triangles on the image. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
-            {
-            _drawWireFrameTriangles<false>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
-            }
-          
-
-        /**
-        * Draw a list of wireframe triangles on the image. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        * Also set the color and opacity for blending instead of using the material color.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
-            {
-            _drawWireFrameTriangles<false>(nb_triangles, ind_vertices, vertices, color, opacity, thickness);
-            }
-
-
-        /**
-        * Draw a 'wireframe' quad (FAST BUT LOW QUALITY METHOD). 
-        *
-        * the quad is drawn with the current material color. This method does not require a zbuffer
-        * but back face culling is used (if enabled).
-        *
-        * - (P1, P2, P3, P4) coordinates (in model space) of the quad to draw.
-        **/
-        void drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
-            {
-            _drawWireFrameQuad<true>(P1, P2, P3, P4, color_t(_color), 1.0f, 1.0f);
-            }
-
-
-        /**
-        * Draw a 'wireframe' quad. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness)
-            {
-            _drawWireFrameQuad<false>(P1, P2, P3, P4, color_t(_color), 1.0f, thickness);
-            }
-           
-
-        /**
-        * Draw a 'wireframe' quad. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        * Also set the color and opacity for blending instead of using the material color.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness, color_t color, float opacity)
-            {
-            _drawWireFrameQuad<false>(P1, P2, P3, P4, color, opacity, thickness);
-            }
-           
-
-        /**
-        * Draw a list of wireframe quads on the image (FAST BUT LOW QUALITY METHOD). 
-        * 
-        * the quads are drawn with the current material color. This method does not require a zbuffer
-        * but back face culling is used (if enabled).
-        *
-        * - nb_quads Number of triangles to draw.
-        *
-        * - ind_vertices Array of vertex indexes. The length of the array is nb_triangles*3
-        *                and each 3 consecutive values represent a triangle.
-        *
-        *               *** MAKE SURE THAT THE QUADS ARE GIVEN WITH THE CORRECT WINDING ORDER ***
-        *               *** QUADS MUST BE COPLANAR ***
-        *
-        * - vertices     The array of vertices (given in model space).
-        **/
-        void drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices)
-            {
-            _drawWireFrameQuads<true>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
-            }
-
-
-        /**
-        * Draw a list of quads on the image. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness)
-            {
-            _drawWireFrameQuads<false>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, thickness);
-            }
-
-
-        /**
-        * Draw a list of quads on the image. (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        * Also set the color and opacity for blending instead of using the material color.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
-            {
-            _drawWireFrameQuads<false>(nb_quads, ind_vertices, vertices, color, opacity, thickness);
-            }
+         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*high quality*].
+         *
+         * @remark
+         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted automatically according to the apparent size on the screen.
+         *
+         * @warning This method is very slow (may be slower that solid drawing) !
+         *
+         * @param quality       Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
+         *                      - `1` : default quality
+         *                      - `>1`: finer mesh. Improve quality but decrease speed.
+         *                      - `<1`: coarser mesh. Decrease quality but improve speed.
+         * @param thickness     thickness of the lines
+         * @param color         color to use
+         * @param opacity       opacity multiplier in [0.0f, 1.0f]
+         */
+        void drawWireFrameAdaptativeSphere(float quality, float thickness, color_t color, float opacity);
 
 
 
 
+
+        ///@}
         /*****************************************************************************************
-        ******************************************************************************************
-        *
-        *                          Drawing simple geometric object in wireframe
-        *
-        *
-        ******************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Drawing 3D point clouds
+         *       
+         * Methods for drawing pixels and dots.
+         *
+         * @remark the methods do not take the scene lightning into account.
+         */
+        ///@{
+        /*****************************************************************************************
         ******************************************************************************************/
 
 
-        /**
-        * Draw the cube [0,1]^3 (in model space) in wireframe (FAST BUT LOW QUALITY METHOD). 
-        **/
-        void drawWireFrameCube()
-            {
-            // set culling direction = 1 and save previous value
-            float save_culling = _culling_dir;
-            if (_culling_dir != 0) _culling_dir = 1;
-            drawWireFrameQuads(6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
-            // restore culling direction
-            _culling_dir = save_culling;
-            }
-
 
         /**
-        * Draw the cube [0,1]^3 (in model space) in wireframe (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameCube(float thickness)
-            {
-            drawWireFrameCube(thickness, color_t(_color), 1.0f);
-            }
+         * Draw a single pixel at a given position in model space.
+         *
+         * @remark
+         * - Use the material color.
+         * - The scene lightning is ignored.  
+         * 
+         * @param   pos Position (in model space).
+         */
+        void drawPixel(const fVec3& pos);
 
 
         /**
-        * Draw the cube [0,1]^3 (in model space) in wireframe (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        * Also set the color and opacity for blending instead of using the material color.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameCube(float thickness, color_t color, float opacity)
-            {
-            // set culling direction = 1 and save previous value
-            float save_culling = _culling_dir;
-            if (_culling_dir != 0) _culling_dir = 1;
-            drawWireFrameQuads(6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES, thickness, color, opacity);
-            // restore culling direction
-            _culling_dir = save_culling;
-            }
-
+         * Draw a single pixel at a given position in model space.
+         * 
+         * @remark
+         *  - Use blending with a given color and opacity factor.
+         *  - The scene lightning is ignored.
+         *
+         * @param   pos     Position (in model space).
+         * @param   color   color to use.
+         * @param   opacity opacity multiplier in `[0.0f, 1.0f]`. 
+         */
+        void drawPixel(const fVec3& pos, color_t color, float opacity);
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin (in model space). (FAST BUT LOW QUALITY METHOD).
-        * 
-        * Create a UV-sphere with a given number of sector and stacks.
-        **/
-        void drawWireFrameSphere(int nb_sectors, int nb_stacks)
-            {
-            _drawSphere<true, true>(nb_sectors, nb_stacks, nullptr, 1.0f, color_t(_color), 1.0f);
-            }
+         * Draw a list of pixels at given positions in model space.
+         * 
+         * @remark
+         *  - Use the material color for all pixels.
+         *  - The scene lightning is ignored.
+         *
+         * @param   nb_pixels   number of pixels to draw.
+         * @param   pos_list    array of positions (in model space). 
+         */
+        void drawPixels(int nb_pixels, const fVec3* pos_list);
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin (in model space). (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness)
-            {
-            drawWireFrameSphere(nb_sectors, nb_stacks, thickness, color_t(_color), 1.0f);
-            }
+         * Draw a list of pixels at given positions in model space with different colors and opacities.
+         * 
+         * @remark
+         *  - Use blending with given colors and opacities given by a palette and a list of indices.
+         *  - The scene lightning is ignored.
+         *
+         * @param   nb_pixels       number of pixels to draw.
+         * @param   pos_list        array of positions (in model space).
+         * @param   colors_ind      array of color indices.
+         * @param   colors          array of colors.
+         * @param   opacities_ind   array of opacities indices.
+         * @param   opacities       array of opacities
+         */
+        void drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities);
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin (in model space). (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        * Also set the color and opacity for blending instead of using the material color.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity)
-            {
-            _drawSphere<true,false>(nb_sectors, nb_stacks, nullptr, thickness, color, opacity);
-            }
+         * Draw a dot/circle at a given position in model space
+         * 
+         * @remark
+         * - Use the the material color.
+         * - The scene lightning is ignored.
+         *
+         * @param   pos Position in model space.
+         * @param   r   radius in pixels (integer valued). 
+         */
+        void drawDot(const fVec3& pos, int r);
 
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin (in model space). (FAST BUT LOW QUALITY METHOD).
-        *
-        * Draw a UV-sphere wherethe number of sector and stacks is
-        * computed automatically according to the apparent size on the screen.
-        *
-        * - quality > 0 is a multiplier (typically between 0.5 and 2) used to
-        *   imcrease or  decrease the number of faces in the tesselation:
-        *     - quality < 1 : decrease quality but improve speed
-        *     - quality > 1 : improve quality but decrease speed
-        *
-        * As usual, model-view transform is applied a drawing time.
-        **/
-        void drawWireFrameAdaptativeSphere(float quality = 1.0f)
-            {
-            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
-            drawWireFrameSphere(nb_stacks*2 - 2, nb_stacks);
-            }   
+         * Draw a dot/circle at a given position in model space
+         * 
+         * @remark
+         * - Use blending with the given color and opacity.  
+         * - The scene lightning is ignored.
+         *
+         * @param   pos     Position in model space.
+         * @param   r       radius in pixels.
+         * @param   color   color to use.
+         * @param   opacity The opacity for blending in [0.0f, 1.0f].
+         */
+        void drawDot(const fVec3& pos, int r, color_t color, float opacity);
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin (in model space). (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameAdaptativeSphere(float quality, float thickness)
-            {
-            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
-            drawWireFrameSphere(nb_stacks * 2 - 2, nb_stacks, thickness);
-            }   
+         * Draw a list of dots/circles at given positions in model space.
+         * 
+         * @remark
+         * - Use the material color and the same radius for every dot.
+         * - The scene lightning is ignored.
+         *
+         * @param   nb_dots     number of dots to draw
+         * @param   pos_list    array of positions in model space.
+         * @param   radius      radius in pixels
+         */
+        void drawDots(int nb_dots, const fVec3* pos_list, const int radius);
 
 
         /**
-        * Draw a wireframe unit radius sphere centered at the origin (in model space). (HIGH QUALITY / SLOW VERSION).
-        *
-        * Same as above but specify the thickness (in pixels > 0.0) and use anti-aliasing.
-        * Also set the color and opacity for blending instead of using the material color.
-        *
-        * *** MUCH SLOWER THAN THE VERSION WITHOUT AA/THICKNESS (AND EVEN SLOWER THAN DRAWING WITH SHADERS !) ***
-        **/
-        void drawWireFrameAdaptativeSphere(float quality, float thickness, color_t color, float opacity)
-            {
-            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
-            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
-            drawWireFrameSphere(nb_stacks * 2 - 2, nb_stacks, thickness, color, opacity);
-            }
+         * Draw a list of dots/circles at given positions in model space.
+         * 
+         * @remark
+         * - Use a different radius and colors for every dot.
+         * - Use blending with given colors and opacities given by a palette and a list of indices.
+         * - The scene lightning is ignored.
+         *
+         * @param   nb_dots         number of dots to draw.
+         * @param   pos_list        array of positions in model space.
+         * @param   radius_ind      array of radius indices.
+         * @param   radius          array of radiuses.
+         * @param   colors_ind      array of color indices.
+         * @param   colors          array of colors.
+         * @param   opacities_ind   array of opacity indices.
+         * @param   opacities       array of opacities value in [0.0f, 1.0f].
+         */
+        void drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities);
 
+
+
+
+
+        ///@}
 
 
 
@@ -1957,7 +1662,7 @@ namespace tgx
         /*****************************************************************************************
         ******************************************************************************************
         *
-        * BE CAREFUL PAST THIS POINT... HERE BE DRAGONS !
+        * BE CAREFUL PAST THIS POINT... FOR HERE BE DRAGONS !
         *
         ******************************************************************************************
         ******************************************************************************************/
@@ -1978,154 +1683,27 @@ namespace tgx
             }
 
 
-
         /** recompute the wa and wa scaling constants. called after every change of the projection matrix or projection mode */
-        void _recompute_wa_wb()
-            {
-            if (_ortho)
-                { // orthographic projection
-                if (std::is_same<ZBUFFER_t, float>::value)
-                    { // float zbuffer : no normalization needed
-                    _uni.wa = 1.0f;
-                    _uni.wb = 0.0f;
-                    }
-                else
-                    { // uint16_t zbuffer : normalize in [0,65535]
-                    _uni.wa = 32767.4f;
-                    _uni.wb = 0;
-                    }
-                }
-            else
-                { // perspective projection
-                if (std::is_same<ZBUFFER_t, float>::value)
-                    { // float zbuffer : no normalization needed
-                    _uni.wa = 1.0f;
-                    _uni.wb = 0.0f;
-                    }
-                else
-                    { // uint16_t zbuffer : normalize in [0,65535]
-                    _uni.wa = -32768 * _projM[14];
-                    _uni.wb = 32768 * (_projM[10] + 1);
-                    }
-                }
-            }
-
+        TGX_NOINLINE void _recompute_wa_wb();
 
 
         /***********************************************************
         * Making sure shader flags are coherent
         ************************************************************/
 
-        void _rectifyShaderOrtho()
-            {
-            if (_ortho)
-                {
-                TGX_SHADER_ADD_ORTHO(_shaders)
-                TGX_SHADER_REMOVE_PERSPECTIVE(_shaders)
-                }
-            else
-                {
-                TGX_SHADER_ADD_PERSPECTIVE(_shaders)
-                TGX_SHADER_REMOVE_ORTHO(_shaders)
-                }
-            }
+        TGX_NOINLINE void _rectifyShaderOrtho();
 
 
-        void _rectifyShaderZbuffer()
-            {
-            if (_uni.zbuf)
-                {
-                TGX_SHADER_ADD_ZBUFFER(_shaders)
-                TGX_SHADER_REMOVE_NOZBUFFER(_shaders)
-                }
-            else
-                {
-                TGX_SHADER_ADD_NOZBUFFER(_shaders)
-                TGX_SHADER_REMOVE_ZBUFFER(_shaders)
-                }
-            }
+        TGX_NOINLINE void _rectifyShaderZbuffer();
 
 
-        void _rectifyShaderShading(int new_shaders)
-            {
-            if (TGX_SHADER_HAS_GOURAUD(new_shaders))
-                {
-                TGX_SHADER_ADD_GOURAUD(_shaders)
-                TGX_SHADER_REMOVE_FLAT(_shaders)
-                }
-            else 
-                {
-                TGX_SHADER_ADD_FLAT(_shaders)
-                TGX_SHADER_REMOVE_GOURAUD(_shaders)
-                }
-
-            bool tex = (TGX_SHADER_HAS_TEXTURE(new_shaders));
-
-            if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(new_shaders))
-                {
-                setTextureWrappingMode(TGX_SHADER_TEXTURE_WRAP_POW2);
-                tex = true;
-                }
-            if (TGX_SHADER_HAS_TEXTURE_CLAMP(new_shaders))
-                {
-                setTextureWrappingMode(TGX_SHADER_TEXTURE_CLAMP);
-                tex = true;
-                }
-            if (TGX_SHADER_HAS_TEXTURE_NEAREST(new_shaders))
-                {
-                setTextureQuality(TGX_SHADER_TEXTURE_NEAREST);
-                tex = true;
-                }
-            if (TGX_SHADER_HAS_TEXTURE_BILINEAR(new_shaders))
-                {
-                setTextureQuality(TGX_SHADER_TEXTURE_BILINEAR);
-                tex = true;
-                }
-            if (tex)
-                {
-                TGX_SHADER_ADD_TEXTURE(_shaders)
-                TGX_SHADER_REMOVE_NOTEXTURE(_shaders)
-                }
-            else
-                {
-                TGX_SHADER_ADD_NOTEXTURE(_shaders)
-                TGX_SHADER_REMOVE_TEXTURE(_shaders)
-                }
-            }
+        TGX_NOINLINE void _rectifyShaderShading(Shader new_shaders);
 
 
-        void _rectifyShaderTextureWrapping()
-            {
-            if (_texture_wrap_mode == TGX_SHADER_TEXTURE_WRAP_POW2)
-                {
-                TGX_SHADER_ADD_TEXTURE_WRAP_POW2(_shaders)
-                TGX_SHADER_REMOVE_TEXTURE_CLAMP(_shaders)                    
-                }
-            else
-                {
-                TGX_SHADER_ADD_TEXTURE_CLAMP(_shaders)
-                 TGX_SHADER_REMOVE_TEXTURE_WRAP_POW2(_shaders)
-                }
-            }
+        TGX_NOINLINE void _rectifyShaderTextureWrapping();
 
 
-        void _rectifyShaderTextureQuality()
-            {
-            if (_texture_quality == TGX_SHADER_TEXTURE_BILINEAR)
-                {
-                TGX_SHADER_ADD_TEXTURE_BILINEAR(_shaders)
-                TGX_SHADER_REMOVE_TEXTURE_NEAREST(_shaders)                    
-                }
-            else
-                {
-                TGX_SHADER_ADD_TEXTURE_NEAREST(_shaders)                    
-                TGX_SHADER_REMOVE_TEXTURE_BILINEAR(_shaders)
-                }
-            }
-
-
-
-
+        TGX_NOINLINE void _rectifyShaderTextureQuality();
        
 
        /***********************************************************
@@ -2207,7 +1785,7 @@ namespace tgx
             
 
 
-        template<bool CHECKRANGE, bool USE_BLENDING> void drawPixelZbuf(int x, int y, color_t color, float opacity, float z)
+        template<bool CHECKRANGE, bool USE_BLENDING> TGX_INLINE inline void drawPixelZbuf(int x, int y, color_t color, float opacity, float z)
             {
             if (CHECKRANGE && ((x < 0) || (x >= _uni.im->lx()) || (y < 0) || (y >= _uni.im->ly()))) return;           
             ZBUFFER_t& W = _uni.zbuf[x + _uni.im->lx() * y];
@@ -2424,17 +2002,17 @@ namespace tgx
         float _fastpowtab[_POWTABSIZE];         // the precomputed power table.
 
         /** Pre-compute the power table for computing specular light component (if needed). */
-        TGX_INLINE void _precomputeSpecularTable(int exponent)
+        TGX_INLINE inline void _precomputeSpecularTable(int exponent)
             {
             if (_currentpow == exponent) return;
             _precomputeSpecularTable2(exponent);
             }
 
-        void _precomputeSpecularTable2(int exponent);
+        TGX_NOINLINE void _precomputeSpecularTable2(int exponent);
 
 
         /** compute pow(x, exponent) using linear interpolation from the pre-computed table */
-        TGX_INLINE float _powSpecular(float x) const
+        TGX_INLINE inline float _powSpecular(float x) const
             {
             const float indf = (_powmax - x) * _POWTABSIZE;
             const int indi = max(0,(int)indf);
@@ -2443,7 +2021,7 @@ namespace tgx
 
 
         /** compute a color according to Phong lightning model, use model color */
-        template<bool TEXTURE> TGX_INLINE  RGBf _phong(float v_diffuse, float v_specular) const
+        template<bool TEXTURE> TGX_INLINE inline RGBf _phong(float v_diffuse, float v_specular) const
             {
             RGBf col = _r_ambiantColor;
             col += _r_diffuseColor * max(v_diffuse, 0.0f);
@@ -2455,7 +2033,7 @@ namespace tgx
 
 
         /** compute a color according to Phong lightning model, use given color */
-        TGX_INLINE  RGBf _phong(float v_diffuse, float v_specular, RGBf color) const
+        TGX_INLINE  inline RGBf _phong(float v_diffuse, float v_specular, RGBf color) const
             {
             RGBf col = _r_ambiantColor;
             col += _r_diffuseColor * max(v_diffuse, 0.0f);
