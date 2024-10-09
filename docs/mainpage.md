@@ -3,7 +3,7 @@
 @section about About the library
 
 TGX is a tiny but full featured C++ library for drawing 2D and 3D graphics onto a memory framebuffer.
-The library runs on both microprocessor and microcontollers but specifically targets 'powerful' 32 bits MCUs such as [ESP32](https://www.espressif.com/en/products/socs/esp32), [RP2040/RP2350](https://www.raspberrypi.com/documentation/microcontrollers/silicon.html), [Teensy 3/4](https://www.pjrc.com/teensy/)...
+The library runs on both microprocessors and microcontollers but specifically targets 'powerful' 32 bits MCUs such as [ESP32](https://www.espressif.com/en/products/socs/esp32), [RP2040/RP2350](https://www.raspberrypi.com/documentation/microcontrollers/silicon.html), [Teensy 3/4](https://www.pjrc.com/teensy/)...
  
 **Features**
 
