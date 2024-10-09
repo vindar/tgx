@@ -794,18 +794,18 @@ Check the [JPEGDEC documentation](https://github.com/bitbank2/JPEGDEC/wiki) for 
 
 
 
-@subsection subsec_AnimateGIF drawing GIF images
+@subsection subsec_AnimatedGIF drawing GIF images
 
-Install Bitbank2's **AnimateGIF** library from the Arduino library manager / platformio of directly from https://github.com/bitbank2/AnimatedGIF
+Install Bitbank2's **AnimatedGIF** library from the Arduino library manager / platformio of directly from https://github.com/bitbank2/AnimatedGIF
 
-We just need to include both libraries into the project to activate the bindings between TGX and AnimateGIF:
+We just need to include both libraries into the project to activate the bindings between TGX and AnimatedGIF:
 ~~~{.cpp}
 #include <tgx.h>
-#include <AnimateGIF.h>
+#include <AnimatedGIF.h>
 ~~~
-Now, we can bind any `AnimateGIF` decoder object to tgx images by providing it with the generic callback `TGX_GIFDraw` and then we can susequently decode GIFs using the \ref tgx::Image<color_t>::GIFplayFrame() "Image::GIFplayFrame()" method. 
+Now, we can bind any `AnimatedGIF` decoder object to tgx images by providing it with the generic callback `TGX_GIFDraw` and then we can susequently decode GIFs using the \ref tgx::Image<color_t>::GIFplayFrame() "Image::GIFplayFrame()" method. 
 
-This method simply wraps around the `playFrame()` method fom the animateGIF library and can be called repeatedly to display successives frame in case of an animated GIF. 
+This method simply wraps around the `playFrame()` method fom the AnimateGIF library and can be called repeatedly to display successives frame in case of an animation. 
 
 Example:
 
@@ -815,7 +815,7 @@ tgx::RGB565 buf[150*100];
 tgx::Image<tgx::RGB565> im(buf, 150, 100);
 im.clear(tgx::RGB565_Black); // clear to full black
 
-// GIF decoder object from AnimateGIF library
+// GIF decoder object from AnimatedGIF library
 AnimatedGIF gif;
 
 // Load the GIF image "earth_128x128" stored in RAM and link the decoder to TGX
@@ -825,12 +825,12 @@ gif.open((uint8_t*)earth_128x128, sizeof(earth_128x128), TGX_GIFDraw);
 // Draw the GIF onto im with upper left corner at pos (20, 10) inside im. 
 im.GIFplayFrame(gif, { 20, 10 }); 
 
-// we can call im.GIFplayFrame(gif, { 20, 10 }) again to draw the next frame if it is an animated GIF... 
+// we can call im.GIFplayFrame(gif, { 20, 10 }) again to draw the next frame if it is an animation... 
 ~~~
 
 @note A complete example is available in the subfolder `/examples/Teensy4/GIF_test/`. 
 
-Check the [AnimateGIf documentation](https://github.com/bitbank2/AnimatedGIF/wiki) for additional details.
+Check the [AnimatedGIf documentation](https://github.com/bitbank2/AnimatedGIF/wiki) for additional details.
 
 
 

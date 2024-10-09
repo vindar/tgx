@@ -66,7 +66,7 @@ var NAVTREE =
         [ "drawing text with TrueType fonts", "md_docs_intro_api_2_d.html#subsec_openfontrender", null ],
         [ "drawing PNG images", "md_docs_intro_api_2_d.html#subsec_PNGdec", null ],
         [ "drawing JPEG images", "md_docs_intro_api_2_d.html#subsec_JPEGDEC", null ],
-        [ "drawing GIF images", "md_docs_intro_api_2_d.html#subsec_AnimateGIF", null ]
+        [ "drawing GIF images", "md_docs_intro_api_2_d.html#subsec_AnimatedGIF", null ]
       ] ]
     ] ],
     [ "Using the 3D API.", "md_docs_intro_api_3_d.html", null ],

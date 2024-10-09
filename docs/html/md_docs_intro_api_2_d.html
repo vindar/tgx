@@ -721,20 +721,20 @@ drawing JPEG images</h2>
 <div class="line">im.JPEGDecode(png, {20, 10}, JPEG_SCALE_HALF, 0.5f);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>A complete example is available in the subfolder <code>/examples/Teensy4/JPEG_test/</code>.</dd></dl>
 <p>Check the <a href="https://github.com/bitbank2/JPEGDEC/wiki">JPEGDEC documentation</a> for additional details.</p>
-<h2><a class="anchor" id="subsec_AnimateGIF"></a>
+<h2><a class="anchor" id="subsec_AnimatedGIF"></a>
 drawing GIF images</h2>
-<p >Install Bitbank2's <b>AnimateGIF</b> library from the Arduino library manager / platformio of directly from <a href="https://github.com/bitbank2/AnimatedGIF">https://github.com/bitbank2/AnimatedGIF</a></p>
-<p >We just need to include both libraries into the project to activate the bindings between TGX and AnimateGIF: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;AnimateGIF.h&gt;</span></div>
-</div><!-- fragment --><p> Now, we can bind any <code>AnimateGIF</code> decoder object to tgx images by providing it with the generic callback <code>TGX_GIFDraw</code> and then we can susequently decode GIFs using the <a class="el" href="classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5">Image::GIFplayFrame()</a> method.</p>
-<p >This method simply wraps around the <code>playFrame()</code> method fom the animateGIF library and can be called repeatedly to display successives frame in case of an animated GIF.</p>
+<p >Install Bitbank2's <b>AnimatedGIF</b> library from the Arduino library manager / platformio of directly from <a href="https://github.com/bitbank2/AnimatedGIF">https://github.com/bitbank2/AnimatedGIF</a></p>
+<p >We just need to include both libraries into the project to activate the bindings between TGX and AnimatedGIF: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;AnimatedGIF.h&gt;</span></div>
+</div><!-- fragment --><p> Now, we can bind any <code>AnimatedGIF</code> decoder object to tgx images by providing it with the generic callback <code>TGX_GIFDraw</code> and then we can susequently decode GIFs using the <a class="el" href="classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5">Image::GIFplayFrame()</a> method.</p>
+<p >This method simply wraps around the <code>playFrame()</code> method fom the AnimateGIF library and can be called repeatedly to display successives frame in case of an animation.</p>
 <p >Example:</p>
 <div class="fragment"><div class="line"><span class="comment">// create a 150x100 image in RGB565 color format. </span></div>
 <div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> buf[150*100];</div>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> im(buf, 150, 100);</div>
 <div class="line">im.clear(tgx::RGB565_Black); <span class="comment">// clear to full black</span></div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// GIF decoder object from AnimateGIF library</span></div>
+<div class="line"><span class="comment">// GIF decoder object from AnimatedGIF library</span></div>
 <div class="line">AnimatedGIF gif;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Load the GIF image &quot;earth_128x128&quot; stored in RAM and link the decoder to TGX</span></div>
@@ -744,9 +744,9 @@ drawing GIF images</h2>
 <div class="line"><span class="comment">// Draw the GIF onto im with upper left corner at pos (20, 10) inside im. </span></div>
 <div class="line">im.GIFplayFrame(gif, { 20, 10 }); </div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// we can call im.GIFplayFrame(gif, { 20, 10 }) again to draw the next frame if it is an animated GIF... </span></div>
+<div class="line"><span class="comment">// we can call im.GIFplayFrame(gif, { 20, 10 }) again to draw the next frame if it is an animation... </span></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>A complete example is available in the subfolder <code>/examples/Teensy4/GIF_test/</code>.</dd></dl>
-<p>Check the <a href="https://github.com/bitbank2/AnimatedGIF/wiki">AnimateGIf documentation</a> for additional details.</p>
+<p>Check the <a href="https://github.com/bitbank2/AnimatedGIF/wiki">AnimatedGIf documentation</a> for additional details.</p>
 <hr  />
  </div></div><!-- contents -->
 </div><!-- PageDoc -->

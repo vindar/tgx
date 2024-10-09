@@ -186,7 +186,7 @@ var NAVTREEINDEX2 =
 "md_docs_intro_api_2_d.html":[5],
 "md_docs_intro_api_2_d.html#sec_2Dprimitives":[5,0],
 "md_docs_intro_api_2_d.html#sec_extensions":[5,1],
-"md_docs_intro_api_2_d.html#subsec_AnimateGIF":[5,1,3],
+"md_docs_intro_api_2_d.html#subsec_AnimatedGIF":[5,1,3],
 "md_docs_intro_api_2_d.html#subsec_JPEGDEC":[5,1,2],
 "md_docs_intro_api_2_d.html#subsec_PNGdec":[5,1,1],
 "md_docs_intro_api_2_d.html#subsec_arcpies":[5,0,16],
