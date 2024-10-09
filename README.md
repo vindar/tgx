@@ -5,8 +5,6 @@
 - **Bad news**:  Many API breaking change.
 - **Good news**:  A full documentation is now available at https://vindar.github.io/tgx/
 
-
-
 <p align="center">
 <img src="./tgx.jpg" height="300" />
 </p>
