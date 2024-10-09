@@ -164,7 +164,11 @@ namespace tgx
     /** little endian / big endian conversion */
     TGX_INLINE inline uint16_t BigEndian16(uint16_t v)
         {
+#ifdef __GNUC__
         return __builtin_bswap16(v); 
+#else
+        return ((v >> 8) | (v << 8));
+#endif
         }
 
 
