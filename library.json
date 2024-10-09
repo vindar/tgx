@@ -1,6 +1,6 @@
 {
   "name": "TGX",
-  "keywords": "2D graphics, 3D graphics, image, drawing primitives, real-time rendering, alpha-blending, anti-aliasing",
+  "keywords": "2D graphics, 3D graphics, image, drawing primitives, real-time rendering, alpha-blending, anti-aliasing, 32 bits MCU, Teensy, ESP32, Pico",
   "description": "TGX is a tiny but full featured C++ graphics library for drawing 2D and 3D graphics onto a memory framebuffer. The library runs on any 32 bits CPU or MPU such as ESP32, Teensy, Pico (M4, M7, RP2040, RP2350...). It provides an extensive set of 2D/3D drawing primitives and aims at high quality rendering (anti-aliasing, alpha-blending, bilinear texture filtering...). The library itself is hardware-agnostic: an independent driver is required to display the image drawn in memory onto a physical screen.",
   "repository":
   {
