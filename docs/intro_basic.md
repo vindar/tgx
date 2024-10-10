@@ -3,7 +3,7 @@
 The TGX library's main class is the \ref tgx::Image class which, as its name suggests, encapsulate an **image**, that is a rectangular array of **pixels** of a given **color** type. 
 The library provides an extensive set of 2D and 3D drawing procedures to operates on image objects. 
 
-All methods/classes are defined inside the `tgx` namespace. To use the library, just include "tgx.h":
+All methods/classes are defined inside the `tgx` namespace. To use the library, just include `tgx.h`:
 ~~~{.cpp}
 #include <tgx.h>
 using namespace tgx; // optional, so we no not need to prefix all methods by tgx::
@@ -87,7 +87,7 @@ In particular, **the image object does not contain the pixels buffer itself** bu
 
 Several images can reference the same memory buffer (or a part of it). Creating images/sub-images that share the same pixels buffer is useful to restrict drawing operations to a given rectangular region 
 
-The position of a pixel in a image is,
+The position of a pixel in an image is
 
 ```Pixel(i, j) = buffer[i + stride*j]```
 
@@ -133,9 +133,9 @@ The tgx library defines classes for 2D vectors and boxes:
 
 @warning Pixel adressing varies slightly when using integer valued coordinates vs floating point valued coordinates.
 - **Integer valued cordinates**: `iVec2(i,j)` represents the location of the pixel `(i,j)` in the image and the whole image corresponds to the (integer valued) box `iBox2(0, lx - 1, 0, ly - 1)`.
-- **Floating point valued coordinates**: `fVec2(i,j)` represents the **center** of pixel `(i,j)` in the image. The pixel itself is a unit lenght square box centered around this location i.e. represented by `fBox2( i-0.5f, i+0.5f, j-0.5f, j+0.5f)`. In this case, the whole image (of size `(lx,ly)`) corresponds to the (floating point valued) box `fBox2( 0.5f, lx - 0.5f, -0.5f, ly - 0.5f)`.
+- **Floating point valued coordinates**: `fVec2(i,j)` represents the **center** of pixel `(i,j)` in the image. The pixel itself is a unit lenght square box centered around this location i.e. represented by `fBox2( i-0.5f, i+0.5f, j-0.5f, j+0.5f)`. In this case, the whole image corresponds to the (floating point valued) box `fBox2( -0.5f, lx - 0.5f, -0.5f, ly - 0.5f)`.
 
-Vector and boxes support the usual operations: arithmetics, copy, type conversion...
+Vector and boxes support all the usual operations: arithmetics, copy, type conversion...
 
 Most drawing methods take vectors and boxes as input parameters instead of scalars. Using initializer lists makes the code more readable: we can simply write `{10, 20}` instead of `tgx::iVec2(10, 20)`. 
 
