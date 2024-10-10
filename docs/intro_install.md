@@ -11,12 +11,12 @@ It is written in pure C++ and all the sources are located in the `/src` subdirec
 
 - **With the Arduino IDE.**
 
-  Install the library directly from within the library manager of the IDE: `[Sketch] > [Include Library] > [Manage Libraries]` and then search for 'TGX' and install the latest version. 
+  Install the library directly from within the library manager of the IDE: `[Sketch] > [Include Library] > [Manage Libraries]` and then search for `tgx` and install the latest version. 
 
 
 - **With PlaftormIO.**
 
-  Install the library directly from within VSCode/PlaftormIO: `[PIO Home] > [libraries]`  then search for 'TGX' , select it and press `[add to Project]`. 
+  Install the library directly from within VSCode/PlaftormIO: `[PIO Home] > [libraries]`  then search for `tgx` , select it and press `[add to Project]`. 
   
   
 ## Using TGX on a desktop computer (Windows/Linux/MacOS)
