@@ -645,8 +645,9 @@ namespace tgx
     /**
     * ZBUFFER + GOURAUD SHADING
     **/
-    template<typename color_t, typename ZBUFFER_t>
-    void shader_Gouraud_Zbuffer(const int32_t& offset, const int32_t& lx, const int32_t& ly,
+        
+    template<typename color_t, typename ZBUFFER_t, int shiftC>
+    void shader_Gouraud_Zbuffer_sub(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -667,8 +668,8 @@ namespace tgx
         const int32_t pa = O1 + O2 + O3;
         const int32_t E = ((pa == 0) ? 1 : 0);
         const int32_t aera = pa + E;
-        const int shiftC = (aera > (1 << 22)) ? 10 : 0; // prevent overflow during color interpolation
-
+        const int32_t aeraShifted = aera >> shiftC;
+        
         const float wa = data.wa;
         const float wb = data.wb;
         const float invaera = fast_inv((float)aera);
@@ -731,7 +732,7 @@ namespace tgx
                 if (W < aa)
                     {
                     W = aa;
-                    buf[bx] = interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC, col1, aera >> shiftC);
+                    buf[bx] = interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC , col1, aeraShifted);
                     }
                 C2 += dx2;
                 C3 += dx3;
@@ -746,6 +747,25 @@ namespace tgx
             zbuf += zstride;
             }
         }
+
+    template<typename color_t, typename ZBUFFER_t>
+    void shader_Gouraud_Zbuffer(const int32_t& offset, const int32_t& lx, const int32_t& ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+ 
+        {
+        if (01 + O2 + O3 > (1 << 24))
+            { // large aera, use interpolateColorsTriangle<true>
+            shader_Gouraud_Zbuffer_sub<color_t, ZBUFFER_t, 10>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else
+            { // small aera, use interpolateColorsTriangle<false>
+            shader_Gouraud_Zbuffer_sub<color_t, ZBUFFER_t, 0>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);        
+            }
+        }            
+
 
 
     /**
