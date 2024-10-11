@@ -49,7 +49,11 @@ namespace tgx
             setOffset(0, 0); // no offset
 
             // let's set some default values
-            fMat4 M;
+            fMat4 M; 
+            
+            M.setIdentity();
+            this->setModelMatrix(M); // no transformation on the mesh.
+
             const float ar = _validDraw() ? (((float)_lx) / _ly) : 1.5f;
             if (_ortho)
                 M.setOrtho(-10*ar, 10*ar, -10.0f, 10.0f, 1.0f, 100.0f);
@@ -60,11 +64,13 @@ namespace tgx
 
             this->setLookAt({ 0,0,0 }, { 0,0,-1 }, { 0,1,0 }); // look toward the negative z axis (id matrix)
 
+           _ambiantStrength = 1.0f;
+           _diffuseStrength = 1.0f;
+           _specularStrength = 1.0f;
+           _specularExponent = 1.0f;
             this->setLight(fVec3(-1.0f, -1.0f, -1.0f), // white light coming from the right, above, in front.
                 RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f)); // full white.
 
-            M.setIdentity();
-            this->setModelMatrix(M); // no transformation on the mesh.
 
             this->setMaterial({ 0.75f, 0.75f, 0.75f }, 0.15f, 0.7f, 0.5f, 8); // just in case: silver color and some default reflexion param...
             this->_precomputeSpecularTable(8);
