@@ -65,8 +65,8 @@ var NAVTREE =
       [ "TGX extensions via external librairies", "md_docs_intro_api_2_d.html#sec_extensions", [
         [ "Drawing text with TrueType fonts", "md_docs_intro_api_2_d.html#subsec_openfontrender", null ],
         [ "Drawing PNG images", "md_docs_intro_api_2_d.html#subsec_PNGdec", null ],
-        [ "drawing JPEG images", "md_docs_intro_api_2_d.html#subsec_JPEGDEC", null ],
-        [ "drawing GIF images", "md_docs_intro_api_2_d.html#subsec_AnimatedGIF", null ]
+        [ "Drawing JPEG images", "md_docs_intro_api_2_d.html#subsec_JPEGDEC", null ],
+        [ "Drawing GIF images", "md_docs_intro_api_2_d.html#subsec_AnimatedGIF", null ]
       ] ]
     ] ],
     [ "Using the 3D API.", "md_docs_intro_api_3_d.html", null ],

@@ -755,7 +755,7 @@ im.PNGDecode(png, {20, 10}, 0.5f);
 Check the [PNGdec documentation](https://github.com/bitbank2/PNGdec/wiki) for additional details.
 
 
-@subsection subsec_JPEGDEC drawing JPEG images
+@subsection subsec_JPEGDEC Drawing JPEG images
 
 Install Bitbank2's **JPEGDEC** library from the Arduino library manager / platformio or directly from https://github.com/bitbank2/JPEGDEC.
 
@@ -792,7 +792,7 @@ Check the [JPEGDEC documentation](https://github.com/bitbank2/JPEGDEC/wiki) for 
 
 
 
-@subsection subsec_AnimatedGIF drawing GIF images
+@subsection subsec_AnimatedGIF Drawing GIF images
 
 Install Bitbank2's **AnimatedGIF** library from the Arduino library manager / platformio of directly from https://github.com/bitbank2/AnimatedGIF
 
