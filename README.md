@@ -1,6 +1,6 @@
 # TGX - a tiny graphics library
 
-***NEW VERSION 1.0.1***
+***NEW VERSION 1.0.2***
 
 - **Bad news**:  Many API breaking change, especially with the 2D API...
 - **Good news**:
