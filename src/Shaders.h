@@ -643,9 +643,8 @@ namespace tgx
 
 
     /**
-    * ZBUFFER + GOURAUD SHADING
-    **/
-        
+    * ZBUFFER + GOURAUD SHADING  (sub-procedure, templated on shiftC)
+    **/        
     template<typename color_t, typename ZBUFFER_t, int shiftC>
     void shader_Gouraud_Zbuffer_sub(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
@@ -748,6 +747,9 @@ namespace tgx
             }
         }
 
+    /**
+    * ZBUFFER + GOURAUD SHADING
+    **/
     template<typename color_t, typename ZBUFFER_t>
     void shader_Gouraud_Zbuffer(const int32_t& offset, const int32_t& lx, const int32_t& ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,

@@ -4,7 +4,7 @@
 **Below is a description, with examples, of most 2D drawing primitives implemented in TGX.** 
 
 - For additional details, look directly into the main header file \ref Image.h
-- Do not forget to check the examples located in the `/examples/`  subdirectory of the library. In particular, the example `TestPrimitives` contains all the code list below. 
+- Do not forget to check the examples located in the `/examples/`  subdirectory of the library. In particular, the example `TestPrimitives` contains all the code listed below. 
 
 @section sec_2Dprimitives 2D Drawing methods. 
 
@@ -57,8 +57,6 @@ for (int i = 0; i < 310; i += 15) {
 - \ref tgx::Image::drawPixelf "drawPixelf()" : set the color of agiven pixel, use floating point values position vector.
 - \ref tgx::Image::readPixel() "readpixel()" : read the color of a pixel.
 - \ref tgx::Image::operator()(tgx::iVec2) "operator()" : direct access to the pixel color memory location (read/write).
-
-
 
 
 ---
@@ -114,7 +112,7 @@ im.fill({ 0,0 }, tgx::RGB32_Olive);                    // fill starting {0,0}
 - \ref tgx::Image<color_t>::blitScaledRotated() "blitScaledRotated(sprite, pos_src, pos_dst, scale, angle, opacity)" : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image. 
 - \ref tgx::Image<color_t>::blitScaledRotatedMasked() "blitScaledRotatedMasked(sprite, mask_color, pos_src, pos_dst, scale, angle, opacity)" : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image with one color set as transparent. 
 
-@note All the blit methods above also have an 'advanced' version which takes as input a user-defined blending operator instead of the opacity parameter and can operate on sprites with different color types than the destination image. see \ref tgx::Image for details...
+@note All the blit methods above also have an 'advanced' version which takes as input a user-defined blending operator instead of the opacity parameter and can operate on sprites with a different color types than the destination image. see \ref tgx::Image for details...
 
 See also \ref tgx::Image<color_t>::blitBackward() "blitBackward()" and methods for image copy/resizing/type conversion \ref tgx::Image<color_t>::copyFrom() "copyFrom()", \ref tgx::Image<color_t>::copyReduceHalf() "copyReduceHalf()",  \ref tgx::Image<color_t>::reduceHalf() "reduceHalf()" and \ref tgx::Image<color_t>::convert() "convert()"
 
@@ -195,7 +193,7 @@ im.fillRectVGradient({ 190, 300, 10, 230 }, tgx::RGB32_Cyan, tgx::RGB32_Purple, 
 - \ref tgx::Image::fillRectHGradient "fillRectHGradient()" : draw a filled rectangle with an horizontal gradient between two colors.
 - \ref tgx::Image::fillRectVGradient "fillRectVGradient()" : draw a filled rectangle with a vertical gradient between two colors.
 
-See also \ref tgx::Image::drawThickRectAA "drawThickRectAA()", \ref tgx::Image::fillRectAA "drawThickRectAA()", \ref tgx::Image::fillThickRectAA "drawThickRectAA()" (useful for smooth animation but not for static display). 
+See also \ref tgx::Image::drawThickRectAA "drawThickRectAA()", \ref tgx::Image::fillRectAA "drawThickRectAA()", \ref tgx::Image::fillThickRectAA "drawThickRectAA()". These methods may be useful for smooth animations but usually not for static display (as rectangles egdes are parallel to pixel boundaries hence do not usually require anti-aliasing). 
 
 
 
@@ -657,20 +655,20 @@ The TGX library support font using:
 - ILI9341_t3 v23 format (antialiased)   (https://github.com/projectitis/packedbdf/blob/master/packedbdf.md)
 
 @note tgx-font (https://github.com/vindar/tgx-font) contains a collection ILI9341_t3 v1 and v2 (antialiased) fonts 
-that can be used directly with the methods below (and the instruction on how to convert a ttf font to  this format).
+that can be used directly with the methods below (and instructions on how to convert a ttf font to this format).
 
 The following fonts are already packaged with TGX but must be included explicitely in the project when used:
-- *Arial* (non AA font): `#include "font_tgx_Arial.h"` 
-- *Arial Bold* (non AA font): `#include "font_tgx_Arial_Bold.h"`
-- *OpenSans* (AA font): `#include "font_tgx_OpenSans.h"`
-- *OpenSans Bold* (AA font): `#include "font_tgx_OpenSans_Bold.h"`
-- *OpenSans Italic* (AA font): `#include "font_tgx_OpenSans_Italic.h"`
+- **Arial** (non AA font): `#include "font_tgx_Arial.h"` 
+- **Arial Bold** (non AA font): `#include "font_tgx_Arial_Bold.h"`
+- **OpenSans** (AA font): `#include "font_tgx_OpenSans.h"`
+- **OpenSans Bold** (AA font): `#include "font_tgx_OpenSans_Bold.h"`
+- **OpenSans Italic** (AA font): `#include "font_tgx_OpenSans_Italic.h"`
 
-Each font above is avaailble in fontsize: 8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14pt, 16pt, 18pt, 20pt, 24pt, 28pt, 32pt, 40pt, 48pt, 60pt, 72pt, 96pt.
+Each font above is available in fontsize: *8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14pt, 16pt, 18pt, 20pt, 24pt, 28pt, 32pt, 40pt, 48pt, 60pt, 72pt, 96pt*.
 
 
 **Methods:**
-- \ref tgx::Image::drawText "drawText()" : draw a text using a given font. simple method
+- \ref tgx::Image::drawText "drawText()" : draw a text using a given font. simple "legacy" method
 - \ref tgx::Image::drawTextEx "drawTextEx()" : draw a text using a given font. Extended method with anchor placement (c.f. \ref tgx::Anchor).
 - \ref tgx::Image::measureText "measureText()" : compute the bounding box of a text (fast, does not draw it)
 - \ref tgx::Image::measureChar "measureChar()" : compute the bounding box of a character (fast, does not draw it)
@@ -681,13 +679,13 @@ Each font above is avaailble in fontsize: 8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14pt
 
 @section sec_extensions TGX extensions via external librairies
 
-TGX implements bindings that makes it very easy to use external libraries to add new capabilities to the Image class, such as displaying classic image format (PNG, GIF, JPEG) and TrueType fonts... 
+TGX implements bindings that makes it easy to use external libraries to add new capabilities to the Image class, such as displaying classic image format (PNG, GIF, JPEG) and TrueType fonts... 
 
-@subsection subsec_openfontrender drawing text with TrueType fonts 
+@subsection subsec_openfontrender Drawing text with TrueType fonts 
 
 Install Takkao's **OpenRenderFont** library from  https://github.com/takkaO/OpenFontRender/.
 
-We just need to include both libraries into the project to activate the bindings between TGX and OpenFontRender:
+Simply include both libraries into the project to activate the bindings between TGX and OpenFontRender:
 ~~~{.cpp}
 #include <tgx.h>
 #include <OpenFontRender.h>
@@ -723,11 +721,11 @@ ofr.cprintf("Hello World"); // -> drawing in done ont im.
 Check the [OpenfontRender documentation](https://github.com/takkaO/OpenFontRender/blob/master/README.md) for additional details.
 
 
-@subsection subsec_PNGdec drawing PNG images
+@subsection subsec_PNGdec Drawing PNG images
 
-Install Bitbank2's **PNGdec** library from the Arduino library manager / platformio of directly from https://github.com/bitbank2/PNGdec/.
+Install Bitbank2's **PNGdec** library from the Arduino library manager / platformio or directly from https://github.com/bitbank2/PNGdec/.
 
-We just need to include both libraries into the project to activate the bindings between TGX and PNGdec:
+Simply include both libraries into the project to activate the bindings between TGX and PNGdec:
 ~~~{.cpp}
 #include <tgx.h>
 #include <PNGdec.h>
@@ -759,9 +757,9 @@ Check the [PNGdec documentation](https://github.com/bitbank2/PNGdec/wiki) for ad
 
 @subsection subsec_JPEGDEC drawing JPEG images
 
-Install Bitbank2's **JPEGDEC** library from the Arduino library manager / platformio of directly from https://github.com/bitbank2/JPEGDEC.
+Install Bitbank2's **JPEGDEC** library from the Arduino library manager / platformio or directly from https://github.com/bitbank2/JPEGDEC.
 
-We just need to include both libraries into the project to activate the bindings between TGX and JPEGDEC:
+Simply include both libraries into the project to activate the bindings between TGX and JPEGDEC:
 ~~~{.cpp}
 #include <tgx.h>
 #include <JPEGDEC.h>
@@ -798,7 +796,7 @@ Check the [JPEGDEC documentation](https://github.com/bitbank2/JPEGDEC/wiki) for 
 
 Install Bitbank2's **AnimatedGIF** library from the Arduino library manager / platformio of directly from https://github.com/bitbank2/AnimatedGIF
 
-We just need to include both libraries into the project to activate the bindings between TGX and AnimatedGIF:
+Simply include both libraries into the project to activate the bindings between TGX and AnimatedGIF:
 ~~~{.cpp}
 #include <tgx.h>
 #include <AnimatedGIF.h>

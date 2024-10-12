@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.1</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.2</span>
    </div>
    <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
@@ -139,6 +139,11 @@ template&lt;typename color_t , typename ZBUFFER_t &gt; </td></tr>
 <tr class="memitem:ae7a56715bd66029159c54df073b299e0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tgx::shader_Flat_Zbuffer</b> (const int32_t offset, const int32_t &amp;lx, const int32_t &amp;ly, const int32_t &amp;dx1, const int32_t &amp;dy1, int32_t O1, const RasterizerVec4 &amp;fP1, const int32_t &amp;dx2, const int32_t &amp;dy2, int32_t O2, const RasterizerVec4 &amp;fP2, const int32_t &amp;dx3, const int32_t &amp;dy3, int32_t O3, const RasterizerVec4 &amp;fP3, const RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>
 <tr class="memdesc:ae7a56715bd66029159c54df073b299e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">ZBUFFER + FLAT SHADING. <br /></td></tr>
 <tr class="separator:ae7a56715bd66029159c54df073b299e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea0cefcb7fcee9e4c9a41e2332e8fecd"><td class="memTemplParams" colspan="2"><a id="aea0cefcb7fcee9e4c9a41e2332e8fecd" name="aea0cefcb7fcee9e4c9a41e2332e8fecd"></a>
+template&lt;typename color_t , typename ZBUFFER_t , int shiftC&gt; </td></tr>
+<tr class="memitem:aea0cefcb7fcee9e4c9a41e2332e8fecd"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tgx::shader_Gouraud_Zbuffer_sub</b> (const int32_t &amp;offset, const int32_t &amp;lx, const int32_t &amp;ly, const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 &amp;fP3, const RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>
+<tr class="memdesc:aea0cefcb7fcee9e4c9a41e2332e8fecd"><td class="mdescLeft">&#160;</td><td class="mdescRight">ZBUFFER + GOURAUD SHADING (sub-procedure, templated on shiftC) <br /></td></tr>
+<tr class="separator:aea0cefcb7fcee9e4c9a41e2332e8fecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3eb9c728ca31d2c0e57a368358f06ac"><td class="memTemplParams" colspan="2"><a id="ab3eb9c728ca31d2c0e57a368358f06ac" name="ab3eb9c728ca31d2c0e57a368358f06ac"></a>
 template&lt;typename color_t , typename ZBUFFER_t &gt; </td></tr>
 <tr class="memitem:ab3eb9c728ca31d2c0e57a368358f06ac"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tgx::shader_Gouraud_Zbuffer</b> (const int32_t &amp;offset, const int32_t &amp;lx, const int32_t &amp;ly, const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 &amp;fP3, const RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>

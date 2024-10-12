@@ -31,11 +31,11 @@ var NAVTREE =
     [ "Installation.", "md_docs_intro_install.html", null ],
     [ "Basic concepts.", "md_docs_intro_basic.html", [
       [ "Colors types", "md_docs_intro_basic.html#autotoc_md2", [
-        [ "blending and opacity parameter.", "md_docs_intro_basic.html#autotoc_md3", null ]
+        [ "Blending and opacity parameter.", "md_docs_intro_basic.html#autotoc_md3", null ]
       ] ],
       [ "Image class, memory layout and sub-images", "md_docs_intro_basic.html#autotoc_md5", null ],
       [ "Vectors and Boxes", "md_docs_intro_basic.html#autotoc_md7", null ],
-      [ "Storing image in .cpp files", "md_docs_intro_basic.html#autotoc_md9", null ],
+      [ "Storing images in .cpp files", "md_docs_intro_basic.html#autotoc_md9", null ],
       [ "Copying/converting images to different color types.", "md_docs_intro_basic.html#autotoc_md10", null ],
       [ "Drawing things on an images...", "md_docs_intro_basic.html#autotoc_md11", null ]
     ] ],
@@ -63,8 +63,8 @@ var NAVTREE =
         [ "drawing text", "md_docs_intro_api_2_d.html#subsec_text", null ]
       ] ],
       [ "TGX extensions via external librairies", "md_docs_intro_api_2_d.html#sec_extensions", [
-        [ "drawing text with TrueType fonts", "md_docs_intro_api_2_d.html#subsec_openfontrender", null ],
-        [ "drawing PNG images", "md_docs_intro_api_2_d.html#subsec_PNGdec", null ],
+        [ "Drawing text with TrueType fonts", "md_docs_intro_api_2_d.html#subsec_openfontrender", null ],
+        [ "Drawing PNG images", "md_docs_intro_api_2_d.html#subsec_PNGdec", null ],
         [ "drawing JPEG images", "md_docs_intro_api_2_d.html#subsec_JPEGDEC", null ],
         [ "drawing GIF images", "md_docs_intro_api_2_d.html#subsec_AnimatedGIF", null ]
       ] ]
@@ -94,11 +94,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_box2_8h.html",
-"_vec3_8h.html#a668a9607676b928624972ced875028e9",
-"classtgx_1_1_renderer3_d.html#a76fa32770476cd15f717d3f103fd752d",
-"structtgx_1_1_box2.html#a194303806a678a2e26fe1a9a222504ba",
-"structtgx_1_1_r_g_b32.html#a645458518cb06f690569f5cc592bdf5d",
-"structtgx_1_1_vec3.html#aab1de305033b31a96a115d3eaeed1aa5"
+"_vec3_8h.html#a5a80b95baec0f98029d9c32f55e13eea",
+"classtgx_1_1_renderer3_d.html#a76c4ce4af7e3c7da2e3a1a7d1d0d4f01",
+"structtgx_1_1_box2.html#a17693b324943853530a2461c6d02a58d",
+"structtgx_1_1_r_g_b32.html#a6394c64dde0e92a73b5c9633e403b3ab",
+"structtgx_1_1_vec3.html#aaa7154572e64f301b2fbcce7c7bc938e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.1</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.2</span>
    </div>
    <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('md_docs_intro_api_2_d.html',''); initR
 <p ><b>Below is a description, with examples, of most 2D drawing primitives implemented in TGX.</b></p>
 <ul>
 <li>For additional details, look directly into the main header file <a class="el" href="_image_8h.html">Image.h</a></li>
-<li>Do not forget to check the examples located in the <code>/examples/</code> subdirectory of the library. In particular, the example <code>TestPrimitives</code> contains all the code list below.</li>
+<li>Do not forget to check the examples located in the <code>/examples/</code> subdirectory of the library. In particular, the example <code>TestPrimitives</code> contains all the code listed below.</li>
 </ul>
 <h1><a class="anchor" id="sec_2Dprimitives"></a>
 2D Drawing methods.</h1>
@@ -192,7 +192,7 @@ Blitting sprites</h2>
 <li><a class="el" href="classtgx_1_1_image.html#a8cd4a1aaf63b59d5803fc759dd64711c">blitScaledRotated(sprite, pos_src, pos_dst, scale, angle, opacity)</a> : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image.</li>
 <li><a class="el" href="classtgx_1_1_image.html#ab6838094c8ac811a72dbeeffb7c51bc8">blitScaledRotatedMasked(sprite, mask_color, pos_src, pos_dst, scale, angle, opacity)</a> : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image with one color set as transparent.</li>
 </ul>
-<dl class="section note"><dt>Note</dt><dd>All the blit methods above also have an 'advanced' version which takes as input a user-defined blending operator instead of the opacity parameter and can operate on sprites with different color types than the destination image. see <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> for details...</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>All the blit methods above also have an 'advanced' version which takes as input a user-defined blending operator instead of the opacity parameter and can operate on sprites with a different color types than the destination image. see <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> for details...</dd></dl>
 <p>See also <a class="el" href="classtgx_1_1_image.html#ab252fa2ceb311770d698a8b9a1f52bef">blitBackward()</a> and methods for image copy/resizing/type conversion <a class="el" href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae">copyFrom()</a>, <a class="el" href="classtgx_1_1_image.html#ab1f64acc0c408c1b901f43ae80a0a57d">copyReduceHalf()</a>, <a class="el" href="classtgx_1_1_image.html#aec06c59da548263f082134368f5202d6">reduceHalf()</a> and <a class="el" href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">convert()</a></p>
 <hr  />
 <h2><a class="anchor" id="subsec_vhlines"></a>
@@ -259,7 +259,7 @@ drawing rectangles</h2>
 <li><a class="el" href="classtgx_1_1_image.html#a4ff1dac74cc146c641f2a1bef505e0cf">fillRectHGradient()</a> : draw a filled rectangle with an horizontal gradient between two colors.</li>
 <li><a class="el" href="classtgx_1_1_image.html#a680472f979bd241643a787fcdd63f64c">fillRectVGradient()</a> : draw a filled rectangle with a vertical gradient between two colors.</li>
 </ul>
-<p >See also <a class="el" href="classtgx_1_1_image.html#a3ba400a6857ceb68d19f02cd50355027">drawThickRectAA()</a>, <a class="el" href="classtgx_1_1_image.html#a313f32df53f761c7f83793271d50fba1">drawThickRectAA()</a>, <a class="el" href="classtgx_1_1_image.html#a05e63abdfef6ce5c5a59b7875d3b5c05">drawThickRectAA()</a> (useful for smooth animation but not for static display).</p>
+<p >See also <a class="el" href="classtgx_1_1_image.html#a3ba400a6857ceb68d19f02cd50355027">drawThickRectAA()</a>, <a class="el" href="classtgx_1_1_image.html#a313f32df53f761c7f83793271d50fba1">drawThickRectAA()</a>, <a class="el" href="classtgx_1_1_image.html#a05e63abdfef6ce5c5a59b7875d3b5c05">drawThickRectAA()</a>. These methods may be useful for smooth animations but usually not for static display (as rectangles egdes are parallel to pixel boundaries hence do not usually require anti-aliasing).</p>
 <hr  />
 <h2><a class="anchor" id="subsec_roundrect"></a>
 drawing rounded rectangles</h2>
@@ -629,17 +629,17 @@ drawing text</h2>
 <li>ILI9341_t3 v1 format (<a href="https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format">https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format</a>)</li>
 <li>ILI9341_t3 v23 format (antialiased) (<a href="https://github.com/projectitis/packedbdf/blob/master/packedbdf.md">https://github.com/projectitis/packedbdf/blob/master/packedbdf.md</a>)</li>
 </ul>
-<dl class="section note"><dt>Note</dt><dd>tgx-font (<a href="https://github.com/vindar/tgx-font">https://github.com/vindar/tgx-font</a>) contains a collection ILI9341_t3 v1 and v2 (antialiased) fonts that can be used directly with the methods below (and the instruction on how to convert a ttf font to this format).</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>tgx-font (<a href="https://github.com/vindar/tgx-font">https://github.com/vindar/tgx-font</a>) contains a collection ILI9341_t3 v1 and v2 (antialiased) fonts that can be used directly with the methods below (and instructions on how to convert a ttf font to this format).</dd></dl>
 <p>The following fonts are already packaged with TGX but must be included explicitely in the project when used:</p><ul>
-<li><em>Arial</em> (non AA font): <code>#include "font_tgx_Arial.h"</code></li>
-<li><em>Arial Bold</em> (non AA font): <code>#include "font_tgx_Arial_Bold.h"</code></li>
-<li><em>OpenSans</em> (AA font): <code>#include "font_tgx_OpenSans.h"</code></li>
-<li><em>OpenSans Bold</em> (AA font): <code>#include "font_tgx_OpenSans_Bold.h"</code></li>
-<li><em>OpenSans Italic</em> (AA font): <code>#include "font_tgx_OpenSans_Italic.h"</code></li>
+<li><b>Arial</b> (non AA font): <code>#include "font_tgx_Arial.h"</code></li>
+<li><b>Arial Bold</b> (non AA font): <code>#include "font_tgx_Arial_Bold.h"</code></li>
+<li><b>OpenSans</b> (AA font): <code>#include "font_tgx_OpenSans.h"</code></li>
+<li><b>OpenSans Bold</b> (AA font): <code>#include "font_tgx_OpenSans_Bold.h"</code></li>
+<li><b>OpenSans Italic</b> (AA font): <code>#include "font_tgx_OpenSans_Italic.h"</code></li>
 </ul>
-<p >Each font above is avaailble in fontsize: 8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14pt, 16pt, 18pt, 20pt, 24pt, 28pt, 32pt, 40pt, 48pt, 60pt, 72pt, 96pt.</p>
+<p >Each font above is available in fontsize: <em>8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14pt, 16pt, 18pt, 20pt, 24pt, 28pt, 32pt, 40pt, 48pt, 60pt, 72pt, 96pt</em>.</p>
 <p ><b>Methods:</b></p><ul>
-<li><a class="el" href="classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0">drawText()</a> : draw a text using a given font. simple method</li>
+<li><a class="el" href="classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0">drawText()</a> : draw a text using a given font. simple "legacy" method</li>
 <li><a class="el" href="classtgx_1_1_image.html#a6495b751001b95f32e9b219d69369caf">drawTextEx()</a> : draw a text using a given font. Extended method with anchor placement (c.f. <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">tgx::Anchor</a>).</li>
 <li><a class="el" href="classtgx_1_1_image.html#abfc2c7a0fa10aac9e11fa9632b535c8a">measureText()</a> : compute the bounding box of a text (fast, does not draw it)</li>
 <li><a class="el" href="classtgx_1_1_image.html#aa42488f709d7294c5dcb107cb4616626">measureChar()</a> : compute the bounding box of a character (fast, does not draw it)</li>
@@ -647,11 +647,11 @@ drawing text</h2>
 <hr  />
 <h1><a class="anchor" id="sec_extensions"></a>
 TGX extensions via external librairies</h1>
-<p >TGX implements bindings that makes it very easy to use external libraries to add new capabilities to the Image class, such as displaying classic image format (PNG, GIF, JPEG) and TrueType fonts...</p>
+<p >TGX implements bindings that makes it easy to use external libraries to add new capabilities to the Image class, such as displaying classic image format (PNG, GIF, JPEG) and TrueType fonts...</p>
 <h2><a class="anchor" id="subsec_openfontrender"></a>
-drawing text with TrueType fonts</h2>
+Drawing text with TrueType fonts</h2>
 <p >Install Takkao's <b>OpenRenderFont</b> library from <a href="https://github.com/takkaO/OpenFontRender/">https://github.com/takkaO/OpenFontRender/</a>.</p>
-<p >We just need to include both libraries into the project to activate the bindings between TGX and OpenFontRender: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<p >Simply include both libraries into the project to activate the bindings between TGX and OpenFontRender: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;OpenFontRender.h&gt;</span></div>
 <div class="ttc" id="atgx_8h_html"><div class="ttname"><a href="tgx_8h.html">tgx.h</a></div><div class="ttdoc">Main header file.</div></div>
 </div><!-- fragment --><p> Now, we can bind any <code>OpenFontRender</code> object to an image with the method: <a class="el" href="classtgx_1_1_image.html#a501bd842e7c783deaf4f0c0f7832f376">Image::setOpenFontRender(ofr)</a> and subsequently use the OpenFontRender library as usual. All texts written with <code>ofr</code> will automatically be drawn onto the selected image.</p>
@@ -678,9 +678,9 @@ drawing text with TrueType fonts</h2>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>A complete example is available in the subfolder <code>/examples/Teensy4/OpenFontRender_test/</code>.</dd></dl>
 <p>Check the <a href="https://github.com/takkaO/OpenFontRender/blob/master/README.md">OpenfontRender documentation</a> for additional details.</p>
 <h2><a class="anchor" id="subsec_PNGdec"></a>
-drawing PNG images</h2>
-<p >Install Bitbank2's <b>PNGdec</b> library from the Arduino library manager / platformio of directly from <a href="https://github.com/bitbank2/PNGdec/">https://github.com/bitbank2/PNGdec/</a>.</p>
-<p >We just need to include both libraries into the project to activate the bindings between TGX and PNGdec: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+Drawing PNG images</h2>
+<p >Install Bitbank2's <b>PNGdec</b> library from the Arduino library manager / platformio or directly from <a href="https://github.com/bitbank2/PNGdec/">https://github.com/bitbank2/PNGdec/</a>.</p>
+<p >Simply include both libraries into the project to activate the bindings between TGX and PNGdec: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;PNGdec.h&gt;</span></div>
 </div><!-- fragment --><p> Now, we can bind any <code>PNG</code> decoder object tgx images by providing it with the generic callback <code>TGX_PNGDraw</code> and then we can susequently decode PNGs using the <a class="el" href="classtgx_1_1_image.html#a077be1a8bdfd1d67ef2788f6e515157c">Image::PNGDecode()</a> method.</p>
 <p >Example: </p><div class="fragment"><div class="line"><span class="comment">// create a 150x100 image in RGB565 color format. </span></div>
@@ -701,8 +701,8 @@ drawing PNG images</h2>
 <p>Check the <a href="https://github.com/bitbank2/PNGdec/wiki">PNGdec documentation</a> for additional details.</p>
 <h2><a class="anchor" id="subsec_JPEGDEC"></a>
 drawing JPEG images</h2>
-<p >Install Bitbank2's <b>JPEGDEC</b> library from the Arduino library manager / platformio of directly from <a href="https://github.com/bitbank2/JPEGDEC">https://github.com/bitbank2/JPEGDEC</a>.</p>
-<p >We just need to include both libraries into the project to activate the bindings between TGX and JPEGDEC: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<p >Install Bitbank2's <b>JPEGDEC</b> library from the Arduino library manager / platformio or directly from <a href="https://github.com/bitbank2/JPEGDEC">https://github.com/bitbank2/JPEGDEC</a>.</p>
+<p >Simply include both libraries into the project to activate the bindings between TGX and JPEGDEC: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;JPEGDEC.h&gt;</span></div>
 </div><!-- fragment --><p> Now, we can bind any <code>JPEGDEC</code> decoder object tgx images by providing it with the generic callback <code>TGX_JPEGDraw</code> and then we can susequently decode JPEGs using the <a class="el" href="classtgx_1_1_image.html#ae83fd55040b78f8b4f55be84b7a27cfd">Image::JPEGDecode()</a> method.</p>
 <p >Example: </p><div class="fragment"><div class="line"><span class="comment">// create a 150x100 image in RGB565 color format. </span></div>
@@ -724,7 +724,7 @@ drawing JPEG images</h2>
 <h2><a class="anchor" id="subsec_AnimatedGIF"></a>
 drawing GIF images</h2>
 <p >Install Bitbank2's <b>AnimatedGIF</b> library from the Arduino library manager / platformio of directly from <a href="https://github.com/bitbank2/AnimatedGIF">https://github.com/bitbank2/AnimatedGIF</a></p>
-<p >We just need to include both libraries into the project to activate the bindings between TGX and AnimatedGIF: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<p >Simply include both libraries into the project to activate the bindings between TGX and AnimatedGIF: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;AnimatedGIF.h&gt;</span></div>
 </div><!-- fragment --><p> Now, we can bind any <code>AnimatedGIF</code> decoder object to tgx images by providing it with the generic callback <code>TGX_GIFDraw</code> and then we can susequently decode GIFs using the <a class="el" href="classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5">Image::GIFplayFrame()</a> method.</p>
 <p >This method simply wraps around the <code>playFrame()</code> method fom the AnimateGIF library and can be called repeatedly to display successives frame in case of an animation.</p>

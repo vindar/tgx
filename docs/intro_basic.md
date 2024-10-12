@@ -17,7 +17,7 @@ The library defines several color classes
 - \ref tgx::RGB24 : 24 bits color: 8 bits red, 8 bits: green, 8 bits blue. *No alignement*. 
 - \ref tgx::RGB32 : 32 bits color: 8 bits red, 8 bits: green, 8 bits blue. 8 bits (pre-multipled) Alpha channel. *Aligned as and convertible to `uint32_t`*. **Useful for blending**. 
 - \ref tgx::RGBf : 96 bits floating point color: 32 bits red (float), 32 bits green (float), 32 bits blue  (float). *Aligned as `float`, no alpha channel*. **Used in the 3D API**.  
-- \ref tgx::RGB64 : 64 bits color: 16 bits red, 16 bits: green, 16 bits blue. 16 bits (pre-multiplied) Alpha channel. *Aligned as and convertible to `uint64_t`*. **Experimental, use RGB32 or RGBf if instead**. 
+- \ref tgx::RGB64 : 64 bits color: 16 bits red, 16 bits: green, 16 bits blue. 16 bits (pre-multiplied) Alpha channel. *Aligned as and convertible to `uint64_t`*. 
 - \ref tgx::HSV : 96 bits colors: 16 bits Hue, 16 bits Saturation, 16 bits Values. *Partial support only*. **Slow, use only to convert between color space, not for drawing operations**.  
 
 
@@ -40,7 +40,7 @@ tgx::RGB32 color5(color2); // conversion: create a RGB32 color from RGB565, this
 color5.setOpacity(0.5f); // adjust the alpha channel in order to make the color half transparent. Other channels are multiplied accordingly (pre-multiplied alpha). 
 ~~~
 
-Predefined colors, *Black*, *White*, *Blue*, *Green*, *Purple*, *Orange*, *Cyan*, *Lime*, *Salmon*, *Maroon*, *Yellow*, *Magenta*, *Olive*, *Teal*, *Gray*, *Silver*, *Navy*, *Transparent*. 
+Predefined colors: *Black*, *White*, *Blue*, *Green*, *Purple*, *Orange*, *Cyan*, *Lime*, *Salmon*, *Maroon*, *Yellow*, *Magenta*, *Olive*, *Teal*, *Gray*, *Silver*, *Navy*, *Transparent*. 
 
 Example:
 ~~~{.cpp}
@@ -51,7 +51,7 @@ tgx::RGB565_Green; //  green color in RGB565
 For additional details on color manipulations, look directly into the color classes definitions in \ref color.h. 
 
 
-## blending and opacity parameter. 
+## Blending and opacity parameter. 
 
 Color types \ref tgx::RGB32 and \ref tgx::RGB64 have an alpha channel which is used for alpha-blending during drawing operations. 
 
@@ -85,15 +85,15 @@ An image object is a lightweight structure (only 16 bytes in memory) similar to 
 
 In particular, **the image object does not contain the pixels buffer itself** but only a pointer to its memory location. **As a general rule, the TGX library never perform any dynamic memory allocation**. 
 
-Several images can reference the same memory buffer (or a part of it). Creating images/sub-images that share the same pixels buffer is useful to restrict drawing operations to a given rectangular region 
+Several images can reference the same memory buffer (or a part of it). Creating images/sub-images that share the same pixels buffer is useful to restrict drawing operations to a given rectangular region.
 
-The position of a pixel in an image is
+The position of a pixel inside an image is given in row major order:
 
 ```Pixel(i, j) = buffer[i + stride*j]```
 
 for 0 &le; `i` &lt; `lx` and 0 &le; `j` &lt; `ly`.
 
-Example
+Example:
 ~~~{.cpp}
 tgx::RGB32 buff[320*240];  // memory buffer for a 320x240 image in RGB32 color format.
 
@@ -124,20 +124,20 @@ See also: \ref tgx::Image::set() "Image::set()", \ref tgx::Image::crop() "Image:
 
 The tgx library defines classes for 2D vectors and boxes:
 
-- \ref tgx::iVec2 : integer-valued 2D vector. ** Use for pixel location in images**
+- \ref tgx::iVec2 : integer-valued 2D vector. **Use for pixel location in images**
 - \ref tgx::fVec2 : floating point-valued 2D vector. **Used for pixel location in images when using sub-pixel precision**
 - \ref tgx::iBox2 : integer-valued 2D box. **Used to represent a rectangular region inside an image**
 - \ref tgx::fBox2 : floating point-valued 2D box. **represent a rectangular region inside an image when using sub-pixel precision**
 
-@note 3D variants are also available: \ref tgx::iVec3, \ref tgx::fVec3, \ref tgx::iBox3, \ref tgx::fBox3 c.f. the 3D API for more details. 
+@note 3D variants for vectros and boxes are also available: \ref tgx::iVec3, \ref tgx::fVec3, \ref tgx::iBox3, \ref tgx::fBox3 c.f. @ref intro_api_3D "the 3D API tutorials" for details. 
 
 @warning Pixel adressing varies slightly when using integer valued coordinates vs floating point valued coordinates.
-- **Integer valued cordinates**: `iVec2(i,j)` represents the location of the pixel `(i,j)` in the image and the whole image corresponds to the (integer valued) box `iBox2(0, lx - 1, 0, ly - 1)`.
-- **Floating point valued coordinates**: `fVec2(i,j)` represents the **center** of pixel `(i,j)` in the image. The pixel itself is a unit lenght square box centered around this location i.e. represented by `fBox2( i-0.5f, i+0.5f, j-0.5f, j+0.5f)`. In this case, the whole image corresponds to the (floating point valued) box `fBox2( -0.5f, lx - 0.5f, -0.5f, ly - 0.5f)`.
+- **Integer valued cordinates**: `iVec2(i,j)` represents the location of the pixel `(i,j)` in the image. The whole image corresponds to the (integer valued) box `iBox2(0, lx - 1, 0, ly - 1)`.
+- **Floating point valued coordinates**: `fVec2(i,j)` represents the **center** of pixel `(i,j)` in the image. The pixel itself is a unit lenght square box centered around this location i.e. represented by `fBox2( i-0.5f, i+0.5f, j-0.5f, j+0.5f)`. The whole image corresponds to the (floating point valued) box `fBox2( -0.5f, lx - 0.5f, -0.5f, ly - 0.5f)`.
 
-Vector and boxes support all the usual operations: arithmetics, copy, type conversion...
+Vectors and boxes support all the usual operations: arithmetics (addition, dot product..), copy, type conversion...
 
-Most drawing methods take vectors and boxes as input parameters instead of scalars. Using initializer lists makes the code more readable: we can simply write `{10, 20}` instead of `tgx::iVec2(10, 20)`. 
+Most drawing methods take vectors and boxes as input parameters instead of scalars. It is recommended to use initializer lists makes the code more readable. For exapple, just write `{10, 20}` instead of `tgx::iVec2(10, 20)`. 
 
 Example:
 ~~~{.cpp}
@@ -170,9 +170,9 @@ im.fillRect({50, 60 , 70, 80}, tgx::RGB32_Black); // using an initializer list: 
 ---
 
 
-# Storing image in .cpp files
+# Storing images in .cpp files
 
-The memory buffer that an image points to may reside in flash/ROM and it if possible to define 'const' image directly in `.cpp` files for easy inclusion in a project. 
+The memory buffer an image points to may reside in flash/ROM and it if possible to define 'const' images directly in `.cpp` files for easy inclusion in a project. 
 
 For example, the 10x10 image
 
@@ -201,15 +201,17 @@ C(0xffff), C(0xef7d), C(0xcdd2), C(0xb4a8), C(0xaba0), C(0xaba0), C(0xb4a8), C(0
 const tgx::Image<tgx::RGB565> smiley(smiley_data, 10, 10);
 ~~~
 
-The `/tools/` subdirectory of the library contain the Python script `image_converter.py` which allows to easily convert an image from a classical format (jpeg/png/bmp...) into a .cpp file.
+The `/tools/` subdirectory of the library contains the Python script `image_converter.py` which converts an image from a classical format (jpeg/png/bmp...) into a .cpp file.
 
-@note It is also easy to directly load PNG, JPEG and GIF images (which may be stored in RAM/FLASH or on another media such as a SD card) by using bindings between TGX and external libraries. See section \ref sec_extensions for more details. 
+@note The TGX library also makes it easy to directly load PNG, JPEG and GIF images (which may be stored in RAM/FLASH or on another media such as a SD card) by using bindings with external libraries. See section \ref sec_extensions for more details. 
 
 
 
 # Copying/converting images to different color types. 
 
 Recall that a \ref tgx::Image object is just a view into a buffer of pixels of a given color type. Thus, copies of image object are shallow (they share the same image buffer / same color type). 
+
+The library provides methods the create "deep" copies and convert images to different color types:
 
 - Method \ref tgx::Image<color_t>::copyFrom() "Image<color_t>::copyFrom(src_im, opacity)" can be used to create deep copy of images and it can also change the color type and resize them (using bilinear interpolation). 
 - Method \ref tgx::Image<color_t>::convert() "Image<color_t>::convert<color_dst>()" can be used to change the color type of an image "in place". 
@@ -235,7 +237,7 @@ tgx::Image<tgx::RGB565> im3 = im1.convert<tgx::RGB565>();
 
 ~~~
 
-
+@note See also the methods for \ref subsec_blitting "blitting sprites" which may be used for copy and color type conversion. 
 
 
 # Drawing things on an images...

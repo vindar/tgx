@@ -7,6 +7,7 @@ var _shaders_8h =
     [ "shader_Flat_Texture", "_shaders_8h.html#a29f7464d24eb1021e412d1c0621e6ecd", null ],
     [ "shader_Gouraud_Texture", "_shaders_8h.html#a11d980f78016451c3586b49225fcbae1", null ],
     [ "shader_Flat_Zbuffer", "_shaders_8h.html#ae7a56715bd66029159c54df073b299e0", null ],
+    [ "shader_Gouraud_Zbuffer_sub", "_shaders_8h.html#aea0cefcb7fcee9e4c9a41e2332e8fecd", null ],
     [ "shader_Gouraud_Zbuffer", "_shaders_8h.html#ab3eb9c728ca31d2c0e57a368358f06ac", null ],
     [ "shader_Flat_Texture_Zbuffer", "_shaders_8h.html#a7b041a5195f91e15c96eca08c75daa56", null ],
     [ "shader_Gouraud_Texture_Zbuffer", "_shaders_8h.html#afb923fc87ec5e960a2f48dd2ed3fc27b", null ],
