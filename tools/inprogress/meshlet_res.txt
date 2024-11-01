@@ -1,47 +1,11 @@
-NAME : test.2.tour
-COMMENT : Length = 2
-COMMENT : Found by LKH [Keld Helsgaun] Tue Oct 29 13:30:10 2024
+NAME : test.1.tour
+COMMENT : Length = 1
+COMMENT : Found by LKH [Keld Helsgaun] Thu Oct 31 22:19:18 2024
 TYPE : TOUR
-DIMENSION : 39
+DIMENSION : 3
 TOUR_SECTION
 1
-23
-16
-35
-14
-13
-15
-12
-11
-26
-28
-19
-20
-6
-8
-27
-25
-18
-4
-5
-9
-7
-38
-39
-10
-17
-24
-30
-32
-22
-31
-21
-34
-33
-29
 2
 3
-37
-36
 -1
 EOF
