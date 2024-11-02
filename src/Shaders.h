@@ -758,7 +758,7 @@ namespace tgx
         const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
  
         {
-        if (01 + O2 + O3 > (1 << 24))
+        if (O1 + O2 + O3 > (1 << 24))
             { // large aera, use interpolateColorsTriangle<true>
             shader_Gouraud_Zbuffer_sub<color_t, ZBUFFER_t, 10>(offset, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
             }
