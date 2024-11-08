@@ -1829,7 +1829,7 @@ namespace tgx
             const fVec4 Q0 = _r_modelViewM.mult1(P1);
             const fVec4 Q1 = _r_modelViewM.mult1(P2);
 
-            if ((Q0.z >= 0)||(Q1.z >= 0)) return;
+            if ((Q0.z >= 0)|(Q1.z >= 0)) return;
 
             const tgx::fMat4 M(_lx / 2.0f, 0, 0, _lx / 2.0f - _ox,
                 0, _ly / 2.0f, 0, _ly / 2.0f - _oy,
@@ -1849,9 +1849,9 @@ namespace tgx
                 H0.zdivide(); 
                 H1.zdivide();
                 }
-            if ((H0.w < -1) || (H0.w > 1)) return;
+            if ((H0.z < -1) | (H0.z > 1)) return;
             H0 = M.mult1(H0);
-            if ((H1.w < -1) || (H1.w > 1)) return;
+            if ((H1.z < -1) | (H1.z > 1)) return;
             H1 = M.mult1(H1);
 
             if (DRAW_FAST)
@@ -1891,7 +1891,7 @@ namespace tgx
                 const fVec4 Q0 = _r_modelViewM.mult1(vertices[ind_vertices[n]]);
                 const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
 
-                if ((Q0.z >= 0)||(Q1.z >= 0)) return;
+                if ((Q0.z >= 0)|(Q1.z >= 0)) continue;
                 
                 fVec4 H0 = _projM * Q0;
                 fVec4 H1 = _projM * Q1;
@@ -1905,9 +1905,9 @@ namespace tgx
                     H0.zdivide(); 
                     H1.zdivide();
                     }
-                if ((H0.w < -1) || (H0.w > 1)) continue;
+                if ((H0.z < -1) | (H0.z > 1)) continue;
                 H0 = M.mult1(H0);
-                if ((H1.w < -1) || (H1.w > 1)) continue;
+                if ((H1.z < -1) | (H1.z > 1)) continue;
                 H1 = M.mult1(H1);
 
                 if (DRAW_FAST)
@@ -1940,7 +1940,7 @@ namespace tgx
             const fVec4 Q1 = _r_modelViewM.mult1(P2);
             const fVec4 Q2 = _r_modelViewM.mult1(P3);
 
-            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+            if ((Q0.z >= 0)|(Q1.z >= 0)|(Q2.z >= 0)) return;
 
             // face culling
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
@@ -1968,11 +1968,11 @@ namespace tgx
                 H1.zdivide();
                 H2.zdivide();
                 }
-            if ((H0.w < -1) || (H0.w > 1)) return;
+            if ((H0.z < -1) | (H0.z > 1)) return;
             H0 = M.mult1(H0);
-            if ((H1.w < -1) || (H1.w > 1)) return;
+            if ((H1.z < -1) | (H1.z > 1)) return;
             H1 = M.mult1(H1);
-            if ((H2.w < -1) || (H2.w > 1)) return;
+            if ((H2.z < -1) | (H2.z > 1)) return;
             H2 = M.mult1(H2);
 
             // draw triangle                       
@@ -2033,7 +2033,7 @@ namespace tgx
                 const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
                 const fVec4 Q2 = _r_modelViewM.mult1(vertices[ind_vertices[n + 2]]);
 
-                if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+                if ((Q0.z >= 0)|(Q1.z >= 0)|(Q2.z >= 0)) continue;
 
                 // face culling 
                 fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
@@ -2055,11 +2055,11 @@ namespace tgx
                     H1.zdivide();
                     H2.zdivide();
                     }
-                if ((H0.w < -1) || (H0.w > 1)) continue;
+                if ((H0.z < -1) | (H0.z > 1)) continue;
                 H0 = M.mult1(H0);
-                if ((H1.w < -1) || (H1.w > 1)) continue;
+                if ((H1.z < -1) | (H1.z > 1)) continue;
                 H1 = M.mult1(H1);
-                if ((H2.w < -1) || (H2.w > 1)) continue;
+                if ((H2.z < -1) | (H2.z > 1)) continue;
                 H2 = M.mult1(H2);
 
                 // draw triangle                       
@@ -2113,7 +2113,7 @@ namespace tgx
             const fVec4 Q1 = _r_modelViewM.mult1(P2);
             const fVec4 Q2 = _r_modelViewM.mult1(P3);
 
-            if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+            if ((Q0.z >= 0)|(Q1.z >= 0)|(Q2.z >= 0)) return;
 
             // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
@@ -2148,13 +2148,13 @@ namespace tgx
                 H2.zdivide();
                 H3.zdivide();
                 }
-            if ((H0.w < -1) || (H0.w > 1)) return;
+            if ((H0.z < -1) | (H0.z > 1)) return;
             H0 = M.mult1(H0);
-            if ((H1.w < -1) || (H1.w > 1)) return;
+            if ((H1.z < -1) | (H1.z > 1)) return;
             H1 = M.mult1(H1);
-            if ((H2.w < -1) || (H2.w > 1)) return;
+            if ((H2.z < -1) | (H2.z > 1)) return;
             H2 = M.mult1(H2);
-            if ((H3.w < -1) || (H3.w > 1)) return;
+            if ((H3.z < -1) | (H3.z > 1)) return;
             H3 = M.mult1(H3);
 
             // draw quad                      
@@ -2203,7 +2203,7 @@ namespace tgx
                 const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
                 const fVec4 Q2 = _r_modelViewM.mult1(vertices[ind_vertices[n + 2]]);
 
-                if ((Q0.z >= 0)||(Q1.z >= 0)||(Q2.z >= 0)) return;
+                if ((Q0.z >= 0)|(Q1.z >= 0)|(Q2.z >= 0)) continue;
 
                 // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
                 fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
@@ -2212,26 +2212,26 @@ namespace tgx
 
                 const fVec4 Q3 = _r_modelViewM.mult1(vertices[ind_vertices[n + 3]]); // compute fourth point
 
-                if (Q3.z >= 0) return;
+                if (Q3.z >= 0) continue;
 
                 fVec4 H0 = _projM * Q0;
                 if (ortho) { H0.w = 1.0f - H0.z; } else { H0.zdivide(); }
-                if ((H0.w < -1) || (H0.w > 1)) continue;
+                if ((H0.z < -1) | (H0.z > 1)) continue;
                 H0 = M.mult1(H0);
 
                 fVec4 H1 = _projM * Q1;
                 if (ortho) { H1.w = 1.0f - H1.z; } else { H1.zdivide(); }
-                if ((H1.w < -1) || (H1.w > 1)) continue;
+                if ((H1.z < -1) | (H1.z > 1)) continue;
                 H1 = M.mult1(H1);
 
                 fVec4 H2 = _projM * Q2;
                 if (ortho) { H2.w = 1.0f - H2.z; } else { H2.zdivide(); }
-                if ((H2.w < -1) || (H2.w > 1)) continue;
+                if ((H2.z < -1) | (H2.z > 1)) continue;
                 H2 = M.mult1(H2);
 
                 fVec4 H3 = _projM * Q3;
                 if (ortho) { H3.w = 1.0f - H3.z; } else { H3.zdivide(); }
-                if ((H3.w < -1) || (H3.w > 1)) continue;
+                if ((H3.z < -1) | (H3.z > 1)) continue;
                 H3 = M.mult1(H3);
 
                 // draw quad                      
@@ -2272,16 +2272,17 @@ namespace tgx
             {
             if (!_validDraw()) return;
             const bool has_zbuffer = TGX_SHADER_HAS_ZBUFFER(_shaders);
-            fVec4 Q = _projM * _r_modelViewM.mult1(pos);
+            auto HH = _r_modelViewM.mult1(pos);
+            fVec4 Q = _projM * HH;
             if (_ortho) { Q.w = 1.0f - Q.z; } else { Q.zdivide(); }
-            if ((Q.w < -1) || (Q.w > 1)) return;
+            if ((Q.z < -1) | (Q.z > 1) | (Q.w <= 0)) return;            
             Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
             Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
             const int x = (int)roundfp(Q.x);
             const int y = (int)roundfp(Q.y);
             if (!has_zbuffer)
                 {
-                if (USE_BLENDING) _uni.im->template drawPixel<true>(x, y, color, opacity); else  _uni.im->template drawPixel<true>(x, y, color);
+                if (USE_BLENDING) _uni.im->template drawPixel<true>({ x, y }, color, opacity); else  _uni.im->template drawPixel<true>({ x, y }, color);
                 }
             else
                 {
@@ -2307,7 +2308,7 @@ namespace tgx
                 fVec3 P = pos_list[k];
                 fVec4 Q = M.mult1(P);
                 if (ortho) { Q.w = 1.0f - Q.z; } else { Q.zdivide(); }
-                if ((Q.w < -1) || (Q.w > 1)) continue;
+                if ((Q.z < -1) | (Q.z > 1) | (Q.w <= 0)) continue;                
                 Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
                 Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
                 const int x = (int)roundfp(Q.x);
@@ -2315,11 +2316,11 @@ namespace tgx
                 if (!has_zbuffer)
                     {
                     if (USE_BLENDING)
-                        _uni.im->template drawPixel<true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]]);
+                        _uni.im->template drawPixel<true>({ x, y }, colors[colors_ind[k]], opacities[opacities_ind[k]]);
                     else if (USE_COLORS)
-                        _uni.im->template drawPixel<true>(x, y, colors[colors_ind[k]]);
+                        _uni.im->template drawPixel<true>({ x, y }, colors[colors_ind[k]]);
                     else
-                        _uni.im->template drawPixel<true>(x, y, _color);
+                        _uni.im->template drawPixel<true>({ x, y }, _color);
                     }
                 else
                     {
@@ -2374,7 +2375,7 @@ namespace tgx
             const bool has_zbuffer = TGX_SHADER_HAS_ZBUFFER(_shaders);
             fVec4 Q = _projM * _r_modelViewM.mult1(pos);
             if (_ortho) { Q.w = 1.0f - Q.z; } else { Q.zdivide(); }
-            if ((Q.w < -1) || (Q.w > 1)) return;
+            if ((Q.z < -1) | (Q.z > 1) | (Q.w <= 0)) return;
             Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
             Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
             const int x = (int)roundfp(Q.x);
@@ -2382,9 +2383,9 @@ namespace tgx
             if (!has_zbuffer)
                 {
                 if (USE_BLENDING)
-                    _uni.im->drawCircle(x, y, r, color, opacity);
+                    _uni.im->drawCircle({ x, y }, r, color, opacity);
                 else
-                    _uni.im->drawCircle(x, y, r, color);
+                    _uni.im->drawCircle({ x, y }, r, color);
                 }
             else 
                 {
@@ -2418,7 +2419,7 @@ namespace tgx
                 {
                 fVec4 Q = M.mult1(pos_list[k]);
                 if (ortho) { Q.w = 1.0f - Q.z; } else { Q.zdivide(); }
-                if ((Q.w < -1) || (Q.w > 1)) continue;
+                if ((Q.z < -1) | (Q.z > 1) | (Q.w <= 0)) continue;
                 Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
                 Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
                 const int x = (int)roundfp(Q.x);
@@ -2427,11 +2428,11 @@ namespace tgx
                 if (!has_zbuffer)
                     {
                     if (USE_BLENDING)
-                        _uni.im->drawCircle(x, y, radius[r], colors[colors_ind[k]], opacities[opacities_ind[k]]);
+                        _uni.im->drawCircle({ x, y }, radius[r], colors[colors_ind[k]], opacities[opacities_ind[k]]);
                     else if (USE_COLORS)
-                        _uni.im->drawCircle(x, y, radius[r], colors[colors_ind[k]]);
+                        _uni.im->drawCircle({ x, y }, radius[r], colors[colors_ind[k]]);
                     else
-                        _uni.im->drawCircle(x, y, radius[r], _color);
+                        _uni.im->drawCircle({ x, y }, radius[r], _color);
                     }
                 else
                     {

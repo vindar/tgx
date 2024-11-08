@@ -1793,7 +1793,7 @@ namespace tgx
             if (W < aa)
                 {
                 W = aa;
-                if (USE_BLENDING) _uni.im->template drawPixel<false>(x, y, color, opacity); else _uni.im->template drawPixel<false>(x, y, color);
+                if (USE_BLENDING) _uni.im->template drawPixel<false>({ x, y }, color, opacity); else _uni.im->template drawPixel<false>({ x, y }, color);
                 }
             }
 
