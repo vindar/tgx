@@ -1,6 +1,0 @@
-PROBLEM_FILE = meshlet.tsp
-MOVE_TYPE = 5
-PATCHING_C = 3
-PATCHING_A = 2
-RUNS = 8
-OUTPUT_TOUR_FILE = meshlet_res.txt
