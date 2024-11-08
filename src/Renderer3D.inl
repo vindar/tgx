@@ -67,7 +67,7 @@ namespace tgx
            _ambiantStrength = 1.0f;
            _diffuseStrength = 1.0f;
            _specularStrength = 1.0f;
-           _specularExponent = 1.0f;
+           _specularExponent = 1;
             this->setLight(fVec3(-1.0f, -1.0f, -1.0f), // white light coming from the right, above, in front.
                 RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f)); // full white.
 
