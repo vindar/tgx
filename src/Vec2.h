@@ -482,7 +482,7 @@ namespace tgx
      */
     template<typename T> inline T dist2(const Vec2<T>  V1, const Vec2<T>  V2)
         {
-        const T xx = V1.x - V2.y;
+        const T xx = V1.x - V2.x;
         const T yy = V1.y - V2.y;
         return xx * xx + yy * yy;
         }
@@ -496,7 +496,7 @@ namespace tgx
      */
     template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist(Vec2<T> V1, const Vec2<T> V2)
         {
-        const T xx = V1.x - V2.y;
+        const T xx = V1.x - V2.x;
         const T yy = V1.y - V2.y;
         return (Tfloat)tgx::precise_sqrt((Tfloat)(xx * xx + yy * yy));
         }
@@ -511,7 +511,7 @@ namespace tgx
      */
     template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist_fast(Vec2<T> V1, const Vec2<T> V2)
         {
-        const T xx = V1.x - V2.y;
+        const T xx = V1.x - V2.x;
         const T yy = V1.y - V2.y;
         return (Tfloat)tgx::fast_sqrt((Tfloat)(xx * xx + yy * yy));
         }
