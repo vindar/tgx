@@ -535,7 +535,7 @@ namespace tgx
      */
     template<typename T> inline T dist2(const Vec4<T>  V1, const Vec4<T>  V2)
         {
-        const T xx = V1.x - V2.y;
+        const T xx = V1.x - V2.x;
         const T yy = V1.y - V2.y;
         const T zz = V1.z - V2.z;
         const T ww = V1.w - V2.w;
@@ -551,7 +551,7 @@ namespace tgx
      */
     template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist(Vec4<T> V1, const Vec4<T> V2)
         {
-        const T xx = V1.x - V2.y;
+        const T xx = V1.x - V2.x;
         const T yy = V1.y - V2.y;
         const T zz = V1.z - V2.z;
         const T ww = V1.w - V2.w;
@@ -568,7 +568,7 @@ namespace tgx
      */
     template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist_fast(Vec4<T> V1, const Vec4<T> V2)
         {
-        const T xx = V1.x - V2.y;
+        const T xx = V1.x - V2.x;
         const T yy = V1.y - V2.y;
         const T zz = V1.z - V2.z;
         const T ww = V1.w - V2.w;
