@@ -89,14 +89,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -104,14 +104,15 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -119,7 +120,8 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
 
             int32_t C2 = O2 + (dx2 * bx);
@@ -171,14 +173,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -186,14 +188,15 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -201,7 +204,8 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
 
             int32_t C2 = O2 + (dx2 * bx);
@@ -286,14 +290,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -301,14 +305,15 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -316,7 +321,8 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
 
             int32_t C1 = O1 + (dx1 * bx) + E;
@@ -447,14 +453,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -462,14 +468,15 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -477,7 +484,8 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
 
             int32_t C1 = O1 + (dx1 * bx) + E;
@@ -577,14 +585,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -593,14 +601,15 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -609,7 +618,8 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
 
             const int32_t C1 = O1 + (dx1 * bx) + E;
@@ -684,14 +694,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -700,14 +710,15 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -716,7 +727,8 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
 
             const int32_t C1 = O1 + (dx1 * bx) + E;
@@ -841,14 +853,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -857,14 +869,15 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -873,7 +886,8 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
 
             int32_t C1 = O1 + (dx1 * bx) + E;
@@ -1016,14 +1030,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -1032,14 +1046,15 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -1048,7 +1063,8 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
             int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
@@ -1173,14 +1189,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -1188,14 +1204,15 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -1203,7 +1220,8 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
             int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
@@ -1323,14 +1341,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -1338,14 +1356,15 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -1353,7 +1372,8 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
                 
             int32_t C1 = O1 + (dx1 * bx) + E;
@@ -1482,14 +1502,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -1498,14 +1518,15 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -1514,7 +1535,8 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
 
             int32_t C1 = O1 + (dx1 * bx) + E;
@@ -1657,14 +1679,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -1673,14 +1695,15 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -1689,7 +1712,8 @@ namespace tgx
                     zbuf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
 
             int32_t C1 = O1 + (dx1 * bx) + E;
@@ -2000,14 +2024,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -2015,14 +2039,15 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -2030,7 +2055,8 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
 
             int32_t C2 = O2 + (dx2 * bx);
@@ -2120,14 +2146,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -2135,14 +2161,15 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -2150,7 +2177,8 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
                 
             int32_t C1 = O1 + (dx1 * bx) + E;
@@ -2313,14 +2341,14 @@ namespace tgx
             if (O1 < 0)
                 {
                 // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1) / dx1; // first index where it becomes positive
+                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
                 {
                 if (dx2 <= 0)
                     {
                     if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1) / dy2;
+                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -2328,14 +2356,15 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O2 + dx2 - 1) / dx2));
+                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
+                bx = max(bx, bx2);
                 }
             if (O3 < 0)
                 {
                 if (dx3 <= 0)
                     {
                     if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1) / dy3;
+                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1);
                     O2 += (by * dy2);
                     O3 += (by * dy3);
@@ -2343,7 +2372,8 @@ namespace tgx
                     buf += offs;
                     continue;
                     }
-                bx = max(bx, ((-O3 + dx3 - 1) / dx3));
+                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
+                bx = max(bx, bx3);
                 }
                 
             int32_t C1 = O1 + (dx1 * bx) + E;
