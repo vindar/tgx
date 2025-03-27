@@ -111,9 +111,9 @@ namespace tgx
         // assuming that clipping was already perfomed and that V0, V1, V2 are in a reasonable "range" so no overflow will occur. 
         const float mx = (float)(TGX_RASTERIZE_MULT128(LX));
         const float my = (float)(TGX_RASTERIZE_MULT128(LY));
-        const iVec2  P0((int32_t)floorf(V0.x * mx), (int32_t)floorf(V0.y * my));
-        const iVec2 sP1((int32_t)floorf(V1.x * mx), (int32_t)floorf(V1.y * my));
-        const iVec2 sP2((int32_t)floorf(V2.x * mx), (int32_t)floorf(V2.y * my));
+        const iVec2  P0(lfloorf(V0.x * mx), lfloorf(V0.y * my));
+        const iVec2 sP1(lfloorf(V1.x * mx), lfloorf(V1.y * my));
+        const iVec2 sP2(lfloorf(V2.x * mx), lfloorf(V2.y * my));
 
         const int32_t umx = min(min(P0.x, sP1.x), sP2.x);
         const int32_t uMx = max(max(P0.x, sP1.x), sP2.x);
