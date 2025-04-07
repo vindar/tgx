@@ -14,9 +14,13 @@ import sys
 
 
 def RGB565(rgb):
-    R = int((rgb[0] + 4)*31.0/255.0) << 11
-    G = int((rgb[1] + 2)*63.0/255.0) << 5
-    B = int((rgb[2] + 4)*31.0/255.0) 
+    r = int(rgb[0])
+    g = int(rgb[1])
+    b = int(rgb[2])
+
+    R = int((r + 4) * 31.0 / 255.0) << 11
+    G = int((g + 2) * 63.0 / 255.0) << 5
+    B = int((b + 4) * 31.0 / 255.0)
     return hex(R + G + B)
 
 
@@ -25,27 +29,29 @@ def RGB565(rgb):
 
 def createTexture(im, name):
     NAMESPACE = "tgx"
+    im = im.convert("RGB")  # Ensure RGB format
     ar = np.asarray(im)
     with open(name + "_texture.h", "w") as f:   
-        f.write('//\n');
-        f.write(f'// texture [{name}]\n');
-        f.write('//\n');
-        f.write('#pragma once\n\n');
-        f.write('#include <tgx.h>\n\n');
-        f.write(f'const uint16_t {name}_texture_data[{im.width}*{im.height}] PROGMEM = {{\n');
+        f.write('//\n')
+        f.write(f'// texture [{name}]\n')
+        f.write('//\n')
+        f.write('#pragma once\n\n')
+        f.write('#include <tgx.h>\n\n')
+        f.write(f'const uint16_t {name}_texture_data[{im.width}*{im.height}] PROGMEM = {{\n')
         i = 0
         for y in range(im.height):
             for x in range(im.width):
-                f.write(RGB565(ar[im.height - 1 - y, x]))
-                if y*x != ((im.width-1)*(im.height-1)):
+                rgb = ar[im.height - 1 - y, x]
+                f.write(RGB565(rgb))
+                if y * x != ((im.width - 1) * (im.height - 1)):
                     f.write(", ")
                 i += 1
                 if i == 16:
                     f.write("\n")
-                    i = 0;
+                    i = 0
         f.write('};\n\n')
         f.write(f'const {NAMESPACE}::Image<{NAMESPACE}::RGB565> {name}_texture((void*){name}_texture_data, {im.width}, {im.height});')                    
-        f.write(f'\n\n/** end of file {name}_texture.h */\n\n');
+        f.write(f'\n\n/** end of file {name}_texture.h */\n\n')
     print(f"\nTexture file [{name}_texture.h] created.\n\n")
 
 
