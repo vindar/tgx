@@ -219,6 +219,7 @@ namespace tgx
     TGX_INLINE inline float fast_inv(float x)
         {
 #if defined(__XTENSA__) && !defined(__XTENSA_SOFT_FLOAT__)
+        // 2 NR iterations, error < 1 ULP
         float t, result;
         asm volatile (
             "recip0.s   %0, %2\n\t"
@@ -321,6 +322,7 @@ namespace tgx
     TGX_INLINE inline float precise_invsqrt(float x)
         {
 #if defined(__XTENSA__) && !defined(__XTENSA_SOFT_FLOAT__)
+        // 2 NR iterations, error < 2 ULP
         float t0, t1, t2, t3, result;
         asm volatile (
             "rsqrt0.s   %0, %5\n\t"
@@ -366,6 +368,7 @@ namespace tgx
     TGX_INLINE inline float fast_invsqrt(float x)
         {
 #if defined(__XTENSA__) && !defined(__XTENSA_SOFT_FLOAT__)
+        // 1 NR iteration, error < 728 ULP
         float t0, t1, t2, t3, result;
         asm volatile (
             "rsqrt0.s   %0, %5\n\t"
