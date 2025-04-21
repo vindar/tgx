@@ -218,7 +218,23 @@ namespace tgx
     */
     TGX_INLINE inline float fast_inv(float x)
         {
-#if defined (TGX_USE_FAST_INV_TRICK)            
+#if defined(__XTENSA__) && !defined(__XTENSA_SOFT_FLOAT__)
+        // 2 NR iterations, error < 1 ULP
+        float t, result;
+        asm volatile (
+            "recip0.s   %0, %2\n\t"
+            "const.s    %1, 1\n\t"
+            "msub.s     %1, %2, %0\n\t"
+            "madd.s     %0, %0, %1\n\t"
+            "const.s    %1, 1\n\t"
+            "msub.s     %1, %2, %0\n\t"
+            "maddn.s    %0, %0, %1"
+            : "=&f" (result),
+              "=&f" (t)
+            : "f" (x)
+        );
+        return result;
+#elif defined (TGX_USE_FAST_INV_TRICK)
         union
             {
             float f;
@@ -305,8 +321,34 @@ namespace tgx
     */
     TGX_INLINE inline float precise_invsqrt(float x)
         {
+#if defined(__XTENSA__) && !defined(__XTENSA_SOFT_FLOAT__)
+        // 2 NR iterations, error < 2 ULP
+        float t0, t1, t2, t3, result;
+        asm volatile (
+            "rsqrt0.s   %0, %5\n\t"
+            "mul.s      %1, %5, %0\n\t"
+            "const.s    %2, 3\n\t"
+            "mul.s      %3, %2, %0\n\t"
+            "const.s    %4, 1\n\t"
+            "msub.s     %4, %1, %0\n\t"
+            "madd.s     %0, %3, %4\n\t"
+            "mul.s      %1, %5, %0\n\t"
+            "mul.s      %3, %2, %0\n\t"
+            "const.s    %4, 1\n\t"
+            "msub.s     %4, %1, %0\n\t"
+            "maddn.s    %0, %3, %4"
+            : "=&f" (result),
+              "=&f" (t0),
+              "=&f" (t1),
+              "=&f" (t2),
+              "=&f" (t3)
+            : "f" (x)
+        );
+        return result;
+#else
         const float s = sqrtf(x);
         return (s == 0) ? 1.0f : (1.0f / s);
+#endif
         }
 
 
@@ -324,8 +366,27 @@ namespace tgx
     * Compute a fast approximation of the inverse square root of a float.
     */
     TGX_INLINE inline float fast_invsqrt(float x)
-        {            
-#if defined (TGX_USE_FAST_INV_SQRT_TRICK)            
+        {
+#if defined(__XTENSA__) && !defined(__XTENSA_SOFT_FLOAT__)
+        // 1 NR iteration, error < 728 ULP
+        float t0, t1, t2, t3, result;
+        asm volatile (
+            "rsqrt0.s   %0, %5\n\t"
+            "mul.s      %1, %5, %0\n\t"
+            "const.s    %2, 3\n\t"
+            "mul.s      %3, %2, %0\n\t"
+            "const.s    %4, 1\n\t"
+            "msub.s     %4, %1, %0\n\t"
+            "maddn.s    %0, %3, %4"
+            : "=&f" (result),
+              "=&f" (t0),
+              "=&f" (t1),
+              "=&f" (t2),
+              "=&f" (t3)
+            : "f" (x)
+        );
+        return result;
+#elif defined (TGX_USE_FAST_INV_SQRT_TRICK)
         // fast reciprocal square root : https://en.wikipedia.org/wiki/Fast_inverse_square_root
         //github.com/JarkkoPFC/meshlete/blob/master/src/core/math/fast_math.inl
         union
@@ -355,6 +416,24 @@ namespace tgx
         return precise_invsqrt(x);
         }
 
+
+    /**
+    * Compute (int32_t)floorf(x).
+    */
+    TGX_INLINE inline int32_t lfloorf(float x)
+        {
+#if defined(__XTENSA__) && !defined(__XTENSA_SOFT_FLOAT__)
+        uint32_t result;
+        asm volatile (
+            "floor.s    %0, %1, 0"
+            : "=a" (result)
+            : "f" (x)
+        );
+        return result;
+#else
+        return (int32_t)floorf(x);
+#endif
+        }
 }
 
 #endif
