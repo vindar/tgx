@@ -1,5 +1,5 @@
 /********************************************************************
-* tgx library example : displaying the Naruto 3D mesh...
+* tgx library example : displaying the Donkey Kong 3D mesh...
 *
 *              EXAMPLE FOR M5STACK Core2 and CoreS3
 *
@@ -22,14 +22,15 @@
 #include <tgx.h>
 
 // the mesh to draw
-#include "naruto.h"
+#include "donkeykong_small.h"
+#define MESH &donkeykong_small
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
 
 // drawing size (limited by the amount of RAM on ESP32/ESP32S3)
-#define SLX 180
-#define SLY 220
+#define SLX 220
+#define SLY 180
 
 // the framebuffer we draw onto
 uint16_t fb[SLX * SLY];
@@ -75,8 +76,8 @@ void setup(void)
 
     // setup the screen driver
     lcd.init();
-    lcd.setRotation(0);
-    lcd.setBrightness(128);
+    lcd.setRotation(1);
+    lcd.setBrightness(200);
     lcd.setColorDepth(16);
     lcd.setSwapBytes(false);  // do not use the library 'builtin byteswapping' because it disabled DMA...
     lcd.setTextFont(1);
@@ -98,6 +99,7 @@ void setup(void)
     }
 
 
+
 /** Compute the model matrix according to the current time */
 tgx::fMat4 moveModel(int &loopnumber) 
     {
@@ -111,10 +113,11 @@ tgx::fMat4 moveModel(int &loopnumber)
 
     loopnumber = m / tot;
     float t = m % tot;
-
-    const float dilat = 9;                // scale model
     const float roty = 360 * (t / 4000);  // rotate 1 turn every 4 seconds
     float tz, ty;
+    const float dilat = 6.5;                // scale model
+    const float nearz = 13; // how much we zoom in
+    const float upy = 2.8; // how much we move up to focus on the head
     if (t < end1) {  // far away
         tz = -25;
         ty = 0;
@@ -122,18 +125,18 @@ tgx::fMat4 moveModel(int &loopnumber)
         t -= end1;
         if (t < end2) {  // zooming in
             t /= end2;
-            tz = -25 + 18 * t;
-            ty = -6.5f * t;
+            tz = -25 + (25-nearz) * t;
+            ty = -upy * t;
         } else {
             t -= end2;
             if (t < end3) {  // close up
-                tz = -7;
-                ty = -6.5f;
+                tz = -nearz;
+                ty = -upy;
             } else {  // zooming out
                 t -= end3;
                 t /= end4;
-                tz = -7 - 18 * t;
-                ty = -6.5 + 6.5 * t;
+                tz = -nearz - (25 -nearz) * t;
+                ty = upy*(t-1);
             }
         }
     }
@@ -199,18 +202,18 @@ void loop()
         {
         case 0:
             renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE);
-            renderer.drawMesh(&naruto_1, false);
+            renderer.drawMesh(MESH, false);
             break;
         case 1:
-            renderer.drawWireFrameMesh(&naruto_1, true);
+            renderer.drawWireFrameMesh(MESH, true);
             break;
         case 2:
             renderer.setShaders(SHADER_FLAT);
-            renderer.drawMesh(&naruto_1, false);
+            renderer.drawMesh(MESH, false);
             break;
         case 3:
             renderer.setShaders(SHADER_GOURAUD);
-            renderer.drawMesh(&naruto_1, false);
+            renderer.drawMesh(MESH, false);
             break;
         }
 

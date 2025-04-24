@@ -36,6 +36,7 @@
 
 // the mesh to draw
 #include "naruto.h"
+#define MESH &naruto_1
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
@@ -120,7 +121,7 @@ void setup()
 
 
 /** Compute the model matrix according to the current time */
-tgx::fMat4 moveModel(int& loopnumber)
+tgx::fMat4 moveModel(int &loopnumber) 
     {
     const float end1 = 6000;
     const float end2 = 2000;
@@ -129,50 +130,42 @@ tgx::fMat4 moveModel(int& loopnumber)
 
     int tot = (int)(end1 + end2 + end3 + end4);
     int m = millis();
-
     loopnumber = m / tot;
     float t = m % tot;
-
-    const float dilat = 9; // scale model
-    const float roty = 360 * (t / 4000); // rotate 1 turn every 4 seconds        
+    const float roty = 360 * (t / 4000);  // rotate 1 turn every 4 seconds
     float tz, ty;
-    if (t < end1)
-        { // far away
+    const float dilat = 9; // scale model
+    const float nearz = 7; // how much we zoom in
+    const float upy = 6.5; // how much we move up to focus on the head
+    if (t < end1) {  // far away
         tz = -25;
         ty = 0;
-        }
-    else
-        {
+    } else {
         t -= end1;
-        if (t < end2)
-            { // zooming in
+        if (t < end2) {  // zooming in
             t /= end2;
-            tz = -25 + 18 * t;
-            ty = -6.5f * t;
-            }
-        else
-            {
+            tz = -25 + (25-nearz) * t;
+            ty = -upy * t;
+        } else {
             t -= end2;
-            if (t < end3)
-                { // close up
-                tz = -7;
-                ty = -6.5f;
-                }
-            else
-                { // zooming out
+            if (t < end3) {  // close up
+                tz = -nearz;
+                ty = -upy;
+            } else {  // zooming out
                 t -= end3;
                 t /= end4;
-                tz = -7 - 18 * t;
-                ty = -6.5 + 6.5 * t;
-                }
+                tz = -nearz - (25 -nearz) * t;
+                ty = upy*(t-1);
             }
         }
+    }
     fMat4 M;
-    M.setScale({ dilat, dilat, dilat }); // scale the model
-    M.multRotate(-roty, { 0,1,0 }); // rotate around y
-    M.multTranslate({ 0,ty, tz }); // translate
+    M.setScale({ dilat, dilat, dilat });  // scale the model
+    M.multRotate(-roty, { 0, 1, 0 });     // rotate around y
+    M.multTranslate({ 0, ty, tz });       // translate
     return M;
     }
+
 
 
 /** Display additional infos on the screen (drawing mode and fps) **/
@@ -228,15 +221,15 @@ void loop()
     switch (loopnumber % 4)
         {
         case 0: renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE);
-                renderer.drawMesh(&naruto_1, false); 
+                renderer.drawMesh(MESH, false); 
                 break;                
-        case 1: renderer.drawWireFrameMesh(&naruto_1, true);
+        case 1: renderer.drawWireFrameMesh(MESH, true);
                 break;
         case 2: renderer.setShaders(SHADER_FLAT);
-                renderer.drawMesh(&naruto_1, false); 
+                renderer.drawMesh(MESH, false); 
                 break;
         case 3: renderer.setShaders(SHADER_GOURAUD);
-                renderer.drawMesh(&naruto_1, false); 
+                renderer.drawMesh(MESH, false); 
                 break;        
         }
 
