@@ -28,48 +28,48 @@ var NAVTREE =
     [ "About the library", "index.html#about", null ],
     [ "Getting started", "index.html#getting_started", null ],
     [ "References", "index.html#References", null ],
-    [ "Installation.", "md_docs_intro_install.html", null ],
-    [ "Basic concepts.", "md_docs_intro_basic.html", [
-      [ "Colors types", "md_docs_intro_basic.html#autotoc_md2", [
-        [ "Blending and opacity parameter.", "md_docs_intro_basic.html#autotoc_md3", null ]
+    [ "Installation.", "intro_install.html", null ],
+    [ "Basic concepts.", "intro_basic.html", [
+      [ "Colors types", "intro_basic.html#autotoc_md2", [
+        [ "Blending and opacity parameter.", "intro_basic.html#autotoc_md3", null ]
       ] ],
-      [ "Image class, memory layout and sub-images", "md_docs_intro_basic.html#autotoc_md5", null ],
-      [ "Vectors and Boxes", "md_docs_intro_basic.html#autotoc_md7", null ],
-      [ "Storing images in .cpp files", "md_docs_intro_basic.html#autotoc_md9", null ],
-      [ "Copying/converting images to different color types.", "md_docs_intro_basic.html#autotoc_md10", null ],
-      [ "Drawing things on an images...", "md_docs_intro_basic.html#autotoc_md11", null ]
+      [ "Image class, memory layout and sub-images", "intro_basic.html#autotoc_md5", null ],
+      [ "Vectors and Boxes", "intro_basic.html#autotoc_md7", null ],
+      [ "Storing images in .cpp files", "intro_basic.html#autotoc_md9", null ],
+      [ "Copying/converting images to different color types.", "intro_basic.html#autotoc_md10", null ],
+      [ "Drawing things on an images...", "intro_basic.html#autotoc_md11", null ]
     ] ],
-    [ "Using the 2D API.", "md_docs_intro_api_2_d.html", [
-      [ "2D Drawing methods.", "md_docs_intro_api_2_d.html#sec_2Dprimitives", [
-        [ "Filling the screen.", "md_docs_intro_api_2_d.html#subsec_filling", null ],
-        [ "Reading/writing pixels", "md_docs_intro_api_2_d.html#subsec_rwpixels", null ],
-        [ "Flood-filling a region", "md_docs_intro_api_2_d.html#subsec_floodfill", null ],
-        [ "Blitting sprites", "md_docs_intro_api_2_d.html#subsec_blitting", null ],
-        [ "drawing horizontal and vertical lines", "md_docs_intro_api_2_d.html#subsec_vhlines", null ],
-        [ "drawing lines", "md_docs_intro_api_2_d.html#subsec_lines", null ],
-        [ "drawing rectangles", "md_docs_intro_api_2_d.html#subsec_rect", null ],
-        [ "drawing rounded rectangles", "md_docs_intro_api_2_d.html#subsec_roundrect", null ],
-        [ "drawing triangles", "md_docs_intro_api_2_d.html#subsec_triangles", null ],
-        [ "drawing triangles (advanced)", "md_docs_intro_api_2_d.html#subsec_triangles_advanced", null ],
-        [ "drawing quads", "md_docs_intro_api_2_d.html#subsec_quads", null ],
-        [ "drawing quads (advanced)", "md_docs_intro_api_2_d.html#subsec_quads_advanced", null ],
-        [ "drawing polylines", "md_docs_intro_api_2_d.html#subsec_polylines", null ],
-        [ "drawing polygons", "md_docs_intro_api_2_d.html#subsec_polygons", null ],
-        [ "drawing circles", "md_docs_intro_api_2_d.html#subsec_circles", null ],
-        [ "drawing ellipses", "md_docs_intro_api_2_d.html#subsec_ellipses", null ],
-        [ "drawing circle arcs and pies", "md_docs_intro_api_2_d.html#subsec_arcpies", null ],
-        [ "drawing Bezier curves", "md_docs_intro_api_2_d.html#subsec_bezier", null ],
-        [ "drawing splines", "md_docs_intro_api_2_d.html#subsec_splines", null ],
-        [ "drawing text", "md_docs_intro_api_2_d.html#subsec_text", null ]
+    [ "Using the 2D API.", "intro_api_2_d.html", [
+      [ "2D Drawing methods.", "intro_api_2_d.html#sec_2Dprimitives", [
+        [ "Filling the screen.", "intro_api_2_d.html#subsec_filling", null ],
+        [ "Reading/writing pixels", "intro_api_2_d.html#subsec_rwpixels", null ],
+        [ "Flood-filling a region", "intro_api_2_d.html#subsec_floodfill", null ],
+        [ "Blitting sprites", "intro_api_2_d.html#subsec_blitting", null ],
+        [ "drawing horizontal and vertical lines", "intro_api_2_d.html#subsec_vhlines", null ],
+        [ "drawing lines", "intro_api_2_d.html#subsec_lines", null ],
+        [ "drawing rectangles", "intro_api_2_d.html#subsec_rect", null ],
+        [ "drawing rounded rectangles", "intro_api_2_d.html#subsec_roundrect", null ],
+        [ "drawing triangles", "intro_api_2_d.html#subsec_triangles", null ],
+        [ "drawing triangles (advanced)", "intro_api_2_d.html#subsec_triangles_advanced", null ],
+        [ "drawing quads", "intro_api_2_d.html#subsec_quads", null ],
+        [ "drawing quads (advanced)", "intro_api_2_d.html#subsec_quads_advanced", null ],
+        [ "drawing polylines", "intro_api_2_d.html#subsec_polylines", null ],
+        [ "drawing polygons", "intro_api_2_d.html#subsec_polygons", null ],
+        [ "drawing circles", "intro_api_2_d.html#subsec_circles", null ],
+        [ "drawing ellipses", "intro_api_2_d.html#subsec_ellipses", null ],
+        [ "drawing circle arcs and pies", "intro_api_2_d.html#subsec_arcpies", null ],
+        [ "drawing Bezier curves", "intro_api_2_d.html#subsec_bezier", null ],
+        [ "drawing splines", "intro_api_2_d.html#subsec_splines", null ],
+        [ "drawing text", "intro_api_2_d.html#subsec_text", null ]
       ] ],
-      [ "TGX extensions via external librairies", "md_docs_intro_api_2_d.html#sec_extensions", [
-        [ "Drawing text with TrueType fonts", "md_docs_intro_api_2_d.html#subsec_openfontrender", null ],
-        [ "Drawing PNG images", "md_docs_intro_api_2_d.html#subsec_PNGdec", null ],
-        [ "Drawing JPEG images", "md_docs_intro_api_2_d.html#subsec_JPEGDEC", null ],
-        [ "Drawing GIF images", "md_docs_intro_api_2_d.html#subsec_AnimatedGIF", null ]
+      [ "TGX extensions via external librairies", "intro_api_2_d.html#sec_extensions", [
+        [ "Drawing text with TrueType fonts", "intro_api_2_d.html#subsec_openfontrender", null ],
+        [ "Drawing PNG images", "intro_api_2_d.html#subsec_PNGdec", null ],
+        [ "Drawing JPEG images", "intro_api_2_d.html#subsec_JPEGDEC", null ],
+        [ "Drawing GIF images", "intro_api_2_d.html#subsec_AnimatedGIF", null ]
       ] ]
     ] ],
-    [ "Using the 3D API.", "md_docs_intro_api_3_d.html", null ],
+    [ "Using the 3D API.", "intro_api_3_d.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -94,12 +94,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_box2_8h.html",
-"_vec3_8h.html#a5a80b95baec0f98029d9c32f55e13eea",
-"classtgx_1_1_renderer3_d.html#a76c4ce4af7e3c7da2e3a1a7d1d0d4f01",
-"structtgx_1_1_box2.html#a17693b324943853530a2461c6d02a58d",
-"structtgx_1_1_r_g_b32.html#a6394c64dde0e92a73b5c9633e403b3ab",
-"structtgx_1_1_vec3.html#aaa7154572e64f301b2fbcce7c7bc938e"
+"classtgx_1_1_renderer3_d.html#a76fa32770476cd15f717d3f103fd752d",
+"structtgx_1_1_box2.html#a194303806a678a2e26fe1a9a222504ba",
+"structtgx_1_1_r_g_b32.html#a645458518cb06f690569f5cc592bdf5d",
+"structtgx_1_1_vec3.html#aab1de305033b31a96a115d3eaeed1aa5"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';
