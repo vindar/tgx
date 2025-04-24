@@ -561,6 +561,20 @@ def reorderVNTarrays(vertice, texture, normal, R):
 # In[ ]:
 
 
+def reverseTriangleDirection(obj,normal):
+    """ Reverse the direction of all the triangle in all the objects"""
+    for o in obj:
+        for i in range(len(o)):
+            T = o[i]
+            o[i] = (T[0],T[2],T[1])
+    for i in range(len(normal)):
+        N = normal[i]
+        normal[i] = (-N[0], -N[1], -N[2])
+
+
+# In[ ]:
+
+
 def arraytoString(array):
     return "{\n" + ("\n".join( [ "{" + ",".join([str(i) for i in u]) + "}," for u in array] )).rstrip(",") + "\n};\n"
 
@@ -789,7 +803,7 @@ def getColorLightning(use_default_cl, nb):
 
     coltxt = input(f"- color for object {nb}. [ENTER] for default: {DEFAULT_COLOR}")
     try:
-        col = [ float(l) for l in re.split(',|\(|\)| ', coltxt) if len(l)>0] 
+        col = [ float(l) for l in re.split(r',|\(|\)| ', coltxt) if len(l)>0] 
     except:
         col = []
     if (len(col) != 3):
@@ -799,7 +813,7 @@ def getColorLightning(use_default_cl, nb):
 
     lighttxt = input(f"- lightning for object {nb}. [ENTER] for default: {DEFAULT_LIGHTNING}")
     try:
-        light = [ float(l) for l in re.split(',|\(|\)| ', lighttxt) if len(l)>0] 
+        light = [ float(l) for l in re.split(r',|\(|\)| ', lighttxt) if len(l)>0] 
         light[3] = int(light[3])
     except:
         light = []    
@@ -827,7 +841,10 @@ print()
 
 #load the file
 vertice, texture, normal, obj, tag = loadObjFile(filename)
-    
+
+#invert triangle direction (only for non-standard oriented meshes)
+#reverseTriangleDirection(obj,normal)
+
 # create normals if needed and normalize them.
 normal = fixNormals(vertice, normal, obj)
 
@@ -887,5 +904,3 @@ print(f"\n*** conversion complete: model saved in [{modelname + '.h'}] ***\n\n")
 
 
 
-
-# 

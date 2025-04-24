@@ -21,9 +21,6 @@
 // graphic library
 #include <tgx.h>
 
-// tgx graphic library
-#include <tgx.h>
-
 // the mesh to draw
 #include "naruto.h"
 
