@@ -1,7 +1,7 @@
 /********************************************************************
 * tgx library example : displaying the Naruto 3D mesh...
 *
-*           EXAMPLE FOR ESP32 FAMILY (ESP32, ESP32-S2, ESP32-S3 ...)
+*                    EXAMPLE FOR RP2040 / RP2350
 *
 * Instructions:
 *
@@ -15,20 +15,11 @@
 *
 * ---
 * This example was tested with:
-*    - boards:  ESP32, ESP32-S2, ESP32-S3
+*    - boards:  Raspberry Pico W (RP2040) and Raspeberry Pico 2 (RP2350)
 *    - screens: ILI9341 (320x240) and ST7735 (160x128)
 ********************************************************************/
 
-
-/**************** WARNING *****************
-* DMA transfer is curently bugged on ESP32. 
-* Two solutions:  
-*   1. Apply the fix provided by @tgghtp in https://github.com/Bodmer/TFT_eSPI/discussions/2233
-*   2. ... Or disable DMA by uncommenting the line below:
-*******************************************/
-// #define DISABLE_DMA   //<-- Uncomment this to disable DMA
-
-// screen driver library
+// screen driver library 
 #include <TFT_eSPI.h>
 
 // tgx graphic library
@@ -40,9 +31,9 @@
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
 
-// default drawing size (limited by the amount of RAM on ESP32/ESP32S3)
-#define SLX 180
-#define SLY 220
+// default drawing size (limited by the amount of RAM on RP2040/RP2350)
+#define SLX 140
+#define SLY 160
 
 // real drawing size
 int slx, sly; 
@@ -51,18 +42,10 @@ int slx, sly;
 uint16_t fb[SLX * SLY];
 
 // second framebuffer used for DMA update
-#if defined(CONFIG_IDF_TARGET_ESP32S3)
-    uint16_t fb2[SLX * SLY];  // statically allocated on ESP32 S3...
-#else
-    uint16_t* fb2;  // ...but malloced on ESP32
-#endif
+uint16_t fb2[SLX * SLY];
 
-// the z-buffer in 16 bits precision
-#if defined(CONFIG_IDF_TARGET_ESP32S3)
-    uint16_t zbuf[SLX * SLY];  // statically allocated on ESP32 S3...
-#else
-    uint16_t* zbuf; // ..but malloced on ESP32
-#endif
+// the zbuffer
+uint16_t zbuf[SLX * SLY];
 
 // the tgx::image object that encapsulate framebuffer fb
 Image<RGB565> imfb;
@@ -91,18 +74,9 @@ void setup()
     tft.initDMA();
     tft.startWrite();
 
-    // fix the drawing size in case the screen is smaller than SLXxSLY. 
+    // resize the drawing size in case the screen is smaller than SLXxSLY. 
     slx =  std::min<int>(tft.width(),SLX);
     sly =  std::min<int>(tft.height()-20,SLY);
-
-    // Allocate memory for the buffers: only on ESP32 (not on ESP32 S3)
-    #if not defined(CONFIG_IDF_TARGET_ESP32S3)
-        fb2 = (uint16_t *)heap_caps_malloc(slx * sly * sizeof(uint16_t), MALLOC_CAP_DMA);  // allocate the second framebuffer
-        while (fb2 == nullptr) { Serial.println("Error: cannot allocate memory for fb2"); delay(1000); }
-        zbuf = (uint16_t*)malloc(slx * sly * sizeof(uint16_t)); // allocate the zbuffer
-        while (zbuf == nullptr) { Serial.println("Error: cannot allocate memory for zbuf"); delay(1000);}
-    #endif
-
 
     // setup the 3D renderer.
     imfb.set(fb,slx,sly);
@@ -212,7 +186,6 @@ void infos(int loopnumber)
 
 int loopnumber = 0;
 
-
 /** Main loop */
 void loop()
     {
@@ -243,12 +216,8 @@ void loop()
     // display additional informations (drawing type and FPS)
     infos(loopnumber);
 
-    // upload the framebuffer to the screen
-    #if defined(DISABLE_DMA)     
-        tft.pushImage((tft.width() - slx) / 2, (tft.height() - sly) / 2, slx, sly, fb); // direct transfer without DMA
-    #else
-        tft.pushImageDMA((tft.width() - slx) / 2, (tft.height() - sly) / 2, slx, sly, fb, fb2); // initiate DMA transfer
-    #endif
+    // upload the framebuffer to the screen (async. via DMA)
+    tft.pushImageDMA((tft.width() - slx) / 2, (tft.height() - sly) / 2, slx, sly, fb, fb2);
     }
 
 
