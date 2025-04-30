@@ -1831,7 +1831,7 @@ namespace tgx
 
 
         /** used by _discard() for testing a point position against the frustum planes */
-        void _clip(int & fl, const fVec4 & P, float bx, float Bx, float by, float By)
+        TGX_INLINE inline void _clip(int & fl, const fVec4 & P, float bx, float Bx, float by, float By)
             {
             if (P.x >= bx) { fl &= (~(1)); }
             if (P.x <= Bx) { fl &= (~(2)); }
@@ -1843,7 +1843,7 @@ namespace tgx
 
 
         /** used by _discard() for testing a point position against the frustum planes */
-        void _clip(int & fl, const fVec3 & P, float bx, float Bx, float by, float By, const fMat4 & M)
+        TGX_INLINE inline void _clip(int & fl, const fVec3 & P, float bx, float Bx, float by, float By, const fMat4 & M)
             {
             fVec4 S = M.mult1(P);
             if (!_ortho) S.zdivide();
@@ -1858,12 +1858,10 @@ namespace tgx
             if ((bb.minX == 0) && (bb.maxX == 0) && (bb.minY == 0) && (bb.maxY == 0) && (bb.minZ == 0) && (bb.maxZ == 0))
                 return false; // do not discard if the bounding box is uninitialized.
 
-            const float ilx = 2.0f * fast_inv((float)_lx);
-            const float bx = (_ox - 1) * ilx - 1.0f;
-            const float Bx = (_ox + _uni.im->width() + 1) * ilx - 1.0f;
-            const float ily = 2.0f * fast_inv((float)_ly);
-            const float by = (_oy - 1) * ily - 1.0f;
-            const float By = (_oy + _uni.im->height() + 1) * ily - 1.0f;
+            const float bx = (_ox - 1) * _ilx - 1.0f;
+            const float Bx = (_ox + _uni.im->width() + 1) * _ilx - 1.0f;
+            const float by = (_oy - 1) * _ily - 1.0f;
+            const float By = (_oy + _uni.im->height() + 1) * _ily - 1.0f;
 
             int fl = 63; // every bit set
             _clip(fl, fVec3(bb.minX, bb.minY, bb.minZ), bx, Bx, by, By, M);
@@ -1890,12 +1888,10 @@ namespace tgx
          * coords are given after z-divide. */
         bool _discardTriangle(const fVec4 & P1, const fVec4 & P2, const fVec4 & P3)
             {
-            const float ilx = 2.0f  * fast_inv((float)_lx);
-            const float bx = (_ox - 1) * ilx - 1.0f;
-            const float Bx = (_ox + _uni.im->width() + 1) * ilx - 1.0f;
-            const float ily = 2.0f  * fast_inv((float)_ly);
-            const float by = (_oy - 1) * ily - 1.0f;
-            const float By = (_oy + _uni.im->height() + 1) * ily - 1.0f;
+            const float bx = (_ox - 1) * _ilx - 1.0f;
+            const float Bx = (_ox + _uni.im->width() + 1) * _ilx - 1.0f;
+            const float by = (_oy - 1) * _ily - 1.0f;
+            const float By = (_oy + _uni.im->height() + 1) * _ily - 1.0f;
 
             int fl = 63; // every bit set
             _clip(fl, P1, bx, Bx, by, By);
@@ -2052,6 +2048,7 @@ namespace tgx
         // *** general parameters ***
 
         int     _lx, _ly;           // viewport dimension        
+        float   _ilx, _ily;         // inverse viewport dimension
 
         int     _ox, _oy;           // image offset w.r.t. the viewport        
 
