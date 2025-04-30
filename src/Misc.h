@@ -4,6 +4,7 @@
  */
 //
 // Copyright 2020 Arvind Singh
+// Fast approximations copyright 2025 Ken Cooke
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -34,16 +35,23 @@
 
 
 
-#if defined(TEENSYDUINO) || defined(ESP32) || defined(ARDUINO_ARCH_STM32)
+#if defined(TEENSYDUINO) || defined(ESP32) || defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_RP2350)
     #include "Arduino.h" // include Arduino to get PROGMEM macro and others
     #define TGX_ON_ARDUINO
 
     #define TGX_USE_FAST_INV_SQRT_TRICK
     #define TGX_USE_FAST_SQRT_TRICK     
-    //#define TGX_USE_FAST_INV_TRICK  // bug and slower then regular inv anyway... 
+    #define TGX_USE_FAST_INV_TRICK
      
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE __attribute__((noinline, noclone)) FLASHMEM
+#elif defined(PICO_RP2350)
+    #define TGX_USE_FAST_INV_SQRT_TRICK
+    #define TGX_USE_FAST_SQRT_TRICK
+    #define TGX_USE_FAST_INV_TRICK
+    
+    #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_NOINLINE __attribute__((noinline, noclone))
 #else    
     #define TGX_INLINE    
     #define TGX_NOINLINE
@@ -199,6 +207,13 @@ namespace tgx
     TGX_INLINE inline double roundfp(const double f) { return round(f); }
 
 
+    /** Reinterpret the bits of a float as a uint32_t */
+    TGX_INLINE inline uint32_t float_as_uint32(float f) { uint32_t u; memcpy(&u, &f, sizeof(uint32_t)); return u; }
+
+
+    /** Reinterpret the bits of a uint32_t as a float */
+    TGX_INLINE inline float uint32_as_float(uint32_t u) { float f; memcpy(&f, &u, sizeof(float)); return f; }
+
 
     /**
      * Return a value smaller or equal to B such that the multiplication by A is safe (no overflow with int32).
@@ -235,18 +250,18 @@ namespace tgx
         );
         return result;
 #elif defined (TGX_USE_FAST_INV_TRICK)
-        union
-            {
-            float f;
-            uint32_t u;
-            } v;
-        v.f = x;
-        v.u = 0x5f375a86 - (v.u >> 1); // slightly more precise than the original 0x5f3759df
-        const float x2 = x * 0.5f;
-        const float threehalfs = 1.5f;
-        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 1st iteration
-//        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 2nd iteration (not needed)
-        return v.f * v.f;                   
+        // error < 14.3 ULP (8.91e-7)
+        // float y = uint32_as_float(0x7ef33409 - float_as_uint32(x));
+        //
+        // y = fmaf(y, fmaf(-x, y, 1.00127125f), y);
+        // y = fmaf(y, fmaf(-x, y, 1.00000083f), y);
+
+        // error < 16.5 ULP (1.03e-6)
+        float y = uint32_as_float(0x7ef335a7 - float_as_uint32(x));
+
+        y *= fmaf(-x, y, 2.00128722f);
+        y *= fmaf(-x, y, 2.00000072f);
+        return y;
 #else 
         return ((x == 0) ? 1.0f : (1.0f / x));
 #endif            
@@ -288,18 +303,10 @@ namespace tgx
     TGX_INLINE inline float fast_sqrt(float x)
         {
 #if defined (TGX_USE_FAST_SQRT_TRICK)            
-        union
-            {
-            float f;
-            uint32_t u;
-            } v;
-        v.f = x;
-        v.u = 0x5f375a86 - (v.u >> 1); // slightly more precise than the original 0x5f3759df
-        const float x2 = x * 0.5f;
-        const float threehalfs = 1.5f;
-        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 1st iteration
-//        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 2nd iteration (not needed)
-        return x * v.f;              
+        // error < 11321 ULP (8.81e-4)
+        float y = uint32_as_float(0x5f0b3892 - (float_as_uint32(x) >> 1));
+
+        return x * y * fmaf(-x, y * y, 1.89099002f);
 #else 
         return precise_sqrt(x);
 #endif            
@@ -387,20 +394,10 @@ namespace tgx
         );
         return result;
 #elif defined (TGX_USE_FAST_INV_SQRT_TRICK)
-        // fast reciprocal square root : https://en.wikipedia.org/wiki/Fast_inverse_square_root
-        //github.com/JarkkoPFC/meshlete/blob/master/src/core/math/fast_math.inl
-        union
-            {
-            float f;
-            uint32_t u;
-            } v;
-        v.f = x;
-        v.u = 0x5f375a86 - (v.u >> 1); // slightly more precise than the original 0x5f3759df
-        const float x2 = x * 0.5f;
-        const float threehalfs = 1.5f;
-        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 1st iteration
-//        v.f = v.f * (threehalfs - (x2 * v.f * v.f));		// 2nd iteration (not needed)
-        return v.f;
+        // error < 12536 ULP (8.81e-4)
+        float y = uint32_as_float(0x5f0b3892 - (float_as_uint32(x) >> 1));
+
+        return y * fmaf(-x, y * y, 1.89099002f);
 #else      
         return precise_invsqrt(x);
 #endif
