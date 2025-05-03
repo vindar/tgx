@@ -22,76 +22,20 @@
 #ifndef _TGX_MISC_H_
 #define _TGX_MISC_H_
 
+#include "tgx_config.h"
 
 #include <stdint.h>
 #include <math.h>
 #include <string.h>
 
 
-// disable mtools extensions by default
-#ifndef MTOOLS_TGX_EXTENSIONS
-#define MTOOLS_TGX_EXTENSIONS 0 
-#endif
-
-
-
-#if defined(TEENSYDUINO) || defined(ESP32) || defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_RP2350)
-    #include "Arduino.h" // include Arduino to get PROGMEM macro and others
-    #define TGX_ON_ARDUINO
-
-    #define TGX_USE_FAST_INV_SQRT_TRICK
-    #define TGX_USE_FAST_SQRT_TRICK     
-    #define TGX_USE_FAST_INV_TRICK
-     
-    #define TGX_INLINE __attribute__((always_inline))
-    #define TGX_NOINLINE __attribute__((noinline, noclone)) FLASHMEM
-#elif defined(PICO_RP2350)
-    #define TGX_USE_FAST_INV_SQRT_TRICK
-    #define TGX_USE_FAST_SQRT_TRICK
-    #define TGX_USE_FAST_INV_TRICK
-    
-    #define TGX_INLINE __attribute__((always_inline))
-    #define TGX_NOINLINE __attribute__((noinline, noclone))
-#else    
-    #define TGX_INLINE    
-    #define TGX_NOINLINE
-#endif
-
-#ifndef PROGMEM
-    #define PROGMEM
-#endif
-
-#ifndef FLASHMEM
-    #define FLASHMEM
-#endif
-
-
-/*  */
-#ifndef TGX_SINGLE_PRECISION_COMPUTATIONS
-    #define TGX_SINGLE_PRECISION_COMPUTATIONS 1  ///< Set this to 1 to use float as the default floating point type and set it to 0 to use double precision instead.
-#endif
-
- 
-#define TGX_DEFAULT_NO_BLENDING -1.0f ///< Default blending operation for drawing primitive: overwrite instead of blending. 
-
-
-#if defined(TEENSYDUINO) || defined(ESP32)
-/* Size of the cache when reading in PROGMEM. This value is used to try to optimize cache read to
-improve rendering speed when reading large image in flash... On teensy, 8K give good results.*/
-#define TGX_PROGMEM_DEFAULT_CACHE_SIZE 8192 
-#else 
-/* Size of the cache when reading in PROGMEM. This value is used to try to optimize cache read to
-improve rendering speed when reading large image in flash... Can use large value on CPU.*/
-#define TGX_PROGMEM_DEFAULT_CACHE_SIZE 262144
-#endif
-
-
-/** macro to cast indexes as 32bit when doing pointer arithmetic */
-#define TGX_CAST32(a)   ((int32_t)(a))
-
 
 // c++, no plain c
 #ifdef __cplusplus
+
+
+// macro to cast indexes as 32bit when doing pointer arithmetic 
+#define TGX_CAST32(a)   ((int32_t)(a))
 
 #define DEPRECATED(X) [[deprecated(" " X " ")]]
 
@@ -230,6 +174,8 @@ namespace tgx
 
     /**
     * Fast (approximate) computation of 1/x. Version for float.
+    * 
+    * Credit Ken Cooke (@joestash)
     */
     TGX_INLINE inline float fast_inv(float x)
         {
@@ -249,7 +195,7 @@ namespace tgx
             : "f" (x)
         );
         return result;
-#elif defined (TGX_USE_FAST_INV_TRICK)
+#elif TGX_USE_FAST_INV_TRICK
         // error < 14.3 ULP (8.91e-7)
         // float y = uint32_as_float(0x7ef33409 - float_as_uint32(x));
         //
@@ -299,10 +245,12 @@ namespace tgx
 
     /**
     * Compute a fast approximation of the square root of a float.
+    * 
+    * Credit Ken Cooke (@joestash)
     */
     TGX_INLINE inline float fast_sqrt(float x)
         {
-#if defined (TGX_USE_FAST_SQRT_TRICK)            
+#if TGX_USE_FAST_SQRT_TRICK
         // error < 11321 ULP (8.81e-4)
         float y = uint32_as_float(0x5f0b3892 - (float_as_uint32(x) >> 1));
 
@@ -325,6 +273,8 @@ namespace tgx
 
     /**
     * Compute the inverse square root of a float (exact computation).
+    * 
+    * Credit Ken Cooke (@joestash)
     */
     TGX_INLINE inline float precise_invsqrt(float x)
         {
@@ -371,6 +321,8 @@ namespace tgx
     
     /**
     * Compute a fast approximation of the inverse square root of a float.
+    * 
+    * Credit Ken Cooke (@joestash)
     */
     TGX_INLINE inline float fast_invsqrt(float x)
         {
@@ -393,7 +345,7 @@ namespace tgx
             : "f" (x)
         );
         return result;
-#elif defined (TGX_USE_FAST_INV_SQRT_TRICK)
+#elif TGX_USE_FAST_INV_SQRT_TRICK
         // error < 12536 ULP (8.81e-4)
         float y = uint32_as_float(0x5f0b3892 - (float_as_uint32(x) >> 1));
 
@@ -416,6 +368,8 @@ namespace tgx
 
     /**
     * Compute (int32_t)floorf(x).
+    * 
+    * Credit Ken Cooke (@joestash)
     */
     TGX_INLINE inline int32_t lfloorf(float x)
         {
