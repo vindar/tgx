@@ -342,8 +342,8 @@ namespace tgx
                     {
                     const float xx = tx * icw;
                     const float yy = ty * icw;                    
-                    const int ttx = (int)floorf(xx);
-                    const int tty = (int)floorf(yy);
+                    const int ttx = lfloorf(xx);
+                    const int tty = lfloorf(yy);
                     const float ax = xx - ttx;
                     const float ay = yy - tty;                    
                     const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
@@ -505,8 +505,8 @@ namespace tgx
                     {
                     const float xx = tx * icw;
                     const float yy = ty * icw;                    
-                    const int ttx = (int)floorf(xx);
-                    const int tty = (int)floorf(yy);
+                    const int ttx = lfloorf(xx);
+                    const int tty = lfloorf(yy);
                     const float ax = xx - ttx;
                     const float ay = yy - tty;  
                     const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
@@ -911,8 +911,8 @@ namespace tgx
                         {
                         const float xx = tx * icw;
                         const float yy = ty * icw;                    
-                        const int ttx = (int)floorf(xx);
-                        const int tty = (int)floorf(yy);
+                        const int ttx = lfloorf(xx);
+                        const int tty = lfloorf(yy);
                         const float ax = xx - ttx;
                         const float ay = yy - tty;       
                         const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
@@ -1088,8 +1088,8 @@ namespace tgx
                         {
                         const float xx = tx * icw;
                         const float yy = ty * icw;                    
-                        const int ttx = (int)floorf(xx);
-                        const int tty = (int)floorf(yy);
+                        const int ttx = lfloorf(xx);
+                        const int tty = lfloorf(yy);
                         const float ax = xx - ttx;
                         const float ay = yy - tty;                    
                         const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
@@ -1238,8 +1238,8 @@ namespace tgx
                     {
                     const float xx = tx;
                     const float yy = ty;                    
-                    const int ttx = (int)floorf(xx);
-                    const int tty = (int)floorf(yy);
+                    const int ttx = lfloorf(xx);
+                    const int tty = lfloorf(yy);
                     const float ax = xx - ttx;
                     const float ay = yy - tty;                    
                     const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
@@ -1391,8 +1391,8 @@ namespace tgx
                     {
                     const float xx = tx;
                     const float yy = ty;                    
-                    const int ttx = (int)floorf(xx);
-                    const int tty = (int)floorf(yy);
+                    const int ttx = lfloorf(xx);
+                    const int tty = lfloorf(yy);
                     const float ax = xx - ttx;
                     const float ay = yy - tty;                    
                     const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
@@ -1560,8 +1560,8 @@ namespace tgx
                         {
                         const float xx = tx;
                         const float yy = ty;                    
-                        const int ttx = (int)floorf(xx);
-                        const int tty = (int)floorf(yy);
+                        const int ttx = lfloorf(xx);
+                        const int tty = lfloorf(yy);
                         const float ax = xx - ttx;
                         const float ay = yy - tty;    
                         const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
@@ -1737,8 +1737,8 @@ namespace tgx
                         {
                         const float xx = tx;
                         const float yy = ty;                    
-                        const int ttx = (int)floorf(xx);
-                        const int tty = (int)floorf(yy);                    
+                        const int ttx = lfloorf(xx);
+                        const int tty = lfloorf(yy);
                         const float ax = xx - ttx;
                         const float ay = yy - tty;
                         const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
@@ -2192,8 +2192,8 @@ namespace tgx
                 {                         
                 const float xx = tx;
                 const float yy = ty;                    
-                const int ttx = (int)floorf(xx);
-                const int tty = (int)floorf(yy);
+                const int ttx = lfloorf(xx);
+                const int tty = lfloorf(yy);
                 const float ax = xx - ttx;
                 const float ay = yy - tty;                    
 
@@ -2387,8 +2387,8 @@ namespace tgx
                 {                         
                 const float xx = tx;
                 const float yy = ty;                    
-                const int ttx = (int)floorf(xx);
-                const int tty = (int)floorf(yy);
+                const int ttx = lfloorf(xx);
+                const int tty = lfloorf(yy);
                 const float ax = xx - ttx;
                 const float ay = yy - tty;                    
 

@@ -124,6 +124,8 @@ namespace tgx
             {
             _lx = clamp(lx, 0, MAXVIEWPORTDIMENSION);
             _ly = clamp(ly, 0, MAXVIEWPORTDIMENSION);
+            _ilx = _lx ? 2.0f / _lx : 2.0f;
+            _ily = _ly ? 2.0f / _ly : 2.0f;
             }
 
 
