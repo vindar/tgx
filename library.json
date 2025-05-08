@@ -14,7 +14,7 @@
     "maintainer": true
   },
   "homepage": "https://github.com/vindar/tgx",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "frameworks": "arduino",
   "platforms": "*"
 }
