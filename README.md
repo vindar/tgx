@@ -1,12 +1,8 @@
 # TGX - a tiny graphics library
 
-***NEW VERSION 1.0.5***
+***LATEST VERSION 1.0.5***
 
-- **Bad news**:  Many API breaking change, especially with the 2D API...
-- **Good news**:
-     - A full documentation is now available at https://vindar.github.io/tgx/
-     - Speed improvement for 3D mesh rendering. 
-     - Added new 2D drawing primitives and improved quality rendering of previous ones.
+A full documentation is now available at https://vindar.github.io/tgx/
        
 
 <p align="center">
@@ -33,6 +29,7 @@ The library has been currently tested on:
 - Teensy 3.5, 3.6, 4.0, 4.1
 - ESP32 family. 
 - Raspberry Pico 1/2 (RP2040/RP2350)
+- STM32 (STM32F4/STM32H7)
 - desktop CPUs
 
 **Warning:** The library's goal is to draw graphics **on  a memory framebuffer**. As such, it does not provide  any hardware/screen support. You will need a screen driver to display the memory framebuffer onto a physical screen. If you are using a Teensy 4.0/4.1 and an ILI9341 screen, you may consider using my [optimized driver](https://github.com/vindar/ILI9341_T4).
