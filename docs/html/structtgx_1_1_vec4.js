@@ -32,6 +32,5 @@ var structtgx_1_1_vec4 =
     [ "getNormalize", "structtgx_1_1_vec4.html#a8a9b09ed5ce746238ec9d1d93af9f3ef", null ],
     [ "getNormalize_fast", "structtgx_1_1_vec4.html#af70d41894b0bc798e38670a1282009c7", null ],
     [ "zdivide", "structtgx_1_1_vec4.html#ac63692579926c0f915b20e433a22f122", null ],
-    [ "print", "structtgx_1_1_vec4.html#ae84f6bdc63e81e6068618c437e27362b", null ],
     [ "w", "structtgx_1_1_vec4.html#a24cc93bb10f7595d12456a736016c376", null ]
 ];

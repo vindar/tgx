@@ -18,6 +18,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "ShaderParams.h", "_shader_params_8h.html", "_shader_params_8h" ],
     [ "Shaders.h", "_shaders_8h.html", "_shaders_8h" ],
     [ "tgx.h", "tgx_8h.html", null ],
+    [ "tgx_config.h", "tgx__config_8h.html", null ],
     [ "Vec2.h", "_vec2_8h.html", "_vec2_8h" ],
     [ "Vec3.h", "_vec3_8h.html", "_vec3_8h" ],
     [ "Vec4.h", "_vec4_8h.html", "_vec4_8h" ]

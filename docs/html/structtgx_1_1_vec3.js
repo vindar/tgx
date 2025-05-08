@@ -31,6 +31,5 @@ var structtgx_1_1_vec3 =
     [ "normalize_fast", "structtgx_1_1_vec3.html#aad43bc6a7548cba572645c3e064118ca", null ],
     [ "getNormalize", "structtgx_1_1_vec3.html#a1e36a77477b01aa50c6c94832b079e66", null ],
     [ "getNormalize_fast", "structtgx_1_1_vec3.html#a23cd15e1b2f3e3c1de96604d3ccdde7d", null ],
-    [ "print", "structtgx_1_1_vec3.html#a362938941a3bee16eceb5de463ec1542", null ],
     [ "z", "structtgx_1_1_vec3.html#a3c29adeab28353c9a4e66b8cfe4eda21", null ]
 ];

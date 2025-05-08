@@ -34,7 +34,6 @@ var structtgx_1_1_vec2 =
     [ "getRotate90", "structtgx_1_1_vec2.html#a0e7fdb36c34634adee5419874414fb98", null ],
     [ "leftOf", "structtgx_1_1_vec2.html#a301f295b0f8369561d6fdfb3eefa9eb7", null ],
     [ "setAsIntersection", "structtgx_1_1_vec2.html#afa8ff02b55c55bf3c296fcb80675bad6", null ],
-    [ "print", "structtgx_1_1_vec2.html#a2a2ad6d208236709aca8e3ca5d6509c7", null ],
     [ "x", "structtgx_1_1_vec2.html#a0dd3317719c780a7614027f9b50edb17", null ],
     [ "y", "structtgx_1_1_vec2.html#a3cdfd98bbf0ed03d5c7ba54eea0c8001", null ]
 ];

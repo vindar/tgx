@@ -1,7 +1,7 @@
 var searchData=
 [
   ['safemultb_0',['safeMultB',['../_misc_8h.html#a2e813ebb271d39da4f92c63d87decc11',1,'tgx']]],
-  ['set_1',['set',['../classtgx_1_1_image.html#a14d5fd97744c3335b775fde5ae055e02',1,'tgx::Image::set(T *buffer, int lx, int ly, int stride=DEFAULT_STRIDE)'],['../classtgx_1_1_image.html#a8ee4c90b993be5b826ce3faa6f64d0dd',1,'tgx::Image::set(T *buffer, iVec2 dim, int stride=DEFAULT_STRIDE)']]],
+  ['set_1',['set',['../classtgx_1_1_image.html#a8ee4c90b993be5b826ce3faa6f64d0dd',1,'tgx::Image::set(T *buffer, iVec2 dim, int stride=DEFAULT_STRIDE)'],['../classtgx_1_1_image.html#a14d5fd97744c3335b775fde5ae055e02',1,'tgx::Image::set(T *buffer, int lx, int ly, int stride=DEFAULT_STRIDE)']]],
   ['setasintersection_2',['setAsIntersection',['../structtgx_1_1_vec2.html#afa8ff02b55c55bf3c296fcb80675bad6',1,'tgx::Vec2']]],
   ['setculling_3',['setCulling',['../classtgx_1_1_renderer3_d.html#a76fa32770476cd15f717d3f103fd752d',1,'tgx::Renderer3D']]],
   ['setfrustum_4',['setFrustum',['../structtgx_1_1_mat4.html#a8f023a5d8bb793c6411a74a57c92e161',1,'tgx::Mat4::setFrustum()'],['../classtgx_1_1_renderer3_d.html#af0ae032c0be73580be8e61c53ad42545',1,'tgx::Renderer3D::setFrustum()']]],
@@ -26,8 +26,8 @@ var searchData=
   ['setopacity_23',['setOpacity',['../structtgx_1_1_r_g_b565.html#a49fc50a8dc77f6f1014bcdb9f72ee3c5',1,'tgx::RGB565::setOpacity()'],['../structtgx_1_1_r_g_b24.html#ae6fd9fee450151b92b1374b6a922a450',1,'tgx::RGB24::setOpacity()'],['../structtgx_1_1_r_g_b32.html#aeab4ea818cfd65a8d512aaf2460e72c3',1,'tgx::RGB32::setOpacity()'],['../structtgx_1_1_r_g_b64.html#a5af6e0e286a042ec99aca8e0ae228ccb',1,'tgx::RGB64::setOpacity()'],['../structtgx_1_1_r_g_bf.html#ab0969713a02179e32462e2290d391419',1,'tgx::RGBf::setOpacity()'],['../structtgx_1_1_h_s_v.html#a69c38cbcdbfebfe370977ae3e9732c1c',1,'tgx::HSV::setOpacity()']]],
   ['setopaque_24',['setOpaque',['../structtgx_1_1_r_g_b32.html#a34b7a24016f78c2d4fcbbc7b45146fae',1,'tgx::RGB32::setOpaque()'],['../structtgx_1_1_r_g_b64.html#a333779a1407b45bdb3af626c2b6c535e',1,'tgx::RGB64::setOpaque()']]],
   ['setopenfontrender_25',['setOpenFontRender',['../classtgx_1_1_image.html#a501bd842e7c783deaf4f0c0f7832f376',1,'tgx::Image']]],
-  ['setortho_26',['setOrtho',['../structtgx_1_1_mat4.html#aa427edd629ed08570dd5c8207a78db2e',1,'tgx::Mat4::setOrtho()'],['../classtgx_1_1_renderer3_d.html#a8ff9976b53c527e62c95be427620685f',1,'tgx::Renderer3D::setOrtho()']]],
-  ['setperspective_27',['setPerspective',['../structtgx_1_1_mat4.html#a1d162f853afbd66782cd6589596770b6',1,'tgx::Mat4::setPerspective()'],['../classtgx_1_1_renderer3_d.html#a8437622c6b90f9429769504848d22456',1,'tgx::Renderer3D::setPerspective(float fovy, float aspect, float zNear, float zFar)']]],
+  ['setortho_26',['setOrtho',['../structtgx_1_1_mat4.html#aa427edd629ed08570dd5c8207a78db2e',1,'tgx::Mat4::setOrtho()'],['../classtgx_1_1_renderer3_d.html#a8ff9976b53c527e62c95be427620685f',1,'tgx::Renderer3D::setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)']]],
+  ['setperspective_27',['setPerspective',['../classtgx_1_1_renderer3_d.html#a8437622c6b90f9429769504848d22456',1,'tgx::Renderer3D::setPerspective()'],['../structtgx_1_1_mat4.html#a1d162f853afbd66782cd6589596770b6',1,'tgx::Mat4::setPerspective()']]],
   ['setprojectionmatrix_28',['setProjectionMatrix',['../classtgx_1_1_renderer3_d.html#af0c31304f8ec4425401629a7846adff5',1,'tgx::Renderer3D']]],
   ['setrotate_29',['setRotate',['../structtgx_1_1_mat4.html#a7b4b318e743ae3bdcc341233bcdc1906',1,'tgx::Mat4::setRotate(T angle, T x, T y, T z)'],['../structtgx_1_1_mat4.html#ad7e8ba53545bc825d11ebf30ffb6b64a',1,'tgx::Mat4::setRotate(T angle, const Vec3&lt; T &gt; v)']]],
   ['setscale_30',['setScale',['../structtgx_1_1_mat4.html#a3b007479b9654809689f7ae4c506da20',1,'tgx::Mat4::setScale(T x, T y, T z)'],['../structtgx_1_1_mat4.html#a4b17405fbd68245b0ad8a9d208250486',1,'tgx::Mat4::setScale(const Vec3&lt; T &gt; v)']]],

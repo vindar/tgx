@@ -1,7 +1,7 @@
 var searchData=
 [
   ['fast_5finv_0',['fast_inv',['../_misc_8h.html#ac1f902347993c1de2e39bc4fc52ff3c2',1,'tgx::fast_inv(float x)'],['../_misc_8h.html#a40244cc372b1073cc6d174321838d765',1,'tgx::fast_inv(double x)']]],
-  ['fast_5finvsqrt_1',['fast_invsqrt',['../_misc_8h.html#a44fe774228b06a2f4216bfc851ae06dd',1,'tgx::fast_invsqrt(float x)'],['../_misc_8h.html#aa181066cf27d4efe69379fe53bdea107',1,'tgx::fast_invsqrt(double x)']]],
+  ['fast_5finvsqrt_1',['fast_invsqrt',['../_misc_8h.html#aa181066cf27d4efe69379fe53bdea107',1,'tgx::fast_invsqrt(double x)'],['../_misc_8h.html#a44fe774228b06a2f4216bfc851ae06dd',1,'tgx::fast_invsqrt(float x)']]],
   ['fast_5fsqrt_2',['fast_sqrt',['../_misc_8h.html#aa8f90c3a49f0c09037f6afaf6fa43456',1,'tgx::fast_sqrt(float x)'],['../_misc_8h.html#a0a471dd481589fff522acb33df0c45a9',1,'tgx::fast_sqrt(double x)']]],
   ['fill_3',['fill',['../classtgx_1_1_image.html#a2a2f1a3381d697f8863277f36f60efdb',1,'tgx::Image::fill(iVec2 start_pos, color_t new_color)'],['../classtgx_1_1_image.html#aa1526bd3763cfbdc0de6b8b874efa7a7',1,'tgx::Image::fill(iVec2 start_pos, color_t border_color, color_t new_color)']]],
   ['fillcircle_4',['fillCircle',['../classtgx_1_1_image.html#a86d499cbadb775d3bb4ea35aa346d1ee',1,'tgx::Image']]],
@@ -35,7 +35,8 @@ var searchData=
   ['fillthicktriangleaa_32',['fillThickTriangleAA',['../classtgx_1_1_image.html#ad5bc7675918586e2cc5f53d5501b5af6',1,'tgx::Image']]],
   ['filltriangle_33',['fillTriangle',['../classtgx_1_1_image.html#adc3f4da7c4b2062077d0c6e88345751c',1,'tgx::Image']]],
   ['filltriangleaa_34',['fillTriangleAA',['../classtgx_1_1_image.html#ace764dbf0276f484c1bbd1e7d0aa2916',1,'tgx::Image']]],
-  ['fontheight_35',['fontHeight',['../classtgx_1_1_image.html#a805232acbfe35ee7034361c4bd2b2dcd',1,'tgx::Image::fontHeight(const GFXfont &amp;font) const'],['../classtgx_1_1_image.html#afc7f0475cb5f0f4e3ea5791bf405b189',1,'tgx::Image::fontHeight(const ILI9341_t3_font_t &amp;font) const'],['../_fonts_8h.html#a88d651a00668dbaffbaaeb73a0e730e0',1,'tgx::fontHeight(const GFXfont &amp;font)'],['../_fonts_8h.html#a3178298b2904e1fa42fff0452145b6df',1,'tgx::fontHeight(const ILI9341_t3_font_t &amp;font)']]],
-  ['freemeshextmem_36',['freeMeshEXTMEM',['../_mesh3_d_8h.html#a0575bac62b3bc78a8b151d17aa4fa742',1,'tgx']]],
-  ['front_37',['front',['../structtgx_1_1_box3.html#abe3850e00409e1871d9c1b522816ebfa',1,'tgx::Box3']]]
+  ['float_5fas_5fuint32_35',['float_as_uint32',['../_misc_8h.html#a39c607a544f512ddf2cab86eb6cce255',1,'tgx']]],
+  ['fontheight_36',['fontHeight',['../classtgx_1_1_image.html#afc7f0475cb5f0f4e3ea5791bf405b189',1,'tgx::Image::fontHeight(const ILI9341_t3_font_t &amp;font) const'],['../classtgx_1_1_image.html#a805232acbfe35ee7034361c4bd2b2dcd',1,'tgx::Image::fontHeight(const GFXfont &amp;font) const'],['../_fonts_8h.html#a88d651a00668dbaffbaaeb73a0e730e0',1,'tgx::fontHeight(const GFXfont &amp;font)'],['../_fonts_8h.html#a3178298b2904e1fa42fff0452145b6df',1,'tgx::fontHeight(const ILI9341_t3_font_t &amp;font)']]],
+  ['freemeshextmem_37',['freeMeshEXTMEM',['../_mesh3_d_8h.html#a0575bac62b3bc78a8b151d17aa4fa742',1,'tgx']]],
+  ['front_38',['front',['../structtgx_1_1_box3.html#abe3850e00409e1871d9c1b522816ebfa',1,'tgx::Box3']]]
 ];
