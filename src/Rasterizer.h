@@ -235,7 +235,7 @@ namespace tgx
         
         if (dx1 > 0)
             {            
-            shader_fun(ox + (data.im->stride() * oy), sx, sy,
+            shader_fun(ox, oy, sx, sy,
                 dx1, dy1, O1, fP2,
                 dx2, dy2, O2, V0,
                 dx3, dy3, O3, fP1,
@@ -243,7 +243,7 @@ namespace tgx
             }
         else if (dx2 > 0)
             {
-            shader_fun(ox + (data.im->stride() * oy), sx, sy,
+            shader_fun(ox, oy, sx, sy,
                 dx2, dy2, O2, V0,
                 dx3, dy3, O3, fP1,
                 dx1, dy1, O1, fP2,
@@ -251,7 +251,7 @@ namespace tgx
             }
         else
             {
-            shader_fun(ox + (data.im->stride() * oy), sx, sy,
+            shader_fun(ox, oy, sx, sy,
                 dx3, dy3, O3, fP1,
                 dx1, dy1, O1, fP2,
                 dx2, dy2, O2, V0,
