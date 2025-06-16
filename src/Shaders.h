@@ -42,10 +42,10 @@ namespace tgx
     * For test purposes... 
     **/
     template<typename color_t, typename ZBUFFER_t>
-    void shader_test(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
-        const int32_t& dx1, const int32_t& dy1, int32_t O1, const tgx::RasterizerVec4& fP1,
-        const int32_t& dx2, const int32_t& dy2, int32_t O2, const tgx::RasterizerVec4& fP2,
-        const int32_t& dx3, const int32_t& dy3, int32_t O3, const tgx::RasterizerVec4& fP3,
+    void shader_test(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const tgx::RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const tgx::RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const tgx::RasterizerVec4& fP3,
         const tgx::RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
         color_t col = (color_t)tgx::RGB32_Red; //data.facecolor; 
@@ -72,10 +72,10 @@ namespace tgx
     * FLAT SHADING (NO ZBUFFER)
     **/
     template<typename color_t, typename ZBUFFER_t>
-    void shader_Flat(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
-        const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
+    void shader_Flat(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
         const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
         color_t col = (color_t)data.facecolor;        
@@ -149,10 +149,10 @@ namespace tgx
     * GOURAUD SHADING (NO Z BUFFER)
     **/
     template<typename color_t, typename ZBUFFER_t>
-    void shader_Gouraud(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
-        const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
+    void shader_Gouraud(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
         const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {        
         const int32_t stride = data.im->stride();
@@ -232,7 +232,7 @@ namespace tgx
     * TEXTURE + FLAT SHADING (NO ZBUFFER)
     **/
     template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Flat_Texture(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_Flat_Texture(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -386,7 +386,7 @@ namespace tgx
     * TEXTURE + GOURAUD SHADING (NO ZBUFFER)
     **/
     template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Gouraud_Texture(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_Gouraud_Texture(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -552,10 +552,10 @@ namespace tgx
     * ZBUFFER + FLAT SHADING
     **/
     template<typename color_t, typename ZBUFFER_t>
-    void shader_Flat_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
-        const int32_t& dx1, const int32_t& dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t& dx2, const int32_t& dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t& dx3, const int32_t& dy3, int32_t O3, const RasterizerVec4& fP3,
+    void shader_Flat_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
         const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
         const color_t col = (color_t)data.facecolor;
@@ -656,7 +656,7 @@ namespace tgx
     * ZBUFFER + GOURAUD SHADING  (sub-procedure, templated on shiftC)
     **/        
     template<typename color_t, typename ZBUFFER_t, int shiftC>
-    void shader_Gouraud_Zbuffer_sub(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_Gouraud_Zbuffer_sub(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -760,7 +760,7 @@ namespace tgx
     * ZBUFFER + GOURAUD SHADING
     **/
     template<typename color_t, typename ZBUFFER_t>
-    void shader_Gouraud_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_Gouraud_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -783,7 +783,7 @@ namespace tgx
     * ZBUFFER + TEXTURE + FLAT SHADING
     **/
     template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Flat_Texture_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_Flat_Texture_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -950,7 +950,7 @@ namespace tgx
     * ZBUFFER + TEXTURE + GOURAUD SHADING
     **/
     template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Gouraud_Texture_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_Gouraud_Texture_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -1128,7 +1128,7 @@ namespace tgx
     * TEXTURE + FLAT SHADING (NO ZBUFFER) + ORTHOGRAPHIC
     **/
     template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Flat_Texture_Ortho(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_Flat_Texture_Ortho(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -1272,7 +1272,7 @@ namespace tgx
     * TEXTURE + GOURAUD SHADING (NO ZBUFFER) + ORTHOGRAPHIC
     **/
     template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Gouraud_Texture_Ortho(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_Gouraud_Texture_Ortho(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -1428,7 +1428,7 @@ namespace tgx
     * ZBUFFER + TEXTURE + FLAT SHADING + ORTHOGRAPHIC
     **/
     template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Flat_Texture_Zbuffer_Ortho(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_Flat_Texture_Zbuffer_Ortho(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -1595,7 +1595,7 @@ namespace tgx
     * ZBUFFER + TEXTURE + GOURAUD SHADING + ORTHOGRAPHIC
     **/
     template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Gouraud_Texture_Zbuffer_Ortho(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_Gouraud_Texture_Zbuffer_Ortho(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -1775,7 +1775,7 @@ namespace tgx
     /**
     * META-Shader THAT DISPATCH TO THE CORRECT Shader ABOVE (IF ENABLED).
     **/
-    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t> void shader_select(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t> void shader_select(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -1986,7 +1986,7 @@ namespace tgx
     * 2D shader (gradient)
     **/
     template<bool USE_BLENDING, typename color_t_im>
-    void shader_2D_gradient(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_2D_gradient(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -2079,7 +2079,7 @@ namespace tgx
     * 2D shader (texture)
     **/
     template<bool USE_BLENDING, bool USE_MASKING, bool USE_GRADIENT, typename color_t_im, typename color_t_tex>
-    void shader_2D_texture(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_2D_texture(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -2279,7 +2279,7 @@ namespace tgx
     * 2D shader (texture with custom blending operator)
     **/
     template<typename BLEND_OP, typename color_t_im, typename color_t_tex>
-    void shader_2D_texture_blend_op(const int32_t oox, const int32_t ooy, const int32_t& lx, const int32_t& ly,
+    void shader_2D_texture_blend_op(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
