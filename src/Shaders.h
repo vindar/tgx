@@ -1,6 +1,6 @@
-/**   
- * @file Shaders.h 
- * Triangle shader functions. 
+/**
+ * @file Shaders.h
+ * Triangle shader functions.
  */
 //
 // Copyright 2020 Arvind Singh
@@ -39,7 +39,7 @@ namespace tgx
 
 
     /**
-    * For test purposes... 
+    * For test purposes...
     **/
     template<typename color_t, typename ZBUFFER_t>
     void shader_test(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
@@ -48,7 +48,7 @@ namespace tgx
         const int32_t dx3, const int32_t dy3, int32_t O3, const tgx::RasterizerVec4& fP3,
         const tgx::RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
         {
-        color_t col = (color_t)tgx::RGB32_Red; //data.facecolor; 
+        color_t col = (color_t)tgx::RGB32_Red; //data.facecolor;
         const int32_t stride = data.im->stride();
         color_t* buf = data.im->data() + oox + (ooy * stride);
 
@@ -61,7 +61,7 @@ namespace tgx
                 const int32_t o3 = O3 + dx3 * x + dy3 * y;
                 if ((o1 >= 0) && (o2 >= 0) && (o3 >= 0))
                     {
-                    buf[x + stride * y].blend256(col, 128);                
+                    buf[x + stride * y].blend256(col, 128);
                     }
                 }
             }
@@ -69,175 +69,20 @@ namespace tgx
 
 
     /**
-    * FLAT SHADING (NO ZBUFFER)
+    * UBER-SHADER for all 3D rendering variants.
+    * Replaces all individual shader functions like shader_Flat, shader_Gouraud, shader_Texture, etc.
+    * Uses compile-time flags to generate optimized code for each specific case.
     **/
-    template<typename color_t, typename ZBUFFER_t>
-    void shader_Flat(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+    template<typename color_t, typename ZBUFFER_t,
+             bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE,
+             bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+    void uber_shader(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
         const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {
-        color_t col = (color_t)data.facecolor;        
-        const int32_t stride = data.im->stride();
-        color_t* buf = data.im->data() + oox + (ooy * stride);
-
-        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-
-        while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
-                    if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
-                    continue;
-                    }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
-                }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
-                    if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
-                    continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
-                }
-
-            int32_t C2 = O2 + (dx2 * bx);
-            int32_t C3 = O3 + (dx3 * bx);
-            while ((bx < lx) && ((C2 | C3) >= 0))
-                {
-                buf[bx] = col;
-                //buf[bx].blend256(col, 128) // for testing. 
-                C2 += dx2;
-                C3 += dx3;
-                bx++;
-                }
-
-            O1 += dy1;
-            O2 += dy2;
-            O3 += dy3;
-            buf += stride;
-            }
-        }
-
-
-
-    /**
-    * GOURAUD SHADING (NO Z BUFFER)
-    **/
-    template<typename color_t, typename ZBUFFER_t>
-    void shader_Gouraud(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {        
-        const int32_t stride = data.im->stride();
-        color_t* buf = data.im->data() + oox + (ooy * stride); 
-
-        const color_t col1 = (color_t)fP1.color;
-        const color_t col2 = (color_t)fP2.color;
-        const color_t col3 = (color_t)fP3.color;
-
-        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t pa = O1 + O2 + O3;
-        const int32_t E = ((pa == 0) ? 1 : 0);
-        const int32_t aera = pa + E;
-        const int shiftC = (aera > (1 << 22)) ? 10 : 0; // prevent overflow during color interpolation
-
-        while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
-                    if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
-                    continue;
-                    }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
-                }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
-                    if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
-                    continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
-                }
-
-            int32_t C2 = O2 + (dx2 * bx);
-            int32_t C3 = O3 + (dx3 * bx);
-            while ((bx < lx) && ((C2 | C3) >= 0))
-                {
-                buf[bx] = interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC, col1, aera >> shiftC);
-                C2 += dx2;
-                C3 += dx3;
-                bx++;
-                }
-
-            O1 += dy1;
-            O2 += dy2;
-            O3 += dy3;
-            buf += stride;
-            }
-        }
-
-
-
-    /**
-    * TEXTURE + FLAT SHADING (NO ZBUFFER)
-    **/
-    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Flat_Texture(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {
+    {
+        // --- Common setup for all shaders ---
         const int32_t stride = data.im->stride();
         color_t* buf = data.im->data() + oox + (ooy * stride);
 
@@ -246,1530 +91,279 @@ namespace tgx
         const int32_t E = ((pa == 0) ? 1 : 0);
         const int32_t aera = pa + E;
 
+        // --- Z-Buffer setup ---
+        ZBUFFER_t* zbuf = nullptr;
+        int32_t zstride = 0;
+        float wa = 0.0f, wb = 0.0f;
+        float fP1a_z = 0.0f, fP2a_z = 0.0f, fP3a_z = 0.0f;
+        float dw_z = 0.0f;
 
-        const float invaera = fast_inv((float)aera);
-        const float fP1a = fP1.w * invaera;
-        const float fP2a = fP2.w * invaera;
-        const float fP3a = fP3.w * invaera;
+        if constexpr (USE_ZBUFFER)
+        {
+            zstride = data.im->lx();
+            zbuf = data.zbuf + oox + (ooy * zstride);
+            wa = data.wa;
+            wb = data.wb;
 
-        const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
+            const float invaera = fast_inv((float)aera);
+            float invaera_wa_factor = USE_ORTHO ? 1.0f : wa;
 
-        const RGBf& cf = (RGBf)data.facecolor;
-        const int fPR = (int)(256 * cf.R);
-        const int fPG = (int)(256 * cf.G);
-        const int fPB = (int)(256 * cf.B);
+            fP1a_z = fP1.w * invaera * invaera_wa_factor;
+            fP2a_z = fP2.w * invaera * invaera_wa_factor;
+            fP3a_z = fP3.w * invaera * invaera_wa_factor;
 
-        // the texture coord
-        fVec2 T1 = fP1.T;
-        fVec2 T2 = fP2.T;
-        fVec2 T3 = fP3.T;
+            dw_z = (dx1 * fP1a_z) + (dx2 * fP2a_z) + (dx3 * fP3a_z);
+        }
 
-        const color_t* tex = data.tex->data();
-        const int32_t texsize_x = data.tex->width();
-        const int32_t texsize_y = data.tex->height();
-        const int32_t texsize_x_mm = texsize_x - 1;
-        const int32_t texsize_y_mm = texsize_y - 1;
-        const int32_t texstride = data.tex->stride();
+        // --- Shading & Texturing setup ---
+        color_t flat_color;
+        color_t col1_g, col2_g, col3_g;
+        int shiftC = 0, aeraShifted = 0;
+        int fPR = 0, fPG = 0, fPB = 0; // Flat color components
+        int fP1R = 0, fP1G = 0, fP1B = 0; // Gouraud color components
+        int fP21R = 0, fP21G = 0, fP21B = 0;
+        int fP31R = 0, fP31G = 0, fP31B = 0;
 
-        // divide the texture coord by z * aera
-        T1 *= fP1a;
-        T2 *= fP2a;
-        T3 *= fP3a;
-        T1.x *= texsize_x;
-        T2.x *= texsize_x;
-        T3.x *= texsize_x;
-        T1.y *= texsize_y;
-        T2.y *= texsize_y;
-        T3.y *= texsize_y;
+        float invaera_persp = 0.0f;
+        float fP1a_p = 0.0f, fP2a_p = 0.0f, fP3a_p = 0.0f;
+        float dw_p = 0.0f;
 
-        const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-        const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+        const color_t* tex = nullptr;
+        int32_t texsize_x_mm = 0, texsize_y_mm = 0, texstride = 0;
+        float dtx = 0.0f, dty = 0.0f;
+        fVec2 T1, T2, T3;
 
+        if constexpr (USE_GOURAUD)
+        {
+            if constexpr (USE_TEXTURE)
+            {
+                const RGBf& cf1 = (RGBf)fP1.color;
+                const RGBf& cf2 = (RGBf)fP2.color;
+                const RGBf& cf3 = (RGBf)fP3.color;
+                fP1R = (int)(256 * cf1.R); fP1G = (int)(256 * cf1.G); fP1B = (int)(256 * cf1.B);
+                fP21R = (int)(256 * (cf2.R - cf1.R)); fP21G = (int)(256 * (cf2.G - cf1.G)); fP21B = (int)(256 * (cf2.B - cf1.B));
+                fP31R = (int)(256 * (cf3.R - cf1.R)); fP31G = (int)(256 * (cf3.G - cf1.G)); fP31B = (int)(256 * (cf3.B - cf1.B));
+            }
+            else
+            {
+                col1_g = (color_t)fP1.color;
+                col2_g = (color_t)fP2.color;
+                col3_g = (color_t)fP3.color;
+                shiftC = (aera > (1 << 22)) ? 10 : 0;
+                aeraShifted = aera >> shiftC;
+            }
+        }
+        else // Flat shading
+        {
+            flat_color = (color_t)data.facecolor;
+            if constexpr (USE_TEXTURE)
+            {
+                const RGBf& cf = (RGBf)data.facecolor;
+                fPR = (int)(256 * cf.R); fPG = (int)(256 * cf.G); fPB = (int)(256 * cf.B);
+            }
+        }
+
+        if constexpr (USE_TEXTURE)
+        {
+            tex = data.tex->data();
+            const int32_t texsize_x = data.tex->width();
+            const int32_t texsize_y = data.tex->height();
+            texsize_x_mm = texsize_x - 1;
+            texsize_y_mm = texsize_y - 1;
+            texstride = data.tex->stride();
+
+            T1 = fP1.T; T2 = fP2.T; T3 = fP3.T;
+
+            const float invaera = fast_inv((float)aera);
+
+            if constexpr (USE_ORTHO)
+            {
+                T1 *= invaera; T2 *= invaera; T3 *= invaera;
+            }
+            else // Perspective
+            {
+                invaera_persp = invaera;
+                fP1a_p = fP1.w * invaera_persp;
+                fP2a_p = fP2.w * invaera_persp;
+                fP3a_p = fP3.w * invaera_persp;
+                dw_p = (dx1 * fP1a_p) + (dx2 * fP2a_p) + (dx3 * fP3a_p);
+
+                T1 *= fP1a_p; T2 *= fP2a_p; T3 *= fP3a_p;
+            }
+
+            T1.x *= texsize_x; T2.x *= texsize_x; T3.x *= texsize_x;
+            T1.y *= texsize_y; T2.y *= texsize_y; T3.y *= texsize_y;
+
+            dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
+            dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
+        }
+
+        // --- Scanline iteration ---
         while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
+        {
+            // --- Clipping and finding start x (bx) ---
+            int32_t bx = 0;
+            if (O1 < 0) {
+                bx = (-O1 + dx1 - 1u) / dx1;
+            }
+            if (O2 < 0) {
+                if (dx2 <= 0) {
                     if (dy2 <= 0) return;
                     const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
+                    O1 += (by * dy1); O2 += (by * dy2); O3 += (by * dy3);
+                    buf += by * stride;
+                    if constexpr (USE_ZBUFFER) zbuf += by * zstride;
                     continue;
-                    }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
                 }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
+                bx = max(bx, (int32_t)((-O2 + dx2 - 1u) / dx2));
+            }
+            if (O3 < 0) {
+                if (dx3 <= 0) {
                     if (dy3 <= 0) return;
                     const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
+                    O1 += (by * dy1); O2 += (by * dy2); O3 += (by * dy3);
+                    buf += by * stride;
+                    if constexpr (USE_ZBUFFER) zbuf += by * zstride;
                     continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
                 }
+                bx = max(bx, (int32_t)((-O3 + dx3 - 1u) / dx3));
+            }
 
+            // --- Per-scanline setup ---
             int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
-            float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
 
-            float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-            float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
+            float cw_z = 0.0f;
+            if constexpr (USE_ZBUFFER) {
+                cw_z = ((C1 * fP1a_z) + (C2 * fP2a_z) + (C3 * fP3a_z));
+                if constexpr (!USE_ORTHO) {
+                    cw_z += wb;
+                }
+            }
 
+            float cw_p = 0.0f;
+            float tx = 0.0f, ty = 0.0f;
+            if constexpr (USE_TEXTURE)
+            {
+                tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
+                ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
+                if constexpr (!USE_ORTHO) // Perspective
+                {
+                    cw_p = ((C1 * fP1a_p) + (C2 * fP2a_p) + (C3 * fP3a_p));
+                }
+            }
+
+            // --- Pixel loop ---
             while ((bx < lx) && ((C2 | C3) >= 0))
+            {
+                bool z_pass = true;
+                if constexpr (USE_ZBUFFER)
                 {
-                const float icw = fast_inv(cw);
-                                
-                color_t col;
-                if (TEXTURE_BILINEAR)
-                    {
-                    const float xx = tx * icw;
-                    const float yy = ty * icw;                    
-                    const int ttx = lfloorf(xx);
-                    const int tty = lfloorf(yy);
-                    const float ax = xx - ttx;
-                    const float ay = yy - tty;                    
-                    const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
-                    const int maxx = (TEXTURE_WRAP ? ((ttx + 1) & (texsize_x_mm)) : shaderclip(ttx + 1, texsize_x_mm));
-                    const int miny = (TEXTURE_WRAP ? ((tty & (texsize_y_mm))*texstride) : shaderclip(tty, texsize_y_mm) * texstride);
-                    const int maxy = (TEXTURE_WRAP ? (((tty + 1) & (texsize_y_mm))*texstride) : shaderclip(tty + 1, texsize_y_mm) * texstride);
-                    col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                    ZBUFFER_t& W = zbuf[bx];
+                    ZBUFFER_t current_z;
+
+                    if constexpr (std::is_same<ZBUFFER_t, uint16_t>::value) {
+                         current_z = (USE_ORTHO) ? ((ZBUFFER_t)(cw_z * wa + wb)) : ((ZBUFFER_t)cw_z);
+                    } else {
+                         current_z = (ZBUFFER_t)cw_z;
                     }
-                else
+
+                    if (W < current_z)
                     {
-                    const int ttx = (TEXTURE_WRAP ? ((int)((tx * icw))) & (texsize_x_mm) : shaderclip((int)(tx * icw), texsize_x_mm));
-                    const int tty = (TEXTURE_WRAP ? ((int)((ty * icw))) & (texsize_y_mm) : shaderclip((int)(ty * icw), texsize_y_mm));
-                    col = tex[ttx + (tty)*texstride];
-                    }                  
-                                
-                col.mult256(fPR, fPG, fPB);
-                buf[bx] = col;
-
-                C2 += dx2;
-                C3 += dx3;
-                cw += dw;
-
-                tx += dtx;
-                ty += dty;
-
-                bx++;
-                }
-
-            O1 += dy1;
-            O2 += dy2;
-            O3 += dy3;
-            buf += stride;
-            }
-        }
-
-
-
-    /**
-    * TEXTURE + GOURAUD SHADING (NO ZBUFFER)
-    **/
-    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Gouraud_Texture(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {
-        const int32_t stride = data.im->stride();
-        color_t* buf = data.im->data() + oox + (ooy * stride);
-
-        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t pa = O1 + O2 + O3;
-        const int32_t E = ((pa == 0) ? 1 : 0);
-        const int32_t aera = pa + E;
-
-        const float invaera = fast_inv((float)aera);
-        const float fP1a = fP1.w * invaera;
-        const float fP2a = fP2.w * invaera;
-        const float fP3a = fP3.w * invaera;
-
-        const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-        const RGBf& cf1 = (RGBf)fP1.color;
-        const RGBf& cf2 = (RGBf)fP2.color;
-        const RGBf& cf3 = (RGBf)fP3.color;
-        const int fP1R = (int)(256 * cf1.R);
-        const int fP1G = (int)(256 * cf1.G);
-        const int fP1B = (int)(256 * cf1.B);
-        const int fP21R = (int)(256 * (cf2.R - cf1.R));
-        const int fP21G = (int)(256 * (cf2.G - cf1.G));
-        const int fP21B = (int)(256 * (cf2.B - cf1.B));
-        const int fP31R = (int)(256 * (cf3.R - cf1.R));
-        const int fP31G = (int)(256 * (cf3.G - cf1.G));
-        const int fP31B = (int)(256 * (cf3.B - cf1.B));
-
-        // the texture coord
-        fVec2 T1 = fP1.T;
-        fVec2 T2 = fP2.T;
-        fVec2 T3 = fP3.T;
-
-        const color_t* tex = data.tex->data();
-        const int32_t texsize_x = data.tex->width();
-        const int32_t texsize_y = data.tex->height();
-        const int32_t texsize_x_mm = texsize_x - 1;
-        const int32_t texsize_y_mm = texsize_y - 1;
-        const int32_t texstride = data.tex->stride();
-
-        // divide the texture coord by z * aera
-        T1 *= fP1a;
-        T2 *= fP2a;
-        T3 *= fP3a;
-        T1.x *= texsize_x;
-        T2.x *= texsize_x;
-        T3.x *= texsize_x;
-        T1.y *= texsize_y;
-        T2.y *= texsize_y;
-        T3.y *= texsize_y;
-
-
-        const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-        const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-        while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
-                    if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
-                    continue;
+                        W = current_z;
                     }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
-                }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
-                    if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
-                    continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
-                }
-
-            int32_t C1 = O1 + (dx1 * bx) + E;
-            int32_t C2 = O2 + (dx2 * bx);
-            int32_t C3 = O3 + (dx3 * bx);
-            float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-            float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-            float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-
-            while ((bx < lx) && ((C2 | C3) >= 0))
-                {
-                const float icw = fast_inv(cw);
-                
-                color_t col;
-                if (TEXTURE_BILINEAR)
-                    {
-                    const float xx = tx * icw;
-                    const float yy = ty * icw;                    
-                    const int ttx = lfloorf(xx);
-                    const int tty = lfloorf(yy);
-                    const float ax = xx - ttx;
-                    const float ay = yy - tty;  
-                    const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
-                    const int maxx = (TEXTURE_WRAP ? ((ttx + 1) & (texsize_x_mm)) : shaderclip(ttx + 1, texsize_x_mm));
-                    const int miny = (TEXTURE_WRAP ? ((tty & (texsize_y_mm)) * texstride) : shaderclip(tty, texsize_y_mm) * texstride);
-                    const int maxy = (TEXTURE_WRAP ? (((tty + 1) & (texsize_y_mm)) * texstride) : shaderclip(tty + 1, texsize_y_mm) * texstride);
-                    col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
-                    }
-                else
-                    {
-                    const int ttx = (TEXTURE_WRAP ? ((int)((tx * icw))) & (texsize_x_mm) : shaderclip((int)(tx * icw), texsize_x_mm));
-                    const int tty = (TEXTURE_WRAP ? ((int)((ty * icw))) & (texsize_y_mm) : shaderclip((int)(ty * icw), texsize_y_mm));
-                    col = tex[ttx + (tty)*texstride];
-                    }
-                    
-                const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-                const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-                const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
-
-                col.mult256(r, g, b);
-                buf[bx] = col;
-
-                C2 += dx2;
-                C3 += dx3;
-                cw += dw;
-
-                tx += dtx;
-                ty += dty;
-
-                bx++;
-                }
-
-            O1 += dy1;
-            O2 += dy2;
-            O3 += dy3;
-            buf += stride;
-            }
-        }
-
-
-
-    /**
-    * ZBUFFER + FLAT SHADING
-    **/
-    template<typename color_t, typename ZBUFFER_t>
-    void shader_Flat_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {
-        const color_t col = (color_t)data.facecolor;
-
-        const int32_t stride = data.im->stride();
-        const int32_t zstride = data.im->lx();
-
-        color_t* buf = data.im->data() + oox + (ooy * stride);
-        ZBUFFER_t* zbuf = data.zbuf + oox + (ooy * zstride);
-
-
-        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t pa = O1 + O2 + O3;
-        const int32_t E = ((pa == 0) ? 1 : 0);
-        const int32_t aera = pa + E;
-
-        const float wa = data.wa;
-        const float wb = data.wb;
-        const float invaera = fast_inv((float)aera);
-        const float invaera_wa = invaera * wa;
-        const float fP1a = fP1.w * invaera_wa;
-        const float fP2a = fP2.w * invaera_wa;
-        const float fP3a = fP3.w * invaera_wa;
-        const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-        while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
-                    if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
-                }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
-                    if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
-                }
-
-            const int32_t C1 = O1 + (dx1 * bx) + E;
-            int32_t C2 = O2 + (dx2 * bx);
-            int32_t C3 = O3 + (dx3 * bx);
-            float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a)) + wb;
-
-            while ((bx < lx) && ((C2 | C3) >= 0))
-                {
-                ZBUFFER_t& W = zbuf[bx];
-                const ZBUFFER_t aa = (ZBUFFER_t)(cw);
-                if (W < aa)
-                    {
-                    W = aa;
-                    buf[bx] = col;
-                    }
-                C2 += dx2;
-                C3 += dx3;
-                cw += dw;
-                bx++;
-                }
-
-            O1 += dy1;
-            O2 += dy2;
-            O3 += dy3;
-            buf += stride;
-            zbuf += zstride;
-            }
-        }
-
-
-
-    /**
-    * ZBUFFER + GOURAUD SHADING  (sub-procedure, templated on shiftC)
-    **/        
-    template<typename color_t, typename ZBUFFER_t, int shiftC>
-    void shader_Gouraud_Zbuffer_sub(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {
-        const int32_t stride = data.im->stride();
-        const int32_t zstride = data.im->lx();
-
-        color_t* buf = data.im->data() + oox + (ooy * stride);
-        ZBUFFER_t* zbuf = data.zbuf + oox + (ooy * zstride);
-
-        const color_t col1 = (color_t)fP1.color;
-        const color_t col2 = (color_t)fP2.color;
-        const color_t col3 = (color_t)fP3.color;
-
-        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t pa = O1 + O2 + O3;
-        const int32_t E = ((pa == 0) ? 1 : 0);
-        const int32_t aera = pa + E;
-        const int32_t aeraShifted = aera >> shiftC;
-        
-        const float wa = data.wa;
-        const float wb = data.wb;
-        const float invaera = fast_inv((float)aera);
-        const float invaera_wa = invaera * wa;
-        const float fP1a = fP1.w * invaera_wa;
-        const float fP2a = fP2.w * invaera_wa;
-        const float fP3a = fP3.w * invaera_wa;
-        const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-        while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
-                    if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
-                }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
-                    if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
-                }
-
-            const int32_t C1 = O1 + (dx1 * bx) + E;
-            int32_t C2 = O2 + (dx2 * bx);
-            int32_t C3 = O3 + (dx3 * bx);
-            float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a)) + wb;
-
-            while ((bx < lx) && ((C2 | C3) >= 0))
-                {
-                ZBUFFER_t& W = zbuf[bx];
-                const ZBUFFER_t aa = (ZBUFFER_t)(cw);
-                if (W < aa)
-                    {
-                    W = aa;
-                    buf[bx] = interpolateColorsTriangle(col2, C2 >> shiftC, col3, C3 >> shiftC , col1, aeraShifted);
-                    }
-                C2 += dx2;
-                C3 += dx3;
-                cw += dw;
-                bx++;
-                }
-
-            O1 += dy1;
-            O2 += dy2;
-            O3 += dy3;
-            buf += stride;
-            zbuf += zstride;
-            }
-        }
-
-    /**
-    * ZBUFFER + GOURAUD SHADING
-    **/
-    template<typename color_t, typename ZBUFFER_t>
-    void shader_Gouraud_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
- 
-        {
-        if (O1 + O2 + O3 > (1 << 24))
-            { // large aera, use interpolateColorsTriangle<true>
-            shader_Gouraud_Zbuffer_sub<color_t, ZBUFFER_t, 10>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-            }
-        else
-            { // small aera, use interpolateColorsTriangle<false>
-            shader_Gouraud_Zbuffer_sub<color_t, ZBUFFER_t, 0>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);        
-            }
-        }            
-
-
-
-    /**
-    * ZBUFFER + TEXTURE + FLAT SHADING
-    **/
-    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Flat_Texture_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {      
-        const float wa = data.wa;
-        const float wb = data.wb;
-        (void)wa; // silence possible unused warnings
-        (void)wb; // 
-
-        const int32_t stride = data.im->stride();
-        const int32_t zstride = data.im->lx();
-
-        color_t* buf = data.im->data() + oox + (ooy * stride);
-        ZBUFFER_t* zbuf = data.zbuf + oox + (ooy * zstride);
-
-        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t pa = O1 + O2 + O3;
-        const int32_t E = ((pa == 0) ? 1 : 0);
-        const int32_t aera = pa + E;
-
-        const float invaera = fast_inv((float)aera);
-        const float fP1a = fP1.w * invaera;
-        const float fP2a = fP2.w * invaera;
-        const float fP3a = fP3.w * invaera;
-
-        const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-        const RGBf& cf = (RGBf)data.facecolor;
-        const int fPR = (int)(256 * cf.R);
-        const int fPG = (int)(256 * cf.G);
-        const int fPB = (int)(256 * cf.B);
-
-        // the texture coord
-        fVec2 T1 = fP1.T;
-        fVec2 T2 = fP2.T;
-        fVec2 T3 = fP3.T;
-
-        const color_t* tex = data.tex->data();
-        const int32_t texsize_x = data.tex->width();
-        const int32_t texsize_y = data.tex->height();
-        const int32_t texsize_x_mm = texsize_x - 1;
-        const int32_t texsize_y_mm = texsize_y - 1;
-        const int32_t texstride = data.tex->stride();
-
-        // divide the texture coord by z * aera
-        T1 *= fP1a;
-        T2 *= fP2a;
-        T3 *= fP3a;
-        T1.x *= texsize_x;
-        T2.x *= texsize_x;
-        T3.x *= texsize_x;
-        T1.y *= texsize_y;
-        T2.y *= texsize_y;
-        T3.y *= texsize_y;
-
-        const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-        const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-        while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
-                    if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
-                }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
-                    if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
-                }
-
-            int32_t C1 = O1 + (dx1 * bx) + E;
-            int32_t C2 = O2 + (dx2 * bx);
-            int32_t C3 = O3 + (dx3 * bx);
-            float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-            float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-            float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-
-            while ((bx < lx) && ((C2 | C3) >= 0))
-                {
-                ZBUFFER_t& W = zbuf[bx];
-                const ZBUFFER_t aa = (std::is_same<ZBUFFER_t, uint16_t>::value) ? ((ZBUFFER_t)(cw * wa + wb)) : ((ZBUFFER_t)cw);
-                if (W < aa)
-                    {
-                    W = aa;
-                    const float icw = fast_inv(cw);
-                    color_t col;
-                    if (TEXTURE_BILINEAR)
-                        {
-                        const float xx = tx * icw;
-                        const float yy = ty * icw;                    
-                        const int ttx = lfloorf(xx);
-                        const int tty = lfloorf(yy);
-                        const float ax = xx - ttx;
-                        const float ay = yy - tty;       
-                        const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
-                        const int maxx = (TEXTURE_WRAP ? ((ttx + 1) & (texsize_x_mm)) : shaderclip(ttx + 1, texsize_x_mm));
-                        const int miny = (TEXTURE_WRAP ? ((tty & (texsize_y_mm)) * texstride) : shaderclip(tty, texsize_y_mm) * texstride);
-                        const int maxy = (TEXTURE_WRAP ? (((tty + 1) & (texsize_y_mm)) * texstride) : shaderclip(tty + 1, texsize_y_mm) * texstride);
-                        col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
-                        }
                     else
+                    {
+                        z_pass = false;
+                    }
+                }
+
+                if (z_pass)
+                {
+                    color_t final_color;
+
+                    if constexpr (USE_TEXTURE)
+                    {
+                        float icw = 1.0f;
+                        if constexpr (!USE_ORTHO)
                         {
-                        const int ttx = (TEXTURE_WRAP ? ((int)((tx * icw))) & (texsize_x_mm) : shaderclip((int)(tx * icw), texsize_x_mm));
-                        const int tty = (TEXTURE_WRAP ? ((int)((ty * icw))) & (texsize_y_mm) : shaderclip((int)(ty * icw), texsize_y_mm));                                          
-                        col = tex[ttx + (tty)*texstride];                           
-                        }  
-                    
-                    col.mult256(fPR, fPG, fPB);
-                    buf[bx] = col;
-                    }
-
-                C2 += dx2;
-                C3 += dx3;
-                cw += dw;
-
-                tx += dtx;
-                ty += dty;
-
-                bx++;
-                }
-
-            O1 += dy1;
-            O2 += dy2;
-            O3 += dy3;
-            buf += stride;
-            zbuf += zstride;
-            }
-        }
-
-
-
-    /**
-    * ZBUFFER + TEXTURE + GOURAUD SHADING
-    **/
-    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Gouraud_Texture_Zbuffer(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {       
-        const float wa = data.wa;
-        const float wb = data.wb;
-        (void)wa; // silence possible unused warnings
-        (void)wb; // 
-
-        const int32_t stride = data.im->stride();
-        const int32_t zstride = data.im->lx();
-
-        color_t* buf = data.im->data() + oox + (ooy * stride);
-        ZBUFFER_t* zbuf = data.zbuf + oox + (ooy * zstride);
-
-        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t pa = O1 + O2 + O3;
-        const int32_t E = ((pa == 0) ? 1 : 0);
-        const int32_t aera = pa + E;
-
-        const float invaera = fast_inv((float)aera);
-        const float fP1a = fP1.w * invaera;
-        const float fP2a = fP2.w * invaera;
-        const float fP3a = fP3.w * invaera;
-
-        const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-        const RGBf& cf1 = (RGBf)fP1.color;
-        const RGBf& cf2 = (RGBf)fP2.color;
-        const RGBf& cf3 = (RGBf)fP3.color;
-        const int fP1R = (int)(256 * cf1.R);
-        const int fP1G = (int)(256 * cf1.G);
-        const int fP1B = (int)(256 * cf1.B);
-        const int fP21R = (int)(256 * (cf2.R - cf1.R));
-        const int fP21G = (int)(256 * (cf2.G - cf1.G));
-        const int fP21B = (int)(256 * (cf2.B - cf1.B));
-        const int fP31R = (int)(256 * (cf3.R - cf1.R));
-        const int fP31G = (int)(256 * (cf3.G - cf1.G));
-        const int fP31B = (int)(256 * (cf3.B - cf1.B));
-
-        // the texture coord
-        fVec2 T1 = fP1.T;
-        fVec2 T2 = fP2.T;
-        fVec2 T3 = fP3.T;
-
-        const color_t* tex = data.tex->data();
-        const int32_t texsize_x = data.tex->width();
-        const int32_t texsize_y = data.tex->height();
-        const int32_t texsize_x_mm = texsize_x - 1;
-        const int32_t texsize_y_mm = texsize_y - 1;
-        const int32_t texstride = data.tex->stride();
-
-        // divide the texture coord by z * aera
-        T1 *= fP1a;
-        T2 *= fP2a;
-        T3 *= fP3a;
-        T1.x *= texsize_x;
-        T2.x *= texsize_x;
-        T3.x *= texsize_x;
-        T1.y *= texsize_y;
-        T2.y *= texsize_y;
-        T3.y *= texsize_y;
-
-        const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-        const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-        while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
-                    if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
-                }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
-                    if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
-                }
-            int32_t C1 = O1 + (dx1 * bx) + E;
-            int32_t C2 = O2 + (dx2 * bx);
-            int32_t C3 = O3 + (dx3 * bx);
-            float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-            float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-            float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-
-            while ((bx < lx) && ((C2 | C3) >= 0))
-                {
-                ZBUFFER_t& W = zbuf[bx];
-                const ZBUFFER_t aa = (std::is_same<ZBUFFER_t, uint16_t>::value) ? ((ZBUFFER_t)(cw * wa + wb)) : ((ZBUFFER_t)cw);
-                if (W < aa)
-                    {
-                    W = aa;
-                    const float icw = fast_inv(cw);
-
-                    color_t col;
-                    if (TEXTURE_BILINEAR)
-                        {
-                        const float xx = tx * icw;
-                        const float yy = ty * icw;                    
-                        const int ttx = lfloorf(xx);
-                        const int tty = lfloorf(yy);
-                        const float ax = xx - ttx;
-                        const float ay = yy - tty;                    
-                        const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
-                        const int maxx = (TEXTURE_WRAP ? ((ttx + 1) & (texsize_x_mm)) : shaderclip(ttx + 1, texsize_x_mm));
-                        const int miny = (TEXTURE_WRAP ? ((tty & (texsize_y_mm)) * texstride) : shaderclip(tty, texsize_y_mm) * texstride);
-                        const int maxy = (TEXTURE_WRAP ? (((tty + 1) & (texsize_y_mm)) * texstride) : shaderclip(tty + 1, texsize_y_mm) * texstride);
-                        col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                            icw = fast_inv(cw_p);
                         }
-                    else
+
+                        float xx = tx * icw;
+                        float yy = ty * icw;
+
+                        if constexpr (TEXTURE_BILINEAR)
                         {
-                        const int ttx = (TEXTURE_WRAP ? ((int)((tx * icw))) & (texsize_x_mm) : shaderclip((int)(tx * icw), texsize_x_mm));
-                        const int tty = (TEXTURE_WRAP ? ((int)((ty * icw))) & (texsize_y_mm) : shaderclip((int)(ty * icw), texsize_y_mm));
-                        col = tex[ttx + (tty)*texstride];
-                        }  
+                            const int ttx = lfloorf(xx);
+                            const int tty = lfloorf(yy);
+                            const float ax = xx - ttx;
+                            const float ay = yy - tty;
 
-                    const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-                    const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-                    const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
-                    col.mult256(r, g, b);
-                    buf[bx] = col;
-                    }
+                            const int minx = TEXTURE_WRAP ? (ttx & texsize_x_mm) : shaderclip(ttx, texsize_x_mm);
+                            const int maxx = TEXTURE_WRAP ? ((ttx + 1) & texsize_x_mm) : shaderclip(ttx + 1, texsize_x_mm);
+                            const int miny = (TEXTURE_WRAP ? (tty & texsize_y_mm) : shaderclip(tty, texsize_y_mm)) * texstride;
+                            const int maxy = (TEXTURE_WRAP ? ((tty + 1) & texsize_y_mm) : shaderclip(tty + 1, texsize_y_mm)) * texstride;
 
-                C2 += dx2;
-                C3 += dx3;
-                cw += dw;
-
-                tx += dtx;
-                ty += dty;
-
-                bx++;
-                }
-
-            O1 += dy1;
-            O2 += dy2;
-            O3 += dy3;
-            buf += stride;
-            zbuf += zstride;
-            }
-        }
-
-
-
-    /**
-    * TEXTURE + FLAT SHADING (NO ZBUFFER) + ORTHOGRAPHIC
-    **/
-    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Flat_Texture_Ortho(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {       
-        const int32_t stride = data.im->stride();
-        color_t* buf = data.im->data() + oox + (ooy * stride);
-
-        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t pa = O1 + O2 + O3;
-        const int32_t E = ((pa == 0) ? 1 : 0);
-        const int32_t aera = pa + E;
-
-        const float invaera = fast_inv((float)aera);
-
-        const RGBf& cf = (RGBf)data.facecolor;
-        const int fPR = (int)(256 * cf.R);
-        const int fPG = (int)(256 * cf.G);
-        const int fPB = (int)(256 * cf.B);
-
-        // the texture coord
-        fVec2 T1 = fP1.T;
-        fVec2 T2 = fP2.T;
-        fVec2 T3 = fP3.T;
-
-        const color_t* tex = data.tex->data();
-        const int32_t texsize_x = data.tex->width();
-        const int32_t texsize_y = data.tex->height();
-        const int32_t texsize_x_mm = texsize_x - 1;
-        const int32_t texsize_y_mm = texsize_y - 1;
-        const int32_t texstride = data.tex->stride();
-
-        // divide the texture coord by aera
-        T1 *= invaera;
-        T2 *= invaera;
-        T3 *= invaera;
-        T1.x *= texsize_x;
-        T2.x *= texsize_x;
-        T3.x *= texsize_x;
-        T1.y *= texsize_y;
-        T2.y *= texsize_y;
-        T3.y *= texsize_y;
-
-        const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-        const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-        while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
-                    if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
-                    continue;
-                    }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
-                }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
-                    if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
-                    continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
-                }
-            int32_t C1 = O1 + (dx1 * bx) + E;
-            int32_t C2 = O2 + (dx2 * bx);
-            int32_t C3 = O3 + (dx3 * bx);
-
-            float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-            float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-
-            while ((bx < lx) && ((C2 | C3) >= 0))
-                {
-
-                color_t col;
-                if (TEXTURE_BILINEAR)
-                    {
-                    const float xx = tx;
-                    const float yy = ty;                    
-                    const int ttx = lfloorf(xx);
-                    const int tty = lfloorf(yy);
-                    const float ax = xx - ttx;
-                    const float ay = yy - tty;                    
-                    const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
-                    const int maxx = (TEXTURE_WRAP ? ((ttx + 1) & (texsize_x_mm)) : shaderclip(ttx + 1, texsize_x_mm));
-                    const int miny = (TEXTURE_WRAP ? ((tty & (texsize_y_mm)) * texstride) : shaderclip(tty, texsize_y_mm) * texstride);
-                    const int maxy = (TEXTURE_WRAP ? (((tty + 1) & (texsize_y_mm)) * texstride) : shaderclip(tty + 1, texsize_y_mm) * texstride);
-                    col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
-                    }
-                else
-                    {
-                    const int ttx = (TEXTURE_WRAP ? ((int)((tx))) & (texsize_x_mm) : shaderclip((int)(tx), texsize_x_mm));
-                    const int tty = (TEXTURE_WRAP ? ((int)((ty))) & (texsize_y_mm) : shaderclip((int)(ty), texsize_y_mm));
-                    col = tex[ttx + (tty)*texstride];
-                    }  
-                        
-                col.mult256(fPR, fPG, fPB);
-                buf[bx] = col;
-
-                C2 += dx2;
-                C3 += dx3;
-
-                tx += dtx;
-                ty += dty;
-
-                bx++;
-                }
-
-            O1 += dy1;
-            O2 += dy2;
-            O3 += dy3;
-            buf += stride;
-            }
-        }
-
-
-
-    /**
-    * TEXTURE + GOURAUD SHADING (NO ZBUFFER) + ORTHOGRAPHIC
-    **/
-    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Gouraud_Texture_Ortho(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {        
-        const int32_t stride = data.im->stride();
-        color_t* buf = data.im->data() + oox + (ooy * stride);
-
-        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t pa = O1 + O2 + O3;
-        const int32_t E = ((pa == 0) ? 1 : 0);
-        const int32_t aera = pa + E;
-
-        const float invaera = fast_inv((float)aera);
-
-        const RGBf& cf1 = (RGBf)fP1.color;
-        const RGBf& cf2 = (RGBf)fP2.color;
-        const RGBf& cf3 = (RGBf)fP3.color;
-        const int fP1R = (int)(256 * cf1.R);
-        const int fP1G = (int)(256 * cf1.G);
-        const int fP1B = (int)(256 * cf1.B);
-        const int fP21R = (int)(256 * (cf2.R - cf1.R));
-        const int fP21G = (int)(256 * (cf2.G - cf1.G));
-        const int fP21B = (int)(256 * (cf2.B - cf1.B));
-        const int fP31R = (int)(256 * (cf3.R - cf1.R));
-        const int fP31G = (int)(256 * (cf3.G - cf1.G));
-        const int fP31B = (int)(256 * (cf3.B - cf1.B));
-
-        // the texture coord
-        fVec2 T1 = fP1.T;
-        fVec2 T2 = fP2.T;
-        fVec2 T3 = fP3.T;
-
-        const color_t* tex = data.tex->data();
-        const int32_t texsize_x = data.tex->width();
-        const int32_t texsize_y = data.tex->height();
-        const int32_t texsize_x_mm = texsize_x - 1;
-        const int32_t texsize_y_mm = texsize_y - 1;
-        const int32_t texstride = data.tex->stride();
-
-        // divide the texture coord by aera
-        T1 *= invaera;
-        T2 *= invaera;
-        T3 *= invaera;
-        T1.x *= texsize_x;
-        T2.x *= texsize_x;
-        T3.x *= texsize_x;
-        T1.y *= texsize_y;
-        T2.y *= texsize_y;
-        T3.y *= texsize_y;
-
-        const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-        const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-        while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
-                    if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
-                    continue;
-                    }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
-                }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
-                    if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    const int32_t offs = by * stride;
-                    buf += offs;
-                    continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
-                }
-                
-            int32_t C1 = O1 + (dx1 * bx) + E;
-            int32_t C2 = O2 + (dx2 * bx);
-            int32_t C3 = O3 + (dx3 * bx);
-
-            float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-            float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-
-            while ((bx < lx) && ((C2 | C3) >= 0))
-                {
-                            
-                color_t col;
-                if (TEXTURE_BILINEAR)
-                    {
-                    const float xx = tx;
-                    const float yy = ty;                    
-                    const int ttx = lfloorf(xx);
-                    const int tty = lfloorf(yy);
-                    const float ax = xx - ttx;
-                    const float ay = yy - tty;                    
-                    const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
-                    const int maxx = (TEXTURE_WRAP ? ((ttx + 1) & (texsize_x_mm)) : shaderclip(ttx + 1, texsize_x_mm));
-                    const int miny = (TEXTURE_WRAP ? ((tty & (texsize_y_mm)) * texstride) : shaderclip(tty, texsize_y_mm) * texstride);
-                    const int maxy = (TEXTURE_WRAP ? (((tty + 1) & (texsize_y_mm)) * texstride) : shaderclip(tty + 1, texsize_y_mm) * texstride);
-                    col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
-                    }
-                else
-                    {
-                    const int ttx = (TEXTURE_WRAP ? ((int)((tx))) & (texsize_x_mm) : shaderclip((int)(tx), texsize_x_mm));
-                    const int tty = (TEXTURE_WRAP ? ((int)((ty))) & (texsize_y_mm) : shaderclip((int)(ty), texsize_y_mm));                  
-                    col = tex[ttx + (tty)*texstride];
-                    }
-                           
-                const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-                const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-                const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
-                col.mult256(r, g, b);
-                buf[bx] = col;
-
-                C2 += dx2;
-                C3 += dx3;
-
-                tx += dtx;
-                ty += dty;
-
-                bx++;
-                }
-
-            O1 += dy1;
-            O2 += dy2;
-            O3 += dy3;
-            buf += stride;
-            }
-        }
-
-
-
-    /**
-    * ZBUFFER + TEXTURE + FLAT SHADING + ORTHOGRAPHIC
-    **/
-    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Flat_Texture_Zbuffer_Ortho(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {
-        const float wa = data.wa;
-        const float wb = data.wb;
-        (void)wa; // silence possible unused warnings
-        (void)wb; // 
-
-        const int32_t stride = data.im->stride();
-        const int32_t zstride = data.im->lx();
-
-        color_t* buf = data.im->data() + oox + (ooy * stride);
-        ZBUFFER_t* zbuf = data.zbuf + oox + (ooy * zstride);
-
-        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t pa = O1 + O2 + O3;
-        const int32_t E = ((pa == 0) ? 1 : 0);
-        const int32_t aera = pa + E;
-
-        const float invaera = fast_inv((float)aera);
-        const float fP1a = fP1.w * invaera;
-        const float fP2a = fP2.w * invaera;
-        const float fP3a = fP3.w * invaera;
-
-        const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-        const RGBf& cf = (RGBf)data.facecolor;
-        const int fPR = (int)(256 * cf.R);
-        const int fPG = (int)(256 * cf.G);
-        const int fPB = (int)(256 * cf.B);
-
-        // the texture coord
-        fVec2 T1 = fP1.T;
-        fVec2 T2 = fP2.T;
-        fVec2 T3 = fP3.T;
-
-        const color_t* tex = data.tex->data();
-        const int32_t texsize_x = data.tex->width();
-        const int32_t texsize_y = data.tex->height();
-        const int32_t texsize_x_mm = texsize_x - 1;
-        const int32_t texsize_y_mm = texsize_y - 1;
-        const int32_t texstride = data.tex->stride();
-
-        // divide the texture coord by aera
-        T1 *= invaera;
-        T2 *= invaera;
-        T3 *= invaera;
-        T1.x *= texsize_x;
-        T2.x *= texsize_x;
-        T3.x *= texsize_x;
-        T1.y *= texsize_y;
-        T2.y *= texsize_y;
-        T3.y *= texsize_y;
-
-        const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-        const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-        while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
-                    if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
-                }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
-                    if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
-                }
-
-            int32_t C1 = O1 + (dx1 * bx) + E;
-            int32_t C2 = O2 + (dx2 * bx);
-            int32_t C3 = O3 + (dx3 * bx);
-            float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-            float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-            float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-
-            while ((bx < lx) && ((C2 | C3) >= 0))
-                {
-                ZBUFFER_t& W = zbuf[bx];
-                const ZBUFFER_t aa = (std::is_same<ZBUFFER_t, uint16_t>::value) ? ((ZBUFFER_t)(cw * wa + wb)) : ((ZBUFFER_t)cw);
-                if (W < aa)
-                    {
-                    W = aa; 
-
-                    color_t col;
-                    if (TEXTURE_BILINEAR)
-                        {
-                        const float xx = tx;
-                        const float yy = ty;                    
-                        const int ttx = lfloorf(xx);
-                        const int tty = lfloorf(yy);
-                        const float ax = xx - ttx;
-                        const float ay = yy - tty;    
-                        const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
-                        const int maxx = (TEXTURE_WRAP ? ((ttx + 1) & (texsize_x_mm)) : shaderclip(ttx + 1, texsize_x_mm));
-                        const int miny = (TEXTURE_WRAP ? ((tty & (texsize_y_mm)) * texstride) : shaderclip(tty, texsize_y_mm) * texstride);
-                        const int maxy = (TEXTURE_WRAP ? (((tty + 1) & (texsize_y_mm)) * texstride) : shaderclip(tty + 1, texsize_y_mm) * texstride);
-                        col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                            final_color = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);
                         }
-                    else
+                        else // Nearest neighbor
                         {
-                        const int ttx = (TEXTURE_WRAP ? ((int)((tx))) & (texsize_x_mm) : shaderclip((int)(tx), texsize_x_mm));
-                        const int tty = (TEXTURE_WRAP ? ((int)((ty))) & (texsize_y_mm) : shaderclip((int)(ty), texsize_y_mm));
-                        col = tex[ttx + (tty)*texstride];
-                        }                            
-                                                        
-                    col.mult256(fPR, fPG, fPB);
-                    buf[bx] = col;
-                    }
-
-                C2 += dx2;
-                C3 += dx3;
-                cw += dw;
-
-                tx += dtx;
-                ty += dty;
-
-                bx++;
-                }
-
-            O1 += dy1;
-            O2 += dy2;
-            O3 += dy3;
-            buf += stride;
-            zbuf += zstride;
-            }
-        }
-
-
-
-    /**
-    * ZBUFFER + TEXTURE + GOURAUD SHADING + ORTHOGRAPHIC
-    **/
-    template<typename color_t, typename ZBUFFER_t, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
-    void shader_Gouraud_Texture_Zbuffer_Ortho(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
-        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
-        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
-        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
-        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-        {
-        const float wa = data.wa;
-        const float wb = data.wb;
-        (void)wa; // silence possible unused warnings
-        (void)wb; // 
-
-        const int32_t stride = data.im->stride();
-        const int32_t zstride = data.im->lx();
-
-        color_t* buf = data.im->data() + oox + (ooy * stride);
-        ZBUFFER_t* zbuf = data.zbuf + oox + (ooy * zstride);
-
-        const uintptr_t end = (uintptr_t)(buf + (ly * stride));
-        const int32_t pa = O1 + O2 + O3;
-        const int32_t E = ((pa == 0) ? 1 : 0);
-        const int32_t aera = pa + E;
-
-        const float invaera = fast_inv((float)aera);
-        const float fP1a = fP1.w * invaera;
-        const float fP2a = fP2.w * invaera;
-        const float fP3a = fP3.w * invaera;
-
-        const float dw = (dx1 * fP1a) + (dx2 * fP2a) + (dx3 * fP3a);
-
-        const RGBf& cf1 = (RGBf)fP1.color;
-        const RGBf& cf2 = (RGBf)fP2.color;
-        const RGBf& cf3 = (RGBf)fP3.color;
-        const int fP1R = (int)(256 * cf1.R);
-        const int fP1G = (int)(256 * cf1.G);
-        const int fP1B = (int)(256 * cf1.B);
-        const int fP21R = (int)(256 * (cf2.R - cf1.R));
-        const int fP21G = (int)(256 * (cf2.G - cf1.G));
-        const int fP21B = (int)(256 * (cf2.B - cf1.B));
-        const int fP31R = (int)(256 * (cf3.R - cf1.R));
-        const int fP31G = (int)(256 * (cf3.G - cf1.G));
-        const int fP31B = (int)(256 * (cf3.B - cf1.B));
-
-        // the texture coord
-        fVec2 T1 = fP1.T;
-        fVec2 T2 = fP2.T;
-        fVec2 T3 = fP3.T;
-
-        const color_t* tex = data.tex->data();
-        const int32_t texsize_x = data.tex->width();
-        const int32_t texsize_y = data.tex->height();
-        const int32_t texsize_x_mm = texsize_x - 1;
-        const int32_t texsize_y_mm = texsize_y - 1;
-        const int32_t texstride = data.tex->stride();
-
-        // divide the texture coord by aera
-        T1 *= invaera;
-        T2 *= invaera;
-        T3 *= invaera;
-        T1.x *= texsize_x;
-        T2.x *= texsize_x;
-        T3.x *= texsize_x;
-        T1.y *= texsize_y;
-        T2.y *= texsize_y;
-        T3.y *= texsize_y;
-
-        const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
-        const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-
-        while ((uintptr_t)(buf) < end)
-            { // iterate over scanlines
-            int32_t bx = 0; // start offset
-            if (O1 < 0)
-                {
-                // we know that dx1 > 0                 
-                bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
-                }
-            if (O2 < 0)
-                {
-                if (dx2 <= 0)
-                    {
-                    if (dy2 <= 0) return;
-                    const int32_t by = (-O2 + dy2 - 1u) / dy2;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx2 = (-O2 + dx2 - 1u) / dx2;
-                bx = max(bx, bx2);
-                }
-            if (O3 < 0)
-                {
-                if (dx3 <= 0)
-                    {
-                    if (dy3 <= 0) return;
-                    const int32_t by = (-O3 + dy3 - 1u) / dy3;
-                    O1 += (by * dy1);
-                    O2 += (by * dy2);
-                    O3 += (by * dy3);
-                    buf += (by * stride);
-                    zbuf += (by * zstride);
-                    continue;
-                    }
-                const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
-                bx = max(bx, bx3);
-                }
-
-            int32_t C1 = O1 + (dx1 * bx) + E;
-            int32_t C2 = O2 + (dx2 * bx);
-            int32_t C3 = O3 + (dx3 * bx);
-            float cw = ((C1 * fP1a) + (C2 * fP2a) + (C3 * fP3a));
-
-            float tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
-            float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
-
-            while ((bx < lx) && ((C2 | C3) >= 0))
-                {
-                ZBUFFER_t& W = zbuf[bx];
-                const ZBUFFER_t aa = (std::is_same<ZBUFFER_t, uint16_t>::value) ? ((ZBUFFER_t)(cw * wa + wb)) : ((ZBUFFER_t)cw);
-                if (W < aa)
-                    {
-                    W = aa;
-
-                    color_t col;
-                    if (TEXTURE_BILINEAR)
-                        {
-                        const float xx = tx;
-                        const float yy = ty;                    
-                        const int ttx = lfloorf(xx);
-                        const int tty = lfloorf(yy);
-                        const float ax = xx - ttx;
-                        const float ay = yy - tty;
-                        const int minx = (TEXTURE_WRAP ? (ttx & (texsize_x_mm)) : shaderclip(ttx, texsize_x_mm));
-                        const int maxx = (TEXTURE_WRAP ? ((ttx + 1) & (texsize_x_mm)) : shaderclip(ttx + 1, texsize_x_mm));
-                        const int miny = (TEXTURE_WRAP ? ((tty & (texsize_y_mm)) * texstride) : shaderclip(tty, texsize_y_mm) * texstride);
-                        const int maxy = (TEXTURE_WRAP ? (((tty + 1) & (texsize_y_mm)) * texstride) : shaderclip(tty + 1, texsize_y_mm) * texstride);
-                        col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);                            
+                            const int ttx = TEXTURE_WRAP ? ((int)(xx)) & texsize_x_mm : shaderclip((int)(xx), texsize_x_mm);
+                            const int tty = TEXTURE_WRAP ? ((int)(yy)) & texsize_y_mm : shaderclip((int)(yy), texsize_y_mm);
+                            final_color = tex[ttx + tty * texstride];
                         }
-                    else
+
+                        if constexpr (USE_GOURAUD)
                         {
-                        const int ttx = (TEXTURE_WRAP ? ((int)((tx))) & (texsize_x_mm) : shaderclip((int)(tx), texsize_x_mm));
-                        const int tty = (TEXTURE_WRAP ? ((int)((ty))) & (texsize_y_mm) : shaderclip((int)(ty), texsize_y_mm));
-                        col = tex[ttx + (tty)*texstride];
-                        } 
-                                
-                    const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-                    const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-                    const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
-
-                    col.mult256(r, g, b);
-                    buf[bx] = col;
-
+                            const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
+                            const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
+                            const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
+                            final_color.mult256(r, g, b);
+                        }
+                        else // Flat
+                        {
+                            final_color.mult256(fPR, fPG, fPB);
+                        }
                     }
-
-                C2 += dx2;
-                C3 += dx3;
-                cw += dw;
-
-                tx += dtx;
-                ty += dty;
-
-                bx++;
+                    else // No texture
+                    {
+                        if constexpr (USE_GOURAUD)
+                        {
+                            final_color = interpolateColorsTriangle(col2_g, C2 >> shiftC, col3_g, C3 >> shiftC, col1_g, aeraShifted);
+                        }
+                        else // Flat
+                        {
+                            final_color = flat_color;
+                        }
+                    }
+                    buf[bx] = final_color;
                 }
 
+                // --- Increment for next pixel ---
+                C2 += dx2;
+                C3 += dx3;
+                bx++;
+
+                if constexpr (USE_ZBUFFER) cw_z += dw_z;
+
+                if constexpr (USE_TEXTURE)
+                {
+                    tx += dtx;
+                    ty += dty;
+                    if constexpr (!USE_ORTHO) cw_p += dw_p;
+                }
+            }
+
+            // --- Increment for next scanline ---
             O1 += dy1;
             O2 += dy2;
             O3 += dy3;
             buf += stride;
-            zbuf += zstride;
-            }
+            if constexpr (USE_ZBUFFER) zbuf += zstride;
         }
-
-
+    }
 
 
     /**
@@ -1780,102 +374,102 @@ namespace tgx
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
         const RasterizerParams<color_t, color_t, ZBUFFER_t> & data)
-        {       
-        int raster_type = data.shader_type;       
+        {
+        int raster_type = data.shader_type;
         if (TGX_SHADER_HAS_ZBUFFER(SHADER_FLAGS_ENABLED) && (TGX_SHADER_HAS_ZBUFFER(raster_type)))
             { // USING ZBUFFER
             if (TGX_SHADER_HAS_ORTHO(SHADER_FLAGS_ENABLED) && (TGX_SHADER_HAS_ORTHO(raster_type)))
                 { // USING ORTHOGRAPHIC PROJECTION
                 if (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type))
-                    {
+                    { // Texture
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        {
-                        if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))                    
-                            {
+                        { // Gouraud
+                        if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
+                            { // Bilinear
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t,ZBUFFER_t, true,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, true, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
-                            {
+                            { // Nearest
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, false,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, false,true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        {
+                        { // Flat
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
-                            {
+                             { // Bilinear
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, true,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, true,true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-                            }
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
-                            {
+                             { // Nearest
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, false,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Zbuffer_Ortho<color_t, ZBUFFER_t, false,true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-                            }
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                             }
                         }
                     }
                 else if (TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
-                    {
+                    { // No Texture
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        shader_Gouraud_Zbuffer<color_t, ZBUFFER_t>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);  // same as perspective projection
+                        uber_shader<color_t, ZBUFFER_t, true, true, false, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        shader_Flat_Zbuffer<color_t, ZBUFFER_t>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);  // same as perspective projection
+                        uber_shader<color_t, ZBUFFER_t, true, false, false, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     }
                 }
             else if (TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED))
                 { // USING PERSPECTIVE PROJECTION
                 if (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type))
-                    {
+                    { // Texture
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        {
+                        { // Gouraud
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
-                            {
+                            { // Bilinear
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Zbuffer<color_t, ZBUFFER_t, true,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, false, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Zbuffer<color_t, ZBUFFER_t, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
-                            {
+                            { // Nearest
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Zbuffer<color_t, ZBUFFER_t, false,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Zbuffer<color_t, ZBUFFER_t, false,true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        {
+                        { // Flat
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
-                            {
+                            { // Bilinear
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Zbuffer<color_t, ZBUFFER_t, true,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Zbuffer<color_t, ZBUFFER_t, true,true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
-                            {
+                            { // Nearest
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Zbuffer<color_t, ZBUFFER_t, false,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Zbuffer<color_t, ZBUFFER_t, false,true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     }
                 else if (TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
-                    {
+                    { // No Texture
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        shader_Gouraud_Zbuffer<color_t, ZBUFFER_t>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                        uber_shader<color_t, ZBUFFER_t, true, true, false, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        shader_Flat_Zbuffer<color_t, ZBUFFER_t>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                        uber_shader<color_t, ZBUFFER_t, true, false, false, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     }
                 }
             }
@@ -1883,99 +477,99 @@ namespace tgx
             { // NOT USING Z-BUFFER
             if (TGX_SHADER_HAS_ORTHO(SHADER_FLAGS_ENABLED) && (TGX_SHADER_HAS_ORTHO(raster_type)))
                 { // USING ORTHOGRAPHIC PROJECTION
-                if (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type))
-                    {
+                 if (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type))
+                    { // Texture
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        {
+                        { // Gouraud
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
-                            {
+                            { // Bilinear
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Ortho<color_t, ZBUFFER_t, true,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, true, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Ortho<color_t, ZBUFFER_t, true,true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
-                            {
+                            { // Nearest
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture_Ortho<color_t, ZBUFFER_t, false,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture_Ortho<color_t, ZBUFFER_t, false,true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        {
+                        { // Flat
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
-                            {
+                            { // Bilinear
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Ortho<color_t, ZBUFFER_t, true,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Ortho<color_t, ZBUFFER_t, true,true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
-                            {
+                            { // Nearest
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture_Ortho<color_t, ZBUFFER_t, false,false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture_Ortho<color_t, ZBUFFER_t, false,true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     }
                 else if (TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
-                    {
+                    { // No Texture
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        shader_Gouraud<color_t, ZBUFFER_t>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data); // same as perspective projection
+                        uber_shader<color_t, ZBUFFER_t, false, true, false, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        shader_Flat<color_t, ZBUFFER_t>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data); // same as perspective projection
+                        uber_shader<color_t, ZBUFFER_t, false, false, false, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     }
                 }
             else if (TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED))
                 { // USING PERSPECTIVE PROJECTION
                 if (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type))
-                    {
+                    { // Texture
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        {
+                        { // Gouraud
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
-                            {
+                            { // Bilinear
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture<color_t, ZBUFFER_t, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, false, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture<color_t, ZBUFFER_t, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
-                            {
+                            { // Nearest
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Gouraud_Texture<color_t, ZBUFFER_t, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Gouraud_Texture<color_t, ZBUFFER_t, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        {
+                        { // Flat
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
-                            {
+                            { // Bilinear
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture<color_t, ZBUFFER_t, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture<color_t, ZBUFFER_t, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
-                            {
+                            { // Nearest
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
-                                shader_Flat_Texture<color_t, ZBUFFER_t, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
-                                shader_Flat_Texture<color_t, ZBUFFER_t, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             }
                         }
                     }
                 else if (TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
-                    {
+                    { // No Texture
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
-                        shader_Gouraud<color_t, ZBUFFER_t>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                        uber_shader<color_t, ZBUFFER_t, false, true, false, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
-                        shader_Flat<color_t, ZBUFFER_t>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                        uber_shader<color_t, ZBUFFER_t, false, false, false, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                     }
                 }
-            }       
+            }
         }
 
 
@@ -1995,7 +589,7 @@ namespace tgx
         const int32_t stride = data.im->stride();
         color_t_im * buf = data.im->data() + oox + (ooy * stride);
 
-        // use RGB32 (could use RGB64 be it would be slower). 
+        // use RGB32 (could use RGB64 be it would be slower).
         const RGB32 col1 = RGB64(fP1.color.R, fP1.color.G, fP1.color.B, fP1.A);
         const RGB32 col2 = RGB64(fP2.color.R, fP2.color.G, fP2.color.B, fP2.A);
         const RGB32 col3 = RGB64(fP3.color.R, fP3.color.G, fP3.color.B, fP3.A);
@@ -2011,7 +605,7 @@ namespace tgx
             int32_t bx = 0; // start offset
             if (O1 < 0)
                 {
-                // we know that dx1 > 0                 
+                // we know that dx1 > 0
                 bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
@@ -2127,13 +721,13 @@ namespace tgx
 
         const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
         const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-         
+
         while ((uintptr_t)(buf) < end)
             { // iterate over scanlines
             int32_t bx = 0; // start offset
             if (O1 < 0)
                 {
-                // we know that dx1 > 0                 
+                // we know that dx1 > 0
                 bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
@@ -2168,7 +762,7 @@ namespace tgx
                 const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
                 bx = max(bx, bx3);
                 }
-                
+
             int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
@@ -2177,13 +771,13 @@ namespace tgx
             float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3)) - 0.5f;
 
             while ((bx < lx) && ((C2 | C3) >= 0))
-                {                         
+                {
                 const float xx = tx;
-                const float yy = ty;                    
+                const float yy = ty;
                 const int ttx = lfloorf(xx);
                 const int tty = lfloorf(yy);
                 const float ax = xx - ttx;
-                const float ay = yy - tty;                    
+                const float ay = yy - tty;
 
                 const int minx = shaderclip(ttx, texsize_x_mm);
                 const int maxx = shaderclip(ttx + 1, texsize_x_mm);
@@ -2191,7 +785,7 @@ namespace tgx
                 const int maxy = shaderclip(tty + 1,  texsize_y_mm) * texstride;
 
                 if (USE_MASKING)
-                    { // 
+                    { //
                     auto col00 = tex[minx + miny];
                     tgx::RGB32 acol00 = (col00 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col00);
 
@@ -2285,7 +879,7 @@ namespace tgx
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
         const RasterizerParams<color_t_im, color_t_tex, float, BLEND_OP> & data)
         {
-      
+
         const int32_t stride = data.im->stride();
         color_t_im * buf = data.im->data() + oox + (ooy * stride);
 
@@ -2322,13 +916,13 @@ namespace tgx
 
         const float dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
         const float dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-         
+
         while ((uintptr_t)(buf) < end)
             { // iterate over scanlines
             int32_t bx = 0; // start offset
             if (O1 < 0)
                 {
-                // we know that dx1 > 0                 
+                // we know that dx1 > 0
                 bx = (-O1 + dx1 - 1u) / dx1; // first index where it becomes positive
                 }
             if (O2 < 0)
@@ -2363,7 +957,7 @@ namespace tgx
                 const int32_t bx3 = (-O3 + dx3 - 1u) / dx3;
                 bx = max(bx, bx3);
                 }
-                
+
             int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
@@ -2372,19 +966,19 @@ namespace tgx
             float ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3)) - 0.5f;
 
             while ((bx < lx) && ((C2 | C3) >= 0))
-                {                         
+                {
                 const float xx = tx;
-                const float yy = ty;                    
+                const float yy = ty;
                 const int ttx = lfloorf(xx);
                 const int tty = lfloorf(yy);
                 const float ax = xx - ttx;
-                const float ay = yy - tty;                    
+                const float ay = yy - tty;
 
                 const int minx = shaderclip(ttx, texsize_x_mm);
                 const int maxx = shaderclip(ttx + 1, texsize_x_mm);
                 const int miny = shaderclip(tty,  texsize_y_mm) * texstride;
                 const int maxy = shaderclip(tty + 1,  texsize_y_mm) * texstride;
-                
+
                 color_t_tex col = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);
 
                 buf[bx] = (color_t_im)((*data.p_blend_op)(col, buf[bx]));
@@ -2413,4 +1007,3 @@ namespace tgx
 #endif
 
 /** end of file */
-
