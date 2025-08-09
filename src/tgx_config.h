@@ -20,16 +20,16 @@
 
 
 
-
 // disable mtools extensions by default
 #ifndef MTOOLS_TGX_EXTENSIONS
 #define MTOOLS_TGX_EXTENSIONS 0 
 #endif
 
-
 #ifdef ARDUINO
     #include <Arduino.h>
     #define TGX_ON_ARDUINO
+#elif defined(ESP_PLATFORM)
+    #include "sdkconfig.h"
 #endif
 
 #ifndef PROGMEM
@@ -139,6 +139,15 @@
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 4096
     #define TGX_USE_FAST_INV_SQRT_TRICK 0 // unused: specific assembly code used instead. 
     #define TGX_USE_FAST_SQRT_TRICK 0     // 
+    #define TGX_USE_FAST_INV_TRICK 0      //
+    #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_NOINLINE
+
+#elif defined(CONFIG_IDF_TARGET_ESP32P4) || defined(ESP32P4)
+    // ESP32 P4
+    #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 4096
+    #define TGX_USE_FAST_INV_SQRT_TRICK 0 // unused: specific assembly code used instead.
+    #define TGX_USE_FAST_SQRT_TRICK 0     //
     #define TGX_USE_FAST_INV_TRICK 0      //
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE
