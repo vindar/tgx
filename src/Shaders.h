@@ -70,7 +70,6 @@ namespace tgx
 
     /**
     * UBER-SHADER for all 3D rendering variants.
-    * Replaces all individual shader functions like shader_Flat, shader_Gouraud, shader_Texture, etc.
     * Uses compile-time flags to generate optimized code for each specific case.
     **/
     template<typename color_t, typename ZBUFFER_t,
@@ -81,7 +80,7 @@ namespace tgx
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
         const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
-    {
+        {
         // --- Common setup for all shaders ---
         const int32_t stride = data.im->stride();
         color_t* buf = data.im->data() + oox + (ooy * stride);
@@ -99,7 +98,7 @@ namespace tgx
         float dw_z = 0.0f;
 
         if constexpr (USE_ZBUFFER)
-        {
+            {
             zstride = data.im->lx();
             zbuf = data.zbuf + oox + (ooy * zstride);
             wa = data.wa;
@@ -113,7 +112,7 @@ namespace tgx
             fP3a_z = fP3.w * invaera * invaera_wa_factor;
 
             dw_z = (dx1 * fP1a_z) + (dx2 * fP2a_z) + (dx3 * fP3a_z);
-        }
+            }
 
         // --- Shading & Texturing setup ---
         color_t flat_color;
@@ -134,37 +133,37 @@ namespace tgx
         fVec2 T1, T2, T3;
 
         if constexpr (USE_GOURAUD)
-        {
-            if constexpr (USE_TEXTURE)
             {
+            if constexpr (USE_TEXTURE)
+                {
                 const RGBf& cf1 = (RGBf)fP1.color;
                 const RGBf& cf2 = (RGBf)fP2.color;
                 const RGBf& cf3 = (RGBf)fP3.color;
                 fP1R = (int)(256 * cf1.R); fP1G = (int)(256 * cf1.G); fP1B = (int)(256 * cf1.B);
                 fP21R = (int)(256 * (cf2.R - cf1.R)); fP21G = (int)(256 * (cf2.G - cf1.G)); fP21B = (int)(256 * (cf2.B - cf1.B));
                 fP31R = (int)(256 * (cf3.R - cf1.R)); fP31G = (int)(256 * (cf3.G - cf1.G)); fP31B = (int)(256 * (cf3.B - cf1.B));
-            }
+                }
             else
-            {
+                {
                 col1_g = (color_t)fP1.color;
                 col2_g = (color_t)fP2.color;
                 col3_g = (color_t)fP3.color;
                 shiftC = (aera > (1 << 22)) ? 10 : 0;
                 aeraShifted = aera >> shiftC;
+                }
             }
-        }
         else // Flat shading
-        {
+            {
             flat_color = (color_t)data.facecolor;
             if constexpr (USE_TEXTURE)
-            {
+                {
                 const RGBf& cf = (RGBf)data.facecolor;
                 fPR = (int)(256 * cf.R); fPG = (int)(256 * cf.G); fPB = (int)(256 * cf.B);
+                }
             }
-        }
 
         if constexpr (USE_TEXTURE)
-        {
+            {
             tex = data.tex->data();
             const int32_t texsize_x = data.tex->width();
             const int32_t texsize_y = data.tex->height();
@@ -177,11 +176,11 @@ namespace tgx
             const float invaera = fast_inv((float)aera);
 
             if constexpr (USE_ORTHO)
-            {
+                {
                 T1 *= invaera; T2 *= invaera; T3 *= invaera;
-            }
+                }
             else // Perspective
-            {
+                {
                 invaera_persp = invaera;
                 fP1a_p = fP1.w * invaera_persp;
                 fP2a_p = fP2.w * invaera_persp;
@@ -189,45 +188,50 @@ namespace tgx
                 dw_p = (dx1 * fP1a_p) + (dx2 * fP2a_p) + (dx3 * fP3a_p);
 
                 T1 *= fP1a_p; T2 *= fP2a_p; T3 *= fP3a_p;
-            }
+                }
 
             T1.x *= texsize_x; T2.x *= texsize_x; T3.x *= texsize_x;
             T1.y *= texsize_y; T2.y *= texsize_y; T3.y *= texsize_y;
 
             dtx = ((T1.x * dx1) + (T2.x * dx2) + (T3.x * dx3));
             dty = ((T1.y * dx1) + (T2.y * dx2) + (T3.y * dx3));
-        }
+            }
 
         // --- Scanline iteration ---
         while ((uintptr_t)(buf) < end)
-        {
+            {
             // --- Clipping and finding start x (bx) ---
             int32_t bx = 0;
-            if (O1 < 0) {
+            if (O1 < 0)
+                {
                 bx = (-O1 + dx1 - 1u) / dx1;
-            }
-            if (O2 < 0) {
-                if (dx2 <= 0) {
+                }
+            if (O2 < 0)
+                {
+                if (dx2 <= 0)
+                    {
                     if (dy2 <= 0) return;
                     const int32_t by = (-O2 + dy2 - 1u) / dy2;
                     O1 += (by * dy1); O2 += (by * dy2); O3 += (by * dy3);
                     buf += by * stride;
                     if constexpr (USE_ZBUFFER) zbuf += by * zstride;
                     continue;
-                }
+                    }
                 bx = max(bx, (int32_t)((-O2 + dx2 - 1u) / dx2));
-            }
-            if (O3 < 0) {
-                if (dx3 <= 0) {
+                }
+            if (O3 < 0)
+                {
+                if (dx3 <= 0)
+                    {
                     if (dy3 <= 0) return;
                     const int32_t by = (-O3 + dy3 - 1u) / dy3;
                     O1 += (by * dy1); O2 += (by * dy2); O3 += (by * dy3);
                     buf += by * stride;
                     if constexpr (USE_ZBUFFER) zbuf += by * zstride;
                     continue;
-                }
+                    }
                 bx = max(bx, (int32_t)((-O3 + dx3 - 1u) / dx3));
-            }
+                }
 
             // --- Per-scanline setup ---
             int32_t C1 = O1 + (dx1 * bx) + E;
@@ -235,67 +239,72 @@ namespace tgx
             int32_t C3 = O3 + (dx3 * bx);
 
             float cw_z = 0.0f;
-            if constexpr (USE_ZBUFFER) {
+            if constexpr (USE_ZBUFFER)
+                {
                 cw_z = ((C1 * fP1a_z) + (C2 * fP2a_z) + (C3 * fP3a_z));
-                if constexpr (!USE_ORTHO) {
+                if constexpr (!USE_ORTHO)
+                    {
                     cw_z += wb;
+                    }
                 }
-            }
 
             float cw_p = 0.0f;
             float tx = 0.0f, ty = 0.0f;
             if constexpr (USE_TEXTURE)
-            {
+                {
                 tx = ((T1.x * C1) + (T2.x * C2) + (T3.x * C3));
                 ty = ((T1.y * C1) + (T2.y * C2) + (T3.y * C3));
                 if constexpr (!USE_ORTHO) // Perspective
-                {
+                    {
                     cw_p = ((C1 * fP1a_p) + (C2 * fP2a_p) + (C3 * fP3a_p));
+                    }
                 }
-            }
 
             // --- Pixel loop ---
             while ((bx < lx) && ((C2 | C3) >= 0))
-            {
+                {
                 bool z_pass = true;
                 if constexpr (USE_ZBUFFER)
-                {
+                    {
                     ZBUFFER_t& W = zbuf[bx];
                     ZBUFFER_t current_z;
 
-                    if constexpr (std::is_same<ZBUFFER_t, uint16_t>::value) {
+                    if constexpr (std::is_same<ZBUFFER_t, uint16_t>::value)
+                        {
                          current_z = (USE_ORTHO) ? ((ZBUFFER_t)(cw_z * wa + wb)) : ((ZBUFFER_t)cw_z);
-                    } else {
+                        }
+                    else
+                        {
                          current_z = (ZBUFFER_t)cw_z;
-                    }
+                        }
 
                     if (W < current_z)
-                    {
+                        {
                         W = current_z;
-                    }
+                        }
                     else
-                    {
+                        {
                         z_pass = false;
+                        }
                     }
-                }
 
                 if (z_pass)
-                {
+                    {
                     color_t final_color;
 
                     if constexpr (USE_TEXTURE)
-                    {
+                        {
                         float icw = 1.0f;
                         if constexpr (!USE_ORTHO)
-                        {
+                            {
                             icw = fast_inv(cw_p);
-                        }
+                            }
 
                         float xx = tx * icw;
                         float yy = ty * icw;
 
                         if constexpr (TEXTURE_BILINEAR)
-                        {
+                            {
                             const int ttx = lfloorf(xx);
                             const int tty = lfloorf(yy);
                             const float ax = xx - ttx;
@@ -307,39 +316,39 @@ namespace tgx
                             const int maxy = (TEXTURE_WRAP ? ((tty + 1) & texsize_y_mm) : shaderclip(tty + 1, texsize_y_mm)) * texstride;
 
                             final_color = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);
-                        }
+                            }
                         else // Nearest neighbor
-                        {
+                            {
                             const int ttx = TEXTURE_WRAP ? ((int)(xx)) & texsize_x_mm : shaderclip((int)(xx), texsize_x_mm);
                             const int tty = TEXTURE_WRAP ? ((int)(yy)) & texsize_y_mm : shaderclip((int)(yy), texsize_y_mm);
                             final_color = tex[ttx + tty * texstride];
-                        }
+                            }
 
                         if constexpr (USE_GOURAUD)
-                        {
+                            {
                             const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
                             const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
                             const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
                             final_color.mult256(r, g, b);
-                        }
+                            }
                         else // Flat
-                        {
+                            {
                             final_color.mult256(fPR, fPG, fPB);
+                            }
                         }
-                    }
                     else // No texture
-                    {
+                        {
                         if constexpr (USE_GOURAUD)
-                        {
+                            {
                             final_color = interpolateColorsTriangle(col2_g, C2 >> shiftC, col3_g, C3 >> shiftC, col1_g, aeraShifted);
-                        }
+                            }
                         else // Flat
-                        {
+                            {
                             final_color = flat_color;
+                            }
                         }
-                    }
                     buf[bx] = final_color;
-                }
+                    }
 
                 // --- Increment for next pixel ---
                 C2 += dx2;
@@ -349,12 +358,12 @@ namespace tgx
                 if constexpr (USE_ZBUFFER) cw_z += dw_z;
 
                 if constexpr (USE_TEXTURE)
-                {
+                    {
                     tx += dtx;
                     ty += dty;
                     if constexpr (!USE_ORTHO) cw_p += dw_p;
+                    }
                 }
-            }
 
             // --- Increment for next scanline ---
             O1 += dy1;
@@ -362,8 +371,8 @@ namespace tgx
             O3 += dy3;
             buf += stride;
             if constexpr (USE_ZBUFFER) zbuf += zstride;
+            }
         }
-    }
 
 
     /**
@@ -402,19 +411,19 @@ namespace tgx
                     else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
                         { // Flat
                         if (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
-                             { // Bilinear
+                            { // Bilinear
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
                                 uber_shader<color_t, ZBUFFER_t, true, false, true, true, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
                                 uber_shader<color_t, ZBUFFER_t, true, false, true, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-                             }
+                            }
                         else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
-                             { // Nearest
+                            { // Nearest
                             if (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
                                 uber_shader<color_t, ZBUFFER_t, true, false, true, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
                             else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
                                 uber_shader<color_t, ZBUFFER_t, true, false, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
-                             }
+                            }
                         }
                     }
                 else if (TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
@@ -477,7 +486,7 @@ namespace tgx
             { // NOT USING Z-BUFFER
             if (TGX_SHADER_HAS_ORTHO(SHADER_FLAGS_ENABLED) && (TGX_SHADER_HAS_ORTHO(raster_type)))
                 { // USING ORTHOGRAPHIC PROJECTION
-                 if (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type))
+                if (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type))
                     { // Texture
                     if (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type))
                         { // Gouraud
