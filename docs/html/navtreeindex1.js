@@ -1,17 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"_vec3_8h.html#a52180e85f9ad033ad380ae890c9fac63":[8,0,0,20,18],
-"_vec3_8h.html#a5a80b95baec0f98029d9c32f55e13eea":[8,0,0,20,4],
-"_vec3_8h.html#a668a9607676b928624972ced875028e9":[8,0,0,20,19],
-"_vec3_8h.html#a7c1bcc71ce9d57db1da42ed72267a2e0":[8,0,0,20,9],
-"_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2":[8,0,0,20,2],
-"_vec3_8h.html#aa66986f6d4db428a3fca04c45507c860":[8,0,0,20,21],
-"_vec3_8h.html#aacd876f2ec45812c62f215ea7bf2ae41":[8,0,0,20,17],
-"_vec3_8h.html#aafcf9709eee28cb7c9d08eee13255bc7":[8,0,0,20,5],
-"_vec3_8h.html#abf7e0e0bf446360caba5816da12db7f8":[8,0,0,20,10],
-"_vec3_8h.html#ac1caa239be43f9aa85c0016e491b726a":[8,0,0,20,3],
-"_vec3_8h.html#aefa7ae432ce009c991ba3d27c7104a2b":[8,0,0,20,11],
-"_vec3_8h.html#af0e1af6b91b2217fcc966a91ae853bca":[8,0,0,20,13],
 "_vec3_8h.html#af5fd8f36e9a7e605bf1a22a70aac2db6":[8,0,0,20,20],
 "_vec3_8h.html#afdba57aaa534a7a4d8894b4bf3c15b9a":[8,0,0,20,14],
 "_vec3_8h.html#afde5a52af4275be762331d0f479bfbde":[8,0,0,20,7],
@@ -249,5 +237,17 @@ var NAVTREEINDEX1 =
 "classtgx_1_1_renderer3_d.html#a63284e47ac2f832f122df06bcbd3193a":[7,0,0,6,23],
 "classtgx_1_1_renderer3_d.html#a6cad095ff0d7eefbdb93ac04b6a3efff":[7,0,0,6,19],
 "classtgx_1_1_renderer3_d.html#a6f1030e0892d613c3406811755bda599":[7,0,0,6,2],
-"classtgx_1_1_renderer3_d.html#a71cef7bec13ce66591e48fd0b1e57c11":[7,0,0,6,0]
+"classtgx_1_1_renderer3_d.html#a71cef7bec13ce66591e48fd0b1e57c11":[7,0,0,6,0],
+"classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa":[7,0,0,6,1],
+"classtgx_1_1_renderer3_d.html#a76c4ce4af7e3c7da2e3a1a7d1d0d4f01":[7,0,0,6,24],
+"classtgx_1_1_renderer3_d.html#a76fa32770476cd15f717d3f103fd752d":[7,0,0,6,13],
+"classtgx_1_1_renderer3_d.html#a7bb17f3177a24fbeccbb0d8a801aef88":[7,0,0,6,43],
+"classtgx_1_1_renderer3_d.html#a7bff46c6c71c78546267d7b75bb12644":[7,0,0,6,9],
+"classtgx_1_1_renderer3_d.html#a7ca1f0b53ca7460869fc3031f8422240":[7,0,0,6,30],
+"classtgx_1_1_renderer3_d.html#a7e6d9c3a846123139123791d3f416be5":[7,0,0,6,62],
+"classtgx_1_1_renderer3_d.html#a8437622c6b90f9429769504848d22456":[7,0,0,6,12],
+"classtgx_1_1_renderer3_d.html#a845bbd628cfd96f379f3f23d880aa60a":[7,0,0,6,68],
+"classtgx_1_1_renderer3_d.html#a8bf2c28c514af367fd47964577f1584d":[7,0,0,6,75],
+"classtgx_1_1_renderer3_d.html#a8ff9976b53c527e62c95be427620685f":[7,0,0,6,10],
+"classtgx_1_1_renderer3_d.html#a92666f8cccbb7233cae2fc07322efcc3":[7,0,0,6,31]
 };
