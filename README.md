@@ -1,6 +1,6 @@
 # TGX - A Tiny Graphics Library
 
-***LATEST VERSION 1.0.5***
+***LATEST VERSION 1.0.6***
 
 Full documentation is now available at https://vindar.github.io/tgx/
 
