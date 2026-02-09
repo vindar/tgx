@@ -116,7 +116,7 @@
     #define TGX_INLINE  __attribute__((always_inline))
     #define TGX_NOINLINE
 
-#elif defined(ARUINO_ARCH_RP2040) ||defined(PICO_RP2040)
+#elif defined(ARDUINO_ARCH_RP2040) || defined(PICO_RP2040)
     // Raspberry Pico 2040
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 2048
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
