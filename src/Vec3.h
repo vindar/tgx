@@ -124,13 +124,13 @@ namespace tgx
          * performed with a simple C-style cast.
          */
         template<typename U>
-        explicit operator Vec3<U>() { return Vec3<U>((U)x, (U)y, (U)z); }
+        explicit operator Vec3<U>() const { return Vec3<U>((U)x, (U)y, (U)z); }
 
 
         /**
         * Implicit conversion to floating point type vector.
         **/
-        operator Vec3<typename DefaultFPType<T>::fptype>() { return Vec3<typename DefaultFPType<T>::fptype>((typename DefaultFPType<T>::fptype)x, (typename DefaultFPType<T>::fptype)y, (typename DefaultFPType<T>::fptype)z); }
+        operator Vec3<typename DefaultFPType<T>::fptype>() const { return Vec3<typename DefaultFPType<T>::fptype>((typename DefaultFPType<T>::fptype)x, (typename DefaultFPType<T>::fptype)y, (typename DefaultFPType<T>::fptype)z); }
 
 
 
@@ -547,7 +547,7 @@ namespace tgx
     template<typename T> inline Vec3<T> operator+(Vec3<T> V, const T a) { V += a; return V; }
 
     /** Scalar substraction operator */
-    template<typename T> inline Vec3<T> operator-(const T a, Vec3<T> V) { V -= a; return V; }
+    //template<typename T> inline Vec3<T> operator-(const T a, Vec3<T> V) { V -= a; return V; }
 
     /** Scalar substraction operator */
     template<typename T> inline Vec3<T> operator-(Vec3<T> V, const T a) { V -= a; return V; }
@@ -559,7 +559,7 @@ namespace tgx
     template<typename T> inline Vec3<T> operator*(Vec3<T> V, const T a) { V *= a; return V; }
 
     /** Scalar division operator */
-    template<typename T> inline Vec3<T> operator/(const T a, Vec3<T> V) { V /= a; return V; }
+    //template<typename T> inline Vec3<T> operator/(const T a, Vec3<T> V) { V /= a; return V; }
 
     /** Scalar division operator */
     template<typename T> inline Vec3<T> operator/(Vec3<T> V, const T a) { V /= a; return V; }

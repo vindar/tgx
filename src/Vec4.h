@@ -134,13 +134,13 @@ namespace tgx
          * performed with a simple C-style cast.
          */
         template<typename U>
-        explicit operator Vec4<U>() { return Vec4<U>((U)x, (U)y, (U)z, (U)w); }
+        explicit operator Vec4<U>() const { return Vec4<U>((U)x, (U)y, (U)z, (U)w); }
 
 
         /**
         * Implicit conversion to floating point type vector.
         **/
-        operator Vec4<typename DefaultFPType<T>::fptype>() { return Vec4<typename DefaultFPType<T>::fptype>((typename DefaultFPType<T>::fptype)x, (typename DefaultFPType<T>::fptype)y, (typename DefaultFPType<T>::fptype)z, (typename DefaultFPType<T>::fptype)w); }
+        operator Vec4<typename DefaultFPType<T>::fptype>() const { return Vec4<typename DefaultFPType<T>::fptype>((typename DefaultFPType<T>::fptype)x, (typename DefaultFPType<T>::fptype)y, (typename DefaultFPType<T>::fptype)z, (typename DefaultFPType<T>::fptype)w); }
 
 
         /**
@@ -173,7 +173,7 @@ namespace tgx
                 if (y == V.y)
                     {
                     if (z < V.z) return true;
-                    if (z == V.z) return true;
+                    if (z == V.z)
                         {
                         if (w < V.w) return true;
                         }
@@ -595,7 +595,7 @@ namespace tgx
     template<typename T> inline Vec4<T> operator+(Vec4<T> V, const T a) { V += a; return V; }
 
     /** Scalar substraction operator */
-    template<typename T> inline Vec4<T> operator-(const T a, Vec4<T> V) { V -= a; return V; }
+    //template<typename T> inline Vec4<T> operator-(const T a, Vec4<T> V) { V -= a; return V; }
 
     /** Scalar substraction operator */
     template<typename T> inline Vec4<T> operator-(Vec4<T> V, const T a) { V -= a; return V; }
@@ -607,7 +607,7 @@ namespace tgx
     template<typename T> inline Vec4<T> operator*(Vec4<T> V, const T a) { V *= a; return V; }
 
     /** Scalar division operator */
-    template<typename T> inline Vec4<T> operator/(const T a, Vec4<T> V) { V /= a; return V; }
+    //template<typename T> inline Vec4<T> operator/(const T a, Vec4<T> V) { V /= a; return V; }
 
     /** Scalar division operator */
     template<typename T> inline Vec4<T> operator/(Vec4<T> V, const T a) { V /= a; return V; }

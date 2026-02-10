@@ -118,10 +118,7 @@ namespace tgx
             val = *(uint32_t*)s; // read 4 bytes - unaligned is ok
             val = __builtin_bswap32(val); // change to big-endian order
             #else
-            val = s[0] << 24;
-            val |= (s[1] << 16);
-            val |= (s[2] << 8);
-            val |= s[3];
+            val = (((uint32_t)s[0]) << 24) | (((uint32_t)s[1]) << 16) | (((uint32_t)s[2]) << 8) | ((uint32_t)s[3]);            
             #endif
             val <<= (index & 7); // shift out used bits
             if (32 - (index & 7) < required) 
