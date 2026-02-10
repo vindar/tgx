@@ -471,13 +471,13 @@ namespace tgx
         * Perform the following operation on the components using  #tgx::fast_inv to speed-up computation:
         * 
         * - x = x/w
-        * - y = x/w
+        * - y = y/w
         * - z = z/w
         * - w = 1/w
         **/
         template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void zdivide() 
             {
-            const float iw = tgx::fast_inv(w);
+            const Tfloat iw = tgx::fast_inv((Tfloat)w);
             x = iw*x;
             y = iw*y;
             z = iw*z;
