@@ -130,7 +130,7 @@ namespace tgx
             }
 
 
-        uint32_t fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required)
+        int32_t fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required)
             {
             uint32_t val = fetchbits_unsigned(p, index, required);
             if (val & (1 << (required - 1))) 

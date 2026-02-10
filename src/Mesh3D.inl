@@ -43,7 +43,9 @@ namespace tgx
             CacheMesh(void* ram1_ptr, size_t ram1_size, char* ram2_ptr, size_t ram2_size)
                 : _ram1_size(ram1_size), _ram2_size(ram2_size), _ram1_ptr((char*)ram1_ptr), _ram2_ptr(ram2_ptr), _nb_entries(0)
             {
+                if (!_ram1_ptr) _ram1_size = 0;
                 align(_ram1_ptr, _ram1_size);
+                if (!_ram2_ptr) _ram2_size = 0;
                 align(_ram2_ptr, _ram2_size);
             }
 
@@ -65,8 +67,8 @@ namespace tgx
                 char* p = find_in_cache((const char*)im);
                 if (p != nullptr) return ((const Image<color_t>*)p);
 
-                const size_t image_size = sizeof(Image<color_t>);
-                const size_t data_size = (im->stride() * im->ly() * sizeof(color_t));
+                const size_t image_size = sizeof(Image<color_t>);                
+                const size_t data_size = size_t(im->stride()) * size_t(im->ly()) * sizeof(color_t);
 
                 if (!can_alloc(image_size + data_size)) return im;
 

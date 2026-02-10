@@ -202,7 +202,7 @@ namespace tgx
         uint32_t fetchbits_unsigned(const uint8_t* p, uint32_t index, uint32_t required);
 
         /** fetch 'required' bits from a bit array, returned as an signed integer. Used to decode ILI9341_t3 format */
-        uint32_t fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required);
+        int32_t fetchbits_signed(const uint8_t* p, uint32_t index, uint32_t required);
 
         }
 
