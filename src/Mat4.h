@@ -153,6 +153,7 @@ namespace tgx
          * Implicit conversion to an array T[16]. 
          */
         operator T*() { return M; }
+        operator const T*() const { return M; }
 
 
         /**
@@ -513,7 +514,7 @@ namespace tgx
         /**
         * Matrix-vector multiplication.
         */
-        TGX_INLINE inline Vec4<T> mult(const Vec3<T> & V, float w) const
+        TGX_INLINE inline Vec4<T> mult(const Vec3<T> & V, T w) const
             {
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z + M[12] * w,
                 M[1] * V.x + M[5] * V.y + M[9] * V.z + M[13] * w,

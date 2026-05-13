@@ -29,3 +29,6 @@
 *.exe
 *.out
 *.app
+
+# Local temporary build/check files
+tmp/

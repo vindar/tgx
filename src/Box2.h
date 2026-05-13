@@ -204,13 +204,13 @@ namespace tgx
         * Explicit conversion to another box type.
         */
         template<typename U>
-        explicit operator Box2<U>() { return Box2<U>((U)minX, (U)maxX, (U)minY, (U)maxY); }
+        explicit operator Box2<U>() const { return Box2<U>((U)minX, (U)maxX, (U)minY, (U)maxY); }
 
 
         /**
         * Implicit conversion to floating-point type.
         */
-        operator Box2<typename DefaultFPType<T>::fptype>() { return Box2<typename DefaultFPType<T>::fptype>((typename DefaultFPType<T>::fptype)minX, (typename DefaultFPType<T>::fptype)maxX, (typename DefaultFPType<T>::fptype)minY, (typename DefaultFPType<T>::fptype)maxY); }
+        operator Box2<typename DefaultFPType<T>::fptype>() const { return Box2<typename DefaultFPType<T>::fptype>((typename DefaultFPType<T>::fptype)minX, (typename DefaultFPType<T>::fptype)maxX, (typename DefaultFPType<T>::fptype)minY, (typename DefaultFPType<T>::fptype)maxY); }
 
 
         /** 
