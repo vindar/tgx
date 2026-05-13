@@ -145,7 +145,7 @@ namespace tgx
          **/
         inline bool operator<=(const Vec2 V) const
             {
-            return ((x <= V.x) || ((x == V.x) && (y <= V.y)));
+            return ((x < V.x) || ((x == V.x) && (y <= V.y)));
             }
             
 

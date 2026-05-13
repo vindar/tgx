@@ -602,7 +602,7 @@ namespace tgx
         * 
         * @sa lx(),ly()
         **/
-        template<typename Tfloat = DefaultFPType<T> > inline  Tfloat ratio() const
+        template<typename Tfloat = typename DefaultFPType<T>::fptype> inline  Tfloat ratio() const
             {
             if (isEmpty()) return (Tfloat)(-1);
             return ((Tfloat)(lx())) / ((Tfloat)(ly()));

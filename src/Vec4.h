@@ -195,7 +195,7 @@ namespace tgx
                 if (y == V.y)
                     {
                     if (z < V.z) return true;
-                    if (z == V.z) return true;
+                    if (z == V.z)
                         {
                         if (w <= V.w) return true;
                         }
