@@ -315,7 +315,7 @@ namespace tgx
     TGX_INLINE inline double precise_invsqrt(double x)
         {
         const double s = sqrt(x);
-        return (s == 0) ? 1.0 : (1.0 / sqrt(s));
+        return (s == 0) ? 1.0 : (1.0 / s);
         }
 
     
