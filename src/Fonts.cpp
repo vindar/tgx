@@ -50,7 +50,7 @@ namespace tgx
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
             iVec2 pos2 = B.getAnchor(anchor);
-            if (anchor & BASELINE) pos2.x = startp.x;
+            if (anchor & BASELINE) pos2.y = startp.y;
             B += (startp - pos2);
             }
         return B; 
@@ -96,7 +96,7 @@ namespace tgx
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
             iVec2 pos2 = B.getAnchor(anchor);
-            if (anchor & BASELINE) pos2.x = startp.x;
+            if (anchor & BASELINE) pos2.y = startp.y;
             B += (startp - pos2);
             }
         return B;

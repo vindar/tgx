@@ -28,7 +28,7 @@ def error(msg):
 # add the alpha channel, the image must not have it already
 def addAlphaChannel(ar):
     if ar.shape[2] != 3:
-        error(f"*** Unsupported image type (this image has {nbchannels} color channels when it should be 3 or 4) ***")
+        error(f"*** Unsupported image type (this image has {ar.shape[2]} color channels when it should be 3 or 4) ***")
     B = np.full((ar.shape[0], ar.shape[1] ,1),255)
     ar = np.concatenate((ar,B),axis=2)
     return ar
@@ -163,7 +163,7 @@ def createCPP(ar, color_type, name, tc):
         for y in range(height):
             for x in range(width):
                 f.write(color(ar[x, y], color_type))
-                if y*x != ((width-1)*(height-1)):
+                if (x != width - 1) or (y != height - 1):
                     f.write(", ")
                 i += 1
                 if i == 16:
@@ -208,7 +208,7 @@ while True:
     except:
         print(f"\n*** cannot open image file [{filename}]... ***\n\n")
 
-arim = np.asarray(image,dtype=np.int)        
+arim = np.asarray(image,dtype=int)        
 if len(arim.shape) != 3:
     error("Unsupported image type !")
 
@@ -265,7 +265,6 @@ createCPP(arim, color_type, filename, tc if use_tc else None)
 
 
 # In[ ]:
-
 
 
 

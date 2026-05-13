@@ -43,7 +43,7 @@ def createTexture(im, name):
             for x in range(im.width):
                 rgb = ar[im.height - 1 - y, x]
                 f.write(RGB565(rgb))
-                if y * x != ((im.width - 1) * (im.height - 1)):
+                if (x != im.width - 1) or (y != im.height - 1):
                     f.write(", ")
                 i += 1
                 if i == 16:

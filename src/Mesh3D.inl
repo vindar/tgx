@@ -220,7 +220,7 @@ namespace tgx
         if (new_mesh == nullptr)
             {
             if (ram1_used) { *ram1_used = 0; }
-            if (ram1_used) { *ram2_used = 0; }
+            if (ram2_used) { *ram2_used = 0; }
             return mesh;
             }
 
@@ -400,10 +400,10 @@ namespace tgx
 
 
     template<typename color_t> Mesh3D<color_t>* copyMeshEXTMEM(const Mesh3D<color_t>* mesh,
-                                                                bool copy_textures,
                                                                 bool copy_vertices,
                                                                 bool copy_normals,
                                                                 bool copy_texcoords,
+                                                                bool copy_textures,
                                                                 bool copy_faces)    
         {
         if (external_psram_size <= 0) return nullptr; // no extram present. 

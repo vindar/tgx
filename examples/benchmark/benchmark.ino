@@ -88,7 +88,7 @@ using namespace tgx;
         }
 #endif
 
-#ifdef TGX_BENCHMARK_ESj32S3
+#ifdef TGX_BENCHMARK_ESP32S3
     #define NBFRAMES 45
     #define DEV_NAME "ESP32-S3"
     #define MAX_ALLOC_BYTES (120*1024)
