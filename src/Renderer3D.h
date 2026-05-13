@@ -2087,7 +2087,8 @@ namespace tgx
 
         // *** pre-computed values ***
         fMat4 _r_modelViewM;        // model-view matrix
-        float _r_inorm;             // inverse of the norm of a unit vector after view transform
+        float _r_inorm;             // Fast normal scaling for lighting. Assumes rotation/uniform scale;
+                                    // Gouraud lighting is approximate with non-uniform model scaling.
         fVec3 _r_light;             // light vector in view space (inverted and normalized)
         fVec3 _r_light_inorm;       // same as above but alreadsy muliplied by inorm
         fVec3 _r_H;                 // halfway vector.
