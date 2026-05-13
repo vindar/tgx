@@ -2797,7 +2797,8 @@ namespace tgx
             {
             if ((x < 0) || (x >= _lx) || (y >= _ly)) return;
             if (y < 0) { h += y; y = 0; }
-            if (y + h > _ly) { h = _ly - y; }
+            if (h <= 0) return;
+            if (h > _ly - y) { h = _ly - y; }
             }
         color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride);
         while (h-- > 0)
@@ -2817,7 +2818,8 @@ namespace tgx
             {
             if ((x < 0) || (x >= _lx) || (y >= _ly)) return;
             if (y < 0) { h += y; y = 0; }
-            if (y + h > _ly) { h = _ly - y; }
+            if (h <= 0) return;
+            if (h > _ly - y) { h = _ly - y; }
             }
         color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride);
         if ((opacity < 0) || (opacity > 1))
@@ -2848,7 +2850,8 @@ namespace tgx
             {
             if ((y < 0) || (y >= _ly) || (x >= _lx)) return;
             if (x < 0) { w += x; x = 0; }
-            if (x + w > _lx) { w = _lx - x; }
+            if (w <= 0) return;
+            if (w > _lx - x) { w = _lx - x; }
             }
         _fast_memset(_buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride), color, w);
         }
@@ -2865,7 +2868,8 @@ namespace tgx
             {
             if ((y < 0) || (y >= _ly) || (x >= _lx)) return;
             if (x < 0) { w += x; x = 0; }
-            if (x + w > _lx) { w = _lx - x; }
+            if (w <= 0) return;
+            if (w > _lx - x) { w = _lx - x; }
             }
         color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride);
         if ((opacity < 0) || (opacity > 1))

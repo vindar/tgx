@@ -3658,6 +3658,7 @@ private:
         void _triangle_hline(int x1, int x2, const int y, color_t color, float opacity)
             { // like drawFasthLine but used by _bseg_fill_interior_angle_sub
             x1 = tgx::max(0, x1); x2 = tgx::min(_lx - 1, x2);
+            if (x1 > x2) return;
             color_t* p = _buffer + TGX_CAST32(x1) + TGX_CAST32(y) * TGX_CAST32(_stride);
             if (opacity < 0) { while (x1++ <= x2) { (*p++) = color; } } else { while (x1++ <= x2) { (*p++).blend(color,opacity); } }
             }
