@@ -52,7 +52,9 @@ namespace tgx
             fMat4 M; 
             
             M.setIdentity();
-            this->setModelMatrix(M); // no transformation on the mesh.
+            _modelM = M; // no transformation on the mesh.
+            _viewM = M;  // valid view matrix before setLookAt() recomputes derived values.
+            _light = fVec3(-1.0f, -1.0f, -1.0f);
 
             const float ar = _validDraw() ? (((float)_lx) / _ly) : 1.5f;
             if (_ortho)
@@ -1186,13 +1188,18 @@ namespace tgx
             const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURE(RASTER_TYPE));
             const bool GOURAUD = (bool)(TGX_SHADER_HAS_GOURAUD(RASTER_TYPE));
 
+            const bool bbox_uninitialized = ((mesh->bounding_box.minX == 0) && (mesh->bounding_box.maxX == 0) &&
+                                             (mesh->bounding_box.minY == 0) && (mesh->bounding_box.maxY == 0) &&
+                                             (mesh->bounding_box.minZ == 0) && (mesh->bounding_box.maxZ == 0));
+            const fMat4 proj_modelview = _projM * _r_modelViewM;
+
             // check if the object is completely outside of the image for fast discard.
-            if (_discardBox(mesh->bounding_box, _projM * _r_modelViewM)) return;
+            if ((!bbox_uninitialized) && _discardBox(mesh->bounding_box, proj_modelview)) return;
             
             const float CLIPBOUND_XY = _clipbound_xy();
 
             // check if the clipping test should be performed for each triangle in the mesh.
-            const bool cliptestneeded = _clipTestNeeded(CLIPBOUND_XY, mesh->bounding_box, _projM * _r_modelViewM);
+            const bool cliptestneeded = bbox_uninitialized || _clipTestNeeded(CLIPBOUND_XY, mesh->bounding_box, proj_modelview);
 
             const fVec3* const tab_vert = mesh->vertice;  // array of vertices
             const fVec3* const tab_norm = mesh->normal;   // array of normals
@@ -1690,7 +1697,11 @@ namespace tgx
             while (mesh != nullptr)
                 {
                 // check if the object is completely outside of the image for fast discard.
-                if (_discardBox(mesh->bounding_box, _projM * _r_modelViewM)) return;
+                if (_discardBox(mesh->bounding_box, _projM * _r_modelViewM))
+                    {
+                    mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
+                    continue;
+                    }
 
                 const fVec3* const tab_norm = mesh->normal;   // array of normals
                 const fVec2* const tab_tex = mesh->texcoord;  // array of texture
@@ -2430,11 +2441,11 @@ namespace tgx
                 if (!has_zbuffer)
                     {
                     if (USE_BLENDING)
-                        _uni.im->drawCircle({ x, y }, radius[r], colors[colors_ind[k]], opacities[opacities_ind[k]]);
+                        _uni.im->drawCircle({ x, y }, r, colors[colors_ind[k]], opacities[opacities_ind[k]]);
                     else if (USE_COLORS)
-                        _uni.im->drawCircle({ x, y }, radius[r], colors[colors_ind[k]]);
+                        _uni.im->drawCircle({ x, y }, r, colors[colors_ind[k]]);
                     else
-                        _uni.im->drawCircle({ x, y }, radius[r], _color);
+                        _uni.im->drawCircle({ x, y }, r, _color);
                     }
                 else
                     {
