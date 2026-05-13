@@ -524,37 +524,45 @@ namespace tgx
         /**
          * Split the box in half or quarter.
          *
+         * @remark This method replaces the former split(): TOP/BOTTOM now follow the
+         * anchor convention and integral splits no longer overlap on the middle row/column.
+         *
          * @param   part    The part or the box to keep. See tgx::BoxSplit. 
          *
-         * @sa  getSplit()
+         * @sa  getSplit_fixed()
          */
-        inline void split(BoxSplit part)
+        inline void split_fixed(BoxSplit part)
             {
-            *this = getSplit(part);
+            *this = getSplit_fixed(part);
             }
 
 
         /**
          * Return the box splitted in half or quater.
          *
+         * @remark This method replaces the former getSplit(): TOP/BOTTOM now follow the
+         * anchor convention and integral splits no longer overlap on the middle row/column.
+         *
          * @param   part    The part or the box to keep. See tgx::BoxSplit.
          *
-         * @sa  split()
+         * @sa  split_fixed()
          */
-        Box2<T> getSplit(BoxSplit part) const
+        Box2<T> getSplit_fixed(BoxSplit part) const
             {
-            const T midX = (minX + maxX)/2;
-            const T midY = (minY + maxY)/2;
+            const T midX = minX + (maxX - minX)/2;
+            const T midY = minY + (maxY - minY)/2;
+            const T nextX = midX + (std::is_integral<T>::value ? (T)1 : (T)0);
+            const T nextY = midY + (std::is_integral<T>::value ? (T)1 : (T)0);
             switch (part)
                 {
-            case SPLIT_TOP: { return Box2<T>(minX, maxX, midY, maxY); }
-            case SPLIT_BOTTOM: { return Box2<T>(minX, maxX, minY, midY); }
+            case SPLIT_TOP: { return Box2<T>(minX, maxX, minY, midY); }
+            case SPLIT_BOTTOM: { return Box2<T>(minX, maxX, nextY, maxY); }
             case SPLIT_LEFT: { return Box2<T>(minX, midX, minY, maxY); }
-            case SPLIT_RIGHT: { return Box2<T>(midX, maxX, minY, maxY); }
-            case SPLIT_TOPLEFT: { return Box2<T>(minX, midX, midY, maxY); }
-            case SPLIT_TOPRIGHT: { return Box2<T>(midX, maxX, midY, maxY); }
-            case SPLIT_BOTTOMLEFT: { return Box2<T>(minX, midX, minY, midY); }
-            case SPLIT_BOTTOMRIGHT: { return Box2<T>(midX, maxX, minY, midY); }
+            case SPLIT_RIGHT: { return Box2<T>(nextX, maxX, minY, maxY); }
+            case SPLIT_TOPLEFT: { return Box2<T>(minX, midX, minY, midY); }
+            case SPLIT_TOPRIGHT: { return Box2<T>(nextX, maxX, minY, midY); }
+            case SPLIT_BOTTOMLEFT: { return Box2<T>(minX, midX, nextY, maxY); }
+            case SPLIT_BOTTOMRIGHT: { return Box2<T>(nextX, maxX, nextY, maxY); }
                 }
             return *this;
             }
@@ -695,18 +703,24 @@ namespace tgx
 
         /**
         * Return the largest box with the same `ratio()` as box `B` that is centered and enclosed inside this box. 
+        *
+        * @remark This method replaces the former getEnclosedWithSameRatioAs(): the returned
+        * box now preserves the position/center of this box instead of being relative to the origin.
         * 
-        * @sa ratio(),getEnclosingWithSameRatioAs()
+        * @sa ratio(),getEnclosingWithSameRatioAs_fixed()
         **/
-        Box2<T> getEnclosedWithSameRatioAs(const Box2<T> & B) const;
+        Box2<T> getEnclosedWithSameRatioAs_fixed(const Box2<T> & B) const;
 
 
         /**
         * Return the smallest box with the same `ratio()` as box `B` that contains this box in its center.
+        *
+        * @remark This method replaces the former getEnclosingWithSameRatioAs(): the returned
+        * box now preserves the position/center of this box instead of being relative to the origin.
         * 
-        * @sa ratio(),getEnclosedWithSameRatioAs()
+        * @sa ratio(),getEnclosedWithSameRatioAs_fixed()
         **/
-        Box2<T> getEnclosingWithSameRatioAs(const Box2<T> & B) const;
+        Box2<T> getEnclosingWithSameRatioAs_fixed(const Box2<T> & B) const;
 
 
     };
@@ -715,47 +729,93 @@ namespace tgx
 
 
 
-    template<typename T> Box2<T> Box2<T>::getEnclosedWithSameRatioAs(const Box2<T> & B) const
+    template<typename T> Box2<T> Box2<T>::getEnclosedWithSameRatioAs_fixed(const Box2<T> & B) const
         {
         Box2<T> C;
-        if (ratio() < B.ratio())
+        C.empty();
+        if (isEmpty() || B.isEmpty()) return C;
+
+        typedef typename DefaultFPType<T>::fptype Tfloat;
+        const Tfloat target_ratio = B.template ratio<Tfloat>();
+        if (target_ratio <= (Tfloat)0) return C;
+
+        Tfloat llx = (Tfloat)lx();
+        Tfloat lly = (Tfloat)ly();
+        if (ratio<Tfloat>() < target_ratio)
             {
-            C.minX = 0;
-            C.maxX = maxX - minX;
-            T ll = (T)(lx() / B.ratio());
-            C.minY = (ly() - ll) / 2;
-            C.maxY = C.minY + ll - (std::is_integral<T>::value ? 1 : 0);
+            lly = llx / target_ratio;
             }
         else
             {
-            C.minY = 0;
-            C.maxY = maxY - minY;
-            T ll = (T)(ly() * B.ratio());
-            C.minX = (lx() - ll) / 2;
-            C.maxX = C.minX + ll - (std::is_integral<T>::value ? 1 : 0);
+            llx = lly * target_ratio;
+            }
+
+        if (std::is_integral<T>::value)
+            {
+            T ilx = (T)floor(llx);
+            T ily = (T)floor(lly);
+            if (ilx < (T)1) ilx = (T)1;
+            if (ily < (T)1) ily = (T)1;
+            if (ilx > lx()) ilx = lx();
+            if (ily > ly()) ily = ly();
+            C.minX = minX + (lx() - ilx) / 2;
+            C.minY = minY + (ly() - ily) / 2;
+            C.maxX = C.minX + ilx - 1;
+            C.maxY = C.minY + ily - 1;
+            }
+        else
+            {
+            const Tfloat cx = ((Tfloat)minX + (Tfloat)maxX) / (Tfloat)2;
+            const Tfloat cy = ((Tfloat)minY + (Tfloat)maxY) / (Tfloat)2;
+            C.minX = (T)(cx - llx / (Tfloat)2);
+            C.maxX = (T)(cx + llx / (Tfloat)2);
+            C.minY = (T)(cy - lly / (Tfloat)2);
+            C.maxY = (T)(cy + lly / (Tfloat)2);
             }
         return C;
         }
 
 
-    template<typename T> Box2<T> Box2<T>::getEnclosingWithSameRatioAs(const Box2<T> & B) const
+    template<typename T> Box2<T> Box2<T>::getEnclosingWithSameRatioAs_fixed(const Box2<T> & B) const
         {
         Box2<T> C;
-        if (ratio() > B.ratio())
+        C.empty();
+        if (isEmpty() || B.isEmpty()) return C;
+
+        typedef typename DefaultFPType<T>::fptype Tfloat;
+        const Tfloat target_ratio = B.template ratio<Tfloat>();
+        if (target_ratio <= (Tfloat)0) return C;
+
+        Tfloat llx = (Tfloat)lx();
+        Tfloat lly = (Tfloat)ly();
+        if (ratio<Tfloat>() > target_ratio)
             {
-            C.minX = 0;
-            C.maxX = maxX - minX;
-            T ll = (T)(lx() / B.ratio());
-            C.minY = (ly() - ll) / 2;
-            C.maxY = C.minY + ll - (std::is_integral<T>::value ? 1 : 0);
+            lly = llx / target_ratio;
             }
         else
             {
-            C.minY = 0;
-            C.maxY = maxY - minY;
-            T ll = (T)(ly() * B.ratio());
-            C.minX = (lx() - ll) / 2;
-            C.maxX = C.minX + ll - (std::is_integral<T>::value ? 1 : 0);
+            llx = lly * target_ratio;
+            }
+
+        if (std::is_integral<T>::value)
+            {
+            T ilx = (T)ceil(llx);
+            T ily = (T)ceil(lly);
+            if (ilx < lx()) ilx = lx();
+            if (ily < ly()) ily = ly();
+            C.minX = minX - (ilx - lx()) / 2;
+            C.minY = minY - (ily - ly()) / 2;
+            C.maxX = C.minX + ilx - 1;
+            C.maxY = C.minY + ily - 1;
+            }
+        else
+            {
+            const Tfloat cx = ((Tfloat)minX + (Tfloat)maxX) / (Tfloat)2;
+            const Tfloat cy = ((Tfloat)minY + (Tfloat)maxY) / (Tfloat)2;
+            C.minX = (T)(cx - llx / (Tfloat)2);
+            C.maxX = (T)(cx + llx / (Tfloat)2);
+            C.minY = (T)(cy - lly / (Tfloat)2);
+            C.maxY = (T)(cy + lly / (Tfloat)2);
             }
         return C;
         }
