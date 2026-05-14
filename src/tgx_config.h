@@ -53,6 +53,12 @@
 //  
 // - TGX_INLINE/TGX_NOINLINE : inlining strategy for time critical/non-critical functions.
 //
+/**
+ * @def TGX_USE_FAST_INV_TRICK
+ * Enable the fast approximate inverse trick on architectures where it is beneficial.
+ *
+ * This is selected automatically from the target board/architecture below.
+ */
 #if defined(_WIN32) || defined(_WIN64) || defined(__linux__) || defined(__APPLE__) || defined(__MACH__) || defined(__ANDROID__) || defined(__unix__)
     // TGX is running on a computer. 
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 262144
@@ -220,13 +226,19 @@
 
 
 
-// Set this to 1 to use float as the default floating point type and set it to 0 to use double precision instead.
+/**
+ * @def TGX_SINGLE_PRECISION_COMPUTATIONS
+ * Set to 1 to use float as the default floating point type, or to 0 to use double precision.
+ */
 #ifndef TGX_SINGLE_PRECISION_COMPUTATIONS
     #define TGX_SINGLE_PRECISION_COMPUTATIONS 1  
 #endif
 
  
-// Default blending operation for drawing primitive: overwrite instead of blending.
+/**
+ * @def TGX_DEFAULT_NO_BLENDING
+ * Default opacity sentinel used by drawing primitives to request overwrite/no-blending mode.
+ */
 #define TGX_DEFAULT_NO_BLENDING -1.0f  
 
 

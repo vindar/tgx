@@ -175,7 +175,7 @@ namespace tgx
     /**
     * Fast (approximate) computation of 1/x. Version for float.
     * 
-    * Credit Ken Cooke (@joestash)
+    * Credit Ken Cooke (\@joestash)
     */
     TGX_INLINE inline float fast_inv(float x)
         {
@@ -246,7 +246,7 @@ namespace tgx
     /**
     * Compute a fast approximation of the square root of a float.
     * 
-    * Credit Ken Cooke (@joestash)
+    * Credit Ken Cooke (\@joestash)
     */
     TGX_INLINE inline float fast_sqrt(float x)
         {
@@ -274,7 +274,7 @@ namespace tgx
     /**
     * Compute the inverse square root of a float (exact computation).
     * 
-    * Credit Ken Cooke (@joestash)
+    * Credit Ken Cooke (\@joestash)
     */
     TGX_INLINE inline float precise_invsqrt(float x)
         {
@@ -322,7 +322,7 @@ namespace tgx
     /**
     * Compute a fast approximation of the inverse square root of a float.
     * 
-    * Credit Ken Cooke (@joestash)
+    * Credit Ken Cooke (\@joestash)
     */
     TGX_INLINE inline float fast_invsqrt(float x)
         {
@@ -369,7 +369,7 @@ namespace tgx
     /**
     * Compute (int32_t)floorf(x).
     * 
-    * Credit Ken Cooke (@joestash)
+    * Credit Ken Cooke (\@joestash)
     */
     TGX_INLINE inline int32_t lfloorf(float x)
         {

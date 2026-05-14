@@ -108,13 +108,13 @@ namespace tgx
      *    where
      *    - `[draw]`  means that the method draw a path whereas [fill] means that the method create a solid shape.
      *    - `[thick]` means that the outline of the shape has selectable thickness (not just a single pixel
-     *                wide). The tickness is usually a float and should be at least 1.
+     *                wide). The thickness is usually a float and should be at least 1.
      *    - `[AA]`    means that the method is *high quality*: it is drawn with anti-aliasing and sub-pixel
      *                precision. Method with this suffix take fVec2 parameters for coordinates inputs whereas
      *                regular 'low quality' methods (without the AA suffix) take iVec2 parameters.
      *                
      *    For example:
-     *    - `drawThickCircleAA()` :  draw a high quality circle with user defined outline thickness, antialiasing and sub-pixel precison.
+     *    - `drawThickCircleAA()` :  draw a high quality circle with user defined outline thickness, antialiasing and sub-pixel precision.
      *    - `fillTriangle()`      :  draw a low quality filled triangle (no antialiasing or subpixel precision).
      *
      * 4. All drawing methods that take a `color` parameter also take an `opacity` float parameter which allows to
@@ -679,7 +679,7 @@ namespace tgx
          * @param   sprite          The sprite image to blit.
          * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                          negative to disable blending and simply overwrite the spite over the
+         *                          negative to disable blending and simply overwrite the sprite over the
          *                          image.
          */
         void blit(const Image<color_t>& sprite, iVec2 upperleftpos, float opacity = TGX_DEFAULT_NO_BLENDING);
@@ -720,7 +720,7 @@ namespace tgx
          * @param   upperleftpos    Position inside this image of the upper left corner of the sprite (after rotation).
          * @param   angle           Clockwise angle to rotate the sprite prior to blitting. In degrees. Must be either 0, 90, 180 or 270.
          * @param   opacity         (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or
-         *                          negative to disable blending and simply overwrite the spite over the
+         *                          negative to disable blending and simply overwrite the sprite over the
          *                          image.
          */
         void blitRotated(const Image<color_t> & sprite, iVec2 upperleftpos, int angle, float opacity = TGX_DEFAULT_NO_BLENDING);
@@ -822,7 +822,7 @@ namespace tgx
         /**
          * Blend a sprite onto this image after rescaling and rotation using a custom blending operator.
          * 
-         * This is the same as the method above excpet that it uses a user defined blending operator
+         * This is the same as the method above except that it uses a user defined blending operator
          * which takes as input the color of the source (sprite) pixel and the color of the destination
          * pixel and returns the blended color. It must have a signature compatible with
          * 
@@ -1104,7 +1104,7 @@ namespace tgx
          * @param   h       number of pixels in the segment.
          * @param   color   color to use.
          * @param   opacity opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
-         *                  blending and simply use overwritting.
+         *                  blending and simply use overwriting.
          */
         void drawFastVLine(iVec2 pos, int h, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
@@ -1116,7 +1116,7 @@ namespace tgx
          * @param   w       number of pixels in the segment.
          * @param   color   color to use.
          * @param   opacity opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable
-         *                  blending and simply use overwritting.
+         *                  blending and simply use overwriting.
          */
         void drawFastHLine(iVec2 pos, int w, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
@@ -1128,7 +1128,7 @@ namespace tgx
          * @param   P2      The second point.
          * @param   color   color to use.
          * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
-         *                  disable blending and simply use overwritting.
+         *                  disable blending and simply use overwriting.
          */
         void drawLine(iVec2 P1, iVec2 P2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
@@ -1143,7 +1143,7 @@ namespace tgx
          * @param   drawP2  True to draw the pixel at endpoint P2.
          * @param   color   color to use.
          * @param   opacity (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
-         *                  disable blending and simply use overwritting.
+         *                  disable blending and simply use overwriting.
          */
         void drawSegment(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity = TGX_DEFAULT_NO_BLENDING);
 
