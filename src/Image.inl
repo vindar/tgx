@@ -1135,9 +1135,41 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::_blitMasked(const Image& sprite, color_t transparent_color, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
         {
-        if ((opacity < 0.0f) || (opacity > 1.0f)) opacity = 1.0f;
         if (!_blitClip(sprite, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
-        _maskRegion(transparent_color, _buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, opacity);
+        if ((opacity < 0.0f) || (opacity > 1.0f))
+            _maskRegion(transparent_color, _buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy);
+        else
+            _maskRegion(transparent_color, _buffer + TGX_CAST32(dest_y) * TGX_CAST32(_stride) + TGX_CAST32(dest_x), _stride, sprite._buffer + TGX_CAST32(sprite_y) * TGX_CAST32(sprite._stride) + TGX_CAST32(sprite_x), sprite._stride, sx, sy, opacity);
+        }
+
+    template<typename color_t>
+    void Image<color_t>::_maskRegionUp(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
+        {
+        for (int j = 0; j < sy; j++)
+            {
+            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            for (int i = 0; i < sx; i++)
+                {
+                color_t c = psrc2[i];
+                if (c != transparent_color) pdest2[i] = c;
+                }
+            }
+        }
+
+    template<typename color_t>
+    void Image<color_t>::_maskRegionDown(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
+        {
+        for (int j = sy - 1; j >= 0; j--)
+            {
+            color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+            color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+            for (int i = sx - 1; i >= 0; i--)
+                {
+                color_t c = psrc2[i];
+                if (c != transparent_color) pdest2[i] = c;
+                }
+            }
         }
 
     template<typename color_t>
@@ -7810,7 +7842,7 @@ namespace tgx
     iVec2 Image<color_t>::drawChar(char c, iVec2 pos, const GFXfont& font, color_t color, float opacity)
         {
         if (!isValid()) return pos; 
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        if ((opacity < 0) || (opacity > 1)) return _drawCharGFX<false>(c, pos, color, font, 1.0f);
         /*
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
@@ -7857,7 +7889,8 @@ namespace tgx
     iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, const GFXfont& font, Anchor anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
         {
         if (!isValid()) return pos;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        const bool blend = ((opacity >= 0) && (opacity <= 1));
+        if (!blend) opacity = 1.0f;
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
             start_newline_at_0 = false;
@@ -7866,7 +7899,7 @@ namespace tgx
             iVec2 pos2 = B.getAnchor(anchor);
             pos += pos - pos2;
             }
-        return _drawTextGFX<true>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
+        return blend ? _drawTextGFX<true>(text, pos, font, color, opacity, wrap_text, start_newline_at_0) : _drawTextGFX<false>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
         }
 
 
@@ -7874,7 +7907,8 @@ namespace tgx
     iVec2 Image<color_t>::drawTextEx(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity)
         {
         if (!isValid()) return pos;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        const bool blend = ((opacity >= 0) && (opacity <= 1));
+        if (!blend) opacity = 1.0f;
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
             start_newline_at_0 = false;
@@ -7883,7 +7917,7 @@ namespace tgx
             iVec2 pos2 = B.getAnchor(anchor);
             pos += pos - pos2;
             }
-        return _drawTextILI<true>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
+        return blend ? _drawTextILI<true>(text, pos, font, color, opacity, wrap_text, start_newline_at_0) : _drawTextILI<false>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
         }
 
 
@@ -8321,9 +8355,9 @@ namespace tgx
                     const uint8_t b = bitmap[off >> 2];
                     switch (uu)
                         {
-                        case 1: { const int v = ((b & 48) >> 4); (p++)->blend256(col, (v * iop) >> 9); off++; dx--; }
-                        case 2: { const int v = ((b & 12) >> 2); (p++)->blend256(col, (v * iop) >> 9); off++; dx--; }
-                        case 3: { const int v = (b & 3); (p++)->blend256(col, (v * iop) >> 9); off++; dx--; }
+                        case 1: { const int v = ((b & 48) >> 4); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); off++; dx--; }
+                        case 2: { const int v = ((b & 12) >> 2); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); off++; dx--; }
+                        case 3: { const int v = (b & 3); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); off++; dx--; }
                         }
                     }
                 while (dx >= 4)
@@ -8331,10 +8365,10 @@ namespace tgx
                     const uint8_t b = bitmap[off >> 2];
                     if (b)
                         {
-                            { const int v = ((b & 192) >> 6); p[0].blend256(col, (v * iop) >> 9); }
-                            { const int v = ((b & 48) >> 4); p[1].blend256(col, (v * iop) >> 9); }
-                            { const int v = ((b & 12) >> 2); p[2].blend256(col, (v * iop) >> 9); }
-                            { const int v = (b & 3); p[3].blend256(col, (v * iop) >> 9); }
+                            { const int v = ((b & 192) >> 6); _drawFontPixel<BLEND>(p + 0, col, (v * iop) >> 9); }
+                            { const int v = ((b & 48) >> 4); _drawFontPixel<BLEND>(p + 1, col, (v * iop) >> 9); }
+                            { const int v = ((b & 12) >> 2); _drawFontPixel<BLEND>(p + 2, col, (v * iop) >> 9); }
+                            { const int v = (b & 3); _drawFontPixel<BLEND>(p + 3, col, (v * iop) >> 9); }
                         }
                     off += 4;
                     p += 4;
@@ -8344,16 +8378,16 @@ namespace tgx
                 if (dx > 1)
                     {
                     const uint8_t b = bitmap[off >> 2];
-                    {const int v = ((b & 192) >> 6); (p++)->blend256(col, (v * iop) >> 9); }
-                    {const int v = ((b & 48) >> 4); (p++)->blend256(col, (v * iop) >> 9); }
-                    if (dx > 2) { const int v = ((b & 12) >> 2); (p++)->blend256(col, (v * iop) >> 9); }
+                    { const int v = ((b & 192) >> 6); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); }
+                    { const int v = ((b & 48) >> 4); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); }
+                    if (dx > 2) { const int v = ((b & 12) >> 2); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); }
                     }
                 else
                     {
                     if (dx > 0) 
                         { 
                         const uint8_t b = bitmap[off >> 2];
-                        const int v = ((b & 192) >> 6); (p++)->blend256(col, (v * iop) >> 9); 
+                        const int v = ((b & 192) >> 6); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9);
                         }
                     }                   
                 }
@@ -8371,9 +8405,9 @@ namespace tgx
                     const uint8_t b = bitmap[off >> 2];
                     switch (uu)
                         {
-                        case 1: { const int v = ((b & 48) >> 4); (p++)->blend256(col, (v * iop) >> 9); off++; dx--; } // this case should never occur
-                        case 2: { const int v = ((b & 12) >> 2); (p++)->blend256(col, (v * iop) >> 9); off++; dx--; }
-                        case 3: { const int v = (b & 3); (p++)->blend256(col, (v * iop) >> 9); off++; dx--; }
+                        case 1: { const int v = ((b & 48) >> 4); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); off++; dx--; } // this case should never occur
+                        case 2: { const int v = ((b & 12) >> 2); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); off++; dx--; }
+                        case 3: { const int v = (b & 3); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); off++; dx--; }
                         }
                     }   
                 if (dx > 0)
@@ -8384,10 +8418,10 @@ namespace tgx
                         const int32_t uu = (off++) & 3;
                         switch (uu)
                             {
-                            case 0: { const int v = ((b & 192) >> 6); (p++)->blend256(col, (v * iop) >> 9); break; }
-                            case 1: { const int v = ((b & 48) >> 4); (p++)->blend256(col, (v * iop) >> 9); break; }
-                            case 2: { const int v = ((b & 12) >> 2); (p++)->blend256(col, (v * iop) >> 9); break; }
-                            case 3: { const int v = (b & 3); (p++)->blend256(col, (v * iop) >> 9); break; }
+                            case 0: { const int v = ((b & 192) >> 6); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); break; }
+                            case 1: { const int v = ((b & 48) >> 4); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); break; }
+                            case 2: { const int v = ((b & 12) >> 2); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); break; }
+                            case 3: { const int v = (b & 3); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); break; }
                             }
                         }
                     }
@@ -8412,7 +8446,7 @@ namespace tgx
                 if (off & 1)
                     {// not at the start of a bitmap byte: we first finish it. 
                     const uint8_t b = bitmap[off >> 1];
-                    const int v = (b & 15); (p++)->blend256(col, (v * iop) >> 11); 
+                    const int v = (b & 15); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 11);
                     off++; dx--; 
                     }
                 while (dx >= 2)
@@ -8420,8 +8454,8 @@ namespace tgx
                     const uint8_t b = bitmap[off >> 1];
                     if (b)
                         {
-                            { const int v = ((b & 240) >> 4); p[0].blend256(col, (v * iop) >> 11); }
-                            { const int v = (b & 15); p[1].blend256(col, (v * iop) >> 11); }
+                            { const int v = ((b & 240) >> 4); _drawFontPixel<BLEND>(p + 0, col, (v * iop) >> 11); }
+                            { const int v = (b & 15); _drawFontPixel<BLEND>(p + 1, col, (v * iop) >> 11); }
                         }
                     off += 2;
                     p += 2;
@@ -8430,7 +8464,7 @@ namespace tgx
                 if (dx > 0)
                     {
                     const uint8_t b = bitmap[off >> 1];                 
-                    const int v = ((b & 240) >> 4); p->blend256(col, (v * iop) >> 11);
+                    const int v = ((b & 240) >> 4); _drawFontPixel<BLEND>(p, col, (v * iop) >> 11);
                     }
                 }
             }
@@ -8442,7 +8476,7 @@ namespace tgx
                 {
                 const uint8_t b = bitmap[off >> 1];
                 const int v = (off & 1) ? (b & 15) : ((b & 240) >> 4);
-                p->blend256(col, (v * iop) >> 11);
+                _drawFontPixel<BLEND>(p, col, (v * iop) >> 11);
                 p += _stride;
                 off += rsx;
                 }
@@ -8466,7 +8500,7 @@ namespace tgx
             while (dx-- > 0)
                 {
                 uint32_t cc = *(p_src++);
-                (*(p_dst++)).blend256(col, (cc*iop) >> 15); 
+                _drawFontPixel<BLEND>(p_dst++, col, (cc*iop) >> 15);
                 }
             p_src += sk_src;
             p_dst += sk_dst;

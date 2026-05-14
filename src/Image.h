@@ -1789,7 +1789,11 @@ namespace tgx
          * @param   dstP1               coords of point 1 on this image.
          * @param   dstP2               coords of point 2 on this image.
          * @param   dstP3               coords of point 3 on this image.
-         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
+         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f (opaque),
+         *                              or negative / #TGX_DEFAULT_NO_BLENDING to disable blending. In that
+         *                              mode, fully transparent masked texels are skipped, fully opaque texels
+         *                              overwrite the destination, and partially covered pixels are still
+         *                              alpha-composited to preserve smooth bilinear mask edges.
          */
         template<typename color_t_tex>
         void drawTexturedMaskedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity = 1.0f);
@@ -1820,7 +1824,11 @@ namespace tgx
          * @param   C1                  color gradient multiplier at point 1.
          * @param   C2                  color gradient multiplier at point 2.
          * @param   C3                  color gradient multiplier at point 3.
-         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f (opaque).
+         * @param   opacity             The opacity multiplier between 0.0f (transparent) and 1.0f (opaque),
+         *                              or negative / #TGX_DEFAULT_NO_BLENDING to disable blending. In that
+         *                              mode, fully transparent masked texels are skipped, fully opaque texels
+         *                              overwrite the destination, and partially covered pixels are still
+         *                              alpha-composited to preserve smooth bilinear mask edges.
          */
         template<typename color_t_tex>
         void drawTexturedGradientMaskedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity = 1.0f);
@@ -3585,6 +3593,9 @@ private:
         template<typename color_t_src, typename BLEND_OPERATOR> static void _blitRegionDown(color_t* pdest, int dest_stride, color_t_src* psrc, int src_stride, int sx, int sy, const  BLEND_OPERATOR& blend_op);
 
         void _blitMasked(const Image& sprite, color_t transparent_color, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity);
+        static void _maskRegion(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy) { if ((size_t)pdest <= (size_t)psrc) _maskRegionUp(transparent_color, pdest, dest_stride, psrc, src_stride, sx, sy); else _maskRegionDown(transparent_color, pdest, dest_stride, psrc, src_stride, sx, sy); }
+        static void _maskRegionUp(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy);
+        static void _maskRegionDown(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy);
         static void _maskRegion(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity) { if ((size_t)pdest <= (size_t)psrc) _maskRegionUp(transparent_color, pdest, dest_stride, psrc, src_stride, sx, sy, opacity); else _maskRegionDown(transparent_color, pdest, dest_stride, psrc, src_stride, sx, sy, opacity); }
         static void _maskRegionUp(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
         static void _maskRegionDown(color_t transparent_color, color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy, float opacity);
@@ -3872,6 +3883,22 @@ private:
         template<bool BLEND> void _drawCharBitmap_2BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
         template<bool BLEND> void _drawCharBitmap_4BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
         template<bool BLEND> void _drawCharBitmap_8BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
+
+        template<bool BLEND> static TGX_INLINE inline void _drawFontPixel(color_t* p, color_t col, uint32_t alpha256)
+            {
+            if (BLEND)
+                {
+                p->blend256(col, alpha256);
+                }
+            else if (alpha256 >= 256)
+                {
+                *p = col;
+                }
+            else if (alpha256 > 0)
+                {
+                p->blend256(col, alpha256);
+                }
+            }
 
 
 
