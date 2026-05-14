@@ -829,7 +829,16 @@ namespace tgx
                         }
                     else
                         {
-                        buf[bx] = color_t_im(col);
+                        if (col.A == 255)
+                            {
+                            buf[bx] = color_t_im(col);
+                            }
+                        else if (col.A > 0)
+                            {
+                            tgx::RGB32 c = tgx::RGB32(buf[bx]);
+                            c.blend(col);
+                            buf[bx] = color_t_im(c);
+                            }
                         }
                     }
                 else

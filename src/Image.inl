@@ -957,7 +957,10 @@ namespace tgx
     template<typename color_t_src, int CACHE_SIZE>
     void Image<color_t>::blitScaledRotatedMasked(const Image<color_t_src>& src_im, color_t_src transparent_color, fVec2 anchor_src, fVec2 anchor_dst, float scale, float angle_degrees, float opacity)
         {
-        _blitScaledRotated<color_t_src, CACHE_SIZE, true, true, false>(src_im, transparent_color, anchor_src, anchor_dst, scale, angle_degrees, ((opacity < 0.0f) || (opacity > 1.0f)) ? 1.0f : opacity, [](color_t_src cola, color_t colb) {return colb; });
+        if ((opacity < 0) || (opacity > 1))
+            _blitScaledRotated<color_t_src, CACHE_SIZE, false, true, false>(src_im, transparent_color, anchor_src, anchor_dst, scale, angle_degrees, 1.0f, [](color_t_src cola, color_t colb) {return colb; });
+        else
+            _blitScaledRotated<color_t_src, CACHE_SIZE, true, true, false>(src_im, transparent_color, anchor_src, anchor_dst, scale, angle_degrees, opacity, [](color_t_src cola, color_t colb) {return colb; });
         }
 
 
@@ -1560,7 +1563,7 @@ namespace tgx
 
             if (USE_MASK)
                 {
-                drawTexturedMaskedQuad(src_im, transparent_color, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4, opacity);
+                drawTexturedMaskedQuad(src_im, transparent_color, fVec2(0.0f, y1), fVec2(tlx, y1), fVec2(tlx, y2), fVec2(0.0f, y2), U1, U2, U3, U4, (USE_BLENDING ? opacity : TGX_DEFAULT_NO_BLENDING));
                 }
             else if (USE_BLENDING)
                 {
@@ -3821,7 +3824,10 @@ namespace tgx
     template<typename color_t_tex>
     void Image<color_t>::drawTexturedMaskedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, float opacity)
         {
-        _drawTexturedTriangle<color_t_tex, false, true, true>(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, color_t_tex(), color_t_tex(), color_t_tex(), opacity);
+        if ((opacity < 0) || (opacity > 1))
+            _drawTexturedTriangle<color_t_tex, false, false, true>(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, color_t_tex(), color_t_tex(), color_t_tex(), 1.0f);
+        else
+            _drawTexturedTriangle<color_t_tex, false, true, true>(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, color_t_tex(), color_t_tex(), color_t_tex(), opacity);
         }
 
 
@@ -3829,7 +3835,10 @@ namespace tgx
     template<typename color_t_tex>
     void Image<color_t>::drawTexturedGradientMaskedTriangle(const Image<color_t_tex>& src_im, color_t_tex transparent_color, fVec2 srcP1, fVec2 srcP2, fVec2 srcP3, fVec2 dstP1, fVec2 dstP2, fVec2 dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity)
         {
-        _drawTexturedTriangle<color_t_tex, true, true, true>(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
+        if ((opacity < 0) || (opacity > 1))
+            _drawTexturedTriangle<color_t_tex, true, false, true>(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, 1.0f);
+        else
+            _drawTexturedTriangle<color_t_tex, true, true, true>(src_im, transparent_color, srcP1, srcP2, srcP3, dstP1, dstP2, dstP3, C1, C2, C3, opacity);
         }
 
 
@@ -3958,13 +3967,27 @@ namespace tgx
 
         if (MASKED)
             {
-            if (!GRADIENT)
+            if (USE_BLENDING)
                 {
-                tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, true, false, color_t, color_t_tex>);
+                if (!GRADIENT)
+                    {
+                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, true, false, color_t, color_t_tex>);
+                    }
+                else
+                    {
+                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, true, true, color_t, color_t_tex>);
+                    }
                 }
             else
                 {
-                tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, true, true, color_t, color_t_tex>);
+                if (!GRADIENT)
+                    {
+                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<false, true, false, color_t, color_t_tex>);
+                    }
+                else
+                    {
+                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<false, true, true, color_t, color_t_tex>);
+                    }
                 }
             }
         else
