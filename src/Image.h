@@ -3372,14 +3372,14 @@ namespace tgx
         * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
         */
         DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
-        iVec2 drawText(const char* text, iVec2 pos, color_t color, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
+        iVec2 drawText(const char* text, iVec2 pos, color_t color, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0, color, opacity); }
 
 
         /**
         * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
         */
         DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
-        iVec2 drawText(const char* text, iVec2 pos, color_t color, const GFXfont& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, DEFAULT_TEXT_ANCHOR, font, false, start_newline_at_0, color, opacity); }
+        iVec2 drawText(const char* text, iVec2 pos, color_t color, const GFXfont& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0, color, opacity); }
 
 
         /**

@@ -2659,7 +2659,7 @@ struct RGB64
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,256].
          */
-        inline void blend256(const RGB64& fg_col, uint32_t alpha)
+        inline void blend256(const RGBf& fg_col, uint32_t alpha)
             {
             blend(fg_col, alpha / 256.0f);
             }

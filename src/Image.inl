@@ -83,7 +83,7 @@ namespace tgx
         const int TGX_PNG_PIXEL_GRAY_ALPHA = 4;                //
         const int TGX_PNG_PIXEL_TRUECOLOR_ALPHA = 6;           //
 
-        lx = tgx::min(lx, pDraw->iWidth);
+        lx = tgx::min(skipx + lx, pDraw->iWidth);
         uint8_t c = 0, a, * pPal, * s = pDraw->pPixels;
 
         const float op255 = op / 255.0f;
@@ -234,7 +234,7 @@ namespace tgx
         }
 
 
-    template<typename PNG_T, typename PNGDraw_T> TGX_NOINLINE void PNGDraw(PNGDraw_T* pDraw)
+    template<typename PNG_T, typename PNGDraw_T> TGX_NOINLINE int PNGDraw(PNGDraw_T* pDraw)
         {
         _PNGDecWrapper* pWrapper = (_PNGDecWrapper*)pDraw->pUser;
         const int skip = max(-pWrapper->pos.x, 0);
@@ -279,6 +279,7 @@ namespace tgx
             break;
             }
             }
+        return 1;
         }
 
     // convenience macro
@@ -509,9 +510,9 @@ namespace tgx
         {  
         if (!isValid()) return 1000; // nothing to draw
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        _JPEGDECWrapper wrap;
+        _GIFWrapper wrap;
         wrap.imgType = id_color_type<color_t>::value;
-        wrap.pJPEG = (void*)(&gif);
+        wrap.pGIF = (void*)(&gif);
         wrap.pImg = (void*)this;
         wrap.pos = topleft;
         wrap.opacity = opacity;
@@ -526,7 +527,7 @@ namespace tgx
         const int TGX_GIF_PALETTE_RGB565_LE = 0; // taken from AnimatedGIF.h
         const int TGX_GIF_PALETTE_RGB565_BE = 1; // taken from AnimatedGIF.h
 
-        _JPEGDECWrapper* pWrapper = (_JPEGDECWrapper*)pDraw->pUser;
+        _GIFWrapper* pWrapper = (_GIFWrapper*)pDraw->pUser;
         const float op = pWrapper->opacity;
         int iWidth = pDraw->iWidth;
         uint8_t* s = pDraw->pPixels;
@@ -676,7 +677,7 @@ namespace tgx
 
     template<typename GIF_T, typename GIFDraw_T> TGX_NOINLINE void GIFDraw(GIFDraw_T* pDraw)
         {
-        _JPEGDECWrapper* pWrapper = (_JPEGDECWrapper*)pDraw->pUser;
+        _GIFWrapper* pWrapper = (_GIFWrapper*)pDraw->pUser;
         switch (pWrapper->imgType)
             {
             case id_color_type<RGB565>::value: { gif_decode(((Image<RGB565>*)pWrapper->pImg), pDraw); break; }
@@ -3267,10 +3268,10 @@ namespace tgx
         const uint16_t d = (uint16_t)((w > 1) ? (w - 1) : 1);
         RGB64 c64_a(color1);    // color conversion to RGB64
         RGB64 c64_b(color2);    //
-        const int16_t dr = (c64_b.R - c64_a.R) / d;
-        const int16_t dg = (c64_b.G - c64_a.G) / d;
-        const int16_t db = (c64_b.B - c64_a.B) / d;
-        const int16_t da = (c64_b.A - c64_a.A) / d;
+        const int32_t dr = (c64_b.R - c64_a.R) / d;
+        const int32_t dg = (c64_b.G - c64_a.G) / d;
+        const int32_t db = (c64_b.B - c64_a.B) / d;
+        const int32_t da = (c64_b.A - c64_a.A) / d;
         color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(_stride) * TGX_CAST32(B.minY);
         if ((opacity < 0) || (opacity > 1))
             {
@@ -3318,10 +3319,10 @@ namespace tgx
         const uint16_t d = (uint16_t)((h > 1) ? (h - 1) : 1);
         RGB64 c64_a(color1);    // color conversion to RGB64
         RGB64 c64_b(color2);    //
-        const int16_t dr = (c64_b.R - c64_a.R) / d;
-        const int16_t dg = (c64_b.G - c64_a.G) / d;
-        const int16_t db = (c64_b.B - c64_a.B) / d;
-        const int16_t da = (c64_b.A - c64_a.A) / d;
+        const int32_t dr = (c64_b.R - c64_a.R) / d;
+        const int32_t dg = (c64_b.G - c64_a.G) / d;
+        const int32_t db = (c64_b.B - c64_a.B) / d;
+        const int32_t da = (c64_b.A - c64_a.A) / d;
         color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(_stride) * TGX_CAST32(B.minY);
 
         if ((opacity < 0) || (opacity > 1))
@@ -7801,7 +7802,7 @@ namespace tgx
     iVec2 Image<color_t>::drawChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity)
         {
         if (!isValid()) return pos; 
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
+        if ((opacity < 0) || (opacity > 1)) return _drawCharILI<false>(c, pos, color, font, 1.0f);
         /*
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
@@ -7810,7 +7811,7 @@ namespace tgx
             pos += pos - pos2;
             }
         */
-        return _drawCharILI<false>(c, pos, color, font, opacity);
+        return _drawCharILI<true>(c, pos, color, font, opacity);
         }
 
 
