@@ -114,7 +114,7 @@ Filling the screen.</h2>
 <div class="line">im1.fillScreenVGradient(tgx::RGB32_Blue, tgx::RGB32_Red);     <span class="comment">// fill with vertical gradient from blue to red</span></div>
 <div class="line"><span class="keyword">auto</span> im2 = im(214, 320, 0, 240);                              <span class="comment">// create subimage = right third of the image</span></div>
 <div class="line">im2.fillScreenHGradient(tgx::RGB32_Green, tgx::RGB32_Orange); <span class="comment">// fill with horizontal gradient from green to orange</span></div>
-<div class="ttc" id="aclasstgx_1_1_image_html"><div class="ttname"><a href="classtgx_1_1_image.html">tgx::Image</a></div><div class="ttdoc">Image class [MAIN CLASS FOR THE 2D API].</div><div class="ttdef"><b>Definition:</b> Image.h:143</div></div>
+<div class="ttc" id="aclasstgx_1_1_image_html"><div class="ttname"><a href="classtgx_1_1_image.html">tgx::Image</a></div><div class="ttdoc">Image class [MAIN CLASS FOR THE 2D API].</div><div class="ttdef"><b>Definition:</b> Image.h:145</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b32_html"><div class="ttname"><a href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a></div><div class="ttdoc">Color in R8/G8/B8/A8 format.</div><div class="ttdef"><b>Definition:</b> Color.h:1176</div></div>
 </div><!-- fragment --><p> <b>Methods:</b></p><ul>
 <li><a class="el" href="classtgx_1_1_image.html#a81816066e883c3d17f13b4bdef22b8c1">clear()</a> : set all pixels of the image with the same color.</li>
@@ -189,7 +189,7 @@ Blitting sprites</h2>
 <li><a class="el" href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542">blit(sprite, pos, opacity)</a> : blit a sprite image onto the image.</li>
 <li><a class="el" href="classtgx_1_1_image.html#ae64e40a38c12fc9abbe886626de89b8c">blitRotated(sprite, pos, angle, opacity)</a> : rotate a sprite (by quarter turns) and then blit it onto the image.</li>
 <li><a class="el" href="classtgx_1_1_image.html#a611faa1ee9f0c2c97561ff4fbeba1658">blitMasked(sprite, mask_color, pos, opacity)</a> : blit a sprite onto the image with one color set as transparent.</li>
-<li><a class="el" href="classtgx_1_1_image.html#a8cd4a1aaf63b59d5803fc759dd64711c">blitScaledRotated(sprite, pos_src, pos_dst, scale, angle, opacity)</a> : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image.</li>
+<li><a class="el" href="classtgx_1_1_image.html#a8f81ae72ed275dc53a53337eae893612">blitScaledRotated(sprite, pos_src, pos_dst, scale, angle, opacity)</a> : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image.</li>
 <li><a class="el" href="classtgx_1_1_image.html#ab6838094c8ac811a72dbeeffb7c51bc8">blitScaledRotatedMasked(sprite, mask_color, pos_src, pos_dst, scale, angle, opacity)</a> : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image with one color set as transparent.</li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>All the blit methods above also have an 'advanced' version which takes as input a user-defined blending operator instead of the opacity parameter and can operate on sprites with a different color types than the destination image. see <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> for details...</dd></dl>

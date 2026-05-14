@@ -120,7 +120,9 @@ namespace tgx
      * 4. All drawing methods that take a `color` parameter also take an `opacity` float parameter which allows to
      *    add transparency effects even when color type used do not have an alpha channel:
      *    - Passing `TGX_DEFAULT_NO_BLENDING` or a negative value for the opacity will disable blending so the method
-     *      will simply use overwritting of the destination pixels.
+     *      will simply overwrite the destination pixels. For antialiased or filtered methods, fully covered pixels
+     *      are overwritten but partially covered edge/filter pixels may still be alpha-composited to preserve smooth
+     *      edges.
      *    - Passing `0.0f < opacity <= 1.0f` will enable blending and the alpha channel of the colors will be used if present.
      *      
      * 5. As indicated in color.h. **All colors with an alpha channel are assumed to have pre-multiplied
@@ -814,7 +816,7 @@ namespace tgx
          *                          negative to disable blending and simply use overwrite.
          */
         template<typename color_t_src, int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE>
-        void blitScaledRotated(const Image<color_t_src> src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale = 1.0f, float angle_degrees = 0.0f, float opacity = TGX_DEFAULT_NO_BLENDING);
+        void blitScaledRotated(const Image<color_t_src>& src_im, fVec2 anchor_src, fVec2 anchor_dst, float scale = 1.0f, float angle_degrees = 0.0f, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**

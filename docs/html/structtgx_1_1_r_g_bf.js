@@ -31,7 +31,7 @@ var structtgx_1_1_r_g_bf =
     [ "operator==", "structtgx_1_1_r_g_bf.html#ac96b8cc4e10442a5572b2c8fe1a702c8", null ],
     [ "operator!=", "structtgx_1_1_r_g_bf.html#a86d12a34e1d3bcee866192e605fb5c5e", null ],
     [ "clamp", "structtgx_1_1_r_g_bf.html#a4d382cf8b662b0d21b43e14f6458627a", null ],
-    [ "blend256", "structtgx_1_1_r_g_bf.html#ab0f2200f7a5c97a6153182b6dcd8620e", null ],
+    [ "blend256", "structtgx_1_1_r_g_bf.html#ac1b7f90e3c8b7bcf3014dfc22e6ef867", null ],
     [ "blend", "structtgx_1_1_r_g_bf.html#a8f2554dc0ad01ca41973193804200a65", null ],
     [ "mult256", "structtgx_1_1_r_g_bf.html#a18b9768cce54ffd8dcd56f8e50d1082c", null ],
     [ "mult256", "structtgx_1_1_r_g_bf.html#a86fd04fb2424c04f2fb7f13d282e75f3", null ],

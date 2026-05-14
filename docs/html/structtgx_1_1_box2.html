@@ -126,15 +126,15 @@ constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>Box2</b> (const 
 <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;B)=default</td></tr>
 <tr class="memdesc:ae91316d6e2dac66d34544a730e2cb363"><td class="mdescLeft">&#160;</td><td class="mdescRight">default assignement operator. <br /></td></tr>
 <tr class="separator:ae91316d6e2dac66d34544a730e2cb363"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3e8f6e4ca193aee0cfc0ca130177b30"><td class="memTemplParams" colspan="2"><a id="ae3e8f6e4ca193aee0cfc0ca130177b30" name="ae3e8f6e4ca193aee0cfc0ca130177b30"></a>
+<tr class="memitem:a20af0341c8f95bd7e279a0204cb29fde"><td class="memTemplParams" colspan="2"><a id="a20af0341c8f95bd7e279a0204cb29fde" name="a20af0341c8f95bd7e279a0204cb29fde"></a>
 template&lt;typename U &gt; </td></tr>
-<tr class="memitem:ae3e8f6e4ca193aee0cfc0ca130177b30"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator Box2&lt; U &gt;</b> ()</td></tr>
-<tr class="memdesc:ae3e8f6e4ca193aee0cfc0ca130177b30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explicit conversion to another box type. <br /></td></tr>
-<tr class="separator:ae3e8f6e4ca193aee0cfc0ca130177b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06cb42191b6381cea6512cb82598ab8a"><td class="memItemLeft" align="right" valign="top"><a id="a06cb42191b6381cea6512cb82598ab8a" name="a06cb42191b6381cea6512cb82598ab8a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>operator Box2&lt; typename DefaultFPType&lt; T &gt;::fptype &gt;</b> ()</td></tr>
-<tr class="memdesc:a06cb42191b6381cea6512cb82598ab8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion to floating-point type. <br /></td></tr>
-<tr class="separator:a06cb42191b6381cea6512cb82598ab8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20af0341c8f95bd7e279a0204cb29fde"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator Box2&lt; U &gt;</b> () const</td></tr>
+<tr class="memdesc:a20af0341c8f95bd7e279a0204cb29fde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explicit conversion to another box type. <br /></td></tr>
+<tr class="separator:a20af0341c8f95bd7e279a0204cb29fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89ec398a6e8312e69ff2be2ca6039b10"><td class="memItemLeft" align="right" valign="top"><a id="a89ec398a6e8312e69ff2be2ca6039b10" name="a89ec398a6e8312e69ff2be2ca6039b10"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>operator Box2&lt; typename DefaultFPType&lt; T &gt;::fptype &gt;</b> () const</td></tr>
+<tr class="memdesc:a89ec398a6e8312e69ff2be2ca6039b10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion to floating-point type. <br /></td></tr>
+<tr class="separator:a89ec398a6e8312e69ff2be2ca6039b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad062993cef49a61d0123f49eedfbf16"><td class="memItemLeft" align="right" valign="top"><a id="aad062993cef49a61d0123f49eedfbf16" name="aad062993cef49a61d0123f49eedfbf16"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>isEmpty</b> () const</td></tr>
 <tr class="memdesc:aad062993cef49a61d0123f49eedfbf16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if the box is empty. <br /></td></tr>
@@ -212,12 +212,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>operator-=</b> (const
 <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> (const <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt; &amp;V) const</td></tr>
 <tr class="memdesc:a585920365968c33579b80a2cf8b2c958"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return this box translated by v (substracted). <br /></td></tr>
 <tr class="separator:a585920365968c33579b80a2cf8b2c958"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a284b9bd7abd0045737145b516c802ae5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_box2.html#a284b9bd7abd0045737145b516c802ae5">split</a> (<a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5">BoxSplit</a> part)</td></tr>
-<tr class="memdesc:a284b9bd7abd0045737145b516c802ae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the box in half or quarter.  <a href="structtgx_1_1_box2.html#a284b9bd7abd0045737145b516c802ae5">More...</a><br /></td></tr>
-<tr class="separator:a284b9bd7abd0045737145b516c802ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4383407599d505c3304471d6acf14ce8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_box2.html#a4383407599d505c3304471d6acf14ce8">getSplit</a> (<a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5">BoxSplit</a> part) const</td></tr>
-<tr class="memdesc:a4383407599d505c3304471d6acf14ce8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the box splitted in half or quater.  <a href="structtgx_1_1_box2.html#a4383407599d505c3304471d6acf14ce8">More...</a><br /></td></tr>
-<tr class="separator:a4383407599d505c3304471d6acf14ce8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35ad9b3ce7563ba350f55549e665851b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_box2.html#a35ad9b3ce7563ba350f55549e665851b">split_fixed</a> (<a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5">BoxSplit</a> part)</td></tr>
+<tr class="memdesc:a35ad9b3ce7563ba350f55549e665851b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split the box in half or quarter.  <a href="structtgx_1_1_box2.html#a35ad9b3ce7563ba350f55549e665851b">More...</a><br /></td></tr>
+<tr class="separator:a35ad9b3ce7563ba350f55549e665851b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add91ecc6069411b7f1fe6c27d26fe2af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_box2.html#add91ecc6069411b7f1fe6c27d26fe2af">getSplit_fixed</a> (<a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5">BoxSplit</a> part) const</td></tr>
+<tr class="memdesc:add91ecc6069411b7f1fe6c27d26fe2af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the box splitted in half or quater.  <a href="structtgx_1_1_box2.html#add91ecc6069411b7f1fe6c27d26fe2af">More...</a><br /></td></tr>
+<tr class="separator:add91ecc6069411b7f1fe6c27d26fe2af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c56f3a8e6f200502de433bd980b7f37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_box2.html#a4c56f3a8e6f200502de433bd980b7f37">getAnchor</a> (<a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor_pos) const</td></tr>
 <tr class="memdesc:a4c56f3a8e6f200502de433bd980b7f37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the position of an anchor point inside this box.  <a href="structtgx_1_1_box2.html#a4c56f3a8e6f200502de433bd980b7f37">More...</a><br /></td></tr>
 <tr class="separator:a4c56f3a8e6f200502de433bd980b7f37"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -225,7 +225,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>operator-=</b> (const
 <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>center</b> () const</td></tr>
 <tr class="memdesc:abc58ce2035e8bdd2c564ddcc2c36455e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the position of the box center as a 2 dimensional vector. <br /></td></tr>
 <tr class="separator:abc58ce2035e8bdd2c564ddcc2c36455e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a643aaf8d9eb8058c4ad86a76be8f2a63"><td class="memTemplParams" colspan="2">template&lt;typename Tfloat  = DefaultFPType&lt;T&gt;&gt; </td></tr>
+<tr class="memitem:a643aaf8d9eb8058c4ad86a76be8f2a63"><td class="memTemplParams" colspan="2">template&lt;typename Tfloat  = typename DefaultFPType&lt;T&gt;::fptype&gt; </td></tr>
 <tr class="memitem:a643aaf8d9eb8058c4ad86a76be8f2a63"><td class="memTemplItemLeft" align="right" valign="top">Tfloat&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63">ratio</a> () const</td></tr>
 <tr class="memdesc:a643aaf8d9eb8058c4ad86a76be8f2a63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the aspect ratio of the box <code><a class="el" href="structtgx_1_1_box2.html#ab32b1bb2e59b82bb87d0e87d850a3874" title="Return the box width.">lx()</a>/ly()</code>.  <a href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63">More...</a><br /></td></tr>
 <tr class="separator:a643aaf8d9eb8058c4ad86a76be8f2a63"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -247,12 +247,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>operator-=</b> (const
 <tr class="memitem:a45485df97962eb6593eb9ddae191d579"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_box2.html#a45485df97962eb6593eb9ddae191d579">down</a> ()</td></tr>
 <tr class="memdesc:a45485df97962eb6593eb9ddae191d579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move the box down by 1/10th of its height.  <a href="structtgx_1_1_box2.html#a45485df97962eb6593eb9ddae191d579">More...</a><br /></td></tr>
 <tr class="separator:a45485df97962eb6593eb9ddae191d579"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a710d4bfd732883bdf6f75f9d3d956185"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_box2.html#a710d4bfd732883bdf6f75f9d3d956185">getEnclosedWithSameRatioAs</a> (const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;B) const</td></tr>
-<tr class="memdesc:a710d4bfd732883bdf6f75f9d3d956185"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the largest box with the same <code><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a></code> as box <code>B</code> that is centered and enclosed inside this box.  <a href="structtgx_1_1_box2.html#a710d4bfd732883bdf6f75f9d3d956185">More...</a><br /></td></tr>
-<tr class="separator:a710d4bfd732883bdf6f75f9d3d956185"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7490851bbc073d6ae089bd3609888a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_box2.html#ad7490851bbc073d6ae089bd3609888a9">getEnclosingWithSameRatioAs</a> (const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;B) const</td></tr>
-<tr class="memdesc:ad7490851bbc073d6ae089bd3609888a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the smallest box with the same <code><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a></code> as box <code>B</code> that contains this box in its center.  <a href="structtgx_1_1_box2.html#ad7490851bbc073d6ae089bd3609888a9">More...</a><br /></td></tr>
-<tr class="separator:ad7490851bbc073d6ae089bd3609888a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a947fcae0bf64d3fd24a4bef7b518e1bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_box2.html#a947fcae0bf64d3fd24a4bef7b518e1bb">getEnclosedWithSameRatioAs_fixed</a> (const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;B) const</td></tr>
+<tr class="memdesc:a947fcae0bf64d3fd24a4bef7b518e1bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the largest box with the same <code><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a></code> as box <code>B</code> that is centered and enclosed inside this box.  <a href="structtgx_1_1_box2.html#a947fcae0bf64d3fd24a4bef7b518e1bb">More...</a><br /></td></tr>
+<tr class="separator:a947fcae0bf64d3fd24a4bef7b518e1bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5c9c1640c15383fc7ce0de1438d1791"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_box2.html#ad5c9c1640c15383fc7ce0de1438d1791">getEnclosingWithSameRatioAs_fixed</a> (const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;B) const</td></tr>
+<tr class="memdesc:ad5c9c1640c15383fc7ce0de1438d1791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the smallest box with the same <code><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a></code> as box <code>B</code> that contains this box in its center.  <a href="structtgx_1_1_box2.html#ad5c9c1640c15383fc7ce0de1438d1791">More...</a><br /></td></tr>
+<tr class="separator:ad5c9c1640c15383fc7ce0de1438d1791"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -663,8 +663,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a284b9bd7abd0045737145b516c802ae5" name="a284b9bd7abd0045737145b516c802ae5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a284b9bd7abd0045737145b516c802ae5">&#9670;&#160;</a></span>split()</h2>
+<a id="a35ad9b3ce7563ba350f55549e665851b" name="a35ad9b3ce7563ba350f55549e665851b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35ad9b3ce7563ba350f55549e665851b">&#9670;&#160;</a></span>split_fixed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -675,7 +675,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::split </td>
+          <td class="memname">void <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::split_fixed </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5">BoxSplit</a>&#160;</td>
           <td class="paramname"><em>part</em></td><td>)</td>
@@ -690,18 +690,19 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Split the box in half or quarter. </p>
+<dl class="section remark"><dt>Remarks</dt><dd>This method replaces the former split(): TOP/BOTTOM now follow the anchor convention and integral splits no longer overlap on the middle row/column.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">part</td><td>The part or the box to keep. See <a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5" title="Splitting of a box in half and quarters.">tgx::BoxSplit</a>.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a4383407599d505c3304471d6acf14ce8" title="Return the box splitted in half or quater.">getSplit()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#add91ecc6069411b7f1fe6c27d26fe2af" title="Return the box splitted in half or quater.">getSplit_fixed()</a> </dd></dl>
 
 </div>
 </div>
-<a id="a4383407599d505c3304471d6acf14ce8" name="a4383407599d505c3304471d6acf14ce8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4383407599d505c3304471d6acf14ce8">&#9670;&#160;</a></span>getSplit()</h2>
+<a id="add91ecc6069411b7f1fe6c27d26fe2af" name="add91ecc6069411b7f1fe6c27d26fe2af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add91ecc6069411b7f1fe6c27d26fe2af">&#9670;&#160;</a></span>getSplit_fixed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -712,7 +713,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getSplit </td>
+          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getSplit_fixed </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5">BoxSplit</a>&#160;</td>
           <td class="paramname"><em>part</em></td><td>)</td>
@@ -727,13 +728,14 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return the box splitted in half or quater. </p>
+<dl class="section remark"><dt>Remarks</dt><dd>This method replaces the former getSplit(): TOP/BOTTOM now follow the anchor convention and integral splits no longer overlap on the middle row/column.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">part</td><td>The part or the box to keep. See <a class="el" href="_box2_8h.html#a901fc93e5886e305d2904b4b9e503ff5" title="Splitting of a box in half and quarters.">tgx::BoxSplit</a>.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a284b9bd7abd0045737145b516c802ae5" title="Split the box in half or quarter.">split()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a35ad9b3ce7563ba350f55549e665851b" title="Split the box in half or quarter.">split_fixed()</a> </dd></dl>
 
 </div>
 </div>
@@ -781,7 +783,7 @@ template&lt;typename T &gt; </div>
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
 <div class="memtemplate">
-template&lt;typename Tfloat  = DefaultFPType&lt;T&gt;&gt; </div>
+template&lt;typename Tfloat  = typename DefaultFPType&lt;T&gt;::fptype&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -990,8 +992,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a710d4bfd732883bdf6f75f9d3d956185" name="a710d4bfd732883bdf6f75f9d3d956185"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a710d4bfd732883bdf6f75f9d3d956185">&#9670;&#160;</a></span>getEnclosedWithSameRatioAs()</h2>
+<a id="a947fcae0bf64d3fd24a4bef7b518e1bb" name="a947fcae0bf64d3fd24a4bef7b518e1bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a947fcae0bf64d3fd24a4bef7b518e1bb">&#9670;&#160;</a></span>getEnclosedWithSameRatioAs_fixed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -999,7 +1001,7 @@ template&lt;typename T &gt; </div>
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getEnclosedWithSameRatioAs </td>
+          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getEnclosedWithSameRatioAs_fixed </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>B</em></td><td>)</td>
@@ -1009,12 +1011,13 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return the largest box with the same <code><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a></code> as box <code>B</code> that is centered and enclosed inside this box. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a>,<a class="el" href="structtgx_1_1_box2.html#ad7490851bbc073d6ae089bd3609888a9" title="Return the smallest box with the same ratio() as box B that contains this box in its center.">getEnclosingWithSameRatioAs()</a> </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>This method replaces the former getEnclosedWithSameRatioAs(): the returned box now preserves the position/center of this box instead of being relative to the origin.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a>,<a class="el" href="structtgx_1_1_box2.html#ad5c9c1640c15383fc7ce0de1438d1791" title="Return the smallest box with the same ratio() as box B that contains this box in its center.">getEnclosingWithSameRatioAs_fixed()</a> </dd></dl>
 
 </div>
 </div>
-<a id="ad7490851bbc073d6ae089bd3609888a9" name="ad7490851bbc073d6ae089bd3609888a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7490851bbc073d6ae089bd3609888a9">&#9670;&#160;</a></span>getEnclosingWithSameRatioAs()</h2>
+<a id="ad5c9c1640c15383fc7ce0de1438d1791" name="ad5c9c1640c15383fc7ce0de1438d1791"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5c9c1640c15383fc7ce0de1438d1791">&#9670;&#160;</a></span>getEnclosingWithSameRatioAs_fixed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1022,7 +1025,7 @@ template&lt;typename T &gt; </div>
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getEnclosingWithSameRatioAs </td>
+          <td class="memname"><a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; <a class="el" href="structtgx_1_1_box2.html">tgx::Box2</a>&lt; T &gt;::getEnclosingWithSameRatioAs_fixed </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>B</em></td><td>)</td>
@@ -1032,7 +1035,8 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Return the smallest box with the same <code><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a></code> as box <code>B</code> that contains this box in its center. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a>,<a class="el" href="structtgx_1_1_box2.html#a710d4bfd732883bdf6f75f9d3d956185" title="Return the largest box with the same ratio() as box B that is centered and enclosed inside this box.">getEnclosedWithSameRatioAs()</a> </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>This method replaces the former getEnclosingWithSameRatioAs(): the returned box now preserves the position/center of this box instead of being relative to the origin.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63" title="Return the aspect ratio of the box lx()/ly().">ratio()</a>,<a class="el" href="structtgx_1_1_box2.html#a947fcae0bf64d3fd24a4bef7b518e1bb" title="Return the largest box with the same ratio() as box B that is centered and enclosed inside this box.">getEnclosedWithSameRatioAs_fixed()</a> </dd></dl>
 
 </div>
 </div>

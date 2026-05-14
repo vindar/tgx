@@ -96,7 +96,7 @@ var NAVTREEINDEX =
 "_box2_8h.html",
 "_vec4_8h.html",
 "classtgx_1_1_renderer3_d.html#aae4fa24bc6a4c5235df0ae3e112c48b3",
-"structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63",
+"structtgx_1_1_box2.html#a6ee5eef030c34062dc4829930b1e5be3",
 "structtgx_1_1_r_g_b32.html#aa686d44a6f3826125f96444c1afae5d6",
 "structtgx_1_1_vec4.html#a5fd0076969b453b61988cfffda3a3b1f"
 ];

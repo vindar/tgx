@@ -46,7 +46,7 @@ var searchData=
   ['shader_5fselect_43',['shader_select',['../_shaders_8h.html#ab05d02568eafd7a5ad92b0841254183b',1,'tgx']]],
   ['shader_5ftest_44',['shader_test',['../_shaders_8h.html#a8514413de53a2b80f9c1cbc0f3d2717c',1,'tgx']]],
   ['shaderclip_45',['shaderclip',['../_shaders_8h.html#ad3d496bf8979b0ceaed986aacbf3a5f2',1,'tgx']]],
-  ['split_46',['split',['../structtgx_1_1_box2.html#a284b9bd7abd0045737145b516c802ae5',1,'tgx::Box2']]],
+  ['split_5ffixed_46',['split_fixed',['../structtgx_1_1_box2.html#a35ad9b3ce7563ba350f55549e665851b',1,'tgx::Box2']]],
   ['stride_47',['stride',['../classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6',1,'tgx::Image']]],
   ['swap_48',['swap',['../_misc_8h.html#a27467fcbd225285d7fb240b325d5211a',1,'tgx']]]
 ];

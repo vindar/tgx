@@ -1,10 +1,10 @@
 var searchData=
 [
   ['opacity_0',['opacity',['../structtgx_1_1_r_g_b565.html#a755e21f73bbf1410faf0491d265c46d1',1,'tgx::RGB565::opacity()'],['../structtgx_1_1_r_g_b24.html#a06b16f9aeaf41c6a306a9ef98ffd453e',1,'tgx::RGB24::opacity()'],['../structtgx_1_1_r_g_b32.html#aec709f35a3242f6d65822168906acd08',1,'tgx::RGB32::opacity()'],['../structtgx_1_1_r_g_b64.html#a57d9b7c0ac14df507a59607a5d3de99d',1,'tgx::RGB64::opacity()'],['../structtgx_1_1_r_g_bf.html#a99a9a67bde4681f0183cbba019cf92d8',1,'tgx::RGBf::opacity()'],['../structtgx_1_1_h_s_v.html#a27e5249a8da032ec63e421aeed4af41c',1,'tgx::HSV::opacity()']]],
-  ['operator_20box2_3c_20typename_20defaultfptype_3c_20t_20_3e_3a_3afptype_20_3e_1',['operator Box2&lt; typename DefaultFPType&lt; T &gt;::fptype &gt;',['../structtgx_1_1_box2.html#a06cb42191b6381cea6512cb82598ab8a',1,'tgx::Box2']]],
-  ['operator_20box2_3c_20u_20_3e_2',['operator Box2&lt; U &gt;',['../structtgx_1_1_box2.html#ae3e8f6e4ca193aee0cfc0ca130177b30',1,'tgx::Box2']]],
-  ['operator_20box3_3c_20typename_20defaultfptype_3c_20t_20_3e_3a_3afptype_20_3e_3',['operator Box3&lt; typename DefaultFPType&lt; T &gt;::fptype &gt;',['../structtgx_1_1_box3.html#a1a39c7b6ce30803f37f4149e698d9212',1,'tgx::Box3']]],
-  ['operator_20box3_3c_20u_20_3e_4',['operator Box3&lt; U &gt;',['../structtgx_1_1_box3.html#a1c4f3547d0344b47407a422b9ecc0b81',1,'tgx::Box3']]],
+  ['operator_20box2_3c_20typename_20defaultfptype_3c_20t_20_3e_3a_3afptype_20_3e_1',['operator Box2&lt; typename DefaultFPType&lt; T &gt;::fptype &gt;',['../structtgx_1_1_box2.html#a89ec398a6e8312e69ff2be2ca6039b10',1,'tgx::Box2']]],
+  ['operator_20box2_3c_20u_20_3e_2',['operator Box2&lt; U &gt;',['../structtgx_1_1_box2.html#a20af0341c8f95bd7e279a0204cb29fde',1,'tgx::Box2']]],
+  ['operator_20box3_3c_20typename_20defaultfptype_3c_20t_20_3e_3a_3afptype_20_3e_3',['operator Box3&lt; typename DefaultFPType&lt; T &gt;::fptype &gt;',['../structtgx_1_1_box3.html#a26f5d1c7a155b820c7a04e46607d2ac7',1,'tgx::Box3']]],
+  ['operator_20box3_3c_20u_20_3e_4',['operator Box3&lt; U &gt;',['../structtgx_1_1_box3.html#a58dc98a648b4e47131d6943d38f14a52',1,'tgx::Box3']]],
   ['operator_20const_20uint16_5ft_20_26_5',['operator const uint16_t &amp;',['../structtgx_1_1_r_g_b565.html#abff3bb5d8b0beb4c7a85e94910377e9f',1,'tgx::RGB565']]],
   ['operator_20const_20uint32_5ft_20_26_6',['operator const uint32_t &amp;',['../structtgx_1_1_r_g_b32.html#a645458518cb06f690569f5cc592bdf5d',1,'tgx::RGB32']]],
   ['operator_20const_20uint64_5ft_20_26_7',['operator const uint64_t &amp;',['../structtgx_1_1_r_g_b64.html#ab79cdf5906d7171ee814925e6a50cbef',1,'tgx::RGB64']]],

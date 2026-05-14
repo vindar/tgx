@@ -172,8 +172,8 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keyword">static_assert</span>(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), <span class="stringliteral">&quot;At least one of the two shaders SHADER_NOZBUFFER or SHADER_ZBUFFER must be enabled&quot;</span>);        </div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keyword">static_assert</span>(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), <span class="stringliteral">&quot;At least one of the two shaders SHADER_FLAT or SHADER_GOURAUD must be enabled&quot;</span>);        </div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keyword">static_assert</span>(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), <span class="stringliteral">&quot;At least one of the two shaders SHADER_TEXTURE or SHADER_NOTEXTURE must be enabled&quot;</span>);                              </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keyword">static_assert</span>((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),<span class="stringliteral">&quot;When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled&quot;</span>);</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="keyword">static_assert</span>((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), <span class="stringliteral">&quot;When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled&quot;</span>);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keyword">static_assert</span>((!TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),<span class="stringliteral">&quot;When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled&quot;</span>);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="keyword">static_assert</span>((!TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), <span class="stringliteral">&quot;When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled&quot;</span>);</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
@@ -947,44 +947,45 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l02087" name="l02087"></a><span class="lineno"> 2087</span> </div>
 <div class="line"><a id="l02088" name="l02088"></a><span class="lineno"> 2088</span>        <span class="comment">// *** pre-computed values ***</span></div>
 <div class="line"><a id="l02089" name="l02089"></a><span class="lineno"> 2089</span>        <a class="code hl_typedef" href="_mat4_8h.html#aa543bb38f59d79a08113a6254b587322">fMat4</a> _r_modelViewM;        <span class="comment">// model-view matrix</span></div>
-<div class="line"><a id="l02090" name="l02090"></a><span class="lineno"> 2090</span>        <span class="keywordtype">float</span> _r_inorm;             <span class="comment">// inverse of the norm of a unit vector after view transform</span></div>
-<div class="line"><a id="l02091" name="l02091"></a><span class="lineno"> 2091</span>        <a class="code hl_typedef" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> _r_light;             <span class="comment">// light vector in view space (inverted and normalized)</span></div>
-<div class="line"><a id="l02092" name="l02092"></a><span class="lineno"> 2092</span>        <a class="code hl_typedef" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> _r_light_inorm;       <span class="comment">// same as above but alreadsy muliplied by inorm</span></div>
-<div class="line"><a id="l02093" name="l02093"></a><span class="lineno"> 2093</span>        <a class="code hl_typedef" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> _r_H;                 <span class="comment">// halfway vector.</span></div>
-<div class="line"><a id="l02094" name="l02094"></a><span class="lineno"> 2094</span>        <a class="code hl_typedef" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> _r_H_inorm;           <span class="comment">// same as above but already muliplied by inorm</span></div>
-<div class="line"><a id="l02095" name="l02095"></a><span class="lineno"> 2095</span>        RGBf _r_ambiantColor;       <span class="comment">// ambient color multipled by object ambient strenght</span></div>
-<div class="line"><a id="l02096" name="l02096"></a><span class="lineno"> 2096</span>        RGBf _r_diffuseColor;       <span class="comment">// diffuse color multipled by object diffuse strenght</span></div>
-<div class="line"><a id="l02097" name="l02097"></a><span class="lineno"> 2097</span>        RGBf _r_specularColor;      <span class="comment">// specular color multipled by object specular strenght</span></div>
-<div class="line"><a id="l02098" name="l02098"></a><span class="lineno"> 2098</span>        RGBf _r_objectColor;        <span class="comment">// color to use for drawing the object (either _color or mesh-&gt;color).</span></div>
-<div class="line"><a id="l02099" name="l02099"></a><span class="lineno"> 2099</span> </div>
+<div class="line"><a id="l02090" name="l02090"></a><span class="lineno"> 2090</span>        <span class="keywordtype">float</span> _r_inorm;             <span class="comment">// Fast normal scaling for lighting. Assumes rotation/uniform scale;</span></div>
+<div class="line"><a id="l02091" name="l02091"></a><span class="lineno"> 2091</span>                                    <span class="comment">// Gouraud lighting is approximate with non-uniform model scaling.</span></div>
+<div class="line"><a id="l02092" name="l02092"></a><span class="lineno"> 2092</span>        <a class="code hl_typedef" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> _r_light;             <span class="comment">// light vector in view space (inverted and normalized)</span></div>
+<div class="line"><a id="l02093" name="l02093"></a><span class="lineno"> 2093</span>        <a class="code hl_typedef" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> _r_light_inorm;       <span class="comment">// same as above but alreadsy muliplied by inorm</span></div>
+<div class="line"><a id="l02094" name="l02094"></a><span class="lineno"> 2094</span>        <a class="code hl_typedef" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> _r_H;                 <span class="comment">// halfway vector.</span></div>
+<div class="line"><a id="l02095" name="l02095"></a><span class="lineno"> 2095</span>        <a class="code hl_typedef" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> _r_H_inorm;           <span class="comment">// same as above but already muliplied by inorm</span></div>
+<div class="line"><a id="l02096" name="l02096"></a><span class="lineno"> 2096</span>        RGBf _r_ambiantColor;       <span class="comment">// ambient color multipled by object ambient strenght</span></div>
+<div class="line"><a id="l02097" name="l02097"></a><span class="lineno"> 2097</span>        RGBf _r_diffuseColor;       <span class="comment">// diffuse color multipled by object diffuse strenght</span></div>
+<div class="line"><a id="l02098" name="l02098"></a><span class="lineno"> 2098</span>        RGBf _r_specularColor;      <span class="comment">// specular color multipled by object specular strenght</span></div>
+<div class="line"><a id="l02099" name="l02099"></a><span class="lineno"> 2099</span>        RGBf _r_objectColor;        <span class="comment">// color to use for drawing the object (either _color or mesh-&gt;color).</span></div>
 <div class="line"><a id="l02100" name="l02100"></a><span class="lineno"> 2100</span> </div>
-<div class="line"><a id="l02104" name="l02104"></a><span class="lineno"> 2104</span>        <span class="keyword">struct </span>ExtVec4 : <span class="keyword">public</span> RasterizerVec4</div>
-<div class="line"><a id="l02105" name="l02105"></a><span class="lineno"> 2105</span>            {</div>
-<div class="line"><a id="l02106" name="l02106"></a><span class="lineno"> 2106</span>            <a class="code hl_typedef" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b">fVec4</a> P;       <span class="comment">// after model-view matrix multiplication</span></div>
-<div class="line"><a id="l02107" name="l02107"></a><span class="lineno"> 2107</span>            <a class="code hl_typedef" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b">fVec4</a> N;       <span class="comment">// normal vector after model-view matrix multiplication</span></div>
-<div class="line"><a id="l02108" name="l02108"></a><span class="lineno"> 2108</span>            <span class="keywordtype">bool</span> missedP;  <span class="comment">// true if the attributes should be computed</span></div>
-<div class="line"><a id="l02109" name="l02109"></a><span class="lineno"> 2109</span>            <span class="keywordtype">int</span> indn;      <span class="comment">// index for normal vector in array</span></div>
-<div class="line"><a id="l02110" name="l02110"></a><span class="lineno"> 2110</span>            <span class="keywordtype">int</span> indt;      <span class="comment">// index for texture vector in array</span></div>
-<div class="line"><a id="l02111" name="l02111"></a><span class="lineno"> 2111</span>            };</div>
-<div class="line"><a id="l02112" name="l02112"></a><span class="lineno"> 2112</span> </div>
+<div class="line"><a id="l02101" name="l02101"></a><span class="lineno"> 2101</span> </div>
+<div class="line"><a id="l02105" name="l02105"></a><span class="lineno"> 2105</span>        <span class="keyword">struct </span>ExtVec4 : <span class="keyword">public</span> RasterizerVec4</div>
+<div class="line"><a id="l02106" name="l02106"></a><span class="lineno"> 2106</span>            {</div>
+<div class="line"><a id="l02107" name="l02107"></a><span class="lineno"> 2107</span>            <a class="code hl_typedef" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b">fVec4</a> P;       <span class="comment">// after model-view matrix multiplication</span></div>
+<div class="line"><a id="l02108" name="l02108"></a><span class="lineno"> 2108</span>            <a class="code hl_typedef" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b">fVec4</a> N;       <span class="comment">// normal vector after model-view matrix multiplication</span></div>
+<div class="line"><a id="l02109" name="l02109"></a><span class="lineno"> 2109</span>            <span class="keywordtype">bool</span> missedP;  <span class="comment">// true if the attributes should be computed</span></div>
+<div class="line"><a id="l02110" name="l02110"></a><span class="lineno"> 2110</span>            <span class="keywordtype">int</span> indn;      <span class="comment">// index for normal vector in array</span></div>
+<div class="line"><a id="l02111" name="l02111"></a><span class="lineno"> 2111</span>            <span class="keywordtype">int</span> indt;      <span class="comment">// index for texture vector in array</span></div>
+<div class="line"><a id="l02112" name="l02112"></a><span class="lineno"> 2112</span>            };</div>
 <div class="line"><a id="l02113" name="l02113"></a><span class="lineno"> 2113</span> </div>
-<div class="line"><a id="l02114" name="l02114"></a><span class="lineno"> 2114</span>    };</div>
-<div class="line"><a id="l02115" name="l02115"></a><span class="lineno"> 2115</span> </div>
+<div class="line"><a id="l02114" name="l02114"></a><span class="lineno"> 2114</span> </div>
+<div class="line"><a id="l02115" name="l02115"></a><span class="lineno"> 2115</span>    };</div>
 <div class="line"><a id="l02116" name="l02116"></a><span class="lineno"> 2116</span> </div>
 <div class="line"><a id="l02117" name="l02117"></a><span class="lineno"> 2117</span> </div>
-<div class="line"><a id="l02118" name="l02118"></a><span class="lineno"> 2118</span>}</div>
-<div class="line"><a id="l02119" name="l02119"></a><span class="lineno"> 2119</span> </div>
+<div class="line"><a id="l02118" name="l02118"></a><span class="lineno"> 2118</span> </div>
+<div class="line"><a id="l02119" name="l02119"></a><span class="lineno"> 2119</span>}</div>
 <div class="line"><a id="l02120" name="l02120"></a><span class="lineno"> 2120</span> </div>
 <div class="line"><a id="l02121" name="l02121"></a><span class="lineno"> 2121</span> </div>
 <div class="line"><a id="l02122" name="l02122"></a><span class="lineno"> 2122</span> </div>
-<div class="line"><a id="l02123" name="l02123"></a><span class="lineno"> 2123</span><span class="preprocessor">#include &quot;Renderer3D.inl&quot;</span></div>
-<div class="line"><a id="l02124" name="l02124"></a><span class="lineno"> 2124</span> </div>
+<div class="line"><a id="l02123" name="l02123"></a><span class="lineno"> 2123</span> </div>
+<div class="line"><a id="l02124" name="l02124"></a><span class="lineno"> 2124</span><span class="preprocessor">#include &quot;Renderer3D.inl&quot;</span></div>
 <div class="line"><a id="l02125" name="l02125"></a><span class="lineno"> 2125</span> </div>
-<div class="line"><a id="l02126" name="l02126"></a><span class="lineno"> 2126</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l02127" name="l02127"></a><span class="lineno"> 2127</span> </div>
-<div class="line"><a id="l02128" name="l02128"></a><span class="lineno"> 2128</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l02129" name="l02129"></a><span class="lineno"> 2129</span> </div>
+<div class="line"><a id="l02126" name="l02126"></a><span class="lineno"> 2126</span> </div>
+<div class="line"><a id="l02127" name="l02127"></a><span class="lineno"> 2127</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l02128" name="l02128"></a><span class="lineno"> 2128</span> </div>
+<div class="line"><a id="l02129" name="l02129"></a><span class="lineno"> 2129</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l02130" name="l02130"></a><span class="lineno"> 2130</span> </div>
+<div class="line"><a id="l02131" name="l02131"></a><span class="lineno"> 2131</span> </div>
 <div class="ttc" id="a_box2_8h_html"><div class="ttname"><a href="_box2_8h.html">Box2.h</a></div><div class="ttdoc">2D box class</div></div>
 <div class="ttc" id="a_box3_8h_html"><div class="ttname"><a href="_box3_8h.html">Box3.h</a></div><div class="ttdoc">3D box class</div></div>
 <div class="ttc" id="a_color_8h_html"><div class="ttname"><a href="_color_8h.html">Color.h</a></div><div class="ttdoc">Color classes [RGB565, RGB24, RGB32, RGB64, RGBf, HSV].</div></div>
@@ -1005,7 +1006,7 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="ttc" id="a_vec3_8h_html_a99f7adbde40341ee92cc8f2bac0b6af2"><div class="ttname"><a href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">tgx::fVec3</a></div><div class="ttdeci">Vec3&lt; float &gt; fVec3</div><div class="ttdoc">Floating point valued 3D vector with single (float) precision.</div><div class="ttdef"><b>Definition:</b> Vec3.h:52</div></div>
 <div class="ttc" id="a_vec4_8h_html"><div class="ttname"><a href="_vec4_8h.html">Vec4.h</a></div><div class="ttdoc">4D vector.</div></div>
 <div class="ttc" id="a_vec4_8h_html_a66dc844afdc508c1137c733caa63695b"><div class="ttname"><a href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b">tgx::fVec4</a></div><div class="ttdeci">Vec4&lt; float &gt; fVec4</div><div class="ttdoc">Floating point valued 4D vector with single (float) precision.</div><div class="ttdef"><b>Definition:</b> Vec4.h:54</div></div>
-<div class="ttc" id="aclasstgx_1_1_image_html"><div class="ttname"><a href="classtgx_1_1_image.html">tgx::Image</a></div><div class="ttdoc">Image class [MAIN CLASS FOR THE 2D API].</div><div class="ttdef"><b>Definition:</b> Image.h:143</div></div>
+<div class="ttc" id="aclasstgx_1_1_image_html"><div class="ttname"><a href="classtgx_1_1_image.html">tgx::Image</a></div><div class="ttdoc">Image class [MAIN CLASS FOR THE 2D API].</div><div class="ttdef"><b>Definition:</b> Image.h:145</div></div>
 <div class="ttc" id="aclasstgx_1_1_renderer3_d_html"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a></div><div class="ttdoc">Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].</div><div class="ttdef"><b>Definition:</b> Renderer3D.h:113</div></div>
 <div class="ttc" id="aclasstgx_1_1_renderer3_d_html_a00c59fee77ca3d42b19d62e9eade1203"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#a00c59fee77ca3d42b19d62e9eade1203">tgx::Renderer3D::drawAdaptativeSphere</a></div><div class="ttdeci">void drawAdaptativeSphere(float quality=1.0f)</div><div class="ttdoc">Draw a unit radius sphere centered at the origin S(0,1) in model space.</div></div>
 <div class="ttc" id="aclasstgx_1_1_renderer3_d_html_a01fe01f23d0925292db43938f164d5ad"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#a01fe01f23d0925292db43938f164d5ad">tgx::Renderer3D::drawQuads</a></div><div class="ttdeci">void drawQuads(int nb_quads, const uint16_t *ind_vertices, const fVec3 *vertices, const uint16_t *ind_normals=nullptr, const fVec3 *normals=nullptr, const uint16_t *ind_texture=nullptr, const fVec2 *textures=nullptr, const Image&lt; color_t &gt; *texture_image=nullptr)</div><div class="ttdoc">Draw a collection of quads.</div></div>

@@ -27,7 +27,7 @@ var structtgx_1_1_mat4 =
     [ "setLookAt", "structtgx_1_1_mat4.html#a559673dc298b417ba65468510c291c93", null ],
     [ "setLookAt", "structtgx_1_1_mat4.html#ac1296fe897141966e80bdd680c217e5d", null ],
     [ "mult", "structtgx_1_1_mat4.html#a6202e6d39b331c03a2d29c6bf73cc1c1", null ],
-    [ "mult", "structtgx_1_1_mat4.html#a7123f3d3033554ac86356b528a1ceebb", null ],
+    [ "mult", "structtgx_1_1_mat4.html#a48dd7c7f74754fda457f7435f80bc6b0", null ],
     [ "mult0", "structtgx_1_1_mat4.html#a2742a4bfaff504e97eb236f7a22318f5", null ],
     [ "mult1", "structtgx_1_1_mat4.html#a120cc3bfae76599ef2cc18f3a11b7aa0", null ],
     [ "operator*=", "structtgx_1_1_mat4.html#abaa09d41d5a5a2d80546045098db1794", null ],

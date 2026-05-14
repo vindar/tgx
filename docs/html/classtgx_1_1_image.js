@@ -43,7 +43,7 @@ var classtgx_1_1_image =
     [ "blitRotated", "classtgx_1_1_image.html#a6fbca896a30cc67e28102c23a9460a99", null ],
     [ "blitMasked", "classtgx_1_1_image.html#a611faa1ee9f0c2c97561ff4fbeba1658", null ],
     [ "blitBackward", "classtgx_1_1_image.html#ab252fa2ceb311770d698a8b9a1f52bef", null ],
-    [ "blitScaledRotated", "classtgx_1_1_image.html#a8cd4a1aaf63b59d5803fc759dd64711c", null ],
+    [ "blitScaledRotated", "classtgx_1_1_image.html#a8f81ae72ed275dc53a53337eae893612", null ],
     [ "blitScaledRotated", "classtgx_1_1_image.html#ac20d9bbd9a6659e95d089fa6d490ef43", null ],
     [ "blitScaledRotatedMasked", "classtgx_1_1_image.html#ab6838094c8ac811a72dbeeffb7c51bc8", null ],
     [ "copyFrom", "classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae", null ],
