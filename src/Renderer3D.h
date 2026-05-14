@@ -128,8 +128,8 @@ namespace tgx
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), "At least one of the two shaders SHADER_NOZBUFFER or SHADER_ZBUFFER must be enabled");        
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), "At least one of the two shaders SHADER_FLAT or SHADER_GOURAUD must be enabled");        
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), "At least one of the two shaders SHADER_TEXTURE or SHADER_NOTEXTURE must be enabled");                              
-        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled");
-        static_assert((~(TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled");
+        static_assert((!TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled");
+        static_assert((!TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled");
 
 
 

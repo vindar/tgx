@@ -211,7 +211,7 @@ namespace tgx
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
             {
-            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setFrustrum()");
+            static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setFrustum()");
             _projM.setFrustum(left, right, bottom, top, zNear, zFar);
             _projM.invertYaxis();
             usePerspectiveProjection();
