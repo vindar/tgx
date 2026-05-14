@@ -12,3 +12,10 @@ add_executable(tgx_text_validation
 target_include_directories(tgx_text_validation PRIVATE ../..)
 target_compile_features(tgx_text_validation PRIVATE cxx_std_17)
 
+add_executable(tgx_blit_copy_validation
+    blit_copy_validation.cpp
+    ../../src/Color.cpp
+)
+
+target_include_directories(tgx_blit_copy_validation PRIVATE ../..)
+target_compile_features(tgx_blit_copy_validation PRIVATE cxx_std_17)

@@ -1064,24 +1064,34 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::_blitRegionUp(color_t * pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
         {
-        // TODO, make faster with specialization (writing 32bit at once etc...)
+        const size_t row_bytes = (size_t)sx * sizeof(color_t);
+        if ((sx == dest_stride) && (sx == src_stride))
+            {
+            memmove(pdest, psrc, row_bytes * (size_t)sy);
+            return;
+            }
         for (int j = 0; j < sy; j++)
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
             color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = 0; i < sx; i++) { pdest2[i] = psrc2[i]; }
+            memmove(pdest2, psrc2, row_bytes);
             }
         }
 
     template<typename color_t>
     void Image<color_t>::_blitRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
         {
-        // TODO, make faster with specialization (writing 32bit at once etc...)
+        const size_t row_bytes = (size_t)sx * sizeof(color_t);
+        if ((sx == dest_stride) && (sx == src_stride))
+            {
+            memmove(pdest, psrc, row_bytes * (size_t)sy);
+            return;
+            }
         for (int j = sy - 1; j >= 0; j--)
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
             color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = sx - 1; i >= 0; i--) { pdest2[i] = psrc2[i]; }
+            memmove(pdest2, psrc2, row_bytes);
             }
         }
 
