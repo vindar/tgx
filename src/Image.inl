@@ -4310,7 +4310,7 @@ namespace tgx
         bool last = false; 
         while(1)        
             {
-            bool hasmore;
+            bool hasmore = false;
             fVec2 I0 = I1; 
             fVec2 J0 = J1;
             fVec2 H0 = H1;            
@@ -4324,8 +4324,9 @@ namespace tgx
                 P1 = P2;
                 hasmore = next_point(P2);
                 H1 = (P2 - P1).getRotate90().getNormalize_fast() * thickness;
-                if (!I1.setAsIntersection(I0, P1 + H0, P1 + H1, P2 + H1)) return; //fail
-                if (!J1.setAsIntersection(J0, P1 - H0, P1 - H1, P2 - H1)) return; //fail
+                const fVec2 H = (H1.norm2() > 0) ? H1 : H0;
+                if (!I1.setAsIntersection(I0, P1 + H0, P1 + H1, P2 + H1)) I1 = P1 + H;
+                if (!J1.setAsIntersection(J0, P1 - H0, P1 - H1, P2 - H1)) J1 = P1 - H;
                 }          
             tgx::BSeg J0J1(J0, J1); tgx::BSeg J1J0 = J0J1.get_reverse();
             tgx::BSeg J1I1(J1, I1); tgx::BSeg I1J1 = J1I1.get_reverse();
@@ -4646,8 +4647,8 @@ namespace tgx
         fVec2 H2 = (P[3] - P[2]).getRotate90().getNormalize_fast() * thickness;
 
         fVec2 I0, I1, I2;
-        if (!I1.setAsIntersection(P[0] + H0, P[1] + H0, P[1] + H1, P[2] + H1)) return; //fail
-        if (!I2.setAsIntersection(P[1] + H1, P[2] + H1, P[2] + H2, P[3] + H2)) return; //fail
+        if (!I1.setAsIntersection(P[0] + H0, P[1] + H0, P[1] + H1, P[2] + H1)) I1 = P[1] + ((H1.norm2() > 0) ? H1 : H0);
+        if (!I2.setAsIntersection(P[1] + H1, P[2] + H1, P[2] + H2, P[3] + H2)) I2 = P[2] + ((H2.norm2() > 0) ? H2 : H1);
 
         for (int i = 4; i <= nb + 3; i++)
             {
@@ -4667,7 +4668,7 @@ namespace tgx
             I0 = I1;
             I1 = I2;
             H2 = (P[3] - P[2]).getRotate90().getNormalize_fast() * thickness;
-            if (!I2.setAsIntersection(P[1] + H1, P[2] + H1, P[2] + H2, P[3] + H2)) return; //fail
+            if (!I2.setAsIntersection(P[1] + H1, P[2] + H1, P[2] + H2, P[3] + H2)) I2 = P[2] + ((H2.norm2() > 0) ? H2 : H1);
             tgx::BSeg P0P1(P[0], P[1]); tgx::BSeg P1P0 = P0P1.get_reverse();
             tgx::BSeg P1I1(P[1], I1); tgx::BSeg I1P1 = P1I1.get_reverse();
             tgx::BSeg I1I0(I1, I0); tgx::BSeg I0I1 = I1I0.get_reverse();
@@ -4747,8 +4748,8 @@ namespace tgx
         fVec2 H2 = (P[3] - P[2]).getRotate90().getNormalize_fast() * thickness;
 
         fVec2 I0, I1, I2;
-        if (!I1.setAsIntersection(P[0] + H0, P[1] + H0, P[1] + H1, P[2] + H1)) return; //fail
-        if (!I2.setAsIntersection(P[1] + H1, P[2] + H1, P[2] + H2, P[3] + H2)) return; //fail
+        if (!I1.setAsIntersection(P[0] + H0, P[1] + H0, P[1] + H1, P[2] + H1)) I1 = P[1] + ((H1.norm2() > 0) ? H1 : H0);
+        if (!I2.setAsIntersection(P[1] + H1, P[2] + H1, P[2] + H2, P[3] + H2)) I2 = P[2] + ((H2.norm2() > 0) ? H2 : H1);
 
         for (int i = 4; i <= nb + 3; i++)
             {
@@ -4768,7 +4769,7 @@ namespace tgx
             I0 = I1;
             I1 = I2;
             H2 = (P[3] - P[2]).getRotate90().getNormalize_fast() * thickness;
-            if (!I2.setAsIntersection(P[1] + H1, P[2] + H1, P[2] + H2, P[3] + H2)) return; //fail
+            if (!I2.setAsIntersection(P[1] + H1, P[2] + H1, P[2] + H2, P[3] + H2)) I2 = P[2] + ((H2.norm2() > 0) ? H2 : H1);
             tgx::BSeg P0P1(P[0], P[1]); tgx::BSeg P1P0 = P0P1.get_reverse();
             tgx::BSeg P1I1(P[1], I1); tgx::BSeg I1P1 = P1I1.get_reverse();
             tgx::BSeg I1I0(I1, I0); tgx::BSeg I0I1 = I1I0.get_reverse();
