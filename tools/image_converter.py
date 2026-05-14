@@ -98,7 +98,7 @@ def color(col , color_type):
     elif  color_type == "RGBf":
         return RGBf(col);
     else:
-        raise(f"Error, unsupported color type [type]")
+        raise RuntimeError(f"Error, unsupported color type [{color_type}]")
         
 def colorTypeSize(color_type):
     if color_type == "RGB565":
@@ -110,7 +110,7 @@ def colorTypeSize(color_type):
     elif color_type == "RGBf":
         return 12;
     else:
-        raise(f"Error, unsupported color type [type]")
+        raise RuntimeError(f"Error, unsupported color type [{color_type}]")
 
 def defineC(color_type):
     if color_type == "RGB565":
@@ -122,7 +122,7 @@ def defineC(color_type):
     elif color_type == "RGBf":
         return "C(R,G,B) tgx::RGBf(R,G,B)";
     else:
-        raise(f"Error, unsupported color type [type]")
+        raise RuntimeError(f"Error, unsupported color type [{color_type}]")
     
         
 def colorName(color_type):
@@ -265,6 +265,5 @@ createCPP(arim, color_type, filename, tc if use_tc else None)
 
 
 # In[ ]:
-
 
 
