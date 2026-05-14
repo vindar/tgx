@@ -5,13 +5,13 @@
 *
 * Instructions:
 *
-* 1. download and install Bodmer's TFT_eSPI library via Arduino's libray manager or 
-*    directly from: https://github.com/Bodmer/TFT_eSPI 
+* 1. download and install Bodmer's TFT_eSPI library via Arduino's libray manager or
+*    directly from: https://github.com/Bodmer/TFT_eSPI
 *
-* 2. Configure the TFT_eSPI library for the screen used 
+* 2. Configure the TFT_eSPI library for the screen used
 *    (customize "TFT_eSPI/User_Setup.h" and/or "TFT_eSPI/User_Setup_Select.h")
 *
-* 3. Select the board model and serial port and upload the sketch 
+* 3. Select the board model and serial port and upload the sketch
 *
 * ---
 * This example was tested with:
@@ -21,8 +21,8 @@
 
 
 /**************** WARNING *****************
-* DMA transfer is curently bugged on ESP32. 
-* Two solutions:  
+* DMA transfer is curently bugged on ESP32.
+* Two solutions:
 *   1. Apply the fix provided by @tgghtp in https://github.com/Bodmer/TFT_eSPI/discussions/2233
 *   2. ... Or disable DMA by uncommenting the line below:
 *******************************************/
@@ -46,7 +46,7 @@ using namespace tgx;
 #define SLY 220
 
 // real drawing size
-int slx, sly; 
+int slx, sly;
 
 // the framebuffer we draw onto
 uint16_t fb[SLX * SLY];
@@ -92,7 +92,7 @@ void setup()
     tft.initDMA();
     tft.startWrite();
 
-    // fix the drawing size in case the screen is smaller than SLXxSLY. 
+    // fix the drawing size in case the screen is smaller than SLXxSLY.
     slx =  std::min<int>(tft.width(),SLX);
     sly =  std::min<int>(tft.height()-20,SLY);
 
@@ -108,20 +108,20 @@ void setup()
     // setup the 3D renderer.
     imfb.set(fb,slx,sly);
     renderer.setViewportSize(slx,sly);
-    renderer.setOffset(0, 0);    
+    renderer.setOffset(0, 0);
     renderer.setImage(&imfb); // set the image to draw onto (ie the screen framebuffer)
     renderer.setZbuffer(zbuf); // set the z buffer for depth testing
-    renderer.setPerspective(45, ((float)slx) / sly, 1.0f, 100.0f);  // set the perspective projection matrix.     
-    renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflexion. 
+    renderer.setPerspective(45, ((float)slx) / sly, 1.0f, 100.0f);  // set the perspective projection matrix.
+    renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflexion.
     renderer.setCulling(1);
     renderer.setTextureQuality(SHADER_TEXTURE_NEAREST);
-    renderer.setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);        
+    renderer.setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);
     }
 
 
 
 /** Compute the model matrix according to the current time */
-tgx::fMat4 moveModel(int &loopnumber) 
+tgx::fMat4 moveModel(int &loopnumber)
     {
     const float end1 = 6000;
     const float end2 = 2000;
@@ -170,9 +170,9 @@ tgx::fMat4 moveModel(int &loopnumber)
 
 /** Display additional infos on the screen (drawing mode and fps) **/
 void infos(int loopnumber)
-    { 
-    static int prev_loopnumber = -1; 
-    static uint32_t prev_millis = 0; 
+    {
+    static int prev_loopnumber = -1;
+    static uint32_t prev_millis = 0;
     static int nbframes = -1;
     uint32_t m = millis();
     nbframes++;
@@ -186,7 +186,7 @@ void infos(int loopnumber)
         tft.drawString(tfps,0,0);
         prev_millis = m;
         nbframes = 0;
-        }       
+        }
     if (prev_loopnumber != loopnumber)
         { // update the text for the drawing mode
         prev_loopnumber = loopnumber;
@@ -221,23 +221,23 @@ void loop()
     switch (loopnumber % 4)
         {
         case 0: renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE);
-                renderer.drawMesh(MESH, false); 
-                break;                
+                renderer.drawMesh(MESH, false);
+                break;
         case 1: renderer.drawWireFrameMesh(MESH, true);
                 break;
         case 2: renderer.setShaders(SHADER_FLAT);
-                renderer.drawMesh(MESH, false); 
+                renderer.drawMesh(MESH, false);
                 break;
         case 3: renderer.setShaders(SHADER_GOURAUD);
-                renderer.drawMesh(MESH, false); 
-                break;        
+                renderer.drawMesh(MESH, false);
+                break;
         }
 
-    // display additional informations (drawing type and FPS)
+    // display additional information (drawing type and FPS)
     infos(loopnumber);
 
     // upload the framebuffer to the screen
-    #if defined(DISABLE_DMA)     
+    #if defined(DISABLE_DMA)
         tft.pushImage((tft.width() - slx) / 2, (tft.height() - sly) / 2, slx, sly, fb); // direct transfer without DMA
     #else
         tft.pushImageDMA((tft.width() - slx) / 2, (tft.height() - sly) / 2, slx, sly, fb, fb2); // initiate DMA transfer

@@ -32,17 +32,17 @@
 
 /************************************************************************************
 *
-* 
+*
 * Implementation file for the template class Image<color_t>
-* 
-* 
+*
+*
 *************************************************************************************/
 
 
 
 
 /***********************************
- * 
+ *
  * Interfacing with the PNGdec library
  *
  ************************************/
@@ -292,7 +292,7 @@ namespace tgx
 
 
 /***********************************
- * 
+ *
  * Interfacing with the JPEGDEC library
  *
  ************************************/
@@ -334,7 +334,7 @@ namespace tgx
     template<typename JPEG_T> TGX_NOINLINE int Image<color_t>::JPEGDecode(JPEG_T& jpeg, iVec2 topleft, int options, float opacity)
         {
         const int TGX_RGB565_LITTLE_ENDIAN = 0;     //  taken from JPEGDEC.h
-        const int TGX_RGB8888 = 2;                  //        
+        const int TGX_RGB8888 = 2;                  //
 
         if (!isValid()) return 1000; // nothing to draw
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
@@ -357,7 +357,7 @@ namespace tgx
     TGX_NOINLINE void _jpegdec_color_convert8888(int x, int y, JPEGDraw_T* pDraw, Image<color_t> * im, float op)
         {
         uint8_t* p = (uint8_t*)pDraw->pPixels;
-        x += pDraw->x; 
+        x += pDraw->x;
         y += pDraw->y;
         if ((op >= 1.0f) && ((x >= 0) && (x + pDraw->iWidth <= im->width())) && ((y >= 0) && (y + pDraw->iHeight <= im->height())))
             { // faster
@@ -403,7 +403,7 @@ namespace tgx
                     fb[i + str * j] = *(p++);
                     }
                 }
-            } 
+            }
         else
             {
             for (int j = 0; j < pDraw->iHeight; j++)
@@ -474,7 +474,7 @@ namespace tgx
 
 
 /***********************************
- * 
+ *
  * Interfacing with the AnimatedGIF library
  *
  ************************************/
@@ -507,7 +507,7 @@ namespace tgx
 
     template<typename color_t>
     template<typename GIF_T> TGX_NOINLINE int Image<color_t>::GIFplayFrame(GIF_T& gif, iVec2 topleft, float opacity)
-        {  
+        {
         if (!isValid()) return 1000; // nothing to draw
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         _GIFWrapper wrap;
@@ -532,7 +532,7 @@ namespace tgx
         int iWidth = pDraw->iWidth;
         uint8_t* s = pDraw->pPixels;
 
-        int x0 = pDraw->iX + pWrapper->pos.x; 
+        int x0 = pDraw->iX + pWrapper->pos.x;
         int y0 = pDraw->iY + pWrapper->pos.y + pDraw->y;
 
         if ((y0 < 0) || (y0 >= im->height())) return;
@@ -543,7 +543,7 @@ namespace tgx
 
         const uint16_t* usPalette = pDraw->pPalette;       // the 565 palette if non null
         const uint8_t* usPalette24 = pDraw->pPalette24;    // the RGB888 palette if non null
-        
+
         const uint8_t ucTransparent = pDraw->ucTransparent; // transparent color index
         const uint8_t ucBackground = pDraw->ucBackground;   // background color index
 
@@ -579,7 +579,7 @@ namespace tgx
                         if (c != ucTransparent) { d[x].blend((color_t)(RGB565(usPalette[c])),op); }
                         }
                     }
-                } 
+                }
             else
                 {
                 if (op >= 1)
@@ -650,7 +650,7 @@ namespace tgx
                             }
                         }
                     }
-                } 
+                }
             else
                 {
                 if (op >= 1)
@@ -670,7 +670,7 @@ namespace tgx
                         }
                     }
                 }
-            } 
+            }
         return;
         }
 
@@ -704,7 +704,7 @@ namespace tgx
     {
 
 
-    /** Used for debuging.   
+    /** Used for debuging.
         Detect a collision bug when drawing by looking for a no pure color (i.e. with at least 2  non zero color channels */
     template<typename color_t>
     bool Image<color_t>::_collision()
@@ -799,7 +799,7 @@ namespace tgx
     template<typename color_t>
     Image<color_t>::Image(const Image<color_t> & im, iBox2 subbox)
         {
-        if (!im.isValid()) { setInvalid();  return; }       
+        if (!im.isValid()) { setInvalid();  return; }
         subbox &= im.imageBox();
         if (subbox.isEmpty()) { setInvalid(); return; }
         _lx = subbox.lx();
@@ -976,13 +976,13 @@ namespace tgx
     /** set len consecutive pixels given color starting at pdest */
     template<typename color_t>
     inline void Image<color_t>::_fast_memset(color_t* p_dest, color_t color, int32_t len)
-        {       
+        {
         if(std::is_same <color_t, RGB565>::value) // optimized away at compile time
-            { // optimized code for RGB565.         
+            { // optimized code for RGB565.
             if (len <= 0) return;
             uint16_t* pdest = (uint16_t*)p_dest;                // recasting
             const uint16_t col = (uint16_t)((RGB565)color);     // conversion to RGB565 does nothing but prevent compiler error when color_t is not RGB565
-            // ! We assume here that pdest is already aligned mod 2 (it should be) ! 
+            // ! We assume here that pdest is already aligned mod 2 (it should be) !
             if (((intptr_t)pdest) & 3)
                 {
                 *(pdest++) = col;
@@ -992,7 +992,7 @@ namespace tgx
             const uint32_t c32 = col;
             const uint32_t cc = (c32 | (c32 << 16));
             uint32_t* pdest2 = (uint32_t*)pdest;
-            int len32 = (len >> 5);         
+            int len32 = (len >> 5);
             while (len32 > 0)
                 { // write 32 color pixels at once
                 *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc;
@@ -1000,23 +1000,23 @@ namespace tgx
                 *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc;
                 *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc; *(pdest2++) = cc;
                 len32--;
-                }               
-            int len2 = ((len & 31) >> 1);       
+                }
+            int len2 = ((len & 31) >> 1);
             while (len2 > 0)
-                { // write 2 color pixels at once 
+                { // write 2 color pixels at once
                 *(pdest2++) = cc;
                 len2--;
                 }
-            
+
             if (len & 1)
-                { // write the last pixel if needed. 
+                { // write the last pixel if needed.
                 *((uint16_t*)pdest2) = col;
-                }               
+                }
             }
-        else 
+        else
             { // generic code for other color types
-            while (len > 0) 
-                { 
+            while (len > 0)
+                {
                 *(p_dest++) = color;
                 len--;
                 }
@@ -1025,7 +1025,7 @@ namespace tgx
 
 
 
-    
+
     template<typename color_t>
     template<typename color_t_src> bool Image<color_t>::_blitClip(const Image<color_t_src> & sprite, int& dest_x, int& dest_y, int& sprite_x, int& sprite_y, int& sx, int& sy)
         {
@@ -1064,7 +1064,7 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::_blitRegionUp(color_t * pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
         {
-        // TODO, make faster with specialization (writing 32bit at once etc...) 
+        // TODO, make faster with specialization (writing 32bit at once etc...)
         for (int j = 0; j < sy; j++)
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
@@ -1082,7 +1082,7 @@ namespace tgx
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
             color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
             for (int i = sx - 1; i >= 0; i--) { pdest2[i] = psrc2[i]; }
-            }   
+            }
         }
 
 
@@ -1105,8 +1105,8 @@ namespace tgx
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
             color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = 0; i < sx; i++) 
-                { 
+            for (int i = 0; i < sx; i++)
+                {
                 pdest2[i].blend256(psrc2[i], op256);
                 }
             }
@@ -1120,11 +1120,11 @@ namespace tgx
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
             color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = sx - 1; i >= 0; i--) 
+            for (int i = sx - 1; i >= 0; i--)
                 {
                 pdest2[i].blend256(psrc2[i], op256);
                 }
-            }   
+            }
         }
 
 
@@ -1180,8 +1180,8 @@ namespace tgx
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
             color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = 0; i < sx; i++) 
-                { 
+            for (int i = 0; i < sx; i++)
+                {
                 color_t c = psrc2[i];
                 if (c != transparent_color) pdest2[i].blend256(c, op256);
                 }
@@ -1196,18 +1196,18 @@ namespace tgx
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
             color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = sx - 1; i >= 0; i--) 
+            for (int i = sx - 1; i >= 0; i--)
                 {
                 color_t c = psrc2[i];
                 if (c != transparent_color) pdest2[i].blend256(c, op256);
                 }
-            }   
+            }
         }
 
 
 
 
-    
+
 
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
@@ -1225,8 +1225,8 @@ namespace tgx
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
             color_t_src* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = 0; i < sx; i++) 
-                { 
+            for (int i = 0; i < sx; i++)
+                {
                 pdest2[i] = (color_t)blend_op(psrc2[i], pdest2[i]);
                 }
             }
@@ -1240,11 +1240,11 @@ namespace tgx
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
             color_t_src * psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            for (int i = sx - 1; i >= 0; i--) 
+            for (int i = sx - 1; i >= 0; i--)
                 {
                 pdest2[i] = (color_t)blend_op(psrc2[i], pdest2[i]);
                 }
-            }   
+            }
         }
 
 
@@ -1256,10 +1256,10 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::blitRotated(const Image<color_t> & sprite, iVec2 upperleftpos, int angle, float opacity)
         {
-        if ((!sprite.isValid()) || (!isValid())) return; 
+        if ((!sprite.isValid()) || (!isValid())) return;
         switch (angle)
             {
-            case 0: 
+            case 0:
                 blit(sprite, upperleftpos, opacity);
                 break;
             case 270: // changed because we go clockwise instead of counterclockwise
@@ -1282,10 +1282,10 @@ namespace tgx
     template<typename color_t_src, typename BLEND_OPERATOR>
     void Image<color_t>::blitRotated(const Image<color_t_src>& sprite, iVec2 upperleftpos, int angle, const BLEND_OPERATOR& blend_op)
         {
-        if ((!sprite.isValid()) || (!isValid())) return; 
+        if ((!sprite.isValid()) || (!isValid())) return;
         switch (angle)
             {
-            case 0: 
+            case 0:
                 blit(sprite, upperleftpos, blend_op);
                 break;
             case 270: // changed because we go clockwise instead of counterclockwise
@@ -1309,10 +1309,10 @@ namespace tgx
 
     template<typename color_t>
     void Image<color_t>::_blitRotated90(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
-        {      
+        {
         if (!_blitClip(sprite._ly, sprite._lx, dest_x, dest_y, sprite_x, sprite_y, sy, sx)) return;
         const int spx = sprite._lx - sprite_y - sx;
-        const int spy = sprite_x;                     
+        const int spy = sprite_x;
         // ok draw subsprite (spx,spy) with size (sx,sy) to this image at upper left pos (dest_x, dest_y)
         const int sp_stride = sprite._stride;
         color_t* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
@@ -1346,10 +1346,10 @@ namespace tgx
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
     void Image<color_t>::_blitRotated90blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
-        {      
+        {
         if (!_blitClip(sprite._ly, sprite._lx, dest_x, dest_y, sprite_x, sprite_y, sy, sx)) return;
         const int spx = sprite._lx - sprite_y - sx;
-        const int spy = sprite_x;                     
+        const int spy = sprite_x;
         // ok draw subsprite (spx,spy) with size (sx,sy) to this image at upper left pos (dest_x, dest_y)
         const int sp_stride = sprite._stride;
         color_t_src* psrc = sprite._buffer + TGX_CAST32(spx) + TGX_CAST32(spy) * TGX_CAST32(sp_stride);
@@ -1369,7 +1369,7 @@ namespace tgx
 
     template<typename color_t>
     void Image<color_t>::_blitRotated180(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
-        {        
+        {
         if (!_blitClip(sprite._lx, sprite._ly, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
         const int spx = sprite._lx - sprite_x - sx;
         const int spy = sprite._ly - sprite_y - sy;
@@ -1387,7 +1387,7 @@ namespace tgx
                     }
                 pdst += (_stride - sx);
                 }
-            } 
+            }
         else
             {
             const int op256 = (int)(opacity * 256);
@@ -1398,7 +1398,7 @@ namespace tgx
                     (pdst++)->blend256(psrc[i + (sp_stride * j)], op256);
                     }
                 pdst += (_stride - sx);
-                }            
+                }
             }
         }
 
@@ -1406,7 +1406,7 @@ namespace tgx
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
     void Image<color_t>::_blitRotated180blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
-        {        
+        {
         if (!_blitClip(sprite._lx, sprite._ly, dest_x, dest_y, sprite_x, sprite_y, sx, sy)) return;
         const int spx = sprite._lx - sprite_x - sx;
         const int spy = sprite._ly - sprite_y - sy;
@@ -1429,7 +1429,7 @@ namespace tgx
 
     template<typename color_t>
     void Image<color_t>::_blitRotated270(const Image& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, float opacity)
-        {        
+        {
         if (!_blitClip(sprite._ly, sprite._lx, dest_x, dest_y, sprite_x, sprite_y, sy, sx)) return;
         const int spx = sprite_y;
         const int spy = sprite._ly - sprite_x - sy;
@@ -1447,7 +1447,7 @@ namespace tgx
                     }
                 pdst += (_stride - sy);
                 }
-            } 
+            }
         else
             {
             const int op256 = (int)(opacity * 256);
@@ -1466,7 +1466,7 @@ namespace tgx
     template<typename color_t>
     template<typename color_t_src, typename BLEND_OPERATOR>
     void Image<color_t>::_blitRotated270blend(const Image<color_t_src>& sprite, int dest_x, int dest_y, int sprite_x, int sprite_y, int sx, int sy, const BLEND_OPERATOR& blend_op)
-        {        
+        {
         if (!_blitClip(sprite._ly, sprite._lx, dest_x, dest_y, sprite_x, sprite_y, sy, sx)) return;
         const int spx = sprite_y;
         const int spy = sprite._ly - sprite_x - sy;
@@ -1498,16 +1498,16 @@ namespace tgx
         {
         if ((!isValid())||(!src_image.isValid())) { return Image<color_t>(); }
         if (src_image._lx == 1)
-            { 
+            {
             if (src_image._ly == 1)
-                { // stupid case 
+                { // stupid case
                 _buffer[0] = src_image._buffer[0];
                 return Image<color_t>(*this, iBox2(0, 0, 0, 0));
                 }
             if (_ly < (src_image._ly >> 1)) { return Image<color_t>(); }
             const color_t * p_src = src_image._buffer;
             color_t * p_dest = _buffer;
-            int ny = (src_image._ly >> 1); 
+            int ny = (src_image._ly >> 1);
             while (ny-- > 0)
                 {
                 (*p_dest) = meanColor(p_src[0], p_src[src_image._stride]);
@@ -1556,11 +1556,11 @@ namespace tgx
         if ((!isValid()) || (!src_im.isValid())) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         // number of slices to draw
-        // (we slice it to improve cache access when reading texwxture from flash)
+        // (we slice it to improve cache access when reading texture from flash)
         const int nb_slices = (angle_degrees == 0) ? 1 : ((src_im.stride() * src_im.ly() * sizeof(color_t_src)) / CACHE_SIZE + 1);
 
         const float tlx = (float)src_im.lx();
-        const float tly = (float)src_im.ly();       
+        const float tly = (float)src_im.ly();
 
         const float a = 0.01745329251f; // 2PI/360
         const float co = cosf(a * angle_degrees);
@@ -1614,7 +1614,7 @@ namespace tgx
 
 
     template<typename color_t>
-    template<typename src_color_t> 
+    template<typename src_color_t>
     void Image<color_t>::copyFrom(const Image<src_color_t>& src_im, float opacity)
         {
         if ((!isValid()) || (!src_im.isValid())) return;
@@ -1628,7 +1628,7 @@ namespace tgx
 
 
     template<typename color_t>
-    template<typename src_color_t, typename BLEND_OPERATOR> 
+    template<typename src_color_t, typename BLEND_OPERATOR>
     void Image<color_t>::copyFrom(const Image<src_color_t>& src_im, const BLEND_OPERATOR& blend_op)
         {
         if ((!isValid()) || (!src_im.isValid())) return;
@@ -1693,7 +1693,7 @@ namespace tgx
 
 
     template<typename color_t>
-    void Image<color_t>::fillScreen(color_t color) 
+    void Image<color_t>::fillScreen(color_t color)
         {
         clear(color);
         }
@@ -1760,7 +1760,7 @@ namespace tgx
                                                 Y = (int)(Qy[stp] >> 1) + (DY); \
                                                 }
 
-        #define TGX_SCANFILL_STACKSIZE         (stp)          
+        #define TGX_SCANFILL_STACKSIZE         (stp)
 
         #define TGX_SCANFILL_INSIDE(COLOR)      (UNICOLOR_COMP ? (COLOR == orig_color) : ((COLOR != border_color) && (COLOR != new_color)))
 
@@ -1774,7 +1774,7 @@ namespace tgx
         if ((!isValid()) || (x < 0) || (x >= _lx) || (y < 0) || (y >= _ly)) return 0;
         const color_t orig_color = readPixel<false>({ x, y });
         if ((UNICOLOR_COMP) && (orig_color == new_color)) return 0; // nothing to do
-        if (!TGX_SCANFILL_INSIDE(orig_color)) return 0; // nothing to do 
+        if (!TGX_SCANFILL_INSIDE(orig_color)) return 0; // nothing to do
 
         TGX_SCANFILL_PUSH(x, x, y, 1);
         TGX_SCANFILL_PUSH(x, x, y + 1, -1);
@@ -1804,7 +1804,7 @@ namespace tgx
                 x++;
                 while ((x <= x2) && (!(TGX_SCANFILL_INSIDE(readPixel<false>({ x, y }))))) { x++; }
                 start = x;
-                } 
+                }
             while (x <= x2);
             }
         return (6 * max_st);
@@ -1898,7 +1898,7 @@ namespace tgx
             {
             auto B = imageBox();
             seg.move_inside_box(B);
-            seg.len() = tgx::min(seg.lenght_inside_box(B), seg.len());	// truncate to stay inside the box          
+            seg.len() = tgx::min(seg.lenght_inside_box(B), seg.len());	// truncate to stay inside the box
             }
         if (seg.x_major())
             {
@@ -2012,7 +2012,7 @@ namespace tgx
         {
         auto PQs = PQ.save();
         auto PAs = PA.save();
-       
+
         if (drawP)
             {
             int32_t aa;
@@ -2022,7 +2022,7 @@ namespace tgx
                 aa = (g < 0) ? (tgx::max(PQ.AA(side), PA.AA(-side))) : (tgx::min(PQ.AA(side), PA.AA(-side)));
                 }
             else
-                {   
+                {
                 aa = 256;
                 }
             _bseg_update_pixel<true>(PQ, color, op, aa);
@@ -2224,7 +2224,7 @@ namespace tgx
         auto QBs = QB.save();
 
         if (drawP)
-            {      
+            {
             int32_t aa;
             if (side != 0)
                 {
@@ -2232,7 +2232,7 @@ namespace tgx
                 aa = (g < 0) ? (tgx::max(PQ.AA(side), PA.AA(-side))) : (tgx::min(PQ.AA(side), PA.AA(-side)));
                 }
             else
-                {   
+                {
                 aa = 256;
                 }
             _bseg_update_pixel<true>(PQ, color, op, aa);
@@ -2243,14 +2243,14 @@ namespace tgx
             if (side != 0)
                 {
                 PQ.move(PQ.len());
-                int g = PQ.angle(side, QB);          
+                int g = PQ.angle(side, QB);
                 aa = (g < 0) ? (tgx::max(PQ.AA(side), QB.AA(side))) : (tgx::min(PQ.AA(side), QB.AA(side)));
                 PQ.restore(PQs);
                 }
             else
                 {
                 aa = 256;
-                }                
+                }
             _bseg_update_pixel<true>(QB, color, op, aa);
             }
 
@@ -2481,7 +2481,7 @@ namespace tgx
     * Fill the interior of a triangle.
     * integer valued version
     ***/
-    /*    
+    /*
     template<typename color_t>
     void Image<color_t>::_bseg_fill_triangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t fillcolor, float opacity)
         {
@@ -2491,7 +2491,7 @@ namespace tgx
         const int y1 = P1.y;
         const int y2 = P2.y;
         const int y3 = P3.y;
-        if (y1 == y3) return; //flat, nothing to draw. 
+        if (y1 == y3) return; //flat, nothing to draw.
         if (y1 == y2)
             {
             BSeg seg31(P3, P1);
@@ -2539,7 +2539,7 @@ namespace tgx
     void Image<color_t>::_bseg_fill_triangle(fVec2 fP1, fVec2 fP2, fVec2 fP3, color_t fillcolor, float opacity)
         {
         if (fP1.y > fP2.y) { tgx::swap(fP1, fP2); } // reorder by increasing Y value
-        if (fP1.y > fP3.y) { tgx::swap(fP1, fP3); } // so we can directly call 
+        if (fP1.y > fP3.y) { tgx::swap(fP1, fP3); } // so we can directly call
         if (fP2.y > fP3.y) { tgx::swap(fP2, fP3); } // _bseg_fill_triangle_precomputed_sub()
         BSeg seg12(fP1, fP2); BSeg seg21 = seg12.get_reverse();
         BSeg seg13(fP1, fP3); BSeg seg31 = seg13.get_reverse();
@@ -2610,7 +2610,7 @@ namespace tgx
         iVec2 P1((int)roundf(fP1.x), (int)roundf(fP1.y)); int y1 = P1.y;
         iVec2 P2((int)roundf(fP2.x), (int)roundf(fP2.y)); int y2 = P2.y;
         iVec2 P3((int)roundf(fP3.x), (int)roundf(fP3.y)); int y3 = P3.y;
-        if (y1 == y3) return; //flat, nothing to draw. 
+        if (y1 == y3) return; //flat, nothing to draw.
         if (y1 == y2)
             {
             _bseg_fill_interior_angle(P3, P1, P2, seg31, seg32, fillcolor, false, opacity);
@@ -2660,7 +2660,7 @@ namespace tgx
     void Image<color_t>::_bseg_fill_interior_angle_sub(int dir, int y, int ytarget, BSeg& sega, BSeg& segb, color_t color, float opacity)
         {
         if (opacity > 1) opacity = -1;
-        // fix the range. 
+        // fix the range.
         if (dir > 0)
             {
             if (ytarget >= _ly) { ytarget = _ly; }
@@ -2801,11 +2801,11 @@ namespace tgx
 
     /*****************************************************
     * LINE DRAWING
-    * 
+    *
     * LOW QUALITY (FAST) DRAWING METHODS
     ******************************************************/
 
-    
+
 
     template<typename color_t>
     void Image<color_t>::drawFastVLine(iVec2 pos, int h, color_t color, float opacity)
@@ -2965,7 +2965,7 @@ namespace tgx
 
     template<typename color_t>
     void Image<color_t>::drawThickLineAA(fVec2 P1, fVec2 P2, float line_width, EndPath end_P1, EndPath end_P2, color_t color, float opacity)
-        {  
+        {
         if (line_width < 0) return;
         drawWedgeLineAA(P1, P2, line_width, end_P1, line_width, end_P2, color, opacity);
         }
@@ -2973,7 +2973,7 @@ namespace tgx
 
 
     /**
-    * Draw the end of a thick line (straight, rounded or arrow). 
+    * Draw the end of a thick line (straight, rounded or arrow).
     **/
     template<typename color_t>
     void Image<color_t>::_drawEnd(float distAB, fVec2 A, fVec2 B, BSeg& segAB, BSeg& segBA, BSeg& segAP, BSeg& segBQ, EndPath end, int w, color_t color, float opacity)
@@ -2992,11 +2992,11 @@ namespace tgx
             _drawPixel<true>(iVec2((int)(roundf(B.x)), (int)(roundf(B.y))), color, (op * segBQ.AA(-w) >> 8) / 256.0f);
             _fillSmoothCircleInterHP((A + B) * 0.5f, distAB * 0.5f, color, opacity, segAB, w);
             return;
-            }   
+            }
         if (end >= END_ARROW_1)
             {
             const int n = ((int)(end)) - ((end >= END_ARROW_SKEWED_1) ? (END_ARROW_SKEWED_1  - 1) : 0);
-            fVec2 H = (B - A);      
+            fVec2 H = (B - A);
             fVec2 V = H.getRotate90() * ((float)(n * w));
             fVec2 E = ((A + B) * 0.5f) + V;
             H = H * (0.5f * n);
@@ -3031,11 +3031,11 @@ namespace tgx
         if (line_width_P1 < 1.1f) line_width_P1 += (1.1f - line_width_P1) * 0.5f; // look better
         if (line_width_P2 < line_width_P1)
             {
-            tgx::swap(P1, P2); 
+            tgx::swap(P1, P2);
             tgx::swap(line_width_P1, line_width_P2);
             tgx::swap(end_P1, end_P2);
             }
-        if (line_width_P2 <= 0) return; 
+        if (line_width_P2 <= 0) return;
         const int op = (int)(opacity * 256);
         if (line_width_P1 <= 1)
             { // draw triangle: here line_width_P1 <= 1
@@ -3046,22 +3046,22 @@ namespace tgx
                 }
             const fVec2 H = (P1 - P2).getRotate90().getNormalize() * (line_width_P2/2);
             const fVec2 PA = P2 + H, PB = P2 - H;
-            const int w = -1; 
+            const int w = -1;
             BSeg seg1A(P1, PA); BSeg segA1 = seg1A.get_reverse();
             BSeg seg1B(P1, PB); BSeg segB1 = seg1B.get_reverse();
             BSeg segAB(PA, PB); BSeg segBA = segAB.get_reverse();
-            _bseg_fill_triangle_precomputed(P1, PA, PB, seg1A, segA1, segAB, segBA, segB1, seg1B, color, opacity);            
-            _bseg_draw(seg1A, false, false, color, -w, op, true);                
+            _bseg_fill_triangle_precomputed(P1, PA, PB, seg1A, segA1, segAB, segBA, segB1, seg1B, color, opacity);
+            _bseg_draw(seg1A, false, false, color, -w, op, true);
             _bseg_avoid1(seg1B, seg1A, true, false, true, color, w, op, true);
             _drawEnd(line_width_P2, PA, PB, segAB, segBA, segA1, segB1, end_P2, w, color, opacity);
             return;
-            }        
+            }
         // here line_width_P1 > 1  and line_width_P2 > 1
         const fVec2 H = (P1 - P2).getRotate90().getNormalize();
         const fVec2 H1 = H * (line_width_P1*0.5f);
         const fVec2 H2 = H * (line_width_P2*0.5f);
         const fVec2 PA = P1 + H1, PB = P2 + H2, PC = P2 - H2, PD = P1 - H1;
-        const int w = 1; 
+        const int w = 1;
         BSeg segAB(PA, PB); BSeg segBA = segAB.get_reverse();
         BSeg segAC(PA, PC); BSeg segCA = segAC.get_reverse();
         BSeg segBC(PB, PC); BSeg segCB = segBC.get_reverse();
@@ -3091,7 +3091,7 @@ namespace tgx
         return tgx::fast_sqrt(dx * dx + dy * dy) + h * dr;
         }
 
-    
+
     /** Adapted from Bodmer e_tft library (legacy, not used anymore) */
     template<typename color_t>
     void Image<color_t>::_drawWedgeLine(float ax, float ay, float bx, float by, float ar, float br, color_t color, float opacity)
@@ -3125,11 +3125,11 @@ namespace tgx
 
         int32_t xs = x0;
         // Scan bounding box from ys down, calculate pixel intensity from distance to line
-        for (int32_t yp = ys; yp <= y1; yp++) 
+        for (int32_t yp = ys; yp <= y1; yp++)
             {
             bool endX = false; // Flag to skip pixels
             ypay = yp - ay;
-            for (int32_t xp = xs; xp <= x1; xp++) 
+            for (int32_t xp = xs; xp <= x1; xp++)
                 {
                 if (endX) if (alpha <= LoAlphaTheshold) break;  // Skip right side
                 xpax = xp - ax;
@@ -3137,7 +3137,7 @@ namespace tgx
                 if (alpha <= LoAlphaTheshold) continue;
                 // Track edge to minimise calculations
                 if (!endX) { endX = true; xs = xp; }
-                if (alpha > HiAlphaTheshold) 
+                if (alpha > HiAlphaTheshold)
                     {
                     _drawPixel<false, false>( { xp, yp }, color, opacity);
                     continue;
@@ -3149,11 +3149,11 @@ namespace tgx
         // Reset x start to left side of box
         xs = x0;
         // Scan bounding box from ys-1 up, calculate pixel intensity from distance to line
-        for (int32_t yp = ys - 1; yp >= y0; yp--) 
+        for (int32_t yp = ys - 1; yp >= y0; yp--)
             {
             bool endX = false; // Flag to skip pixels
             ypay = yp - ay;
-            for (int32_t xp = xs; xp <= x1; xp++) 
+            for (int32_t xp = xs; xp <= x1; xp++)
                 {
                 if (endX) if (alpha <= LoAlphaTheshold) break;  // Skip right side of drawn line
                 xpax = xp - ax;
@@ -3161,7 +3161,7 @@ namespace tgx
                 if (alpha <= LoAlphaTheshold) continue;
                 // Track line boundary
                 if (!endX) { endX = true; xs = xp; }
-                if (alpha > HiAlphaTheshold) 
+                if (alpha > HiAlphaTheshold)
                     {
                     _drawPixel<false, false>({ xp, yp }, color, opacity);
                     continue;
@@ -3217,11 +3217,11 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::drawThickRect(const iBox2& B, int thickness, color_t color, float opacity)
         {
-        if (B.isEmpty() || (!isValid()) ||(thickness < 1)) return;        
-        int r = tgx::min(B.lx(), B.ly()) / 2; 
+        if (B.isEmpty() || (!isValid()) ||(thickness < 1)) return;
+        int r = tgx::min(B.lx(), B.ly()) / 2;
         if (r <= 1) { fillRect(B, color, opacity); return; }
-        if (thickness > r) thickness = r; 
-        thickness--; 
+        if (thickness > r) thickness = r;
+        thickness--;
         fillRect(iBox2(B.minX, B.maxX, B.minY, B.minY + thickness), color, opacity);
         fillRect(iBox2(B.minX, B.maxX, B.maxY - thickness, B.maxY), color, opacity);
         fillRect(iBox2(B.minX, B.minX + thickness, B.minY + thickness + 1, B.maxY - thickness - 1), color, opacity);
@@ -3241,7 +3241,7 @@ namespace tgx
         fillRect(iBox2(B.minX, B.maxX, B.maxY - thickness, B.maxY), color_border, opacity);
         fillRect(iBox2(B.minX, B.minX + thickness, B.minY + thickness + 1, B.maxY - thickness - 1), color_border, opacity);
         fillRect(iBox2(B.maxX - thickness, B.maxX, B.minY + thickness + 1, B.maxY - thickness - 1), color_border, opacity);
-        thickness++; 
+        thickness++;
         fillRect(iBox2(B.minX + thickness, B.maxX - thickness, B.minY + thickness, B.maxY - thickness), color_interior, opacity);
         }
 
@@ -3256,7 +3256,7 @@ namespace tgx
         const int sx = B.lx();
         int sy = B.ly();
         color_t * p = _buffer + TGX_CAST32(B.minX) + TGX_CAST32(B.minY) * TGX_CAST32(_stride);
-        if (sx == _stride) 
+        if (sx == _stride)
             { // fast, set everything at once
             int32_t len = TGX_CAST32(sy) * TGX_CAST32(_stride);
             if ((opacity < 0) || (opacity > 1))
@@ -3298,7 +3298,7 @@ namespace tgx
         {
         if (!isValid()) return;
         B &= imageBox();
-        if (B.isEmpty()) return;        
+        if (B.isEmpty()) return;
         const int w = B.lx();
         const uint16_t d = (uint16_t)((w > 1) ? (w - 1) : 1);
         RGB64 c64_a(color1);    // color conversion to RGB64
@@ -3338,7 +3338,7 @@ namespace tgx
                     c.A += da;
                     }
                 p += _stride;
-                }    
+                }
             }
         }
 
@@ -3350,7 +3350,7 @@ namespace tgx
         if (!isValid()) return;
         B &= imageBox();
         if (B.isEmpty()) return;
-        const int h = B.ly(); 
+        const int h = B.ly();
         const uint16_t d = (uint16_t)((h > 1) ? (h - 1) : 1);
         RGB64 c64_a(color1);    // color conversion to RGB64
         RGB64 c64_b(color2);    //
@@ -3383,7 +3383,7 @@ namespace tgx
                 c64_a.B += db;
                 c64_a.A += da;
                 p += _stride - B.lx();
-                }                
+                }
             }
         }
 
@@ -3541,7 +3541,7 @@ namespace tgx
             return;
             }
         if (eB.minY == eB.maxY)
-            { // just an horizontal line
+            { // just a horizontal line
             const float h = B.maxY - B.minY;
             const float a_left = 0.5f + eB.minX - B.minX;
             const float a_right = 0.5f + B.maxX - eB.maxX;
@@ -3550,7 +3550,7 @@ namespace tgx
             _drawFastHLine(checkrange, { eB.minX + 1, eB.minY }, eB.maxX - eB.minX - 1, color, opacity * h);
             return;
             }
-        fillRect(tgx::iBox2(eB.minX + 1, eB.maxX - 1, eB.minY + 1, eB.maxY - 1), color, opacity); // fill interior (may be empty)	
+        fillRect(tgx::iBox2(eB.minX + 1, eB.maxX - 1, eB.minY + 1, eB.maxY - 1), color, opacity); // fill interior (may be empty)
         const float a_left = 0.5f + eB.minX - B.minX;
         const float a_right = 0.5f + B.maxX - eB.maxX;
         const float a_up = 0.5f + eB.minY - B.minY;
@@ -3779,13 +3779,13 @@ namespace tgx
         {
         if (!isValid()) return;
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
-        float a = _triangleAera(P1, P2, P3); // winding direction of the polygon            
+        float a = _triangleAera(P1, P2, P3); // winding direction of the polygon
         const int w = (a > 0) ? 1 : ((a < 0) ? -1 : 0);
         const int op = (int)(opacity * 256);
         BSeg seg12(P1, P2); BSeg seg21 = seg12.get_reverse();
         BSeg seg13(P1, P3); BSeg seg31 = seg13.get_reverse();
         BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
-        _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangle 
+        _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangle
         _bseg_avoid1(seg12, seg13, true, false, true, color, w, op, true);
         _bseg_avoid1(seg23, seg21, true, false, true, color, w, op, true);
         _bseg_avoid1(seg31, seg32, true, false, true, color, w, op, true);
@@ -4109,8 +4109,8 @@ namespace tgx
         BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
         BSeg seg34(P3, P4); BSeg seg43 = seg34.get_reverse();
         BSeg seg41(P4, P1); BSeg seg14 = seg41.get_reverse();
-        _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangles 
-        _bseg_fill_triangle_precomputed(P1, P3, P4, seg13, seg31, seg34, seg43, seg41, seg14, color, opacity);	// fill the triangles 
+        _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangles
+        _bseg_fill_triangle_precomputed(P1, P3, P4, seg13, seg31, seg34, seg43, seg41, seg14, color, opacity);	// fill the triangles
         _bseg_avoid1(seg12, seg14, true, false, true, color, 0, op, true);
         _bseg_avoid1(seg23, seg21, true, false, true, color, 0, op, true);
         _bseg_avoid1(seg34, seg32, true, false, true, color, 0, op, true);
@@ -4164,8 +4164,8 @@ namespace tgx
         BSeg seg23(P2, P3); BSeg seg32 = seg23.get_reverse();
         BSeg seg34(P3, P4); BSeg seg43 = seg34.get_reverse();
         BSeg seg41(P4, P1); BSeg seg14 = seg41.get_reverse();
-        _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangles 
-        _bseg_fill_triangle_precomputed(P1, P3, P4, seg13, seg31, seg34, seg43, seg41, seg14, color, opacity);	// fill the triangles 
+        _bseg_fill_triangle_precomputed(P1, P2, P3, seg12, seg21, seg23, seg32, seg31, seg13, color, opacity);	// fill the triangles
+        _bseg_fill_triangle_precomputed(P1, P3, P4, seg13, seg31, seg34, seg43, seg41, seg14, color, opacity);	// fill the triangles
         _bseg_avoid1(seg12, seg14, true, false, true, color, w, op, true);
         _bseg_avoid1(seg23, seg21, true, false, true, color, w, op, true);
         _bseg_avoid1(seg34, seg32, true, false, true, color, w, op, true);
@@ -4269,7 +4269,7 @@ namespace tgx
             {
             P = Q;
             if (!next_point(Q))
-                { // last point 
+                { // last point
                 BSeg seg(P, Q);
                 _bseg_draw(seg, true, true, color, 0, op, true);
                 return;
@@ -4309,7 +4309,7 @@ namespace tgx
             {
             P = Q;
             if (!next_point(Q))
-                { // last point 
+                { // last point
                 BSeg seg(P, Q);
                 _bseg_draw_AA(seg, true, true, color, op, true);
                 return;
@@ -4349,30 +4349,30 @@ namespace tgx
             drawPolylineAA(next_point, color, opacity);
             return;
             }
-        fVec2 P1, P2; 
+        fVec2 P1, P2;
         if (!next_point(P1)) return;
         if (!next_point(P2))
             {
             drawThickLineAA(P1, P2, line_width, end_P0, end_Pn, color, opacity);
             return;
             }
-        float thickness = line_width / 2; 
+        float thickness = line_width / 2;
         int op = (int)(opacity * 256);
         fVec2 H1 = (P2 - P1).getRotate90().getNormalize_fast() * thickness;
         fVec2 I1 = P1 + H1;
         fVec2 J1 = P1 - H1;
-        bool first = true; 
-        bool last = false; 
-        while(1)        
+        bool first = true;
+        bool last = false;
+        while(1)
             {
             bool hasmore = false;
-            fVec2 I0 = I1; 
+            fVec2 I0 = I1;
             fVec2 J0 = J1;
-            fVec2 H0 = H1;            
+            fVec2 H0 = H1;
             if (last)
                 {
                 I1 = P2 + H1;
-                J1 = P2 - H1; 
+                J1 = P2 - H1;
                 }
             else
                 {
@@ -4382,7 +4382,7 @@ namespace tgx
                 const fVec2 H = (H1.norm2() > 0) ? H1 : H0;
                 if (!I1.setAsIntersection(I0, P1 + H0, P1 + H1, P2 + H1)) I1 = P1 + H;
                 if (!J1.setAsIntersection(J0, P1 - H0, P1 - H1, P2 - H1)) J1 = P1 - H;
-                }          
+                }
             tgx::BSeg J0J1(J0, J1); tgx::BSeg J1J0 = J0J1.get_reverse();
             tgx::BSeg J1I1(J1, I1); tgx::BSeg I1J1 = J1I1.get_reverse();
             tgx::BSeg I1I0(I1, I0); tgx::BSeg I0I1 = I1I0.get_reverse();
@@ -4393,7 +4393,7 @@ namespace tgx
             const int side = 1;
             if (first)
                 { // draw first end
-                _drawEnd(line_width, I0, J0, I0J0, J0I0, I0I1, J0J1, end_P0, -side, color, opacity); 
+                _drawEnd(line_width, I0, J0, I0J0, J0I0, I0I1, J0J1, end_P0, -side, color, opacity);
                 }
             if (last)
                 {
@@ -4409,7 +4409,7 @@ namespace tgx
             _bseg_avoid1(I1I0, I1I2, true, false, true, color, side, op, true);
             _bseg_avoid22(I0J1, I0J0, I0I1, J1J0, J1I1, true, true, true, true, color, 0, op, true);
             _bseg_avoid22(J1I1, J1J0, J1J2, I1I0, I1I2, true, true, true, true, color, 0, op, true);
-            if (!hasmore) last = true; 
+            if (!hasmore) last = true;
             first = false;
             }
 
@@ -4446,12 +4446,12 @@ namespace tgx
         const int op = (int)(opacity * 256);
         iVec2 P, Q;
         if (!next_point(Q)) return;
-        const iVec2 Q0 = Q; 
+        const iVec2 Q0 = Q;
         while (1)
             {
             P = Q;
             if (!next_point(Q))
-                { // last point 
+                { // last point
                 auto bsPQ = BSeg(P, Q);
                 _bseg_draw(bsPQ, true, false, color, 0, op, true);
                 auto bsQQ0 = BSeg(Q, Q0);
@@ -4464,7 +4464,7 @@ namespace tgx
         }
 
 
-    template<typename color_t> 
+    template<typename color_t>
     void Image<color_t>::drawPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
         {
         if ((nbpoints < 2) || (!isValid())) return;
@@ -4493,25 +4493,25 @@ namespace tgx
         fVec2 C(0,0);
         iVec2 iP;
         int nb = 0;
-        bool hasmore = true; 
+        bool hasmore = true;
         while (hasmore)
             {
             hasmore = next_point(iP);
-            C += fVec2(iP); 
-            nb++; 
+            C += fVec2(iP);
+            nb++;
             }
         if (nb < 3) return;
         C = C * (1.0f / nb);
         _drawPixel<true>(iVec2{ (int32_t)roundf(C.x), (int32_t)roundf(C.y) }, color, opacity);
-        fVec2 P0, P1, P2; 
+        fVec2 P0, P1, P2;
         P1 = fVec2(iP);
         next_point(iP);
         P2 = fVec2(iP);
-        const fVec2 sP0 = P2; 
+        const fVec2 sP0 = P2;
         for (int i = 1; i <= nb; i++)
             {
-            P0 = P1; 
-            P1 = P2; 
+            P0 = P1;
+            P1 = P2;
             if (i == nb)
                 {
                 P2 = sP0;
@@ -4535,13 +4535,13 @@ namespace tgx
 
     template<typename color_t>
     void Image<color_t>::fillPolygon(int nbpoints, const iVec2 tabPoints[], color_t color, float opacity)
-        {   
+        {
         if ((nbpoints < 2) || (!isValid())) return;
         int k = 0;
         fillPolygon(
             [&k, &nbpoints, &tabPoints](tgx::iVec2& P)
                 {
-                if (k == nbpoints) k = 0; 
+                if (k == nbpoints) k = 0;
                 P = tabPoints[k++];
                 return (k < nbpoints);
                 },
@@ -4559,12 +4559,12 @@ namespace tgx
         const int op = (int)(opacity * 256);
         fVec2 P, Q;
         if (!next_point(Q)) return;
-        const fVec2 Q0 = Q; 
+        const fVec2 Q0 = Q;
         while (1)
             {
             P = Q;
             if (!next_point(Q))
-                { // last point 
+                { // last point
                 auto bsPQ = BSeg(P, Q);
                 _bseg_draw_AA(bsPQ, true, false, color, op, true);
                 auto bsQQ0 = BSeg(Q, Q0);
@@ -4605,29 +4605,29 @@ namespace tgx
         fVec2 C(0,0);
         fVec2 iP;
         int nb = 0;
-        bool hasmore = true; 
+        bool hasmore = true;
         while (hasmore)
             {
             hasmore = next_point(iP);
-            C += iP; 
-            nb++; 
+            C += iP;
+            nb++;
             }
         if (nb < 3) return;
         C = C * (1.0f / nb);
         _drawPixel<true>(iVec2{ (int32_t)roundf(C.x), (int32_t)roundf(C.y) }, color, opacity);
 
-        fVec2 P0, P1, P2; 
+        fVec2 P0, P1, P2;
         P1 = iP;
         next_point(P2);
-        const fVec2 sP0 = P2; 
+        const fVec2 sP0 = P2;
 
         const float a = _triangleAera(C, P1, P2);
         int w = (a > 0) ? 1 : ((a < 0) ? -1 : 0);
 
         for (int i = 1; i <= nb; i++)
             {
-            P0 = P1; 
-            P1 = P2; 
+            P0 = P1;
+            P1 = P2;
             if (i == nb)
                 {
                 P2 = sP0;
@@ -4650,7 +4650,7 @@ namespace tgx
 
     template<typename color_t>
     void Image<color_t>::fillPolygonAA(int nbpoints, const fVec2 tabPoints[], color_t color, float opacity)
-        {   
+        {
         if ((nbpoints < 2) || (!isValid())) return;
         int k = 0;
         fillPolygonAA(
@@ -4846,7 +4846,7 @@ namespace tgx
 
             }
         }
- 
+
 
     template<typename color_t>
     void Image<color_t>::fillThickPolygonAA(int nbpoints, const fVec2 tabPoints[], float thickness, color_t interior_color, color_t border_color, float opacity)
@@ -4865,7 +4865,7 @@ namespace tgx
 
 
 
-   
+
 
 
 
@@ -4874,7 +4874,7 @@ namespace tgx
 
     /********************************************************************************
     *
-    * DRAWING CIRCLES 
+    * DRAWING CIRCLES
     *
     *********************************************************************************/
 
@@ -5003,7 +5003,7 @@ namespace tgx
         if ((r < 0) || (!isValid())) return;
         if ((CHECKRANGE) && (r > 2))
             { // circle is large enough to check first if there is something to draw.
-            if ((xm + r < 0) || (xm - r >= _lx) || (ym + r < 0) || (ym - r >= _ly)) return; // outside of image. 
+            if ((xm + r < 0) || (xm - r >= _lx) || (ym + r < 0) || (ym - r >= _ly)) return; // outside of image.
             // TODO : check if the circle completely fills the image, in this case use FillScreen()
             }
         switch (r)
@@ -5105,19 +5105,19 @@ namespace tgx
 
 
 
-    /* Fill a quarter circle intersected with 0,1 or 2 half plane of equation x*kx + y*ky + off > 0  (and x*kx + y*ky + off_full > 0 for full pixel intensity). 
-    * 
+    /* Fill a quarter circle intersected with 0,1 or 2 half plane of equation x*kx + y*ky + off > 0  (and x*kx + y*ky + off_full > 0 for full pixel intensity).
+    *
         2    x=1, y=-1  |  3   x=-1; y=-1
        ---------------------------------
-        0    x=1, y=1   |  1   x=-1, y=1    
-    */    
+        0    x=1, y=1   |  1   x=-1, y=1
+    */
     template<typename color_t>
     void Image<color_t>::_fillSmoothQuarterCircleInterHPsub(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity,
         int nb_planes, int32_t kx1, int32_t ky1, int32_t off1, int32_t off1_full, int32_t kx2, int32_t ky2, int32_t off2, int32_t off2_full)
         {
         const int32_t df1 = off1 - off1_full + ((off1 == off1_full) ? 1 : 0);
         const int32_t df2 = off2 - off2_full + ((off2 == off2_full) ? 1 : 0);
-        const int32_t op = (int32_t)(opacity * 256); 
+        const int32_t op = (int32_t)(opacity * 256);
 
         const int dir_x = (quarter & 1) ? -1 : 1;
         const int dir_y = (quarter & 2) ? -1 : 1;
@@ -5168,7 +5168,7 @@ namespace tgx
                             o1 += kx1; x1++;
                             }
                         }
-                    else 
+                    else
                         {
                         while (x1 <= x2)
                             {
@@ -5195,7 +5195,7 @@ namespace tgx
                     }
 
                 const float alpha = RT - sqrtf(e2);
-                _drawPixel<false>({ i, j }, color, alpha * nop);                    
+                _drawPixel<false>({ i, j }, color, alpha * nop);
                 }
             }
         }
@@ -5291,7 +5291,7 @@ namespace tgx
                 if (u1 > 135) continue;
                 else
                     {
-                    if (u2 > 135) 
+                    if (u2 > 135)
                         _fillSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, +1);
                     else
                         _fillSmoothQuarterCircleInterHP2(i, center, r, color, opacity, seg1, +1, seg2, -1);
@@ -5320,7 +5320,7 @@ namespace tgx
                     }
                 }
             }
-        col_origin.blend256(color, (op * tgx::min(seg1.AA(+1), seg2.AA(-1)))>> 8);        
+        col_origin.blend256(color, (op * tgx::min(seg1.AA(+1), seg2.AA(-1)))>> 8);
         drawPixel<true>(seg1.pos(), col_origin);
         }
 
@@ -5328,7 +5328,7 @@ namespace tgx
 
 
 
-    /* draw a quarter circle intersected with 0,1 or 2 half plane of equation x*kx + y*ky + off > 0 (and x*kx + y*ky + off_full > 0 for full pixel intensity). 
+    /* draw a quarter circle intersected with 0,1 or 2 half plane of equation x*kx + y*ky + off > 0 (and x*kx + y*ky + off_full > 0 for full pixel intensity).
         2    x=1, y=-1  |  3   x=-1; y=-1
        ---------------------------------
         0    x=1, y=1   |  1   x=-1, y=1
@@ -5464,7 +5464,7 @@ namespace tgx
                 if (u1 > 135) continue;
                 else
                     {
-                    if (u2 > 135) 
+                    if (u2 > 135)
                         _drawSmoothQuarterCircleInterHP1(i, center, r, color, opacity, seg1, +1);
                     else
                         _drawSmoothQuarterCircleInterHP2(i, center, r, color, opacity, seg1, +1, seg2, -1);
@@ -5499,7 +5499,7 @@ namespace tgx
 
 
 
-    /* draw a thick quarter circle intersected with 0,1 or 2 half plane of equation x*kx + y*ky + off > 0  (and x*kx + y*ky + off_full > 0 for full pixel intensity). 
+    /* draw a thick quarter circle intersected with 0,1 or 2 half plane of equation x*kx + y*ky + off > 0  (and x*kx + y*ky + off_full > 0 for full pixel intensity).
         2    x=1, y=-1  |  3   x=-1; y=-1
        ---------------------------------
         0    x=1, y=1   |  1   x=-1, y=1
@@ -5599,7 +5599,7 @@ namespace tgx
     void Image<color_t>::drawThickCircleAA(fVec2 center, float r, float thickness, color_t color, float opacity)
         {
         if ((!isValid()) || (r <= 0)) return;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;        
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         _drawSmoothThickQuarterCircleInterHPsub(center, r, thickness, 0, 1, 1, color, opacity, 0);
         _drawSmoothThickQuarterCircleInterHPsub(center, r, thickness, 1, 0, 1, color, opacity, 0);
         _drawSmoothThickQuarterCircleInterHPsub(center, r, thickness, 2, 1, 0, color, opacity, 0);
@@ -5639,7 +5639,7 @@ namespace tgx
                 if (u1 > 135) continue;
                 else
                     {
-                    if (u2 > 135) 
+                    if (u2 > 135)
                         _drawSmoothThickQuarterCircleInterHP1(i, center, r, thickness, color, opacity, seg1, +1);
                     else
                         _drawSmoothThickQuarterCircleInterHP2(i, center, r, thickness, color, opacity, seg1, +1, seg2, -1);
@@ -5673,7 +5673,7 @@ namespace tgx
 
 
 
-    /* fill a thick quarter circle intersected with 0,1 or 2 half plane of equation x*kx + y*ky + off > 0  (and x*kx + y*ky + off_full > 0 for full pixel intensity). 
+    /* fill a thick quarter circle intersected with 0,1 or 2 half plane of equation x*kx + y*ky + off > 0  (and x*kx + y*ky + off_full > 0 for full pixel intensity).
         2    x=1, y=-1  |  3   x=-1; y=-1
        ---------------------------------
         0    x=1, y=1   |  1   x=-1, y=1
@@ -5715,7 +5715,7 @@ namespace tgx
                 const float e2 = dx2 + dy2;
                 if (e2 >= RA2) { i_min = i + dir_x; continue; }
                 if (e2 <= RB2)
-                    { 
+                    {
                     int x1 = i;
                     int x2 = B.maxX - dir_x;
                     if (x2 < x1) tgx::swap(x1, x2);
@@ -5738,7 +5738,7 @@ namespace tgx
                             o1 += kx1; x1++;
                             }
                         }
-                    else 
+                    else
                         {
                         while (x1 <= x2)
                             {
@@ -5767,7 +5767,7 @@ namespace tgx
                 const float d1 = se - (R - thickness); const float alpha1 = (d1 < 1) ? d1 : 1.0f;
                 const float alpha = alpha1 * alpha2;
                 if (d1 < 1.5f) _drawPixel<false>({ i,j }, color_interior, (1 - d1/2) * nop);
-                _drawPixel<false>({ i,j }, color_border, alpha * nop);                
+                _drawPixel<false>({ i,j }, color_border, alpha * nop);
                 }
             }
         return;
@@ -5849,7 +5849,7 @@ namespace tgx
                 if (u1 > 135) continue;
                 else
                     {
-                    if (u2 > 135) 
+                    if (u2 > 135)
                         _fillSmoothThickQuarterCircleInterHP1(i, center, r, thickness, color_interior, color_border, opacity, seg1, +1);
                     else
                         _fillSmoothThickQuarterCircleInterHP2(i, center, r, thickness, color_interior, color_border, opacity, seg1, +1, seg2, -1);
@@ -5878,7 +5878,7 @@ namespace tgx
                     }
                 }
             }
-        col_origin.blend256(color_interior, (op * tgx::min(seg1.AA(+1), seg2.AA(-1)))>> 8);        
+        col_origin.blend256(color_interior, (op * tgx::min(seg1.AA(+1), seg2.AA(-1)))>> 8);
         drawPixel<true>(seg1.pos(), col_origin);
         }
 
@@ -5922,7 +5922,7 @@ namespace tgx
         int32_t fy2 = 4 * ry2;
         int32_t s;
         int yt = ry;
-        for (x = 0, y = ry, s = 2 * ry2 + rx2 * (1 - 2 * ry); ry2 * x <= rx2 * y; x++) 
+        for (x = 0, y = ry, s = 2 * ry2 + rx2 * (1 - 2 * ry); ry2 * x <= rx2 * y; x++)
             {
             if (OUTLINE)
                 {
@@ -5934,7 +5934,7 @@ namespace tgx
                     _drawPixel<CHECKRANGE>({ x0 + x, y0 + y }, outline_color, opacity);
                     }
                 }
-            if (s >= 0) 
+            if (s >= 0)
                 {
                 s += fx2 * (1 - y);
                 y--;
@@ -5950,8 +5950,8 @@ namespace tgx
                 }
             s += ry2 * ((4 * x) + 6);
             }
-        
-        for (x = rx, y = 0, s = 2 * rx2 + ry2 * (1 - 2 * rx); rx2 * y <= ry2 * x; y++) 
+
+        for (x = rx, y = 0, s = 2 * rx2 + ry2 * (1 - 2 * rx); rx2 * y <= ry2 * x; y++)
             {
             if (OUTLINE)
                 {
@@ -6013,7 +6013,7 @@ namespace tgx
         }
 
 
-   
+
 
 
 
@@ -6060,7 +6060,7 @@ namespace tgx
                 const float e2 = (dx2 + dy2 - 1);
                 if (e2 >= tt) { i_min = i + dir_x; continue; }
                 if (e2 <= -tt) { break; }
-                const float alpha = 1.0f - fabs(e2 / (tt)); // single line                
+                const float alpha = 1.0f - fabs(e2 / (tt)); // single line
                 _drawPixel<false>({ i,j }, color, alpha * opacity);
                 }
             }
@@ -6280,7 +6280,7 @@ namespace tgx
     void Image<color_t>::fillThickEllipseAA(fVec2 center, fVec2 radiuses, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
         if ((!isValid()) || (radiuses.x <= 0) || (radiuses.y <= 0)) return;
-        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;        
+        if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         _fillSmoothThickQuarterEllipse(center, radiuses.x, radiuses.y, thickness, 0, 1, 1, color_interior, color_border, opacity);
         _fillSmoothThickQuarterEllipse(center, radiuses.x, radiuses.y, thickness, 1, 0, 1, color_interior, color_border, opacity);
         _fillSmoothThickQuarterEllipse(center, radiuses.x, radiuses.y, thickness, 2, 1, 0, color_interior, color_border, opacity);
@@ -6954,8 +6954,8 @@ namespace tgx
             drawThickLineAA(P1, P2, thickness, end_P1, end_P2, color, opacity);
             return;
             }
-        bool done = false; 
-        drawThickPolylineAA(            
+        bool done = false;
+        drawThickPolylineAA(
             [&P1, &P2, &PC, &wc, &done](tgx::fVec2& P)
                 {
                 if (done)
@@ -6982,7 +6982,7 @@ namespace tgx
     bool Image<color_t>::_splitCubicBezier(fVec2 P1, fVec2 P2, fVec2 PPC1, fVec2 PPC2, fVec2& Q, fVec2& C, fVec2& D)
         {
         const int MAX_ITER = 20;    // maximum number of iteration to prevent stalling
-        const float l = 0.25f;        
+        const float l = 0.25f;
         const float nn = (P1 - P2).norm2();
         const float a1 = _triangleAera(P1, P2, PPC1);
         const float a2 = _triangleAera(P1, P2, PPC2);
@@ -6991,7 +6991,7 @@ namespace tgx
         int d = 0;
         while (1)
             {
-            const fVec2 A = (1 - t) * P1 + t * PPC1; 
+            const fVec2 A = (1 - t) * P1 + t * PPC1;
             const fVec2 X = (1 - t) * PPC1 + t * PPC2;
             const fVec2 B = (1 - t) * A + t * X;
             D = (1 - t) * PPC2 + t * P2;
@@ -7011,8 +7011,8 @@ namespace tgx
     void Image<color_t>::drawThickCubicBezierAA(fVec2 P1, fVec2 P2, fVec2 PPC1, fVec2 PPC2, float thickness, EndPath end_P1, EndPath end_P2, color_t color, float opacity)
         {
         if (!isValid() || (thickness <=0)) return;
-        bool done = false; 
-        drawThickPolylineAA(            
+        bool done = false;
+        drawThickPolylineAA(
             [&P1, &P2, &PPC1, &PPC2, &done](tgx::fVec2& P)
                 {
                 if (done)
@@ -7075,10 +7075,10 @@ namespace tgx
             x1 = (x0 - 2 * x2) / (5.0f - mi);
             y1 = (y0 - 2 * y2) / (5.0f - mi);
 
-            int i = n - 2; 
-            bool loadstart = true; 
-            bool begin = true; 
-            fVec2 P1, P2, PC; 
+            int i = n - 2;
+            bool loadstart = true;
+            bool begin = true;
+            fVec2 P1, P2, PC;
 
             drawThickPolylineAA(
                 [&](tgx::fVec2& P)
@@ -7101,27 +7101,27 @@ namespace tgx
                             P2 = { x[0], y[0] };
                             P1 = { x2, y2 };
                             PC = { x1, y1 };
-                            }                         
-                        i--; 
-                        loadstart = false; 
+                            }
+                        i--;
+                        loadstart = false;
                         }
                     if (begin)
                         {
-                        begin = false; 
-                        P = P1; 
-                        return true; 
+                        begin = false;
+                        P = P1;
+                        return true;
                         }
-                    // here, we are on curve P1, P2, PC and P1 has already been plotted.                     
+                    // here, we are on curve P1, P2, PC and P1 has already been plotted.
                     fVec2 Q, PB;
                     float wb;
                     if (_splitRationalQuadBezier(P1, P2, PC, 1.0f, Q, PB, wb))
-                        { // done with this curve. 
-                        P = P2; 
-                        if (i == -1) return false; 
+                        { // done with this curve.
+                        P = P2;
+                        if (i == -1) return false;
                         loadstart = true;
                         return true;
                         }
-                    P = Q; 
+                    P = Q;
                     P1 = Q;
                     PC = PB;
                     return true;
@@ -7216,7 +7216,7 @@ namespace tgx
                             x3 = x4; y3 = y4; x2 = x1; y2 = y1; x1 = x0; y1 = y0;
                             }
                         else if (i == 0)
-                            {              
+                            {
                             x0 = x[0]; x4 = (3 * x0 + 7 * x1 + 2 * x2 + 6) / 12.0f;
                             y0 = y[0]; y4 = (3 * y0 + 7 * y1 + 2 * y2 + 6) / 12.0f;
                             P2 = { x4, y4 };
@@ -7240,11 +7240,11 @@ namespace tgx
                         P = P1;
                         return true;
                         }
-                    // here, we are on curve P1, P2, PPC1 and PPC2 has already been plotted.                     
+                    // here, we are on curve P1, P2, PPC1 and PPC2 has already been plotted.
                     fVec2 Q, C, D;
                     if (_splitCubicBezier(P1, P2, PPC1, PPC2, Q, C, D))
-                        { // done with this curve. 
-                        P = P2;                   
+                        { // done with this curve.
+                        P = P2;
                         if (i == -2) return false;
                         loadstart = true;
                         return true;
@@ -7333,10 +7333,10 @@ namespace tgx
                 y[i] = yy;
                 }
 
-            int i = 0; 
-            bool loadstart = true; 
-            bool begin = true; 
-            fVec2 P1, P2, PC; 
+            int i = 0;
+            bool loadstart = true;
+            bool begin = true;
+            fVec2 P1, P2, PC;
             drawThickPolygonAA(
                 [&](tgx::fVec2& P)
                     {
@@ -7370,17 +7370,17 @@ namespace tgx
                             begin = false;
                             continue; // skip the first point P1 as this will be the last one !
                             }
-                        // here, we are on curve P1, P2, PC and P1 has already been plotted.                     
+                        // here, we are on curve P1, P2, PC and P1 has already been plotted.
                         fVec2 Q, PB;
                         float wb;
                         if (_splitRationalQuadBezier(P1, P2, PC, 1.0f, Q, PB, wb))
-                            { // done with this curve. 
+                            { // done with this curve.
                             P = P2;
                             if (i == n)
                                 { // reset because we need to go over the list of points twice
                                 i = 0;
                                 loadstart = true;
-                                begin = true;                                
+                                begin = true;
                                 return false;
                                 }
                             loadstart = true;
@@ -7408,7 +7408,7 @@ namespace tgx
             {
         case 0:
         case 1:
-        case 2:         
+        case 2:
             return;
         default:
            {
@@ -7464,10 +7464,10 @@ namespace tgx
                 y[i] = yy;
                 }
 
-            int i = 0; 
-            bool loadstart = true; 
-            bool begin = true; 
-            fVec2 P1, P2, PC; 
+            int i = 0;
+            bool loadstart = true;
+            bool begin = true;
+            fVec2 P1, P2, PC;
             fillPolygonAA(
                 [&](tgx::fVec2& P)
                     {
@@ -7501,11 +7501,11 @@ namespace tgx
                             begin = false;
                             continue; // skip the first point P1 as this will be the last one !
                             }
-                        // here, we are on curve P1, P2, PC and P1 has already been plotted.                     
+                        // here, we are on curve P1, P2, PC and P1 has already been plotted.
                         fVec2 Q, PB;
                         float wb;
                         if (_splitRationalQuadBezier(P1, P2, PC, 1.0f, Q, PB, wb))
-                            { // done with this curve. 
+                            { // done with this curve.
                             P = P2;
                             if (i == n)
                                 { // reset because we need to go over the list of points twice
@@ -7539,7 +7539,7 @@ namespace tgx
             {
         case 0:
         case 1:
-        case 2:         
+        case 2:
             return;
 
         default:
@@ -7596,10 +7596,10 @@ namespace tgx
                 y[i] = yy;
                 }
 
-            int i = 0; 
-            bool loadstart = true; 
-            bool begin = true; 
-            fVec2 P1, P2, PC; 
+            int i = 0;
+            bool loadstart = true;
+            bool begin = true;
+            fVec2 P1, P2, PC;
             fillThickPolygonAA(
                 [&](tgx::fVec2& P)
                     {
@@ -7633,11 +7633,11 @@ namespace tgx
                             begin = false;
                             continue; // skip the first point P1 as this will be the last one !
                             }
-                        // here, we are on curve P1, P2, PC and P1 has already been plotted.                     
+                        // here, we are on curve P1, P2, PC and P1 has already been plotted.
                         fVec2 Q, PB;
                         float wb;
                         if (_splitRationalQuadBezier(P1, P2, PC, 1.0f, Q, PB, wb))
-                            { // done with this curve. 
+                            { // done with this curve.
                             P = P2;
                             if (i == n)
                                 { // reset because we need to go over the list of points twice
@@ -7662,12 +7662,12 @@ namespace tgx
 
 
 
-    
 
 
-    
-    
-    
+
+
+
+
 
 
 
@@ -7680,9 +7680,9 @@ namespace tgx
 
 
     /************************************************************************************
-    * 
+    *
     *  Drawing Text
-    * 
+    *
     *************************************************************************************/
 
 
@@ -7692,7 +7692,7 @@ namespace tgx
     bool Image<color_t>::_clipit(int& x, int& y, int& sx, int& sy, int & b_left, int & b_up)
         {
         b_left = 0;
-        b_up = 0; 
+        b_up = 0;
         if ((sx < 1) || (sy < 1) || (y >= _ly) || (y + sy <= 0) || (x >= _lx) || (x + sx <= 0))
             { // completely outside of image
             return false;
@@ -7776,7 +7776,7 @@ namespace tgx
                 auto U = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
                 if ((wrap_text) && (pos.x + xa >= _lx))
                     {
-                    auto pos2 = pos; 
+                    auto pos2 = pos;
                     pos.x = startx;
                     pos.y += hh;
                     U += (pos - pos2);
@@ -7818,7 +7818,7 @@ namespace tgx
                 auto U = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
                 if ((wrap_text)&& (pos.x + xa >= _lx))
                     {
-                    auto pos2 = pos; 
+                    auto pos2 = pos;
                     pos.x = startx;
                     pos.y += hh;
                     U += (pos - pos2);
@@ -7838,10 +7838,10 @@ namespace tgx
 
 
 
-    template<typename color_t>    
+    template<typename color_t>
     iVec2 Image<color_t>::drawChar(char c, iVec2 pos, const GFXfont& font, color_t color, float opacity)
         {
-        if (!isValid()) return pos; 
+        if (!isValid()) return pos;
         if ((opacity < 0) || (opacity > 1)) return _drawCharGFX<false>(c, pos, color, font, 1.0f);
         /*
         if (anchor != DEFAULT_TEXT_ANCHOR)
@@ -7857,7 +7857,7 @@ namespace tgx
     template<typename color_t>
     iVec2 Image<color_t>::drawChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, color_t color, float opacity)
         {
-        if (!isValid()) return pos; 
+        if (!isValid()) return pos;
         if ((opacity < 0) || (opacity > 1)) return _drawCharILI<false>(c, pos, color, font, 1.0f);
         /*
         if (anchor != DEFAULT_TEXT_ANCHOR)
@@ -7894,7 +7894,7 @@ namespace tgx
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
             start_newline_at_0 = false;
-            if (!(anchor & LEFT)) wrap_text = false; // cannot perform wrapping if we need to move. 
+            if (!(anchor & LEFT)) wrap_text = false; // cannot perform wrapping if we need to move.
             auto B = measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, wrap_text, start_newline_at_0);
             iVec2 pos2 = B.getAnchor(anchor);
             pos += pos - pos2;
@@ -7912,7 +7912,7 @@ namespace tgx
         if (anchor != DEFAULT_TEXT_ANCHOR)
             {
             start_newline_at_0 = false;
-            if (!(anchor & LEFT)) wrap_text = false; // cannot perform wrapping if we need to move. 
+            if (!(anchor & LEFT)) wrap_text = false; // cannot perform wrapping if we need to move.
             auto B = measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, wrap_text,start_newline_at_0);
             iVec2 pos2 = B.getAnchor(anchor);
             pos += pos - pos2;
@@ -7925,14 +7925,14 @@ namespace tgx
     template<bool BLEND> iVec2 Image<color_t>::_drawCharGFX(char c, iVec2 pos, color_t col, const GFXfont& font, float opacity)
         {
         uint8_t n = (uint8_t)c;
-        if ((n < font.first) || (n > font.last)) return pos; // nothing to draw. 
+        if ((n < font.first) || (n > font.last)) return pos; // nothing to draw.
         auto& g = font.glyph[n - font.first];
         if ((!isValid()) || (font.bitmap == nullptr)) return pos;
         int x = pos.x + g.xOffset;
         int y = pos.y + g.yOffset;
         int sx = g.width;
         int sy = g.height;
-        const int rsx = sx; // save the real bitmap width; 
+        const int rsx = sx; // save the real bitmap width;
         int b_left, b_up;
         if (!_clipit(x, y, sx, sy, b_left, b_up)) return iVec2(pos.x + g.xAdvance, pos.y);
         _drawCharBitmap_1BPP<BLEND>(font.bitmap + g.bitmapOffset, rsx, b_up, b_left, sx, sy, x, y, col, opacity);
@@ -7959,14 +7959,14 @@ namespace tgx
             return pos;
             }
         const uint8_t * data = font.data + tgx_internals::fetchbits_unsigned(font.index, (n*font.bits_index), font.bits_index);
-        int32_t off = 0; 
+        int32_t off = 0;
         uint32_t encoding = tgx_internals::fetchbits_unsigned(data, off, 3);
         if (encoding != 0) return  pos; // wrong/unsupported format
         off += 3;
         int sx = (int)tgx_internals::fetchbits_unsigned(data, off, font.bits_width);
-        off += font.bits_width;         
+        off += font.bits_width;
         int sy = (int)tgx_internals::fetchbits_unsigned(data, off, font.bits_height);
-        off += font.bits_height;            
+        off += font.bits_height;
         const int xoffset = (int)tgx_internals::fetchbits_signed(data, off, font.bits_xoffset);
         off += font.bits_xoffset;
         const int yoffset = (int)tgx_internals::fetchbits_signed(data, off, font.bits_yoffset);
@@ -7975,7 +7975,7 @@ namespace tgx
         off += font.bits_delta;
         int x = pos.x + xoffset;
         int y = pos.y - sy - yoffset;
-        const int rsx = sx; // save the real bitmap width; 
+        const int rsx = sx; // save the real bitmap width;
         int b_left, b_up;
         if (!_clipit(x, y, sx, sy, b_left, b_up)) return iVec2(pos.x + delta, pos.y);
         if (font.version == 1)
@@ -7987,7 +7987,7 @@ namespace tgx
             data += (off >> 3) + ((off & 7) ? 1 : 0); // bitmap begins at the next byte boundary
             switch (font.reserved)
                 {
-                case 0: 
+                case 0:
                     _drawCharBitmap_1BPP<BLEND>(data, rsx, b_up, b_left, sx, sy, x, y, col, opacity);
                     break;
                 case 1:
@@ -8086,14 +8086,14 @@ namespace tgx
     template<bool BLEND>
     void Image<color_t>::_drawCharILI9341_t3(const uint8_t* bitmap, int32_t off, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)
         {
-        uint32_t rl = 0; // number of line repeat remaining. 
+        uint32_t rl = 0; // number of line repeat remaining.
         while (b_up > 0)
             { // need to skip lines
             if (tgx_internals::fetchbit(bitmap, off++))
                 { // this is a repeating line
                 int n = (int)tgx_internals::fetchbits_unsigned(bitmap, off, 3) + 2; // number of repetition
-                if (n <= b_up) 
-                    {  
+                if (n <= b_up)
+                    {
                     b_up -= n;
                     off += (rsx + 3);
                     }
@@ -8107,15 +8107,15 @@ namespace tgx
                 }
             else
                 { // skipping a single line
-                b_up--; 
-                off += rsx; 
+                b_up--;
+                off += rsx;
                 }
             }
 
         while (sy-- > 0)
             { // iterate over lines to draw
             if (rl == 0)
-                { // need to read the line header. 
+                { // need to read the line header.
                 if (tgx_internals::fetchbit(bitmap, off++))
                     { // repeating line
                     rl = tgx_internals::fetchbits_unsigned(bitmap, off, 3) + 2; // number of repetition
@@ -8123,10 +8123,10 @@ namespace tgx
                     }
                 else
                     {
-                    rl = 1; // repeat only once, already at beginning of line pixels 
+                    rl = 1; // repeat only once, already at beginning of line pixels
                     }
                 }
-            // off is now pointing to the begining of the line pixels and we can draw it. 
+            // off is now pointing to the beginning of the line pixels and we can draw it.
             _drawcharline<BLEND>(bitmap, off + b_left, _buffer + TGX_CAST32(x) + TGX_CAST32(y) * TGX_CAST32(_stride), sx, col, opacity);
             if ((--rl) == 0)
                 { // done repeating so we move to the next line in the bitmap
@@ -8147,7 +8147,7 @@ namespace tgx
         if (dx >= 8)
             { // line has at least 8 pixels
             if (u != 128)
-                { // not at the start of a bitmap byte: we first finish it. 
+                { // not at the start of a bitmap byte: we first finish it.
                 const uint8_t b = *(bitmap++); // increment bitmap now since we know we will finish this byte
                 while (u > 0)
                     {
@@ -8157,7 +8157,7 @@ namespace tgx
                 u = 128;
                 }
             while (dx >= 8)
-                { // now we can write 8 pixels consecutively. 
+                { // now we can write 8 pixels consecutively.
                 const uint8_t b = *(bitmap++);
                 if (b)
                     { // there is something to write
@@ -8173,11 +8173,11 @@ namespace tgx
                 p += 8;
                 dx -= 8;
                 }
-            // strictly less than 8 pixels remain 
+            // strictly less than 8 pixels remain
             if (dx > 0)
                 {
                 const uint8_t b = *bitmap;
-                if (b)                  
+                if (b)
                     {
                     do
                         {
@@ -8225,16 +8225,16 @@ namespace tgx
         {
         int32_t off = TGX_CAST32(b_up) * TGX_CAST32(rsx) + TGX_CAST32(b_left);
         bitmap += (off >> 3);                       // starting byte in the bitmap
-        uint8_t u = (uint8_t)(128 >> (off & 7));    // index of the first bit 
+        uint8_t u = (uint8_t)(128 >> (off & 7));    // index of the first bit
         const int sk = (rsx - sx);              // number of bits to skip at the end of a row.
         color_t* p = _buffer + TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y); // start position in destination buffer
         if (sx >= 8)
             { // each row has at least 8 pixels
             for (int dy = sy; dy > 0; dy--)
                 {
-                int dx = sx; // begining of row, number of char to write
+                int dx = sx; // beginning of row, number of characters to write
                 if (u != 128)
-                    { // not at the start of a bitmap byte: we first finish it. 
+                    { // not at the start of a bitmap byte: we first finish it.
                     const uint8_t b = *(bitmap++); // increment bitmap now since we know we will finish this byte
                     while (u > 0)
                         {
@@ -8244,7 +8244,7 @@ namespace tgx
                     u = 128;
                     }
                 while (dx >= 8)
-                    { // now we can write 8 pixels consecutively. 
+                    { // now we can write 8 pixels consecutively.
                     const uint8_t b = *(bitmap++);
                     if (b)
                         {
@@ -8260,7 +8260,7 @@ namespace tgx
                     p += 8;
                     dx -= 8;
                     }
-                // strictly less than 8 pixels remain on the row 
+                // strictly less than 8 pixels remain on the row
                 if (dx > 0)
                     {
                     const uint8_t b = *bitmap; // do not increment bitmap now since we know we will not finish this byte now.
@@ -8334,24 +8334,24 @@ namespace tgx
         }
 
 
-    /** draw a 2 bit per pixel char bitmap on the image 
+    /** draw a 2 bit per pixel char bitmap on the image
     *  packed bdf format 23 : https://github.com/projectitis/packedbdf/blob/master/packedbdf.md
     **/
     template<typename color_t>
     template<bool BLEND>
     void Image<color_t>::_drawCharBitmap_2BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)
-        { 
+        {
         int iop = 171 * (int)(256 * opacity);
         if (sx >= 4)
             { // each row has at least 4 pixels
             for (int dy = 0; dy < sy; dy++)
                 {
                 int32_t off = TGX_CAST32(b_up + dy) * TGX_CAST32(rsx) + TGX_CAST32(b_left);
-                color_t* p = _buffer + TGX_CAST32(_stride) * TGX_CAST32(y + dy) + TGX_CAST32(x); 
+                color_t* p = _buffer + TGX_CAST32(_stride) * TGX_CAST32(y + dy) + TGX_CAST32(x);
                 int dx = sx;
                 const int32_t uu = off & 3;
                 if (uu)
-                    {// not at the start of a bitmap byte: we first finish it. 
+                    {// not at the start of a bitmap byte: we first finish it.
                     const uint8_t b = bitmap[off >> 2];
                     switch (uu)
                         {
@@ -8361,7 +8361,7 @@ namespace tgx
                         }
                     }
                 while (dx >= 4)
-                    { // now we can write 4 pixels consecutively. 
+                    { // now we can write 4 pixels consecutively.
                     const uint8_t b = bitmap[off >> 2];
                     if (b)
                         {
@@ -8374,7 +8374,7 @@ namespace tgx
                     p += 4;
                     dx -= 4;
                     }
-                // strictly less than 4 pixels remain on the row 
+                // strictly less than 4 pixels remain on the row
                 if (dx > 1)
                     {
                     const uint8_t b = bitmap[off >> 2];
@@ -8384,12 +8384,12 @@ namespace tgx
                     }
                 else
                     {
-                    if (dx > 0) 
-                        { 
+                    if (dx > 0)
+                        {
                         const uint8_t b = bitmap[off >> 2];
                         const int v = ((b & 192) >> 6); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9);
                         }
-                    }                   
+                    }
                 }
             }
         else
@@ -8409,7 +8409,7 @@ namespace tgx
                         case 2: { const int v = ((b & 12) >> 2); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); off++; dx--; }
                         case 3: { const int v = (b & 3); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 9); off++; dx--; }
                         }
-                    }   
+                    }
                 if (dx > 0)
                     {
                     const uint8_t b = bitmap[off >> 2];
@@ -8434,20 +8434,20 @@ namespace tgx
     template<typename color_t>
     template<bool BLEND>
     void Image<color_t>::_drawCharBitmap_4BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity)
-        { 
+        {
         int iop = 137 * (int)(256 * opacity);
         if (sx >= 2)
             { // each row has at least 2 pixels
             for (int dy = 0; dy < sy; dy++)
                 {
                 int32_t off = TGX_CAST32(b_up + dy) * TGX_CAST32(rsx) + TGX_CAST32(b_left);
-                color_t* p = _buffer + TGX_CAST32(_stride) * TGX_CAST32(y + dy) + TGX_CAST32(x); 
+                color_t* p = _buffer + TGX_CAST32(_stride) * TGX_CAST32(y + dy) + TGX_CAST32(x);
                 int dx = sx;
                 if (off & 1)
-                    {// not at the start of a bitmap byte: we first finish it. 
+                    {// not at the start of a bitmap byte: we first finish it.
                     const uint8_t b = bitmap[off >> 1];
                     const int v = (b & 15); _drawFontPixel<BLEND>(p++, col, (v * iop) >> 11);
-                    off++; dx--; 
+                    off++; dx--;
                     }
                 while (dx >= 2)
                     {
@@ -8463,13 +8463,13 @@ namespace tgx
                     }
                 if (dx > 0)
                     {
-                    const uint8_t b = bitmap[off >> 1];                 
+                    const uint8_t b = bitmap[off >> 1];
                     const int v = ((b & 240) >> 4); _drawFontPixel<BLEND>(p, col, (v * iop) >> 11);
                     }
                 }
             }
         else
-            { // each row has a single pixel 
+            { // each row has a single pixel
             color_t* p = _buffer + TGX_CAST32(_stride) * TGX_CAST32(y) + TGX_CAST32(x);
             int32_t off = TGX_CAST32(b_up) * TGX_CAST32(rsx) + TGX_CAST32(b_left);
             while(sy-- > 0)

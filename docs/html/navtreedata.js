@@ -62,7 +62,7 @@ var NAVTREE =
         [ "drawing splines", "md_docs_intro_api_2_d.html#subsec_splines", null ],
         [ "drawing text", "md_docs_intro_api_2_d.html#subsec_text", null ]
       ] ],
-      [ "TGX extensions via external librairies", "md_docs_intro_api_2_d.html#sec_extensions", [
+      [ "TGX extensions via external libraries", "md_docs_intro_api_2_d.html#sec_extensions", [
         [ "Drawing text with TrueType fonts", "md_docs_intro_api_2_d.html#subsec_openfontrender", null ],
         [ "Drawing PNG images", "md_docs_intro_api_2_d.html#subsec_PNGdec", null ],
         [ "Drawing JPEG images", "md_docs_intro_api_2_d.html#subsec_JPEGDEC", null ],
@@ -97,8 +97,8 @@ var NAVTREEINDEX =
 "_vec4_8h.html",
 "classtgx_1_1_renderer3_d.html#aae4fa24bc6a4c5235df0ae3e112c48b3",
 "structtgx_1_1_box2.html#a6ee5eef030c34062dc4829930b1e5be3",
-"structtgx_1_1_r_g_b32.html#aa686d44a6f3826125f96444c1afae5d6",
-"structtgx_1_1_vec4.html#a5fd0076969b453b61988cfffda3a3b1f"
+"structtgx_1_1_r_g_b32.html#aa4c7516824d5f171362c2967a2cd6cd1",
+"structtgx_1_1_vec4.html#a521d165fddc29c7602861cde4f99c73b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

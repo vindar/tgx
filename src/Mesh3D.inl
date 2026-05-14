@@ -51,7 +51,7 @@ namespace tgx
 
             size_t remaining_ram1() const { return _ram1_size; }
 
-            size_t remaining_ram2() const { return _ram2_size; }   
+            size_t remaining_ram2() const { return _ram2_size; }
 
             const fVec3* cache_vertice(size_t size, const fVec3* va) { return (const fVec3*)cache_array(size * sizeof(fVec3), (const char*)va); }
 
@@ -67,7 +67,7 @@ namespace tgx
                 char* p = find_in_cache((const char*)im);
                 if (p != nullptr) return ((const Image<color_t>*)p);
 
-                const size_t image_size = sizeof(Image<color_t>);                
+                const size_t image_size = sizeof(Image<color_t>);
                 const size_t data_size = size_t(im->stride()) * size_t(im->ly()) * sizeof(color_t);
 
                 if (!can_alloc(image_size + data_size)) return im;
@@ -113,7 +113,7 @@ namespace tgx
             /** align pointer on 4 bytes boundary and adjust remaining size */
             void align(char*& ptr, size_t& space)
             {
-                if (space < 4) return; // cannot do nothing. 
+                if (space < 4) return; // cannot do nothing.
                 // ugly hack, should change this to use std::align at some point...
                 const size_t adr = (size_t)(ptr);
                 const size_t r = 4 - (adr % 4);
@@ -226,7 +226,7 @@ namespace tgx
 
         for (int k= 0; copy_order[k] != 0; k++)
             {
-            const char c = copy_order[k]; 
+            const char c = copy_order[k];
             Mesh3D<color_t> * m = new_mesh;
             while (m != nullptr)
                 {
@@ -257,7 +257,7 @@ namespace tgx
                     m->face = CM.cache_face(m->len_face, m->face);
                     break;
                     }
-                m = const_cast<tgx::Mesh3D<color_t>*>(m->next); // valid because we know this mesh is in a ram buffer. 
+                m = const_cast<tgx::Mesh3D<color_t>*>(m->next); // valid because we know this mesh is in a ram buffer.
                 }
             }
 
@@ -275,13 +275,13 @@ namespace tgx
 
 
 
-   
 
 
-    /** 
-     * Very stupid, unoptimized "map" container to make sure memory is 
+
+    /**
+     * Very stupid, unoptimized "map" container to make sure memory is
      * allocated/freed only once for each object.
-     * Algo. inefficient but we dont care here... 
+     * Algo. inefficient but we don't care here...
      **/
     class _MapPtr
         {
@@ -291,8 +291,8 @@ namespace tgx
             _MapPtr() : _nb(0) {}
 
 
-            /** 
-             * free p if p is not a key in the map 
+            /**
+             * free p if p is not a key in the map
              * and then add it to the map (with itself as value)
              **/
             inline void free(const void* p)
@@ -311,15 +311,15 @@ namespace tgx
                     {
                     extmem_free(_vals[k]);
                     }
-                _nb = 0; 
+                _nb = 0;
                 }
 
-            /** 
-             * Check if src is a key in the map. 
+            /**
+             * Check if src is a key in the map.
              * If true, return the mapped pointer.
              * If false, allocate size bytes and add to the map src as key
-             * and the allocated adress as value and return the allocated adress. 
-             * 
+             * and the allocated address as value and return the allocated address.
+             *
              * if allocation fails, free all cvalue pointer in the map and return nulptr
              **/
             inline void* malloc(const void* src, size_t size)
@@ -331,7 +331,7 @@ namespace tgx
                     }
                 void* adr = _find(src);
                 if (adr == nullptr)
-                    { // not yet in the map, 
+                    { // not yet in the map,
                     adr = extmem_malloc(size);
                     if (!TGX_IS_EXTMEM(adr))
                         { // out of memory
@@ -344,12 +344,12 @@ namespace tgx
                 return adr;
                 }
 
-        private: 
+        private:
 
             /** push a new element, no overflow check ! */
-            void _add(const void* key, void * val) 
-                { 
-                _keys[_nb] = key; 
+            void _add(const void* key, void * val)
+                {
+                _keys[_nb] = key;
                 _vals[_nb] = val;
                 _nb++;
                 }
@@ -390,13 +390,13 @@ namespace tgx
                 {
                 map.free(mesh->texture->data());
                 map.free(mesh->texture);
-                }       
+                }
             Mesh3D<color_t>* m = mesh;
             mesh = (Mesh3D<color_t> * )mesh->next;
             map.free(m);
             }
         }
-    
+
 
 
     template<typename color_t> Mesh3D<color_t>* copyMeshEXTMEM(const Mesh3D<color_t>* mesh,
@@ -404,15 +404,15 @@ namespace tgx
                                                                 bool copy_normals,
                                                                 bool copy_texcoords,
                                                                 bool copy_textures,
-                                                                bool copy_faces)    
+                                                                bool copy_faces)
         {
-        if (external_psram_size <= 0) return nullptr; // no extram present. 
+        if (external_psram_size <= 0) return nullptr; // no extram present.
         if ((mesh == nullptr) || (TGX_IS_EXTMEM(mesh))) return nullptr; // not a valid mesh
         _MapPtr map;
-        
+
         Mesh3D<color_t>* new_mesh = (Mesh3D<color_t> * )map.malloc(mesh, sizeof(Mesh3D<color_t>));
         if (new_mesh == nullptr) return nullptr;
-        Mesh3D<color_t>* cur_mesh = new_mesh;   
+        Mesh3D<color_t>* cur_mesh = new_mesh;
         while (1)
             {
             if (TGX_IS_EXTMEM(mesh->vertice)) { map.freeAll(); return nullptr; }
@@ -422,7 +422,7 @@ namespace tgx
                 if (p == nullptr) return nullptr;
                 cur_mesh->vertice = p;
                 }
-            
+
             if (TGX_IS_EXTMEM(mesh->texcoord)) { map.freeAll(); return nullptr; }
             if ((copy_texcoords) && (mesh->nb_texcoords > 0) && (TGX_IS_PROGMEM(mesh->texcoord)))
                 {
@@ -430,7 +430,7 @@ namespace tgx
                 if (p == nullptr) return nullptr;
                 cur_mesh->texcoord = p;
                 }
-            
+
             if (TGX_IS_EXTMEM(mesh->normal)) { map.freeAll(); return nullptr; }
             if ((copy_normals) && (mesh->nb_normals > 0) && (TGX_IS_PROGMEM(mesh->normal)))
                 {
@@ -438,7 +438,7 @@ namespace tgx
                 if (p == nullptr) return nullptr;
                 cur_mesh->normal = p;
                 }
-                    
+
             if (TGX_IS_EXTMEM(mesh->face)) { map.freeAll(); return nullptr; }
             if ((copy_faces) && (mesh->nb_faces > 0) && (TGX_IS_PROGMEM(mesh->face)))
                 {
@@ -446,7 +446,7 @@ namespace tgx
                 if (p == nullptr) return nullptr;
                 cur_mesh->face = p;
                 }
-            
+
             if (TGX_IS_EXTMEM(mesh->texture)) { map.freeAll(); return nullptr; }
             if ((copy_textures) && (mesh->texture))
                 {
@@ -474,7 +474,7 @@ namespace tgx
             cur_mesh = next_cur_mesh;
             mesh = mesh->next;
             }
-        return new_mesh; 
+        return new_mesh;
         }
 
 

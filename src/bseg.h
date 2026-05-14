@@ -21,7 +21,7 @@
 // only C++, no plain C
 #ifdef __cplusplus
 
-// mtools extension (if available).  
+// mtools extension (if available).
 #if (MTOOLS_TGX_EXTENSIONS)
 #include <cmath>
 #endif
@@ -37,7 +37,7 @@ namespace tgx
 
 
 
-	
+
 	struct BSegState;
 
 
@@ -60,10 +60,10 @@ namespace tgx
 			if (len > 0)
 				{
 				move(len);		// move to the other endpoint
-				_len = len;		// reset the lenght
+				_len = len;		// reset the length
 				}
 			// reverse
-			_stepx = -_stepx; 
+			_stepx = -_stepx;
 			_stepy = -_stepy;
 			if (_x_major) { _frac = -_dx - 1 - _frac; _frac += 2 * _dy; }
 			else { _frac = -_dy - 1 - _frac; _frac += 2 * _dx; }
@@ -81,12 +81,12 @@ namespace tgx
 
 		/**
 		* check whether this segment makes an obtuse angle with seg
-		* when this line is oriented accoridng to side. 
+		* when this line is oriented accoridng to side.
 		*
-		* this segment and seg must have the same start point. 
-		* 
+		* this segment and seg must have the same start point.
+		*
 		* side should be -1 or 1
-		* returns  -1, 1 or 0. 
+		* returns  -1, 1 or 0.
 		**/
 		int angle(int side, BSeg seg)
 			{
@@ -99,8 +99,8 @@ namespace tgx
 		/* Return the equation of the line: off = kx*x + ky*y
 		*  if off < mino : we are on a pixel on the left side of the line
 		*  if off > maxo : we are on a pixel on the right side of the line
-        *  if mino <= off <= maxo : we are on the line 
-        *  
+        *  if mino <= off <= maxo : we are on the line
+        *
 		* if invert_dir is set, left and right sides are exchanged
 		*/
 		void equation(int32_t & kx, int32_t & ky, int32_t & mino, int32_t & maxo, bool invert_dir = false) const
@@ -127,7 +127,7 @@ namespace tgx
 			if (invert_dir) xm = (!xm);
 			if (xm)
 				{
-				kx = -kx; 
+				kx = -kx;
 				ky = -ky;
 				maxo = o - mi;
 				mino = o - ma;
@@ -173,7 +173,7 @@ namespace tgx
 		void move(int32_t totlen)
 			{
 			_len -= totlen;
-			int32_t len = safeMultB(((_dx > _dy) ? _dx : _dy), totlen);				
+			int32_t len = safeMultB(((_dx > _dy) ? _dx : _dy), totlen);
 			while (1)
 				{
 				if (_x_major)
@@ -205,7 +205,7 @@ namespace tgx
 
 		/**
 		* Move the position pos by 1 pixel horizontally along the given bresenham line.
-		* return the number of pixel traveled by the bresenham line.
+		* return the number of pixels traveled by the bresenham line.
 		*
 		* [x_major can be deduced from linedir but is given as template paramter for speed optimization]
 		*/
@@ -239,8 +239,8 @@ namespace tgx
 
 
 		/**
-		* Move the position pos by a given number of pixels horizontal along a bresenham line.
-		* return the number of pixel traveled by the bresenham line.
+		* Move the position pos by a given number of pixels horizontally along a bresenham line.
+		* return the number of pixels traveled by the bresenham line.
 		* do nothing and return 0 if lenx <= 0.
 		*/
 		int32_t move_x_dir(int32_t totlenx)
@@ -284,7 +284,7 @@ namespace tgx
 
 		/**
 		* Move the position pos by one pixel vertically along the given bresenham line.
-		* return the number of pixel traveled by the bresenham line.
+		* return the number of pixels traveled by the bresenham line.
 		*
 		* [x_major can be deduced from linedir but given as template paramter for speed optimization]
 		*/
@@ -319,7 +319,7 @@ namespace tgx
 
 		/**
 		* Move the position pos along a line by a given number of pixels vertically along a bresenham line.
-		* return the number of pixel traveled by the bresenham line.
+		* return the number of pixels traveled by the bresenham line.
 		* do nothing and return 0 if leny <= 0.
 		*/
 		int32_t move_y_dir(int32_t totleny)
@@ -395,14 +395,14 @@ namespace tgx
 
 
 		/**
-		* Compute number of pixel of the line (that can be drawn) before it exits the box B.
+		* Compute the number of pixels of the line (that can be drawn) before it exits the box B.
 		* If the box is empty of if pos is not in it, return 0. Otherwise, return at least 1.
 		**/
 		int32_t lenght_inside_box(const tgx::iBox2& B) const
 			{
 			if (!B.contains(iVec2{ _x, _y })) return 0;
-			const int32_t hx = 1 + ((_stepx > 0) ? (B.maxX - _x) : (_x - B.minX)); // number of horizontal step before exit. 
-			const int32_t hy = 1 + ((_stepy > 0) ? (B.maxY - _y) : (_y - B.minY)); // number of vertical step before exit. 
+			const int32_t hx = 1 + ((_stepx > 0) ? (B.maxX - _x) : (_x - B.minX)); // number of horizontal step before exit.
+			const int32_t hy = 1 + ((_stepy > 0) ? (B.maxY - _y) : (_y - B.minY)); // number of vertical step before exit.
 			int32_t nx = -1, ny = -1;
 			if (_dx != 0) { BSeg tmp(*this); nx = tmp.move_x_dir(hx); }
 			if (_dy != 0) { BSeg tmp(*this); ny = tmp.move_y_dir(hy); }
@@ -432,7 +432,7 @@ namespace tgx
 			int32_t dy = P2.y - P1.y; if (dy < 0) { dy = -dy;  _stepy = -1; } else { _stepy = 1; } dy <<= EXP; _dy = dy;
 			if (dx >= dy) { _x_major = true; _rat = (dy == 0) ? 0 : (dx / dy); } else { _x_major = false; _rat = (dx == 0) ? 0 : (dy / dx); }
 			_x = P1.x; _y = P1.y;
-			int32_t flagdir = (P2.x > P1.x) ? 1 : 0; // used to compensante frac so that line [P1,P2] = [P2,P1]. 
+			int32_t flagdir = (P2.x > P1.x) ? 1 : 0; // used to compensante frac so that line [P1,P2] = [P2,P1].
 			_frac = ((_x_major) ? (dy - (dx >> 1)) : (dx - (dy >> 1))) - flagdir;
 			_amul = ((int32_t)1 << 28) / (_x_major ? _dx : _dy);
 			_len = ((_x_major ? dx : dy) >> EXP);
@@ -446,7 +446,7 @@ namespace tgx
 			// Fall back to integer computations
 			//init(tgx::iVec2((int)roundf(Pf1.x), (int)roundf(Pf1.y)), tgx::iVec2((int)roundf(Pf2.x), (int)roundf(Pf2.y)));
 			//return;
-			// ************************************************************	
+			// ************************************************************
 			const int32_t PRECISION = 256; // 1024*16;
 			bool sw = false;
 			if ((Pf1.x > Pf2.x) || ((Pf1.x == Pf2.x) && (Pf1.y > Pf2.y))) { sw = true; tgx::swap(Pf1, Pf2); }
@@ -460,7 +460,7 @@ namespace tgx
 			const float fdy = (Pf2.y - Pf1.y);
 			_len = (adx > ady) ? adx : ady;
 			if ((adx == 0) && (ady == 0))
-				{ 
+				{
 				// default horizontal line: could do better and compute _frac for shading
 				// but single point line are usually not raw (since endpoint is not drawn)
 				// so it does not really matter...
@@ -494,7 +494,7 @@ namespace tgx
 			else
 				{ // y major
 				_x_major = false;
-				const float mul = fdx / fdy;	
+				const float mul = fdx / fdy;
 				const float f1 = mul * (P1.y - Pf1.y) + Pf1.x - P1.x;
 				const float f2 = mul * (P2.y - Pf2.y) + Pf2.x - P2.x;
 				int32_t if1 = (int32_t)((2 * PRECISION) * f1); if (if1 <= -PRECISION) { if1 = -PRECISION + 1; } else if (if1 >= PRECISION) { if1 = PRECISION - 1; }
@@ -560,7 +560,7 @@ namespace tgx
 				}
 			if (a > 127)
 				{
-				dir = (X_MAJOR) ? -_stepy : -_stepx;				
+				dir = (X_MAJOR) ? -_stepy : -_stepx;
 				a = (128 + 256) - a;
 				}
 			else
@@ -658,13 +658,13 @@ namespace tgx
 
 
 		/**
-        * Save the current position 
+        * Save the current position
 		**/
 		TGX_INLINE inline BSegState save() const;
 
 
 		/**
-        * Restore a position previously stored. 
+        * Restore a position previously stored.
 		**/
 		TGX_INLINE inline void restore(const BSegState& state);
 
@@ -676,7 +676,7 @@ namespace tgx
 		int32_t _dx, _dy;		// step size in each direction
 		int32_t _stepx, _stepy;	// directions (+/-1)
 		int32_t _rat;			// ratio max(dx,dy)/min(dx,dy) to speed up computations
-		int32_t _amul;			// multiplication factor to compute aa values. 
+		int32_t _amul;			// multiplication factor to compute aa values.
 		bool  _x_major;			// true if the line is xmajor (ie dx > dy) and false if y major (dy >= dx).
 	};
 

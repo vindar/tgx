@@ -143,11 +143,11 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">namespace </span>tgx</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>{</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// forward declaration for the vertices and faces of the unit cube [-1,1]^3 </span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>     </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// forward declaration for the vertices and faces of the unit cube [-1,1]^3</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">extern</span> <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">tgx::fVec3</a> UNIT_CUBE_VERTICES[8];</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">extern</span> <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">tgx::fVec3</a> UNIT_CUBE_NORMALS[6];</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">extern</span> <span class="keyword">const</span> uint16_t UNIT_CUBE_FACES[6*4];   </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">extern</span> <span class="keyword">const</span> uint16_t UNIT_CUBE_FACES[6*4];</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">extern</span> <span class="keyword">const</span> uint16_t UNIT_CUBE_FACES_NORMALS[6 * 4];</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
@@ -155,23 +155,23 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> color_t, Shader LOADED_SHADERS = TGX_SHADER_MASK_ALL, <span class="keyword">typename</span> ZBUFFER_t = <span class="keywordtype">float</span>&gt;</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="classtgx_1_1_renderer3_d.html">  112</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classtgx_1_1_renderer3_d.html">Renderer3D</a></div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    {</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>       </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> MAXVIEWPORTDIMENSION = 2048 * (1 &lt;&lt; ((8 - <a class="code hl_define" href="_rasterizer_8h.html#a2579259e42dd339f48fa4fda493e6043">TGX_RASTERIZE_SUBPIXEL_BITS</a>) &gt;&gt; 1)); </div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keyword">static_assert</span>(is_color&lt;color_t&gt;::value, <span class="stringliteral">&quot;color_t must be one of the color types defined in color.h&quot;</span>);</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="keyword">static_assert</span>((std::is_same&lt;ZBUFFER_t, float&gt;::value) || (std::is_same&lt;ZBUFFER_t, uint16_t&gt;::value), <span class="stringliteral">&quot;The Z-buffer type must be either float or uint16_t&quot;</span>);</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                    </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="comment">// true if some kind of texturing may be used. </span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="comment">// true if some kind of texturing may be used.</span></div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (<a class="code hl_enumvalue" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a948fe24bc5b2f298510991b6d505fcb1">SHADER_TEXTURE</a> | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_enumeration" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">Shader</a> ENABLED_SHADERS = LOADED_SHADERS | (ENABLE_TEXTURING ? <a class="code hl_enumvalue" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a948fe24bc5b2f298510991b6d505fcb1">SHADER_TEXTURE</a> : <a class="code hl_enumvalue" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a612eed5a49521db755ed897ececc898f">SHADER_NOTEXTURE</a>); <span class="comment">// enable texturing when at least one texturing related flag is set</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        </div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        <span class="comment">// check that disabled shaders do not completely disable all drawing operations.         </span></div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="keyword">static_assert</span>(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), <span class="stringliteral">&quot;At least one of the two shaders SHADER_PERSPECTIVE or SHADER_ORTHO must be enabled&quot;</span>);        </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keyword">static_assert</span>(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), <span class="stringliteral">&quot;At least one of the two shaders SHADER_NOZBUFFER or SHADER_ZBUFFER must be enabled&quot;</span>);        </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keyword">static_assert</span>(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), <span class="stringliteral">&quot;At least one of the two shaders SHADER_FLAT or SHADER_GOURAUD must be enabled&quot;</span>);        </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keyword">static_assert</span>(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), <span class="stringliteral">&quot;At least one of the two shaders SHADER_TEXTURE or SHADER_NOTEXTURE must be enabled&quot;</span>);                              </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        <span class="comment">// check that disabled shaders do not completely disable all drawing operations.</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="keyword">static_assert</span>(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), <span class="stringliteral">&quot;At least one of the two shaders SHADER_PERSPECTIVE or SHADER_ORTHO must be enabled&quot;</span>);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keyword">static_assert</span>(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), <span class="stringliteral">&quot;At least one of the two shaders SHADER_NOZBUFFER or SHADER_ZBUFFER must be enabled&quot;</span>);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keyword">static_assert</span>(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), <span class="stringliteral">&quot;At least one of the two shaders SHADER_FLAT or SHADER_GOURAUD must be enabled&quot;</span>);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keyword">static_assert</span>(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), <span class="stringliteral">&quot;At least one of the two shaders SHADER_TEXTURE or SHADER_NOTEXTURE must be enabled&quot;</span>);</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keyword">static_assert</span>((!TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),<span class="stringliteral">&quot;When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled&quot;</span>);</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="keyword">static_assert</span>((!TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), <span class="stringliteral">&quot;When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled&quot;</span>);</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
@@ -288,13 +288,13 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span> </div>
 <div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span> </div>
 <div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span> </div>
-<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>        </div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span> </div>
 <div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span><span class="comment">        /*****************************************************************************************</span></div>
 <div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span><span class="comment">        *****************************************************************************************/</span></div>
 <div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span><span class="comment">        /*****************************************************************************************</span></div>
 <div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span><span class="comment">        ******************************************************************************************/</span></div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>        </div>
-<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>       </div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span> </div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span> </div>
 <div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span> </div>
 <div class="line"><a id="l00642" name="l00642"></a><span class="lineno"><a class="line" href="classtgx_1_1_renderer3_d.html#a7ca1f0b53ca7460869fc3031f8422240">  642</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classtgx_1_1_renderer3_d.html#a7ca1f0b53ca7460869fc3031f8422240">setModelMatrix</a>(<span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_mat4.html">fMat4</a>&amp; M);</div>
 <div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span> </div>
@@ -334,7 +334,7 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span> </div>
 <div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span> </div>
 <div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span> </div>
-<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span>        </div>
+<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span> </div>
 <div class="line"><a id="l00787" name="l00787"></a><span class="lineno">  787</span><span class="comment">        /*****************************************************************************************</span></div>
 <div class="line"><a id="l00788" name="l00788"></a><span class="lineno">  788</span><span class="comment">        *****************************************************************************************/</span></div>
 <div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span><span class="comment">        /*****************************************************************************************</span></div>
@@ -368,13 +368,13 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span>                      <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> * N1 = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> * N2 = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> * N3 = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> * N4 = <span class="keyword">nullptr</span>,</div>
 <div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>                      <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec2.html">fVec2</a> * T1 = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec2.html">fVec2</a> * T2 = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec2.html">fVec2</a> * T3 = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec2.html">fVec2</a> * T4 = <span class="keyword">nullptr</span>,</div>
 <div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span>                      <span class="keyword">const</span> <a class="code hl_class" href="classtgx_1_1_image.html">Image&lt;color_t&gt;</a>* texture = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>        </div>
+<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span> </div>
 <div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span> </div>
 <div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span> </div>
 <div class="line"><a id="l00925" name="l00925"></a><span class="lineno"><a class="line" href="classtgx_1_1_renderer3_d.html#addff7a6a3a439659704d29b524b7f6b2">  925</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classtgx_1_1_renderer3_d.html#addff7a6a3a439659704d29b524b7f6b2">drawQuadWithVertexColor</a>(<span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> &amp; P1, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> &amp; P2, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> &amp; P3, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> &amp; P4,</div>
 <div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span>                                     <span class="keyword">const</span> <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp; col1, <span class="keyword">const</span> <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp; col2, <span class="keyword">const</span> <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp; col3, <span class="keyword">const</span> <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp; col4,</div>
 <div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>                                     <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> * N1 = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> * N2 = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> * N3 = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec3.html">fVec3</a> * N4 = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>         </div>
+<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span> </div>
 <div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span> </div>
 <div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span> </div>
 <div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span> </div>
@@ -395,8 +395,8 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span> </div>
 <div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span> </div>
 <div class="line"><a id="l00981" name="l00981"></a><span class="lineno"><a class="line" href="classtgx_1_1_renderer3_d.html#a44f87bfade3e549ef8b3ec2468705e77">  981</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classtgx_1_1_renderer3_d.html#a44f87bfade3e549ef8b3ec2468705e77">drawCube</a>();</div>
-<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>            </div>
-<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>        </div>
+<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span> </div>
+<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span> </div>
 <div class="line"><a id="l01025" name="l01025"></a><span class="lineno"><a class="line" href="classtgx_1_1_renderer3_d.html#ab32f027d40abe77c230d9975482d6488"> 1025</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classtgx_1_1_renderer3_d.html#ab32f027d40abe77c230d9975482d6488">drawCube</a>(</div>
 <div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>            <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec2.html">fVec2</a> v_front_ABCD[4] , <span class="keyword">const</span> <a class="code hl_class" href="classtgx_1_1_image.html">Image&lt;color_t&gt;</a>* texture_front,</div>
 <div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>            <span class="keyword">const</span> <a class="code hl_class" href="structtgx_1_1_vec2.html">fVec2</a> v_back_EFGH[4]  , <span class="keyword">const</span> <a class="code hl_class" href="classtgx_1_1_image.html">Image&lt;color_t&gt;</a>* texture_back,</div>
@@ -568,9 +568,9 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l01669" name="l01669"></a><span class="lineno"> 1669</span> </div>
 <div class="line"><a id="l01670" name="l01670"></a><span class="lineno"> 1670</span> </div>
 <div class="line"><a id="l01672" name="l01672"></a><span class="lineno"> 1672</span>        TGX_INLINE <span class="keywordtype">float</span> _clipbound_xy()<span class="keyword"> const</span></div>
-<div class="line"><a id="l01673" name="l01673"></a><span class="lineno"> 1673</span><span class="keyword">            </span>{ </div>
+<div class="line"><a id="l01673" name="l01673"></a><span class="lineno"> 1673</span><span class="keyword">            </span>{</div>
 <div class="line"><a id="l01674" name="l01674"></a><span class="lineno"> 1674</span>            <span class="keywordflow">return</span> (256 + 3*((MAXVIEWPORTDIMENSION * 256) / ((_lx &gt; _ly) ? _lx : _ly))) / 1024.0f; <span class="comment">// use integer computation up to the last divide</span></div>
-<div class="line"><a id="l01675" name="l01675"></a><span class="lineno"> 1675</span>            <span class="comment">//return (1.0f + 3.0f * (((float)MAXVIEWPORTDIMENSION) / ((_lx &gt; _ly) ? _lx : _ly))) / 4.0f;                                  </span></div>
+<div class="line"><a id="l01675" name="l01675"></a><span class="lineno"> 1675</span>            <span class="comment">//return (1.0f + 3.0f * (((float)MAXVIEWPORTDIMENSION) / ((_lx &gt; _ly) ? _lx : _ly))) / 4.0f;</span></div>
 <div class="line"><a id="l01676" name="l01676"></a><span class="lineno"> 1676</span>            }</div>
 <div class="line"><a id="l01677" name="l01677"></a><span class="lineno"> 1677</span> </div>
 <div class="line"><a id="l01678" name="l01678"></a><span class="lineno"> 1678</span> </div>
@@ -600,7 +600,7 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l01704" name="l01704"></a><span class="lineno"> 1704</span> </div>
 <div class="line"><a id="l01705" name="l01705"></a><span class="lineno"> 1705</span> </div>
 <div class="line"><a id="l01706" name="l01706"></a><span class="lineno"> 1706</span>        TGX_NOINLINE <span class="keywordtype">void</span> _rectifyShaderTextureQuality();</div>
-<div class="line"><a id="l01707" name="l01707"></a><span class="lineno"> 1707</span>       </div>
+<div class="line"><a id="l01707" name="l01707"></a><span class="lineno"> 1707</span> </div>
 <div class="line"><a id="l01708" name="l01708"></a><span class="lineno"> 1708</span> </div>
 <div class="line"><a id="l01709" name="l01709"></a><span class="lineno"> 1709</span><span class="comment">       /***********************************************************</span></div>
 <div class="line"><a id="l01710" name="l01710"></a><span class="lineno"> 1710</span><span class="comment">        * DRAWING STUFF</span></div>
@@ -623,7 +623,7 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l01730" name="l01730"></a><span class="lineno"> 1730</span>            <span class="keyword">const</span> fVec3* N0, <span class="keyword">const</span> fVec3* N1, <span class="keyword">const</span> fVec3* N2,</div>
 <div class="line"><a id="l01731" name="l01731"></a><span class="lineno"> 1731</span>            <span class="keyword">const</span> fVec2* T0, <span class="keyword">const</span> fVec2* T1, <span class="keyword">const</span> fVec2* T2,</div>
 <div class="line"><a id="l01732" name="l01732"></a><span class="lineno"> 1732</span>            <span class="keyword">const</span> RGBf&amp; Vcol0, <span class="keyword">const</span> RGBf&amp; Vcol1, <span class="keyword">const</span> RGBf&amp; Vcol2);</div>
-<div class="line"><a id="l01733" name="l01733"></a><span class="lineno"> 1733</span>        </div>
+<div class="line"><a id="l01733" name="l01733"></a><span class="lineno"> 1733</span> </div>
 <div class="line"><a id="l01734" name="l01734"></a><span class="lineno"> 1734</span> </div>
 <div class="line"><a id="l01736" name="l01736"></a><span class="lineno"> 1736</span>        <span class="keywordtype">void</span> _drawQuad(<span class="keyword">const</span> <span class="keywordtype">int</span> RASTER_TYPE,</div>
 <div class="line"><a id="l01737" name="l01737"></a><span class="lineno"> 1737</span>            <span class="keyword">const</span> fVec3* P0, <span class="keyword">const</span> fVec3* P1, <span class="keyword">const</span> fVec3* P2, <span class="keyword">const</span> fVec3* P3,</div>
@@ -661,24 +661,24 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l01770" name="l01770"></a><span class="lineno"> 1770</span><span class="comment">        /***********************************************************</span></div>
 <div class="line"><a id="l01771" name="l01771"></a><span class="lineno"> 1771</span><span class="comment">        * Simple geometric objects</span></div>
 <div class="line"><a id="l01772" name="l01772"></a><span class="lineno"> 1772</span><span class="comment">        ************************************************************/</span></div>
-<div class="line"><a id="l01773" name="l01773"></a><span class="lineno"> 1773</span>        </div>
+<div class="line"><a id="l01773" name="l01773"></a><span class="lineno"> 1773</span> </div>
 <div class="line"><a id="l01774" name="l01774"></a><span class="lineno"> 1774</span> </div>
 <div class="line"><a id="l01775" name="l01775"></a><span class="lineno"> 1775</span>        <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> USE_BLENDING&gt; <span class="keywordtype">void</span> _drawPixel(<span class="keyword">const</span> fVec3&amp; pos, color_t color, <span class="keywordtype">float</span> opacity);</div>
-<div class="line"><a id="l01776" name="l01776"></a><span class="lineno"> 1776</span>           </div>
+<div class="line"><a id="l01776" name="l01776"></a><span class="lineno"> 1776</span> </div>
 <div class="line"><a id="l01777" name="l01777"></a><span class="lineno"> 1777</span> </div>
 <div class="line"><a id="l01778" name="l01778"></a><span class="lineno"> 1778</span>        <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> USE_COLORS, <span class="keywordtype">bool</span> USE_BLENDING&gt; <span class="keywordtype">void</span> _drawPixels(<span class="keywordtype">int</span> nb_pixels, <span class="keyword">const</span> fVec3* pos_list, <span class="keyword">const</span> <span class="keywordtype">int</span>* colors_ind, <span class="keyword">const</span> color_t* colors, <span class="keyword">const</span> <span class="keywordtype">int</span>* opacities_ind, <span class="keyword">const</span> <span class="keywordtype">float</span>* opacities);</div>
-<div class="line"><a id="l01779" name="l01779"></a><span class="lineno"> 1779</span>            </div>
+<div class="line"><a id="l01779" name="l01779"></a><span class="lineno"> 1779</span> </div>
 <div class="line"><a id="l01780" name="l01780"></a><span class="lineno"> 1780</span> </div>
 <div class="line"><a id="l01781" name="l01781"></a><span class="lineno"> 1781</span>        <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> USE_BLENDING&gt; <span class="keywordtype">void</span> _drawDot(<span class="keyword">const</span> fVec3&amp; pos, <span class="keywordtype">int</span> r, color_t color, <span class="keywordtype">float</span> opacity);</div>
-<div class="line"><a id="l01782" name="l01782"></a><span class="lineno"> 1782</span>           </div>
+<div class="line"><a id="l01782" name="l01782"></a><span class="lineno"> 1782</span> </div>
 <div class="line"><a id="l01783" name="l01783"></a><span class="lineno"> 1783</span> </div>
 <div class="line"><a id="l01784" name="l01784"></a><span class="lineno"> 1784</span>        <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> USE_RADIUS, <span class="keywordtype">bool</span> USE_COLORS, <span class="keywordtype">bool</span> USE_BLENDING&gt; <span class="keywordtype">void</span> _drawDots(<span class="keywordtype">int</span> nb_dots, <span class="keyword">const</span> fVec3* pos_list, <span class="keyword">const</span> <span class="keywordtype">int</span>* radius_ind, <span class="keyword">const</span> <span class="keywordtype">int</span>* radius, <span class="keyword">const</span> <span class="keywordtype">int</span>* colors_ind, <span class="keyword">const</span> color_t* colors, <span class="keyword">const</span> <span class="keywordtype">int</span>* opacities_ind, <span class="keyword">const</span> <span class="keywordtype">float</span>* opacities);</div>
-<div class="line"><a id="l01785" name="l01785"></a><span class="lineno"> 1785</span>            </div>
+<div class="line"><a id="l01785" name="l01785"></a><span class="lineno"> 1785</span> </div>
 <div class="line"><a id="l01786" name="l01786"></a><span class="lineno"> 1786</span> </div>
 <div class="line"><a id="l01787" name="l01787"></a><span class="lineno"> 1787</span> </div>
 <div class="line"><a id="l01788" name="l01788"></a><span class="lineno"> 1788</span>        <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> CHECKRANGE, <span class="keywordtype">bool</span> USE_BLENDING&gt; TGX_INLINE <span class="keyword">inline</span> <span class="keywordtype">void</span> drawPixelZbuf(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, color_t color, <span class="keywordtype">float</span> opacity, <span class="keywordtype">float</span> z)</div>
 <div class="line"><a id="l01789" name="l01789"></a><span class="lineno"> 1789</span>            {</div>
-<div class="line"><a id="l01790" name="l01790"></a><span class="lineno"> 1790</span>            <span class="keywordflow">if</span> (CHECKRANGE &amp;&amp; ((x &lt; 0) || (x &gt;= _uni.im-&gt;lx()) || (y &lt; 0) || (y &gt;= _uni.im-&gt;ly()))) <span class="keywordflow">return</span>;           </div>
+<div class="line"><a id="l01790" name="l01790"></a><span class="lineno"> 1790</span>            <span class="keywordflow">if</span> (CHECKRANGE &amp;&amp; ((x &lt; 0) || (x &gt;= _uni.im-&gt;lx()) || (y &lt; 0) || (y &gt;= _uni.im-&gt;ly()))) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l01791" name="l01791"></a><span class="lineno"> 1791</span>            ZBUFFER_t&amp; W = _uni.zbuf[x + _uni.im-&gt;lx() * y];</div>
 <div class="line"><a id="l01792" name="l01792"></a><span class="lineno"> 1792</span>            <span class="keyword">const</span> ZBUFFER_t aa =  (std::is_same&lt;ZBUFFER_t, uint16_t&gt;::value) ? ((ZBUFFER_t)(z * _uni.wa + _uni.wb)) : ((ZBUFFER_t)z);</div>
 <div class="line"><a id="l01793" name="l01793"></a><span class="lineno"> 1793</span>            <span class="keywordflow">if</span> (W &lt; aa)</div>
@@ -907,20 +907,20 @@ $(document).ready(function(){initNavTree('_renderer3_d_8h_source.html',''); init
 <div class="line"><a id="l02047" name="l02047"></a><span class="lineno"> 2047</span> </div>
 <div class="line"><a id="l02048" name="l02048"></a><span class="lineno"> 2048</span>        <span class="comment">// *** general parameters ***</span></div>
 <div class="line"><a id="l02049" name="l02049"></a><span class="lineno"> 2049</span> </div>
-<div class="line"><a id="l02050" name="l02050"></a><span class="lineno"> 2050</span>        <span class="keywordtype">int</span>     _lx, _ly;           <span class="comment">// viewport dimension        </span></div>
+<div class="line"><a id="l02050" name="l02050"></a><span class="lineno"> 2050</span>        <span class="keywordtype">int</span>     _lx, _ly;           <span class="comment">// viewport dimension</span></div>
 <div class="line"><a id="l02051" name="l02051"></a><span class="lineno"> 2051</span>        <span class="keywordtype">float</span>   _ilx, _ily;         <span class="comment">// inverse viewport dimension</span></div>
 <div class="line"><a id="l02052" name="l02052"></a><span class="lineno"> 2052</span> </div>
-<div class="line"><a id="l02053" name="l02053"></a><span class="lineno"> 2053</span>        <span class="keywordtype">int</span>     _ox, _oy;           <span class="comment">// image offset w.r.t. the viewport        </span></div>
+<div class="line"><a id="l02053" name="l02053"></a><span class="lineno"> 2053</span>        <span class="keywordtype">int</span>     _ox, _oy;           <span class="comment">// image offset w.r.t. the viewport</span></div>
 <div class="line"><a id="l02054" name="l02054"></a><span class="lineno"> 2054</span> </div>
 <div class="line"><a id="l02055" name="l02055"></a><span class="lineno"> 2055</span>        <span class="keywordtype">bool</span>    _ortho;             <span class="comment">// true to use orthographic projection and false for perspective projection</span></div>
-<div class="line"><a id="l02056" name="l02056"></a><span class="lineno"> 2056</span>        </div>
+<div class="line"><a id="l02056" name="l02056"></a><span class="lineno"> 2056</span> </div>
 <div class="line"><a id="l02057" name="l02057"></a><span class="lineno"> 2057</span>        <a class="code hl_typedef" href="_mat4_8h.html#aa543bb38f59d79a08113a6254b587322">fMat4</a>   _projM;             <span class="comment">// projection matrix</span></div>
 <div class="line"><a id="l02058" name="l02058"></a><span class="lineno"> 2058</span> </div>
 <div class="line"><a id="l02059" name="l02059"></a><span class="lineno"> 2059</span>        RasterizerParams&lt;color_t, color_t,ZBUFFER_t&gt;  _uni; <span class="comment">// rasterizer param (contain the image pointer and the zbuffer pointer).</span></div>
 <div class="line"><a id="l02060" name="l02060"></a><span class="lineno"> 2060</span> </div>
 <div class="line"><a id="l02061" name="l02061"></a><span class="lineno"> 2061</span>        <span class="keywordtype">float</span> _culling_dir;         <span class="comment">// culling direction postive/negative or 0 to disable back face culling.</span></div>
 <div class="line"><a id="l02062" name="l02062"></a><span class="lineno"> 2062</span> </div>
-<div class="line"><a id="l02063" name="l02063"></a><span class="lineno"> 2063</span>        <span class="keywordtype">int</span>   _shaders;             <span class="comment">// the shaders to use. </span></div>
+<div class="line"><a id="l02063" name="l02063"></a><span class="lineno"> 2063</span>        <span class="keywordtype">int</span>   _shaders;             <span class="comment">// the shaders to use.</span></div>
 <div class="line"><a id="l02064" name="l02064"></a><span class="lineno"> 2064</span>        <span class="keywordtype">int</span>   _texture_wrap_mode;   <span class="comment">// wrapping mode (wrap_pow2 or clamp)</span></div>
 <div class="line"><a id="l02065" name="l02065"></a><span class="lineno"> 2065</span>        <span class="keywordtype">int</span>   _texture_quality;     <span class="comment">// texturing quality (nearest or bilinear)</span></div>
 <div class="line"><a id="l02066" name="l02066"></a><span class="lineno"> 2066</span> </div>

@@ -1,6 +1,6 @@
-/**   
- * @file Mesh3D.h 
- * 3D model mesh class. 
+/**
+ * @file Mesh3D.h
+ * 3D model mesh class.
  */
 //
 // Copyright 2020 Arvind Singh
@@ -39,18 +39,18 @@
 namespace tgx
 {
 
-    
+
     /**
      * 3D mesh data stucture.
-     * 
-     * A Mesh3D structure contain all the informations about an object geometry, color, material
+     *
+     * A Mesh3D structure contains all the information about an object geometry, color, material
      * property and textures. A mesh can be rendered onto an `Image` object using the
      * `Renderer3D::drawMesh()` method.
-     * 
+     *
      * The mesh data format is designed to be compact and favors linear access to elements in order
-     * to improve cache coherency so that meshes can be stored and rendered directly from "slow" 
+     * to improve cache coherency so that meshes can be stored and rendered directly from "slow"
      * memory such as FLASH on a MCU.
-     * 
+     *
      * The Python scripts `obj_to_h` located in the `\tools` directory of the library can be used to
      * create a `Mesh3D` object directly from an .obj file.  The associated image textures (if any)
      * can be converted using the Python script `texture_2_h`.
@@ -73,12 +73,12 @@ namespace tgx
      *
      * @param texture   image texture object associated with the mesh (or nullptr is none).
      *
-     * @param next      pointer to the next mesh (or nullptr if none). Chaining mesh enalbe to draw complex 
+     * @param next      pointer to the next mesh (or nullptr if none). Chaining mesh enalbe to draw complex
      *                  models with multiple textures images and more than 32767 vertices...
      *
-     * 
+     *
      * **Structure of the `face` array**.
-     * 
+     *
      * the array is composed of "chains of triangles". Each chain starts with a `uint16_t` that
      * specifies its length and is followed by a sequence of elements where each element occupies 1,
      * 2 or 3 `uint16_t`. The array takes the following general form:
@@ -93,24 +93,24 @@ namespace tgx
      * - An endtag `(int16_t)0` is used as a sentinel to mark the end of the `face` array.
      *
      * - Each chain starts with a single uint16_t [chain length] that specify the number of
-     *   triangles in the chain. It is followed by [chain length]+2 elements. 
+     *   triangles in the chain. It is followed by [chain length]+2 elements.
      *
      * A "element" represent a vertex of a triangle and occupies 1, 2 or 3 `uint16_t`
-     * depending on whether the textcoord and normal arrays exist in the mesh. The first 
-     * `uint16_t` of an element is the vertex index (with a *direction bit*), then is 
+     * depending on whether the textcoord and normal arrays exist in the mesh. The first
+     * `uint16_t` of an element is the vertex index (with a *direction bit*), then is
      * followed by the texture index if a texture array is present and then finally followed by
-     * the normal index if a normal array is present. 
-     * 
+     * the normal index if a normal array is present.
+     *
      * Schematiccally:
      *
      *```
      *    1bit     15bits      (16bits, opt.)   (16bits, opt.)
      *   [DBIT| VERTEX INDEX]  [TEXTURE INDEX]  [NORMAL INDEX]
      *```
-     * 
-     * The first 3 elements of a chain represent the 3 vertices that compose the first triangle 
-     * of the chain. Their DBIT is always 0. Each subsequent element is combined with the current 
-     * triangle to deduce the next triangle in the following way: suppose the current triangle is 
+     *
+     * The first 3 elements of a chain represent the 3 vertices that compose the first triangle
+     * of the chain. Their DBIT is always 0. Each subsequent element is combined with the current
+     * triangle to deduce the next triangle in the following way: suppose the current triangle is
      * `[V1, V2, V3]` and the next element is `DBIT|V4`:
      *
      * - if `DBIT = 0`, then the next triangle is `[V1, V3, V4]`
@@ -127,7 +127,7 @@ namespace tgx
      * face = {3,0,1,2,2,4,6,32773,8,7,7,1,8,7,9,4,5,5,0}
      *
      * ```
-     * 
+     *
      * It should be read as
      *
      * ```
@@ -139,8 +139,8 @@ namespace tgx
      * 8/7   9/4  5/5   the triangle of the second chain
      * 0                end tag
      * ```
-     * 
-     * after decoding, this gives a list of 4 triangles (with normals associated 
+     *
+     * after decoding, this gives a list of 4 triangles (with normals associated
      * with each vertex index).
      *
      * ```
@@ -150,10 +150,10 @@ namespace tgx
      * 8/7   9/4  5/5
      * ```
      */
-    template<typename color_t> 
+    template<typename color_t>
     struct Mesh3D
         {
-        // make sure right away that the template parameter is admissible to prevent cryptic error message later.  
+        // make sure right away that the template parameter is admissible to prevent cryptic error message later.
         static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in color.h");
 
         int32_t id;                     ///< Set to 1 (may change in future version).
@@ -170,18 +170,18 @@ namespace tgx
         const uint16_t* face;           ///< Array of triangles (format described above).
 
         const Image<color_t>* texture;  ///< Texture image (or nullptr if none).
-        
+
         RGBf color;                     ///< Default color to use when texturing is disabled.
 
         float ambiant_strength;         ///< Object ambiant coefficient (how much it reflects the ambiant light component). Typical value: 0.2f.
-        float diffuse_strength;         ///< Object diffuse coefficient (how much it reflects the diffuse light component). Typical value:  0.7f. 
+        float diffuse_strength;         ///< Object diffuse coefficient (how much it reflects the diffuse light component). Typical value:  0.7f.
         float specular_strength;        ///< Object ambiant coefficient (how much it reflects the specular light component). Typical value:  0.5f.
-        int specular_exponent;          ///< Specular exponent. 0 to disable specular lightning. Typical value between 4 and 64.
+        int specular_exponent;          ///< Specular exponent. 0 to disable specular lighting. Typical value between 4 and 64.
 
-        const Mesh3D * next;            ///< Next object to draw when chaining is enabled. nullptr at end of chain. 
-        
+        const Mesh3D * next;            ///< Next object to draw when chaining is enabled. nullptr at end of chain.
+
         fBox3 bounding_box;             ///< Object bounding box.
-        
+
         const char* name;               ///< Mesh name, or nullptr
         };
 
@@ -190,25 +190,25 @@ namespace tgx
 
     /**
      * Creates a "cache version" of a mesh by copying part of its data into fast memory buffers.
-     * 
+     *
      * A typical scenario for using this method is when when using a MCU (Teesny, ESP32..) with
      * limited RAM and slow FLASH memory.
-     * 
+     *
      * The method copy as much as it can into the given RAM1/RAM2 buffers but will leave the arrays
      * that are to big in their current place. The method never 'fails' but it may return the
      * original mesh if caching is not possible.
-     * 
+     *
      * A C-string describes which arrays should be copied and in which order:
-     * 
-     * - "V" = vertex array.   
-     * - "N" = normal array.   
-     * - "T" = texture array.   
-     * - "I" = texture image  
+     *
+     * - "V" = vertex array.
+     * - "N" = normal array.
+     * - "T" = texture array.
+     * - "I" = texture image
      * - "F" = face arrays.
-     * 
+     *
      * For example "VIT" means: "copy vertex arrays first, then image texture and finally texture
      * coord (if there is still room)".
-     * 
+     *
      * @remark
      * 1. The memory buffers supplied do **not** need to be be aligned, the method takes care of it.
      * 2. The method also caches the sub-meshes linked after this one.
@@ -248,9 +248,9 @@ namespace tgx
 
     /**
      * Create a copy of a mesh where specified arrays in PROGMEM are copied to EXTMEM.
-     * 
+     *
      * @attention This method is defined only for Teensy 4.1
-     * 
+     *
      * @remark
      * 1. Obviously, external RAM must be present...
      * 2. Only arrays in PROGMEM are copied to EXTMEM. Arrays located elsewhere are not copied.
@@ -259,7 +259,7 @@ namespace tgx
      * less improvments).
      *
      * @returns a pointer to the new mesh or nullptr on error (nothing is allocated in that case). the
-     * methods also copies the sub-meshes linked to this one (via the ->next pointer).  
+     * methods also copies the sub-meshes linked to this one (via the ->next pointer).
      */
     template<typename color_t> Mesh3D<color_t>* copyMeshEXTMEM(const Mesh3D<color_t>* mesh,
                                                                 bool copy_vertices = false,
@@ -271,9 +271,9 @@ namespace tgx
 
     /**
      * Delete a mesh allocated with copyMeshEXTMEM().
-     * 
+     *
      * @attention This method is defined only for Teensy 4.1
-     * 
+     *
      * Deletes also the linked sub-meshes is any.
      */
     template<typename color_t> void freeMeshEXTMEM(Mesh3D<color_t>* mesh);
@@ -293,7 +293,7 @@ namespace tgx
     //template<typename color_t> Mesh3D<color_t>* copyMeshFromSDToEXTMEM(const char * filename);
 
 
-#endif 
+#endif
 
 
 }

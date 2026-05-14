@@ -1,6 +1,6 @@
-/**   
- * @file Image.h 
- * Main image class. 
+/**
+ * @file Image.h
+ * Main image class.
  */
 //
 // Copyright 2020 Arvind Singh
@@ -43,13 +43,13 @@ namespace tgx
 {
     /**
      * Enumeration of end path shapes.
-     * 
+     *
      * List the shapes that can be drawn at the end of a path. Used by methods such as
      * `Image::drawThickLineAA()`, `Image::drawThickPolylineAA()`, `Image::drawThickQuadSplineAA()`...
      */
     enum EndPath
         {
-        END_STRAIGHT = -1,          ///< straight end. 
+        END_STRAIGHT = -1,          ///< straight end.
         END_ROUNDED = 0,            ///< rounded end.
         END_ARROW_1 = 1,            ///< tiny arrow head [extends = line thickness]
         END_ARROW_2 = 2,            ///< small arrow head [extends = 2 x line thickness]
@@ -62,36 +62,36 @@ namespace tgx
         END_ARROW_SKEWED_4 = 104,   ///< large skewed arrow head [extends = 4 x line thickness]
         END_ARROW_SKEWED_5 = 105,   ///< huge skewed arrow head [extends = 5 x line thickness]
         };
-        
 
 
-     
+
+
     /**
      * Image class [**MAIN CLASS FOR THE 2D API**].
      *
      * **This is the main image class for the TGX library**.
-     * 
+     *
      * An image object is a thin wrapper (only 16 bytes) around a memory buffer which defines the type and
      * dimension of the image.
-     * 
+     *
      * @tparam  color_t Color type of the image. Must be one of the color type defined in Color.h. Typical choice:
      *                  - `RGB32` when running on a desktop computer.
      *                  - `RGB565` when running on an MCU with limited memory (Teensy 4, ESP32..)
      *
      * **Image memory layout**
-     * 
+     *
      * The image in the memory buffer in made of consecutive pixel of type color_t in row major order but with a
-     * stride which may be larger than the image width (ie row lenght).
+     * stride which may be larger than the image width (ie row length).
      *
      * Pixels are ordered from the top left `(0,0)` to the bottom right `(_lx-1, _ly-1)` and the position of pixel
      * `(x,y)` in the buffer is given by the formula:
      * ```
      * pixel(x,y) = buffer[x + y * _stride].
      * ```
-     * 
+     *
      * @note **No memory allocation is ever perfomed by the Image class. It is the sole user repsonsability to
      *       allocated et free the pixel buffer**
-     * 
+     *
      * @remark
      *
      * 1. When creating a new image, one can (and usually should) choose `_stride = lx`. However, allowing
@@ -112,7 +112,7 @@ namespace tgx
      *    - `[AA]`    means that the method is *high quality*: it is drawn with anti-aliasing and sub-pixel
      *                precision. Method with this suffix take fVec2 parameters for coordinates inputs whereas
      *                regular 'low quality' methods (without the AA suffix) take iVec2 parameters.
-     *                
+     *
      *    For example:
      *    - `drawThickCircleAA()` :  draw a high quality circle with user defined outline thickness, antialiasing and sub-pixel precision.
      *    - `fillTriangle()`      :  draw a low quality filled triangle (no antialiasing or subpixel precision).
@@ -124,15 +124,15 @@ namespace tgx
      *      are overwritten but partially covered edge/filter pixels may still be alpha-composited to preserve smooth
      *      edges.
      *    - Passing `0.0f < opacity <= 1.0f` will enable blending and the alpha channel of the colors will be used if present.
-     *      
+     *
      * 5. As indicated in color.h. **All colors with an alpha channel are assumed to have pre-multiplied
      *    alpha** and treated as such for all blending operations cf: https://en.wikipedia.org/wiki/Alpha_compositing
      *
      * 6. Most methods take `iVec2`/`fVec2` parameters to specify coordinates in the image. Using initializer
      *    list, it is very easy to call such method without explicitly mentioning the `iVec2`/`fVec2` type. For
      *    example, a function with signature `f(iVec2 pos, int r)` can be simply called `f({x,y},z)` which
-     *    is equivalent to the expression `f(iVec2(x,y),z)`. 
-     *    
+     *    is equivalent to the expression `f(iVec2(x,y),z)`.
+     *
      *    @note `iVec2` vectors are automatically promoted to `fVec2` vectors so calling a method with sub-pixel
      *          precision is transparent when working with integer vectors `iVec2`. On the other hand, downgrading
      *          from `fVec2` to `iVec2` requires an explicit cast.
@@ -140,11 +140,11 @@ namespace tgx
      * 7. Creating sub-image is cheap and convenient to restrict a drawing operation to a rectangular region of an
      *    image. Do not refrain from creating sub-images!
      */
-    template<typename color_t> 
+    template<typename color_t>
     class Image
     {
 
-        // make sure right away that the template parameter is admissible to prevent cryptic error message later.  
+        // make sure right away that the template parameter is admissible to prevent cryptic error message later.
         static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in Color.h");
 
         // befriend all sister Image classes
@@ -153,11 +153,11 @@ namespace tgx
 
     public:
 
-        static const int DEFAULT_STRIDE = -1;   ///< If not specified, the stride of an image is equal to its width. 
+        static const int DEFAULT_STRIDE = -1;   ///< If not specified, the stride of an image is equal to its width.
 
 
         #if (MTOOLS_TGX_EXTENSIONS)
-        #include <mtools/extensions/tgx/tgx_ext_Image.inl> 
+        #include <mtools/extensions/tgx/tgx_ext_Image.inl>
         #endif
 
 
@@ -167,26 +167,26 @@ namespace tgx
     //*************************************************************************************************************
     //*************************************************************************************************************
     /**
-    * @name Creation of image and sub-images. 
+    * @name Creation of image and sub-images.
     *
     * If the memory buffer is not supplied at creation, the image is marked as invalid until a buffer is set.
     *
-    * @remark 
-    * 1. The image object does not manage the buffer memory: **memory allocation/deallocation is the user's respnsability.**  
-    * 2. The image class is lightweight: creating image and sub-image is very fast and requires no additional memory.  
-    * 
+    * @remark
+    * 1. The image object does not manage the buffer memory: **memory allocation/deallocation is the user's responsibility.**
+    * 2. The image class is lightweight: creating image and sub-image is very fast and requires no additional memory.
+    *
     */
     ///@{
     //*************************************************************************************************************
     //*************************************************************************************************************
     //*************************************************************************************************************
 
-   
 
-        /** 
+
+        /**
         * Default constructor.
-        *  
-        * Create a empty (invalid) image. 
+        *
+        * Create a empty (invalid) image.
         */
         Image();
 
@@ -223,7 +223,7 @@ namespace tgx
 
         /**
          * Default copy constructor.
-         * 
+         *
          * **Copy is shallow**: both images share the same memory buffer.
          *
          * @param   im  The source image.
@@ -232,7 +232,7 @@ namespace tgx
 
 
         /**
-         * Default assignement operator.
+         * Default assignment operator.
          *
          * **Copy is shallow**: both images share the same memory buffer.
          *
@@ -266,9 +266,9 @@ namespace tgx
 
         /**
          * Crop the image.
-         * 
+         *
          * Crop this image keeping only the region represented by subbox intersected with the image box.
-         * 
+         *
          * This operation does not change the underlying pixel buffer: it simply replaces this image by
          * a sub-image of itself (with different dimension/stride).
          *
@@ -281,7 +281,7 @@ namespace tgx
          * Return a sub-image of this image (sharing the same pixel buffer).
          *
          * See also `operator()` below.
-         * 
+         *
          * @param   subbox  The region to to keep.
          *
          * @returns the cropped image.
@@ -291,12 +291,12 @@ namespace tgx
 
         /**
          * Return a sub-image of this image (sharing the same pixel buffer).
-         * 
+         *
          * This is the same as `getCrop(B)`
          *
-         * @param   B  box that delimit the sub-image inside this image. 
+         * @param   B  box that delimit the sub-image inside this image.
          *
-         * @returns the sub-image delimited by B and sharing the same memory buffer. 
+         * @returns the sub-image delimited by B and sharing the same memory buffer.
          */
         Image<color_t> operator()(const iBox2& B) const;
 
@@ -311,7 +311,7 @@ namespace tgx
          * @param   min_y   top boundary (inclusive)
          * @param   max_y   bottom boundary (inclusive)
          *
-         * @returns the sub-image delimited the closed box iBox(min_x, max_x, min_y, max_x) and sharing the same memory buffer. 
+         * @returns the sub-image delimited the closed box iBox(min_x, max_x, min_y, max_x) and sharing the same memory buffer.
          */
         Image<color_t> operator()(int min_x, int max_x, int min_y, int max_y) const;
 
@@ -323,8 +323,8 @@ namespace tgx
     //*************************************************************************************************************
     /**
     * @name Image attributes.
-    *       
-    * Query the state (dimension, buffer...) of the image.  
+    *
+    * Query the state (dimension, buffer...) of the image.
     */
     ///@{
     //*************************************************************************************************************
@@ -364,7 +364,7 @@ namespace tgx
         inline TGX_INLINE int lx() const { return _lx; }
 
 
-        /** 
+        /**
          * Return the image height. Same as ly().
          *
          * @returns The image height (0 for an invalid image).
@@ -406,26 +406,26 @@ namespace tgx
 
         /**
          * Return a pointer to the pixel buffer.
-         * 
+         *
          * const overload.
          *
          * @returns A const pointer to the start of the pixel buffer associated with this image (or nullptr if the image is invalid).
          */
-        inline TGX_INLINE const color_t * data() const { return _buffer; } 
+        inline TGX_INLINE const color_t * data() const { return _buffer; }
 
 
         /**
          * Return a pointer to the pixel buffer.
          *
-         * non-const overload. 
-         * 
+         * non-const overload.
+         *
          * @returns A pointer to the start of the pixel buffer associated with this image (or nullptr if the image is invalid).
          */
         inline TGX_INLINE color_t * data() { return _buffer; }
 
 
 
-       
+
 
 
     ///@}
@@ -434,8 +434,8 @@ namespace tgx
     //*************************************************************************************************************
     /**
     * @name Direct pixel access.
-    *       
-    * Methods to read/write pixels directly on the image buffer. 
+    *
+    * Methods to read/write pixels directly on the image buffer.
     */
     ///@{
     //*************************************************************************************************************
@@ -457,11 +457,11 @@ namespace tgx
 
         /**
          * Set a pixel at a given position (floating point coord).
-         * 
-         * @remark Version for floating point value coordinates. Recall that the image range is `[-0.5f, lx-0.5f]x[-0.5f,lx-0.5f]` and center of pixels are on the interger lattice. 
-         * 
+         *
+         * @remark Version for floating point value coordinates. Recall that the image range is `[-0.5f, lx-0.5f]x[-0.5f,lx-0.5f]` and center of pixels are on the interger lattice.
+         *
          * @tparam  CHECKRANGE  set to false to disable range checking (danger!)
-         * @param   pos     position given as a floating point value vector.  
+         * @param   pos     position given as a floating point value vector.
          * @param   color   color to set.
          */
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixelf(fVec2 pos, color_t color) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE>({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, color); }
@@ -469,7 +469,7 @@ namespace tgx
 
         /**
          * Blend a pixel with the current pixel color.
-         * 
+         *
          * @remark If type color_t has an alpha channel, then it is used for alpha blending.
          *
          * @tparam  CHECKRANGE  set to false to disable range checking (danger!)
@@ -479,12 +479,12 @@ namespace tgx
          *                      if negative, then simple overwriting of color is used instead of blending.
          */
         template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color, float opacity) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE,true>(pos, color, opacity); }
-        
-        
+
+
         /**
          * Blend a pixel with the current pixel color (floating point coord).
-         * 
-         * @remark 
+         *
+         * @remark
          * - Version for floating point value coordinates. Recall that the image range is `[-0.5f, lx-0.5f]x[-0.5f,lx-0.5f]` and center of pixels are on the interger lattice.
          * - If type color_t has an alpha channel, then it is used for alpha blending.
          *
@@ -502,7 +502,7 @@ namespace tgx
          *
          * @tparam  CHECKRANGE      If set to true, outside_color is returned when querying outside of the
          *                          image range. Otherwise nor range checking is performed (danger!)
-         * @param   pos             The position to read. 
+         * @param   pos             The position to read.
          * @param   outside_color   (Optional) color to return when querying outside the range.
          *
          * @returns The pixel color.
@@ -514,7 +514,7 @@ namespace tgx
          * Return the color of a pixel at a given position (floating point coord).
          *
          * @remark Version for floating point value coordinates. Recall that the image range is `[-0.5f, lx-0.5f]x[-0.5f,lx-0.5f]` and center of pixels are on the interger lattice.
-         *         
+         *
          * @tparam  CHECKRANGE      If set to true, outside_color is returned when querying outside of the
          *                          image range. Otherwise nor range checking is performed (danger!)
          * @param   pos             The position to read given as a floating point value vector.
@@ -529,18 +529,18 @@ namespace tgx
          * Get a reference to a pixel (no range check!)
          *
          * const overload.
-         * 
+         *
          * @param   pos The position.
          *
          * @returns a const reference to the pixel color.
          */
         TGX_INLINE inline const color_t& operator()(iVec2 pos) const { return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)]; }
-        
+
         /**
          * Get a reference to a pixel (no range check!)
          *
          * non-const overload.
-         * 
+         *
          * @param   pos The position.
          *
          * @returns a reference to the pixel color.
@@ -552,7 +552,7 @@ namespace tgx
          * Get a reference to a pixel (no range check!)
          *
          * const overload.
-         * 
+         *
          * @param   x   x-coordinate.
          * @param   y   y-coordinate.
          *
@@ -565,7 +565,7 @@ namespace tgx
          * Get a reference to a pixel (no range check!)
          *
          * non-const overload.
-         * 
+         *
          * @param   x   x-coordinate.
          * @param   y   y-coordinate.
          *
@@ -576,27 +576,27 @@ namespace tgx
 
         /**
          * Iterate over all the pixels of the image.
-         * 
+         *
          * non-const overload.
-         * 
+         *
          * Iteration is performed from left to right (inner loop) and top to bottom (outer loop). The
          * callback function cb_fun() is called for each pixel and must have a signature compatible with:
-         * 
-         * `bool cb_fun(tgx::iVec2 pos, color_t & color)` 
-         * 
+         *
+         * `bool cb_fun(tgx::iVec2 pos, color_t & color)`
+         *
          * where:
-         * 
+         *
          * - `pos` is the position of the current pixel in the image
          * - `color` is a reference to the current pixel color.
          * - the callback must return true to continue the iteration and false to abort iteration.
-         * 
+         *
          * @remark this method is particularly useful with lambdas, for example, to paint all black pixels
          * to red in a tgx::Image<tgx::RGB565> image `im`:
          * ```
          * im.iterate( [](tgx::iVec2 pos, tgx::RGB565 & color)
          *               { if (color == tgx::RGB565_Black) color = tgx::RGB565_Red; return true; } );
          * ```
-         * 
+         *
          * @param   cb_fun  The callback function.
          */
         template<typename ITERFUN> void iterate(ITERFUN cb_fun);
@@ -606,12 +606,12 @@ namespace tgx
          * Iterate over all the pixels of the image.
          *
          * const overload.
-         * 
+         *
          * Iteration is performed from left to right (inner loop) and top to bottom (outer loop). The
          * callback function cb_fun() is called for each pixel and must have a signature compatible with:
          *
          * `bool cb_fun(tgx::iVec2 pos, const color_t & color)`
-         * 
+         *
          * see void iterate(ITERFUN cb_fun) for details.
          *
          * @param   cb_fun  The callback function.
@@ -621,11 +621,11 @@ namespace tgx
 
         /**
          * Iterate over the pixel of the image inside a given region.
-         * 
+         *
          * non-const overload.
-         * 
-         * The method calls the callback function for each pixel inside `B` (intersected with `imageBox()`). 
-         * 
+         *
+         * The method calls the callback function for each pixel inside `B` (intersected with `imageBox()`).
+         *
          * See void iterate(ITERFUN cb_fun) for details.
          *
          * @param   cb_fun  The callback function.
@@ -636,11 +636,11 @@ namespace tgx
 
         /**
          * Iterate over the pixel of the image inside a given region.
-         * 
+         *
          * const overload.
-         * 
-         * The method calls the callback function for each pixel inside `B` (intersected with `imageBox()`). 
-         * 
+         *
+         * The method calls the callback function for each pixel inside `B` (intersected with `imageBox()`).
+         *
          * See void iterate(ITERFUN cb_fun) for details.
          *
          * @param   cb_fun  The callback function.
@@ -659,8 +659,8 @@ namespace tgx
     //*************************************************************************************************************
     //*************************************************************************************************************
     /**
-    * @name Image manipulation. 
-    *       
+    * @name Image manipulation.
+    *
     * Methods for blitting, converting, resizing and rotating images.
     */
     ///@{
@@ -671,7 +671,7 @@ namespace tgx
 
         /**
          * Blit/blend a sprite over this image at a given position.
-         * 
+         *
          * Remark: If only part of the sprite should be blended onto this image, simply blit a sub-image
          * of the sprite like so: 'blend(sprite(subbox),upperleftpos, blend_op)'. This is very efficient
          * because no copy is performed when creating (shallow) sub-image.
@@ -687,32 +687,32 @@ namespace tgx
 
         /**
          * Blend a sprite at a given position on the image using a custom blending operator.
-         * 
+         *
          * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
          * color of the source (sprite) pixel and the color of the destination pixel and returns the
          * blended color. It must have a signature compatible with
-         * 
+         *
          *                    color_t blend_op(color_t_src src, color_t dst)
          *
          * (the method can, in fact, return a color of any type but returning type color_t will improve
          * performance).
-         * 
+         *
          * @remark
-         * 1. The sprite can have a different color type from the image. 
-         * 2. To perform "classical alpha blending" with images of the same color format, use the blit()   
+         * 1. The sprite can have a different color type from the image.
+         * 2. To perform "classical alpha blending" with images of the same color format, use the blit()
          *    method with an opacity parameter instead of this method as it will be a little faster.
          *
          * @param   sprite          The sprite image to blend.
          * @param   upperleftpos    Position of the upper left corner of the sprite in the image.
          * @param   blend_op        The blending operator.
          */
-        template<typename color_t_src, typename BLEND_OPERATOR> 
+        template<typename color_t_src, typename BLEND_OPERATOR>
         void blit(const Image<color_t_src>& sprite, iVec2 upperleftpos, const BLEND_OPERATOR& blend_op);
 
 
         /**
          * Blit/blend a rotated sprite over this image at a given position.
-         * 
+         *
          * The rotation must be only quarter turns (0, 90, 180 or 270) degree. For blitting with arbitrary
          * rotation, use the blitScaledRotated() method instead.
          *
@@ -728,19 +728,19 @@ namespace tgx
 
         /**
          * Blend a rotated sprite over this image at a given position using a custom blending operator.
-         * 
+         *
          * The rotation must be only quarter turns (0, 90, 180 or 270) degree. For blitting with arbitrary
          * rotation, use the blitScaledRotated() method instead.
-         * 
+         *
          * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
          * color of the source (sprite) pixel and the color of the destination pixel and returns the
          * blended color. It must have a signature compatible with
-         * 
+         *
          *                    color_t blend_op(color_t_src src, color_t dst)
-         * 
+         *
          * (the method can, in fact, return a color of any type but returning type color_t will improve
          * performance).
-         * 
+         *
          * @remark
          * 1. The sprite can have a different color type from the image.
          * 2. To perform "classical alpha blending" with images of the same color format, use the blitRotated()
@@ -757,11 +757,11 @@ namespace tgx
 
         /**
          * Blend a sprite at a given position on this image with a given mask.
-         * 
+         *
          * Sprite pixels with color `transparent_color` are treated as transparent hence are not copied
          * on the image. Other pixels are copied/blended with the destination image (after being
          * multiplied by the opacity factor).
-         * 
+         *
          * @remark This method is especially useful when color_t does not have an alpha channel.
          *
          * @param   sprite              The sprite image to blit.
@@ -777,7 +777,7 @@ namespace tgx
         /**
          * Reverse blitting. Copy part of the image into the sprite This is the inverse of the blit
          * operation.
-         * 
+         *
          * @remark This method can be useful to 'save' a portion of the image into a sprite before
          * drawing/blitting something on it...
          *
@@ -789,16 +789,16 @@ namespace tgx
 
         /**
          * Blit/blend a sprite onto this image after rescaling and rotation.
-         * 
+         *
          * The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The
          * rotation is performed in clockwise direction around the anchor point.
-         * 
+         *
          * @remark
          *   1. Positions are given using floating point values to allow for sub-pixel precision for
          *      smoother animation.
          *   2. The method uses bilinear interpolation for high quality rendering.
          *   3. The sprite image can have a different color type from this image.
-         * 
+         *
          * @note When rotated, access to the sprite pixels colors is not linear anymore. For certain
          * orientations, this will yield very 'irregular' access to the sprite memory locations.
          * The method will try to improve this by splitting the sprite in smaller part to improve
@@ -821,16 +821,16 @@ namespace tgx
 
         /**
          * Blend a sprite onto this image after rescaling and rotation using a custom blending operator.
-         * 
+         *
          * This is the same as the method above except that it uses a user defined blending operator
          * which takes as input the color of the source (sprite) pixel and the color of the destination
          * pixel and returns the blended color. It must have a signature compatible with
-         * 
+         *
          *                    color_t blend_op(color_t_src src, color_t dst)
-         * 
+         *
          * (the method can, in fact, return a color of any type but returning type color_t will improve
-         * performance).  
-         * 
+         * performance).
+         *
          * See the method above for more details.
          *
          * @tparam  CACHE_SIZE      Size of the MCU cache when reading from flash. This value is
@@ -850,17 +850,17 @@ namespace tgx
         /**
          * Blend a sprite onto this image after rescaling and rotation and use a given color which is
          * treated as fully transparent.
-         * 
+         *
          * The anchor point 'anchor_src' in the sprite is mapped to 'anchor_im' in this image. The
          * rotation is performed in clockwise direction around the anchor point.
-         * 
+         *
          * @remark
          *   1. Positions are given using floating point values to allow for sub-pixel precision for
          *      smoother animation.
          *   2. The method uses bilinear interpolation for high quality rendering.
          *   3. The sprite image can have a different color type from this image.
          *   4. This method is useful when the sprite color type does not have an alpha channel.
-         * 
+         *
          * @note When rotated, access to the sprite pixels colors is not linear anymore. For certain
          * orientations, this will yield very 'irregular' access to the sprite memory locations.
          * The method will try to improve this by splitting the sprite in smaller part to improve
@@ -884,36 +884,36 @@ namespace tgx
 
         /**
          * Copy (or blend) the src image onto the destination image with resizing and color conversion.
-         * 
+         *
          * Useful for converting image of different size and color type !
-         * 
+         *
          * @remark
          * 1. the source image is resized to match this image size. Bilinear interpolation is used to
-         *    improve quality.  
+         *    improve quality.
          * 2. The source and destination image may have different color type. Conversion is automatic.
          *
          * @param   src_im  The image to copy into this image.
          * @param   opacity (Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to
-         *                  disable blending and simply use overwrite. 
+         *                  disable blending and simply use overwrite.
          */
         template<typename src_color_t> void copyFrom(const Image<src_color_t>& src_im, float opacity = TGX_DEFAULT_NO_BLENDING);
 
 
         /**
          * Blend the src image onto the destination image with resizing and color conversion.
-         * 
+         *
          * Same as above but uses a user-defined blending operator to combine src over the existing
          * image.
-         * 
+         *
          * The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the
          * color of the source (sprite) pixel and the color of the destination pixel and returns the
          * blended color. It must have a signature compatible with
-         * 
+         *
          *                    color_t blend_op(color_t_src src, color_t dst)
-         * 
+         *
          * (the method can, in fact, return a color of any type but returning type color_t will improve
-         * performance).  
-         * 
+         * performance).
+         *
          * @remark
          * 1. the source image is resized to match this image size. Bilinear interpolation is used to
          *    improve quality.
@@ -929,13 +929,13 @@ namespace tgx
 
         /**
          * Copy the source image pixels into this image, reducing it by half in the process.
-         * 
+         *
          * The method ignores the last row/column for odd dimensions larger than 1. Resizing is done by
          * averaging the color of the 4 neighbour pixels.
-         * 
+         *
          * This image must be large enough to accomodate the reduced image otherwise the method returns
          * without doing anything. The reduced image is copied from the top-left corner of this image.
-         * 
+         *
          * @note This is an old method. Use blitScaledRotated() instead.
          *
          * @param   src_image   the source image.
@@ -947,7 +947,7 @@ namespace tgx
 
         /**
          * Reduce this image by half.
-         * 
+         *
          * Use the same memory buffer and keep the same stride. Resizing is done by averaging the color
          * of the 4 neighbour pixels.
          *
@@ -958,17 +958,17 @@ namespace tgx
 
         /**
          * Convert this image to another type.
-         * 
+         *
          * Performs 'in place' conversion of the image using the same memory buffer.
-         * 
+         *
          * @note The image returned may have a different stride from this image !
-         * 
-         * @warning 
+         *
+         * @warning
          * 1. In place conversion only possible if `sizeof(color_dst)` divides `sizeof(color_t)`. Otherwise
          * a compile time error is raised. For conversion between any two color types, one can use `copyFrom()`.
          * 2. When the method returns, this image dimensions/stride are not unchange but the content of its memory
-         * buffer has been modified. 
-         * 
+         * buffer has been modified.
+         *
          * @tparam  color_dst   Color type to convert the image into.
          *
          * @returns A new image with the same content and using the same memory framebuffer but converted to type `color_dest`.
@@ -984,8 +984,8 @@ namespace tgx
     //*************************************************************************************************************
     /**
     * @name Drawing primitives: filling a region.
-    *       
-    * Method for filling the whole (or just a region of the) image with a given color.  
+    *
+    * Method for filling the whole (or just a region of the) image with a given color.
     */
     ///@{
     //*************************************************************************************************************
@@ -996,16 +996,16 @@ namespace tgx
 
         /**
          * Fill the whole image with a single color.
-         * 
+         *
          * same as `clear(color)`
-         *  
+         *
          * @param   color   The color to use.
          */
         void fillScreen(color_t color);
 
         /**
          * Fill the whole image with a single color
-         * 
+         *
          * Same as `fillScreen(color)`.
          *
          * @param   color   The color to use.
@@ -1015,7 +1015,7 @@ namespace tgx
 
         /**
          * Fill the whole image with a vertical color gradient between two colors.
-         * 
+         *
          * Interpolation takes place in RGB color space (even if color_t is HSV).
          *
          * @param   top_color       color at the top of the image.
@@ -1025,8 +1025,8 @@ namespace tgx
 
 
         /**
-         * Fill the whole screen with an horizontal color gradient between two colors.
-         * 
+         * Fill the whole screen with a horizontal color gradient between two colors.
+         *
          * Interpolation takes place in RGB color space (even if color_t is HSV).
          *
          * @param   left_color  color on the left side of the image.
@@ -1037,9 +1037,9 @@ namespace tgx
 
         /**
          * 'Flood fill' a 4-connected region of the image.
-         * 
+         *
          * Recolor the unicolor component containing position `start_pos` with the color `new_color`.
-         * 
+         *
          * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack.
          * If the algorithm runs out of space, it stops without completing the filling (and return -1 to
          * indicate failure). Otherwise, the method returns the max number of bytes used on the stack
@@ -1057,15 +1057,15 @@ namespace tgx
 
         /**
          * 'Flood fill' a 4-connected region of the image.
-         * 
+         *
          * Recolor the connected component containing position `startpos` whose boundary is delimited by
          * `border_color`.
-         * 
+         *
          * The template parameter can be adjusted to specify the size (in bytes) allocated on the stack.
          * If the algorithm runs out of space, it stops without completing the filling (and return -1 to
          * indicate failure). Otherwise, the method returns the max number of bytes used on the stack
          * during the filling.
-         * 
+         *
          * @note During the algorithm, `new_color` is treated the same as `border_color` and will also
          * block the filling procedure when encountered.
          *
@@ -1087,7 +1087,7 @@ namespace tgx
     //*************************************************************************************************************
     /**
     * @name Drawing primitives: lines.
-    *       
+    *
     * FAST/REGULAR METHODS
     */
     ///@{
@@ -1098,7 +1098,7 @@ namespace tgx
 
 
         /**
-         * Draw an vertical segment of `h` pixels starting at `pos`.
+         * Draw a vertical segment of `h` pixels starting at `pos`.
          *
          * @param   pos     position of the top endpoint of the segment.
          * @param   h       number of pixels in the segment.
@@ -1110,7 +1110,7 @@ namespace tgx
 
 
         /**
-         * Draw an horizontal segment of `w` pixels starting at pos.
+         * Draw a horizontal segment of `w` pixels starting at pos.
          *
          * @param   pos     position of the left endpoint of the segment.
          * @param   w       number of pixels in the segment.
@@ -1135,7 +1135,7 @@ namespace tgx
 
         /**
          * Draw a line segment between two points (using Bresenham's algorithm).
-         * Same as drawLine() but specify also which endpoints should be drawn. 
+         * Same as drawLine() but specify also which endpoints should be drawn.
          *
          * @param   P1      The first point.
          * @param   drawP1  True to draw the pixel at endpoint P1.
@@ -1152,7 +1152,7 @@ namespace tgx
     //*************************************************************************************************************
     /**
     * @name Drawing primitives: lines (AA).
-    *       
+    *
     * HIGH QUALITY DRAWING
     */
     ///@{
@@ -1162,9 +1162,9 @@ namespace tgx
 
         /**
          * Draw a line segment between two points [**High quality**]
-         * 
-         * @note High quality drawing with anti-aliasing and sub-pixel precision. 
-         * 
+         *
+         * @note High quality drawing with anti-aliasing and sub-pixel precision.
+         *
          * @param   P1      The first point.
          * @param   P2      The second point.
          * @param   color   color to use.
@@ -1175,7 +1175,7 @@ namespace tgx
 
         /**
          * Draw a thick line segment between two points [**High quality**].
-         * 
+         *
          * @note High quality drawing with anti-aliasing and sub-pixel precision.
          *
          * @attention this method superseeds the old `drawWideLine()` method.
@@ -1224,10 +1224,10 @@ namespace tgx
 
         /**
         * DEPRECATED: Use drawThickLineAA() instead.
-        * 
+        *
         * @warning This method will be removed soon...
         */
-        DEPRECATED("Use method drawThickLineAA() instead.") 
+        DEPRECATED("Use method drawThickLineAA() instead.")
         void drawWideLine(fVec2 PA, fVec2 PB, float w, color_t color, float opacity)  { drawThickLineAA(PA, PB, w, END_ROUNDED, END_ROUNDED, color, opacity); }
 
 
@@ -1318,7 +1318,7 @@ namespace tgx
 
 
         /**
-         * Draw a rectangle filled with an horizontal gradient of colors
+         * Draw a rectangle filled with a horizontal gradient of colors
          *
          * @param   B           box that delimits the rectangle to draw.
          * @param   color_left  color on the left side.
@@ -1346,8 +1346,8 @@ namespace tgx
     //*************************************************************************************************************
     /**
     * @name Drawing primitives: rectangles. (AA)
-    *       
-    * HIGH QUALITY DRAWING       
+    *
+    * HIGH QUALITY DRAWING
     *
     * @remark
     * 1. Sub-pixel precision and anti-aliasing is usually not desirable
@@ -1369,7 +1369,7 @@ namespace tgx
 
         /**
          * Draw a filled rectangle with a thick border [**High quality**].
-         * 
+         *
          * @note High quality drawing with anti-aliasing and sub-pixel precision.
          *
          * @warning This is probably not the method you want to use: if you just want to draw a nice
@@ -1413,7 +1413,7 @@ namespace tgx
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
          */
         void fillThickRectAA(const fBox2& B, float thickness, color_t color_interior, color_t color_border, float opacity = 1.0f);
- 
+
 
 
 
@@ -1464,7 +1464,7 @@ namespace tgx
     //*************************************************************************************************************
     /**
     * @name Drawing primitives: rounded rectangles (AA).
-    *       
+    *
     * HIGH QUALITY DRAWING
     */
     ///@{
@@ -1486,7 +1486,7 @@ namespace tgx
 
         /**
          * Draw a rounded rectangle with a thick border [**High quality**].
-         * 
+         *
          * @note High quality drawing with anti-aliasing and sub-pixel precision.
          *
          * @param   B               box that delimits the rectangle to draw.
@@ -1580,7 +1580,7 @@ namespace tgx
     //*************************************************************************************************************
     /**
     * @name Drawing primitives: triangles (AA).
-    *       
+    *
     * HIGH QUALITY DRAWING
     */
     ///@{
@@ -1630,14 +1630,14 @@ namespace tgx
 
 
         /**
-         * Draw a filled triangle with a thick border of a different color [**High quality**]. 
+         * Draw a filled triangle with a thick border of a different color [**High quality**].
          *
          * @note High quality drawing with anti-aliasing and sub-pixel precision.
          *
          * @param   P1              first vertex.
          * @param   P2              second vertex.
          * @param   P3              third vertex.
-         * @param   thickness       thickness of the border (going 'inside' the triangle). 
+         * @param   thickness       thickness of the border (going 'inside' the triangle).
          * @param   color_interior  interior color.
          * @param   color_border    boundary color.
          * @param   opacity         (Optional) Opacity multiplier in [0.0f, 1.0f].
@@ -1651,8 +1651,8 @@ namespace tgx
     //*************************************************************************************************************
     /**
     * @name Drawing primitives: triangles (SPECIAL METHODS).
-    *       
-    * ADVANCED METHODS USING THE 3D RASTERIZER BACKEND. 
+    *
+    * ADVANCED METHODS USING THE 3D RASTERIZER BACKEND.
     *
     * @remark
     *   1. These method use sub-pixel precision (but not anti-aliasing).
@@ -1665,7 +1665,7 @@ namespace tgx
 
         /**
          * Draw a triangle with gradient color specified by the colors on its vertices.
-         * 
+         *
          * @param   P1      First triangle vertex.
          * @param   P2      Second triangle vertex.
          * @param   P3      Third triangle vertex.
@@ -1681,7 +1681,7 @@ namespace tgx
 
         /**
          * Draw textured triangle onto the image.
-         * 
+         *
          * The texture is mapped onto the triangle using bilinear filtering.
          *
          * @warning For particular orientations of triangles, access to texture pixels is
@@ -1707,18 +1707,18 @@ namespace tgx
 
 
         /**
-         * Blend a textured triangle onto the image. 
-         * 
+         * Blend a textured triangle onto the image.
+         *
          * The texture is mapped onto the triangle using bilinear filtering.
-         * 
+         *
          * The method takes as input a user defined 'blending operator' with allow to create fancy
-         * effects. The blending operator 'blend_op' can be a function/functor/lambda. It takes as 
-         * input the color of the source (sprite) pixel and the color of the destination pixel and 
+         * effects. The blending operator 'blend_op' can be a function/functor/lambda. It takes as
+         * input the color of the source (sprite) pixel and the color of the destination pixel and
          * returns the blended color. It must have a signature compatible with
          *
          *                    color_t blend_op(color_t_src src, color_t dst)
          *
-         * (the method can, in fact, return a color of any type but returning type color_t will 
+         * (the method can, in fact, return a color of any type but returning type color_t will
          * improve performance).
          *
          * @warning For particular orientations of triangles, access to texture pixels is
@@ -1728,7 +1728,7 @@ namespace tgx
          * 1. Move the texture to a faster memory location before drawing.
          * 2. Or tessellate the triangle into smaller triangles so that the
          *    memory data for each triangle fit into the cache.
-         * 
+         *
          * @param   src_im  the image texture to map onto the triangle.
          * @param   srcP1   coords of point 1 on the texture.
          * @param   srcP2   coords of point 2 on the texture.
@@ -1744,7 +1744,7 @@ namespace tgx
 
         /**
          * Blend textured triangle on the image while combining it with a color gradient.
-         * 
+         *
          * The texture is mapped onto the triangle using bilinear filtering.
          *
          * @warning For particular orientations of triangles, access to texture pixels is
@@ -1805,7 +1805,7 @@ namespace tgx
          * Blend textured triangle with a transparency mask (ie a specific color is treated as fully
          * transparent) and blend it with a color gradient...
          *
-         * Ok, this one is really overkill :p 
+         * Ok, this one is really overkill :p
          *
          * @warning For particular orientations of triangles, access to texture pixels is
          * highly non-linear. For texture stored in slow memory (e.g. flash), this
@@ -1872,7 +1872,7 @@ namespace tgx
 
         /**
          * draw a filled quad.
-         * 
+         *
          * @warning The quad must be **convex**.
          *
          * @param   P1      first vertex.
@@ -1971,8 +1971,8 @@ namespace tgx
     //*************************************************************************************************************
     /**
     * @name Drawing primitives: quads (SPECIAL METHODS).
-    *       
-    * ADVANCED METHODS USING THE 3D RASTERIZER BACKEND. 
+    *
+    * ADVANCED METHODS USING THE 3D RASTERIZER BACKEND.
     *
     * @remark
     *   1. These method use sub-pixel precision (but not anti-aliasing).
@@ -2061,7 +2061,7 @@ namespace tgx
 
 
         /**
-         * Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn].
+         * Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn].
          *
          * @param   nbpoints    number of points in tabPoints.
          * @param   tabPoints   array of points.
@@ -2073,13 +2073,13 @@ namespace tgx
 
 
         /**
-         * Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn].
-         * 
+         * Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn].
+         *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
-         * compatible with: 
+         * compatible with:
          * ```
          *                    bool next_point(iVec2 & P)
-         * ```         
+         * ```
          * The callback must store the next point in the reference `P` and return:
          * - `true`: if there are additional points to plot after this one.
          * - `false`: if this is the last point.
@@ -2110,7 +2110,7 @@ namespace tgx
 
 
         /**
-         * Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (**High quality**).
+         * Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (**High quality**).
          *
          * @note High quality drawing with anti-aliasing and sub-pixel precision.
          *
@@ -2123,7 +2123,7 @@ namespace tgx
 
 
         /**
-         * Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (**High quality**).
+         * Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (**High quality**).
          *
          * @note High quality drawing with anti-aliasing and sub-pixel precision.
          *
@@ -2145,7 +2145,7 @@ namespace tgx
 
 
         /**
-         * Draw a thick polyline ie a sequence of consecutif thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (**High quality**).
+         * Draw a thick polyline ie a sequence of consecutive thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (**High quality**).
          *
          * @note High quality drawing with anti-aliasing and sub-pixel precision.
          *
@@ -2162,15 +2162,15 @@ namespace tgx
 
 
         /**
-         * Draw a thick polyline ie a sequence of consecutif thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (**High quality**).
+         * Draw a thick polyline ie a sequence of consecutive thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (**High quality**).
          *
          * @note High quality drawing with anti-aliasing and sub-pixel precision.
          *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
-         * compatible with: 
+         * compatible with:
          * ```
          *                    bool next_point(fVec2 & P)
-         * ```         
+         * ```
          * The callback must store the next point in the reference `P` and return:
          * - `true`: if there are additional points to plot after this one.
          * - `false`: if this is the last point.
@@ -2241,7 +2241,7 @@ namespace tgx
 
         /**
          * Draw a filled polygon with vertices [P0,P2,,, PN]
-         * 
+         *
          * @warning The polygon must be **convex** (or at least star-shaped from its center of mass).
          *
          * @param   nbpoints    number of points in tabPoints.
@@ -2266,8 +2266,8 @@ namespace tgx
          * - `false`: if this is the last point **AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !**
          *
          * @warning In order to draw the polygon correctly, all points must be queried TWICE so
-         * the callback must reset to the first point after returning false. 
-         *           
+         * the callback must reset to the first point after returning false.
+         *
          * @warning The polygon must be **convex** (or at least star-shaped from its center of mass).
          *
          * @param   next_point  callback functor that provides the list of points.
@@ -2310,7 +2310,7 @@ namespace tgx
 
         /**
          * Draw a closed polygon with vertices [P0,P2,,, PN] (**High quality**).
-         * 
+         *
          * @note High quality drawing with anti-aliasing and sub-pixel precision.
          *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
@@ -2360,7 +2360,7 @@ namespace tgx
          * - `false`: if this is the last point **AND THEN THE FUNCTOR MUST RESET BACK THE FIRST POINT !**
          *
          * @warning In order to draw the polygon correctly, all points must be queried TWICE so
-         * the callback must reset to the first point after returning false. 
+         * the callback must reset to the first point after returning false.
          *
          * @param   next_point  callback functor that provides the list of points delimiting the outer
          *                      boundary of the polygon.
@@ -2629,7 +2629,7 @@ namespace tgx
          * |         90          |   3AM    |
          * |        180          |   6AM    |
          * |        270          |   9AM    |
-         * 
+         *
          * @param   center      circle center position.
          * @param   r           circle radius.
          * @param   angle_start angle in degrees of the begigining of the arc.
@@ -2855,7 +2855,7 @@ namespace tgx
 
         /**
          * Draw a quadratic spline interpolating between a given set of points.
-         * 
+         *
          * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
          * can have. Can be increased if needed (but increase memory allocated on stack when the method
          * is called).
@@ -2875,8 +2875,8 @@ namespace tgx
 
 
         /**
-         * Draw a cubic spline interpolating between a given set of points. 
-         * 
+         * Draw a cubic spline interpolating between a given set of points.
+         *
          * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
          * can have. Can be increased if needed (but increase memory allocated on stack when the method
          * is called).
@@ -2897,7 +2897,7 @@ namespace tgx
 
         /**
          * Draw a closed quadratic spline interpolating between a given set of points.
-         * 
+         *
          * The template parameter SPLINE_MAX_POINTS defines the maximum number of points that a spline
          * can have. Can be increased if needed (but increase memory allocated on stack when the method
          * is called).
@@ -3049,7 +3049,7 @@ namespace tgx
          * can have. Can be increased if needed (but increase memory allocated on stack when the method
          * is called).
          *
-         * @warning The region should be convex (or at least star-shape around center of mass). Even 
+         * @warning The region should be convex (or at least star-shape around center of mass). Even
          * for a convex region, the drawing may not be perfect if there are sharp turns.
          *
          * @tparam  SPLINE_MAX_POINTS   Max number of point interpolation point in the sline. Adjust if
@@ -3074,7 +3074,7 @@ namespace tgx
          * can have. Can be increased if needed (but increase memory allocated on stack when the method
          * is called).
          *
-         * @warning 
+         * @warning
          * 1. The region should be convex (or at least star-shape around center of mass). Even
          *    for a convex region, the drawing may not be perfect if there are sharp turns.
          * 2. If the shape is 'very irregular'. it might be better to draw a thick curve with
@@ -3098,7 +3098,7 @@ namespace tgx
 
 
 
-     
+
 
     ///@}
     //*************************************************************************************************************
@@ -3125,9 +3125,9 @@ namespace tgx
 
         /**
          * Query the height of a font.
-         * 
+         *
          * overload for `GFXfont`.
-         * 
+         *
          * @remark this method simply forwards the calls `tgx::fontHeight(const GFXfont & font)`.
          *
          * @param   font    The font.
@@ -3153,7 +3153,7 @@ namespace tgx
 
         /**
          * Compute the bounding box of a character.
-         * 
+         *
          * overload for `ILI9341_t3_font_t`.
          *
          * @remark this method simply forwards the calls `tgx::measureChar(char c, iVec2 pos, const GFXfont& font, Anchor anchor, int* xadvance)`.
@@ -3163,7 +3163,7 @@ namespace tgx
          * @param           font        The font to use.
          * @param           anchor      (Optional) location of the anchor with respect to the char
          *                              bounding box. (by default, this is the BASELINE|LEFT).
-         * @param [in,out]  xadvance    If non-null, the number of pixel to advance horizontally after
+         * @param [in,out]  xadvance    If non-null, the number of pixels to advance horizontally after
          *                              drawing the char is stored here.
          *
          * @returns the bounding box of pixels occupied by the char draw with `font `when its chosen anchor is at `pos`.
@@ -3173,7 +3173,7 @@ namespace tgx
 
         /**
          * Compute the bounding box of a character.
-         * 
+         *
          * overload for `ILI9341_t3_font_t`.
          *
          * @remark this method simply forwards the calls `tgx::measureChar(char c, iVec2 pos, const ILI9341_t3_font_t& font, Anchor anchor, int* xadvance)`.
@@ -3183,7 +3183,7 @@ namespace tgx
          * @param           font        The font to use.
          * @param           anchor      (Optional) location of the anchor with respect to the char
          *                              bounding box. (by default, this is the BASELINE|LEFT).
-         * @param [in,out]  xadvance    If non-null, the number of pixel to advance horizontally after
+         * @param [in,out]  xadvance    If non-null, the number of pixels to advance horizontally after
          *                              drawing the char is stored here.
          *
          * @returns the bounding box of pixels occupied by the char draw with `font `when its chosen anchor is at `pos`.
@@ -3234,7 +3234,7 @@ namespace tgx
          * character.
          *
          * overload for `GFXfont`.
-         * 
+         *
          * @param   c       The character to draw.
          * @param   pos     Location of the anchor with respect to the char bounding box. (by default,
          *                  this is the BASELINE|LEFT).
@@ -3253,7 +3253,7 @@ namespace tgx
          * character.
          *
          * overload for `ILI9341_t3_font_t`.
-         * 
+         *
          * @param   c       The character to draw.
          * @param   pos     Location of the anchor with respect to the char bounding box. (by default,
          *                  this is the BASELINE|LEFT).
@@ -3320,7 +3320,7 @@ namespace tgx
          * @param   pos                 position to draw the text. This is the position to which will be
          *                              mapped the selected anchor point of the text.
          * @param   font                The font to use.
-         * @param   anchor              Select the anchor point of the text c.f. enum tgx::Anchor (the `drawText()` methods uses `BASELINE|LEFT`). 
+         * @param   anchor              Select the anchor point of the text c.f. enum tgx::Anchor (the `drawText()` methods uses `BASELINE|LEFT`).
          * @param   wrap_text           True to wrap wrap text at the end of image. Wrapping occur per
          *                              character (not per word).
          * @param   start_newline_at_0  True to start a new line of text at position x=0 and false to
@@ -3346,7 +3346,7 @@ namespace tgx
          * @param   pos                 position to draw the text. This is the position to which will be
          *                              mapped the selected anchor point of the text.
          * @param   font                The font to use.
-         * @param   anchor              Select the anchor point of the text c.f. enum tgx::Anchor (the `drawText()` methods uses `BASELINE|LEFT`). 
+         * @param   anchor              Select the anchor point of the text c.f. enum tgx::Anchor (the `drawText()` methods uses `BASELINE|LEFT`).
          * @param   wrap_text           True to wrap wrap text at the end of image. Wrapping occur per
          *                              character (not per word).
          * @param   start_newline_at_0  True to start a new line of text at position x=0 and false to
@@ -3419,7 +3419,7 @@ namespace tgx
     /**
     * @name Extensions. Interfacing TGX with other libraries.
     *
-    *       
+    *
     */
     ///@{
     //*************************************************************************************************************
@@ -3431,19 +3431,19 @@ namespace tgx
         /**
          * Link the image with Takkoa's OpenFontRender library : https://github.com/takkaO/OpenFontRender
          *
-         * @tparam  T   type of the font renderer i.e. here it is `OpenFontRender` for Takkao's library. 
+         * @tparam  T   type of the font renderer i.e. here it is `OpenFontRender` for Takkao's library.
          * @param [in,out]  ofr     The font renderer object to link with.
-         * @param           opacity (Optional) Opacity multiplier (in [0.0f, 1.0f]) used when drawing the font. 
+         * @param           opacity (Optional) Opacity multiplier (in [0.0f, 1.0f]) used when drawing the font.
          */
         template<typename T> void setOpenFontRender(T& ofr, float opacity = TGX_DEFAULT_NO_BLENDING)
-            { 
-            // for some strange reason, cannot put this method inside the .inl file when compiling with arduino IDE... 
+            {
+            // for some strange reason, cannot put this method inside the .inl file when compiling with arduino IDE...
             // must have something to do with Arduino's mangling of .ino file...
             if ((opacity >= 0) && (opacity < 1))
                 {
                 ofr.set_drawPixel([&](int32_t x, int32_t y, uint16_t c) { drawPixel({ x,y }, color_t(RGB565(c)), opacity); return; });
                 ofr.set_drawFastHLine([&](int32_t x, int32_t y, int32_t w, uint16_t c) { drawFastHLine({ x,y }, w, color_t(RGB565(c)), opacity); return; });
-                } 
+                }
             else
                 {
                 ofr.set_drawPixel([&](int32_t x, int32_t y, uint16_t c) { drawPixel({ x,y }, color_t(RGB565(c))); return; });
@@ -3457,10 +3457,10 @@ namespace tgx
         /**
          * Decode a PNG image into this image using the PNGDec library:
          * https://github.com/bitbank2/PNGdec/
-         * 
+         *
          * This method is a wrapper around the `PNG.decode()` method from the PNGDec library and takes
          * the same arguments and return values.
-         * 
+         *
          * The image is cropped if it does not fit completely into this image.
          *
          * @tparam  PNG_T   Type of the PNG decoder i.e. here it is `PNG` from BitBank2's PNGDec library.
@@ -3481,10 +3481,10 @@ namespace tgx
         /**
          * Decode a JPEG image into this image using the JPEGDEC library:
          * https://github.com/bitbank2/JPEGDEC/
-         * 
+         *
          * This method is a wrapper around the `JPEGDEC.decode()` method from the JPEGDEC library and
          * takes the same arguments and return values.
-         * 
+         *
          * The image is cropped if it does not fit completely into this image.
          *
          * @tparam  JPEG_T  Type of the JPEG decoder i.e. here it is `JPEGDEC` from BitBank2's JPEGDEC
@@ -3511,14 +3511,14 @@ namespace tgx
         /**
          * Decode a (possibly animated) GIF image into this image using the AnimatedGIF library:
          * https://github.com/bitbank2/AnimatedGIF/
-         * 
+         *
          * This method is a wrapper around the `JPEGDEC.playFrame()` method from the AnimatedGIF library
          * and takes the same arguments and return values.
-         * 
+         *
          * - In the case of animated GIF. Each call to the method draws the nexct frame. The method
          *   returns 1 when there is still another frame to draw, 0 when finished. See the
          *   `gif.playFrame()` method from the AnimatedGIF library for additional details.
-         * 
+         *
          * - The image is cropped if it does not fit completely into this image.
          *
          * @tparam  GIF_T   Type of the GIF decoder i.e. here it is `AnimatedGIF` from BitBank2's
@@ -3562,7 +3562,7 @@ namespace tgx
 
 private:
 
-        bool _collision(); // For debug 
+        bool _collision(); // For debug
 
 private:
 
@@ -3625,9 +3625,9 @@ private:
         /***************************************
         * BRESENHAM
         ****************************************/
-     
+
         template<bool X_MAJOR, bool BLEND, int SIDE, bool CHECKRANGE = false> inline TGX_INLINE void _bseg_update_pixel(const BSeg & seg, color_t color, int32_t op)
-            { 
+            {
             const int x = seg.X(); const int y = seg.Y();
             if (CHECKRANGE) { if ((x < 0) || (y < 0) || (x >= _lx) || (y >= _ly)) return; }
             if (SIDE != 0) { const int32_t o = ((seg.AA<SIDE, X_MAJOR>()) * op) >> 8; _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)].blend256(color, (uint32_t)o); }
@@ -3659,7 +3659,7 @@ private:
         void _bseg_avoid22(BSeg& PQ, BSeg& PA, BSeg& PB, BSeg& QC, BSeg& QD, bool closedPA, bool closedPB, bool closedQC, bool closedQD, color_t color, int side, int32_t op, bool checkrange);
 
 
-        // filling a triangle 
+        // filling a triangle
 
         //void _bseg_fill_triangle(iVec2 P1, iVec2 P2, iVec2 P3, color_t fillcolor, float opacity);
         void _bseg_fill_triangle(fVec2 fP1, fVec2 fP2, fVec2 fP3, color_t fillcolor, float opacity);
@@ -3675,7 +3675,7 @@ private:
             color_t* p = _buffer + TGX_CAST32(x1) + TGX_CAST32(y) * TGX_CAST32(_stride);
             if (opacity < 0) { while (x1++ <= x2) { (*p++) = color; } } else { while (x1++ <= x2) { (*p++).blend(color,opacity); } }
             }
-        
+
         template<typename T> static inline T _triangleAera(Vec2<T> P1, Vec2<T> P2, Vec2<T> P3) { return P1.x * (P2.y - P3.y) + P2.x * (P3.y - P1.y) + P3.x * (P1.y - P2.y); } // return twice the aera of the triangle.
 
 
@@ -3740,11 +3740,11 @@ private:
         ****************************************/
 
 
-        // low quality drawing 
+        // low quality drawing
         void _fillRect(iBox2 B, color_t color, float opacity);
         template<bool CHECKRANGE> void _drawRoundRect(int x, int y, int w, int h, int r, color_t color);
-        template<bool CHECKRANGE> void _drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);        
-        template<bool CHECKRANGE> void _fillRoundRect(int x, int y, int w, int h, int r, color_t color);        
+        template<bool CHECKRANGE> void _drawRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
+        template<bool CHECKRANGE> void _fillRoundRect(int x, int y, int w, int h, int r, color_t color);
         template<bool CHECKRANGE> void _fillRoundRect(int x, int y, int w, int h, int r, color_t color, float opacity);
 
 
@@ -3761,7 +3761,7 @@ private:
         ****************************************/
 
 
-        // methods using the 3D triangle rasterizer        
+        // methods using the 3D triangle rasterizer
         inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size) { return tgx::fVec2(pos.x / ((float)size.x), pos.y / ((float)size.y)); } // Convert to texture coordinates
         inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size) { return tgx::fVec2((2.0f / ((float)size.x)) * (pos.x) - 1.0f, (2.0f / ((float)size.y)) * (pos.y) - 1.0f); } // Convert to viewport coordinates
 
@@ -3794,10 +3794,10 @@ private:
 
 
         // high quality drawing for circle, arc and pie
-        static float _rectifyAngle(float a); 
+        static float _rectifyAngle(float a);
         static void _defaultQuarterVH(int quarter, int& v, int& h);
-      
-        void _fillSmoothQuarterCircleInterHPsub(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t off1_full = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0, int32_t off2_full = 0);        
+
+        void _fillSmoothQuarterCircleInterHPsub(tgx::fVec2 C, float R, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity, int nb_planes, int32_t kx1 = 0, int32_t ky1 = 0, int32_t off1 = 0, int32_t off1_full = 0, int32_t kx2 = 0, int32_t ky2 = 0, int32_t off2 = 0, int32_t off2_full = 0);
         void _fillSmoothQuarterCircleInterHP0(int quarter, tgx::fVec2 C, float R, color_t color, float opacity);
         void _fillSmoothQuarterCircleInterHP1(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1);
         void _fillSmoothQuarterCircleInterHP2(int quarter, tgx::fVec2 C, float R, color_t color, float opacity, const BSeg& seg1, int side1, const BSeg& seg2, int side2);
@@ -3824,16 +3824,16 @@ private:
         * ELLIPSES
         ****************************************/
 
-        
+
         // low quality drawing for ellipses
         template<bool OUTLINE, bool FILL, bool CHECKRANGE> void _drawEllipse(int x0, int y0, int rx, int ry, color_t outline_color, color_t interior_color, float opacity); // adapted from bodmer e_tft library
 
         // high quality drawing for ellipses
         void _drawSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
-        void _drawSmoothThickQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);        
+        void _drawSmoothThickQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
         void _fillSmoothQuarterEllipse(tgx::fVec2 C, float rx, float ry, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color, float opacity);
         void _fillSmoothThickQuarterEllipse(tgx::fVec2 C, float rx, float ry, float thickness, int quarter, bool vertical_center_line, bool horizontal_center_line, color_t color_interior, color_t color_border, float opacity);
-  
+
 
 
         /***************************************
@@ -3862,7 +3862,7 @@ private:
 
 
         // high quality Bezier curves
-        static bool _splitRationalQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float w, fVec2& Q, fVec2& PB, float& wb);  
+        static bool _splitRationalQuadBezier(fVec2 P1, fVec2 P2, fVec2 PC, float w, fVec2& Q, fVec2& PB, float& wb);
         static bool _splitCubicBezier(fVec2 P1, fVec2 P2, fVec2 PPC1, fVec2 PPC2, fVec2& Q, fVec2& C, fVec2 & D);
 
 
@@ -3870,7 +3870,7 @@ private:
         /***************************************
         * DRAWING TEXT
         ****************************************/
-        
+
         bool _clipit(int& x, int& y, int& sx, int& sy, int& b_left, int& b_up);
 
         template<bool BLEND> iVec2 _drawCharGFX(char c, iVec2 pos, color_t col, const GFXfont& font, float opacity);
@@ -3879,7 +3879,7 @@ private:
         template<bool BLEND> iVec2 _drawTextGFX(const char* text, iVec2 pos, const GFXfont& font, color_t col, float opacity, bool wrap, bool start_newline_at_0);
         template<bool BLEND> iVec2 _drawTextILI(const char* text, iVec2 pos, const ILI9341_t3_font_t& font, color_t col, float opacity, bool wrap, bool start_newline_at_0);
 
-        template<bool BLEND> void _drawCharILI9341_t3(const uint8_t* bitmap, int32_t off, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);        
+        template<bool BLEND> void _drawCharILI9341_t3(const uint8_t* bitmap, int32_t off, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
         template<bool BLEND> static void _drawcharline(const uint8_t* bitmap, int32_t off, color_t* p, int dx, color_t col, float opacity);
         template<bool BLEND> void _drawCharBitmap_1BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);
         template<bool BLEND> void _drawCharBitmap_2BPP(const uint8_t* bitmap, int rsx, int b_up, int b_left, int sx, int sy, int x, int y, color_t col, float opacity);

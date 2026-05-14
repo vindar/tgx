@@ -307,7 +307,7 @@ void getCoord(int16_t x, int16_t y, float* xp, float* yp, int16_t r, float a) {
 }
 
 /// <summary>
-/// center text horizontaly
+/// center text horizontally
 /// </summary>
 /// <param name="img"></param>
 /// <param name="text"></param>

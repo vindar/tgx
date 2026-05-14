@@ -6,6 +6,7 @@ var structtgx_1_1_mat4 =
     [ "Mat4", "structtgx_1_1_mat4.html#af4c8d5b865d1365a4138da4e72362b94", null ],
     [ "operator=", "structtgx_1_1_mat4.html#acc6f3a93971911aa71d134699f3f2189", null ],
     [ "operator T*", "structtgx_1_1_mat4.html#a889b971f27605704e7c5161e95e2ebce", null ],
+    [ "operator const T *", "structtgx_1_1_mat4.html#a58642659527614f1ae20f4fd78370bea", null ],
     [ "setZero", "structtgx_1_1_mat4.html#a6519e9224912a9f636b31891b59d8422", null ],
     [ "setIdentity", "structtgx_1_1_mat4.html#a7ab58bbab5ea584275ebfec3c5e40ab7", null ],
     [ "setOrtho", "structtgx_1_1_mat4.html#aa427edd629ed08570dd5c8207a78db2e", null ],

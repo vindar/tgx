@@ -144,11 +144,11 @@ $(document).ready(function(){initNavTree('_box3_8h_source.html',''); initResizab
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="structtgx_1_1_box3.html">   66</a></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span><a class="code hl_struct" href="structtgx_1_1_box3.html">Box3</a></div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    {</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="comment">// mtools extension (if available).   </span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="comment">// mtools extension (if available).</span></div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">        #if (MTOOLS_TGX_EXTENSIONS)</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">        #include &lt;mtools/extensions/tgx/tgx_ext_Box3.inl&gt;</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">        #endif        </span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">        #endif</span></div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="comment">// box dimension: [minX, maxX] x [minY, maxY] x [minZ, maxZ]</span></div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
@@ -193,7 +193,7 @@ $(document).ready(function(){initNavTree('_box3_8h_source.html',''); initResizab
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno"><a class="line" href="structtgx_1_1_box3.html#aca9ba940c83bfb452f4a6852650c490c">  142</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="structtgx_1_1_box3.html#aca9ba940c83bfb452f4a6852650c490c">empty</a>()</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>            {</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>            <a class="code hl_variable" href="structtgx_1_1_box3.html#a0ec18c942ee1a22ceae123624c5ae149">minX</a> = (T)1; </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>            <a class="code hl_variable" href="structtgx_1_1_box3.html#a0ec18c942ee1a22ceae123624c5ae149">minX</a> = (T)1;</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>            <a class="code hl_variable" href="structtgx_1_1_box3.html#adad62b1ca05be2ed7479425df3ef428f">maxX</a> = (T)0;</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>            <a class="code hl_variable" href="structtgx_1_1_box3.html#a61ccd1113fa235efd644db11534512f2">minY</a> = (T)1;</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>            <a class="code hl_variable" href="structtgx_1_1_box3.html#a10040f264e971790921c23a19c108d0b">maxY</a> = (T)0;</div>
@@ -204,40 +204,40 @@ $(document).ready(function(){initNavTree('_box3_8h_source.html',''); initResizab
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="structtgx_1_1_box3.html#ac81f2a22c85fc8f79ad33223a0e0d893">  160</a></span>        <span class="keyword">inline</span> T <a class="code hl_function" href="structtgx_1_1_box3.html#ac81f2a22c85fc8f79ad33223a0e0d893">lx</a>()<span class="keyword"> const</span></div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="keyword">            </span>{</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            <span class="keywordflow">if</span> (std::is_integral&lt;T&gt;::value) <span class="comment">// compiler optimize this away. </span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            <span class="keywordflow">if</span> (std::is_integral&lt;T&gt;::value) <span class="comment">// compiler optimize this away.</span></div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                {</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                <span class="keywordflow">return</span> (<a class="code hl_variable" href="structtgx_1_1_box3.html#adad62b1ca05be2ed7479425df3ef428f">maxX</a> - <a class="code hl_variable" href="structtgx_1_1_box3.html#a0ec18c942ee1a22ceae123624c5ae149">minX</a> + 1); <span class="comment">// for integer, return the number of points</span></div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                }</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="keywordflow">else</span>    </div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                {</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                <span class="keywordflow">return</span> (<a class="code hl_variable" href="structtgx_1_1_box3.html#adad62b1ca05be2ed7479425df3ef428f">maxX</a> - <a class="code hl_variable" href="structtgx_1_1_box3.html#a0ec18c942ee1a22ceae123624c5ae149">minX</a>); <span class="comment">// for floating point type, return maxX - minX. </span></div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                }                   </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                <span class="keywordflow">return</span> (<a class="code hl_variable" href="structtgx_1_1_box3.html#adad62b1ca05be2ed7479425df3ef428f">maxX</a> - <a class="code hl_variable" href="structtgx_1_1_box3.html#a0ec18c942ee1a22ceae123624c5ae149">minX</a>); <span class="comment">// for floating point type, return maxX - minX.</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                }</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            }</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="structtgx_1_1_box3.html#a14b62c4be3dd366ace261a3e761a3dec">  180</a></span>        <span class="keyword">inline</span> T <a class="code hl_function" href="structtgx_1_1_box3.html#a14b62c4be3dd366ace261a3e761a3dec">ly</a>()<span class="keyword"> const</span></div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="keyword">            </span>{</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            <span class="keywordflow">if</span> (std::is_integral&lt;T&gt;::value) <span class="comment">// compiler optimize this away. </span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            <span class="keywordflow">if</span> (std::is_integral&lt;T&gt;::value) <span class="comment">// compiler optimize this away.</span></div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                {</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                <span class="keywordflow">return</span> (<a class="code hl_variable" href="structtgx_1_1_box3.html#a10040f264e971790921c23a19c108d0b">maxY</a> - <a class="code hl_variable" href="structtgx_1_1_box3.html#a61ccd1113fa235efd644db11534512f2">minY</a> + 1); <span class="comment">// for integer, return the number of points</span></div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                }</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>            <span class="keywordflow">else</span>    </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                {</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                <span class="keywordflow">return</span> (<a class="code hl_variable" href="structtgx_1_1_box3.html#a10040f264e971790921c23a19c108d0b">maxY</a> - <a class="code hl_variable" href="structtgx_1_1_box3.html#a61ccd1113fa235efd644db11534512f2">minY</a>); <span class="comment">// for floating point type, return maxX - minX. </span></div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                }                   </div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                <span class="keywordflow">return</span> (<a class="code hl_variable" href="structtgx_1_1_box3.html#a10040f264e971790921c23a19c108d0b">maxY</a> - <a class="code hl_variable" href="structtgx_1_1_box3.html#a61ccd1113fa235efd644db11534512f2">minY</a>); <span class="comment">// for floating point type, return maxX - minX.</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                }</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>            }</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno"><a class="line" href="structtgx_1_1_box3.html#ad52977bdf3fb602ee81af3a1f22559c9">  200</a></span>        <span class="keyword">inline</span> T <a class="code hl_function" href="structtgx_1_1_box3.html#ad52977bdf3fb602ee81af3a1f22559c9">lz</a>()<span class="keyword"> const</span></div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="keyword">            </span>{</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            <span class="keywordflow">if</span> (std::is_integral&lt;T&gt;::value) <span class="comment">// compiler optimize this away. </span></div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            <span class="keywordflow">if</span> (std::is_integral&lt;T&gt;::value) <span class="comment">// compiler optimize this away.</span></div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                {</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                <span class="keywordflow">return</span> (<a class="code hl_variable" href="structtgx_1_1_box3.html#a71abb747ba038932d196583543b55f5a">maxZ</a> - <a class="code hl_variable" href="structtgx_1_1_box3.html#ab564725a67765f210a174ce474db60a9">minZ</a> + 1); <span class="comment">// for integer, return the number of points</span></div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                }</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            <span class="keywordflow">else</span>    </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                {</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                <span class="keywordflow">return</span> (<a class="code hl_variable" href="structtgx_1_1_box3.html#a71abb747ba038932d196583543b55f5a">maxZ</a> - <a class="code hl_variable" href="structtgx_1_1_box3.html#ab564725a67765f210a174ce474db60a9">minZ</a>); <span class="comment">// for floating point type, return maxX - minX. </span></div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                }                   </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                <span class="keywordflow">return</span> (<a class="code hl_variable" href="structtgx_1_1_box3.html#a71abb747ba038932d196583543b55f5a">maxZ</a> - <a class="code hl_variable" href="structtgx_1_1_box3.html#ab564725a67765f210a174ce474db60a9">minZ</a>); <span class="comment">// for floating point type, return maxX - minX.</span></div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                }</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>            }</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
@@ -295,7 +295,7 @@ $(document).ready(function(){initNavTree('_box3_8h_source.html',''); initResizab
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno"><a class="line" href="structtgx_1_1_box3.html#ae53113887e276cfcb9d9f18ab5ed58f7">  323</a></span>        <span class="keyword">inline</span> <a class="code hl_struct" href="structtgx_1_1_box3.html">Box3&lt;T&gt;</a> <a class="code hl_function" href="structtgx_1_1_box3.html#ae53113887e276cfcb9d9f18ab5ed58f7">operator&amp;</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structtgx_1_1_box3.html">Box3&lt;T&gt;</a>&amp; B)<span class="keyword"> const</span></div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span><span class="keyword">            </span>{</div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>            <a class="code hl_struct" href="structtgx_1_1_box3.html">Box3&lt;T&gt;</a> R;</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="structtgx_1_1_box3.html#a903246af8db14817c5e756f811c2dd26">isEmpty</a>()) </div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="structtgx_1_1_box3.html#a903246af8db14817c5e756f811c2dd26">isEmpty</a>())</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                {</div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                R = *<span class="keyword">this</span>;</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                }</div>
@@ -554,7 +554,7 @@ $(document).ready(function(){initNavTree('_box3_8h_source.html',''); initResizab
 <div class="ttc" id="astructtgx_1_1_box3_html_af3e4657fe32cbd4e4cbb617eb57681ba"><div class="ttname"><a href="structtgx_1_1_box3.html#af3e4657fe32cbd4e4cbb617eb57681ba">tgx::Box3::operator|=</a></div><div class="ttdeci">void operator|=(const Box3&lt; T &gt; &amp;B)</div><div class="ttdoc">Enlarge this box in order to contain B.</div><div class="ttdef"><b>Definition:</b> Box3.h:386</div></div>
 <div class="ttc" id="astructtgx_1_1_box3_html_af659cf76ba61ba0ace9bb0c7580aa152"><div class="ttname"><a href="structtgx_1_1_box3.html#af659cf76ba61ba0ace9bb0c7580aa152">tgx::Box3::up</a></div><div class="ttdeci">void up()</div><div class="ttdoc">Move the box up by 1/10th of its height.</div><div class="ttdef"><b>Definition:</b> Box3.h:550</div></div>
 <div class="ttc" id="astructtgx_1_1_box3_html_afa113e4509ee6e78d736e7d33b908c83"><div class="ttname"><a href="structtgx_1_1_box3.html#afa113e4509ee6e78d736e7d33b908c83">tgx::Box3::down</a></div><div class="ttdeci">void down()</div><div class="ttdoc">Move the box down by 1/10th of its height.</div><div class="ttdef"><b>Definition:</b> Box3.h:563</div></div>
-<div class="ttc" id="astructtgx_1_1_box3_html_afc57afb344359f7a92e167e1be1ba58b"><div class="ttname"><a href="structtgx_1_1_box3.html#afc57afb344359f7a92e167e1be1ba58b">tgx::Box3::operator=</a></div><div class="ttdeci">Box3&lt; T &gt; &amp; operator=(const Box3&lt; T &gt; &amp;B)=default</div><div class="ttdoc">default assignement operator.</div></div>
+<div class="ttc" id="astructtgx_1_1_box3_html_afc57afb344359f7a92e167e1be1ba58b"><div class="ttname"><a href="structtgx_1_1_box3.html#afc57afb344359f7a92e167e1be1ba58b">tgx::Box3::operator=</a></div><div class="ttdeci">Box3&lt; T &gt; &amp; operator=(const Box3&lt; T &gt; &amp;B)=default</div><div class="ttdoc">default assignment operator.</div></div>
 <div class="ttc" id="astructtgx_1_1_vec2_html_a0dd3317719c780a7614027f9b50edb17"><div class="ttname"><a href="structtgx_1_1_vec2.html#a0dd3317719c780a7614027f9b50edb17">tgx::Vec2::x</a></div><div class="ttdeci">T x</div><div class="ttdoc">'x' coordinate (first dimension)</div><div class="ttdef"><b>Definition:</b> Vec2.h:72</div></div>
 <div class="ttc" id="astructtgx_1_1_vec2_html_a3cdfd98bbf0ed03d5c7ba54eea0c8001"><div class="ttname"><a href="structtgx_1_1_vec2.html#a3cdfd98bbf0ed03d5c7ba54eea0c8001">tgx::Vec2::y</a></div><div class="ttdeci">T y</div><div class="ttdoc">'y' coordinate (second dimension)</div><div class="ttdef"><b>Definition:</b> Vec2.h:73</div></div>
 <div class="ttc" id="astructtgx_1_1_vec3_html"><div class="ttname"><a href="structtgx_1_1_vec3.html">tgx::Vec3</a></div><div class="ttdoc">Generic 3D vector [specializations iVec3, fVec3, dVec3].</div><div class="ttdef"><b>Definition:</b> Vec3.h:70</div></div>

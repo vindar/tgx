@@ -36,7 +36,7 @@
 // FONT FORMATS
 //
 // !!! The Adafruit GFX and ILI9341_t3 libraries should be included before 
-//     this header if you want ot use these libraries !!!
+//     this header if you want to use these libraries !!!
 //****************************************************************************
 //****************************************************************************
 //****************************************************************************
@@ -166,7 +166,7 @@ namespace tgx
      * @param           pos         position of the anchor point.
      * @param           font        The font to use.
      * @param           anchor      location of the anchor with respect to the char bounding box. (by default, this is the BASELINE|LEFT).
-     * @param [in,out]  xadvance    If non-null, the number of pixel to advance horizontally after drawing the char is stored here.
+     * @param [in,out]  xadvance    If non-null, the number of pixels to advance horizontally after drawing the char is stored here.
      *
      * @returns the bounding box of pixels occupied by char `c` when draw with `font` when its chosen `anchor` is at `pos`.
      */
@@ -182,7 +182,7 @@ namespace tgx
      * @param           pos         position of the anchor point.
      * @param           font        The font to use.
      * @param           anchor      location of the anchor with respect to the char bounding box. (by default, this is the BASELINE|LEFT).
-     * @param [in,out]  xadvance    If non-null, the number of pixel to advance horizontally after drawing the char is stored here.
+     * @param [in,out]  xadvance    If non-null, the number of pixels to advance horizontally after drawing the char is stored here.
      *
      * @returns the bounding box of pixels occupied by char `c` when draw with `font` when its chosen `anchor` is at `pos`.
      */

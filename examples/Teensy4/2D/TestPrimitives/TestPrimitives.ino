@@ -3,7 +3,7 @@
 * TGX library.
 *
 * This example show how to call (most of) the 2D drawing methods
-* of the tgx library. 
+* of the tgx library.
 *
 * EXAMPLE FOR TEENSY 4 / 4.1
 *
@@ -12,12 +12,12 @@
 ********************************************************************/
 
 
-// This example runs on teensy 4.0/4.1 with ILI9341 via SPI. 
+// This example runs on teensy 4.0/4.1 with ILI9341 via SPI.
 // install from arduino's library manager or from https://github.com/vindar/ILI9341_T4
-#include <ILI9341_T4.h> 
+#include <ILI9341_T4.h>
 
-// the tgx library 
-#include <tgx.h> 
+// the tgx library
+#include <tgx.h>
 
 // font used
 #include <font_tgx_OpenSans_Bold.h>
@@ -36,8 +36,8 @@ using namespace tgx;
 #define PIN_MOSI    11      // mandatory
 #define PIN_DC      10      // mandatory, can be any pin but using pin 10 (or 36 or 37 on T4.1) provides greater performance
 
-#define PIN_CS      9       // optional (but recommended), can be any pin.  
-#define PIN_RESET   6       // optional (but recommended), can be any pin. 
+#define PIN_CS      9       // optional (but recommended), can be any pin.
+#define PIN_RESET   6       // optional (but recommended), can be any pin.
 #define PIN_BACKLIGHT 255   // optional, set this only if the screen LED pin is connected directly to the Teensy.
 #define PIN_TOUCH_IRQ 255   // optional. set this only if the touchscreen is connected on the same SPI bus
 #define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
@@ -77,7 +77,7 @@ void test_read_write_pixels()
         for (int j = 0; j < 230; j += 15) {
             im.drawPixel({ i, j }, tgx::RGB565_White);              // integer valued position vector
             im.drawPixelf({ i + 4.4f, j + 5.6f }, tgx::RGB565_Red); // floating-point valued position vector
-            im(i + 10, j + 10) = tgx::RGB565_Green;                    // direct acces to memory loaction of the pixel. 
+            im(i + 10, j + 10) = tgx::RGB565_Green;                    // direct access to the memory location of the pixel.
             }
         }
     }
@@ -110,7 +110,7 @@ void test_floodfilling()
 
 
 //
-// testing methods for blitting sprites/images. 
+// testing methods for blitting sprites/images.
 //
 void test_blitting()
     {
@@ -138,20 +138,20 @@ void test_blitting()
 
 //
 // testing methods for drawing horizontal and vertical lines
-// 
+//
 void test_hvlines()
     {
     im.clear(tgx::RGB565_Black);
     for (int i = 0; i < 20; i++) {
         im.drawFastVLine({ i * 16, i * 3 }, 100, tgx::RGB565_Red, i / 20.0f);	// draw a vertical line
-        im.drawFastHLine({ i * 3, i * 12 }, 200, tgx::RGB565_Green, i / 20.0f);	// draw an horizontal line
+        im.drawFastHLine({ i * 3, i * 12 }, 200, tgx::RGB565_Green, i / 20.0f);	// draw a horizontal line
         }
     }
 
 
 //
 // testing methods for drawing lines
-// 
+//
 void test_lines()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -164,7 +164,7 @@ void test_lines()
 
 //
 // testing methods for drawing rectangles
-// 
+//
 void test_rectangles()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -179,7 +179,7 @@ void test_rectangles()
 
 //
 // testing methods for drawing rounded rectangles
-// 
+//
 void test_rounded_rectangles()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -192,7 +192,7 @@ void test_rounded_rectangles()
 
 //
 // testing methods for drawing triangles
-// 
+//
 void test_triangles()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -207,24 +207,24 @@ void test_triangles()
 
 //
 // testing methods for drawing triangles (advanced methods using the 3D rasterizer)
-// 
+//
 void test_triangles_advanced()
     {
     tgx::RGB565 buf[50 * 50]; // memory for texture image
     tgx::Image<tgx::RGB565> tex(buf, 50, 50); // the texture image...
     tex.clear(tgx::RGB565_Blue); // ... has blue background ..
-    tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB565_Red, tgx::RGB565_Green); // ...and red-filled circle with green outline in the center. 
+    tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB565_Red, tgx::RGB565_Green); // ...and red-filled circle with green outline in the center.
 
-    im.clear(tgx::RGB565_Black);					  //    
+    im.clear(tgx::RGB565_Black);					  //
     im.drawTexturedTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 10, 10 }, { 100, 20 }, { 30, 100 }); // textured triangle, full opacity
-    im.drawGradientTriangle({ 20, 140 }, { 160, 50 }, { 230, 200 }, tgx::RGB565_Blue, tgx::RGB565_Orange, tgx::RGB565_Black); // gradient triangle, full opacity. 
+    im.drawGradientTriangle({ 20, 140 }, { 160, 50 }, { 230, 200 }, tgx::RGB565_Blue, tgx::RGB565_Orange, tgx::RGB565_Black); // gradient triangle, full opacity.
     im.drawTexturedGradientTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 120, 230 }, { 300, 20 }, { 280, 170 }, tgx::RGB565_Red, tgx::RGB565_Green, tgx::RGB565_Blue, 0.5f); // texture triangle with color gradient. half opacity.
     }
 
 
 //
 // testing methods for drawing quads
-// 
+//
 void test_quads()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -239,16 +239,16 @@ void test_quads()
 
 //
 // testing methods for drawing quads  (advanced methods using the 3D rasterizer)
-// 
+//
 void test_quads_advanced()
     {
     tgx::RGB565 buf[50 * 50]; // memory for texture image
     tgx::Image<tgx::RGB565> tex(buf, 50, 50); // the texture image...
     tex.clear(tgx::RGB565_Blue); // ... has blue background ..
-    tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB565_Red, tgx::RGB565_Green); // ...and red-filled circle with green outline in the center. 
+    tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB565_Red, tgx::RGB565_Green); // ...and red-filled circle with green outline in the center.
 
     im.clear(tgx::RGB565_Black);					  //
-    im.drawTexturedQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 10, 10 }, { 100, 20 }, { 80, 40 }, { 30, 120 }); // textured quad, 
+    im.drawTexturedQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 10, 10 }, { 100, 20 }, { 80, 40 }, { 30, 120 }); // textured quad,
     im.drawGradientQuad({ 20, 140 }, { 160, 50 }, { 180, 55 }, { 230, 200 }, tgx::RGB565_Blue, tgx::RGB565_Orange, tgx::RGB565_Green, tgx::RGB565_Black); // gradient quad
     im.drawTexturedGradientQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 120, 230 }, { 280, 20 }, { 310, 170 }, { 250,210 }, tgx::RGB565_Red, tgx::RGB565_Green, tgx::RGB565_Blue, tgx::RGB565_Navy, 0.5f); // texture quad with color gradient. half opacity.
     }
@@ -256,7 +256,7 @@ void test_quads_advanced()
 
 //
 // testing methods for drawing polylines
-// 
+//
 void test_polylines()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -274,7 +274,7 @@ void test_polylines()
 
 //
 // testing methods for drawing polygons
-// 
+//
 void test_polygons()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -301,7 +301,7 @@ void test_polygons()
 
 //
 // testing methods for drawing circles
-// 
+//
 void test_circles()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -310,13 +310,13 @@ void test_circles()
     im.drawCircleAA({ 210, 90 }, 60, tgx::RGB565_Green); // green circle with AA
     im.drawThickCircleAA({ 60, 180 }, 40, 10, tgx::RGB565_Purple); //thick maroon circle, with AA
     im.fillCircleAA({ 230, 150 }, 70, tgx::RGB565_Yellow, 0.5f); // filled circle with AA, 50% opacity
-    im.fillThickCircleAA({ 160,160 }, 55, 8, tgx::RGB565_Teal, tgx::RGB565_Orange, 0.5f); // filled circle with thick outline, with AA, 50% opacity 
+    im.fillThickCircleAA({ 160,160 }, 55, 8, tgx::RGB565_Teal, tgx::RGB565_Orange, 0.5f); // filled circle with thick outline, with AA, 50% opacity
     }
 
 
 //
 // testing methods for drawing ellipses
-// 
+//
 void test_ellipses()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -325,13 +325,13 @@ void test_ellipses()
     im.drawEllipseAA({ 210, 90 }, { 60, 30 }, tgx::RGB565_Green); // ellipse with AA
     im.drawThickEllipseAA({ 60, 180 }, { 35, 55 }, 10, tgx::RGB565_Purple); // thick ellipse, with AA
     im.fillEllipseAA({ 230, 150 }, { 45, 70 }, tgx::RGB565_Yellow, 0.5f); // filled ellipse with AA, 50% opacity
-    im.fillThickEllipseAA({ 160,160 }, { 55, 65 }, 8, tgx::RGB565_Teal, tgx::RGB565_Orange, 0.5f); // filled ellipse with thick outline, with AA, 50% opacity 
+    im.fillThickEllipseAA({ 160,160 }, { 55, 65 }, 8, tgx::RGB565_Teal, tgx::RGB565_Orange, 0.5f); // filled ellipse with thick outline, with AA, 50% opacity
     }
 
 
 //
 // testing methods for drawing arcs and pies
-// 
+//
 void test_arcs_pies()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -344,7 +344,7 @@ void test_arcs_pies()
 
 //
 // testing methods for drawing Bezier curves
-// 
+//
 void test_bezier()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -357,7 +357,7 @@ void test_bezier()
 
 //
 // testing methods for drawing splines
-// 
+//
 void test_splines()
     {
     im.clear(tgx::RGB565_Black);					  //
@@ -390,38 +390,38 @@ void test_splines()
 
 //
 // testing methods for drawing text
-// 
+//
 void test_text()
     {
     im.clear(tgx::RGB565_Black);
 
-    // drawing text: the anchor point use the baseline. 
+    // drawing text: the anchor point use the baseline.
     im.drawText("non-AA font are ugly...", { 5, 10 }, font_tgx_Arial_Bold_8, tgx::RGB565_Blue); // a non AA font
-    
+
     im.drawText("AA font, 9pt", { 5, 25 }, font_tgx_OpenSans_9, tgx::RGB565_Green);     // AA font, 9pt
     im.drawText("AA font, 10pt", { 5, 40 }, font_tgx_OpenSans_10, tgx::RGB565_Green);   // AA font, 10pt
     im.drawText("AA font, 14pt", { 5, 60 }, font_tgx_OpenSans_14, tgx::RGB565_Green);   // AA font, 14pt
     im.drawText("AA font, 18pt", { 5, 83 }, font_tgx_OpenSans_20, tgx::RGB565_Green);   // AA font, 18pt
-    
+
     // drawing on the baseline
     im.drawFastHLine({ 130, 30 }, 160, tgx::RGB565_White, 0.5f);
     im.drawFastHLine({ 130, 45 }, 160, tgx::RGB565_White, 0.5f);
     im.drawText("The quick brown fox jumps", { 130, 30 }, font_tgx_OpenSans_12, tgx::RGB565_Orange);
     im.drawText("over the lazy dog !", { 130, 45 }, font_tgx_OpenSans_12, tgx::RGB565_Orange);
-    
-    // finding the bounding box of a text. 
+
+    // finding the bounding box of a text.
     const char* tbb = "Text bounding box";
     tgx::iBox2 bb = im.measureText(tbb, { 230, 70 }, font_tgx_OpenSans_Bold_14, tgx::Anchor::CENTER, false, false);
     im.fillRect(bb, tgx::RGB565_Yellow, 0.5f);
     im.drawTextEx(tbb, { 230, 70 }, font_tgx_OpenSans_Bold_14, tgx::Anchor::CENTER, false, false, tgx::RGB565_Blue);
-    
+
     // draw text with different anchor points using drawTextEx()
     // -> the anchor is relative to the text bounding box
     im.drawRect({ 20, 300,100, 230 }, tgx::RGB565_Gray);
     im.drawFastHLine({ 20, 165 }, 280, tgx::RGB565_Gray);
     im.drawFastVLine({ 160, 100 }, 130, tgx::RGB565_Gray);
     tgx::iVec2 anchor_point;
-    
+
     anchor_point = { 20, 100 };
     im.drawTextEx("TOPLEFT", anchor_point, font_tgx_OpenSans_10, tgx::Anchor::TOPLEFT, true, true, tgx::RGB565_Red);
     im.fillCircleAA(anchor_point, 1.5, tgx::RGB565_Green);
@@ -433,7 +433,7 @@ void test_text()
     anchor_point = { 20, 230 };
     im.drawTextEx("BOTTOMLEFT", anchor_point, font_tgx_OpenSans_10, tgx::Anchor::BOTTOMLEFT, true, true, tgx::RGB565_Red);
     im.fillCircleAA(anchor_point, 1.5, tgx::RGB565_Green);
- 
+
     anchor_point = { 300, 230 };
     im.drawTextEx("BOTTOMRIGHT", anchor_point, font_tgx_OpenSans_10, tgx::Anchor::BOTTOMRIGHT, true, true, tgx::RGB565_Red);
     im.fillCircleAA(anchor_point, 1.5, tgx::RGB565_Green);
@@ -441,30 +441,30 @@ void test_text()
     anchor_point = { 160, 100 };
     im.drawTextEx("CENTERTOP", anchor_point, font_tgx_OpenSans_10, tgx::Anchor::CENTERTOP, true, true, tgx::RGB565_Red);
     im.fillCircleAA(anchor_point, 1.5, tgx::RGB565_Green);
-    
+
     anchor_point = { 160, 230 };
     im.drawTextEx("CENTERBOTTOM", anchor_point, font_tgx_OpenSans_10, tgx::Anchor::CENTERBOTTOM, true, true, tgx::RGB565_Red);
     im.fillCircleAA(anchor_point, 1.5, tgx::RGB565_Green);
-    
+
     anchor_point = { 20, 165 };
     im.drawTextEx("CENTERLEFT", anchor_point, font_tgx_OpenSans_10, tgx::Anchor::CENTERLEFT, true, true, tgx::RGB565_Red);
     im.fillCircleAA(anchor_point, 1.5, tgx::RGB565_Green);
-    
+
     anchor_point = { 300, 165 };
     im.drawTextEx("CENTERRIGHT", anchor_point, font_tgx_OpenSans_10, tgx::Anchor::CENTERRIGHT, true, true, tgx::RGB565_Red);
     im.fillCircleAA(anchor_point, 1.5, tgx::RGB565_Green);
-    
+
     anchor_point = { 160, 165 };
     im.drawTextEx("CENTER", anchor_point, font_tgx_OpenSans_10, tgx::Anchor::CENTER, true, true, tgx::RGB565_Red);
-    im.fillCircleAA(anchor_point, 1.5, tgx::RGB565_Green);        
+    im.fillCircleAA(anchor_point, 1.5, tgx::RGB565_Green);
     }
 
 
 
 
 void setup()
-    {    
-    Serial.begin(9600); 
+    {
+    Serial.begin(9600);
     // output debug infos to serial port.
     tft.output(&Serial);
     // initialize the ILI9341 screen
@@ -474,7 +474,7 @@ void setup()
     pinMode(PIN_BACKLIGHT, OUTPUT);
     digitalWrite(PIN_BACKLIGHT, HIGH);
 
-    // setup the screen driver 
+    // setup the screen driver
     tft.setRotation(3); // portrait mode
     tft.setFramebuffer(internal_fb); // double buffering
     tft.setDiffBuffers(&diff1, &diff2); // 2 diff buffers
@@ -487,17 +487,17 @@ void setup()
 
 // add a subtitle, display the image and wait for 2 seconds
 void displayAndWait(const char* title)
-    {    
+    {
     tgx::iBox2 bb = im.measureText(title, { 2, 237 }, font_tgx_OpenSans_14, tgx::Anchor::BOTTOMLEFT, false, false);
     im.fillRect(bb, tgx::RGB565_White);
-    im.drawTextEx(title, { 2, 237 }, font_tgx_OpenSans_14, tgx::Anchor::BOTTOMLEFT, false, false, tgx::RGB565_Black);    
+    im.drawTextEx(title, { 2, 237 }, font_tgx_OpenSans_14, tgx::Anchor::BOTTOMLEFT, false, false, tgx::RGB565_Black);
     tft.update(fb);
     delay(2000);
     }
 
 
 void loop()
-    {       
+    {
     test_read_write_pixels();
     displayAndWait("test: reading and writing pixels...");
 
@@ -554,9 +554,9 @@ void loop()
 
     test_splines();
     displayAndWait("test: drawing splines...");
-    
+
     test_text();
-    displayAndWait("test: drawing text...");  
+    displayAndWait("test: drawing text...");
 
     }
 

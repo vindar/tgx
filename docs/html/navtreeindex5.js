@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"structtgx_1_1_vec4.html#a521d165fddc29c7602861cde4f99c73b":[7,0,0,14,28],
 "structtgx_1_1_vec4.html#a5fd0076969b453b61988cfffda3a3b1f":[7,0,0,14,10],
 "structtgx_1_1_vec4.html#a603c86ac7c2264c4cb589acac640268e":[7,0,0,14,26],
 "structtgx_1_1_vec4.html#a60a27b4eff0b914df4edd8eba10316ab":[7,0,0,14,13],
@@ -28,5 +29,8 @@ var NAVTREEINDEX5 =
 "tgx_8h.html":[8,0,0,17],
 "tgx_8h_source.html":[8,0,0,17],
 "tgx__config_8h.html":[8,0,0,18],
+"tgx__config_8h.html#a78253ceb4e0c2b6a3714006768f62dcb":[8,0,0,18,1],
+"tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901":[8,0,0,18,2],
+"tgx__config_8h.html#aba55b26e9f69fa58c832655a6639e39d":[8,0,0,18,0],
 "tgx__config_8h_source.html":[8,0,0,18]
 };

@@ -1,22 +1,22 @@
 @page intro_api_2D Using the 2D API.
 
 
-**Below is a description, with examples, of most 2D drawing primitives implemented in TGX.** 
+**Below is a description, with examples, of most 2D drawing primitives implemented in TGX.**
 
 - For additional details, look directly into the main header file \ref Image.h
-- Do not forget to check the examples located in the `/examples/`  subdirectory of the library. In particular, the example `TestPrimitives` contains all the code listed below. 
+- Do not forget to check the examples located in the `/examples/`  subdirectory of the library. In particular, the example `TestPrimitives` contains all the code listed below.
 
-@section sec_2Dprimitives 2D Drawing methods. 
+@section sec_2Dprimitives 2D Drawing methods.
 
 
-@subsection subsec_filling Filling the screen. 
+@subsection subsec_filling Filling the screen.
 
-![test_screen_filling](../test_screen_filling.png)   
+![test_screen_filling](../test_screen_filling.png)
 
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];						//
-tgx::Image<tgx::RGB32> im(buffer, 320, 240); 	// create a 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240); 	// create a 320x240 image.
 
 im.fillScreen(tgx::RGB32_Black); 							  // same as im.clear(tgx::RGB32_Black);
 auto im1 = im(0, 106, 0, 240); 								  // create subimage = left third of the image
@@ -24,11 +24,11 @@ im1.fillScreenVGradient(tgx::RGB32_Blue, tgx::RGB32_Red); 	  // fill with vertic
 auto im2 = im(214, 320, 0, 240); 							  // create subimage = right third of the image
 im2.fillScreenHGradient(tgx::RGB32_Green, tgx::RGB32_Orange); // fill with horizontal gradient from green to orange
 ~~~
-**Methods:** 
+**Methods:**
 - \ref tgx::Image::clear "clear()" : set all pixels of the image with the same color.
 - \ref tgx::Image::fillScreen "fillScreen()" : same as clear().
 - \ref tgx::Image::fillScreenVGradient "fillScreenVGradient()" : fill the image with a vertical gradient between two colors.
-- \ref tgx::Image::fillScreenHGradient "fillScreenHGradient()" : fill the image with an horizontal gradient between two colors.
+- \ref tgx::Image::fillScreenHGradient "fillScreenHGradient()" : fill the image with a horizontal gradient between two colors.
 
 
 ---
@@ -41,45 +41,45 @@ im2.fillScreenHGradient(tgx::RGB32_Green, tgx::RGB32_Orange); // fill with horiz
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 for (int i = 0; i < 310; i += 15) {
     for (int j = 0; j < 230; j += 15){
         im.drawPixel({ i, j }, tgx::RGB32_White);              // integer valued position vector
         im.drawPixelf({ i + 4.4f, j + 5.6f }, tgx::RGB32_Red); // floating-point valued position vector
-        im(i+10, j+10) =  tgx::RGB32_Green;                    // direct acces to memory loaction of the pixel. 
+        im(i+10, j+10) =  tgx::RGB32_Green;                    // direct access to the memory location of the pixel.
         }
     }
 ~~~
 **Methods:**
-- \ref tgx::Image::drawPixel "drawPixel()" : set the color of agiven pixel.
-- \ref tgx::Image::drawPixelf "drawPixelf()" : set the color of agiven pixel, use floating point values position vector.
+- \ref tgx::Image::drawPixel "drawPixel()" : set the color of a given pixel.
+- \ref tgx::Image::drawPixelf "drawPixelf()" : set the color of a given pixel, use floating point values position vector.
 - \ref tgx::Image::readPixel() "readpixel()" : read the color of a pixel.
 - \ref tgx::Image::operator()(tgx::iVec2) "operator()" : direct access to the pixel color memory location (read/write).
 
 
 ---
 
-@subsection subsec_floodfill Flood-filling a region 
+@subsection subsec_floodfill Flood-filling a region
 
 ![test_region_filling](../test_region_filling.png)
 
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
-im.drawLine({ 0,50 }, { 320,160 }, tgx::RGB32_White);  
+im.drawLine({ 0,50 }, { 320,160 }, tgx::RGB32_White);
 im.drawLine({ 0,240 }, { 320,10 }, tgx::RGB32_Red);
 im.fill({ 319,239 }, tgx::RGB32_Red, tgx::RGB32_Blue); // fill starting {319,239}, region delimited by the red line
 im.fill({ 0,0 }, tgx::RGB32_Olive);                    // fill starting {0,0}
 ~~~
-**Methods:** 
-- \ref tgx::Image<color_t>::fill(tgx::iVec2, color_t) "fill(start_pos, new_color)" : fill a connected componenet with a given color.
-- \ref tgx::Image<color_t>::fill(tgx::iVec2, color_t, color_t) "fill(start_pos, border_color, new_color)" :  fill a region delimited by a given color. 
- 
+**Methods:**
+- \ref tgx::Image<color_t>::fill(tgx::iVec2, color_t) "fill(start_pos, new_color)" : fill a connected component with a given color.
+- \ref tgx::Image<color_t>::fill(tgx::iVec2, color_t, color_t) "fill(start_pos, border_color, new_color)" :  fill a region delimited by a given color.
+
 
 ---
 
@@ -87,10 +87,10 @@ im.fill({ 0,0 }, tgx::RGB32_Olive);                    // fill starting {0,0}
 
 ![test_blitting](../test_blitting.png)
 
-*Code used to generate the image:* 
+*Code used to generate the image:*
 ~~~{.cpp}
-    // create a sprite: 
-    // #include <font_tgx_OpenSans_Bold.h> is needed to use the font_tgx_Arial_Bold_20. 
+    // create a sprite:
+    // #include <font_tgx_OpenSans_Bold.h> is needed to use the font_tgx_Arial_Bold_20.
     tgx::RGB32 buf[120 * 40]; // memory for the sprite image
     tgx::Image<tgx::RGB32> sprite(buf, 120, 40); // the sprite image...
     sprite.clear(tgx::RGB32_Green); // ... has green background
@@ -105,12 +105,12 @@ im.fill({ 0,0 }, tgx::RGB32_Olive);                    // fill starting {0,0}
     im.blitScaledRotated(sprite, { 60, 20 }, { 100, 160 }, 0.6f, 60.0f, 0.5f); // blit the sprite scaled at 0.6, rotated by 60 degrees, half opacity
     im.blitScaledRotatedMasked(sprite, tgx::RGB32_Green, { 60, 20 }, { 230, 160 }, 1.5f, -25.0f); // blit the sprite scaled at 1.5, rotated by -25 degrees, with green set as the transparent color.
 ~~~
-**Methods:** 
-- \ref tgx::Image<color_t>::blit() "blit(sprite, pos, opacity)" : blit a sprite image onto the image. 
-- \ref tgx::Image<color_t>::blitRotated() "blitRotated(sprite, pos, angle, opacity)" : rotate a sprite (by quarter turns) and then blit it onto the image. 
-- \ref tgx::Image<color_t>::blitMasked() "blitMasked(sprite, mask_color, pos, opacity)" : blit a sprite onto the image with one color set as transparent. 
-- \ref tgx::Image<color_t>::blitScaledRotated() "blitScaledRotated(sprite, pos_src, pos_dst, scale, angle, opacity)" : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image. 
-- \ref tgx::Image<color_t>::blitScaledRotatedMasked() "blitScaledRotatedMasked(sprite, mask_color, pos_src, pos_dst, scale, angle, opacity)" : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image with one color set as transparent. 
+**Methods:**
+- \ref tgx::Image<color_t>::blit() "blit(sprite, pos, opacity)" : blit a sprite image onto the image.
+- \ref tgx::Image<color_t>::blitRotated() "blitRotated(sprite, pos, angle, opacity)" : rotate a sprite (by quarter turns) and then blit it onto the image.
+- \ref tgx::Image<color_t>::blitMasked() "blitMasked(sprite, mask_color, pos, opacity)" : blit a sprite onto the image with one color set as transparent.
+- \ref tgx::Image<color_t>::blitScaledRotated() "blitScaledRotated(sprite, pos_src, pos_dst, scale, angle, opacity)" : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image.
+- \ref tgx::Image<color_t>::blitScaledRotatedMasked() "blitScaledRotatedMasked(sprite, mask_color, pos_src, pos_dst, scale, angle, opacity)" : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image with one color set as transparent.
 
 @note All the blit methods above also have an 'advanced' version which takes as input a user-defined blending operator instead of the opacity parameter and can operate on sprites with a different color types than the destination image. see \ref tgx::Image for details...
 
@@ -125,20 +125,20 @@ See also \ref tgx::Image<color_t>::blitBackward() "blitBackward()" and methods f
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 for (int i = 0; i < 20; i++) {
     im.drawFastVLine({ i * 16, i * 3 }, 100, tgx::RGB32_Red, i / 20.0f);	// draw a vertical line
-    im.drawFastHLine({ i * 3, i * 12 }, 200, tgx::RGB32_Green, i / 20.0f);	// draw an horizontal line
+    im.drawFastHLine({ i * 3, i * 12 }, 200, tgx::RGB32_Green, i / 20.0f);	// draw a horizontal line
     }
 ~~~
 **Methods:** use these methods when drawing parallel lines as they are faster that the 'general' line drawing methods.
 - \ref tgx::Image::drawFastVLine "drawFastVLine()" : draw a vertical line segment.
-- \ref tgx::Image::drawFastHLine "drawFastHLine()" : draw an horizontal line segment.
+- \ref tgx::Image::drawFastHLine "drawFastHLine()" : draw a horizontal line segment.
 
-    
-	
+
+
 
 ---
 
@@ -149,7 +149,7 @@ for (int i = 0; i < 20; i++) {
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 im.drawLine({ 10,10 }, { 300, 60 }, tgx::RGB32_Red);       // simple red line
@@ -158,10 +158,10 @@ im.drawThickLineAA({ 10, 120 }, { 250, 10 }, 10, tgx::END_STRAIGHT, tgx::END_ROU
 im.drawWedgeLineAA({ 300, 220 }, { 150, 100 }, 10, tgx::END_ARROW_1, 20, tgx::END_ARROW_SKEWED_5,tgx::RGB32_Orange, 0.5f); // wedge line ending with arrows, half opacity.
 ~~~
 **Methods:**
-- \ref tgx::Image::drawLine "drawLine()" : draw a basic straight line (single pixel thick, no anti-aliasing). Fastest method. 
-- \ref tgx::Image::drawLineAA "drawLineAA()" : draw a line segment with anti-aliasing (single pixel thick). 
+- \ref tgx::Image::drawLine "drawLine()" : draw a basic straight line (single pixel thick, no anti-aliasing). Fastest method.
+- \ref tgx::Image::drawLineAA "drawLineAA()" : draw a line segment with anti-aliasing (single pixel thick).
 - \ref tgx::Image::drawThickLineAA "drawThickLineAA()" : draw a thick line with anti-aliasing and specify how the ends look like (rounded, flat, arrows...)
-- \ref tgx::Image::drawWedgeLineAA "drawWedgeLineAA()" : draw a line segment with anti-aliasing with vraying thickness, specify how the ends look like (rounded, flat, arrows...)
+- \ref tgx::Image::drawWedgeLineAA "drawWedgeLineAA()" : draw a line segment with anti-aliasing with varying thickness, specify how the ends look like (rounded, flat, arrows...)
 
 
 
@@ -175,7 +175,7 @@ im.drawWedgeLineAA({ 300, 220 }, { 150, 100 }, 10, tgx::END_ARROW_1, 20, tgx::EN
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 im.drawRect({ 10,70,10,70 }, tgx::RGB32_White); // simple green square, full opacity
@@ -186,14 +186,14 @@ im.fillRectHGradient({ 140, 310, 100, 160 }, tgx::RGB32_Red, tgx::RGB32_Blue); /
 im.fillRectVGradient({ 190, 300, 10, 230 }, tgx::RGB32_Cyan, tgx::RGB32_Purple, 0.5f); // rectangle filled with vertical gradient from cyan to purple. half opacity.
 ~~~
 **Methods:**
-- \ref tgx::Image::drawRect "drawRect()" : draw a basic rectangle. Fastest method. 
-- \ref tgx::Image::drawThickRect "drawThickRect()" : draw a rectangle with a thick outline. 
+- \ref tgx::Image::drawRect "drawRect()" : draw a basic rectangle. Fastest method.
+- \ref tgx::Image::drawThickRect "drawThickRect()" : draw a rectangle with a thick outline.
 - \ref tgx::Image::fillRect "fillRect()" : draw a filled rectangle.
 - \ref tgx::Image::fillThickRect "fillThickRect()" : draw a filled rectangle with a thick outline of a different color.
-- \ref tgx::Image::fillRectHGradient "fillRectHGradient()" : draw a filled rectangle with an horizontal gradient between two colors.
+- \ref tgx::Image::fillRectHGradient "fillRectHGradient()" : draw a filled rectangle with a horizontal gradient between two colors.
 - \ref tgx::Image::fillRectVGradient "fillRectVGradient()" : draw a filled rectangle with a vertical gradient between two colors.
 
-See also \ref tgx::Image::drawThickRectAA "drawThickRectAA()", \ref tgx::Image::fillRectAA "drawThickRectAA()", \ref tgx::Image::fillThickRectAA "drawThickRectAA()". These methods may be useful for smooth animations but usually not for static display (as rectangles egdes are parallel to pixel boundaries hence do not usually require anti-aliasing). 
+See also \ref tgx::Image::drawThickRectAA "drawThickRectAA()", \ref tgx::Image::fillRectAA "drawThickRectAA()", \ref tgx::Image::fillThickRectAA "drawThickRectAA()". These methods may be useful for smooth animations but usually not for static display (as rectangles edges are parallel to pixel boundaries hence do not usually require anti-aliasing).
 
 
 
@@ -207,7 +207,7 @@ See also \ref tgx::Image::drawThickRectAA "drawThickRectAA()", \ref tgx::Image::
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 im.drawRoundRectAA({ 10,70,10,70}, 4, tgx::RGB32_White); // simple 4-pixels rounded square
@@ -216,9 +216,9 @@ im.fillRoundRectAA({ 140, 310, 170, 230 }, 25, tgx::RGB32_Blue); // filled 25-pi
 im.fillThickRoundRectAA({ 100, 250, 60, 200 }, 10, 5, tgx::RGB32_Gray, tgx::RGB32_Red, 0.5f); // 5 pixels thick, 10 pixel rounded corner rectangle, 50% opacity
 ~~~
 **Methods:**
-- \ref tgx::Image::drawRoundRectAA "drawRoundRectAA()" : draw a single pixel thick rectangle with rounded corners, with antiliasing.
-- \ref tgx::Image::drawThickRoundRectAA "drawThickRoundRectAA()" : draw a rounded corners rectangle with thick outline, with antiliasing.
-- \ref tgx::Image::fillRoundRectAA "fillRoundRectAA()" : draw a filled rectangle with rounded corners, with anti-aliasing. 
+- \ref tgx::Image::drawRoundRectAA "drawRoundRectAA()" : draw a single pixel thick rectangle with rounded corners, with anti-aliasing.
+- \ref tgx::Image::drawThickRoundRectAA "drawThickRoundRectAA()" : draw a rounded corners rectangle with thick outline, with anti-aliasing.
+- \ref tgx::Image::fillRoundRectAA "fillRoundRectAA()" : draw a filled rectangle with rounded corners, with anti-aliasing.
 - \ref tgx::Image::fillThickRoundRectAA "fillThickRoundRectAA()" : draw a filled rectangle  with rounded corners and thick outline of a different color, with anti-aliasing.
 
 
@@ -232,7 +232,7 @@ im.fillThickRoundRectAA({ 100, 250, 60, 200 }, 10, 5, tgx::RGB32_Gray, tgx::RGB3
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 im.drawTriangle({ 10,10 }, { 60, 30 }, {40, 80}, tgx::RGB32_White); // simple triangle
@@ -262,24 +262,24 @@ im.fillThickTriangleAA({ 130,200 }, { 280, 110 }, {250, 170}, 5, tgx::RGB32_Lime
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 tgx::RGB32 buf[50 * 50]; // memory for texture image
 tgx::Image<tgx::RGB32> tex(buf, 50, 50); // the texture image...
 tex.clear(tgx::RGB32_Blue); // ... has blue background ..
-tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB32_Red, tgx::RGB32_Green); // ...and red-filled circle with green outline in the center. 
+tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB32_Red, tgx::RGB32_Green); // ...and red-filled circle with green outline in the center.
 
 im.drawTexturedTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 10, 10 }, { 100, 20 }, { 30, 100 }); // textured triangle, full opacity
-im.drawGradientTriangle({ 20, 140 }, { 160, 50 }, {230, 200}, tgx::RGB32_Blue, tgx::RGB32_Orange, tgx::RGB32_Black); // gradient triangle, full opacity. 
+im.drawGradientTriangle({ 20, 140 }, { 160, 50 }, {230, 200}, tgx::RGB32_Blue, tgx::RGB32_Orange, tgx::RGB32_Black); // gradient triangle, full opacity.
 im.drawTexturedGradientTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 } , { 120, 230 }, { 300, 20 }, { 280, 170 }, tgx::RGB32_Red, tgx::RGB32_Green, tgx::RGB32_Blue, 0.5f); // texture triangle with color gradient. half opacity.
 ~~~
 **Methods:** these methods make use of the 3D rasterizer:
 - \ref tgx::Image::drawTexturedTriangle "drawTexturedTriangle()" : draw a filled triangle with texture mapping.
 - \ref tgx::Image::drawGradientTriangle "drawGradientTriangle()" : draw a filled triangle with gradient color (i.e. Gouraud shading)
-- \ref tgx::Image::drawTexturedGradientTriangle "drawTexturedGradientTriangle()" : draw a filled trinagle with both texture mapping and gradient color. 
+- \ref tgx::Image::drawTexturedGradientTriangle "drawTexturedGradientTriangle()" : draw a filled triangle with both texture mapping and gradient color.
 
-See also \ref tgx::Image::drawTexturedMaskedTriangle "drawTexturedMaskedTriangle()", \ref tgx::Image::drawTexturedGradientMaskedTriangle "drawTexturedGradientMaskedTriangle()" for additonal masking features. 
+See also \ref tgx::Image::drawTexturedMaskedTriangle "drawTexturedMaskedTriangle()", \ref tgx::Image::drawTexturedGradientMaskedTriangle "drawTexturedGradientMaskedTriangle()" for additional masking features.
 
 
 
@@ -293,7 +293,7 @@ See also \ref tgx::Image::drawTexturedMaskedTriangle "drawTexturedMaskedTriangle
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 im.drawQuad({ 10,10 }, { 60, 30 }, { 40, 80 }, {5, 40}, tgx::RGB32_White); // simple quad
@@ -323,19 +323,19 @@ im.fillThickQuadAA({ 130,200 }, { 160, 140 }, { 230, 100 }, { 250, 170 } , 5, tg
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
-im.drawTexturedQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 10, 10 }, { 100, 20 }, { 80, 40 }, {30, 120}); // textured quad, 
+im.drawTexturedQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 10, 10 }, { 100, 20 }, { 80, 40 }, {30, 120}); // textured quad,
 im.drawGradientQuad({ 20, 140 }, { 160, 50 }, {180, 55}, { 230, 200 }, tgx::RGB32_Blue, tgx::RGB32_Orange, tgx::RGB32_Green, tgx::RGB32_Black); // gradient quad
 im.drawTexturedGradientQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 120, 230 }, { 280, 20 }, { 310, 170 }, {250,210}, tgx::RGB32_Red, tgx::RGB32_Green, tgx::RGB32_Blue, tgx::RGB32_Navy,0.5f); // texture quad with color gradient. half opacity.
 ~~~
 **Methods:** these methods make use of the 3D rasterizer:
 - \ref tgx::Image::drawTexturedQuad "drawTexturedQuad()" : draw a filled quad with texture mapping.
 - \ref tgx::Image::drawGradientQuad "drawGradientQuad()" : draw a filled quad with gradient color (i.e. Gouraud shading)
-- \ref tgx::Image::drawTexturedGradientQuad "drawTexturedGradientQuad()" : draw a filled quad with both texture mapping and gradient color. 
+- \ref tgx::Image::drawTexturedGradientQuad "drawTexturedGradientQuad()" : draw a filled quad with both texture mapping and gradient color.
 
-See also \ref tgx::Image::drawTexturedMaskedQuad "drawTexturedMaskedQuad()", \ref tgx::Image::drawTexturedGradientMaskedQuad "drawTexturedGradientMaskedQuad()" for additonal masking features. 
+See also \ref tgx::Image::drawTexturedMaskedQuad "drawTexturedMaskedQuad()", \ref tgx::Image::drawTexturedGradientMaskedQuad "drawTexturedGradientMaskedQuad()" for additional masking features.
 
 
 
@@ -344,11 +344,11 @@ See also \ref tgx::Image::drawTexturedMaskedQuad "drawTexturedMaskedQuad()", \re
 @subsection subsec_polylines drawing polylines
 
 ![test_polylines](../test_polylines.png)
-    
+
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 const tgx::iVec2 tabPoints1[] = { {10, 10}, {50, 10}, {80, 50}, {20, 110}, {20, 180}, {300, 150} };
@@ -363,20 +363,20 @@ im.drawThickPolylineAA(6, tabPoints3, 12, tgx::END_ARROW_1, tgx::END_ROUNDED, tg
 **Methods:**
 - \ref tgx::Image::drawPolyline "drawPolyline()" : draw a simple polyline. Fastest method.
 - \ref tgx::Image::drawPolylineAA "drawPolylineAA()" : draw a polyline, with anti-aliasing.
-- \ref tgx::Image::drawThickPolylineAA "drawThickPolylineAA()" : draw a thick polyline with anti-aliasing and specify how the ending look like. 
+- \ref tgx::Image::drawThickPolylineAA "drawThickPolylineAA()" : draw a thick polyline with anti-aliasing and specify how the ending look like.
 
-	
+
 
 ---
 
 @subsection subsec_polygons drawing polygons
-	
+
 ![test_polygons](../test_polygons.png)
 
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 tgx::iVec2 tabPoints1[] = { {10, 10}, {50, 10}, {80, 40}, {50, 90}, {10, 70} };
@@ -417,7 +417,7 @@ im.fillThickPolygonAA(6, tabPoints6, 10, tgx::RGB32_Purple, tgx::RGB32_Orange, 0
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 im.drawCircle({50, 50}, 48, tgx::RGB32_White); // simple circle
@@ -425,7 +425,7 @@ im.fillCircle({ 120, 80 }, 70, tgx::RGB32_Blue, tgx::RGB32_Red, 0.5f); // filled
 im.drawCircleAA({210, 90}, 60, tgx::RGB32_Green); // green circle with AA
 im.drawThickCircleAA({60, 180}, 40, 10, tgx::RGB32_Purple); //thick maroon circle, with AA
 im.fillCircleAA({230, 150}, 70, tgx::RGB32_Yellow, 0.5f); // filled circle with AA, 50% opacity
-im.fillThickCircleAA({160,160}, 55, 8, tgx::RGB32_Teal, tgx::RGB32_Orange, 0.5f); // filled circle with thick outline, with AA, 50% opacity 
+im.fillThickCircleAA({160,160}, 55, 8, tgx::RGB32_Teal, tgx::RGB32_Orange, 0.5f); // filled circle with thick outline, with AA, 50% opacity
 ~~~
 **Methods:**
 - \ref tgx::Image::drawCircle "drawCircle()" : draw a simple circle. Fastest method.
@@ -446,7 +446,7 @@ im.fillThickCircleAA({160,160}, 55, 8, tgx::RGB32_Teal, tgx::RGB32_Orange, 0.5f)
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 im.drawEllipse({ 50, 50 }, { 48, 20 }, tgx::RGB32_White); // simple ellipse
@@ -454,7 +454,7 @@ im.fillEllipse({ 120, 80 }, { 70, 50 }, tgx::RGB32_Blue, tgx::RGB32_Red, 0.5f); 
 im.drawEllipseAA({ 210, 90 }, { 60, 30 }, tgx::RGB32_Green); // ellipse with AA
 im.drawThickEllipseAA({ 60, 180 }, { 35, 55 }, 10, tgx::RGB32_Purple); // thick ellipse, with AA
 im.fillEllipseAA({ 230, 150 }, { 45, 70 }, tgx::RGB32_Yellow, 0.5f); // filled ellipse with AA, 50% opacity
-im.fillThickEllipseAA({ 160,160 }, { 55, 65 }, 8, tgx::RGB32_Teal, tgx::RGB32_Orange, 0.5f); // filled ellipse with thick outline, with AA, 50% opacity 
+im.fillThickEllipseAA({ 160,160 }, { 55, 65 }, 8, tgx::RGB32_Teal, tgx::RGB32_Orange, 0.5f); // filled ellipse with thick outline, with AA, 50% opacity
 ~~~
 **Methods:**
 - \ref tgx::Image::drawEllipse "drawEllipse()" : draw a simple ellipse. Fastest method.
@@ -476,7 +476,7 @@ im.fillThickEllipseAA({ 160,160 }, { 55, 65 }, 8, tgx::RGB32_Teal, tgx::RGB32_Or
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 im.fillCircleSectorAA({ 60,60 }, 40, 50, 270, tgx::RGB32_Red); // filled circle sector between 50 and 270 degrees
@@ -488,7 +488,7 @@ im.fillThickCircleSectorAA({230, 120}, 100, 140, 340, 10, tgx::RGB32_Olive, tgx:
 - \ref tgx::Image::fillCircleSectorAA "fillCircleSectorAA()" : draw a circle sector (pie), with AA.
 - \ref tgx::Image::drawCircleArcAA "drawCircleArcAA()" : draw a circle arc, single pixel thickness, with AA
 - \ref tgx::Image::drawThickCircleArcAA "drawThickCircleArcAA()" : draw a thick circle arc, with AA
-- \ref tgx::Image::fillThickCircleSectorAA "fillThickCircleSectorAA()" : draw a circle sector (pie) with thick outline (circle arc), with AA. 
+- \ref tgx::Image::fillThickCircleSectorAA "fillThickCircleSectorAA()" : draw a circle sector (pie) with thick outline (circle arc), with AA.
 
 
 
@@ -503,7 +503,7 @@ im.fillThickCircleSectorAA({230, 120}, 100, 140, 340, 10, tgx::RGB32_Olive, tgx:
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 im.drawQuadBezier({ 10, 10 }, { 250, 180 }, {280, 20}, 1.0f, true, tgx::RGB32_White); // simple quadratic bezier curve
@@ -515,7 +515,7 @@ im.drawThickCubicBezierAA({ 80, 80 }, { 305, 150 }, { 0, 240 }, {290, 240}, 10, 
 - \ref tgx::Image::drawQuadBezier "drawQuadBezier()" : draw a quadratic Bezier curve.
 - \ref tgx::Image::drawCubicBezier "drawCubicBezier()" : draw a cubic Bezier curve.
 - \ref tgx::Image::drawThickQuadBezierAA "drawThickQuadBezierAA()" : draw a thick quadratic Bezier curve, with AA
-- \ref tgx::Image::drawThickCubicBezierAA "drawThickCubicBezierAA()" : draw a thick cubic Bezier curve, with AA. 
+- \ref tgx::Image::drawThickCubicBezierAA "drawThickCubicBezierAA()" : draw a thick cubic Bezier curve, with AA.
 
 
 ---
@@ -528,12 +528,12 @@ im.drawThickCubicBezierAA({ 80, 80 }, { 305, 150 }, { 0, 240 }, {290, 240}, 10, 
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
 const tgx::iVec2 tabPoints1[] = { {30, 10}, {10, 40}, {40, 70}, {10, 100}, {60, 130}, {10, 160}, {80, 190}, {10, 220} };
 im.drawQuadSpline(8, tabPoints1, true, tgx::RGB32_White); // simple quadratic spline
-    
+
 const tgx::iVec2 tabPoints2[] = { {10, 10}, {50, 40}, {10, 70}, {70, 100}, {10, 130}, {90, 160}, {10, 190}, {120, 220} };
 im.drawCubicSpline(8, tabPoints2, true, tgx::RGB32_Red); // simple cubic spline
 
@@ -582,10 +582,10 @@ im.fillThickClosedSplineAA(5, tabPoints8, 5, tgx::RGB32_Gray ,tgx::RGB32_Red, 0.
 *Code used to generate the image:*
 ~~~{.cpp}
 tgx::RGB32 buffer[320*240];					  //
-tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image. 
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
-// drawing text: the anchor point use the baseline. 
+// drawing text: the anchor point use the baseline.
 im.drawText("non-AA font are ugly...", { 5, 10 },font_tgx_Arial_8, tgx::RGB32_Blue); // a non AA font
 im.drawText("AA font, 9pt", { 5, 25 }, font_tgx_OpenSans_9, tgx::RGB32_Green);     // AA font, 9pt
 im.drawText("AA font, 10pt", { 5, 40 }, font_tgx_OpenSans_10, tgx::RGB32_Green);   // AA font, 10pt
@@ -598,7 +598,7 @@ im.drawFastHLine({ 130, 45 }, 160, tgx::RGB32_White, 0.5f);
 im.drawText("The quick brown fox jumps", { 130, 30 }, font_tgx_OpenSans_12, tgx::RGB32_Orange);
 im.drawText("over the lazy dog !", { 130, 45 }, font_tgx_OpenSans_12, tgx::RGB32_Orange);
 
-// finding the bounding box of a text. 
+// finding the bounding box of a text.
 const char * tbb = "Text bounding box";
 tgx::iBox2 bb = im.measureText(tbb, { 230, 70 }, font_tgx_OpenSans_14, tgx::Anchor::CENTER, false, false);
 im.fillRect(bb, tgx::RGB32_Yellow, 0.5f);
@@ -649,16 +649,16 @@ im.drawTextEx("CENTER", anchor_point, font_tgx_OpenSans_10, tgx::Anchor::CENTER,
 im.fillCircleAA(anchor_point, 1.5, tgx::RGB32_Green);
 ~~~
 
-The TGX library support font using:
+The TGX library supports fonts using:
 - AdafruitGFX format:                   (https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts)
 - ILI9341_t3 v1 format                  (https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format)
 - ILI9341_t3 v23 format (antialiased)   (https://github.com/projectitis/packedbdf/blob/master/packedbdf.md)
 
-@note tgx-font (https://github.com/vindar/tgx-font) contains a collection ILI9341_t3 v1 and v2 (antialiased) fonts 
+@note tgx-font (https://github.com/vindar/tgx-font) contains a collection ILI9341_t3 v1 and v2 (antialiased) fonts
 that can be used directly with the methods below (and instructions on how to convert a ttf font to this format).
 
-The following fonts are already packaged with TGX but must be included explicitely in the project when used:
-- **Arial** (non AA font): `#include "font_tgx_Arial.h"` 
+The following fonts are already packaged with TGX but must be included explicitly in the project when used:
+- **Arial** (non AA font): `#include "font_tgx_Arial.h"`
 - **Arial Bold** (non AA font): `#include "font_tgx_Arial_Bold.h"`
 - **OpenSans** (AA font): `#include "font_tgx_OpenSans.h"`
 - **OpenSans Bold** (AA font): `#include "font_tgx_OpenSans_Bold.h"`
@@ -677,11 +677,11 @@ Each font above is available in fontsize: *8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14p
 ---
 
 
-@section sec_extensions TGX extensions via external librairies
+@section sec_extensions TGX extensions via external libraries
 
-TGX implements bindings that makes it easy to use external libraries to add new capabilities to the Image class, such as displaying classic image format (PNG, GIF, JPEG) and TrueType fonts... 
+TGX implements bindings that makes it easy to use external libraries to add new capabilities to the Image class, such as displaying classic image format (PNG, GIF, JPEG) and TrueType fonts...
 
-@subsection subsec_openfontrender Drawing text with TrueType fonts 
+@subsection subsec_openfontrender Drawing text with TrueType fonts
 
 Install Takkao's **OpenRenderFont** library from  https://github.com/takkaO/OpenFontRender/.
 
@@ -690,35 +690,35 @@ Simply include both libraries into the project to activate the bindings between 
 #include <tgx.h>
 #include <OpenFontRender.h>
 ~~~
-Now, we can bind any `OpenFontRender` object to an image with the method: \ref tgx::Image<color_t>::setOpenFontRender() "Image::setOpenFontRender(ofr)" and subsequently use the OpenFontRender library as usual. All texts written with `ofr` will automatically be drawn onto the selected image. 
+Now, we can bind any `OpenFontRender` object to an image with the method: \ref tgx::Image<color_t>::setOpenFontRender() "Image::setOpenFontRender(ofr)" and subsequently use the OpenFontRender library as usual. All texts written with `ofr` will automatically be drawn onto the selected image.
 
 Example:
 ~~~{.cpp}
-// create a 100x50 image in RGB565 color format. 
+// create a 100x50 image in RGB565 color format.
 tgx::RGB565 buf[100*50];
 tgx::Image<tgx::RGB565> im(buf, 100, 50);
 im.clear(tgx::RGB565_Black); // clear to full black
 
 // create a font rendering object
-OpenFontRender ofr; 
+OpenFontRender ofr;
 
-// we link it wih image im
-im.setOpenFontRender(ofr); 
+// we link it with image im
+im.setOpenFontRender(ofr);
 
 // set up the font rendering object properties before drawing
-ofr.loadFont(NotoSans_Bold, sizeof(NotoSans_Bold))  // assume here that NotoSans_Bold is a Truetype font in memory. 
+ofr.loadFont(NotoSans_Bold, sizeof(NotoSans_Bold))  // assume here that NotoSans_Bold is a TrueType font in memory.
 ofr.setFontColor((uint16_t)tgx::RGB565_Yellow, (uint16_t)tgx::RGB565_Black); // set foreground and background colors for drawing text
 ofr.setCursor(10, 20); // Set the cursor position
-ofr.setFontSize(15); // set font size. 
+ofr.setFontSize(15); // set font size.
 
 // and let's draw text !
-ofr.cprintf("Hello World"); // -> drawing in done ont im. 
+ofr.cprintf("Hello World"); // -> drawing is done onto im.
 ~~~
 
-@note A complete example is available in the subfolder `/examples/Teensy4/OpenFontRender_test/`. 
+@note A complete example is available in the subfolder `/examples/Teensy4/OpenFontRender_test/`.
 
 
-Check the [OpenfontRender documentation](https://github.com/takkaO/OpenFontRender/blob/master/README.md) for additional details.
+Check the [OpenFontRender documentation](https://github.com/takkaO/OpenFontRender/blob/master/README.md) for additional details.
 
 
 @subsection subsec_PNGdec Drawing PNG images
@@ -730,27 +730,27 @@ Simply include both libraries into the project to activate the bindings between 
 #include <tgx.h>
 #include <PNGdec.h>
 ~~~
-Now, we can bind any `PNG` decoder object tgx images by providing it with the generic callback `TGX_PNGDraw` and then we can susequently decode PNGs using the \ref tgx::Image<color_t>::PNGDecode "Image::PNGDecode()" method. 
+Now, we can bind any `PNG` decoder object to tgx images by providing it with the generic callback `TGX_PNGDraw` and then we can subsequently decode PNGs using the \ref tgx::Image<color_t>::PNGDecode "Image::PNGDecode()" method.
 
 Example:
 ~~~{.cpp}
-// create a 150x100 image in RGB565 color format. 
+// create a 150x100 image in RGB565 color format.
 tgx::RGB565 buf[150*100];
 tgx::Image<tgx::RGB565> im(buf, 150, 100);
 im.clear(tgx::RGB565_Black); // clear to full black
 
 // PNG decoder object from PNGdec library
-PNG png; 
+PNG png;
 
 // Load the png image "octocat_4bpp" stored in RAM and link the decoder to TGX
 // -> note that 'TGX_PNGDraw' is passed as callback parameter.
-png.openRAM((uint8_t*)octocat_4bpp, sizeof(octocat_4bpp), TGX_PNGDraw); 
+png.openRAM((uint8_t*)octocat_4bpp, sizeof(octocat_4bpp), TGX_PNGDraw);
 
-// Draw the PNG onto im, with half opacity and upper left corner at pos (20, 10) inside im. 
+// Draw the PNG onto im, with half opacity and upper left corner at pos (20, 10) inside im.
 im.PNGDecode(png, {20, 10}, 0.5f);
 ~~~
 
-@note A complete example is available in the subfolder `/examples/Teensy4/PNG_test/`. 
+@note A complete example is available in the subfolder `/examples/Teensy4/PNG_test/`.
 
 Check the [PNGdec documentation](https://github.com/bitbank2/PNGdec/wiki) for additional details.
 
@@ -764,28 +764,28 @@ Simply include both libraries into the project to activate the bindings between 
 #include <tgx.h>
 #include <JPEGDEC.h>
 ~~~
-Now, we can bind any `JPEGDEC` decoder object tgx images by providing it with the generic callback `TGX_JPEGDraw` and then we can susequently decode JPEGs using the \ref tgx::Image<color_t>::JPEGDecode "Image::JPEGDecode()" method. 
+Now, we can bind any `JPEGDEC` decoder object to tgx images by providing it with the generic callback `TGX_JPEGDraw` and then we can subsequently decode JPEGs using the \ref tgx::Image<color_t>::JPEGDecode "Image::JPEGDecode()" method.
 
 Example:
 ~~~{.cpp}
-// create a 150x100 image in RGB565 color format. 
+// create a 150x100 image in RGB565 color format.
 tgx::RGB565 buf[150*100];
 tgx::Image<tgx::RGB565> im(buf, 150, 100);
 im.clear(tgx::RGB565_Black); // clear to full black
 
 // JPEG decoder object from JPEGDEC library
-JPEGDEC jpeg; 
+JPEGDEC jpeg;
 
 // Load the jpeg image "batman" stored in RAM and link the decoder to TGX
 // -> note that 'TGX_JPEGDraw' is passed as callback parameter.
-jpeg.openRAM((uint8_t*)batman, sizeof(batman), TGX_JPEGDraw); 
+jpeg.openRAM((uint8_t*)batman, sizeof(batman), TGX_JPEGDraw);
 
-// Draw the JPEG onto im at half scale, half opacity and upper left corner at pos (20, 10) inside im. 
+// Draw the JPEG onto im at half scale, half opacity and upper left corner at pos (20, 10) inside im.
 im.JPEGDecode(png, {20, 10}, JPEG_SCALE_HALF, 0.5f);
 
 ~~~
 
-@note A complete example is available in the subfolder `/examples/Teensy4/JPEG_test/`. 
+@note A complete example is available in the subfolder `/examples/Teensy4/JPEG_test/`.
 
 Check the [JPEGDEC documentation](https://github.com/bitbank2/JPEGDEC/wiki) for additional details.
 
@@ -794,21 +794,21 @@ Check the [JPEGDEC documentation](https://github.com/bitbank2/JPEGDEC/wiki) for 
 
 @subsection subsec_AnimatedGIF Drawing GIF images
 
-Install Bitbank2's **AnimatedGIF** library from the Arduino library manager / platformio of directly from https://github.com/bitbank2/AnimatedGIF
+Install Bitbank2's **AnimatedGIF** library from the Arduino library manager / platformio or directly from https://github.com/bitbank2/AnimatedGIF
 
 Simply include both libraries into the project to activate the bindings between TGX and AnimatedGIF:
 ~~~{.cpp}
 #include <tgx.h>
 #include <AnimatedGIF.h>
 ~~~
-Now, we can bind any `AnimatedGIF` decoder object to tgx images by providing it with the generic callback `TGX_GIFDraw` and then we can susequently decode GIFs using the \ref tgx::Image<color_t>::GIFplayFrame() "Image::GIFplayFrame()" method. 
+Now, we can bind any `AnimatedGIF` decoder object to tgx images by providing it with the generic callback `TGX_GIFDraw` and then we can subsequently decode GIFs using the \ref tgx::Image<color_t>::GIFplayFrame() "Image::GIFplayFrame()" method.
 
-This method simply wraps around the `playFrame()` method fom the AnimateGIF library and can be called repeatedly to display successives frame in case of an animation. 
+This method simply wraps around the `playFrame()` method from the AnimatedGIF library and can be called repeatedly to display successive frames in case of an animation.
 
 Example:
 
 ~~~{.cpp}
-// create a 150x100 image in RGB565 color format. 
+// create a 150x100 image in RGB565 color format.
 tgx::RGB565 buf[150*100];
 tgx::Image<tgx::RGB565> im(buf, 150, 100);
 im.clear(tgx::RGB565_Black); // clear to full black
@@ -818,15 +818,15 @@ AnimatedGIF gif;
 
 // Load the GIF image "earth_128x128" stored in RAM and link the decoder to TGX
 // -> note that 'TGX_GIFDraw' is passed as callback parameter.
-gif.open((uint8_t*)earth_128x128, sizeof(earth_128x128), TGX_GIFDraw); 
+gif.open((uint8_t*)earth_128x128, sizeof(earth_128x128), TGX_GIFDraw);
 
-// Draw the GIF onto im with upper left corner at pos (20, 10) inside im. 
-im.GIFplayFrame(gif, { 20, 10 }); 
+// Draw the GIF onto im with upper left corner at pos (20, 10) inside im.
+im.GIFplayFrame(gif, { 20, 10 });
 
-// we can call im.GIFplayFrame(gif, { 20, 10 }) again to draw the next frame if it is an animation... 
+// we can call im.GIFplayFrame(gif, { 20, 10 }) again to draw the next frame if it is an animation...
 ~~~
 
-@note A complete example is available in the subfolder `/examples/Teensy4/GIF_test/`. 
+@note A complete example is available in the subfolder `/examples/Teensy4/GIF_test/`.
 
 Check the [AnimatedGIf documentation](https://github.com/bitbank2/AnimatedGIF/wiki) for additional details.
 

@@ -108,10 +108,8 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Creation of image and sub-images.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >If the memory buffer is not supplied at creation, the image is marked as invalid until a buffer is set.</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
-<li>The image object does not manage the buffer memory: <b>memory allocation/deallocation is the user's respnsability.</b> <br  />
-</li>
-<li>The image class is lightweight: creating image and sub-image is very fast and requires no additional memory. <br  />
- </li>
+<li>The image object does not manage the buffer memory: <b>memory allocation/deallocation is the user's responsibility.</b></li>
+<li>The image class is lightweight: creating image and sub-image is very fast and requires no additional memory. </li>
 </ol>
 </dd></dl>
 </div></td></tr>
@@ -133,7 +131,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a2db3c8b090abcb70d3f3d922ee01ebbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default copy constructor.  <a href="classtgx_1_1_image.html#a2db3c8b090abcb70d3f3d922ee01ebbd">More...</a><br /></td></tr>
 <tr class="separator:a2db3c8b090abcb70d3f3d922ee01ebbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed5b6c351a33109970c5edeef14678bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtgx_1_1_image.html">Image</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aed5b6c351a33109970c5edeef14678bb">operator=</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; &amp;im)=default</td></tr>
-<tr class="memdesc:aed5b6c351a33109970c5edeef14678bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default assignement operator.  <a href="classtgx_1_1_image.html#aed5b6c351a33109970c5edeef14678bb">More...</a><br /></td></tr>
+<tr class="memdesc:aed5b6c351a33109970c5edeef14678bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default assignment operator.  <a href="classtgx_1_1_image.html#aed5b6c351a33109970c5edeef14678bb">More...</a><br /></td></tr>
 <tr class="separator:aed5b6c351a33109970c5edeef14678bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14d5fd97744c3335b775fde5ae055e02"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a14d5fd97744c3335b775fde5ae055e02"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a14d5fd97744c3335b775fde5ae055e02">set</a> (T *buffer, int <a class="el" href="classtgx_1_1_image.html#a9d703268591c2d95cc2be2427fb62a3f">lx</a>, int <a class="el" href="classtgx_1_1_image.html#a9f18af07e65db0c8afb794f295e8bb40">ly</a>, int <a class="el" href="classtgx_1_1_image.html#a069d9b0ad0ffc0fe83aa73b4df198dc6">stride</a>=<a class="el" href="classtgx_1_1_image.html#af756f79c7bd822db4c9349046f0be937">DEFAULT_STRIDE</a>)</td></tr>
@@ -156,9 +154,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac6d989d0bcea2c58ac12da437c4541a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a sub-image of this image (sharing the same pixel buffer).  <a href="classtgx_1_1_image.html#ac6d989d0bcea2c58ac12da437c4541a5">More...</a><br /></td></tr>
 <tr class="separator:ac6d989d0bcea2c58ac12da437c4541a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Image attributes.</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p >Query the state (dimension, buffer...) of the image.</p>
-<p ><br  />
- </p>
+<tr><td colspan="2"><div class="groupText"><p >Query the state (dimension, buffer...) of the image. </p>
 </div></td></tr>
 <tr class="memitem:a6fe6fb2fd7cb9cb5da5c2984420ea184"><td class="memItemLeft" align="right" valign="top">TGX_INLINE bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a6fe6fb2fd7cb9cb5da5c2984420ea184">isValid</a> () const</td></tr>
 <tr class="memdesc:a6fe6fb2fd7cb9cb5da5c2984420ea184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query if the image is valid.  <a href="classtgx_1_1_image.html#a6fe6fb2fd7cb9cb5da5c2984420ea184">More...</a><br /></td></tr>
@@ -251,14 +247,14 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Image manipulation.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >Methods for blitting, converting, resizing and rotating images. </p>
 </div></td></tr>
-<tr class="memitem:a70a3026cb3805252d30cc51fb31ad542"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542">blit</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; &amp;sprite, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> upperleftpos, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a70a3026cb3805252d30cc51fb31ad542"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542">blit</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; &amp;sprite, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> upperleftpos, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a70a3026cb3805252d30cc51fb31ad542"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blit/blend a sprite over this image at a given position.  <a href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542">More...</a><br /></td></tr>
 <tr class="separator:a70a3026cb3805252d30cc51fb31ad542"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac127cdbeb7f300dfde49f75bc0b25f2"><td class="memTemplParams" colspan="2">template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </td></tr>
 <tr class="memitem:aac127cdbeb7f300dfde49f75bc0b25f2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aac127cdbeb7f300dfde49f75bc0b25f2">blit</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_src &gt; &amp;sprite, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> upperleftpos, const BLEND_OPERATOR &amp;blend_op)</td></tr>
 <tr class="memdesc:aac127cdbeb7f300dfde49f75bc0b25f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blend a sprite at a given position on the image using a custom blending operator.  <a href="classtgx_1_1_image.html#aac127cdbeb7f300dfde49f75bc0b25f2">More...</a><br /></td></tr>
 <tr class="separator:aac127cdbeb7f300dfde49f75bc0b25f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae64e40a38c12fc9abbe886626de89b8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ae64e40a38c12fc9abbe886626de89b8c">blitRotated</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; &amp;sprite, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> upperleftpos, int angle, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:ae64e40a38c12fc9abbe886626de89b8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ae64e40a38c12fc9abbe886626de89b8c">blitRotated</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t &gt; &amp;sprite, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> upperleftpos, int angle, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:ae64e40a38c12fc9abbe886626de89b8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blit/blend a rotated sprite over this image at a given position.  <a href="classtgx_1_1_image.html#ae64e40a38c12fc9abbe886626de89b8c">More...</a><br /></td></tr>
 <tr class="separator:ae64e40a38c12fc9abbe886626de89b8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fbca896a30cc67e28102c23a9460a99"><td class="memTemplParams" colspan="2">template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </td></tr>
@@ -272,7 +268,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab252fa2ceb311770d698a8b9a1f52bef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse blitting.  <a href="classtgx_1_1_image.html#ab252fa2ceb311770d698a8b9a1f52bef">More...</a><br /></td></tr>
 <tr class="separator:ab252fa2ceb311770d698a8b9a1f52bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f81ae72ed275dc53a53337eae893612"><td class="memTemplParams" colspan="2">template&lt;typename color_t_src , int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE&gt; </td></tr>
-<tr class="memitem:a8f81ae72ed275dc53a53337eae893612"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a8f81ae72ed275dc53a53337eae893612">blitScaledRotated</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_src &gt; &amp;src_im, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> anchor_src, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> anchor_dst, float scale=1.0f, float angle_degrees=0.0f, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a8f81ae72ed275dc53a53337eae893612"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a8f81ae72ed275dc53a53337eae893612">blitScaledRotated</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_src &gt; &amp;src_im, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> anchor_src, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> anchor_dst, float scale=1.0f, float angle_degrees=0.0f, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a8f81ae72ed275dc53a53337eae893612"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blit/blend a sprite onto this image after rescaling and rotation.  <a href="classtgx_1_1_image.html#a8f81ae72ed275dc53a53337eae893612">More...</a><br /></td></tr>
 <tr class="separator:a8f81ae72ed275dc53a53337eae893612"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac20d9bbd9a6659e95d089fa6d490ef43"><td class="memTemplParams" colspan="2">template&lt;typename color_t_src , typename BLEND_OPERATOR , int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SIZE&gt; </td></tr>
@@ -284,7 +280,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab6838094c8ac811a72dbeeffb7c51bc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blend a sprite onto this image after rescaling and rotation and use a given color which is treated as fully transparent.  <a href="classtgx_1_1_image.html#ab6838094c8ac811a72dbeeffb7c51bc8">More...</a><br /></td></tr>
 <tr class="separator:ab6838094c8ac811a72dbeeffb7c51bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6957f8982ec8fe73bf5e31b2ffe74ae"><td class="memTemplParams" colspan="2">template&lt;typename src_color_t &gt; </td></tr>
-<tr class="memitem:aa6957f8982ec8fe73bf5e31b2ffe74ae"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae">copyFrom</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; src_color_t &gt; &amp;src_im, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:aa6957f8982ec8fe73bf5e31b2ffe74ae"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae">copyFrom</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; src_color_t &gt; &amp;src_im, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:aa6957f8982ec8fe73bf5e31b2ffe74ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy (or blend) the src image onto the destination image with resizing and color conversion.  <a href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae">More...</a><br /></td></tr>
 <tr class="separator:aa6957f8982ec8fe73bf5e31b2ffe74ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a425f901094fe9d6526fb746216319036"><td class="memTemplParams" colspan="2">template&lt;typename src_color_t , typename BLEND_OPERATOR &gt; </td></tr>
@@ -302,9 +298,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9613250401a0fe1d6283e81070e99ee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert this image to another type.  <a href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">More...</a><br /></td></tr>
 <tr class="separator:a9613250401a0fe1d6283e81070e99ee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: filling a region.</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p >Method for filling the whole (or just a region of the) image with a given color.</p>
-<p ><br  />
- </p>
+<tr><td colspan="2"><div class="groupText"><p >Method for filling the whole (or just a region of the) image with a given color. </p>
 </div></td></tr>
 <tr class="memitem:ab126be8d4510810f3e17da14bb517ab9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ab126be8d4510810f3e17da14bb517ab9">fillScreen</a> (color_t color)</td></tr>
 <tr class="memdesc:ab126be8d4510810f3e17da14bb517ab9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the whole image with a single color.  <a href="classtgx_1_1_image.html#ab126be8d4510810f3e17da14bb517ab9">More...</a><br /></td></tr>
@@ -316,7 +310,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a74c74b64b26ca9befa59ed9f5467e88b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the whole image with a vertical color gradient between two colors.  <a href="classtgx_1_1_image.html#a74c74b64b26ca9befa59ed9f5467e88b">More...</a><br /></td></tr>
 <tr class="separator:a74c74b64b26ca9befa59ed9f5467e88b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95a7689a2be90f61e5b8738acc445d9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a95a7689a2be90f61e5b8738acc445d9d">fillScreenHGradient</a> (color_t left_color, color_t right_color)</td></tr>
-<tr class="memdesc:a95a7689a2be90f61e5b8738acc445d9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the whole screen with an horizontal color gradient between two colors.  <a href="classtgx_1_1_image.html#a95a7689a2be90f61e5b8738acc445d9d">More...</a><br /></td></tr>
+<tr class="memdesc:a95a7689a2be90f61e5b8738acc445d9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the whole screen with a horizontal color gradient between two colors.  <a href="classtgx_1_1_image.html#a95a7689a2be90f61e5b8738acc445d9d">More...</a><br /></td></tr>
 <tr class="separator:a95a7689a2be90f61e5b8738acc445d9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a2f1a3381d697f8863277f36f60efdb"><td class="memTemplParams" colspan="2">template&lt;int STACK_SIZE = 1024&gt; </td></tr>
 <tr class="memitem:a2a2f1a3381d697f8863277f36f60efdb"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a2a2f1a3381d697f8863277f36f60efdb">fill</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> start_pos, color_t new_color)</td></tr>
@@ -329,16 +323,16 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: lines.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >FAST/REGULAR METHODS </p>
 </div></td></tr>
-<tr class="memitem:a35627216d8411a54dbba33c3c43fb5a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a35627216d8411a54dbba33c3c43fb5a0">drawFastVLine</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int h, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
-<tr class="memdesc:a35627216d8411a54dbba33c3c43fb5a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw an vertical segment of <code>h</code> pixels starting at <code>pos</code>.  <a href="classtgx_1_1_image.html#a35627216d8411a54dbba33c3c43fb5a0">More...</a><br /></td></tr>
+<tr class="memitem:a35627216d8411a54dbba33c3c43fb5a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a35627216d8411a54dbba33c3c43fb5a0">drawFastVLine</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int h, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
+<tr class="memdesc:a35627216d8411a54dbba33c3c43fb5a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a vertical segment of <code>h</code> pixels starting at <code>pos</code>.  <a href="classtgx_1_1_image.html#a35627216d8411a54dbba33c3c43fb5a0">More...</a><br /></td></tr>
 <tr class="separator:a35627216d8411a54dbba33c3c43fb5a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a469410b578753d8d0ae5b7c8204efe50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a469410b578753d8d0ae5b7c8204efe50">drawFastHLine</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int w, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
-<tr class="memdesc:a469410b578753d8d0ae5b7c8204efe50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw an horizontal segment of <code>w</code> pixels starting at pos.  <a href="classtgx_1_1_image.html#a469410b578753d8d0ae5b7c8204efe50">More...</a><br /></td></tr>
+<tr class="memitem:a469410b578753d8d0ae5b7c8204efe50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a469410b578753d8d0ae5b7c8204efe50">drawFastHLine</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, int w, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
+<tr class="memdesc:a469410b578753d8d0ae5b7c8204efe50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a horizontal segment of <code>w</code> pixels starting at pos.  <a href="classtgx_1_1_image.html#a469410b578753d8d0ae5b7c8204efe50">More...</a><br /></td></tr>
 <tr class="separator:a469410b578753d8d0ae5b7c8204efe50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58d25cf25063f4654f40ffd27047b6aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a58d25cf25063f4654f40ffd27047b6aa">drawLine</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a58d25cf25063f4654f40ffd27047b6aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a58d25cf25063f4654f40ffd27047b6aa">drawLine</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a58d25cf25063f4654f40ffd27047b6aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a line segment between two points (uses Bresenham's algorithm).  <a href="classtgx_1_1_image.html#a58d25cf25063f4654f40ffd27047b6aa">More...</a><br /></td></tr>
 <tr class="separator:a58d25cf25063f4654f40ffd27047b6aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea9227b744818b67d5ad8a516e33267f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aea9227b744818b67d5ad8a516e33267f">drawSegment</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, bool drawP1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, bool drawP2, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:aea9227b744818b67d5ad8a516e33267f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aea9227b744818b67d5ad8a516e33267f">drawSegment</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, bool drawP1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, bool drawP2, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:aea9227b744818b67d5ad8a516e33267f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a line segment between two points (using Bresenham's algorithm).  <a href="classtgx_1_1_image.html#aea9227b744818b67d5ad8a516e33267f">More...</a><br /></td></tr>
 <tr class="separator:aea9227b744818b67d5ad8a516e33267f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: lines (AA).</div></td></tr>
@@ -356,27 +350,26 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: rectangles.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >FAST/REGULAR METHODS </p>
 </div></td></tr>
-<tr class="memitem:a18a065e3844d1a65bc3a32d86072f706"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a18a065e3844d1a65bc3a32d86072f706">drawRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a18a065e3844d1a65bc3a32d86072f706"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a18a065e3844d1a65bc3a32d86072f706">drawRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a18a065e3844d1a65bc3a32d86072f706"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a rectangle.  <a href="classtgx_1_1_image.html#a18a065e3844d1a65bc3a32d86072f706">More...</a><br /></td></tr>
 <tr class="separator:a18a065e3844d1a65bc3a32d86072f706"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a352f4dc22d83c2530a2608a4b9015065"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a352f4dc22d83c2530a2608a4b9015065">drawThickRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, int thickness, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a352f4dc22d83c2530a2608a4b9015065"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a352f4dc22d83c2530a2608a4b9015065">drawThickRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, int thickness, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a352f4dc22d83c2530a2608a4b9015065"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a rectangle with a thick outline.  <a href="classtgx_1_1_image.html#a352f4dc22d83c2530a2608a4b9015065">More...</a><br /></td></tr>
 <tr class="separator:a352f4dc22d83c2530a2608a4b9015065"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e71e57a7067f87a68c8c6e9c5d3c4d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a8e71e57a7067f87a68c8c6e9c5d3c4d2">fillRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a8e71e57a7067f87a68c8c6e9c5d3c4d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a8e71e57a7067f87a68c8c6e9c5d3c4d2">fillRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a8e71e57a7067f87a68c8c6e9c5d3c4d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled rectangle.  <a href="classtgx_1_1_image.html#a8e71e57a7067f87a68c8c6e9c5d3c4d2">More...</a><br /></td></tr>
 <tr class="separator:a8e71e57a7067f87a68c8c6e9c5d3c4d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83767ac7a7b61004205a56ba29995a82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a83767ac7a7b61004205a56ba29995a82">fillThickRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, int thickness, color_t color_interior, color_t color_border, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a83767ac7a7b61004205a56ba29995a82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a83767ac7a7b61004205a56ba29995a82">fillThickRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, int thickness, color_t color_interior, color_t color_border, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a83767ac7a7b61004205a56ba29995a82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled rectangle with a thick border of a possibly different color.  <a href="classtgx_1_1_image.html#a83767ac7a7b61004205a56ba29995a82">More...</a><br /></td></tr>
 <tr class="separator:a83767ac7a7b61004205a56ba29995a82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ff1dac74cc146c641f2a1bef505e0cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4ff1dac74cc146c641f2a1bef505e0cf">fillRectHGradient</a> (<a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> B, color_t color_left, color_t color_right, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
-<tr class="memdesc:a4ff1dac74cc146c641f2a1bef505e0cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a rectangle filled with an horizontal gradient of colors.  <a href="classtgx_1_1_image.html#a4ff1dac74cc146c641f2a1bef505e0cf">More...</a><br /></td></tr>
+<tr class="memitem:a4ff1dac74cc146c641f2a1bef505e0cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4ff1dac74cc146c641f2a1bef505e0cf">fillRectHGradient</a> (<a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> B, color_t color_left, color_t color_right, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
+<tr class="memdesc:a4ff1dac74cc146c641f2a1bef505e0cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a rectangle filled with a horizontal gradient of colors.  <a href="classtgx_1_1_image.html#a4ff1dac74cc146c641f2a1bef505e0cf">More...</a><br /></td></tr>
 <tr class="separator:a4ff1dac74cc146c641f2a1bef505e0cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a680472f979bd241643a787fcdd63f64c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a680472f979bd241643a787fcdd63f64c">fillRectVGradient</a> (<a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> B, color_t color_top, color_t color_bottom, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a680472f979bd241643a787fcdd63f64c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a680472f979bd241643a787fcdd63f64c">fillRectVGradient</a> (<a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> B, color_t color_top, color_t color_bottom, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a680472f979bd241643a787fcdd63f64c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a rectangle filled with a vertical gradient of colors.  <a href="classtgx_1_1_image.html#a680472f979bd241643a787fcdd63f64c">More...</a><br /></td></tr>
 <tr class="separator:a680472f979bd241643a787fcdd63f64c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: rectangles. (AA)</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p >HIGH QUALITY DRAWING <br  />
-</p>
+<tr><td colspan="2"><div class="groupText"><p >HIGH QUALITY DRAWING</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>Sub-pixel precision and anti-aliasing is usually not desirable when drawing rectangle. The method below should not be needed in usual circonstance (but may be useful for creating very smooth animations).</li>
 <li>Recall that pixel centers are at integer values (and the full image range is [-0.5, lx - 0.5] x [-0.5, lx-0.5]), therefore, giving a fVec2 box with integer values to the method below will create aliasing along the edges of the rectangle... </li>
@@ -395,10 +388,10 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: rounded rectangles.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >FAST/REGULAR METHODS </p>
 </div></td></tr>
-<tr class="memitem:a901d531c6a308705cf9b1b9a0a0a7162"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a901d531c6a308705cf9b1b9a0a0a7162">drawRoundRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, int corner_radius, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a901d531c6a308705cf9b1b9a0a0a7162"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a901d531c6a308705cf9b1b9a0a0a7162">drawRoundRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, int corner_radius, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a901d531c6a308705cf9b1b9a0a0a7162"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a rounded rectangle in box <code>B</code> with radius <code>corner_radius</code>.  <a href="classtgx_1_1_image.html#a901d531c6a308705cf9b1b9a0a0a7162">More...</a><br /></td></tr>
 <tr class="separator:a901d531c6a308705cf9b1b9a0a0a7162"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71dacbe15f6a296988966a8bef5a9b77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a71dacbe15f6a296988966a8bef5a9b77">fillRoundRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, int corner_radius, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a71dacbe15f6a296988966a8bef5a9b77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a71dacbe15f6a296988966a8bef5a9b77">fillRoundRect</a> (const <a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a> &amp;B, int corner_radius, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a71dacbe15f6a296988966a8bef5a9b77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled rounded rectangle in box <code>B</code> with radius <code>corner_radius</code>.  <a href="classtgx_1_1_image.html#a71dacbe15f6a296988966a8bef5a9b77">More...</a><br /></td></tr>
 <tr class="separator:a71dacbe15f6a296988966a8bef5a9b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: rounded rectangles (AA).</div></td></tr>
@@ -419,10 +412,10 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: triangles.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >FAST/REGULAR METHODS </p>
 </div></td></tr>
-<tr class="memitem:acfa17aae1ba6326e081682d9e8960e8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#acfa17aae1ba6326e081682d9e8960e8f">drawTriangle</a> (const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P1, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P2, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P3, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:acfa17aae1ba6326e081682d9e8960e8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#acfa17aae1ba6326e081682d9e8960e8f">drawTriangle</a> (const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P1, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P2, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P3, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:acfa17aae1ba6326e081682d9e8960e8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a triangle.  <a href="classtgx_1_1_image.html#acfa17aae1ba6326e081682d9e8960e8f">More...</a><br /></td></tr>
 <tr class="separator:acfa17aae1ba6326e081682d9e8960e8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc3f4da7c4b2062077d0c6e88345751c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#adc3f4da7c4b2062077d0c6e88345751c">fillTriangle</a> (const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P1, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P2, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P3, color_t interior_color, color_t outline_color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:adc3f4da7c4b2062077d0c6e88345751c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#adc3f4da7c4b2062077d0c6e88345751c">fillTriangle</a> (const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P1, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P2, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> &amp;P3, color_t interior_color, color_t outline_color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:adc3f4da7c4b2062077d0c6e88345751c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled triangle with different colors for the outline and the interior.  <a href="classtgx_1_1_image.html#adc3f4da7c4b2062077d0c6e88345751c">More...</a><br /></td></tr>
 <tr class="separator:adc3f4da7c4b2062077d0c6e88345751c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: triangles (AA).</div></td></tr>
@@ -449,11 +442,11 @@ Public Member Functions</h2></td></tr>
 </dd></dl>
 </div></td></tr>
 <tr class="memitem:ad60369023e154acb41fc08d9c0ba262c"><td class="memTemplParams" colspan="2">template&lt;typename color_alt &gt; </td></tr>
-<tr class="memitem:ad60369023e154acb41fc08d9c0ba262c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad60369023e154acb41fc08d9c0ba262c">drawGradientTriangle</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:ad60369023e154acb41fc08d9c0ba262c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad60369023e154acb41fc08d9c0ba262c">drawGradientTriangle</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P3, color_alt colorP1, color_alt colorP2, color_alt colorP3, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:ad60369023e154acb41fc08d9c0ba262c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a triangle with gradient color specified by the colors on its vertices.  <a href="classtgx_1_1_image.html#ad60369023e154acb41fc08d9c0ba262c">More...</a><br /></td></tr>
 <tr class="separator:ad60369023e154acb41fc08d9c0ba262c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af79825fb258532b4ff4e1326c06e972f"><td class="memTemplParams" colspan="2">template&lt;typename color_t_tex &gt; </td></tr>
-<tr class="memitem:af79825fb258532b4ff4e1326c06e972f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#af79825fb258532b4ff4e1326c06e972f">drawTexturedTriangle</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_tex &gt; &amp;src_im, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP3, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:af79825fb258532b4ff4e1326c06e972f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#af79825fb258532b4ff4e1326c06e972f">drawTexturedTriangle</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_tex &gt; &amp;src_im, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP3, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:af79825fb258532b4ff4e1326c06e972f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw textured triangle onto the image.  <a href="classtgx_1_1_image.html#af79825fb258532b4ff4e1326c06e972f">More...</a><br /></td></tr>
 <tr class="separator:af79825fb258532b4ff4e1326c06e972f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05598fbc94448e58de873ad65a49e9ef"><td class="memTemplParams" colspan="2">template&lt;typename color_t_tex , typename BLEND_OPERATOR &gt; </td></tr>
@@ -461,7 +454,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a05598fbc94448e58de873ad65a49e9ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blend a textured triangle onto the image.  <a href="classtgx_1_1_image.html#a05598fbc94448e58de873ad65a49e9ef">More...</a><br /></td></tr>
 <tr class="separator:a05598fbc94448e58de873ad65a49e9ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5198a94520b7b1b30e11d0462254a835"><td class="memTemplParams" colspan="2">template&lt;typename color_t_tex &gt; </td></tr>
-<tr class="memitem:a5198a94520b7b1b30e11d0462254a835"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a5198a94520b7b1b30e11d0462254a835">drawTexturedGradientTriangle</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_tex &gt; &amp;src_im, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a5198a94520b7b1b30e11d0462254a835"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a5198a94520b7b1b30e11d0462254a835">drawTexturedGradientTriangle</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_tex &gt; &amp;src_im, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP3, color_t_tex C1, color_t_tex C2, color_t_tex C3, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a5198a94520b7b1b30e11d0462254a835"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blend textured triangle on the image while combining it with a color gradient.  <a href="classtgx_1_1_image.html#a5198a94520b7b1b30e11d0462254a835">More...</a><br /></td></tr>
 <tr class="separator:a5198a94520b7b1b30e11d0462254a835"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6daf96f99c5806b6af17390cc644703a"><td class="memTemplParams" colspan="2">template&lt;typename color_t_tex &gt; </td></tr>
@@ -475,10 +468,10 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: quads.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >FAST/REGULAR METHODS </p>
 </div></td></tr>
-<tr class="memitem:a6dd3ad9cf8aa54cbc2340446c906d00f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a6dd3ad9cf8aa54cbc2340446c906d00f">drawQuad</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P3, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P4, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a6dd3ad9cf8aa54cbc2340446c906d00f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a6dd3ad9cf8aa54cbc2340446c906d00f">drawQuad</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P3, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P4, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a6dd3ad9cf8aa54cbc2340446c906d00f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a quad.  <a href="classtgx_1_1_image.html#a6dd3ad9cf8aa54cbc2340446c906d00f">More...</a><br /></td></tr>
 <tr class="separator:a6dd3ad9cf8aa54cbc2340446c906d00f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6403d21f8a05fa2fda38b07fd7f289be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a6403d21f8a05fa2fda38b07fd7f289be">fillQuad</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P3, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P4, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a6403d21f8a05fa2fda38b07fd7f289be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a6403d21f8a05fa2fda38b07fd7f289be">fillQuad</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P3, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P4, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a6403d21f8a05fa2fda38b07fd7f289be"><td class="mdescLeft">&#160;</td><td class="mdescRight">draw a filled quad.  <a href="classtgx_1_1_image.html#a6403d21f8a05fa2fda38b07fd7f289be">More...</a><br /></td></tr>
 <tr class="separator:a6403d21f8a05fa2fda38b07fd7f289be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: quads (AA).</div></td></tr>
@@ -505,11 +498,11 @@ Public Member Functions</h2></td></tr>
 </dd></dl>
 </div></td></tr>
 <tr class="memitem:a85d8c925e8aa08322755d7c34de3f20a"><td class="memTemplParams" colspan="2">template&lt;typename color_alt &gt; </td></tr>
-<tr class="memitem:a85d8c925e8aa08322755d7c34de3f20a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a85d8c925e8aa08322755d7c34de3f20a">drawGradientQuad</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P4, color_alt colorP1, color_alt colorP2, color_alt colorP3, color_alt colorP4, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a85d8c925e8aa08322755d7c34de3f20a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a85d8c925e8aa08322755d7c34de3f20a">drawGradientQuad</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P4, color_alt colorP1, color_alt colorP2, color_alt colorP3, color_alt colorP4, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a85d8c925e8aa08322755d7c34de3f20a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a quad with a gradient color specified by the color at the four vertices.  <a href="classtgx_1_1_image.html#a85d8c925e8aa08322755d7c34de3f20a">More...</a><br /></td></tr>
 <tr class="separator:a85d8c925e8aa08322755d7c34de3f20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab59135aa90d56194423b829b4d761b12"><td class="memTemplParams" colspan="2">template&lt;typename color_t_tex &gt; </td></tr>
-<tr class="memitem:ab59135aa90d56194423b829b4d761b12"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ab59135aa90d56194423b829b4d761b12">drawTexturedQuad</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_tex &gt; &amp;src_im, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP4, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP4, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:ab59135aa90d56194423b829b4d761b12"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ab59135aa90d56194423b829b4d761b12">drawTexturedQuad</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_tex &gt; &amp;src_im, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP4, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP4, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:ab59135aa90d56194423b829b4d761b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a textured quad using bilinear filtering.  <a href="classtgx_1_1_image.html#ab59135aa90d56194423b829b4d761b12">More...</a><br /></td></tr>
 <tr class="separator:ab59135aa90d56194423b829b4d761b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a547b3bee51e00512609ce172589ac8b6"><td class="memTemplParams" colspan="2">template&lt;typename color_t_tex , typename BLEND_OPERATOR &gt; </td></tr>
@@ -517,7 +510,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a547b3bee51e00512609ce172589ac8b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a textured quad with bilinear filtering and a custom blending operator.  <a href="classtgx_1_1_image.html#a547b3bee51e00512609ce172589ac8b6">More...</a><br /></td></tr>
 <tr class="separator:a547b3bee51e00512609ce172589ac8b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53d233376df95d785465f62fefd11a96"><td class="memTemplParams" colspan="2">template&lt;typename color_t_tex &gt; </td></tr>
-<tr class="memitem:a53d233376df95d785465f62fefd11a96"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a53d233376df95d785465f62fefd11a96">drawTexturedGradientQuad</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_tex &gt; &amp;src_im, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP4, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a53d233376df95d785465f62fefd11a96"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a53d233376df95d785465f62fefd11a96">drawTexturedGradientQuad</a> (const <a class="el" href="classtgx_1_1_image.html">Image</a>&lt; color_t_tex &gt; &amp;src_im, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> srcP4, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP3, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> dstP4, color_t_tex C1, color_t_tex C2, color_t_tex C3, color_t_tex C4, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a53d233376df95d785465f62fefd11a96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a textured quad using bilinear filtering combined with a color gradient.  <a href="classtgx_1_1_image.html#a53d233376df95d785465f62fefd11a96">More...</a><br /></td></tr>
 <tr class="separator:a53d233376df95d785465f62fefd11a96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad463dcf29b1e1ea8827b6ec8d678e6a"><td class="memTemplParams" colspan="2">template&lt;typename color_t_tex &gt; </td></tr>
@@ -531,45 +524,45 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: polylines.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >FAST/REGULAR METHODS </p>
 </div></td></tr>
-<tr class="memitem:a94c88a9642c1c9eb662bae142e35d3c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a94c88a9642c1c9eb662bae142e35d3c7">drawPolyline</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
-<tr class="memdesc:a94c88a9642c1c9eb662bae142e35d3c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn].  <a href="classtgx_1_1_image.html#a94c88a9642c1c9eb662bae142e35d3c7">More...</a><br /></td></tr>
+<tr class="memitem:a94c88a9642c1c9eb662bae142e35d3c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a94c88a9642c1c9eb662bae142e35d3c7">drawPolyline</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
+<tr class="memdesc:a94c88a9642c1c9eb662bae142e35d3c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn].  <a href="classtgx_1_1_image.html#a94c88a9642c1c9eb662bae142e35d3c7">More...</a><br /></td></tr>
 <tr class="separator:a94c88a9642c1c9eb662bae142e35d3c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a73c0103cb1b218d185afa80f3c331c"><td class="memTemplParams" colspan="2">template&lt;typename FUNCTOR_NEXT &gt; </td></tr>
-<tr class="memitem:a3a73c0103cb1b218d185afa80f3c331c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a3a73c0103cb1b218d185afa80f3c331c">drawPolyline</a> (FUNCTOR_NEXT next_point, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
-<tr class="memdesc:a3a73c0103cb1b218d185afa80f3c331c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn].  <a href="classtgx_1_1_image.html#a3a73c0103cb1b218d185afa80f3c331c">More...</a><br /></td></tr>
+<tr class="memitem:a3a73c0103cb1b218d185afa80f3c331c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a3a73c0103cb1b218d185afa80f3c331c">drawPolyline</a> (FUNCTOR_NEXT next_point, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
+<tr class="memdesc:a3a73c0103cb1b218d185afa80f3c331c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn].  <a href="classtgx_1_1_image.html#a3a73c0103cb1b218d185afa80f3c331c">More...</a><br /></td></tr>
 <tr class="separator:a3a73c0103cb1b218d185afa80f3c331c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: polylines (AA).</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >HIGH QUALITY DRAWING </p>
 </div></td></tr>
 <tr class="memitem:a68edb910b49dfedd37006a2f091245db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a68edb910b49dfedd37006a2f091245db">drawPolylineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], color_t color, float opacity=1.0f)</td></tr>
-<tr class="memdesc:a68edb910b49dfedd37006a2f091245db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#a68edb910b49dfedd37006a2f091245db">More...</a><br /></td></tr>
+<tr class="memdesc:a68edb910b49dfedd37006a2f091245db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#a68edb910b49dfedd37006a2f091245db">More...</a><br /></td></tr>
 <tr class="separator:a68edb910b49dfedd37006a2f091245db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b8aa437be57dd28aded838f494df28b"><td class="memTemplParams" colspan="2">template&lt;typename FUNCTOR_NEXT &gt; </td></tr>
 <tr class="memitem:a8b8aa437be57dd28aded838f494df28b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a8b8aa437be57dd28aded838f494df28b">drawPolylineAA</a> (FUNCTOR_NEXT next_point, color_t color, float opacity=1.0f)</td></tr>
-<tr class="memdesc:a8b8aa437be57dd28aded838f494df28b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#a8b8aa437be57dd28aded838f494df28b">More...</a><br /></td></tr>
+<tr class="memdesc:a8b8aa437be57dd28aded838f494df28b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#a8b8aa437be57dd28aded838f494df28b">More...</a><br /></td></tr>
 <tr class="separator:a8b8aa437be57dd28aded838f494df28b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac11812aa29ca96aa0d8ca962fce581df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ac11812aa29ca96aa0d8ca962fce581df">drawThickPolylineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], float thickness, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P0, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_Pn, color_t color, float opacity=1.0f)</td></tr>
-<tr class="memdesc:ac11812aa29ca96aa0d8ca962fce581df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a thick polyline ie a sequence of consecutif thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#ac11812aa29ca96aa0d8ca962fce581df">More...</a><br /></td></tr>
+<tr class="memdesc:ac11812aa29ca96aa0d8ca962fce581df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a thick polyline ie a sequence of consecutive thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#ac11812aa29ca96aa0d8ca962fce581df">More...</a><br /></td></tr>
 <tr class="separator:ac11812aa29ca96aa0d8ca962fce581df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabb27aff4a3cf925518879941944f359"><td class="memTemplParams" colspan="2">template&lt;typename FUNCTOR_NEXT &gt; </td></tr>
 <tr class="memitem:aabb27aff4a3cf925518879941944f359"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aabb27aff4a3cf925518879941944f359">drawThickPolylineAA</a> (FUNCTOR_NEXT next_point, float thickness, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P0, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_Pn, color_t color, float opacity=1.0f)</td></tr>
-<tr class="memdesc:aabb27aff4a3cf925518879941944f359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a thick polyline ie a sequence of consecutif thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#aabb27aff4a3cf925518879941944f359">More...</a><br /></td></tr>
+<tr class="memdesc:aabb27aff4a3cf925518879941944f359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a thick polyline ie a sequence of consecutive thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#aabb27aff4a3cf925518879941944f359">More...</a><br /></td></tr>
 <tr class="separator:aabb27aff4a3cf925518879941944f359"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: polygons.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >FAST/REGULAR METHODS </p>
 </div></td></tr>
-<tr class="memitem:ad0e2f2ba12a7a1c9bf53ddb913d8ad69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad0e2f2ba12a7a1c9bf53ddb913d8ad69">drawPolygon</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:ad0e2f2ba12a7a1c9bf53ddb913d8ad69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad0e2f2ba12a7a1c9bf53ddb913d8ad69">drawPolygon</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:ad0e2f2ba12a7a1c9bf53ddb913d8ad69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed polygon with vertices [P0,P2,,, PN].  <a href="classtgx_1_1_image.html#ad0e2f2ba12a7a1c9bf53ddb913d8ad69">More...</a><br /></td></tr>
 <tr class="separator:ad0e2f2ba12a7a1c9bf53ddb913d8ad69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a743f07b3927846d55acb2f1fd94d2ed7"><td class="memTemplParams" colspan="2">template&lt;typename FUNCTOR_NEXT &gt; </td></tr>
-<tr class="memitem:a743f07b3927846d55acb2f1fd94d2ed7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a743f07b3927846d55acb2f1fd94d2ed7">drawPolygon</a> (FUNCTOR_NEXT next_point, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a743f07b3927846d55acb2f1fd94d2ed7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a743f07b3927846d55acb2f1fd94d2ed7">drawPolygon</a> (FUNCTOR_NEXT next_point, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a743f07b3927846d55acb2f1fd94d2ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed polygon with vertices [P0,P2,,, PN].  <a href="classtgx_1_1_image.html#a743f07b3927846d55acb2f1fd94d2ed7">More...</a><br /></td></tr>
 <tr class="separator:a743f07b3927846d55acb2f1fd94d2ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7387e3a24d3df0de9b19c2097f557f54"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a7387e3a24d3df0de9b19c2097f557f54">fillPolygon</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a7387e3a24d3df0de9b19c2097f557f54"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a7387e3a24d3df0de9b19c2097f557f54">fillPolygon</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a7387e3a24d3df0de9b19c2097f557f54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled polygon with vertices [P0,P2,,, PN].  <a href="classtgx_1_1_image.html#a7387e3a24d3df0de9b19c2097f557f54">More...</a><br /></td></tr>
 <tr class="separator:a7387e3a24d3df0de9b19c2097f557f54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab641b0c1c7c8bdd483ed763749e699db"><td class="memTemplParams" colspan="2">template&lt;typename FUNCTOR_NEXT &gt; </td></tr>
-<tr class="memitem:ab641b0c1c7c8bdd483ed763749e699db"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ab641b0c1c7c8bdd483ed763749e699db">fillPolygon</a> (FUNCTOR_NEXT next_point, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:ab641b0c1c7c8bdd483ed763749e699db"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ab641b0c1c7c8bdd483ed763749e699db">fillPolygon</a> (FUNCTOR_NEXT next_point, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:ab641b0c1c7c8bdd483ed763749e699db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled polygon with vertices [P0,P2,,, PN].  <a href="classtgx_1_1_image.html#ab641b0c1c7c8bdd483ed763749e699db">More...</a><br /></td></tr>
 <tr class="separator:ab641b0c1c7c8bdd483ed763749e699db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: polygons (AA).</div></td></tr>
@@ -606,10 +599,10 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: circles.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >FAST/REGULAR METHODS </p>
 </div></td></tr>
-<tr class="memitem:a294024b055161de8193f462ff5896337"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a294024b055161de8193f462ff5896337">drawCircle</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> center, int r, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a294024b055161de8193f462ff5896337"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a294024b055161de8193f462ff5896337">drawCircle</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> center, int r, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a294024b055161de8193f462ff5896337"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a circle.  <a href="classtgx_1_1_image.html#a294024b055161de8193f462ff5896337">More...</a><br /></td></tr>
 <tr class="separator:a294024b055161de8193f462ff5896337"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86d499cbadb775d3bb4ea35aa346d1ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a86d499cbadb775d3bb4ea35aa346d1ee">fillCircle</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> center, int r, color_t interior_color, color_t outline_color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a86d499cbadb775d3bb4ea35aa346d1ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a86d499cbadb775d3bb4ea35aa346d1ee">fillCircle</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> center, int r, color_t interior_color, color_t outline_color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a86d499cbadb775d3bb4ea35aa346d1ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled circle with different colors for outline and interior.  <a href="classtgx_1_1_image.html#a86d499cbadb775d3bb4ea35aa346d1ee">More...</a><br /></td></tr>
 <tr class="separator:a86d499cbadb775d3bb4ea35aa346d1ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: circles (AA).</div></td></tr>
@@ -645,10 +638,10 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: ellipses</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >FAST/REGULAR METHODS </p>
 </div></td></tr>
-<tr class="memitem:a4d4274ed5ba69e51c27a920bb3dcfa03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4d4274ed5ba69e51c27a920bb3dcfa03">drawEllipse</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> center, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> radiuses, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a4d4274ed5ba69e51c27a920bb3dcfa03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4d4274ed5ba69e51c27a920bb3dcfa03">drawEllipse</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> center, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> radiuses, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a4d4274ed5ba69e51c27a920bb3dcfa03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw an ellipse.  <a href="classtgx_1_1_image.html#a4d4274ed5ba69e51c27a920bb3dcfa03">More...</a><br /></td></tr>
 <tr class="separator:a4d4274ed5ba69e51c27a920bb3dcfa03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a4e991c998a94916d579ee8ce89f712"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a7a4e991c998a94916d579ee8ce89f712">fillEllipse</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> center, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> radiuses, color_t interior_color, color_t outline_color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a7a4e991c998a94916d579ee8ce89f712"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a7a4e991c998a94916d579ee8ce89f712">fillEllipse</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> center, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> radiuses, color_t interior_color, color_t outline_color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a7a4e991c998a94916d579ee8ce89f712"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled ellipse with different colors for the outline and the interior.  <a href="classtgx_1_1_image.html#a7a4e991c998a94916d579ee8ce89f712">More...</a><br /></td></tr>
 <tr class="separator:a7a4e991c998a94916d579ee8ce89f712"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: ellipses (AA).</div></td></tr>
@@ -669,51 +662,51 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: Bezier curves.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >FAST/REGULAR METHODS </p>
 </div></td></tr>
-<tr class="memitem:adc5a0cfb43dc2f20c9c52a32dc26eeb5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#adc5a0cfb43dc2f20c9c52a32dc26eeb5">drawQuadBezier</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> PC, float wc, bool drawP2, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:adc5a0cfb43dc2f20c9c52a32dc26eeb5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#adc5a0cfb43dc2f20c9c52a32dc26eeb5">drawQuadBezier</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> PC, float wc, bool drawP2, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:adc5a0cfb43dc2f20c9c52a32dc26eeb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a quadratic (rational) Bezier curve.  <a href="classtgx_1_1_image.html#adc5a0cfb43dc2f20c9c52a32dc26eeb5">More...</a><br /></td></tr>
 <tr class="separator:adc5a0cfb43dc2f20c9c52a32dc26eeb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb65e5f3c3460ddf4ca54df3aa5d982a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#acb65e5f3c3460ddf4ca54df3aa5d982a">drawCubicBezier</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> PA, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> PB, bool drawP2, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:acb65e5f3c3460ddf4ca54df3aa5d982a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#acb65e5f3c3460ddf4ca54df3aa5d982a">drawCubicBezier</a> (<a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P1, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> P2, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> PA, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> PB, bool drawP2, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:acb65e5f3c3460ddf4ca54df3aa5d982a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a cubic Bezier curve.  <a href="classtgx_1_1_image.html#acb65e5f3c3460ddf4ca54df3aa5d982a">More...</a><br /></td></tr>
 <tr class="separator:acb65e5f3c3460ddf4ca54df3aa5d982a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af04cd25109ea02b50d3e9a557216d9a4"><td class="memTemplParams" colspan="2">template&lt;int SPLINE_MAX_POINTS = 32&gt; </td></tr>
-<tr class="memitem:af04cd25109ea02b50d3e9a557216d9a4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#af04cd25109ea02b50d3e9a557216d9a4">drawQuadSpline</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], bool draw_last_point, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:af04cd25109ea02b50d3e9a557216d9a4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#af04cd25109ea02b50d3e9a557216d9a4">drawQuadSpline</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], bool draw_last_point, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:af04cd25109ea02b50d3e9a557216d9a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a quadratic spline interpolating between a given set of points.  <a href="classtgx_1_1_image.html#af04cd25109ea02b50d3e9a557216d9a4">More...</a><br /></td></tr>
 <tr class="separator:af04cd25109ea02b50d3e9a557216d9a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada01bf9e2c8875557df1fb9b1085de58"><td class="memTemplParams" colspan="2">template&lt;int SPLINE_MAX_POINTS = 32&gt; </td></tr>
-<tr class="memitem:ada01bf9e2c8875557df1fb9b1085de58"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ada01bf9e2c8875557df1fb9b1085de58">drawCubicSpline</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], bool draw_last_point, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:ada01bf9e2c8875557df1fb9b1085de58"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ada01bf9e2c8875557df1fb9b1085de58">drawCubicSpline</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], bool draw_last_point, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:ada01bf9e2c8875557df1fb9b1085de58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a cubic spline interpolating between a given set of points.  <a href="classtgx_1_1_image.html#ada01bf9e2c8875557df1fb9b1085de58">More...</a><br /></td></tr>
 <tr class="separator:ada01bf9e2c8875557df1fb9b1085de58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cae8a0e7d359ff7b3b46f9707577f6b"><td class="memTemplParams" colspan="2">template&lt;int SPLINE_MAX_POINTS = 32&gt; </td></tr>
-<tr class="memitem:a4cae8a0e7d359ff7b3b46f9707577f6b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4cae8a0e7d359ff7b3b46f9707577f6b">drawClosedSpline</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a4cae8a0e7d359ff7b3b46f9707577f6b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4cae8a0e7d359ff7b3b46f9707577f6b">drawClosedSpline</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a4cae8a0e7d359ff7b3b46f9707577f6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed quadratic spline interpolating between a given set of points.  <a href="classtgx_1_1_image.html#a4cae8a0e7d359ff7b3b46f9707577f6b">More...</a><br /></td></tr>
 <tr class="separator:a4cae8a0e7d359ff7b3b46f9707577f6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: Bezier curves (AA).</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >HIGH QUALITY DRAWING </p>
 </div></td></tr>
-<tr class="memitem:abde8613b3ce56078c221e2bbb8afb38a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#abde8613b3ce56078c221e2bbb8afb38a">drawThickQuadBezierAA</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> PC, float wc, float thickness, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P1, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P2, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:abde8613b3ce56078c221e2bbb8afb38a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#abde8613b3ce56078c221e2bbb8afb38a">drawThickQuadBezierAA</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> PC, float wc, float thickness, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P1, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P2, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:abde8613b3ce56078c221e2bbb8afb38a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a thick quadratic (rational) Bezier curve (<b>high quality</b>).  <a href="classtgx_1_1_image.html#abde8613b3ce56078c221e2bbb8afb38a">More...</a><br /></td></tr>
 <tr class="separator:abde8613b3ce56078c221e2bbb8afb38a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cec6cabb220c2bd8cc6e4d6fe606719"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4cec6cabb220c2bd8cc6e4d6fe606719">drawThickCubicBezierAA</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> PA, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> PB, float thickness, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P1, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P2, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a4cec6cabb220c2bd8cc6e4d6fe606719"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a4cec6cabb220c2bd8cc6e4d6fe606719">drawThickCubicBezierAA</a> (<a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P1, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> P2, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> PA, <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> PB, float thickness, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P1, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P2, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a4cec6cabb220c2bd8cc6e4d6fe606719"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a thick cubic Bezier curve (<b>high quality</b>).  <a href="classtgx_1_1_image.html#a4cec6cabb220c2bd8cc6e4d6fe606719">More...</a><br /></td></tr>
 <tr class="separator:a4cec6cabb220c2bd8cc6e4d6fe606719"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9591f1706431e86b4000f7f4a558f45a"><td class="memTemplParams" colspan="2">template&lt;int SPLINE_MAX_POINTS = 32&gt; </td></tr>
-<tr class="memitem:a9591f1706431e86b4000f7f4a558f45a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a9591f1706431e86b4000f7f4a558f45a">drawThickQuadSplineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], float thickness, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P0, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_Pn, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a9591f1706431e86b4000f7f4a558f45a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a9591f1706431e86b4000f7f4a558f45a">drawThickQuadSplineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], float thickness, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P0, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_Pn, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a9591f1706431e86b4000f7f4a558f45a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a thick quadratic spline interpolating between a given set of points (<b>high quality</b>).  <a href="classtgx_1_1_image.html#a9591f1706431e86b4000f7f4a558f45a">More...</a><br /></td></tr>
 <tr class="separator:a9591f1706431e86b4000f7f4a558f45a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace75e67cec3e794cab67261365f20f98"><td class="memTemplParams" colspan="2">template&lt;int SPLINE_MAX_POINTS = 32&gt; </td></tr>
-<tr class="memitem:ace75e67cec3e794cab67261365f20f98"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ace75e67cec3e794cab67261365f20f98">drawThickCubicSplineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], float thickness, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P0, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_Pn, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:ace75e67cec3e794cab67261365f20f98"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ace75e67cec3e794cab67261365f20f98">drawThickCubicSplineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], float thickness, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_P0, <a class="el" href="_image_8h.html#aae93d1e0e6655ff2317d6793f0eaef9b">EndPath</a> end_Pn, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:ace75e67cec3e794cab67261365f20f98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a thick cubic spline interpolating between a given set of points (<b>high quality</b>).  <a href="classtgx_1_1_image.html#ace75e67cec3e794cab67261365f20f98">More...</a><br /></td></tr>
 <tr class="separator:ace75e67cec3e794cab67261365f20f98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21771fda75bf4b6c0ef13efcb3f579ea"><td class="memTemplParams" colspan="2">template&lt;int SPLINE_MAX_POINTS = 32&gt; </td></tr>
-<tr class="memitem:a21771fda75bf4b6c0ef13efcb3f579ea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a21771fda75bf4b6c0ef13efcb3f579ea">drawThickClosedSplineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], float thickness, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a21771fda75bf4b6c0ef13efcb3f579ea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a21771fda75bf4b6c0ef13efcb3f579ea">drawThickClosedSplineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], float thickness, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a21771fda75bf4b6c0ef13efcb3f579ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a thick closed quadratic spline interpolating between a given set of points (<b>high quality</b>).  <a href="classtgx_1_1_image.html#a21771fda75bf4b6c0ef13efcb3f579ea">More...</a><br /></td></tr>
 <tr class="separator:a21771fda75bf4b6c0ef13efcb3f579ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbd61161093645701d1d98e51b73ce54"><td class="memTemplParams" colspan="2">template&lt;int SPLINE_MAX_POINTS = 32&gt; </td></tr>
-<tr class="memitem:adbd61161093645701d1d98e51b73ce54"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#adbd61161093645701d1d98e51b73ce54">fillClosedSplineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:adbd61161093645701d1d98e51b73ce54"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#adbd61161093645701d1d98e51b73ce54">fillClosedSplineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:adbd61161093645701d1d98e51b73ce54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a region delimited by a closed quadratic spline (<b>high quality</b>).  <a href="classtgx_1_1_image.html#adbd61161093645701d1d98e51b73ce54">More...</a><br /></td></tr>
 <tr class="separator:adbd61161093645701d1d98e51b73ce54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbb199e8586e739467275d7f0b44a5e4"><td class="memTemplParams" colspan="2">template&lt;int SPLINE_MAX_POINTS = 32&gt; </td></tr>
-<tr class="memitem:abbb199e8586e739467275d7f0b44a5e4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#abbb199e8586e739467275d7f0b44a5e4">fillThickClosedSplineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:abbb199e8586e739467275d7f0b44a5e4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#abbb199e8586e739467275d7f0b44a5e4">fillThickClosedSplineAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], float thickness, color_t color_interior, color_t color_border, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:abbb199e8586e739467275d7f0b44a5e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a region delimited by a closed thick quadratic spline where the interior and boundary can have different colors (<b>high quality</b>).  <a href="classtgx_1_1_image.html#abbb199e8586e739467275d7f0b44a5e4">More...</a><br /></td></tr>
 <tr class="separator:abbb199e8586e739467275d7f0b44a5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: Text</div></td></tr>
@@ -743,27 +736,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a766c9b7ddaf96a98948d9a3ccf01b03b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_box2_8h.html#a13665af6261a105d3a8bf65396833df8">iBox2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a766c9b7ddaf96a98948d9a3ccf01b03b">measureText</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_i_l_i9341__t3__font__t.html">ILI9341_t3_font_t</a> &amp;font, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor=<a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25ad8449e7e7d0d7d3cb14aa5ceef880428">DEFAULT_TEXT_ANCHOR</a>, bool wrap_text=false, bool start_newline_at_0=false) const</td></tr>
 <tr class="memdesc:a766c9b7ddaf96a98948d9a3ccf01b03b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the bounding box of a text.  <a href="classtgx_1_1_image.html#a766c9b7ddaf96a98948d9a3ccf01b03b">More...</a><br /></td></tr>
 <tr class="separator:a766c9b7ddaf96a98948d9a3ccf01b03b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8a7d2f9bd4c38a3aba67fa8a42ed34f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad8a7d2f9bd4c38a3aba67fa8a42ed34f">drawChar</a> (char c, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_g_f_xfont.html">GFXfont</a> &amp;font, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:ad8a7d2f9bd4c38a3aba67fa8a42ed34f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad8a7d2f9bd4c38a3aba67fa8a42ed34f">drawChar</a> (char c, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_g_f_xfont.html">GFXfont</a> &amp;font, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:ad8a7d2f9bd4c38a3aba67fa8a42ed34f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a single character at position pos on the image and return the position for the next character.  <a href="classtgx_1_1_image.html#ad8a7d2f9bd4c38a3aba67fa8a42ed34f">More...</a><br /></td></tr>
 <tr class="separator:ad8a7d2f9bd4c38a3aba67fa8a42ed34f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afae0944718b49ee043741a969dee0d8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#afae0944718b49ee043741a969dee0d8e">drawChar</a> (char c, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_i_l_i9341__t3__font__t.html">ILI9341_t3_font_t</a> &amp;font, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:afae0944718b49ee043741a969dee0d8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#afae0944718b49ee043741a969dee0d8e">drawChar</a> (char c, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_i_l_i9341__t3__font__t.html">ILI9341_t3_font_t</a> &amp;font, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:afae0944718b49ee043741a969dee0d8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a single character at position pos on the image and return the position for the next character.  <a href="classtgx_1_1_image.html#afae0944718b49ee043741a969dee0d8e">More...</a><br /></td></tr>
 <tr class="separator:afae0944718b49ee043741a969dee0d8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02d594de3a82d4bc5a594c0982cd90a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0">drawText</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_g_f_xfont.html">GFXfont</a> &amp;font, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a02d594de3a82d4bc5a594c0982cd90a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0">drawText</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_g_f_xfont.html">GFXfont</a> &amp;font, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a02d594de3a82d4bc5a594c0982cd90a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a text at a given position with a given font.  <a href="classtgx_1_1_image.html#a02d594de3a82d4bc5a594c0982cd90a0">More...</a><br /></td></tr>
 <tr class="separator:a02d594de3a82d4bc5a594c0982cd90a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a51b7472e4627f9f8ce8e6b6ed4199e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a0a51b7472e4627f9f8ce8e6b6ed4199e">drawText</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_i_l_i9341__t3__font__t.html">ILI9341_t3_font_t</a> &amp;font, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a0a51b7472e4627f9f8ce8e6b6ed4199e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a0a51b7472e4627f9f8ce8e6b6ed4199e">drawText</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_i_l_i9341__t3__font__t.html">ILI9341_t3_font_t</a> &amp;font, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a0a51b7472e4627f9f8ce8e6b6ed4199e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a text at a given position with a given font.  <a href="classtgx_1_1_image.html#a0a51b7472e4627f9f8ce8e6b6ed4199e">More...</a><br /></td></tr>
 <tr class="separator:a0a51b7472e4627f9f8ce8e6b6ed4199e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6495b751001b95f32e9b219d69369caf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a6495b751001b95f32e9b219d69369caf">drawTextEx</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_g_f_xfont.html">GFXfont</a> &amp;font, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a6495b751001b95f32e9b219d69369caf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a6495b751001b95f32e9b219d69369caf">drawTextEx</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_g_f_xfont.html">GFXfont</a> &amp;font, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a6495b751001b95f32e9b219d69369caf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advanced drawText method.  <a href="classtgx_1_1_image.html#a6495b751001b95f32e9b219d69369caf">More...</a><br /></td></tr>
 <tr class="separator:a6495b751001b95f32e9b219d69369caf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa978df96aebf8d150988001ae5463c8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aa978df96aebf8d150988001ae5463c8f">drawTextEx</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_i_l_i9341__t3__font__t.html">ILI9341_t3_font_t</a> &amp;font, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:aa978df96aebf8d150988001ae5463c8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aa978df96aebf8d150988001ae5463c8f">drawTextEx</a> (const char *text, <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> pos, const <a class="el" href="struct_i_l_i9341__t3__font__t.html">ILI9341_t3_font_t</a> &amp;font, <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">Anchor</a> anchor, bool wrap_text, bool start_newline_at_0, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:aa978df96aebf8d150988001ae5463c8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advanced drawText method.  <a href="classtgx_1_1_image.html#aa978df96aebf8d150988001ae5463c8f">More...</a><br /></td></tr>
 <tr class="separator:aa978df96aebf8d150988001ae5463c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Extensions. Interfacing TGX with other libraries.</div></td></tr>
 <tr class="memitem:a501bd842e7c783deaf4f0c0f7832f376"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a501bd842e7c783deaf4f0c0f7832f376"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a501bd842e7c783deaf4f0c0f7832f376">setOpenFontRender</a> (T &amp;ofr, float opacity=TGX_DEFAULT_NO_BLENDING)</td></tr>
+<tr class="memitem:a501bd842e7c783deaf4f0c0f7832f376"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a501bd842e7c783deaf4f0c0f7832f376">setOpenFontRender</a> (T &amp;ofr, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
 <tr class="memdesc:a501bd842e7c783deaf4f0c0f7832f376"><td class="mdescLeft">&#160;</td><td class="mdescRight">Link the image with Takkoa's OpenFontRender library : <a href="https://github.com/takkaO/OpenFontRender">https://github.com/takkaO/OpenFontRender</a>.  <a href="classtgx_1_1_image.html#a501bd842e7c783deaf4f0c0f7832f376">More...</a><br /></td></tr>
 <tr class="separator:a501bd842e7c783deaf4f0c0f7832f376"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a077be1a8bdfd1d67ef2788f6e515157c"><td class="memTemplParams" colspan="2">template&lt;typename PNG_T &gt; </td></tr>
@@ -802,7 +795,7 @@ class tgx::Image&lt; color_t &gt;</div><p ><a class="el" href="classtgx_1_1_imag
   </dd>
 </dl>
 <p><b><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">Image</a> memory layout</b></p>
-<p >The image in the memory buffer in made of consecutive pixel of type color_t in row major order but with a stride which may be larger than the image width (ie row lenght).</p>
+<p >The image in the memory buffer in made of consecutive pixel of type color_t in row major order but with a stride which may be larger than the image width (ie row length).</p>
 <p >Pixels are ordered from the top left <code>(0,0)</code> to the bottom right <code>(_lx-1, _ly-1)</code> and the position of pixel <code>(x,y)</code> in the buffer is given by the formula: </p><div class="fragment"><div class="line">pixel(x,y) = buffer[x + y * _stride].</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><b>No memory allocation is ever perfomed by the <a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">Image</a> class. It is the sole user repsonsability to allocated et free the pixel buffer</b></dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd></dd></dl>
@@ -813,11 +806,11 @@ class tgx::Image&lt; color_t &gt;</div><p ><a class="el" href="classtgx_1_1_imag
 <div class="ttc" id="aclasstgx_1_1_image_html_a2a2f1a3381d697f8863277f36f60efdb"><div class="ttname"><a href="classtgx_1_1_image.html#a2a2f1a3381d697f8863277f36f60efdb">tgx::Image::fill</a></div><div class="ttdeci">int fill(iVec2 start_pos, color_t new_color)</div><div class="ttdoc">'Flood fill' a 4-connected region of the image.</div></div>
 </div><!-- fragment --><p> where</p><ul>
 <li><code>[draw]</code> means that the method draw a path whereas [fill] means that the method create a solid shape.</li>
-<li><code>[thick]</code> means that the outline of the shape has selectable thickness (not just a single pixel wide). The tickness is usually a float and should be at least 1.</li>
+<li><code>[thick]</code> means that the outline of the shape has selectable thickness (not just a single pixel wide). The thickness is usually a float and should be at least 1.</li>
 <li><code>[AA]</code> means that the method is <em>high quality</em>: it is drawn with anti-aliasing and sub-pixel precision. Method with this suffix take fVec2 parameters for coordinates inputs whereas regular 'low quality' methods (without the AA suffix) take iVec2 parameters.</li>
 </ul>
 <p class="startli">For example:</p><ul>
-<li><code><a class="el" href="classtgx_1_1_image.html#a9420ed2b65cadd55373b0a7af164e232" title="Draw a circle with a thick border (high quality).">drawThickCircleAA()</a></code> : draw a high quality circle with user defined outline thickness, antialiasing and sub-pixel precison.</li>
+<li><code><a class="el" href="classtgx_1_1_image.html#a9420ed2b65cadd55373b0a7af164e232" title="Draw a circle with a thick border (high quality).">drawThickCircleAA()</a></code> : draw a high quality circle with user defined outline thickness, antialiasing and sub-pixel precision.</li>
 <li><code><a class="el" href="classtgx_1_1_image.html#adc3f4da7c4b2062077d0c6e88345751c" title="Draw a filled triangle with different colors for the outline and the interior.">fillTriangle()</a></code> : draw a low quality filled triangle (no antialiasing or subpixel precision).</li>
 </ul>
 </li>
@@ -1064,7 +1057,7 @@ template&lt;typename color_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Default assignement operator. </p>
+<p>Default assignment operator. </p>
 <p ><b>Copy is shallow</b>: both images share the same memory buffer.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1755,8 +1748,7 @@ template&lt;bool CHECKRANGE = true&gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pos</td><td>position given as a floating point value vector. <br  />
- </td></tr>
+    <tr><td class="paramname">pos</td><td>position given as a floating point value vector. </td></tr>
     <tr><td class="paramname">color</td><td>color to set. </td></tr>
   </table>
   </dd>
@@ -2371,7 +2363,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2387,7 +2379,7 @@ template&lt;typename color_t &gt; </div>
   <table class="params">
     <tr><td class="paramname">sprite</td><td>The sprite image to blit. </td></tr>
     <tr><td class="paramname">upperleftpos</td><td>Position of the upper left corner of the sprite in the image. </td></tr>
-    <tr><td class="paramname">opacity</td><td>(Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply overwrite the spite over the image. </td></tr>
+    <tr><td class="paramname">opacity</td><td>(Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply overwrite the sprite over the image. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2435,8 +2427,7 @@ template&lt;typename color_t_src , typename BLEND_OPERATOR &gt; </div>
 </pre><p> (the method can, in fact, return a color of any type but returning type color_t will improve performance).</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>The sprite can have a different color type from the image.</li>
-<li>To perform "classical alpha blending" with images of the same color format, use the <a class="el" href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542" title="Blit/blend a sprite over this image at a given position.">blit()</a> <br  />
- method with an opacity parameter instead of this method as it will be a little faster.</li>
+<li>To perform "classical alpha blending" with images of the same color format, use the <a class="el" href="classtgx_1_1_image.html#a70a3026cb3805252d30cc51fb31ad542" title="Blit/blend a sprite over this image at a given position.">blit()</a> method with an opacity parameter instead of this method as it will be a little faster.</li>
 </ol>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -2480,7 +2471,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2497,7 +2488,7 @@ template&lt;typename color_t &gt; </div>
     <tr><td class="paramname">sprite</td><td>The sprite image to blit. </td></tr>
     <tr><td class="paramname">upperleftpos</td><td>Position inside this image of the upper left corner of the sprite (after rotation). </td></tr>
     <tr><td class="paramname">angle</td><td>Clockwise angle to rotate the sprite prior to blitting. In degrees. Must be either 0, 90, 180 or 270. </td></tr>
-    <tr><td class="paramname">opacity</td><td>(Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply overwrite the spite over the image. </td></tr>
+    <tr><td class="paramname">opacity</td><td>(Optional) Opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply overwrite the sprite over the image. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2707,7 +2698,7 @@ template&lt;typename color_t_src , int CACHE_SIZE = TGX_PROGMEM_DEFAULT_CACHE_SI
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2801,9 +2792,8 @@ template&lt;typename color_t_src , typename BLEND_OPERATOR , int CACHE_SIZE = TG
 </div><div class="memdoc">
 
 <p>Blend a sprite onto this image after rescaling and rotation using a custom blending operator. </p>
-<p >This is the same as the method above excpet that it uses a user defined blending operator which takes as input the color of the source (sprite) pixel and the color of the destination pixel and returns the blended color. It must have a signature compatible with </p><pre class="fragment">               color_t blend_op(color_t_src src, color_t dst)
-</pre><p> (the method can, in fact, return a color of any type but returning type color_t will improve performance). <br  />
-</p>
+<p >This is the same as the method above except that it uses a user defined blending operator which takes as input the color of the source (sprite) pixel and the color of the destination pixel and returns the blended color. It must have a signature compatible with </p><pre class="fragment">               color_t blend_op(color_t_src src, color_t dst)
+</pre><p> (the method can, in fact, return a color of any type but returning type color_t will improve performance).</p>
 <p >See the method above for more details.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -2936,7 +2926,7 @@ template&lt;typename src_color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2949,8 +2939,7 @@ template&lt;typename src_color_t &gt; </div>
 <p>Copy (or blend) the src image onto the destination image with resizing and color conversion. </p>
 <p >Useful for converting image of different size and color type !</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
-<li>the source image is resized to match this image size. Bilinear interpolation is used to improve quality. <br  />
-</li>
+<li>the source image is resized to match this image size. Bilinear interpolation is used to improve quality.</li>
 <li>The source and destination image may have different color type. Conversion is automatic.</li>
 </ol>
 </dd></dl>
@@ -2997,8 +2986,7 @@ template&lt;typename src_color_t , typename BLEND_OPERATOR &gt; </div>
 <p>Blend the src image onto the destination image with resizing and color conversion. </p>
 <p >Same as above but uses a user-defined blending operator to combine src over the existing image.</p>
 <p >The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the color of the source (sprite) pixel and the color of the destination pixel and returns the blended color. It must have a signature compatible with </p><pre class="fragment">               color_t blend_op(color_t_src src, color_t dst)
-</pre><p> (the method can, in fact, return a color of any type but returning type color_t will improve performance). <br  />
-</p>
+</pre><p> (the method can, in fact, return a color of any type but returning type color_t will improve performance).</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>the source image is resized to match this image size. Bilinear interpolation is used to improve quality.</li>
 <li>The source and destination image may have different color type. Conversion is automatic.</li>
@@ -3235,7 +3223,7 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Fill the whole screen with an horizontal color gradient between two colors. </p>
+<p>Fill the whole screen with a horizontal color gradient between two colors. </p>
 <p >Interpolation takes place in RGB color space (even if color_t is <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in H/S/V format [experimental].">HSV</a>).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -3385,7 +3373,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3395,13 +3383,13 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw an vertical segment of <code>h</code> pixels starting at <code>pos</code>. </p>
+<p>Draw a vertical segment of <code>h</code> pixels starting at <code>pos</code>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pos</td><td>position of the top endpoint of the segment. </td></tr>
     <tr><td class="paramname">h</td><td>number of pixels in the segment. </td></tr>
     <tr><td class="paramname">color</td><td>color to use. </td></tr>
-    <tr><td class="paramname">opacity</td><td>opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply use overwritting. </td></tr>
+    <tr><td class="paramname">opacity</td><td>opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply use overwriting. </td></tr>
   </table>
   </dd>
 </dl>
@@ -3438,7 +3426,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3448,13 +3436,13 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw an horizontal segment of <code>w</code> pixels starting at pos. </p>
+<p>Draw a horizontal segment of <code>w</code> pixels starting at pos. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pos</td><td>position of the left endpoint of the segment. </td></tr>
     <tr><td class="paramname">w</td><td>number of pixels in the segment. </td></tr>
     <tr><td class="paramname">color</td><td>color to use. </td></tr>
-    <tr><td class="paramname">opacity</td><td>opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply use overwritting. </td></tr>
+    <tr><td class="paramname">opacity</td><td>opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply use overwriting. </td></tr>
   </table>
   </dd>
 </dl>
@@ -3491,7 +3479,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3507,7 +3495,7 @@ template&lt;typename color_t &gt; </div>
     <tr><td class="paramname">P1</td><td>The first point. </td></tr>
     <tr><td class="paramname">P2</td><td>The second point. </td></tr>
     <tr><td class="paramname">color</td><td>color to use. </td></tr>
-    <tr><td class="paramname">opacity</td><td>(Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply use overwritting. </td></tr>
+    <tr><td class="paramname">opacity</td><td>(Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply use overwriting. </td></tr>
   </table>
   </dd>
 </dl>
@@ -3556,7 +3544,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3575,7 +3563,7 @@ template&lt;typename color_t &gt; </div>
     <tr><td class="paramname">P2</td><td>The second point. </td></tr>
     <tr><td class="paramname">drawP2</td><td>True to draw the pixel at endpoint P2. </td></tr>
     <tr><td class="paramname">color</td><td>color to use. </td></tr>
-    <tr><td class="paramname">opacity</td><td>(Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply use overwritting. </td></tr>
+    <tr><td class="paramname">opacity</td><td>(Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending and simply use overwriting. </td></tr>
   </table>
   </dd>
 </dl>
@@ -3818,7 +3806,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3870,7 +3858,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3917,7 +3905,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3975,7 +3963,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4029,7 +4017,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4039,7 +4027,7 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a rectangle filled with an horizontal gradient of colors. </p>
+<p>Draw a rectangle filled with a horizontal gradient of colors. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">B</td><td>box that delimits the rectangle to draw. </td></tr>
@@ -4082,7 +4070,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4300,7 +4288,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4353,7 +4341,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4649,7 +4637,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4715,7 +4703,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -5054,7 +5042,7 @@ template&lt;typename color_alt &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -5136,7 +5124,7 @@ template&lt;typename color_t_tex &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -5334,7 +5322,7 @@ template&lt;typename color_t_tex &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -5458,7 +5446,7 @@ template&lt;typename color_t_tex &gt; </div>
     <tr><td class="paramname">dstP1</td><td>coords of point 1 on this image. </td></tr>
     <tr><td class="paramname">dstP2</td><td>coords of point 2 on this image. </td></tr>
     <tr><td class="paramname">dstP3</td><td>coords of point 3 on this image. </td></tr>
-    <tr><td class="paramname">opacity</td><td>The opacity multiplier between 0.0f (transparent) and 1.0f (opaque), or negative / TGX_DEFAULT_NO_BLENDING to disable blending. In that mode, fully transparent masked texels are skipped, fully opaque texels overwrite the destination, and partially covered pixels are still alpha-composited to preserve smooth bilinear mask edges. </td></tr>
+    <tr><td class="paramname">opacity</td><td>The opacity multiplier between 0.0f (transparent) and 1.0f (opaque), or negative / <a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901" title="Default opacity sentinel used by drawing primitives to request overwrite/no-blending mode.">TGX_DEFAULT_NO_BLENDING</a> to disable blending. In that mode, fully transparent masked texels are skipped, fully opaque texels overwrite the destination, and partially covered pixels are still alpha-composited to preserve smooth bilinear mask edges. </td></tr>
   </table>
   </dd>
 </dl>
@@ -5575,7 +5563,7 @@ template&lt;typename color_t_tex &gt; </div>
     <tr><td class="paramname">C1</td><td>color gradient multiplier at point 1. </td></tr>
     <tr><td class="paramname">C2</td><td>color gradient multiplier at point 2. </td></tr>
     <tr><td class="paramname">C3</td><td>color gradient multiplier at point 3. </td></tr>
-    <tr><td class="paramname">opacity</td><td>The opacity multiplier between 0.0f (transparent) and 1.0f (opaque), or negative / TGX_DEFAULT_NO_BLENDING to disable blending. In that mode, fully transparent masked texels are skipped, fully opaque texels overwrite the destination, and partially covered pixels are still alpha-composited to preserve smooth bilinear mask edges. </td></tr>
+    <tr><td class="paramname">opacity</td><td>The opacity multiplier between 0.0f (transparent) and 1.0f (opaque), or negative / <a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901" title="Default opacity sentinel used by drawing primitives to request overwrite/no-blending mode.">TGX_DEFAULT_NO_BLENDING</a> to disable blending. In that mode, fully transparent masked texels are skipped, fully opaque texels overwrite the destination, and partially covered pixels are still alpha-composited to preserve smooth bilinear mask edges. </td></tr>
   </table>
   </dd>
 </dl>
@@ -5624,7 +5612,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -5691,7 +5679,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -6074,7 +6062,7 @@ template&lt;typename color_alt &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -6157,7 +6145,7 @@ template&lt;typename color_t_tex &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -6347,7 +6335,7 @@ template&lt;typename color_t_tex &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -6594,7 +6582,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -6604,7 +6592,7 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn]. </p>
+<p>Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn]. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">nbpoints</td><td>number of points in tabPoints. </td></tr>
@@ -6643,7 +6631,7 @@ template&lt;typename FUNCTOR_NEXT &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -6653,7 +6641,7 @@ template&lt;typename FUNCTOR_NEXT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn]. </p>
+<p>Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn]. </p>
 <p >Points are queried in order P0, P1,... using a functor callback which must have a signature compatible with: </p><div class="fragment"><div class="line"><span class="keywordtype">bool</span> next_point(<a class="code hl_struct" href="structtgx_1_1_vec2.html">iVec2</a> &amp; P)</div>
 </div><!-- fragment --><p> The callback must store the next point in the reference <code>P</code> and return:</p><ul>
 <li><code>true</code>: if there are additional points to plot after this one.</li>
@@ -6710,7 +6698,7 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>). </p>
+<p>Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>). </p>
 <dl class="section note"><dt>Note</dt><dd>High quality drawing with anti-aliasing and sub-pixel precision.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -6760,7 +6748,7 @@ template&lt;typename FUNCTOR_NEXT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a polyline ie a sequence of consecutif segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>). </p>
+<p>Draw a polyline ie a sequence of consecutive segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>). </p>
 <dl class="section note"><dt>Note</dt><dd>High quality drawing with anti-aliasing and sub-pixel precision.</dd></dl>
 <p>Points are queried in order P0, P1,... using a functor callback which must have a signature compatible with: </p><div class="fragment"><div class="line"><span class="keywordtype">bool</span> next_point(<a class="code hl_class" href="structtgx_1_1_vec2.html">fVec2</a> &amp; P)</div>
 </div><!-- fragment --><p> The callback must store the next point in the reference <code>P</code> and return:</p><ul>
@@ -6836,7 +6824,7 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a thick polyline ie a sequence of consecutif thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>). </p>
+<p>Draw a thick polyline ie a sequence of consecutive thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>). </p>
 <dl class="section note"><dt>Note</dt><dd>High quality drawing with anti-aliasing and sub-pixel precision.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -6907,7 +6895,7 @@ template&lt;typename FUNCTOR_NEXT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a thick polyline ie a sequence of consecutif thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>). </p>
+<p>Draw a thick polyline ie a sequence of consecutive thick segments [P0,P1] , [P1,P2],,, [Pn-1,Pn] (<b>High quality</b>). </p>
 <dl class="section note"><dt>Note</dt><dd>High quality drawing with anti-aliasing and sub-pixel precision.</dd></dl>
 <p>Points are queried in order P0, P1,... using a functor callback which must have a signature compatible with: </p><div class="fragment"><div class="line"><span class="keywordtype">bool</span> next_point(<a class="code hl_class" href="structtgx_1_1_vec2.html">fVec2</a> &amp; P)</div>
 </div><!-- fragment --><p> The callback must store the next point in the reference <code>P</code> and return:</p><ul>
@@ -6958,7 +6946,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -7007,7 +6995,7 @@ template&lt;typename FUNCTOR_NEXT &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -7064,7 +7052,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -7114,7 +7102,7 @@ template&lt;typename FUNCTOR_NEXT &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -7656,7 +7644,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -7715,7 +7703,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -8347,7 +8335,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -8406,7 +8394,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -8715,7 +8703,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -8789,7 +8777,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -8853,7 +8841,7 @@ template&lt;int SPLINE_MAX_POINTS = 32&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -8922,7 +8910,7 @@ template&lt;int SPLINE_MAX_POINTS = 32&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -8985,7 +8973,7 @@ template&lt;int SPLINE_MAX_POINTS = 32&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -9075,7 +9063,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -9164,7 +9152,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -9243,7 +9231,7 @@ template&lt;int SPLINE_MAX_POINTS = 32&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -9327,7 +9315,7 @@ template&lt;int SPLINE_MAX_POINTS = 32&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -9399,7 +9387,7 @@ template&lt;int SPLINE_MAX_POINTS = 32&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -9463,7 +9451,7 @@ template&lt;int SPLINE_MAX_POINTS = 32&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -9539,7 +9527,7 @@ template&lt;int SPLINE_MAX_POINTS = 32&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -9694,7 +9682,7 @@ template&lt;typename color_t &gt; </div>
     <tr><td class="paramdir"></td><td class="paramname">pos</td><td>position of the anchor point in this image. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">font</td><td>The font to use. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">anchor</td><td>(Optional) location of the anchor with respect to the char bounding box. (by default, this is the BASELINE|LEFT). </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">xadvance</td><td>If non-null, the number of pixel to advance horizontally after drawing the char is stored here.</td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">xadvance</td><td>If non-null, the number of pixels to advance horizontally after drawing the char is stored here.</td></tr>
   </table>
   </dd>
 </dl>
@@ -9757,7 +9745,7 @@ template&lt;typename color_t &gt; </div>
     <tr><td class="paramdir"></td><td class="paramname">pos</td><td>position of the anchor point in this image. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">font</td><td>The font to use. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">anchor</td><td>(Optional) location of the anchor with respect to the char bounding box. (by default, this is the BASELINE|LEFT). </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">xadvance</td><td>If non-null, the number of pixel to advance horizontally after drawing the char is stored here.</td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">xadvance</td><td>If non-null, the number of pixels to advance horizontally after drawing the char is stored here.</td></tr>
   </table>
   </dd>
 </dl>
@@ -9939,7 +9927,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -10001,7 +9989,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -10063,7 +10051,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -10126,7 +10114,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -10207,7 +10195,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -10292,7 +10280,7 @@ template&lt;typename color_t &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -10346,7 +10334,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>opacity</em> = <code>TGX_DEFAULT_NO_BLENDING</code>&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code><a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>

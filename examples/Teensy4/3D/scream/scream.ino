@@ -324,7 +324,7 @@ void setup()
     renderer.setImage(&im); // set the image to draw onto (ie the screen framebuffer)
     renderer.setZbuffer(zbuf); // set the z buffer for depth testing    
     renderer.setPerspective(45, ((float)SLX) / SLY, 0.1f, 50.0f);  // set the perspective projection matrix. 
-    renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2); // shader ot use
+    renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2); // shader to use
     renderer.setCulling(0); // in case we see below the sheet. 
 
     fMat4 MV;

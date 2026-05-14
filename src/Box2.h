@@ -1,5 +1,5 @@
-/**   
- * @file Box2.h 
+/**
+ * @file Box2.h
  * 2D box class
  */
 //
@@ -35,8 +35,8 @@ namespace tgx
 {
 
 
-    // Forward declaration 
-     
+    // Forward declaration
+
     template<typename T> struct Box2;
 
 
@@ -72,21 +72,21 @@ namespace tgx
     **/
     enum Anchor
         {
-        CENTER = 0,                             ///< Center (vertical/horizontal alignement). This is the default placement if not specitified.
-        LEFT = 1,                               ///< Left side (horizontal alignement)
-        RIGHT = 2,                              ///< Right side (horizontal alignement)
-        TOP = 4,                                ///< Top side (vertical alignement)
-        BOTTOM = 8,                             ///< Bottom side (vertical alignement)
-        BASELINE = 16,                          ///< Baseline height (vertical alignement). **only makes sense with a font (when drawing text), replaced by center otherwise**
+        CENTER = 0,                             ///< Center (vertical/horizontal alignment). This is the default placement if not specified.
+        LEFT = 1,                               ///< Left side (horizontal alignment)
+        RIGHT = 2,                              ///< Right side (horizontal alignment)
+        TOP = 4,                                ///< Top side (vertical alignment)
+        BOTTOM = 8,                             ///< Bottom side (vertical alignment)
+        BASELINE = 16,                          ///< Baseline height (vertical alignment). **only makes sense with a font (when drawing text), replaced by center otherwise**
         TOPLEFT = TOP | LEFT,                   ///< Top-left corner
         TOPRIGHT = TOP | RIGHT,                 ///< Top-right corner
         BOTTOMLEFT = BOTTOM | LEFT,             ///< bottom-left corner
         BOTTOMRIGHT = BOTTOM | RIGHT,           ///< Bottom-right corner
         CENTERLEFT = CENTER | LEFT,             ///< center point on the left side
-        CENTERRIGHT = CENTER | RIGHT,           ///< center point on the right side 
+        CENTERRIGHT = CENTER | RIGHT,           ///< center point on the right side
         CENTERTOP = CENTER | TOP,               ///< center point on the top side
-        CENTERBOTTOM = CENTER | BOTTOM,         ///< center point on the bottom side 
-        DEFAULT_TEXT_ANCHOR = BASELINE | LEFT   ///< Default location for text anchoring. 
+        CENTERBOTTOM = CENTER | BOTTOM,         ///< center point on the bottom side
+        DEFAULT_TEXT_ANCHOR = BASELINE | LEFT   ///< Default location for text anchoring.
         };
 
 
@@ -112,7 +112,7 @@ namespace tgx
         SPLIT_TOP           = Anchor::TOP,         ///< top half
         SPLIT_BOTTOM        = Anchor::BOTTOM,      ///< bottom half
         SPLIT_TOPLEFT       = Anchor::TOPLEFT,     ///< top left quarter
-        SPLIT_TOPRIGHT      = Anchor::TOPRIGHT,    ///< top right quarter 
+        SPLIT_TOPRIGHT      = Anchor::TOPRIGHT,    ///< top right quarter
         SPLIT_BOTTOMLEFT    = Anchor::BOTTOMLEFT,  ///< bottom left quarter
         SPLIT_BOTTOMRIGHT   = Anchor::BOTTOMRIGHT  ///< bottom right quarter
         };
@@ -135,29 +135,29 @@ namespace tgx
 
     /**
      * Generic 2D Box [specializations #iBox2 , #fBox2, #dBox2].
-     * 
+     *
      * The class encapsulates of 4 public variables: `minX`, `maxX`, `minY`, `maxY` which delimit the 2
      * dimensional *closed* box: `[minX, maxX] x [minY, maxY]`
-     * 
+     *
      * The box is empty if `maxX` < `minX` or if `maxY` < `minY`.
-     * 
+     *
      * @warning Some methods compute things differently  depending whether T is an integral or a floating point  value type.
-     * 
+     *
      * @tparam  `T` arithmetic type of the box (`int`, `float`...)
-     *              
+     *
      * @sa `iBox2`,`fBox2`,`dBox2`
      */
     template<typename T> struct Box2
     {
 
-        // mtools extension (if available).  
+        // mtools extension (if available).
         #if (MTOOLS_TGX_EXTENSIONS)
         #include <mtools/extensions/tgx/tgx_ext_Box2.inl>
         #endif
 
 
         // box dimension: [minX, maxX] x [minY, maxY]
-        
+
         T minX; ///< min horizontal (X) value (inclusive)
         T maxX; ///< max horizontal (X) value (inclusive)
         T minY; ///< min vertical (Y) value (inclusive)
@@ -188,14 +188,14 @@ namespace tgx
             }
 
 
-        /** 
+        /**
         * default copy constructor.
         */
         Box2(const Box2<T>& B) = default;
 
 
-        /** 
-        * default assignement operator. 
+        /**
+        * default assignment operator.
         */
         Box2<T>& operator=(const Box2<T>& B) = default;
 
@@ -213,18 +213,18 @@ namespace tgx
         operator Box2<typename DefaultFPType<T>::fptype>() const { return Box2<typename DefaultFPType<T>::fptype>((typename DefaultFPType<T>::fptype)minX, (typename DefaultFPType<T>::fptype)maxX, (typename DefaultFPType<T>::fptype)minY, (typename DefaultFPType<T>::fptype)maxY); }
 
 
-        /** 
-        * Return true if the box is empty. 
+        /**
+        * Return true if the box is empty.
         */
         constexpr inline bool isEmpty() const { return ((maxX < minX) || (maxY < minY)); }
 
 
-        /** 
+        /**
         * Make the box empty.
         **/
         void empty()
             {
-            minX = (T)1; 
+            minX = (T)1;
             maxX = (T)0;
             minY = (T)1;
             maxY = (T)0;
@@ -233,51 +233,51 @@ namespace tgx
 
         /**
          * Return the box width.
-         * 
+         *
          * @warning The width is computed differently depending on whether `T` is of floating point
          *          or integral type.
-         *          - If `T` is floating point, the method returns `maxX - minX`.  
+         *          - If `T` is floating point, the method returns `maxX - minX`.
          *          - If `T` is integral, the method returns `maxX - minX + 1` (number of horizontal points in the closed box).
          */
-        inline T lx() const 
+        inline T lx() const
             {
-            if (std::is_integral<T>::value) // compiler optimize this away. 
+            if (std::is_integral<T>::value) // compiler optimize this away.
                 {
                 return (maxX - minX + 1); // for integer, return the number of points
                 }
-            else    
+            else
                 {
-                return (maxX - minX); // for floating point type, return maxX - minX. 
-                }                   
+                return (maxX - minX); // for floating point type, return maxX - minX.
+                }
             }
 
 
         /**
          * Return the box height.
-         * 
+         *
          * @warning The height is computed differently depending on whether `T` is of floating point
          *          or integral type.
-         *          - If `T` is floating point, the method returns `maxY - minY`.  
+         *          - If `T` is floating point, the method returns `maxY - minY`.
          *          - If `T` is integral, the method returns `maxY - minY + 1` (number of vertical points in the closed box).
          */
         inline T ly() const
             {
-            if (std::is_integral<T>::value) // compiler optimize this away. 
+            if (std::is_integral<T>::value) // compiler optimize this away.
                 {
                 return (maxY - minY + 1); // for integer, return the number of points
                 }
-            else    
+            else
                 {
-                return (maxY - minY); // for floating point type, return maxX - minX. 
-                }                   
+                return (maxY - minY); // for floating point type, return maxX - minX.
+                }
             }
 
 
         /**
         * Return true if the boxes are equal.
-        * 
-        * @note Two empty boxes always compare equal. 
-        * 
+        *
+        * @note Two empty boxes always compare equal.
+        *
         * @see operator==()
         **/
         inline bool equals(const Box2<T>& B) const
@@ -291,7 +291,7 @@ namespace tgx
         * Return true if the boxes are equal.
         *
         * @note Two empty boxes always compare equal.
-        * 
+        *
         * @see equals()
         **/
         inline bool operator==(const Box2<T>& B) const
@@ -329,8 +329,8 @@ namespace tgx
         *
         * @note
         * 1. An empty box contains nothing.
-        * 2. A non-empty box contains any empty box.  
-        * 
+        * 2. A non-empty box contains any empty box.
+        *
         * @see contains()
         **/
         inline bool operator>=(const Box2<T>& B) const
@@ -381,12 +381,12 @@ namespace tgx
 
 
         /**
-         * Return the intersection of this box and B. This may return an empty box. 
+         * Return the intersection of this box and B. This may return an empty box.
          **/
         inline Box2<T> operator&(const Box2<T>& B) const
             {
             Box2<T> R;
-            if (isEmpty()) 
+            if (isEmpty())
                 {
                 R = *this;
                 }
@@ -480,7 +480,7 @@ namespace tgx
 
 
         /**
-        * Translate this box by a given vector. 
+        * Translate this box by a given vector.
         **/
         inline void operator+=(const Vec2<T> & V)
             {
@@ -527,7 +527,7 @@ namespace tgx
          * @remark This method replaces the former split(): TOP/BOTTOM now follow the
          * anchor convention and integral splits no longer overlap on the middle row/column.
          *
-         * @param   part    The part or the box to keep. See tgx::BoxSplit. 
+         * @param   part    The part or the box to keep. See tgx::BoxSplit.
          *
          * @sa  getSplit_fixed()
          */
@@ -571,7 +571,7 @@ namespace tgx
         /**
          * Return the position of an anchor point inside this box.
          *
-         * @param   anchor_pos Th anchor location, see 
+         * @param   anchor_pos Th anchor location, see
          */
         Vec2<T> getAnchor(Anchor anchor_pos) const
             {
@@ -600,14 +600,14 @@ namespace tgx
             {
             return Vec2<T>((minX + maxX) / 2, (minY + maxY) / 2);
             }
-            
+
 
         /**
         * Return the aspect ratio of the box `lx()/ly()`.
-        * 
+        *
         * - Return -1 for an empty box.
-        * - Beware that lx() and ly() are computed differently depending on wether T is an integral or a floating point type !   
-        * 
+        * - Beware that lx() and ly() are computed differently depending on wether T is an integral or a floating point type !
+        *
         * @sa lx(),ly()
         **/
         template<typename Tfloat = typename DefaultFPType<T>::fptype> inline  Tfloat ratio() const
@@ -690,7 +690,7 @@ namespace tgx
 
         /**
         * Move the box down by 1/10th of its height.
-        * 
+        *
         * @sa up(),left(),right()
         **/
         void down()
@@ -702,11 +702,11 @@ namespace tgx
 
 
         /**
-        * Return the largest box with the same `ratio()` as box `B` that is centered and enclosed inside this box. 
+        * Return the largest box with the same `ratio()` as box `B` that is centered and enclosed inside this box.
         *
         * @remark This method replaces the former getEnclosedWithSameRatioAs(): the returned
         * box now preserves the position/center of this box instead of being relative to the origin.
-        * 
+        *
         * @sa ratio(),getEnclosingWithSameRatioAs_fixed()
         **/
         Box2<T> getEnclosedWithSameRatioAs_fixed(const Box2<T> & B) const;
@@ -717,7 +717,7 @@ namespace tgx
         *
         * @remark This method replaces the former getEnclosingWithSameRatioAs(): the returned
         * box now preserves the position/center of this box instead of being relative to the origin.
-        * 
+        *
         * @sa ratio(),getEnclosedWithSameRatioAs_fixed()
         **/
         Box2<T> getEnclosingWithSameRatioAs_fixed(const Box2<T> & B) const;

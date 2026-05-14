@@ -2,30 +2,30 @@
 *
 * tgx library example.
 *
-* Mars demo : demonstrate how to use a skybox. 
-* 
+* Mars demo : demonstrate how to use a skybox.
+*
 * EXAMPLE FOR TEENSY 4 / 4.1
 *
-* DISPLAY: ILI9341 (320x240) with ILI9341_T4 driver. 
+* DISPLAY: ILI9341 (320x240) with ILI9341_T4 driver.
 *
 * REMARKS: THe demo is very computationaly intensive. For best results:
-* 
+*
 * 1. Use a very SPI speed for the ILI9341 speed: with short wires, most
 *    OLI9341 controller can work with speed above 70Mhz...
-*  
-* 2. Compile with "fastest" option (all optimization enabled). 
 *
-* 3. (Optional) Compile the code for Teensy4@720Mhz : smoother result :-)  
-* 
+* 2. Compile with "fastest" option (all optimization enabled).
+*
+* 3. (Optional) Compile the code for Teensy4@720Mhz : smoother result :-)
+*
 ********************************************************************/
 
 
-// This example runs on teensy 4.0/4.1 with ILI9341 via SPI. 
+// This example runs on teensy 4.0/4.1 with ILI9341 via SPI.
 // the screen driver library : https://github.com/vindar/ILI9341_T4
-#include <ILI9341_T4.h> 
+#include <ILI9341_T4.h>
 
-// the tgx library 
-#include <tgx.h> 
+// the tgx library
+#include <tgx.h>
 
 // font we use
 #include <font_tgx_OpenSans_Bold.h>
@@ -42,7 +42,7 @@
 #if __has_include("falcon_vs.h")
     // Arduino IDE stupidly flattens the example directory tree...
     #include "falcon_vs.h"
-#else 
+#else
     // ok, use the normal path
     #include "falcon/falcon_vs.h"
 #endif
@@ -61,30 +61,30 @@ using namespace tgx;
 #define PIN_MOSI    11      // mandatory
 #define PIN_DC      10      // mandatory, can be any pin but using pin 10 (or 36 or 37 on T4.1) provides greater performance
 
-#define PIN_CS      9       // optional (but recommended), can be any pin.  
-#define PIN_RESET   6       // optional (but recommended), can be any pin. 
+#define PIN_CS      9       // optional (but recommended), can be any pin.
+#define PIN_RESET   6       // optional (but recommended), can be any pin.
 #define PIN_BACKLIGHT 255   // optional, set this only if the screen LED pin is connected directly to the Teensy.
 #define PIN_TOUCH_IRQ 255   // optional. set this only if the touchscreen is connected on the same SPI bus
 #define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
 
 
 //
-// ALTERNATE WIRING USING SPI 1 ON TEENSY 4/4.1 
+// ALTERNATE WIRING USING SPI 1 ON TEENSY 4/4.1
 //
-//#define PIN_SCK     27      // mandatory 
+//#define PIN_SCK     27      // mandatory
 //#define PIN_MISO    1       // mandatory
 //#define PIN_MOSI    26      // mandatory
 //#define PIN_DC      0       // mandatory, can be any pin but using pin 0 (or 38 on T4.1) provides greater performance
 
-//#define PIN_CS      30      // optional (but recommended), can be any pin.  
-//#define PIN_RESET   29      // optional (but recommended), can be any pin.  
-//#define PIN_BACKLIGHT 255   // optional, set this only if the screen LED pin is connected directly to the Teensy. 
+//#define PIN_CS      30      // optional (but recommended), can be any pin.
+//#define PIN_RESET   29      // optional (but recommended), can be any pin.
+//#define PIN_BACKLIGHT 255   // optional, set this only if the screen LED pin is connected directly to the Teensy.
 //#define PIN_TOUCH_IRQ 255   // optional. set this only if the touchscreen is connected on the same SPI bus
 //#define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
 
 
 
-// 40MHz SPI. 
+// 40MHz SPI.
 // SET A LOWER SPEED IF ARTIFACT APPEAR ON THE SCREEN, OR TRY 60MHz (OR EVEN MORE) IF IT WORKS... !!!!!!!
 #define SPI_SPEED       40000000
 
@@ -101,13 +101,13 @@ static const int SLX = 320;
 static const int SLY = 240;
 
 // main screen framebuffer (150K in DTCM for fastest access)
-uint16_t fb[SLX * SLY];                 
+uint16_t fb[SLX * SLY];
 
 // internal framebuffer (150K) used by the ILI9431_T4 library for double buffering.
-uint16_t internal_fb[SLX * SLY]; 
+uint16_t internal_fb[SLX * SLY];
 
 // zbuffer in 16bits precision (150K in DMAMEM)
-DMAMEM uint16_t zbuf[SLX * SLY];              
+DMAMEM uint16_t zbuf[SLX * SLY];
 
 // image that encapsulates the framebuffer fb.
 Image<RGB565> im(fb, SLX, SLY);
@@ -119,7 +119,7 @@ const Shader LOADED_SHADER = SHADER_ZBUFFER | SHADER_PERSPECTIVE | SHADER_GOURAU
 Renderer3D<RGB565, LOADED_SHADER, uint16_t> renderer;
 
 // additional memory in DMAMEM (175Kb)
-// used to load temporary objects. 
+// used to load temporary objects.
 DMAMEM int dma_buf[260 * 256]; // 260kb in DMAMEM
 
 
@@ -137,12 +137,12 @@ tgx::Image<tgx::RGB565> marble_dma;
 
 
 TGX_NOINLINE FLASHMEM void setup()
-    {    
+    {
     Serial.begin(9600);
 
-    // output debug infos to serial port. 
-    tft.output(&Serial);                
-    
+    // output debug infos to serial port.
+    tft.output(&Serial);
+
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED));
 
@@ -150,13 +150,13 @@ TGX_NOINLINE FLASHMEM void setup()
     pinMode(PIN_BACKLIGHT, OUTPUT);
     digitalWrite(PIN_BACKLIGHT, HIGH);
 
-    // setup the screen driver 
+    // setup the screen driver
     tft.setRotation(3); // portrait mode
     tft.setFramebuffer(internal_fb); // double buffering
     tft.setDiffBuffers(&diff1, &diff2); // 2 diff buffers
     tft.setDiffGap(5); // small gap
     tft.setRefreshRate(85); // refresh at 85hz
-    tft.setVSyncSpacing(2); // lock the framerate at 85/2 = 42fps. 
+    tft.setVSyncSpacing(2); // lock the framerate at 85/2 = 42fps.
     tft.setLateStartRatio(0.7f);
 
     const float ratio = ((float)SLX) / SLY;
@@ -169,15 +169,15 @@ TGX_NOINLINE FLASHMEM void setup()
     renderer.setPerspective(50, ratio, 10.0f, 8000.0f);
     renderer.setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);
 
-    // set the lighning direction (to match the sun position in the skybox). 
+    // set the lighning direction (to match the sun position in the skybox).
     tgx::fVec3 lightdir(-0.40f, -0.30f, 1.0f);
     renderer.setLightDirection(lightdir);
     renderer.setLightAmbiant(tgx::RGBf(1, 1, 1));
-    
+
     // copy falcon mesh to extmem (if present) on Teensy 4.1
 #if defined(ARDUINO_TEENSY41)
     if (external_psram_size > 0)
-        { 
+        {
         falcon_vs_1 = *(copyMeshEXTMEM(&falcon_vs_1));
         }
 #endif
@@ -186,15 +186,15 @@ TGX_NOINLINE FLASHMEM void setup()
 
 
 
-/** 
-* Redraw screen and overlay the current framerate 
+/**
+* Redraw screen and overlay the current framerate
 **/
 TGX_NOINLINE FLASHMEM void redraw(bool full_redraw = false)
     {
     // add fps counter (on top right, color white on semi-transparent black background)
-    tft.overlayFPS(fb, 0, 0xFFFF, 0, 0.3f); 
+    tft.overlayFPS(fb, 0, 0xFFFF, 0, 0.3f);
 
-    // update the screen (async). 
+    // update the screen (async).
     tft.update(fb, full_redraw);
 
     // print some info about the graphic driver on Serial (for debugging)
@@ -215,12 +215,12 @@ TGX_NOINLINE FLASHMEM void redraw(bool full_redraw = false)
 *  Animation helper functions
 *
 ******************************************/
-elapsedMillis em; 
+elapsedMillis em;
 float duration;
 
 
 /**
-* Start an animation with a given lenght (in seconds)
+* Start an animation with a given length (in seconds)
 **/
 void start(float duration_sec)
     {
@@ -230,7 +230,7 @@ void start(float duration_sec)
 
 
 /**
-* Return the current time fror the animation (in [0,1]). 
+* Return the current time fror the animation (in [0,1]).
 **/
 float time()
     {
@@ -240,7 +240,7 @@ float time()
 
 
 /**
-* Return true while the animation is ongoing. 
+* Return true while the animation is ongoing.
 **/
 bool ongoing()
     {
@@ -277,7 +277,7 @@ TGX_NOINLINE FLASHMEM void drawSkyBox()
 
 TGX_NOINLINE FLASHMEM void drawBase(bool use_dma_tex = false)
     {
-    renderer.setCulling(1);    
+    renderer.setCulling(1);
     renderer.setMaterialSpecularExponent(6);
     renderer.setMaterialAmbiantStrength(0.2f);
     renderer.setMaterialDiffuseStrength(0.9f);
@@ -304,7 +304,7 @@ TGX_NOINLINE FLASHMEM void drawBase(bool use_dma_tex = false)
 
 TGX_NOINLINE void drawSphere(const Shader shader, const Image<RGB565> * texture = nullptr)
     {
-     renderer.setCulling(1);     
+     renderer.setCulling(1);
     if (texture)
         {
         renderer.setShaders(shader);
@@ -351,7 +351,7 @@ void loadFalconTexture()
 
     tgx::fVec3* vn = (tgx::fVec3*)(dma_buf + (128 * 256) + (sizeof(falcon_vs_vert_array) + 3)/4 + (sizeof(falcon_vs_tex_array) + 3)/4);
     memcpy(vn, falcon_vs_norm_array, sizeof(falcon_vs_norm_array));
-    
+
     tgx::Mesh3D<tgx::RGB565> * mesh = &falcon_vs_1;
     while (mesh != nullptr)
         {
@@ -375,20 +375,20 @@ TGX_NOINLINE FLASHMEM void movie()
         {
         renderer.clearZbuffer();
         const float t = time();
-        const float a = slide(t, 0.1f, 1.0f) * 2 * M_PI;        
+        const float a = slide(t, 0.1f, 1.0f) * 2 * M_PI;
         renderer.setLookAt({ 0, 0, 0 },  { sinf(a), 0, cosf(a) }, { 0,1,0 });
         drawSkyBox();
         redraw();
         }
     // ends at (0,0,0), looking toward (0,0,-1)
-    
+
     // look up
-    start(4); 
+    start(4);
     while (ongoing())
         {
         renderer.clearZbuffer();
         const float t = time();
-        float a = slide(t, 0, 0.8f); 
+        float a = slide(t, 0, 0.8f);
         a = a*a*a*(M_PI / 2);
         float sa = sinf(a);
         float ca = cosf(a);
@@ -397,17 +397,17 @@ TGX_NOINLINE FLASHMEM void movie()
         redraw();
         }
     // ends at (0, 0, 0), looking toward (0, 1, 0)
-    
+
     const float base_width = 45;
     const float base_height = 8;
-    const float base_y = -50; 
+    const float base_y = -50;
 
-    const float looking_dist = -200; 
+    const float looking_dist = -200;
 
     loadMarbleTexture();
 
     // base falling
-    start(4);  
+    start(4);
     while (ongoing())
         {
         renderer.clearZbuffer();
@@ -465,7 +465,7 @@ TGX_NOINLINE FLASHMEM void movie()
         const float t = time();
 
         tgx::fVec3 eye = { 0, 0, looking_dist };
-        
+
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
@@ -496,7 +496,7 @@ TGX_NOINLINE FLASHMEM void movie()
         const float t = time();
 
         tgx::fVec3 eye = { 0, 0, looking_dist };
-        
+
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
         drawSkyBox();
@@ -504,7 +504,7 @@ TGX_NOINLINE FLASHMEM void movie()
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
 
-        const float a = slide(t, 0 , 0.8f); 
+        const float a = slide(t, 0 , 0.8f);
         tgx::fVec3 wsphere_pos = { 0, base_y + sphere_dy/3 + 2*a*sphere_dy/3 , 0 };
         float wsphere_size = sphere_r * a;
 
@@ -523,10 +523,10 @@ TGX_NOINLINE FLASHMEM void movie()
         {
         renderer.clearZbuffer();
 
-        const float t = time();       
+        const float t = time();
 
         tgx::fVec3 eye = { 0, 0, looking_dist };
-        
+
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
         drawSkyBox();
@@ -534,7 +534,7 @@ TGX_NOINLINE FLASHMEM void movie()
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
 
-        const float a = slide(t, 0.2f,0.6f);           
+        const float a = slide(t, 0.2f,0.6f);
 
 
         if (a < 1)
@@ -554,7 +554,7 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.setMaterialColor(tgx::RGBf(0, 0, 1));
         drawSphere(SHADER_GOURAUD);
 
-        
+
         if (a < 1)
             {
             setModelPosScaleRot(sphere_pos, { sphere_r, sphere_r, sphere_r });
@@ -562,12 +562,12 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setCulling(1);
             renderer.drawWireFrameSphere(25, 25);
             }
-            
+
 
         redraw();
         }
 
-    const float climb = 40; 
+    const float climb = 40;
 
     // rotating around the base
     start(20); // 20
@@ -586,7 +586,7 @@ TGX_NOINLINE FLASHMEM void movie()
         drawBase();
 
         if (t< 0.33)
-            { 
+            {
             renderer.setCulling(1);
             setModelPosScaleRot(sphere_pos, { sphere_r, sphere_r, sphere_r });
 
@@ -628,11 +628,11 @@ TGX_NOINLINE FLASHMEM void movie()
 
             drawSphere(SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
             }
-        else 
+        else
             {
             renderer.setCulling(1);
             setModelPosScaleRot(sphere_pos, { sphere_r, sphere_r, sphere_r });
-         
+
             renderer.setMaterialSpecularExponent(32);
             renderer.setMaterialAmbiantStrength(0.3f);
             renderer.setMaterialDiffuseStrength(0.8f);
@@ -646,7 +646,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         redraw();
         }
-        
+
     start(15); // 15
     while (ongoing())
         {
@@ -655,7 +655,7 @@ TGX_NOINLINE FLASHMEM void movie()
         const float t = time();
 
         tgx::fVec3 eye = { 0, climb + t*climb, looking_dist * ((t < 0.7f) ? ((t < 0.35f) ? (1 - (1.5f)*t) : (1 - 1.5f*0.35f + 1.5f*(t-0.35f))) : 1) };
-        
+
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
 
@@ -667,11 +667,11 @@ TGX_NOINLINE FLASHMEM void movie()
         const float angle = t * t * t * t * 20;
         const float r = sphere_r * ((t < 0.7f) ? 1 : ((1.0f - t) / 0.3f));
         setModelPosScaleRot(sphere_pos, { r, r, r },  angle * 360);
-         
+
         renderer.setMaterialSpecularExponent(32);
         renderer.setMaterialAmbiantStrength(0.3f);
         renderer.setMaterialDiffuseStrength(0.8f);
-        renderer.setMaterialSpecularStrength(0.9f);        
+        renderer.setMaterialSpecularStrength(0.9f);
 
         drawSphere(SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
         drawSkyBox();
@@ -680,9 +680,9 @@ TGX_NOINLINE FLASHMEM void movie()
         }
 
 
-    
 
-    // marble glowing before falcon   
+
+    // marble glowing before falcon
     start(1.5f); // 3
     while (ongoing())
         {
@@ -733,7 +733,7 @@ TGX_NOINLINE FLASHMEM void movie()
         const float t = time();
 
         tgx::fVec3 eye = { 0, 2*climb , looking_dist };
-        
+
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
         drawSkyBox();
@@ -741,7 +741,7 @@ TGX_NOINLINE FLASHMEM void movie()
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
 
-        const float a = slide(t, 0.0 , 0.9f); 
+        const float a = slide(t, 0.0 , 0.9f);
         tgx::fVec3 falcon_pos = { 0, a * falcon_base + (1-a)*base_y , 0 };
         float falcon_size = sphere_r * 1.5f * a ;
 
@@ -762,7 +762,7 @@ TGX_NOINLINE FLASHMEM void movie()
         const float t = time();
 
         tgx::fVec3 eye = { 0, 2*climb , looking_dist };
-        
+
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
         drawSkyBox();
@@ -770,7 +770,7 @@ TGX_NOINLINE FLASHMEM void movie()
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
 
-        const float a = slide(t, 0 , 0.8f); 
+        const float a = slide(t, 0 , 0.8f);
         tgx::fVec3 falcon_pos = { 0, falcon_base , 0 };
         float falcon_max_size = sphere_r * 1.5f;
         float falcon_size = sphere_r * 1.5f * a ;
@@ -794,7 +794,7 @@ TGX_NOINLINE FLASHMEM void movie()
     start(20); // 20
 
     //tft.setDiffCompareMask(0, 0, 0); // blur to improve framerate
-    
+
    // observation
     while (ongoing())
         {
@@ -807,7 +807,7 @@ TGX_NOINLINE FLASHMEM void movie()
         const float l = (cosf(a/2) + 1.5) / 2.5;
 
         tgx::fVec3 eye = { (looking_dist * l) * sinf(a), 2*climb - (a  * climb / ((float)(2*M_PI))) , (looking_dist * l) *cosf(a)};
-        
+
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
         tgx::fVec3 falcon_pos = { 0, falcon_base , 0 };
@@ -823,7 +823,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         drawSkyBox();
 
-        redraw();     
+        redraw();
         }
 
    // tft.setDiffCompareMask(0, 0, 0);
@@ -846,7 +846,7 @@ TGX_NOINLINE FLASHMEM void movie()
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
         renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
-        
+
         renderer.drawMesh(&falcon_vs_1, true, true);
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
@@ -879,7 +879,7 @@ TGX_NOINLINE FLASHMEM void movie()
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
         renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
-        
+
         renderer.drawMesh(&falcon_vs_1, true, true);
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
@@ -891,7 +891,7 @@ TGX_NOINLINE FLASHMEM void movie()
         }
 
     // tournant lointain
-    const float rturn = 250; 
+    const float rturn = 250;
     start(2.5); //2
     while (ongoing())
     {
@@ -1029,7 +1029,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.clearZbuffer();
 
             const float t = time();
-            
+
             tgx::fVec3 eye = { 0, 0 , looking_dist };
             tgx::fVec3 falcon_pos = { 0, py + 3000*t , pz };
 
@@ -1060,7 +1060,7 @@ TGX_NOINLINE FLASHMEM void movie()
         }
     }
 
-    meshF->texture = &Engine01_texture; // turn off the engines !   
+    meshF->texture = &Engine01_texture; // turn off the engines !
     }
 
 
@@ -1097,9 +1097,9 @@ TGX_NOINLINE FLASHMEM void ending()
 TGX_NOINLINE FLASHMEM void beginning()
     {
     tft.setVSyncSpacing(1);
-    tgx::Image<tgx::RGB565> imdma(dma_buf, 320, 240,320); 
-    
-    renderer.setImage(&imdma); 
+    tgx::Image<tgx::RGB565> imdma(dma_buf, 320, 240,320);
+
+    renderer.setImage(&imdma);
     renderer.clearZbuffer();
     renderer.setLookAt({ 0, 0, 0 }, { 0, 0, 1 }, { 0,1,0 });
     drawSkyBox();
@@ -1152,14 +1152,14 @@ void loop()
     {
     while (1)
         {
-        intro();        
+        intro();
         beginning();
         movie();
         ending();
         delay(1000);
-        
+
         }
     }
-       
+
 
 /** end of file */

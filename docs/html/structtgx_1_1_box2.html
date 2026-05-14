@@ -124,7 +124,7 @@ constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>Box2</b> (const 
 <tr class="separator:a17693b324943853530a2461c6d02a58d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae91316d6e2dac66d34544a730e2cb363"><td class="memItemLeft" align="right" valign="top"><a id="ae91316d6e2dac66d34544a730e2cb363" name="ae91316d6e2dac66d34544a730e2cb363"></a>
 <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="structtgx_1_1_box2.html">Box2</a>&lt; T &gt; &amp;B)=default</td></tr>
-<tr class="memdesc:ae91316d6e2dac66d34544a730e2cb363"><td class="mdescLeft">&#160;</td><td class="mdescRight">default assignement operator. <br /></td></tr>
+<tr class="memdesc:ae91316d6e2dac66d34544a730e2cb363"><td class="mdescLeft">&#160;</td><td class="mdescRight">default assignment operator. <br /></td></tr>
 <tr class="separator:ae91316d6e2dac66d34544a730e2cb363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20af0341c8f95bd7e279a0204cb29fde"><td class="memTemplParams" colspan="2"><a id="a20af0341c8f95bd7e279a0204cb29fde" name="a20af0341c8f95bd7e279a0204cb29fde"></a>
 template&lt;typename U &gt; </td></tr>
@@ -314,8 +314,7 @@ template&lt;typename T &gt; </div>
 
 <p>Return the box width. </p>
 <dl class="section warning"><dt>Warning</dt><dd>The width is computed differently depending on whether <code>T</code> is of floating point or integral type.<ul>
-<li>If <code>T</code> is floating point, the method returns <code>maxX - minX</code>. <br  />
-</li>
+<li>If <code>T</code> is floating point, the method returns <code>maxX - minX</code>.</li>
 <li>If <code>T</code> is integral, the method returns <code>maxX - minX + 1</code> (number of horizontal points in the closed box). </li>
 </ul>
 </dd></dl>
@@ -349,8 +348,7 @@ template&lt;typename T &gt; </div>
 
 <p>Return the box height. </p>
 <dl class="section warning"><dt>Warning</dt><dd>The height is computed differently depending on whether <code>T</code> is of floating point or integral type.<ul>
-<li>If <code>T</code> is floating point, the method returns <code>maxY - minY</code>. <br  />
-</li>
+<li>If <code>T</code> is floating point, the method returns <code>maxY - minY</code>.</li>
 <li>If <code>T</code> is integral, the method returns <code>maxY - minY + 1</code> (number of vertical points in the closed box). </li>
 </ul>
 </dd></dl>
@@ -485,8 +483,7 @@ template&lt;typename T &gt; </div>
 <p>Return true if B is included in this box. </p>
 <dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>An empty box contains nothing.</li>
-<li>A non-empty box contains any empty box. <br  />
-</li>
+<li>A non-empty box contains any empty box.</li>
 </ol>
 </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#abf74bfc3a197249ff7cb1cbc067386f5" title="Return true if the box contains the point v.">contains()</a> </dd></dl>
@@ -805,8 +802,7 @@ template&lt;typename Tfloat  = typename DefaultFPType&lt;T&gt;::fptype&gt; </div
 <p>Return the aspect ratio of the box <code><a class="el" href="structtgx_1_1_box2.html#ab32b1bb2e59b82bb87d0e87d850a3874" title="Return the box width.">lx()</a>/ly()</code>. </p>
 <ul>
 <li>Return -1 for an empty box.</li>
-<li>Beware that <a class="el" href="structtgx_1_1_box2.html#ab32b1bb2e59b82bb87d0e87d850a3874" title="Return the box width.">lx()</a> and <a class="el" href="structtgx_1_1_box2.html#a5e5b94b8b824fbde820a041b8f1486b0" title="Return the box height.">ly()</a> are computed differently depending on wether T is an integral or a floating point type ! <br  />
-</li>
+<li>Beware that <a class="el" href="structtgx_1_1_box2.html#ab32b1bb2e59b82bb87d0e87d850a3874" title="Return the box width.">lx()</a> and <a class="el" href="structtgx_1_1_box2.html#a5e5b94b8b824fbde820a041b8f1486b0" title="Return the box height.">ly()</a> are computed differently depending on wether T is an integral or a floating point type !</li>
 </ul>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structtgx_1_1_box2.html#ab32b1bb2e59b82bb87d0e87d850a3874" title="Return the box width.">lx()</a>,<a class="el" href="structtgx_1_1_box2.html#a5e5b94b8b824fbde820a041b8f1486b0" title="Return the box height.">ly()</a> </dd></dl>
 

@@ -4,14 +4,14 @@
 
 In the meantime, you can:
 
-- Check the `/examples/arch/3D/`  subdirectories of the library to see example on how to use the 3D engine. 
-- Check the documentation of the \ref tgx::Renderer3D class which contains all the important methods for rendering a scene onto an image. 
+- Check the `/examples/arch/3D/`  subdirectories of the library to see examples of how to use the 3D engine.
+- Check the documentation of the \ref tgx::Renderer3D class which contains all the important methods for rendering a scene onto an image.
 
 
-![buddha](../buddha.png)   
+![buddha](../buddha.png)
 
 *The `buddha` mesh rendered by TGX's 3D engine.*
 
 *See the example located in `examples/CPU/buddhaOnCPU/`*
 
-	
+

@@ -1,5 +1,5 @@
-/**   
- * @file Box3.h 
+/**
+ * @file Box3.h
  * 3D box class
  */
 //
@@ -51,12 +51,12 @@ namespace tgx
 
     /**
      * Generic 3D Box [specializations #iBox3, #fBox3, #dBox3].
-     * 
+     *
      * The class encapsulates of 6 public variables: `minX`, `maxX`, `minY`, `maxY`, `minZ`, `maxZ`
      * which delimit the 3 dimensional *closed* box: `[minX, maxX] x [minY, maxY] x [minZ, maxZ]`
-     * 
-     * The box is empty if `maxX` < `minX` or if `maxY` < `minY` or if `maxZ` < `minZ`.  
-     * 
+     *
+     * The box is empty if `maxX` < `minX` or if `maxY` < `minY` or if `maxZ` < `minZ`.
+     *
      * @warning Some methods compute things differently  depending whether T is an integral or a floating point  value type.
      *
      * @tparam  T arithmetic type of the box (`int`, `float`...)
@@ -65,11 +65,11 @@ namespace tgx
      */
     template<typename T> struct Box3
     {
-        
-        // mtools extension (if available).   
+
+        // mtools extension (if available).
         #if (MTOOLS_TGX_EXTENSIONS)
         #include <mtools/extensions/tgx/tgx_ext_Box3.inl>
-        #endif        
+        #endif
 
         // box dimension: [minX, maxX] x [minY, maxY] x [minZ, maxZ]
 
@@ -112,7 +112,7 @@ namespace tgx
 
 
         /**
-        * default assignement operator.
+        * default assignment operator.
         */
         Box3<T>& operator=(const Box3<T>& B) = default;
 
@@ -141,7 +141,7 @@ namespace tgx
         **/
         void empty()
             {
-            minX = (T)1; 
+            minX = (T)1;
             maxX = (T)0;
             minY = (T)1;
             maxY = (T)0;
@@ -159,14 +159,14 @@ namespace tgx
          */
         inline T lx() const
             {
-            if (std::is_integral<T>::value) // compiler optimize this away. 
+            if (std::is_integral<T>::value) // compiler optimize this away.
                 {
                 return (maxX - minX + 1); // for integer, return the number of points
                 }
-            else    
+            else
                 {
-                return (maxX - minX); // for floating point type, return maxX - minX. 
-                }                   
+                return (maxX - minX); // for floating point type, return maxX - minX.
+                }
             }
 
 
@@ -179,14 +179,14 @@ namespace tgx
          */
         inline T ly() const
             {
-            if (std::is_integral<T>::value) // compiler optimize this away. 
+            if (std::is_integral<T>::value) // compiler optimize this away.
                 {
                 return (maxY - minY + 1); // for integer, return the number of points
                 }
-            else    
+            else
                 {
-                return (maxY - minY); // for floating point type, return maxX - minX. 
-                }                   
+                return (maxY - minY); // for floating point type, return maxX - minX.
+                }
             }
 
 
@@ -199,14 +199,14 @@ namespace tgx
          */
         inline T lz() const
             {
-            if (std::is_integral<T>::value) // compiler optimize this away. 
+            if (std::is_integral<T>::value) // compiler optimize this away.
                 {
                 return (maxZ - minZ + 1); // for integer, return the number of points
                 }
-            else    
+            else
                 {
-                return (maxZ - minZ); // for floating point type, return maxX - minX. 
-                }                   
+                return (maxZ - minZ); // for floating point type, return maxX - minX.
+                }
             }
 
 
@@ -323,7 +323,7 @@ namespace tgx
         inline Box3<T> operator&(const Box3<T>& B) const
             {
             Box3<T> R;
-            if (isEmpty()) 
+            if (isEmpty())
                 {
                 R = *this;
                 }

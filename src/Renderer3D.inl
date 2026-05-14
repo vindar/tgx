@@ -21,7 +21,7 @@
 /************************************************************************************
 *
 * Implementation file for the template class Renderer3D<color_t, LOADED_SHADERS>
-* 
+*
 *************************************************************************************/
 namespace tgx
 {
@@ -35,13 +35,13 @@ namespace tgx
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::Renderer3D(const iVec2& viewportSize, Image<color_t> * im, ZBUFFER_t * zbuffer) : _currentpow(-1), _uni(), _culling_dir(1)
-            {                        
-            _shaders = 0;             
+            {
+            _shaders = 0;
             _ortho = TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS) ? false : true; // default projection is perspective if not disabled)
-            
-            _uni.tex = nullptr; 
-            _uni.shader_type = 0; 
-            _uni.zbuf = nullptr; 
+
+            _uni.tex = nullptr;
+            _uni.shader_type = 0;
+            _uni.zbuf = nullptr;
             _uni.facecolor = RGBf(1.0f, 1.0f, 1.0f);
 
             setViewportSize(viewportSize);
@@ -49,8 +49,8 @@ namespace tgx
             setOffset(0, 0); // no offset
 
             // let's set some default values
-            fMat4 M; 
-            
+            fMat4 M;
+
             M.setIdentity();
             _modelM = M; // no transformation on the mesh.
             _viewM = M;  // valid view matrix before setLookAt() recomputes derived values.
@@ -61,7 +61,7 @@ namespace tgx
                 M.setOrtho(-10*ar, 10*ar, -10.0f, 10.0f, 1.0f, 100.0f);
             else
                 M.setPerspective(45.0f, ar, 1.0f, 100.0f);
-                
+
             this->setProjectionMatrix(M);
 
             this->setLookAt({ 0,0,0 }, { 0,0,-1 }, { 0,1,0 }); // look toward the negative z axis (id matrix)
@@ -76,7 +76,7 @@ namespace tgx
 
             this->setMaterial({ 0.75f, 0.75f, 0.75f }, 0.15f, 0.7f, 0.5f, 8); // just in case: silver color and some default reflexion param...
             this->_precomputeSpecularTable(8);
-            
+
             setShaders(SHADER_FLAT);
             setTextureWrappingMode(SHADER_TEXTURE_CLAMP); // slow but safer (no need to be power of 2)
             setTextureQuality(SHADER_TEXTURE_NEAREST); // dirty but fast
@@ -688,11 +688,11 @@ namespace tgx
 
             _uni.shader_type = RASTER_TYPE; // just in case
 
-            // face culling (unneeded but we must compute cu anyway). 
+            // face culling (unneeded but we must compute cu anyway).
             fVec3 faceN = crossProduct(*Q1 - *Q0, *Q2 - *Q0);
             const float cu = (_ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, *Q0);
             if (cu * _culling_dir > 0) return; // skip triangle !
-            
+
             RasterizerVec4 PPC0,PPC1,PPC2;
 
             *((fVec4*)&PPC0) = _projM * (*Q0);
@@ -700,7 +700,7 @@ namespace tgx
             *((fVec4*)&PPC2) = _projM * (*Q2);
 
 
-            // compute phong lightning
+            // compute phong lighting
             if (TGX_SHADER_HAS_GOURAUD(RASTER_TYPE))
                 { // gouraud shading
                 const fVec3 NN0 = _r_modelViewM.mult0(*N0);
@@ -748,22 +748,22 @@ namespace tgx
                 }
 
             // ok, now PPC0, PPC1 and PPC2 contain the points in NDC coord with associated color and texture indices, let's go (recursively) !
-            _drawTriangleClippedSub(RASTER_TYPE, 0, PPC0, PPC1, PPC2); 
+            _drawTriangleClippedSub(RASTER_TYPE, 0, PPC0, PPC1, PPC2);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawTriangleClippedSub(const int RASTER_TYPE, const int plane, const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3)
             {
-                    
+
             const float CLIPBOUND_XY = _clipbound_xy();
 
-            fVec4 CP; 
+            fVec4 CP;
             float off;
-            RasterizerVec4 V1, V2, V3, V4;     
+            RasterizerVec4 V1, V2, V3, V4;
             const bool ortho = _ortho;
             switch (plane)
-                {                
+                {
                 case 0: // left plane
                     if (ortho)
                         { // X + 1 >= 0
@@ -776,7 +776,7 @@ namespace tgx
                         off = 0;
                         }
                     break;
-                
+
                 case 1: // right plane
                     if (ortho)
                         { // -X + 1 >= 0
@@ -789,7 +789,7 @@ namespace tgx
                         off = 0;
                         }
                     break;
-                
+
                 case 2: // bottom plane
                     if (ortho)
                         { // Y + 1 >= 0
@@ -802,7 +802,7 @@ namespace tgx
                         off = 0;
                         }
                     break;
-                
+
                 case 3: // top plane
                     if (ortho)
                         { // -Y + 1 >= 0
@@ -815,8 +815,8 @@ namespace tgx
                         off = 0;
                         }
                     break;
-                
-                case 4: // near plane 
+
+                case 4: // near plane
                     if (ortho)
                         { // Z + 1 >= 0
                         CP = fVec4(0, 0, 1, 0);
@@ -844,9 +844,9 @@ namespace tgx
                 */
 
                 default:
-                    {  
-                    V1 = P1; 
-                    V2 = P2; 
+                    {
+                    V1 = P1;
+                    V2 = P2;
                     V3 = P3;
                     // Triangle is now correctly clipped so it can be drawn directly !
                     if (ortho)
@@ -871,7 +871,7 @@ namespace tgx
                 case 0:
                     _drawTriangleClippedSub(RASTER_TYPE, plane + 1, P1, P2, P3);
                     break;
-                case 2: 
+                case 2:
                     _drawTriangleClippedSub(RASTER_TYPE, plane + 1, V1, V3, V4);
                 case 1:
                     _drawTriangleClippedSub(RASTER_TYPE, plane + 1, V1, V2, V3);
@@ -897,7 +897,7 @@ namespace tgx
             const fVec4 Q0 = _r_modelViewM.mult1(*P0);
             const fVec4 Q1 = _r_modelViewM.mult1(*P1);
             const fVec4 Q2 = _r_modelViewM.mult1(*P2);
-            
+
             // face culling
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
             const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
@@ -910,15 +910,15 @@ namespace tgx
             (*((fVec4*)&PPC1)) = _projM * Q1;
             (*((fVec4*)&PPC2)) = _projM * Q2;
 
-            if (ortho) 
-                { 
-                PPC0.w = 1.0f - PPC0.z; 
+            if (ortho)
+                {
+                PPC0.w = 1.0f - PPC0.z;
                 PPC1.w = 1.0f - PPC1.z;
                 PPC2.w = 1.0f - PPC2.z;
-                } 
-            else 
-                { 
-                PPC0.zdivide(); 
+                }
+            else
+                {
+                PPC0.zdivide();
                 PPC1.zdivide();
                 PPC2.zdivide();
                 }
@@ -927,10 +927,10 @@ namespace tgx
 
             bool needclip = (PPC0.x < -CLIPBOUND_XY) | (PPC0.x > CLIPBOUND_XY)
                           | (PPC0.y < -CLIPBOUND_XY) | (PPC0.y > CLIPBOUND_XY)
-                          | (PPC0.z < -1) | (PPC0.z > 1) | (PPC0.w <= 0)                    
+                          | (PPC0.z < -1) | (PPC0.z > 1) | (PPC0.w <= 0)
                           | (PPC1.x < -CLIPBOUND_XY) | (PPC1.x > CLIPBOUND_XY)
                           | (PPC1.y < -CLIPBOUND_XY) | (PPC1.y > CLIPBOUND_XY)
-                          | (PPC1.z < -1) | (PPC1.z > 1) | (PPC1.w <= 0)           
+                          | (PPC1.z < -1) | (PPC1.z > 1) | (PPC1.w <= 0)
                           | (PPC2.x < -CLIPBOUND_XY) | (PPC2.x > CLIPBOUND_XY)
                           | (PPC2.y < -CLIPBOUND_XY) | (PPC2.y > CLIPBOUND_XY)
                           | (PPC2.z < -1) | (PPC2.z > 1) | (PPC2.w <= 0);
@@ -939,7 +939,7 @@ namespace tgx
                 {// test if we can discard the triangle immediately
                 if (!_discardTriangle(PPC0, PPC1, PPC2))
                     { // no, so we use the slow version where we perform clipping.
-                    _drawTriangleClipped(RASTER_TYPE, 
+                    _drawTriangleClipped(RASTER_TYPE,
                                          &Q0, &Q1, &Q2, // vertices are sent after modelview mult.
                                          N0, N1, N2,
                                          T0, T1, T2,
@@ -948,7 +948,7 @@ namespace tgx
                 return;
                 }
 
-            // compute phong lightning
+            // compute phong lighting
             if (TGX_SHADER_HAS_GOURAUD(RASTER_TYPE))
                 { // gouraud shading
                 const fVec3 NN0 = _r_modelViewM.mult0(*N0);
@@ -992,7 +992,7 @@ namespace tgx
                 PPC2.T = *T2;
                 }
 
-            // go rasterize !          
+            // go rasterize !
             rasterizeTriangle(_lx, _ly, PPC0, PPC1, PPC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
 
             return;
@@ -1007,7 +1007,7 @@ namespace tgx
             const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3,
             const RGBf & Vcol0, const RGBf & Vcol1, const RGBf & Vcol2,  const RGBf & Vcol3)
             {
-            const bool ortho = _ortho; 
+            const bool ortho = _ortho;
 
             _uni.shader_type = RASTER_TYPE;
 
@@ -1015,7 +1015,7 @@ namespace tgx
             const fVec4 Q0 = _r_modelViewM.mult1(*P0);
             const fVec4 Q1 = _r_modelViewM.mult1(*P1);
             const fVec4 Q2 = _r_modelViewM.mult1(*P2);
-         
+
             // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
             const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
@@ -1032,15 +1032,15 @@ namespace tgx
             (*((fVec4*)&PPC3)) = _projM * Q3;
 
             if (ortho)
-                { 
-                PPC0.w = 1.0f - PPC0.z; 
+                {
+                PPC0.w = 1.0f - PPC0.z;
                 PPC1.w = 1.0f - PPC1.z;
                 PPC2.w = 1.0f - PPC2.z;
                 PPC3.w = 1.0f - PPC3.z;
-                } 
-            else 
-                { 
-                PPC0.zdivide(); 
+                }
+            else
+                {
+                PPC0.zdivide();
                 PPC1.zdivide();
                 PPC2.zdivide();
                 PPC3.zdivide();
@@ -1065,7 +1065,7 @@ namespace tgx
                 {// test if we can discard some triangles of the quad immediately
                 if (!_discardTriangle(PPC0, PPC1, PPC2))
                     {// slow version where we perform clipping.
-                    _drawTriangleClipped(RASTER_TYPE, 
+                    _drawTriangleClipped(RASTER_TYPE,
                                          &Q0, &Q1, &Q2, // vertices are sent after modelview mult.
                                          N0, N1, N2,
                                          T0, T1, T2,
@@ -1073,16 +1073,16 @@ namespace tgx
                     }
                 if (!_discardTriangle(PPC0, PPC2, PPC3))
                     {// slow version where we perform clipping.
-                    _drawTriangleClipped(RASTER_TYPE, 
+                    _drawTriangleClipped(RASTER_TYPE,
                                          &Q0, &Q2, &Q3, // vertices are sent after modelview mult.
                                          N0, N2, N3,
                                          T0, T2, T3,
                                          Vcol0, Vcol2, Vcol3);
-                    }                
+                    }
                 return;
                 }
 
-            // compute phong lightning
+            // compute phong lighting
             if (TGX_SHADER_HAS_GOURAUD(RASTER_TYPE))
                 { // gouraud shading
                 const fVec3 NN0 = _r_modelViewM.mult0(*N0);
@@ -1133,7 +1133,7 @@ namespace tgx
             // go rasterize !
             rasterizeTriangle(_lx, _ly, PPC0, PPC1, PPC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
             rasterizeTriangle(_lx, _ly, PPC0, PPC2, PPC3, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
-            
+
             return;
             }
 
@@ -1195,7 +1195,7 @@ namespace tgx
 
             // check if the object is completely outside of the image for fast discard.
             if ((!bbox_uninitialized) && _discardBox(mesh->bounding_box, proj_modelview)) return;
-            
+
             const float CLIPBOUND_XY = _clipbound_xy();
 
             // check if the clipping test should be performed for each triangle in the mesh.
@@ -1262,15 +1262,15 @@ namespace tgx
                         *((fVec4*)PPC1) = _projM * PPC1->P;
                         if (ortho) { PPC1->w = 1.0f - PPC1->z; } else { PPC1->zdivide(); }
                         }
-                        
-                    // test if triangle must be clipped                                         
+
+                    // test if triangle must be clipped
                     if (cliptestneeded)
                         {
                         const float CLIPBOUND_XY = _clipbound_xy();
                         const bool needclip = (PPC2->P.z >= 0)
                             | (PPC2->x < -CLIPBOUND_XY) | (PPC2->x > CLIPBOUND_XY)
                             | (PPC2->y < -CLIPBOUND_XY) | (PPC2->y > CLIPBOUND_XY)
-                            | (PPC2->z < -1) | (PPC2->z > 1)                      
+                            | (PPC2->z < -1) | (PPC2->z > 1)
                             | (PPC0->P.z >= 0)
                             | (PPC0->x < -CLIPBOUND_XY) | (PPC0->x > CLIPBOUND_XY)
                             | (PPC0->y < -CLIPBOUND_XY) | (PPC0->y > CLIPBOUND_XY)
@@ -1285,7 +1285,7 @@ namespace tgx
                                 { // no, use the slow drawing method with clipping
                                 _drawTriangleClipped(RASTER_TYPE,
                                                 &(PPC0->P), &(PPC1->P), &(PPC2->P),
-                                                ((GOURAUD) ? tab_norm + PPC0->indn : nullptr), ((GOURAUD) ? tab_norm + PPC1->indn : nullptr), ((GOURAUD) ? tab_norm + PPC2->indn : nullptr),                                
+                                                ((GOURAUD) ? tab_norm + PPC0->indn : nullptr), ((GOURAUD) ? tab_norm + PPC1->indn : nullptr), ((GOURAUD) ? tab_norm + PPC2->indn : nullptr),
                                                 ((TEXTURE) ? tab_tex + PPC0->indt : nullptr), ((TEXTURE) ? tab_tex + PPC1->indt : nullptr), ((TEXTURE) ? tab_tex + PPC2->indt : nullptr),
                                                 _uni.facecolor, _uni.facecolor, _uni.facecolor);
                                 }
@@ -1344,9 +1344,9 @@ namespace tgx
                     PPC1->missedP = false;
                     PPC2->missedP = false;
 
-                    // go rasterize !                   
+                    // go rasterize !
                     rasterizeTriangle(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
-              
+
                 rasterize_next_triangle:
 
                     if (--nbt == 0) break; // exit loop at end of chain
@@ -1388,7 +1388,7 @@ namespace tgx
                 int shader = _shaders;
                 TGX_SHADER_REMOVE_TEXTURE(shader)
                 if ((N1 == nullptr) || (N2 == nullptr) || (N3 == nullptr)) { TGX_SHADER_REMOVE_GOURAUD(shader) }
-                _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed            
+                _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
                 if (TGX_SHADER_HAS_GOURAUD(shader))
                     {
                     _drawTriangle(shader, &P1, &P2, &P3, N1, N2, N3, nullptr, nullptr, nullptr, col1, col2, col3);
@@ -1413,7 +1413,7 @@ namespace tgx
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return; // invalid vertices
 
             int shader = _shaders;
-            if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud            
+            if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud
             if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) TGX_SHADER_REMOVE_TEXTURE(shader) // disable texture
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             nb_triangles *= 3;
@@ -1493,7 +1493,7 @@ namespace tgx
             int shader = _shaders;
             TGX_SHADER_REMOVE_TEXTURE(shader)
                 if ((N1 == nullptr) || (N2 == nullptr) || (N3 == nullptr) || (N4 == nullptr)) { TGX_SHADER_REMOVE_GOURAUD(shader) }
-            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed            
+            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             if (TGX_SHADER_HAS_GOURAUD(shader))
                 {
                 _drawQuad(shader, &P1, &P2, &P3, &P4, N1, N2, N3, N4, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4);
@@ -1518,7 +1518,7 @@ namespace tgx
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return; // invalid vertices
 
             int shader = _shaders;
-            if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud            
+            if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud
             if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) TGX_SHADER_REMOVE_TEXTURE(shader) // disable texture
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
 
@@ -1750,13 +1750,13 @@ namespace tgx
 
 
                         // triangle is not culled
-                        *((fVec4*)PPC2) = _projM * PPC2->P;                        
+                        *((fVec4*)PPC2) = _projM * PPC2->P;
                         if (ortho) { PPC2->w = 1.0f - PPC2->z; } else { PPC2->zdivide(); }
                         *((fVec4*)PPC2) = M.mult1(*((fVec4*)PPC2));
 
                         if (PPC0->missedP)
                             {
-                            *((fVec4*)PPC0) = _projM * PPC0->P;                            
+                            *((fVec4*)PPC0) = _projM * PPC0->P;
                             if (ortho) { PPC0->w = 1.0f - PPC0->z; } else { PPC0->zdivide(); }
                             *((fVec4*)PPC0) = M.mult1(*((fVec4*)PPC0));
                             }
@@ -1773,18 +1773,18 @@ namespace tgx
                         PPC2->missedP = false;
 
                         // clip test
-                        if ((PPC0->P.z >= 0) || (PPC0->z < -1) || (PPC0->z > 1) 
-                         || (PPC1->P.z >= 0) || (PPC1->z < -1) || (PPC1->z > 1) 
+                        if ((PPC0->P.z >= 0) || (PPC0->z < -1) || (PPC0->z > 1)
+                         || (PPC1->P.z >= 0) || (PPC1->z < -1) || (PPC1->z > 1)
                          || (PPC2->P.z >= 0) || (PPC2->z < -1) || (PPC2->z > 1))
                             goto rasterize_next_wireframetriangle;
 
-                        // draw triangle                       
+                        // draw triangle
                         if (DRAW_FAST)
                             {
                             iVec2 PP0(*((fVec2*)PPC0));
                             iVec2 PP1(*((fVec2*)PPC1));
                             iVec2 PP2(*((fVec2*)PPC2));
-                            if (PP0 == PP1) 
+                            if (PP0 == PP1)
                                 {
                                 _uni.im->drawLine(PP0, PP2, color);
                                 }
@@ -1852,14 +1852,14 @@ namespace tgx
             fVec4 H0 = _projM * Q0;
             fVec4 H1 = _projM * Q1;
 
-            if (ortho) 
-                { 
-                H0.w = 1.0f - H0.z; 
+            if (ortho)
+                {
+                H0.w = 1.0f - H0.z;
                 H1.w = 1.0f - H1.z;
-                } 
-            else 
-                { 
-                H0.zdivide(); 
+                }
+            else
+                {
+                H0.zdivide();
                 H1.zdivide();
                 }
             if ((H0.z < -1) | (H0.z > 1)) return;
@@ -1885,7 +1885,7 @@ namespace tgx
         template<bool DRAW_FAST> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
-            
+
             if (!_validDraw()) return;
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return; // invalid vertices
             if (thickness <= 0) return;
@@ -1905,17 +1905,17 @@ namespace tgx
                 const fVec4 Q1 = _r_modelViewM.mult1(vertices[ind_vertices[n + 1]]);
 
                 if ((Q0.z >= 0)|(Q1.z >= 0)) continue;
-                
+
                 fVec4 H0 = _projM * Q0;
                 fVec4 H1 = _projM * Q1;
-                if (ortho) 
-                    { 
-                    H0.w = 1.0f - H0.z; 
+                if (ortho)
+                    {
+                    H0.w = 1.0f - H0.z;
                     H1.w = 1.0f - H1.z;
-                    } 
-                else 
-                    { 
-                    H0.zdivide(); 
+                    }
+                else
+                    {
+                    H0.zdivide();
                     H1.zdivide();
                     }
                 if ((H0.z < -1) | (H0.z > 1)) continue;
@@ -1934,7 +1934,7 @@ namespace tgx
                     _uni.im->drawThickLineAA(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                     }
 
-                }            
+                }
             }
 
 
@@ -1969,15 +1969,15 @@ namespace tgx
             fVec4 H1 = _projM * Q1;
             fVec4 H2 = _projM * Q2;
 
-            if (ortho) 
-                { 
-                H0.w = 1.0f - H0.z; 
+            if (ortho)
+                {
+                H0.w = 1.0f - H0.z;
                 H1.w = 1.0f - H1.z;
                 H2.w = 1.0f - H2.z;
                 }
-            else 
-                { 
-                H0.zdivide(); 
+            else
+                {
+                H0.zdivide();
                 H1.zdivide();
                 H2.zdivide();
                 }
@@ -1988,7 +1988,7 @@ namespace tgx
             if ((H2.z < -1) | (H2.z > 1)) return;
             H2 = M.mult1(H2);
 
-            // draw triangle                       
+            // draw triangle
             if (DRAW_FAST)
                 {
                 iVec2 PP0(H0);
@@ -2048,7 +2048,7 @@ namespace tgx
 
                 if ((Q0.z >= 0)|(Q1.z >= 0)|(Q2.z >= 0)) continue;
 
-                // face culling 
+                // face culling
                 fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
                 const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
                 if (cu * _culling_dir > 0) continue; // we discard the triangle.
@@ -2056,15 +2056,15 @@ namespace tgx
                 fVec4 H0 = _projM * Q0;
                 fVec4 H1 = _projM * Q1;
                 fVec4 H2 = _projM * Q2;
-                if (ortho) 
-                    { 
-                    H0.w = 1.0f - H0.z; 
+                if (ortho)
+                    {
+                    H0.w = 1.0f - H0.z;
                     H1.w = 1.0f - H1.z;
                     H2.w = 1.0f - H2.z;
-                    } 
-                else 
-                    { 
-                    H0.zdivide(); 
+                    }
+                else
+                    {
+                    H0.zdivide();
                     H1.zdivide();
                     H2.zdivide();
                     }
@@ -2075,7 +2075,7 @@ namespace tgx
                 if ((H2.z < -1) | (H2.z > 1)) continue;
                 H2 = M.mult1(H2);
 
-                // draw triangle                       
+                // draw triangle
                 if (DRAW_FAST)
                     {
                     iVec2 PP0(H0);
@@ -2147,16 +2147,16 @@ namespace tgx
             fVec4 H2 = _projM * Q2;
             fVec4 H3 = _projM * Q3;
 
-            if (ortho) 
-                { 
-                H0.w = 1.0f - H0.z; 
+            if (ortho)
+                {
+                H0.w = 1.0f - H0.z;
                 H1.w = 1.0f - H1.z;
                 H2.w = 1.0f - H2.z;
                 H3.w = 1.0f - H3.z;
                 }
-            else 
-                { 
-                H0.zdivide(); 
+            else
+                {
+                H0.zdivide();
                 H1.zdivide();
                 H2.zdivide();
                 H3.zdivide();
@@ -2170,7 +2170,7 @@ namespace tgx
             if ((H3.z < -1) | (H3.z > 1)) return;
             H3 = M.mult1(H3);
 
-            // draw quad                      
+            // draw quad
             if (DRAW_FAST)
                 {
                 iVec2 PP0(H0);
@@ -2247,7 +2247,7 @@ namespace tgx
                 if ((H3.z < -1) | (H3.z > 1)) continue;
                 H3 = M.mult1(H3);
 
-                // draw quad                      
+                // draw quad
                 if (DRAW_FAST)
                     {
                     iVec2 PP0(H0);
@@ -2288,7 +2288,7 @@ namespace tgx
             auto HH = _r_modelViewM.mult1(pos);
             fVec4 Q = _projM * HH;
             if (_ortho) { Q.w = 1.0f - Q.z; } else { Q.zdivide(); }
-            if ((Q.z < -1) | (Q.z > 1) | (Q.w <= 0)) return;            
+            if ((Q.z < -1) | (Q.z > 1) | (Q.w <= 0)) return;
             Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
             Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
             const int x = (int)roundfp(Q.x);
@@ -2309,7 +2309,7 @@ namespace tgx
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             if (!_validDraw()) return;
-            if (pos_list == nullptr) return;            
+            if (pos_list == nullptr) return;
             if ((USE_COLORS) && ((colors_ind == nullptr) || (colors == nullptr))) return;
             if ((USE_BLENDING) && ((!USE_COLORS) || (opacities_ind == nullptr) || (opacities == nullptr))) return;
             const bool has_zbuffer = TGX_SHADER_HAS_ZBUFFER(_shaders);
@@ -2321,7 +2321,7 @@ namespace tgx
                 fVec3 P = pos_list[k];
                 fVec4 Q = M.mult1(P);
                 if (ortho) { Q.w = 1.0f - Q.z; } else { Q.zdivide(); }
-                if ((Q.z < -1) | (Q.z > 1) | (Q.w <= 0)) continue;                
+                if ((Q.z < -1) | (Q.z > 1) | (Q.w <= 0)) continue;
                 Q.x = ((Q.x + 1) * _lx) / 2 - _ox;
                 Q.y = ((Q.y + 1) * _ly) / 2 - _oy;
                 const int x = (int)roundfp(Q.x);
@@ -2337,15 +2337,15 @@ namespace tgx
                     }
                 else
                     {
-                    
+
                     if (USE_BLENDING)
                         drawPixelZbuf<true, true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
                     else if (USE_COLORS)
                         drawPixelZbuf<true, true>(x, y, colors[colors_ind[k]], 1.0f, Q.w);
                     else
-                        drawPixelZbuf<true, true>(x, y, _color, 1.0f, Q.w);                        
+                        drawPixelZbuf<true, true>(x, y, _color, 1.0f, Q.w);
                     }
-                }           
+                }
             }
 
 
@@ -2400,7 +2400,7 @@ namespace tgx
                 else
                     _uni.im->drawCircle({ x, y }, r, color);
                 }
-            else 
+            else
                 {
                 const int lx = _uni.im->lx();
                 const int ly = _uni.im->ly();
@@ -2411,7 +2411,7 @@ namespace tgx
                     if ((x >= 0) && (x < lx) && (y >= 0) && (y < ly))
                         _drawCircleZbuf<true, USE_BLENDING>(x, y, r, color, opacity, Q.w);
                     }
-                }                
+                }
             }
 
 
@@ -2451,7 +2451,7 @@ namespace tgx
                     {
                     const int lx = _uni.im->lx();
                     const int ly = _uni.im->ly();
-                    
+
                     if ((x - r >= 0) && (x + r < lx) && (y - r >= 0) && (y + r < ly))
                         {
                         if (USE_BLENDING)
@@ -2478,16 +2478,16 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> 
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool CHECKRANGE, bool USE_BLENDING> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawCircleZbuf(int xm, int ym, int r, color_t color, float opacity, float z)
-            { 
+            {
             if ((CHECKRANGE) && (r > 2))
                 { // circle is large enough to check first if there is something to draw.
-                if ((xm + r < 0) || (xm - r >= _uni.im->lx()) || (ym + r < 0) || (ym - r >= _uni.im->ly())) return; // outside of image. 
+                if ((xm + r < 0) || (xm - r >= _uni.im->lx()) || (ym + r < 0) || (ym - r >= _uni.im->ly())) return; // outside of image.
                 }
 
-            auto fillcolor = color; 
+            auto fillcolor = color;
             const bool OUTLINE = true;
             const bool FILL = true;
 
@@ -2543,7 +2543,7 @@ namespace tgx
                             }
                         }
                     }
-                } 
+                }
             while (x < 0);
             }
 
@@ -2591,7 +2591,7 @@ namespace tgx
             fVec4 P0 = _r_modelViewM.mult1(fVec3(0, 0, 0));
             fVec4 P1 = _r_modelViewM.mult1(fVec3(1, 0, 0));
             float r = fVec3(P0 - P1).norm_fast(); // radius after modelview transform
-            fVec4 P2 = { P0.x - r * ONEOVERSQRT2, P0.y - r * ONEOVERSQRT2, P0.z, P0.w }; // take a point on the sphere that is at same z as origin and take equal contribution from x and y. 
+            fVec4 P2 = { P0.x - r * ONEOVERSQRT2, P0.y - r * ONEOVERSQRT2, P0.z, P0.w }; // take a point on the sphere that is at same z as origin and take equal contribution from x and y.
 
             fVec4 Q0 = _projM * P0;
             fVec4 Q2 = _projM * P2;
@@ -2639,7 +2639,7 @@ namespace tgx
             float save_culling = _culling_dir;
             if (_culling_dir != 0) _culling_dir = 1;
 
-            
+
             const uint16_t list_v[4] = { 0,1,2,3 };
             if (texture_front) { drawQuads(1, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_front_ABCD, texture_front); } else { drawQuads(1, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES); }
             if (texture_back) { drawQuads(1, UNIT_CUBE_FACES + 4, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_back_EFGH, texture_back); } else { drawQuads(1, UNIT_CUBE_FACES + 4, UNIT_CUBE_VERTICES); }
@@ -2647,10 +2647,10 @@ namespace tgx
             if (texture_bottom) { drawQuads(1, UNIT_CUBE_FACES + 12, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_bottom_BGFC, texture_bottom); } else { drawQuads(1, UNIT_CUBE_FACES + 12, UNIT_CUBE_VERTICES); }
             if (texture_left) { drawQuads(1, UNIT_CUBE_FACES + 16, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_left_HGBA, texture_left); } else { drawQuads(1, UNIT_CUBE_FACES + 16, UNIT_CUBE_VERTICES); }
             if (texture_right) { drawQuads(1, UNIT_CUBE_FACES + 20, UNIT_CUBE_VERTICES, nullptr, nullptr, list_v, v_right_DCFE, texture_right); } else { drawQuads(1, UNIT_CUBE_FACES + 20, UNIT_CUBE_VERTICES); }
-            
+
 
             // restore culling direction
-            _culling_dir = save_culling;            
+            _culling_dir = save_culling;
             }
 
 
@@ -2665,45 +2665,45 @@ namespace tgx
             const Image<color_t>* texture_right
             )
             {
-            float epsx = 0, epsy = 0; 
-            if (texture_front) 
+            float epsx = 0, epsy = 0;
+            if (texture_front)
                 {
-                epsx = fast_inv((float)(texture_front->lx() - 1)); 
+                epsx = fast_inv((float)(texture_front->lx() - 1));
                 epsy = fast_inv((float)(texture_front->ly() - 1));
                 }
             tgx::fVec2 t_front[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
-            if (texture_back) 
+            if (texture_back)
                 {
-                epsx = fast_inv((float)(texture_back->lx() - 1)); 
+                epsx = fast_inv((float)(texture_back->lx() - 1));
                 epsy = fast_inv((float)(texture_back->ly() - 1));
                 }
             tgx::fVec2 t_back[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
-            if (texture_top) 
+            if (texture_top)
                 {
-                epsx = fast_inv((float)(texture_top->lx() - 1)); 
+                epsx = fast_inv((float)(texture_top->lx() - 1));
                 epsy = fast_inv((float)(texture_top->ly() - 1));
                 }
             tgx::fVec2 t_top[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
-            if (texture_bottom) 
+            if (texture_bottom)
                 {
-                epsx = fast_inv((float)(texture_bottom->lx() - 1)); 
+                epsx = fast_inv((float)(texture_bottom->lx() - 1));
                 epsy = fast_inv((float)(texture_bottom->ly() - 1));
                 }
             tgx::fVec2 t_bottom[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
-            if (texture_left) 
+            if (texture_left)
                 {
-                epsx = fast_inv((float)(texture_left->lx() - 1)); 
+                epsx = fast_inv((float)(texture_left->lx() - 1));
                 epsy = fast_inv((float)(texture_left->ly() - 1));
                 }
             tgx::fVec2 t_left[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
-            if (texture_right) 
+            if (texture_right)
                 {
-                epsx = fast_inv((float)(texture_right->lx() - 1)); 
+                epsx = fast_inv((float)(texture_right->lx() - 1));
                 epsy = fast_inv((float)(texture_right->ly() - 1));
                 }
             tgx::fVec2 t_right[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
@@ -2756,9 +2756,9 @@ namespace tgx
         template<bool WIREFRAME, bool DRAWFAST> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
             {
-            
-            const int save_shaders = _shaders; 
-            
+
+            const int save_shaders = _shaders;
+
             if (texture == nullptr)
                 {
                 TGX_SHADER_REMOVE_TEXTURE(_shaders);
@@ -2769,7 +2769,7 @@ namespace tgx
             if (_culling_dir != 0) _culling_dir = 1;
 
             const float MPI = 3.141592653589793238f;
-            const int MAX_SECTORS = 256; 
+            const int MAX_SECTORS = 256;
             if (nb_sectors > MAX_SECTORS) nb_sectors = 256;
             if (nb_sectors < 3) nb_sectors = 3;
             if (nb_stacks < 3) nb_stacks = 3;
@@ -2777,7 +2777,7 @@ namespace tgx
             // precomputed sin/cos for sectors as we will need them often
             float cosTheta[MAX_SECTORS];
             float sinTheta[MAX_SECTORS];
-            
+
             const float d_sector = 2*MPI / nb_sectors;
             for(int i = 0; i < nb_sectors; i++)
                 {
@@ -2790,7 +2790,7 @@ namespace tgx
             fVec3 P1, P2, P3, P4;
 
             // top part, top vertex at {0,1,0}
-            
+
             float cosPhi = cosf(d_stack);
             float sinPhi = sinf(d_stack);
 
@@ -2811,7 +2811,7 @@ namespace tgx
                 {
                 P3.x = sinPhi * cosTheta[i];
                 P3.z = sinPhi * sinTheta[i];
-                
+
                 if (WIREFRAME)
                     {
                     if (DRAWFAST) drawWireFrameTriangle(P1, P3, P2); else drawWireFrameTriangle(P1, P3, P2, thickness, color, opacity);
@@ -2824,12 +2824,12 @@ namespace tgx
                     drawTriangle(P1, P3, P2, &P1, &P3, &P2, &T1, &T2, &T3, texture);
                     }
 
-                u += dtx; 
+                u += dtx;
                 P2.x = P3.x;
                 P2.z = P3.z;
                 }
-            
-            // main part       
+
+            // main part
             for (int j = 2; j < nb_stacks; j++)
                 {
 
@@ -2851,7 +2851,7 @@ namespace tgx
                 v = 0.5f*cosPhi + 0.5f;
                 const float vv = 0.5f*new_cosPhi + 0.5f;
 
-                u = 0; 
+                u = 0;
 
                 for (int i = 0; i < nb_sectors; i++)
                     {
@@ -2874,7 +2874,7 @@ namespace tgx
                         drawQuad(P1, P3, P4, P2, &P1, &P3, &P4, &P2, &T1, &T2, &T3, &T4, texture);
                         }
 
-                    u += dtx; 
+                    u += dtx;
                     P1.x = P3.x;
                     P1.z = P3.z;
                     P2.x = P4.x;
@@ -2884,7 +2884,7 @@ namespace tgx
                 cosPhi = new_cosPhi;
                 sinPhi = new_sinPhi;
                 }
-                
+
 
             // bottom part, bottom vertex at {0,1,0}
             P1 = { 0,-1,0 };
@@ -2895,7 +2895,7 @@ namespace tgx
 
             P3.y = cosPhi;
 
-            u = 0; 
+            u = 0;
 
             for (int i = 0; i < nb_sectors; i++)
                 {
@@ -2921,10 +2921,10 @@ namespace tgx
 
             // restore culling direction
             _culling_dir = save_culling;
-            
+
             // restore shader
             _shaders = save_shaders;
-            return; 
+            return;
             }
 
 
@@ -2974,7 +2974,7 @@ namespace tgx
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
             drawWireFrameSphere(nb_stacks*2 - 2, nb_stacks);
-            }   
+            }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
@@ -2999,7 +2999,7 @@ namespace tgx
     ******************************************************************************************
     ******************************************************************************************/
 
-                
+
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
@@ -3077,7 +3077,7 @@ namespace tgx
                 TGX_SHADER_ADD_GOURAUD(_shaders)
                 TGX_SHADER_REMOVE_FLAT(_shaders)
                 }
-            else 
+            else
                 {
                 TGX_SHADER_ADD_FLAT(_shaders)
                 TGX_SHADER_REMOVE_GOURAUD(_shaders)
@@ -3125,7 +3125,7 @@ namespace tgx
             if (_texture_wrap_mode == SHADER_TEXTURE_WRAP_POW2)
                 {
                 TGX_SHADER_ADD_TEXTURE_WRAP_POW2(_shaders)
-                TGX_SHADER_REMOVE_TEXTURE_CLAMP(_shaders)                    
+                TGX_SHADER_REMOVE_TEXTURE_CLAMP(_shaders)
                 }
             else
                 {
@@ -3142,11 +3142,11 @@ namespace tgx
             if (_texture_quality == SHADER_TEXTURE_BILINEAR)
                 {
                 TGX_SHADER_ADD_TEXTURE_BILINEAR(_shaders)
-                TGX_SHADER_REMOVE_TEXTURE_NEAREST(_shaders)                    
+                TGX_SHADER_REMOVE_TEXTURE_NEAREST(_shaders)
                 }
             else
                 {
-                TGX_SHADER_ADD_TEXTURE_NEAREST(_shaders)                    
+                TGX_SHADER_ADD_TEXTURE_NEAREST(_shaders)
                 TGX_SHADER_REMOVE_TEXTURE_BILINEAR(_shaders)
                 }
             }

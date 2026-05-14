@@ -123,7 +123,7 @@ constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>Mat4</b> (T x1, 
 <tr class="separator:af4c8d5b865d1365a4138da4e72362b94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc6f3a93971911aa71d134699f3f2189"><td class="memItemLeft" align="right" valign="top"><a id="acc6f3a93971911aa71d134699f3f2189" name="acc6f3a93971911aa71d134699f3f2189"></a>
 <a class="el" href="structtgx_1_1_mat4.html">Mat4</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="structtgx_1_1_mat4.html">Mat4</a> &amp;mat)=default</td></tr>
-<tr class="memdesc:acc6f3a93971911aa71d134699f3f2189"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignement operator. <br /></td></tr>
+<tr class="memdesc:acc6f3a93971911aa71d134699f3f2189"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator. <br /></td></tr>
 <tr class="separator:acc6f3a93971911aa71d134699f3f2189"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a889b971f27605704e7c5161e95e2ebce"><td class="memItemLeft" align="right" valign="top"><a id="a889b971f27605704e7c5161e95e2ebce" name="a889b971f27605704e7c5161e95e2ebce"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>operator T*</b> ()</td></tr>
@@ -131,6 +131,7 @@ constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>Mat4</b> (T x1, 
 <tr class="separator:a889b971f27605704e7c5161e95e2ebce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58642659527614f1ae20f4fd78370bea"><td class="memItemLeft" align="right" valign="top"><a id="a58642659527614f1ae20f4fd78370bea" name="a58642659527614f1ae20f4fd78370bea"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>operator const T *</b> () const</td></tr>
+<tr class="memdesc:a58642659527614f1ae20f4fd78370bea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion to a const array T[16]. <br /></td></tr>
 <tr class="separator:a58642659527614f1ae20f4fd78370bea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6519e9224912a9f636b31891b59d8422"><td class="memItemLeft" align="right" valign="top"><a id="a6519e9224912a9f636b31891b59d8422" name="a6519e9224912a9f636b31891b59d8422"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setZero</b> ()</td></tr>
@@ -338,8 +339,7 @@ template&lt;typename T &gt; </div>
 <p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glOrtho.xml</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">left,right</td><td>coordinates for the left and right vertical clipping planes <br  />
- </td></tr>
+    <tr><td class="paramname">left,right</td><td>coordinates for the left and right vertical clipping planes </td></tr>
     <tr><td class="paramname">bottom,top</td><td>coordinates for the bottom and top horizontal clipping planes. </td></tr>
     <tr><td class="paramname">zNear,zFar</td><td>distances to the nearer and farther depth clipping planes. </td></tr>
   </table>
@@ -925,8 +925,7 @@ template&lt;typename T &gt; </div>
 <p ><a href="https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml">https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glScale.xml</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x,y,z</td><td>scale factors along the x, y, and z axes respectively. <br  />
- </td></tr>
+    <tr><td class="paramname">x,y,z</td><td>scale factors along the x, y, and z axes respectively. </td></tr>
   </table>
   </dd>
 </dl>

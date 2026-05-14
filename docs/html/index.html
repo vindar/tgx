@@ -96,23 +96,21 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="about"></a>
 About the library</h1>
-<p >TGX is a tiny but full featured C++ library for drawing 2D and 3D graphics onto a memory framebuffer. The library runs on both microprocessors and microcontollers but specifically targets 'powerful' 32 bits MCUs such as <a href="https://www.espressif.com/en/products/socs/esp32">ESP32</a>, <a href="https://www.raspberrypi.com/documentation/microcontrollers/silicon.html">RP2040/RP2350</a>, <a href="https://www.pjrc.com/teensy/">Teensy 3/4</a>...</p>
+<p >TGX is a tiny but full-featured C++ library for drawing 2D and 3D graphics onto a memory framebuffer. The library runs on both microprocessors and microcontrollers but specifically targets 'powerful' 32 bits MCUs such as <a href="https://www.espressif.com/en/products/socs/esp32">ESP32</a>, <a href="https://www.raspberrypi.com/documentation/microcontrollers/silicon.html">RP2040/RP2350</a>, <a href="https://www.pjrc.com/teensy/">Teensy 3/4</a>...</p>
 <p ><b>Features</b></p>
 <ul>
 <li>Hardware agnostic: the library simply draws on a memory framebuffer.</li>
 <li>Optimized RAM usage and no dynamic allocation.</li>
-<li>No external dependency (and no C++ STL dependency): just include the <code>.h</code> and <code>.cpp</code> files into your project and your are set!</li>
-<li>Library in Arduino friendly format.</li>
-<li>Mutiple color formats supported: <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a>, <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a>, <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a>, <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a>, <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a>, <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a></li>
-<li><a class="el" href="classtgx_1_1_image.html">Image</a> class that encapsulates a memory buffer and allows the creation of sub-images for clipping any drawing operations. <br  />
-</li>
+<li>No external dependency (and no C++ STL dependency): just include the <code>.h</code> and <code>.cpp</code> files into your project and you are set!</li>
+<li>Library in Arduino-friendly format.</li>
+<li>Multiple color formats supported: <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a>, <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a>, <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a>, <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a>, <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a>, <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a></li>
+<li><a class="el" href="classtgx_1_1_image.html">Image</a> class that encapsulates a memory buffer and allows the creation of sub-images for clipping any drawing operations.</li>
 <li><b>Extensive 2D API:</b><ul>
-<li>Methods for converting, blittings, copying and resizing sprites with high quality (bilinear filtering, sub-pixel precision).</li>
-<li>Methods for drawing lines, polylines, polygons, triangles, rectangles, rounded rectangles, quads, circles, arcs, ellipses, Bezier curve and splines.</li>
-<li>Methods for drawing Text with support for multiple font formats with anti-aliasing</li>
-<li>Alpha-blending supported for all drawings operations.</li>
-<li>Several drawing methods come in two flavours: fast' methods and 'high quality' methods which are slower but draw using anti-aliasing and/or sub-pixel precision. <br  />
-</li>
+<li>Methods for converting, blitting, copying and resizing sprites with high quality (bilinear filtering, sub-pixel precision).</li>
+<li>Methods for drawing lines, polylines, polygons, triangles, rectangles, rounded rectangles, quads, circles, arcs, ellipses, Bezier curves and splines.</li>
+<li>Methods for drawing text with support for multiple font formats with anti-aliasing</li>
+<li>Alpha-blending supported for all drawing operations.</li>
+<li>Several drawing methods come in two flavours: 'fast' methods and 'high quality' methods which are slower but draw using anti-aliasing and/or sub-pixel precision.</li>
 <li>Easy interfacing with other libraries for<ul>
 <li>drawing text with TrueType font using the <a href="https://github.com/takkaO/OpenFontRender">OpenFontRender library</a></li>
 <li>drawing JPEG images using the <a href="https://github.com/bitbank2/JPEGDEC">JPEGDEC library</a></li>
@@ -127,13 +125,13 @@ About the library</h1>
 <li>Depth buffer testing (selectable 16 bits or 32 bits precision).</li>
 <li>Multiple drawing modes: wireframe (selectable low/high quality) and solid (i.e. with shaders).</li>
 <li>Flat and Gouraud Shading.</li>
-<li>Phong lightning's model with separate ambient/diffuse/specular color components.</li>
+<li>Phong lighting model with separate ambient/diffuse/specular color components.</li>
 <li>Per object material properties.</li>
 <li>Perspective-correct texture mapping with selectable point sampling/bilinear filtering and multiple wrapping modes.</li>
 <li>Perspective and orthographic projections.</li>
 <li>Optional backface culling.</li>
 <li>Tile rasterization: it is possible to render the viewport in multiple passes to save RAM.</li>
-<li>Templates classes for all the needed maths: <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>, <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>, <a class="el" href="structtgx_1_1_vec4.html">Vec4</a> (vectors), <a class="el" href="structtgx_1_1_mat4.html">Mat4</a> (4x4 matrix) and <a class="el" href="structtgx_1_1_box2.html">Box2</a>, <a class="el" href="structtgx_1_1_box3.html">Box3</a> (boxes).</li>
+<li>Template classes for all the needed maths: <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>, <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>, <a class="el" href="structtgx_1_1_vec4.html">Vec4</a> (vectors), <a class="el" href="structtgx_1_1_mat4.html">Mat4</a> (4x4 matrix) and <a class="el" href="structtgx_1_1_box2.html">Box2</a>, <a class="el" href="structtgx_1_1_box3.html">Box3</a> (boxes).</li>
 <li>Optimized <a class="el" href="structtgx_1_1_mesh3_d.html">mesh</a> data format: meshes and textures can be read directly from flash memory to save RAM.</li>
 <li>Python scripts provided for easy conversion of texture images and 3D meshes from Wavefront's .obj format into C files.</li>
 </ul>

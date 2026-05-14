@@ -167,7 +167,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>specular_strength</b
 <tr class="separator:a75451ace39d84cc78754a695b9f23da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa84f351c12832017904e310d916dbaba"><td class="memItemLeft" align="right" valign="top"><a id="aa84f351c12832017904e310d916dbaba" name="aa84f351c12832017904e310d916dbaba"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>specular_exponent</b></td></tr>
-<tr class="memdesc:aa84f351c12832017904e310d916dbaba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specular exponent. 0 to disable specular lightning. Typical value between 4 and 64. <br /></td></tr>
+<tr class="memdesc:aa84f351c12832017904e310d916dbaba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specular exponent. 0 to disable specular lighting. Typical value between 4 and 64. <br /></td></tr>
 <tr class="separator:aa84f351c12832017904e310d916dbaba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a553ef003bb9d42fcfa314b21e03a8cd3"><td class="memItemLeft" align="right" valign="top"><a id="a553ef003bb9d42fcfa314b21e03a8cd3" name="a553ef003bb9d42fcfa314b21e03a8cd3"></a>
 const <a class="el" href="structtgx_1_1_mesh3_d.html">Mesh3D</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>next</b></td></tr>
@@ -185,7 +185,7 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename color_t&gt;<br />
 struct tgx::Mesh3D&lt; color_t &gt;</div><p >3D mesh data stucture. </p>
-<p >A <a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data stucture.">Mesh3D</a> structure contain all the informations about an object geometry, color, material property and textures. A mesh can be rendered onto an <code><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">Image</a></code> object using the <code><a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e" title="Draw a Mesh3D object.">Renderer3D::drawMesh()</a></code> method.</p>
+<p >A <a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data stucture.">Mesh3D</a> structure contains all the information about an object geometry, color, material property and textures. A mesh can be rendered onto an <code><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">Image</a></code> object using the <code><a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e" title="Draw a Mesh3D object.">Renderer3D::drawMesh()</a></code> method.</p>
 <p >The mesh data format is designed to be compact and favors linear access to elements in order to improve cache coherency so that meshes can be stored and rendered directly from "slow" memory such as FLASH on a MCU.</p>
 <p >The Python scripts <code>obj_to_h</code> located in the <code>\tools</code> directory of the library can be used to create a <code><a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data stucture.">Mesh3D</a></code> object directly from an .obj file. The associated image textures (if any) can be converted using the Python script <code>texture_2_h</code>.</p>
 <p ><b>MESH FORMAT</b></p>

@@ -5,10 +5,10 @@
 *
 * Instructions:
 *
-* 1. download and install LovyanGFX library via Arduino's libray manager or 
-*    directly from: https://github.com/lovyan03/LovyanGFX 
+* 1. download and install LovyanGFX library via Arduino's libray manager or
+*    directly from: https://github.com/lovyan03/LovyanGFX
 *
-* 2. Select the board model and serial port and upload the sketch 
+* 2. Select the board model and serial port and upload the sketch
 *
 * ---
 * This example was tested with M5Stack Core2 and M5Stack Core3SE
@@ -62,7 +62,7 @@ Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
 LGFX lcd;
 
 
-void setup(void) 
+void setup(void)
     {
     Serial.begin(115200);
 
@@ -101,7 +101,7 @@ void setup(void)
 
 
 /** Compute the model matrix according to the current time */
-tgx::fMat4 moveModel(int &loopnumber) 
+tgx::fMat4 moveModel(int &loopnumber)
     {
     const float end1 = 6000;
     const float end2 = 2000;
@@ -149,14 +149,14 @@ tgx::fMat4 moveModel(int &loopnumber)
 
 
 /** Display additional infos on the screen (drawing mode and fps) **/
-void infos(int loopnumber) 
+void infos(int loopnumber)
     {
     static int prev_loopnumber = -1;
     static uint32_t prev_millis = 0;
     static int nbframes = -1;
     uint32_t m = millis();
     nbframes++;
-    if (prev_loopnumber != loopnumber) 
+    if (prev_loopnumber != loopnumber)
         { // update the text for the drawing mode
         prev_loopnumber = loopnumber;
         lcd.setTextDatum(BL_DATUM);
@@ -187,7 +187,7 @@ void infos(int loopnumber)
 int loopnumber = 0;
 
 /** Main loop */
-void loop() 
+void loop()
     {
     // compute the model position
     fMat4 M = moveModel(loopnumber);
@@ -198,7 +198,7 @@ void loop()
     renderer.clearZbuffer();       // clear the z-buffer
 
     // choose the shader to use and perform the drawing
-    switch (loopnumber % 4) 
+    switch (loopnumber % 4)
         {
         case 0:
             renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE);
@@ -217,17 +217,17 @@ void loop()
             break;
         }
 
-    // display additonal informations on the screen
+    // display additional information on the screen
     infos(loopnumber);
 
     // copy fb to fb2 with byteswapping (beware that fb2 may not be uint8_t* addressable)
-    for (int i = 0; i < SLX * SLY; i++) 
-        { 
+    for (int i = 0; i < SLX * SLY; i++)
+        {
         const uint16_t a = fb[i];
         fb2[i] = (a << 8) | (a >> 8);
         }
     // start DMA upload of the framebuffer to the screen.
-    lcd.pushImageDMA((lcd.width() - SLX) / 2, (lcd.height() - SLY) / 2, SLX, SLY, fb2);  
+    lcd.pushImageDMA((lcd.width() - SLX) / 2, (lcd.height() - SLY) / 2, SLX, SLY, fb2);
     }
 
 
