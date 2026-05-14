@@ -4945,7 +4945,7 @@ namespace tgx
     template<typename color_t>
     template<bool OUTLINE, bool FILL, bool CHECKRANGE> void Image<color_t>::_drawFilledCircle(int xm, int ym, int r, color_t color, color_t fillcolor, float opacity)
         {
-        if ((r <= 0) || (!isValid())) return;
+        if ((r < 0) || (!isValid())) return;
         if ((CHECKRANGE) && (r > 2))
             { // circle is large enough to check first if there is something to draw.
             if ((xm + r < 0) || (xm - r >= _lx) || (ym + r < 0) || (ym - r >= _ly)) return; // outside of image. 
