@@ -207,7 +207,7 @@ namespace tgx
 		* Move the position pos by 1 pixel horizontally along the given bresenham line.
 		* return the number of pixels traveled by the bresenham line.
 		*
-		* [x_major can be deduced from linedir but is given as template paramter for speed optimization]
+		* [x_major can be deduced from linedir but is given as template parameter for speed optimization]
 		*/
 		template<bool X_MAJOR> int32_t move_x_dir()
 			{
@@ -286,7 +286,7 @@ namespace tgx
 		* Move the position pos by one pixel vertically along the given bresenham line.
 		* return the number of pixels traveled by the bresenham line.
 		*
-		* [x_major can be deduced from linedir but given as template paramter for speed optimization]
+		* [x_major can be deduced from linedir but given as template parameter for speed optimization]
 		*/
 		template<bool X_MAJOR> int32_t move_y_dir()
 			{

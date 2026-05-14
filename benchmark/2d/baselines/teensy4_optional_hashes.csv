@@ -1,0 +1,9 @@
+platform,color_type,group,kind,hash,changed_pixels
+teensy4,RGB565,pngdec_val,validation,0x0,0
+teensy4,RGB565,pngdec,benchmark,0x145732C6,76800
+teensy4,RGB565,jpegdec_val,validation,0x0,0
+teensy4,RGB565,jpegdec,benchmark,0x255F52AC,76800
+teensy4,RGB565,animatedgif_val,validation,0x0,0
+teensy4,RGB565,animatedgif,benchmark,0xC4B23771,76800
+teensy4,RGB565,openfontrender_val,validation,0x0,0
+teensy4,RGB565,openfontrender,benchmark,0x72F3D685,76800

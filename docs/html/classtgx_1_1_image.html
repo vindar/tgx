@@ -5225,7 +5225,7 @@ template&lt;typename color_t_tex , typename BLEND_OPERATOR &gt; </div>
 
 <p>Blend a textured triangle onto the image. </p>
 <p >The texture is mapped onto the triangle using bilinear filtering.</p>
-<p >The method takes as input a user defined 'blending operator' with allow to create fancy effects. The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the color of the source (sprite) pixel and the color of the destination pixel and returns the blended color. It must have a signature compatible with </p><pre class="fragment">               color_t blend_op(color_t_src src, color_t dst)
+<p >The method takes as input a user defined 'blending operator' which allows creating fancy effects. The blending operator 'blend_op' can be a function/functor/lambda. It takes as input the color of the source (sprite) pixel and the color of the destination pixel and returns the blended color. It must have a signature compatible with </p><pre class="fragment">               color_t blend_op(color_t_src src, color_t dst)
 </pre><p> (the method can, in fact, return a color of any type but returning type color_t will improve performance).</p>
 <dl class="section warning"><dt>Warning</dt><dd>For particular orientations of triangles, access to texture pixels is highly non-linear. For texture stored in slow memory (e.g. flash), this can cause huge slowdown because the read cache becomes basically useless. To overcome this problem:<ol type="1">
 <li>Move the texture to a faster memory location before drawing.</li>

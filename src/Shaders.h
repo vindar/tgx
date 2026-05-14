@@ -796,48 +796,75 @@ namespace tgx
                 if (USE_MASKING)
                     { //
                     auto col00 = tex[minx + miny];
-                    tgx::RGB32 acol00 = (col00 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col00);
-
                     auto col10 = tex[maxx + miny];
-                    tgx::RGB32 acol10 = (col10 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col10);
-
                     auto col01 = tex[minx + maxy];
-                    tgx::RGB32 acol01 = (col01 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col01);
-
                     auto col11 = tex[maxx + maxy];
-                    tgx::RGB32 acol11 = (col11 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col11);
 
-                    tgx::RGB32 col = interpolateColorsBilinear(acol00, acol10, acol01, acol11, ax, ay);
-
-                    if (USE_GRADIENT)
+                    if ((col00 != mask_color) && (col10 != mask_color) && (col01 != mask_color) && (col11 != mask_color))
                         {
-                        const int sC2 = C2;
-                        const int sC3 = C3;
-                        const int sC1 = aera - C3 - C2;
-                        const float m = 256.0f / aera;
-                        const int r = (int)((sC1 * cf1.R + sC2 * cf2.R + sC3 * cf3.R) * m);
-                        const int g = (int)((sC1 * cf1.G + sC2 * cf2.G + sC3 * cf3.G) * m);
-                        const int b = (int)((sC1 * cf1.B + sC2 * cf2.B + sC3 * cf3.B) * m);
-                        const int a = (int)((sC1 * fP1.A + sC2 * fP2.A + sC3 * fP3.A) * m);
-                        col.mult256(r, g, b, a);
-                        }
-                    if (USE_BLENDING)
-                        {
-                        tgx::RGB32 c = tgx::RGB32(buf[bx]);
-                        c.blend(col, data.opacity);
-                        buf[bx] = color_t_im(c);
-                        }
-                    else
-                        {
-                        if (col.A == 255)
+                        color_t_tex col = interpolateColorsBilinear(col00, col10, col01, col11, ax, ay);
+                        if (USE_GRADIENT)
+                            {
+                            const int sC2 = C2;
+                            const int sC3 = C3;
+                            const int sC1 = aera - C3 - C2;
+                            const float m = 256.0f / aera;
+                            const int r = (int)((sC1 * cf1.R + sC2 * cf2.R + sC3 * cf3.R) * m);
+                            const int g = (int)((sC1 * cf1.G + sC2 * cf2.G + sC3 * cf3.G) * m);
+                            const int b = (int)((sC1 * cf1.B + sC2 * cf2.B + sC3 * cf3.B) * m);
+                            const int a = (int)((sC1 * fP1.A + sC2 * fP2.A + sC3 * fP3.A) * m);
+                            col.mult256(r, g, b, a);
+                            }
+                        if (USE_BLENDING)
+                            {
+                            color_t_tex c = color_t_tex(buf[bx]);
+                            c.blend(col, data.opacity);
+                            buf[bx] = color_t_im(c);
+                            }
+                        else
                             {
                             buf[bx] = color_t_im(col);
                             }
-                        else if (col.A > 0)
+                        }
+                    else
+                        {
+                        tgx::RGB32 acol00 = (col00 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col00);
+                        tgx::RGB32 acol10 = (col10 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col10);
+                        tgx::RGB32 acol01 = (col01 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col01);
+                        tgx::RGB32 acol11 = (col11 == mask_color) ? tgx::RGB32((uint32_t)0) : tgx::RGB32(col11);
+
+                        tgx::RGB32 col = interpolateColorsBilinear(acol00, acol10, acol01, acol11, ax, ay);
+
+                        if (USE_GRADIENT)
+                            {
+                            const int sC2 = C2;
+                            const int sC3 = C3;
+                            const int sC1 = aera - C3 - C2;
+                            const float m = 256.0f / aera;
+                            const int r = (int)((sC1 * cf1.R + sC2 * cf2.R + sC3 * cf3.R) * m);
+                            const int g = (int)((sC1 * cf1.G + sC2 * cf2.G + sC3 * cf3.G) * m);
+                            const int b = (int)((sC1 * cf1.B + sC2 * cf2.B + sC3 * cf3.B) * m);
+                            const int a = (int)((sC1 * fP1.A + sC2 * fP2.A + sC3 * fP3.A) * m);
+                            col.mult256(r, g, b, a);
+                            }
+                        if (USE_BLENDING)
                             {
                             tgx::RGB32 c = tgx::RGB32(buf[bx]);
-                            c.blend(col);
+                            c.blend(col, data.opacity);
                             buf[bx] = color_t_im(c);
+                            }
+                        else
+                            {
+                            if (col.A == 255)
+                                {
+                                buf[bx] = color_t_im(col);
+                                }
+                            else if (col.A > 0)
+                                {
+                                tgx::RGB32 c = tgx::RGB32(buf[bx]);
+                                c.blend(col);
+                                buf[bx] = color_t_im(c);
+                                }
                             }
                         }
                     }

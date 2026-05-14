@@ -2009,7 +2009,7 @@ namespace tgx
 
     /**
      * Draw the bresenham segment [P,Q| while avoiding [P,A|
-     * if drawP is set and AA on on , the pixel at P is draw using the minimum AA value.
+     * if drawP is set and AA is on, the pixel at P is drawn using the minimum AA value.
      *
      *             A
      *            /
@@ -2216,8 +2216,8 @@ namespace tgx
 
     /**
     * Draw the bresenham segment [P,Q| while avoiding [P,A| and [Q,B|
-    * if drawP is set and AA on on , the pixel at P is draw using the minimum AA value.
-    * if drawQ is set and AA on on , the pixel at Q is draw using the minimum AA value.
+    * if drawP is set and AA is on, the pixel at P is drawn using the minimum AA value.
+    * if drawQ is set and AA is on, the pixel at Q is drawn using the minimum AA value.
     *
     *     A                     B
     *      \                   /
@@ -5414,7 +5414,7 @@ namespace tgx
         int32_t kx1, ky1, minleft1, maxright1;
         seg1.equation(kx1, ky1, minleft1, maxright1, (side1 > 0));
         int v, h; _defaultQuarterVH(quarter, v, h);
-        _drawSmoothQuarterCircleInterHPsub(C, R, quarter, v, h, color, opacity, 1, kx1, ky1, -minleft1, -maxright1);  // include the boudary line with AA
+        _drawSmoothQuarterCircleInterHPsub(C, R, quarter, v, h, color, opacity, 1, kx1, ky1, -minleft1, -maxright1);  // include the boundary line with AA
         }
 
 
@@ -5426,7 +5426,7 @@ namespace tgx
         seg1.equation(kx1, ky1, minleft1, maxright1, (side1 > 0));
         seg2.equation(kx2, ky2, minleft2, maxright2, (side2 > 0));
         int v, h; _defaultQuarterVH(quarter, v, h);
-        _drawSmoothQuarterCircleInterHPsub(C, R, quarter, v, h, color, opacity, 2, kx1, ky1, -minleft1, -maxright1, kx2, ky2, -minleft2, -maxright2);    // include the boudary lines with AA
+        _drawSmoothQuarterCircleInterHPsub(C, R, quarter, v, h, color, opacity, 2, kx1, ky1, -minleft1, -maxright1, kx2, ky2, -minleft2, -maxright2);    // include the boundary lines with AA
         }
 
 

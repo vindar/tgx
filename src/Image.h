@@ -1711,7 +1711,7 @@ namespace tgx
          *
          * The texture is mapped onto the triangle using bilinear filtering.
          *
-         * The method takes as input a user defined 'blending operator' with allow to create fancy
+         * The method takes as input a user defined 'blending operator' which allows creating fancy
          * effects. The blending operator 'blend_op' can be a function/functor/lambda. It takes as
          * input the color of the source (sprite) pixel and the color of the destination pixel and
          * returns the blended color. It must have a signature compatible with

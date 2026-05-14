@@ -265,9 +265,9 @@ struct RGB565
         /**
          * Constructor from a #iVec3 vector (x=R, y=G, z=B).
          *
-         * - red componenent v.x in [0,31]
-         * - green componenent v.y in [0,63]
-         * - blue componenent v.z in [0,31]
+         * - red component v.x in [0,31]
+         * - green component v.y in [0,63]
+         * - blue component v.z in [0,31]
          */
         constexpr RGB565(iVec3 v) : RGB565(v.x, v.y, v.z)
         {}
@@ -276,9 +276,9 @@ struct RGB565
         /**
         * Constructor from an #iVec4 vector (x=R, y=G, z=B, w=ignored).
         *
-        * - red componenent v.x in [0,31]
-        * - green componenent v.y in [0,63]
-        * - blue componenent v.z in [0,31]
+        * - red component v.x in [0,31]
+        * - green component v.y in [0,63]
+        * - blue component v.z in [0,31]
         * - v.w is ignored
         */
         constexpr RGB565(iVec4 v) : RGB565(v.x, v.y, v.z)
