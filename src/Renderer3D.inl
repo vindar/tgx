@@ -63,6 +63,7 @@ namespace tgx
                 M.setPerspective(45.0f, ar, 1.0f, 100.0f);
 
             this->setProjectionMatrix(M);
+            _rectifyShaderOrtho();
 
             this->setLookAt({ 0,0,0 }, { 0,0,-1 }, { 0,1,0 }); // look toward the negative z axis (id matrix)
 
@@ -80,7 +81,15 @@ namespace tgx
             setShaders(SHADER_FLAT);
             setTextureWrappingMode(SHADER_TEXTURE_CLAMP); // slow but safer (no need to be power of 2)
             setTextureQuality(SHADER_TEXTURE_NEAREST); // dirty but fast
-            setZbuffer(zbuffer);
+            if constexpr (TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS))
+                {
+                setZbuffer(zbuffer);
+                }
+            else
+                {
+                _uni.zbuf = nullptr;
+                _rectifyShaderZbuffer();
+                }
             }
 
 
@@ -828,7 +837,6 @@ namespace tgx
                         off = 0;
                         }
                     break;
-                /*
                 case 5: // far plane
                     if (ortho)
                         { // -Z + 1 >= 0
@@ -841,7 +849,6 @@ namespace tgx
                         off = 0;
                         }
                     break;
-                */
 
                 default:
                     {
@@ -1287,7 +1294,7 @@ namespace tgx
                                                 &(PPC0->P), &(PPC1->P), &(PPC2->P),
                                                 ((GOURAUD) ? tab_norm + PPC0->indn : nullptr), ((GOURAUD) ? tab_norm + PPC1->indn : nullptr), ((GOURAUD) ? tab_norm + PPC2->indn : nullptr),
                                                 ((TEXTURE) ? tab_tex + PPC0->indt : nullptr), ((TEXTURE) ? tab_tex + PPC1->indt : nullptr), ((TEXTURE) ? tab_tex + PPC2->indt : nullptr),
-                                                _uni.facecolor, _uni.facecolor, _uni.facecolor);
+                                                _r_objectColor, _r_objectColor, _r_objectColor);
                                 }
                             goto rasterize_next_triangle;
                             }
@@ -1387,17 +1394,25 @@ namespace tgx
                 if (!_validDraw()) return;
                 int shader = _shaders;
                 TGX_SHADER_REMOVE_TEXTURE(shader)
-                if ((N1 == nullptr) || (N2 == nullptr) || (N3 == nullptr)) { TGX_SHADER_REMOVE_GOURAUD(shader) }
                 _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
                 if (TGX_SHADER_HAS_GOURAUD(shader))
                     {
-                    _drawTriangle(shader, &P1, &P2, &P3, N1, N2, N3, nullptr, nullptr, nullptr, col1, col2, col3);
+                    if ((N1 == nullptr) || (N2 == nullptr) || (N3 == nullptr))
+                        {
+                        fVec3 N = crossProduct(P2 - P1, P3 - P1);// compute the triangle face normal
+                        N.normalize_fast(); // normalize it
+                        _drawTriangle(shader, &P1, &P2, &P3, &N, &N, &N, nullptr, nullptr, nullptr, col1, col2, col3);
+                        }
+                    else
+                        {
+                        _drawTriangle(shader, &P1, &P2, &P3, N1, N2, N3, nullptr, nullptr, nullptr, col1, col2, col3);
+                        }
                     }
                 else
                     {
                     fVec3 N = crossProduct(P2 - P1, P3 - P1);// compute the triangle face normal
                     N.normalize_fast(); // normalize it
-                    _drawTriangle(shader, &P1, &P2, &P3, &N, &N, &N, nullptr, nullptr, nullptr, col1, col2, col3); // call gouraud shader with the same normal for all 3 vertices
+                    _drawTriangle(shader, &P1, &P2, &P3, &N, &N, &N, nullptr, nullptr, nullptr, col1, col2, col3);
                     }
                 }
 
@@ -1492,17 +1507,25 @@ namespace tgx
             if (!_validDraw()) return;
             int shader = _shaders;
             TGX_SHADER_REMOVE_TEXTURE(shader)
-                if ((N1 == nullptr) || (N2 == nullptr) || (N3 == nullptr) || (N4 == nullptr)) { TGX_SHADER_REMOVE_GOURAUD(shader) }
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             if (TGX_SHADER_HAS_GOURAUD(shader))
                 {
-                _drawQuad(shader, &P1, &P2, &P3, &P4, N1, N2, N3, N4, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4);
+                if ((N1 == nullptr) || (N2 == nullptr) || (N3 == nullptr) || (N4 == nullptr))
+                    {
+                    fVec3 N = crossProduct(P2 - P1, P3 - P1);// compute the quad face normal
+                    N.normalize_fast(); // normalize it
+                    _drawQuad(shader, &P1, &P2, &P3, &P4, &N, &N, &N, &N, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4);
+                    }
+                else
+                    {
+                    _drawQuad(shader, &P1, &P2, &P3, &P4, N1, N2, N3, N4, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4);
+                    }
                 }
             else
                 {
                 fVec3 N = crossProduct(P2 - P1, P3 - P1);// compute the triangle face normal
                 N.normalize_fast(); // normalize it
-                _drawQuad(shader, &P1, &P2, &P3, &P4, &N, &N, &N, &N, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4); // call gouraud shader with the same normal for all 3 vertices
+                _drawQuad(shader, &P1, &P2, &P3, &P4, &N, &N, &N, &N, nullptr, nullptr, nullptr, nullptr, col1, col2, col3, col4);
                 }
             }
 
