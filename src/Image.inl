@@ -7899,7 +7899,7 @@ namespace tgx
             { // no char to draw
             return pos;
             }
-        uint8_t * data = (uint8_t *)font.data + tgx_internals::fetchbits_unsigned(font.index, (n*font.bits_index), font.bits_index);
+        const uint8_t * data = font.data + tgx_internals::fetchbits_unsigned(font.index, (n*font.bits_index), font.bits_index);
         int32_t off = 0; 
         uint32_t encoding = tgx_internals::fetchbits_unsigned(data, off, 3);
         if (encoding != 0) return  pos; // wrong/unsupported format

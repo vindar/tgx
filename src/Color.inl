@@ -141,18 +141,18 @@ inline RGB565& RGB565::operator=(iVec4 v)
 
 inline RGB565& RGB565::operator=(fVec3 v)
         {
-        B = (uint8_t)(v.x * 31);
+        R = (uint8_t)(v.x * 31);
         G = (uint8_t)(v.y * 63);
-        R = (uint8_t)(v.z * 31);
+        B = (uint8_t)(v.z * 31);
         return *this;
         }
 
 
 inline RGB565& RGB565::operator=(fVec4 v)
         {
-        B = (uint8_t)(v.x * 31);
+        R = (uint8_t)(v.x * 31);
         G = (uint8_t)(v.y * 63);
-        R = (uint8_t)(v.z * 31);
+        B = (uint8_t)(v.z * 31);
         return *this;
         }
 
@@ -275,18 +275,18 @@ inline RGB24& RGB24::operator=(iVec4 v)
 
 inline RGB24& RGB24::operator=(fVec3 v)
         {
-        B = (uint8_t)(v.x * 255);
+        R = (uint8_t)(v.x * 255);
         G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
+        B = (uint8_t)(v.z * 255);
         return *this;
         }
 
 
 inline RGB24& RGB24::operator=(fVec4 v)
         {
-        B = (uint8_t)(v.x * 255);
+        R = (uint8_t)(v.x * 255);
         G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
+        B = (uint8_t)(v.z * 255);
         return *this;
         }
 
@@ -410,9 +410,9 @@ inline RGB32& RGB32::operator=(iVec4 v)
 
 inline RGB32& RGB32::operator=(fVec3 v)
         {
-        B = (uint8_t)(v.x * 255);
+        R = (uint8_t)(v.x * 255);
         G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
+        B = (uint8_t)(v.z * 255);
         A = DEFAULT_A;
         return *this;
         }
@@ -420,9 +420,9 @@ inline RGB32& RGB32::operator=(fVec3 v)
 
 inline RGB32& RGB32::operator=(fVec4 v)
         {
-        B = (uint8_t)(v.x * 255);
+        R = (uint8_t)(v.x * 255);
         G = (uint8_t)(v.y * 255);
-        R = (uint8_t)(v.z * 255);
+        B = (uint8_t)(v.z * 255);
         A = (uint8_t)(v.w * 255);
         return *this;
         }
@@ -529,9 +529,9 @@ inline RGB64& RGB64::operator=(iVec4 v)
 
 inline RGB64& RGB64::operator=(fVec3 v)
         {
-        B = (uint16_t)(v.x * 65535);
+        R = (uint16_t)(v.x * 65535);
         G = (uint16_t)(v.y * 65535);
-        R = (uint16_t)(v.z * 65535);
+        B = (uint16_t)(v.z * 65535);
         A = DEFAULT_A;
         return *this;
         }
@@ -539,9 +539,9 @@ inline RGB64& RGB64::operator=(fVec3 v)
 
 inline RGB64& RGB64::operator=(fVec4 v)
         {
-        B = (uint16_t)(v.x * 65535);
+        R = (uint16_t)(v.x * 65535);
         G = (uint16_t)(v.y * 65535);
-        R = (uint16_t)(v.z * 65535);
+        B = (uint16_t)(v.z * 65535);
         A = (uint16_t)(v.w * 65535);
         return *this;
         }
@@ -647,18 +647,18 @@ inline RGBf& RGBf::operator=(const RGB64& c)
 
 inline RGBf& RGBf::operator=(fVec3 v)
         {
-        B = v.x;
+        R = v.x;
         G = v.y;
-        R = v.z;
+        B = v.z;
         return *this;
         }
 
 
 inline RGBf& RGBf::operator=(fVec4 v)
         {
-        B = v.x;
+        R = v.x;
         G = v.y;
-        R = v.z;
+        B = v.z;
         return *this;
         }
 

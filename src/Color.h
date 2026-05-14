@@ -1603,7 +1603,7 @@ struct RGB32
             R = (R * mr) >> 8;
             G = (G * mg) >> 8;
             B = (B * mb) >> 8;
-            A = (B * ma) >> 8;
+            A = (A * ma) >> 8;
             }
 
 
@@ -2233,7 +2233,7 @@ struct RGB64
             R = (R * mr) >> 8;
             G = (G * mg) >> 8;
             B = (B * mb) >> 8;
-            A = (A * mb) >> 8;
+            A = (A * ma) >> 8;
             }
 
 

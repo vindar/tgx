@@ -39,7 +39,11 @@ namespace tgx
         {
         const iVec2 startp = pos;
         uint8_t n = (uint8_t)c;
-        if ((n < font.first) || (n > font.last)) return iBox2(pos.x, pos.x, pos.y, pos.y); // nothing to draw. 
+        if ((n < font.first) || (n > font.last))
+            { // nothing to draw
+            if (xadvance) *xadvance = 0;
+            return iBox2(pos.x, pos.x, pos.y, pos.y);
+            }
         auto& g = font.glyph[n - font.first];
         int x = pos.x + g.xOffset;
         int y = pos.y + g.yOffset;
@@ -71,12 +75,17 @@ namespace tgx
             }
         else
             { // no char to draw
+            if (xadvance) *xadvance = 0;
             return iBox2(pos.x,pos.x,pos.y,pos.y); // nothing to draw. 
             }
-        uint8_t* data = (uint8_t*)font.data + tgx_internals::fetchbits_unsigned(font.index, (n * font.bits_index), font.bits_index);
+        const uint8_t* data = font.data + tgx_internals::fetchbits_unsigned(font.index, (n * font.bits_index), font.bits_index);
         int32_t off = 0;
         uint32_t encoding = tgx_internals::fetchbits_unsigned(data, off, 3);
-        if (encoding != 0) return  iBox2(pos.x,pos.x,pos.y,pos.y); // wrong/unsupported format
+        if (encoding != 0)
+            { // wrong/unsupported format
+            if (xadvance) *xadvance = 0;
+            return iBox2(pos.x,pos.x,pos.y,pos.y);
+            }
         off += 3;
         const int sx = (int)tgx_internals::fetchbits_unsigned(data, off, font.bits_width);
         off += font.bits_width;
@@ -113,9 +122,9 @@ namespace tgx
         uint32_t fetchbits_unsigned(const uint8_t* p, uint32_t index, uint32_t required)
             {
             uint32_t val;
-            uint8_t* s = (uint8_t*)&p[index >> 3];
+            const uint8_t* s = &p[index >> 3];
             #ifdef UNALIGNED_IS_SAFE        // is this defined anywhere ? 
-            val = *(uint32_t*)s; // read 4 bytes - unaligned is ok
+            val = *(const uint32_t*)s; // read 4 bytes - unaligned is ok
             val = __builtin_bswap32(val); // change to big-endian order
             #else
             val = (((uint32_t)s[0]) << 24) | (((uint32_t)s[1]) << 16) | (((uint32_t)s[2]) << 8) | ((uint32_t)s[3]);            
