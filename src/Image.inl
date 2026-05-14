@@ -7774,7 +7774,7 @@ namespace tgx
                 {
                 int xa = 0;
                 auto U = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
-                if ((wrap_text) && (pos.x + xa >= _lx))
+                if ((wrap_text) && (pos.x + xa > _lx))
                     {
                     auto pos2 = pos;
                     pos.x = startx;
@@ -7816,7 +7816,7 @@ namespace tgx
                 {
                 int xa = 0;
                 auto U = measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
-                if ((wrap_text)&& (pos.x + xa >= _lx))
+                if ((wrap_text)&& (pos.x + xa > _lx))
                     {
                     auto pos2 = pos;
                     pos.x = startx;
@@ -7897,6 +7897,7 @@ namespace tgx
             if (!(anchor & LEFT)) wrap_text = false; // cannot perform wrapping if we need to move.
             auto B = measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, wrap_text, start_newline_at_0);
             iVec2 pos2 = B.getAnchor(anchor);
+            if (anchor & BASELINE) pos2.y = pos.y;
             pos += pos - pos2;
             }
         return blend ? _drawTextGFX<true>(text, pos, font, color, opacity, wrap_text, start_newline_at_0) : _drawTextGFX<false>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
@@ -7915,6 +7916,7 @@ namespace tgx
             if (!(anchor & LEFT)) wrap_text = false; // cannot perform wrapping if we need to move.
             auto B = measureText(text, pos, font, DEFAULT_TEXT_ANCHOR, wrap_text,start_newline_at_0);
             iVec2 pos2 = B.getAnchor(anchor);
+            if (anchor & BASELINE) pos2.y = pos.y;
             pos += pos - pos2;
             }
         return blend ? _drawTextILI<true>(text, pos, font, color, opacity, wrap_text, start_newline_at_0) : _drawTextILI<false>(text, pos, font, color, opacity, wrap_text, start_newline_at_0);
@@ -8028,7 +8030,7 @@ namespace tgx
                     {
                     int xa = 0;
                     measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
-                    if ((wrap) && (pos.x + xa >= _lx))
+                    if ((wrap) && (pos.x + xa > _lx))
                         {
                         pos.x = startx;
                         pos.y += hh;
@@ -8062,7 +8064,7 @@ namespace tgx
                     {
                     int xa = 0;
                     measureChar(c, pos, font, DEFAULT_TEXT_ANCHOR, &xa);
-                    if ((wrap) && (pos.x + xa >= _lx))
+                    if ((wrap) && (pos.x + xa > _lx))
                         {
                         pos.x = startx;
                         pos.y += hh;
