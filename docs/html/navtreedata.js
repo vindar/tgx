@@ -69,7 +69,23 @@ var NAVTREE =
         [ "Drawing GIF images", "md_docs_intro_api_2_d.html#subsec_AnimatedGIF", null ]
       ] ]
     ] ],
-    [ "Using the 3D API.", "md_docs_intro_api_3_d.html", null ],
+    [ "Using the 3D API.", "md_docs_intro_api_3_d.html", [
+      [ "Rendering model", "md_docs_intro_api_3_d.html#sec_3D_overview", null ],
+      [ "Renderer template parameters", "md_docs_intro_api_3_d.html#sec_3D_renderer_template", null ],
+      [ "Shader state", "md_docs_intro_api_3_d.html#sec_3D_shaders", null ],
+      [ "Projection, camera and model transform", "md_docs_intro_api_3_d.html#sec_3D_projection", null ],
+      [ "Z-buffer", "md_docs_intro_api_3_d.html#sec_3D_zbuffer", null ],
+      [ "Mesh3D and generated models", "md_docs_intro_api_3_d.html#sec_3D_meshes", null ],
+      [ "Drawing primitives directly", "md_docs_intro_api_3_d.html#sec_3D_primitives", null ],
+      [ "Textures", "md_docs_intro_api_3_d.html#sec_3D_textures", null ],
+      [ "Light and material", "md_docs_intro_api_3_d.html#sec_3D_lighting", null ],
+      [ "Back-face culling", "md_docs_intro_api_3_d.html#sec_3D_culling", null ],
+      [ "Tile rendering", "md_docs_intro_api_3_d.html#sec_3D_tiling", null ],
+      [ "Wireframe and debug drawing", "md_docs_intro_api_3_d.html#sec_3D_wireframe", null ],
+      [ "Embedded performance checklist", "md_docs_intro_api_3_d.html#sec_3D_performance", null ],
+      [ "Useful examples", "md_docs_intro_api_3_d.html#sec_3D_examples", null ],
+      [ "Common pitfalls", "md_docs_intro_api_3_d.html#sec_3D_pitfalls", null ]
+    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -96,9 +112,9 @@ var NAVTREEINDEX =
 "_box2_8h.html",
 "_vec4_8h.html",
 "classtgx_1_1_renderer3_d.html#aae4fa24bc6a4c5235df0ae3e112c48b3",
-"structtgx_1_1_box2.html#a6ee5eef030c34062dc4829930b1e5be3",
-"structtgx_1_1_r_g_b32.html#aa4c7516824d5f171362c2967a2cd6cd1",
-"structtgx_1_1_vec4.html#a521d165fddc29c7602861cde4f99c73b"
+"structtgx_1_1_box2.html#a24d72d9ac6cd12bc216de9be36b00ffd",
+"structtgx_1_1_r_g_b32.html#a677765b5345c4f9e1e940d3c6e8bba81",
+"structtgx_1_1_vec3.html#ab03e6d50fa3454646be470c94d752bef"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
