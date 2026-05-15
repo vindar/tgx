@@ -112,6 +112,14 @@ DMAMEM char buf_DMAMEM[DMAMEM_buf_size];
 const tgx::Mesh3D<tgx::RGB565> * cached_mesh; // pointer to the currently cached mesh. 
 
 
+// Print per-second FPS and frame timing on Serial.
+void telemetryBegin();
+void telemetryStartFrame();
+void telemetryEndFrame();
+
+void telemetrySetScene(const char* scene);
+
+
 
 /**
 * Overlay some info about the current mesh on the screen
@@ -139,8 +147,7 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, Shader shader, const tgx::Mesh3D<tgx:
 void setup()
     {
     Serial.begin(9600);
-
-    tft.output(&Serial);                // output debug infos to serial port. 
+    telemetryBegin();
 
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED));
@@ -169,15 +176,18 @@ void setup()
     }
 
 
-void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
+void drawMesh(const Mesh3D<RGB565>* mesh, float scale, const char* scene_gouraud, const char* scene_nearest, const char* scene_bilinear)
     {
     // cache the first mesh to display in RAM to improve framerate
     cached_mesh  = tgx::cacheMesh(mesh, buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size);
   
     const int maxT = 18000; // display model for 15 seconds. 
     elapsedMillis em = 0;
+    int prev_part = -1;
     while (em < maxT)
         {
+        telemetryStartFrame();
+
         // erase the screen
         im.fillScreen(RGB565_Black);
 
@@ -197,6 +207,11 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
  
         // choose the shader to use
         Shader shader = (part == 0) ? SHADER_GOURAUD : ((part == 1) ? (SHADER_GOURAUD | SHADER_TEXTURE_NEAREST) : (SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR));
+        if (part != prev_part)
+            {
+            prev_part = part;
+            telemetrySetScene((part == 0) ? scene_gouraud : ((part == 1) ? scene_nearest : scene_bilinear));
+            }
 
         renderer.setShaders(shader);
 
@@ -211,6 +226,8 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
 
         tft.update(fb);
 
+        telemetryEndFrame();
+
         }
     }
 
@@ -218,16 +235,105 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale)
 void loop()
     {
     
-    drawMesh(&spot, 13);
+    drawMesh(&spot, 13, "spot_gouraud", "spot_tex_nearest", "spot_tex_bilinear");
     
-    drawMesh(&bob, 15);
+    drawMesh(&bob, 15, "bob_gouraud", "bob_tex_nearest", "bob_tex_bilinear");
 
-    drawMesh(&blub, 15);
+    drawMesh(&blub, 15, "blub_gouraud", "blub_tex_nearest", "blub_tex_bilinear");
 
     // random light orientation.
     const float angle = M_PI * random(0, 360) / 180.0f;
     renderer.setLightDirection({ cosf(angle) , sinf(angle) , -0.3f });
     }
 
+
+// Print per-second FPS and frame timing on Serial.
+uint32_t telemetry_last_ms = 0;
+uint32_t telemetry_frame_start_us = 0;
+uint32_t telemetry_frames = 0;
+uint32_t telemetry_sum_us = 0;
+uint32_t telemetry_min_us = 0xFFFFFFFFu;
+uint32_t telemetry_max_us = 0;
+uint32_t telemetry_cycle = 0;
+const char* telemetry_scene = "startup";
+
+void telemetryBegin()
+    {
+    telemetry_last_ms = millis();
+    telemetry_frames = 0;
+    telemetry_sum_us = 0;
+    telemetry_min_us = 0xFFFFFFFFu;
+    telemetry_max_us = 0;
+    }
+
+
+void telemetryStartFrame()
+    {
+    if (telemetry_frames == 0) telemetry_last_ms = millis();
+    telemetry_frame_start_us = micros();
+    }
+
+
+static void telemetryPrintScene()
+    {
+    for (const char* p = telemetry_scene; *p != 0; p++)
+        {
+        const char c = *p;
+        Serial.print((c <= ' ' || c == '=') ? '_' : c);
+        }
+    }
+
+void telemetrySetScene(const char* scene)
+    {
+    if (scene == nullptr) scene = "unnamed";
+    telemetry_scene = scene;
+    telemetry_cycle++;
+    telemetry_last_ms = millis();
+    telemetry_frames = 0;
+    telemetry_sum_us = 0;
+    telemetry_min_us = 0xFFFFFFFFu;
+    telemetry_max_us = 0;
+    Serial.print("\n[TGX scene] cycle=");
+    Serial.print(telemetry_cycle);
+    Serial.print(" scene=");
+    telemetryPrintScene();
+    Serial.println();
+    }
+
+
+void telemetryEndFrame()
+    {
+    const uint32_t dt = micros() - telemetry_frame_start_us;
+    telemetry_frames++;
+    telemetry_sum_us += dt;
+    if (dt < telemetry_min_us) telemetry_min_us = dt;
+    if (dt > telemetry_max_us) telemetry_max_us = dt;
+
+    const uint32_t now = millis();
+    const uint32_t elapsed_ms = now - telemetry_last_ms;
+    if (elapsed_ms >= 1000)
+        {
+        Serial.print("\n[TGX telemetry] cycle=");
+        Serial.print(telemetry_cycle);
+        Serial.print(" scene=");
+        telemetryPrintScene();
+        Serial.print(" fps=");
+        Serial.print((1000.0f * telemetry_frames) / elapsed_ms, 2);
+        Serial.print(" frame_avg_us=");
+        Serial.print(((float)telemetry_sum_us) / telemetry_frames, 1);
+        Serial.print(" frame_min_us=");
+        Serial.print(telemetry_min_us);
+        Serial.print(" frame_max_us=");
+        Serial.print(telemetry_max_us);
+        Serial.print(" frames=");
+        Serial.println(telemetry_frames);
+
+        telemetry_last_ms = now;
+        telemetry_frames = 0;
+        telemetry_sum_us = 0;
+        telemetry_min_us = 0xFFFFFFFFu;
+        telemetry_max_us = 0;
+        }
+    }
 
 /** end of file */

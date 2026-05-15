@@ -1,11 +1,9 @@
 /********************************************************************
 *
-* tgx library example
+* tgx library 3D benchmark
 *
-* 
-* Run a very crude 'benchmark' of the library 3D mesh rendering engine
-* 
-* Used to assert the impact of code changes in the library...
+* Portable rendering benchmark used to measure the impact of code changes on
+* desktop builds and MCU targets.
 *
 ********************************************************************/
 //
@@ -28,16 +26,18 @@
 /**
 * Define below the platform used.
 *
-* If no platform is defined externally, Teensy 4.x is selected by default.
+* For automated builds, pass one TGX_BENCHMARK_* define from the command line.
+* If no platform is defined externally, common architectures are detected when
+* possible; otherwise Teensy 4.x is selected by default.
 **/
-//#define TGX_BENCHMARK_T4            // use  600MHz, fastest without LTO
-//#define TGX_BENCHMARK_T36           // use  180MHz, optimized
-//#define TGX_BENCHMARK_T35           // use  120MHz, optimized
-//#define TGX_BENCHMARK_ESP32         // use  240Mhz, QIO 80MHz (Huge App)
-//#define TGX_BENCHMARK_ESP32S2       // use  240Mhz, QIO 80MHz (Huge App)
-//#define TGX_BENCHMARK_ESP32S3       // use  240Mhz, QIO 80MHz (Huge App)
-//#define TGX_BENCHMARK_RP2040        // use  200MHz, Ofast (RTTI, stack and exception disabled)  
-//#define TGX_BENCHMARK_RP2350        // use  150MHz, Ofast (RTTI, stack and exception disabled)
+//#define TGX_BENCHMARK_T4            // Teensy 4.x, 600MHz, Fastest
+//#define TGX_BENCHMARK_T36           // Teensy 3.6, 180MHz, Fastest
+//#define TGX_BENCHMARK_T35           // Teensy 3.5, 120MHz
+//#define TGX_BENCHMARK_ESP32         // ESP32, 240MHz
+//#define TGX_BENCHMARK_ESP32S2       // ESP32-S2, 240MHz
+//#define TGX_BENCHMARK_ESP32S3       // ESP32-S3, 240MHz
+//#define TGX_BENCHMARK_RP2040        // RP2040 / Pico 1
+//#define TGX_BENCHMARK_RP2350        // RP2350 / Pico 2
 //#define TGX_BENCHMARK_CPU          
 
 #if !defined(TGX_BENCHMARK_T4) && !defined(TGX_BENCHMARK_T36) && !defined(TGX_BENCHMARK_T35) && !defined(TGX_BENCHMARK_ESP32) && !defined(TGX_BENCHMARK_ESP32S2) && !defined(TGX_BENCHMARK_ESP32S3) && !defined(TGX_BENCHMARK_RP2040) && !defined(TGX_BENCHMARK_RP2350) && !defined(TGX_BENCHMARK_CPU)
@@ -131,7 +131,7 @@ using namespace tgx;
 
 
 #ifdef TGX_BENCHMARK_T4
-    #define NBFRAMES 60
+    #define NBFRAMES 30
     #define DEV_NAME "Teensy 4.0/4.1"
     #define MAX_ALLOC_BYTES (220*1024)
     uint16_t fb[MAX_ALLOC_BYTES/2];
@@ -140,7 +140,7 @@ using namespace tgx;
 #endif
 
 #ifdef TGX_BENCHMARK_T36
-    #define NBFRAMES 24
+    #define NBFRAMES 12
     #define DEV_NAME "Teensy 3.6"
     #define MAX_ALLOC_BYTES (80*1024)
     uint16_t fb[MAX_ALLOC_BYTES/2];
@@ -149,7 +149,7 @@ using namespace tgx;
 #endif
 
 #ifdef TGX_BENCHMARK_T35
-    #define NBFRAMES 20
+    #define NBFRAMES 10
     #define DEV_NAME "Teensy 3.5"
     #define MAX_ALLOC_BYTES (70*1024)
     uint16_t fb[MAX_ALLOC_BYTES/2];
@@ -158,7 +158,7 @@ using namespace tgx;
 #endif
 
 #ifdef TGX_BENCHMARK_ESP32
-    #define NBFRAMES 45
+    #define NBFRAMES 24
     #define DEV_NAME "ESP32"
     #define MAX_ALLOC_BYTES (90*1024)
     uint16_t fb[MAX_ALLOC_BYTES / 2];
@@ -171,7 +171,7 @@ using namespace tgx;
 #endif
 
 #ifdef TGX_BENCHMARK_ESP32S2
-    #define NBFRAMES 30
+    #define NBFRAMES 16
     #define DEV_NAME "ESP32-S2"
     #define MAX_ALLOC_BYTES (80*1024)
     uint16_t* fb = nullptr;
@@ -185,7 +185,7 @@ using namespace tgx;
 #endif
 
 #ifdef TGX_BENCHMARK_ESP32S3
-    #define NBFRAMES 45
+    #define NBFRAMES 24
     #define DEV_NAME "ESP32-S3"
     #define MAX_ALLOC_BYTES (120*1024)
     uint16_t fb[MAX_ALLOC_BYTES / 2];
@@ -198,7 +198,7 @@ using namespace tgx;
 #endif
 
 #ifdef TGX_BENCHMARK_RP2040
-    #define NBFRAMES 30
+    #define NBFRAMES 16
     #define DEV_NAME "RP2040"
     #define MAX_ALLOC_BYTES (90*1024)
     uint16_t* fb = nullptr;
@@ -212,7 +212,7 @@ using namespace tgx;
 #endif
 
 #ifdef TGX_BENCHMARK_RP2350
-    #define NBFRAMES 30
+    #define NBFRAMES 16
     #define DEV_NAME "RP2350"
     #define MAX_ALLOC_BYTES (220*1024)
     uint16_t fb[MAX_ALLOC_BYTES / 2];
@@ -225,7 +225,7 @@ using namespace tgx;
 #endif
 
 #ifdef TGX_BENCHMARK_CPU
-    #define NBFRAMES 120
+    #define NBFRAMES 60
     #define DEV_NAME "CPU"
     #define MAX_ALLOC_BYTES (9*1024*1024)
     uint16_t fb[MAX_ALLOC_BYTES / 2];

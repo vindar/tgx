@@ -127,6 +127,14 @@ DMAMEM int dma_buf[260 * 256]; // 260kb in DMAMEM
 tgx::Image<tgx::RGB565> marble_dma;
 
 
+// Print per-second FPS and frame timing on Serial.
+void telemetryBegin();
+void telemetryStartFrame();
+void telemetryEndFrame();
+
+void telemetrySetScene(const char* scene);
+
+
 
 
 /*************************************************************
@@ -139,9 +147,7 @@ tgx::Image<tgx::RGB565> marble_dma;
 TGX_NOINLINE FLASHMEM void setup()
     {
     Serial.begin(9600);
-
-    // output debug infos to serial port.
-    tft.output(&Serial);
+    telemetryBegin();
 
     // initialize the ILI9341 screen
     while (!tft.begin(SPI_SPEED));
@@ -197,14 +203,8 @@ TGX_NOINLINE FLASHMEM void redraw(bool full_redraw = false)
     // update the screen (async).
     tft.update(fb, full_redraw);
 
-    // print some info about the graphic driver on Serial (for debugging)
-    static int nbf = 0;
-    if (nbf++ % 1000 == 0)
-        {
-        tft.printStats();
-        diff1.printStats();
-        diff2.printStats();
-        }
+    telemetryEndFrame();
+    telemetryStartFrame();
 
     yield();
     }
@@ -367,6 +367,8 @@ void loadFalconTexture()
 
 TGX_NOINLINE FLASHMEM void movie()
     {
+    telemetrySetScene("movie");
+    telemetryStartFrame();
     tft.setVSyncSpacing(2);
 
     // look around
@@ -1067,11 +1069,13 @@ TGX_NOINLINE FLASHMEM void movie()
 
 TGX_NOINLINE FLASHMEM void ending()
     {
+    telemetrySetScene("ending");
     tft.setVSyncSpacing(1);
 
     start(4); // 2
     while (ongoing())
         {
+        telemetryStartFrame();
         const float t = time();
         const float a = (1.0f - slide(t, 0, 0.8f)) * 210;
         const float a2 = a * a;
@@ -1087,6 +1091,7 @@ TGX_NOINLINE FLASHMEM void ending()
                 }
             }
         tft.update(fb);
+        telemetryEndFrame();
         yield();
         }
     tft.setVSyncSpacing(2);
@@ -1096,6 +1101,7 @@ TGX_NOINLINE FLASHMEM void ending()
 
 TGX_NOINLINE FLASHMEM void beginning()
     {
+    telemetrySetScene("beginning");
     tft.setVSyncSpacing(1);
     tgx::Image<tgx::RGB565> imdma(dma_buf, 320, 240,320);
 
@@ -1108,6 +1114,7 @@ TGX_NOINLINE FLASHMEM void beginning()
     start(4); // 2
     while (ongoing())
         {
+        telemetryStartFrame();
         const float t = time();
         float a = slide(t, 0.0f, 1.0f);
         a = a * a * 210;
@@ -1123,6 +1130,7 @@ TGX_NOINLINE FLASHMEM void beginning()
                 }
             }
         tft.update(fb);
+        telemetryEndFrame();
         yield();
         }
     tft.setVSyncSpacing(2);
@@ -1131,16 +1139,19 @@ TGX_NOINLINE FLASHMEM void beginning()
 
 void intro()
     {
+    telemetrySetScene("intro");
     tft.setVSyncSpacing(1);
     elapsedMillis em = 0;
     while (em < 2500)
         {
+        telemetryStartFrame();
         int y1 = (em < 1700) ? (130 * em) / 1700 - 50 : 80;
         int y2 = (em < 1700) ? 240 - (110 * em) / 1700 : 130;
         im.fillScreen(RGB565_Black);
         im.drawText("TGX library", iVec2{ 110,y1 }, font_tgx_OpenSans_Bold_18, RGB565_Red);
         im.drawText("Mars demo", iVec2{ 80,y2 }, font_tgx_OpenSans_Bold_28, RGB565_White);
         tft.update(fb);
+        telemetryEndFrame();
         yield();
         }
 
@@ -1161,5 +1172,94 @@ void loop()
         }
     }
 
+
+// Print per-second FPS and frame timing on Serial.
+uint32_t telemetry_last_ms = 0;
+uint32_t telemetry_frame_start_us = 0;
+uint32_t telemetry_frames = 0;
+uint32_t telemetry_sum_us = 0;
+uint32_t telemetry_min_us = 0xFFFFFFFFu;
+uint32_t telemetry_max_us = 0;
+uint32_t telemetry_cycle = 0;
+const char* telemetry_scene = "startup";
+
+void telemetryBegin()
+    {
+    telemetry_last_ms = millis();
+    telemetry_frames = 0;
+    telemetry_sum_us = 0;
+    telemetry_min_us = 0xFFFFFFFFu;
+    telemetry_max_us = 0;
+    }
+
+
+void telemetryStartFrame()
+    {
+    if (telemetry_frames == 0) telemetry_last_ms = millis();
+    telemetry_frame_start_us = micros();
+    }
+
+
+static void telemetryPrintScene()
+    {
+    for (const char* p = telemetry_scene; *p != 0; p++)
+        {
+        const char c = *p;
+        Serial.print((c <= ' ' || c == '=') ? '_' : c);
+        }
+    }
+
+void telemetrySetScene(const char* scene)
+    {
+    if (scene == nullptr) scene = "unnamed";
+    telemetry_scene = scene;
+    telemetry_cycle++;
+    telemetry_last_ms = millis();
+    telemetry_frames = 0;
+    telemetry_sum_us = 0;
+    telemetry_min_us = 0xFFFFFFFFu;
+    telemetry_max_us = 0;
+    Serial.print("\n[TGX scene] cycle=");
+    Serial.print(telemetry_cycle);
+    Serial.print(" scene=");
+    telemetryPrintScene();
+    Serial.println();
+    }
+
+
+void telemetryEndFrame()
+    {
+    const uint32_t dt = micros() - telemetry_frame_start_us;
+    telemetry_frames++;
+    telemetry_sum_us += dt;
+    if (dt < telemetry_min_us) telemetry_min_us = dt;
+    if (dt > telemetry_max_us) telemetry_max_us = dt;
+
+    const uint32_t now = millis();
+    const uint32_t elapsed_ms = now - telemetry_last_ms;
+    if (elapsed_ms >= 1000)
+        {
+        Serial.print("\n[TGX telemetry] cycle=");
+        Serial.print(telemetry_cycle);
+        Serial.print(" scene=");
+        telemetryPrintScene();
+        Serial.print(" fps=");
+        Serial.print((1000.0f * telemetry_frames) / elapsed_ms, 2);
+        Serial.print(" frame_avg_us=");
+        Serial.print(((float)telemetry_sum_us) / telemetry_frames, 1);
+        Serial.print(" frame_min_us=");
+        Serial.print(telemetry_min_us);
+        Serial.print(" frame_max_us=");
+        Serial.print(telemetry_max_us);
+        Serial.print(" frames=");
+        Serial.println(telemetry_frames);
+
+        telemetry_last_ms = now;
+        telemetry_frames = 0;
+        telemetry_sum_us = 0;
+        telemetry_min_us = 0xFFFFFFFFu;
+        telemetry_max_us = 0;
+        }
+    }
 
 /** end of file */
