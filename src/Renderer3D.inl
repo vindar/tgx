@@ -101,7 +101,7 @@ namespace tgx
             if (exponent > 0)
                 {
                 const float MAX_VAL_POW = 10.0f;  //  maximum value that the power can take
-                _powmax = pow(MAX_VAL_POW, 1 / specularExponent);
+                _powmax = powf(MAX_VAL_POW, 1.0f / specularExponent);
                 for (int k = 0; k < _POWTABSIZE; k++)
                     {
                     float v = 1.0f - (((float)k) / _POWTABSIZE);
@@ -1155,7 +1155,7 @@ namespace tgx
 
             while (mesh)
                 {
-                if (mesh->vertice)
+                if ((mesh->vertice) && (mesh->face))
                     {
                     if (use_mesh_material)
                         {   // use mesh material if requested
@@ -2364,9 +2364,9 @@ namespace tgx
                     if (USE_BLENDING)
                         drawPixelZbuf<true, true>(x, y, colors[colors_ind[k]], opacities[opacities_ind[k]], Q.w);
                     else if (USE_COLORS)
-                        drawPixelZbuf<true, true>(x, y, colors[colors_ind[k]], 1.0f, Q.w);
+                        drawPixelZbuf<true, false>(x, y, colors[colors_ind[k]], 1.0f, Q.w);
                     else
-                        drawPixelZbuf<true, true>(x, y, _color, 1.0f, Q.w);
+                        drawPixelZbuf<true, false>(x, y, _color, 1.0f, Q.w);
                     }
                 }
             }

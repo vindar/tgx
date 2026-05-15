@@ -236,7 +236,12 @@ namespace tgx
         void setPerspective(T fovy, T aspect, T zNear, T zFar)
             {
             static const T deg2rad = (T)(M_PI / 180);
-            const T aux = tan((fovy / ((T)2)) * deg2rad);
+            const T angle = (fovy / ((T)2)) * deg2rad;
+            T aux;
+            if constexpr (std::is_same<T, float>::value)
+                aux = (T)tanf((float)angle);
+            else
+                aux = (T)tan((double)angle);
             const T top = zNear * aux;
             const T bottom = -top;
             const T right = zNear * aspect * aux;
@@ -261,9 +266,19 @@ namespace tgx
             const T nx = x / norm;
             const T ny = y / norm;
             const T nz = z / norm;
-            const T c = cos(deg2rad * angle);
+            const T angle_rad = deg2rad * angle;
+            T c, s;
+            if constexpr (std::is_same<T, float>::value)
+                {
+                c = (T)cosf((float)angle_rad);
+                s = (T)sinf((float)angle_rad);
+                }
+            else
+                {
+                c = (T)cos((double)angle_rad);
+                s = (T)sin((double)angle_rad);
+                }
             const T oneminusc = ((T)1) - c;
-            const T s = sin(deg2rad * angle);
 
             memset(M, 0, 16 * sizeof(T));
             M[0] = nx * nx * oneminusc + c;
