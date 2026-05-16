@@ -1807,6 +1807,7 @@ namespace tgx
                 if ((y < 0) || (y >= ly) || (x >= lx)) return;
                 if (x < 0) { w += x; x = 0; }
                 if (x + w > lx) { w = lx - x; }
+                if (w <= 0) return;
                 }
             while(w--) drawPixelZbuf<CHECKRANGE, USE_BLENDING>(x++, y, color, opacity, z);
             }

@@ -1719,8 +1719,12 @@ namespace tgx
 
             while (mesh != nullptr)
                 {
+                const bool bbox_uninitialized = ((mesh->bounding_box.minX == 0) && (mesh->bounding_box.maxX == 0) &&
+                                                 (mesh->bounding_box.minY == 0) && (mesh->bounding_box.maxY == 0) &&
+                                                 (mesh->bounding_box.minZ == 0) && (mesh->bounding_box.maxZ == 0));
+
                 // check if the object is completely outside of the image for fast discard.
-                if (_discardBox(mesh->bounding_box, _projM * _r_modelViewM))
+                if ((!bbox_uninitialized) && _discardBox(mesh->bounding_box, _projM * _r_modelViewM))
                     {
                     mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
                     continue;
