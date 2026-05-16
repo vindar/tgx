@@ -1768,8 +1768,13 @@ namespace tgx
                     PPC1->missedP = true;
                     PPC2->missedP = true;
 
+                    bool previous_wire_triangle_drawn = false;
+
                     while (1)
                         {
+                        const bool skip_shared_edge = previous_wire_triangle_drawn;
+                        bool current_wire_triangle_drawn = false;
+
                         // face culling
                         fVec3 faceN = crossProduct(PPC1->P - PPC0->P, PPC2->P - PPC0->P);
                         const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PPC0->P);
@@ -1825,20 +1830,22 @@ namespace tgx
                                 }
                             else
                                 {
-                                _uni.im->drawLine(PP0, PP1, color);
+                                if (!skip_shared_edge) _uni.im->drawLine(PP0, PP1, color);
                                 _uni.im->drawLine(PP1, PP2, color);
                                 _uni.im->drawLine(PP2, PP0, color);
                                 }
                             }
                         else
                             {
-                            _uni.im->drawThickLineAA(*((fVec2*)PPC0), *((fVec2*)PPC1), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                            if (!skip_shared_edge) _uni.im->drawThickLineAA(*((fVec2*)PPC0), *((fVec2*)PPC1), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                             _uni.im->drawThickLineAA(*((fVec2*)PPC1), *((fVec2*)PPC2), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                             _uni.im->drawThickLineAA(*((fVec2*)PPC2), *((fVec2*)PPC0), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                             }
+                        current_wire_triangle_drawn = true;
 
                     rasterize_next_wireframetriangle:
 
+                        previous_wire_triangle_drawn = current_wire_triangle_drawn;
                         if (--nbt == 0) break; // exit loop at end of chain
 
                         // get the next triangle
