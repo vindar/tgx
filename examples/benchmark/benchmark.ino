@@ -118,7 +118,7 @@ using namespace tgx;
 
 #include "3Dmodels/bunny_fig_small.h"
 
-#if !defined(TGX_BENCHMARK_T36) && !defined(TGX_BENCHMARK_T35)
+#if !defined(TGX_BENCHMARK_T36) && !defined(TGX_BENCHMARK_T35) && !defined(TGX_BENCHMARK_RP2040)
     #define TGX_BENCHMARK_FULL_PROFILE 1
 #else
     #define TGX_BENCHMARK_FULL_PROFILE 0
@@ -178,8 +178,8 @@ using namespace tgx;
     uint16_t* zbuf = nullptr;
     void allocateBuffers()
         {
-        fb = (uint16_t*)heap_caps_malloc(MAX_ALLOC_BYTES, MALLOC_CAP_DMA);
-        zbuf = (uint16_t*)heap_caps_malloc(MAX_ALLOC_BYTES, MALLOC_CAP_DMA);
+        fb = (uint16_t*)malloc(MAX_ALLOC_BYTES);
+        zbuf = (uint16_t*)malloc(MAX_ALLOC_BYTES);
         if ((!fb) || (!zbuf)) { while (1) { Serial.println("Failed to allocate buffers"); delay(3000); } }
         }
 #endif
@@ -198,9 +198,9 @@ using namespace tgx;
 #endif
 
 #ifdef TGX_BENCHMARK_RP2040
-    #define NBFRAMES 16
+    #define NBFRAMES 8
     #define DEV_NAME "RP2040"
-    #define MAX_ALLOC_BYTES (90*1024)
+    #define MAX_ALLOC_BYTES (80*1024)
     uint16_t* fb = nullptr;
     uint16_t* zbuf = nullptr;
     void allocateBuffers()
