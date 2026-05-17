@@ -32,3 +32,5 @@
 
 # Local temporary build/check files
 tmp/
+__pycache__/
+tools/mesh3d2_converter/cpp/build/
