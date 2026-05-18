@@ -1,0 +1,5 @@
+# LKH is optional and has its own license. Users may copy a local LKH source
+# tree here; do not commit downloaded sources or generated binaries by default.
+*
+!.gitignore
+!README.md

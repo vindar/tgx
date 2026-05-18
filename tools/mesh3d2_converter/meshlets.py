@@ -13,6 +13,7 @@ import time
 import numpy as np
 
 from .mesh import Meshlet, ObjMesh, compute_triangle_centers, compute_triangle_normals, unique_valid
+from .progress import Heartbeat, log, step
 
 
 @dataclass
@@ -35,7 +36,7 @@ class MeshletBuildOptions:
     compatible_merge_weight: float = 0.0
     lkh_exe: str = r"D:\Programmation\myProjects\tgxmeshlets\LKH-2.exe"
     nocull_lkh_component_limit: int = 500
-    nocull_lkh_time_limit: int = 30
+    nocull_lkh_time_limit: float | None = None
     visibility_merge_samples: int = 1024
     visibility_merge_size: int = 1024
     visibility_merge_margin_deg: float = -1.0
@@ -282,6 +283,7 @@ def build_meshlets(mesh: ObjMesh, options: MeshletBuildOptions | None = None) ->
 
     remaining: set[int] = set(range(len(mesh.triangles)))
     meshlets: list[Meshlet] = []
+    heartbeat = Heartbeat("greedy meshlets")
 
     max_normal_cost = 1.0 - float(np.cos(np.radians(opt.max_normal_angle_deg)))
 
@@ -362,6 +364,10 @@ def build_meshlets(mesh: ObjMesh, options: MeshletBuildOptions | None = None) ->
                     frontier.add(n)
 
         meshlets.append(_make_meshlet(mesh, current, normals))
+        if len(meshlets) % 250 == 0:
+            log(f"greedy meshlets: {len(meshlets)} meshlets, {len(mesh.triangles) - len(remaining)}/{len(mesh.triangles)} triangles")
+        else:
+            heartbeat.ping(f"{len(meshlets)} meshlets, {len(mesh.triangles) - len(remaining)}/{len(mesh.triangles)} triangles")
 
     return refine_meshlets(mesh, meshlets, opt)
 
@@ -381,15 +387,23 @@ def build_meshlets_nocull(mesh: ObjMesh, options: MeshletBuildOptions | None = N
     configurable time limit, then packed into the largest local-index meshlets possible.
     """
     opt = options or MeshletBuildOptions(builder="nocull")
-    components = _compatible_components_by_material(mesh)
+    with step("nocull components", f"{len(mesh.triangles)} triangles"):
+        components = _compatible_components_by_material(mesh)
+    log(f"nocull components: {len(components)} components; largest {len(components[0]) if components else 0} triangles")
     meshlets: list[Meshlet] = []
 
-    for component in components:
+    heartbeat = Heartbeat("nocull build")
+    processed = 0
+    for index, component in enumerate(components, start=1):
+        if len(component) >= 128:
+            log(f"nocull component {index}/{len(components)}: {len(component)} triangles")
         if _fits_nocull(mesh, component, opt):
             meshlets.append(_make_nocull_meshlet(mesh, component))
         else:
             ordered = _lkh_order_for_component(mesh, component, opt.lkh_exe, opt.nocull_lkh_time_limit)
             meshlets.extend(_pack_nocull_order(mesh, ordered, opt))
+        processed += len(component)
+        heartbeat.ping(f"{processed}/{len(mesh.triangles)} triangles, {len(meshlets)} meshlets")
 
     if opt.merge_passes <= 0:
         return meshlets
@@ -427,59 +441,19 @@ def _compatible_components_by_material(mesh: ObjMesh) -> list[list[int]]:
     return components
 
 
-def _lkh_order_for_component(mesh: ObjMesh, tri_indices: list[int], lkh_exe: str | Path, time_limit: int) -> list[int]:
+def _lkh_order_for_component(mesh: ObjMesh, tri_indices: list[int], lkh_exe: str | Path, time_limit: float | None) -> list[int]:
     if len(tri_indices) <= 2:
         return tri_indices.copy()
     try:
-        from .exporter import _is_chain_adjacent
-        from .stripifier import _read_lkh_tour, _triangle_vertices
+        from .stripifier import StripifyOptions, stripify_component
     except Exception:
         return tri_indices.copy()
 
-    lkh_exe = Path(lkh_exe)
-    if not lkh_exe.exists():
-        return tri_indices.copy()
-
-    local_triangles = [_triangle_vertices(mesh, ti) for ti in tri_indices]
     try:
-        with tempfile.TemporaryDirectory(prefix="tgx_lkh_nocull_") as tmp:
-            workdir = Path(tmp)
-            with (workdir / "meshlet.par").open("w", newline="\n") as f:
-                f.write("PROBLEM_FILE = meshlet.tsp\n")
-                f.write("MOVE_TYPE = 5\n")
-                f.write("PATCHING_C = 3\n")
-                f.write("PATCHING_A = 2\n")
-                f.write("RUNS = 4\n")
-                if time_limit > 0:
-                    f.write(f"TIME_LIMIT = {int(time_limit)}\n")
-                f.write("TRACE_LEVEL = 0\n")
-                f.write("OUTPUT_TOUR_FILE = meshlet_res.txt\n")
-
-            with (workdir / "meshlet.tsp").open("w", newline="\n") as f:
-                f.write("NAME: meshlet\n")
-                f.write("TYPE: TSP\n")
-                f.write(f"DIMENSION: {len(local_triangles)}\n")
-                f.write("EDGE_WEIGHT_TYPE: EXPLICIT\n")
-                f.write("EDGE_WEIGHT_FORMAT: LOWER_DIAG_ROW\n")
-                f.write("EDGE_WEIGHT_SECTION\n")
-                for i in range(len(local_triangles)):
-                    for j in range(i + 1):
-                        cost = 0 if i == j or _is_chain_adjacent(local_triangles[i], local_triangles[j]) else 1
-                        f.write(f"{cost} ")
-                    f.write("\n")
-                f.write("EOF\n")
-
-            completed = subprocess.run(
-                [str(lkh_exe), "meshlet.par"],
-                cwd=workdir,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.PIPE,
-                text=True,
-                check=False,
-            )
-            if completed.returncode != 0 or not (workdir / "meshlet_res.txt").exists():
-                return tri_indices.copy()
-            return _read_lkh_tour(workdir, tri_indices)
+        result = stripify_component(mesh, tri_indices, StripifyOptions(max_time_s=time_limit, lkh_exe=lkh_exe))
+        if len(tri_indices) >= 128:
+            log(f"nocull component strips: {len(result.chains)} chains from {result.source}")
+        return [ti for chain in result.chains for ti in chain]
     except Exception:
         return tri_indices.copy()
 
@@ -695,6 +669,7 @@ def _split_large_component_nocull(mesh: ObjMesh, component: list[int], opt: Mesh
 
 def _merge_nocull_meshlets(mesh: ObjMesh, meshlets: list[Meshlet], opt: MeshletBuildOptions) -> list[Meshlet]:
     merges = 0
+    heartbeat = Heartbeat("nocull merge")
     while True:
         best: tuple[tuple[int, int, int], int, int] | None = None
         for i, a in enumerate(meshlets):
@@ -730,6 +705,8 @@ def _merge_nocull_meshlets(mesh: ObjMesh, meshlets: list[Meshlet], opt: MeshletB
         merges += 1
         if (merges % 50) == 0:
             print(f"nocull merge: {merges} merges, {len(meshlets)} meshlets")
+        else:
+            heartbeat.ping(f"{merges} merges, {len(meshlets)} meshlets")
     return meshlets
 
 
@@ -1091,6 +1068,7 @@ def build_meshlets_hybrid(mesh: ObjMesh, options: MeshletBuildOptions | None = N
     remaining: set[int] = set(range(len(mesh.triangles)))
     meshlets: list[Meshlet] = []
     max_normal_cost = 1.0 - float(np.cos(np.radians(opt.max_normal_angle_deg)))
+    heartbeat = Heartbeat("hybrid meshlets")
 
     def triangle_edges(ti: int) -> list[tuple[int, int]]:
         v = [c.v for c in mesh.triangles[ti].corners]
@@ -1248,6 +1226,10 @@ def build_meshlets_hybrid(mesh: ObjMesh, options: MeshletBuildOptions | None = N
                         break
 
         meshlets.append(_make_meshlet(mesh, current, tri_normals))
+        if len(meshlets) % 250 == 0:
+            log(f"hybrid meshlets: {len(meshlets)} meshlets, {len(mesh.triangles) - len(remaining)}/{len(mesh.triangles)} triangles")
+        else:
+            heartbeat.ping(f"{len(meshlets)} meshlets, {len(mesh.triangles) - len(remaining)}/{len(mesh.triangles)} triangles")
 
     return meshlets
 
@@ -1260,12 +1242,17 @@ def refine_meshlets(mesh: ObjMesh, meshlets: list[Meshlet], options: MeshletBuil
     neighboring meshlets if it improves local connectivity while preserving constraints.
     """
     tri_normals = compute_triangle_normals(mesh)
-    for _ in range(max(0, options.merge_passes)):
-        meshlets, changed = _merge_meshlet_pass(mesh, meshlets, tri_normals, options)
+    for pass_index in range(max(0, options.merge_passes)):
+        before = len(meshlets)
+        with step("meshlet merge pass", f"{pass_index + 1}/{max(0, options.merge_passes)}, {before} meshlets"):
+            meshlets, changed = _merge_meshlet_pass(mesh, meshlets, tri_normals, options)
+        log(f"meshlet merge pass {pass_index + 1}: {before} -> {len(meshlets)} meshlets")
         if not changed:
             break
-    for _ in range(max(0, options.smooth_passes)):
-        meshlets, changed = _smooth_meshlet_pass(mesh, meshlets, tri_normals, options)
+    for pass_index in range(max(0, options.smooth_passes)):
+        with step("meshlet smooth pass", f"{pass_index + 1}/{max(0, options.smooth_passes)}, {len(meshlets)} meshlets"):
+            meshlets, changed = _smooth_meshlet_pass(mesh, meshlets, tri_normals, options)
+        log(f"meshlet smooth pass {pass_index + 1}: {'changed' if changed else 'no change'}")
         if not changed:
             break
     return meshlets
@@ -1359,9 +1346,12 @@ def _merge_meshlet_pass(
     mesh_adj = _meshlet_adjacency(mesh, meshlets, tri_to_meshlet)
     alive = [True] * len(meshlets)
     changed = False
+    heartbeat = Heartbeat("meshlet merge pass")
 
-    for mi in sorted(range(len(meshlets)), key=lambda k: len(meshlets[k].triangles)):
+    ordered_meshlets = sorted(range(len(meshlets)), key=lambda k: len(meshlets[k].triangles))
+    for processed, mi in enumerate(ordered_meshlets, start=1):
         if not alive[mi]:
+            heartbeat.ping(f"{processed}/{len(ordered_meshlets)} scanned")
             continue
         best = None
         for mj in sorted(mesh_adj[mi], key=lambda k: len(meshlets[k].triangles)):
@@ -1384,6 +1374,7 @@ def _merge_meshlet_pass(
         changed = True
         for ti in candidate.triangles:
             tri_to_meshlet[ti] = mj
+        heartbeat.ping(f"{processed}/{len(ordered_meshlets)} scanned, merged {sum(1 for item in alive if not item)}")
 
     if not changed:
         return meshlets, False
@@ -1405,16 +1396,20 @@ def _smooth_meshlet_pass(
         return sum(1 for tj in tri_adj[ti] if tri_to_meshlet.get(tj) == mi)
 
     candidates = sorted(tri_to_meshlet, key=lambda ti: (local_degree(ti, tri_to_meshlet[ti]), len(meshlets[tri_to_meshlet[ti]].triangles)))
-    for ti in candidates:
+    heartbeat = Heartbeat("meshlet smooth pass")
+    for processed, ti in enumerate(candidates, start=1):
         src = tri_to_meshlet.get(ti)
         if src is None or len(meshlets[src].triangles) <= 1:
+            heartbeat.ping(f"{processed}/{len(candidates)} triangles scanned")
             continue
         neighbor_meshlets = sorted({tri_to_meshlet[tj] for tj in tri_adj[ti] if tri_to_meshlet.get(tj) != src})
         if not neighbor_meshlets:
+            heartbeat.ping(f"{processed}/{len(candidates)} triangles scanned")
             continue
 
         src_without = [t for t in meshlets[src].triangles if t != ti]
         if not _is_connected_subset(tri_adj, src_without):
+            heartbeat.ping(f"{processed}/{len(candidates)} triangles scanned")
             continue
 
         old_src = meshlets[src]
@@ -1439,12 +1434,14 @@ def _smooth_meshlet_pass(
             if best is None or improvement > best[0]:
                 best = (improvement, dst, new_src, new_dst)
         if best is None:
+            heartbeat.ping(f"{processed}/{len(candidates)} triangles scanned")
             continue
         _, dst, new_src, new_dst = best
         meshlets[src] = new_src
         meshlets[dst] = new_dst
         tri_to_meshlet[ti] = dst
         moved = True
+        heartbeat.ping(f"{processed}/{len(candidates)} triangles scanned")
 
     if not moved:
         return meshlets, False

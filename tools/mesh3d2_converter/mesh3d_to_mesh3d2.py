@@ -13,7 +13,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.mesh3d2_converter.cones import apply_visibility_cones, auto_visibility_margin_deg
-from tools.mesh3d2_converter.exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_header
+from tools.mesh3d2_converter.exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_header, export_mesh3d3_16_header
 from tools.mesh3d2_converter.mesh import FaceVertex, Material, Meshlet, ObjMesh, Triangle
 from tools.mesh3d2_converter.meshlets import sort_meshlets_by_material
 from tools.mesh3d2_converter.pipeline import (
@@ -23,16 +23,18 @@ from tools.mesh3d2_converter.pipeline import (
     export_common,
     finalize_meshlets_for_export,
 )
+from tools.mesh3d2_converter.preprocess import (
+    DEFAULT_NORMAL_QUANT_BITS,
+    DEFAULT_TEXCOORD_QUANT_BITS,
+    DEFAULT_VERTEX_QUANT_BITS,
+    preprocess_mesh,
+)
 from tools.mesh3d2_converter.profiles import apply_profile_to_args
+from tools.mesh3d2_converter.progress import step
 from tools.mesh3d2_converter.quality import cull_ratio_stats, fibonacci_sphere
 from tools.mesh3d2_converter.stripifier import DEFAULT_LKH_EXE
 from tools.mesh3d2_converter.validate import validate_mesh_for_export
 from tools.mesh3d2_converter.visibility import compute_tgx_visibility
-
-
-DEFAULT_TEXCOORD_QUANT_BITS = 9
-DEFAULT_NORMAL_QUANT_BITS = 16
-DEFAULT_VERTEX_QUANT_BITS = 20
 
 
 @dataclass
@@ -429,88 +431,17 @@ def preprocess_legacy_mesh(
     texcoord_wrap: bool,
     normal_quant_bits: int,
 ) -> ObjMesh:
-    """Merge near-identical vertices/UVs/normals before meshlet construction.
-
-    Vertices are snapped relative to the mesh bounding box. UVs are snapped on an
-    unbounded grid, so coordinates outside [0,1] keep their tile number. Normals are
-    snapped in signed fixed point and then renormalized.
-    """
-    vertices = mesh.vertices.astype(np.float64, copy=True)
-    texcoords = mesh.texcoords.astype(np.float64, copy=True)
-    normals = mesh.normals.astype(np.float64, copy=True)
-    v_remap = {i: i for i in range(len(vertices))}
-    vt_remap = {i: i for i in range(len(texcoords))}
-    vn_remap = {i: i for i in range(len(normals))}
-
-    if vertex_quant_bits >= 0 and len(vertices):
-        bb_min = np.min(vertices, axis=0)
-        bb_max = np.max(vertices, axis=0)
-        extent = bb_max - bb_min
-        scale = (1 << vertex_quant_bits) - 1
-        safe_extent = np.where(extent > 0.0, extent, 1.0)
-        quant = np.rint(((vertices - bb_min) / safe_extent) * scale).astype(np.int64)
-        quant[:, extent <= 0.0] = 0
-        seen_v: dict[tuple[int, int, int], int] = {}
-        new_vertices: list[np.ndarray] = []
-        v_remap = {}
-        for i, key in enumerate(map(tuple, quant)):
-            if key not in seen_v:
-                seen_v[key] = len(new_vertices)
-                new_vertices.append(bb_min + (quant[i].astype(np.float64) / scale) * extent)
-            v_remap[i] = seen_v[key]
-        vertices = np.asarray(new_vertices, dtype=np.float64).reshape((-1, 3))
-
-    if texcoord_quant_bits >= 0 and len(texcoords):
-        scale = 1 << texcoord_quant_bits
-        uv = np.mod(texcoords, 1.0) if texcoord_wrap else texcoords.copy()
-        quant = np.rint(uv * scale).astype(np.int64)
-        if texcoord_wrap:
-            quant %= scale
-        seen: dict[tuple[int, int], int] = {}
-        new_texcoords: list[np.ndarray] = []
-        vt_remap = {}
-        for i, key in enumerate(map(tuple, quant)):
-            if key not in seen:
-                seen[key] = len(new_texcoords)
-                new_texcoords.append(quant[i].astype(np.float64) / scale)
-            vt_remap[i] = seen[key]
-        texcoords = np.asarray(new_texcoords, dtype=np.float64).reshape((-1, 2))
-
-    if normal_quant_bits >= 0 and len(normals):
-        maxq = (1 << (normal_quant_bits - 1)) - 1
-        quant = np.rint(np.clip(normals, -1.0, 1.0) * maxq).astype(np.int64)
-        seen_n: dict[tuple[int, int, int], int] = {}
-        new_normals: list[np.ndarray] = []
-        vn_remap = {}
-        for i, key in enumerate(map(tuple, quant)):
-            if key not in seen_n:
-                seen_n[key] = len(new_normals)
-                n = quant[i].astype(np.float64) / maxq
-                length = float(np.linalg.norm(n))
-                if length > 0.0:
-                    n /= length
-                new_normals.append(n)
-            vn_remap[i] = seen_n[key]
-        normals = np.asarray(new_normals, dtype=np.float64).reshape((-1, 3))
-
-    triangles: list[Triangle] = []
-    for tri in mesh.triangles:
-        triangles.append(
-            Triangle(
-                tuple(
-                    FaceVertex(
-                        v_remap.get(c.v, c.v),
-                        vt_remap.get(c.vt, c.vt),
-                        vn_remap.get(c.vn, c.vn),
-                    )
-                    for c in tri.corners
-                ),
-                tri.material,
-                tri.group,
-            )
-        )
-
-    return ObjMesh(vertices, texcoords, normals, triangles, mesh.name, mesh.materials.copy(), mesh.source_path)
+    """Apply the same cleanup used by OBJ inputs to a legacy Mesh3D-derived mesh."""
+    cleaned, _ = preprocess_mesh(
+        mesh,
+        normalize=False,
+        force_normals=False,
+        vertex_quant_bits=vertex_quant_bits,
+        texcoord_quant_bits=texcoord_quant_bits,
+        texcoord_wrap=texcoord_wrap,
+        normal_quant_bits=normal_quant_bits,
+    )
+    return cleaned
 
 
 def _apply_profile(args: argparse.Namespace, mesh: ObjMesh) -> None:
@@ -567,7 +498,12 @@ def _score_candidate(stats: Mesh3D2ExportStats, cull: dict[str, float], texture_
 
 
 def _exporter_for_args(args: argparse.Namespace):
-    return export_mesh3d2_16_header if getattr(args, "mesh3d2_format", "mesh3d2") == "mesh3d2_16" else export_mesh3d2_header
+    fmt = getattr(args, "mesh3d2_format", "mesh3d2")
+    if fmt == "mesh3d2_16":
+        return export_mesh3d2_16_header
+    if fmt == "mesh3d3_16":
+        return export_mesh3d3_16_header
+    return export_mesh3d2_header
 
 
 def _evaluate_candidate(
@@ -598,17 +534,23 @@ def _evaluate_candidate(
     if args.sort_by_material:
         meshlets = sort_meshlets_by_material(meshlets)
     validate_mesh_for_export(mesh, meshlets)
-    exported = _exporter_for_args(args)(
-        mesh,
-        meshlets,
+    export_kwargs = dict(
         name=args.name or (Path(args.output).stem),
         color_type=color_type,
-        use_lkh=not args.no_lkh,
+        use_lkh=True,
         lkh_exe=args.lkh,
         texture_symbols=texture_symbols,
         extra_includes=[],
-        cone_source=cone_source,
     )
+    if getattr(args, "mesh3d2_format", "mesh3d2") == "mesh3d3_16":
+        export_kwargs.update(
+            visibility_size=getattr(args, "visibility_size", 1024),
+            visibility_helper=getattr(args, "visibility_helper", None),
+            keep_visibility_files=getattr(args, "keep_visibility_files", False),
+        )
+    else:
+        export_kwargs.update(cone_source=cone_source)
+    exported = _exporter_for_args(args)(mesh, meshlets, **export_kwargs)
     cull = cull_ratio_stats(meshlets, samples=args.auto_tune_cull_samples, meshlet_cost=args.auto_tune_meshlet_cost, cone_source=cone_source)
     return TuneResult(name, dict(params), _score_candidate(exported.stats, cull, bool(texture_symbols)), meshlets, exported, cull, cone_source)
 
@@ -703,22 +645,25 @@ def _auto_tune(args: argparse.Namespace, mesh: ObjMesh, texture_symbols: dict[st
 
 
 def convert(args: argparse.Namespace) -> None:
-    parsed = parse_legacy_header(args.input)
-    mesh, texture_symbols, chain = legacy_to_objmesh(parsed, root=args.root, name=args.name)
+    with step("parse legacy Mesh3D", args.input):
+        parsed = parse_legacy_header(args.input)
+        mesh, texture_symbols, chain = legacy_to_objmesh(parsed, root=args.root, name=args.name)
     if args.preprocess_legacy:
-        mesh = preprocess_legacy_mesh(
-            mesh,
-            vertex_quant_bits=args.vertex_quant_bits,
-            texcoord_quant_bits=args.texcoord_quant_bits,
-            texcoord_wrap=args.texcoord_wrap,
-            normal_quant_bits=args.normal_quant_bits,
-        )
+        with step("preprocess mesh", f"{len(mesh.triangles)} triangles"):
+            mesh = preprocess_legacy_mesh(
+                mesh,
+                vertex_quant_bits=args.vertex_quant_bits,
+                texcoord_quant_bits=args.texcoord_quant_bits,
+                texcoord_wrap=args.texcoord_wrap,
+                normal_quant_bits=args.normal_quant_bits,
+            )
 
     output = Path(args.output)
     includes = _relative_includes(parsed.includes, output)
     color_type = args.color_type or chain[0].color_type
     if args.auto_tune != "off":
-        tuned = _auto_tune(args, mesh, texture_symbols, color_type)
+        with step("auto-tune meshlets", args.auto_tune):
+            tuned = _auto_tune(args, mesh, texture_symbols, color_type)
         if args.visibility_cones and (
             args.visibility_samples != args.auto_tune_visibility_samples
             or args.visibility_size != args.auto_tune_visibility_size
@@ -741,6 +686,7 @@ def convert(args: argparse.Namespace) -> None:
             )
             _print_tune_result(tuned)
         meshlets = tuned.meshlets
+        cone_source = tuned.cone_source
         result = export_common(
             args,
             mesh,
@@ -751,7 +697,6 @@ def convert(args: argparse.Namespace) -> None:
             texture_symbols=texture_symbols,
             extra_includes=includes,
         )
-        cone_source = tuned.cone_source
     else:
         _apply_profile(args, mesh)
         meshlets = _build_meshlets_for_args(args, mesh)
@@ -777,9 +722,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", help="root Mesh3D symbol; auto-detected for a single chain")
     parser.add_argument("--name", help="output C++ symbol")
     parser.add_argument("--color-type", help="override color type; defaults to the legacy Mesh3D color type")
-    parser.add_argument("--mesh3d2-format", choices=("mesh3d2", "mesh3d2_16"), default="mesh3d2", help="output payload format")
+    parser.add_argument("--mesh3d2-format", choices=("mesh3d2", "mesh3d2_16", "mesh3d3_16"), default="mesh3d2", help="output payload format")
     add_build_options(parser, source="legacy")
-    parser.add_argument("--no-lkh", action="store_true")
     parser.add_argument("--lkh", default=str(DEFAULT_LKH_EXE))
     add_visibility_options(parser, default_samples=1024, default_size=512)
     parser.add_argument("--no-preprocess-legacy", dest="preprocess_legacy", action="store_false", help="keep legacy vertex/normal/UV indices exactly as-is")

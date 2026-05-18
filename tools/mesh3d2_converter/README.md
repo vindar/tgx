@@ -69,6 +69,7 @@ py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export D:\Programmation\myProjec
 The export command:
 
 - removes duplicate vertex, normal and texture-coordinate entries,
+- snaps vertices, UVs and normals to conservative grids before duplicate removal,
 - recenters and rescales the model when `--normalize` is used,
 - regenerates smooth normals if the OBJ has no complete normal set, or when `--force-normals` is used,
 - removes degenerate triangles,
@@ -76,6 +77,23 @@ The export command:
 - encodes local triangle chains into the 8-bit Mesh3D2 face stream,
 - writes a 32-bit aligned payload array,
 - prints meshlet, culling, strip and payload statistics.
+
+## Triangle Stripifier Helpers
+
+The converter uses `tools.mesh3d2_converter.stripifier` as the single stripification module.
+It receives one strict compatible connected component, where adjacency means a shared edge
+with matching `(vertex, texcoord, normal)` corners, and returns triangle chains.
+
+Build the optional external helpers with:
+
+```powershell
+py -3.12 tools\mesh3d2_converter\setup_stripifiers.py
+```
+
+The module always keeps a fast greedy fallback, runs the bundled GA-EAX helper when built,
+and also runs the patched sparse LKH helper when an LKH 2.x source tree is available under
+`tools\mesh3d2_converter\external_libs\LKH`. The only high-level tuning knobs are the total thread count and a time
+budget; the module chooses small, medium and large component profiles internally.
 
 For a guided conversion, use the interactive wizard:
 

@@ -280,28 +280,46 @@ def _parse_materials(text: str, array_name: str) -> list[DecodedMaterial]:
     return materials
 
 
-def _parse_meshlet_headers(text: str, array_name: str) -> list[DecodedMeshlet]:
+def _parse_meshlet_headers(text: str, array_name: str, fmt: str = "Mesh3D2") -> list[DecodedMeshlet]:
     body = _extract_named_array_body(text, array_name)
     entries = _split_top_level(body)
     meshlets: list[DecodedMeshlet] = []
     for index, entry in enumerate(entries):
         fields = _split_top_level(entry.strip().strip("{}").strip())
-        if len(fields) < 8:
-            continue
-        meshlets.append(
-            DecodedMeshlet(
-                index=index,
-                center=_vec3(fields[0]),
-                cone_dir=_vec3(fields[1]),
-                radius=float(_numbers(fields[2])[0]),
-                cone_cos=float(_numbers(fields[3])[0]),
-                payload_offset32=int(_numbers(fields[4])[0]),
-                nb_vertices=int(_numbers(fields[5])[0]),
-                nb_normals=int(_numbers(fields[6])[0]),
-                nb_texcoords=int(_numbers(fields[7])[0]),
-                material_index=int(_numbers(fields[8])[0]) if len(fields) > 8 else 0,
+        if fmt == "Mesh3D3_16":
+            if len(fields) < 7:
+                continue
+            meshlets.append(
+                DecodedMeshlet(
+                    index=index,
+                    center=_vec3(fields[0]),
+                    cone_dir=np.array([0.0, 0.0, 1.0], dtype=np.float64),
+                    radius=float(_numbers(fields[1])[0]),
+                    cone_cos=-1.0,
+                    payload_offset32=int(_numbers(fields[2])[0]),
+                    nb_vertices=int(_numbers(fields[3])[0]),
+                    nb_normals=int(_numbers(fields[4])[0]),
+                    nb_texcoords=int(_numbers(fields[5])[0]),
+                    material_index=int(_numbers(fields[6])[0]) if len(fields) > 6 else 0,
+                )
             )
-        )
+        else:
+            if len(fields) < 8:
+                continue
+            meshlets.append(
+                DecodedMeshlet(
+                    index=index,
+                    center=_vec3(fields[0]),
+                    cone_dir=_vec3(fields[1]),
+                    radius=float(_numbers(fields[2])[0]),
+                    cone_cos=float(_numbers(fields[3])[0]),
+                    payload_offset32=int(_numbers(fields[4])[0]),
+                    nb_vertices=int(_numbers(fields[5])[0]),
+                    nb_normals=int(_numbers(fields[6])[0]),
+                    nb_texcoords=int(_numbers(fields[7])[0]),
+                    material_index=int(_numbers(fields[8])[0]) if len(fields) > 8 else 0,
+                )
+            )
     return meshlets
 
 
@@ -366,7 +384,7 @@ def _decode_payload(mesh: DecodedHeaderMesh, payload_words: list[int]) -> None:
     for meshlet, next_offset in zip(mesh.meshlets, next_offsets):
         start = meshlet.payload_offset32 * 4
         pos = start
-        if mesh.format == "Mesh3D2_16":
+        if mesh.format in ("Mesh3D2_16", "Mesh3D3_16"):
             qv, pos = _bytes_to_i16_array(data, pos, meshlet.nb_vertices, 3)
             qn, pos = _bytes_to_i16_array(data, pos, meshlet.nb_normals, 3)
             qt, pos = _bytes_to_i16_array(data, pos, meshlet.nb_texcoords, 2)
@@ -394,17 +412,20 @@ def parse_mesh3d2_header(path: str | Path) -> DecodedHeaderMesh:
     header = Path(path).resolve()
     raw = header.read_text(encoding="utf-8", errors="replace")
     text = _strip_comments(raw)
-    decl = re.search(r"const\s+tgx::(Mesh3D2(?:_16)?)<\s*([^>]+?)\s*>\s+(\w+)\s*(?:PROGMEM\s*)?=", text)
+    decl = re.search(r"const\s+tgx::(Mesh3D(?:2(?:_16)?|3_16))<\s*([^>]+?)\s*>\s+(\w+)\s*(?:PROGMEM\s*)?=", text)
     if not decl:
-        raise ValueError("no Mesh3D2 or Mesh3D2_16 declaration found")
+        raise ValueError("no Mesh3D2, Mesh3D2_16 or Mesh3D3_16 declaration found")
     fmt, color_type, symbol = decl.group(1), decl.group(2).strip(), decl.group(3)
     body = _extract_named_object_body(text, symbol)
     fields = _split_top_level(body)
-    if len(fields) < 10:
-        raise ValueError(f"{symbol}: expected 10 mesh fields, found {len(fields)}")
+    if len(fields) < (11 if fmt == "Mesh3D3_16" else 10):
+        raise ValueError(f"{symbol}: expected mesh fields, found {len(fields)}")
     material_array = _identifier_or_null(fields[5])
     meshlet_array = _identifier_or_null(fields[6])
-    payload_array = _identifier_or_null(fields[7])
+    payload_field = 8 if fmt == "Mesh3D3_16" else 7
+    bbox_field = 9 if fmt == "Mesh3D3_16" else 8
+    name_field = 10 if fmt == "Mesh3D3_16" else 9
+    payload_array = _identifier_or_null(fields[payload_field])
     mesh = DecodedHeaderMesh(
         path=header,
         format=fmt,
@@ -415,10 +436,10 @@ def parse_mesh3d2_header(path: str | Path) -> DecodedHeaderMesh:
         nb_meshlets_declared=int(_numbers(fields[2])[0]),
         nb_faces_declared=int(_numbers(fields[3])[0]),
         nb_materials_declared=int(_numbers(fields[4])[0]),
-        bbox=_box(fields[8]),
-        name=_string_field(fields[9]),
+        bbox=_box(fields[bbox_field]),
+        name=_string_field(fields[name_field]),
         materials=_parse_materials(text, material_array),
-        meshlets=_parse_meshlet_headers(text, meshlet_array),
+        meshlets=_parse_meshlet_headers(text, meshlet_array, fmt),
         texture_headers=_parse_texture_headers(raw, header.parent),
     )
     payload_words = _ints(_extract_named_array_body(text, payload_array))
@@ -430,6 +451,8 @@ def detect_mesh_type(path: str | Path) -> str:
     text = Path(path).read_text(encoding="utf-8", errors="replace")
     if re.search(r"tgx::Mesh3D2_16\s*<", text):
         return "Mesh3D2_16"
+    if re.search(r"tgx::Mesh3D3_16\s*<", text):
+        return "Mesh3D3_16"
     if re.search(r"tgx::Mesh3D2\s*<", text):
         return "Mesh3D2"
     if re.search(r"tgx::Mesh3D\s*<", text):

@@ -6,13 +6,14 @@ from pathlib import Path
 import numpy as np
 
 from .cones import apply_visibility_cones, auto_visibility_margin_deg
-from .exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_header
+from .exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_header, export_mesh3d3_16_header
 from .mesh import Meshlet, ObjMesh, compute_triangle_normals, unique_valid
 from .meshlets import MeshletBuildOptions, _make_meshlet, build_meshlets, meshlet_stats, sort_meshlets_by_material
 from .preprocess import PreprocessStats
+from .progress import log, step
 from .profiles import meshlet_options_from_args, profile_names
 from .quality import cull_ratio_stats, fibonacci_sphere
-from .stripifier import DEFAULT_LKH_EXE
+from .stripifier import DEFAULT_LKH_EXE, solver_stats_text
 from .validate import validate_mesh_for_export
 from .visibility import compute_tgx_visibility
 
@@ -21,27 +22,27 @@ def add_build_options(parser: argparse.ArgumentParser, *, source: str = "obj") -
     include_obj = source != "legacy"
     include_legacy = True
     parser.add_argument("--profile", choices=profile_names(include_obj=include_obj, include_legacy=include_legacy), default="custom", help="meshlet tuning profile; custom uses the low-level options below")
-    parser.add_argument("--builder", choices=("greedy", "hybrid", "nocull", "visibility_merge"), default="greedy")
-    parser.add_argument("--target-vertices", type=int, default=52)
-    parser.add_argument("--max-vertices", type=int, default=127)
-    parser.add_argument("--max-triangles", type=int, default=70)
-    parser.add_argument("--max-normal-angle", type=float, default=42.0)
-    parser.add_argument("--radius-weight", type=float, default=7.0)
-    parser.add_argument("--normal-weight", type=float, default=18.0)
-    parser.add_argument("--vertex-weight", type=float, default=2.0)
-    parser.add_argument("--stop-score", type=float, default=4.8)
-    parser.add_argument("--compatible-edge-weight", type=float, default=0.0)
-    parser.add_argument("--incompatible-edge-penalty", type=float, default=0.0)
-    parser.add_argument("--compatible-merge-weight", type=float, default=0.0)
-    parser.add_argument("--nocull-lkh-component-limit", type=int, default=500)
-    parser.add_argument("--nocull-lkh-time-limit", type=int, default=30)
-    parser.add_argument("--visibility-merge-samples", type=int, default=1024)
-    parser.add_argument("--visibility-merge-size", type=int, default=1024)
-    parser.add_argument("--visibility-merge-margin", type=float, default=-1.0)
-    parser.add_argument("--visibility-merge-cone-weight", type=float, default=45.0)
-    parser.add_argument("--merge-passes", type=int, default=1)
-    parser.add_argument("--smooth-passes", type=int, default=0)
-    parser.add_argument("--merge-max-normal-angle", type=float, default=48.0)
+    parser.add_argument("--builder", choices=("greedy", "hybrid", "nocull", "visibility_merge"), default=None)
+    parser.add_argument("--target-vertices", type=int, default=None)
+    parser.add_argument("--max-vertices", type=int, default=None)
+    parser.add_argument("--max-triangles", type=int, default=None)
+    parser.add_argument("--max-normal-angle", type=float, default=None)
+    parser.add_argument("--radius-weight", type=float, default=None)
+    parser.add_argument("--normal-weight", type=float, default=None)
+    parser.add_argument("--vertex-weight", type=float, default=None)
+    parser.add_argument("--stop-score", type=float, default=None)
+    parser.add_argument("--compatible-edge-weight", type=float, default=None)
+    parser.add_argument("--incompatible-edge-penalty", type=float, default=None)
+    parser.add_argument("--compatible-merge-weight", type=float, default=None)
+    parser.add_argument("--nocull-lkh-component-limit", type=int, default=None)
+    parser.add_argument("--nocull-lkh-time-limit", type=float, default=None, help="override automatic stripifier budget for nocull components")
+    parser.add_argument("--visibility-merge-samples", type=int, default=None)
+    parser.add_argument("--visibility-merge-size", type=int, default=None)
+    parser.add_argument("--visibility-merge-margin", type=float, default=None)
+    parser.add_argument("--visibility-merge-cone-weight", type=float, default=None)
+    parser.add_argument("--merge-passes", type=int, default=None)
+    parser.add_argument("--smooth-passes", type=int, default=None)
+    parser.add_argument("--merge-max-normal-angle", type=float, default=None)
 
 
 def add_visibility_options(parser: argparse.ArgumentParser, *, default_samples: int = 2048, default_size: int = 768) -> None:
@@ -69,15 +70,16 @@ def maybe_compute_visibility_cones(args: argparse.Namespace, mesh: ObjMesh, mesh
     print(f"  views         : {len(views)}")
     print(f"  render size   : {args.visibility_size}x{args.visibility_size}")
     print(f"  margin        : {margin:.2f} deg" + (" (auto)" if args.visibility_margin < 0.0 else ""))
-    visibility = compute_tgx_visibility(
-        mesh,
-        meshlets,
-        views,
-        width=args.visibility_size,
-        height=args.visibility_size,
-        helper=args.visibility_helper,
-        keep_files=getattr(args, "keep_visibility_files", False),
-    )
+    with step("TGX visibility render", f"{len(meshlets)} meshlets, {len(views)} views"):
+        visibility = compute_tgx_visibility(
+            mesh,
+            meshlets,
+            views,
+            width=args.visibility_size,
+            height=args.visibility_size,
+            helper=args.visibility_helper,
+            keep_files=getattr(args, "keep_visibility_files", False),
+        )
     visible_counts = np.sum(visibility, axis=0)
     print(f"  visible views : min {int(np.min(visible_counts))}, avg {float(np.mean(visible_counts)):.1f}, max {int(np.max(visible_counts))}")
     print(f"  never visible : {int(np.sum(visible_counts == 0))}")
@@ -131,23 +133,34 @@ def merge_small_material_meshlets(mesh: ObjMesh, meshlets: list[Meshlet], option
 
 def build_meshlets_for_args(args: argparse.Namespace, mesh: ObjMesh, *, source: str = "obj") -> tuple[list[Meshlet], MeshletBuildOptions]:
     options = options_from_args(args, mesh, source=source)
-    meshlets = build_meshlets(mesh, options)
+    setattr(args, "_resolved_meshlet_options", options)
+    with step("meshlet build", f"builder={options.builder}, triangles={len(mesh.triangles)}"):
+        meshlets = build_meshlets(mesh, options)
+    log(f"meshlet build result: {len(meshlets)} meshlets")
     if getattr(args, "merge_small_materials", False):
-        meshlets = merge_small_material_meshlets(mesh, meshlets, options)
+        before = len(meshlets)
+        with step("merge small material meshlets", f"{before} meshlets"):
+            meshlets = merge_small_material_meshlets(mesh, meshlets, options)
+        if len(meshlets) != before:
+            log(f"merge small material meshlets: {before} -> {len(meshlets)}")
     return meshlets, options
 
 
 def finalize_meshlets_for_export(args: argparse.Namespace, mesh: ObjMesh, meshlets: list[Meshlet], *, cone_source: str | None = None) -> tuple[list[Meshlet], str]:
     meshlets = maybe_compute_visibility_cones(args, mesh, meshlets)
     if getattr(args, "sort_by_material", True):
-        meshlets = sort_meshlets_by_material(meshlets)
-    validate_mesh_for_export(mesh, meshlets)
+        with step("sort meshlets by material", f"{len(meshlets)} meshlets"):
+            meshlets = sort_meshlets_by_material(meshlets)
+    with step("validate meshlets", f"{len(meshlets)} meshlets"):
+        validate_mesh_for_export(mesh, meshlets)
     if cone_source is not None:
         return meshlets, cone_source
+    resolved_options = getattr(args, "_resolved_meshlet_options", None)
+    resolved_builder = getattr(resolved_options, "builder", getattr(args, "builder", ""))
     resolved = "visibility" if getattr(args, "visibility_cones", False) else "normal"
-    if getattr(args, "builder", "") == "nocull":
+    if resolved_builder == "nocull":
         resolved = "nocull"
-    elif getattr(args, "builder", "") == "visibility_merge":
+    elif resolved_builder == "visibility_merge":
         resolved = "visibility"
     return meshlets, resolved
 
@@ -163,21 +176,40 @@ def export_common(
     texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
 ) -> Mesh3D2ExportResult:
-    exporter = export_mesh3d2_16_header if getattr(args, "mesh3d2_format", "mesh3d2") == "mesh3d2_16" else export_mesh3d2_header
-    result = exporter(
-        mesh,
-        meshlets,
+    fmt = getattr(args, "mesh3d2_format", "mesh3d2")
+    if fmt == "mesh3d2_16":
+        exporter = export_mesh3d2_16_header
+    elif fmt == "mesh3d3_16":
+        exporter = export_mesh3d3_16_header
+    else:
+        exporter = export_mesh3d2_header
+    kwargs = dict(
         name=args.name or output.stem,
         color_type=color_type,
-        use_lkh=not getattr(args, "no_lkh", False),
+        use_lkh=True,
         lkh_exe=getattr(args, "lkh", DEFAULT_LKH_EXE),
         texture_symbols=texture_symbols or {},
         extra_includes=extra_includes or [],
-        cone_source=cone_source,
     )
+    if fmt == "mesh3d3_16":
+        kwargs.update(
+            visibility_size=getattr(args, "visibility_size", 1024),
+            visibility_helper=getattr(args, "visibility_helper", None),
+            keep_visibility_files=getattr(args, "keep_visibility_files", False),
+        )
+    else:
+        kwargs.update(cone_source=cone_source)
+    with step("encode/export mesh", f"{fmt}, {len(meshlets)} meshlets"):
+        result = exporter(
+            mesh,
+            meshlets,
+            **kwargs,
+        )
+    log(f"stripifier choices: {solver_stats_text()}")
     output.parent.mkdir(parents=True, exist_ok=True)
-    with output.open("w", encoding="utf-8", newline="\n") as handle:
-        handle.write(result.header)
+    with step("write header", str(output)):
+        with output.open("w", encoding="utf-8", newline="\n") as handle:
+            handle.write(result.header)
     return result
 
 

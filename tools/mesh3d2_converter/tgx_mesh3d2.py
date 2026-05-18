@@ -1,17 +1,21 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import numpy as np
 
-from .meshlets import build_meshlets
-from .obj_loader import load_obj
-from .preprocess import preprocess_mesh
-from .stripifier import DEFAULT_LKH_EXE, strip_stats
-from .viewer import show_meshlets, show_meshlets_pyvista
-from .texture_exporter import export_texture_rgb565_header, identifier as texture_identifier
-from .pipeline import (
+from tools.mesh3d2_converter.meshlets import build_meshlets
+from tools.mesh3d2_converter.obj_loader import load_obj
+from tools.mesh3d2_converter.preprocess import DEFAULT_NORMAL_QUANT_BITS, DEFAULT_TEXCOORD_QUANT_BITS, DEFAULT_VERTEX_QUANT_BITS, preprocess_mesh
+from tools.mesh3d2_converter.progress import step
+from tools.mesh3d2_converter.stripifier import DEFAULT_LKH_EXE, strip_stats
+from tools.mesh3d2_converter.texture_exporter import export_texture_rgb565_header, identifier as texture_identifier
+from tools.mesh3d2_converter.pipeline import (
     add_build_options as _add_build_options,
     add_visibility_options as _add_visibility_options,
     build_meshlets_for_args,
@@ -28,6 +32,7 @@ from .pipeline import (
 def cmd_stats(args: argparse.Namespace) -> None:
     mesh = load_obj(args.obj)
     if args.meshlets:
+        mesh, _ = preprocess_mesh(mesh)
         meshlets = build_meshlets(mesh, _options(args, mesh))
         meshlets = _maybe_compute_visibility_cones(args, mesh, meshlets)
     else:
@@ -38,7 +43,11 @@ def cmd_stats(args: argparse.Namespace) -> None:
 
 
 def cmd_view(args: argparse.Namespace) -> None:
+    from tools.mesh3d2_converter.viewer import show_meshlets, show_meshlets_pyvista
+
     mesh = load_obj(args.obj)
+    if args.meshlets:
+        mesh, _ = preprocess_mesh(mesh)
     meshlets = build_meshlets(mesh, _options(args, mesh)) if args.meshlets else None
     if args.meshlets:
         meshlets = _maybe_compute_visibility_cones(args, mesh, meshlets)
@@ -73,6 +82,7 @@ def cmd_view(args: argparse.Namespace) -> None:
 
 def cmd_strips(args: argparse.Namespace) -> None:
     mesh = load_obj(args.obj)
+    mesh, _ = preprocess_mesh(mesh)
     meshlets = build_meshlets(mesh, _options(args, mesh))
     meshlets = _maybe_compute_visibility_cones(args, mesh, meshlets)
     _print_mesh_stats(mesh, meshlets)
@@ -92,14 +102,20 @@ def cmd_strips(args: argparse.Namespace) -> None:
 
 
 def cmd_export(args: argparse.Namespace) -> None:
-    mesh = load_obj(args.obj)
-    mesh, prep = preprocess_mesh(
-        mesh,
-        normalize=args.normalize,
-        normalize_size=args.normalize_size,
-        dedupe_epsilon=args.dedupe_epsilon,
-        force_normals=args.force_normals,
-    )
+    with step("load OBJ", args.obj):
+        mesh = load_obj(args.obj)
+    with step("preprocess mesh", f"{len(mesh.triangles)} triangles"):
+        mesh, prep = preprocess_mesh(
+            mesh,
+            normalize=args.normalize,
+            normalize_size=args.normalize_size,
+            dedupe_epsilon=args.dedupe_epsilon,
+            force_normals=args.force_normals,
+            vertex_quant_bits=args.vertex_quant_bits,
+            texcoord_quant_bits=args.texcoord_quant_bits,
+            texcoord_wrap=args.texcoord_wrap,
+            normal_quant_bits=args.normal_quant_bits,
+        )
     meshlets, _ = build_meshlets_for_args(args, mesh, source="obj")
     meshlets, cone_source = finalize_meshlets_for_export(args, mesh, meshlets)
 
@@ -155,7 +171,7 @@ def cmd_export(args: argparse.Namespace) -> None:
     print(f"  chains          : {stats.chains} ({100.0 * stats.chains / stats.triangles:.2f}% of triangles)")
     print(f"  vertex refs     : {stats.vertex_refs_loaded} ({stats.vertex_refs_loaded / stats.triangles:.3f} per tri)")
     print(f"  payload         : {stats.payload_bytes} bytes ({stats.payload_words} uint32 words)")
-    print(f"  LKH chains      : {'no' if args.no_lkh else 'yes'}")
+    print("  stripifiers     : enabled")
 
 
 def _ask(prompt: str, default: str = "") -> str:
@@ -187,7 +203,10 @@ def cmd_wizard(args: argparse.Namespace) -> None:
         normalize_size=2.0,
         dedupe_epsilon=1e-9,
         force_normals=False,
-        no_lkh=False,
+        vertex_quant_bits=DEFAULT_VERTEX_QUANT_BITS,
+        texcoord_quant_bits=DEFAULT_TEXCOORD_QUANT_BITS,
+        texcoord_wrap=False,
+        normal_quant_bits=DEFAULT_NORMAL_QUANT_BITS,
         lkh=str(DEFAULT_LKH_EXE),
         texture_symbol=[],
         export_textures=textures,
@@ -309,12 +328,15 @@ def main(argv: list[str] | None = None) -> int:
     p_export.add_argument("-o", "--output", required=True)
     p_export.add_argument("--name")
     p_export.add_argument("--color-type", choices=("tgx::RGB565", "tgx::RGB32", "tgx::RGBf"), default="tgx::RGB565")
-    p_export.add_argument("--mesh3d2-format", choices=("mesh3d2", "mesh3d2_16"), default="mesh3d2", help="output payload format")
+    p_export.add_argument("--mesh3d2-format", choices=("mesh3d2", "mesh3d2_16", "mesh3d3_16"), default="mesh3d2", help="output payload format")
     p_export.add_argument("--normalize", action="store_true", help="center the model and fit its largest extent to --normalize-size")
     p_export.add_argument("--normalize-size", type=float, default=2.0)
     p_export.add_argument("--dedupe-epsilon", type=float, default=1e-9)
     p_export.add_argument("--force-normals", action="store_true")
-    p_export.add_argument("--no-lkh", action="store_true")
+    p_export.add_argument("--vertex-quant-bits", type=int, default=DEFAULT_VERTEX_QUANT_BITS, help="quantize and merge vertices to this many bounding-box bits; negative disables")
+    p_export.add_argument("--texcoord-quant-bits", type=int, default=DEFAULT_TEXCOORD_QUANT_BITS, help="snap and merge UVs to a 1/(2^bits) grid; negative disables")
+    p_export.add_argument("--texcoord-wrap", action="store_true", help="identify UVs modulo 1 during UV quantization; only use when this preserves texture mapping")
+    p_export.add_argument("--normal-quant-bits", type=int, default=DEFAULT_NORMAL_QUANT_BITS, help="quantize and merge normals to signed fixed-point bits per coordinate; negative disables")
     p_export.add_argument("--lkh", default=str(DEFAULT_LKH_EXE))
     p_export.add_argument("--texture-symbol", action="append", default=[], metavar="MATERIAL=SYMBOL", help="link an OBJ material to an existing tgx::Image symbol")
     p_export.add_argument("--export-textures", action="store_true", help="convert map_Kd textures from OBJ materials to RGB565 TGX headers")

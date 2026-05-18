@@ -1,17 +1,18 @@
 from __future__ import annotations
 
 import math
+import os
 import re
 import struct
-import subprocess
-import tempfile
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
 
 from .mesh import FaceVertex, Meshlet, ObjMesh
-from .stripifier import DEFAULT_LKH_EXE, _read_lkh_tour, _write_lkh_problem
+from .progress import Heartbeat, log
+from .stripifier import DEFAULT_LKH_EXE, StripifyOptions, stripify_component
 
 
 @dataclass
@@ -102,56 +103,37 @@ def _with_new_corner_last(
     raise RuntimeError("internal strip error: new corner is not in triangle")
 
 
-def _lkh_order(mesh: ObjMesh, tri_indices: list[int], lkh_exe: str | Path) -> list[int]:
-    if len(tri_indices) <= 2:
-        return tri_indices.copy()
-    lkh_exe = Path(lkh_exe)
-    if not lkh_exe.exists():
-        return tri_indices.copy()
-    with tempfile.TemporaryDirectory(prefix="tgx_lkh_export_") as tmp:
-        workdir = Path(tmp)
-        _write_lkh_problem(workdir, mesh, tri_indices)
-        completed = subprocess.run(
-            [str(lkh_exe), "meshlet.par"],
-            cwd=workdir,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.PIPE,
-            text=True,
-            check=False,
-        )
-        if completed.returncode != 0 or not (workdir / "meshlet_res.txt").exists():
-            return tri_indices.copy()
-        return _read_lkh_tour(workdir, tri_indices)
-
-
 def _make_chains(
     mesh: ObjMesh,
     tri_indices: list[int],
     *,
     use_lkh: bool,
     lkh_exe: str | Path,
+    lkh_time_limit_s: float | None = None,
 ) -> list[list[tuple[int | None, tuple[FaceVertex, FaceVertex, FaceVertex]]]]:
-    ordered = _lkh_order(mesh, tri_indices, lkh_exe) if use_lkh else tri_indices.copy()
-    triangles = [mesh.triangles[i].corners for i in ordered]
-    if not triangles:
+    if use_lkh:
+        result = stripify_component(
+            mesh,
+            tri_indices,
+            StripifyOptions(max_time_s=lkh_time_limit_s, lkh_exe=lkh_exe),
+        )
+        ordered_runs = result.chains
+    else:
+        ordered_runs = [tri_indices.copy()]
+
+    if not ordered_runs:
         return []
 
-    # LKH returns a cyclic tour. Rotate it at a rupture when one exists, so the
-    # arbitrary tour start does not add a spurious extra chain.
-    if len(triangles) > 1:
-        for i in range(len(triangles)):
-            if not _is_chain_adjacent(triangles[i - 1], triangles[i]):
-                triangles = triangles[i:] + triangles[:i]
-                break
-
     runs: list[list[tuple[FaceVertex, FaceVertex, FaceVertex]]] = []
-    current: list[tuple[FaceVertex, FaceVertex, FaceVertex]] = []
-    for tri in triangles:
-        if (not current) or (len(current) >= 255) or (not _is_chain_adjacent(current[-1], tri)):
-            current = [tri]
-            runs.append(current)
-        else:
-            current.append(tri)
+    for ordered in ordered_runs:
+        current: list[tuple[FaceVertex, FaceVertex, FaceVertex]] = []
+        for ti in ordered:
+            tri = mesh.triangles[ti].corners
+            if (not current) or (len(current) >= 255) or (not _is_chain_adjacent(current[-1], tri)):
+                current = [tri]
+                runs.append(current)
+            else:
+                current.append(tri)
 
     chains: list[list[tuple[int | None, tuple[FaceVertex, FaceVertex, FaceVertex]]]] = []
     for run in runs:
@@ -403,6 +385,67 @@ def _format_u32_array(values: list[int]) -> str:
     return "\n".join(lines)
 
 
+def octahedral_visibility_directions(grid: int = 32) -> np.ndarray:
+    """Return object-to-camera directions matching TGX Mesh3D3_16 runtime indexing."""
+    if grid != 32:
+        raise ValueError("Mesh3D3_16 currently expects a 32x32 visibility grid")
+    dirs = []
+    for iy in range(grid):
+        for ix in range(grid):
+            u = (2.0 * ix / float(grid - 1)) - 1.0
+            v = (2.0 * iy / float(grid - 1)) - 1.0
+            x = u
+            y = v
+            z = 1.0 - abs(u) - abs(v)
+            if z < 0.0:
+                old_x = x
+                x = (1.0 - abs(y)) * (-1.0 if old_x < 0.0 else 1.0)
+                y = (1.0 - abs(old_x)) * (-1.0 if y < 0.0 else 1.0)
+            n = np.asarray([x, y, z], dtype=np.float64)
+            norm = float(np.linalg.norm(n))
+            dirs.append(n / norm if norm > 0.0 else np.asarray([0.0, 0.0, 1.0], dtype=np.float64))
+    return np.asarray(dirs, dtype=np.float64)
+
+
+def _dilate_oct_visibility(visibility: np.ndarray, grid: int = 32) -> np.ndarray:
+    """Dilate visibility bits by one 2D neighbor ring to make quantized lookup conservative."""
+    if visibility.shape[0] != grid * grid:
+        raise ValueError(f"visibility row count must be {grid * grid}")
+    src = visibility.astype(bool, copy=False).reshape((grid, grid, visibility.shape[1]))
+    dst = src.copy()
+    for dy in (-1, 0, 1):
+        for dx in (-1, 0, 1):
+            if dx == 0 and dy == 0:
+                continue
+            ys0 = max(0, -dy)
+            ys1 = min(grid, grid - dy)
+            xs0 = max(0, -dx)
+            xs1 = min(grid, grid - dx)
+            dst[ys0 + dy : ys1 + dy, xs0 + dx : xs1 + dx, :] |= src[ys0:ys1, xs0:xs1, :]
+    return dst.reshape((grid * grid, visibility.shape[1]))
+
+
+def _pack_visibility_masks(visibility: np.ndarray) -> list[int]:
+    """Pack a (1024, nb_meshlets) boolean visibility matrix into per-meshlet uint32 words."""
+    if visibility.shape[0] != 1024:
+        raise ValueError("Mesh3D3_16 expects exactly 1024 visibility samples")
+    words: list[int] = []
+    for mi in range(visibility.shape[1]):
+        column = visibility[:, mi].astype(bool, copy=False)
+        if not np.any(column):
+            # Keep invisible/internal meshlets conservative; do not drop geometry automatically.
+            words.extend([0xFFFFFFFF] * 32)
+            continue
+        for wi in range(32):
+            word = 0
+            base = wi * 32
+            for bit in range(32):
+                if bool(column[base + bit]):
+                    word |= 1 << bit
+            words.append(word)
+    return words
+
+
 def _export_mesh3d2_header_impl(
     mesh: ObjMesh,
     meshlets: list[Meshlet],
@@ -419,6 +462,7 @@ def _export_mesh3d2_header_impl(
     mesh_id: int = 2,
     payload16: bool = False,
     cone_source: str = "normal",
+    visibility_masks_words: list[int] | None = None,
 ) -> Mesh3D2ExportResult:
     symbol = _identifier(name or mesh.name or "mesh")
     materials = sorted({m.material for m in meshlets})
@@ -428,16 +472,38 @@ def _export_mesh3d2_header_impl(
     texture_symbols = texture_symbols or {}
     extra_includes = extra_includes or []
 
-    encoded: list[_EncodedMeshlet] = []
+    encoded: list[_EncodedMeshlet] = [None] * len(meshlets)  # type: ignore[list-item]
+    heartbeat = Heartbeat("encode meshlets")
+    done_count = 0
+    done_chains = 0
+    workers = max(1, min(len(meshlets), (os.cpu_count() or 1) // 2))
+    if len(meshlets) >= 32:
+        log(f"encode meshlets: {len(meshlets)} meshlets, {workers} workers")
+
+    def encode_one(index: int, meshlet: Meshlet) -> tuple[int, _EncodedMeshlet]:
+        item = _encode_meshlet(mesh, meshlet, material_index[meshlet.material], use_lkh=use_lkh, lkh_exe=lkh_exe)
+        return index, item
+
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        futures = [pool.submit(encode_one, index, meshlet) for index, meshlet in enumerate(meshlets)]
+        for future in as_completed(futures):
+            index, item = future.result()
+            encoded[index] = item
+            done_count += 1
+            done_chains += item.chain_count
+            if len(meshlets) >= 32:
+                if done_count == 1 or done_count == len(meshlets) or (done_count % 25) == 0:
+                    log(f"encode meshlets: {done_count}/{len(meshlets)}, chains {done_chains}")
+                else:
+                    heartbeat.ping(f"{done_count}/{len(meshlets)}, chains {done_chains}")
+
     payload = bytearray()
     chains = 0
     vertex_refs_loaded = 0
-    for meshlet in meshlets:
-        item = _encode_meshlet(mesh, meshlet, material_index[meshlet.material], use_lkh=use_lkh, lkh_exe=lkh_exe)
+    for item, meshlet in zip(encoded, meshlets):
         item.payload_offset32 = len(payload) // 4
         block = _payload16_for_meshlet(mesh, meshlet, item) if payload16 else _payload_for_meshlet(mesh, item)
         payload.extend(block)
-        encoded.append(item)
         chains += item.chain_count
         vertex_refs_loaded += item.vertex_refs_loaded
 
@@ -459,21 +525,34 @@ def _export_mesh3d2_header_impl(
     text.append(_format_u32_array(payload_words))
     text.append("};")
     text.append("")
+    if visibility_masks_words is not None:
+        text.append(f"const uint32_t {symbol}_visibility_masks[{len(visibility_masks_words)}] PROGMEM = {{")
+        text.append(_format_u32_array(visibility_masks_words))
+        text.append("};")
+        text.append("")
     text.append(f"const tgx::{meshlet_type} {symbol}_meshlets[{len(meshlets)}] PROGMEM = {{")
     for meshlet, item in zip(meshlets, encoded):
-        if cone_source == "nocull":
-            cone_dir = np.asarray([0.0, 0.0, 1.0], dtype=np.float64)
-            cone_cos = -1.0
+        if mesh_type == "Mesh3D3_16":
+            text.append("    {")
+            text.append(f"        {_fmt_vec3(meshlet.center)},")
+            text.append(f"        {_fmt_float(meshlet.radius)},")
+            text.append(f"        {item.payload_offset32}u,")
+            text.append(f"        {len(item.vertices)}, {len(item.normals)}, {len(item.texcoords)}, {item.material_index}")
+            text.append("    },")
         else:
-            cone_dir, cone_cos = meshlet.selected_cull_cone(cone_source)
-            if cone_cos > 1.0:
+            if cone_source == "nocull":
+                cone_dir = np.asarray([0.0, 0.0, 1.0], dtype=np.float64)
                 cone_cos = -1.0
-        text.append("    {")
-        text.append(f"        {_fmt_vec3(meshlet.center)}, {_fmt_vec3(cone_dir)},")
-        text.append(f"        {_fmt_float(meshlet.radius)}, {_fmt_float(cone_cos)},")
-        text.append(f"        {item.payload_offset32}u,")
-        text.append(f"        {len(item.vertices)}, {len(item.normals)}, {len(item.texcoords)}, {item.material_index}")
-        text.append("    },")
+            else:
+                cone_dir, cone_cos = meshlet.selected_cull_cone(cone_source)
+                if cone_cos > 1.0:
+                    cone_cos = -1.0
+            text.append("    {")
+            text.append(f"        {_fmt_vec3(meshlet.center)}, {_fmt_vec3(cone_dir)},")
+            text.append(f"        {_fmt_float(meshlet.radius)}, {_fmt_float(cone_cos)},")
+            text.append(f"        {item.payload_offset32}u,")
+            text.append(f"        {len(item.vertices)}, {len(item.normals)}, {len(item.texcoords)}, {item.material_index}")
+            text.append("    },")
     text.append("};")
     text.append("")
     text.append(f"const tgx::{material_type}<{color_type}> {symbol}_materials[{len(materials)}] PROGMEM = {{")
@@ -499,6 +578,8 @@ def _export_mesh3d2_header_impl(
     text.append(f"    {len(materials)},")
     text.append(f"    {symbol}_materials,")
     text.append(f"    {symbol}_meshlets,")
+    if visibility_masks_words is not None:
+        text.append(f"    {symbol}_visibility_masks,")
     text.append(f"    {symbol}_payload,")
     text.append("    {")
     text.append(f"    {_fmt_float(bb_min[0])}, {_fmt_float(bb_max[0])},")
@@ -573,4 +654,54 @@ def export_mesh3d2_16_header(
         mesh_id=216,
         payload16=True,
         cone_source=cone_source,
+    )
+
+
+def export_mesh3d3_16_header(
+    mesh: ObjMesh,
+    meshlets: list[Meshlet],
+    *,
+    name: str | None = None,
+    color_type: str = "tgx::RGB565",
+    use_lkh: bool = True,
+    lkh_exe: str | Path = DEFAULT_LKH_EXE,
+    texture_symbols: dict[str, str] | None = None,
+    extra_includes: list[str] | None = None,
+    visibility_size: int = 1024,
+    visibility_helper: str | Path | None = None,
+    keep_visibility_files: bool = False,
+) -> Mesh3D2ExportResult:
+    from .visibility import compute_tgx_visibility
+
+    # Mesh3D3_16 stores object-to-camera directions. The TGX helper renders using
+    # camera-to-object directions, so the sign is flipped for the helper call.
+    object_to_camera = octahedral_visibility_directions(32)
+    visibility = compute_tgx_visibility(
+        mesh,
+        meshlets,
+        -object_to_camera,
+        width=visibility_size,
+        height=visibility_size,
+        helper=visibility_helper,
+        keep_files=keep_visibility_files,
+    )
+    visibility = _dilate_oct_visibility(visibility, 32)
+    visibility_masks_words = _pack_visibility_masks(visibility)
+
+    return _export_mesh3d2_header_impl(
+        mesh,
+        meshlets,
+        name=name,
+        color_type=color_type,
+        use_lkh=use_lkh,
+        lkh_exe=lkh_exe,
+        texture_symbols=texture_symbols,
+        extra_includes=extra_includes,
+        mesh_type="Mesh3D3_16",
+        meshlet_type="Meshlet3D3_16",
+        material_type="MeshMaterial3D3_16",
+        mesh_id=316,
+        payload16=True,
+        cone_source="visibility",
+        visibility_masks_words=visibility_masks_words,
     )

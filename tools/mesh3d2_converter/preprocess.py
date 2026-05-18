@@ -7,6 +7,11 @@ import numpy as np
 from .mesh import FaceVertex, ObjMesh, Triangle
 
 
+DEFAULT_TEXCOORD_QUANT_BITS = 9
+DEFAULT_NORMAL_QUANT_BITS = 16
+DEFAULT_VERTEX_QUANT_BITS = 20
+
+
 @dataclass
 class PreprocessStats:
     vertices_before: int
@@ -36,6 +41,81 @@ def _dedupe_array(values: np.ndarray, eps: float) -> tuple[np.ndarray, list[int]
             unique.append(row.copy())
         remap.append(index)
     return np.asarray(unique, dtype=np.float64).reshape((-1, values.shape[1])), remap
+
+
+def _quantize_dedupe_vertices(values: np.ndarray, bits: int) -> tuple[np.ndarray, list[int]]:
+    if len(values) == 0:
+        return values.copy(), []
+    if bits <= 0:
+        return _dedupe_array(values, 1e-12)
+    bb_min = np.min(values, axis=0)
+    bb_max = np.max(values, axis=0)
+    extent = bb_max - bb_min
+    scale = (1 << bits) - 1
+    safe_extent = np.where(extent > 0.0, extent, 1.0)
+    quant = np.rint(((values - bb_min) / safe_extent) * scale).astype(np.int64)
+    quant[:, extent <= 0.0] = 0
+    remap: list[int] = []
+    unique: list[np.ndarray] = []
+    seen: dict[tuple[int, int, int], int] = {}
+    for i, key in enumerate(map(tuple, quant)):
+        index = seen.get(key)
+        if index is None:
+            index = len(unique)
+            seen[key] = index
+            unique.append(bb_min + (quant[i].astype(np.float64) / scale) * extent)
+        remap.append(index)
+    return np.asarray(unique, dtype=np.float64).reshape((-1, 3)), remap
+
+
+def _quantize_dedupe_texcoords(values: np.ndarray, bits: int, *, wrap: bool) -> tuple[np.ndarray, list[int]]:
+    if len(values) == 0:
+        return values.copy(), []
+    if bits < 0:
+        return _dedupe_array(values, 1e-12)
+    scale = 1 << bits
+    source = np.mod(values, 1.0) if wrap else values.copy()
+    quant = np.rint(source * scale).astype(np.int64)
+    if wrap:
+        quant %= scale
+    remap: list[int] = []
+    unique: list[np.ndarray] = []
+    seen: dict[tuple[int, int], int] = {}
+    for i, key in enumerate(map(tuple, quant)):
+        index = seen.get(key)
+        if index is None:
+            index = len(unique)
+            seen[key] = index
+            unique.append(quant[i].astype(np.float64) / scale)
+        remap.append(index)
+    return np.asarray(unique, dtype=np.float64).reshape((-1, 2)), remap
+
+
+def _quantize_dedupe_normals(values: np.ndarray, bits: int) -> tuple[np.ndarray, list[int]]:
+    if len(values) == 0:
+        return values.copy(), []
+    if bits <= 1:
+        return _dedupe_array(_normalize_normals(values), 1e-12)
+    normalized = _normalize_normals(values)
+    maxq = (1 << (bits - 1)) - 1
+    quant = np.rint(np.clip(normalized, -1.0, 1.0) * maxq).astype(np.int64)
+    remap: list[int] = []
+    unique: list[np.ndarray] = []
+    seen: dict[tuple[int, int, int], int] = {}
+    for i, key in enumerate(map(tuple, quant)):
+        index = seen.get(key)
+        if index is None:
+            index = len(unique)
+            seen[key] = index
+            n = quant[i].astype(np.float64) / maxq
+            length = float(np.linalg.norm(n))
+            if length > 0.0:
+                n /= length
+            else:
+                n = np.asarray([0.0, 0.0, 1.0], dtype=np.float64)
+            unique.append(n)
+        remap.append(index)
+    return np.asarray(unique, dtype=np.float64).reshape((-1, 3)), remap
 
 
 def _normalize_normals(normals: np.ndarray) -> np.ndarray:
@@ -89,6 +169,10 @@ def preprocess_mesh(
     normalize_size: float = 2.0,
     dedupe_epsilon: float = 1e-9,
     force_normals: bool = False,
+    vertex_quant_bits: int = DEFAULT_VERTEX_QUANT_BITS,
+    texcoord_quant_bits: int = DEFAULT_TEXCOORD_QUANT_BITS,
+    texcoord_wrap: bool = False,
+    normal_quant_bits: int = DEFAULT_NORMAL_QUANT_BITS,
 ) -> tuple[ObjMesh, PreprocessStats]:
     """Return a cleaned mesh suitable for Mesh3D2 export."""
     vertices_before = len(mesh.vertices)
@@ -108,9 +192,18 @@ def preprocess_mesh(
         if extent > 0.0:
             vertices = (vertices - center) * (float(normalize_size) / extent)
 
-    vertices, v_remap = _dedupe_array(vertices, dedupe_epsilon)
-    texcoords, vt_remap = _dedupe_array(texcoords, dedupe_epsilon)
-    normals, vn_remap = _dedupe_array(normals, dedupe_epsilon)
+    if vertex_quant_bits >= 0:
+        vertices, v_remap = _quantize_dedupe_vertices(vertices, vertex_quant_bits)
+    else:
+        vertices, v_remap = _dedupe_array(vertices, dedupe_epsilon)
+    if texcoord_quant_bits >= 0:
+        texcoords, vt_remap = _quantize_dedupe_texcoords(texcoords, texcoord_quant_bits, wrap=texcoord_wrap)
+    else:
+        texcoords, vt_remap = _dedupe_array(texcoords, dedupe_epsilon)
+    if normal_quant_bits >= 0:
+        normals, vn_remap = _quantize_dedupe_normals(normals, normal_quant_bits)
+    else:
+        normals, vn_remap = _dedupe_array(normals, dedupe_epsilon)
 
     remapped: list[Triangle] = []
     for tri in triangles:
@@ -124,7 +217,10 @@ def preprocess_mesh(
     triangles, degenerate_removed = _remove_degenerate_triangles(vertices, triangles)
 
     tmp = ObjMesh(vertices, texcoords, normals, triangles, mesh.name, mesh.materials.copy(), mesh.source_path)
+    any_texcoord_ref = any(c.vt >= 0 for tri in triangles for c in tri.corners)
     if not tmp.has_texcoords():
+        if any_texcoord_ref:
+            raise ValueError("texture coordinates are present only on some triangle corners")
         texcoords = np.zeros((0, 2), dtype=np.float64)
         triangles = [
             Triangle(tuple(FaceVertex(c.v, -1, c.vn) for c in tri.corners), tri.material, tri.group)
@@ -136,7 +232,10 @@ def preprocess_mesh(
     if force_normals or not tmp.has_normals():
         normals, triangles = _generate_smooth_normals(tmp)
         normals_generated = True
-        normals, vn_remap = _dedupe_array(normals, dedupe_epsilon)
+        if normal_quant_bits >= 0:
+            normals, vn_remap = _quantize_dedupe_normals(normals, normal_quant_bits)
+        else:
+            normals, vn_remap = _dedupe_array(normals, dedupe_epsilon)
         remapped = []
         for tri in triangles:
             remapped.append(Triangle(tuple(FaceVertex(c.v, c.vt, vn_remap[c.vn]) for c in tri.corners), tri.material, tri.group))
