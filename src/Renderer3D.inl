@@ -1442,7 +1442,13 @@ namespace tgx
                 {
                 const Meshlet3D2& meshlet = mesh->meshlets[mli];
 
-                if ((_culling_dir != 0) && (meshlet.cone_cos > -1.0f) && _discardMeshlet(meshlet)) continue;
+                if ((_culling_dir != 0) && (meshlet.cone_cos > -1.0f))
+                    {
+                    if (_discardMeshlet(meshlet))
+                        {
+                        continue;
+                        }
+                    }
 
                 const bool HAS_TEXCOORDS = (meshlet.nb_texcoords != 0);
                 const bool HAS_NORMALS = (meshlet.nb_normals != 0);
@@ -1684,7 +1690,13 @@ namespace tgx
                 {
                 const Meshlet3D2_16& meshlet = mesh->meshlets[mli];
 
-                if ((_culling_dir != 0) && (meshlet.cone_cos > -1.0f) && _discardMeshlet(meshlet)) continue;
+                if ((_culling_dir != 0) && (meshlet.cone_cos > -1.0f))
+                    {
+                    if (_discardMeshlet(meshlet))
+                        {
+                        continue;
+                        }
+                    }
 
                 const bool HAS_TEXCOORDS = (meshlet.nb_texcoords != 0);
                 const bool HAS_NORMALS = (meshlet.nb_normals != 0);
