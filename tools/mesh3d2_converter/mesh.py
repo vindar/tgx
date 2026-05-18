@@ -103,9 +103,9 @@ class Meshlet:
         if source == "normal":
             return self.cull_axis, self.cull_cos
         if source == "visibility":
-            if self.visibility_cull_axis is None:
+            if self.visibility_axis is None:
                 return self.cull_axis, self.cull_cos
-            return self.visibility_cull_axis, self.visibility_cull_cos
+            return self.visibility_axis, self.visibility_cos
         raise ValueError(f"unknown cull cone source: {source}")
 
 

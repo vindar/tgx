@@ -13,7 +13,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.mesh3d2_converter.cones import apply_visibility_cones, auto_visibility_margin_deg
-from tools.mesh3d2_converter.exporter import Mesh3D2ExportResult, export_mesh3d2_header
+from tools.mesh3d2_converter.exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_header
 from tools.mesh3d2_converter.mesh import FaceVertex, Material, Meshlet, ObjMesh, Triangle
 from tools.mesh3d2_converter.meshlets import sort_meshlets_by_material
 from tools.mesh3d2_converter.pipeline import (
@@ -566,6 +566,10 @@ def _score_candidate(stats: Mesh3D2ExportStats, cull: dict[str, float], texture_
     return predicted_tri_cost + chain_cost + vertex_ref_cost + payload_cost
 
 
+def _exporter_for_args(args: argparse.Namespace):
+    return export_mesh3d2_16_header if getattr(args, "mesh3d2_format", "mesh3d2") == "mesh3d2_16" else export_mesh3d2_header
+
+
 def _evaluate_candidate(
     args: argparse.Namespace,
     mesh: ObjMesh,
@@ -594,7 +598,7 @@ def _evaluate_candidate(
     if args.sort_by_material:
         meshlets = sort_meshlets_by_material(meshlets)
     validate_mesh_for_export(mesh, meshlets)
-    exported = export_mesh3d2_header(
+    exported = _exporter_for_args(args)(
         mesh,
         meshlets,
         name=args.name or (Path(args.output).stem),
@@ -603,6 +607,7 @@ def _evaluate_candidate(
         lkh_exe=args.lkh,
         texture_symbols=texture_symbols,
         extra_includes=[],
+        cone_source=cone_source,
     )
     cull = cull_ratio_stats(meshlets, samples=args.auto_tune_cull_samples, meshlet_cost=args.auto_tune_meshlet_cost, cone_source=cone_source)
     return TuneResult(name, dict(params), _score_candidate(exported.stats, cull, bool(texture_symbols)), meshlets, exported, cull, cone_source)
@@ -742,6 +747,7 @@ def convert(args: argparse.Namespace) -> None:
             meshlets,
             output=output,
             color_type=color_type,
+            cone_source=cone_source,
             texture_symbols=texture_symbols,
             extra_includes=includes,
         )
@@ -756,6 +762,7 @@ def convert(args: argparse.Namespace) -> None:
             meshlets,
             output=output,
             color_type=color_type,
+            cone_source=cone_source,
             texture_symbols=texture_symbols,
             extra_includes=includes,
         )
@@ -770,6 +777,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", help="root Mesh3D symbol; auto-detected for a single chain")
     parser.add_argument("--name", help="output C++ symbol")
     parser.add_argument("--color-type", help="override color type; defaults to the legacy Mesh3D color type")
+    parser.add_argument("--mesh3d2-format", choices=("mesh3d2", "mesh3d2_16"), default="mesh3d2", help="output payload format")
     add_build_options(parser, source="legacy")
     parser.add_argument("--no-lkh", action="store_true")
     parser.add_argument("--lkh", default=str(DEFAULT_LKH_EXE))

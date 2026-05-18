@@ -848,8 +848,8 @@ namespace tgx
          *                              coefficients, otherwise use the current renderer material.
          *
          * @remark
-         * - Mesh3D2_16 is currently an experimental copy of Mesh3D2 reserved for a future 16-bit
-         *   quantized payload decoder.
+         * - Mesh3D2_16 is an experimental Mesh3D2 variant with 16-bit quantized local vertex,
+         *   normal, and texture-coordinate arrays.
          * - Keeping this as a separate overload makes it possible to benchmark Mesh3D2 and
          *   Mesh3D2_16 side by side.
          */

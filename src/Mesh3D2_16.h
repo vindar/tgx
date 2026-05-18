@@ -1,6 +1,6 @@
 /**
  * @file Mesh3D2_16.h
- * Experimental Mesh3D2 variant reserved for a future 16-bit quantized payload.
+ * Experimental Mesh3D2 variant with a 16-bit quantized payload.
  */
 //
 // Copyright 2020 Arvind Singh
@@ -40,6 +40,33 @@ namespace tgx
 {
 
 
+    namespace Mesh3D2_16_detail
+    {
+        TGX_INLINE inline fVec3 load_vertex(const int16_t* table, uint8_t index, float base_x, float base_y, float base_z, float scale)
+            {
+            const int16_t* const q = table + ((size_t)index) * 3;
+            return fVec3(base_x + ((float)q[0]) * scale,
+                         base_y + ((float)q[1]) * scale,
+                         base_z + ((float)q[2]) * scale);
+            }
+
+        TGX_INLINE inline fVec3 load_normal(const int16_t* table, uint8_t index, float scale)
+            {
+            const int16_t* const q = table + ((size_t)index) * 3;
+            return fVec3(((float)q[0]) * scale,
+                         ((float)q[1]) * scale,
+                         ((float)q[2]) * scale);
+            }
+
+        TGX_INLINE inline fVec2 load_texcoord(const int16_t* table, uint8_t index, float scale)
+            {
+            const int16_t* const q = table + ((size_t)index) * 2;
+            return fVec2(((float)q[0]) * scale,
+                         ((float)q[1]) * scale);
+            }
+    }
+
+
     /**
      * Material definition for a Mesh3D2_16 object.
      *
@@ -68,16 +95,15 @@ namespace tgx
     /**
      * Header for a single meshlet inside a Mesh3D2_16 object.
      *
-     * This first version is intentionally identical to Meshlet3D2. The name is separated now so
-     * a future patch can change the payload interpretation to 16-bit quantized arrays while keeping
-     * the current Mesh3D2 format available for direct performance comparisons.
+     * This is the same header shape as Meshlet3D2, but the payload arrays are stored
+     * with signed 16-bit quantization to reduce mesh memory traffic.
      */
     struct Meshlet3D2_16
         {
-        fVec3 sphere_center;       ///< Bounding sphere center, in object space.
+        fVec3 sphere_center;       ///< Bounding sphere center, in object space. Also used as the vertex dequantization base.
         fVec3 cone_dir;            ///< Normalized visibility cone direction, in object space, pointing from the meshlet toward visible cameras.
 
-        float sphere_radius;       ///< Bounding sphere radius.
+        float sphere_radius;       ///< Bounding sphere radius. Also used as the vertex dequantization scale.
         float cone_cos;            ///< Cosine threshold for the visibility cone test.
 
         uint32_t payload_offset32; ///< Offset of this meshlet payload in Mesh3D2_16::payload, in 32-bit words.
@@ -92,20 +118,24 @@ namespace tgx
 
 
     /**
-     * Experimental Mesh3D2 copy reserved for a future 16-bit quantized payload.
+     * Experimental Mesh3D2 variant with 16-bit quantized local arrays.
      *
-     * The current Mesh3D2_16 payload is deliberately identical to Mesh3D2:
+     * The Mesh3D2_16 payload layout is:
      *
      * ```
-     * [fVec3 vertices[meshlet.nb_vertices]]
-     * [fVec3 normals[meshlet.nb_normals]]
-     * [fVec2 texcoords[meshlet.nb_texcoords]]
+     * [int16_t vertices[meshlet.nb_vertices][3]]
+     * [int16_t normals[meshlet.nb_normals][3]]
+     * [int16_t texcoords[meshlet.nb_texcoords][2]]
      * [uint8_t face stream]
      * [padding bytes to reach the next 4-byte boundary]
      * ```
      *
-     * The separate type lets benchmarks compare the baseline Mesh3D2 path with the upcoming
-     * quantized decoder without changing the validated Mesh3D2 format.
+     * Vertices are decoded as `meshlet.sphere_center + q * (meshlet.sphere_radius / 32767)`.
+     * Normals are decoded as `q / 32767`. Texture coordinates are decoded on the fixed
+     * range [-4, 4] as `q * (4 / 32767)`.
+     *
+     * Keeping this as a separate type lets benchmarks compare the baseline Mesh3D2 path with
+     * the quantized decoder without changing the validated Mesh3D2 format.
      */
     template<typename color_t>
     struct Mesh3D2_16
@@ -113,7 +143,7 @@ namespace tgx
         // make sure right away that the template parameter is admissible to prevent cryptic error message later.
         static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in Color.h");
 
-        int32_t id;                                        ///< Version/id. Expected to be 216 for Mesh3D2_16 once quantization is enabled.
+        int32_t id;                                        ///< Version/id. Expected to be 216 for Mesh3D2_16.
 
         uint32_t payload_size32;                           ///< Total size of the payload array, in 32-bit words.
 

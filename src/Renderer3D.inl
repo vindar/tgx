@@ -1671,6 +1671,8 @@ namespace tgx
             int current_material_index = -1;
             int current_raster_type = -1;
             const Image<color_t>* current_texture = nullptr;
+            const float normal_scale = (1.0f / 32767.0f);
+            const float texcoord_scale = (4.0f / 32767.0f);
 
             if (!use_mesh_material)
                 {
@@ -1723,14 +1725,19 @@ namespace tgx
 
                 const uint8_t* payload = (const uint8_t*)(mesh->payload + meshlet.payload_offset32);
 
-                const fVec3* const tab_vert = (const fVec3*)payload;
-                payload += ((size_t)meshlet.nb_vertices) * sizeof(fVec3);
+                const int16_t* const tab_vert = (const int16_t*)payload;
+                payload += ((size_t)meshlet.nb_vertices) * 3 * sizeof(int16_t);
 
-                const fVec3* const tab_norm = (const fVec3*)payload;
-                payload += ((size_t)meshlet.nb_normals) * sizeof(fVec3);
+                const int16_t* const tab_norm = (const int16_t*)payload;
+                payload += ((size_t)meshlet.nb_normals) * 3 * sizeof(int16_t);
 
-                const fVec2* const tab_tex = (const fVec2*)payload;
-                payload += ((size_t)meshlet.nb_texcoords) * sizeof(fVec2);
+                const int16_t* const tab_tex = (const int16_t*)payload;
+                payload += ((size_t)meshlet.nb_texcoords) * 2 * sizeof(int16_t);
+
+                const float vertex_scale = meshlet.sphere_radius * (1.0f / 32767.0f);
+                const float vertex_base_x = meshlet.sphere_center.x;
+                const float vertex_base_y = meshlet.sphere_center.y;
+                const float vertex_base_z = meshlet.sphere_center.z;
 
                 const uint8_t* face = payload;
 
@@ -1752,9 +1759,9 @@ namespace tgx
                     if (GOURAUD) PPC2->indn = *(face++); else { if (HAS_NORMALS) face++; }
 
                     // compute vertices position because we are sure we will need them...
-                    PPC2->P = _r_modelViewM.mult1(tab_vert[v2]);
-                    PPC0->P = _r_modelViewM.mult1(tab_vert[v0]);
-                    PPC1->P = _r_modelViewM.mult1(tab_vert[v1]);
+                    PPC2->P = _r_modelViewM.mult1(Mesh3D2_16_detail::load_vertex(tab_vert, v2, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                    PPC0->P = _r_modelViewM.mult1(Mesh3D2_16_detail::load_vertex(tab_vert, v0, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                    PPC1->P = _r_modelViewM.mult1(Mesh3D2_16_detail::load_vertex(tab_vert, v1, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
 
                     // ...but use lazy computation of other vertex attributes
                     PPC0->missedP = true;
@@ -1802,10 +1809,16 @@ namespace tgx
                                 { // need cliiping, test is we can just discard the triangle if not shown on screen
                                 if (!_discardTriangle(*((fVec4*)PPC0), *((fVec4*)PPC1), *((fVec4*)PPC2)))
                                     { // no, use the slow drawing method with clipping
+                                    const fVec3 CN0 = (GOURAUD) ? Mesh3D2_16_detail::load_normal(tab_norm, PPC0->indn, normal_scale) : fVec3();
+                                    const fVec3 CN1 = (GOURAUD) ? Mesh3D2_16_detail::load_normal(tab_norm, PPC1->indn, normal_scale) : fVec3();
+                                    const fVec3 CN2 = (GOURAUD) ? Mesh3D2_16_detail::load_normal(tab_norm, PPC2->indn, normal_scale) : fVec3();
+                                    const fVec2 CT0 = (TEXTURE) ? Mesh3D2_16_detail::load_texcoord(tab_tex, PPC0->indt, texcoord_scale) : fVec2();
+                                    const fVec2 CT1 = (TEXTURE) ? Mesh3D2_16_detail::load_texcoord(tab_tex, PPC1->indt, texcoord_scale) : fVec2();
+                                    const fVec2 CT2 = (TEXTURE) ? Mesh3D2_16_detail::load_texcoord(tab_tex, PPC2->indt, texcoord_scale) : fVec2();
                                     _drawTriangleClipped(raster_type,
                                                     &(PPC0->P), &(PPC1->P), &(PPC2->P),
-                                                    ((GOURAUD) ? tab_norm + PPC0->indn : nullptr), ((GOURAUD) ? tab_norm + PPC1->indn : nullptr), ((GOURAUD) ? tab_norm + PPC2->indn : nullptr),
-                                                    ((TEXTURE) ? tab_tex + PPC0->indt : nullptr), ((TEXTURE) ? tab_tex + PPC1->indt : nullptr), ((TEXTURE) ? tab_tex + PPC2->indt : nullptr),
+                                                    ((GOURAUD) ? &CN0 : nullptr), ((GOURAUD) ? &CN1 : nullptr), ((GOURAUD) ? &CN2 : nullptr),
+                                                    ((TEXTURE) ? &CT0 : nullptr), ((TEXTURE) ? &CT1 : nullptr), ((TEXTURE) ? &CT2 : nullptr),
                                                     _r_objectColor, _r_objectColor, _r_objectColor);
                                     }
                                 goto rasterize_next_meshlet_triangle;
@@ -1820,7 +1833,7 @@ namespace tgx
                             const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
                             if (PPC0->missedP)
                                 {
-                                PPC0->N = _r_modelViewM.mult0(tab_norm[PPC0->indn]);
+                                PPC0->N = _r_modelViewM.mult0(Mesh3D2_16_detail::load_normal(tab_norm, PPC0->indn, normal_scale));
                                 if (TEXTURE)
                                     PPC0->color = _phong<true>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
                                 else
@@ -1828,13 +1841,13 @@ namespace tgx
                                 }
                             if (PPC1->missedP)
                                 {
-                                PPC1->N = _r_modelViewM.mult0(tab_norm[PPC1->indn]);
+                                PPC1->N = _r_modelViewM.mult0(Mesh3D2_16_detail::load_normal(tab_norm, PPC1->indn, normal_scale));
                                 if (TEXTURE)
                                     PPC1->color = _phong<true>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
                                 else
                                     PPC1->color = _phong<false>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
                                 }
-                            PPC2->N = _r_modelViewM.mult0(tab_norm[PPC2->indn]);
+                            PPC2->N = _r_modelViewM.mult0(Mesh3D2_16_detail::load_normal(tab_norm, PPC2->indn, normal_scale));
                             if (TEXTURE)
                                 PPC2->color = _phong<true>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
                             else
@@ -1853,9 +1866,9 @@ namespace tgx
 
                         if (TEXTURE)
                             { // compute texture vectors if needed
-                            if (PPC0->missedP) { PPC0->T = tab_tex[PPC0->indt]; }
-                            if (PPC1->missedP) { PPC1->T = tab_tex[PPC1->indt]; }
-                            PPC2->T = tab_tex[PPC2->indt];
+                            if (PPC0->missedP) { PPC0->T = Mesh3D2_16_detail::load_texcoord(tab_tex, PPC0->indt, texcoord_scale); }
+                            if (PPC1->missedP) { PPC1->T = Mesh3D2_16_detail::load_texcoord(tab_tex, PPC1->indt, texcoord_scale); }
+                            PPC2->T = Mesh3D2_16_detail::load_texcoord(tab_tex, PPC2->indt, texcoord_scale);
                             }
 
                         // attributes are now all up to date
@@ -1875,7 +1888,7 @@ namespace tgx
                         swap(((nv2 & 128) ? PPC0 : PPC1), PPC2);
                         if (TEXTURE) PPC2->indt = *(face++); else { if (HAS_TEXCOORDS) face++; }
                         if (GOURAUD) PPC2->indn = *(face++);  else { if (HAS_NORMALS) face++; }
-                        PPC2->P = _r_modelViewM.mult1(tab_vert[nv2 & 127]);
+                        PPC2->P = _r_modelViewM.mult1(Mesh3D2_16_detail::load_vertex(tab_vert, nv2 & 127, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
                         PPC2->missedP = true;
                         }
                     }

@@ -91,12 +91,10 @@ def cull_ratio_stats(meshlets: list[Meshlet], samples: int = 128, meshlet_cost: 
 
 
 def _is_culled_orthographic(meshlet: Meshlet, view_dir: np.ndarray, cone_source: str) -> bool:
-    if cone_source == "normal":
-        return meshlet.cull_cos <= 1.0 and float(np.dot(view_dir, meshlet.cull_axis)) >= meshlet.cull_cos
-    if cone_source == "visibility":
-        if meshlet.visibility_axis is None:
+    if cone_source in ("normal", "visibility"):
+        axis, cos_angle = meshlet.selected_cull_cone(cone_source)
+        if cos_angle > 1.0:
             return False
-        # view_dir is camera->object; the visibility cone stores object->camera.
-        camera_dir = -view_dir
-        return float(np.dot(meshlet.visibility_axis, camera_dir)) < meshlet.visibility_cos
+        # view_dir is camera->object; runtime cones store object->camera.
+        return float(np.dot(axis, -view_dir)) < cos_angle
     raise ValueError(f"unknown cull cone source: {cone_source}")

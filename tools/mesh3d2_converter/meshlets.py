@@ -2,9 +2,13 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
+from dataclasses import replace
+import heapq
+import math
 from pathlib import Path
 import subprocess
 import tempfile
+import time
 
 import numpy as np
 
@@ -32,6 +36,10 @@ class MeshletBuildOptions:
     lkh_exe: str = r"D:\Programmation\myProjects\tgxmeshlets\LKH-2.exe"
     nocull_lkh_component_limit: int = 500
     nocull_lkh_time_limit: int = 30
+    visibility_merge_samples: int = 1024
+    visibility_merge_size: int = 1024
+    visibility_merge_margin_deg: float = -1.0
+    visibility_merge_cone_weight: float = 45.0
     fill_holes: bool = True
     merge_passes: int = 1
     smooth_passes: int = 0
@@ -191,16 +199,16 @@ def _normal_cone_fast(normals: np.ndarray) -> tuple[np.ndarray, float]:
 
 
 def _backface_cull_cone(normal_axis: np.ndarray, normal_min_dot: float) -> tuple[np.ndarray, float]:
-    """Return the view-direction cone where all normals are back-facing.
+    """Return the object-to-camera visibility cone derived from a normal cone.
 
-    The normal cone half-angle is alpha=acos(normal_min_dot). All faces are back-facing
-    for camera-to-object directions inside the normal cone axis with half-angle
-    max(0, 90deg-alpha).
-    cull_cos > 1 marks an empty culling cone.
+    The normal cone half-angle is alpha=acos(normal_min_dot). A face can be visible
+    when the object-to-camera direction lies within 90deg+alpha from the normal-cone
+    axis. The runtime stores visibility cones, so the cosine is -sin(alpha).
+    cull_cos > 1 marks an empty/disabled culling cone.
     """
     if normal_min_dot <= 0.0:
         return normal_axis, 2.0
-    cull_cos = float(np.sqrt(max(0.0, 1.0 - normal_min_dot * normal_min_dot)))
+    cull_cos = -float(np.sqrt(max(0.0, 1.0 - normal_min_dot * normal_min_dot)))
     return normal_axis, cull_cos
 
 
@@ -259,6 +267,8 @@ def build_meshlets(mesh: ObjMesh, options: MeshletBuildOptions | None = None) ->
     opt = options or MeshletBuildOptions()
     if opt.builder == "nocull":
         return build_meshlets_nocull(mesh, opt)
+    if opt.builder == "visibility_merge":
+        return build_meshlets_visibility_merge(mesh, opt)
     if opt.builder == "hybrid":
         meshlets = build_meshlets_hybrid(mesh, opt)
         return refine_meshlets(mesh, meshlets, opt)
@@ -721,6 +731,321 @@ def _merge_nocull_meshlets(mesh: ObjMesh, meshlets: list[Meshlet], opt: MeshletB
         if (merges % 50) == 0:
             print(f"nocull merge: {merges} merges, {len(meshlets)} meshlets")
     return meshlets
+
+
+def _cone_angle(cos_angle: float) -> float:
+    return float(math.acos(max(-1.0, min(1.0, cos_angle))))
+
+
+def _meshlet_with_visibility(
+    meshlet: Meshlet,
+    visibility_axis: np.ndarray,
+    visibility_cos: float,
+    visibility_samples: int = 0,
+) -> Meshlet:
+    return replace(
+        meshlet,
+        visibility_axis=visibility_axis,
+        visibility_cos=visibility_cos,
+        visibility_cull_axis=-visibility_axis,
+        visibility_cull_cos=-visibility_cos,
+        visibility_samples=visibility_samples,
+    )
+
+
+def _visibility_cone_from_mask(views: np.ndarray, mask: np.ndarray, margin_deg: float, *, fast: bool) -> tuple[np.ndarray, float, int]:
+    from .cones import direction_cone, expand_cone_cos
+
+    visible_count = int(np.count_nonzero(mask))
+    if visible_count == 0:
+        return np.array([0.0, 0.0, 1.0], dtype=np.float64), -1.0, 0
+    # The TGX helper renders along camera->object directions. Runtime Mesh3D2 cones
+    # store object->camera visibility directions, hence the sign flip.
+    visible_camera_dirs = -views[mask]
+    if fast:
+        axis, cos_angle = _normal_cone_fast(visible_camera_dirs)
+    else:
+        axis, cos_angle = direction_cone(visible_camera_dirs)
+    return axis, expand_cone_cos(cos_angle, margin_deg), visible_count
+
+
+def _apply_mask_visibility_cones(
+    meshlets: list[Meshlet],
+    views: np.ndarray,
+    masks: list[np.ndarray],
+    margin_deg: float,
+    *,
+    fast: bool,
+) -> list[Meshlet]:
+    updated: list[Meshlet] = []
+    for meshlet, mask in zip(meshlets, masks):
+        axis, cos_angle, visible_count = _visibility_cone_from_mask(views, mask, margin_deg, fast=fast)
+        updated.append(_meshlet_with_visibility(meshlet, axis, cos_angle, visible_count))
+    return updated
+
+
+def _triangle_visibility_meshlets(mesh: ObjMesh, opt: MeshletBuildOptions, tri_normals: np.ndarray) -> tuple[list[Meshlet], np.ndarray, list[np.ndarray], float, float]:
+    """Create one meshlet per triangle and keep their TGX visibility masks."""
+    from .cones import auto_visibility_margin_deg
+    from .quality import fibonacci_sphere
+    from .visibility import compute_tgx_visibility
+
+    meshlets = [_make_meshlet(mesh, [ti], tri_normals) for ti in range(len(mesh.triangles))]
+    views = fibonacci_sphere(max(1, int(opt.visibility_merge_samples)))
+    margin = float(opt.visibility_merge_margin_deg)
+    if margin < 0.0:
+        margin = auto_visibility_margin_deg(len(views))
+    print("visibility-merge seed cones:")
+    print(f"  triangle seeds: {len(meshlets)}")
+    print(f"  views         : {len(views)}")
+    print(f"  render size   : {opt.visibility_merge_size}x{opt.visibility_merge_size}")
+    print(f"  margin        : {margin:.2f} deg" + (" (auto)" if opt.visibility_merge_margin_deg < 0.0 else ""))
+    t0 = time.perf_counter()
+    visibility = compute_tgx_visibility(
+        mesh,
+        meshlets,
+        views,
+        width=int(opt.visibility_merge_size),
+        height=int(opt.visibility_merge_size),
+    )
+    tgx_time = time.perf_counter() - t0
+    visible_counts = np.sum(visibility, axis=0)
+    print(f"  visible views : min {int(np.min(visible_counts))}, avg {float(np.mean(visible_counts)):.1f}, max {int(np.max(visible_counts))}")
+    print(f"  never visible : {int(np.sum(visible_counts == 0))}")
+    print(f"  TGX time      : {tgx_time:.3f} s")
+    masks = [visibility[:, ti].astype(bool, copy=True) for ti in range(visibility.shape[1])]
+    t1 = time.perf_counter()
+    meshlets = _apply_mask_visibility_cones(meshlets, views, masks, margin, fast=True)
+    cone_time = time.perf_counter() - t1
+    print(f"  seed cones    : {cone_time:.3f} s")
+    return meshlets, views, masks, margin, tgx_time
+
+
+def _visibility_pair_links(mesh: ObjMesh, a: Meshlet, b: Meshlet, compatible_edges: dict[tuple, list[int]], geometric_edges: dict[tuple[int, int], list[int]]) -> tuple[int, int]:
+    b_tris = set(b.triangles)
+    compatible = 0
+    geometric = 0
+    for ti in a.triangles:
+        tri = mesh.triangles[ti]
+        c = tri.corners
+        for key in (_corner_edge_key(c[0], c[1]), _corner_edge_key(c[1], c[2]), _corner_edge_key(c[2], c[0])):
+            if any(tj in b_tris for tj in compatible_edges.get(key, [])):
+                compatible += 1
+        v = [corner.v for corner in tri.corners]
+        for key in (_edge_key(v[0], v[1]), _edge_key(v[1], v[2]), _edge_key(v[2], v[0])):
+            if any(tj in b_tris for tj in geometric_edges.get(key, [])):
+                geometric += 1
+    return compatible, max(0, geometric - compatible)
+
+
+def _visibility_merge_candidate(
+    mesh: ObjMesh,
+    a: Meshlet,
+    b: Meshlet,
+    mask_a: np.ndarray,
+    mask_b: np.ndarray,
+    nb_views: int,
+    tri_normals: np.ndarray,
+    opt: MeshletBuildOptions,
+    scale: float,
+    compatible_edges: dict[tuple, list[int]],
+    geometric_edges: dict[tuple[int, int], list[int]],
+) -> tuple[float, Meshlet, np.ndarray] | None:
+    if a.material != b.material:
+        return None
+    tri_indices = a.triangles + b.triangles
+    if len(tri_indices) > opt.max_triangles:
+        return None
+    vertices = a.vertices | b.vertices
+    texcoords = a.texcoords | b.texcoords
+    normals = a.normals | b.normals
+    if len(vertices) > opt.max_vertices or len(texcoords) > opt.max_texcoords or len(normals) > opt.max_normals:
+        return None
+
+    normal_axis, normal_min_dot = _normal_cone_fast(tri_normals[tri_indices])
+    normal_angle = _cone_angle(normal_min_dot)
+    if math.degrees(normal_angle) > opt.max_normal_angle_deg:
+        return None
+
+    candidate_mask = np.logical_or(mask_a, mask_b)
+    visible_count = int(np.count_nonzero(candidate_mask))
+    overlap_count = int(np.count_nonzero(np.logical_and(mask_a, mask_b)))
+    visible_growth = max(0, visible_count - max(a.visibility_samples, b.visibility_samples)) / max(1, nb_views)
+    overlap_bonus = overlap_count / max(1, nb_views)
+
+    old_radius = max(a.radius, b.radius)
+    center, radius = _sphere_from_vertices(mesh.vertices[list(vertices)])
+    radius_growth = max(0.0, radius - old_radius) / scale
+    normal_cost = 1.0 - normal_min_dot
+    new_vertex_cost = len(vertices) - max(len(a.vertices), len(b.vertices))
+    compatible_links, incompatible_links = _visibility_pair_links(mesh, a, b, compatible_edges, geometric_edges)
+    shared_refs = len(a.vertices & b.vertices) + len(a.texcoords & b.texcoords) + len(a.normals & b.normals)
+
+    score = (
+        opt.vertex_weight * new_vertex_cost
+        + opt.radius_weight * radius_growth
+        + opt.normal_weight * normal_cost
+        + opt.visibility_merge_cone_weight * visible_growth
+        + opt.incompatible_edge_penalty * incompatible_links
+        - opt.compatible_edge_weight * compatible_links
+        - 0.10 * opt.visibility_merge_cone_weight * overlap_bonus
+        - 0.05 * shared_refs
+    )
+    if len(vertices) >= opt.target_vertices and score > opt.stop_score:
+        return None
+
+    cull_axis, cull_cos = _backface_cull_cone(normal_axis, normal_min_dot)
+    candidate = Meshlet(
+        tri_indices,
+        a.material,
+        vertices,
+        texcoords,
+        normals,
+        center,
+        radius,
+        normal_axis,
+        normal_min_dot,
+        cull_axis,
+        cull_cos,
+    )
+    visibility_axis = a.visibility_axis if a.visibility_axis is not None else np.array([0.0, 0.0, 1.0], dtype=np.float64)
+    candidate = _meshlet_with_visibility(candidate, visibility_axis, -1.0, visible_count)
+    return score, candidate, candidate_mask
+
+
+def build_meshlets_visibility_merge(mesh: ObjMesh, options: MeshletBuildOptions | None = None) -> list[Meshlet]:
+    """Build meshlets by merging triangle visibility masks computed by the TGX helper.
+
+    This experimental builder starts with one triangle per meshlet, renders a TGX visibility
+    matrix for those seeds, then greedily merges adjacent meshlets. Candidate visibility is
+    computed as the exact discrete union of the triangle visibility masks.
+    """
+    t_total = time.perf_counter()
+    opt = options or MeshletBuildOptions(builder="visibility_merge")
+    tri_normals = compute_triangle_normals(mesh)
+    meshlets, views, masks, visibility_margin, tgx_time = _triangle_visibility_meshlets(mesh, opt, tri_normals)
+    scale = mesh.scale_hint()
+    tri_adj = build_triangle_adjacency(mesh)
+    geometric_edges = build_edge_to_triangles(mesh)
+    compatible_edges = build_compatible_edge_to_triangles(mesh)
+
+    alive: set[int] = set(range(len(meshlets)))
+    versions = [0 for _ in meshlets]
+    tri_to_meshlet = {ti: ti for ti in range(len(mesh.triangles))}
+    adjacency: list[set[int]] = [set() for _ in meshlets]
+    for ti, neighbors in enumerate(tri_adj):
+        for tj in neighbors:
+            if mesh.triangles[ti].material == mesh.triangles[tj].material:
+                adjacency[ti].add(tj)
+
+    heap: list[tuple[float, int, int, int, int, int, Meshlet, np.ndarray]] = []
+    serial = 0
+    candidate_time = 0.0
+    candidate_count = 0
+
+    def push_pair(i: int, j: int) -> None:
+        nonlocal serial, candidate_time, candidate_count
+        if i == j or i not in alive or j not in alive:
+            return
+        if i > j:
+            i, j = j, i
+        t_candidate = time.perf_counter()
+        result = _visibility_merge_candidate(
+            mesh,
+            meshlets[i],
+            meshlets[j],
+            masks[i],
+            masks[j],
+            len(views),
+            tri_normals,
+            opt,
+            scale,
+            compatible_edges,
+            geometric_edges,
+        )
+        candidate_time += time.perf_counter() - t_candidate
+        candidate_count += 1
+        if result is None:
+            return
+        score, candidate, candidate_mask = result
+        heapq.heappush(heap, (score, versions[i], versions[j], serial, i, j, candidate, candidate_mask))
+        serial += 1
+
+    for i in range(len(meshlets)):
+        for j in adjacency[i]:
+            if i < j:
+                push_pair(i, j)
+
+    t_merge = time.perf_counter()
+    merges = 0
+    while heap:
+        score, version_i, version_j, _, i, j, candidate, candidate_mask = heapq.heappop(heap)
+        if i not in alive or j not in alive:
+            continue
+        if versions[i] != version_i or versions[j] != version_j:
+            continue
+
+        keep, kill = (i, j) if len(meshlets[i].triangles) >= len(meshlets[j].triangles) else (j, i)
+        if keep != i:
+            t_candidate = time.perf_counter()
+            candidate = _visibility_merge_candidate(
+                mesh,
+                meshlets[keep],
+                meshlets[kill],
+                masks[keep],
+                masks[kill],
+                len(views),
+                tri_normals,
+                opt,
+                scale,
+                compatible_edges,
+                geometric_edges,
+            )
+            candidate_time += time.perf_counter() - t_candidate
+            candidate_count += 1
+            if candidate is None:
+                continue
+            _, candidate_meshlet, candidate_mask = candidate
+        else:
+            candidate_meshlet = candidate
+
+        old_neighbors = (adjacency[keep] | adjacency[kill]) - {keep, kill}
+        meshlets[keep] = candidate_meshlet
+        masks[keep] = candidate_mask
+        versions[keep] += 1
+        alive.remove(kill)
+        versions[kill] += 1
+        adjacency[keep] = {n for n in old_neighbors if n in alive}
+        adjacency[kill].clear()
+        for n in list(old_neighbors):
+            adjacency[n].discard(kill)
+            adjacency[n].discard(keep)
+            if n in alive:
+                adjacency[n].add(keep)
+        for ti in candidate_meshlet.triangles:
+            tri_to_meshlet[ti] = keep
+        merges += 1
+        if (merges % 250) == 0:
+            print(f"visibility-merge: {merges} merges, {len(alive)} meshlets, best score {score:.3f}")
+        for n in adjacency[keep]:
+            push_pair(keep, n)
+
+    merge_time = time.perf_counter() - t_merge
+    ordered_alive = sorted(alive, key=lambda idx: min(meshlets[idx].triangles))
+    result = [meshlets[i] for i in ordered_alive]
+    result_masks = [masks[i] for i in ordered_alive]
+    t_final = time.perf_counter()
+    result = _apply_mask_visibility_cones(result, views, result_masks, visibility_margin, fast=False)
+    final_cone_time = time.perf_counter() - t_final
+    print(f"visibility-merge: {merges} merges, {len(result)} meshlets")
+    total_time = time.perf_counter() - t_total
+    print("visibility-merge timings:")
+    print(f"  TGX seed masks : {tgx_time:.3f} s")
+    print(f"  merge loop     : {merge_time:.3f} s")
+    print(f"  candidates     : {candidate_time:.3f} s for {candidate_count}")
+    print(f"  final cones    : {final_cone_time:.3f} s")
+    print(f"  total builder  : {total_time:.3f} s")
+    return result
 
 
 def _meshlets_share_compatible_edge(mesh: ObjMesh, a: Meshlet, b: Meshlet) -> bool:

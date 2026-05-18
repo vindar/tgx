@@ -137,6 +137,7 @@ def cmd_export(args: argparse.Namespace) -> None:
         meshlets,
         output=output,
         color_type=args.color_type,
+        cone_source=cone_source,
         texture_symbols=texture_symbols,
         extra_includes=extra_includes,
     )
@@ -145,7 +146,7 @@ def cmd_export(args: argparse.Namespace) -> None:
     _print_mesh_stats(mesh, meshlets)
     _print_cull_quality(meshlets, args.cull_samples, args.meshlet_cost, cone_source)
     stats = result.stats
-    print("Mesh3D2 export:")
+    print(f"{args.mesh3d2_format} export:")
     print(f"  output          : {output}")
     print(f"  color type      : {args.color_type}")
     print(f"  materials       : {stats.materials}")
@@ -216,6 +217,7 @@ def cmd_wizard(args: argparse.Namespace) -> None:
         visibility_helper=None,
         keep_visibility_files=False,
         cone_source="visibility" if visibility else "normal",
+        mesh3d2_format="mesh3d2",
     )
     cmd_export(export_args)
 
@@ -307,6 +309,7 @@ def main(argv: list[str] | None = None) -> int:
     p_export.add_argument("-o", "--output", required=True)
     p_export.add_argument("--name")
     p_export.add_argument("--color-type", choices=("tgx::RGB565", "tgx::RGB32", "tgx::RGBf"), default="tgx::RGB565")
+    p_export.add_argument("--mesh3d2-format", choices=("mesh3d2", "mesh3d2_16"), default="mesh3d2", help="output payload format")
     p_export.add_argument("--normalize", action="store_true", help="center the model and fit its largest extent to --normalize-size")
     p_export.add_argument("--normalize-size", type=float, default=2.0)
     p_export.add_argument("--dedupe-epsilon", type=float, default=1e-9)

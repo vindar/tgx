@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from .cones import apply_visibility_cones, auto_visibility_margin_deg
-from .exporter import Mesh3D2ExportResult, export_mesh3d2_header
+from .exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_header
 from .mesh import Meshlet, ObjMesh, compute_triangle_normals, unique_valid
 from .meshlets import MeshletBuildOptions, _make_meshlet, build_meshlets, meshlet_stats, sort_meshlets_by_material
 from .preprocess import PreprocessStats
@@ -21,7 +21,7 @@ def add_build_options(parser: argparse.ArgumentParser, *, source: str = "obj") -
     include_obj = source != "legacy"
     include_legacy = True
     parser.add_argument("--profile", choices=profile_names(include_obj=include_obj, include_legacy=include_legacy), default="custom", help="meshlet tuning profile; custom uses the low-level options below")
-    parser.add_argument("--builder", choices=("greedy", "hybrid", "nocull"), default="greedy")
+    parser.add_argument("--builder", choices=("greedy", "hybrid", "nocull", "visibility_merge"), default="greedy")
     parser.add_argument("--target-vertices", type=int, default=52)
     parser.add_argument("--max-vertices", type=int, default=127)
     parser.add_argument("--max-triangles", type=int, default=70)
@@ -35,6 +35,10 @@ def add_build_options(parser: argparse.ArgumentParser, *, source: str = "obj") -
     parser.add_argument("--compatible-merge-weight", type=float, default=0.0)
     parser.add_argument("--nocull-lkh-component-limit", type=int, default=500)
     parser.add_argument("--nocull-lkh-time-limit", type=int, default=30)
+    parser.add_argument("--visibility-merge-samples", type=int, default=1024)
+    parser.add_argument("--visibility-merge-size", type=int, default=1024)
+    parser.add_argument("--visibility-merge-margin", type=float, default=-1.0)
+    parser.add_argument("--visibility-merge-cone-weight", type=float, default=45.0)
     parser.add_argument("--merge-passes", type=int, default=1)
     parser.add_argument("--smooth-passes", type=int, default=0)
     parser.add_argument("--merge-max-normal-angle", type=float, default=48.0)
@@ -143,6 +147,8 @@ def finalize_meshlets_for_export(args: argparse.Namespace, mesh: ObjMesh, meshle
     resolved = "visibility" if getattr(args, "visibility_cones", False) else "normal"
     if getattr(args, "builder", "") == "nocull":
         resolved = "nocull"
+    elif getattr(args, "builder", "") == "visibility_merge":
+        resolved = "visibility"
     return meshlets, resolved
 
 
@@ -153,10 +159,12 @@ def export_common(
     *,
     output: Path,
     color_type: str,
+    cone_source: str = "normal",
     texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
 ) -> Mesh3D2ExportResult:
-    result = export_mesh3d2_header(
+    exporter = export_mesh3d2_16_header if getattr(args, "mesh3d2_format", "mesh3d2") == "mesh3d2_16" else export_mesh3d2_header
+    result = exporter(
         mesh,
         meshlets,
         name=args.name or output.stem,
@@ -165,9 +173,11 @@ def export_common(
         lkh_exe=getattr(args, "lkh", DEFAULT_LKH_EXE),
         texture_symbols=texture_symbols or {},
         extra_includes=extra_includes or [],
+        cone_source=cone_source,
     )
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(result.header, encoding="utf-8", newline="\n")
+    with output.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(result.header)
     return result
 
 

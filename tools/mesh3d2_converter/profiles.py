@@ -13,13 +13,14 @@ MESHLET_PROFILES: dict[str, dict[str, float | int | str]] = {
     "material": dict(target_vertices=112, max_triangles=220, max_normal_angle_deg=125.0, radius_weight=0.5, normal_weight=0.5, vertex_weight=0.1, stop_score=999.0, merge_passes=2, smooth_passes=0, merge_max_normal_angle_deg=140.0),
     "non_culling": dict(builder="hybrid", target_vertices=127, max_triangles=512, max_normal_angle_deg=180.0, radius_weight=0.8, normal_weight=0.0, vertex_weight=0.1, stop_score=999.0, compatible_edge_weight=8.0, incompatible_edge_penalty=4.0, compatible_merge_weight=0.05, merge_passes=3, smooth_passes=0, merge_max_normal_angle_deg=180.0),
     "nocull": dict(builder="nocull", target_vertices=127, max_triangles=65535, max_normal_angle_deg=180.0, radius_weight=0.0, normal_weight=0.0, vertex_weight=0.0, stop_score=999.0, nocull_lkh_time_limit=30, merge_passes=1, smooth_passes=0, merge_max_normal_angle_deg=180.0),
+    "visibility_merge": dict(builder="visibility_merge", target_vertices=64, max_triangles=96, max_normal_angle_deg=72.0, radius_weight=5.0, normal_weight=12.0, vertex_weight=1.5, stop_score=7.5, compatible_edge_weight=8.0, incompatible_edge_penalty=8.0, visibility_merge_cone_weight=55.0, visibility_merge_samples=1024, visibility_merge_size=1024, visibility_merge_margin_deg=-1.0, merge_passes=0, smooth_passes=0, merge_max_normal_angle_deg=72.0),
 }
 
 
 def profile_names(*, include_obj: bool = True, include_legacy: bool = True) -> tuple[str, ...]:
     names = ["auto"]
     if include_obj:
-        names.extend(["balanced", "smooth", "coarse", "fast"])
+        names.extend(["balanced", "smooth", "coarse", "fast", "visibility_merge"])
     if include_legacy:
         names.extend(["balanced", "material", "non_culling", "nocull"])
     names.append("custom")
@@ -78,6 +79,10 @@ def meshlet_options_from_args(args, mesh: ObjMesh | None = None, *, source: str 
         lkh_exe=str(getattr(args, "lkh", DEFAULT_LKH_EXE)),
         nocull_lkh_component_limit=int(opt("nocull_lkh_component_limit", getattr(args, "nocull_lkh_component_limit", 500))),
         nocull_lkh_time_limit=int(opt("nocull_lkh_time_limit", getattr(args, "nocull_lkh_time_limit", 30))),
+        visibility_merge_samples=int(opt("visibility_merge_samples", getattr(args, "visibility_merge_samples", 1024))),
+        visibility_merge_size=int(opt("visibility_merge_size", getattr(args, "visibility_merge_size", 1024))),
+        visibility_merge_margin_deg=float(opt("visibility_merge_margin_deg", getattr(args, "visibility_merge_margin", -1.0))),
+        visibility_merge_cone_weight=float(opt("visibility_merge_cone_weight", getattr(args, "visibility_merge_cone_weight", 45.0))),
         merge_passes=int(opt("merge_passes", 1)),
         smooth_passes=int(opt("smooth_passes", 0)),
         merge_max_normal_angle_deg=float(opt("merge_max_normal_angle_deg", 48.0)),

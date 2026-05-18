@@ -307,34 +307,26 @@ def _meshlet_metric_values(meshlets: list[Meshlet] | None, color_by: str) -> np.
 
 
 def _is_culled(meshlet: Meshlet, view_dir: np.ndarray, cone_source: str) -> bool:
-    if cone_source == "normal":
-        cull_axis, cull_cos = meshlet.selected_cull_cone("normal")
-        return cull_cos <= 1.0 and float(np.dot(view_dir, cull_axis)) >= cull_cos
-    if cone_source == "visibility":
-        if meshlet.visibility_axis is None:
+    if cone_source in ("normal", "visibility"):
+        axis, cos_angle = meshlet.selected_cull_cone(cone_source)
+        if cos_angle > 1.0:
             return False
-        # view_dir is camera->object; visibility_axis is object->camera.
-        return float(np.dot(meshlet.visibility_axis, -view_dir)) < meshlet.visibility_cos
+        # view_dir is camera->object; runtime cones store object->camera.
+        return float(np.dot(axis, -view_dir)) < cos_angle
     raise ValueError(f"unknown cull cone source: {cone_source}")
 
 
 def _is_culled_from_camera(meshlet: Meshlet, camera_pos: np.ndarray, cone_source: str) -> bool:
-    if cone_source == "normal":
-        view_dir = meshlet.center - camera_pos
-        n = float(np.linalg.norm(view_dir))
-        if n <= 1e-12:
+    if cone_source in ("normal", "visibility"):
+        axis, cos_angle = meshlet.selected_cull_cone(cone_source)
+        if cos_angle > 1.0:
             return False
-        return _is_culled(meshlet, view_dir / n, cone_source)
-    if cone_source == "visibility":
-        if meshlet.visibility_axis is None:
-            return False
-        # EmberGL/Meshlete convention: test from an anchor point behind the
-        # meshlet bounding sphere, not simply from the sphere center.
-        anchor = meshlet.center - meshlet.visibility_axis * meshlet.radius
+        # Match the runtime's conservative perspective test.
+        anchor = meshlet.center - axis * meshlet.radius
         camera_dir = camera_pos - anchor
         n = float(np.linalg.norm(camera_dir))
         if n <= 1e-12:
             return False
         camera_dir /= n
-        return float(np.dot(meshlet.visibility_axis, camera_dir)) < meshlet.visibility_cos
+        return float(np.dot(axis, camera_dir)) < cos_angle
     raise ValueError(f"unknown cull cone source: {cone_source}")
