@@ -41,6 +41,7 @@
 #include "Mesh3D.h"
 #include "Mesh3D2.h"
 #include "Mesh3D2_16.h"
+#include "Mesh3D3_16.h"
 
 
 
@@ -854,6 +855,22 @@ namespace tgx
          *   Mesh3D2_16 side by side.
          */
         void drawMesh(const Mesh3D2_16<color_t>* mesh, bool use_mesh_material = true);
+
+
+        /**
+         * Draw a Mesh3D3_16 object.
+         *
+         * @param   mesh                The mesh to draw.
+         * @param   use_mesh_material   True (default) to use Mesh3D3_16 material colors and lighting
+         *                              coefficients, otherwise use the current renderer material.
+         *
+         * @remark
+         * - Mesh3D3_16 is an experimental Mesh3D2_16 variant that replaces visibility cones
+         *   with a 1024-bit octahedral visibility mask per meshlet.
+         * - This overload exists only to benchmark the visibility-mask idea side by side with
+         *   Mesh3D2 and Mesh3D2_16.
+         */
+        void drawMesh(const Mesh3D3_16<color_t>* mesh, bool use_mesh_material = true);
 
 
         /**
@@ -1782,6 +1799,9 @@ namespace tgx
         /** Method called by drawMesh() which does the actual Mesh3D2_16 drawing. */
         void _drawMesh(const int RASTER_TYPE, const Mesh3D2_16<color_t>* mesh, bool use_mesh_material);
 
+        /** Method called by drawMesh() which does the actual Mesh3D3_16 drawing. */
+        void _drawMesh(const int RASTER_TYPE, const Mesh3D3_16<color_t>* mesh, bool use_mesh_material);
+
         /** Return true when the Mesh3D2 visibility cone rejects the meshlet for the current view. */
         TGX_INLINE inline bool _discardMeshlet(const Meshlet3D2& meshlet) const
             {
@@ -1813,6 +1833,44 @@ namespace tgx
             const float dot2 = dot * dot;
             return (cone_cos >= 0.0f) ? ((dot < 0.0f) || (dot2 < c2len2))
                                       : ((dot < 0.0f) && (dot2 > c2len2));
+            }
+
+        /** Return the 32x32 octahedral visibility-map index for the current object-space view direction. */
+        TGX_INLINE inline uint16_t _mesh3d3VisibilityIndex() const
+            {
+            // Object-to-camera direction in object space. This uses the transpose of the
+            // upper 3x3 model-view matrix and is exact for the rotation/uniform-scale model
+            // transforms used by TGX examples and converters.
+            float x = _r_modelViewM.M[2];
+            float y = _r_modelViewM.M[6];
+            float z = _r_modelViewM.M[10];
+
+            const float ax = (x < 0.0f) ? -x : x;
+            const float ay = (y < 0.0f) ? -y : y;
+            const float az = (z < 0.0f) ? -z : z;
+            const float inv_l1 = 1.0f / (ax + ay + az + 1.0e-20f);
+            x *= inv_l1;
+            y *= inv_l1;
+            z *= inv_l1;
+
+            float u;
+            float v;
+            if (z >= 0.0f)
+                {
+                u = x;
+                v = y;
+                }
+            else
+                {
+                u = (1.0f - ((y < 0.0f) ? -y : y)) * ((x < 0.0f) ? -1.0f : 1.0f);
+                v = (1.0f - ((x < 0.0f) ? -x : x)) * ((y < 0.0f) ? -1.0f : 1.0f);
+                }
+
+            int ix = (int)((u + 1.0f) * 15.5f + 0.5f);
+            int iy = (int)((v + 1.0f) * 15.5f + 0.5f);
+            if (ix < 0) ix = 0; else if (ix > 31) ix = 31;
+            if (iy < 0) iy = 0; else if (iy > 31) iy = 31;
+            return (uint16_t)(iy * 32 + ix);
             }
 
         /** Return true when the Mesh3D2_16 visibility cone rejects the meshlet for the current view. */
