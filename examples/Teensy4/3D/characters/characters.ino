@@ -21,14 +21,18 @@ using namespace tgx;
 
 
 // meshes (stored in PROGMEM) for Teensy 4.0 and 4.1
-#if __has_include("nanosuit.h")
+#if __has_include("nanosuit_v2.h")
     // Arduino IDE stupidly flattens the example directory tree...
-    #include "nanosuit.h"
-    #include "R2D2.h"
+    #include "nanosuit_v2.h"
+    #include "R2D2_v2.h"
+    #include "nanosuit_v2.cpp"
+    #include "R2D2_v2.cpp"
 #else 
     // ok, use the normal path
-    #include "3Dmodels/nanosuit/nanosuit.h"
-    #include "3Dmodels/R2D2/R2D2.h"    
+    #include "3Dmodels/nanosuit/nanosuit_v2.h"
+    #include "3Dmodels/R2D2/R2D2_v2.h"    
+    #include "3Dmodels/nanosuit/nanosuit_v2.cpp"
+    #include "3Dmodels/R2D2/R2D2_v2.cpp"    
 #endif
 
 
@@ -36,24 +40,38 @@ using namespace tgx;
 // additional meshes for Teensy 4.1 / MicroMod since it has more flash. 
 #if defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSY_MICROMOD)
 
-#if __has_include("elementalist.h")
+#if __has_include("elementalist_v2.h")
     // Arduino IDE stupidly flattens the example directory tree...
-    #include "elementalist.h"
-    #include "sinbad.h"
-    #include "cyborg.h"
-    #include "dennis.h"
-    #include "manga3.h"
-    #include "naruto.h"
-    #include "stormtrooper.h"
+    #include "elementalist_v2.h"
+    #include "sinbad_v2.h"
+    #include "cyborg_v2.h"
+    #include "dennis_v2.h"
+    #include "manga3_v2.h"
+    #include "naruto_v2.h"
+    #include "stormtrooper_v2.h"
+    #include "elementalist_v2.cpp"
+    #include "sinbad_v2.cpp"
+    #include "cyborg_v2.cpp"
+    #include "dennis_v2.cpp"
+    #include "manga3_v2.cpp"
+    #include "naruto_v2.cpp"
+    #include "stormtrooper_v2.cpp"
 #else 
     // ok, use the normal path
-    #include "3Dmodels/elementalist/elementalist.h"
-    #include "3Dmodels/sinbad/sinbad.h"
-    #include "3Dmodels/cyborg/cyborg.h"
-    #include "3Dmodels/dennis/dennis.h"
-    #include "3Dmodels/manga3/manga3.h"
-    #include "3Dmodels/naruto/naruto.h"
-    #include "3Dmodels/stormtrooper/stormtrooper.h"
+    #include "3Dmodels/elementalist/elementalist_v2.h"
+    #include "3Dmodels/sinbad/sinbad_v2.h"
+    #include "3Dmodels/cyborg/cyborg_v2.h"
+    #include "3Dmodels/dennis/dennis_v2.h"
+    #include "3Dmodels/manga3/manga3_v2.h"
+    #include "3Dmodels/naruto/naruto_v2.h"
+    #include "3Dmodels/stormtrooper/stormtrooper_v2.h"
+    #include "3Dmodels/elementalist/elementalist_v2.cpp"
+    #include "3Dmodels/sinbad/sinbad_v2.cpp"
+    #include "3Dmodels/cyborg/cyborg_v2.cpp"
+    #include "3Dmodels/dennis/dennis_v2.cpp"
+    #include "3Dmodels/manga3/manga3_v2.cpp"
+    #include "3Dmodels/naruto/naruto_v2.cpp"
+    #include "3Dmodels/stormtrooper/stormtrooper_v2.cpp"
 #endif
 
 #endif
@@ -133,9 +151,11 @@ const Shader shader = SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_W
 
 // list of meshes to display
 #if defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSY_MICROMOD)
-const Mesh3D<RGB565>* meshes[9] = { &nanosuit_1, &elementalist_1, &sinbad_1, &cyborg, &naruto_1, &manga3_1, &dennis, &R2D2, &stormtrooper };
+const Mesh3Dv2<RGB565>* meshes[9] = { &nanosuit_v2, &elementalist_v2, &sinbad_v2, &cyborg_v2, &naruto_v2, &manga3_v2, &dennis_v2, &R2D2_v2, &stormtrooper_v2 };
+const int mesh_triangles[9] = { 8807, 5013, 7610, 5549, 2472, 13427, 7657, 8035, 6518 };
 #else
-const Mesh3D<RGB565>* meshes[2] = { &nanosuit_1,  &R2D2 };
+const Mesh3Dv2<RGB565>* meshes[2] = { &nanosuit_v2,  &R2D2_v2 };
+const int mesh_triangles[2] = { 8807, 8035 };
 #endif
 
 
@@ -148,7 +168,7 @@ char buf_DTCM[DTCM_buf_size];
 const int DMAMEM_buf_size = 330000; // adjust this value to fill unused DMAMEM,  leave at least 10k for additional serial objects. 
 DMAMEM char buf_DMAMEM[DMAMEM_buf_size];
 
-const tgx::Mesh3D<tgx::RGB565> * cached_mesh; // pointer to the currently cached mesh. 
+const tgx::Mesh3Dv2<tgx::RGB565> * cached_mesh; // pointer to the currently cached mesh. 
 
 
 // Print per-second FPS and frame timing on Serial.
@@ -225,20 +245,12 @@ bool  moveModel() // remark: need to keep the tgx:: prefix in function signature
 /**
 * Overlay some info about the current mesh on the screen
 **/
-void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3D<tgx::RGB565>* mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
+void drawInfo(tgx::Image<tgx::RGB565>& im, int shader, const tgx::Mesh3Dv2<tgx::RGB565>* mesh, int nb_triangles)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
     {
-    // count the number of triangles in the mesh (by iterating over linked meshes)
-    const Mesh3D<RGB565>* m = mesh;
-    int nbt = 0;
-    while (m != nullptr)
-        {
-        nbt += m->nb_faces;
-        m = m->next;
-        }
     // display some info 
     char buf[80];
     im.drawText((mesh->name != nullptr ? mesh->name : "[unnamed mesh]"), { 3,12 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
-    sprintf(buf, "%d triangles", nbt);
+    sprintf(buf, "%d triangles", nb_triangles);
     im.drawText(buf, { 3,SLY - 21 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     sprintf(buf, "%s%s", (shader & SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & SHADER_TEXTURE_NEAREST ? " / texturing" : ""));
     im.drawText(buf, { 3, SLY - 5 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
@@ -288,7 +300,7 @@ void setup()
     #endif
 
     // cache the first mesh to display in RAM to improve framerate
-    cached_mesh  = tgx::cacheMesh(meshes[meshindex], buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size);
+    cached_mesh  = tgx::cacheMesh(meshes[meshindex], buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size, "LMPI");
     telemetrySetScene(meshes[meshindex]->name);
 
     }
@@ -314,7 +326,7 @@ void loop()
         meshindex = (meshindex + 1) % (sizeof(meshes) / sizeof(meshes[0]));
 
         // cache it in RAM to improve framerate
-        cached_mesh  = tgx::cacheMesh(meshes[meshindex], buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size);
+        cached_mesh  = tgx::cacheMesh(meshes[meshindex], buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size, "LMPI");
         telemetrySetScene(meshes[meshindex]->name);
         }
 
@@ -323,7 +335,7 @@ void loop()
     renderer.drawMesh(cached_mesh);
 
     // overlay some info 
-    drawInfo(im, shader, meshes[meshindex]);
+    drawInfo(im, shader, meshes[meshindex], mesh_triangles[meshindex]);
 
     // add FPS counter
     tft.overlayFPS(fb); 
