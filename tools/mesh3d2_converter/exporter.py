@@ -479,6 +479,7 @@ def _export_meshlet_header_impl(
     mesh_id: int = 2162,
     cone_source: str = "normal",
     header_filename: str | None = None,
+    single_header: bool = False,
 ) -> MeshletExportResult:
     symbol = _identifier(name or mesh.name or "mesh")
     materials = sorted({m.material for m in meshlets})
@@ -561,26 +562,18 @@ def _export_meshlet_header_impl(
         f"y[{_fmt_comment_float(bb_min[1])}, {_fmt_comment_float(bb_max[1])}] "
         f"z[{_fmt_comment_float(bb_min[2])}, {_fmt_comment_float(bb_max[2])}]"
     )
-    header.append("")
-    header.append(f"extern const tgx::{mesh_type}<{color_type}> {symbol};")
-    header.append("")
-
-    source: list[str] = []
-    source.append(f'#include "{header_filename or (symbol + ".h")}"')
-    for include in extra_includes:
-        source.append(f'#include "{include}"')
-    source.append("")
-    source.append(f"const uint32_t {symbol}_payload[{len(payload_words)}] PROGMEM = {{")
-    source.append(_format_u32_array(payload_words))
-    source.append("};")
-    source.append("")
-    source.append(f"const tgx::{meshlet_type} {symbol}_meshlets[{len(meshlets)}] PROGMEM = {{")
+    definitions: list[str] = []
+    definitions.append(f"const uint32_t {symbol}_payload[{len(payload_words)}] PROGMEM = {{")
+    definitions.append(_format_u32_array(payload_words))
+    definitions.append("};")
+    definitions.append("")
+    definitions.append(f"const tgx::{meshlet_type} {symbol}_meshlets[{len(meshlets)}] PROGMEM = {{")
     for mi, item in enumerate(encoded):
         q_center, q_dir, q_radius, q_cos, _, _ = metadata16b[mi]
-        source.append(_format_meshlet_initializer(q_center, q_dir, q_radius, q_cos, item))
-    source.append("};")
-    source.append("")
-    source.append(f"const tgx::{material_type}<{color_type}> {symbol}_materials[{len(materials)}] PROGMEM = {{")
+        definitions.append(_format_meshlet_initializer(q_center, q_dir, q_radius, q_cos, item))
+    definitions.append("};")
+    definitions.append("")
+    definitions.append(f"const tgx::{material_type}<{color_type}> {symbol}_materials[{len(materials)}] PROGMEM = {{")
     for mat in materials:
         texture = texture_symbols.get(mat, "")
         texture_ptr = f"&{texture}" if texture else "nullptr"
@@ -591,25 +584,43 @@ def _export_meshlet_header_impl(
         specular = material.specular_strength if material is not None else 0.6
         exponent = material.specular_exponent if material is not None else 32
         suffix = f" // {mat}" if mat else ""
-        source.append(f"    {{ {texture_ptr}, {{ {_fmt_float(color[0])}, {_fmt_float(color[1])}, {_fmt_float(color[2])} }}, {_fmt_float(ambiant)}, {_fmt_float(diffuse)}, {_fmt_float(specular)}, {int(exponent)} }},{suffix}")
-    source.append("};")
-    source.append("")
-    source.append(f"extern const tgx::{mesh_type}<{color_type}> {symbol} PROGMEM =")
-    source.append("    {")
-    source.append(f"    {mesh_id},")
-    source.append(f"    {len(meshlets)},")
-    source.append(f"    {len(materials)},")
-    source.append(f"    {symbol}_materials,")
-    source.append(f"    {symbol}_meshlets,")
-    source.append(f"    {symbol}_payload,")
-    source.append("    {")
-    source.append(f"    {_fmt_float(bb_min[0])}, {_fmt_float(bb_max[0])},")
-    source.append(f"    {_fmt_float(bb_min[1])}, {_fmt_float(bb_max[1])},")
-    source.append(f"    {_fmt_float(bb_min[2])}, {_fmt_float(bb_max[2])}")
-    source.append("    },")
-    source.append(f"    \"{symbol}\"")
-    source.append("    };")
-    source.append("")
+        definitions.append(f"    {{ {texture_ptr}, {{ {_fmt_float(color[0])}, {_fmt_float(color[1])}, {_fmt_float(color[2])} }}, {_fmt_float(ambiant)}, {_fmt_float(diffuse)}, {_fmt_float(specular)}, {int(exponent)} }},{suffix}")
+    definitions.append("};")
+    definitions.append("")
+    object_prefix = "const" if single_header else "extern const"
+    definitions.append(f"{object_prefix} tgx::{mesh_type}<{color_type}> {symbol} PROGMEM =")
+    definitions.append("    {")
+    definitions.append(f"    {mesh_id},")
+    definitions.append(f"    {len(meshlets)},")
+    definitions.append(f"    {len(materials)},")
+    definitions.append(f"    {symbol}_materials,")
+    definitions.append(f"    {symbol}_meshlets,")
+    definitions.append(f"    {symbol}_payload,")
+    definitions.append("    {")
+    definitions.append(f"    {_fmt_float(bb_min[0])}, {_fmt_float(bb_max[0])},")
+    definitions.append(f"    {_fmt_float(bb_min[1])}, {_fmt_float(bb_max[1])},")
+    definitions.append(f"    {_fmt_float(bb_min[2])}, {_fmt_float(bb_max[2])}")
+    definitions.append("    },")
+    definitions.append(f"    \"{symbol}\"")
+    definitions.append("    };")
+    definitions.append("")
+
+    source: list[str] | None
+    if single_header:
+        for include in extra_includes:
+            header.append(f'#include "{include}"')
+        header.append("")
+        header.extend(definitions)
+        source = None
+    else:
+        header.append("")
+        header.append(f"extern const tgx::{mesh_type}<{color_type}> {symbol};")
+        header.append("")
+        source = [f'#include "{header_filename or (symbol + ".h")}"']
+        for include in extra_includes:
+            source.append(f'#include "{include}"')
+        source.append("")
+        source.extend(definitions)
 
     stats = MeshletExportStats(
         meshlets=len(meshlets),
@@ -624,7 +635,7 @@ def _export_meshlet_header_impl(
         mesh_struct_bytes=mesh_struct_bytes,
         static_bytes=static_bytes,
     )
-    return MeshletExportResult("\n".join(header), stats, "\n".join(source))
+    return MeshletExportResult("\n".join(header), stats, None if source is None else "\n".join(source))
 
 
 
@@ -641,6 +652,7 @@ def export_mesh3dv2_header(
     extra_includes: list[str] | None = None,
     cone_source: str = "normal",
     header_filename: str | None = None,
+    single_header: bool = False,
 ) -> MeshletExportResult:
     return _export_meshlet_header_impl(
         mesh,
@@ -657,4 +669,5 @@ def export_mesh3dv2_header(
         mesh_id=2162,
         cone_source=cone_source,
         header_filename=header_filename,
+        single_header=single_header,
     )

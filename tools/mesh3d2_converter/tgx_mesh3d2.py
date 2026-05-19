@@ -347,6 +347,7 @@ def main(argv: list[str] | None = None) -> int:
     p_export.add_argument("--name")
     p_export.add_argument("--color-type", choices=("tgx::RGB565", "tgx::RGB32", "tgx::RGBf"), default="tgx::RGB565")
     p_export.add_argument("--mesh-format", choices=("mesh3dv2",), default="mesh3dv2", help="output payload format")
+    p_export.add_argument("--single-header", action="store_true", help="write the mesh definition directly in the .h instead of generating a companion .cpp")
     p_export.add_argument("--normalize", action="store_true", help="center the model and fit its largest extent to --normalize-size")
     p_export.add_argument("--normalize-size", type=float, default=2.0)
     p_export.add_argument("--dedupe-epsilon", type=float, default=1e-9)

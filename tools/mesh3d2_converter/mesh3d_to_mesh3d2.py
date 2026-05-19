@@ -714,6 +714,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--name", help="output C++ symbol")
     parser.add_argument("--color-type", help="override color type; defaults to the legacy Mesh3D color type")
     parser.add_argument("--mesh-format", choices=("mesh3dv2",), default="mesh3dv2", help="output payload format")
+    parser.add_argument("--single-header", action="store_true", help="write the mesh definition directly in the .h instead of generating a companion .cpp")
     add_build_options(parser, source="legacy")
     parser.add_argument("--lkh", default=str(DEFAULT_LKH_EXE))
     add_visibility_options(parser, default_samples=1024, default_size=512)

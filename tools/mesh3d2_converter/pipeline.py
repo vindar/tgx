@@ -188,6 +188,7 @@ def export_common(
         texture_symbols=texture_symbols or {},
         extra_includes=extra_includes or [],
         header_filename=output.name,
+        single_header=getattr(args, "single_header", False),
     )
     kwargs.update(cone_source=cone_source)
     with step("encode/export mesh", f"{fmt}, {len(meshlets)} meshlets"):
@@ -206,6 +207,10 @@ def export_common(
         with step("write source", str(source_output)):
             with source_output.open("w", encoding="utf-8", newline="\n") as handle:
                 handle.write(result.source)
+    elif getattr(args, "single_header", False):
+        stale_source = output.with_suffix(".cpp")
+        if stale_source.exists():
+            log(f"single-header output: not writing companion source; remove old split source if unused: {stale_source}")
     return result
 
 

@@ -11,7 +11,7 @@ Current scope:
 - print basic meshlet quality statistics.
 - estimate gross and net meshlet-cone culling efficiency across view directions,
 - compute visibility cones with an offline TGX C++ helper,
-- export a TGX `Mesh3Dv2` C++ header,
+- export TGX `Mesh3Dv2` C++ files,
 - convert an existing TGX `Mesh3D` header to a meshlet format while reusing the same texture headers.
 
 This is still an experimental converter. The generated meshlet files are meant to
@@ -64,6 +64,15 @@ Export a normalized model as a `Mesh3Dv2<RGB565>` header. Without an explicit
 
 ```powershell
 py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export D:\Programmation\myProjects\tgxmeshlets\bunny.obj -o tmp\bunny_mesh3dv2.h --name bunny_mesh3dv2 --normalize
+```
+
+By default, exports are split into a small declaration header and a companion `.cpp`
+containing the large payload arrays. For Arduino examples that live in nested
+directories, add `--single-header` to put the payload and mesh definition directly in
+the `.h` file:
+
+```powershell
+py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_mesh3dv2.h --single-header
 ```
 
 The export command:
@@ -130,6 +139,9 @@ OBJ file:
 ```powershell
 py -3.12 -m tools.mesh3d2_converter.mesh3d_to_mesh3d2 examples\Teensy4\3D\mars\falcon\falcon_vs.h -o falcon_vs_m2.h --root falcon_vs_1 --name falcon_vs_m2
 ```
+
+Use `--single-header` here as well when a single generated `.h` is more convenient than
+the default `.h` plus `.cpp` pair.
 
 The legacy converter:
 
