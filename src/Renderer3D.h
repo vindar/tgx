@@ -1193,6 +1193,20 @@ namespace tgx
 
 
         /**
+         * Draw a Mesh3Dv2 object in wireframe [*low quality*].
+         *
+         * @remark
+         * - This method uses fast low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - The mesh is drawn with the current material color, not with the Mesh3Dv2 materials.
+         * - This method does not require a zbuffer but back face culling is used if it is enabled.
+         * - Meshlet visibility cones are used when `TGX_MESHLET_WIREFRAME_CULL` is enabled.
+         *
+         * @param   mesh                The Mesh3Dv2 object to draw.
+        **/
+        void drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh);
+
+
+        /**
          * Draw a mesh in wireframe [*high quality*].
          *
          * @remark
@@ -1208,6 +1222,24 @@ namespace tgx
          * @param   opacity             opacity multiplier in [0.0f, 1.0f].
         **/
         void drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness, color_t color, float opacity);
+
+
+        /**
+         * Draw a Mesh3Dv2 object in wireframe [*high quality*].
+         *
+         * @remark
+         * - This method uses high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - This method does not require a zbuffer but back face culling is used if it is enabled.
+         * - Meshlet visibility cones are used when `TGX_MESHLET_WIREFRAME_CULL` is enabled.
+         *
+         * @warning This method is very slow (may be slower that solid drawing) !
+         *
+         * @param   mesh                The Mesh3Dv2 object to draw.
+         * @param   thickness           thickness of the lines.
+         * @param   color               color to use.
+         * @param   opacity             opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, float thickness, color_t color, float opacity);
 
 
         /**
@@ -1795,6 +1827,8 @@ namespace tgx
 
 
         template<bool DRAW_FAST> void _drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness);
+
+        template<bool DRAW_FAST> void _drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, color_t color, float opacity, float thickness);
 
         template<bool DRAW_FAST> void _drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness);
 

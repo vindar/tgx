@@ -1940,9 +1940,23 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh)
+            {
+            _drawWireFrameMesh<true>(mesh, color_t(_color), 1.0f, 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness, color_t color, float opacity)
             {
             _drawWireFrameMesh<false>(mesh, draw_chained_meshes, color, opacity, thickness);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, float thickness, color_t color, float opacity)
+            {
+            _drawWireFrameMesh<false>(mesh, color, opacity, thickness);
             }
 
 
@@ -2187,6 +2201,211 @@ namespace tgx
                 mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
                 }
         }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<bool DRAW_FAST> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, color_t color, float opacity, float thickness)
+            {
+            if (!_validDraw()) return;
+            if ((mesh == nullptr) || (thickness <= 0)) return;
+
+            const bool ortho = _ortho;
+
+            const tgx::fMat4 M(_lx/2.0f, 0, 0, _lx / 2.0f - _ox,
+                               0, _ly / 2.0f, 0, _ly / 2.0f - _oy,
+                               0, 0, 1, 0,
+                               0, 0, 0, 0);
+
+            const bool bbox_uninitialized = ((mesh->bounding_box.minX == 0) && (mesh->bounding_box.maxX == 0) &&
+                                             (mesh->bounding_box.minY == 0) && (mesh->bounding_box.maxY == 0) &&
+                                             (mesh->bounding_box.minZ == 0) && (mesh->bounding_box.maxZ == 0));
+
+            // check if the object is completely outside of the image for fast discard.
+            if ((!bbox_uninitialized) && _discardBox(mesh->bounding_box, _projM * _r_modelViewM)) return;
+
+            ExtVec4 QQA, QQB, QQC;
+            ExtVec4* PPC0 = &QQA;
+            ExtVec4* PPC1 = &QQB;
+            ExtVec4* PPC2 = &QQC;
+
+            // Mesh3Dv2 stores meshlet sphere metadata as 16-bit values relative
+            // to the global bounding box. Decode the common scales once per mesh.
+            const float meshlet_bbox_cx = 0.5f * (mesh->bounding_box.minX + mesh->bounding_box.maxX);
+            const float meshlet_bbox_cy = 0.5f * (mesh->bounding_box.minY + mesh->bounding_box.maxY);
+            const float meshlet_bbox_cz = 0.5f * (mesh->bounding_box.minZ + mesh->bounding_box.maxZ);
+            const float meshlet_bbox_dx = mesh->bounding_box.maxX - mesh->bounding_box.minX;
+            const float meshlet_bbox_dy = mesh->bounding_box.maxY - mesh->bounding_box.minY;
+            const float meshlet_bbox_dz = mesh->bounding_box.maxZ - mesh->bounding_box.minZ;
+            float meshlet_bbox_extent = (meshlet_bbox_dx > meshlet_bbox_dy) ? meshlet_bbox_dx : meshlet_bbox_dy;
+            if (meshlet_bbox_dz > meshlet_bbox_extent) meshlet_bbox_extent = meshlet_bbox_dz;
+            if (meshlet_bbox_extent <= 1.0e-20f) meshlet_bbox_extent = 1.0f;
+            const float meshlet_center_scale = meshlet_bbox_extent * (1.0f / 65534.0f);
+            const float meshlet_radius_scale = meshlet_bbox_extent * (1.0f / 65535.0f);
+#if TGX_MESHLET_WIREFRAME_CULL
+            const float meshlet_snorm_scale = (1.0f / 32767.0f);
+#endif
+
+            for (uint16_t mli = 0; mli < mesh->nb_meshlets; mli++)
+                {
+                const Meshlet3Dv2& meshlet = mesh->meshlets[mli];
+
+                const fVec3 meshlet_sphere_center(
+                    meshlet_bbox_cx + ((float)meshlet.sphere_center[0]) * meshlet_center_scale,
+                    meshlet_bbox_cy + ((float)meshlet.sphere_center[1]) * meshlet_center_scale,
+                    meshlet_bbox_cz + ((float)meshlet.sphere_center[2]) * meshlet_center_scale);
+                const float meshlet_sphere_radius = ((float)meshlet.sphere_radius) * meshlet_radius_scale;
+
+#if TGX_MESHLET_WIREFRAME_CULL
+                const float meshlet_cone_cos = ((float)meshlet.cone_cos) * meshlet_snorm_scale;
+                if ((_culling_dir != 0) && (meshlet_cone_cos > -1.0f))
+                    {
+                    const fVec3 meshlet_cone_dir(
+                        ((float)meshlet.cone_dir[0]) * meshlet_snorm_scale,
+                        ((float)meshlet.cone_dir[1]) * meshlet_snorm_scale,
+                        ((float)meshlet.cone_dir[2]) * meshlet_snorm_scale);
+                    if (_discardMeshlet16b(meshlet_sphere_center, meshlet_sphere_radius, meshlet_cone_dir, meshlet_cone_cos))
+                        {
+                        continue;
+                        }
+                    }
+#endif
+
+                const bool HAS_TEXCOORDS = (meshlet.nb_texcoords != 0);
+                const bool HAS_NORMALS = (meshlet.nb_normals != 0);
+
+                const uint8_t* payload = (const uint8_t*)(mesh->payload + meshlet.payload_offset32);
+
+                const int16_t* const tab_vert = (const int16_t*)payload;
+                payload += ((size_t)meshlet.nb_vertices) * 3 * sizeof(int16_t);
+
+                payload += ((size_t)meshlet.nb_normals) * 3 * sizeof(int16_t);
+                payload += ((size_t)meshlet.nb_texcoords) * 2 * sizeof(int16_t);
+
+                const float vertex_scale = meshlet_sphere_radius * (1.0f / 32767.0f);
+                const float vertex_base_x = meshlet_sphere_center.x;
+                const float vertex_base_y = meshlet_sphere_center.y;
+                const float vertex_base_z = meshlet_sphere_center.z;
+
+                const uint8_t* face = payload;
+
+                int nbt;
+                while ((nbt = *(face++)) > 0)
+                    { // starting a chain with nbt triangles
+
+                    // load the first triangle
+                    const uint8_t v0 = *(face++);
+                    if (HAS_TEXCOORDS) face++;
+                    if (HAS_NORMALS) face++;
+
+                    const uint8_t v1 = *(face++);
+                    if (HAS_TEXCOORDS) face++;
+                    if (HAS_NORMALS) face++;
+
+                    const uint8_t v2 = *(face++);
+                    if (HAS_TEXCOORDS) face++;
+                    if (HAS_NORMALS) face++;
+
+                    // compute vertices position because we are sure we will need them...
+                    PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v2, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                    PPC0->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v0, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                    PPC1->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v1, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+
+                    // ...but use lazy computation of other vertex attributes
+                    PPC0->missedP = true;
+                    PPC1->missedP = true;
+                    PPC2->missedP = true;
+
+                    bool previous_wire_triangle_drawn = false;
+
+                    while (1)
+                        {
+                        const bool skip_shared_edge = previous_wire_triangle_drawn;
+                        bool current_wire_triangle_drawn = false;
+
+                        // face culling
+                        fVec3 faceN = crossProduct(PPC1->P - PPC0->P, PPC2->P - PPC0->P);
+                        const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PPC0->P);
+                        if (cu * _culling_dir > 0) goto rasterize_next_meshlet_wireframetriangle; // skip triangle !
+
+                        // triangle is not culled
+                        *((fVec4*)PPC2) = _projM * PPC2->P;
+                        if (ortho) { PPC2->w = 1.0f - PPC2->z; } else { PPC2->zdivide(); }
+                        *((fVec4*)PPC2) = M.mult1(*((fVec4*)PPC2));
+
+                        if (PPC0->missedP)
+                            {
+                            *((fVec4*)PPC0) = _projM * PPC0->P;
+                            if (ortho) { PPC0->w = 1.0f - PPC0->z; } else { PPC0->zdivide(); }
+                            *((fVec4*)PPC0) = M.mult1(*((fVec4*)PPC0));
+                            }
+                        if (PPC1->missedP)
+                            {
+                            *((fVec4*)PPC1) = _projM * PPC1->P;
+                            if (ortho) { PPC1->w = 1.0f - PPC1->z; } else { PPC1->zdivide(); }
+                            *((fVec4*)PPC1) = M.mult1(*((fVec4*)PPC1));
+                            }
+
+                        // attributes are now all up to date
+                        PPC0->missedP = false;
+                        PPC1->missedP = false;
+                        PPC2->missedP = false;
+
+                        // clip test
+                        if ((PPC0->P.z >= 0) || (PPC0->z < -1) || (PPC0->z > 1)
+                         || (PPC1->P.z >= 0) || (PPC1->z < -1) || (PPC1->z > 1)
+                         || (PPC2->P.z >= 0) || (PPC2->z < -1) || (PPC2->z > 1))
+                            goto rasterize_next_meshlet_wireframetriangle;
+
+                        // draw triangle
+                        if (DRAW_FAST)
+                            {
+                            iVec2 PP0(*((fVec2*)PPC0));
+                            iVec2 PP1(*((fVec2*)PPC1));
+                            iVec2 PP2(*((fVec2*)PPC2));
+                            if (PP0 == PP1)
+                                {
+                                _uni.im->drawLine(PP0, PP2, color);
+                                }
+                            else if (PP0 == PP2)
+                                {
+                                _uni.im->drawLine(PP0, PP1, color);
+                                }
+                            else if (PP1 == PP2)
+                                {
+                                _uni.im->drawLine(PP0, PP1, color);
+                                }
+                            else
+                                {
+                                if (!skip_shared_edge) _uni.im->drawLine(PP0, PP1, color);
+                                _uni.im->drawLine(PP1, PP2, color);
+                                _uni.im->drawLine(PP2, PP0, color);
+                                }
+                            }
+                        else
+                            {
+                            if (!skip_shared_edge) _uni.im->drawThickLineAA(*((fVec2*)PPC0), *((fVec2*)PPC1), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                            _uni.im->drawThickLineAA(*((fVec2*)PPC1), *((fVec2*)PPC2), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                            _uni.im->drawThickLineAA(*((fVec2*)PPC2), *((fVec2*)PPC0), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                            }
+                        current_wire_triangle_drawn = true;
+
+                    rasterize_next_meshlet_wireframetriangle:
+
+                        previous_wire_triangle_drawn = current_wire_triangle_drawn;
+                        if (--nbt == 0) break; // exit loop at end of chain
+
+                        // get the next triangle
+                        const uint8_t nv2 = *(face++);
+                        swap(((nv2 & 128) ? PPC0 : PPC1), PPC2);
+                        if (HAS_TEXCOORDS) face++;
+                        if (HAS_NORMALS) face++;
+                        PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, nv2 & 127, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                        PPC2->missedP = true;
+                        }
+                    }
+                }
+            }
 
 
 

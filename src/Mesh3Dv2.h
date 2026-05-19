@@ -286,8 +286,8 @@ namespace tgx
      * @param mesh        Pointer to the Mesh3Dv2 object to cache.
      * @param ram1_buffer Pointer to the first memory buffer, usually the fastest RAM.
      * @param ram1_size   Size in bytes of the first RAM buffer.
-     * @param ram2_buffer Pointer to a second memory buffer, may be nullptr.
-     * @param ram2_size   Size in bytes of the second RAM buffer, or 0 if not supplied.
+     * @param ram2_buffer Optional pointer to a second memory buffer, may be nullptr.
+     * @param ram2_size   Optional size in bytes of the second RAM buffer, or 0 if not supplied.
      * @param copy_order  Optional C string describing which data should be copied
      *                    and in which order. Default is "PLMI".
      * @param ram1_used   If non-null, receives the number of bytes consumed in ram1_buffer.
@@ -298,7 +298,7 @@ namespace tgx
      */
     template<typename color_t> const Mesh3Dv2<color_t>* cacheMesh(const Mesh3Dv2<color_t>* mesh,
                                                                   void* ram1_buffer, size_t ram1_size,
-                                                                  void* ram2_buffer, size_t ram2_size,
+                                                                  void* ram2_buffer = nullptr, size_t ram2_size = 0,
                                                                   const char* copy_order = "PLMI",
                                                                   size_t* ram1_used = nullptr,
                                                                   size_t* ram2_used = nullptr);

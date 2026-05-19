@@ -250,6 +250,13 @@
     #define TGX_MESHLET_SPHERE_CLIP 1
 #endif
 
+/**
+ * @def TGX_MESHLET_WIREFRAME_CULL
+ * Set to 1 to let Mesh3Dv2 wireframe rendering discard meshlets using their visibility cones.
+ */
+#ifndef TGX_MESHLET_WIREFRAME_CULL
+    #define TGX_MESHLET_WIREFRAME_CULL 1
+#endif
+
 
 /** end of file */
-
