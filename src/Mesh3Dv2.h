@@ -102,17 +102,18 @@ namespace tgx
      * touching the meshlet payload. This makes it possible to reject invisible
      * meshlets quickly using the bounding sphere and visibility cone.
      *
-     * The sphere and cone metadata are quantized to reduce flash/RAM traffic
-     * before a meshlet is accepted. The renderer reconstructs them as:
+     * The sphere and cone metadata are quantized relative to the mesh global
+     * bounding box. The renderer reconstructs this metadata before it touches
+     * the meshlet payload:
      *
      * ```
      * bbox_center = 0.5 * (mesh.bounding_box.min + mesh.bounding_box.max)
      * bbox_extent = max(mesh.bounding_box size on x/y/z)
      *
-     * sphere_center = bbox_center + sphere_center[i] * (bbox_extent / 65534)
-     * sphere_radius = sphere_radius * (bbox_extent / 65535)
-     * cone_dir      = cone_dir[i] * (1 / 32767)
-     * cone_cos      = cone_cos * (1 / 32767)
+     * decoded_sphere_center = bbox_center + sphere_center[i] * (bbox_extent / 65534)
+     * decoded_sphere_radius = sphere_radius * (bbox_extent / 65535)
+     * decoded_cone_dir      = cone_dir[i] * (1 / 32767)
+     * decoded_cone_cos      = cone_cos * (1 / 32767)
      * ```
      *
      * A `cone_cos` value below or equal to -1 disables meshlet cone culling.
@@ -175,14 +176,30 @@ namespace tgx
      * [padding bytes to reach the next 4-byte boundary]
      * ```
      *
-     * Vertices are decoded as:
+     * The payload stores local meshlet arrays. Vertex positions are quantized
+     * relative to the decoded meshlet bounding sphere above, not relative to
+     * the global mesh bounding box. They are decoded as:
      *
      * ```
-     * sphere_center + q * (sphere_radius / 32767)
+     * vertex = decoded_sphere_center + q * (decoded_sphere_radius / 32767)
      * ```
      *
-     * Normals are decoded as signed normalized values `q / 32767`. Texture
-     * coordinates are decoded on the fixed range [-4, 4] as `q * (4 / 32767)`.
+     * Normals use signed-normalized coordinates:
+     *
+     * ```
+     * normal = q * (1 / 32767)
+     * ```
+     *
+     * Texture coordinates use a fixed signed range large enough for ordinary
+     * UVs and simple tiling:
+     *
+     * ```
+     * texcoord = q * (4 / 32767)    // range approximately [-4, 4]
+     * ```
+     *
+     * The renderer computes these scale factors once per meshlet and then only
+     * performs multiply-adds when a vertex, normal or texture coordinate is
+     * actually needed by the active shader path.
      *
      * **Face stream**
      *
@@ -221,10 +238,7 @@ namespace tgx
 
         int32_t id;                                         ///< Version/id. Expected to be 2162 for Mesh3Dv2.
 
-        uint32_t payload_size32;                            ///< Total size of the payload array, in 32-bit words.
-
         uint16_t nb_meshlets;                               ///< Number of meshlets in the mesh.
-        uint16_t nb_faces;                                  ///< Total number of triangular faces in the mesh.
         uint16_t nb_materials;                              ///< Number of materials. Must be <= 256 because meshlet material indices are uint8_t.
 
         const MeshMaterial3Dv2<color_t>* materials;      ///< Material array.

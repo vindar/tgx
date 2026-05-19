@@ -7,8 +7,6 @@ from .mesh import Meshlet, ObjMesh
 
 def validate_mesh_for_export(mesh: ObjMesh, meshlets: list[Meshlet]) -> None:
     """Validate the final preprocessed mesh and meshlets before C++ header export."""
-    if len(mesh.triangles) > 0xFFFF:
-        raise ValueError(f"meshlet formats support at most 65535 triangles, got {len(mesh.triangles)}")
     if len(meshlets) > 0xFFFF:
         raise ValueError(f"meshlet formats support at most 65535 meshlets, got {len(meshlets)}")
 

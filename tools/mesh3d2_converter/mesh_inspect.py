@@ -58,9 +58,8 @@ class DecodedHeaderMesh:
     symbol: str
     color_type: str
     id: int
-    payload_size32: int
+    payload_words_count: int
     nb_meshlets_declared: int
-    nb_faces_declared: int
     nb_materials_declared: int
     bbox: tuple[float, float, float, float, float, float]
     name: str
@@ -381,7 +380,7 @@ def _decode_face_stream(face: bytes, has_tex: bool, has_norm: bool) -> tuple[
 
 def _decode_payload(mesh: DecodedHeaderMesh, payload_words: list[int]) -> None:
     data = _u32_to_bytes(payload_words)
-    next_offsets = [m.payload_offset32 * 4 for m in mesh.meshlets[1:]] + [mesh.payload_size32 * 4]
+    next_offsets = [m.payload_offset32 * 4 for m in mesh.meshlets[1:]] + [mesh.payload_words_count * 4]
     for meshlet, next_offset in zip(mesh.meshlets, next_offsets):
         start = meshlet.payload_offset32 * 4
         pos = start
@@ -415,31 +414,30 @@ def parse_mesh3d2_header(path: str | Path) -> DecodedHeaderMesh:
     fmt, color_type, symbol = decl.group(1), decl.group(2).strip(), decl.group(3)
     body = _extract_named_object_body(text, symbol)
     fields = _split_top_level(body)
-    if len(fields) < 10:
+    if len(fields) < 8:
         raise ValueError(f"{symbol}: expected mesh fields, found {len(fields)}")
-    material_array = _identifier_or_null(fields[5])
-    meshlet_array = _identifier_or_null(fields[6])
-    payload_field = 7
-    bbox_field = 8
-    name_field = 9
+    material_array = _identifier_or_null(fields[3])
+    meshlet_array = _identifier_or_null(fields[4])
+    payload_field = 5
+    bbox_field = 6
+    name_field = 7
     payload_array = _identifier_or_null(fields[payload_field])
+    payload_words = _ints(_extract_named_array_body(text, payload_array))
     mesh = DecodedHeaderMesh(
         path=header,
         format=fmt,
         symbol=symbol,
         color_type=color_type,
         id=int(_numbers(fields[0])[0]),
-        payload_size32=int(_numbers(fields[1])[0]),
-        nb_meshlets_declared=int(_numbers(fields[2])[0]),
-        nb_faces_declared=int(_numbers(fields[3])[0]),
-        nb_materials_declared=int(_numbers(fields[4])[0]),
+        payload_words_count=len(payload_words),
+        nb_meshlets_declared=int(_numbers(fields[1])[0]),
+        nb_materials_declared=int(_numbers(fields[2])[0]),
         bbox=_box(fields[bbox_field]),
         name=_string_field(fields[name_field]),
         materials=_parse_materials(text, material_array),
         meshlets=_parse_meshlet_headers(text, meshlet_array, fmt, _box(fields[bbox_field])),
         texture_headers=_parse_texture_headers(raw, header.parent),
     )
-    payload_words = _ints(_extract_named_array_body(text, payload_array))
     _decode_payload(mesh, payload_words)
     return mesh
 
@@ -464,7 +462,7 @@ def print_mesh3d2_stats(mesh: DecodedHeaderMesh) -> None:
     triangles = sum(len(m.triangles) for m in mesh.meshlets)
     chains = sum(m.chains for m in mesh.meshlets)
     refs = sum(m.vertex_refs_loaded for m in mesh.meshlets)
-    payload_bytes = mesh.payload_size32 * 4
+    payload_bytes = mesh.payload_words_count * 4
     vertices_local = sum(m.nb_vertices for m in mesh.meshlets)
     normals_local = sum(m.nb_normals for m in mesh.meshlets)
     texcoords_local = sum(m.nb_texcoords for m in mesh.meshlets)
@@ -479,11 +477,11 @@ def print_mesh3d2_stats(mesh: DecodedHeaderMesh) -> None:
         tex = mat.texture_symbol or "none"
         print(f"  mat {i:3d}: tex={tex}, color=({mat.color[0]:.3g}, {mat.color[1]:.3g}, {mat.color[2]:.3g}), ka/kd/ks={mat.ambiant:.3g}/{mat.diffuse:.3g}/{mat.specular:.3g}, exp={mat.exponent}")
     print(f"meshlets       : {len(mesh.meshlets)} declared {mesh.nb_meshlets_declared}")
-    print(f"triangles      : {triangles} declared {mesh.nb_faces_declared}")
+    print(f"triangles      : {triangles} decoded")
     print(f"chains         : {chains} ({100.0 * chains / max(1, triangles):.2f}% of triangles)")
     print(f"vertex refs    : {refs} ({refs / max(1, triangles):.3f} per tri)")
     print(f"local arrays   : vertices {vertices_local}, normals {normals_local}, texcoords {texcoords_local}")
-    print(f"payload        : {payload_bytes} bytes ({mesh.payload_size32} uint32 words, {payload_bytes / max(1, triangles):.2f} bytes/tri)")
+    print(f"payload        : {payload_bytes} bytes ({mesh.payload_words_count} uint32 words, {payload_bytes / max(1, triangles):.2f} bytes/tri)")
     print("meshlet distribution:")
     print(f"  triangles    : {_summarize_distribution([len(m.triangles) for m in mesh.meshlets])}")
     print(f"  chains       : {_summarize_distribution([m.chains for m in mesh.meshlets])}")
