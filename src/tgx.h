@@ -40,6 +40,7 @@
 #include "Mesh3D.h"
 #include "Mesh3D2.h"
 #include "Mesh3D2_16.h"
+#include "Mesh3D2_16b.h"
 #include "Mesh3D3_16.h"
 #include "Renderer3D.h"
 

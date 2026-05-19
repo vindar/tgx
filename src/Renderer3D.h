@@ -41,6 +41,7 @@
 #include "Mesh3D.h"
 #include "Mesh3D2.h"
 #include "Mesh3D2_16.h"
+#include "Mesh3D2_16b.h"
 #include "Mesh3D3_16.h"
 
 namespace tgx
@@ -848,6 +849,21 @@ namespace tgx
          *   Mesh3D2_16 side by side.
          */
         void drawMesh(const Mesh3D2_16<color_t>* mesh, bool use_mesh_material = true);
+
+
+        /**
+         * Draw a Mesh3D2_16b object.
+         *
+         * @param   mesh                The mesh to draw.
+         * @param   use_mesh_material   True (default) to use Mesh3D2_16b material colors and
+         *                              coefficients, otherwise use the current renderer material.
+         *
+         * @remark
+         * - Mesh3D2_16b is a Mesh3D2_16 variant with quantized meshlet sphere/cone headers.
+         * - The payload layout is the same as Mesh3D2_16; only the per-meshlet sphere/cone
+         *   metadata is stored in a more compact quantized form.
+         */
+        void drawMesh(const Mesh3D2_16b<color_t>* mesh, bool use_mesh_material = true);
 
 
         /**
@@ -1792,6 +1808,9 @@ namespace tgx
         /** Method called by drawMesh() which does the actual Mesh3D2_16 drawing. */
         void _drawMesh(const int RASTER_TYPE, const Mesh3D2_16<color_t>* mesh, bool use_mesh_material);
 
+        /** Method called by drawMesh() which does the actual Mesh3D2_16b drawing. */
+        void _drawMesh(const int RASTER_TYPE, const Mesh3D2_16b<color_t>* mesh, bool use_mesh_material);
+
         /** Method called by drawMesh() which does the actual Mesh3D3_16 drawing. */
         void _drawMesh(const int RASTER_TYPE, const Mesh3D3_16<color_t>* mesh, bool use_mesh_material);
 
@@ -1886,6 +1905,39 @@ namespace tgx
             else
                 {
                 const fVec3 anchor = meshlet.sphere_center - (meshlet.cone_dir * meshlet.sphere_radius);
+                const fVec4 A = _r_modelViewM.mult1(anchor);
+                dot = -(D.x * A.x + D.y * A.y + D.z * A.z);
+                const float aa = A.x * A.x + A.y * A.y + A.z * A.z;
+                if (aa <= 1.0e-20f) return false;
+                len2 = dd * aa;
+                }
+
+            const float c2len2 = cone_cos * cone_cos * len2;
+            const float dot2 = dot * dot;
+            return (cone_cos >= 0.0f) ? ((dot < 0.0f) || (dot2 < c2len2))
+                                      : ((dot < 0.0f) && (dot2 > c2len2));
+            }
+
+
+        /** Return true when a decoded Mesh3D2_16b visibility cone rejects the meshlet for the current view. */
+        TGX_INLINE inline bool _discardMeshlet16b(const fVec3& sphere_center, float sphere_radius, const fVec3& cone_dir, float cone_cos) const
+            {
+            if (cone_cos <= -1.0f) return false;
+
+            const fVec4 D = _r_modelViewM.mult0(cone_dir);
+            const float dd = D.x * D.x + D.y * D.y + D.z * D.z;
+            if (dd <= 1.0e-20f) return false;
+
+            float dot;
+            float len2;
+            if (_ortho)
+                {
+                dot = D.z; // object-to-camera direction is +Z in view space.
+                len2 = dd;
+                }
+            else
+                {
+                const fVec3 anchor = sphere_center - (cone_dir * sphere_radius);
                 const fVec4 A = _r_modelViewM.mult1(anchor);
                 dot = -(D.x * A.x + D.y * A.y + D.z * A.z);
                 const float aa = A.x * A.x + A.y * A.y + A.z * A.z;

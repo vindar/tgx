@@ -315,6 +315,10 @@ def _clamp_i16(value: int) -> int:
     return max(-32767, min(32767, value))
 
 
+def _clamp_u16(value: int) -> int:
+    return max(0, min(65535, value))
+
+
 def _pack_i16(values) -> bytes:
     items = [int(x) for x in values]
     return struct.pack("<" + "h" * len(items), *items)
@@ -342,15 +346,16 @@ def _payload_for_meshlet(mesh: ObjMesh, encoded: _EncodedMeshlet) -> bytes:
     return bytes(payload)
 
 
-def _payload16_for_meshlet(mesh: ObjMesh, meshlet: Meshlet, encoded: _EncodedMeshlet) -> bytes:
+def _payload16_for_meshlet(mesh: ObjMesh, meshlet: Meshlet, encoded: _EncodedMeshlet, *, center: np.ndarray | None = None, radius: float | None = None) -> bytes:
     payload = bytearray()
-    radius = float(meshlet.radius)
+    center = meshlet.center if center is None else np.asarray(center, dtype=np.float64)
+    radius = float(meshlet.radius if radius is None else radius)
     if (not math.isfinite(radius)) or radius <= 0.0:
         raise ValueError("Mesh3D2_16 export requires each meshlet to have a positive finite bounding sphere radius")
     vertex_scale = 32767.0 / radius
 
     for index in encoded.vertices:
-        rel = mesh.vertices[index] - meshlet.center
+        rel = mesh.vertices[index] - center
         if float(np.linalg.norm(rel)) > radius * (1.0 + 1e-6):
             raise ValueError("Mesh3D2_16 meshlet bounding sphere does not contain all local vertices")
         q = np.rint(rel * vertex_scale).astype(np.int64)
@@ -363,6 +368,55 @@ def _payload16_for_meshlet(mesh: ObjMesh, meshlet: Meshlet, encoded: _EncodedMes
     while len(payload) % 4:
         payload.append(0)
     return bytes(payload)
+
+
+def _meshlet16b_scales(mesh: ObjMesh) -> tuple[np.ndarray, float, float, float]:
+    bb_min, bb_max = mesh.bounding_box()
+    bbox_center = 0.5 * (bb_min + bb_max)
+    extent = float(np.max(bb_max - bb_min))
+    if (not math.isfinite(extent)) or extent <= 1.0e-20:
+        extent = 1.0
+    return bbox_center, extent / 65534.0, extent / 65535.0, 1.0 / 32767.0
+
+
+def _quantize_meshlet16b_metadata(
+    mesh: ObjMesh,
+    meshlet: Meshlet,
+    encoded: _EncodedMeshlet,
+    cone_source: str,
+    bbox_center: np.ndarray,
+    center_scale: float,
+    radius_scale: float,
+    snorm_scale: float,
+) -> tuple[list[int], list[int], int, int, np.ndarray, float]:
+    q_center = [
+        _clamp_i16(int(round(float((meshlet.center[i] - bbox_center[i]) / center_scale))))
+        for i in range(3)
+    ]
+    decoded_center = bbox_center + np.asarray(q_center, dtype=np.float64) * center_scale
+
+    if encoded.vertices:
+        radius_needed = max(float(np.linalg.norm(mesh.vertices[index] - decoded_center)) for index in encoded.vertices)
+    else:
+        radius_needed = float(meshlet.radius)
+    radius_needed = max(radius_needed, float(meshlet.radius), 1.0e-12)
+    q_radius = _clamp_u16(int(math.ceil(radius_needed / radius_scale)))
+    decoded_radius = max(float(q_radius) * radius_scale, 1.0e-12)
+
+    if cone_source == "nocull":
+        cone_dir = np.asarray([0.0, 0.0, 1.0], dtype=np.float64)
+        cone_cos = -2.0
+    else:
+        cone_dir, cone_cos = meshlet.selected_cull_cone(cone_source)
+        if cone_cos > 1.0:
+            cone_cos = -2.0
+    q_dir = [_q_snorm16(float(x)) for x in cone_dir]
+    if cone_cos <= -1.0:
+        q_cos = -32768
+    else:
+        q_cos = _clamp_i16(int(math.floor((max(-1.0, min(1.0, float(cone_cos))) - 0.0015) / snorm_scale)))
+
+    return q_center, q_dir, q_radius, q_cos, decoded_center, decoded_radius
 
 
 def _fmt_float(v: float) -> str:
@@ -461,6 +515,7 @@ def _export_mesh3d2_header_impl(
     material_type: str = "MeshMaterial3D2",
     mesh_id: int = 2,
     payload16: bool = False,
+    meshlet16b: bool = False,
     cone_source: str = "normal",
     visibility_masks_words: list[int] | None = None,
 ) -> Mesh3D2ExportResult:
@@ -500,9 +555,20 @@ def _export_mesh3d2_header_impl(
     payload = bytearray()
     chains = 0
     vertex_refs_loaded = 0
+    metadata16b: list[tuple[list[int], list[int], int, int, np.ndarray, float]] | None = [] if meshlet16b else None
+    bbox_center = None
+    center_scale = radius_scale = snorm_scale = 0.0
+    if meshlet16b:
+        bbox_center, center_scale, radius_scale, snorm_scale = _meshlet16b_scales(mesh)
     for item, meshlet in zip(encoded, meshlets):
         item.payload_offset32 = len(payload) // 4
-        block = _payload16_for_meshlet(mesh, meshlet, item) if payload16 else _payload_for_meshlet(mesh, item)
+        if meshlet16b:
+            assert metadata16b is not None and bbox_center is not None
+            meta = _quantize_meshlet16b_metadata(mesh, meshlet, item, cone_source, bbox_center, center_scale, radius_scale, snorm_scale)
+            metadata16b.append(meta)
+            block = _payload16_for_meshlet(mesh, meshlet, item, center=meta[4], radius=meta[5])
+        else:
+            block = _payload16_for_meshlet(mesh, meshlet, item) if payload16 else _payload_for_meshlet(mesh, item)
         payload.extend(block)
         chains += item.chain_count
         vertex_refs_loaded += item.vertex_refs_loaded
@@ -531,11 +597,20 @@ def _export_mesh3d2_header_impl(
         text.append("};")
         text.append("")
     text.append(f"const tgx::{meshlet_type} {symbol}_meshlets[{len(meshlets)}] PROGMEM = {{")
-    for meshlet, item in zip(meshlets, encoded):
+    for mi, (meshlet, item) in enumerate(zip(meshlets, encoded)):
         if mesh_type == "Mesh3D3_16":
             text.append("    {")
             text.append(f"        {_fmt_vec3(meshlet.center)},")
             text.append(f"        {_fmt_float(meshlet.radius)},")
+            text.append(f"        {item.payload_offset32}u,")
+            text.append(f"        {len(item.vertices)}, {len(item.normals)}, {len(item.texcoords)}, {item.material_index}")
+            text.append("    },")
+        elif mesh_type == "Mesh3D2_16b":
+            assert metadata16b is not None
+            q_center, q_dir, q_radius, q_cos, _, _ = metadata16b[mi]
+            text.append("    {")
+            text.append(f"        {{ {q_center[0]}, {q_center[1]}, {q_center[2]} }}, {{ {q_dir[0]}, {q_dir[1]}, {q_dir[2]} }},")
+            text.append(f"        {q_radius}u, {q_cos},")
             text.append(f"        {item.payload_offset32}u,")
             text.append(f"        {len(item.vertices)}, {len(item.normals)}, {len(item.texcoords)}, {item.material_index}")
             text.append("    },")
@@ -653,6 +728,37 @@ def export_mesh3d2_16_header(
         material_type="MeshMaterial3D2_16",
         mesh_id=216,
         payload16=True,
+        cone_source=cone_source,
+    )
+
+
+def export_mesh3d2_16b_header(
+    mesh: ObjMesh,
+    meshlets: list[Meshlet],
+    *,
+    name: str | None = None,
+    color_type: str = "tgx::RGB565",
+    use_lkh: bool = True,
+    lkh_exe: str | Path = DEFAULT_LKH_EXE,
+    texture_symbols: dict[str, str] | None = None,
+    extra_includes: list[str] | None = None,
+    cone_source: str = "normal",
+) -> Mesh3D2ExportResult:
+    return _export_mesh3d2_header_impl(
+        mesh,
+        meshlets,
+        name=name,
+        color_type=color_type,
+        use_lkh=use_lkh,
+        lkh_exe=lkh_exe,
+        texture_symbols=texture_symbols,
+        extra_includes=extra_includes,
+        mesh_type="Mesh3D2_16b",
+        meshlet_type="Meshlet3D2_16b",
+        material_type="MeshMaterial3D2_16b",
+        mesh_id=2162,
+        payload16=True,
+        meshlet16b=True,
         cone_source=cone_source,
     )
 

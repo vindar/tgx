@@ -1221,6 +1221,24 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawMesh(const Mesh3D2_16b<color_t>* mesh, bool use_mesh_material)
+            {
+            if (!_validDraw()) return;
+            if ((mesh == nullptr) || (mesh->meshlets == nullptr) || (mesh->payload == nullptr) || (mesh->materials == nullptr)) return;
+
+            _drawMesh(_shaders, mesh, use_mesh_material);
+
+            if (use_mesh_material)
+                { // restore material pre-computed values
+                _r_ambiantColor = _ambiantColor * _ambiantStrength;
+                _r_diffuseColor = _diffuseColor * _diffuseStrength;
+                _r_specularColor = _specularColor * _specularStrength;
+                _r_objectColor = _color;
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawMesh(const Mesh3D3_16<color_t>* mesh, bool use_mesh_material)
             {
             if (!_validDraw()) return;
@@ -1967,6 +1985,310 @@ namespace tgx
                         if (TEXTURE) PPC2->indt = *(face++); else { if (HAS_TEXCOORDS) face++; }
                         if (GOURAUD) PPC2->indn = *(face++);  else { if (HAS_NORMALS) face++; }
                         PPC2->P = _r_modelViewM.mult1(Mesh3D2_16_detail::load_vertex(tab_vert, nv2 & 127, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                        PPC2->missedP = true;
+                        }
+                    }
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>  TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawMesh(const int RASTER_TYPE, const Mesh3D2_16b<color_t>* mesh, bool use_mesh_material)
+            {
+            const bool bbox_uninitialized = ((mesh->bounding_box.minX == 0) && (mesh->bounding_box.maxX == 0) &&
+                                             (mesh->bounding_box.minY == 0) && (mesh->bounding_box.maxY == 0) &&
+                                             (mesh->bounding_box.minZ == 0) && (mesh->bounding_box.maxZ == 0));
+            const fMat4 proj_modelview = _projM * _r_modelViewM;
+
+            // Check if the whole object is completely outside of the image for fast discard.
+            if ((!bbox_uninitialized) && _discardBox(mesh->bounding_box, proj_modelview)) return;
+
+            const float CLIPBOUND_XY = _clipbound_xy();
+
+            // Check if the clipping test should be performed for each triangle in the mesh.
+            const bool cliptestneeded = bbox_uninitialized || _clipTestNeeded(CLIPBOUND_XY, mesh->bounding_box, proj_modelview);
+#if TGX_MESHLET_SPHERE_CLIP
+            fVec4 meshlet_clip_planes[6];
+            float meshlet_clip_plane_norms[6];
+            if (cliptestneeded)
+                {
+                _meshletClipPlanes(CLIPBOUND_XY, proj_modelview, meshlet_clip_planes, meshlet_clip_plane_norms);
+                }
+#endif
+
+            const bool ortho = _ortho;
+
+            ExtVec4 QQA, QQB, QQC;
+            ExtVec4* PPC0 = &QQA;
+            ExtVec4* PPC1 = &QQB;
+            ExtVec4* PPC2 = &QQC;
+
+            int current_exponent = -1;
+            int current_material_index = -1;
+            int current_raster_type = -1;
+            const Image<color_t>* current_texture = nullptr;
+            const float normal_scale = (1.0f / 32767.0f);
+            const float texcoord_scale = (4.0f / 32767.0f);
+            const float meshlet_bbox_cx = 0.5f * (mesh->bounding_box.minX + mesh->bounding_box.maxX);
+            const float meshlet_bbox_cy = 0.5f * (mesh->bounding_box.minY + mesh->bounding_box.maxY);
+            const float meshlet_bbox_cz = 0.5f * (mesh->bounding_box.minZ + mesh->bounding_box.maxZ);
+            const float meshlet_bbox_dx = mesh->bounding_box.maxX - mesh->bounding_box.minX;
+            const float meshlet_bbox_dy = mesh->bounding_box.maxY - mesh->bounding_box.minY;
+            const float meshlet_bbox_dz = mesh->bounding_box.maxZ - mesh->bounding_box.minZ;
+            float meshlet_bbox_extent = (meshlet_bbox_dx > meshlet_bbox_dy) ? meshlet_bbox_dx : meshlet_bbox_dy;
+            if (meshlet_bbox_dz > meshlet_bbox_extent) meshlet_bbox_extent = meshlet_bbox_dz;
+            if (meshlet_bbox_extent <= 1.0e-20f) meshlet_bbox_extent = 1.0f;
+            const float meshlet_center_scale = meshlet_bbox_extent * (1.0f / 65534.0f);
+            const float meshlet_radius_scale = meshlet_bbox_extent * (1.0f / 65535.0f);
+            const float meshlet_snorm_scale = (1.0f / 32767.0f);
+
+            if (!use_mesh_material)
+                {
+                current_exponent = _specularExponent;
+                _precomputeSpecularTable(current_exponent);
+                }
+
+            for (uint16_t mli = 0; mli < mesh->nb_meshlets; mli++)
+                {
+                const Meshlet3D2_16b& meshlet = mesh->meshlets[mli];
+                const fVec3 meshlet_sphere_center(
+                    meshlet_bbox_cx + ((float)meshlet.sphere_center[0]) * meshlet_center_scale,
+                    meshlet_bbox_cy + ((float)meshlet.sphere_center[1]) * meshlet_center_scale,
+                    meshlet_bbox_cz + ((float)meshlet.sphere_center[2]) * meshlet_center_scale);
+                const float meshlet_sphere_radius = ((float)meshlet.sphere_radius) * meshlet_radius_scale;
+                const float meshlet_cone_cos = ((float)meshlet.cone_cos) * meshlet_snorm_scale;
+#if TGX_MESHLET_SPHERE_CLIP
+                bool meshlet_cliptestneeded = cliptestneeded;
+#endif
+
+                if ((_culling_dir != 0) && (meshlet_cone_cos > -1.0f))
+                    {
+                    const fVec3 meshlet_cone_dir(
+                        ((float)meshlet.cone_dir[0]) * meshlet_snorm_scale,
+                        ((float)meshlet.cone_dir[1]) * meshlet_snorm_scale,
+                        ((float)meshlet.cone_dir[2]) * meshlet_snorm_scale);
+                    if (_discardMeshlet16b(meshlet_sphere_center, meshlet_sphere_radius, meshlet_cone_dir, meshlet_cone_cos))
+                        {
+                        continue;
+                        }
+                    }
+
+#if TGX_MESHLET_SPHERE_CLIP
+                if (cliptestneeded)
+                    {
+                    const int sphere_clip = _meshletSphereClip(meshlet_sphere_center, meshlet_sphere_radius, meshlet_clip_planes, meshlet_clip_plane_norms);
+                    if (sphere_clip < 0) continue;
+                    meshlet_cliptestneeded = (sphere_clip != 0);
+                    }
+#endif
+
+                const bool HAS_TEXCOORDS = (meshlet.nb_texcoords != 0);
+                const bool HAS_NORMALS = (meshlet.nb_normals != 0);
+
+                if (current_material_index != meshlet.material_index)
+                    {
+                    current_material_index = meshlet.material_index;
+                    const MeshMaterial3D2_16b<color_t>& material = mesh->materials[current_material_index];
+                    current_texture = material.texture;
+                    _uni.tex = (const Image<color_t>*)current_texture;
+
+                    if (use_mesh_material)
+                        {
+                        _r_ambiantColor = _ambiantColor * material.ambiant_strength;
+                        _r_diffuseColor = _diffuseColor * material.diffuse_strength;
+                        _r_specularColor = _specularColor * material.specular_strength;
+                        _r_objectColor = material.color;
+                        if (current_exponent != material.specular_exponent)
+                            {
+                            current_exponent = material.specular_exponent;
+                            _precomputeSpecularTable(current_exponent);
+                            }
+                        }
+                    }
+
+                int raster_type = RASTER_TYPE;
+                if (!HAS_NORMALS) { TGX_SHADER_REMOVE_GOURAUD(raster_type) }
+                if ((!HAS_TEXCOORDS) || (current_texture == nullptr)) { TGX_SHADER_REMOVE_TEXTURE(raster_type) }
+
+                if (current_raster_type != raster_type)
+                    {
+                    current_raster_type = raster_type;
+                    _uni.shader_type = raster_type;
+                    }
+
+                const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURE(raster_type));
+                const bool GOURAUD = (bool)(TGX_SHADER_HAS_GOURAUD(raster_type));
+
+                const uint8_t* payload = (const uint8_t*)(mesh->payload + meshlet.payload_offset32);
+
+                const int16_t* const tab_vert = (const int16_t*)payload;
+                payload += ((size_t)meshlet.nb_vertices) * 3 * sizeof(int16_t);
+
+                const int16_t* const tab_norm = (const int16_t*)payload;
+                payload += ((size_t)meshlet.nb_normals) * 3 * sizeof(int16_t);
+
+                const int16_t* const tab_tex = (const int16_t*)payload;
+                payload += ((size_t)meshlet.nb_texcoords) * 2 * sizeof(int16_t);
+
+                const float vertex_scale = meshlet_sphere_radius * (1.0f / 32767.0f);
+                const float vertex_base_x = meshlet_sphere_center.x;
+                const float vertex_base_y = meshlet_sphere_center.y;
+                const float vertex_base_z = meshlet_sphere_center.z;
+
+                const uint8_t* face = payload;
+
+                int nbt;
+                while ((nbt = *(face++)) > 0)
+                    { // starting a chain with nbt triangles
+
+                    // load the first triangle
+                    const uint8_t v0 = *(face++);
+                    if (TEXTURE) PPC0->indt = *(face++); else { if (HAS_TEXCOORDS) face++; }
+                    if (GOURAUD) PPC0->indn = *(face++); else { if (HAS_NORMALS) face++; }
+
+                    const uint8_t v1 = *(face++);
+                    if (TEXTURE) PPC1->indt = *(face++); else { if (HAS_TEXCOORDS) face++; }
+                    if (GOURAUD) PPC1->indn = *(face++); else { if (HAS_NORMALS) face++; }
+
+                    const uint8_t v2 = *(face++);
+                    if (TEXTURE) PPC2->indt = *(face++); else { if (HAS_TEXCOORDS) face++; }
+                    if (GOURAUD) PPC2->indn = *(face++); else { if (HAS_NORMALS) face++; }
+
+                    // compute vertices position because we are sure we will need them...
+                    PPC2->P = _r_modelViewM.mult1(Mesh3D2_16b_detail::load_vertex(tab_vert, v2, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                    PPC0->P = _r_modelViewM.mult1(Mesh3D2_16b_detail::load_vertex(tab_vert, v0, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                    PPC1->P = _r_modelViewM.mult1(Mesh3D2_16b_detail::load_vertex(tab_vert, v1, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+
+                    // ...but use lazy computation of other vertex attributes
+                    PPC0->missedP = true;
+                    PPC1->missedP = true;
+                    PPC2->missedP = true;
+
+                    while (1)
+                        {
+                        // face culling
+                        fVec3 faceN = crossProduct(PPC1->P - PPC0->P, PPC2->P - PPC0->P);
+                        const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PPC0->P);
+                        if (cu * _culling_dir > 0) goto rasterize_next_meshlet_triangle; // skip triangle !
+                        // triangle is not culled
+
+                        *((fVec4*)PPC2) = _projM * PPC2->P;
+                        if (ortho) { PPC2->w = 1.0f - PPC2->z; } else { PPC2->zdivide(); }
+
+                        if (PPC0->missedP)
+                            {
+                            *((fVec4*)PPC0) = _projM * PPC0->P;
+                            if (ortho) { PPC0->w = 1.0f - PPC0->z; } else { PPC0->zdivide(); }
+                            }
+                        if (PPC1->missedP)
+                            {
+                            *((fVec4*)PPC1) = _projM * PPC1->P;
+                            if (ortho) { PPC1->w = 1.0f - PPC1->z; } else { PPC1->zdivide(); }
+                            }
+
+                        // test if triangle must be clipped
+#if TGX_MESHLET_SPHERE_CLIP
+                        if (meshlet_cliptestneeded)
+#else
+                        if (cliptestneeded)
+#endif
+                            {
+                            const bool needclip = (PPC2->P.z >= 0)
+                                | (PPC2->x < -CLIPBOUND_XY) | (PPC2->x > CLIPBOUND_XY)
+                                | (PPC2->y < -CLIPBOUND_XY) | (PPC2->y > CLIPBOUND_XY)
+                                | (PPC2->z < -1) | (PPC2->z > 1)
+                                | (PPC0->P.z >= 0)
+                                | (PPC0->x < -CLIPBOUND_XY) | (PPC0->x > CLIPBOUND_XY)
+                                | (PPC0->y < -CLIPBOUND_XY) | (PPC0->y > CLIPBOUND_XY)
+                                | (PPC0->z < -1) | (PPC0->z > 1)
+                                | (PPC1->P.z >= 0)
+                                | (PPC1->x < -CLIPBOUND_XY) | (PPC1->x > CLIPBOUND_XY)
+                                | (PPC1->y < -CLIPBOUND_XY) | (PPC1->y > CLIPBOUND_XY)
+                                | (PPC1->z < -1) | (PPC1->z > 1);
+                            if (needclip)
+                                { // need cliiping, test is we can just discard the triangle if not shown on screen
+                                if (!_discardTriangle(*((fVec4*)PPC0), *((fVec4*)PPC1), *((fVec4*)PPC2)))
+                                    { // no, use the slow drawing method with clipping
+                                    const fVec3 CN0 = (GOURAUD) ? Mesh3D2_16b_detail::load_normal(tab_norm, PPC0->indn, normal_scale) : fVec3();
+                                    const fVec3 CN1 = (GOURAUD) ? Mesh3D2_16b_detail::load_normal(tab_norm, PPC1->indn, normal_scale) : fVec3();
+                                    const fVec3 CN2 = (GOURAUD) ? Mesh3D2_16b_detail::load_normal(tab_norm, PPC2->indn, normal_scale) : fVec3();
+                                    const fVec2 CT0 = (TEXTURE) ? Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC0->indt, texcoord_scale) : fVec2();
+                                    const fVec2 CT1 = (TEXTURE) ? Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC1->indt, texcoord_scale) : fVec2();
+                                    const fVec2 CT2 = (TEXTURE) ? Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC2->indt, texcoord_scale) : fVec2();
+                                    _drawTriangleClipped(raster_type,
+                                                    &(PPC0->P), &(PPC1->P), &(PPC2->P),
+                                                    ((GOURAUD) ? &CN0 : nullptr), ((GOURAUD) ? &CN1 : nullptr), ((GOURAUD) ? &CN2 : nullptr),
+                                                    ((TEXTURE) ? &CT0 : nullptr), ((TEXTURE) ? &CT1 : nullptr), ((TEXTURE) ? &CT2 : nullptr),
+                                                    _r_objectColor, _r_objectColor, _r_objectColor);
+                                    }
+                                goto rasterize_next_meshlet_triangle;
+                                }
+                            }
+
+                        // ok, the triangle must be rasterized !
+                        if (GOURAUD)
+                            { // Gouraud shading : color on vertices
+
+                            // reverse normal only when culling is disabled (and we assume in this case that normals are given for the CCW face).
+                            const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
+                            if (PPC0->missedP)
+                                {
+                                PPC0->N = _r_modelViewM.mult0(Mesh3D2_16b_detail::load_normal(tab_norm, PPC0->indn, normal_scale));
+                                if (TEXTURE)
+                                    PPC0->color = _phong<true>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
+                                else
+                                    PPC0->color = _phong<false>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
+                                }
+                            if (PPC1->missedP)
+                                {
+                                PPC1->N = _r_modelViewM.mult0(Mesh3D2_16b_detail::load_normal(tab_norm, PPC1->indn, normal_scale));
+                                if (TEXTURE)
+                                    PPC1->color = _phong<true>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
+                                else
+                                    PPC1->color = _phong<false>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
+                                }
+                            PPC2->N = _r_modelViewM.mult0(Mesh3D2_16b_detail::load_normal(tab_norm, PPC2->indn, normal_scale));
+                            if (TEXTURE)
+                                PPC2->color = _phong<true>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
+                            else
+                                PPC2->color = _phong<false>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
+
+                            }
+                        else
+                            { // flat shading : color on faces
+                            const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
+                            faceN.normalize_fast();
+                            if (TEXTURE)
+                                _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                            else
+                                _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                            }
+
+                        if (TEXTURE)
+                            { // compute texture vectors if needed
+                            if (PPC0->missedP) { PPC0->T = Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC0->indt, texcoord_scale); }
+                            if (PPC1->missedP) { PPC1->T = Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC1->indt, texcoord_scale); }
+                            PPC2->T = Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC2->indt, texcoord_scale);
+                            }
+
+                        // attributes are now all up to date
+                        PPC0->missedP = false;
+                        PPC1->missedP = false;
+                        PPC2->missedP = false;
+
+                        // go rasterize !
+                        rasterizeTriangle(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+
+                    rasterize_next_meshlet_triangle:
+
+                        if (--nbt == 0) break; // exit loop at end of chain
+
+                        // get the next triangle
+                        const uint8_t nv2 = *(face++);
+                        swap(((nv2 & 128) ? PPC0 : PPC1), PPC2);
+                        if (TEXTURE) PPC2->indt = *(face++); else { if (HAS_TEXCOORDS) face++; }
+                        if (GOURAUD) PPC2->indn = *(face++);  else { if (HAS_NORMALS) face++; }
+                        PPC2->P = _r_modelViewM.mult1(Mesh3D2_16b_detail::load_vertex(tab_vert, nv2 & 127, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
                         PPC2->missedP = true;
                         }
                     }

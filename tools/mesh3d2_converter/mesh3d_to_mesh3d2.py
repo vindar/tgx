@@ -13,7 +13,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.mesh3d2_converter.cones import apply_visibility_cones, auto_visibility_margin_deg
-from tools.mesh3d2_converter.exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_header, export_mesh3d3_16_header
+from tools.mesh3d2_converter.exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_16b_header, export_mesh3d2_header, export_mesh3d3_16_header
 from tools.mesh3d2_converter.mesh import FaceVertex, Material, Meshlet, ObjMesh, Triangle
 from tools.mesh3d2_converter.meshlets import sort_meshlets_by_material
 from tools.mesh3d2_converter.pipeline import (
@@ -501,6 +501,8 @@ def _exporter_for_args(args: argparse.Namespace):
     fmt = getattr(args, "mesh3d2_format", "mesh3d2")
     if fmt == "mesh3d2_16":
         return export_mesh3d2_16_header
+    if fmt == "mesh3d2_16b":
+        return export_mesh3d2_16b_header
     if fmt == "mesh3d3_16":
         return export_mesh3d3_16_header
     return export_mesh3d2_header
@@ -722,7 +724,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", help="root Mesh3D symbol; auto-detected for a single chain")
     parser.add_argument("--name", help="output C++ symbol")
     parser.add_argument("--color-type", help="override color type; defaults to the legacy Mesh3D color type")
-    parser.add_argument("--mesh3d2-format", choices=("mesh3d2", "mesh3d2_16", "mesh3d3_16"), default="mesh3d2", help="output payload format")
+    parser.add_argument("--mesh3d2-format", choices=("mesh3d2", "mesh3d2_16", "mesh3d2_16b", "mesh3d3_16"), default="mesh3d2", help="output payload format")
     add_build_options(parser, source="legacy")
     parser.add_argument("--lkh", default=str(DEFAULT_LKH_EXE))
     add_visibility_options(parser, default_samples=1024, default_size=512)

@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from .cones import apply_visibility_cones, auto_visibility_margin_deg
-from .exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_header, export_mesh3d3_16_header
+from .exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_16b_header, export_mesh3d2_header, export_mesh3d3_16_header
 from .mesh import Meshlet, ObjMesh, compute_triangle_normals, unique_valid
 from .meshlets import MeshletBuildOptions, _make_meshlet, build_meshlets, meshlet_stats, sort_meshlets_by_material
 from .preprocess import PreprocessStats
@@ -179,6 +179,8 @@ def export_common(
     fmt = getattr(args, "mesh3d2_format", "mesh3d2")
     if fmt == "mesh3d2_16":
         exporter = export_mesh3d2_16_header
+    elif fmt == "mesh3d2_16b":
+        exporter = export_mesh3d2_16b_header
     elif fmt == "mesh3d3_16":
         exporter = export_mesh3d3_16_header
     else:
