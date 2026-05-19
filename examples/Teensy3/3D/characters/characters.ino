@@ -225,9 +225,9 @@ void loop()
 
     // choose the mesh
 #if (TWO_MODELS)
-    const Mesh3D<RGB565>* mesh = (loopnumber & 1) ? &stormtrooper : &cyborg; 
+    const Mesh3Dv2<RGB565>* mesh = (loopnumber & 1) ? &stormtrooper : &cyborg;
 #else
-    const Mesh3D<RGB565>* mesh = &stormtrooper; 
+    const Mesh3Dv2<RGB565>* mesh = &stormtrooper;
 #endif
     static int prev_loopnumber = -1;
     if (loopnumber != prev_loopnumber)

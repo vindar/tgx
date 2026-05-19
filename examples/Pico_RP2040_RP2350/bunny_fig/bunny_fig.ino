@@ -207,7 +207,7 @@ void loop()
         case 0: renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE);
                 renderer.drawMesh(MESH, false);
                 break;
-        case 1: renderer.drawWireFrameMesh(MESH, true);
+        case 1: renderer.drawWireFrameMesh(MESH);
                 break;
         case 2: renderer.setShaders(SHADER_FLAT);
                 renderer.drawMesh(MESH, false);
