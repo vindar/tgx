@@ -13,7 +13,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.mesh3d2_converter.cones import apply_visibility_cones, auto_visibility_margin_deg
-from tools.mesh3d2_converter.exporter import MeshletExportResult, MeshletExportStats, export_mesh3d2_16_header, export_mesh3d2_16b_header, export_mesh3d3_16_header
+from tools.mesh3d2_converter.exporter import MeshletExportResult, MeshletExportStats, export_mesh3d2_16b_header
 from tools.mesh3d2_converter.mesh import FaceVertex, Material, Meshlet, ObjMesh, Triangle
 from tools.mesh3d2_converter.meshlets import sort_meshlets_by_material
 from tools.mesh3d2_converter.pipeline import (
@@ -499,13 +499,9 @@ def _score_candidate(stats: MeshletExportStats, cull: dict[str, float], texture_
 
 def _exporter_for_args(args: argparse.Namespace):
     fmt = getattr(args, "mesh3d2_format", "mesh3d2_16b")
-    if fmt == "mesh3d2_16":
-        return export_mesh3d2_16_header
-    if fmt == "mesh3d2_16b":
-        return export_mesh3d2_16b_header
-    if fmt == "mesh3d3_16":
-        return export_mesh3d3_16_header
-    raise ValueError(f"unsupported meshlet format: {fmt}")
+    if fmt != "mesh3d2_16b":
+        raise ValueError(f"unsupported meshlet format: {fmt}")
+    return export_mesh3d2_16b_header
 
 
 def _evaluate_candidate(
@@ -544,14 +540,7 @@ def _evaluate_candidate(
         texture_symbols=texture_symbols,
         extra_includes=[],
     )
-    if getattr(args, "mesh3d2_format", "mesh3d2_16b") == "mesh3d3_16":
-        export_kwargs.update(
-            visibility_size=getattr(args, "visibility_size", 1024),
-            visibility_helper=getattr(args, "visibility_helper", None),
-            keep_visibility_files=getattr(args, "keep_visibility_files", False),
-        )
-    else:
-        export_kwargs.update(cone_source=cone_source)
+    export_kwargs.update(cone_source=cone_source)
     exported = _exporter_for_args(args)(mesh, meshlets, **export_kwargs)
     cull = cull_ratio_stats(meshlets, samples=args.auto_tune_cull_samples, meshlet_cost=args.auto_tune_meshlet_cost, cone_source=cone_source)
     return TuneResult(name, dict(params), _score_candidate(exported.stats, cull, bool(texture_symbols)), meshlets, exported, cull, cone_source)
@@ -724,7 +713,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", help="root Mesh3D symbol; auto-detected for a single chain")
     parser.add_argument("--name", help="output C++ symbol")
     parser.add_argument("--color-type", help="override color type; defaults to the legacy Mesh3D color type")
-    parser.add_argument("--mesh3d2-format", choices=("mesh3d2_16", "mesh3d2_16b", "mesh3d3_16"), default="mesh3d2_16b", help="output payload format")
+    parser.add_argument("--mesh3d2-format", choices=("mesh3d2_16b",), default="mesh3d2_16b", help="output payload format")
     add_build_options(parser, source="legacy")
     parser.add_argument("--lkh", default=str(DEFAULT_LKH_EXE))
     add_visibility_options(parser, default_samples=1024, default_size=512)

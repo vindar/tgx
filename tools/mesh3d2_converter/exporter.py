@@ -307,10 +307,6 @@ def _encode_meshlet(mesh: ObjMesh, meshlet: Meshlet, material_index: int, *, use
     return _EncodedMeshlet(material_index, vertices, normals, texcoords, bytes(stream), len(chains), vertex_refs_loaded)
 
 
-def _pack_f32(values) -> bytes:
-    return struct.pack("<" + "f" * len(values), *[float(x) for x in values])
-
-
 def _clamp_i16(value: int) -> int:
     return max(-32767, min(32767, value))
 
@@ -332,32 +328,18 @@ def _q_texcoord16(value: float) -> int:
     return _clamp_i16(int(round(max(-4.0, min(4.0, float(value))) * (32767.0 / 4.0))))
 
 
-def _payload_for_meshlet(mesh: ObjMesh, encoded: _EncodedMeshlet) -> bytes:
-    payload = bytearray()
-    for index in encoded.vertices:
-        payload.extend(_pack_f32(mesh.vertices[index]))
-    for index in encoded.normals:
-        payload.extend(_pack_f32(mesh.normals[index]))
-    for index in encoded.texcoords:
-        payload.extend(_pack_f32(mesh.texcoords[index]))
-    payload.extend(encoded.face_stream)
-    while len(payload) % 4:
-        payload.append(0)
-    return bytes(payload)
-
-
 def _payload16_for_meshlet(mesh: ObjMesh, meshlet: Meshlet, encoded: _EncodedMeshlet, *, center: np.ndarray | None = None, radius: float | None = None) -> bytes:
     payload = bytearray()
     center = meshlet.center if center is None else np.asarray(center, dtype=np.float64)
     radius = float(meshlet.radius if radius is None else radius)
     if (not math.isfinite(radius)) or radius <= 0.0:
-        raise ValueError("Mesh3D2_16 export requires each meshlet to have a positive finite bounding sphere radius")
+        raise ValueError("Mesh3D2_16b export requires each meshlet to have a positive finite bounding sphere radius")
     vertex_scale = 32767.0 / radius
 
     for index in encoded.vertices:
         rel = mesh.vertices[index] - center
         if float(np.linalg.norm(rel)) > radius * (1.0 + 1e-6):
-            raise ValueError("Mesh3D2_16 meshlet bounding sphere does not contain all local vertices")
+            raise ValueError("Mesh3D2_16b meshlet bounding sphere does not contain all local vertices")
         q = np.rint(rel * vertex_scale).astype(np.int64)
         payload.extend(_pack_i16(_clamp_i16(int(x)) for x in q))
     for index in encoded.normals:
@@ -428,76 +410,12 @@ def _fmt_float(v: float) -> str:
     return text + "f"
 
 
-def _fmt_vec3(v: np.ndarray) -> str:
-    return "{ " + ", ".join(_fmt_float(float(x)) for x in v) + " }"
-
-
 def _format_u32_array(values: list[int]) -> str:
     lines = []
     for i in range(0, len(values), 8):
         lines.append("    " + ", ".join(f"0x{v:08x}u" for v in values[i : i + 8]) + ",")
     return "\n".join(lines)
 
-
-def octahedral_visibility_directions(grid: int = 32) -> np.ndarray:
-    """Return object-to-camera directions matching TGX Mesh3D3_16 runtime indexing."""
-    if grid != 32:
-        raise ValueError("Mesh3D3_16 currently expects a 32x32 visibility grid")
-    dirs = []
-    for iy in range(grid):
-        for ix in range(grid):
-            u = (2.0 * ix / float(grid - 1)) - 1.0
-            v = (2.0 * iy / float(grid - 1)) - 1.0
-            x = u
-            y = v
-            z = 1.0 - abs(u) - abs(v)
-            if z < 0.0:
-                old_x = x
-                x = (1.0 - abs(y)) * (-1.0 if old_x < 0.0 else 1.0)
-                y = (1.0 - abs(old_x)) * (-1.0 if y < 0.0 else 1.0)
-            n = np.asarray([x, y, z], dtype=np.float64)
-            norm = float(np.linalg.norm(n))
-            dirs.append(n / norm if norm > 0.0 else np.asarray([0.0, 0.0, 1.0], dtype=np.float64))
-    return np.asarray(dirs, dtype=np.float64)
-
-
-def _dilate_oct_visibility(visibility: np.ndarray, grid: int = 32) -> np.ndarray:
-    """Dilate visibility bits by one 2D neighbor ring to make quantized lookup conservative."""
-    if visibility.shape[0] != grid * grid:
-        raise ValueError(f"visibility row count must be {grid * grid}")
-    src = visibility.astype(bool, copy=False).reshape((grid, grid, visibility.shape[1]))
-    dst = src.copy()
-    for dy in (-1, 0, 1):
-        for dx in (-1, 0, 1):
-            if dx == 0 and dy == 0:
-                continue
-            ys0 = max(0, -dy)
-            ys1 = min(grid, grid - dy)
-            xs0 = max(0, -dx)
-            xs1 = min(grid, grid - dx)
-            dst[ys0 + dy : ys1 + dy, xs0 + dx : xs1 + dx, :] |= src[ys0:ys1, xs0:xs1, :]
-    return dst.reshape((grid * grid, visibility.shape[1]))
-
-
-def _pack_visibility_masks(visibility: np.ndarray) -> list[int]:
-    """Pack a (1024, nb_meshlets) boolean visibility matrix into per-meshlet uint32 words."""
-    if visibility.shape[0] != 1024:
-        raise ValueError("Mesh3D3_16 expects exactly 1024 visibility samples")
-    words: list[int] = []
-    for mi in range(visibility.shape[1]):
-        column = visibility[:, mi].astype(bool, copy=False)
-        if not np.any(column):
-            # Keep invisible/internal meshlets conservative; do not drop geometry automatically.
-            words.extend([0xFFFFFFFF] * 32)
-            continue
-        for wi in range(32):
-            word = 0
-            base = wi * 32
-            for bit in range(32):
-                if bool(column[base + bit]):
-                    word |= 1 << bit
-            words.append(word)
-    return words
 
 
 def _export_meshlet_header_impl(
@@ -510,14 +428,11 @@ def _export_meshlet_header_impl(
     lkh_exe: str | Path = DEFAULT_LKH_EXE,
     texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
-    mesh_type: str = "Mesh3D2_16",
-    meshlet_type: str = "Meshlet3D2_16",
-    material_type: str = "MeshMaterial3D2_16",
-    mesh_id: int = 216,
-    payload16: bool = True,
-    meshlet16b: bool = False,
+    mesh_type: str = "Mesh3D2_16b",
+    meshlet_type: str = "Meshlet3D2_16b",
+    material_type: str = "MeshMaterial3D2_16b",
+    mesh_id: int = 2162,
     cone_source: str = "normal",
-    visibility_masks_words: list[int] | None = None,
 ) -> MeshletExportResult:
     symbol = _identifier(name or mesh.name or "mesh")
     materials = sorted({m.material for m in meshlets})
@@ -555,20 +470,13 @@ def _export_meshlet_header_impl(
     payload = bytearray()
     chains = 0
     vertex_refs_loaded = 0
-    metadata16b: list[tuple[list[int], list[int], int, int, np.ndarray, float]] | None = [] if meshlet16b else None
-    bbox_center = None
-    center_scale = radius_scale = snorm_scale = 0.0
-    if meshlet16b:
-        bbox_center, center_scale, radius_scale, snorm_scale = _meshlet16b_scales(mesh)
+    metadata16b: list[tuple[list[int], list[int], int, int, np.ndarray, float]] = []
+    bbox_center, center_scale, radius_scale, snorm_scale = _meshlet16b_scales(mesh)
     for item, meshlet in zip(encoded, meshlets):
         item.payload_offset32 = len(payload) // 4
-        if meshlet16b:
-            assert metadata16b is not None and bbox_center is not None
-            meta = _quantize_meshlet16b_metadata(mesh, meshlet, item, cone_source, bbox_center, center_scale, radius_scale, snorm_scale)
-            metadata16b.append(meta)
-            block = _payload16_for_meshlet(mesh, meshlet, item, center=meta[4], radius=meta[5])
-        else:
-            block = _payload16_for_meshlet(mesh, meshlet, item) if payload16 else _payload_for_meshlet(mesh, item)
+        meta = _quantize_meshlet16b_metadata(mesh, meshlet, item, cone_source, bbox_center, center_scale, radius_scale, snorm_scale)
+        metadata16b.append(meta)
+        block = _payload16_for_meshlet(mesh, meshlet, item, center=meta[4], radius=meta[5])
         payload.extend(block)
         chains += item.chain_count
         vertex_refs_loaded += item.vertex_refs_loaded
@@ -591,43 +499,15 @@ def _export_meshlet_header_impl(
     text.append(_format_u32_array(payload_words))
     text.append("};")
     text.append("")
-    if visibility_masks_words is not None:
-        text.append(f"const uint32_t {symbol}_visibility_masks[{len(visibility_masks_words)}] PROGMEM = {{")
-        text.append(_format_u32_array(visibility_masks_words))
-        text.append("};")
-        text.append("")
     text.append(f"const tgx::{meshlet_type} {symbol}_meshlets[{len(meshlets)}] PROGMEM = {{")
     for mi, (meshlet, item) in enumerate(zip(meshlets, encoded)):
-        if mesh_type == "Mesh3D3_16":
-            text.append("    {")
-            text.append(f"        {_fmt_vec3(meshlet.center)},")
-            text.append(f"        {_fmt_float(meshlet.radius)},")
-            text.append(f"        {item.payload_offset32}u,")
-            text.append(f"        {len(item.vertices)}, {len(item.normals)}, {len(item.texcoords)}, {item.material_index}")
-            text.append("    },")
-        elif mesh_type == "Mesh3D2_16b":
-            assert metadata16b is not None
-            q_center, q_dir, q_radius, q_cos, _, _ = metadata16b[mi]
-            text.append("    {")
-            text.append(f"        {{ {q_center[0]}, {q_center[1]}, {q_center[2]} }}, {{ {q_dir[0]}, {q_dir[1]}, {q_dir[2]} }},")
-            text.append(f"        {q_radius}u, {q_cos},")
-            text.append(f"        {item.payload_offset32}u,")
-            text.append(f"        {len(item.vertices)}, {len(item.normals)}, {len(item.texcoords)}, {item.material_index}")
-            text.append("    },")
-        else:
-            if cone_source == "nocull":
-                cone_dir = np.asarray([0.0, 0.0, 1.0], dtype=np.float64)
-                cone_cos = -1.0
-            else:
-                cone_dir, cone_cos = meshlet.selected_cull_cone(cone_source)
-                if cone_cos > 1.0:
-                    cone_cos = -1.0
-            text.append("    {")
-            text.append(f"        {_fmt_vec3(meshlet.center)}, {_fmt_vec3(cone_dir)},")
-            text.append(f"        {_fmt_float(meshlet.radius)}, {_fmt_float(cone_cos)},")
-            text.append(f"        {item.payload_offset32}u,")
-            text.append(f"        {len(item.vertices)}, {len(item.normals)}, {len(item.texcoords)}, {item.material_index}")
-            text.append("    },")
+        q_center, q_dir, q_radius, q_cos, _, _ = metadata16b[mi]
+        text.append("    {")
+        text.append(f"        {{ {q_center[0]}, {q_center[1]}, {q_center[2]} }}, {{ {q_dir[0]}, {q_dir[1]}, {q_dir[2]} }},")
+        text.append(f"        {q_radius}u, {q_cos},")
+        text.append(f"        {item.payload_offset32}u,")
+        text.append(f"        {len(item.vertices)}, {len(item.normals)}, {len(item.texcoords)}, {item.material_index}")
+        text.append("    },")
     text.append("};")
     text.append("")
     text.append(f"const tgx::{material_type}<{color_type}> {symbol}_materials[{len(materials)}] PROGMEM = {{")
@@ -653,8 +533,6 @@ def _export_meshlet_header_impl(
     text.append(f"    {len(materials)},")
     text.append(f"    {symbol}_materials,")
     text.append(f"    {symbol}_meshlets,")
-    if visibility_masks_words is not None:
-        text.append(f"    {symbol}_visibility_masks,")
     text.append(f"    {symbol}_payload,")
     text.append("    {")
     text.append(f"    {_fmt_float(bb_min[0])}, {_fmt_float(bb_max[0])},")
@@ -677,35 +555,6 @@ def _export_meshlet_header_impl(
     return MeshletExportResult("\n".join(text), stats)
 
 
-
-def export_mesh3d2_16_header(
-    mesh: ObjMesh,
-    meshlets: list[Meshlet],
-    *,
-    name: str | None = None,
-    color_type: str = "tgx::RGB565",
-    use_lkh: bool = True,
-    lkh_exe: str | Path = DEFAULT_LKH_EXE,
-    texture_symbols: dict[str, str] | None = None,
-    extra_includes: list[str] | None = None,
-    cone_source: str = "normal",
-) -> MeshletExportResult:
-    return _export_meshlet_header_impl(
-        mesh,
-        meshlets,
-        name=name,
-        color_type=color_type,
-        use_lkh=use_lkh,
-        lkh_exe=lkh_exe,
-        texture_symbols=texture_symbols,
-        extra_includes=extra_includes,
-        mesh_type="Mesh3D2_16",
-        meshlet_type="Meshlet3D2_16",
-        material_type="MeshMaterial3D2_16",
-        mesh_id=216,
-        payload16=True,
-        cone_source=cone_source,
-    )
 
 
 def export_mesh3d2_16b_header(
@@ -733,57 +582,5 @@ def export_mesh3d2_16b_header(
         meshlet_type="Meshlet3D2_16b",
         material_type="MeshMaterial3D2_16b",
         mesh_id=2162,
-        payload16=True,
-        meshlet16b=True,
         cone_source=cone_source,
-    )
-
-
-def export_mesh3d3_16_header(
-    mesh: ObjMesh,
-    meshlets: list[Meshlet],
-    *,
-    name: str | None = None,
-    color_type: str = "tgx::RGB565",
-    use_lkh: bool = True,
-    lkh_exe: str | Path = DEFAULT_LKH_EXE,
-    texture_symbols: dict[str, str] | None = None,
-    extra_includes: list[str] | None = None,
-    visibility_size: int = 1024,
-    visibility_helper: str | Path | None = None,
-    keep_visibility_files: bool = False,
-) -> MeshletExportResult:
-    from .visibility import compute_tgx_visibility
-
-    # Mesh3D3_16 stores object-to-camera directions. The TGX helper renders using
-    # camera-to-object directions, so the sign is flipped for the helper call.
-    object_to_camera = octahedral_visibility_directions(32)
-    visibility = compute_tgx_visibility(
-        mesh,
-        meshlets,
-        -object_to_camera,
-        width=visibility_size,
-        height=visibility_size,
-        helper=visibility_helper,
-        keep_files=keep_visibility_files,
-    )
-    visibility = _dilate_oct_visibility(visibility, 32)
-    visibility_masks_words = _pack_visibility_masks(visibility)
-
-    return _export_meshlet_header_impl(
-        mesh,
-        meshlets,
-        name=name,
-        color_type=color_type,
-        use_lkh=use_lkh,
-        lkh_exe=lkh_exe,
-        texture_symbols=texture_symbols,
-        extra_includes=extra_includes,
-        mesh_type="Mesh3D3_16",
-        meshlet_type="Meshlet3D3_16",
-        material_type="MeshMaterial3D3_16",
-        mesh_id=316,
-        payload16=True,
-        cone_source="visibility",
-        visibility_masks_words=visibility_masks_words,
     )

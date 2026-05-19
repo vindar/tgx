@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from .cones import apply_visibility_cones, auto_visibility_margin_deg
-from .exporter import MeshletExportResult, export_mesh3d2_16_header, export_mesh3d2_16b_header, export_mesh3d3_16_header
+from .exporter import MeshletExportResult, export_mesh3d2_16b_header
 from .mesh import Meshlet, ObjMesh, compute_triangle_normals, unique_valid
 from .meshlets import MeshletBuildOptions, _make_meshlet, build_meshlets, meshlet_stats, sort_meshlets_by_material
 from .preprocess import PreprocessStats
@@ -177,14 +177,9 @@ def export_common(
     extra_includes: list[str] | None = None,
 ) -> MeshletExportResult:
     fmt = getattr(args, "mesh3d2_format", "mesh3d2_16b")
-    if fmt == "mesh3d2_16":
-        exporter = export_mesh3d2_16_header
-    elif fmt == "mesh3d2_16b":
-        exporter = export_mesh3d2_16b_header
-    elif fmt == "mesh3d3_16":
-        exporter = export_mesh3d3_16_header
-    else:
+    if fmt != "mesh3d2_16b":
         raise ValueError(f"unsupported meshlet format: {fmt}")
+    exporter = export_mesh3d2_16b_header
     kwargs = dict(
         name=args.name or output.stem,
         color_type=color_type,
@@ -193,14 +188,7 @@ def export_common(
         texture_symbols=texture_symbols or {},
         extra_includes=extra_includes or [],
     )
-    if fmt == "mesh3d3_16":
-        kwargs.update(
-            visibility_size=getattr(args, "visibility_size", 1024),
-            visibility_helper=getattr(args, "visibility_helper", None),
-            keep_visibility_files=getattr(args, "keep_visibility_files", False),
-        )
-    else:
-        kwargs.update(cone_source=cone_source)
+    kwargs.update(cone_source=cone_source)
     with step("encode/export mesh", f"{fmt}, {len(meshlets)} meshlets"):
         result = exporter(
             mesh,
