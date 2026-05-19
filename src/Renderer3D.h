@@ -859,9 +859,9 @@ namespace tgx
          *                              coefficients, otherwise use the current renderer material.
          *
          * @remark
-         * - Mesh3D2_16b is a Mesh3D2_16 variant with quantized meshlet sphere/cone headers.
-         * - The payload layout is the same as Mesh3D2_16; only the per-meshlet sphere/cone
-         *   metadata is stored in a more compact quantized form.
+         * Mesh3D2_16b stores geometry in compact meshlets. The renderer first decodes the
+         * quantized meshlet sphere/cone metadata, optionally rejects the whole meshlet, then
+         * reads and rasterizes the local 16-bit payload only for visible meshlets.
          */
         void drawMesh(const Mesh3D2_16b<color_t>* mesh, bool use_mesh_material = true);
 

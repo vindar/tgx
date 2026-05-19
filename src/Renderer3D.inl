@@ -2029,6 +2029,9 @@ namespace tgx
             const Image<color_t>* current_texture = nullptr;
             const float normal_scale = (1.0f / 32767.0f);
             const float texcoord_scale = (4.0f / 32767.0f);
+
+            // Mesh3D2_16b stores meshlet sphere/cone metadata as 16-bit values
+            // relative to the global bounding box. Decode scales once per mesh.
             const float meshlet_bbox_cx = 0.5f * (mesh->bounding_box.minX + mesh->bounding_box.maxX);
             const float meshlet_bbox_cy = 0.5f * (mesh->bounding_box.minY + mesh->bounding_box.maxY);
             const float meshlet_bbox_cz = 0.5f * (mesh->bounding_box.minZ + mesh->bounding_box.maxZ);
@@ -2051,6 +2054,9 @@ namespace tgx
             for (uint16_t mli = 0; mli < mesh->nb_meshlets; mli++)
                 {
                 const Meshlet3D2_16b& meshlet = mesh->meshlets[mli];
+
+                // Decode the compact meshlet sphere once. The same values are used for
+                // visibility culling, optional sphere clipping and vertex dequantization.
                 const fVec3 meshlet_sphere_center(
                     meshlet_bbox_cx + ((float)meshlet.sphere_center[0]) * meshlet_center_scale,
                     meshlet_bbox_cy + ((float)meshlet.sphere_center[1]) * meshlet_center_scale,
@@ -2063,6 +2069,8 @@ namespace tgx
 
                 if ((_culling_dir != 0) && (meshlet_cone_cos > -1.0f))
                     {
+                    // Decode the cone direction lazily: it is only needed when cone
+                    // culling is enabled and this meshlet has an active cone.
                     const fVec3 meshlet_cone_dir(
                         ((float)meshlet.cone_dir[0]) * meshlet_snorm_scale,
                         ((float)meshlet.cone_dir[1]) * meshlet_snorm_scale,
