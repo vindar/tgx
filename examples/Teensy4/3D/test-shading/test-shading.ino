@@ -29,11 +29,6 @@ using namespace tgx;
     #include "suzanne.h"
     #include "bunny.h"
     #include "dragon.h"
-    #include "teapot.cpp"
-    #include "skull.cpp"
-    #include "suzanne.cpp"
-    #include "bunny.cpp"
-    #include "dragon.cpp"
 #else
     // ok, use the normal path
     #include "3Dmodels/teapot/teapot.h"
@@ -41,11 +36,6 @@ using namespace tgx;
     #include "3Dmodels/suzanne/suzanne.h"
     #include "3Dmodels/bunny/bunny.h"
     #include "3Dmodels/dragon/dragon.h"
-    #include "3Dmodels/teapot/teapot.cpp"
-    #include "3Dmodels/skull/skull.cpp"
-    #include "3Dmodels/suzanne/suzanne.cpp"
-    #include "3Dmodels/bunny/bunny.cpp"
-    #include "3Dmodels/dragon/dragon.cpp"
 #endif
 
 

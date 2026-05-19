@@ -26,17 +26,11 @@ using namespace tgx;
     #include "spot.h"
     #include "bob.h"
     #include "blub.h"
-    #include "spot.cpp"
-    #include "bob.cpp"
-    #include "blub.cpp"
-#else 
+#else
     // ok, use the normal path
     #include "3Dmodels/spot/spot.h"
     #include "3Dmodels/bob/bob.h"
     #include "3Dmodels/blub/blub.h"
-    #include "3Dmodels/spot/spot.cpp"
-    #include "3Dmodels/bob/bob.cpp"
-    #include "3Dmodels/blub/blub.cpp"
 #endif
 
 

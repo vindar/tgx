@@ -25,14 +25,10 @@ using namespace tgx;
     // Arduino IDE may flatten the example directory tree.
     #include "nanosuit_v2.h"
     #include "R2D2_v2.h"
-    #include "nanosuit_v2.cpp"
-    #include "R2D2_v2.cpp"
 #else 
     // ok, use the normal path
     #include "3Dmodels/nanosuit/nanosuit_v2.h"
     #include "3Dmodels/R2D2/R2D2_v2.h"    
-    #include "3Dmodels/nanosuit/nanosuit_v2.cpp"
-    #include "3Dmodels/R2D2/R2D2_v2.cpp"    
 #endif
 
 
@@ -49,13 +45,6 @@ using namespace tgx;
     #include "manga3_v2.h"
     #include "naruto_v2.h"
     #include "stormtrooper_v2.h"
-    #include "elementalist_v2.cpp"
-    #include "sinbad_v2.cpp"
-    #include "cyborg_v2.cpp"
-    #include "dennis_v2.cpp"
-    #include "manga3_v2.cpp"
-    #include "naruto_v2.cpp"
-    #include "stormtrooper_v2.cpp"
 #else 
     // ok, use the normal path
     #include "3Dmodels/elementalist/elementalist_v2.h"
@@ -65,13 +54,6 @@ using namespace tgx;
     #include "3Dmodels/manga3/manga3_v2.h"
     #include "3Dmodels/naruto/naruto_v2.h"
     #include "3Dmodels/stormtrooper/stormtrooper_v2.h"
-    #include "3Dmodels/elementalist/elementalist_v2.cpp"
-    #include "3Dmodels/sinbad/sinbad_v2.cpp"
-    #include "3Dmodels/cyborg/cyborg_v2.cpp"
-    #include "3Dmodels/dennis/dennis_v2.cpp"
-    #include "3Dmodels/manga3/manga3_v2.cpp"
-    #include "3Dmodels/naruto/naruto_v2.cpp"
-    #include "3Dmodels/stormtrooper/stormtrooper_v2.cpp"
 #endif
 
 #endif

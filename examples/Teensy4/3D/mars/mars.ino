@@ -42,11 +42,9 @@
 #if __has_include("falcon_vs_v2.h")
     // Arduino IDE may flatten the example directory tree.
     #include "falcon_vs_v2.h"
-    #include "falcon_vs_v2.cpp"
 #else
     // ok, use the normal path
     #include "falcon/falcon_vs_v2.h"
-    #include "falcon/falcon_vs_v2.cpp"
 #endif
 
 
