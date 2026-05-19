@@ -23,7 +23,7 @@ using namespace tgx;
 
 // meshes (stored in PROGMEM)
 #if __has_include("teapot.h")
-    // Arduino IDE stupidly flattens the example directory tree...
+    // Arduino IDE may flatten the example directory tree.
     #include "teapot.h"
     #include "skull.h"
     #include "suzanne.h"

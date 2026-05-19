@@ -39,12 +39,14 @@
 #include "mars_right.h"
 #include "mars_bottom.h"
 #include "mars_top_neb.h"
-#if __has_include("falcon_vs.h")
-    // Arduino IDE stupidly flattens the example directory tree...
-    #include "falcon_vs.h"
+#if __has_include("falcon_vs_v2.h")
+    // Arduino IDE may flatten the example directory tree.
+    #include "falcon_vs_v2.h"
+    #include "falcon_vs_v2.cpp"
 #else
     // ok, use the normal path
-    #include "falcon/falcon_vs.h"
+    #include "falcon/falcon_vs_v2.h"
+    #include "falcon/falcon_vs_v2.cpp"
 #endif
 
 
@@ -126,6 +128,14 @@ DMAMEM int dma_buf[260 * 256]; // 260kb in DMAMEM
 // marble image texture in dma memory
 tgx::Image<tgx::RGB565> marble_dma;
 
+// Active Falcon mesh. setup() may move textures to EXTMEM, and loadFalconTexture()
+// caches the hot mesh data into dma_buf while keeping FalcPlan in DMA memory.
+const Mesh3Dv2<RGB565>* falcon_source_mesh = &falcon_vs_v2;
+const Mesh3Dv2<RGB565>* falcon_mesh = &falcon_vs_v2;
+static constexpr uint8_t FALCON_ENGINE_MATERIAL = 6;
+static constexpr uint8_t FALCON_PLAN_MATERIAL = 9;
+const tgx::Image<tgx::RGB565>* falcon_engine_off_texture = &Engine01_texture;
+
 
 // Print per-second FPS and frame timing on Serial.
 void telemetryBegin();
@@ -139,7 +149,7 @@ void telemetrySetScene(const char* scene);
 
 /*************************************************************
 *
-* VERY DIRTY CODE BELOW: CLEANUP NEEDED....
+* Demo setup and animation helpers.
 *
 **************************************************************/
 
@@ -180,11 +190,11 @@ TGX_NOINLINE FLASHMEM void setup()
     renderer.setLightDirection(lightdir);
     renderer.setLightAmbiant(tgx::RGBf(1, 1, 1));
 
-    // copy falcon mesh to extmem (if present) on Teensy 4.1
 #if defined(ARDUINO_TEENSY41)
     if (external_psram_size > 0)
         {
-        falcon_vs_1 = *(copyMeshEXTMEM(&falcon_vs_1));
+        Mesh3Dv2<RGB565>* copied = copyMeshEXTMEM(&falcon_vs_v2, false, false, true, true);
+        if (copied != nullptr) falcon_source_mesh = copied;
         }
 #endif
     }
@@ -343,23 +353,21 @@ void loadFalconTexture()
     memcpy(dma_buf, FalcPlan_texture_data, 256*256*2);
     FalcPlan_texture.set(dma_buf, iVec2(256, 256), 256); // 128kb
 
-    tgx::fVec3* va = (tgx::fVec3*)(dma_buf + (128 * 256));
-    memcpy(va, falcon_vs_vert_array, sizeof(falcon_vs_vert_array));
+    uint8_t* const cache = (uint8_t*)(dma_buf + (128 * 256));
+    const size_t cache_size = sizeof(dma_buf) - (128 * 256 * sizeof(dma_buf[0]));
+    const Mesh3Dv2<RGB565>* cached = tgx::cacheMesh(falcon_source_mesh, cache, cache_size, "LMP");
+    falcon_mesh = (cached != nullptr) ? cached : falcon_source_mesh;
 
-    tgx::fVec2* vt = (tgx::fVec2*)(dma_buf + (128 * 256) + (sizeof(falcon_vs_vert_array) + 3)/4);
-    memcpy(vt, falcon_vs_tex_array, sizeof(falcon_vs_tex_array));
+    tgx::MeshMaterial3Dv2<tgx::RGB565>* materials = const_cast<tgx::MeshMaterial3Dv2<tgx::RGB565>*>(falcon_mesh->materials);
+    materials[FALCON_PLAN_MATERIAL].texture = &FalcPlan_texture;
+    falcon_engine_off_texture = materials[FALCON_ENGINE_MATERIAL].texture;
+    }
 
-    tgx::fVec3* vn = (tgx::fVec3*)(dma_buf + (128 * 256) + (sizeof(falcon_vs_vert_array) + 3)/4 + (sizeof(falcon_vs_tex_array) + 3)/4);
-    memcpy(vn, falcon_vs_norm_array, sizeof(falcon_vs_norm_array));
 
-    tgx::Mesh3D<tgx::RGB565> * mesh = &falcon_vs_1;
-    while (mesh != nullptr)
-        {
-        mesh->vertice = va;
-        mesh->texcoord = vt;
-        mesh->normal = vn;
-        mesh = (tgx::Mesh3D<tgx::RGB565>*)mesh->next;
-        }
+void setFalconEngineTexture(const tgx::Image<tgx::RGB565>* texture)
+    {
+    tgx::MeshMaterial3Dv2<tgx::RGB565>* materials = const_cast<tgx::MeshMaterial3Dv2<tgx::RGB565>*>(falcon_mesh->materials);
+    materials[FALCON_ENGINE_MATERIAL].texture = texture;
     }
 
 
@@ -611,9 +619,6 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setMaterialSpecularStrength(0.9f * a);
             renderer.setMaterialColor(tgx::RGBf(0, 0, 1) * a);
 
-            //renderer.setShaders(TGX_SHADER_GOURAUD | TGX_SHADER_TEXTURE_NEAREST);
-            //renderer.drawMesh(&falcon_1, true, true);
-
             drawSphere(SHADER_GOURAUD);
             }
 
@@ -723,6 +728,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
 
 
+    telemetrySetScene("falcon");
     loadFalconTexture();
     const float falcon_base = -20;
 
@@ -749,7 +755,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 360 * a, { 0,1,0 });
         renderer.setMaterialColor(tgx::RGBf(1.0f, 0.0f, 0.0f));
-        renderer.drawWireFrameMesh(&falcon_vs_1, true);
+        renderer.drawWireFrameMesh(falcon_mesh);
 
         redraw();
         }
@@ -780,13 +786,13 @@ TGX_NOINLINE FLASHMEM void movie()
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
         renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
-        renderer.drawMesh(&falcon_vs_1, true, true);
+        renderer.drawMesh(falcon_mesh, true);
 
         if (a < 1)
             {
             setModelPosScaleRot(falcon_pos, { falcon_max_size, falcon_max_size, falcon_max_size }, 0, { 0,1,0 });
             renderer.setMaterialColor(tgx::RGBf(1-a, 0, 0));
-            renderer.drawWireFrameMesh(&falcon_vs_1, true);
+            renderer.drawWireFrameMesh(falcon_mesh);
             }
 
         redraw();
@@ -818,7 +824,7 @@ TGX_NOINLINE FLASHMEM void movie()
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
         renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
-        renderer.drawMesh(&falcon_vs_1, true, true);
+        renderer.drawMesh(falcon_mesh, true);
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
@@ -849,7 +855,7 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.setCulling(1);
         renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
-        renderer.drawMesh(&falcon_vs_1, true, true);
+        renderer.drawMesh(falcon_mesh, true);
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
@@ -860,9 +866,7 @@ TGX_NOINLINE FLASHMEM void movie()
         }
 
     // allumage et depart
-    tgx::Mesh3D<tgx::RGB565> * meshF = &falcon_vs_1;
-    for(int b=1; b<15; b++) { meshF = (tgx::Mesh3D<tgx::RGB565>*)meshF->next; } // find falcon_vs_15 (but may have been copied in EXTMEM)
-    meshF->texture = &Engine02_texture; // turn on the engines !
+    setFalconEngineTexture(&Engine02_texture); // turn on the engines !
 
     start(2.5); // 2.5
     while (ongoing())
@@ -882,7 +886,7 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.setCulling(1);
         renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
-        renderer.drawMesh(&falcon_vs_1, true, true);
+        renderer.drawMesh(falcon_mesh, true);
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
@@ -920,7 +924,7 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.setCulling(1);
         renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
-        renderer.drawMesh(&falcon_vs_1, true, true);
+        renderer.drawMesh(falcon_mesh, true);
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
@@ -961,7 +965,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setCulling(1);
             renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
-            renderer.drawMesh(&falcon_vs_1, true, true);
+            renderer.drawMesh(falcon_mesh, true);
 
             setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
             drawBase();
@@ -1005,7 +1009,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setCulling(1);
             renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
-            renderer.drawMesh(&falcon_vs_1, true, true);
+            renderer.drawMesh(falcon_mesh, true);
 
             setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
             drawBase();
@@ -1051,7 +1055,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setCulling(1);
             renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
-            renderer.drawMesh(&falcon_vs_1, true, true);
+            renderer.drawMesh(falcon_mesh, true);
 
             setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
             drawBase();
@@ -1062,7 +1066,7 @@ TGX_NOINLINE FLASHMEM void movie()
         }
     }
 
-    meshF->texture = &Engine01_texture; // turn off the engines !
+    setFalconEngineTexture(falcon_engine_off_texture); // turn off the engines !
     }
 
 

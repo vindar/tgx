@@ -22,7 +22,7 @@ using namespace tgx;
 
 // meshes (stored in PROGMEM)
 #if __has_include("spot.h")
-    // Arduino IDE stupidly flattens the example directory tree...
+    // Arduino IDE may flatten the example directory tree.
     #include "spot.h"
     #include "bob.h"
     #include "blub.h"
@@ -104,7 +104,7 @@ static const size_t mesh_cache_size = 355000;
 DMAMEM char mesh_cache[mesh_cache_size];
 
 
-// only load the shaders we need (note that TGX_SHADER_NOTEXTURE is needed in order to draw without texturing !). 
+// only load the shaders we need (note that SHADER_NOTEXTURE is needed in order to draw without texturing !).
 const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings

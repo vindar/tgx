@@ -22,7 +22,7 @@ using namespace tgx;
 
 // meshes (stored in PROGMEM) for Teensy 4.0 and 4.1
 #if __has_include("nanosuit_v2.h")
-    // Arduino IDE stupidly flattens the example directory tree...
+    // Arduino IDE may flatten the example directory tree.
     #include "nanosuit_v2.h"
     #include "R2D2_v2.h"
     #include "nanosuit_v2.cpp"
@@ -41,7 +41,7 @@ using namespace tgx;
 #if defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSY_MICROMOD)
 
 #if __has_include("elementalist_v2.h")
-    // Arduino IDE stupidly flattens the example directory tree...
+    // Arduino IDE may flatten the example directory tree.
     #include "elementalist_v2.h"
     #include "sinbad_v2.h"
     #include "cyborg_v2.h"
