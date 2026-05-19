@@ -8,13 +8,13 @@ from .mesh import Meshlet, ObjMesh
 def validate_mesh_for_export(mesh: ObjMesh, meshlets: list[Meshlet]) -> None:
     """Validate the final preprocessed mesh and meshlets before C++ header export."""
     if len(mesh.triangles) > 0xFFFF:
-        raise ValueError(f"Mesh3D2 supports at most 65535 triangles, got {len(mesh.triangles)}")
+        raise ValueError(f"meshlet formats support at most 65535 triangles, got {len(mesh.triangles)}")
     if len(meshlets) > 0xFFFF:
-        raise ValueError(f"Mesh3D2 supports at most 65535 meshlets, got {len(meshlets)}")
+        raise ValueError(f"meshlet formats support at most 65535 meshlets, got {len(meshlets)}")
 
     materials = {m.material for m in meshlets}
     if len(materials) > 0x100:
-        raise ValueError(f"Mesh3D2 supports at most 256 materials, got {len(materials)}")
+        raise ValueError(f"meshlet formats support at most 256 materials, got {len(materials)}")
 
     _validate_array(mesh.vertices, "vertices", 3)
     _validate_array(mesh.texcoords, "texcoords", 2)

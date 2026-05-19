@@ -39,7 +39,6 @@
 #include "Rasterizer.h"
 
 #include "Mesh3D.h"
-#include "Mesh3D2.h"
 #include "Mesh3D2_16.h"
 #include "Mesh3D2_16b.h"
 #include "Mesh3D3_16.h"
@@ -821,21 +820,6 @@ namespace tgx
 
 
         /**
-         * Draw a Mesh3D2 object.
-         *
-         * @param   mesh                The mesh to draw.
-         * @param   use_mesh_material   True (default) to use Mesh3D2 material colors and lighting
-         *                              coefficients, otherwise use the current renderer material.
-         *
-         * @remark
-         * - Mesh3D2 is the meshlet-based mesh format. Unlike Mesh3D, multi-material models are stored
-         *   as a single mesh with a material table and one material index per meshlet.
-         * - Meshlet visibility cones are used for fast culling when face culling is enabled.
-         */
-        void drawMesh(const Mesh3D2<color_t>* mesh, bool use_mesh_material = true);
-
-
-        /**
          * Draw a Mesh3D2_16 object.
          *
          * @param   mesh                The mesh to draw.
@@ -843,10 +827,10 @@ namespace tgx
          *                              coefficients, otherwise use the current renderer material.
          *
          * @remark
-         * - Mesh3D2_16 is an experimental Mesh3D2 variant with 16-bit quantized local vertex,
+         * - Mesh3D2_16 is an experimental meshlet variant with 16-bit quantized local vertex,
          *   normal, and texture-coordinate arrays.
-         * - Keeping this as a separate overload makes it possible to benchmark Mesh3D2 and
-         *   Mesh3D2_16 side by side.
+         * - Keeping this as a separate overload makes it possible to benchmark Mesh3D2_16 and
+         *   Mesh3D2_16b side by side.
          */
         void drawMesh(const Mesh3D2_16<color_t>* mesh, bool use_mesh_material = true);
 
@@ -877,7 +861,7 @@ namespace tgx
          * - Mesh3D3_16 is an experimental Mesh3D2_16 variant that replaces visibility cones
          *   with a 1024-bit octahedral visibility mask per meshlet.
          * - This overload exists only to benchmark the visibility-mask idea side by side with
-         *   Mesh3D2 and Mesh3D2_16.
+         *   Mesh3D2_16 and Mesh3D2_16b.
          */
         void drawMesh(const Mesh3D3_16<color_t>* mesh, bool use_mesh_material = true);
 
@@ -1802,9 +1786,6 @@ namespace tgx
         /** Method called by drawMesh() which does the actual drawing. */
         void _drawMesh(const int RASTER_TYPE, const Mesh3D<color_t>* mesh);
 
-        /** Method called by drawMesh() which does the actual Mesh3D2 drawing. */
-        void _drawMesh(const int RASTER_TYPE, const Mesh3D2<color_t>* mesh, bool use_mesh_material);
-
         /** Method called by drawMesh() which does the actual Mesh3D2_16 drawing. */
         void _drawMesh(const int RASTER_TYPE, const Mesh3D2_16<color_t>* mesh, bool use_mesh_material);
 
@@ -1813,39 +1794,6 @@ namespace tgx
 
         /** Method called by drawMesh() which does the actual Mesh3D3_16 drawing. */
         void _drawMesh(const int RASTER_TYPE, const Mesh3D3_16<color_t>* mesh, bool use_mesh_material);
-
-        /** Return true when the Mesh3D2 visibility cone rejects the meshlet for the current view. */
-        TGX_INLINE inline bool _discardMeshlet(const Meshlet3D2& meshlet) const
-            {
-            const float cone_cos = meshlet.cone_cos;
-            if (cone_cos <= -1.0f) return false;
-
-            const fVec4 D = _r_modelViewM.mult0(meshlet.cone_dir);
-            const float dd = D.x * D.x + D.y * D.y + D.z * D.z;
-            if (dd <= 1.0e-20f) return false;
-
-            float dot;
-            float len2;
-            if (_ortho)
-                {
-                dot = D.z; // object-to-camera direction is +Z in view space.
-                len2 = dd;
-                }
-            else
-                {
-                const fVec3 anchor = meshlet.sphere_center - (meshlet.cone_dir * meshlet.sphere_radius);
-                const fVec4 A = _r_modelViewM.mult1(anchor);
-                dot = -(D.x * A.x + D.y * A.y + D.z * A.z);
-                const float aa = A.x * A.x + A.y * A.y + A.z * A.z;
-                if (aa <= 1.0e-20f) return false;
-                len2 = dd * aa;
-                }
-
-            const float c2len2 = cone_cos * cone_cos * len2;
-            const float dot2 = dot * dot;
-            return (cone_cos >= 0.0f) ? ((dot < 0.0f) || (dot2 < c2len2))
-                                      : ((dot < 0.0f) && (dot2 > c2len2));
-            }
 
         /** Return the 32x32 octahedral visibility-map index for the current object-space view direction. */
         TGX_INLINE inline uint16_t _mesh3d3VisibilityIndex() const

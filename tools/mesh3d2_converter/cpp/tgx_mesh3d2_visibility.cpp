@@ -1,5 +1,5 @@
 /*
- * Offline TGX visibility helper for the Mesh3D2 converter.
+ * Offline TGX visibility helper for the meshlet converter.
  *
  * The Python converter writes a compact binary scene, this program renders it
  * from many orthographic directions with TGX itself and writes a view/meshlet

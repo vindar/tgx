@@ -61,8 +61,8 @@ def export_legacy_mesh3d_header(
     """Export a Mesh3D validation reference.
 
     When meshlets are provided, the face stream is generated with the same meshlet order and
-    triangle strips as Mesh3D2. This makes pixel-exact comparisons meaningful: the only intended
-    difference is that Mesh3D2 may skip invisible meshlets before reading their payload.
+    triangle strips as the meshlet formats. This makes comparisons meaningful: the intended
+    difference is that meshlet formats may skip invisible meshlets before reading their payload.
     """
     symbol = _identifier(name)
     has_texcoords = mesh.has_texcoords()

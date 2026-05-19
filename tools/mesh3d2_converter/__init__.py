@@ -1,2 +1,2 @@
-"""Mesh3D2 conversion tools for TGX."""
+"""Meshlet conversion tools for TGX."""
 

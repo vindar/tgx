@@ -1,20 +1,20 @@
-# TGX Mesh3D2 Converter
+# TGX Meshlet Converter
 
-Experimental Python tooling for building and inspecting TGX `Mesh3D2` meshes from Wavefront `.obj` files.
+Experimental Python tooling for building and inspecting TGX meshlet meshes from Wavefront `.obj` files.
 
 Current scope:
 
 - load triangular or polygonal OBJ files,
 - triangulate polygon faces,
-- split triangles into connected meshlets under the current Mesh3D2 local-index limits,
+- split triangles into connected meshlets under the current meshlet local-index limits,
 - visualize the mesh or meshlets with matplotlib,
 - print basic meshlet quality statistics.
 - estimate gross and net meshlet-cone culling efficiency across view directions,
 - compute visibility cones with an offline TGX C++ helper,
-- export a TGX `Mesh3D2` C++ header,
-- convert an existing TGX `Mesh3D` header to `Mesh3D2` while reusing the same texture headers.
+- export a TGX `Mesh3D2_16b` C++ header,
+- convert an existing TGX `Mesh3D` header to a meshlet format while reusing the same texture headers.
 
-This is still an experimental converter. The generated `Mesh3D2` files are meant to
+This is still an experimental converter. The generated meshlet files are meant to
 coexist with the existing `Mesh3D` format while the new runtime path is being validated.
 
 ## Python
@@ -58,7 +58,7 @@ py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 view D:\Programmation\myProjects
 
 The default visibility-cone pass uses 2048 orthographic views rendered at 768x768 by the TGX helper. The default margin is automatic: it is based on the average angular coverage of the sampled views, with a small safety allowance for non-perfect sampling and raster effects.
 
-Export a normalized model as a `Mesh3D2<RGB565>` header. The `auto` profile selects a
+Export a normalized model as a `Mesh3D2_16b<RGB565>` header. The `auto` profile selects a
 smooth, culling-oriented split for small models and a coarser split for large models where
 meshlet overhead and chain count matter more:
 
@@ -74,7 +74,7 @@ The export command:
 - regenerates smooth normals if the OBJ has no complete normal set, or when `--force-normals` is used,
 - removes degenerate triangles,
 - splits the mesh into meshlets,
-- encodes local triangle chains into the 8-bit Mesh3D2 face stream,
+- encodes local triangle chains into the 8-bit meshlet face stream,
 - writes a 32-bit aligned payload array,
 - prints meshlet, culling, strip and payload statistics.
 
@@ -136,7 +136,7 @@ The legacy converter:
 - decodes the original 16-bit `Mesh3D` triangle-chain stream,
 - keeps the exact same vertex, normal and texture-coordinate indices,
 - preserves mesh material colors and lighting coefficients,
-- links generated `Mesh3D2` materials to the original texture image symbols,
+- links generated meshlet materials to the original texture image symbols,
 - writes relative includes to the original texture headers,
 - builds meshlets and 8-bit local face streams for the new runtime path.
 

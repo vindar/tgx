@@ -68,7 +68,7 @@ def _parse_mtl(path: Path) -> dict[str, Material]:
 
 
 def load_obj(path: str | Path) -> ObjMesh:
-    """Load a Wavefront OBJ file into the small internal Mesh3D2 converter model."""
+    """Load a Wavefront OBJ file into the small internal meshlet converter model."""
     path = Path(path)
     vertices: list[tuple[float, float, float]] = []
     texcoords: list[tuple[float, float]] = []

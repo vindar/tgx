@@ -290,7 +290,7 @@ def _parse_materials(text: str, array_name: str) -> list[DecodedMaterial]:
     return materials
 
 
-def _parse_meshlet_headers(text: str, array_name: str, fmt: str = "Mesh3D2", bbox: tuple[float, float, float, float, float, float] | None = None) -> list[DecodedMeshlet]:
+def _parse_meshlet_headers(text: str, array_name: str, fmt: str = "Mesh3D2_16b", bbox: tuple[float, float, float, float, float, float] | None = None) -> list[DecodedMeshlet]:
     body = _extract_named_array_body(text, array_name)
     entries = _split_top_level(body)
     meshlets: list[DecodedMeshlet] = []
@@ -448,9 +448,9 @@ def parse_mesh3d2_header(path: str | Path) -> DecodedHeaderMesh:
     header = Path(path).resolve()
     raw = header.read_text(encoding="utf-8", errors="replace")
     text = _strip_comments(raw)
-    decl = re.search(r"const\s+tgx::(Mesh3D(?:2(?:_16b|_16)?|3_16))<\s*([^>]+?)\s*>\s+(\w+)\s*(?:PROGMEM\s*)?=", text)
+    decl = re.search(r"const\s+tgx::(Mesh3D(?:2_(?:16b|16)|3_16))<\s*([^>]+?)\s*>\s+(\w+)\s*(?:PROGMEM\s*)?=", text)
     if not decl:
-        raise ValueError("no Mesh3D2, Mesh3D2_16, Mesh3D2_16b or Mesh3D3_16 declaration found")
+        raise ValueError("no Mesh3D2_16, Mesh3D2_16b or Mesh3D3_16 declaration found")
     fmt, color_type, symbol = decl.group(1), decl.group(2).strip(), decl.group(3)
     body = _extract_named_object_body(text, symbol)
     fields = _split_top_level(body)
@@ -491,8 +491,6 @@ def detect_mesh_type(path: str | Path) -> str:
         return "Mesh3D2_16"
     if re.search(r"tgx::Mesh3D3_16\s*<", text):
         return "Mesh3D3_16"
-    if re.search(r"tgx::Mesh3D2\s*<", text):
-        return "Mesh3D2"
     if re.search(r"tgx::Mesh3D\s*<", text):
         return "Mesh3D"
     raise ValueError("could not detect TGX mesh type")
@@ -744,9 +742,9 @@ def show_mesh3d2_pyvista(mesh: DecodedHeaderMesh, mode: str = "tabs") -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Inspect TGX Mesh3D, Mesh3D2 and Mesh3D2_16 generated headers")
+    parser = argparse.ArgumentParser(description="Inspect TGX Mesh3D and meshlet generated headers")
     parser.add_argument("input", help="TGX mesh header to inspect")
-    parser.add_argument("--view", action="store_true", help="open an interactive PyVista viewer for Mesh3D2/Mesh3D2_16")
+    parser.add_argument("--view", action="store_true", help="open an interactive PyVista viewer for meshlet formats")
     parser.add_argument("--view-mode", choices=("tabs", "texture", "meshlets", "cones"), default="tabs", help="initial PyVista view mode; tabs enables keys 1/2/3")
     args = parser.parse_args(argv)
 

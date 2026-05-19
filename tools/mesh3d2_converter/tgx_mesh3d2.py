@@ -245,7 +245,7 @@ def cmd_wizard(args: argparse.Namespace) -> None:
         visibility_helper=None,
         keep_visibility_files=False,
         cone_source="visibility" if visibility else "normal",
-        mesh3d2_format="mesh3d2",
+        mesh3d2_format="mesh3d2_16b",
     )
     cmd_export(export_args)
 
@@ -300,7 +300,7 @@ def cmd_wizard(args: argparse.Namespace) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="TGX Mesh3D2 OBJ conversion helper")
+    parser = argparse.ArgumentParser(description="TGX meshlet OBJ conversion helper")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p_stats = sub.add_parser("stats", help="load an OBJ and print mesh/meshlet statistics")
@@ -341,12 +341,12 @@ def main(argv: list[str] | None = None) -> int:
     _add_visibility_options(p_strips)
     p_strips.set_defaults(func=cmd_strips)
 
-    p_export = sub.add_parser("export", help="convert an OBJ mesh to a TGX Mesh3D2 C++ header")
+    p_export = sub.add_parser("export", help="convert an OBJ mesh to a TGX meshlet C++ header")
     p_export.add_argument("obj")
     p_export.add_argument("-o", "--output", required=True)
     p_export.add_argument("--name")
     p_export.add_argument("--color-type", choices=("tgx::RGB565", "tgx::RGB32", "tgx::RGBf"), default="tgx::RGB565")
-    p_export.add_argument("--mesh3d2-format", choices=("mesh3d2", "mesh3d2_16", "mesh3d2_16b", "mesh3d3_16"), default="mesh3d2", help="output payload format")
+    p_export.add_argument("--mesh3d2-format", choices=("mesh3d2_16", "mesh3d2_16b", "mesh3d3_16"), default="mesh3d2_16b", help="output payload format")
     p_export.add_argument("--normalize", action="store_true", help="center the model and fit its largest extent to --normalize-size")
     p_export.add_argument("--normalize-size", type=float, default=2.0)
     p_export.add_argument("--dedupe-epsilon", type=float, default=1e-9)
@@ -361,14 +361,14 @@ def main(argv: list[str] | None = None) -> int:
     p_export.add_argument("--texture-output-dir", help="directory for generated texture headers; defaults to the mesh header directory")
     p_export.add_argument("--texture-size", nargs=2, type=int, metavar=("W", "H"), help="resize all exported textures to W x H")
     p_export.add_argument("--texture-require-pow2", action="store_true", help="fail when exported textures are not power-of-two sized")
-    p_export.add_argument("--include", action="append", default=[], help="extra header to include before the Mesh3D2 declaration")
+    p_export.add_argument("--include", action="append", default=[], help="extra header to include before the mesh declaration")
     p_export.add_argument("--cull-samples", type=int, default=128)
     p_export.add_argument("--meshlet-cost", type=float, default=2.0)
     _add_build_options(p_export)
     _add_visibility_options(p_export)
     p_export.set_defaults(func=cmd_export)
 
-    p_wizard = sub.add_parser("wizard", help="interactive OBJ to Mesh3D2 conversion")
+    p_wizard = sub.add_parser("wizard", help="interactive OBJ to meshlet conversion")
     p_wizard.add_argument("obj", nargs="?")
     p_wizard.add_argument("--color-type", choices=("tgx::RGB565", "tgx::RGB32", "tgx::RGBf"), default="tgx::RGB565")
     p_wizard.set_defaults(func=cmd_wizard)

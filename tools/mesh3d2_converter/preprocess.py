@@ -174,7 +174,7 @@ def preprocess_mesh(
     texcoord_wrap: bool = False,
     normal_quant_bits: int = DEFAULT_NORMAL_QUANT_BITS,
 ) -> tuple[ObjMesh, PreprocessStats]:
-    """Return a cleaned mesh suitable for Mesh3D2 export."""
+    """Return a cleaned mesh suitable for meshlet export."""
     vertices_before = len(mesh.vertices)
     texcoords_before = len(mesh.texcoords)
     normals_before = len(mesh.normals)

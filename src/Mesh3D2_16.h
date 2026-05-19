@@ -1,6 +1,6 @@
 /**
  * @file Mesh3D2_16.h
- * Experimental Mesh3D2 variant with a 16-bit quantized payload.
+ * Experimental meshlet variant with a 16-bit quantized payload.
  */
 //
 // Copyright 2020 Arvind Singh
@@ -70,8 +70,8 @@ namespace tgx
     /**
      * Material definition for a Mesh3D2_16 object.
      *
-     * This is currently a copy of MeshMaterial3D2. It is kept as a separate type so the
-     * Mesh3D2_16 experiment can evolve independently from the baseline Mesh3D2 format.
+     * This is kept as a separate type so the Mesh3D2_16 experiment can evolve
+     * independently from the other meshlet formats.
      */
     template<typename color_t>
     struct MeshMaterial3D2_16
@@ -95,8 +95,8 @@ namespace tgx
     /**
      * Header for a single meshlet inside a Mesh3D2_16 object.
      *
-     * This is the same header shape as Meshlet3D2, but the payload arrays are stored
-     * with signed 16-bit quantization to reduce mesh memory traffic.
+     * This header stores meshlet bounds and the payload location. The payload arrays
+     * are stored with signed 16-bit quantization to reduce mesh memory traffic.
      */
     struct Meshlet3D2_16
         {
@@ -118,7 +118,7 @@ namespace tgx
 
 
     /**
-     * Experimental Mesh3D2 variant with 16-bit quantized local arrays.
+     * Experimental meshlet variant with 16-bit quantized local arrays.
      *
      * The Mesh3D2_16 payload layout is:
      *
@@ -134,8 +134,7 @@ namespace tgx
      * Normals are decoded as `q / 32767`. Texture coordinates are decoded on the fixed
      * range [-4, 4] as `q * (4 / 32767)`.
      *
-     * Keeping this as a separate type lets benchmarks compare the baseline Mesh3D2 path with
-     * the quantized decoder without changing the validated Mesh3D2 format.
+     * Keeping this as a separate type lets benchmarks compare different meshlet decoders side by side.
      */
     template<typename color_t>
     struct Mesh3D2_16

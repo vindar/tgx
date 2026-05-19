@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from .cones import apply_visibility_cones, auto_visibility_margin_deg
-from .exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_16b_header, export_mesh3d2_header, export_mesh3d3_16_header
+from .exporter import MeshletExportResult, export_mesh3d2_16_header, export_mesh3d2_16b_header, export_mesh3d3_16_header
 from .mesh import Meshlet, ObjMesh, compute_triangle_normals, unique_valid
 from .meshlets import MeshletBuildOptions, _make_meshlet, build_meshlets, meshlet_stats, sort_meshlets_by_material
 from .preprocess import PreprocessStats
@@ -99,7 +99,7 @@ def triangle_index_sets(mesh: ObjMesh, tri_indices: list[int]) -> tuple[set[int]
 
 
 def merge_small_material_meshlets(mesh: ObjMesh, meshlets: list[Meshlet], options: MeshletBuildOptions) -> list[Meshlet]:
-    """Merge material groups that fit in one local Mesh3D2 table."""
+    """Merge material groups that fit in one local meshlet table."""
     tri_normals = compute_triangle_normals(mesh)
     by_material: dict[str, list[int]] = {}
     material_order: list[str] = []
@@ -175,8 +175,8 @@ def export_common(
     cone_source: str = "normal",
     texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
-) -> Mesh3D2ExportResult:
-    fmt = getattr(args, "mesh3d2_format", "mesh3d2")
+) -> MeshletExportResult:
+    fmt = getattr(args, "mesh3d2_format", "mesh3d2_16b")
     if fmt == "mesh3d2_16":
         exporter = export_mesh3d2_16_header
     elif fmt == "mesh3d2_16b":
@@ -184,7 +184,7 @@ def export_common(
     elif fmt == "mesh3d3_16":
         exporter = export_mesh3d3_16_header
     else:
-        exporter = export_mesh3d2_header
+        raise ValueError(f"unsupported meshlet format: {fmt}")
     kwargs = dict(
         name=args.name or output.stem,
         color_type=color_type,

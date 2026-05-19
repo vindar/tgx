@@ -264,7 +264,7 @@ def _make_nocull_meshlet(mesh: ObjMesh, tri_indices: list[int]) -> Meshlet:
 
 
 def build_meshlets(mesh: ObjMesh, options: MeshletBuildOptions | None = None) -> list[Meshlet]:
-    """Build connected, local, normal-coherent meshlets under Mesh3D2 index limits."""
+    """Build connected, local, normal-coherent meshlets under meshlet index limits."""
     opt = options or MeshletBuildOptions()
     if opt.builder == "nocull":
         return build_meshlets_nocull(mesh, opt)
@@ -378,7 +378,7 @@ def sort_meshlets_by_material(meshlets: list[Meshlet]) -> list[Meshlet]:
 
 
 def build_meshlets_nocull(mesh: ObjMesh, options: MeshletBuildOptions | None = None) -> list[Meshlet]:
-    """Build large, compact Mesh3D2 meshlets with meshlet culling disabled.
+    """Build large, compact meshlets with meshlet culling disabled.
 
     This builder is intended as a compact Mesh3D-like mode. It first splits the mesh into
     strong compatible connected components: two triangles are connected only when they share an
@@ -736,7 +736,7 @@ def _visibility_cone_from_mask(views: np.ndarray, mask: np.ndarray, margin_deg: 
     visible_count = int(np.count_nonzero(mask))
     if visible_count == 0:
         return np.array([0.0, 0.0, 1.0], dtype=np.float64), -1.0, 0
-    # The TGX helper renders along camera->object directions. Runtime Mesh3D2 cones
+    # The TGX helper renders along camera->object directions. Runtime meshlet cones
     # store object->camera visibility directions, hence the sign flip.
     visible_camera_dirs = -views[mask]
     if fast:

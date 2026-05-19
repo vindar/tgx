@@ -16,7 +16,7 @@ from .stripifier import DEFAULT_LKH_EXE, StripifyOptions, stripify_component
 
 
 @dataclass
-class Mesh3D2ExportStats:
+class MeshletExportStats:
     meshlets: int
     triangles: int
     chains: int
@@ -27,9 +27,9 @@ class Mesh3D2ExportStats:
 
 
 @dataclass
-class Mesh3D2ExportResult:
+class MeshletExportResult:
     header: str
-    stats: Mesh3D2ExportStats
+    stats: MeshletExportStats
 
 
 @dataclass
@@ -204,7 +204,7 @@ def _append_corner(
 ) -> None:
     v = v_map[corner.v]
     if v > 127:
-        raise ValueError("Mesh3D2 local vertex index exceeded 127")
+        raise ValueError("meshlet local vertex index exceeded 127")
     out.append(v | (0x80 if direction else 0))
     if has_texcoords:
         out.append(vt_map[corner.vt])
@@ -300,9 +300,9 @@ def _encode_meshlet(mesh: ObjMesh, meshlet: Meshlet, material_index: int, *, use
     stream.append(0)
 
     if has_normals and len(normals) > 255:
-        raise ValueError("Mesh3D2 local normal index exceeded 255")
+        raise ValueError("meshlet local normal index exceeded 255")
     if has_texcoords and len(texcoords) > 255:
-        raise ValueError("Mesh3D2 local texture coordinate index exceeded 255")
+        raise ValueError("meshlet local texture coordinate index exceeded 255")
 
     return _EncodedMeshlet(material_index, vertices, normals, texcoords, bytes(stream), len(chains), vertex_refs_loaded)
 
@@ -500,7 +500,7 @@ def _pack_visibility_masks(visibility: np.ndarray) -> list[int]:
     return words
 
 
-def _export_mesh3d2_header_impl(
+def _export_meshlet_header_impl(
     mesh: ObjMesh,
     meshlets: list[Meshlet],
     *,
@@ -510,15 +510,15 @@ def _export_mesh3d2_header_impl(
     lkh_exe: str | Path = DEFAULT_LKH_EXE,
     texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
-    mesh_type: str = "Mesh3D2",
-    meshlet_type: str = "Meshlet3D2",
-    material_type: str = "MeshMaterial3D2",
-    mesh_id: int = 2,
-    payload16: bool = False,
+    mesh_type: str = "Mesh3D2_16",
+    meshlet_type: str = "Meshlet3D2_16",
+    material_type: str = "MeshMaterial3D2_16",
+    mesh_id: int = 216,
+    payload16: bool = True,
     meshlet16b: bool = False,
     cone_source: str = "normal",
     visibility_masks_words: list[int] | None = None,
-) -> Mesh3D2ExportResult:
+) -> MeshletExportResult:
     symbol = _identifier(name or mesh.name or "mesh")
     materials = sorted({m.material for m in meshlets})
     if not materials:
@@ -665,7 +665,7 @@ def _export_mesh3d2_header_impl(
     text.append("    };")
     text.append("")
 
-    stats = Mesh3D2ExportStats(
+    stats = MeshletExportStats(
         meshlets=len(meshlets),
         triangles=len(mesh.triangles),
         chains=chains,
@@ -674,32 +674,8 @@ def _export_mesh3d2_header_impl(
         payload_words=len(payload_words),
         materials=len(materials),
     )
-    return Mesh3D2ExportResult("\n".join(text), stats)
+    return MeshletExportResult("\n".join(text), stats)
 
-
-def export_mesh3d2_header(
-    mesh: ObjMesh,
-    meshlets: list[Meshlet],
-    *,
-    name: str | None = None,
-    color_type: str = "tgx::RGB565",
-    use_lkh: bool = True,
-    lkh_exe: str | Path = DEFAULT_LKH_EXE,
-    texture_symbols: dict[str, str] | None = None,
-    extra_includes: list[str] | None = None,
-    cone_source: str = "normal",
-) -> Mesh3D2ExportResult:
-    return _export_mesh3d2_header_impl(
-        mesh,
-        meshlets,
-        name=name,
-        color_type=color_type,
-        use_lkh=use_lkh,
-        lkh_exe=lkh_exe,
-        texture_symbols=texture_symbols,
-        extra_includes=extra_includes,
-        cone_source=cone_source,
-    )
 
 
 def export_mesh3d2_16_header(
@@ -713,8 +689,8 @@ def export_mesh3d2_16_header(
     texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
     cone_source: str = "normal",
-) -> Mesh3D2ExportResult:
-    return _export_mesh3d2_header_impl(
+) -> MeshletExportResult:
+    return _export_meshlet_header_impl(
         mesh,
         meshlets,
         name=name,
@@ -743,8 +719,8 @@ def export_mesh3d2_16b_header(
     texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
     cone_source: str = "normal",
-) -> Mesh3D2ExportResult:
-    return _export_mesh3d2_header_impl(
+) -> MeshletExportResult:
+    return _export_meshlet_header_impl(
         mesh,
         meshlets,
         name=name,
@@ -776,7 +752,7 @@ def export_mesh3d3_16_header(
     visibility_size: int = 1024,
     visibility_helper: str | Path | None = None,
     keep_visibility_files: bool = False,
-) -> Mesh3D2ExportResult:
+) -> MeshletExportResult:
     from .visibility import compute_tgx_visibility
 
     # Mesh3D3_16 stores object-to-camera directions. The TGX helper renders using
@@ -794,7 +770,7 @@ def export_mesh3d3_16_header(
     visibility = _dilate_oct_visibility(visibility, 32)
     visibility_masks_words = _pack_visibility_masks(visibility)
 
-    return _export_mesh3d2_header_impl(
+    return _export_meshlet_header_impl(
         mesh,
         meshlets,
         name=name,

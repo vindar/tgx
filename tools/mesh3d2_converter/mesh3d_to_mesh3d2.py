@@ -13,7 +13,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.mesh3d2_converter.cones import apply_visibility_cones, auto_visibility_margin_deg
-from tools.mesh3d2_converter.exporter import Mesh3D2ExportResult, export_mesh3d2_16_header, export_mesh3d2_16b_header, export_mesh3d2_header, export_mesh3d3_16_header
+from tools.mesh3d2_converter.exporter import MeshletExportResult, MeshletExportStats, export_mesh3d2_16_header, export_mesh3d2_16b_header, export_mesh3d3_16_header
 from tools.mesh3d2_converter.mesh import FaceVertex, Material, Meshlet, ObjMesh, Triangle
 from tools.mesh3d2_converter.meshlets import sort_meshlets_by_material
 from tools.mesh3d2_converter.pipeline import (
@@ -78,7 +78,7 @@ class TuneResult:
     params: dict[str, float | int | str]
     score: float
     meshlets: list[Meshlet]
-    export: Mesh3D2ExportResult
+    export: MeshletExportResult
     cull: dict[str, float]
     cone_source: str
 
@@ -396,7 +396,7 @@ def _relative_includes(includes: list[Path | str], output: Path) -> list[str]:
     return rels
 
 
-def _print_stats(mesh: ObjMesh, meshlets, result: Mesh3D2ExportResult, chain: list[LegacyMeshDecl], cone_source: str) -> None:
+def _print_stats(mesh: ObjMesh, meshlets, result: MeshletExportResult, chain: list[LegacyMeshDecl], cone_source: str) -> None:
     target = max(len(mesh.materials), int(np.ceil(len(mesh.triangles) / 64.0)))
     print("Legacy Mesh3D input:")
     print(f"  submeshes      : {len(chain)}")
@@ -407,7 +407,7 @@ def _print_stats(mesh: ObjMesh, meshlets, result: Mesh3D2ExportResult, chain: li
     print(f"  materials      : {len(mesh.materials)}")
     print(f"  target meshlets: {target} (heuristic: max(materials, triangles/64))")
     stats = result.stats
-    print("Mesh3D2 output:")
+    print("meshlet output:")
     print(f"  meshlets       : {stats.meshlets}")
     print(f"  chains         : {stats.chains} ({100.0 * stats.chains / max(1, stats.triangles):.2f}% of triangles)")
     print(f"  vertex refs    : {stats.vertex_refs_loaded} ({stats.vertex_refs_loaded / max(1, stats.triangles):.3f} per tri)")
@@ -483,7 +483,7 @@ def _candidate_params(mesh: ObjMesh, mode: str) -> list[tuple[str, dict[str, flo
     return base
 
 
-def _score_candidate(stats: Mesh3D2ExportStats, cull: dict[str, float], texture_heavy: bool) -> float:
+def _score_candidate(stats: MeshletExportStats, cull: dict[str, float], texture_heavy: bool) -> float:
     tri = max(1, stats.triangles)
     predicted_tri_cost = tri * (1.0 - cull["net_mean"])
     if texture_heavy:
@@ -498,14 +498,14 @@ def _score_candidate(stats: Mesh3D2ExportStats, cull: dict[str, float], texture_
 
 
 def _exporter_for_args(args: argparse.Namespace):
-    fmt = getattr(args, "mesh3d2_format", "mesh3d2")
+    fmt = getattr(args, "mesh3d2_format", "mesh3d2_16b")
     if fmt == "mesh3d2_16":
         return export_mesh3d2_16_header
     if fmt == "mesh3d2_16b":
         return export_mesh3d2_16b_header
     if fmt == "mesh3d3_16":
         return export_mesh3d3_16_header
-    return export_mesh3d2_header
+    raise ValueError(f"unsupported meshlet format: {fmt}")
 
 
 def _evaluate_candidate(
@@ -544,7 +544,7 @@ def _evaluate_candidate(
         texture_symbols=texture_symbols,
         extra_includes=[],
     )
-    if getattr(args, "mesh3d2_format", "mesh3d2") == "mesh3d3_16":
+    if getattr(args, "mesh3d2_format", "mesh3d2_16b") == "mesh3d3_16":
         export_kwargs.update(
             visibility_size=getattr(args, "visibility_size", 1024),
             visibility_helper=getattr(args, "visibility_helper", None),
@@ -718,13 +718,13 @@ def convert(args: argparse.Namespace) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Convert a TGX legacy Mesh3D header into a Mesh3D2 header")
+    parser = argparse.ArgumentParser(description="Convert a TGX legacy Mesh3D header into a meshlet header")
     parser.add_argument("input", help="legacy Mesh3D .h file")
-    parser.add_argument("-o", "--output", required=True, help="output Mesh3D2 header")
+    parser.add_argument("-o", "--output", required=True, help="output meshlet header")
     parser.add_argument("--root", help="root Mesh3D symbol; auto-detected for a single chain")
     parser.add_argument("--name", help="output C++ symbol")
     parser.add_argument("--color-type", help="override color type; defaults to the legacy Mesh3D color type")
-    parser.add_argument("--mesh3d2-format", choices=("mesh3d2", "mesh3d2_16", "mesh3d2_16b", "mesh3d3_16"), default="mesh3d2", help="output payload format")
+    parser.add_argument("--mesh3d2-format", choices=("mesh3d2_16", "mesh3d2_16b", "mesh3d3_16"), default="mesh3d2_16b", help="output payload format")
     add_build_options(parser, source="legacy")
     parser.add_argument("--lkh", default=str(DEFAULT_LKH_EXE))
     add_visibility_options(parser, default_samples=1024, default_size=512)
@@ -741,7 +741,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--auto-tune-visibility-size", type=int, default=512, help="TGX visibility render size used for auto-tune finalists")
     parser.add_argument("--auto-tune-report", help="optional JSON report for auto-tune candidates")
     parser.add_argument("--no-sort-by-material", dest="sort_by_material", action="store_false", help="keep meshlets in builder order instead of grouping them by material")
-    parser.add_argument("--no-merge-small-materials", dest="merge_small_materials", action="store_false", help="do not merge material groups that fit in one Mesh3D2 local table")
+    parser.add_argument("--no-merge-small-materials", dest="merge_small_materials", action="store_false", help="do not merge material groups that fit in one local meshlet table")
     parser.set_defaults(preprocess_legacy=True)
     parser.set_defaults(sort_by_material=True)
     parser.set_defaults(merge_small_materials=True)
