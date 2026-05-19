@@ -1,0 +1,307 @@
+/** @file Mesh3Dv2.inl */
+//
+// Copyright 2020 Arvind Singh
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+//version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; If not, see <http://www.gnu.org/licenses/>.
+#ifndef _TGX_MESH3DV2_INL_
+#define _TGX_MESH3DV2_INL_
+
+
+namespace tgx
+    {
+
+
+    namespace Mesh3Dv2_detail
+        {
+
+        /** Align a byte pointer on a 4-byte boundary and adjust the remaining space. */
+        inline void cache_align4(char*& ptr, size_t& space)
+            {
+            if (space < 4) return;
+            const size_t adr = (size_t)(ptr);
+            const size_t r = 4 - (adr % 4);
+            if (r != 4)
+                {
+                ptr += r;
+                space -= r;
+                }
+            }
+
+
+        template<typename color_t>
+        class CacheMesh3Dv2
+            {
+        public:
+
+            CacheMesh3Dv2(void* ram1_ptr, size_t ram1_size, void* ram2_ptr, size_t ram2_size)
+                : _ram1_size(ram1_size), _ram2_size(ram2_size), _ram1_ptr((char*)ram1_ptr), _ram2_ptr((char*)ram2_ptr), _nb_entries(0)
+                {
+                if (!_ram1_ptr) _ram1_size = 0;
+                cache_align4(_ram1_ptr, _ram1_size);
+                if (!_ram2_ptr) _ram2_size = 0;
+                cache_align4(_ram2_ptr, _ram2_size);
+                }
+
+            size_t remaining_ram1() const { return _ram1_size; }
+
+            size_t remaining_ram2() const { return _ram2_size; }
+
+            Mesh3Dv2<color_t>* cache_mesh(const Mesh3Dv2<color_t>* mesh)
+                {
+                if (mesh == nullptr) return nullptr;
+                if (!can_alloc(sizeof(Mesh3Dv2<color_t>))) return nullptr;
+
+                Mesh3Dv2<color_t>* new_mesh = (Mesh3Dv2<color_t>*)alloc(sizeof(Mesh3Dv2<color_t>));
+                memcpy(new_mesh, mesh, sizeof(Mesh3Dv2<color_t>));
+                return new_mesh;
+                }
+
+            const uint32_t* cache_payload(size_t size_bytes, const uint32_t* payload)
+                {
+                return (const uint32_t*)cache_array(size_bytes, (const char*)payload);
+                }
+
+            const Meshlet3Dv2* cache_meshlets(uint16_t nb_meshlets, const Meshlet3Dv2* meshlets)
+                {
+                return (const Meshlet3Dv2*)cache_array(((size_t)nb_meshlets) * sizeof(Meshlet3Dv2), (const char*)meshlets);
+                }
+
+            const MeshMaterial3Dv2<color_t>* cache_materials(uint16_t nb_materials, const MeshMaterial3Dv2<color_t>* materials)
+                {
+                return (const MeshMaterial3Dv2<color_t>*)cache_array(((size_t)nb_materials) * sizeof(MeshMaterial3Dv2<color_t>), (const char*)materials);
+                }
+
+            const Image<color_t>* cache_image(const Image<color_t>* im)
+                {
+                if (im == nullptr) return nullptr;
+                char* p = find_in_cache((const char*)im);
+                if (p != nullptr) return ((const Image<color_t>*)p);
+
+                const size_t image_size = sizeof(Image<color_t>);
+                const size_t data_size = ((size_t)im->stride()) * ((size_t)im->ly()) * sizeof(color_t);
+
+                if (!can_alloc(image_size + data_size)) return im;
+
+                Image<color_t>* new_im = (Image<color_t>*)alloc(image_size);
+                memcpy(new_im, im, image_size);
+
+                color_t* data = (color_t*)alloc(data_size);
+                memcpy(data, im->data(), data_size);
+
+                new_im->set(data, im->lx(), im->ly(), im->stride());
+
+                add_in_cache((const char*)im, (char*)new_im);
+                return new_im;
+                }
+
+        private:
+
+            bool can_alloc(size_t size) const
+                {
+                return ((size + 8 < _ram1_size) || (size + 8 < _ram2_size));
+                }
+
+            char* alloc(size_t size)
+                {
+                if (size < _ram1_size)
+                    {
+                    char* ptr = _ram1_ptr;
+                    _ram1_ptr += size;
+                    _ram1_size -= size;
+                    cache_align4(_ram1_ptr, _ram1_size);
+                    return ptr;
+                    }
+                if (size < _ram2_size)
+                    {
+                    char* ptr = _ram2_ptr;
+                    _ram2_ptr += size;
+                    _ram2_size -= size;
+                    cache_align4(_ram2_ptr, _ram2_size);
+                    return ptr;
+                    }
+                return nullptr;
+                }
+
+            char* find_in_cache(const char* ptr) const
+                {
+                for (int i = 0; i < _nb_entries; i++)
+                    {
+                    if (_keys[i] == ptr) return _values[i];
+                    }
+                return nullptr;
+                }
+
+            bool add_in_cache(const char* ptr_src, char* ptr_cached)
+                {
+                if (_nb_entries == MAX_NB_KEYS) return false;
+                _keys[_nb_entries] = ptr_src;
+                _values[_nb_entries] = ptr_cached;
+                _nb_entries++;
+                return true;
+                }
+
+            const char* cache_array(size_t size, const char* src_ptr)
+                {
+                if (src_ptr == nullptr) return nullptr;
+                if (size == 0) return src_ptr;
+                char* p = find_in_cache(src_ptr);
+                if (p != nullptr) return p;
+                if (!can_alloc(size)) return src_ptr;
+                p = alloc(size);
+                memcpy(p, src_ptr, size);
+                add_in_cache(src_ptr, p);
+                return p;
+                }
+
+            size_t      _ram1_size;
+            size_t      _ram2_size;
+            char*       _ram1_ptr;
+            char*       _ram2_ptr;
+
+            static const int MAX_NB_KEYS = 256;
+
+            int         _nb_entries;
+            const char* _keys[MAX_NB_KEYS];
+            char*       _values[MAX_NB_KEYS];
+            };
+
+
+        inline size_t round_up4(size_t value)
+            {
+            return (value + 3) & ~(size_t)3;
+            }
+
+
+        inline size_t face_stream_size_bytes(const uint8_t* face, bool has_texcoords, bool has_normals)
+            {
+            const uint8_t* pos = face;
+            const size_t elem_size = 1 + (has_texcoords ? 1 : 0) + (has_normals ? 1 : 0);
+            uint8_t nbt;
+            while ((nbt = *(pos++)) > 0)
+                {
+                pos += (((size_t)nbt) + 2) * elem_size;
+                }
+            return (size_t)(pos - face);
+            }
+
+
+        inline size_t meshlet_payload_size_bytes(const Meshlet3Dv2& meshlet, const uint8_t* base)
+            {
+            const uint8_t* pos = base;
+            pos += ((size_t)meshlet.nb_vertices) * 3 * sizeof(int16_t);
+            pos += ((size_t)meshlet.nb_normals) * 3 * sizeof(int16_t);
+            pos += ((size_t)meshlet.nb_texcoords) * 2 * sizeof(int16_t);
+            pos += face_stream_size_bytes(pos, meshlet.nb_texcoords != 0, meshlet.nb_normals != 0);
+            return round_up4((size_t)(pos - base));
+            }
+
+
+        template<typename color_t>
+        size_t payload_size_bytes(const Mesh3Dv2<color_t>* mesh)
+            {
+            if ((mesh == nullptr) || (mesh->payload == nullptr) || (mesh->meshlets == nullptr) || (mesh->nb_meshlets == 0)) return 0;
+
+            const Meshlet3Dv2& last = mesh->meshlets[mesh->nb_meshlets - 1];
+            const size_t last_offset = ((size_t)last.payload_offset32) * sizeof(uint32_t);
+            const uint8_t* const payload = (const uint8_t*)mesh->payload;
+            return last_offset + meshlet_payload_size_bytes(last, payload + last_offset);
+            }
+
+        }
+
+
+    template<typename color_t> const Mesh3Dv2<color_t>* cacheMesh(const Mesh3Dv2<color_t>* mesh,
+                                                                  void* ram1_buffer, size_t ram1_size,
+                                                                  void* ram2_buffer, size_t ram2_size,
+                                                                  const char* copy_order,
+                                                                  size_t* ram1_used,
+                                                                  size_t* ram2_used)
+        {
+        Mesh3Dv2_detail::CacheMesh3Dv2<color_t> CM(ram1_buffer, ram1_size, ram2_buffer, ram2_size);
+
+        Mesh3Dv2<color_t>* new_mesh = CM.cache_mesh(mesh);
+        if (new_mesh == nullptr)
+            {
+            if (ram1_used) { *ram1_used = 0; }
+            if (ram2_used) { *ram2_used = 0; }
+            return mesh;
+            }
+
+        if (copy_order == nullptr) copy_order = "";
+
+        const size_t payload_size = Mesh3Dv2_detail::payload_size_bytes(mesh);
+        bool material_writable = (new_mesh->materials != mesh->materials);
+
+        for (int k = 0; copy_order[k] != 0; k++)
+            {
+            const char c = copy_order[k];
+            switch (c)
+                {
+            case 'P':
+            case 'p':
+                if (new_mesh->payload == mesh->payload)
+                    {
+                    new_mesh->payload = CM.cache_payload(payload_size, new_mesh->payload);
+                    }
+                break;
+
+            case 'L':
+            case 'l':
+                if (new_mesh->meshlets == mesh->meshlets)
+                    {
+                    new_mesh->meshlets = CM.cache_meshlets(new_mesh->nb_meshlets, new_mesh->meshlets);
+                    }
+                break;
+
+            case 'M':
+            case 'm':
+                if (!material_writable)
+                    {
+                    new_mesh->materials = CM.cache_materials(new_mesh->nb_materials, new_mesh->materials);
+                    material_writable = (new_mesh->materials != mesh->materials);
+                    }
+                break;
+
+            case 'I':
+            case 'i':
+                if (!material_writable)
+                    {
+                    new_mesh->materials = CM.cache_materials(new_mesh->nb_materials, new_mesh->materials);
+                    material_writable = (new_mesh->materials != mesh->materials);
+                    }
+                if (material_writable)
+                    {
+                    MeshMaterial3Dv2<color_t>* const materials = const_cast<MeshMaterial3Dv2<color_t>*>(new_mesh->materials);
+                    for (uint16_t i = 0; i < new_mesh->nb_materials; i++)
+                        {
+                        materials[i].texture = CM.cache_image(materials[i].texture);
+                        }
+                    }
+                break;
+                }
+            }
+
+        if (ram1_used) { *ram1_used = ram1_size - CM.remaining_ram1(); }
+        if (ram2_used) { *ram2_used = ram2_size - CM.remaining_ram2(); }
+
+        return new_mesh;
+        }
+
+
+    }
+
+
+#endif
+
+/* end of file */

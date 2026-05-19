@@ -5,6 +5,11 @@ from .meshlets import MeshletBuildOptions
 from .stripifier import DEFAULT_LKH_EXE
 
 
+DEFAULT_MESHLET_PROFILE = "visibility_merge"
+DEFAULT_TARGET_VERTICES = 30
+DEFAULT_MAX_NORMAL_ANGLE_DEG = 90.0
+
+
 MESHLET_PROFILES: dict[str, dict[str, float | int | str]] = {
     "balanced": dict(target_vertices=30, max_triangles=127, max_normal_angle_deg=90.0, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, merge_passes=1, smooth_passes=0, merge_max_normal_angle_deg=48.0),
     "smooth": dict(target_vertices=30, max_triangles=127, max_normal_angle_deg=90.0, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, merge_passes=1, smooth_passes=3, merge_max_normal_angle_deg=48.0),
@@ -13,7 +18,7 @@ MESHLET_PROFILES: dict[str, dict[str, float | int | str]] = {
     "material": dict(target_vertices=112, max_triangles=220, max_normal_angle_deg=125.0, radius_weight=0.5, normal_weight=0.5, vertex_weight=0.1, stop_score=999.0, merge_passes=2, smooth_passes=0, merge_max_normal_angle_deg=140.0),
     "non_culling": dict(builder="hybrid", target_vertices=127, max_triangles=512, max_normal_angle_deg=180.0, radius_weight=0.8, normal_weight=0.0, vertex_weight=0.1, stop_score=999.0, compatible_edge_weight=8.0, incompatible_edge_penalty=4.0, compatible_merge_weight=0.05, merge_passes=3, smooth_passes=0, merge_max_normal_angle_deg=180.0),
     "nocull": dict(builder="nocull", target_vertices=127, max_triangles=65535, max_normal_angle_deg=180.0, radius_weight=0.0, normal_weight=0.0, vertex_weight=0.0, stop_score=999.0, merge_passes=1, smooth_passes=0, merge_max_normal_angle_deg=180.0),
-    "visibility_merge": dict(builder="visibility_merge", target_vertices=30, max_triangles=127, max_normal_angle_deg=90.0, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, compatible_edge_weight=0.0, incompatible_edge_penalty=0.0, visibility_merge_cone_weight=45.0, visibility_merge_samples=1024, visibility_merge_size=1024, visibility_merge_margin_deg=-1.0, merge_passes=1, smooth_passes=0, merge_max_normal_angle_deg=48.0),
+    "visibility_merge": dict(builder="visibility_merge", target_vertices=DEFAULT_TARGET_VERTICES, max_triangles=127, max_normal_angle_deg=DEFAULT_MAX_NORMAL_ANGLE_DEG, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, compatible_edge_weight=0.0, incompatible_edge_penalty=0.0, visibility_merge_cone_weight=45.0, visibility_merge_samples=1024, visibility_merge_size=1024, visibility_merge_margin_deg=-1.0, merge_passes=1, smooth_passes=0, merge_max_normal_angle_deg=48.0),
 }
 
 
@@ -105,7 +110,7 @@ def _arg_name(profile_key: str) -> str:
 
 
 def _base_profile_name(args, mesh: ObjMesh | None, *, source: str) -> str:
-    requested = getattr(args, "profile", "custom")
+    requested = getattr(args, "profile", DEFAULT_MESHLET_PROFILE)
     profile = resolve_profile(mesh, requested, source=source)
     builder = getattr(args, "builder", None)
     if profile == "custom" and builder in MESHLET_PROFILES:

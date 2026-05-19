@@ -31,15 +31,16 @@ Save a meshlet preview image:
 py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 view D:\Programmation\myProjects\tgxmeshlets\spot.obj --meshlets --save tmp\spot_meshlets.png
 ```
 
-The default meshlet profile balances culling quality, meshlet test overhead and stripification:
+The default meshlet profile is `visibility_merge`. It balances culling quality,
+meshlet test overhead and stripification, using the MCU-tuned defaults:
 
 ```text
-builder        : greedy growth + one merge pass
-target vertices: 52
-max triangles  : 70
-max normal cone: 42 degrees
+builder        : visibility_merge
+target vertices: 30
+max triangles  : 127
+max normal cone: 90 degrees
 merge max cone : 48 degrees
-meshlet cost   : 2 triangle-equivalent units
+visibility views: 1024 at 1024x1024
 ```
 
 The `meshlet cost` is used only for the quality estimate. It subtracts a fixed per-meshlet runtime overhead from the gross number of culled triangles, making it easier to compare many small meshlets against fewer large meshlets. The tuning experiments used a cost of 3 triangle-equivalent units, which favors fewer, well-connected meshlets on MCU targets.
@@ -58,12 +59,11 @@ py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 view D:\Programmation\myProjects
 
 The default visibility-cone pass uses 2048 orthographic views rendered at 768x768 by the TGX helper. The default margin is automatic: it is based on the average angular coverage of the sampled views, with a small safety allowance for non-perfect sampling and raster effects.
 
-Export a normalized model as a `Mesh3Dv2<RGB565>` header. The `auto` profile selects a
-smooth, culling-oriented split for small models and a coarser split for large models where
-meshlet overhead and chain count matter more:
+Export a normalized model as a `Mesh3Dv2<RGB565>` header. Without an explicit
+`--profile`, the converter uses the `visibility_merge` defaults above:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export D:\Programmation\myProjects\tgxmeshlets\bunny.obj -o tmp\bunny_mesh3dv2.h --name bunny_mesh3dv2 --normalize --profile auto --visibility-cones --cone-source visibility
+py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export D:\Programmation\myProjects\tgxmeshlets\bunny.obj -o tmp\bunny_mesh3dv2.h --name bunny_mesh3dv2 --normalize
 ```
 
 The export command:
@@ -140,10 +140,10 @@ The legacy converter:
 - writes relative includes to the original texture headers,
 - builds meshlets and 8-bit local face streams for the new runtime path.
 
-The default `--profile auto` detects multi-material legacy meshes and uses a coarser
-material-aware split. It keeps meshlets inside a single material, estimates a global target
-meshlet count for the whole mesh, and groups exported meshlets by material so the runtime
-lazy material loader changes texture/color state as rarely as possible.
+The default `visibility_merge` profile keeps meshlets inside a single material and
+groups exported meshlets by material so the runtime lazy material loader changes
+texture/color state as rarely as possible. The older `auto` profile is still
+available explicitly for quick heuristic conversions.
 
 For best culling quality, compute visibility cones from the complete mesh, not from each
 material independently:

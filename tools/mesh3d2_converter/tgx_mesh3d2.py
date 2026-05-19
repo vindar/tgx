@@ -188,7 +188,7 @@ def cmd_wizard(args: argparse.Namespace) -> None:
     default_name = obj_path.stem + "_mesh3dv2"
     name = _ask("C++ mesh symbol", default_name)
     output = _ask("Output header", str(Path.cwd() / (name + ".h")))
-    profile = _ask("Meshlet profile (auto/smooth/fast/coarse/custom)", "auto")
+    profile = _ask("Meshlet profile (visibility_merge/auto/smooth/fast/coarse/custom)", "visibility_merge")
     normalize = _ask("Normalize to [-1,1] box (y/n)", "y").lower().startswith("y")
     visibility = _ask("Compute TGX visibility cones (y/n)", "y").lower().startswith("y")
     textures = _ask("Export OBJ material textures (y/n)", "y").lower().startswith("y")

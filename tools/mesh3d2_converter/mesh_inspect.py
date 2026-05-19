@@ -244,6 +244,14 @@ def _parse_texture_headers(raw_text: str, base: Path) -> dict[str, Path]:
     return out
 
 
+def _read_generated_pair(path: Path) -> tuple[str, str]:
+    raw = path.read_text(encoding="utf-8", errors="replace")
+    source = path.with_suffix(".cpp")
+    if source.exists():
+        raw = raw + "\n" + source.read_text(encoding="utf-8", errors="replace")
+    return raw, _strip_comments(raw)
+
+
 def _parse_texture_image(path: Path, symbol: str) -> TextureImage | None:
     text = _strip_comments(path.read_text(encoding="utf-8", errors="replace"))
     data_match = re.search(rf"const\s+uint16_t\s+{re.escape(symbol)}_data\s*\[\s*(\d+)\s*\*\s*(\d+)\s*\]\s*PROGMEM\s*=", text)
@@ -406,8 +414,7 @@ def _decode_payload(mesh: DecodedHeaderMesh, payload_words: list[int]) -> None:
 
 def parse_mesh3d2_header(path: str | Path) -> DecodedHeaderMesh:
     header = Path(path).resolve()
-    raw = header.read_text(encoding="utf-8", errors="replace")
-    text = _strip_comments(raw)
+    raw, text = _read_generated_pair(header)
     decl = re.search(r"const\s+tgx::(Mesh3Dv2)<\s*([^>]+?)\s*>\s+(\w+)\s*(?:PROGMEM\s*)?=", text)
     if not decl:
         raise ValueError("no Mesh3Dv2 declaration found")
@@ -443,7 +450,8 @@ def parse_mesh3d2_header(path: str | Path) -> DecodedHeaderMesh:
 
 
 def detect_mesh_type(path: str | Path) -> str:
-    text = Path(path).read_text(encoding="utf-8", errors="replace")
+    raw, _ = _read_generated_pair(Path(path).resolve())
+    text = raw
     if re.search(r"tgx::Mesh3Dv2\s*<", text):
         return "Mesh3Dv2"
     if re.search(r"tgx::Mesh3D\s*<", text):

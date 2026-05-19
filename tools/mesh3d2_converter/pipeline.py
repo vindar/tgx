@@ -11,7 +11,7 @@ from .mesh import Meshlet, ObjMesh, compute_triangle_normals, unique_valid
 from .meshlets import MeshletBuildOptions, _make_meshlet, build_meshlets, meshlet_stats, sort_meshlets_by_material
 from .preprocess import PreprocessStats
 from .progress import log, step
-from .profiles import meshlet_options_from_args, profile_names
+from .profiles import DEFAULT_MESHLET_PROFILE, DEFAULT_MAX_NORMAL_ANGLE_DEG, DEFAULT_TARGET_VERTICES, meshlet_options_from_args, profile_names
 from .quality import cull_ratio_stats, fibonacci_sphere
 from .stripifier import DEFAULT_LKH_EXE, solver_stats_text
 from .validate import validate_mesh_for_export
@@ -21,7 +21,7 @@ from .visibility import compute_tgx_visibility
 def add_build_options(parser: argparse.ArgumentParser, *, source: str = "obj") -> None:
     include_obj = source != "legacy"
     include_legacy = True
-    parser.add_argument("--profile", choices=profile_names(include_obj=include_obj, include_legacy=include_legacy), default="custom", help="meshlet tuning profile; custom uses the low-level options below")
+    parser.add_argument("--profile", choices=profile_names(include_obj=include_obj, include_legacy=include_legacy), default=DEFAULT_MESHLET_PROFILE, help=f"meshlet tuning profile; default is {DEFAULT_MESHLET_PROFILE} (target vertices {DEFAULT_TARGET_VERTICES}, max normal angle {DEFAULT_MAX_NORMAL_ANGLE_DEG:g})")
     parser.add_argument("--builder", choices=("greedy", "hybrid", "nocull", "visibility_merge"), default=None)
     parser.add_argument("--target-vertices", type=int, default=None)
     parser.add_argument("--max-vertices", type=int, default=None)
@@ -187,6 +187,7 @@ def export_common(
         lkh_exe=getattr(args, "lkh", DEFAULT_LKH_EXE),
         texture_symbols=texture_symbols or {},
         extra_includes=extra_includes or [],
+        header_filename=output.name,
     )
     kwargs.update(cone_source=cone_source)
     with step("encode/export mesh", f"{fmt}, {len(meshlets)} meshlets"):
@@ -200,6 +201,11 @@ def export_common(
     with step("write header", str(output)):
         with output.open("w", encoding="utf-8", newline="\n") as handle:
             handle.write(result.header)
+    if result.source is not None:
+        source_output = output.with_suffix(".cpp")
+        with step("write source", str(source_output)):
+            with source_output.open("w", encoding="utf-8", newline="\n") as handle:
+                handle.write(result.source)
     return result
 
 

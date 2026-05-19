@@ -251,7 +251,63 @@ namespace tgx
         };
 
 
+    /**
+     * Creates a cached version of a Mesh3Dv2 object by copying selected data arrays
+     * into user-supplied RAM buffers.
+     *
+     * This is useful on MCUs where meshes are stored in slow flash/PROGMEM but some
+     * RAM is available for faster rendering. The method first copies the small
+     * Mesh3Dv2 structure itself, then tries to copy the requested arrays in the
+     * order specified by copy_order. If an array does not fit in either buffer, its
+     * original pointer is kept.
+     *
+     * Copy-order letters:
+     *
+     * - "P" = meshlet payload blob.
+     * - "L" = meshlet header array.
+     * - "M" = material array.
+     * - "I" = texture images referenced by the material array.
+     *
+     * Texture caching requires a writable material array because texture pointers
+     * inside materials must be remapped. Therefore, requesting "I" implicitly tries
+     * to cache the material array first if it has not already been cached. If the
+     * material array cannot be cached, textures are left untouched.
+     *
+     * @remark
+     * 1. The memory buffers supplied do not need to be aligned; the method aligns
+     *    allocations internally.
+     * 2. Mesh3Dv2 has no linked sub-meshes. Multi-material models are represented
+     *    by the material array and per-meshlet material indices.
+     * 3. The payload size is computed once by scanning the final meshlet payload.
+     *    This has no runtime rendering cost.
+     * 4. The returned mesh points either to cached arrays or to the original arrays
+     *    for data that did not fit in the supplied buffers.
+     *
+     * @param mesh        Pointer to the Mesh3Dv2 object to cache.
+     * @param ram1_buffer Pointer to the first memory buffer, usually the fastest RAM.
+     * @param ram1_size   Size in bytes of the first RAM buffer.
+     * @param ram2_buffer Pointer to a second memory buffer, may be nullptr.
+     * @param ram2_size   Size in bytes of the second RAM buffer, or 0 if not supplied.
+     * @param copy_order  Optional C string describing which data should be copied
+     *                    and in which order. Default is "PLMI".
+     * @param ram1_used   If non-null, receives the number of bytes consumed in ram1_buffer.
+     * @param ram2_used   If non-null, receives the number of bytes consumed in ram2_buffer.
+     *
+     * @returns The cached mesh object, or the original mesh if even the Mesh3Dv2
+     *          structure itself could not be copied.
+     */
+    template<typename color_t> const Mesh3Dv2<color_t>* cacheMesh(const Mesh3Dv2<color_t>* mesh,
+                                                                  void* ram1_buffer, size_t ram1_size,
+                                                                  void* ram2_buffer, size_t ram2_size,
+                                                                  const char* copy_order = "PLMI",
+                                                                  size_t* ram1_used = nullptr,
+                                                                  size_t* ram2_used = nullptr);
+
+
 }
+
+
+#include "Mesh3Dv2.inl"
 
 
 #endif
