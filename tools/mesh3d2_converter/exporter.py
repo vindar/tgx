@@ -333,13 +333,13 @@ def _payload16_for_meshlet(mesh: ObjMesh, meshlet: Meshlet, encoded: _EncodedMes
     center = meshlet.center if center is None else np.asarray(center, dtype=np.float64)
     radius = float(meshlet.radius if radius is None else radius)
     if (not math.isfinite(radius)) or radius <= 0.0:
-        raise ValueError("Mesh3D2_16b export requires each meshlet to have a positive finite bounding sphere radius")
+        raise ValueError("Mesh3Dv2 export requires each meshlet to have a positive finite bounding sphere radius")
     vertex_scale = 32767.0 / radius
 
     for index in encoded.vertices:
         rel = mesh.vertices[index] - center
         if float(np.linalg.norm(rel)) > radius * (1.0 + 1e-6):
-            raise ValueError("Mesh3D2_16b meshlet bounding sphere does not contain all local vertices")
+            raise ValueError("Mesh3Dv2 meshlet bounding sphere does not contain all local vertices")
         q = np.rint(rel * vertex_scale).astype(np.int64)
         payload.extend(_pack_i16(_clamp_i16(int(x)) for x in q))
     for index in encoded.normals:
@@ -428,9 +428,9 @@ def _export_meshlet_header_impl(
     lkh_exe: str | Path = DEFAULT_LKH_EXE,
     texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
-    mesh_type: str = "Mesh3D2_16b",
-    meshlet_type: str = "Meshlet3D2_16b",
-    material_type: str = "MeshMaterial3D2_16b",
+    mesh_type: str = "Mesh3Dv2",
+    meshlet_type: str = "Meshlet3Dv2",
+    material_type: str = "MeshMaterial3Dv2",
     mesh_id: int = 2162,
     cone_source: str = "normal",
 ) -> MeshletExportResult:
@@ -557,7 +557,7 @@ def _export_meshlet_header_impl(
 
 
 
-def export_mesh3d2_16b_header(
+def export_mesh3dv2_header(
     mesh: ObjMesh,
     meshlets: list[Meshlet],
     *,
@@ -578,9 +578,9 @@ def export_mesh3d2_16b_header(
         lkh_exe=lkh_exe,
         texture_symbols=texture_symbols,
         extra_includes=extra_includes,
-        mesh_type="Mesh3D2_16b",
-        meshlet_type="Meshlet3D2_16b",
-        material_type="MeshMaterial3D2_16b",
+        mesh_type="Mesh3Dv2",
+        meshlet_type="Meshlet3Dv2",
+        material_type="MeshMaterial3Dv2",
         mesh_id=2162,
         cone_source=cone_source,
     )

@@ -38,7 +38,7 @@
 #include "Color.h"
 #include "Image.h"
 #include "Mesh3D.h"
-#include "Mesh3D2_16b.h"
+#include "Mesh3Dv2.h"
 #include "Renderer3D.h"
 
 #endif

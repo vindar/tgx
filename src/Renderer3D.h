@@ -39,7 +39,7 @@
 #include "Rasterizer.h"
 
 #include "Mesh3D.h"
-#include "Mesh3D2_16b.h"
+#include "Mesh3Dv2.h"
 
 namespace tgx
 {
@@ -818,18 +818,18 @@ namespace tgx
 
 
         /**
-         * Draw a Mesh3D2_16b object.
+         * Draw a Mesh3Dv2 object.
          *
          * @param   mesh                The mesh to draw.
-         * @param   use_mesh_material   True (default) to use Mesh3D2_16b material colors and
+         * @param   use_mesh_material   True (default) to use Mesh3Dv2 material colors and
          *                              coefficients, otherwise use the current renderer material.
          *
          * @remark
-         * Mesh3D2_16b stores geometry in compact meshlets. The renderer first decodes the
+         * Mesh3Dv2 stores geometry in compact meshlets. The renderer first decodes the
          * quantized meshlet sphere/cone metadata, optionally rejects the whole meshlet, then
          * reads and rasterizes the local 16-bit payload only for visible meshlets.
          */
-        void drawMesh(const Mesh3D2_16b<color_t>* mesh, bool use_mesh_material = true);
+        void drawMesh(const Mesh3Dv2<color_t>* mesh, bool use_mesh_material = true);
 
 
         /**
@@ -1752,10 +1752,10 @@ namespace tgx
         /** Method called by drawMesh() which does the actual drawing. */
         void _drawMesh(const int RASTER_TYPE, const Mesh3D<color_t>* mesh);
 
-        /** Method called by drawMesh() which does the actual Mesh3D2_16b drawing. */
-        void _drawMesh(const int RASTER_TYPE, const Mesh3D2_16b<color_t>* mesh, bool use_mesh_material);
+        /** Method called by drawMesh() which does the actual Mesh3Dv2 drawing. */
+        void _drawMesh(const int RASTER_TYPE, const Mesh3Dv2<color_t>* mesh, bool use_mesh_material);
 
-        /** Return true when a decoded Mesh3D2_16b visibility cone rejects the meshlet for the current view. */
+        /** Return true when a decoded Mesh3Dv2 visibility cone rejects the meshlet for the current view. */
         TGX_INLINE inline bool _discardMeshlet16b(const fVec3& sphere_center, float sphere_radius, const fVec3& cone_dir, float cone_cos) const
             {
             if (cone_cos <= -1.0f) return false;

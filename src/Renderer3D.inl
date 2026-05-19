@@ -1185,7 +1185,7 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawMesh(const Mesh3D2_16b<color_t>* mesh, bool use_mesh_material)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawMesh(const Mesh3Dv2<color_t>* mesh, bool use_mesh_material)
             {
             if (!_validDraw()) return;
             if ((mesh == nullptr) || (mesh->meshlets == nullptr) || (mesh->payload == nullptr) || (mesh->materials == nullptr)) return;
@@ -1386,7 +1386,7 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>  TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawMesh(const int RASTER_TYPE, const Mesh3D2_16b<color_t>* mesh, bool use_mesh_material)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawMesh(const int RASTER_TYPE, const Mesh3Dv2<color_t>* mesh, bool use_mesh_material)
             {
             const bool bbox_uninitialized = ((mesh->bounding_box.minX == 0) && (mesh->bounding_box.maxX == 0) &&
                                              (mesh->bounding_box.minY == 0) && (mesh->bounding_box.maxY == 0) &&
@@ -1423,7 +1423,7 @@ namespace tgx
             const float normal_scale = (1.0f / 32767.0f);
             const float texcoord_scale = (4.0f / 32767.0f);
 
-            // Mesh3D2_16b stores meshlet sphere/cone metadata as 16-bit values
+            // Mesh3Dv2 stores meshlet sphere/cone metadata as 16-bit values
             // relative to the global bounding box. Decode scales once per mesh.
             const float meshlet_bbox_cx = 0.5f * (mesh->bounding_box.minX + mesh->bounding_box.maxX);
             const float meshlet_bbox_cy = 0.5f * (mesh->bounding_box.minY + mesh->bounding_box.maxY);
@@ -1446,7 +1446,7 @@ namespace tgx
 
             for (uint16_t mli = 0; mli < mesh->nb_meshlets; mli++)
                 {
-                const Meshlet3D2_16b& meshlet = mesh->meshlets[mli];
+                const Meshlet3Dv2& meshlet = mesh->meshlets[mli];
 
                 // Decode the compact meshlet sphere once. The same values are used for
                 // visibility culling, optional sphere clipping and vertex dequantization.
@@ -1489,7 +1489,7 @@ namespace tgx
                 if (current_material_index != meshlet.material_index)
                     {
                     current_material_index = meshlet.material_index;
-                    const MeshMaterial3D2_16b<color_t>& material = mesh->materials[current_material_index];
+                    const MeshMaterial3Dv2<color_t>& material = mesh->materials[current_material_index];
                     current_texture = material.texture;
                     _uni.tex = (const Image<color_t>*)current_texture;
 
@@ -1556,9 +1556,9 @@ namespace tgx
                     if (GOURAUD) PPC2->indn = *(face++); else { if (HAS_NORMALS) face++; }
 
                     // compute vertices position because we are sure we will need them...
-                    PPC2->P = _r_modelViewM.mult1(Mesh3D2_16b_detail::load_vertex(tab_vert, v2, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
-                    PPC0->P = _r_modelViewM.mult1(Mesh3D2_16b_detail::load_vertex(tab_vert, v0, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
-                    PPC1->P = _r_modelViewM.mult1(Mesh3D2_16b_detail::load_vertex(tab_vert, v1, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                    PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v2, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                    PPC0->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v0, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                    PPC1->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v1, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
 
                     // ...but use lazy computation of other vertex attributes
                     PPC0->missedP = true;
@@ -1610,12 +1610,12 @@ namespace tgx
                                 { // need cliiping, test is we can just discard the triangle if not shown on screen
                                 if (!_discardTriangle(*((fVec4*)PPC0), *((fVec4*)PPC1), *((fVec4*)PPC2)))
                                     { // no, use the slow drawing method with clipping
-                                    const fVec3 CN0 = (GOURAUD) ? Mesh3D2_16b_detail::load_normal(tab_norm, PPC0->indn, normal_scale) : fVec3();
-                                    const fVec3 CN1 = (GOURAUD) ? Mesh3D2_16b_detail::load_normal(tab_norm, PPC1->indn, normal_scale) : fVec3();
-                                    const fVec3 CN2 = (GOURAUD) ? Mesh3D2_16b_detail::load_normal(tab_norm, PPC2->indn, normal_scale) : fVec3();
-                                    const fVec2 CT0 = (TEXTURE) ? Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC0->indt, texcoord_scale) : fVec2();
-                                    const fVec2 CT1 = (TEXTURE) ? Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC1->indt, texcoord_scale) : fVec2();
-                                    const fVec2 CT2 = (TEXTURE) ? Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC2->indt, texcoord_scale) : fVec2();
+                                    const fVec3 CN0 = (GOURAUD) ? Mesh3Dv2_detail::load_normal(tab_norm, PPC0->indn, normal_scale) : fVec3();
+                                    const fVec3 CN1 = (GOURAUD) ? Mesh3Dv2_detail::load_normal(tab_norm, PPC1->indn, normal_scale) : fVec3();
+                                    const fVec3 CN2 = (GOURAUD) ? Mesh3Dv2_detail::load_normal(tab_norm, PPC2->indn, normal_scale) : fVec3();
+                                    const fVec2 CT0 = (TEXTURE) ? Mesh3Dv2_detail::load_texcoord(tab_tex, PPC0->indt, texcoord_scale) : fVec2();
+                                    const fVec2 CT1 = (TEXTURE) ? Mesh3Dv2_detail::load_texcoord(tab_tex, PPC1->indt, texcoord_scale) : fVec2();
+                                    const fVec2 CT2 = (TEXTURE) ? Mesh3Dv2_detail::load_texcoord(tab_tex, PPC2->indt, texcoord_scale) : fVec2();
                                     _drawTriangleClipped(raster_type,
                                                     &(PPC0->P), &(PPC1->P), &(PPC2->P),
                                                     ((GOURAUD) ? &CN0 : nullptr), ((GOURAUD) ? &CN1 : nullptr), ((GOURAUD) ? &CN2 : nullptr),
@@ -1634,7 +1634,7 @@ namespace tgx
                             const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
                             if (PPC0->missedP)
                                 {
-                                PPC0->N = _r_modelViewM.mult0(Mesh3D2_16b_detail::load_normal(tab_norm, PPC0->indn, normal_scale));
+                                PPC0->N = _r_modelViewM.mult0(Mesh3Dv2_detail::load_normal(tab_norm, PPC0->indn, normal_scale));
                                 if (TEXTURE)
                                     PPC0->color = _phong<true>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
                                 else
@@ -1642,13 +1642,13 @@ namespace tgx
                                 }
                             if (PPC1->missedP)
                                 {
-                                PPC1->N = _r_modelViewM.mult0(Mesh3D2_16b_detail::load_normal(tab_norm, PPC1->indn, normal_scale));
+                                PPC1->N = _r_modelViewM.mult0(Mesh3Dv2_detail::load_normal(tab_norm, PPC1->indn, normal_scale));
                                 if (TEXTURE)
                                     PPC1->color = _phong<true>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
                                 else
                                     PPC1->color = _phong<false>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
                                 }
-                            PPC2->N = _r_modelViewM.mult0(Mesh3D2_16b_detail::load_normal(tab_norm, PPC2->indn, normal_scale));
+                            PPC2->N = _r_modelViewM.mult0(Mesh3Dv2_detail::load_normal(tab_norm, PPC2->indn, normal_scale));
                             if (TEXTURE)
                                 PPC2->color = _phong<true>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
                             else
@@ -1667,9 +1667,9 @@ namespace tgx
 
                         if (TEXTURE)
                             { // compute texture vectors if needed
-                            if (PPC0->missedP) { PPC0->T = Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC0->indt, texcoord_scale); }
-                            if (PPC1->missedP) { PPC1->T = Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC1->indt, texcoord_scale); }
-                            PPC2->T = Mesh3D2_16b_detail::load_texcoord(tab_tex, PPC2->indt, texcoord_scale);
+                            if (PPC0->missedP) { PPC0->T = Mesh3Dv2_detail::load_texcoord(tab_tex, PPC0->indt, texcoord_scale); }
+                            if (PPC1->missedP) { PPC1->T = Mesh3Dv2_detail::load_texcoord(tab_tex, PPC1->indt, texcoord_scale); }
+                            PPC2->T = Mesh3Dv2_detail::load_texcoord(tab_tex, PPC2->indt, texcoord_scale);
                             }
 
                         // attributes are now all up to date
@@ -1689,7 +1689,7 @@ namespace tgx
                         swap(((nv2 & 128) ? PPC0 : PPC1), PPC2);
                         if (TEXTURE) PPC2->indt = *(face++); else { if (HAS_TEXCOORDS) face++; }
                         if (GOURAUD) PPC2->indn = *(face++);  else { if (HAS_NORMALS) face++; }
-                        PPC2->P = _r_modelViewM.mult1(Mesh3D2_16b_detail::load_vertex(tab_vert, nv2 & 127, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+                        PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, nv2 & 127, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
                         PPC2->missedP = true;
                         }
                     }

@@ -162,7 +162,7 @@ def cmd_export(args: argparse.Namespace) -> None:
     _print_mesh_stats(mesh, meshlets)
     _print_cull_quality(meshlets, args.cull_samples, args.meshlet_cost, cone_source)
     stats = result.stats
-    print(f"{args.mesh3d2_format} export:")
+    print(f"{args.mesh_format} export:")
     print(f"  output          : {output}")
     print(f"  color type      : {args.color_type}")
     print(f"  materials       : {stats.materials}")
@@ -185,7 +185,7 @@ def cmd_wizard(args: argparse.Namespace) -> None:
     if not obj:
         raise ValueError("an OBJ file is required")
     obj_path = Path(obj)
-    default_name = obj_path.stem + "_mesh3d2"
+    default_name = obj_path.stem + "_mesh3dv2"
     name = _ask("C++ mesh symbol", default_name)
     output = _ask("Output header", str(Path.cwd() / (name + ".h")))
     profile = _ask("Meshlet profile (auto/smooth/fast/coarse/custom)", "auto")
@@ -245,7 +245,7 @@ def cmd_wizard(args: argparse.Namespace) -> None:
         visibility_helper=None,
         keep_visibility_files=False,
         cone_source="visibility" if visibility else "normal",
-        mesh3d2_format="mesh3d2_16b",
+        mesh_format="mesh3dv2",
     )
     cmd_export(export_args)
 
@@ -346,7 +346,7 @@ def main(argv: list[str] | None = None) -> int:
     p_export.add_argument("-o", "--output", required=True)
     p_export.add_argument("--name")
     p_export.add_argument("--color-type", choices=("tgx::RGB565", "tgx::RGB32", "tgx::RGBf"), default="tgx::RGB565")
-    p_export.add_argument("--mesh3d2-format", choices=("mesh3d2_16b",), default="mesh3d2_16b", help="output payload format")
+    p_export.add_argument("--mesh-format", choices=("mesh3dv2",), default="mesh3dv2", help="output payload format")
     p_export.add_argument("--normalize", action="store_true", help="center the model and fit its largest extent to --normalize-size")
     p_export.add_argument("--normalize-size", type=float, default=2.0)
     p_export.add_argument("--dedupe-epsilon", type=float, default=1e-9)

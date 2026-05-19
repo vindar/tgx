@@ -13,7 +13,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.mesh3d2_converter.cones import apply_visibility_cones, auto_visibility_margin_deg
-from tools.mesh3d2_converter.exporter import MeshletExportResult, MeshletExportStats, export_mesh3d2_16b_header
+from tools.mesh3d2_converter.exporter import MeshletExportResult, MeshletExportStats, export_mesh3dv2_header
 from tools.mesh3d2_converter.mesh import FaceVertex, Material, Meshlet, ObjMesh, Triangle
 from tools.mesh3d2_converter.meshlets import sort_meshlets_by_material
 from tools.mesh3d2_converter.pipeline import (
@@ -498,10 +498,10 @@ def _score_candidate(stats: MeshletExportStats, cull: dict[str, float], texture_
 
 
 def _exporter_for_args(args: argparse.Namespace):
-    fmt = getattr(args, "mesh3d2_format", "mesh3d2_16b")
-    if fmt != "mesh3d2_16b":
+    fmt = getattr(args, "mesh_format", "mesh3dv2")
+    if fmt != "mesh3dv2":
         raise ValueError(f"unsupported meshlet format: {fmt}")
-    return export_mesh3d2_16b_header
+    return export_mesh3dv2_header
 
 
 def _evaluate_candidate(
@@ -713,7 +713,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", help="root Mesh3D symbol; auto-detected for a single chain")
     parser.add_argument("--name", help="output C++ symbol")
     parser.add_argument("--color-type", help="override color type; defaults to the legacy Mesh3D color type")
-    parser.add_argument("--mesh3d2-format", choices=("mesh3d2_16b",), default="mesh3d2_16b", help="output payload format")
+    parser.add_argument("--mesh-format", choices=("mesh3dv2",), default="mesh3dv2", help="output payload format")
     add_build_options(parser, source="legacy")
     parser.add_argument("--lkh", default=str(DEFAULT_LKH_EXE))
     add_visibility_options(parser, default_samples=1024, default_size=512)

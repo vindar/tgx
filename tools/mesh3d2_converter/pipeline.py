@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from .cones import apply_visibility_cones, auto_visibility_margin_deg
-from .exporter import MeshletExportResult, export_mesh3d2_16b_header
+from .exporter import MeshletExportResult, export_mesh3dv2_header
 from .mesh import Meshlet, ObjMesh, compute_triangle_normals, unique_valid
 from .meshlets import MeshletBuildOptions, _make_meshlet, build_meshlets, meshlet_stats, sort_meshlets_by_material
 from .preprocess import PreprocessStats
@@ -176,10 +176,10 @@ def export_common(
     texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
 ) -> MeshletExportResult:
-    fmt = getattr(args, "mesh3d2_format", "mesh3d2_16b")
-    if fmt != "mesh3d2_16b":
+    fmt = getattr(args, "mesh_format", "mesh3dv2")
+    if fmt != "mesh3dv2":
         raise ValueError(f"unsupported meshlet format: {fmt}")
-    exporter = export_mesh3d2_16b_header
+    exporter = export_mesh3dv2_header
     kwargs = dict(
         name=args.name or output.stem,
         color_type=color_type,

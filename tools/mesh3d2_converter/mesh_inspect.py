@@ -290,22 +290,22 @@ def _parse_materials(text: str, array_name: str) -> list[DecodedMaterial]:
     return materials
 
 
-def _parse_meshlet_headers(text: str, array_name: str, fmt: str = "Mesh3D2_16b", bbox: tuple[float, float, float, float, float, float] | None = None) -> list[DecodedMeshlet]:
+def _parse_meshlet_headers(text: str, array_name: str, fmt: str = "Mesh3Dv2", bbox: tuple[float, float, float, float, float, float] | None = None) -> list[DecodedMeshlet]:
     body = _extract_named_array_body(text, array_name)
     entries = _split_top_level(body)
     meshlets: list[DecodedMeshlet] = []
     if bbox is None:
-        raise ValueError("Mesh3D2_16b parsing requires the parent mesh bounding box")
+        raise ValueError("Mesh3Dv2 parsing requires the parent mesh bounding box")
     bbox_center, center_scale, radius_scale, snorm_scale = _meshlet16b_scales(bbox)
     for index, entry in enumerate(entries):
         fields = _split_top_level(entry.strip().strip("{}").strip())
-        if fmt == "Mesh3D2_16b":
+        if fmt == "Mesh3Dv2":
             if len(fields) < 8:
                 continue
             q_center = _ints(fields[0])
             q_dir = _ints(fields[1])
             if len(q_center) != 3 or len(q_dir) != 3:
-                raise ValueError(f"Mesh3D2_16b meshlet {index}: invalid quantized center/cone fields")
+                raise ValueError(f"Mesh3Dv2 meshlet {index}: invalid quantized center/cone fields")
             center = bbox_center + np.asarray(q_center, dtype=np.float64) * center_scale
             meshlets.append(
                 DecodedMeshlet(
@@ -385,7 +385,7 @@ def _decode_payload(mesh: DecodedHeaderMesh, payload_words: list[int]) -> None:
     for meshlet, next_offset in zip(mesh.meshlets, next_offsets):
         start = meshlet.payload_offset32 * 4
         pos = start
-        if mesh.format == "Mesh3D2_16b":
+        if mesh.format == "Mesh3Dv2":
             qv, pos = _bytes_to_i16_array(data, pos, meshlet.nb_vertices, 3)
             qn, pos = _bytes_to_i16_array(data, pos, meshlet.nb_normals, 3)
             qt, pos = _bytes_to_i16_array(data, pos, meshlet.nb_texcoords, 2)
@@ -409,9 +409,9 @@ def parse_mesh3d2_header(path: str | Path) -> DecodedHeaderMesh:
     header = Path(path).resolve()
     raw = header.read_text(encoding="utf-8", errors="replace")
     text = _strip_comments(raw)
-    decl = re.search(r"const\s+tgx::(Mesh3D2_16b)<\s*([^>]+?)\s*>\s+(\w+)\s*(?:PROGMEM\s*)?=", text)
+    decl = re.search(r"const\s+tgx::(Mesh3Dv2)<\s*([^>]+?)\s*>\s+(\w+)\s*(?:PROGMEM\s*)?=", text)
     if not decl:
-        raise ValueError("no Mesh3D2_16b declaration found")
+        raise ValueError("no Mesh3Dv2 declaration found")
     fmt, color_type, symbol = decl.group(1), decl.group(2).strip(), decl.group(3)
     body = _extract_named_object_body(text, symbol)
     fields = _split_top_level(body)
@@ -446,8 +446,8 @@ def parse_mesh3d2_header(path: str | Path) -> DecodedHeaderMesh:
 
 def detect_mesh_type(path: str | Path) -> str:
     text = Path(path).read_text(encoding="utf-8", errors="replace")
-    if re.search(r"tgx::Mesh3D2_16b\s*<", text):
-        return "Mesh3D2_16b"
+    if re.search(r"tgx::Mesh3Dv2\s*<", text):
+        return "Mesh3Dv2"
     if re.search(r"tgx::Mesh3D\s*<", text):
         return "Mesh3D"
     raise ValueError("could not detect TGX mesh type")

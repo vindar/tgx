@@ -11,7 +11,7 @@ Current scope:
 - print basic meshlet quality statistics.
 - estimate gross and net meshlet-cone culling efficiency across view directions,
 - compute visibility cones with an offline TGX C++ helper,
-- export a TGX `Mesh3D2_16b` C++ header,
+- export a TGX `Mesh3Dv2` C++ header,
 - convert an existing TGX `Mesh3D` header to a meshlet format while reusing the same texture headers.
 
 This is still an experimental converter. The generated meshlet files are meant to
@@ -58,12 +58,12 @@ py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 view D:\Programmation\myProjects
 
 The default visibility-cone pass uses 2048 orthographic views rendered at 768x768 by the TGX helper. The default margin is automatic: it is based on the average angular coverage of the sampled views, with a small safety allowance for non-perfect sampling and raster effects.
 
-Export a normalized model as a `Mesh3D2_16b<RGB565>` header. The `auto` profile selects a
+Export a normalized model as a `Mesh3Dv2<RGB565>` header. The `auto` profile selects a
 smooth, culling-oriented split for small models and a coarser split for large models where
 meshlet overhead and chain count matter more:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export D:\Programmation\myProjects\tgxmeshlets\bunny.obj -o tmp\bunny_mesh3d2.h --name bunny_mesh3d2 --normalize --profile auto --visibility-cones --cone-source visibility
+py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export D:\Programmation\myProjects\tgxmeshlets\bunny.obj -o tmp\bunny_mesh3dv2.h --name bunny_mesh3dv2 --normalize --profile auto --visibility-cones --cone-source visibility
 ```
 
 The export command:
@@ -104,13 +104,13 @@ py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 wizard model.obj
 Textures can be linked by symbol name if they already exist:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_mesh3d2.h --texture-symbol Body=model_body_texture --include model_body_texture.h
+py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_mesh3dv2.h --texture-symbol Body=model_body_texture --include model_body_texture.h
 ```
 
 They can also be generated automatically from OBJ/MTL `map_Kd` entries:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_mesh3d2.h --profile auto --export-textures --texture-size 128 128
+py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_mesh3dv2.h --profile auto --export-textures --texture-size 128 128
 ```
 
 If no texture symbol is provided or generated for a material, that material is exported with
