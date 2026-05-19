@@ -40,8 +40,8 @@ namespace tgx
         public:
 
             /** ctor. */
-            CacheMesh(void* ram1_ptr, size_t ram1_size, char* ram2_ptr, size_t ram2_size)
-                : _ram1_size(ram1_size), _ram2_size(ram2_size), _ram1_ptr((char*)ram1_ptr), _ram2_ptr(ram2_ptr), _nb_entries(0)
+            CacheMesh(void* ram1_ptr, size_t ram1_size, void* ram2_ptr, size_t ram2_size)
+                : _ram1_size(ram1_size), _ram2_size(ram2_size), _ram1_ptr((char*)ram1_ptr), _ram2_ptr((char*)ram2_ptr), _nb_entries(0)
             {
                 if (!_ram1_ptr) _ram1_size = 0;
                 align(_ram1_ptr, _ram1_size);
@@ -85,7 +85,7 @@ namespace tgx
                 }
 
 
-            template<typename color_t> Mesh3D<color_t>* cash_mesh_recurse(const Mesh3D<color_t>* mesh)
+            template<typename color_t> Mesh3D<color_t>* cache_mesh_recurse(const Mesh3D<color_t>* mesh)
                 {
                 if (mesh == nullptr) return nullptr;
                 if (!can_alloc(sizeof(Mesh3D<color_t>))) return nullptr;
@@ -216,13 +216,15 @@ namespace tgx
         {
         tgx_internals::CacheMesh CM((char*)ram1_buffer, ram1_size, (char*)ram2_buffer, ram2_size);
 
-        Mesh3D<color_t> * new_mesh = CM.cash_mesh_recurse(mesh);
+        Mesh3D<color_t> * new_mesh = CM.cache_mesh_recurse(mesh);
         if (new_mesh == nullptr)
             {
             if (ram1_used) { *ram1_used = 0; }
             if (ram2_used) { *ram2_used = 0; }
             return mesh;
             }
+
+        if (copy_order == nullptr) copy_order = "";
 
         for (int k= 0; copy_order[k] != 0; k++)
             {
@@ -265,6 +267,15 @@ namespace tgx
         if (ram2_used) { *ram2_used = ram2_size - CM.remaining_ram2(); }
 
         return new_mesh;
+        }
+
+
+    template<typename color_t> const Mesh3D<color_t> * cacheMesh(const Mesh3D<color_t>* mesh,
+                                                            void* ram_buffer, size_t ram_size,
+                                                            const char* copy_order,
+                                                            size_t* ram_used)
+        {
+        return cacheMesh(mesh, ram_buffer, ram_size, nullptr, 0, copy_order, ram_used, nullptr);
         }
 
 
@@ -320,7 +331,7 @@ namespace tgx
              * If false, allocate size bytes and add to the map src as key
              * and the allocated address as value and return the allocated address.
              *
-             * if allocation fails, free all cvalue pointer in the map and return nulptr
+             * If allocation fails, free all value pointers in the map and return nullptr.
              **/
             inline void* malloc(const void* src, size_t size)
                 {
@@ -406,7 +417,7 @@ namespace tgx
                                                                 bool copy_textures,
                                                                 bool copy_faces)
         {
-        if (external_psram_size <= 0) return nullptr; // no extram present.
+        if (external_psram_size <= 0) return nullptr; // no external RAM present.
         if ((mesh == nullptr) || (TGX_IS_EXTMEM(mesh))) return nullptr; // not a valid mesh
         _MapPtr map;
 
@@ -455,7 +466,7 @@ namespace tgx
                     if (TGX_IS_EXTMEM(mesh->texture->data())) { map.freeAll(); return nullptr; }
                     if (TGX_IS_PROGMEM(mesh->texture->data()))
                         {
-                        int imlen = mesh->texture->stride() * mesh->texture->height();
+                        const size_t imlen = ((size_t)mesh->texture->stride()) * ((size_t)mesh->texture->height());
                         color_t* imdata = (color_t*)map.malloc(mesh->texture->data(), imlen * sizeof(color_t));
                         if (imdata == nullptr) return nullptr;
                         Image<color_t>* imp = (Image<color_t>*)map.malloc(mesh->texture, sizeof(Image<color_t>)); // dirty, should use placement new...

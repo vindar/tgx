@@ -169,7 +169,8 @@ namespace tgx
             char*       _ram1_ptr;
             char*       _ram2_ptr;
 
-            static const int MAX_NB_KEYS = 256;
+            // payload + meshlet array + material array + up to 256 texture objects.
+            static const int MAX_NB_KEYS = 320;
 
             int         _nb_entries;
             const char* _keys[MAX_NB_KEYS];
@@ -217,6 +218,89 @@ namespace tgx
             const uint8_t* const payload = (const uint8_t*)mesh->payload;
             return last_offset + meshlet_payload_size_bytes(last, payload + last_offset);
             }
+
+
+#if defined(ARDUINO_TEENSY41)
+
+        class ExtMemMap
+            {
+        public:
+
+            ExtMemMap() : _nb(0), _used(0) {}
+
+            size_t used() const { return _used; }
+
+            void free(const void* p)
+                {
+                if ((p != nullptr) && (_find(p) == nullptr))
+                    {
+                    if (_nb >= MAXPTR) return;
+                    _add(p, (void*)p, 0);
+                    extmem_free((void*)p);
+                    }
+                }
+
+            void freeAll()
+                {
+                for (int k = 0; k < _nb; k++)
+                    {
+                    extmem_free(_vals[k]);
+                    }
+                _nb = 0;
+                _used = 0;
+                }
+
+            void* malloc(const void* src, size_t size)
+                {
+                if ((src == nullptr) || (size == 0) || (_nb >= MAXPTR))
+                    {
+                    freeAll();
+                    return nullptr;
+                    }
+
+                void* adr = _find(src);
+                if (adr == nullptr)
+                    {
+                    adr = extmem_malloc(size);
+                    if (!TGX_IS_EXTMEM(adr))
+                        {
+                        freeAll();
+                        return nullptr;
+                        }
+                    _add(src, adr, size);
+                    memcpy(adr, src, size);
+                    _used += size;
+                    }
+                return adr;
+                }
+
+        private:
+
+            void _add(const void* key, void* val, size_t)
+                {
+                _keys[_nb] = key;
+                _vals[_nb] = val;
+                _nb++;
+                }
+
+            void* _find(const void* key) const
+                {
+                for (int k = 0; k < _nb; k++)
+                    {
+                    if (_keys[k] == key) return _vals[k];
+                    }
+                return nullptr;
+                }
+
+            static const int MAXPTR = 560;
+
+            int         _nb;
+            size_t      _used;
+            const void* _keys[MAXPTR];
+            void*       _vals[MAXPTR];
+            };
+
+#endif
 
         }
 
@@ -297,6 +381,120 @@ namespace tgx
 
         return new_mesh;
         }
+
+
+    template<typename color_t> const Mesh3Dv2<color_t>* cacheMesh(const Mesh3Dv2<color_t>* mesh,
+                                                                  void* ram_buffer, size_t ram_size,
+                                                                  const char* copy_order,
+                                                                  size_t* ram_used)
+        {
+        return cacheMesh(mesh, ram_buffer, ram_size, nullptr, 0, copy_order, ram_used, nullptr);
+        }
+
+
+#if defined(ARDUINO_TEENSY41)
+
+    template<typename color_t> void freeMeshEXTMEM(Mesh3Dv2<color_t>* mesh)
+        {
+        if ((mesh == nullptr) || (!TGX_IS_EXTMEM(mesh))) return;
+
+        Mesh3Dv2_detail::ExtMemMap map;
+        if (TGX_IS_EXTMEM(mesh->payload)) map.free(mesh->payload);
+        if (TGX_IS_EXTMEM(mesh->meshlets)) map.free(mesh->meshlets);
+        if (TGX_IS_EXTMEM(mesh->materials))
+            {
+            MeshMaterial3Dv2<color_t>* materials = const_cast<MeshMaterial3Dv2<color_t>*>(mesh->materials);
+            for (uint16_t i = 0; i < mesh->nb_materials; i++)
+                {
+                const Image<color_t>* im = materials[i].texture;
+                if (TGX_IS_EXTMEM(im))
+                    {
+                    if (TGX_IS_EXTMEM(im->data())) map.free(im->data());
+                    map.free(im);
+                    }
+                }
+            map.free(mesh->materials);
+            }
+        map.free(mesh);
+        }
+
+
+    template<typename color_t> Mesh3Dv2<color_t>* copyMeshEXTMEM(const Mesh3Dv2<color_t>* mesh,
+                                                                 bool copy_payload,
+                                                                 bool copy_meshlets,
+                                                                 bool copy_materials,
+                                                                 bool copy_textures,
+                                                                 size_t* extmem_used)
+        {
+        if (extmem_used) { *extmem_used = 0; }
+        if (external_psram_size <= 0) return nullptr;
+        if ((mesh == nullptr) || (TGX_IS_EXTMEM(mesh))) return nullptr;
+        if (TGX_IS_EXTMEM(mesh->payload) || TGX_IS_EXTMEM(mesh->meshlets) || TGX_IS_EXTMEM(mesh->materials)) return nullptr;
+        if (mesh->materials != nullptr)
+            {
+            for (uint16_t i = 0; i < mesh->nb_materials; i++)
+                {
+                const Image<color_t>* im = mesh->materials[i].texture;
+                if (im != nullptr)
+                    {
+                    if (TGX_IS_EXTMEM(im) || TGX_IS_EXTMEM(im->data())) return nullptr;
+                    }
+                }
+            }
+
+        Mesh3Dv2_detail::ExtMemMap map;
+        Mesh3Dv2<color_t>* new_mesh = (Mesh3Dv2<color_t>*)map.malloc(mesh, sizeof(Mesh3Dv2<color_t>));
+        if (new_mesh == nullptr) return nullptr;
+
+        const size_t payload_size = Mesh3Dv2_detail::payload_size_bytes(mesh);
+
+        if ((copy_materials || copy_textures) && (mesh->nb_materials > 0))
+            {
+            const MeshMaterial3Dv2<color_t>* p = (const MeshMaterial3Dv2<color_t>*)map.malloc(mesh->materials, ((size_t)mesh->nb_materials) * sizeof(MeshMaterial3Dv2<color_t>));
+            if (p == nullptr) return nullptr;
+            new_mesh->materials = p;
+            }
+
+        if (copy_textures && (new_mesh->materials != mesh->materials))
+            {
+            MeshMaterial3Dv2<color_t>* materials = const_cast<MeshMaterial3Dv2<color_t>*>(new_mesh->materials);
+            for (uint16_t i = 0; i < new_mesh->nb_materials; i++)
+                {
+                const Image<color_t>* im = materials[i].texture;
+                if (im == nullptr) continue;
+                if (im->isValid() && TGX_IS_PROGMEM(im->data()))
+                    {
+                    const size_t data_size = ((size_t)im->stride()) * ((size_t)im->ly()) * sizeof(color_t);
+                    color_t* imdata = (color_t*)map.malloc(im->data(), data_size);
+                    if (imdata == nullptr) return nullptr;
+
+                    Image<color_t>* imp = (Image<color_t>*)map.malloc(im, sizeof(Image<color_t>));
+                    if (imp == nullptr) return nullptr;
+                    imp->set(imdata, im->lx(), im->ly(), im->stride());
+                    materials[i].texture = imp;
+                    }
+                }
+            }
+
+        if (copy_payload && (payload_size > 0) && (TGX_IS_PROGMEM(mesh->payload)))
+            {
+            const uint32_t* p = (const uint32_t*)map.malloc(mesh->payload, payload_size);
+            if (p == nullptr) return nullptr;
+            new_mesh->payload = p;
+            }
+
+        if (copy_meshlets && (mesh->nb_meshlets > 0) && (TGX_IS_PROGMEM(mesh->meshlets)))
+            {
+            const Meshlet3Dv2* p = (const Meshlet3Dv2*)map.malloc(mesh->meshlets, ((size_t)mesh->nb_meshlets) * sizeof(Meshlet3Dv2));
+            if (p == nullptr) return nullptr;
+            new_mesh->meshlets = p;
+            }
+
+        if (extmem_used) { *extmem_used = map.used(); }
+        return new_mesh;
+        }
+
+#endif
 
 
     }

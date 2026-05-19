@@ -88,7 +88,7 @@ namespace tgx
 
         RGBf color;                     ///< Default color to use when texturing is disabled.
 
-        float ambiant_strength;         ///< Object ambiant coefficient (how much it reflects the ambiant light component). Typical value: 0.2f.
+        float ambiant_strength;         ///< Object ambient coefficient (how much it reflects the ambient light component). Typical value: 0.2f.
         float diffuse_strength;         ///< Object diffuse coefficient (how much it reflects the diffuse light component). Typical value: 0.7f.
         float specular_strength;        ///< Object specular coefficient (how much it reflects the specular light component). Typical value: 0.5f.
         int specular_exponent;          ///< Specular exponent. 0 to disable specular lighting. Typical value between 4 and 64.
@@ -253,13 +253,14 @@ namespace tgx
 
     /**
      * Creates a cached version of a Mesh3Dv2 object by copying selected data arrays
-     * into user-supplied RAM buffers.
+     * into one or two user-supplied RAM buffers.
      *
      * This is useful on MCUs where meshes are stored in slow flash/PROGMEM but some
      * RAM is available for faster rendering. The method first copies the small
      * Mesh3Dv2 structure itself, then tries to copy the requested arrays in the
-     * order specified by copy_order. If an array does not fit in either buffer, its
-     * original pointer is kept.
+     * order specified by copy_order. Each allocation first tries the first buffer;
+     * if it does not fit there, it tries the second buffer when supplied. If an
+     * array does not fit in either buffer, its original pointer is kept.
      *
      * Copy-order letters:
      *
@@ -278,8 +279,8 @@ namespace tgx
      *    allocations internally.
      * 2. Mesh3Dv2 has no linked sub-meshes. Multi-material models are represented
      *    by the material array and per-meshlet material indices.
-     * 3. The payload size is computed once by scanning the final meshlet payload.
-     *    This has no runtime rendering cost.
+     * 3. The payload size is computed once when cacheMesh() is called, by scanning
+     *    the final meshlet payload. This has no per-frame rendering cost.
      * 4. The returned mesh points either to cached arrays or to the original arrays
      *    for data that did not fit in the supplied buffers.
      *
@@ -298,10 +299,67 @@ namespace tgx
      */
     template<typename color_t> const Mesh3Dv2<color_t>* cacheMesh(const Mesh3Dv2<color_t>* mesh,
                                                                   void* ram1_buffer, size_t ram1_size,
-                                                                  void* ram2_buffer = nullptr, size_t ram2_size = 0,
+                                                                  void* ram2_buffer, size_t ram2_size,
                                                                   const char* copy_order = "PLMI",
                                                                   size_t* ram1_used = nullptr,
                                                                   size_t* ram2_used = nullptr);
+
+
+    /**
+     * Convenience overload of cacheMesh() with a single RAM buffer.
+     */
+    template<typename color_t> const Mesh3Dv2<color_t>* cacheMesh(const Mesh3Dv2<color_t>* mesh,
+                                                                  void* ram_buffer, size_t ram_size,
+                                                                  const char* copy_order = "PLMI",
+                                                                  size_t* ram_used = nullptr);
+
+
+#if defined(ARDUINO_TEENSY41)
+
+    /**
+     * Create a copy of a Mesh3Dv2 object where selected PROGMEM arrays are copied to EXTMEM.
+     *
+     * @attention This method is defined only for Teensy 4.1.
+     *
+     * Requested payload, meshlet and texture-pixel arrays are copied only when
+     * their source pointer is in PROGMEM; otherwise the original pointer is kept.
+     * The material array is the exception: it is copied when copy_materials or
+     * copy_textures is true, because it may need writable texture pointers.
+     *
+     * If any source pointer belonging to the mesh is already in EXTMEM, the method
+     * fails to avoid ambiguous ownership.
+     *
+     * Requesting texture copies also creates a writable EXTMEM copy of the material
+     * array, even when copy_materials is false, so that texture pointers can be
+     * remapped to their EXTMEM copies.
+     *
+     * @param mesh           Pointer to the source Mesh3Dv2 object.
+     * @param copy_payload   Copy the meshlet payload blob to EXTMEM when it is in PROGMEM.
+     * @param copy_meshlets  Copy the meshlet header array to EXTMEM when it is in PROGMEM.
+     * @param copy_materials Copy the material array to EXTMEM.
+     * @param copy_textures  Copy texture images referenced by the material array to EXTMEM.
+     * @param extmem_used    If non-null, receives the number of bytes allocated
+     *                       in EXTMEM for the returned mesh.
+     *
+     * @returns A pointer to the new mesh in EXTMEM, or nullptr on error. On error,
+     *          all allocations performed by the method are freed.
+     */
+    template<typename color_t> Mesh3Dv2<color_t>* copyMeshEXTMEM(const Mesh3Dv2<color_t>* mesh,
+                                                                 bool copy_payload = false,
+                                                                 bool copy_meshlets = false,
+                                                                 bool copy_materials = false,
+                                                                 bool copy_textures = true,
+                                                                 size_t* extmem_used = nullptr);
+
+
+    /**
+     * Delete a Mesh3Dv2 object allocated with copyMeshEXTMEM().
+     *
+     * @attention This method is defined only for Teensy 4.1.
+     */
+    template<typename color_t> void freeMeshEXTMEM(Mesh3Dv2<color_t>* mesh);
+
+#endif
 
 
 }

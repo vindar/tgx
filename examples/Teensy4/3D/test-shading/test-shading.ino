@@ -1,6 +1,6 @@
 /********************************************************************
 *
-* tgx library example : comparing flat vs Gouraud shading.
+* tgx library example: comparing wireframe, flat and Gouraud shading.
 *
 * EXAMPLE FOR TEENSY 4 / 4.1
 *
@@ -8,16 +8,16 @@
 *
 ********************************************************************/
 
-// This example runs on teensy 4.0/4.1 with ILI9341 via SPI.
-// the screen driver library : https://github.com/vindar/ILI9341_T4
+// This example runs on Teensy 4.0/4.1 with ILI9341 via SPI.
+// The screen driver library: https://github.com/vindar/ILI9341_T4
 #include <ILI9341_T4.h>
 
-// the tgx library
+// The tgx library.
 #include <tgx.h>
 #include <font_tgx_OpenSans_Bold.h>
 
 
-// let's not burden ourselves with the tgx:: prefix
+// Let's not burden ourselves with the tgx:: prefix.
 using namespace tgx;
 
 
@@ -29,6 +29,11 @@ using namespace tgx;
     #include "suzanne.h"
     #include "bunny.h"
     #include "dragon.h"
+    #include "teapot.cpp"
+    #include "skull.cpp"
+    #include "suzanne.cpp"
+    #include "bunny.cpp"
+    #include "dragon.cpp"
 #else
     // ok, use the normal path
     #include "3Dmodels/teapot/teapot.h"
@@ -36,6 +41,11 @@ using namespace tgx;
     #include "3Dmodels/suzanne/suzanne.h"
     #include "3Dmodels/bunny/bunny.h"
     #include "3Dmodels/dragon/dragon.h"
+    #include "3Dmodels/teapot/teapot.cpp"
+    #include "3Dmodels/skull/skull.cpp"
+    #include "3Dmodels/suzanne/suzanne.cpp"
+    #include "3Dmodels/bunny/bunny.cpp"
+    #include "3Dmodels/dragon/dragon.cpp"
 #endif
 
 
@@ -70,61 +80,54 @@ using namespace tgx;
 //#define PIN_TOUCH_CS  255   // optional. set this only if the touchscreen is connected on the same spi bus
 
 
-// 30MHz SPI, we can go higher with short wires
+// 30 MHz SPI, we can go higher with short wires.
 #define SPI_SPEED       30000000
 
 
-// the screen driver object
+// The screen driver object.
 ILI9341_T4::ILI9341Driver tft(PIN_CS, PIN_DC, PIN_SCK, PIN_MOSI, PIN_MISO, PIN_RESET, PIN_TOUCH_CS, PIN_TOUCH_IRQ);
 
 
-// 2 x 8K diff buffers (used by tft) for differential updates
-ILI9341_T4::DiffBuffStatic<8000> diff1;
-ILI9341_T4::DiffBuffStatic<8000> diff2;
+// 2 x 8K diff buffers used by tft for differential updates.
+DMAMEM ILI9341_T4::DiffBuffStatic<8000> diff1;
+DMAMEM ILI9341_T4::DiffBuffStatic<8000> diff2;
 
-// screen dimension (landscape mode)
+// Screen dimension (landscape mode).
 static const int SLX = 320;
 static const int SLY = 240;
 
-// main screen framebuffer (150K in DTCM)
-uint16_t fb[SLX * SLY];
+// Main screen framebuffer (150K in DMAMEM).
+DMAMEM uint16_t fb[SLX * SLY];
 
-// internal framebuffer (150K in DMAMEM) used by the ILI9431_T4 library for double buffering.
+// Internal framebuffer (150K in DMAMEM) used by the ILI9341_T4 library for double buffering.
 DMAMEM uint16_t internal_fb[SLX * SLY];
 
-// zbuffer in 16 bits precision (150K in DTCM)
+// Z-buffer in 16-bit precision (150K in DMAMEM).
 DMAMEM uint16_t zbuf[SLX * SLY];
 
-// image that encapsulates fb.
+// Image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
 
 
 
-// only load the shaders we need.
+// Only load the shaders we need.
 const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_GOURAUD;
 
-// the renderer object that performs the 3D drawings
+// The renderer object that performs the 3D drawings.
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
 
 
 
-// DTCM and DMAMEM buffers used to cache meshes into RAM
-// which is faster than progmem: caching may lead to significant speedup.
-
-const int DTCM_buf_size = 160000; // adjust this value to fill unused DTCM but leave at least 20K for the stack to be sure
+// DTCM buffer used to cache the Mesh3Dv2 payload and metadata into RAM.
+// This is faster than progmem and keeps the mesh payload contiguous.
+static const size_t DTCM_buf_size = 330000; // adjust this value to fill unused DTCM but leave enough room for the stack.
 char buf_DTCM[DTCM_buf_size];
-
-const int DMAMEM_buf_size = 190000; // adjust this value to fill unused DMAMEM,  leave at least 10k for additional serial objects.
-DMAMEM char buf_DMAMEM[DMAMEM_buf_size];
-
-const tgx::Mesh3D<tgx::RGB565> * cached_mesh; // pointer to the currently cached mesh.
 
 
 // Print per-second FPS and frame timing on Serial.
 void telemetryBegin();
 void telemetryStartFrame();
 void telemetryEndFrame();
-
 void telemetrySetScene(const char* scene);
 
 
@@ -133,20 +136,12 @@ void telemetrySetScene(const char* scene);
 /**
 * Overlay some info about the current mesh on the screen
 **/
-void drawInfo(tgx::Image<tgx::RGB565>& im, int t, const tgx::Mesh3D<tgx::RGB565>& mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
+void drawInfo(tgx::Image<tgx::RGB565>& im, int t, const char* mesh_name, int nb_triangles)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
     {
-    // count the number of triangles in the mesh (by iterating over linked meshes)
-    const Mesh3D<RGB565>* m = &mesh;
-    int nbt = 0;
-    while (m != nullptr)
-        {
-        nbt += m->nb_faces;
-        m = m->next;
-        }
     // display some info
     char buf[80];
-    im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
-    sprintf(buf, "%d triangles", nbt);
+    im.drawText((mesh_name != nullptr ? mesh_name : "[unnamed mesh]"), { 3,12 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
+    sprintf(buf, "%d triangles", nb_triangles);
     im.drawText(buf, { 3,SLY - 21 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     sprintf(buf, "%s", (t == 0) ? "Wireframe" : ((t == 1) ? "Flat shading" : "Gouraud shading"));
     im.drawText(buf, { 3, SLY - 5 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
@@ -159,10 +154,10 @@ void setup()
     Serial.begin(9600);
     telemetryBegin();
 
-    // initialize the ILI9341 screen
+    // initialize the ILI9341 screen.
     while (!tft.begin(SPI_SPEED));
 
-    // ok. turn on backlight
+    // turn on backlight.
     pinMode(PIN_BACKLIGHT, OUTPUT);
     digitalWrite(PIN_BACKLIGHT, HIGH);
 
@@ -184,10 +179,10 @@ void setup()
     }
 
 
-void drawMesh(const Mesh3D<RGB565>* mesh, float scale, const char* scene_wireframe, const char* scene_flat, const char* scene_gouraud, float tilt = 0.0f)
+void drawModel(const Mesh3Dv2<RGB565>* mesh, int nb_triangles, float scale, const char* scene_wireframe, const char* scene_flat, const char* scene_gouraud, float tilt = 0.0f)
 {
-    // cache the first mesh to display in RAM to improve framerate
-    cached_mesh  = tgx::cacheMesh(mesh, buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size);
+    // cache the mesh payload and small metadata arrays in RAM to improve framerate.
+    const Mesh3Dv2<RGB565>* cached_mesh = tgx::cacheMesh(mesh, buf_DTCM, DTCM_buf_size);
 
     const int maxT = 12000; // display model for 12 seconds.
     elapsedMillis em = 0;
@@ -232,7 +227,7 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, const char* scene_wirefra
             }
 
         // overlay some info
-        drawInfo(im, t, *cached_mesh);
+        drawInfo(im, t, cached_mesh->name, nb_triangles);
 
         // and the current framerate
         tft.overlayFPS(fb);
@@ -248,13 +243,13 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, const char* scene_wirefra
 void loop()
 {
     renderer.setMaterial(RGBf(0.15f, 0.7f, 0.39f), 0.2f, 0.8f, 0.5f, 8); // teapot
-    drawMesh(&teapot, 15, "teapot_wireframe", "teapot_flat", "teapot_gouraud", 30);
+    drawModel(&teapot, 2256, 15, "teapot_wireframe", "teapot_flat", "teapot_gouraud", 30);
 
     renderer.setMaterial(RGBf(1.0f, 1.0f, 1.0f), 0.15f, 0.7f, 0.8f, 48); // bunny
-    drawMesh(&bunny, 12, "bunny_wireframe", "bunny_flat", "bunny_gouraud");
+    drawModel(&bunny, 4968, 12, "bunny_wireframe", "bunny_flat", "bunny_gouraud");
 
     renderer.setMaterial(RGBf(166 / 256.0f, 130 / 256.0f, 110.0f / 256.0f), 0.15f, 0.7f, 0.4f, 16); // skull
-    drawMesh(&skull_1, 12, "skull_wireframe", "skull_flat", "skull_gouraud");
+    drawModel(&skull_1, 9535, 12, "skull_wireframe", "skull_flat", "skull_gouraud");
 
     // let's have some fun with lighting
     renderer.setLightAmbiant({ 0, 0, 1.0f });  // blue
@@ -262,7 +257,7 @@ void loop()
     renderer.setLightSpecular({ 1.0f, 1.0f, 1.0f }); // white
 
     renderer.setMaterial(RGBf(1.0f, 1.0f, 1.0f), 0.2f, 0.8f, 0.8f, 32); // suzanne
-    drawMesh(&suzanne, 13, "suzanne_wireframe", "suzanne_flat", "suzanne_gouraud");
+    drawModel(&suzanne, 15744, 13, "suzanne_wireframe", "suzanne_flat", "suzanne_gouraud");
 
     // back to normal lighting
     renderer.setLightAmbiant({ 1.0f, 1.0f, 1.0f }); // white
@@ -270,9 +265,9 @@ void loop()
     renderer.setLightSpecular({ 1.0f, 1.0f, 1.0f }); // white
 
     renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // dragon
-    drawMesh(&dragon, 15, "dragon_wireframe", "dragon_flat", "dragon_gouraud");
+    drawModel(&dragon, 23000, 15, "dragon_wireframe", "dragon_flat", "dragon_gouraud");
 
-    // chooose new random light orientation.
+    // choose new random light orientation.
     const float angle = M_PI * random(0, 360) / 180.0f;
     renderer.setLightDirection({ cosf(angle) , sinf(angle) , -0.3f });
 }

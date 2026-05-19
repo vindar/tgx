@@ -41,45 +41,45 @@ namespace tgx
 
 
     /**
-     * 3D mesh data stucture.
+     * 3D mesh data structure.
      *
-     * A Mesh3D structure contains all the information about an object geometry, color, material
-     * property and textures. A mesh can be rendered onto an `Image` object using the
+     * A Mesh3D structure contains all the information about an object's geometry, color, material
+     * properties and textures. A mesh can be rendered onto an `Image` object using the
      * `Renderer3D::drawMesh()` method.
      *
      * The mesh data format is designed to be compact and favors linear access to elements in order
      * to improve cache coherency so that meshes can be stored and rendered directly from "slow"
      * memory such as FLASH on a MCU.
      *
-     * The Python scripts `obj_to_h` located in the `\tools` directory of the library can be used to
+     * The Python script `obj_to_h` located in the `\tools` directory of the library can be used to
      * create a `Mesh3D` object directly from an .obj file.  The associated image textures (if any)
      * can be converted using the Python script `texture_2_h`.
      *
      * **MESH FORMAT**
      *
      * @param vertice   Array of all the vertices of the mesh in `(x,y,z)` `fVec3` format. A vertex is
-     *                  refered by its index in this array. **Maximum number of vertices per mesh: 32767.**
+     *                  referred to by its index in this array. **Maximum number of vertices per mesh: 32767.**
      *
-     * @param texcoord  Array of texture coordinate in `(u,v)` `fVec2` format. A texture coord is
-     *                  refered by its index in this array. Set to nullptr (and nb_texcoords=0) if
+     * @param texcoord  Array of texture coordinates in `(u,v)` `fVec2` format. A texture coordinate is
+     *                  referred to by its index in this array. Set to nullptr (and nb_texcoords=0) if
      *                  the mesh has no texture. **Maximum number of texture coords: 65535**
      *
-     * @param normal    Array of normal vectors in (x,y,z) fVec3 format. A normal vector is refered
+     * @param normal    Array of normal vectors in `(x,y,z)` `fVec3` format. A normal vector is referred to
      *                  by its index in this array. Set to nullptr if no normal vectors are defined.
      *                  **Normal vectors must have unit norm**. **Maximum number of normal vectors: 65535**
      *
      * @param face      Array of triangular faces. The array is composed of `uint16_t` and is divided into
      *                  *chains of triangles*. See below for details.
      *
-     * @param texture   image texture object associated with the mesh (or nullptr is none).
+     * @param texture   Image texture object associated with the mesh, or nullptr if none.
      *
-     * @param next      pointer to the next mesh (or nullptr if none). Chaining mesh enalbe to draw complex
-     *                  models with multiple textures images and more than 32767 vertices...
+     * @param next      Pointer to the next mesh, or nullptr if none. Chained meshes make it possible to draw
+     *                  complex models with multiple texture images and more than 32767 vertices.
      *
      *
      * **Structure of the `face` array**.
      *
-     * the array is composed of "chains of triangles". Each chain starts with a `uint16_t` that
+     * The array is composed of "chains of triangles". Each chain starts with a `uint16_t` that
      * specifies its length and is followed by a sequence of elements where each element occupies 1,
      * 2 or 3 `uint16_t`. The array takes the following general form:
      *
@@ -92,16 +92,16 @@ namespace tgx
      *
      * - An endtag `(int16_t)0` is used as a sentinel to mark the end of the `face` array.
      *
-     * - Each chain starts with a single uint16_t [chain length] that specify the number of
+     * - Each chain starts with a single uint16_t [chain length] that specifies the number of
      *   triangles in the chain. It is followed by [chain length]+2 elements.
      *
-     * A "element" represent a vertex of a triangle and occupies 1, 2 or 3 `uint16_t`
-     * depending on whether the textcoord and normal arrays exist in the mesh. The first
+     * An "element" represents a vertex of a triangle and occupies 1, 2 or 3 `uint16_t`
+     * depending on whether the texcoord and normal arrays exist in the mesh. The first
      * `uint16_t` of an element is the vertex index (with a *direction bit*), then is
      * followed by the texture index if a texture array is present and then finally followed by
      * the normal index if a normal array is present.
      *
-     * Schematiccally:
+     * Schematically:
      *
      *```
      *    1bit     15bits      (16bits, opt.)   (16bits, opt.)
@@ -173,9 +173,9 @@ namespace tgx
 
         RGBf color;                     ///< Default color to use when texturing is disabled.
 
-        float ambiant_strength;         ///< Object ambiant coefficient (how much it reflects the ambiant light component). Typical value: 0.2f.
+        float ambiant_strength;         ///< Object ambient coefficient (how much it reflects the ambient light component). Typical value: 0.2f.
         float diffuse_strength;         ///< Object diffuse coefficient (how much it reflects the diffuse light component). Typical value:  0.7f.
-        float specular_strength;        ///< Object ambiant coefficient (how much it reflects the specular light component). Typical value:  0.5f.
+        float specular_strength;        ///< Object specular coefficient (how much it reflects the specular light component). Typical value:  0.5f.
         int specular_exponent;          ///< Specular exponent. 0 to disable specular lighting. Typical value between 4 and 64.
 
         const Mesh3D * next;            ///< Next object to draw when chaining is enabled. nullptr at end of chain.
@@ -189,47 +189,62 @@ namespace tgx
 
 
     /**
-     * Creates a "cache version" of a mesh by copying part of its data into fast memory buffers.
+     * Creates a cached version of a Mesh3D object by copying selected data arrays
+     * into one or two user-supplied RAM buffers.
      *
-     * A typical scenario for using this method is when when using a MCU (Teesny, ESP32..) with
-     * limited RAM and slow FLASH memory.
+     * This is useful on MCUs where meshes are stored in slow flash/PROGMEM but some
+     * RAM is available for faster rendering. The method first copies the linked
+     * Mesh3D structures themselves, then tries to copy the requested arrays in the
+     * order specified by copy_order. Each allocation first tries the first buffer;
+     * if it does not fit there, it tries the second buffer when supplied. If an
+     * array does not fit in either buffer, its original pointer is kept.
      *
-     * The method copy as much as it can into the given RAM1/RAM2 buffers but will leave the arrays
-     * that are to big in their current place. The method never 'fails' but it may return the
-     * original mesh if caching is not possible.
-     *
-     * A C-string describes which arrays should be copied and in which order:
+     * Copy-order letters:
      *
      * - "V" = vertex array.
      * - "N" = normal array.
-     * - "T" = texture array.
-     * - "I" = texture image
-     * - "F" = face arrays.
+     * - "T" = texture-coordinate array.
+     * - "I" = texture image.
+     * - "F" = face array.
      *
-     * For example "VIT" means: "copy vertex arrays first, then image texture and finally texture
-     * coord (if there is still room)".
+     * For example, "VIT" means: copy vertex arrays first, then texture images,
+     * then texture-coordinate arrays if there is still room.
      *
      * @remark
-     * 1. The memory buffers supplied do **not** need to be be aligned, the method takes care of it.
+     * 1. The memory buffers supplied do not need to be aligned; the method aligns
+     *    allocations internally.
      * 2. The method also caches the sub-meshes linked after this one.
+     * 3. The returned mesh points either to cached arrays or to the original arrays
+     *    for data that did not fit in the supplied buffers.
      *
-     * @param  mesh        Pointer to the mesh to cache.
-     * @param  ram1_buffer pointer to the first memory buffer (should have the fastest access).
-     * @param  ram1_size   size in bytes of the ram1 buffer.
-     * @param  ram2_buffer (Optional) pointer to a second memory buffer, may be nullptr.
-     * @param  ram2_size   (Optional) size in bytes of the ram2 buffer or 0 if not supplied.
-     * @param  copy_order  (Optional) c string that describe which array should be copied and in which order.
-     * @param  ram1_used   If non-null, the number of bytes consumed in ram1_buffer is put here.
-     * @param  ram2_used   If non-null, the number of bytes consumed in ram2_buffer is put here.
+     * @param mesh        Pointer to the Mesh3D object to cache.
+     * @param ram1_buffer Pointer to the first memory buffer, usually the fastest RAM.
+     * @param ram1_size   Size in bytes of the first RAM buffer.
+     * @param ram2_buffer Optional pointer to a second memory buffer, may be nullptr.
+     * @param ram2_size   Optional size in bytes of the second RAM buffer, or 0 if not supplied.
+     * @param copy_order  Optional C string describing which data should be copied
+     *                    and in which order. Default is "VNTIF".
+     * @param ram1_used   If non-null, receives the number of bytes consumed in ram1_buffer.
+     * @param ram2_used   If non-null, receives the number of bytes consumed in ram2_buffer.
      *
-     * @returns The cached mesh (or the initial mesh if nothing was cached).
+     * @returns The cached mesh object, or the original mesh if even the Mesh3D
+     *          structures themselves could not be copied.
      */
     template<typename color_t> const Mesh3D<color_t> * cacheMesh(const Mesh3D<color_t> * mesh,
-                                                           void * ram1_buffer, size_t ram1_size,
-                                                           void * ram2_buffer = nullptr, size_t ram2_size = 0,
-                                                           const char * copy_order = "VNTIF",
-                                                           size_t * ram1_used = nullptr,
-                                                           size_t * ram2_used = nullptr);
+                                                            void * ram1_buffer, size_t ram1_size,
+                                                            void * ram2_buffer, size_t ram2_size,
+                                                            const char * copy_order = "VNTIF",
+                                                            size_t * ram1_used = nullptr,
+                                                            size_t * ram2_used = nullptr);
+
+
+    /**
+     * Convenience overload of cacheMesh() with a single RAM buffer.
+     */
+    template<typename color_t> const Mesh3D<color_t> * cacheMesh(const Mesh3D<color_t> * mesh,
+                                                            void * ram_buffer, size_t ram_size,
+                                                            const char * copy_order = "VNTIF",
+                                                            size_t * ram_used = nullptr);
 
 
 
@@ -247,7 +262,7 @@ namespace tgx
 
 
     /**
-     * Create a copy of a mesh where specified arrays in PROGMEM are copied to EXTMEM.
+     * Create a copy of a Mesh3D object where selected PROGMEM arrays are copied to EXTMEM.
      *
      * @attention This method is defined only for Teensy 4.1
      *
@@ -255,11 +270,12 @@ namespace tgx
      * 1. Obviously, external RAM must be present...
      * 2. Only arrays in PROGMEM are copied to EXTMEM. Arrays located elsewhere are not copied.
      * 3. The source mesh must not have any part located in EXTMEM already or the method will fail.
-     * 4. In practice, it is most efficient to copy textures to EXTMEM (the other arrays provide
-     * less improvments).
+     * 4. In practice, it is most efficient to copy textures to EXTMEM; the other arrays usually
+     * provide smaller improvements.
      *
-     * @returns a pointer to the new mesh or nullptr on error (nothing is allocated in that case). the
-     * methods also copies the sub-meshes linked to this one (via the ->next pointer).
+     * @returns A pointer to the new mesh, or nullptr on error. On error, all allocations
+     *          performed by the method are freed. The method also copies the sub-meshes
+     *          linked to this one via the next pointer.
      */
     template<typename color_t> Mesh3D<color_t>* copyMeshEXTMEM(const Mesh3D<color_t>* mesh,
                                                                 bool copy_vertices = false,
@@ -274,7 +290,7 @@ namespace tgx
      *
      * @attention This method is defined only for Teensy 4.1
      *
-     * Deletes also the linked sub-meshes is any.
+     * Also deletes linked sub-meshes, if any.
      */
     template<typename color_t> void freeMeshEXTMEM(Mesh3D<color_t>* mesh);
 

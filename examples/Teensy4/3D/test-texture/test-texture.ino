@@ -26,11 +26,17 @@ using namespace tgx;
     #include "spot.h"
     #include "bob.h"
     #include "blub.h"
+    #include "spot.cpp"
+    #include "bob.cpp"
+    #include "blub.cpp"
 #else 
     // ok, use the normal path
     #include "3Dmodels/spot/spot.h"
     #include "3Dmodels/bob/bob.h"
     #include "3Dmodels/blub/blub.h"
+    #include "3Dmodels/spot/spot.cpp"
+    #include "3Dmodels/bob/bob.cpp"
+    #include "3Dmodels/blub/blub.cpp"
 #endif
 
 
@@ -72,7 +78,7 @@ using namespace tgx;
 ILI9341_T4::ILI9341Driver tft(PIN_CS, PIN_DC, PIN_SCK, PIN_MOSI, PIN_MISO, PIN_RESET, PIN_TOUCH_CS, PIN_TOUCH_IRQ);
 
 
-// 2 x 8K diff buffers (used by tft) for differential updates
+// 2 x 8K diff buffers (used by tft) for differential updates.
 ILI9341_T4::DiffBuffStatic<8000> diff1;
 ILI9341_T4::DiffBuffStatic<8000> diff2;
 
@@ -93,23 +99,16 @@ uint16_t zbuf[SLX * SLY];
 Image<RGB565> im(fb, SLX, SLY);
 
 
+// Large cache for Mesh3Dv2 materials, textures and payload.
+static const size_t mesh_cache_size = 355000;
+DMAMEM char mesh_cache[mesh_cache_size];
+
+
 // only load the shaders we need (note that TGX_SHADER_NOTEXTURE is needed in order to draw without texturing !). 
 const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
-
-
-// DTCM and DMAMEM buffers used to cache meshes into RAM
-// which is faster than progmem: caching may lead to significant speedup. 
-
-const int DTCM_buf_size = 10000; // adjust this value to fill unused DTCM but leave at least 20K for the stack to be sure
-char buf_DTCM[DTCM_buf_size];
-
-const int DMAMEM_buf_size = 330000; // adjust this value to fill unused DMAMEM,  leave at least 10k for additional serial objects. 
-DMAMEM char buf_DMAMEM[DMAMEM_buf_size];
-
-const tgx::Mesh3D<tgx::RGB565> * cached_mesh; // pointer to the currently cached mesh. 
 
 
 // Print per-second FPS and frame timing on Serial.
@@ -124,20 +123,12 @@ void telemetrySetScene(const char* scene);
 /**
 * Overlay some info about the current mesh on the screen
 **/
-void drawInfo(tgx::Image<tgx::RGB565>& im, Shader shader, const tgx::Mesh3D<tgx::RGB565> & mesh)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
+void drawInfo(tgx::Image<tgx::RGB565>& im, Shader shader, const tgx::Mesh3Dv2<tgx::RGB565> & mesh, int nb_triangles)  // remark: need to keep the tgx:: prefix in function signatures because arduino messes with ino files....
     {
-    // count the number of triangles in the mesh (by iterating over linked meshes)
-    const Mesh3D<RGB565> * m = &mesh;
-    int nbt = 0;
-    while (m != nullptr)
-        {
-        nbt += m->nb_faces;
-        m = m->next;
-        }
     // display some info 
     char buf[80];
     im.drawText((mesh.name != nullptr ? mesh.name : "[unnamed mesh]"), { 3,12 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
-    sprintf(buf, "%d triangles", nbt);
+    sprintf(buf, "%d triangles", nb_triangles);
     im.drawText(buf, { 3,SLY - 21 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     sprintf(buf, "%s%s", (shader & SHADER_GOURAUD ? "Gouraud shading" : "flat shading"), (shader & SHADER_TEXTURE_BILINEAR ? " / texturing (bilinear)" : (shader & SHADER_TEXTURE_NEAREST ? " / texturing (nearest neighbour)" : "")));
     im.drawText(buf, { 3, SLY - 5 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
@@ -176,11 +167,12 @@ void setup()
     }
 
 
-void drawMesh(const Mesh3D<RGB565>* mesh, float scale, const char* scene_gouraud, const char* scene_nearest, const char* scene_bilinear)
+void drawModel(const Mesh3Dv2<RGB565>* mesh, int nb_triangles, float scale, const char* scene_gouraud, const char* scene_nearest, const char* scene_bilinear)
     {
-    // cache the first mesh to display in RAM to improve framerate
-    cached_mesh  = tgx::cacheMesh(mesh, buf_DTCM, DTCM_buf_size,  buf_DMAMEM, DMAMEM_buf_size);
-  
+    // Cache material records first so texture pointers can be remapped, then
+    // texture images, meshlet headers and payload.
+    const Mesh3Dv2<RGB565>* cached_mesh = tgx::cacheMesh(mesh, mesh_cache, mesh_cache_size, "MIPL");
+
     const int maxT = 18000; // display model for 15 seconds. 
     elapsedMillis em = 0;
     int prev_part = -1;
@@ -222,7 +214,7 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, const char* scene_gouraud
         tft.overlayFPS(fb); 
         
         // overlay some info 
-        drawInfo(im, shader, *mesh);
+        drawInfo(im, shader, *cached_mesh, nb_triangles);
 
         tft.update(fb);
 
@@ -235,11 +227,11 @@ void drawMesh(const Mesh3D<RGB565>* mesh, float scale, const char* scene_gouraud
 void loop()
     {
     
-    drawMesh(&spot, 13, "spot_gouraud", "spot_tex_nearest", "spot_tex_bilinear");
+    drawModel(&spot, 5856, 13, "spot_gouraud", "spot_tex_nearest", "spot_tex_bilinear");
     
-    drawMesh(&bob, 15, "bob_gouraud", "bob_tex_nearest", "bob_tex_bilinear");
+    drawModel(&bob, 10688, 15, "bob_gouraud", "bob_tex_nearest", "bob_tex_bilinear");
 
-    drawMesh(&blub, 15, "blub_gouraud", "blub_tex_nearest", "blub_tex_bilinear");
+    drawModel(&blub, 14208, 15, "blub_gouraud", "blub_tex_nearest", "blub_tex_bilinear");
 
     // random light orientation.
     const float angle = M_PI * random(0, 360) / 180.0f;
