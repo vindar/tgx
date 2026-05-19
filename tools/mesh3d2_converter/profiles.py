@@ -6,14 +6,14 @@ from .stripifier import DEFAULT_LKH_EXE
 
 
 MESHLET_PROFILES: dict[str, dict[str, float | int | str]] = {
-    "balanced": dict(target_vertices=52, max_triangles=70, max_normal_angle_deg=42.0, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, merge_passes=1, smooth_passes=0, merge_max_normal_angle_deg=48.0),
-    "smooth": dict(target_vertices=52, max_triangles=70, max_normal_angle_deg=42.0, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, merge_passes=1, smooth_passes=3, merge_max_normal_angle_deg=48.0),
+    "balanced": dict(target_vertices=30, max_triangles=127, max_normal_angle_deg=90.0, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, merge_passes=1, smooth_passes=0, merge_max_normal_angle_deg=48.0),
+    "smooth": dict(target_vertices=30, max_triangles=127, max_normal_angle_deg=90.0, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, merge_passes=1, smooth_passes=3, merge_max_normal_angle_deg=48.0),
     "coarse": dict(target_vertices=127, max_triangles=800, max_normal_angle_deg=120.0, radius_weight=0.2, normal_weight=0.5, vertex_weight=0.1, stop_score=1000.0, merge_passes=1, smooth_passes=1, merge_max_normal_angle_deg=120.0),
     "fast": dict(target_vertices=96, max_triangles=180, max_normal_angle_deg=58.0, radius_weight=0.7, normal_weight=3.0, vertex_weight=0.5, stop_score=30.0, merge_passes=1, smooth_passes=0, merge_max_normal_angle_deg=64.0),
     "material": dict(target_vertices=112, max_triangles=220, max_normal_angle_deg=125.0, radius_weight=0.5, normal_weight=0.5, vertex_weight=0.1, stop_score=999.0, merge_passes=2, smooth_passes=0, merge_max_normal_angle_deg=140.0),
     "non_culling": dict(builder="hybrid", target_vertices=127, max_triangles=512, max_normal_angle_deg=180.0, radius_weight=0.8, normal_weight=0.0, vertex_weight=0.1, stop_score=999.0, compatible_edge_weight=8.0, incompatible_edge_penalty=4.0, compatible_merge_weight=0.05, merge_passes=3, smooth_passes=0, merge_max_normal_angle_deg=180.0),
     "nocull": dict(builder="nocull", target_vertices=127, max_triangles=65535, max_normal_angle_deg=180.0, radius_weight=0.0, normal_weight=0.0, vertex_weight=0.0, stop_score=999.0, merge_passes=1, smooth_passes=0, merge_max_normal_angle_deg=180.0),
-    "visibility_merge": dict(builder="visibility_merge", target_vertices=52, max_triangles=127, max_normal_angle_deg=42.0, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, compatible_edge_weight=0.0, incompatible_edge_penalty=0.0, visibility_merge_cone_weight=45.0, visibility_merge_samples=1024, visibility_merge_size=1024, visibility_merge_margin_deg=-1.0, merge_passes=1, smooth_passes=0, merge_max_normal_angle_deg=48.0),
+    "visibility_merge": dict(builder="visibility_merge", target_vertices=30, max_triangles=127, max_normal_angle_deg=90.0, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, compatible_edge_weight=0.0, incompatible_edge_penalty=0.0, visibility_merge_cone_weight=45.0, visibility_merge_samples=1024, visibility_merge_size=1024, visibility_merge_margin_deg=-1.0, merge_passes=1, smooth_passes=0, merge_max_normal_angle_deg=48.0),
 }
 
 
@@ -68,10 +68,10 @@ def meshlet_options_from_args(args, mesh: ObjMesh | None = None, *, source: str 
 
     return MeshletBuildOptions(
         builder=str(opt("builder", "greedy")),
-        target_vertices=int(opt("target_vertices", 52)),
+        target_vertices=int(opt("target_vertices", 30)),
         max_vertices=int(opt("max_vertices", 127)),
-        max_triangles=int(opt("max_triangles", 70)),
-        max_normal_angle_deg=float(opt("max_normal_angle_deg", 42.0)),
+        max_triangles=int(opt("max_triangles", 127)),
+        max_normal_angle_deg=float(opt("max_normal_angle_deg", 90.0)),
         radius_weight=float(opt("radius_weight", 7.0)),
         normal_weight=float(opt("normal_weight", 18.0)),
         vertex_weight=float(opt("vertex_weight", 2.0)),

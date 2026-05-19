@@ -43,13 +43,6 @@
 #include "Mesh3D2_16.h"
 #include "Mesh3D3_16.h"
 
-
-
-
-
-
-
-
 namespace tgx
 {
 
@@ -2095,6 +2088,42 @@ namespace tgx
                  || _clip2(clipboundXY, fVec3(bb.maxX, bb.maxY, bb.minZ), M)
                  || _clip2(clipboundXY, fVec3(bb.maxX, bb.maxY, bb.maxZ), M));
             }
+
+
+#if TGX_MESHLET_SPHERE_CLIP
+        /** Build object-space clip planes from the current projection-modelview matrix. */
+        TGX_INLINE inline void _meshletClipPlanes(float clipboundXY, const fMat4& M, fVec4* planes, float* plane_norms) const
+            {
+            const float cx = clipboundXY;
+            planes[0] = fVec4(M.M[0] + cx * M.M[3], M.M[4] + cx * M.M[7], M.M[8] + cx * M.M[11], M.M[12] + cx * M.M[15]);
+            planes[1] = fVec4(-M.M[0] + cx * M.M[3], -M.M[4] + cx * M.M[7], -M.M[8] + cx * M.M[11], -M.M[12] + cx * M.M[15]);
+            planes[2] = fVec4(M.M[1] + cx * M.M[3], M.M[5] + cx * M.M[7], M.M[9] + cx * M.M[11], M.M[13] + cx * M.M[15]);
+            planes[3] = fVec4(-M.M[1] + cx * M.M[3], -M.M[5] + cx * M.M[7], -M.M[9] + cx * M.M[11], -M.M[13] + cx * M.M[15]);
+            planes[4] = fVec4(M.M[2] + M.M[3], M.M[6] + M.M[7], M.M[10] + M.M[11], M.M[14] + M.M[15]);
+            planes[5] = fVec4(-M.M[2] + M.M[3], -M.M[6] + M.M[7], -M.M[10] + M.M[11], -M.M[14] + M.M[15]);
+            for (int i = 0; i < 6; i++)
+                {
+                const fVec4& P = planes[i];
+                plane_norms[i] = sqrtf(P.x * P.x + P.y * P.y + P.z * P.z);
+                }
+            }
+
+
+        /** Return -1 when outside, 0 when fully inside, 1 when intersecting the clipping frustum. */
+        TGX_INLINE inline int _meshletSphereClip(const fVec3& center, float radius, const fVec4* planes, const float* plane_norms) const
+            {
+            bool intersects = false;
+            for (int i = 0; i < 6; i++)
+                {
+                const fVec4& P = planes[i];
+                const float d = P.x * center.x + P.y * center.y + P.z * center.z + P.w;
+                const float r = radius * plane_norms[i];
+                if (d < -r) return -1;
+                if (d < r) intersects = true;
+                }
+            return intersects ? 1 : 0;
+            }
+#endif
 
 
 

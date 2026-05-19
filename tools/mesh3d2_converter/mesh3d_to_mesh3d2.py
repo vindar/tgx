@@ -470,7 +470,7 @@ def _candidate_params(mesh: ObjMesh, mode: str) -> list[tuple[str, dict[str, flo
         return base
 
     base = [
-        ("balanced", dict(target_vertices=52, max_triangles=70, max_normal_angle=42.0, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, merge_passes=1, smooth_passes=0, merge_max_normal_angle=48.0)),
+        ("balanced", dict(target_vertices=30, max_triangles=127, max_normal_angle=90.0, radius_weight=7.0, normal_weight=18.0, vertex_weight=2.0, stop_score=4.8, merge_passes=1, smooth_passes=0, merge_max_normal_angle=48.0)),
         ("balanced_wide", dict(target_vertices=64, max_triangles=95, max_normal_angle=50.0, radius_weight=4.0, normal_weight=10.0, vertex_weight=1.0, stop_score=8.0, merge_passes=1, smooth_passes=0, merge_max_normal_angle=56.0)),
         ("coarse", dict(target_vertices=96, max_triangles=160, max_normal_angle=70.0, radius_weight=1.5, normal_weight=4.0, vertex_weight=0.4, stop_score=40.0, merge_passes=1, smooth_passes=0, merge_max_normal_angle=78.0)),
         ("xcoarse", dict(target_vertices=112, max_triangles=220, max_normal_angle=90.0, radius_weight=0.7, normal_weight=1.5, vertex_weight=0.2, stop_score=120.0, merge_passes=2, smooth_passes=0, merge_max_normal_angle=100.0)),

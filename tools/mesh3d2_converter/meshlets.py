@@ -19,12 +19,12 @@ from .progress import Heartbeat, log, step
 @dataclass
 class MeshletBuildOptions:
     builder: str = "greedy"
-    target_vertices: int = 52
+    target_vertices: int = 30
     max_vertices: int = 127
     max_texcoords: int = 255
     max_normals: int = 255
-    max_triangles: int = 70
-    max_normal_angle_deg: float = 42.0
+    max_triangles: int = 127
+    max_normal_angle_deg: float = 90.0
     radius_weight: float = 7.0
     normal_weight: float = 18.0
     vertex_weight: float = 2.0

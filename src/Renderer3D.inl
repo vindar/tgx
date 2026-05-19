@@ -1437,6 +1437,14 @@ namespace tgx
 
             // Check if the clipping test should be performed for each triangle in the mesh.
             const bool cliptestneeded = bbox_uninitialized || _clipTestNeeded(CLIPBOUND_XY, mesh->bounding_box, proj_modelview);
+#if TGX_MESHLET_SPHERE_CLIP
+            fVec4 meshlet_clip_planes[6];
+            float meshlet_clip_plane_norms[6];
+            if (cliptestneeded)
+                {
+                _meshletClipPlanes(CLIPBOUND_XY, proj_modelview, meshlet_clip_planes, meshlet_clip_plane_norms);
+                }
+#endif
 
             const bool ortho = _ortho;
 
@@ -1459,6 +1467,9 @@ namespace tgx
             for (uint16_t mli = 0; mli < mesh->nb_meshlets; mli++)
                 {
                 const Meshlet3D2& meshlet = mesh->meshlets[mli];
+#if TGX_MESHLET_SPHERE_CLIP
+                bool meshlet_cliptestneeded = cliptestneeded;
+#endif
 
                 if ((_culling_dir != 0) && (meshlet.cone_cos > -1.0f))
                     {
@@ -1467,6 +1478,15 @@ namespace tgx
                         continue;
                         }
                     }
+
+#if TGX_MESHLET_SPHERE_CLIP
+                if (cliptestneeded)
+                    {
+                    const int sphere_clip = _meshletSphereClip(meshlet.sphere_center, meshlet.sphere_radius, meshlet_clip_planes, meshlet_clip_plane_norms);
+                    if (sphere_clip < 0) continue;
+                    meshlet_cliptestneeded = (sphere_clip != 0);
+                    }
+#endif
 
                 const bool HAS_TEXCOORDS = (meshlet.nb_texcoords != 0);
                 const bool HAS_NORMALS = (meshlet.nb_normals != 0);
@@ -1568,7 +1588,11 @@ namespace tgx
                             }
 
                         // test if triangle must be clipped
+#if TGX_MESHLET_SPHERE_CLIP
+                        if (meshlet_cliptestneeded)
+#else
                         if (cliptestneeded)
+#endif
                             {
                             const bool needclip = (PPC2->P.z >= 0)
                                 | (PPC2->x < -CLIPBOUND_XY) | (PPC2->x > CLIPBOUND_XY)
@@ -1683,6 +1707,14 @@ namespace tgx
 
             // Check if the clipping test should be performed for each triangle in the mesh.
             const bool cliptestneeded = bbox_uninitialized || _clipTestNeeded(CLIPBOUND_XY, mesh->bounding_box, proj_modelview);
+#if TGX_MESHLET_SPHERE_CLIP
+            fVec4 meshlet_clip_planes[6];
+            float meshlet_clip_plane_norms[6];
+            if (cliptestneeded)
+                {
+                _meshletClipPlanes(CLIPBOUND_XY, proj_modelview, meshlet_clip_planes, meshlet_clip_plane_norms);
+                }
+#endif
 
             const bool ortho = _ortho;
 
@@ -1707,6 +1739,9 @@ namespace tgx
             for (uint16_t mli = 0; mli < mesh->nb_meshlets; mli++)
                 {
                 const Meshlet3D2_16& meshlet = mesh->meshlets[mli];
+#if TGX_MESHLET_SPHERE_CLIP
+                bool meshlet_cliptestneeded = cliptestneeded;
+#endif
 
                 if ((_culling_dir != 0) && (meshlet.cone_cos > -1.0f))
                     {
@@ -1715,6 +1750,15 @@ namespace tgx
                         continue;
                         }
                     }
+
+#if TGX_MESHLET_SPHERE_CLIP
+                if (cliptestneeded)
+                    {
+                    const int sphere_clip = _meshletSphereClip(meshlet.sphere_center, meshlet.sphere_radius, meshlet_clip_planes, meshlet_clip_plane_norms);
+                    if (sphere_clip < 0) continue;
+                    meshlet_cliptestneeded = (sphere_clip != 0);
+                    }
+#endif
 
                 const bool HAS_TEXCOORDS = (meshlet.nb_texcoords != 0);
                 const bool HAS_NORMALS = (meshlet.nb_normals != 0);
@@ -1821,7 +1865,11 @@ namespace tgx
                             }
 
                         // test if triangle must be clipped
+#if TGX_MESHLET_SPHERE_CLIP
+                        if (meshlet_cliptestneeded)
+#else
                         if (cliptestneeded)
+#endif
                             {
                             const bool needclip = (PPC2->P.z >= 0)
                                 | (PPC2->x < -CLIPBOUND_XY) | (PPC2->x > CLIPBOUND_XY)
@@ -4016,4 +4064,3 @@ namespace tgx
 #endif
 
 /** end of file */
-

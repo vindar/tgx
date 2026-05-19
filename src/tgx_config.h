@@ -242,5 +242,14 @@
 #define TGX_DEFAULT_NO_BLENDING -1.0f
 
 
+/**
+ * @def TGX_MESHLET_SPHERE_CLIP
+ * Set to 1 to let Mesh3D2/Mesh3D2_16 skip per-triangle clipping for meshlets whose bounding sphere is fully inside the frustum, and discard meshlets fully outside.
+ */
+#ifndef TGX_MESHLET_SPHERE_CLIP
+    #define TGX_MESHLET_SPHERE_CLIP 1
+#endif
+
+
 /** end of file */
 
