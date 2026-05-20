@@ -39,7 +39,7 @@
 #include "tgx.h" 
 
 // the mesh we will draw. 
-#include "buddha.h" 
+#include "buddha_v2.h" 
 
 
 const int LX = 600; // image dimension
@@ -68,7 +68,7 @@ int main()
     im.clear(tgx::RGB32_Gray);  // clear the image
     renderer.clearZbuffer(); // and the zbuffer.
     renderer.setModelPosScaleRot({ 0, 0.5f, -36 }, { 13,13,13 }, 0); // set the position of the mesh
-    renderer.drawMesh(&buddha, false); // and then draw it ! 
+    renderer.drawMesh(&buddha_v2, false); // and then draw it ! 
 
     // display on the screen using the CImg library.
     cimg_library::CImg<unsigned char> cimg_im((const unsigned char*)im_buffer, 4, LX, LY, 1); // create a temporary CImg image
