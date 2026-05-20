@@ -2,7 +2,7 @@ param(
     [string]$ComPort = "COM3",
     [string]$OutFile = "tmp\tgx_2d_teensy_results.txt",
     [string]$CsvOut = "tmp\tgx_2d_teensy_results.csv",
-    [string]$Baseline = "benchmark\2d\baselines\teensy4_hashes.csv",
+    [string]$Baseline = "validation\2d\baselines\teensy4_hashes.csv",
     [switch]$UpdateBaseline,
     [switch]$NoBaseline,
     [int]$TimeoutSeconds = 120

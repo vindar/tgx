@@ -15,9 +15,9 @@ Push-Location $root
 try {
     if ($Sketch -eq "") {
         if ($OptionalSet -eq "None") {
-            $Sketch = "benchmark\2d\teensy4\TGX2DTeensySuite"
+            $Sketch = "validation\2d\teensy4\TGX2DTeensySuite"
         } else {
-            $Sketch = "benchmark\2d\teensy4\TGX2DOptionalSuite"
+            $Sketch = "validation\2d\teensy4\TGX2DOptionalSuite"
         }
     }
 

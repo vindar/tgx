@@ -25,8 +25,8 @@
 #define PROGMEM
 #endif
 
-#include "../../../examples/benchmark/3Dmodels/buddha.h"
-#include "../../../examples/benchmark/3Dmodels/bunny_fig_small.h"
+#include "../../../examples/benchmark/3dmodels/buddha.h"
+#include "../../../examples/benchmark/3dmodels/bunny_fig_small.h"
 
 namespace
 {

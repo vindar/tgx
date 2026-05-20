@@ -9,18 +9,18 @@ CPU:
 - `RGB24`, `RGB32`, `RGBf`
 - 800x600 output images
 - BMP snapshots and CSV timings/hashes
-- stable CSV schema and baseline comparison via `benchmark/2d/baselines/cpu_hashes.csv`
-- optional golden-image comparison against archived BMP snapshots in `benchmark/2d/golden/cpu`, with diagnostic diff BMPs on mismatch
+- stable CSV schema and baseline comparison via `validation/2d/baselines/cpu_hashes.csv`
+- optional golden-image comparison against archived BMP snapshots in `validation/2d/golden/cpu`, with diagnostic diff BMPs on mismatch
 - extra BMP snapshots for state/copy/fill/spline-heavy groups
-- optional `-Large` desktop pass with 2048x2048 default output, configurable with `-LargeSize`, and a separate baseline at `benchmark/2d/baselines/cpu_large_hashes.csv`
+- optional `-Large` desktop pass with 2048x2048 default output, configurable with `-LargeSize`, and a separate baseline at `validation/2d/baselines/cpu_large_hashes.csv`
 
 Teensy 4.1:
 
 - `RGB565`
 - 320x240 ILI9341 display pages
 - USB Serial timings/hashes; the sketch waits for one received character before starting
-- machine-readable `RESULT` lines, CSV extraction and baseline comparison via `benchmark/2d/baselines/teensy4_hashes.csv`
-- separate optional-integration sketch for `PNGdec`, `JPEGDEC`, `AnimatedGIF` and `OpenFontRender`, with baseline comparison via `benchmark/2d/baselines/teensy4_optional_hashes.csv`
+- machine-readable `RESULT` lines, CSV extraction and baseline comparison via `validation/2d/baselines/teensy4_hashes.csv`
+- separate optional-integration sketch for `PNGdec`, `JPEGDEC`, `AnimatedGIF` and `OpenFontRender`, with baseline comparison via `validation/2d/baselines/teensy4_optional_hashes.csv`
 
 Covered method families in the first broad suite:
 
