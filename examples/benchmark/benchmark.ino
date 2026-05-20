@@ -116,7 +116,15 @@ using namespace tgx;
 #define FLASHMEM
 #endif
 
-#include "3Dmodels/bunny_fig_small.h"
+#ifndef TGX_BENCHMARK_USE_MESH3DV2
+    #define TGX_BENCHMARK_USE_MESH3DV2 1
+#endif
+
+#if TGX_BENCHMARK_USE_MESH3DV2
+    #include "3Dmodels/bunny_fig_small_v2.h"
+#else
+    #include "3Dmodels/bunny_fig_small.h"
+#endif
 
 #if !defined(TGX_BENCHMARK_T36) && !defined(TGX_BENCHMARK_T35) && !defined(TGX_BENCHMARK_RP2040)
     #define TGX_BENCHMARK_FULL_PROFILE 1
@@ -125,8 +133,13 @@ using namespace tgx;
 #endif
 
 #if TGX_BENCHMARK_FULL_PROFILE
-    #include "3Dmodels/buddha.h"
-    #include "3Dmodels/R2D2.h"
+    #if TGX_BENCHMARK_USE_MESH3DV2
+        #include "3Dmodels/buddha_v2.h"
+        #include "3Dmodels/R2D2_v2.h"
+    #else
+        #include "3Dmodels/buddha.h"
+        #include "3Dmodels/R2D2.h"
+    #endif
 #endif
 
 
@@ -598,7 +611,11 @@ FLASHMEM void drawSyntheticScene(int scene)
             renderer.drawWireFrameSphere(16, 8, 1.4f, RGB565_Cyan, 1.0f);
             break;
         case SCENE_WIRE_BUNNY:
+            #if TGX_BENCHMARK_USE_MESH3DV2
+            renderer.drawWireFrameMesh(&bunny_fig_small, 1.2f, RGB565_White, 1.0f);
+            #else
             renderer.drawWireFrameMesh(&bunny_fig_small, true, 1.2f, RGB565_White, 1.0f);
+            #endif
             break;
         }
     }
@@ -680,7 +697,13 @@ struct Score
 /**
 * Compute the score for a given mesh, with a given set of shaders at a given distance
 **/
-FLASHMEM Score computeScore(Score & finaleS, int weight, const char * text, const tgx::Mesh3D<tgx::RGB565>* mesh,
+#if TGX_BENCHMARK_USE_MESH3DV2
+using BenchmarkMesh = tgx::Mesh3Dv2<tgx::RGB565>;
+#else
+using BenchmarkMesh = tgx::Mesh3D<tgx::RGB565>;
+#endif
+
+FLASHMEM Score computeScore(Score & finaleS, int weight, const char * text, const BenchmarkMesh* mesh,
                    tgx::Shader shaders, int dist, int nb_frames = -1,
                    bool ortho = false, bool use_mesh_material = false)
     {
