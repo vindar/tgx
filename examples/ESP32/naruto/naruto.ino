@@ -35,8 +35,8 @@
 #include <tgx.h>
 
 // the mesh to draw
-#include "naruto.h"
-#define MESH &naruto_1
+#include "naruto_v2.h"
+#define MESH &naruto_v2
 
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
@@ -238,7 +238,7 @@ void loop()
         case 0: renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE);
                 renderer.drawMesh(MESH, false);
                 break;
-        case 1: renderer.drawWireFrameMesh(MESH, true);
+        case 1: renderer.drawWireFrameMesh(MESH);
                 break;
         case 2: renderer.setShaders(SHADER_FLAT);
                 renderer.drawMesh(MESH, false);
