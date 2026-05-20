@@ -13,6 +13,21 @@ signatures. The signatures are meant to catch broken projection, clipping,
 z-buffering, texturing, lighting, direct primitives, point drawing and wireframe
 paths without requiring every single pixel to be forever identical.
 
+The validation meshes are stored locally under `validation/3d/models` so the
+suite does not depend on example sketches. It currently covers both TGX mesh
+formats:
+
+- legacy `Mesh3D`: `bunny_fig_small`, `buddha` and `R2D2`;
+- compact `Mesh3Dv2`: `validation_bunny_v2`, `validation_buddha_v2` and
+  `validation_R2D2_v2`, plus the multi-material textured
+  `validation_falcon_v2`.
+
+The fixed scene set contains 23 scenes per color type. It includes legacy and
+Mesh3Dv2 real-mesh rendering, flat and Gouraud shading, nearest and bilinear
+texturing, orthographic projection, near/far clipping, z-buffer overlap, direct
+triangle/cube/sphere helpers, small-triangle grids, point/dot drawing and
+wireframe paths.
+
 Build and run from the repository root:
 
 ```powershell

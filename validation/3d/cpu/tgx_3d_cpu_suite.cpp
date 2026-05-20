@@ -25,8 +25,13 @@
 #define PROGMEM
 #endif
 
-#include "../../../examples/benchmark/3dmodels/buddha.h"
-#include "../../../examples/benchmark/3dmodels/bunny_fig_small.h"
+#include "../models/buddha.h"
+#include "../models/bunny_fig_small.h"
+#include "../models/R2D2.h"
+#include "../models/validation_buddha_v2.h"
+#include "../models/validation_bunny_v2.h"
+#include "../models/validation_R2D2_v2.h"
+#include "../models/falcon/validation_falcon_v2.h"
 
 namespace
 {
@@ -54,14 +59,25 @@ enum class SceneId
     BunnyTextureNearest,
     BunnyTextureBilinear,
     BuddhaFlat,
+    BunnyV2Gouraud,
+    BunnyV2TextureNearest,
+    BunnyV2TextureBilinear,
+    BuddhaV2Flat,
+    R2D2TextureBilinear,
+    R2D2V2TextureBilinear,
+    FalconV2TextureNearest,
     OrthoBunny,
+    OrthoBunnyV2,
     NearClip,
+    NearClipV2,
     FarClip,
+    FarClipV2,
     ZBufferOverlap,
     LargeTriangles,
     SmallTriangleGrid,
     DirectShapes,
     WirePoints,
+    WirePointsV2,
     Count
     };
 
@@ -77,14 +93,25 @@ const SceneDef SCENES[] = {
     { SceneId::BunnyTextureNearest, "bunny_texture_nearest", "real mesh, perspective-correct nearest texture" },
     { SceneId::BunnyTextureBilinear,"bunny_texture_bilinear","real mesh, perspective-correct bilinear texture" },
     { SceneId::BuddhaFlat,          "buddha_flat",           "dense real mesh, flat shading" },
+    { SceneId::BunnyV2Gouraud,      "bunny_v2_gouraud",      "Mesh3Dv2 mesh, Gouraud lighting" },
+    { SceneId::BunnyV2TextureNearest,"bunny_v2_texture_nearest","Mesh3Dv2 mesh, perspective-correct nearest texture" },
+    { SceneId::BunnyV2TextureBilinear,"bunny_v2_texture_bilinear","Mesh3Dv2 mesh, perspective-correct bilinear texture" },
+    { SceneId::BuddhaV2Flat,        "buddha_v2_flat",        "dense Mesh3Dv2 mesh, flat shading" },
+    { SceneId::R2D2TextureBilinear,  "r2d2_texture_bilinear", "legacy Mesh3D textured model with bilinear filtering" },
+    { SceneId::R2D2V2TextureBilinear,"r2d2_v2_texture_bilinear","textured Mesh3Dv2 model with bilinear filtering" },
+    { SceneId::FalconV2TextureNearest,"falcon_v2_texture_nearest","multi-material textured Mesh3Dv2 model" },
     { SceneId::OrthoBunny,          "ortho_bunny",           "orthographic projection" },
+    { SceneId::OrthoBunnyV2,        "ortho_bunny_v2",        "Mesh3Dv2 orthographic projection" },
     { SceneId::NearClip,            "near_clip",             "near-plane clipping" },
+    { SceneId::NearClipV2,          "near_clip_v2",          "Mesh3Dv2 near-plane clipping" },
     { SceneId::FarClip,             "far_clip",              "far-plane clipping" },
+    { SceneId::FarClipV2,           "far_clip_v2",           "Mesh3Dv2 far-plane clipping" },
     { SceneId::ZBufferOverlap,      "zbuffer_overlap",       "overlapping direct geometry" },
     { SceneId::LargeTriangles,      "large_triangles",       "few large filled triangles" },
     { SceneId::SmallTriangleGrid,   "small_triangle_grid",   "many small textured triangles" },
     { SceneId::DirectShapes,        "direct_shapes",         "direct cube and sphere helpers" },
-    { SceneId::WirePoints,          "wire_points",           "wireframe plus pixels/dots" }
+    { SceneId::WirePoints,          "wire_points",           "wireframe plus pixels/dots" },
+    { SceneId::WirePointsV2,        "wire_points_v2",        "Mesh3Dv2 wireframe plus pixels/dots" }
 };
 
 struct Options
@@ -136,6 +163,39 @@ template<typename color_t>
 RGB32 toRGB32(color_t c)
 {
     return RGB32(c);
+}
+
+template<typename color_t>
+MeshMaterial3Dv2<color_t> makeV2Material(const MeshMaterial3Dv2<RGB565>& src, const Image<color_t>* texture)
+{
+    return {
+        texture,
+        src.color,
+        src.ambiant_strength,
+        src.diffuse_strength,
+        src.specular_strength,
+        src.specular_exponent
+    };
+}
+
+template<typename color_t>
+void copyTexture(const Image<RGB565>* src, std::vector<color_t>& pixels, Image<color_t>& dst)
+{
+    if (src == nullptr)
+        {
+        dst.set(static_cast<color_t*>(nullptr), 0, 0);
+        return;
+        }
+
+    pixels.resize(size_t(src->lx()) * size_t(src->ly()));
+    for (int y = 0; y < src->ly(); y++)
+        {
+        for (int x = 0; x < src->lx(); x++)
+            {
+            pixels[size_t(x) + size_t(y) * size_t(src->lx())] = color_t((*src)(x, y));
+            }
+        }
+    dst.set(pixels.data(), src->lx(), src->ly());
 }
 
 template<typename color_t>
@@ -378,21 +438,27 @@ template<typename color_t>
 struct MeshAssets
     {
     std::vector<color_t> bunny_texture_pixels;
+    std::vector<color_t> r2d2_texture_pixels;
+    std::vector<std::vector<color_t>> falcon_texture_pixels;
     Image<color_t> bunny_texture;
+    Image<color_t> r2d2_texture;
+    std::vector<Image<color_t>> falcon_textures;
     Mesh3D<color_t> bunny;
     Mesh3D<color_t> buddha_mesh;
+    Mesh3D<color_t> r2d2_mesh;
+    std::vector<MeshMaterial3Dv2<color_t>> bunny_v2_materials;
+    std::vector<MeshMaterial3Dv2<color_t>> buddha_v2_materials;
+    std::vector<MeshMaterial3Dv2<color_t>> r2d2_v2_materials;
+    std::vector<MeshMaterial3Dv2<color_t>> falcon_v2_materials;
+    Mesh3Dv2<color_t> bunny_v2;
+    Mesh3Dv2<color_t> buddha_v2;
+    Mesh3Dv2<color_t> r2d2_v2;
+    Mesh3Dv2<color_t> falcon_v2;
 
     MeshAssets()
         {
-        bunny_texture_pixels.resize(256 * 256);
-        for (int y = 0; y < 256; y++)
-            {
-            for (int x = 0; x < 256; x++)
-                {
-                bunny_texture_pixels[size_t(x) + size_t(y) * 256] = color_t(bunny_fig_texture(x, y));
-                }
-            }
-        bunny_texture.set(bunny_texture_pixels.data(), 256, 256);
+        copyTexture(&bunny_fig_texture, bunny_texture_pixels, bunny_texture);
+        copyTexture(&R2D2_texture, r2d2_texture_pixels, r2d2_texture);
 
         bunny = {
             1,
@@ -436,6 +502,103 @@ struct MeshAssets
             nullptr,
             buddha.bounding_box,
             "buddha"
+        };
+
+        r2d2_mesh = {
+            1,
+            R2D2.nb_vertices,
+            R2D2.nb_texcoords,
+            R2D2.nb_normals,
+            R2D2.nb_faces,
+            R2D2.len_face,
+            R2D2.vertice,
+            R2D2.texcoord,
+            R2D2.normal,
+            R2D2.face,
+            &r2d2_texture,
+            R2D2.color,
+            R2D2.ambiant_strength,
+            R2D2.diffuse_strength,
+            R2D2.specular_strength,
+            R2D2.specular_exponent,
+            nullptr,
+            R2D2.bounding_box,
+            "R2D2"
+        };
+
+        bunny_v2_materials.reserve(validation_bunny_v2.nb_materials);
+        for (int i = 0; i < validation_bunny_v2.nb_materials; i++)
+            {
+            bunny_v2_materials.push_back(makeV2Material(validation_bunny_v2_materials[i],
+                                                        validation_bunny_v2_materials[i].texture ? &bunny_texture : nullptr));
+            }
+        bunny_v2 = {
+            validation_bunny_v2.id,
+            validation_bunny_v2.nb_meshlets,
+            validation_bunny_v2.nb_materials,
+            bunny_v2_materials.data(),
+            validation_bunny_v2.meshlets,
+            validation_bunny_v2.payload,
+            validation_bunny_v2.bounding_box,
+            "validation_bunny_v2"
+        };
+
+        buddha_v2_materials.reserve(validation_buddha_v2.nb_materials);
+        for (int i = 0; i < validation_buddha_v2.nb_materials; i++)
+            {
+            buddha_v2_materials.push_back(makeV2Material(validation_buddha_v2_materials[i], static_cast<const Image<color_t>*>(nullptr)));
+            }
+        buddha_v2 = {
+            validation_buddha_v2.id,
+            validation_buddha_v2.nb_meshlets,
+            validation_buddha_v2.nb_materials,
+            buddha_v2_materials.data(),
+            validation_buddha_v2.meshlets,
+            validation_buddha_v2.payload,
+            validation_buddha_v2.bounding_box,
+            "validation_buddha_v2"
+        };
+
+        r2d2_v2_materials.reserve(validation_R2D2_v2.nb_materials);
+        for (int i = 0; i < validation_R2D2_v2.nb_materials; i++)
+            {
+            r2d2_v2_materials.push_back(makeV2Material(validation_R2D2_v2_materials[i],
+                                                       validation_R2D2_v2_materials[i].texture ? &r2d2_texture : nullptr));
+            }
+        r2d2_v2 = {
+            validation_R2D2_v2.id,
+            validation_R2D2_v2.nb_meshlets,
+            validation_R2D2_v2.nb_materials,
+            r2d2_v2_materials.data(),
+            validation_R2D2_v2.meshlets,
+            validation_R2D2_v2.payload,
+            validation_R2D2_v2.bounding_box,
+            "validation_R2D2_v2"
+        };
+
+        falcon_texture_pixels.resize(validation_falcon_v2.nb_materials);
+        falcon_textures.resize(validation_falcon_v2.nb_materials);
+        falcon_v2_materials.reserve(validation_falcon_v2.nb_materials);
+        for (int i = 0; i < validation_falcon_v2.nb_materials; i++)
+            {
+            const auto* src_texture = validation_falcon_v2_materials[i].texture;
+            const Image<color_t>* dst_texture = nullptr;
+            if (src_texture != nullptr)
+                {
+                copyTexture(src_texture, falcon_texture_pixels[i], falcon_textures[i]);
+                dst_texture = &falcon_textures[i];
+                }
+            falcon_v2_materials.push_back(makeV2Material(validation_falcon_v2_materials[i], dst_texture));
+            }
+        falcon_v2 = {
+            validation_falcon_v2.id,
+            validation_falcon_v2.nb_meshlets,
+            validation_falcon_v2.nb_materials,
+            falcon_v2_materials.data(),
+            validation_falcon_v2.meshlets,
+            validation_falcon_v2.payload,
+            validation_falcon_v2.bounding_box,
+            "validation_falcon_v2"
         };
         }
     };
@@ -589,11 +752,68 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             r.drawMesh(&ctx.meshes.buddha_mesh, false);
             break;
 
+        case SceneId::BunnyV2Gouraud:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD);
+            r.setModelPosScaleRot({ 0.0f, 0.15f, -11.0f }, { 5.0f, 5.0f, 5.0f }, 24.0f, { 0.1f, 1.0f, 0.0f });
+            r.drawMesh(&ctx.meshes.bunny_v2, false);
+            break;
+
+        case SceneId::BunnyV2TextureNearest:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+            r.setModelPosScaleRot({ 0.0f, 0.15f, -10.5f }, { 5.1f, 5.1f, 5.1f }, -34.0f, { 0.15f, 1.0f, 0.0f });
+            r.drawMesh(&ctx.meshes.bunny_v2, true);
+            break;
+
+        case SceneId::BunnyV2TextureBilinear:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_CLAMP);
+            r.setModelPosScaleRot({ 0.0f, 0.15f, -10.5f }, { 5.1f, 5.1f, 5.1f }, 42.0f, { 0.2f, 1.0f, 0.0f });
+            r.drawMesh(&ctx.meshes.bunny_v2, true);
+            break;
+
+        case SceneId::BuddhaV2Flat:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            r.setMaterial(RGBf(0.9f, 0.62f, 0.28f), 0.20f, 0.72f, 0.35f, 18);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setModelPosScaleRot({ 0.0f, 0.45f, -32.0f }, { 13.0f, 13.0f, 13.0f }, -28.0f, { 0.0f, 1.0f, 0.0f });
+            r.drawMesh(&ctx.meshes.buddha_v2, false);
+            break;
+
+        case SceneId::R2D2TextureBilinear:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_CLAMP);
+            r.setModelPosScaleRot({ 0.0f, 0.15f, -7.8f }, { 3.0f, 3.0f, 3.0f }, -36.0f, { 0.05f, 1.0f, 0.0f });
+            r.drawMesh(&ctx.meshes.r2d2_mesh, false);
+            break;
+
+        case SceneId::R2D2V2TextureBilinear:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_CLAMP);
+            r.setModelPosScaleRot({ 0.0f, 0.15f, -7.8f }, { 3.0f, 3.0f, 3.0f }, -36.0f, { 0.05f, 1.0f, 0.0f });
+            r.drawMesh(&ctx.meshes.r2d2_v2, true);
+            break;
+
+        case SceneId::FalconV2TextureNearest:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+            r.setModelPosScaleRot({ 0.0f, -0.05f, -8.4f }, { 3.15f, 3.15f, 3.15f }, 68.0f, { 0.32f, 1.0f, 0.08f });
+            r.drawMesh(&ctx.meshes.falcon_v2, true);
+            break;
+
         case SceneId::OrthoBunny:
             r.setOrtho(-9.0f * float(W) / H, 9.0f * float(W) / H, -9.0f, 9.0f, 1.0f, 300.0f);
             r.setShaders(SHADER_ORTHO | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
             r.setModelPosScaleRot({ 0.0f, 0.0f, -35.0f }, { 5.8f, 5.8f, 5.8f }, 62.0f, { 0.0f, 1.0f, 0.0f });
             r.drawMesh(&ctx.meshes.bunny, false);
+            break;
+
+        case SceneId::OrthoBunnyV2:
+            r.setOrtho(-9.0f * float(W) / H, 9.0f * float(W) / H, -9.0f, 9.0f, 1.0f, 300.0f);
+            r.setShaders(SHADER_ORTHO | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+            r.setModelPosScaleRot({ 0.0f, 0.0f, -35.0f }, { 5.8f, 5.8f, 5.8f }, 62.0f, { 0.0f, 1.0f, 0.0f });
+            r.drawMesh(&ctx.meshes.bunny_v2, true);
             break;
 
         case SceneId::NearClip:
@@ -603,11 +823,25 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             r.drawMesh(&ctx.meshes.bunny, false);
             break;
 
+        case SceneId::NearClipV2:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+            r.setModelPosScaleRot({ 0.0f, -0.55f, -3.4f }, { 5.0f, 5.0f, 5.0f }, 18.0f, { 0.2f, 1.0f, 0.0f });
+            r.drawMesh(&ctx.meshes.bunny_v2, true);
+            break;
+
         case SceneId::FarClip:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
             r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
             r.setModelPosScaleRot({ 0.0f, 0.1f, -296.0f }, { 13.0f, 13.0f, 13.0f }, 20.0f, { 0.0f, 1.0f, 0.0f });
             r.drawMesh(&ctx.meshes.bunny, false);
+            break;
+
+        case SceneId::FarClipV2:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+            r.setModelPosScaleRot({ 0.0f, 0.1f, -296.0f }, { 13.0f, 13.0f, 13.0f }, 20.0f, { 0.0f, 1.0f, 0.0f });
+            r.drawMesh(&ctx.meshes.bunny_v2, true);
             break;
 
         case SceneId::ZBufferOverlap:
@@ -662,6 +896,15 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
             r.setModelPosScaleRot({ -0.8f, 0.15f, -9.0f }, { 4.4f, 4.4f, 4.4f }, 38.0f, { 0.1f, 1.0f, 0.0f });
             r.drawWireFrameMesh(&ctx.meshes.bunny, true, 1.15f, C<color_t>(230, 230, 245), 1.0f);
+            r.setModelPosScaleRot({ 1.45f, 0.0f, -8.4f }, { 2.2f, 2.2f, 2.2f }, 20.0f, { 0.2f, 1.0f, 0.0f });
+            r.drawDots(POINT_COUNT, ctx.point_positions.data(), ctx.point_radius_ind.data(), ctx.point_radii, ctx.point_colors_ind.data(), ctx.point_colors, ctx.point_opacity_ind.data(), ctx.point_opacities);
+            break;
+
+        case SceneId::WirePointsV2:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setModelPosScaleRot({ -0.8f, 0.15f, -9.0f }, { 4.4f, 4.4f, 4.4f }, 38.0f, { 0.1f, 1.0f, 0.0f });
+            r.drawWireFrameMesh(&ctx.meshes.bunny_v2, 1.15f, C<color_t>(230, 230, 245), 1.0f);
             r.setModelPosScaleRot({ 1.45f, 0.0f, -8.4f }, { 2.2f, 2.2f, 2.2f }, 20.0f, { 0.2f, 1.0f, 0.0f });
             r.drawDots(POINT_COUNT, ctx.point_positions.data(), ctx.point_radius_ind.data(), ctx.point_radii, ctx.point_colors_ind.data(), ctx.point_colors, ctx.point_opacity_ind.data(), ctx.point_opacities);
             break;

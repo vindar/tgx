@@ -7,7 +7,6 @@ if (NOT CMAKE_BUILD_TYPE)
 endif ()
 
 include_directories("../../../src/")
-include_directories("../../../examples/benchmark/")
 include_directories("../../../examples/CPU/buddhaOnCPU/")
 
 file(GLOB tgx_SRC "../../../src/*.cpp")

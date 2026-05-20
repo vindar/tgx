@@ -269,6 +269,10 @@ def _parse_texture_image(path: Path, symbol: str) -> TextureImage | None:
         y = i // width
         x = i % width
         rgb[y, x] = _rgb565_to_rgb(value)
+    # TGX texture headers generated from OBJ files store rows bottom-to-top to
+    # match the historical renderer convention.  PyVista/NumPy expects row 0 at
+    # the top of the image, so flip the decoded preview image vertically.
+    rgb = np.flipud(rgb)
     return TextureImage(symbol=symbol, width=width, height=height, rgb=rgb)
 
 
