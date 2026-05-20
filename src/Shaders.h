@@ -142,6 +142,8 @@ namespace tgx
                 fP1R = (int)(256 * cf1.R); fP1G = (int)(256 * cf1.G); fP1B = (int)(256 * cf1.B);
                 fP21R = (int)(256 * (cf2.R - cf1.R)); fP21G = (int)(256 * (cf2.G - cf1.G)); fP21B = (int)(256 * (cf2.B - cf1.B));
                 fP31R = (int)(256 * (cf3.R - cf1.R)); fP31G = (int)(256 * (cf3.G - cf1.G)); fP31B = (int)(256 * (cf3.B - cf1.B));
+                shiftC = (aera > (1 << 22)) ? 10 : 0;
+                aeraShifted = aera >> shiftC;
                 }
             else
                 {
@@ -326,9 +328,11 @@ namespace tgx
 
                         if constexpr (USE_GOURAUD)
                             {
-                            const int r = fP1R + ((C2 * fP21R + C3 * fP31R) / aera);
-                            const int g = fP1G + ((C2 * fP21G + C3 * fP31G) / aera);
-                            const int b = fP1B + ((C2 * fP21B + C3 * fP31B) / aera);
+                            const int32_t C2s = C2 >> shiftC;
+                            const int32_t C3s = C3 >> shiftC;
+                            const int r = fP1R + ((C2s * fP21R + C3s * fP31R) / aeraShifted);
+                            const int g = fP1G + ((C2s * fP21G + C3s * fP31G) / aeraShifted);
+                            const int b = fP1B + ((C2s * fP21B + C3s * fP31B) / aeraShifted);
                             final_color.mult256(r, g, b);
                             }
                         else // Flat
