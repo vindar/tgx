@@ -4,7 +4,7 @@ This directory contains broad 2D API validation and timing suites.
 
 ## CPU Suite
 
-Location: `validation/2d/cpu`
+Location: `tools/validation/2d/cpu`
 
 The CPU suite renders the same 800x600 scene with:
 
@@ -25,11 +25,11 @@ It writes:
 Build and run from the repository root:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\run_cpu.ps1
 ```
 
 The script configures, builds, runs the suite, and compares hashes/changed-pixel
-counts against `validation/2d/baselines/cpu_hashes.csv`. The CSV schema is stable:
+counts against `tools/validation/2d/baselines/cpu_hashes.csv`. The CSV schema is stable:
 
 ```text
 schema_version,platform,color_type,group,kind,iterations,total_us,per_iter_us,hash,changed_pixels,ok,note
@@ -39,15 +39,15 @@ Use this only when a rendering change is intentional and the new output has been
 reviewed:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1 -UpdateBaseline
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\run_cpu.ps1 -UpdateBaseline
 ```
 
 For visual regression checks, the CPU suite can compare the generated BMP
 snapshots pixel-by-pixel against archived golden images in
-`validation/2d/golden/cpu`:
+`tools/validation/2d/golden/cpu`:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1 -Golden
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\run_cpu.ps1 -Golden
 ```
 
 This adds `kind=golden` rows to the CSV. `changed_pixels` is the number of
@@ -60,7 +60,7 @@ deltas.
 Use this only after reviewing an intentional visual change:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1 -UpdateGolden
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\run_cpu.ps1 -UpdateGolden
 ```
 
 The golden pass covers the six regular 800x600 snapshots for `RGB24`, `RGB32`
@@ -71,40 +71,40 @@ For desktop stress/performance passes, add `-Large`. This keeps the regular
 800x600 coverage and appends 2048x2048 large-frame groups for gradients,
 primitives, blits/textured primitives, text and a full layered scene. It writes
 to `tmp\tgx_2d_cpu_suite_large` by default and compares against
-`validation/2d/baselines/cpu_large_hashes.csv`:
+`tools/validation/2d/baselines/cpu_large_hashes.csv`:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1 -Large
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\run_cpu.ps1 -Large
 ```
 
 The large frame size can be changed for heavier local tests:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1 -Large -LargeSize 4096 -NoBaseline
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\run_cpu.ps1 -Large -LargeSize 4096 -NoBaseline
 ```
 
 Update the large baseline only after reviewing an intentional rendering change:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1 -Large -UpdateBaseline
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\run_cpu.ps1 -Large -UpdateBaseline
 ```
 
 Recommended CPU validation before committing changes to the 2D suite:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1 -Golden
-powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1 -Large
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\run_cpu.ps1 -Golden
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\run_cpu.ps1 -Large
 ```
 
 The old direct executable form is still supported:
 
 ```powershell
-.\tmp\build_validation_2d_cpu\Release\tgx_2d_cpu_suite.exe --out tmp\tgx_2d_cpu_suite --baseline validation\2d\baselines\cpu_hashes.csv
+.\tmp\build_tools_validation_2d_cpu\Release\tgx_2d_cpu_suite.exe --out tmp\tgx_2d_cpu_suite --baseline tools\validation\2d\baselines\cpu_hashes.csv
 ```
 
 ## Teensy 4.1 Suite
 
-Location: `validation/2d/teensy4/TGX2DTeensySuite`
+Location: `tools/validation/2d/teensy4/TGX2DTeensySuite`
 
 The Teensy suite uses a 320x240 `RGB565` framebuffer with the standard
 `ILI9341_T4` wiring used by the examples. It displays one page per method group
@@ -115,7 +115,7 @@ start screen and waits for another character so the same upload can be repeated.
 Compile from the repository root:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\build_teensy.ps1
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\build_teensy.ps1
 ```
 
 The sketch is intentionally a single upload so the complete 2D pass can run
@@ -124,15 +124,15 @@ without repeatedly reprogramming the board.
 Upload and run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\upload_teensy.ps1
-powershell -ExecutionPolicy Bypass -File validation\2d\read_teensy_serial.ps1
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\upload_teensy.ps1
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\read_teensy_serial.ps1
 ```
 
 Recommended Teensy build validation before committing changes to the 2D suite:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\build_teensy.ps1
-powershell -ExecutionPolicy Bypass -File validation\2d\build_teensy.ps1 -BuildDir tmp\build_2d_teensy_optional -OptionalSet All
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\build_teensy.ps1
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\build_teensy.ps1 -BuildDir tmp\build_2d_teensy_optional -OptionalSet All
 ```
 
 The serial output contains human-readable timing lines and machine-readable
@@ -142,16 +142,16 @@ The serial output contains human-readable timing lines and machine-readable
 - `tmp\tgx_2d_teensy_results.csv`
 
 It also compares the machine-readable results with
-`validation/2d/baselines/teensy4_hashes.csv`. Update that baseline only after
+`tools/validation/2d/baselines/teensy4_hashes.csv`. Update that baseline only after
 reviewing an intentional rendering change:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\read_teensy_serial.ps1 -UpdateBaseline
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\read_teensy_serial.ps1 -UpdateBaseline
 ```
 
 ## Teensy 4.1 Optional 2D Integrations
 
-Location: `validation/2d/teensy4/TGX2DOptionalSuite`
+Location: `tools/validation/2d/teensy4/TGX2DOptionalSuite`
 
 This separate sketch validates and benchmarks TGX wrappers for optional Arduino
 libraries when they are installed:
@@ -169,14 +169,14 @@ same display wiring and CSV format, but only exercises the optional wrappers.
 Build, upload and read results:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\build_teensy.ps1 -BuildDir tmp\build_2d_teensy_optional -OptionalSet All
-powershell -ExecutionPolicy Bypass -File validation\2d\upload_teensy.ps1 -BuildDir tmp\build_2d_teensy_optional -Sketch validation\2d\teensy4\TGX2DOptionalSuite
-powershell -ExecutionPolicy Bypass -File validation\2d\read_teensy_serial.ps1 -OutFile tmp\tgx_2d_teensy_optional_results.txt -CsvOut tmp\tgx_2d_teensy_optional_results.csv -Baseline validation\2d\baselines\teensy4_optional_hashes.csv
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\build_teensy.ps1 -BuildDir tmp\build_2d_teensy_optional -OptionalSet All
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\upload_teensy.ps1 -BuildDir tmp\build_2d_teensy_optional -Sketch tools\validation\2d\teensy4\TGX2DOptionalSuite
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\read_teensy_serial.ps1 -OutFile tmp\tgx_2d_teensy_optional_results.txt -CsvOut tmp\tgx_2d_teensy_optional_results.csv -Baseline tools\validation\2d\baselines\teensy4_optional_hashes.csv
 ```
 
 Update the optional baseline only after reviewing an intentional rendering
 change:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\2d\read_teensy_serial.ps1 -OutFile tmp\tgx_2d_teensy_optional_results.txt -CsvOut tmp\tgx_2d_teensy_optional_results.csv -Baseline validation\2d\baselines\teensy4_optional_hashes.csv -UpdateBaseline
+powershell -ExecutionPolicy Bypass -File tools\validation\2d\read_teensy_serial.ps1 -OutFile tmp\tgx_2d_teensy_optional_results.txt -CsvOut tmp\tgx_2d_teensy_optional_results.csv -Baseline tools\validation\2d\baselines\teensy4_optional_hashes.csv -UpdateBaseline
 ```

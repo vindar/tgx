@@ -114,22 +114,27 @@ $(document).ready(function(){initNavTree('_mesh3_d_8h.html',''); initResizable()
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_mesh3_d.html">tgx::Mesh3D&lt; color_t &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">3D mesh data stucture.  <a href="structtgx_1_1_mesh3_d.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">3D mesh data structure.  <a href="structtgx_1_1_mesh3_d.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a702507b5a357a4e5d538c0851118e5ea"><td class="memTemplParams" colspan="2">template&lt;typename color_t &gt; </td></tr>
 <tr class="memitem:a702507b5a357a4e5d538c0851118e5ea"><td class="memTemplItemLeft" align="right" valign="top">const Mesh3D&lt; color_t &gt; *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_mesh3_d_8h.html#a702507b5a357a4e5d538c0851118e5ea">tgx::cacheMesh</a> (const Mesh3D&lt; color_t &gt; *mesh, void *ram1_buffer, size_t ram1_size, void *ram2_buffer, size_t ram2_size, const char *copy_order=&quot;VNTIF&quot;, size_t *ram1_used=nullptr, size_t *ram2_used=nullptr)</td></tr>
-<tr class="memdesc:a702507b5a357a4e5d538c0851118e5ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a "cache version" of a mesh by copying part of its data into fast memory buffers.  <a href="_mesh3_d_8h.html#a702507b5a357a4e5d538c0851118e5ea">More...</a><br /></td></tr>
+<tr class="memdesc:a702507b5a357a4e5d538c0851118e5ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a cached version of a <a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data structure.">Mesh3D</a> object by copying selected data arrays into one or two user-supplied RAM buffers.  <a href="_mesh3_d_8h.html#a702507b5a357a4e5d538c0851118e5ea">More...</a><br /></td></tr>
 <tr class="separator:a702507b5a357a4e5d538c0851118e5ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23c2d06caa669dea40792bddefd62782"><td class="memTemplParams" colspan="2"><a id="a23c2d06caa669dea40792bddefd62782" name="a23c2d06caa669dea40792bddefd62782"></a>
+template&lt;typename color_t &gt; </td></tr>
+<tr class="memitem:a23c2d06caa669dea40792bddefd62782"><td class="memTemplItemLeft" align="right" valign="top">const Mesh3D&lt; color_t &gt; *&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tgx::cacheMesh</b> (const Mesh3D&lt; color_t &gt; *mesh, void *ram_buffer, size_t ram_size, const char *copy_order=&quot;VNTIF&quot;, size_t *ram_used=nullptr)</td></tr>
+<tr class="memdesc:a23c2d06caa669dea40792bddefd62782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience overload of <a class="el" href="_mesh3_d_8h.html#a702507b5a357a4e5d538c0851118e5ea" title="Creates a cached version of a Mesh3D object by copying selected data arrays into one or two user-supp...">cacheMesh()</a> with a single RAM buffer. <br /></td></tr>
+<tr class="separator:a23c2d06caa669dea40792bddefd62782"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0e5c4ceb583a160ecfbd2b699966a43"><td class="memTemplParams" colspan="2">template&lt;typename color_t &gt; </td></tr>
 <tr class="memitem:aa0e5c4ceb583a160ecfbd2b699966a43"><td class="memTemplItemLeft" align="right" valign="top">Mesh3D&lt; color_t &gt; *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_mesh3_d_8h.html#aa0e5c4ceb583a160ecfbd2b699966a43">tgx::copyMeshEXTMEM</a> (const Mesh3D&lt; color_t &gt; *mesh, bool copy_vertices=false, bool copy_normals=false, bool copy_texcoords=false, bool copy_textures=true, bool copy_faces=false)</td></tr>
-<tr class="memdesc:aa0e5c4ceb583a160ecfbd2b699966a43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a copy of a mesh where specified arrays in PROGMEM are copied to EXTMEM.  <a href="_mesh3_d_8h.html#aa0e5c4ceb583a160ecfbd2b699966a43">More...</a><br /></td></tr>
+<tr class="memdesc:aa0e5c4ceb583a160ecfbd2b699966a43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a copy of a <a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data structure.">Mesh3D</a> object where selected PROGMEM arrays are copied to EXTMEM.  <a href="_mesh3_d_8h.html#aa0e5c4ceb583a160ecfbd2b699966a43">More...</a><br /></td></tr>
 <tr class="separator:aa0e5c4ceb583a160ecfbd2b699966a43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0575bac62b3bc78a8b151d17aa4fa742"><td class="memTemplParams" colspan="2">template&lt;typename color_t &gt; </td></tr>
 <tr class="memitem:a0575bac62b3bc78a8b151d17aa4fa742"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_mesh3_d_8h.html#a0575bac62b3bc78a8b151d17aa4fa742">tgx::freeMeshEXTMEM</a> (Mesh3D&lt; color_t &gt; *mesh)</td></tr>
-<tr class="memdesc:a0575bac62b3bc78a8b151d17aa4fa742"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete a mesh allocated with <a class="el" href="_mesh3_d_8h.html#aa0e5c4ceb583a160ecfbd2b699966a43" title="Create a copy of a mesh where specified arrays in PROGMEM are copied to EXTMEM.">copyMeshEXTMEM()</a>.  <a href="_mesh3_d_8h.html#a0575bac62b3bc78a8b151d17aa4fa742">More...</a><br /></td></tr>
+<tr class="memdesc:a0575bac62b3bc78a8b151d17aa4fa742"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete a mesh allocated with <a class="el" href="_mesh3_d_8h.html#aa0e5c4ceb583a160ecfbd2b699966a43" title="Create a copy of a Mesh3D object where selected PROGMEM arrays are copied to EXTMEM.">copyMeshEXTMEM()</a>.  <a href="_mesh3_d_8h.html#a0575bac62b3bc78a8b151d17aa4fa742">More...</a><br /></td></tr>
 <tr class="separator:a0575bac62b3bc78a8b151d17aa4fa742"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -199,38 +204,37 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Creates a "cache version" of a mesh by copying part of its data into fast memory buffers. </p>
-<p >A typical scenario for using this method is when when using a MCU (Teesny, ESP32..) with limited RAM and slow FLASH memory.</p>
-<p >The method copy as much as it can into the given RAM1/RAM2 buffers but will leave the arrays that are to big in their current place. The method never 'fails' but it may return the original mesh if caching is not possible.</p>
-<p >A C-string describes which arrays should be copied and in which order:</p>
+<p>Creates a cached version of a Mesh3D object by copying selected data arrays into one or two user-supplied RAM buffers. </p>
+<p >This is useful on MCUs where meshes are stored in slow flash/PROGMEM but some RAM is available for faster rendering. The method first copies the linked Mesh3D structures themselves, then tries to copy the requested arrays in the order specified by copy_order. Each allocation first tries the first buffer; if it does not fit there, it tries the second buffer when supplied. If an array does not fit in either buffer, its original pointer is kept.</p>
+<p >Copy-order letters:</p>
 <ul>
 <li>"V" = vertex array.</li>
 <li>"N" = normal array.</li>
-<li>"T" = texture array.</li>
-<li>"I" = texture image</li>
-<li>"F" = face arrays.</li>
+<li>"T" = texture-coordinate array.</li>
+<li>"I" = texture image.</li>
+<li>"F" = face array.</li>
 </ul>
-<p >For example "VIT" means: "copy vertex arrays first, then image texture and finally texture
-coord (if there is still room)".</p>
+<p >For example, "VIT" means: copy vertex arrays first, then texture images, then texture-coordinate arrays if there is still room.</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
-<li>The memory buffers supplied do <b>not</b> need to be be aligned, the method takes care of it.</li>
+<li>The memory buffers supplied do not need to be aligned; the method aligns allocations internally.</li>
 <li>The method also caches the sub-meshes linked after this one.</li>
+<li>The returned mesh points either to cached arrays or to the original arrays for data that did not fit in the supplied buffers.</li>
 </ol>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mesh</td><td>Pointer to the mesh to cache. </td></tr>
-    <tr><td class="paramname">ram1_buffer</td><td>pointer to the first memory buffer (should have the fastest access). </td></tr>
-    <tr><td class="paramname">ram1_size</td><td>size in bytes of the ram1 buffer. </td></tr>
-    <tr><td class="paramname">ram2_buffer</td><td>pointer to a second memory buffer, may be nullptr. </td></tr>
-    <tr><td class="paramname">ram2_size</td><td>size in bytes of the ram2 buffer or 0 if not supplied. </td></tr>
-    <tr><td class="paramname">copy_order</td><td>(Optional) c string that describe which array should be copied and in which order. </td></tr>
-    <tr><td class="paramname">ram1_used</td><td>If non-null, the number of bytes consumed in ram1_buffer is put here. </td></tr>
-    <tr><td class="paramname">ram2_used</td><td>If non-null, the number of bytes consumed in ram2_buffer is put here.</td></tr>
+    <tr><td class="paramname">mesh</td><td>Pointer to the Mesh3D object to cache. </td></tr>
+    <tr><td class="paramname">ram1_buffer</td><td>Pointer to the first memory buffer, usually the fastest RAM. </td></tr>
+    <tr><td class="paramname">ram1_size</td><td>Size in bytes of the first RAM buffer. </td></tr>
+    <tr><td class="paramname">ram2_buffer</td><td>Optional pointer to a second memory buffer, may be nullptr. </td></tr>
+    <tr><td class="paramname">ram2_size</td><td>Optional size in bytes of the second RAM buffer, or 0 if not supplied. </td></tr>
+    <tr><td class="paramname">copy_order</td><td>Optional C string describing which data should be copied and in which order. Default is "VNTIF". </td></tr>
+    <tr><td class="paramname">ram1_used</td><td>If non-null, receives the number of bytes consumed in ram1_buffer. </td></tr>
+    <tr><td class="paramname">ram2_used</td><td>If non-null, receives the number of bytes consumed in ram2_buffer.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The cached mesh (or the initial mesh if nothing was cached). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The cached mesh object, or the original mesh if even the Mesh3D structures themselves could not be copied. </dd></dl>
 
 </div>
 </div>
@@ -286,16 +290,16 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Create a copy of a mesh where specified arrays in PROGMEM are copied to EXTMEM. </p>
+<p>Create a copy of a Mesh3D object where selected PROGMEM arrays are copied to EXTMEM. </p>
 <dl class="section attention"><dt>Attention</dt><dd>This method is defined only for Teensy 4.1</dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>Obviously, external RAM must be present...</li>
 <li>Only arrays in PROGMEM are copied to EXTMEM. Arrays located elsewhere are not copied.</li>
 <li>The source mesh must not have any part located in EXTMEM already or the method will fail.</li>
-<li>In practice, it is most efficient to copy textures to EXTMEM (the other arrays provide less improvments).</li>
+<li>In practice, it is most efficient to copy textures to EXTMEM; the other arrays usually provide smaller improvements.</li>
 </ol>
 </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>a pointer to the new mesh or nullptr on error (nothing is allocated in that case). the methods also copies the sub-meshes linked to this one (via the -&gt;next pointer). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the new mesh, or nullptr on error. On error, all allocations performed by the method are freed. The method also copies the sub-meshes linked to this one via the next pointer. </dd></dl>
 
 </div>
 </div>
@@ -319,7 +323,7 @@ template&lt;typename color_t &gt; </div>
 
 <p>Delete a mesh allocated with copyMeshEXTMEM(). </p>
 <dl class="section attention"><dt>Attention</dt><dd>This method is defined only for Teensy 4.1</dd></dl>
-<p>Deletes also the linked sub-meshes is any. </p>
+<p>Also deletes linked sub-meshes, if any. </p>
 
 </div>
 </div>

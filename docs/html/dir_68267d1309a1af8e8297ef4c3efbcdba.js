@@ -12,6 +12,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "Image.h", "_image_8h.html", "_image_8h" ],
     [ "Mat4.h", "_mat4_8h.html", "_mat4_8h" ],
     [ "Mesh3D.h", "_mesh3_d_8h.html", "_mesh3_d_8h" ],
+    [ "Mesh3Dv2.h", "_mesh3_dv2_8h.html", "_mesh3_dv2_8h" ],
     [ "Misc.h", "_misc_8h.html", "_misc_8h" ],
     [ "Rasterizer.h", "_rasterizer_8h.html", "_rasterizer_8h" ],
     [ "Renderer3D.h", "_renderer3_d_8h.html", "_renderer3_d_8h" ],

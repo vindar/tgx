@@ -2,7 +2,7 @@ param(
     [string]$ComPort = "COM3",
     [string]$OutFile = "tmp\tgx_2d_teensy_results.txt",
     [string]$CsvOut = "tmp\tgx_2d_teensy_results.csv",
-    [string]$Baseline = "validation\2d\baselines\teensy4_hashes.csv",
+    [string]$Baseline = "tools\validation\2d\baselines\teensy4_hashes.csv",
     [switch]$UpdateBaseline,
     [switch]$NoBaseline,
     [int]$TimeoutSeconds = 120
@@ -10,7 +10,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$root = Resolve-Path (Join-Path $PSScriptRoot "..\..")
+$root = Resolve-Path (Join-Path $PSScriptRoot "..\..\..")
 Push-Location $root
 try {
     $port = New-Object System.IO.Ports.SerialPort $ComPort, 9600, 'None', 8, 'One'

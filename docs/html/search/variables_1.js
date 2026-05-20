@@ -8,5 +8,5 @@ var searchData=
   ['bits_5fwidth_5',['bits_width',['../struct_i_l_i9341__t3__font__t.html#a67d9db4401a397e261b76991ad11b05f',1,'ILI9341_t3_font_t']]],
   ['bits_5fxoffset_6',['bits_xoffset',['../struct_i_l_i9341__t3__font__t.html#afbc3a7675abac24d03b5d9441d652274',1,'ILI9341_t3_font_t']]],
   ['bits_5fyoffset_7',['bits_yoffset',['../struct_i_l_i9341__t3__font__t.html#a1067bcb9dedeebc4870802e6bd825027',1,'ILI9341_t3_font_t']]],
-  ['bounding_5fbox_8',['bounding_box',['../structtgx_1_1_mesh3_d.html#a69d25b4bcca652488b53466161099870',1,'tgx::Mesh3D']]]
+  ['bounding_5fbox_8',['bounding_box',['../structtgx_1_1_mesh3_d.html#a69d25b4bcca652488b53466161099870',1,'tgx::Mesh3D::bounding_box()'],['../structtgx_1_1_mesh3_dv2.html#a878dc51e1655d8d45eadf915285058dc',1,'tgx::Mesh3Dv2::bounding_box()']]]
 ];

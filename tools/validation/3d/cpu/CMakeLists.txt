@@ -6,10 +6,10 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif ()
 
-include_directories("../../../src/")
-include_directories("../../../examples/CPU/buddhaOnCPU/")
+include_directories("../../../../src/")
+include_directories("../../../../examples/CPU/buddhaOnCPU/")
 
-file(GLOB tgx_SRC "../../../src/*.cpp")
+file(GLOB tgx_SRC "../../../../src/*.cpp")
 
 add_executable(${PROJECT_NAME}
     tgx_3d_cpu_suite.cpp

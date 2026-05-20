@@ -13,7 +13,7 @@ signatures. The signatures are meant to catch broken projection, clipping,
 z-buffering, texturing, lighting, direct primitives, point drawing and wireframe
 paths without requiring every single pixel to be forever identical.
 
-The validation meshes are stored locally under `validation/3d/models` so the
+The validation meshes are stored locally under `tools/validation/3d/models` so the
 suite does not depend on example sketches. It currently covers both TGX mesh
 formats:
 
@@ -31,7 +31,7 @@ wireframe paths.
 Build and run from the repository root:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\3d\run_cpu.ps1
+powershell -ExecutionPolicy Bypass -File tools\validation\3d\run_cpu.ps1
 ```
 
 Comparison modes:
@@ -45,24 +45,24 @@ Comparison modes:
 Examples:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\3d\run_cpu.ps1 -Compare strict
-powershell -ExecutionPolicy Bypass -File validation\3d\run_cpu.ps1 -Compare smoke
+powershell -ExecutionPolicy Bypass -File tools\validation\3d\run_cpu.ps1 -Compare strict
+powershell -ExecutionPolicy Bypass -File tools\validation\3d\run_cpu.ps1 -Compare smoke
 ```
 
 Use this only after reviewing an intentional rendering change:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\3d\run_cpu.ps1 -UpdateBaseline -UpdateGolden
+powershell -ExecutionPolicy Bypass -File tools\validation\3d\run_cpu.ps1 -UpdateBaseline -UpdateGolden
 ```
 
 The suite can also run a CImg desktop animation:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\3d\run_cpu.ps1 -Demo
+powershell -ExecutionPolicy Bypass -File tools\validation\3d\run_cpu.ps1 -Demo
 ```
 
 Use `-DemoOnly` when you only want to preview the animation without running the
 validation scenes afterwards.
 
 Generated runtime files are written under `tmp\tgx_3d_cpu_suite` by default.
-Golden images are stored under `validation\3d\golden\cpu`.
+Golden images are stored under `tools\validation\3d\golden\cpu`.

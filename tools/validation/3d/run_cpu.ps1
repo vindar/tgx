@@ -1,22 +1,22 @@
 param(
     [string]$OutDir = "tmp\tgx_3d_cpu_suite",
-    [string]$BuildDir = "tmp\build_validation_3d_cpu",
-    [string]$Baseline = "validation\3d\baselines\cpu_validation.csv",
+    [string]$BuildDir = "tmp\build_tools_validation_3d_cpu",
+    [string]$Baseline = "tools\validation\3d\baselines\cpu_validation.csv",
     [switch]$UpdateBaseline,
     [switch]$NoBaseline,
     [string]$Compare = "tolerant",
     [switch]$UpdateGolden,
-    [string]$GoldenDir = "validation\3d\golden\cpu",
+    [string]$GoldenDir = "tools\validation\3d\golden\cpu",
     [switch]$Demo,
     [switch]$DemoOnly
 )
 
 $ErrorActionPreference = "Stop"
 
-$root = Resolve-Path (Join-Path $PSScriptRoot "..\..")
+$root = Resolve-Path (Join-Path $PSScriptRoot "..\..\..")
 Push-Location $root
 try {
-    cmake -S validation\3d\cpu -B $BuildDir -G "Visual Studio 17 2022" -A x64
+    cmake -S tools\validation\3d\cpu -B $BuildDir -G "Visual Studio 17 2022" -A x64
     if ($LASTEXITCODE -ne 0) {
         throw "CPU 3D CMake configure failed with exit code $LASTEXITCODE"
     }

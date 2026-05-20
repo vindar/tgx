@@ -10,14 +10,14 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$root = Resolve-Path (Join-Path $PSScriptRoot "..\..")
+$root = Resolve-Path (Join-Path $PSScriptRoot "..\..\..")
 Push-Location $root
 try {
     if ($Sketch -eq "") {
         if ($OptionalSet -eq "None") {
-            $Sketch = "validation\2d\teensy4\TGX2DTeensySuite"
+            $Sketch = "tools\validation\2d\teensy4\TGX2DTeensySuite"
         } else {
-            $Sketch = "validation\2d\teensy4\TGX2DOptionalSuite"
+            $Sketch = "tools\validation\2d\teensy4\TGX2DOptionalSuite"
         }
     }
 

@@ -2,5 +2,7 @@ var tgx__config_8h =
 [
     [ "TGX_USE_FAST_INV_TRICK", "tgx__config_8h.html#aba55b26e9f69fa58c832655a6639e39d", null ],
     [ "TGX_SINGLE_PRECISION_COMPUTATIONS", "tgx__config_8h.html#a78253ceb4e0c2b6a3714006768f62dcb", null ],
-    [ "TGX_DEFAULT_NO_BLENDING", "tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901", null ]
+    [ "TGX_DEFAULT_NO_BLENDING", "tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901", null ],
+    [ "TGX_MESHLET_SPHERE_CLIP", "tgx__config_8h.html#a28da6bee63efe13263e8768ab3e41f3c", null ],
+    [ "TGX_MESHLET_WIREFRAME_CULL", "tgx__config_8h.html#aef61d09d47e32d0a9c17f38889870d58", null ]
 ];

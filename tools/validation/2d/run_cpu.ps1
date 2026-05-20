@@ -1,32 +1,32 @@
 param(
     [string]$OutDir = "tmp\tgx_2d_cpu_suite",
-    [string]$BuildDir = "tmp\build_validation_2d_cpu",
-    [string]$Baseline = "validation\2d\baselines\cpu_hashes.csv",
+    [string]$BuildDir = "tmp\build_tools_validation_2d_cpu",
+    [string]$Baseline = "tools\validation\2d\baselines\cpu_hashes.csv",
     [switch]$UpdateBaseline,
     [switch]$NoBaseline,
     [switch]$Large,
     [int]$LargeSize = 2048,
     [switch]$Golden,
     [switch]$UpdateGolden,
-    [string]$GoldenDir = "validation\2d\golden\cpu",
+    [string]$GoldenDir = "tools\validation\2d\golden\cpu",
     [string]$GoldenDiffDir = ""
 )
 
 $ErrorActionPreference = "Stop"
 
-$root = Resolve-Path (Join-Path $PSScriptRoot "..\..")
+$root = Resolve-Path (Join-Path $PSScriptRoot "..\..\..")
 Push-Location $root
 try {
     if ($Large) {
         if ($OutDir -eq "tmp\tgx_2d_cpu_suite") {
             $OutDir = "tmp\tgx_2d_cpu_suite_large"
         }
-        if ($Baseline -eq "validation\2d\baselines\cpu_hashes.csv") {
-            $Baseline = "validation\2d\baselines\cpu_large_hashes.csv"
+        if ($Baseline -eq "tools\validation\2d\baselines\cpu_hashes.csv") {
+            $Baseline = "tools\validation\2d\baselines\cpu_large_hashes.csv"
         }
     }
 
-    cmake -S validation\2d\cpu -B $BuildDir -G "Visual Studio 17 2022" -A x64
+    cmake -S tools\validation\2d\cpu -B $BuildDir -G "Visual Studio 17 2022" -A x64
     if ($LASTEXITCODE -ne 0) {
         throw "CPU 2D CMake configure failed with exit code $LASTEXITCODE"
     }
