@@ -25,6 +25,90 @@ namespace tgx
     namespace Mesh3Dv2_detail
         {
 
+        /** Decode one local quantized vertex from a meshlet payload. */
+        TGX_FORCED_INLINE fVec3 load_vertex(const int16_t* table, uint8_t index, float base_x, float base_y, float base_z, float scale)
+            {
+            const int16_t* const q = table + ((size_t)index) * 3;
+#if TGX_USE_FMA_MATH
+            return fVec3(fmaf((float)q[0], scale, base_x),
+                         fmaf((float)q[1], scale, base_y),
+                         fmaf((float)q[2], scale, base_z));
+#else
+            return fVec3(base_x + ((float)q[0]) * scale,
+                         base_y + ((float)q[1]) * scale,
+                         base_z + ((float)q[2]) * scale);
+#endif
+            }
+
+
+        /** Decode one local quantized vertex directly in view coordinates. */
+        TGX_FORCED_INLINE fVec4 load_vertex_transformed(const int16_t* table, uint8_t index,
+                                                        const fVec4& base,
+                                                        const fVec4& sx,
+                                                        const fVec4& sy,
+                                                        const fVec4& sz)
+            {
+            const int16_t* const q = table + ((size_t)index) * 3;
+            const float qx = (float)q[0];
+            const float qy = (float)q[1];
+            const float qz = (float)q[2];
+#if TGX_USE_FMA_MATH
+            return fVec4(fmaf(qx, sx.x, fmaf(qy, sy.x, fmaf(qz, sz.x, base.x))),
+                         fmaf(qx, sx.y, fmaf(qy, sy.y, fmaf(qz, sz.y, base.y))),
+                         fmaf(qx, sx.z, fmaf(qy, sy.z, fmaf(qz, sz.z, base.z))),
+                         fmaf(qx, sx.w, fmaf(qy, sy.w, fmaf(qz, sz.w, base.w))));
+#else
+            return fVec4(base.x + qx * sx.x + qy * sy.x + qz * sz.x,
+                         base.y + qx * sx.y + qy * sy.y + qz * sz.y,
+                         base.z + qx * sx.z + qy * sy.z + qz * sz.z,
+                         base.w + qx * sx.w + qy * sy.w + qz * sz.w);
+#endif
+            }
+
+
+        /** Decode one local signed-normalized normal from a meshlet payload. */
+        TGX_FORCED_INLINE fVec3 load_normal(const int16_t* table, uint8_t index, float scale)
+            {
+            const int16_t* const q = table + ((size_t)index) * 3;
+            return fVec3(((float)q[0]) * scale,
+                         ((float)q[1]) * scale,
+                         ((float)q[2]) * scale);
+            }
+
+
+        /** Decode one local signed-normalized normal directly in view coordinates. */
+        TGX_FORCED_INLINE fVec4 load_normal_transformed(const int16_t* table, uint8_t index,
+                                                        const fVec4& sx,
+                                                        const fVec4& sy,
+                                                        const fVec4& sz)
+            {
+            const int16_t* const q = table + ((size_t)index) * 3;
+            const float qx = (float)q[0];
+            const float qy = (float)q[1];
+            const float qz = (float)q[2];
+#if TGX_USE_FMA_MATH
+            return fVec4(fmaf(qx, sx.x, fmaf(qy, sy.x, qz * sz.x)),
+                         fmaf(qx, sx.y, fmaf(qy, sy.y, qz * sz.y)),
+                         fmaf(qx, sx.z, fmaf(qy, sy.z, qz * sz.z)),
+                         fmaf(qx, sx.w, fmaf(qy, sy.w, qz * sz.w)));
+#else
+            return fVec4(qx * sx.x + qy * sy.x + qz * sz.x,
+                         qx * sx.y + qy * sy.y + qz * sz.y,
+                         qx * sx.z + qy * sy.z + qz * sz.z,
+                         qx * sx.w + qy * sy.w + qz * sz.w);
+#endif
+            }
+
+
+        /** Decode one local texture coordinate from a meshlet payload. */
+        TGX_FORCED_INLINE fVec2 load_texcoord(const int16_t* table, uint8_t index, float scale)
+            {
+            const int16_t* const q = table + ((size_t)index) * 2;
+            return fVec2(((float)q[0]) * scale,
+                         ((float)q[1]) * scale);
+            }
+
+
         /** Align a byte pointer on a 4-byte boundary and adjust the remaining space. */
         inline void cache_align4(char*& ptr, size_t& space)
             {

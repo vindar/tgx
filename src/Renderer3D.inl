@@ -1422,7 +1422,6 @@ namespace tgx
             const Image<color_t>* current_texture = nullptr;
             const float normal_scale = (1.0f / 32767.0f);
             const float texcoord_scale = (4.0f / 32767.0f);
-#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
             const fVec4 normal_sx(_r_modelViewM.M[0] * normal_scale,
                                   _r_modelViewM.M[1] * normal_scale,
                                   _r_modelViewM.M[2] * normal_scale,
@@ -1435,7 +1434,6 @@ namespace tgx
                                   _r_modelViewM.M[9] * normal_scale,
                                   _r_modelViewM.M[10] * normal_scale,
                                   _r_modelViewM.M[11] * normal_scale);
-#endif
 
             // Mesh3Dv2 stores meshlet sphere/cone metadata as 16-bit values
             // relative to the global bounding box. Decode scales once per mesh.
@@ -1546,10 +1544,6 @@ namespace tgx
                 payload += ((size_t)meshlet.nb_texcoords) * 2 * sizeof(int16_t);
 
                 const float vertex_scale = meshlet_sphere_radius * (1.0f / 32767.0f);
-                const float vertex_base_x = meshlet_sphere_center.x;
-                const float vertex_base_y = meshlet_sphere_center.y;
-                const float vertex_base_z = meshlet_sphere_center.z;
-#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
                 const fVec4 vertex_base_view = _r_modelViewM.mult1(meshlet_sphere_center);
                 const fVec4 vertex_sx(_r_modelViewM.M[0] * vertex_scale,
                                       _r_modelViewM.M[1] * vertex_scale,
@@ -1563,7 +1557,6 @@ namespace tgx
                                       _r_modelViewM.M[9] * vertex_scale,
                                       _r_modelViewM.M[10] * vertex_scale,
                                       _r_modelViewM.M[11] * vertex_scale);
-#endif
 
                 const uint8_t* face = payload;
 
@@ -1585,15 +1578,9 @@ namespace tgx
                     if (GOURAUD) PPC2->indn = *(face++); else { if (HAS_NORMALS) face++; }
 
                     // compute vertices position because we are sure we will need them...
-#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
                     PPC2->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v2, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
                     PPC0->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v0, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
                     PPC1->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v1, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
-#else
-                    PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v2, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
-                    PPC0->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v0, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
-                    PPC1->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v1, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
-#endif
 
                     // ...but use lazy computation of other vertex attributes
                     PPC0->missedP = true;
@@ -1669,11 +1656,7 @@ namespace tgx
                             const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
                             if (PPC0->missedP)
                                 {
-#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
                                 PPC0->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC0->indn, normal_sx, normal_sy, normal_sz);
-#else
-                                PPC0->N = _r_modelViewM.mult0(Mesh3Dv2_detail::load_normal(tab_norm, PPC0->indn, normal_scale));
-#endif
                                 if (TEXTURE)
                                     PPC0->color = _phong<true>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
                                 else
@@ -1681,21 +1664,13 @@ namespace tgx
                                 }
                             if (PPC1->missedP)
                                 {
-#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
                                 PPC1->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC1->indn, normal_sx, normal_sy, normal_sz);
-#else
-                                PPC1->N = _r_modelViewM.mult0(Mesh3Dv2_detail::load_normal(tab_norm, PPC1->indn, normal_scale));
-#endif
                                 if (TEXTURE)
                                     PPC1->color = _phong<true>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
                                 else
                                     PPC1->color = _phong<false>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
                                 }
-#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
                             PPC2->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC2->indn, normal_sx, normal_sy, normal_sz);
-#else
-                            PPC2->N = _r_modelViewM.mult0(Mesh3Dv2_detail::load_normal(tab_norm, PPC2->indn, normal_scale));
-#endif
                             if (TEXTURE)
                                 PPC2->color = _phong<true>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
                             else
@@ -1736,11 +1711,7 @@ namespace tgx
                         swap(((nv2 & 128) ? PPC0 : PPC1), PPC2);
                         if (TEXTURE) PPC2->indt = *(face++); else { if (HAS_TEXCOORDS) face++; }
                         if (GOURAUD) PPC2->indn = *(face++);  else { if (HAS_NORMALS) face++; }
-#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
                         PPC2->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, nv2 & 127, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
-#else
-                        PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, nv2 & 127, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
-#endif
                         PPC2->missedP = true;
                         }
                     }
@@ -2334,10 +2305,6 @@ namespace tgx
                 payload += ((size_t)meshlet.nb_texcoords) * 2 * sizeof(int16_t);
 
                 const float vertex_scale = meshlet_sphere_radius * (1.0f / 32767.0f);
-                const float vertex_base_x = meshlet_sphere_center.x;
-                const float vertex_base_y = meshlet_sphere_center.y;
-                const float vertex_base_z = meshlet_sphere_center.z;
-#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
                 const fVec4 vertex_base_view = _r_modelViewM.mult1(meshlet_sphere_center);
                 const fVec4 vertex_sx(_r_modelViewM.M[0] * vertex_scale,
                                       _r_modelViewM.M[1] * vertex_scale,
@@ -2351,7 +2318,6 @@ namespace tgx
                                       _r_modelViewM.M[9] * vertex_scale,
                                       _r_modelViewM.M[10] * vertex_scale,
                                       _r_modelViewM.M[11] * vertex_scale);
-#endif
 
                 const uint8_t* face = payload;
 
@@ -2373,15 +2339,9 @@ namespace tgx
                     if (HAS_NORMALS) face++;
 
                     // compute vertices position because we are sure we will need them...
-#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
                     PPC2->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v2, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
                     PPC0->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v0, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
                     PPC1->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v1, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
-#else
-                    PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v2, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
-                    PPC0->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v0, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
-                    PPC1->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v1, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
-#endif
 
                     // ...but use lazy computation of other vertex attributes
                     PPC0->missedP = true;
@@ -2472,11 +2432,7 @@ namespace tgx
                         swap(((nv2 & 128) ? PPC0 : PPC1), PPC2);
                         if (HAS_TEXCOORDS) face++;
                         if (HAS_NORMALS) face++;
-#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
                         PPC2->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, nv2 & 127, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
-#else
-                        PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, nv2 & 127, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
-#endif
                         PPC2->missedP = true;
                         }
                     }

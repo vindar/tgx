@@ -39,6 +39,16 @@
 
 #define DEPRECATED(X) [[deprecated(" " X " ")]]
 
+#ifndef TGX_FORCED_INLINE
+    #if defined(_MSC_VER)
+        #define TGX_FORCED_INLINE __forceinline
+    #elif defined(__GNUC__) || defined(__clang__)
+        #define TGX_FORCED_INLINE inline __attribute__((always_inline))
+    #else
+        #define TGX_FORCED_INLINE inline
+    #endif
+#endif
+
 
 // check that int is at least 4 bytes. 
 static_assert(sizeof(int) >= 4, "The TGX library only works on 32 bits or 64 bits architecture. Sorry!");
