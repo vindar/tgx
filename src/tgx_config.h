@@ -50,6 +50,8 @@
 // - TGX_USE_FAST_INV_SQRT_TRICK : fast inverse 'quake like' square root trick to speed up computations.
 // - TGX_USE_FAST_SQRT_TRICK : fast 'quake like' square root trick to speed up computations.
 // - TGX_USE_FAST_INV_TRICK : fast inverse 'quake like' trick to speed up computations.
+// - TGX_USE_FMA_MATH : use explicit fused multiply-add in small floating-point vector/matrix operations.
+// - TGX_MESH3DV2_PRETRANSFORM_VERTICES : precompose Mesh3Dv2 vertex dequantization and model-view transform.
 //
 // - TGX_INLINE/TGX_NOINLINE : inlining strategy for time critical/non-critical functions.
 //
@@ -146,6 +148,8 @@
     #define TGX_USE_FAST_INV_SQRT_TRICK 0 // unused: specific assembly code used instead.
     #define TGX_USE_FAST_SQRT_TRICK 0     //
     #define TGX_USE_FAST_INV_TRICK 0      //
+    #define TGX_USE_FMA_MATH 1
+    #define TGX_MESH3DV2_PRETRANSFORM_VERTICES 1
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE
 
@@ -223,6 +227,14 @@
     #define TGX_NOINLINE
 #endif
 
+
+#ifndef TGX_USE_FMA_MATH
+    #define TGX_USE_FMA_MATH 0
+#endif
+
+#ifndef TGX_MESH3DV2_PRETRANSFORM_VERTICES
+    #define TGX_MESH3DV2_PRETRANSFORM_VERTICES 0
+#endif
 
 
 

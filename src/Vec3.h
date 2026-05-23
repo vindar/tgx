@@ -573,6 +573,13 @@ namespace tgx
         return U.x * V.x + U.y * V.y + U.z * V.z;
         }
 
+#if TGX_USE_FMA_MATH
+    TGX_INLINE inline float dotProduct(const Vec3<float>& U, const Vec3<float>& V)
+        {
+        return fmaf(U.x, V.x, fmaf(U.y, V.y, U.z * V.z));
+        }
+#endif
+
 
     /**
      * Return the cross product of U x V.

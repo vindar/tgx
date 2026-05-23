@@ -535,6 +535,15 @@ namespace tgx
         */
         TGX_INLINE inline Vec4<T> mult(const Vec3<T> & V, T w) const
             {
+#if TGX_USE_FMA_MATH
+            if constexpr (std::is_same<T, float>::value)
+                {
+                return Vec4<T>{ fmaf(M[0], V.x, fmaf(M[4], V.y, fmaf(M[8], V.z, M[12] * w))),
+                    fmaf(M[1], V.x, fmaf(M[5], V.y, fmaf(M[9], V.z, M[13] * w))),
+                    fmaf(M[2], V.x, fmaf(M[6], V.y, fmaf(M[10], V.z, M[14] * w))),
+                    fmaf(M[3], V.x, fmaf(M[7], V.y, fmaf(M[11], V.z, M[15] * w))) };
+                }
+#endif
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z + M[12] * w,
                 M[1] * V.x + M[5] * V.y + M[9] * V.z + M[13] * w,
                 M[2] * V.x + M[6] * V.y + M[10] * V.z + M[14] * w,
@@ -547,6 +556,15 @@ namespace tgx
         */
         TGX_INLINE inline Vec4<T> mult0(const Vec3<T> & V) const
             {
+#if TGX_USE_FMA_MATH
+            if constexpr (std::is_same<T, float>::value)
+                {
+                return Vec4<T>{ fmaf(M[0], V.x, fmaf(M[4], V.y, M[8] * V.z)),
+                    fmaf(M[1], V.x, fmaf(M[5], V.y, M[9] * V.z)),
+                    fmaf(M[2], V.x, fmaf(M[6], V.y, M[10] * V.z)),
+                    fmaf(M[3], V.x, fmaf(M[7], V.y, M[11] * V.z)) };
+                }
+#endif
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z,
                 M[1] * V.x + M[5] * V.y + M[9] * V.z,
                 M[2] * V.x + M[6] * V.y + M[10] * V.z,
@@ -559,6 +577,15 @@ namespace tgx
         */
         TGX_INLINE inline Vec4<T> mult1(const Vec3<T> & V) const
             {
+#if TGX_USE_FMA_MATH
+            if constexpr (std::is_same<T, float>::value)
+                {
+                return Vec4<T>{ fmaf(M[0], V.x, fmaf(M[4], V.y, fmaf(M[8], V.z, M[12]))),
+                    fmaf(M[1], V.x, fmaf(M[5], V.y, fmaf(M[9], V.z, M[13]))),
+                    fmaf(M[2], V.x, fmaf(M[6], V.y, fmaf(M[10], V.z, M[14]))),
+                    fmaf(M[3], V.x, fmaf(M[7], V.y, fmaf(M[11], V.z, M[15]))) };
+                }
+#endif
             return Vec4<T>{ M[0] * V.x + M[4] * V.y + M[8] * V.z + M[12],
                 M[1] * V.x + M[5] * V.y + M[9] * V.z + M[13],
                 M[2] * V.x + M[6] * V.y + M[10] * V.z + M[14],
@@ -639,6 +666,15 @@ namespace tgx
     */
     template<typename T> TGX_INLINE inline Vec4<T> operator*(const Mat4<T> & M, const Vec4<T> V)
         {
+#if TGX_USE_FMA_MATH
+        if constexpr (std::is_same<T, float>::value)
+            {
+            return Vec4<T>{ fmaf(M.M[0], V.x, fmaf(M.M[4], V.y, fmaf(M.M[8], V.z, M.M[12] * V.w))),
+                            fmaf(M.M[1], V.x, fmaf(M.M[5], V.y, fmaf(M.M[9], V.z, M.M[13] * V.w))),
+                            fmaf(M.M[2], V.x, fmaf(M.M[6], V.y, fmaf(M.M[10], V.z, M.M[14] * V.w))),
+                            fmaf(M.M[3], V.x, fmaf(M.M[7], V.y, fmaf(M.M[11], V.z, M.M[15] * V.w))) };
+            }
+#endif
         return Vec4<T>{ M.M[0] * V.x + M.M[4] * V.y + M.M[8] * V.z + M.M[12] * V.w,
                         M.M[1] * V.x + M.M[5] * V.y + M.M[9] * V.z + M.M[13] * V.w,
                         M.M[2] * V.x + M.M[6] * V.y + M.M[10] * V.z + M.M[14] * V.w,

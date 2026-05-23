@@ -698,7 +698,7 @@ namespace tgx
 
             // face culling (unneeded but we must compute cu anyway).
             fVec3 faceN = crossProduct(*Q1 - *Q0, *Q2 - *Q0);
-            const float cu = (_ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, *Q0);
+            const float cu = (_ortho) ? (-faceN.z) : dotProduct(faceN, *Q0);
             if (cu * _culling_dir > 0) return; // skip triangle !
 
             RasterizerVec4 PPC0,PPC1,PPC2;
@@ -906,7 +906,7 @@ namespace tgx
 
             // face culling
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
-            const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+            const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, Q0);
             if (cu * _culling_dir > 0) return; // skip triangle !
 
             RasterizerVec4 PPC0, PPC1, PPC2;
@@ -1024,7 +1024,7 @@ namespace tgx
 
             // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
-            const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+            const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, Q0);
             if (cu * _culling_dir > 0) return; // Q3 is coplanar with Q0, Q1, Q2 so we discard the whole quad.
 
             const fVec4 Q3 = _r_modelViewM.mult1(*P3); // compute fourth point
@@ -1268,7 +1268,7 @@ namespace tgx
                     {
                     // face culling
                     fVec3 faceN = crossProduct(PPC1->P - PPC0->P, PPC2->P - PPC0->P);
-                    const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PPC0->P);
+                    const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, PPC0->P);
                     if (cu * _culling_dir > 0) goto rasterize_next_triangle; // skip triangle !
                     // triangle is not culled
 
@@ -1422,6 +1422,20 @@ namespace tgx
             const Image<color_t>* current_texture = nullptr;
             const float normal_scale = (1.0f / 32767.0f);
             const float texcoord_scale = (4.0f / 32767.0f);
+#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
+            const fVec4 normal_sx(_r_modelViewM.M[0] * normal_scale,
+                                  _r_modelViewM.M[1] * normal_scale,
+                                  _r_modelViewM.M[2] * normal_scale,
+                                  _r_modelViewM.M[3] * normal_scale);
+            const fVec4 normal_sy(_r_modelViewM.M[4] * normal_scale,
+                                  _r_modelViewM.M[5] * normal_scale,
+                                  _r_modelViewM.M[6] * normal_scale,
+                                  _r_modelViewM.M[7] * normal_scale);
+            const fVec4 normal_sz(_r_modelViewM.M[8] * normal_scale,
+                                  _r_modelViewM.M[9] * normal_scale,
+                                  _r_modelViewM.M[10] * normal_scale,
+                                  _r_modelViewM.M[11] * normal_scale);
+#endif
 
             // Mesh3Dv2 stores meshlet sphere/cone metadata as 16-bit values
             // relative to the global bounding box. Decode scales once per mesh.
@@ -1535,6 +1549,21 @@ namespace tgx
                 const float vertex_base_x = meshlet_sphere_center.x;
                 const float vertex_base_y = meshlet_sphere_center.y;
                 const float vertex_base_z = meshlet_sphere_center.z;
+#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
+                const fVec4 vertex_base_view = _r_modelViewM.mult1(meshlet_sphere_center);
+                const fVec4 vertex_sx(_r_modelViewM.M[0] * vertex_scale,
+                                      _r_modelViewM.M[1] * vertex_scale,
+                                      _r_modelViewM.M[2] * vertex_scale,
+                                      _r_modelViewM.M[3] * vertex_scale);
+                const fVec4 vertex_sy(_r_modelViewM.M[4] * vertex_scale,
+                                      _r_modelViewM.M[5] * vertex_scale,
+                                      _r_modelViewM.M[6] * vertex_scale,
+                                      _r_modelViewM.M[7] * vertex_scale);
+                const fVec4 vertex_sz(_r_modelViewM.M[8] * vertex_scale,
+                                      _r_modelViewM.M[9] * vertex_scale,
+                                      _r_modelViewM.M[10] * vertex_scale,
+                                      _r_modelViewM.M[11] * vertex_scale);
+#endif
 
                 const uint8_t* face = payload;
 
@@ -1556,9 +1585,15 @@ namespace tgx
                     if (GOURAUD) PPC2->indn = *(face++); else { if (HAS_NORMALS) face++; }
 
                     // compute vertices position because we are sure we will need them...
+#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
+                    PPC2->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v2, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
+                    PPC0->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v0, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
+                    PPC1->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v1, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
+#else
                     PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v2, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
                     PPC0->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v0, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
                     PPC1->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v1, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+#endif
 
                     // ...but use lazy computation of other vertex attributes
                     PPC0->missedP = true;
@@ -1569,7 +1604,7 @@ namespace tgx
                         {
                         // face culling
                         fVec3 faceN = crossProduct(PPC1->P - PPC0->P, PPC2->P - PPC0->P);
-                        const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PPC0->P);
+                        const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, PPC0->P);
                         if (cu * _culling_dir > 0) goto rasterize_next_meshlet_triangle; // skip triangle !
                         // triangle is not culled
 
@@ -1634,7 +1669,11 @@ namespace tgx
                             const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
                             if (PPC0->missedP)
                                 {
+#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
+                                PPC0->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC0->indn, normal_sx, normal_sy, normal_sz);
+#else
                                 PPC0->N = _r_modelViewM.mult0(Mesh3Dv2_detail::load_normal(tab_norm, PPC0->indn, normal_scale));
+#endif
                                 if (TEXTURE)
                                     PPC0->color = _phong<true>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
                                 else
@@ -1642,13 +1681,21 @@ namespace tgx
                                 }
                             if (PPC1->missedP)
                                 {
+#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
+                                PPC1->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC1->indn, normal_sx, normal_sy, normal_sz);
+#else
                                 PPC1->N = _r_modelViewM.mult0(Mesh3Dv2_detail::load_normal(tab_norm, PPC1->indn, normal_scale));
+#endif
                                 if (TEXTURE)
                                     PPC1->color = _phong<true>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
                                 else
                                     PPC1->color = _phong<false>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
                                 }
+#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
+                            PPC2->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC2->indn, normal_sx, normal_sy, normal_sz);
+#else
                             PPC2->N = _r_modelViewM.mult0(Mesh3Dv2_detail::load_normal(tab_norm, PPC2->indn, normal_scale));
+#endif
                             if (TEXTURE)
                                 PPC2->color = _phong<true>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
                             else
@@ -1689,7 +1736,11 @@ namespace tgx
                         swap(((nv2 & 128) ? PPC0 : PPC1), PPC2);
                         if (TEXTURE) PPC2->indt = *(face++); else { if (HAS_TEXCOORDS) face++; }
                         if (GOURAUD) PPC2->indn = *(face++);  else { if (HAS_NORMALS) face++; }
+#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
+                        PPC2->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, nv2 & 127, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
+#else
                         PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, nv2 & 127, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+#endif
                         PPC2->missedP = true;
                         }
                     }
@@ -2118,7 +2169,7 @@ namespace tgx
 
                         // face culling
                         fVec3 faceN = crossProduct(PPC1->P - PPC0->P, PPC2->P - PPC0->P);
-                        const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PPC0->P);
+                        const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, PPC0->P);
                         if (cu * _culling_dir > 0) goto rasterize_next_wireframetriangle; // skip triangle !
 
 
@@ -2286,6 +2337,21 @@ namespace tgx
                 const float vertex_base_x = meshlet_sphere_center.x;
                 const float vertex_base_y = meshlet_sphere_center.y;
                 const float vertex_base_z = meshlet_sphere_center.z;
+#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
+                const fVec4 vertex_base_view = _r_modelViewM.mult1(meshlet_sphere_center);
+                const fVec4 vertex_sx(_r_modelViewM.M[0] * vertex_scale,
+                                      _r_modelViewM.M[1] * vertex_scale,
+                                      _r_modelViewM.M[2] * vertex_scale,
+                                      _r_modelViewM.M[3] * vertex_scale);
+                const fVec4 vertex_sy(_r_modelViewM.M[4] * vertex_scale,
+                                      _r_modelViewM.M[5] * vertex_scale,
+                                      _r_modelViewM.M[6] * vertex_scale,
+                                      _r_modelViewM.M[7] * vertex_scale);
+                const fVec4 vertex_sz(_r_modelViewM.M[8] * vertex_scale,
+                                      _r_modelViewM.M[9] * vertex_scale,
+                                      _r_modelViewM.M[10] * vertex_scale,
+                                      _r_modelViewM.M[11] * vertex_scale);
+#endif
 
                 const uint8_t* face = payload;
 
@@ -2307,9 +2373,15 @@ namespace tgx
                     if (HAS_NORMALS) face++;
 
                     // compute vertices position because we are sure we will need them...
+#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
+                    PPC2->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v2, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
+                    PPC0->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v0, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
+                    PPC1->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, v1, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
+#else
                     PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v2, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
                     PPC0->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v0, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
                     PPC1->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, v1, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+#endif
 
                     // ...but use lazy computation of other vertex attributes
                     PPC0->missedP = true;
@@ -2325,7 +2397,7 @@ namespace tgx
 
                         // face culling
                         fVec3 faceN = crossProduct(PPC1->P - PPC0->P, PPC2->P - PPC0->P);
-                        const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, PPC0->P);
+                        const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, PPC0->P);
                         if (cu * _culling_dir > 0) goto rasterize_next_meshlet_wireframetriangle; // skip triangle !
 
                         // triangle is not culled
@@ -2400,7 +2472,11 @@ namespace tgx
                         swap(((nv2 & 128) ? PPC0 : PPC1), PPC2);
                         if (HAS_TEXCOORDS) face++;
                         if (HAS_NORMALS) face++;
+#if TGX_MESH3DV2_PRETRANSFORM_VERTICES
+                        PPC2->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, nv2 & 127, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
+#else
                         PPC2->P = _r_modelViewM.mult1(Mesh3Dv2_detail::load_vertex(tab_vert, nv2 & 127, vertex_base_x, vertex_base_y, vertex_base_z, vertex_scale));
+#endif
                         PPC2->missedP = true;
                         }
                     }
@@ -2537,7 +2613,7 @@ namespace tgx
 
             // face culling
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
-            const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+            const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, Q0);
             if (cu * _culling_dir > 0) return; // skip triangle !
 
             const tgx::fMat4 M(_lx / 2.0f, 0, 0, _lx / 2.0f - _ox,
@@ -2630,7 +2706,7 @@ namespace tgx
 
                 // face culling
                 fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
-                const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+                const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, Q0);
                 if (cu * _culling_dir > 0) continue; // we discard the triangle.
 
                 fVec4 H0 = _projM * Q0;
@@ -2710,7 +2786,7 @@ namespace tgx
 
             // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
             fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
-            const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+            const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, Q0);
             if (cu * _culling_dir > 0) return; // Q3 is coplanar with Q0, Q1, Q2 so we discard the whole quad.
 
             const fVec4 Q3 = _r_modelViewM.mult1(P4); // compute fourth point
@@ -2800,7 +2876,7 @@ namespace tgx
 
                 // face culling (use triangle (0 1 2), doesn't matter since 0 1 2 3 are coplanar.
                 fVec3 faceN = crossProduct(Q1 - Q0, Q2 - Q0);
-                const float cu = (ortho) ? dotProduct(faceN, fVec3(0.0f, 0.0f, -1.0f)) : dotProduct(faceN, Q0);
+                const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, Q0);
                 if (cu * _culling_dir > 0) continue; // Q3 is coplanar with Q0, Q1, Q2 so we discard the whole quad.
 
                 const fVec4 Q3 = _r_modelViewM.mult1(vertices[ind_vertices[n + 3]]); // compute fourth point
