@@ -66,6 +66,7 @@
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE
     #define TGX_NOINLINE
 
@@ -75,15 +76,17 @@
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 1
     #define TGX_USE_FAST_INV_TRICK 1
+    #define TGX_USE_FMA_MATH 1
     #define TGX_INLINE __attribute__((always_inline))
-    #define TGX_NOINLINE __attribute__((noinline, noclone)) FLASHMEM
+    #define TGX_NOINLINE
 
 #elif defined(ARDUINO_TEENSY36)
     // teensy 3.6
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 2048
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 0
-    #define TGX_USE_FAST_INV_TRICK 0
+    #define TGX_USE_FAST_INV_TRICK 1
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE
 
@@ -92,7 +95,8 @@
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 2048
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 0
-    #define TGX_USE_FAST_INV_TRICK 0
+    #define TGX_USE_FAST_INV_TRICK 1
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE
 
@@ -101,7 +105,8 @@
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 1024
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 0
-    #define TGX_USE_FAST_INV_TRICK 0
+    #define TGX_USE_FAST_INV_TRICK 1
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE
 
@@ -111,6 +116,7 @@
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE
     #define TGX_NOINLINE
 
@@ -120,15 +126,17 @@
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 1
     #define TGX_USE_FAST_INV_TRICK 1
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE  __attribute__((always_inline))
     #define TGX_NOINLINE
 
 #elif defined(ARDUINO_ARCH_RP2040) || defined(PICO_RP2040)
     // Raspberry Pico 2040
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 2048
-    #define TGX_USE_FAST_INV_SQRT_TRICK 1
+    #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE
     #define TGX_NOINLINE
 
@@ -138,6 +146,7 @@
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE
     #define TGX_NOINLINE
 
@@ -146,17 +155,18 @@
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 4096
     #define TGX_USE_FAST_INV_SQRT_TRICK 0 // unused: specific assembly code used instead.
     #define TGX_USE_FAST_SQRT_TRICK 0     //
-    #define TGX_USE_FAST_INV_TRICK 0      //
-    #define TGX_USE_FMA_MATH 1
+    #define TGX_USE_FAST_INV_TRICK 0      // unused: specific assembly code used instead.
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE
 
 #elif defined(CONFIG_IDF_TARGET_ESP32P4) || defined(ESP32P4)
     // ESP32 P4
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 4096
-    #define TGX_USE_FAST_INV_SQRT_TRICK 0 // unused: specific assembly code used instead.
-    #define TGX_USE_FAST_SQRT_TRICK 0     //
-    #define TGX_USE_FAST_INV_TRICK 0      //
+    #define TGX_USE_FAST_INV_SQRT_TRICK 1
+    #define TGX_USE_FAST_SQRT_TRICK 1
+    #define TGX_USE_FAST_INV_TRICK 1
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE
 
@@ -167,8 +177,9 @@
     #define TGX_USE_FAST_INV_SQRT_TRICK 0 // unused: specific assembly code used instead.
     #define TGX_USE_FAST_SQRT_TRICK 0     //
     #define TGX_USE_FAST_INV_TRICK 0      //
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE __attribute__((always_inline))
-    #define TGX_NOINLINE
+    #define TGX_NOINLINE __attribute__((noinline, noclone))
 
 #elif defined(__ARM_ARCH_6M__)
     // generic Cortex-M0 (use same setting as Teensy LC)
@@ -176,6 +187,7 @@
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE
     #define TGX_NOINLINE
 
@@ -184,7 +196,8 @@
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 1024
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 0
-    #define TGX_USE_FAST_INV_TRICK 0
+    #define TGX_USE_FAST_INV_TRICK 1
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE  __attribute__((always_inline))
     #define TGX_NOINLINE
 
@@ -194,6 +207,7 @@
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 1
     #define TGX_USE_FAST_INV_TRICK 1
+    #define TGX_USE_FMA_MATH 1
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE
 
@@ -202,7 +216,8 @@
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 2048
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 0
-    #define TGX_USE_FAST_INV_TRICK 0
+    #define TGX_USE_FAST_INV_TRICK 1
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE
 
@@ -212,6 +227,7 @@
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 1
     #define TGX_USE_FAST_INV_TRICK 1
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_NOINLINE
 
@@ -221,14 +237,13 @@
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
+    #define TGX_USE_FMA_MATH 0
     #define TGX_INLINE
     #define TGX_NOINLINE
 #endif
 
 
-#ifndef TGX_USE_FMA_MATH
-    #define TGX_USE_FMA_MATH 0
-#endif
+
 
 /**
  * @def TGX_SINGLE_PRECISION_COMPUTATIONS
