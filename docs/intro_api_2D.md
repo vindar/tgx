@@ -42,12 +42,35 @@ Most 2D drawing methods follow a small set of naming rules. Once these rules are
 As a rule of thumb, use the non-AA integer methods for static, pixel-aligned graphics and use the `AA` methods when shapes move smoothly, use non-integer coordinates, have diagonal edges, or need visually smooth outlines.
 
 
+@section sec_2D_performance Performance and clipping
+
+TGX is often used on small MCUs, so the 2D API tries to keep the common paths simple and fast. A few rules help when choosing between methods:
+
+| Situation | Recommended approach |
+|-----------|----------------------|
+| Pixel-aligned static graphics | Prefer integer, non-AA methods such as `drawLine()`, `fillRect()`, `fillTriangle()` or `fillCircle()`. |
+| Smooth motion, diagonal edges or sub-pixel placement | Use the `AA` methods when the visual quality matters. They are usually more expensive. |
+| Repeated horizontal or vertical lines | Prefer `drawFastHLine()` and `drawFastVLine()` over the general line method. |
+| Drawing inside a rectangular panel, widget or viewport | Create a sub-image and draw into it. Sub-images are cheap and automatically clip drawing to their own bounds. |
+| Copying rectangular images | Prefer `blit()` or `copyFrom()` over manual pixel loops. |
+| Large sprites, textures or fonts on MCUs | Keep frequently used pixel data in fast memory when the platform provides several memory regions. |
+
+Most public drawing methods clip their output to the current image or sub-image. Direct pixel access with `operator()` is intentionally different: it gives raw access to the buffer and assumes that the coordinates are valid.
+
+
 @section sec_2Dprimitives 2D Drawing methods.
 
 
 @subsection subsec_filling Filling the screen.
 
 ![test_screen_filling](../test_screen_filling.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::clear "clear()" | Set all pixels of the image to the same color. |
+| \ref tgx::Image::fillScreen "fillScreen()" | Same as `clear()`. |
+| \ref tgx::Image::fillScreenVGradient "fillScreenVGradient()" | Fill the image with a vertical gradient between two colors. |
+| \ref tgx::Image::fillScreenHGradient "fillScreenHGradient()" | Fill the image with a horizontal gradient between two colors. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -60,11 +83,6 @@ im1.fillScreenVGradient(tgx::RGB32_Blue, tgx::RGB32_Red); 	  // fill with vertic
 auto im2 = im(214, 320, 0, 240); 							  // create subimage = right third of the image
 im2.fillScreenHGradient(tgx::RGB32_Green, tgx::RGB32_Orange); // fill with horizontal gradient from green to orange
 ~~~
-**Methods:**
-- \ref tgx::Image::clear "clear()" : set all pixels of the image with the same color.
-- \ref tgx::Image::fillScreen "fillScreen()" : same as clear().
-- \ref tgx::Image::fillScreenVGradient "fillScreenVGradient()" : fill the image with a vertical gradient between two colors.
-- \ref tgx::Image::fillScreenHGradient "fillScreenHGradient()" : fill the image with a horizontal gradient between two colors.
 
 
 ---
@@ -73,6 +91,13 @@ im2.fillScreenHGradient(tgx::RGB32_Green, tgx::RGB32_Orange); // fill with horiz
 @subsection subsec_rwpixels Reading/writing pixels
 
 ![test_points](../test_points.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawPixel "drawPixel()" | Set the color of a given pixel. |
+| \ref tgx::Image::drawPixelf "drawPixelf()" | Set the color of a given pixel, using a floating-point position vector. |
+| \ref tgx::Image::readPixel() "readPixel()" | Read the color of a pixel. |
+| \ref tgx::Image::operator()(tgx::iVec2) "operator()" | Direct access to the pixel color memory location (read/write). |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -88,11 +113,6 @@ for (int i = 0; i < 310; i += 15) {
         }
     }
 ~~~
-**Methods:**
-- \ref tgx::Image::drawPixel "drawPixel()" : set the color of a given pixel.
-- \ref tgx::Image::drawPixelf "drawPixelf()" : set the color of a given pixel, using a floating-point position vector.
-- \ref tgx::Image::readPixel() "readPixel()" : read the color of a pixel.
-- \ref tgx::Image::operator()(tgx::iVec2) "operator()" : direct access to the pixel color memory location (read/write).
 
 
 ---
@@ -100,6 +120,11 @@ for (int i = 0; i < 310; i += 15) {
 @subsection subsec_floodfill Flood-filling a region
 
 ![test_region_filling](../test_region_filling.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image<color_t>::fill(tgx::iVec2, color_t) "fill(start_pos, new_color)" | Fill a connected component with a given color. |
+| \ref tgx::Image<color_t>::fill(tgx::iVec2, color_t, color_t) "fill(start_pos, border_color, new_color)" | Fill a region delimited by a given color. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -112,9 +137,6 @@ im.drawLine({ 0,240 }, { 320,10 }, tgx::RGB32_Red);
 im.fill({ 319,239 }, tgx::RGB32_Red, tgx::RGB32_Blue); // fill starting {319,239}, region delimited by the red line
 im.fill({ 0,0 }, tgx::RGB32_Olive);                    // fill starting {0,0}
 ~~~
-**Methods:**
-- \ref tgx::Image<color_t>::fill(tgx::iVec2, color_t) "fill(start_pos, new_color)" : fill a connected component with a given color.
-- \ref tgx::Image<color_t>::fill(tgx::iVec2, color_t, color_t) "fill(start_pos, border_color, new_color)" :  fill a region delimited by a given color.
 
 
 ---
@@ -122,6 +144,19 @@ im.fill({ 0,0 }, tgx::RGB32_Olive);                    // fill starting {0,0}
 @subsection subsec_blitting Blitting sprites
 
 ![test_blitting](../test_blitting.png)
+
+Blitting means copying pixels from a source image (the sprite) into a destination image. This is the usual way to draw small images, icons, sprites, off-screen buffers or pre-rendered UI elements.
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image<color_t>::blit() "blit(sprite, pos, opacity)" | Copy the sprite at a given position, with optional opacity. |
+| \ref tgx::Image<color_t>::blitMasked() "blitMasked(sprite, mask_color, pos, opacity)" | Copy the sprite but skip pixels that match a transparent color. |
+| \ref tgx::Image<color_t>::blitRotated() "blitRotated(sprite, pos, angle, opacity)" | Rotate the sprite by a quarter turn (`0`, `90`, `180` or `270` degrees) before drawing it. |
+| \ref tgx::Image<color_t>::blitScaledRotated() "blitScaledRotated(sprite, pos_src, pos_dst, scale, angle, opacity)" | Scale and rotate the sprite by an arbitrary angle around a source anchor point. |
+| \ref tgx::Image<color_t>::blitScaledRotatedMasked() "blitScaledRotatedMasked(sprite, mask_color, pos_src, pos_dst, scale, angle, opacity)" | Same as `blitScaledRotated()`, but with one transparent source color. |
+| \ref tgx::Image<color_t>::copyFrom() "copyFrom()" | Copy and resize another image into the whole destination image, possibly converting color types. |
+
+All blit methods clip automatically to the destination image or sub-image. Advanced overloads also accept a custom blending operator instead of the standard opacity parameter.
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -141,14 +176,6 @@ im.fill({ 0,0 }, tgx::RGB32_Olive);                    // fill starting {0,0}
     im.blitScaledRotated(sprite, { 60, 20 }, { 100, 160 }, 0.6f, 60.0f, 0.5f); // blit the sprite scaled at 0.6, rotated by 60 degrees, half opacity
     im.blitScaledRotatedMasked(sprite, tgx::RGB32_Green, { 60, 20 }, { 230, 160 }, 1.5f, -25.0f); // blit the sprite scaled at 1.5, rotated by -25 degrees, with green set as the transparent color.
 ~~~
-**Methods:**
-- \ref tgx::Image<color_t>::blit() "blit(sprite, pos, opacity)" : blit a sprite image onto the image.
-- \ref tgx::Image<color_t>::blitRotated() "blitRotated(sprite, pos, angle, opacity)" : rotate a sprite (by quarter turns) and then blit it onto the image.
-- \ref tgx::Image<color_t>::blitMasked() "blitMasked(sprite, mask_color, pos, opacity)" : blit a sprite onto the image with one color set as transparent.
-- \ref tgx::Image<color_t>::blitScaledRotated() "blitScaledRotated(sprite, pos_src, pos_dst, scale, angle, opacity)" : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image.
-- \ref tgx::Image<color_t>::blitScaledRotatedMasked() "blitScaledRotatedMasked(sprite, mask_color, pos_src, pos_dst, scale, angle, opacity)" : rescale and rotate a sprite (by arbitrary angle) and then blit it onto the image with one color set as transparent.
-
-@note All the blit methods above also have an 'advanced' version which takes as input a user-defined blending operator instead of the opacity parameter and can operate on sprites with a different color type than the destination image. See \ref tgx::Image for details...
 
 See also \ref tgx::Image<color_t>::blitBackward() "blitBackward()" and methods for image copy/resizing/type conversion \ref tgx::Image<color_t>::copyFrom() "copyFrom()", \ref tgx::Image<color_t>::copyReduceHalf() "copyReduceHalf()",  \ref tgx::Image<color_t>::reduceHalf() "reduceHalf()" and \ref tgx::Image<color_t>::convert() "convert()"
 
@@ -157,6 +184,13 @@ See also \ref tgx::Image<color_t>::blitBackward() "blitBackward()" and methods f
 @subsection subsec_vhlines Drawing horizontal and vertical lines
 
 ![test_vhlines](../test_vhlines.png)
+
+Use these methods when drawing parallel lines as they are faster than the general line drawing methods.
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawFastVLine "drawFastVLine()" | Draw a vertical line segment. |
+| \ref tgx::Image::drawFastHLine "drawFastHLine()" | Draw a horizontal line segment. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -169,9 +203,6 @@ for (int i = 0; i < 20; i++) {
     im.drawFastHLine({ i * 3, i * 12 }, 200, tgx::RGB32_Green, i / 20.0f);	// draw a horizontal line
     }
 ~~~
-**Methods:** use these methods when drawing parallel lines as they are faster than the 'general' line drawing methods.
-- \ref tgx::Image::drawFastVLine "drawFastVLine()" : draw a vertical line segment.
-- \ref tgx::Image::drawFastHLine "drawFastHLine()" : draw a horizontal line segment.
 
 
 
@@ -181,6 +212,13 @@ for (int i = 0; i < 20; i++) {
 @subsection subsec_lines Drawing lines
 
 ![test_lines](../test_lines.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawLine "drawLine()" | Draw a basic straight line (single pixel thick, no anti-aliasing). Fastest method. |
+| \ref tgx::Image::drawLineAA "drawLineAA()" | Draw a line segment with anti-aliasing (single pixel thick). |
+| \ref tgx::Image::drawThickLineAA "drawThickLineAA()" | Draw a thick line with anti-aliasing and specify how the ends are drawn (rounded, flat, arrows...). |
+| \ref tgx::Image::drawWedgeLineAA "drawWedgeLineAA()" | Draw a line segment with anti-aliasing and varying thickness, and specify how the ends are drawn. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -193,11 +231,6 @@ im.drawLineAA({ 200,200 }, { 300, 10 }, tgx::RGB32_Green); // green line with an
 im.drawThickLineAA({ 10, 120 }, { 250, 10 }, 10, tgx::END_STRAIGHT, tgx::END_ROUNDED, tgx::RGB32_White); // thick line, rounded at the start, straight at the end.
 im.drawWedgeLineAA({ 300, 220 }, { 150, 100 }, 10, tgx::END_ARROW_1, 20, tgx::END_ARROW_SKEWED_5,tgx::RGB32_Orange, 0.5f); // wedge line ending with arrows, half opacity.
 ~~~
-**Methods:**
-- \ref tgx::Image::drawLine "drawLine()" : draw a basic straight line (single pixel thick, no anti-aliasing). Fastest method.
-- \ref tgx::Image::drawLineAA "drawLineAA()" : draw a line segment with anti-aliasing (single pixel thick).
-- \ref tgx::Image::drawThickLineAA "drawThickLineAA()" : draw a thick line with anti-aliasing and specify how the ends are drawn (rounded, flat, arrows...)
-- \ref tgx::Image::drawWedgeLineAA "drawWedgeLineAA()" : draw a line segment with anti-aliasing and varying thickness, and specify how the ends are drawn (rounded, flat, arrows...)
 
 
 
@@ -207,6 +240,17 @@ im.drawWedgeLineAA({ 300, 220 }, { 150, 100 }, 10, tgx::END_ARROW_1, 20, tgx::EN
 @subsection subsec_rect Drawing rectangles
 
 ![test_rectangles](../test_rectangles.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawRect "drawRect()" | Draw a basic rectangle. Fastest method. |
+| \ref tgx::Image::drawThickRect "drawThickRect()" | Draw a rectangle with a thick outline. |
+| \ref tgx::Image::fillRect "fillRect()" | Draw a filled rectangle. |
+| \ref tgx::Image::fillThickRect "fillThickRect()" | Draw a filled rectangle with a thick outline of a different color. |
+| \ref tgx::Image::fillRectHGradient "fillRectHGradient()" | Draw a filled rectangle with a horizontal gradient between two colors. |
+| \ref tgx::Image::fillRectVGradient "fillRectVGradient()" | Draw a filled rectangle with a vertical gradient between two colors. |
+
+See also \ref tgx::Image::drawThickRectAA "drawThickRectAA()", \ref tgx::Image::fillRectAA "fillRectAA()", \ref tgx::Image::fillThickRectAA "fillThickRectAA()". These methods may be useful for smooth animations but usually not for static display (as rectangle edges are parallel to pixel boundaries and therefore do not usually require anti-aliasing).
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -221,15 +265,6 @@ im.fillThickRect({ 50, 150, 150, 220 }, 5, tgx::RGB32_Gray, tgx::RGB32_Red, 0.5f
 im.fillRectHGradient({ 140, 310, 100, 160 }, tgx::RGB32_Red, tgx::RGB32_Blue); // rectangle filled with horizontal gradient from red to blue. full opacity.
 im.fillRectVGradient({ 190, 300, 10, 230 }, tgx::RGB32_Cyan, tgx::RGB32_Purple, 0.5f); // rectangle filled with vertical gradient from cyan to purple. half opacity.
 ~~~
-**Methods:**
-- \ref tgx::Image::drawRect "drawRect()" : draw a basic rectangle. Fastest method.
-- \ref tgx::Image::drawThickRect "drawThickRect()" : draw a rectangle with a thick outline.
-- \ref tgx::Image::fillRect "fillRect()" : draw a filled rectangle.
-- \ref tgx::Image::fillThickRect "fillThickRect()" : draw a filled rectangle with a thick outline of a different color.
-- \ref tgx::Image::fillRectHGradient "fillRectHGradient()" : draw a filled rectangle with a horizontal gradient between two colors.
-- \ref tgx::Image::fillRectVGradient "fillRectVGradient()" : draw a filled rectangle with a vertical gradient between two colors.
-
-See also \ref tgx::Image::drawThickRectAA "drawThickRectAA()", \ref tgx::Image::fillRectAA "fillRectAA()", \ref tgx::Image::fillThickRectAA "fillThickRectAA()". These methods may be useful for smooth animations but usually not for static display (as rectangle edges are parallel to pixel boundaries and therefore do not usually require anti-aliasing).
 
 
 
@@ -239,6 +274,13 @@ See also \ref tgx::Image::drawThickRectAA "drawThickRectAA()", \ref tgx::Image::
 @subsection subsec_roundrect Drawing rounded rectangles
 
 ![test_rounded_rectangles](../test_rounded_rectangles.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawRoundRectAA "drawRoundRectAA()" | Draw a single pixel thick rectangle with rounded corners, with anti-aliasing. |
+| \ref tgx::Image::drawThickRoundRectAA "drawThickRoundRectAA()" | Draw a rounded-corner rectangle with a thick outline, with anti-aliasing. |
+| \ref tgx::Image::fillRoundRectAA "fillRoundRectAA()" | Draw a filled rectangle with rounded corners, with anti-aliasing. |
+| \ref tgx::Image::fillThickRoundRectAA "fillThickRoundRectAA()" | Draw a filled rectangle with rounded corners and a thick outline of a different color, with anti-aliasing. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -251,11 +293,6 @@ im.drawThickRoundRectAA({ 30,180,30,140 }, 20, 7, tgx::RGB32_Orange, 0.5f); // 7
 im.fillRoundRectAA({ 140, 310, 170, 230 }, 25, tgx::RGB32_Blue); // filled 25-pixel rounded corner rectangle
 im.fillThickRoundRectAA({ 100, 250, 60, 200 }, 10, 5, tgx::RGB32_Gray, tgx::RGB32_Red, 0.5f); // 5 pixels thick, 10 pixel rounded corner rectangle, 50% opacity
 ~~~
-**Methods:**
-- \ref tgx::Image::drawRoundRectAA "drawRoundRectAA()" : draw a single pixel thick rectangle with rounded corners, with anti-aliasing.
-- \ref tgx::Image::drawThickRoundRectAA "drawThickRoundRectAA()" : draw a rounded corners rectangle with thick outline, with anti-aliasing.
-- \ref tgx::Image::fillRoundRectAA "fillRoundRectAA()" : draw a filled rectangle with rounded corners, with anti-aliasing.
-- \ref tgx::Image::fillThickRoundRectAA "fillThickRoundRectAA()" : draw a filled rectangle  with rounded corners and thick outline of a different color, with anti-aliasing.
 
 
 
@@ -264,6 +301,15 @@ im.fillThickRoundRectAA({ 100, 250, 60, 200 }, 10, 5, tgx::RGB32_Gray, tgx::RGB3
 @subsection subsec_triangles Drawing triangles
 
 ![test_triangles](../test_triangles.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawTriangle "drawTriangle()" | Draw a simple triangle. Fastest method. |
+| \ref tgx::Image::fillTriangle "fillTriangle()" | Draw a simple filled triangle. Fastest method. |
+| \ref tgx::Image::drawTriangleAA "drawTriangleAA()" | Draw a triangle with a single pixel thick outline, with anti-aliasing. |
+| \ref tgx::Image::drawThickTriangleAA "drawThickTriangleAA()" | Draw a triangle with a thick outline, with anti-aliasing. |
+| \ref tgx::Image::fillTriangleAA "fillTriangleAA()" | Draw a filled triangle with anti-aliasing. |
+| \ref tgx::Image::fillThickTriangleAA "fillThickTriangleAA()" | Draw a filled triangle with a thick outline of a different color, with anti-aliasing. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -278,13 +324,6 @@ im.drawThickTriangleAA({ 160, 60 }, {240,30}, {300, 80}, 10, tgx::RGB32_Cyan, 0.
 im.fillTriangleAA({ 200, 220 }, { 315,210 }, { 150, 120 }, tgx::RGB32_Yellow); // filled triangle with AA.
 im.fillThickTriangleAA({ 130,200 }, { 280, 110 }, {250, 170}, 5, tgx::RGB32_Lime, tgx::RGB32_Orange, 0.5f); // filled 5 pixels thick triangle, 50% opacity, with AA
 ~~~
-**Methods:**
-- \ref tgx::Image::drawTriangle "drawTriangle()" : draw a simple triangle. Fastest method.
-- \ref tgx::Image::fillTriangle "fillTriangle()" : draw a simple filled triangle. Fastest method
-- \ref tgx::Image::drawTriangleAA "drawTriangleAA()" : draw a triangle with single pixel thick outline, with anti-aliasing.
-- \ref tgx::Image::drawThickTriangleAA "drawThickTriangleAA()" :  draw a triangle with thick outline, with anti-aliasing.
-- \ref tgx::Image::fillTriangleAA "fillTriangleAA()" : draw a filled triangle  with anti-aliasing.
-- \ref tgx::Image::fillThickTriangleAA "fillThickTriangleAA()" : draw a filled triangle  with a thick outline of a different color, with anti-aliasing.
 
 
 
@@ -294,6 +333,16 @@ im.fillThickTriangleAA({ 130,200 }, { 280, 110 }, {250, 170}, 5, tgx::RGB32_Lime
 @subsection subsec_triangles_advanced Drawing triangles (advanced)
 
 ![test_triangles_advanced](../test_triangles_advanced.png)
+
+These methods use the 3D rasterizer.
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawTexturedTriangle "drawTexturedTriangle()" | Draw a filled triangle with texture mapping. |
+| \ref tgx::Image::drawGradientTriangle "drawGradientTriangle()" | Draw a filled triangle with gradient color (Gouraud shading). |
+| \ref tgx::Image::drawTexturedGradientTriangle "drawTexturedGradientTriangle()" | Draw a filled triangle with both texture mapping and gradient color. |
+
+See also \ref tgx::Image::drawTexturedMaskedTriangle "drawTexturedMaskedTriangle()" and \ref tgx::Image::drawTexturedGradientMaskedTriangle "drawTexturedGradientMaskedTriangle()" for additional masking features.
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -310,12 +359,6 @@ im.drawTexturedTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 10, 10 }, { 100, 
 im.drawGradientTriangle({ 20, 140 }, { 160, 50 }, {230, 200}, tgx::RGB32_Blue, tgx::RGB32_Orange, tgx::RGB32_Black); // gradient triangle, full opacity.
 im.drawTexturedGradientTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 } , { 120, 230 }, { 300, 20 }, { 280, 170 }, tgx::RGB32_Red, tgx::RGB32_Green, tgx::RGB32_Blue, 0.5f); // texture triangle with color gradient. half opacity.
 ~~~
-**Methods:** these methods use the 3D rasterizer:
-- \ref tgx::Image::drawTexturedTriangle "drawTexturedTriangle()" : draw a filled triangle with texture mapping.
-- \ref tgx::Image::drawGradientTriangle "drawGradientTriangle()" : draw a filled triangle with gradient color (i.e. Gouraud shading)
-- \ref tgx::Image::drawTexturedGradientTriangle "drawTexturedGradientTriangle()" : draw a filled triangle with both texture mapping and gradient color.
-
-See also \ref tgx::Image::drawTexturedMaskedTriangle "drawTexturedMaskedTriangle()", \ref tgx::Image::drawTexturedGradientMaskedTriangle "drawTexturedGradientMaskedTriangle()" for additional masking features.
 
 
 
@@ -325,6 +368,15 @@ See also \ref tgx::Image::drawTexturedMaskedTriangle "drawTexturedMaskedTriangle
 @subsection subsec_quads Drawing quads
 
 ![test_quads](../test_quads.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawQuad "drawQuad()" | Draw a simple quad. Fastest method. |
+| \ref tgx::Image::fillQuad "fillQuad()" | Draw a simple filled quad. Fastest method. |
+| \ref tgx::Image::drawQuadAA "drawQuadAA()" | Draw a quad with a single pixel thick outline, with anti-aliasing. |
+| \ref tgx::Image::drawThickQuadAA "drawThickQuadAA()" | Draw a quad with a thick outline, with anti-aliasing. |
+| \ref tgx::Image::fillQuadAA "fillQuadAA()" | Draw a filled quad with anti-aliasing. |
+| \ref tgx::Image::fillThickQuadAA "fillThickQuadAA()" | Draw a filled quad with a thick outline of a different color, with anti-aliasing. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -339,13 +391,6 @@ im.drawThickQuadAA({ 160, 60 }, { 240,30 }, { 300, 80 }, {230, 120}, 10, tgx::RG
 im.fillQuadAA({ 200, 220 }, { 315,210 }, {250, 150}, { 150, 120 }, tgx::RGB32_Yellow); // filled quad with AA
 im.fillThickQuadAA({ 130,200 }, { 160, 140 }, { 230, 100 }, { 250, 170 } , 5, tgx::RGB32_Lime, tgx::RGB32_Orange, 0.5f); //filled, 5 pixels thick quad, 50% opacity, with AA
 ~~~
-**Methods:**
-- \ref tgx::Image::drawQuad "drawQuad()" : draw a simple quad. Fastest method.
-- \ref tgx::Image::fillQuad "fillQuad()" : draw a simple filled quad. Fastest method
-- \ref tgx::Image::drawQuadAA "drawQuadAA()" : draw a quad with single pixel thick outline, with anti-aliasing.
-- \ref tgx::Image::drawThickQuadAA "drawThickQuadAA()" :  draw a quad with thick outline, with anti-aliasing.
-- \ref tgx::Image::fillQuadAA "fillQuadAA()" : draw a filled quad  with anti-aliasing.
-- \ref tgx::Image::fillThickQuadAA "fillThickQuadAA()" : draw a filled quad with a thick outline of a different color, with anti-aliasing.
 
 
 
@@ -355,6 +400,16 @@ im.fillThickQuadAA({ 130,200 }, { 160, 140 }, { 230, 100 }, { 250, 170 } , 5, tg
 @subsection subsec_quads_advanced Drawing quads (advanced)
 
 ![test_quad_advanced](../test_quad_advanced.png)
+
+These methods use the 3D rasterizer.
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawTexturedQuad "drawTexturedQuad()" | Draw a filled quad with texture mapping. |
+| \ref tgx::Image::drawGradientQuad "drawGradientQuad()" | Draw a filled quad with gradient color (Gouraud shading). |
+| \ref tgx::Image::drawTexturedGradientQuad "drawTexturedGradientQuad()" | Draw a filled quad with both texture mapping and gradient color. |
+
+See also \ref tgx::Image::drawTexturedMaskedQuad "drawTexturedMaskedQuad()" and \ref tgx::Image::drawTexturedGradientMaskedQuad "drawTexturedGradientMaskedQuad()" for additional masking features.
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -366,12 +421,6 @@ im.drawTexturedQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 10, 10 }, 
 im.drawGradientQuad({ 20, 140 }, { 160, 50 }, {180, 55}, { 230, 200 }, tgx::RGB32_Blue, tgx::RGB32_Orange, tgx::RGB32_Green, tgx::RGB32_Black); // gradient quad
 im.drawTexturedGradientQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 120, 230 }, { 280, 20 }, { 310, 170 }, {250,210}, tgx::RGB32_Red, tgx::RGB32_Green, tgx::RGB32_Blue, tgx::RGB32_Navy,0.5f); // texture quad with color gradient. half opacity.
 ~~~
-**Methods:** these methods use the 3D rasterizer:
-- \ref tgx::Image::drawTexturedQuad "drawTexturedQuad()" : draw a filled quad with texture mapping.
-- \ref tgx::Image::drawGradientQuad "drawGradientQuad()" : draw a filled quad with gradient color (i.e. Gouraud shading)
-- \ref tgx::Image::drawTexturedGradientQuad "drawTexturedGradientQuad()" : draw a filled quad with both texture mapping and gradient color.
-
-See also \ref tgx::Image::drawTexturedMaskedQuad "drawTexturedMaskedQuad()", \ref tgx::Image::drawTexturedGradientMaskedQuad "drawTexturedGradientMaskedQuad()" for additional masking features.
 
 
 
@@ -380,6 +429,12 @@ See also \ref tgx::Image::drawTexturedMaskedQuad "drawTexturedMaskedQuad()", \re
 @subsection subsec_polylines Drawing polylines
 
 ![test_polylines](../test_polylines.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawPolyline "drawPolyline()" | Draw a simple polyline. Fastest method. |
+| \ref tgx::Image::drawPolylineAA "drawPolylineAA()" | Draw a polyline with anti-aliasing. |
+| \ref tgx::Image::drawThickPolylineAA "drawThickPolylineAA()" | Draw a thick polyline with anti-aliasing and specify how the endings look. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -396,10 +451,6 @@ im.drawPolylineAA(6, tabPoints2, tgx::RGB32_Red); // polyline with AA
 const tgx::fVec2 tabPoints3[] = { {30, 30}, {200, 15}, {300, 200}, {140, 230}, {80, 150}, {20, 230} };
 im.drawThickPolylineAA(6, tabPoints3, 12, tgx::END_ARROW_1, tgx::END_ROUNDED, tgx::RGB32_Orange, 0.5f); // thick polyline, arrow at start, rounded at end, half opacity, with AA
 ~~~
-**Methods:**
-- \ref tgx::Image::drawPolyline "drawPolyline()" : draw a simple polyline. Fastest method.
-- \ref tgx::Image::drawPolylineAA "drawPolylineAA()" : draw a polyline, with anti-aliasing.
-- \ref tgx::Image::drawThickPolylineAA "drawThickPolylineAA()" : draw a thick polyline with anti-aliasing and specify how the endings look.
 
 
 
@@ -408,6 +459,15 @@ im.drawThickPolylineAA(6, tabPoints3, 12, tgx::END_ARROW_1, tgx::END_ROUNDED, tg
 @subsection subsec_polygons Drawing polygons
 
 ![test_polygons](../test_polygons.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawPolygon "drawPolygon()" | Draw a simple polygon. Fastest method. |
+| \ref tgx::Image::fillPolygon "fillPolygon()" | Draw a simple filled polygon. Fastest method. |
+| \ref tgx::Image::drawPolygonAA "drawPolygonAA()" | Draw a polygon with anti-aliasing. |
+| \ref tgx::Image::drawThickPolygonAA "drawThickPolygonAA()" | Draw a polygon with a thick outline, with anti-aliasing. |
+| \ref tgx::Image::fillPolygonAA "fillPolygonAA()" | Draw a filled polygon with anti-aliasing. |
+| \ref tgx::Image::fillThickPolygonAA "fillThickPolygonAA()" | Draw a filled polygon with a thick outline, with anti-aliasing. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -433,13 +493,6 @@ im.fillPolygonAA(5, tabPoints5, tgx::RGB32_Lime, 0.5f); // filled polygon, 50% o
 tgx::fVec2 tabPoints6[] = { {120, 150}, {210, 50}, {250, 70}, {300, 100}, {290, 170}, {230, 210} };
 im.fillThickPolygonAA(6, tabPoints6, 10, tgx::RGB32_Purple, tgx::RGB32_Orange, 0.5f); // filled thick polygon, 50% opacity, with AA
 ~~~
-**Methods:**
-- \ref tgx::Image::drawPolygon "drawPolygon()" : draw a simple polygon. Fastest method.
-- \ref tgx::Image::fillPolygon "fillPolygon()" : draw a simple filled polygon. Fastest method.
-- \ref tgx::Image::drawPolygonAA "drawPolygonAA()" : draw a polygon with anti-aliasing.
-- \ref tgx::Image::drawThickPolygonAA "drawThickPolygonAA()" : draw a polygon with thick outline, with anti-aliasing.
-- \ref tgx::Image::fillPolygonAA "fillPolygonAA()" : draw a filled polygon, with anti-aliasing.
-- \ref tgx::Image::fillThickPolygonAA "fillThickPolygonAA()" : draw a filled polygon with thick outline, with anti-aliasing.
 
 
 
@@ -449,6 +502,15 @@ im.fillThickPolygonAA(6, tabPoints6, 10, tgx::RGB32_Purple, tgx::RGB32_Orange, 0
 @subsection subsec_circles Drawing circles
 
 ![test_circles](../test_circles.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawCircle "drawCircle()" | Draw a simple circle. Fastest method. |
+| \ref tgx::Image::fillCircle "fillCircle()" | Draw a simple filled circle. Fastest method. |
+| \ref tgx::Image::drawCircleAA "drawCircleAA()" | Draw a circle with anti-aliasing. |
+| \ref tgx::Image::drawThickCircleAA "drawThickCircleAA()" | Draw a circle with a thick outline, with anti-aliasing. |
+| \ref tgx::Image::fillCircleAA "fillCircleAA()" | Draw a filled circle with anti-aliasing. |
+| \ref tgx::Image::fillThickCircleAA "fillThickCircleAA()" | Draw a filled circle with a thick outline, with anti-aliasing. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -463,13 +525,6 @@ im.drawThickCircleAA({60, 180}, 40, 10, tgx::RGB32_Purple); // thick purple circ
 im.fillCircleAA({230, 150}, 70, tgx::RGB32_Yellow, 0.5f); // filled circle with AA, 50% opacity
 im.fillThickCircleAA({160,160}, 55, 8, tgx::RGB32_Teal, tgx::RGB32_Orange, 0.5f); // filled circle with thick outline, with AA, 50% opacity
 ~~~
-**Methods:**
-- \ref tgx::Image::drawCircle "drawCircle()" : draw a simple circle. Fastest method.
-- \ref tgx::Image::fillCircle "fillCircle()" : draw a simple filled circle. Fastest method.
-- \ref tgx::Image::drawCircleAA "drawCircleAA()" : draw a circle with anti-aliasing.
-- \ref tgx::Image::drawThickCircleAA "drawThickCircleAA()" : draw a circle with thick outline, with anti-aliasing.
-- \ref tgx::Image::fillCircleAA "fillCircleAA()" : draw a filled circle, with anti-aliasing.
-- \ref tgx::Image::fillThickCircleAA "fillThickCircleAA()" : draw a filled circle with thick outline, with anti-aliasing.
 
 
 
@@ -478,6 +533,15 @@ im.fillThickCircleAA({160,160}, 55, 8, tgx::RGB32_Teal, tgx::RGB32_Orange, 0.5f)
 @subsection subsec_ellipses Drawing ellipses
 
 ![test_ellipses](../test_ellipses.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawEllipse "drawEllipse()" | Draw a simple ellipse. Fastest method. |
+| \ref tgx::Image::fillEllipse "fillEllipse()" | Draw a simple filled ellipse. Fastest method. |
+| \ref tgx::Image::drawEllipseAA "drawEllipseAA()" | Draw an ellipse with anti-aliasing. |
+| \ref tgx::Image::drawThickEllipseAA "drawThickEllipseAA()" | Draw an ellipse with a thick outline, with anti-aliasing. |
+| \ref tgx::Image::fillEllipseAA "fillEllipseAA()" | Draw a filled ellipse with anti-aliasing. |
+| \ref tgx::Image::fillThickEllipseAA "fillThickEllipseAA()" | Draw a filled ellipse with a thick outline, with anti-aliasing. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -492,13 +556,6 @@ im.drawThickEllipseAA({ 60, 180 }, { 35, 55 }, 10, tgx::RGB32_Purple); // thick 
 im.fillEllipseAA({ 230, 150 }, { 45, 70 }, tgx::RGB32_Yellow, 0.5f); // filled ellipse with AA, 50% opacity
 im.fillThickEllipseAA({ 160,160 }, { 55, 65 }, 8, tgx::RGB32_Teal, tgx::RGB32_Orange, 0.5f); // filled ellipse with thick outline, with AA, 50% opacity
 ~~~
-**Methods:**
-- \ref tgx::Image::drawEllipse "drawEllipse()" : draw a simple ellipse. Fastest method.
-- \ref tgx::Image::fillEllipse "fillEllipse()" : draw a simple filled ellipse. Fastest method.
-- \ref tgx::Image::drawEllipseAA "drawEllipseAA()" : draw an ellipse with anti-aliasing.
-- \ref tgx::Image::drawThickEllipseAA "drawThickEllipseAA()" : draw an ellipse with thick outline, with anti-aliasing.
-- \ref tgx::Image::fillEllipseAA "fillEllipseAA()" : draw a filled ellipse, with anti-aliasing.
-- \ref tgx::Image::fillThickEllipseAA "fillThickEllipseAA()" : draw a filled ellipse with thick outline, with anti-aliasing.
 
 
 
@@ -508,6 +565,13 @@ im.fillThickEllipseAA({ 160,160 }, { 55, 65 }, 8, tgx::RGB32_Teal, tgx::RGB32_Or
 @subsection subsec_arcpies Drawing circle arcs and pies
 
 ![test_arc_pies](../test_arc_pies.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::fillCircleSectorAA "fillCircleSectorAA()" | Draw a circle sector (pie), with anti-aliasing. |
+| \ref tgx::Image::drawCircleArcAA "drawCircleArcAA()" | Draw a single-pixel circle arc, with anti-aliasing. |
+| \ref tgx::Image::drawThickCircleArcAA "drawThickCircleArcAA()" | Draw a thick circle arc, with anti-aliasing. |
+| \ref tgx::Image::fillThickCircleSectorAA "fillThickCircleSectorAA()" | Draw a circle sector (pie) with a thick outline arc, with anti-aliasing. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -520,11 +584,6 @@ im.drawCircleArcAA({250, 60}, 50, 250, 90, tgx::RGB32_Green); // green circle ar
 im.drawThickCircleArcAA({80, 160}, 75, 220, 160, 20, tgx::RGB32_Purple, 0.5f); // thick circle arc from 220 to 160 degrees, 50% opacity
 im.fillThickCircleSectorAA({230, 120}, 100, 140, 340, 10, tgx::RGB32_Olive, tgx::RGB32_Orange, 0.5f); // filled thick circle sector from 140 to 340 degrees, 50% opacity
 ~~~
-**Methods:**
-- \ref tgx::Image::fillCircleSectorAA "fillCircleSectorAA()" : draw a circle sector (pie), with AA.
-- \ref tgx::Image::drawCircleArcAA "drawCircleArcAA()" : draw a circle arc, single pixel thickness, with AA
-- \ref tgx::Image::drawThickCircleArcAA "drawThickCircleArcAA()" : draw a thick circle arc, with AA
-- \ref tgx::Image::fillThickCircleSectorAA "fillThickCircleSectorAA()" : draw a circle sector (pie) with thick outline (circle arc), with AA.
 
 
 
@@ -535,6 +594,12 @@ im.fillThickCircleSectorAA({230, 120}, 100, 140, 340, 10, tgx::RGB32_Olive, tgx:
 
 ![test_bezier_curves](../test_bezier_curves.png)
 
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawQuadBezier "drawQuadBezier()" | Draw a quadratic Bezier curve. |
+| \ref tgx::Image::drawCubicBezier "drawCubicBezier()" | Draw a cubic Bezier curve. |
+| \ref tgx::Image::drawThickQuadBezierAA "drawThickQuadBezierAA()" | Draw a thick quadratic Bezier curve, with anti-aliasing. |
+| \ref tgx::Image::drawThickCubicBezierAA "drawThickCubicBezierAA()" | Draw a thick cubic Bezier curve, with anti-aliasing. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -547,11 +612,6 @@ im.drawCubicBezier({ 10, 40 }, { 280, 50 }, { 20, 80 }, { 300, 200 }, true, tgx:
 im.drawThickQuadBezierAA({ 30, 150 }, { 300, 20 }, {0,0}, 2.0f, 10, tgx::END_STRAIGHT, tgx::END_ROUNDED, tgx::RGB32_Red, 0.5f); // thick quadratic Bezier curve, with AA, 50% opacity.
 im.drawThickCubicBezierAA({ 80, 80 }, { 305, 150 }, { 0, 240 }, {290, 240}, 10, tgx::END_ARROW_5, tgx::END_ARROW_SKEWED_2, tgx::RGB32_Orange, 0.5f); // thick cubic Bezier curve, with AA, 50% opacity.
 ~~~
-**Methods:**
-- \ref tgx::Image::drawQuadBezier "drawQuadBezier()" : draw a quadratic Bezier curve.
-- \ref tgx::Image::drawCubicBezier "drawCubicBezier()" : draw a cubic Bezier curve.
-- \ref tgx::Image::drawThickQuadBezierAA "drawThickQuadBezierAA()" : draw a thick quadratic Bezier curve, with AA
-- \ref tgx::Image::drawThickCubicBezierAA "drawThickCubicBezierAA()" : draw a thick cubic Bezier curve, with AA.
 
 
 ---
@@ -560,6 +620,16 @@ im.drawThickCubicBezierAA({ 80, 80 }, { 305, 150 }, { 0, 240 }, {290, 240}, 10, 
 
 ![test_splines](../test_splines.png)
 
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawQuadSpline "drawQuadSpline()" | Draw a simple quadratic spline. |
+| \ref tgx::Image::drawCubicSpline "drawCubicSpline()" | Draw a simple cubic spline. |
+| \ref tgx::Image::drawThickQuadSplineAA "drawThickQuadSplineAA()" | Draw a thick quadratic spline, with anti-aliasing. |
+| \ref tgx::Image::drawThickCubicSplineAA "drawThickCubicSplineAA()" | Draw a thick cubic spline, with anti-aliasing. |
+| \ref tgx::Image::drawThickClosedSplineAA "drawThickClosedSplineAA()" | Draw a thick closed spline, with anti-aliasing. |
+| \ref tgx::Image::drawClosedSpline "drawClosedSpline()" | Draw a simple closed spline. |
+| \ref tgx::Image::fillClosedSplineAA "fillClosedSplineAA()" | Draw a closed spline and fill its interior, with anti-aliasing. |
+| \ref tgx::Image::fillThickClosedSplineAA "fillThickClosedSplineAA()" | Draw a thick closed spline and fill its interior, with anti-aliasing. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -591,15 +661,6 @@ im.fillClosedSplineAA(4, tabPoints7, tgx::RGB32_Cyan); // interior filled closed
 const tgx::fVec2 tabPoints8[] = { {150, 210}, {160, 150}, {250, 120}, {280, 150}, {260, 190} };
 im.fillThickClosedSplineAA(5, tabPoints8, 5, tgx::RGB32_Gray ,tgx::RGB32_Red, 0.5f); // interior filled thick closed spline, 50% opacity, with AA
 ~~~
-**Methods:**
-- \ref tgx::Image::drawQuadSpline "drawQuadSpline()" : draw a simple quadratic spline
-- \ref tgx::Image::drawCubicSpline "drawCubicSpline()" : draw a simple cubic spline
-- \ref tgx::Image::drawThickQuadSplineAA "drawThickQuadSplineAA()" : draw a thick quadratic spline, with AA
-- \ref tgx::Image::drawThickCubicSplineAA "drawThickCubicSplineAA()" : draw a thick cubic spline, with AA
-- \ref tgx::Image::drawThickClosedSplineAA "drawThickClosedSplineAA()" : draw a thick closed spline, with AA
-- \ref tgx::Image::drawClosedSpline "drawClosedSpline()" : draw a simple closed spline
-- \ref tgx::Image::fillClosedSplineAA "fillClosedSplineAA()" : draw a closed spline and fill its interior, with AA
-- \ref tgx::Image::fillThickClosedSplineAA "fillThickClosedSplineAA()" : draw a  thick closed spline and fill its interior, with AA
 
 
 ---
@@ -608,6 +669,13 @@ im.fillThickClosedSplineAA(5, tabPoints8, 5, tgx::RGB32_Gray ,tgx::RGB32_Red, 0.
 @subsection subsec_text Drawing text
 
 ![test_text](../test_text.png)
+
+| Method | Description |
+|--------|-------------|
+| \ref tgx::Image::drawText "drawText()" | Draw text using a given font. Simple "legacy" method. |
+| \ref tgx::Image::drawTextEx "drawTextEx()" | Draw text using a given font. Extended method with anchor placement (see \ref tgx::Anchor). |
+| \ref tgx::Image::measureText "measureText()" | Compute the bounding box of a text string without drawing it. |
+| \ref tgx::Image::measureChar "measureChar()" | Compute the bounding box of a character without drawing it. |
 
 *additional includes for the text fonts*
 ~~~{.cpp}
@@ -701,13 +769,6 @@ The following fonts are already packaged with TGX but must be included explicitl
 - **OpenSans Italic** (AA font): `#include "font_tgx_OpenSans_Italic.h"`
 
 Each font above is available in the following sizes: *8pt, 9pt, 10pt, 11pt, 12pt, 13pt, 14pt, 16pt, 18pt, 20pt, 24pt, 28pt, 32pt, 40pt, 48pt, 60pt, 72pt, 96pt*.
-
-
-**Methods:**
-- \ref tgx::Image::drawText "drawText()" : draw text using a given font. Simple "legacy" method.
-- \ref tgx::Image::drawTextEx "drawTextEx()" : draw text using a given font. Extended method with anchor placement (see \ref tgx::Anchor).
-- \ref tgx::Image::measureText "measureText()" : compute the bounding box of a text (fast, does not draw it)
-- \ref tgx::Image::measureChar "measureChar()" : compute the bounding box of a character (fast, does not draw it)
 
 
 ---

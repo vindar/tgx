@@ -49,6 +49,7 @@ var NAVTREE =
     [ "Using the 2D API.", "md_docs_intro_api_2_d.html", [
       [ "Overview of the 2D API", "md_docs_intro_api_2_d.html#sec_2D_overview", null ],
       [ "Naming conventions", "md_docs_intro_api_2_d.html#sec_2D_naming", null ],
+      [ "Performance and clipping", "md_docs_intro_api_2_d.html#sec_2D_performance", null ],
       [ "2D Drawing methods.", "md_docs_intro_api_2_d.html#sec_2Dprimitives", [
         [ "Filling the screen.", "md_docs_intro_api_2_d.html#subsec_filling", null ],
         [ "Reading/writing pixels", "md_docs_intro_api_2_d.html#subsec_rwpixels", null ],
@@ -137,9 +138,9 @@ var NAVTREEINDEX =
 "_box2_8h.html",
 "_vec3_8h.html#ac1caa239be43f9aa85c0016e491b726a",
 "classtgx_1_1_renderer3_d.html#a845bbd628cfd96f379f3f23d880aa60a",
-"md_docs_tools.html#tools_workflow",
-"structtgx_1_1_r_g_b24.html#a4ec139157f640bb9820b9b3bca0f9c9e",
-"structtgx_1_1_vec2.html#a1008bdde94c59ba515607a9ad34ddcd8"
+"md_docs_tools.html#tools_validation",
+"structtgx_1_1_r_g_b24.html#a4e989a01f791a0c5c93ddfa54686e956",
+"structtgx_1_1_vec2.html#a0e7fdb36c34634adee5419874414fb98"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
