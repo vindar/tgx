@@ -536,7 +536,13 @@ namespace tgx
         int y0 = pDraw->iY + pWrapper->pos.y + pDraw->y;
 
         if ((y0 < 0) || (y0 >= im->height())) return;
-        if (x0 < 0) { iWidth += x0; s -= x0; x0 = 0; }
+        if (x0 < 0)
+            {
+            if (x0 + iWidth <= 0) return;
+            s -= x0;
+            iWidth += x0;
+            x0 = 0;
+            }
         if (x0 + iWidth > im->width()) { iWidth = im->width() - x0; }
         if ((x0 >= im->width()) || (iWidth < 1)) return;
         // ok, we can draw now
@@ -3503,6 +3509,7 @@ namespace tgx
     void Image<color_t>::drawRoundRectAA(const fBox2& B, float corner_radius, color_t color, float opacity)
         {
         if ((!isValid()) || (B.isEmpty())) return;
+        if (corner_radius <= 0) { drawRect(iBox2((int)roundf(B.minX), (int)roundf(B.maxX), (int)roundf(B.minY), (int)roundf(B.maxY)), color, opacity); return; }
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         _drawSmoothRoundRect(iBox2((int)roundf(B.minX), (int)roundf(B.maxX), (int)roundf(B.minY), (int)roundf(B.maxY)), corner_radius, color, opacity); // cheat, convert to iBox2 for the time being. todo improve this !
         }
@@ -3512,6 +3519,7 @@ namespace tgx
     void Image<color_t>::drawThickRoundRectAA(const fBox2& B, float corner_radius, float thickness, color_t color, float opacity)
         {
         if ((!isValid()) || (B.isEmpty())) return;
+        if ((corner_radius <= 0) || (thickness <= 0)) { drawRect(iBox2((int)roundf(B.minX), (int)roundf(B.maxX), (int)roundf(B.minY), (int)roundf(B.maxY)), color, opacity); return; }
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         if (corner_radius - thickness < 1) thickness = corner_radius - 1.0f;
         _drawSmoothWideRoundRect(iBox2((int)roundf(B.minX), (int)roundf(B.maxX), (int)roundf(B.minY), (int)roundf(B.maxY)), corner_radius, thickness, color, opacity); // cheat, convert to iBox2 for the time being. todo improve this !
@@ -3522,6 +3530,7 @@ namespace tgx
     void Image<color_t>::fillRoundRectAA(const fBox2& B, float corner_radius, color_t color, float opacity)
         {
         if ((!isValid()) || (B.isEmpty())) return;
+        if (corner_radius <= 0) { fillRectAA(B, color, opacity); return; }
         if ((opacity < 0) || (opacity > 1)) opacity = 1.0f;
         _fillSmoothRoundedRect(iBox2((int)roundf(B.minX), (int)roundf(B.maxX), (int)roundf(B.minY), (int)roundf(B.maxY)), corner_radius, color, opacity); // cheat, convert to iBox2 for the time being. todo improve this !
         }
@@ -3682,6 +3691,8 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::fillThickRoundRectAA(const fBox2& B, float corner_radius, float thickness, color_t color_interior, color_t color_border, float opacity)
         {
+        if ((!isValid()) || (B.isEmpty())) return;
+        if (corner_radius <= 0) { fillThickRectAA(B, thickness, color_interior, color_border, opacity); return; }
         if (corner_radius - thickness < 1) thickness = corner_radius - 1.0f;
         if (thickness < 1)
             {
