@@ -1,173 +1,212 @@
-# TGX Meshlet Converter
+# TGX Mesh Converter
 
-Experimental Python tooling for building and inspecting TGX meshlet meshes from Wavefront `.obj` files.
+This directory contains the Python tools used to build TGX 3D mesh headers.
+The recommended output format for new models is `Mesh3Dv2<RGB565>`. The tools
+can also regenerate legacy `Mesh3D` headers with better triangle chains when an
+existing project still needs the old format.
 
-Current scope:
+The converter is designed for Arduino-style projects: it can produce either a
+single `.h` file, convenient for sketches, or a split `.h` + `.cpp` pair,
+convenient for larger C++ projects.
 
-- load triangular or polygonal OBJ files,
-- triangulate polygon faces,
-- split triangles into connected meshlets under the current meshlet local-index limits,
-- visualize the mesh or meshlets with matplotlib,
-- print basic meshlet quality statistics.
-- estimate gross and net meshlet-cone culling efficiency across view directions,
-- compute visibility cones with an offline TGX C++ helper,
-- export TGX `Mesh3Dv2` C++ files,
-- convert an existing TGX `Mesh3D` header to a meshlet format while reusing the same texture headers.
+## What The Tool Does
 
-This is still an experimental converter. The generated meshlet files are meant to
-coexist with the existing `Mesh3D` format while the new runtime path is being validated.
+The conversion pipeline is shared by OBJ input and existing TGX mesh headers:
 
-## Python
+1. Load the source model.
+2. Triangulate OBJ polygons when needed.
+3. Build a common internal mesh representation with vertices, normals, UVs,
+   materials and texture references.
+4. Remove degenerate triangles.
+5. Generate or normalize normals when needed.
+6. Snap vertices, normals and UVs to conservative grids, then remove duplicate
+   entries to improve strict triangle adjacency.
+7. Build triangle chains with the stripifier module.
+8. For `Mesh3Dv2`, build meshlets with the default visibility-merge builder.
+9. Export C++ data and print memory, strip and meshlet statistics.
 
-Use the local Python 3.12 environment:
+`Mesh3Dv2` stores vertices, normals and UVs quantized in each meshlet payload.
+The runtime dequantizes them with one multiply/add per component. Meshlet
+metadata also stores a compact bounding sphere and visibility cone so TGX can
+discard invisible meshlets cheaply.
 
-```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 stats D:\Programmation\myProjects\tgxmeshlets\spot.obj --meshlets
-```
+## Python Environment
 
-Save a meshlet preview image:
+Use Python 3.11 or newer. Python 3.12 is the tested version on the development
+machine.
 
-```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 view D:\Programmation\myProjects\tgxmeshlets\spot.obj --meshlets --save tmp\spot_meshlets.png
-```
-
-The default meshlet profile is `visibility_merge`. It balances culling quality,
-meshlet test overhead and stripification, using the MCU-tuned defaults:
+Recommended packages:
 
 ```text
-builder        : visibility_merge
-target vertices: 30
-max triangles  : 127
-max normal cone: 90 degrees
-merge max cone : 48 degrees
-visibility views: 1024 at 1024x1024
+numpy
+scipy
+matplotlib
+scikit-learn
+numba
+trimesh
+meshio
+pyvista
+vtk
+Pillow
 ```
 
-The `meshlet cost` is used only for the quality estimate. It subtracts a fixed per-meshlet runtime overhead from the gross number of culled triangles, making it easier to compare many small meshlets against fewer large meshlets. The tuning experiments used a cost of 3 triangle-equivalent units, which favors fewer, well-connected meshlets on MCU targets.
+### Windows
 
-Interactive view:
+With conda:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 view D:\Programmation\myProjects\tgxmeshlets\spot.obj --meshlets
+conda create -n tgxmesh3d2 python=3.12 numpy scipy matplotlib scikit-learn numba trimesh meshio pyvista vtk pillow
+conda activate tgxmesh3d2
 ```
 
-Compute true visibility cones using TGX itself, then inspect a fixed-view culling result:
+With venv:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 view D:\Programmation\myProjects\tgxmeshlets\bunny.obj --meshlets --visibility-cones --cone-source visibility --viewer pyvista --view-dir 0 0 1 --cull-view
+py -3.12 -m venv .venv-tgxmesh
+.\.venv-tgxmesh\Scripts\Activate.ps1
+python -m pip install numpy scipy matplotlib scikit-learn numba trimesh meshio pyvista vtk pillow
 ```
 
-The default visibility-cone pass uses 2048 orthographic views rendered at 768x768 by the TGX helper. The default margin is automatic: it is based on the average angular coverage of the sampled views, with a small safety allowance for non-perfect sampling and raster effects.
+### Linux / macOS
 
-Export a normalized model as a `Mesh3Dv2<RGB565>` header. Without an explicit
-`--profile`, the converter uses the `visibility_merge` defaults above:
+```bash
+python3 -m venv .venv-tgxmesh
+. .venv-tgxmesh/bin/activate
+python -m pip install numpy scipy matplotlib scikit-learn numba trimesh meshio pyvista vtk pillow
+```
+
+The TGX visibility helper is a small C++ program built with CMake. Install a C++
+compiler and CMake if you want true visibility-cone generation:
+
+- Windows: Visual Studio Build Tools or Visual Studio Community with C++.
+- Linux: `g++` or `clang++`, `cmake`, and usual build tools.
+- macOS: Xcode command-line tools and CMake.
+
+## Stripifier Helpers
+
+The converter uses `tools.mesh3d2_converter.stripifier` for triangle chains. It
+always has a greedy fallback. For best chains, build the optional helpers:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export D:\Programmation\myProjects\tgxmeshlets\bunny.obj -o tmp\bunny_mesh3dv2.h --name bunny_mesh3dv2 --normalize
+python tools\mesh3d2_converter\setup_stripifiers.py
 ```
 
-By default, exports are split into a small declaration header and a companion `.cpp`
-containing the large payload arrays. For Arduino examples that live in nested
-directories, add `--single-header` to put the payload and mesh definition directly in
-the `.h` file:
+GA-EAX is bundled as source in `tools/mesh3d2_converter/external_libs/GA_EAX`.
+Patched sparse LKH support is optional because of the LKH license. To enable it,
+copy an LKH 2.x source tree into:
+
+```text
+tools/mesh3d2_converter/external_libs/LKH
+```
+
+Then run `setup_stripifiers.py` again. The converter automatically uses all
+available helpers and keeps the best chain result.
+
+## Default Mesh3Dv2 Profile
+
+By default, export uses the MCU-tuned visibility-merge profile:
+
+```text
+builder          : visibility_merge
+target vertices  : 30
+max triangles    : 127
+max normal angle : 90 degrees
+visibility views : 1024
+visibility size  : 1024 x 1024
+```
+
+These defaults came from measuring multiple textured and untextured models on
+Teensy 4.1, ESP32/ESP32-S3 and RP2350. They are a good starting point. Larger
+`--target-vertices` values can reduce meshlet overhead on some large textured
+models, but can also reduce culling efficiency.
+
+## Export From OBJ
+
+Single-header Arduino output:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_mesh3dv2.h --single-header
+python -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_v2.h --name model_v2 --single-header --normalize
 ```
 
-The export command:
-
-- removes duplicate vertex, normal and texture-coordinate entries,
-- snaps vertices, UVs and normals to conservative grids before duplicate removal,
-- recenters and rescales the model when `--normalize` is used,
-- regenerates smooth normals if the OBJ has no complete normal set, or when `--force-normals` is used,
-- removes degenerate triangles,
-- splits the mesh into meshlets,
-- encodes local triangle chains into the 8-bit meshlet face stream,
-- writes a 32-bit aligned payload array,
-- prints meshlet, culling, strip and payload statistics.
-
-## Triangle Stripifier Helpers
-
-The converter uses `tools.mesh3d2_converter.stripifier` as the single stripification module.
-It receives one strict compatible connected component, where adjacency means a shared edge
-with matching `(vertex, texcoord, normal)` corners, and returns triangle chains.
-
-Build the optional external helpers with:
+Split `.h` + `.cpp` output:
 
 ```powershell
-py -3.12 tools\mesh3d2_converter\setup_stripifiers.py
+python -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_v2.h --name model_v2 --normalize
 ```
 
-The module always keeps a fast greedy fallback, runs the bundled GA-EAX helper when built,
-and also runs the patched sparse LKH helper when an LKH 2.x source tree is available under
-`tools\mesh3d2_converter\external_libs\LKH`. The only high-level tuning knobs are the total thread count and a time
-budget; the module chooses small, medium and large component profiles internally.
+Useful options:
 
-For a guided conversion, use the interactive wizard:
+- `--name SYMBOL`: C++ symbol name for the exported mesh.
+- `--normalize`: center and scale the model to a unit box.
+- `--single-header`: write payload arrays directly in the header.
+- `--target-vertices N`: preferred meshlet size before hard limits.
+- `--max-normal-angle DEG`: maximum normal spread accepted while merging.
+- `--export-textures`: generate texture headers from OBJ/MTL `map_Kd`.
+- `--texture-size W H`: resample exported textures.
+- `--texture-symbol Material=Symbol`: link a material to an existing texture symbol.
+- `--include file.h`: add an include for an existing texture header.
+
+Example with existing textures:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 wizard model.obj
+python -m tools.mesh3d2_converter.tgx_mesh3d2 export falcon.obj -o falcon_v2.h --name falcon_v2 --single-header --texture-symbol Body=Body_texture --include Body_texture.h
 ```
 
-Textures can be linked by symbol name if they already exist:
+## Convert Existing Mesh3D Headers
+
+Existing TGX `Mesh3D` headers can be converted directly. This preserves texture
+symbols and material values from the original header.
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_mesh3dv2.h --texture-symbol Body=model_body_texture --include model_body_texture.h
+python -m tools.mesh3d2_converter.mesh3d_to_mesh3d2 examples\Teensy4\3D\mars\falcon\falcon_vs.h -o falcon_vs_v2.h --root falcon_vs_1 --name falcon_vs_v2 --single-header
 ```
 
-They can also be generated automatically from OBJ/MTL `map_Kd` entries:
+When the file contains only one mesh chain, `--root` is often optional. When it
+contains several independent declarations, pass the first legacy `Mesh3D` symbol
+explicitly.
+
+## Legacy Mesh3D Strip Optimization
+
+To keep the legacy format but rebuild better triangle chains:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_mesh3dv2.h --profile auto --export-textures --texture-size 128 128
+python -m tools.mesh3d2_converter.tgx_mesh3d model.obj -o model_legacy_opt.h --name model
 ```
 
-If no texture symbol is provided or generated for a material, that material is exported with
-a `nullptr` texture and its diffuse material color.
+This is useful for comparing old and new formats, or for projects that cannot
+move to `Mesh3Dv2` yet.
 
-Interactive textured preview is available with PyVista:
+## Stats And Visualization
+
+Print mesh statistics:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.tgx_mesh3d2 view model.obj --meshlets --profile auto --viewer pyvista --texture
+python -m tools.mesh3d2_converter.tgx_mesh3d2 stats model.obj --meshlets
 ```
 
-## Converting Existing Mesh3D Headers
-
-Existing TGX `Mesh3D` headers can be converted directly without going back to the original
-OBJ file:
+Open an interactive PyVista viewer:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.mesh3d_to_mesh3d2 examples\Teensy4\3D\mars\falcon\falcon_vs.h -o falcon_vs_m2.h --root falcon_vs_1 --name falcon_vs_m2
+python -m tools.mesh3d2_converter.tgx_mesh3d2 view model.obj --meshlets --viewer pyvista --texture
 ```
 
-Use `--single-header` here as well when a single generated `.h` is more convenient than
-the default `.h` plus `.cpp` pair.
-
-The legacy converter:
-
-- decodes the original 16-bit `Mesh3D` triangle-chain stream,
-- keeps the exact same vertex, normal and texture-coordinate indices,
-- preserves mesh material colors and lighting coefficients,
-- links generated meshlet materials to the original texture image symbols,
-- writes relative includes to the original texture headers,
-- builds meshlets and 8-bit local face streams for the new runtime path.
-
-The default `visibility_merge` profile keeps meshlets inside a single material and
-groups exported meshlets by material so the runtime lazy material loader changes
-texture/color state as rarely as possible. The older `auto` profile is still
-available explicitly for quick heuristic conversions.
-
-For best culling quality, compute visibility cones from the complete mesh, not from each
-material independently:
+Inspect a generated header:
 
 ```powershell
-py -3.12 -m tools.mesh3d2_converter.mesh3d_to_mesh3d2 model.h -o model_m2.h --root model_1 --visibility-cones --visibility-samples 1024 --visibility-size 512
+python -m tools.mesh3d2_converter.mesh_stats generated_model_v2.h --view --meshlets
 ```
 
-The visibility helper renders the whole mesh and only uses the meshlet assignment as a color
-ID, so one material/submesh can occlude another during offline cone construction.
+The viewer can display the textured mesh, meshlets with distinct colors and
+visibility cones when they are present.
 
-When the legacy header contains a single mesh chain, `--root` is optional. For files with
-several independent chains, pass the first `Mesh3D` symbol explicitly.
+## Notes For Arduino Users
 
-The current implementation uses packages available in the local `tgxmesh3d2` Python environment: `numpy`, `matplotlib`, `scipy`, `scikit-learn`, `numba`, `trimesh`, `meshio`, `pyvista` and `vtk`.
+- Prefer `--single-header` for examples/sketches unless you already have a C++
+  build system that compiles companion `.cpp` files.
+- Put generated texture headers next to the generated mesh header, or use
+  relative includes that match the sketch layout.
+- Use `RGB565` textures for MCU display rendering.
+- Use power-of-two texture dimensions when selecting
+  `SHADER_TEXTURE_WRAP_POW2`.
+- On Teensy 4.x, `cacheMesh()` and `copyMeshEXTMEM()` can improve performance
+  when model payloads or textures are read from slower memory.
