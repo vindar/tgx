@@ -33,11 +33,17 @@ var NAVTREE =
       [ "Color types", "md_docs_intro_basic.html#autotoc_md2", [
         [ "Blending and opacity parameter.", "md_docs_intro_basic.html#autotoc_md3", null ]
       ] ],
-      [ "Image class, memory layout and sub-images", "md_docs_intro_basic.html#autotoc_md5", null ],
-      [ "Vectors and Boxes", "md_docs_intro_basic.html#autotoc_md7", null ],
-      [ "Storing images in C++ source files", "md_docs_intro_basic.html#autotoc_md9", null ],
-      [ "Copying/converting images to different color types", "md_docs_intro_basic.html#autotoc_md10", null ],
-      [ "Drawing things on images...", "md_docs_intro_basic.html#autotoc_md11", null ]
+      [ "Image class, memory layout and sub-images", "md_docs_intro_basic.html#autotoc_md5", [
+        [ "Creating an image", "md_docs_intro_basic.html#autotoc_md6", null ],
+        [ "Memory layout and stride", "md_docs_intro_basic.html#autotoc_md7", null ],
+        [ "Sub-images", "md_docs_intro_basic.html#autotoc_md8", null ]
+      ] ],
+      [ "Coordinates, vectors and boxes", "md_docs_intro_basic.html#autotoc_md10", [
+        [ "Vector and box classes", "md_docs_intro_basic.html#autotoc_md11", null ]
+      ] ],
+      [ "Storing images in C++ source files", "md_docs_intro_basic.html#autotoc_md13", null ],
+      [ "Copying/converting images to different color types", "md_docs_intro_basic.html#autotoc_md14", null ],
+      [ "Drawing things on images...", "md_docs_intro_basic.html#autotoc_md15", null ]
     ] ],
     [ "Using the 2D API.", "md_docs_intro_api_2_d.html", [
       [ "2D Drawing methods.", "md_docs_intro_api_2_d.html#sec_2Dprimitives", [
@@ -128,9 +134,9 @@ var NAVTREEINDEX =
 "_box2_8h.html",
 "_vec3_8h.html#ac1caa239be43f9aa85c0016e491b726a",
 "classtgx_1_1_renderer3_d.html#a845bbd628cfd96f379f3f23d880aa60a",
-"struct_g_f_xfont.html#af63d88fa053c9a634e86eab7c96db290",
-"structtgx_1_1_r_g_b24.html#a763128161790e9e9f4d0aebab5159703",
-"structtgx_1_1_vec2.html#a3cdfd98bbf0ed03d5c7ba54eea0c8001"
+"struct_g_f_xfont.html#a2d2ef5e8e2984dc65a7820e2906855b2",
+"structtgx_1_1_r_g_b24.html#a5a0fac6011c4716c4da4cc7a61a665e7",
+"structtgx_1_1_vec2.html#a259fe4d6084cdfad6661626b0c932f53"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

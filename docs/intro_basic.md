@@ -80,16 +80,44 @@ im.drawLine({10, 20}, {30, 40}, tgx::RGB565_Red, 0.5f); // here opacity=0.5f so 
 
 # Image class, memory layout and sub-images
 
-An image object is a lightweight structure (only 16 bytes in memory) similar to a NumPy view in Python. The object records:
-- the dimensions of the image (`lx`, `ly`).
-- a pointer to the memory buffer `buffer[]` of pixel colors of type `color_t` (the template color type of the image).
-- a `stride` value that is the number of pixels per image row (which may be larger than `lx` when working with sub-images).
+The \ref tgx::Image class is a lightweight **view over an existing pixel buffer**. It does not allocate memory and it
+does not own the pixels. It only records how to interpret a rectangular region of memory as an image:
 
-In particular, **the image object does not contain the pixel buffer itself** but only a pointer to its memory location. **As a general rule, the TGX library never performs any dynamic memory allocation**.
+| Field | Meaning |
+|-------|---------|
+| `data()` | Pointer to the first visible pixel. |
+| `lx()` | Width of the image, in pixels. |
+| `ly()` | Height of the image, in pixels. |
+| `stride()` | Distance, in pixels, between the beginning of two consecutive rows. |
 
-Several images can reference the same memory buffer (or a part of it). Creating images/sub-images that share the same pixel buffer is useful to restrict drawing operations to a given rectangular region.
+This design is important on embedded targets: the application controls where buffers live, for example in RAM, external memory or flash/ROM. As a general rule, **the TGX library never performs dynamic memory allocation.**
 
-The position of a pixel inside an image is given in row major order:
+@warning Copying a \ref tgx::Image object is a shallow copy: the new object points to the same pixel buffer. The pixel
+buffer must remain alive as long as an Image points to it.
+
+## Creating an image
+
+The most common pattern is to create a pixel buffer, then create an Image view over it:
+
+~~~{.cpp}
+tgx::RGB565 buffer[320 * 240]; // allocate the image buffer (about 150 KB)
+tgx::Image<tgx::RGB565> im(buffer, 320, 240); // create the image, set its dimensions and memory buffer (default stride)
+
+im.clear(tgx::RGB565_Black); // clear the image to black
+im.drawLine({0, 0}, {319, 239}, tgx::RGB565_Red); // draw a red diagonal from top-left to bottom-right
+~~~
+
+An image can also be default-constructed and attached to a buffer later:
+
+~~~{.cpp}
+tgx::RGB32 buffer32[320 * 240]; // memory buffer.
+tgx::Image<tgx::RGB32> im; // image is defined but in an invalid state. 
+im.set(buffer32, 320, 240); // assign the dimensions and buffer; the image is now valid. 
+~~~
+
+## Memory layout and stride
+
+The position of a pixel inside an image is given in row-major order:
 
 ```Pixel(i, j) = buffer[i + stride*j]```
 
@@ -116,29 +144,27 @@ sub-image lx = 3, ly = 2, but stride = 6 because the next row is still
 6 pixels farther in the parent buffer.
 ~~~
 
+## Sub-images
+
+A sub-image is another Image object that points to a rectangular part of an existing image. It shares the same pixel
+buffer and clips drawing operations to its own rectangle:
+
+~~~{.cpp}
+tgx::RGB32 buffer[320 * 240];
+tgx::Image<tgx::RGB32> im(buffer, 320, 240);
+
+// Region [20, 50] x [100, 200] in the parent image.
+tgx::Image<tgx::RGB32> panel = im({20, 50, 100, 200});
+
+panel.fillScreen(tgx::RGB32_Blue);       // only modifies the panel region
+panel.drawCircle({15, 20}, 12, tgx::RGB32_White);
+~~~
+
+For this sub-image, `panel.data()` points inside `buffer`, `panel.lx()` is `31`, `panel.ly()` is `101`, and
+`panel.stride()` is still `320`, the stride of the parent image.
+
 This is why TGX can create sub-images without copying pixels: it only changes the starting pointer, width, height and
 stride stored in the \ref tgx::Image object.
-
-Example:
-~~~{.cpp}
-tgx::RGB32 buff[320*240];  // memory buffer for a 320x240 image in RGB32 color format.
-
-tgx::Image<tgx::RGB32> im0; // create an empty (invalid) image of type RGB32.
-im0.set(buff, 320, 240); // set the image pixel buffer and dimensions (default stride = lx).
-
-tgx::Image<tgx::RGB32> im1(buff, 320, 240); // construct and set the image parameters at the same time (same as im0)
-
-tgx::Image<tgx::RGB32> im2 = im0({20, 50, 100, 200}); // create a sub-image restricted to the region [20,50]x[100,200] of im0.
-
-im0.lx(); // width of im0, here it is 320;
-im2.ly(); // height of im2, here it is 101 = 200 - 100 + 1
-
-im0.data(); // return the address of the buffer (here = buff)
-im2.data(); // return the address of the buffer (here = buff + 20 + 100*stride)
-
-im0.stride(); // im0 stride (here = 320)
-im2.stride(); // im2 stride (here = 320, same as im0)
-~~~
 
 See also: \ref tgx::Image::set() "Image::set()", \ref tgx::Image::crop() "Image::crop()", \ref tgx::Image::getCrop() "Image::getCrop()", \ref tgx::Image::operator()() "Image::operator()", \ref tgx::Image::isValid() "Image::isValid()", \ref tgx::Image::setInvalid() "Image::setInvalid()", \ref tgx::Image::imageBox() "Image::imageBox()".
 
@@ -146,27 +172,14 @@ See also: \ref tgx::Image::set() "Image::set()", \ref tgx::Image::crop() "Image:
 
 ---
 
-# Vectors and Boxes
-
-The tgx library defines classes for 2D vectors and boxes:
-
-- \ref tgx::iVec2 : integer-valued 2D vector. **Used for pixel locations in images**
-- \ref tgx::fVec2 : floating point-valued 2D vector. **Used for pixel location in images when using sub-pixel precision**
-- \ref tgx::iBox2 : integer-valued 2D box. **Used to represent a rectangular region inside an image**
-- \ref tgx::fBox2 : floating point-valued 2D box. **Used to represent a rectangular region inside an image when using sub-pixel precision**
-
-@note 3D variants for vectors and boxes are also available: \ref tgx::iVec3, \ref tgx::fVec3, \ref tgx::iBox3, \ref tgx::fBox3. See @ref intro_api_3D "the 3D API tutorial" for details.
+# Coordinates, vectors and boxes
 
 TGX uses the usual framebuffer coordinate system: the pixel `(0,0)` is located at the **top-left** corner of the image,
 the X coordinate grows to the right, and the Y coordinate grows downward.
 
 ![pixel_coordinates](../pixel_coordinates.svg)
 
-@warning Pixel addressing varies slightly when using integer-valued coordinates vs floating point-valued coordinates.
-- **Integer-valued coordinates**: `iVec2(i,j)` represents the location of pixel `(i,j)` in the image. The whole image corresponds to the integer-valued box `iBox2(0, lx - 1, 0, ly - 1)`.
-- **Floating point-valued coordinates**: `fVec2(i,j)` represents the **center** of pixel `(i,j)` in the image. The pixel itself is a unit-length square box centered around this location, i.e. represented by `fBox2( i-0.5f, i+0.5f, j-0.5f, j+0.5f)`. The whole image corresponds to the floating point-valued box `fBox2( -0.5f, lx - 0.5f, -0.5f, ly - 0.5f)`.
-
-The difference matters when mixing exact pixel primitives and anti-aliased or sub-pixel primitives:
+Pixel addressing varies slightly when using integer-valued coordinates vs floating point-valued coordinates:
 
 | Coordinate type | Meaning of `(i,j)` | Whole image box for an image of size `lx` x `ly` |
 |-----------------|--------------------|--------------------------------------------------|
@@ -176,35 +189,51 @@ The difference matters when mixing exact pixel primitives and anti-aliased or su
 For example, the floating point box occupied by pixel `(0,0)` is
 `fBox2(-0.5f, 0.5f, -0.5f, 0.5f)`, centered at `fVec2(0.0f, 0.0f)`.
 
-Vectors and boxes support all the usual operations: arithmetic (addition, dot product...), copy, type conversion...
+The difference matters when mixing exact pixel primitives and anti-aliased or sub-pixel primitives.
 
-Most drawing methods take vectors and boxes as input parameters instead of scalars. It is recommended to use initializer lists to make the code more readable. For example, just write `{10, 20}` instead of `tgx::iVec2(10, 20)`.
+## Vector and box classes
 
-Example:
+The tgx library defines classes for 2D vectors and boxes:
+
+| Class | Meaning |
+|-------|---------|
+| \ref tgx::iVec2 | Integer-valued 2D vector, used for pixel locations. |
+| \ref tgx::fVec2 | Floating point-valued 2D vector, used for sub-pixel precision. |
+| \ref tgx::iBox2 | Integer-valued 2D box, used to represent a rectangular pixel region. |
+| \ref tgx::fBox2 | Floating point-valued 2D box, used to represent a sub-pixel rectangular region. |
+
+@note 3D variants for vectors and boxes are also available: \ref tgx::iVec3, \ref tgx::fVec3, \ref tgx::iBox3, \ref tgx::fBox3. See @ref intro_api_3D "the 3D API tutorial" for details.
+
+Vectors and boxes support the usual operations: arithmetic (addition, scalar multiplication, dot product...), copy and
+type conversion.
+
 ~~~{.cpp}
-tgx::iVec2 v1(10, 30); // integer-valued vector (10,30)
+tgx::iVec2 p(10, 30);      // integer-valued vector
+tgx::fVec2 q = p;          // conversion to floating point: (10.0f, 30.0f)
 
-tgx::fVec2 v2 = v1; // conversion: floating point-valued vector (10.0f, 30.0f)
+tgx::fVec2 r = { 2.0f, 7.0f };
+tgx::fVec2 s = (q + r) * 3.0f;
 
-float x = 2.0f;
-tgx::fVec2 v3 = { x, 7 }; // construct the vector from an initializer list: vector (2.0f, 7.0f)
+s.x = 4.0f;                // direct access to coordinate values
+~~~
 
-(v2 + v3) * 3.0f; // usual math operations are available...
+Boxes use the order `(minx, maxx, miny, maxy)`:
 
-v3.x = 4; // direct access to coordinate values; v3 is now (4.0f, 7.0f)
+~~~{.cpp}
+tgx::iBox2 B(40, 80, 20, 30); // integer box [40,80] x [20,30]
+~~~
 
-tgx::iBox2 B(40, 80, 20, 30); // format (minx, maxx, miny, maxy) -> integer-valued box [40,80]x[20,30]
+Most drawing methods take vectors and boxes as input parameters instead of scalars. It is recommended to use
+initializer lists to make the code more readable. For example, write `{10, 20}` instead of `tgx::iVec2(10, 20)`.
 
+~~~{.cpp}
 // assume below that `im` is a tgx::Image<tgx::RGB32> object
-// method `Image::drawCircle(iVec2 center, int r, color_t color, float opacity)` takes integer-valued parameters.
-im.drawCircle(v1, 12, tgx::RGB32_Red); // draw a red circle centered at v1 = (10, 30) of radius 12.
 
-// method `Image::drawCircleAA(fVec2 center, float r, color_t color, float opacity)` takes floating point-valued parameters for sub-pixel precision:
-im.drawCircleAA({50.0f, 60.0f} , 11.5f, tgx::RGB32_Red); // draw a blue circle centered at (50.0f, 60.0f) of radius 11.5f. Use an initializer list to define the center.
+im.drawCircle({10, 30}, 12, tgx::RGB32_Red);
 
-// method `Image::fillRect(const iBox2 & B, color_t color, float opacity)` takes an integer valued box as input parameter.
-im.fillRect(B, tgx::RGB32_Black); // draw a filled black box [40, 80]x[20,30]
-im.fillRect({50, 60 , 70, 80}, tgx::RGB32_Black); // using an initializer list: draw a filled black box [50, 60]x[70,80]
+im.drawCircleAA({50.0f, 60.0f}, 11.5f, tgx::RGB32_Blue);
+
+im.fillRect({50, 60, 70, 80}, tgx::RGB32_Black);
 ~~~
 
 
@@ -289,5 +318,4 @@ TGX defines many primitives to draw shapes (such as lines, rectangles, circles a
 
 - **Details for 2D drawing are provided in** @ref intro_api_2D "the 2D API tutorial"
 - **Details for 3D drawing are provided in** @ref intro_api_3D "the 3D API tutorial"
-
 

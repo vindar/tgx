@@ -44,8 +44,10 @@
   <!-- Floating image boundary labels. -->
   <line x1="150" y1="48" x2="150" y2="290" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 4"/>
   <line x1="142" y1="55" x2="462" y2="55" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 4"/>
-  <text x="132" y="88" font-family="Arial, sans-serif" font-size="13" fill="#555555">-0.5</text>
-  <text x="160" y="47" font-family="Arial, sans-serif" font-size="13" fill="#555555">-0.5</text>
+  <line x1="150" y1="87" x2="150" y2="99" stroke="#6b7280" stroke-width="1"/>
+  <line x1="182" y1="55" x2="194" y2="55" stroke="#6b7280" stroke-width="1"/>
+  <text x="125" y="42" font-family="Arial, sans-serif" font-size="13" fill="#555555">x = -0.5</text>
+  <text x="95" y="62" font-family="Arial, sans-serif" font-size="13" fill="#555555">y = -0.5</text>
   <text x="438" y="47" font-family="Arial, sans-serif" font-size="13" fill="#555555">3.5</text>
   <text x="125" y="288" font-family="Arial, sans-serif" font-size="13" fill="#555555">2.5</text>
 
