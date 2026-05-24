@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.0"
+   width="54.538082"
+   height="54.538082"
+   id="svg3384">
+  <defs
+     id="defs3386" />
+  <g
+     transform="translate(-287.01666,-367.95029)"
+     id="layer1">
+    <g
+       transform="translate(185.37289,290.93319)"
+       id="g3186">
+      <path
+         d="M 109.72782,119.23376 L 105.16635,123.60583 L 105.16635,103.99804 L 109.7515,108.0781"
+         id="path3178"
+         style="fill:#666666;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1" />
+      <path
+         d="M 111.36932,108.12209 L 109.85409,108.12209 L 109.85409,119.1075 L 111.36932,119.1075"
+         id="path3176"
+         style="fill:#666666;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <rect
+         width="41.416256"
+         height="21.339472"
+         x="111.24305"
+         y="102.56625"
+         id="rect2396"
+         style="opacity:1;fill:#666666;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         d="M 122.73353,88.487251 A 9.5333147,9.5333147 0 1 1 103.6669,88.487251 A 9.5333147,9.5333147 0 1 1 122.73353,88.487251 z"
+         transform="matrix(0.940321,0,0,0.938798,18.667068,10.544741)"
+         id="path3172"
+         style="opacity:1;fill:#666666;fill-opacity:1;stroke:#000000;stroke-width:1.06432891;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <use
+         transform="translate(17.882888,0)"
+         id="use3180"
+         x="0"
+         y="0"
+         width="744.09448"
+         height="1052.3622"
+         xlink:href="#path3172" />
+    </g>
+  </g>
+</svg>
