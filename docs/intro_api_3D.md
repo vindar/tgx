@@ -46,17 +46,16 @@ uint16_t zbuffer[W * H];
 tgx::Image<tgx::RGB565> image(framebuffer, W, H);
 
 // Keep only the shader variants that this program will actually use.
-using Renderer = tgx::Renderer3D<
-    tgx::RGB565,
+const tgx::Shader shaders_loaded =
     tgx::SHADER_PERSPECTIVE |
     tgx::SHADER_ZBUFFER |
     tgx::SHADER_FLAT |
     tgx::SHADER_GOURAUD |
     tgx::SHADER_NOTEXTURE |
     tgx::SHADER_TEXTURE_NEAREST |
-    tgx::SHADER_TEXTURE_WRAP_POW2,
-    uint16_t>;
+    tgx::SHADER_TEXTURE_WRAP_POW2;
 
+using Renderer = tgx::Renderer3D<tgx::RGB565, shaders_loaded, uint16_t>;
 Renderer renderer({ W, H }, &image, zbuffer);
 
 void drawFrame(float angle)
@@ -82,7 +81,7 @@ void drawFrame(float angle)
 ~~~
 
 On an embedded display, the last step is usually an upload of `image` to the screen driver. On a desktop target,
-the same image can be displayed with CImg, written to a BMP/PNG file, or compared against a reference image.
+the same image can be displayed in a window, written to a BMP/PNG file, or compared against a reference image.
 
 
 @section sec_3D_pipeline Coordinate spaces and matrices
@@ -95,6 +94,15 @@ application can keep control over CPU time and memory:
 3. **Clip space**: the projection matrix maps the view frustum to homogeneous coordinates.
 4. **NDC**: perspective projection divides by `w`, giving normalized coordinates in roughly `[-1, 1]`.
 5. **Framebuffer space**: the rasterizer maps NDC to pixels in the target \ref tgx::Image.
+
+The important point is that the mesh data itself is not modified. Each frame, TGX transforms the original vertices
+through the current matrices and rasterizes the projected triangles:
+
+~~~
+model coordinates      object placement       camera transform       projection          screen
+      P_model       ->      P_world       ->      P_view       ->      P_clip      ->    pixels
+                    model matrix             view matrix          projection
+~~~
 
 The combined transform used by the renderer is:
 
@@ -123,6 +131,33 @@ Use `modelToNDC()` when debugging transforms. It returns the projected position 
 current model, view and projection matrices have been applied.
 
 
+@subsection sec_3D_vectors_matrices Short math reminder
+
+A 3D point is usually written as `(x, y, z)`. Internally, transformations use homogeneous coordinates `(x, y, z, w)`.
+For ordinary points, `w = 1`. Directions such as normals or light directions behave like vectors and do not represent
+a position in space.
+
+The three operations used most often are:
+
+- **dot product**: `dot(a, b)` measures how aligned two directions are. Lighting and back-face tests use it heavily.
+- **cross product**: `cross(a, b)` creates a direction perpendicular to two other directions. It is useful for normals.
+- **normalization**: `normalize(v)` scales a vector to length 1. Normals and light directions should be normalized.
+
+Matrices are applied from right to left in the usual expression:
+
+~~~{.cpp}
+P_clip = projection * view * model * P_model;
+~~~
+
+So `model` is applied first, then `view`, then `projection`. If the object moves when the camera should move, or the
+camera seems to orbit the object in the wrong direction, the problem is often an inverted transform or a wrong matrix
+order.
+
+Normals describe surface orientation. When non-uniform scaling is used, normals should theoretically be transformed by
+the inverse-transpose of the model matrix. TGX keeps the runtime small and assumes typical embedded use: normalized
+mesh normals, mostly uniform scales, and explicit care from the sketch when using unusual transforms.
+
+
 @section sec_3D_renderer_template Renderer template parameters
 
 \ref tgx::Renderer3D has three template parameters:
@@ -144,14 +179,14 @@ For example, a fast textured mesh renderer using perspective projection, a Z-buf
 texture sampling and power-of-two texture wrapping can be declared as:
 
 ~~~{.cpp}
-using Renderer = tgx::Renderer3D<
-    tgx::RGB565,
+const tgx::Shader shaders_loaded =
     tgx::SHADER_PERSPECTIVE |
     tgx::SHADER_ZBUFFER |
     tgx::SHADER_GOURAUD |
     tgx::SHADER_TEXTURE_NEAREST |
-    tgx::SHADER_TEXTURE_WRAP_POW2,
-    uint16_t>;
+    tgx::SHADER_TEXTURE_WRAP_POW2;
+
+using Renderer = tgx::Renderer3D<tgx::RGB565, shaders_loaded, uint16_t>;
 ~~~
 
 @warning Runtime shader changes can only select variants that were enabled in `LOADED_SHADERS`. If a draw call
@@ -175,6 +210,30 @@ The most common runtime call is:
 ~~~{.cpp}
 renderer.setShaders(tgx::SHADER_GOURAUD | tgx::SHADER_TEXTURE);
 ~~~
+
+Think of `LOADED_SHADERS` as the list of compiled code paths, and `setShaders()` as the currently selected path:
+
+~~~{.cpp}
+// Compiled once, at build time.
+const tgx::Shader shaders_loaded =
+    tgx::SHADER_PERSPECTIVE |
+    tgx::SHADER_ZBUFFER |
+    tgx::SHADER_FLAT |
+    tgx::SHADER_GOURAUD |
+    tgx::SHADER_NOTEXTURE |
+    tgx::SHADER_TEXTURE_NEAREST |
+    tgx::SHADER_TEXTURE_BILINEAR |
+    tgx::SHADER_TEXTURE_WRAP_POW2;
+
+tgx::Renderer3D<tgx::RGB565, shaders_loaded, uint16_t> renderer({ W, H }, &image, zbuffer);
+
+// Selected at runtime, before drawing.
+renderer.setShaders(tgx::SHADER_GOURAUD | tgx::SHADER_TEXTURE);
+renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);
+~~~
+
+If a sketch only uses flat untextured geometry, do not load bilinear texture shaders. If it switches between a flat
+debug view and a textured view, both `SHADER_FLAT` and the texture sampling mode must be present in `shaders_loaded`.
 
 Texture quality and wrapping may also be selected explicitly:
 
@@ -228,6 +287,25 @@ Custom projection, view and model matrices can also be supplied directly. If a c
 make sure the renderer is told whether it is orthographic or perspective by calling `useOrthographicProjection()`
 or `usePerspectiveProjection()` afterward.
 
+The frustum is the visible volume. In perspective projection it looks like a truncated pyramid:
+
+~~~
+          far plane
+       +-------------+
+      /             /|
+     /             / |
+    +-------------+  |
+     \             \ |
+      \             \|
+       +-------------+
+        near plane
+             camera
+~~~
+
+`zNear` should be positive and not too close to zero. A very small near plane reduces depth precision and can make
+Z-buffer artifacts more visible. `zFar` should be far enough for the scene, but not arbitrarily huge for the same
+reason.
+
 
 @section sec_3D_zbuffer Z-buffer
 
@@ -241,7 +319,7 @@ traffic and memory usage.
 
 ~~~{.cpp}
 uint16_t zbuffer[W * H];
-tgx::Renderer3D<tgx::RGB565, MY_SHADERS, uint16_t> renderer({ W, H }, &image, zbuffer);
+tgx::Renderer3D<tgx::RGB565, shaders_loaded, uint16_t> renderer({ W, H }, &image, zbuffer);
 
 void drawFrame()
 {
@@ -260,6 +338,16 @@ rendering. Keeping old depth values is a very common cause of missing or partial
 \ref tgx::Mesh3Dv2 is the preferred format for new static models. It stores compact 16-bit meshlet payloads, material
 records, optional textures and precomputed meshlet visibility data. Compared with legacy \ref tgx::Mesh3D, it usually
 reduces memory traffic and can discard invisible meshlets before decoding their triangles.
+
+At a high level, a `Mesh3Dv2` model contains:
+
+- one material table: colors, lighting strengths and optional texture pointers;
+- one meshlet table: small local groups of triangles, each attached to one material;
+- one compact payload: quantized vertices, normals, UVs and triangle chains for the meshlets;
+- visibility information used to skip meshlets that cannot contribute to the current view.
+
+This organization is friendlier to MCU caches than a large global index soup. A meshlet that is not visible can be
+discarded before its local payload is decoded, and a visible meshlet works mostly on a small local set of data.
 
 Legacy \ref tgx::Mesh3D is still supported for existing projects. It stores global arrays of vertices, normals,
 texture coordinates and chained triangle strips. Existing sketches do not need to be converted, but new examples and
@@ -301,6 +389,9 @@ renderer.drawMesh(cached);
 Some examples also use `copyMeshEXTMEM()` to move large model data or textures to external memory when available.
 This can improve speed compared with reading large textures directly from flash, depending on the board and memory
 layout.
+
+Use the \ref tools_mesh "mesh tools" to generate `Mesh3Dv2` headers from Wavefront OBJ files or to migrate existing
+legacy `Mesh3D` headers.
 
 
 @section sec_3D_primitives Drawing primitives directly
@@ -363,6 +454,15 @@ There are two addressing modes:
 @note On some MCUs, large textures stored in flash can be much slower to access than geometry. Smaller triangles,
 power-of-two wrapping and moving textures to faster memory can make a large difference.
 
+Texture coordinates are usually called `(u, v)`. They are independent from pixel coordinates:
+
+- `(0, 0)` usually means one corner of the texture;
+- `(1, 1)` means the opposite corner;
+- values outside `[0, 1]` can either repeat the texture or clamp to its edge, depending on the wrapping mode.
+
+With `SHADER_TEXTURE_WRAP_POW2`, TGX can wrap very quickly, but the texture width and height must be powers of two.
+With `SHADER_TEXTURE_CLAMP`, TGX accepts arbitrary texture sizes, but each lookup needs slightly more work.
+
 
 @section sec_3D_lighting Light and material
 
@@ -397,6 +497,16 @@ Flat and Gouraud shading differ in where lighting is evaluated:
 
 TGX does not implement per-pixel Phong normal interpolation; that would be much more expensive on the intended MCU
 targets.
+
+For a directional light, the diffuse part is controlled mostly by:
+
+~~~{.cpp}
+diffuse = max(0, dot(normal, -light_direction));
+~~~
+
+When the normal points toward the light, the dot product is close to 1 and the surface is bright. When it points away,
+the value is 0 and only ambient or specular terms may remain. This is why wrong or non-normalized normals can make a
+mesh look blotchy, dark or overbright.
 
 
 @section sec_3D_culling Back-face culling
@@ -484,7 +594,7 @@ DMAMEM uint16_t zbuffer[W * H];
 
 tgx::Image<tgx::RGB565> image(framebuffer, W, H);
 
-constexpr tgx::Shader LOADED =
+const tgx::Shader shaders_loaded =
     tgx::SHADER_PERSPECTIVE |
     tgx::SHADER_ZBUFFER |
     tgx::SHADER_FLAT |
@@ -493,7 +603,7 @@ constexpr tgx::Shader LOADED =
     tgx::SHADER_TEXTURE_BILINEAR |
     tgx::SHADER_TEXTURE_WRAP_POW2;
 
-tgx::Renderer3D<tgx::RGB565, LOADED, uint16_t> renderer({ W, H }, &image, zbuffer);
+tgx::Renderer3D<tgx::RGB565, shaders_loaded, uint16_t> renderer({ W, H }, &image, zbuffer);
 
 void setup3D()
 {
@@ -527,7 +637,7 @@ void drawFrame(float angle)
 
 The repository contains several examples that exercise different parts of the 3D API:
 
-- `examples/CPU/buddhaOnCPU/`: CPU rendering into an image using CImg for display.
+- `examples/CPU/buddhaOnCPU/`: CPU rendering into an image and displaying the result in a small window.
 - `examples/Teensy4/3D/buddha/`: shaded mesh rendering and mesh caching on Teensy 4.x.
 - `examples/Teensy4/3D/borg_cube/`: dynamic texture generation and textured cube rendering.
 - `examples/Teensy4/3D/test-shading/`: flat and Gouraud shading comparisons on several meshes.

@@ -913,6 +913,7 @@ INPUT                  = ./docs/intro_install.md \
                          ./docs/intro_basic.md \
                          ./docs/intro_api_2D.md \
                          ./docs/intro_api_3D.md \
+                         ./docs/tools.md \
                          ./src/
 
 # This tag can be used to specify the character encoding of the source files

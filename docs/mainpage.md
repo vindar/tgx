@@ -50,6 +50,7 @@ The library runs on both microprocessors and microcontrollers but specifically t
 2. @ref intro_basic "Basic concepts"
 3. @ref intro_api_2D "The 2D API."
 4. @ref intro_api_3D "The 3D API."
+5. @ref tools_mesh "Mesh conversion and validation tools."
 
 
 

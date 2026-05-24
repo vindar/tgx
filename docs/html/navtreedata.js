@@ -30,14 +30,14 @@ var NAVTREE =
     [ "References", "index.html#References", null ],
     [ "Installation.", "md_docs_intro_install.html", null ],
     [ "Basic concepts.", "md_docs_intro_basic.html", [
-      [ "Colors types", "md_docs_intro_basic.html#autotoc_md2", [
+      [ "Color types", "md_docs_intro_basic.html#autotoc_md2", [
         [ "Blending and opacity parameter.", "md_docs_intro_basic.html#autotoc_md3", null ]
       ] ],
       [ "Image class, memory layout and sub-images", "md_docs_intro_basic.html#autotoc_md5", null ],
       [ "Vectors and Boxes", "md_docs_intro_basic.html#autotoc_md7", null ],
-      [ "Storing images in .cpp files", "md_docs_intro_basic.html#autotoc_md9", null ],
-      [ "Copying/converting images to different color types.", "md_docs_intro_basic.html#autotoc_md10", null ],
-      [ "Drawing things on an images...", "md_docs_intro_basic.html#autotoc_md11", null ]
+      [ "Storing images in <tt>.cpp</tt> files", "md_docs_intro_basic.html#autotoc_md9", null ],
+      [ "Copying/converting images to different color types", "md_docs_intro_basic.html#autotoc_md10", null ],
+      [ "Drawing things on images...", "md_docs_intro_basic.html#autotoc_md11", null ]
     ] ],
     [ "Using the 2D API.", "md_docs_intro_api_2_d.html", [
       [ "2D Drawing methods.", "md_docs_intro_api_2_d.html#sec_2Dprimitives", [
@@ -71,7 +71,9 @@ var NAVTREE =
     ] ],
     [ "Using the 3D API.", "md_docs_intro_api_3_d.html", [
       [ "Rendering model", "md_docs_intro_api_3_d.html#sec_3D_overview", null ],
-      [ "Coordinate spaces and matrices", "md_docs_intro_api_3_d.html#sec_3D_pipeline", null ],
+      [ "Coordinate spaces and matrices", "md_docs_intro_api_3_d.html#sec_3D_pipeline", [
+        [ "Short math reminder", "md_docs_intro_api_3_d.html#sec_3D_vectors_matrices", null ]
+      ] ],
       [ "Renderer template parameters", "md_docs_intro_api_3_d.html#sec_3D_renderer_template", null ],
       [ "Shader state", "md_docs_intro_api_3_d.html#sec_3D_shaders", null ],
       [ "Projection, camera and model transform", "md_docs_intro_api_3_d.html#sec_3D_projection", null ],
@@ -87,6 +89,18 @@ var NAVTREE =
       [ "Complete embedded example", "md_docs_intro_api_3_d.html#sec_3D_complete_example", null ],
       [ "Useful examples", "md_docs_intro_api_3_d.html#sec_3D_examples", null ],
       [ "Common pitfalls", "md_docs_intro_api_3_d.html#sec_3D_pitfalls", null ]
+    ] ],
+    [ "Mesh and validation tools", "md_docs_tools.html", [
+      [ "Installing the tool environment", "md_docs_tools.html#tools_setup", null ],
+      [ "Optional stripifier helpers", "md_docs_tools.html#tools_stripifiers", null ],
+      [ "Mesh formats in practice", "md_docs_tools.html#tools_formats", null ],
+      [ "Converting an OBJ model to Mesh3Dv2", "md_docs_tools.html#tools_obj_to_mesh3dv2", null ],
+      [ "Migrating an existing Mesh3D header", "md_docs_tools.html#tools_legacy_to_mesh3dv2", null ],
+      [ "Optimizing legacy Mesh3D output", "md_docs_tools.html#tools_legacy_mesh3d", null ],
+      [ "Inspecting and visualizing meshes", "md_docs_tools.html#tools_inspect_view", null ],
+      [ "Preprocessing and cleanup", "md_docs_tools.html#tools_cleanup", null ],
+      [ "Validation tools", "md_docs_tools.html#tools_validation", null ],
+      [ "Suggested workflow", "md_docs_tools.html#tools_workflow", null ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
@@ -114,9 +128,9 @@ var NAVTREEINDEX =
 "_box2_8h.html",
 "_vec3_8h.html#ac1caa239be43f9aa85c0016e491b726a",
 "classtgx_1_1_renderer3_d.html#a845bbd628cfd96f379f3f23d880aa60a",
-"struct_i_l_i9341__t3__font__t.html#a9cfe03e7fd5495eaf5cde6ceb91e0933",
-"structtgx_1_1_r_g_b24.html#ab704a73d03068fc1a8cde273d7fdfc92",
-"structtgx_1_1_vec2.html#a87c59336da78c86e10ba23c69a01cbd0"
+"struct_g_f_xfont.html#af63d88fa053c9a634e86eab7c96db290",
+"structtgx_1_1_r_g_b24.html#a763128161790e9e9f4d0aebab5159703",
+"structtgx_1_1_vec2.html#a3cdfd98bbf0ed03d5c7ba54eea0c8001"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
