@@ -9,6 +9,16 @@ All methods/classes are defined inside the `tgx` namespace. To use the library, 
 using namespace tgx; // optional, so we do not need to prefix all methods by tgx::
 ~~~
 
+A minimal TGX framebuffer is just a pixel buffer plus an Image view over it:
+
+~~~{.cpp}
+tgx::RGB565 buffer[320 * 240];
+tgx::Image<tgx::RGB565> im(buffer, 320, 240);
+
+im.clear(tgx::RGB565_Black);
+im.drawLine({0, 0}, {319, 239}, tgx::RGB565_Red);
+~~~
+
 # Color types
 
 The library defines several color classes. Choosing the right one is mostly a question of memory, speed and intended use:
@@ -81,7 +91,8 @@ im.drawLine({10, 20}, {30, 40}, tgx::RGB565_Red, 0.5f); // here opacity=0.5f so 
 # Image class, memory layout and sub-images
 
 The \ref tgx::Image class is a lightweight **view over an existing pixel buffer**. It does not allocate memory and it
-does not own the pixels. It only records how to interpret a rectangular region of memory as an image:
+does not own the pixels. It only records how to interpret a rectangular region of memory as an image. These four
+values are the whole state of an Image view:
 
 | Field | Meaning |
 |-------|---------|
@@ -93,26 +104,34 @@ does not own the pixels. It only records how to interpret a rectangular region o
 This design is important on embedded targets: the application controls where buffers live, for example in RAM, external memory or flash/ROM. As a general rule, **the TGX library never performs dynamic memory allocation.**
 
 @warning Copying a \ref tgx::Image object is a shallow copy: the new object points to the same pixel buffer. The pixel
-buffer must remain alive as long as an Image points to it.
+buffer must remain alive as long as an Image points to it. Deep copies are discussed later in
+\ref subsec_basic_copy_convert "Copying/converting images to different color types".
 
 ## Creating an image
 
-The most common pattern is to create a pixel buffer, then create an Image view over it:
+The most common pattern is to create a pixel buffer, then attach an Image view to it directly in the constructor:
 
 ~~~{.cpp}
 tgx::RGB565 buffer[320 * 240]; // allocate the image buffer (about 150 KB)
-tgx::Image<tgx::RGB565> im(buffer, 320, 240); // create the image, set its dimensions and memory buffer (default stride)
-
-im.clear(tgx::RGB565_Black); // clear the image to black
-im.drawLine({0, 0}, {319, 239}, tgx::RGB565_Red); // draw a red diagonal from top-left to bottom-right
+tgx::Image<tgx::RGB565> im(buffer, 320, 240); // default stride = width = 320
 ~~~
 
 An image can also be default-constructed and attached to a buffer later:
 
 ~~~{.cpp}
-tgx::RGB32 buffer32[320 * 240]; // memory buffer.
-tgx::Image<tgx::RGB32> im; // image is defined but in an invalid state. 
-im.set(buffer32, 320, 240); // assign the dimensions and buffer; the image is now valid. 
+tgx::RGB32 buffer32[320 * 240];
+tgx::Image<tgx::RGB32> im;       // invalid image, not attached to a buffer yet
+im.set(buffer32, 320, 240);      // the image is now valid
+~~~
+
+@warning The following code is **wrong**. The returned Image points to a local buffer that disappears when the function
+returns:
+~~~{.cpp}
+tgx::Image<tgx::RGB565> makeImage()
+{
+    tgx::RGB565 local[100 * 100];
+    return tgx::Image<tgx::RGB565>(local, 100, 100); // WRONG: dangling pointer !!!
+}
 ~~~
 
 ## Memory layout and stride
@@ -147,7 +166,7 @@ sub-image lx = 3, ly = 2, but stride = 6 because the next row is still
 ## Sub-images
 
 A sub-image is another Image object that points to a rectangular part of an existing image. It shares the same pixel
-buffer and clips drawing operations to its own rectangle:
+buffer and clips drawing operations to its own rectangle. Drawing coordinates are local to the sub-image:
 
 ~~~{.cpp}
 tgx::RGB32 buffer[320 * 240];
@@ -157,6 +176,7 @@ tgx::Image<tgx::RGB32> im(buffer, 320, 240);
 tgx::Image<tgx::RGB32> panel = im({20, 50, 100, 200});
 
 panel.fillScreen(tgx::RGB32_Blue);       // only modifies the panel region
+panel.drawPixel({0, 0}, tgx::RGB32_Red); // top-left pixel of panel, not of im
 panel.drawCircle({15, 20}, 12, tgx::RGB32_White);
 ~~~
 
@@ -190,6 +210,8 @@ For example, the floating point box occupied by pixel `(0,0)` is
 `fBox2(-0.5f, 0.5f, -0.5f, 0.5f)`, centered at `fVec2(0.0f, 0.0f)`.
 
 The difference matters when mixing exact pixel primitives and anti-aliased or sub-pixel primitives.
+As a rule of thumb, use integer coordinates for exact pixel primitives and floating point coordinates for anti-aliased
+or sub-pixel primitives.
 
 ## Vector and box classes
 
@@ -223,6 +245,9 @@ Boxes use the order `(minx, maxx, miny, maxy)`:
 tgx::iBox2 B(40, 80, 20, 30); // integer box [40,80] x [20,30]
 ~~~
 
+Integer boxes are inclusive: both `min` and `max` coordinates belong to the box. Therefore, the width of the box above
+is `80 - 40 + 1 = 41` pixels. This differs from half-open rectangle conventions used by some other libraries.
+
 Most drawing methods take vectors and boxes as input parameters instead of scalars. It is recommended to use
 initializer lists to make the code more readable. For example, write `{10, 20}` instead of `tgx::iVec2(10, 20)`.
 
@@ -235,6 +260,14 @@ im.drawCircleAA({50.0f, 60.0f}, 11.5f, tgx::RGB32_Blue);
 
 im.fillRect({50, 60, 70, 80}, tgx::RGB32_Black);
 ~~~
+
+## Common beginner mistakes
+
+- Do not let the pixel buffer go out of scope while an Image still points to it.
+- Remember that sub-image coordinates are local to the sub-image.
+- Remember that integer boxes are inclusive.
+- Use the native channel range when constructing low-level colors such as `RGB565(31, 63, 31)`. Use float
+  constructors such as `RGB565(1.0f, 1.0f, 1.0f)` when you want normalized color values.
 
 
 ---
@@ -277,7 +310,7 @@ The `/tools/` subdirectory of the library contains the Python script `image_conv
 
 
 
-# Copying/converting images to different color types
+# Copying/converting images to different color types {#subsec_basic_copy_convert}
 
 Recall that a \ref tgx::Image object is just a view into a buffer of pixels of a given color type. Thus, copies of image objects are shallow (they share the same image buffer / same color type).
 
@@ -310,12 +343,15 @@ tgx::Image<tgx::RGB565> im3 = im1.convert<tgx::RGB565>();
 @note See also the methods for \ref subsec_blitting "blitting sprites" which may be used for copy and color type conversion.
 
 
-# Drawing things on images...
+# Where to go next
 
-Here comes the good part! Now that we can create and manipulate images, we obviously want to draw things on them.
+You now know how TGX images store pixels, how coordinates work, and how image objects refer to their pixel buffers.
 
-TGX defines many primitives to draw shapes (such as lines, rectangles, circles and Bezier curves), to blit sprites or write text, as well as a simple but full-featured 3D engine.
+Choose the next tutorial depending on what you want to draw:
 
-- **Details for 2D drawing are provided in** @ref intro_api_2D "the 2D API tutorial"
-- **Details for 3D drawing are provided in** @ref intro_api_3D "the 3D API tutorial"
+| Goal | Continue with |
+|------|---------------|
+| Draw pixels, lines, rectangles, circles, curves, sprites, text, image blits or 2D user-interface elements. | @ref intro_api_2D "The 2D API tutorial" |
+| Render 3D primitives, meshes, lights, textures, Z-buffered scenes, cameras and projections. | @ref intro_api_3D "The 3D API tutorial" |
 
+Of course, projects can use both parts together: the 3D renderer draws into an image, and the 2D API can then overlay text, user-interface elements, debug information or sprites on top of the rendered frame.
