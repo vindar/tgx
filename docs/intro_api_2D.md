@@ -97,6 +97,7 @@ im2.fillScreenHGradient(tgx::RGB32_Green, tgx::RGB32_Orange); // fill with horiz
 | \ref tgx::Image::drawPixel "drawPixel()" | Set the color of a given pixel. |
 | \ref tgx::Image::drawPixelf "drawPixelf()" | Set the color of a given pixel, using a floating-point position vector. |
 | \ref tgx::Image::readPixel() "readPixel()" | Read the color of a pixel. |
+| \ref tgx::Image::readPixelf "readPixelf()" | Read the color of a pixel, using a floating-point position vector. |
 | \ref tgx::Image::operator()(tgx::iVec2) "operator()" | Direct access to the pixel color memory location (read/write). |
 
 *Code used to generate the image:*
@@ -216,6 +217,7 @@ for (int i = 0; i < 20; i++) {
 | Method | Description |
 |--------|-------------|
 | \ref tgx::Image::drawLine "drawLine()" | Draw a basic straight line (single pixel thick, no anti-aliasing). Fastest method. |
+| \ref tgx::Image::drawSegment "drawSegment()" | Draw a basic line segment and choose independently whether each endpoint is drawn. |
 | \ref tgx::Image::drawLineAA "drawLineAA()" | Draw a line segment with anti-aliasing (single pixel thick). |
 | \ref tgx::Image::drawThickLineAA "drawThickLineAA()" | Draw a thick line with anti-aliasing and specify how the ends are drawn (rounded, flat, arrows...). |
 | \ref tgx::Image::drawWedgeLineAA "drawWedgeLineAA()" | Draw a line segment with anti-aliasing and varying thickness, and specify how the ends are drawn. |
@@ -277,6 +279,8 @@ im.fillRectVGradient({ 190, 300, 10, 230 }, tgx::RGB32_Cyan, tgx::RGB32_Purple, 
 
 | Method | Description |
 |--------|-------------|
+| \ref tgx::Image::drawRoundRect "drawRoundRect()" | Draw a single pixel thick rectangle with rounded corners. Fastest non-AA method. |
+| \ref tgx::Image::fillRoundRect "fillRoundRect()" | Draw a filled rectangle with rounded corners. Fastest non-AA method. |
 | \ref tgx::Image::drawRoundRectAA "drawRoundRectAA()" | Draw a single pixel thick rectangle with rounded corners, with anti-aliasing. |
 | \ref tgx::Image::drawThickRoundRectAA "drawThickRoundRectAA()" | Draw a rounded-corner rectangle with a thick outline, with anti-aliasing. |
 | \ref tgx::Image::fillRoundRectAA "fillRoundRectAA()" | Draw a filled rectangle with rounded corners, with anti-aliasing. |
@@ -334,15 +338,16 @@ im.fillThickTriangleAA({ 130,200 }, { 280, 110 }, {250, 170}, 5, tgx::RGB32_Lime
 
 ![test_triangles_advanced](../test_triangles_advanced.png)
 
-These methods use the 3D rasterizer.
+These methods are still part of the 2D API, but internally they use the TGX triangle rasterizer. They are useful when an image or a color field must be warped onto an arbitrary triangle instead of copied as a rectangle. They are more expensive than a simple `blit()`, but they interpolate texture coordinates, vertex colors, or both across the triangle.
 
 | Method | Description |
 |--------|-------------|
 | \ref tgx::Image::drawTexturedTriangle "drawTexturedTriangle()" | Draw a filled triangle with texture mapping. |
+| \ref tgx::Image::drawTexturedTriangle "drawTexturedTriangle(..., blend_op)" | Draw a textured triangle using a custom blending operator, function, functor or lambda. |
 | \ref tgx::Image::drawGradientTriangle "drawGradientTriangle()" | Draw a filled triangle with gradient color (Gouraud shading). |
 | \ref tgx::Image::drawTexturedGradientTriangle "drawTexturedGradientTriangle()" | Draw a filled triangle with both texture mapping and gradient color. |
-
-See also \ref tgx::Image::drawTexturedMaskedTriangle "drawTexturedMaskedTriangle()" and \ref tgx::Image::drawTexturedGradientMaskedTriangle "drawTexturedGradientMaskedTriangle()" for additional masking features.
+| \ref tgx::Image::drawTexturedMaskedTriangle "drawTexturedMaskedTriangle()" | Draw a textured triangle while skipping one transparent source color. |
+| \ref tgx::Image::drawTexturedGradientMaskedTriangle "drawTexturedGradientMaskedTriangle()" | Draw a textured gradient triangle while skipping one transparent source color. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -401,15 +406,16 @@ im.fillThickQuadAA({ 130,200 }, { 160, 140 }, { 230, 100 }, { 250, 170 } , 5, tg
 
 ![test_quad_advanced](../test_quad_advanced.png)
 
-These methods use the 3D rasterizer.
+These methods are still part of the 2D API, but internally they use the TGX triangle rasterizer. They are useful when an image or a color field must be warped onto an arbitrary quad instead of copied as a rectangle. They are more expensive than a simple `blit()`, but they interpolate texture coordinates, vertex colors, or both across the quad.
 
 | Method | Description |
 |--------|-------------|
 | \ref tgx::Image::drawTexturedQuad "drawTexturedQuad()" | Draw a filled quad with texture mapping. |
+| \ref tgx::Image::drawTexturedQuad "drawTexturedQuad(..., blend_op)" | Draw a textured quad using a custom blending operator, function, functor or lambda. |
 | \ref tgx::Image::drawGradientQuad "drawGradientQuad()" | Draw a filled quad with gradient color (Gouraud shading). |
 | \ref tgx::Image::drawTexturedGradientQuad "drawTexturedGradientQuad()" | Draw a filled quad with both texture mapping and gradient color. |
-
-See also \ref tgx::Image::drawTexturedMaskedQuad "drawTexturedMaskedQuad()" and \ref tgx::Image::drawTexturedGradientMaskedQuad "drawTexturedGradientMaskedQuad()" for additional masking features.
+| \ref tgx::Image::drawTexturedMaskedQuad "drawTexturedMaskedQuad()" | Draw a textured quad while skipping one transparent source color. |
+| \ref tgx::Image::drawTexturedGradientMaskedQuad "drawTexturedGradientMaskedQuad()" | Draw a textured gradient quad while skipping one transparent source color. |
 
 *Code used to generate the image:*
 ~~~{.cpp}
@@ -674,8 +680,19 @@ im.fillThickClosedSplineAA(5, tabPoints8, 5, tgx::RGB32_Gray ,tgx::RGB32_Red, 0.
 |--------|-------------|
 | \ref tgx::Image::drawText "drawText()" | Draw text using a given font. Simple "legacy" method. |
 | \ref tgx::Image::drawTextEx "drawTextEx()" | Draw text using a given font. Extended method with anchor placement (see \ref tgx::Anchor). |
+| \ref tgx::Image::drawChar "drawChar()" | Draw a single character and return the next cursor position. |
 | \ref tgx::Image::measureText "measureText()" | Compute the bounding box of a text string without drawing it. |
 | \ref tgx::Image::measureChar "measureChar()" | Compute the bounding box of a character without drawing it. |
+
+TGX can draw bitmap fonts directly from the font headers included with the project. The simple `drawText()` method places text at the default text anchor, which is baseline-left. Use `drawTextEx()` when the text must be centered, aligned to a box, placed relative to another anchor point, or measured consistently before drawing.
+
+| Concept | Meaning |
+|---------|---------|
+| Baseline | The default text position is on the text baseline, not on the top-left corner of the text box. |
+| Anchor | `drawTextEx()` interprets the position according to the selected \ref tgx::Anchor. |
+| Measurement | `measureText()` and `measureChar()` return bounding boxes without drawing anything. |
+| Built-in fonts | TGX ships bitmap font headers that must be explicitly included when used. |
+| TrueType fonts | For TrueType rendering, use the optional OpenFontRender binding described in \ref subsec_openfontrender. |
 
 *additional includes for the text fonts*
 ~~~{.cpp}

@@ -206,6 +206,8 @@ Reading/writing pixels</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a31d1ea8d424eefcf8b30889d429db6a6">readPixel()</a>   </td><td class="markdownTableBodyNone">Read the color of a pixel.    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#ac4b995f36ba86cad72756df15beae389">readPixelf()</a>   </td><td class="markdownTableBodyNone">Read the color of a pixel, using a floating-point position vector.    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a56eca61edba23f1abfb74b9a52f4cb06">operator()</a>   </td><td class="markdownTableBodyNone">Direct access to the pixel color memory location (read/write).   </td></tr>
 </table>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -315,10 +317,12 @@ Drawing lines</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a58d25cf25063f4654f40ffd27047b6aa">drawLine()</a>   </td><td class="markdownTableBodyNone">Draw a basic straight line (single pixel thick, no anti-aliasing). Fastest method.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a007e67be4591db9d048b0e039fcd9c0b">drawLineAA()</a>   </td><td class="markdownTableBodyNone">Draw a line segment with anti-aliasing (single pixel thick).    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#aea9227b744818b67d5ad8a516e33267f">drawSegment()</a>   </td><td class="markdownTableBodyNone">Draw a basic line segment and choose independently whether each endpoint is drawn.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a78cf70663974df19ce7fe119b934ecf0">drawThickLineAA()</a>   </td><td class="markdownTableBodyNone">Draw a thick line with anti-aliasing and specify how the ends are drawn (rounded, flat, arrows...).    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a007e67be4591db9d048b0e039fcd9c0b">drawLineAA()</a>   </td><td class="markdownTableBodyNone">Draw a line segment with anti-aliasing (single pixel thick).    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a78cf70663974df19ce7fe119b934ecf0">drawThickLineAA()</a>   </td><td class="markdownTableBodyNone">Draw a thick line with anti-aliasing and specify how the ends are drawn (rounded, flat, arrows...).    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#ab38ad3252029c3091e3daf1fc39fc941">drawWedgeLineAA()</a>   </td><td class="markdownTableBodyNone">Draw a line segment with anti-aliasing and varying thickness, and specify how the ends are drawn.   </td></tr>
 </table>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
@@ -377,6 +381,10 @@ Drawing rounded rectangles</h2>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Description    </th></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a901d531c6a308705cf9b1b9a0a0a7162">drawRoundRect()</a>   </td><td class="markdownTableBodyNone">Draw a single pixel thick rectangle with rounded corners. Fastest non-AA method.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a71dacbe15f6a296988966a8bef5a9b77">fillRoundRect()</a>   </td><td class="markdownTableBodyNone">Draw a filled rectangle with rounded corners. Fastest non-AA method.    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a5ad71a76b3a0eae3396fb47f441e190a">drawRoundRectAA()</a>   </td><td class="markdownTableBodyNone">Draw a single pixel thick rectangle with rounded corners, with anti-aliasing.    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a83bc1250c10db1d9d0b84676d112c919">drawThickRoundRectAA()</a>   </td><td class="markdownTableBodyNone">Draw a rounded-corner rectangle with a thick outline, with anti-aliasing.    </td></tr>
@@ -429,18 +437,23 @@ Drawing triangles</h2>
 <h2><a class="anchor" id="subsec_triangles_advanced"></a>
 Drawing triangles (advanced)</h2>
 <p ><img src="../test_triangles_advanced.png" alt="test_triangles_advanced" class="inline"/></p>
-<p >These methods use the 3D rasterizer.</p>
+<p >These methods are still part of the 2D API, but internally they use the TGX triangle rasterizer. They are useful when an image or a color field must be warped onto an arbitrary triangle instead of copied as a rectangle. They are more expensive than a simple <code>blit()</code>, but they interpolate texture coordinates, vertex colors, or both across the triangle.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Description    </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#af79825fb258532b4ff4e1326c06e972f">drawTexturedTriangle()</a>   </td><td class="markdownTableBodyNone">Draw a filled triangle with texture mapping.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#ad60369023e154acb41fc08d9c0ba262c">drawGradientTriangle()</a>   </td><td class="markdownTableBodyNone">Draw a filled triangle with gradient color (Gouraud shading).    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#af79825fb258532b4ff4e1326c06e972f">drawTexturedTriangle(..., blend_op)</a>   </td><td class="markdownTableBodyNone">Draw a textured triangle using a custom blending operator, function, functor or lambda.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a5198a94520b7b1b30e11d0462254a835">drawTexturedGradientTriangle()</a>   </td><td class="markdownTableBodyNone">Draw a filled triangle with both texture mapping and gradient color.   </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#ad60369023e154acb41fc08d9c0ba262c">drawGradientTriangle()</a>   </td><td class="markdownTableBodyNone">Draw a filled triangle with gradient color (Gouraud shading).    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a5198a94520b7b1b30e11d0462254a835">drawTexturedGradientTriangle()</a>   </td><td class="markdownTableBodyNone">Draw a filled triangle with both texture mapping and gradient color.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a6daf96f99c5806b6af17390cc644703a">drawTexturedMaskedTriangle()</a>   </td><td class="markdownTableBodyNone">Draw a textured triangle while skipping one transparent source color.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a4f0cbbbf7e021ac3ebc78c6520951eda">drawTexturedGradientMaskedTriangle()</a>   </td><td class="markdownTableBodyNone">Draw a textured gradient triangle while skipping one transparent source color.   </td></tr>
 </table>
-<p >See also <a class="el" href="classtgx_1_1_image.html#a6daf96f99c5806b6af17390cc644703a">drawTexturedMaskedTriangle()</a> and <a class="el" href="classtgx_1_1_image.html#a4f0cbbbf7e021ac3ebc78c6520951eda">drawTexturedGradientMaskedTriangle()</a> for additional masking features.</p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> im(buffer, 320, 240);  <span class="comment">// create a black 320x240 image.</span></div>
 <div class="line">im.clear(tgx::RGB32_Black);                   <span class="comment">//</span></div>
@@ -487,18 +500,23 @@ Drawing quads</h2>
 <h2><a class="anchor" id="subsec_quads_advanced"></a>
 Drawing quads (advanced)</h2>
 <p ><img src="../test_quad_advanced.png" alt="test_quad_advanced" class="inline"/></p>
-<p >These methods use the 3D rasterizer.</p>
+<p >These methods are still part of the 2D API, but internally they use the TGX triangle rasterizer. They are useful when an image or a color field must be warped onto an arbitrary quad instead of copied as a rectangle. They are more expensive than a simple <code>blit()</code>, but they interpolate texture coordinates, vertex colors, or both across the quad.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Description    </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#ab59135aa90d56194423b829b4d761b12">drawTexturedQuad()</a>   </td><td class="markdownTableBodyNone">Draw a filled quad with texture mapping.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a85d8c925e8aa08322755d7c34de3f20a">drawGradientQuad()</a>   </td><td class="markdownTableBodyNone">Draw a filled quad with gradient color (Gouraud shading).    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#ab59135aa90d56194423b829b4d761b12">drawTexturedQuad(..., blend_op)</a>   </td><td class="markdownTableBodyNone">Draw a textured quad using a custom blending operator, function, functor or lambda.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a53d233376df95d785465f62fefd11a96">drawTexturedGradientQuad()</a>   </td><td class="markdownTableBodyNone">Draw a filled quad with both texture mapping and gradient color.   </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a85d8c925e8aa08322755d7c34de3f20a">drawGradientQuad()</a>   </td><td class="markdownTableBodyNone">Draw a filled quad with gradient color (Gouraud shading).    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a53d233376df95d785465f62fefd11a96">drawTexturedGradientQuad()</a>   </td><td class="markdownTableBodyNone">Draw a filled quad with both texture mapping and gradient color.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#aad463dcf29b1e1ea8827b6ec8d678e6a">drawTexturedMaskedQuad()</a>   </td><td class="markdownTableBodyNone">Draw a textured quad while skipping one transparent source color.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a511347039f599f26f146b63e57014acb">drawTexturedGradientMaskedQuad()</a>   </td><td class="markdownTableBodyNone">Draw a textured gradient quad while skipping one transparent source color.   </td></tr>
 </table>
-<p >See also <a class="el" href="classtgx_1_1_image.html#aad463dcf29b1e1ea8827b6ec8d678e6a">drawTexturedMaskedQuad()</a> and <a class="el" href="classtgx_1_1_image.html#a511347039f599f26f146b63e57014acb">drawTexturedGradientMaskedQuad()</a> for additional masking features.</p>
 <p ><em>Code used to generate the image:</em> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320*240];                   <span class="comment">//</span></div>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> im(buffer, 320, 240);  <span class="comment">// create a black 320x240 image.</span></div>
 <div class="line">im.clear(tgx::RGB32_Black);                   <span class="comment">//</span></div>
@@ -749,9 +767,26 @@ Drawing text</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#a6495b751001b95f32e9b219d69369caf">drawTextEx()</a>   </td><td class="markdownTableBodyNone">Draw text using a given font. Extended method with anchor placement (see <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">tgx::Anchor</a>).    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#abfc2c7a0fa10aac9e11fa9632b535c8a">measureText()</a>   </td><td class="markdownTableBodyNone">Compute the bounding box of a text string without drawing it.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#ad8a7d2f9bd4c38a3aba67fa8a42ed34f">drawChar()</a>   </td><td class="markdownTableBodyNone">Draw a single character and return the next cursor position.    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#abfc2c7a0fa10aac9e11fa9632b535c8a">measureText()</a>   </td><td class="markdownTableBodyNone">Compute the bounding box of a text string without drawing it.    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_image.html#aa42488f709d7294c5dcb107cb4616626">measureChar()</a>   </td><td class="markdownTableBodyNone">Compute the bounding box of a character without drawing it.   </td></tr>
+</table>
+<p >TGX can draw bitmap fonts directly from the font headers included with the project. The simple <code>drawText()</code> method places text at the default text anchor, which is baseline-left. Use <code>drawTextEx()</code> when the text must be centered, aligned to a box, placed relative to another anchor point, or measured consistently before drawing.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Concept   </th><th class="markdownTableHeadNone">Meaning    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Baseline   </td><td class="markdownTableBodyNone">The default text position is on the text baseline, not on the top-left corner of the text box.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Anchor   </td><td class="markdownTableBodyNone"><code>drawTextEx()</code> interprets the position according to the selected <a class="el" href="_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25">tgx::Anchor</a>.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Measurement   </td><td class="markdownTableBodyNone"><code>measureText()</code> and <code>measureChar()</code> return bounding boxes without drawing anything.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Built-in fonts   </td><td class="markdownTableBodyNone">TGX ships bitmap font headers that must be explicitly included when used.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">TrueType fonts   </td><td class="markdownTableBodyNone">For TrueType rendering, use the optional OpenFontRender binding described in <a class="el" href="md_docs_intro_api_2_d.html#subsec_openfontrender">Drawing text with TrueType fonts</a>.   </td></tr>
 </table>
 <p ><em>additional includes for the text fonts</em> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="font__tgx___arial_8h.html">font_tgx_Arial.h</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="font__tgx___open_sans_8h.html">font_tgx_OpenSans.h</a>&quot;</span></div>
