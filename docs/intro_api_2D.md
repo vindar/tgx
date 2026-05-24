@@ -1,16 +1,16 @@
 @page intro_api_2D Using the 2D API.
 
 
-**Below is a description, with examples, of most 2D drawing primitives implemented in TGX.**
+**This page describes, with examples, most 2D drawing primitives implemented in TGX.**
 
-- For additional details, look directly into the main header file \ref Image.h
+- For additional details, see the main header file \ref Image.h.
 - Do not forget to check the examples located in the `/examples/` subdirectory of the library. In particular, the example `TestPrimitives` contains all the code listed below.
 
 @section sec_2D_overview Overview of the 2D API
 
 The 2D API is centered around the \ref tgx::Image class. Drawing methods modify the pixels of an image, or of a sub-image when clipping to a rectangular region is needed.
 
-The API can roughly be read in the following groups:
+The API is roughly organized into the following groups:
 
 | Group | Main purpose | Typical methods |
 |-------|--------------|-----------------|
@@ -58,10 +58,10 @@ TGX is often used on small MCUs, so the 2D API tries to keep the common paths si
 Most public drawing methods clip their output to the current image or sub-image. Direct pixel access with `operator()` is intentionally different: it gives raw access to the buffer and assumes that the coordinates are valid.
 
 
-@section sec_2Dprimitives 2D Drawing methods.
+@section sec_2Dprimitives 2D drawing methods
 
 
-@subsection subsec_filling Filling the screen.
+@subsection subsec_filling Filling the screen
 
 ![test_screen_filling](../test_screen_filling.png)
 
@@ -165,9 +165,9 @@ All blit methods clip automatically to the destination image or sub-image. Advan
     // #include <font_tgx_Arial_Bold.h> is needed to use font_tgx_Arial_Bold_20.
     tgx::RGB32 buf[120 * 40]; // memory for the sprite image
     tgx::Image<tgx::RGB32> sprite(buf, 120, 40); // the sprite image...
-    sprite.clear(tgx::RGB32_Green); // ... has green background
+    sprite.clear(tgx::RGB32_Green); // ... has a green background
     sprite.fillCircle({ 20, 20 }, 13, tgx::RGB32_Black, tgx::RGB32_Black); // ... a black circle
-    sprite.drawTextEx("Sprite", { 76, 20 }, font_tgx_Arial_Bold_20, tgx::Anchor::CENTER, false, false, tgx::RGB32_Black); // ... and a black text "sprite".
+    sprite.drawTextEx("Sprite", { 76, 20 }, font_tgx_Arial_Bold_20, tgx::Anchor::CENTER, false, false, tgx::RGB32_Black); // ... and the black text "sprite".
 
     im.fillScreenHGradient(tgx::RGB32_Blue, tgx::RGB32_Red); // fill the screen with a horizontal gradient from blue to red
 
@@ -178,7 +178,7 @@ All blit methods clip automatically to the destination image or sub-image. Advan
     im.blitScaledRotatedMasked(sprite, tgx::RGB32_Green, { 60, 20 }, { 230, 160 }, 1.5f, -25.0f); // blit the sprite scaled at 1.5, rotated by -25 degrees, with green set as the transparent color.
 ~~~
 
-See also \ref tgx::Image<color_t>::blitBackward() "blitBackward()" and methods for image copy/resizing/type conversion \ref tgx::Image<color_t>::copyFrom() "copyFrom()", \ref tgx::Image<color_t>::copyReduceHalf() "copyReduceHalf()",  \ref tgx::Image<color_t>::reduceHalf() "reduceHalf()" and \ref tgx::Image<color_t>::convert() "convert()"
+See also \ref tgx::Image<color_t>::blitBackward() "blitBackward()" and methods for image copying, resizing and color type conversion: \ref tgx::Image<color_t>::copyFrom() "copyFrom()", \ref tgx::Image<color_t>::copyReduceHalf() "copyReduceHalf()", \ref tgx::Image<color_t>::reduceHalf() "reduceHalf()" and \ref tgx::Image<color_t>::convert() "convert()".
 
 ---
 
@@ -357,12 +357,12 @@ im.clear(tgx::RGB32_Black);					  //
 
 tgx::RGB32 buf[50 * 50]; // memory for texture image
 tgx::Image<tgx::RGB32> tex(buf, 50, 50); // the texture image...
-tex.clear(tgx::RGB32_Blue); // ... has blue background ..
-tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB32_Red, tgx::RGB32_Green); // ...and red-filled circle with green outline in the center.
+tex.clear(tgx::RGB32_Blue); // ... has a blue background
+tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB32_Red, tgx::RGB32_Green); // ... and a red-filled circle with green outline in the center.
 
 im.drawTexturedTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 10, 10 }, { 100, 20 }, { 30, 100 }); // textured triangle, full opacity
 im.drawGradientTriangle({ 20, 140 }, { 160, 50 }, {230, 200}, tgx::RGB32_Blue, tgx::RGB32_Orange, tgx::RGB32_Black); // gradient triangle, full opacity.
-im.drawTexturedGradientTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 } , { 120, 230 }, { 300, 20 }, { 280, 170 }, tgx::RGB32_Red, tgx::RGB32_Green, tgx::RGB32_Blue, 0.5f); // texture triangle with color gradient. half opacity.
+im.drawTexturedGradientTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 } , { 120, 230 }, { 300, 20 }, { 280, 170 }, tgx::RGB32_Red, tgx::RGB32_Green, tgx::RGB32_Blue, 0.5f); // textured triangle with color gradient, half opacity.
 ~~~
 
 
@@ -394,7 +394,7 @@ im.fillQuad({ 150, 5 }, { 80, 180 }, {170, 40}, { 300, 20 }, tgx::RGB32_Purple);
 im.drawQuadAA({ 20,120 }, { 150, 100 }, { 150, 140 },  { 70, 239 }, tgx::RGB32_Green); // green quad with AA
 im.drawThickQuadAA({ 160, 60 }, { 240,30 }, { 300, 80 }, {230, 120}, 10, tgx::RGB32_Cyan, 0.5f); // 10 pixels thick quad, 50% opacity, with AA
 im.fillQuadAA({ 200, 220 }, { 315,210 }, {250, 150}, { 150, 120 }, tgx::RGB32_Yellow); // filled quad with AA
-im.fillThickQuadAA({ 130,200 }, { 160, 140 }, { 230, 100 }, { 250, 170 } , 5, tgx::RGB32_Lime, tgx::RGB32_Orange, 0.5f); //filled, 5 pixels thick quad, 50% opacity, with AA
+im.fillThickQuadAA({ 130,200 }, { 160, 140 }, { 230, 100 }, { 250, 170 } , 5, tgx::RGB32_Lime, tgx::RGB32_Orange, 0.5f); // filled, 5 pixels thick quad, 50% opacity, with AA
 ~~~
 
 
@@ -423,9 +423,9 @@ tgx::RGB32 buffer[320*240];					  //
 tgx::Image<tgx::RGB32> im(buffer, 320, 240);  // create a black 320x240 image.
 im.clear(tgx::RGB32_Black);					  //
 
-im.drawTexturedQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 10, 10 }, { 100, 20 }, { 80, 40 }, {30, 120}); // textured quad,
+im.drawTexturedQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 10, 10 }, { 100, 20 }, { 80, 40 }, {30, 120}); // textured quad
 im.drawGradientQuad({ 20, 140 }, { 160, 50 }, {180, 55}, { 230, 200 }, tgx::RGB32_Blue, tgx::RGB32_Orange, tgx::RGB32_Green, tgx::RGB32_Black); // gradient quad
-im.drawTexturedGradientQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 120, 230 }, { 280, 20 }, { 310, 170 }, {250,210}, tgx::RGB32_Red, tgx::RGB32_Green, tgx::RGB32_Blue, tgx::RGB32_Navy,0.5f); // texture quad with color gradient. half opacity.
+im.drawTexturedGradientQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 120, 230 }, { 280, 20 }, { 310, 170 }, {250,210}, tgx::RGB32_Red, tgx::RGB32_Green, tgx::RGB32_Blue, tgx::RGB32_Navy,0.5f); // textured quad with color gradient, half opacity.
 ~~~
 
 
@@ -711,7 +711,7 @@ im.drawText("non-AA fonts are ugly...", { 5, 10 }, font_tgx_Arial_8, tgx::RGB32_
 im.drawText("AA font, 9pt", { 5, 25 }, font_tgx_OpenSans_9, tgx::RGB32_Green);     // AA font, 9pt
 im.drawText("AA font, 10pt", { 5, 40 }, font_tgx_OpenSans_10, tgx::RGB32_Green);   // AA font, 10pt
 im.drawText("AA font, 14pt", { 5, 60 }, font_tgx_OpenSans_14, tgx::RGB32_Green);   // AA font, 14pt
-im.drawText("AA font, 18pt", { 5, 83 }, font_tgx_OpenSans_20, tgx::RGB32_Green);   // AA font, 18pt
+im.drawText("AA font, 20pt", { 5, 83 }, font_tgx_OpenSans_20, tgx::RGB32_Green);   // AA font, 20pt
 
 // drawing on the baseline
 im.drawFastHLine({ 130, 30 }, 160, tgx::RGB32_White, 0.5f);
@@ -719,7 +719,7 @@ im.drawFastHLine({ 130, 45 }, 160, tgx::RGB32_White, 0.5f);
 im.drawText("The quick brown fox jumps", { 130, 30 }, font_tgx_OpenSans_12, tgx::RGB32_Orange);
 im.drawText("over the lazy dog !", { 130, 45 }, font_tgx_OpenSans_12, tgx::RGB32_Orange);
 
-// finding the bounding box of a text.
+// finding the bounding box of text.
 const char * tbb = "Text bounding box";
 tgx::iBox2 bb = im.measureText(tbb, { 230, 70 }, font_tgx_OpenSans_14, tgx::Anchor::CENTER, false, false);
 im.fillRect(bb, tgx::RGB32_Yellow, 0.5f);
@@ -773,14 +773,14 @@ im.fillCircleAA(anchor_point, 1.5, tgx::RGB32_Green);
 The TGX library supports fonts using:
 - AdafruitGFX format:                   (https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts)
 - ILI9341_t3 v1 format                  (https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format)
-- ILI9341_t3 v23 format (antialiased)   (https://github.com/projectitis/packedbdf/blob/master/packedbdf.md)
+- ILI9341_t3 v2 format (antialiased)    (https://github.com/projectitis/packedbdf/blob/master/packedbdf.md)
 
 @note tgx-font (https://github.com/vindar/tgx-font) contains a collection of ILI9341_t3 v1 and v2 (antialiased) fonts
 that can be used directly with the methods below (and instructions on how to convert a TTF font to this format).
 
 The following fonts are already packaged with TGX but must be included explicitly in the project when used:
-- **Arial** (non AA font): `#include "font_tgx_Arial.h"`
-- **Arial Bold** (non AA font): `#include "font_tgx_Arial_Bold.h"`
+- **Arial** (non-AA font): `#include "font_tgx_Arial.h"`
+- **Arial Bold** (non-AA font): `#include "font_tgx_Arial_Bold.h"`
 - **OpenSans** (AA font): `#include "font_tgx_OpenSans.h"`
 - **OpenSans Bold** (AA font): `#include "font_tgx_OpenSans_Bold.h"`
 - **OpenSans Italic** (AA font): `#include "font_tgx_OpenSans_Italic.h"`
@@ -793,18 +793,25 @@ Each font above is available in the following sizes: *8pt, 9pt, 10pt, 11pt, 12pt
 
 @section sec_extensions TGX extensions via external libraries
 
-TGX implements bindings that make it easy to use external libraries to add new capabilities to the Image class, such as displaying classic image formats (PNG, GIF, JPEG) and TrueType fonts...
+TGX can cooperate with a few external Arduino libraries to add image decoding and TrueType font rendering to the Image class. These bindings are optional: if the external library is not installed or not included by the sketch, TGX still works normally and no extra dependency is required.
+
+| Extension | External library | Purpose |
+|-----------|------------------|---------|
+| \ref subsec_openfontrender | OpenFontRender | Draw TrueType fonts into a TGX image. |
+| \ref subsec_PNGdec | PNGdec | Decode PNG images into a TGX image. |
+| \ref subsec_JPEGDEC | JPEGDEC | Decode JPEG images into a TGX image. |
+| \ref subsec_AnimatedGIF | AnimatedGIF | Decode and display GIF frames into a TGX image. |
 
 @subsection subsec_openfontrender Drawing text with TrueType fonts
 
 Install Takkao's **OpenFontRender** library from https://github.com/takkaO/OpenFontRender/.
 
-Simply include both libraries into the project to activate the bindings between TGX and OpenFontRender:
+Include both libraries in the sketch to activate the TGX/OpenFontRender binding:
 ~~~{.cpp}
 #include <tgx.h>
 #include <OpenFontRender.h>
 ~~~
-Now, we can bind any `OpenFontRender` object to an image with the method: \ref tgx::Image<color_t>::setOpenFontRender() "Image::setOpenFontRender(ofr)" and subsequently use the OpenFontRender library as usual. All texts written with `ofr` will automatically be drawn onto the selected image.
+Then bind an `OpenFontRender` object to an image with \ref tgx::Image<color_t>::setOpenFontRender() "Image::setOpenFontRender(ofr)". After that, OpenFontRender can be used normally: text drawn with `ofr` is rendered into the selected TGX image.
 
 Example:
 ~~~{.cpp}
@@ -839,12 +846,12 @@ Check the [OpenFontRender documentation](https://github.com/takkaO/OpenFontRende
 
 Install Bitbank2's **PNGdec** library from the Arduino library manager / PlatformIO or directly from https://github.com/bitbank2/PNGdec/.
 
-Simply include both libraries into the project to activate the bindings between TGX and PNGdec:
+Include both libraries in the sketch to activate the TGX/PNGdec binding:
 ~~~{.cpp}
 #include <tgx.h>
 #include <PNGdec.h>
 ~~~
-Now, we can bind any `PNG` decoder object to tgx images by providing it with the generic callback `TGX_PNGDraw` and then we can subsequently decode PNGs using the \ref tgx::Image<color_t>::PNGDecode "Image::PNGDecode()" method.
+Open the PNG with the `TGX_PNGDraw` callback, then decode it into an image with \ref tgx::Image<color_t>::PNGDecode "Image::PNGDecode()".
 
 Example:
 ~~~{.cpp}
@@ -873,12 +880,12 @@ Check the [PNGdec documentation](https://github.com/bitbank2/PNGdec/wiki) for ad
 
 Install Bitbank2's **JPEGDEC** library from the Arduino library manager / PlatformIO or directly from https://github.com/bitbank2/JPEGDEC.
 
-Simply include both libraries into the project to activate the bindings between TGX and JPEGDEC:
+Include both libraries in the sketch to activate the TGX/JPEGDEC binding:
 ~~~{.cpp}
 #include <tgx.h>
 #include <JPEGDEC.h>
 ~~~
-Now, we can bind any `JPEGDEC` decoder object to tgx images by providing it with the generic callback `TGX_JPEGDraw` and then we can subsequently decode JPEGs using the \ref tgx::Image<color_t>::JPEGDecode "Image::JPEGDecode()" method.
+Open the JPEG with the `TGX_JPEGDraw` callback, then decode it into an image with \ref tgx::Image<color_t>::JPEGDecode "Image::JPEGDecode()".
 
 Example:
 ~~~{.cpp}
@@ -910,14 +917,14 @@ Check the [JPEGDEC documentation](https://github.com/bitbank2/JPEGDEC/wiki) for 
 
 Install Bitbank2's **AnimatedGIF** library from the Arduino library manager / PlatformIO or directly from https://github.com/bitbank2/AnimatedGIF.
 
-Simply include both libraries into the project to activate the bindings between TGX and AnimatedGIF:
+Include both libraries in the sketch to activate the TGX/AnimatedGIF binding:
 ~~~{.cpp}
 #include <tgx.h>
 #include <AnimatedGIF.h>
 ~~~
-Now, we can bind any `AnimatedGIF` decoder object to tgx images by providing it with the generic callback `TGX_GIFDraw` and then we can subsequently decode GIFs using the \ref tgx::Image<color_t>::GIFplayFrame() "Image::GIFplayFrame()" method.
+Open the GIF with the `TGX_GIFDraw` callback, then draw frames into an image with \ref tgx::Image<color_t>::GIFplayFrame() "Image::GIFplayFrame()".
 
-This method simply wraps around the `playFrame()` method from the AnimatedGIF library and can be called repeatedly to display successive frames in case of an animation.
+This method wraps the `playFrame()` method from the AnimatedGIF library and can be called repeatedly to display successive frames.
 
 Example:
 
@@ -943,6 +950,13 @@ im.GIFplayFrame(gif, { 20, 10 });
 @note A complete example is available in the subfolder `/examples/Teensy4/2D/GIF_test/`.
 
 Check the [AnimatedGIF documentation](https://github.com/bitbank2/AnimatedGIF/wiki) for additional details.
+
+
+@section sec_2D_next Where to go next
+
+This page covered the main 2D drawing methods available on `tgx::Image`. The examples above are intentionally small; complete sketches are available in `/examples`.
+
+For the memory model, color types, image views and coordinate conventions, see @ref intro_basic "Basic concepts". For 3D rendering, meshes, shaders and projection matrices, continue with @ref intro_api_3D "the 3D API introduction".
 
 
 

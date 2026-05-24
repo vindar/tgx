@@ -122,8 +122,8 @@ var NAVTREEINDEX2 =
 "font__tgx___open_sans___italic_8h.html#af0c29d62e49a828f21d791bf9c457acc":[9,0,0,7,8],
 "font__tgx___open_sans___italic_8h.html#af4040027c1ca0579093bbbbe4a642c66":[9,0,0,7,11],
 "font__tgx___open_sans___italic_8h_source.html":[9,0,0,7],
-"functions.html":[8,3,0,0],
 "functions.html":[8,3,0],
+"functions.html":[8,3,0,0],
 "functions_b.html":[8,3,0,1],
 "functions_c.html":[8,3,0,2],
 "functions_d.html":[8,3,0,3],
@@ -180,6 +180,7 @@ var NAVTREEINDEX2 =
 "index.html#getting_started":[1],
 "md_docs_intro_api_2_d.html":[5],
 "md_docs_intro_api_2_d.html#sec_2D_naming":[5,1],
+"md_docs_intro_api_2_d.html#sec_2D_next":[5,5],
 "md_docs_intro_api_2_d.html#sec_2D_overview":[5,0],
 "md_docs_intro_api_2_d.html#sec_2D_performance":[5,2],
 "md_docs_intro_api_2_d.html#sec_2Dprimitives":[5,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "md_docs_tools.html#tools_legacy_mesh3d":[7,5],
 "md_docs_tools.html#tools_legacy_to_mesh3dv2":[7,4],
 "md_docs_tools.html#tools_obj_to_mesh3dv2":[7,3],
-"md_docs_tools.html#tools_setup":[7,0],
-"md_docs_tools.html#tools_stripifiers":[7,1]
+"md_docs_tools.html#tools_setup":[7,0]
 };

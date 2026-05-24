@@ -95,15 +95,15 @@ $(document).ready(function(){initNavTree('md_docs_intro_api_2_d.html',''); initR
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p ><a class="anchor" id="intro_api_2D"></a></p>
-<p ><b>Below is a description, with examples, of most 2D drawing primitives implemented in TGX.</b></p>
+<p ><b>This page describes, with examples, most 2D drawing primitives implemented in TGX.</b></p>
 <ul>
-<li>For additional details, look directly into the main header file <a class="el" href="_image_8h.html">Image.h</a></li>
+<li>For additional details, see the main header file <a class="el" href="_image_8h.html">Image.h</a>.</li>
 <li>Do not forget to check the examples located in the <code>/examples/</code> subdirectory of the library. In particular, the example <code>TestPrimitives</code> contains all the code listed below.</li>
 </ul>
 <h1><a class="anchor" id="sec_2D_overview"></a>
 Overview of the 2D API</h1>
 <p >The 2D API is centered around the <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> class. Drawing methods modify the pixels of an image, or of a sub-image when clipping to a rectangular region is needed.</p>
-<p >The API can roughly be read in the following groups:</p>
+<p >The API is roughly organized into the following groups:</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Group   </th><th class="markdownTableHeadNone">Main purpose   </th><th class="markdownTableHeadNone">Typical methods    </th></tr>
@@ -166,9 +166,9 @@ Performance and clipping</h1>
 </table>
 <p >Most public drawing methods clip their output to the current image or sub-image. Direct pixel access with <code>operator()</code> is intentionally different: it gives raw access to the buffer and assumes that the coordinates are valid.</p>
 <h1><a class="anchor" id="sec_2Dprimitives"></a>
-2D Drawing methods.</h1>
+2D drawing methods</h1>
 <h2><a class="anchor" id="subsec_filling"></a>
-Filling the screen.</h2>
+Filling the screen</h2>
 <p ><img src="../test_screen_filling.png" alt="test_screen_filling" class="inline"/></p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -272,9 +272,9 @@ Blitting sprites</h2>
 <div class="line"><span class="comment">// #include &lt;font_tgx_Arial_Bold.h&gt; is needed to use font_tgx_Arial_Bold_20.</span></div>
 <div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buf[120 * 40]; <span class="comment">// memory for the sprite image</span></div>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> sprite(buf, 120, 40); <span class="comment">// the sprite image...</span></div>
-<div class="line">sprite.clear(tgx::RGB32_Green); <span class="comment">// ... has green background</span></div>
+<div class="line">sprite.clear(tgx::RGB32_Green); <span class="comment">// ... has a green background</span></div>
 <div class="line">sprite.fillCircle({ 20, 20 }, 13, tgx::RGB32_Black, tgx::RGB32_Black); <span class="comment">// ... a black circle</span></div>
-<div class="line">sprite.drawTextEx(<span class="stringliteral">&quot;Sprite&quot;</span>, { 76, 20 }, <a class="code hl_variable" href="font__tgx___arial___bold_8h.html#abdf4be3aa39662e07d15057dac010212">font_tgx_Arial_Bold_20</a>, tgx::Anchor::CENTER, <span class="keyword">false</span>, <span class="keyword">false</span>, <a class="code hl_variable" href="_color_8h.html#a1e688542f09375307545639f49ac8d99">tgx::RGB32_Black</a>); <span class="comment">// ... and a black text &quot;sprite&quot;.</span></div>
+<div class="line">sprite.drawTextEx(<span class="stringliteral">&quot;Sprite&quot;</span>, { 76, 20 }, <a class="code hl_variable" href="font__tgx___arial___bold_8h.html#abdf4be3aa39662e07d15057dac010212">font_tgx_Arial_Bold_20</a>, tgx::Anchor::CENTER, <span class="keyword">false</span>, <span class="keyword">false</span>, <a class="code hl_variable" href="_color_8h.html#a1e688542f09375307545639f49ac8d99">tgx::RGB32_Black</a>); <span class="comment">// ... and the black text &quot;sprite&quot;.</span></div>
 <div class="line"> </div>
 <div class="line">im.fillScreenHGradient(tgx::RGB32_Blue, tgx::RGB32_Red); <span class="comment">// fill the screen with a horizontal gradient from blue to red</span></div>
 <div class="line"> </div>
@@ -285,7 +285,7 @@ Blitting sprites</h2>
 <div class="line">im.blitScaledRotatedMasked(sprite, tgx::RGB32_Green, { 60, 20 }, { 230, 160 }, 1.5f, -25.0f); <span class="comment">// blit the sprite scaled at 1.5, rotated by -25 degrees, with green set as the transparent color.</span></div>
 <div class="ttc" id="a_color_8h_html_a1e688542f09375307545639f49ac8d99"><div class="ttname"><a href="_color_8h.html#a1e688542f09375307545639f49ac8d99">tgx::RGB32_Black</a></div><div class="ttdeci">const RGB32 RGB32_Black</div><div class="ttdoc">Color black in RGB32 format.</div></div>
 <div class="ttc" id="afont__tgx___arial___bold_8h_html_abdf4be3aa39662e07d15057dac010212"><div class="ttname"><a href="font__tgx___arial___bold_8h.html#abdf4be3aa39662e07d15057dac010212">font_tgx_Arial_Bold_20</a></div><div class="ttdeci">const ILI9341_t3_font_t font_tgx_Arial_Bold_20</div><div class="ttdoc">Arial font (bold) 20pt.</div></div>
-</div><!-- fragment --><p >See also <a class="el" href="classtgx_1_1_image.html#ab252fa2ceb311770d698a8b9a1f52bef">blitBackward()</a> and methods for image copy/resizing/type conversion <a class="el" href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae">copyFrom()</a>, <a class="el" href="classtgx_1_1_image.html#ab1f64acc0c408c1b901f43ae80a0a57d">copyReduceHalf()</a>, <a class="el" href="classtgx_1_1_image.html#aec06c59da548263f082134368f5202d6">reduceHalf()</a> and <a class="el" href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">convert()</a></p>
+</div><!-- fragment --><p >See also <a class="el" href="classtgx_1_1_image.html#ab252fa2ceb311770d698a8b9a1f52bef">blitBackward()</a> and methods for image copying, resizing and color type conversion: <a class="el" href="classtgx_1_1_image.html#aa6957f8982ec8fe73bf5e31b2ffe74ae">copyFrom()</a>, <a class="el" href="classtgx_1_1_image.html#ab1f64acc0c408c1b901f43ae80a0a57d">copyReduceHalf()</a>, <a class="el" href="classtgx_1_1_image.html#aec06c59da548263f082134368f5202d6">reduceHalf()</a> and <a class="el" href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">convert()</a>.</p>
 <hr  />
 <h2><a class="anchor" id="subsec_vhlines"></a>
 Drawing horizontal and vertical lines</h2>
@@ -460,12 +460,12 @@ Drawing triangles (advanced)</h2>
 <div class="line"> </div>
 <div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buf[50 * 50]; <span class="comment">// memory for texture image</span></div>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> tex(buf, 50, 50); <span class="comment">// the texture image...</span></div>
-<div class="line">tex.clear(tgx::RGB32_Blue); <span class="comment">// ... has blue background ..</span></div>
-<div class="line">tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB32_Red, tgx::RGB32_Green); <span class="comment">// ...and red-filled circle with green outline in the center.</span></div>
+<div class="line">tex.clear(tgx::RGB32_Blue); <span class="comment">// ... has a blue background</span></div>
+<div class="line">tex.fillThickCircleAA({ 25,25 }, 24, 5, tgx::RGB32_Red, tgx::RGB32_Green); <span class="comment">// ... and a red-filled circle with green outline in the center.</span></div>
 <div class="line"> </div>
 <div class="line">im.drawTexturedTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 10, 10 }, { 100, 20 }, { 30, 100 }); <span class="comment">// textured triangle, full opacity</span></div>
 <div class="line">im.drawGradientTriangle({ 20, 140 }, { 160, 50 }, {230, 200}, <a class="code hl_variable" href="_color_8h.html#a104b07f7b610b4062eb41af9ab85f046">tgx::RGB32_Blue</a>, <a class="code hl_variable" href="_color_8h.html#a4797620ab64671168c8c67fb5c324bdb">tgx::RGB32_Orange</a>, <a class="code hl_variable" href="_color_8h.html#a1e688542f09375307545639f49ac8d99">tgx::RGB32_Black</a>); <span class="comment">// gradient triangle, full opacity.</span></div>
-<div class="line">im.drawTexturedGradientTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 } , { 120, 230 }, { 300, 20 }, { 280, 170 }, <a class="code hl_variable" href="_color_8h.html#a3cf013ec1fa56751bb229035ef718aba">tgx::RGB32_Red</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>, <a class="code hl_variable" href="_color_8h.html#a104b07f7b610b4062eb41af9ab85f046">tgx::RGB32_Blue</a>, 0.5f); <span class="comment">// texture triangle with color gradient. half opacity.</span></div>
+<div class="line">im.drawTexturedGradientTriangle(tex, { 0,0 }, { 50, 0 }, { 50, 50 } , { 120, 230 }, { 300, 20 }, { 280, 170 }, <a class="code hl_variable" href="_color_8h.html#a3cf013ec1fa56751bb229035ef718aba">tgx::RGB32_Red</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>, <a class="code hl_variable" href="_color_8h.html#a104b07f7b610b4062eb41af9ab85f046">tgx::RGB32_Blue</a>, 0.5f); <span class="comment">// textured triangle with color gradient, half opacity.</span></div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="subsec_quads"></a>
 Drawing quads</h2>
@@ -495,7 +495,7 @@ Drawing quads</h2>
 <div class="line">im.drawQuadAA({ 20,120 }, { 150, 100 }, { 150, 140 },  { 70, 239 }, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>); <span class="comment">// green quad with AA</span></div>
 <div class="line">im.drawThickQuadAA({ 160, 60 }, { 240,30 }, { 300, 80 }, {230, 120}, 10, <a class="code hl_variable" href="_color_8h.html#a04d398cacda38bf62660b1171b219d9f">tgx::RGB32_Cyan</a>, 0.5f); <span class="comment">// 10 pixels thick quad, 50% opacity, with AA</span></div>
 <div class="line">im.fillQuadAA({ 200, 220 }, { 315,210 }, {250, 150}, { 150, 120 }, <a class="code hl_variable" href="_color_8h.html#a081cdffdf849f16ccad42a59cc5fa373">tgx::RGB32_Yellow</a>); <span class="comment">// filled quad with AA</span></div>
-<div class="line">im.fillThickQuadAA({ 130,200 }, { 160, 140 }, { 230, 100 }, { 250, 170 } , 5, <a class="code hl_variable" href="_color_8h.html#af26447e70dc2fbd304a4c6e55ca2c56b">tgx::RGB32_Lime</a>, <a class="code hl_variable" href="_color_8h.html#a4797620ab64671168c8c67fb5c324bdb">tgx::RGB32_Orange</a>, 0.5f); <span class="comment">//filled, 5 pixels thick quad, 50% opacity, with AA</span></div>
+<div class="line">im.fillThickQuadAA({ 130,200 }, { 160, 140 }, { 230, 100 }, { 250, 170 } , 5, <a class="code hl_variable" href="_color_8h.html#af26447e70dc2fbd304a4c6e55ca2c56b">tgx::RGB32_Lime</a>, <a class="code hl_variable" href="_color_8h.html#a4797620ab64671168c8c67fb5c324bdb">tgx::RGB32_Orange</a>, 0.5f); <span class="comment">// filled, 5 pixels thick quad, 50% opacity, with AA</span></div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="subsec_quads_advanced"></a>
 Drawing quads (advanced)</h2>
@@ -521,9 +521,9 @@ Drawing quads (advanced)</h2>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB32&gt;</a> im(buffer, 320, 240);  <span class="comment">// create a black 320x240 image.</span></div>
 <div class="line">im.clear(tgx::RGB32_Black);                   <span class="comment">//</span></div>
 <div class="line"> </div>
-<div class="line">im.drawTexturedQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 10, 10 }, { 100, 20 }, { 80, 40 }, {30, 120}); <span class="comment">// textured quad,</span></div>
+<div class="line">im.drawTexturedQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 10, 10 }, { 100, 20 }, { 80, 40 }, {30, 120}); <span class="comment">// textured quad</span></div>
 <div class="line">im.drawGradientQuad({ 20, 140 }, { 160, 50 }, {180, 55}, { 230, 200 }, <a class="code hl_variable" href="_color_8h.html#a104b07f7b610b4062eb41af9ab85f046">tgx::RGB32_Blue</a>, <a class="code hl_variable" href="_color_8h.html#a4797620ab64671168c8c67fb5c324bdb">tgx::RGB32_Orange</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>, <a class="code hl_variable" href="_color_8h.html#a1e688542f09375307545639f49ac8d99">tgx::RGB32_Black</a>); <span class="comment">// gradient quad</span></div>
-<div class="line">im.drawTexturedGradientQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 120, 230 }, { 280, 20 }, { 310, 170 }, {250,210}, <a class="code hl_variable" href="_color_8h.html#a3cf013ec1fa56751bb229035ef718aba">tgx::RGB32_Red</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>, <a class="code hl_variable" href="_color_8h.html#a104b07f7b610b4062eb41af9ab85f046">tgx::RGB32_Blue</a>, <a class="code hl_variable" href="_color_8h.html#a6a88015e9bd7af57b27e66dd58cd97b7">tgx::RGB32_Navy</a>,0.5f); <span class="comment">// texture quad with color gradient. half opacity.</span></div>
+<div class="line">im.drawTexturedGradientQuad(tex, { 0,0 }, { 50, 0 }, { 50, 50 }, { 0, 50 }, { 120, 230 }, { 280, 20 }, { 310, 170 }, {250,210}, <a class="code hl_variable" href="_color_8h.html#a3cf013ec1fa56751bb229035ef718aba">tgx::RGB32_Red</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>, <a class="code hl_variable" href="_color_8h.html#a104b07f7b610b4062eb41af9ab85f046">tgx::RGB32_Blue</a>, <a class="code hl_variable" href="_color_8h.html#a6a88015e9bd7af57b27e66dd58cd97b7">tgx::RGB32_Navy</a>,0.5f); <span class="comment">// textured quad with color gradient, half opacity.</span></div>
 <div class="ttc" id="a_color_8h_html_a6a88015e9bd7af57b27e66dd58cd97b7"><div class="ttname"><a href="_color_8h.html#a6a88015e9bd7af57b27e66dd58cd97b7">tgx::RGB32_Navy</a></div><div class="ttdeci">const RGB32 RGB32_Navy</div><div class="ttdoc">Color navy in RGB32 format.</div></div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="subsec_polylines"></a>
@@ -801,7 +801,7 @@ Drawing text</h2>
 <div class="line">im.drawText(<span class="stringliteral">&quot;AA font, 9pt&quot;</span>, { 5, 25 }, <a class="code hl_variable" href="font__tgx___open_sans_8h.html#a52410c1ca227d2547cc10e7b4eb1a11b">font_tgx_OpenSans_9</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>);     <span class="comment">// AA font, 9pt</span></div>
 <div class="line">im.drawText(<span class="stringliteral">&quot;AA font, 10pt&quot;</span>, { 5, 40 }, <a class="code hl_variable" href="font__tgx___open_sans_8h.html#a821c02398107f5bf48f304e76cff07c1">font_tgx_OpenSans_10</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>);   <span class="comment">// AA font, 10pt</span></div>
 <div class="line">im.drawText(<span class="stringliteral">&quot;AA font, 14pt&quot;</span>, { 5, 60 }, <a class="code hl_variable" href="font__tgx___open_sans_8h.html#a4facde21237c5e22adca402d46baa07c">font_tgx_OpenSans_14</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>);   <span class="comment">// AA font, 14pt</span></div>
-<div class="line">im.drawText(<span class="stringliteral">&quot;AA font, 18pt&quot;</span>, { 5, 83 }, <a class="code hl_variable" href="font__tgx___open_sans_8h.html#a9f2939e9a65c37bba813209afa0b85fe">font_tgx_OpenSans_20</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>);   <span class="comment">// AA font, 18pt</span></div>
+<div class="line">im.drawText(<span class="stringliteral">&quot;AA font, 20pt&quot;</span>, { 5, 83 }, <a class="code hl_variable" href="font__tgx___open_sans_8h.html#a9f2939e9a65c37bba813209afa0b85fe">font_tgx_OpenSans_20</a>, <a class="code hl_variable" href="_color_8h.html#a70b651304a6e592b923c013b74d83e4c">tgx::RGB32_Green</a>);   <span class="comment">// AA font, 20pt</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// drawing on the baseline</span></div>
 <div class="line">im.drawFastHLine({ 130, 30 }, 160, <a class="code hl_variable" href="_color_8h.html#aeacd911d22215d594fd63fae4f20cded">tgx::RGB32_White</a>, 0.5f);</div>
@@ -809,7 +809,7 @@ Drawing text</h2>
 <div class="line">im.drawText(<span class="stringliteral">&quot;The quick brown fox jumps&quot;</span>, { 130, 30 }, <a class="code hl_variable" href="font__tgx___open_sans_8h.html#af6f36b8271f2f859a8605f2bdf75926d">font_tgx_OpenSans_12</a>, <a class="code hl_variable" href="_color_8h.html#a4797620ab64671168c8c67fb5c324bdb">tgx::RGB32_Orange</a>);</div>
 <div class="line">im.drawText(<span class="stringliteral">&quot;over the lazy dog !&quot;</span>, { 130, 45 }, <a class="code hl_variable" href="font__tgx___open_sans_8h.html#af6f36b8271f2f859a8605f2bdf75926d">font_tgx_OpenSans_12</a>, <a class="code hl_variable" href="_color_8h.html#a4797620ab64671168c8c67fb5c324bdb">tgx::RGB32_Orange</a>);</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// finding the bounding box of a text.</span></div>
+<div class="line"><span class="comment">// finding the bounding box of text.</span></div>
 <div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span> * tbb = <span class="stringliteral">&quot;Text bounding box&quot;</span>;</div>
 <div class="line"><a class="code hl_struct" href="structtgx_1_1_box2.html">tgx::iBox2</a> bb = im.measureText(tbb, { 230, 70 }, <a class="code hl_variable" href="font__tgx___open_sans_8h.html#a4facde21237c5e22adca402d46baa07c">font_tgx_OpenSans_14</a>, tgx::Anchor::CENTER, <span class="keyword">false</span>, <span class="keyword">false</span>);</div>
 <div class="line">im.fillRect(bb, tgx::RGB32_Yellow, 0.5f);</div>
@@ -868,12 +868,12 @@ Drawing text</h2>
 </div><!-- fragment --><p >The TGX library supports fonts using:</p><ul>
 <li>AdafruitGFX format: (<a href="https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts">https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts</a>)</li>
 <li>ILI9341_t3 v1 format (<a href="https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format">https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format</a>)</li>
-<li>ILI9341_t3 v23 format (antialiased) (<a href="https://github.com/projectitis/packedbdf/blob/master/packedbdf.md">https://github.com/projectitis/packedbdf/blob/master/packedbdf.md</a>)</li>
+<li>ILI9341_t3 v2 format (antialiased) (<a href="https://github.com/projectitis/packedbdf/blob/master/packedbdf.md">https://github.com/projectitis/packedbdf/blob/master/packedbdf.md</a>)</li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>tgx-font (<a href="https://github.com/vindar/tgx-font">https://github.com/vindar/tgx-font</a>) contains a collection of ILI9341_t3 v1 and v2 (antialiased) fonts that can be used directly with the methods below (and instructions on how to convert a TTF font to this format).</dd></dl>
 <p>The following fonts are already packaged with TGX but must be included explicitly in the project when used:</p><ul>
-<li><b>Arial</b> (non AA font): <code>#include "font_tgx_Arial.h"</code></li>
-<li><b>Arial Bold</b> (non AA font): <code>#include "font_tgx_Arial_Bold.h"</code></li>
+<li><b>Arial</b> (non-AA font): <code>#include "font_tgx_Arial.h"</code></li>
+<li><b>Arial Bold</b> (non-AA font): <code>#include "font_tgx_Arial_Bold.h"</code></li>
 <li><b>OpenSans</b> (AA font): <code>#include "font_tgx_OpenSans.h"</code></li>
 <li><b>OpenSans Bold</b> (AA font): <code>#include "font_tgx_OpenSans_Bold.h"</code></li>
 <li><b>OpenSans Italic</b> (AA font): <code>#include "font_tgx_OpenSans_Italic.h"</code></li>
@@ -882,14 +882,26 @@ Drawing text</h2>
 <hr  />
 <h1><a class="anchor" id="sec_extensions"></a>
 TGX extensions via external libraries</h1>
-<p >TGX implements bindings that make it easy to use external libraries to add new capabilities to the Image class, such as displaying classic image formats (PNG, GIF, JPEG) and TrueType fonts...</p>
+<p >TGX can cooperate with a few external Arduino libraries to add image decoding and TrueType font rendering to the Image class. These bindings are optional: if the external library is not installed or not included by the sketch, TGX still works normally and no extra dependency is required.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Extension   </th><th class="markdownTableHeadNone">External library   </th><th class="markdownTableHeadNone">Purpose    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_intro_api_2_d.html#subsec_openfontrender">Drawing text with TrueType fonts</a>   </td><td class="markdownTableBodyNone">OpenFontRender   </td><td class="markdownTableBodyNone">Draw TrueType fonts into a TGX image.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_intro_api_2_d.html#subsec_PNGdec">Drawing PNG images</a>   </td><td class="markdownTableBodyNone">PNGdec   </td><td class="markdownTableBodyNone">Decode PNG images into a TGX image.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_intro_api_2_d.html#subsec_JPEGDEC">Drawing JPEG images</a>   </td><td class="markdownTableBodyNone">JPEGDEC   </td><td class="markdownTableBodyNone">Decode JPEG images into a TGX image.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_intro_api_2_d.html#subsec_AnimatedGIF">Drawing GIF images</a>   </td><td class="markdownTableBodyNone">AnimatedGIF   </td><td class="markdownTableBodyNone">Decode and display GIF frames into a TGX image.   </td></tr>
+</table>
 <h2><a class="anchor" id="subsec_openfontrender"></a>
 Drawing text with TrueType fonts</h2>
 <p >Install Takkao's <b>OpenFontRender</b> library from <a href="https://github.com/takkaO/OpenFontRender/">https://github.com/takkaO/OpenFontRender/</a>.</p>
-<p >Simply include both libraries into the project to activate the bindings between TGX and OpenFontRender: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<p >Include both libraries in the sketch to activate the TGX/OpenFontRender binding: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;OpenFontRender.h&gt;</span></div>
 <div class="ttc" id="atgx_8h_html"><div class="ttname"><a href="tgx_8h.html">tgx.h</a></div><div class="ttdoc">Main header file.</div></div>
-</div><!-- fragment --><p> Now, we can bind any <code>OpenFontRender</code> object to an image with the method: <a class="el" href="classtgx_1_1_image.html#a501bd842e7c783deaf4f0c0f7832f376">Image::setOpenFontRender(ofr)</a> and subsequently use the OpenFontRender library as usual. All texts written with <code>ofr</code> will automatically be drawn onto the selected image.</p>
+</div><!-- fragment --><p> Then bind an <code>OpenFontRender</code> object to an image with <a class="el" href="classtgx_1_1_image.html#a501bd842e7c783deaf4f0c0f7832f376">Image::setOpenFontRender(ofr)</a>. After that, OpenFontRender can be used normally: text drawn with <code>ofr</code> is rendered into the selected TGX image.</p>
 <p >Example: </p><div class="fragment"><div class="line"><span class="comment">// create a 100x50 image in RGB565 color format.</span></div>
 <div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> buf[100*50];</div>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> im(buf, 100, 50);</div>
@@ -915,9 +927,9 @@ Drawing text with TrueType fonts</h2>
 <h2><a class="anchor" id="subsec_PNGdec"></a>
 Drawing PNG images</h2>
 <p >Install Bitbank2's <b>PNGdec</b> library from the Arduino library manager / PlatformIO or directly from <a href="https://github.com/bitbank2/PNGdec/">https://github.com/bitbank2/PNGdec/</a>.</p>
-<p >Simply include both libraries into the project to activate the bindings between TGX and PNGdec: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<p >Include both libraries in the sketch to activate the TGX/PNGdec binding: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;PNGdec.h&gt;</span></div>
-</div><!-- fragment --><p> Now, we can bind any <code>PNG</code> decoder object to tgx images by providing it with the generic callback <code>TGX_PNGDraw</code> and then we can subsequently decode PNGs using the <a class="el" href="classtgx_1_1_image.html#a077be1a8bdfd1d67ef2788f6e515157c">Image::PNGDecode()</a> method.</p>
+</div><!-- fragment --><p> Open the PNG with the <code>TGX_PNGDraw</code> callback, then decode it into an image with <a class="el" href="classtgx_1_1_image.html#a077be1a8bdfd1d67ef2788f6e515157c">Image::PNGDecode()</a>.</p>
 <p >Example: </p><div class="fragment"><div class="line"><span class="comment">// create a 150x100 image in RGB565 color format.</span></div>
 <div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> buf[150*100];</div>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> im(buf, 150, 100);</div>
@@ -937,9 +949,9 @@ Drawing PNG images</h2>
 <h2><a class="anchor" id="subsec_JPEGDEC"></a>
 Drawing JPEG images</h2>
 <p >Install Bitbank2's <b>JPEGDEC</b> library from the Arduino library manager / PlatformIO or directly from <a href="https://github.com/bitbank2/JPEGDEC">https://github.com/bitbank2/JPEGDEC</a>.</p>
-<p >Simply include both libraries into the project to activate the bindings between TGX and JPEGDEC: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<p >Include both libraries in the sketch to activate the TGX/JPEGDEC binding: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;JPEGDEC.h&gt;</span></div>
-</div><!-- fragment --><p> Now, we can bind any <code>JPEGDEC</code> decoder object to tgx images by providing it with the generic callback <code>TGX_JPEGDraw</code> and then we can subsequently decode JPEGs using the <a class="el" href="classtgx_1_1_image.html#ae83fd55040b78f8b4f55be84b7a27cfd">Image::JPEGDecode()</a> method.</p>
+</div><!-- fragment --><p> Open the JPEG with the <code>TGX_JPEGDraw</code> callback, then decode it into an image with <a class="el" href="classtgx_1_1_image.html#ae83fd55040b78f8b4f55be84b7a27cfd">Image::JPEGDecode()</a>.</p>
 <p >Example: </p><div class="fragment"><div class="line"><span class="comment">// create a 150x100 image in RGB565 color format.</span></div>
 <div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> buf[150*100];</div>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> im(buf, 150, 100);</div>
@@ -959,10 +971,10 @@ Drawing JPEG images</h2>
 <h2><a class="anchor" id="subsec_AnimatedGIF"></a>
 Drawing GIF images</h2>
 <p >Install Bitbank2's <b>AnimatedGIF</b> library from the Arduino library manager / PlatformIO or directly from <a href="https://github.com/bitbank2/AnimatedGIF">https://github.com/bitbank2/AnimatedGIF</a>.</p>
-<p >Simply include both libraries into the project to activate the bindings between TGX and AnimatedGIF: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
+<p >Include both libraries in the sketch to activate the TGX/AnimatedGIF binding: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;AnimatedGIF.h&gt;</span></div>
-</div><!-- fragment --><p> Now, we can bind any <code>AnimatedGIF</code> decoder object to tgx images by providing it with the generic callback <code>TGX_GIFDraw</code> and then we can subsequently decode GIFs using the <a class="el" href="classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5">Image::GIFplayFrame()</a> method.</p>
-<p >This method simply wraps around the <code>playFrame()</code> method from the AnimatedGIF library and can be called repeatedly to display successive frames in case of an animation.</p>
+</div><!-- fragment --><p> Open the GIF with the <code>TGX_GIFDraw</code> callback, then draw frames into an image with <a class="el" href="classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5">Image::GIFplayFrame()</a>.</p>
+<p >This method wraps the <code>playFrame()</code> method from the AnimatedGIF library and can be called repeatedly to display successive frames.</p>
 <p >Example:</p>
 <div class="fragment"><div class="line"><span class="comment">// create a 150x100 image in RGB565 color format.</span></div>
 <div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> buf[150*100];</div>
@@ -982,6 +994,10 @@ Drawing GIF images</h2>
 <div class="line"><span class="comment">// we can call im.GIFplayFrame(gif, { 20, 10 }) again to draw the next frame if it is an animation...</span></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>A complete example is available in the subfolder <code>/examples/Teensy4/2D/GIF_test/</code>.</dd></dl>
 <p>Check the <a href="https://github.com/bitbank2/AnimatedGIF/wiki">AnimatedGIF documentation</a> for additional details.</p>
+<h1><a class="anchor" id="sec_2D_next"></a>
+Where to go next</h1>
+<p >This page covered the main 2D drawing methods available on <code><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">tgx::Image</a></code>. The examples above are intentionally small; complete sketches are available in <code>/examples</code>.</p>
+<p >For the memory model, color types, image views and coordinate conventions, see <a class="el" href="md_docs_intro_basic.html#intro_basic">Basic concepts</a>. For 3D rendering, meshes, shaders and projection matrices, continue with <a class="el" href="md_docs_intro_api_3_d.html#intro_api_3D">the 3D API introduction</a>.</p>
 <hr  />
  </div></div><!-- contents -->
 </div><!-- PageDoc -->

@@ -50,8 +50,8 @@ var NAVTREE =
       [ "Overview of the 2D API", "md_docs_intro_api_2_d.html#sec_2D_overview", null ],
       [ "Naming conventions", "md_docs_intro_api_2_d.html#sec_2D_naming", null ],
       [ "Performance and clipping", "md_docs_intro_api_2_d.html#sec_2D_performance", null ],
-      [ "2D Drawing methods.", "md_docs_intro_api_2_d.html#sec_2Dprimitives", [
-        [ "Filling the screen.", "md_docs_intro_api_2_d.html#subsec_filling", null ],
+      [ "2D drawing methods", "md_docs_intro_api_2_d.html#sec_2Dprimitives", [
+        [ "Filling the screen", "md_docs_intro_api_2_d.html#subsec_filling", null ],
         [ "Reading/writing pixels", "md_docs_intro_api_2_d.html#subsec_rwpixels", null ],
         [ "Flood-filling a region", "md_docs_intro_api_2_d.html#subsec_floodfill", null ],
         [ "Blitting sprites", "md_docs_intro_api_2_d.html#subsec_blitting", null ],
@@ -77,7 +77,8 @@ var NAVTREE =
         [ "Drawing PNG images", "md_docs_intro_api_2_d.html#subsec_PNGdec", null ],
         [ "Drawing JPEG images", "md_docs_intro_api_2_d.html#subsec_JPEGDEC", null ],
         [ "Drawing GIF images", "md_docs_intro_api_2_d.html#subsec_AnimatedGIF", null ]
-      ] ]
+      ] ],
+      [ "Where to go next", "md_docs_intro_api_2_d.html#sec_2D_next", null ]
     ] ],
     [ "Using the 3D API.", "md_docs_intro_api_3_d.html", [
       [ "Rendering model", "md_docs_intro_api_3_d.html#sec_3D_overview", null ],
@@ -138,9 +139,9 @@ var NAVTREEINDEX =
 "_box2_8h.html",
 "_vec3_8h.html#ac1caa239be43f9aa85c0016e491b726a",
 "classtgx_1_1_renderer3_d.html#a845bbd628cfd96f379f3f23d880aa60a",
-"md_docs_tools.html#tools_validation",
-"structtgx_1_1_r_g_b24.html#a4e989a01f791a0c5c93ddfa54686e956",
-"structtgx_1_1_vec2.html#a0e7fdb36c34634adee5419874414fb98"
+"md_docs_tools.html#tools_stripifiers",
+"structtgx_1_1_r_g_b24.html#a4ab2a21ebf091abe62f3861ef0a51eeb",
+"structtgx_1_1_vec2.html#a0dd3317719c780a7614027f9b50edb17"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
