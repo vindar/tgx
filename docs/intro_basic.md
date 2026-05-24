@@ -11,14 +11,16 @@ using namespace tgx; // optional, so we do not need to prefix all methods by tgx
 
 # Color types
 
-The library defines several color classes
+The library defines several color classes. Choosing the right one is mostly a question of memory, speed and intended use:
 
-- \ref tgx::RGB565 : 16-bit colors: 5 bits red, 6 bits green, 5 bits blue. *Aligned as and convertible to `uint16_t`.* **Preferred type when working with embedded platforms/MCUs**.
-- \ref tgx::RGB24 : 24-bit color: 8 bits red, 8 bits green, 8 bits blue. *No alignment*.
-- \ref tgx::RGB32 : 32-bit color: 8 bits red, 8 bits green, 8 bits blue. 8-bit (pre-multiplied) alpha channel. *Aligned as and convertible to `uint32_t`*. **Useful for blending**.
-- \ref tgx::RGBf : 96-bit floating point color: 32 bits red (float), 32 bits green (float), 32 bits blue (float). *Aligned as `float`, no alpha channel*. **Used in the 3D API**.
-- \ref tgx::RGB64 : 64-bit color: 16 bits red, 16 bits green, 16 bits blue. 16-bit (pre-multiplied) alpha channel. *Aligned as and convertible to `uint64_t`*.
-- \ref tgx::HSV : 96-bit color: 16 bits Hue, 16 bits Saturation, 16 bits Value. *Partial support only*. **Slow, use only to convert between color spaces, not for drawing operations**.
+| Type | Layout | Storage/alignment | Typical use |
+|------|--------|-------------------|-------------|
+| \ref tgx::RGB565 | 16-bit RGB: 5 bits red, 6 bits green, 5 bits blue | Aligned as and convertible to `uint16_t` | Preferred type on MCU displays: compact, fast, and compatible with many embedded display drivers. |
+| \ref tgx::RGB24 | 24-bit RGB: 8 bits red, 8 bits green, 8 bits blue | No special alignment | Useful on CPU or when a simple 24-bit image format is convenient and no alpha channel is needed. |
+| \ref tgx::RGB32 | 32-bit RGBA: 8 bits per channel, pre-multiplied alpha | Aligned as and convertible to `uint32_t` | Useful when an alpha channel is needed, especially for pre-multiplied alpha blending. |
+| \ref tgx::RGBf | 96-bit RGB: 32-bit float per channel | Aligned as `float`, no alpha channel | Used for floating-point color computations, especially with the 3D API lighting/material code. |
+| \ref tgx::RGB64 | 64-bit RGBA: 16 bits per channel, pre-multiplied alpha | Aligned as and convertible to `uint64_t` | Use only when high precision and alpha are both needed; heavier than the usual MCU formats. |
+| \ref tgx::HSV | 96-bit HSV: 16 bits Hue, 16 bits Saturation, 16 bits Value | Partial support only | Mainly an intermediate color space for conversions or procedural color generation; slow for drawing operations. |
 
 
 Color types are handled just like usual basic types such as `int` or `char`. Any color type can be converted into any other color type.
@@ -170,7 +172,7 @@ im.fillRect({50, 60 , 70, 80}, tgx::RGB32_Black); // using an initializer list: 
 ---
 
 
-# Storing images in `.cpp` files
+# Storing images in C++ source files
 
 The memory buffer an image points to may reside in flash/ROM and it is possible to define `const` images directly in `.cpp` files for easy inclusion in a project.
 

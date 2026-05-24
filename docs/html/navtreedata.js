@@ -35,7 +35,7 @@ var NAVTREE =
       ] ],
       [ "Image class, memory layout and sub-images", "md_docs_intro_basic.html#autotoc_md5", null ],
       [ "Vectors and Boxes", "md_docs_intro_basic.html#autotoc_md7", null ],
-      [ "Storing images in <tt>.cpp</tt> files", "md_docs_intro_basic.html#autotoc_md9", null ],
+      [ "Storing images in C++ source files", "md_docs_intro_basic.html#autotoc_md9", null ],
       [ "Copying/converting images to different color types", "md_docs_intro_basic.html#autotoc_md10", null ],
       [ "Drawing things on images...", "md_docs_intro_basic.html#autotoc_md11", null ]
     ] ],

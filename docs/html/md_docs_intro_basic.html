@@ -100,15 +100,23 @@ $(document).ready(function(){initNavTree('md_docs_intro_basic.html',''); initRes
 <div class="ttc" id="atgx_8h_html"><div class="ttname"><a href="tgx_8h.html">tgx.h</a></div><div class="ttdoc">Main header file.</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
 Color types</h1>
-<p >The library defines several color classes</p>
-<ul>
-<li><a class="el" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> : 16-bit colors: 5 bits red, 6 bits green, 5 bits blue. <em>Aligned as and convertible to <code>uint16_t</code>.</em> <b>Preferred type when working with embedded platforms/MCUs</b>.</li>
-<li><a class="el" href="structtgx_1_1_r_g_b24.html">tgx::RGB24</a> : 24-bit color: 8 bits red, 8 bits green, 8 bits blue. <em>No alignment</em>.</li>
-<li><a class="el" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> : 32-bit color: 8 bits red, 8 bits green, 8 bits blue. 8-bit (pre-multiplied) alpha channel. <em>Aligned as and convertible to <code>uint32_t</code></em>. <b>Useful for blending</b>.</li>
-<li><a class="el" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a> : 96-bit floating point color: 32 bits red (float), 32 bits green (float), 32 bits blue (float). <em>Aligned as <code>float</code>, no alpha channel</em>. <b>Used in the 3D API</b>.</li>
-<li><a class="el" href="structtgx_1_1_r_g_b64.html">tgx::RGB64</a> : 64-bit color: 16 bits red, 16 bits green, 16 bits blue. 16-bit (pre-multiplied) alpha channel. <em>Aligned as and convertible to <code>uint64_t</code></em>.</li>
-<li><a class="el" href="structtgx_1_1_h_s_v.html">tgx::HSV</a> : 96-bit color: 16 bits Hue, 16 bits Saturation, 16 bits Value. <em>Partial support only</em>. <b>Slow, use only to convert between color spaces, not for drawing operations</b>.</li>
-</ul>
+<p >The library defines several color classes. Choosing the right one is mostly a question of memory, speed and intended use:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Type   </th><th class="markdownTableHeadNone">Layout   </th><th class="markdownTableHeadNone">Storage/alignment   </th><th class="markdownTableHeadNone">Typical use    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a>   </td><td class="markdownTableBodyNone">16-bit RGB: 5 bits red, 6 bits green, 5 bits blue   </td><td class="markdownTableBodyNone">Aligned as and convertible to <code>uint16_t</code>   </td><td class="markdownTableBodyNone">Preferred type on MCU displays: compact, fast, and compatible with many embedded display drivers.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_r_g_b24.html">tgx::RGB24</a>   </td><td class="markdownTableBodyNone">24-bit RGB: 8 bits red, 8 bits green, 8 bits blue   </td><td class="markdownTableBodyNone">No special alignment   </td><td class="markdownTableBodyNone">Useful on CPU or when a simple 24-bit image format is convenient and no alpha channel is needed.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a>   </td><td class="markdownTableBodyNone">32-bit RGBA: 8 bits per channel, pre-multiplied alpha   </td><td class="markdownTableBodyNone">Aligned as and convertible to <code>uint32_t</code>   </td><td class="markdownTableBodyNone">Useful when an alpha channel is needed, especially for pre-multiplied alpha blending.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>   </td><td class="markdownTableBodyNone">96-bit RGB: 32-bit float per channel   </td><td class="markdownTableBodyNone">Aligned as <code>float</code>, no alpha channel   </td><td class="markdownTableBodyNone">Used for floating-point color computations, especially with the 3D API lighting/material code.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_r_g_b64.html">tgx::RGB64</a>   </td><td class="markdownTableBodyNone">64-bit RGBA: 16 bits per channel, pre-multiplied alpha   </td><td class="markdownTableBodyNone">Aligned as and convertible to <code>uint64_t</code>   </td><td class="markdownTableBodyNone">Use only when high precision and alpha are both needed; heavier than the usual MCU formats.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_h_s_v.html">tgx::HSV</a>   </td><td class="markdownTableBodyNone">96-bit HSV: 16 bits Hue, 16 bits Saturation, 16 bits Value   </td><td class="markdownTableBodyNone">Partial support only   </td><td class="markdownTableBodyNone">Mainly an intermediate color space for conversions or procedural color generation; slow for drawing operations.   </td></tr>
+</table>
 <p >Color types are handled just like usual basic types such as <code>int</code> or <code>char</code>. Any color type can be converted into any other color type.</p>
 <p >Examples: </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> color1; <span class="comment">// create a 16-bit color, undefined value</span></div>
 <div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> color2(8, 32, 16); <span class="comment">// create a 16-bit color and set the color channels: 8 red (5 bits), 32 green (6 bits), 16 blue (5 bits)</span></div>
@@ -233,7 +241,7 @@ Vectors and Boxes</h1>
 <div class="ttc" id="astructtgx_1_1_vec2_html_a0dd3317719c780a7614027f9b50edb17"><div class="ttname"><a href="structtgx_1_1_vec2.html#a0dd3317719c780a7614027f9b50edb17">tgx::Vec2::x</a></div><div class="ttdeci">T x</div><div class="ttdoc">'x' coordinate (first dimension)</div><div class="ttdef"><b>Definition:</b> Vec2.h:72</div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md9"></a>
-Storing images in &lt;tt&gt;.cpp&lt;/tt&gt; files</h1>
+Storing images in C++ source files</h1>
 <p >The memory buffer an image points to may reside in flash/ROM and it is possible to define <code>const</code> images directly in <code>.cpp</code> files for easy inclusion in a project.</p>
 <p >For example, the 10x10 image</p>
 <p ><img src="../smileybig.png" alt="smiley_icon" class="inline"/></p>
