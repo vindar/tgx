@@ -103,6 +103,7 @@ $(document).ready(function(){initNavTree('md_docs_intro_api_3_d.html',''); initR
 <li>For ready-to-run code, see the 3D examples in the <code>/examples/</code> directory.</li>
 </ul>
 <p >The 3D engine is designed for small embedded targets. It does not try to be a full scene graph or a desktop GPU API. Instead, it gives direct control over a software rasterizer that draws triangles, quads, meshes, cubes and spheres into an image buffer. That image can then be displayed on a screen, copied to a DMA buffer, saved on a desktop target, or used as a texture by other TGX drawing code.</p>
+<p >If you are new to 3D rendering, the most important idea is that TGX always draws triangles into a normal 2D <a class="el" href="classtgx_1_1_image.html">tgx::Image</a>. A 3D model is transformed by matrices, clipped to the camera view, projected to screen coordinates, and finally rasterized as pixels. TGX exposes these steps because embedded programs often need direct control over memory, shader variants and the exact cost of each draw call.</p>
 <p ><img src="../buddha.png" alt="buddha" class="inline"/></p>
 <p ><em>The <code>buddha</code> mesh rendered by TGX's 3D engine.</em></p>
 <p ><em>See the example located in <code>examples/CPU/buddhaOnCPU/</code>.</em></p>
@@ -169,6 +170,25 @@ Rendering model</h1>
 <div class="ttc" id="astructtgx_1_1_r_g_bf_html"><div class="ttname"><a href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a></div><div class="ttdoc">Color in R,G,B float format.</div><div class="ttdef"><b>Definition:</b> Color.h:2407</div></div>
 <div class="ttc" id="atgx_8h_html"><div class="ttname"><a href="tgx_8h.html">tgx.h</a></div><div class="ttdoc">Main header file.</div></div>
 </div><!-- fragment --><p >On an embedded display, the last step is usually an upload of <code>image</code> to the screen driver. On a desktop target, the same image can be displayed in a window, written to a BMP/PNG file, or compared against a reference image.</p>
+<p >The most useful <code>Renderer3D</code> methods are grouped below:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Group   </th><th class="markdownTableHeadNone">Purpose   </th><th class="markdownTableHeadNone">Typical methods    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Target and viewport   </td><td class="markdownTableBodyNone">Select the destination image, Z-buffer and virtual viewport.   </td><td class="markdownTableBodyNone"><code>setImage()</code>, <code>setViewportSize()</code>, <code>setOffset()</code>, <code>setZbuffer()</code>, <code>clearZbuffer()</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Camera and projection   </td><td class="markdownTableBodyNone">Define what part of the 3D world is visible.   </td><td class="markdownTableBodyNone"><code>setPerspective()</code>, <code>setOrtho()</code>, <code>setFrustum()</code>, <code>setLookAt()</code>, <code>setViewMatrix()</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Object transform   </td><td class="markdownTableBodyNone">Place the object currently being drawn.   </td><td class="markdownTableBodyNone"><code>setModelMatrix()</code>, <code>setModelPosScaleRot()</code>, <code>modelToNDC()</code>, <code>modelToImage()</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Shader state   </td><td class="markdownTableBodyNone">Select the compiled rendering path used by subsequent draw calls.   </td><td class="markdownTableBodyNone"><code>setShaders()</code>, <code>setTextureQuality()</code>, <code>setTextureWrappingMode()</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Lighting and material   </td><td class="markdownTableBodyNone">Control directional light, object color and specular highlights.   </td><td class="markdownTableBodyNone"><code>setLightDirection()</code>, <code>setLight()</code>, <code>setMaterial()</code>, <code>setMaterialColor()</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Solid drawing   </td><td class="markdownTableBodyNone">Draw optimized solid geometry.   </td><td class="markdownTableBodyNone"><code>drawMesh()</code>, <code>drawTriangle()</code>, <code>drawQuad()</code>, <code>drawCube()</code>, <code>drawSphere()</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Debug drawing   </td><td class="markdownTableBodyNone">Inspect geometry or transforms.   </td><td class="markdownTableBodyNone"><code>drawWireFrameMesh()</code>, <code>drawWireFrameTriangle()</code>, <code>drawPixel()</code>, <code>drawDot()</code>   </td></tr>
+</table>
 <h1><a class="anchor" id="sec_3D_pipeline"></a>
 Coordinate spaces and matrices</h1>
 <p >TGX follows the same conceptual pipeline as a small OpenGL-style renderer, but it exposes the steps directly so the application can keep control over CPU time and memory:</p>
@@ -179,11 +199,11 @@ Coordinate spaces and matrices</h1>
 <li><b>NDC</b>: perspective projection divides by <code>w</code>, giving normalized coordinates in roughly <code>[-1, 1]</code>.</li>
 <li><b>Framebuffer space</b>: the rasterizer maps NDC to pixels in the target <a class="el" href="classtgx_1_1_image.html">tgx::Image</a>.</li>
 </ol>
+<p ><img src="../3d_coordinate_spaces.svg" alt="3d_coordinate_spaces" style="pointer-events: none;" class="inline"/></p>
+<p >TGX uses a right-handed convention for the 3D spaces used by the renderer. In view space, the camera is at the origin and looks toward negative Z. Image coordinates are different: once projected, pixels use the usual TGX image convention with <code>(0, 0)</code> at the upper-left corner, X increasing to the right and Y increasing downward.</p>
 <p >The important point is that the mesh data itself is not modified. Each frame, TGX transforms the original vertices through the current matrices and rasterizes the projected triangles:</p>
-<div class="fragment"><div class="line">model coordinates      object placement       camera transform       projection          screen</div>
-<div class="line">      P_model       -&gt;      P_world       -&gt;      P_view       -&gt;      P_clip      -&gt;    pixels</div>
-<div class="line">                    model matrix             view matrix          projection</div>
-</div><!-- fragment --><p >The combined transform used by the renderer is:</p>
+<p ><img src="../3d_pipeline.svg" alt="3d_pipeline" style="pointer-events: none;" class="inline"/></p>
+<p >The combined transform used by the renderer is:</p>
 <div class="fragment"><div class="line">clip_position = projection_matrix * view_matrix * model_matrix * model_position;</div>
 </div><!-- fragment --><p >The most common calls are:</p>
 <div class="fragment"><div class="line">renderer.setPerspective(fovy_degrees, aspect, zNear, zFar);</div>
@@ -240,6 +260,33 @@ Shader state</h1>
 <li>texture sampling: <code>SHADER_TEXTURE_NEAREST</code> or <code>SHADER_TEXTURE_BILINEAR</code>;</li>
 <li>texture addressing: <code>SHADER_TEXTURE_WRAP_POW2</code> or <code>SHADER_TEXTURE_CLAMP</code>.</li>
 </ul>
+<p >These flags are combined in two places: first in the renderer template parameter, to decide which code paths are compiled, and then at runtime with <code>setShaders()</code> and the texture setters, to choose which compiled path is active.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Shader choice   </th><th class="markdownTableHeadNone">Meaning   </th><th class="markdownTableHeadNone">Typical use    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>SHADER_PERSPECTIVE</code>   </td><td class="markdownTableBodyNone">Use perspective projection with division by <code>w</code>.   </td><td class="markdownTableBodyNone">Normal 3D scenes.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>SHADER_ORTHO</code>   </td><td class="markdownTableBodyNone">Use orthographic projection without perspective shrinking.   </td><td class="markdownTableBodyNone">CAD-like views, debug views, 3D sprites.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>SHADER_ZBUFFER</code>   </td><td class="markdownTableBodyNone">Use depth testing.   </td><td class="markdownTableBodyNone">Solid objects that can overlap.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>SHADER_NOZBUFFER</code>   </td><td class="markdownTableBodyNone">Draw without depth testing.   </td><td class="markdownTableBodyNone">Ordered overlays or special effects.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>SHADER_FLAT</code>   </td><td class="markdownTableBodyNone">One lighting result per triangle.   </td><td class="markdownTableBodyNone">Fast faceted rendering.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>SHADER_GOURAUD</code>   </td><td class="markdownTableBodyNone">Lighting at vertices, interpolated across triangles.   </td><td class="markdownTableBodyNone">Smoother curved meshes.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>SHADER_NOTEXTURE</code>   </td><td class="markdownTableBodyNone">Use material or vertex colors only.   </td><td class="markdownTableBodyNone">Untextured models and debug views.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_NEAREST</code>   </td><td class="markdownTableBodyNone">Nearest-neighbor texture lookup.   </td><td class="markdownTableBodyNone">Fast textured rendering.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_BILINEAR</code>   </td><td class="markdownTableBodyNone">Bilinear texture filtering.   </td><td class="markdownTableBodyNone">Smoother textures when speed allows.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_WRAP_POW2</code>   </td><td class="markdownTableBodyNone">Repeat power-of-two textures.   </td><td class="markdownTableBodyNone">Fast tiling textures.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_CLAMP</code>   </td><td class="markdownTableBodyNone">Clamp texture coordinates to the edge.   </td><td class="markdownTableBodyNone">Non-power-of-two textures or non-repeating images.   </td></tr>
+</table>
 <p >The most common runtime call is:</p>
 <div class="fragment"><div class="line">renderer.setShaders(tgx::SHADER_GOURAUD | tgx::SHADER_TEXTURE);</div>
 </div><!-- fragment --><p >Think of <code>LOADED_SHADERS</code> as the list of compiled code paths, and <code>setShaders()</code> as the currently selected path:</p>
@@ -284,17 +331,8 @@ Projection, camera and model transform</h1>
 <div class="line">                             { 0.0f, 1.0f, 0.0f });   <span class="comment">// rotation axis</span></div>
 </div><!-- fragment --><p >Custom projection, view and model matrices can also be supplied directly. If a custom projection matrix is used, make sure the renderer is told whether it is orthographic or perspective by calling <code>useOrthographicProjection()</code> or <code>usePerspectiveProjection()</code> afterward.</p>
 <p >The frustum is the visible volume. In perspective projection it looks like a truncated pyramid:</p>
-<div class="fragment"><div class="line">      far plane</div>
-<div class="line">   +-------------+</div>
-<div class="line">  /             /|</div>
-<div class="line"> /             / |</div>
-<div class="line">+-------------+  |</div>
-<div class="line"> \             \ |</div>
-<div class="line">  \             \|</div>
-<div class="line">   +-------------+</div>
-<div class="line">    near plane</div>
-<div class="line">         camera</div>
-</div><!-- fragment --><p ><code>zNear</code> should be positive and not too close to zero. A very small near plane reduces depth precision and can make Z-buffer artifacts more visible. <code>zFar</code> should be far enough for the scene, but not arbitrarily huge for the same reason.</p>
+<p ><img src="../3d_projection.svg" alt="3d_projection" style="pointer-events: none;" class="inline"/></p>
+<p ><code>zNear</code> should be positive and not too close to zero. A very small near plane reduces depth precision and can make Z-buffer artifacts more visible. <code>zFar</code> should be far enough for the scene, but not arbitrarily huge for the same reason.</p>
 <h1><a class="anchor" id="sec_3D_zbuffer"></a>
 Z-buffer</h1>
 <p >A Z-buffer is required for normal solid rendering when triangles overlap. Its memory footprint is:</p>
@@ -315,6 +353,14 @@ Z-buffer</h1>
 </div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>Clear the Z-buffer at the start of every frame, and also after changing the viewport offset during tiled rendering. Keeping old depth values is a very common cause of missing or partially erased geometry.</dd></dl>
 <h1><a class="anchor" id="sec_3D_meshes"></a>
 Mesh3Dv2, Mesh3D and generated models</h1>
+<p >Most real 3D objects are stored as meshes. A mesh is made of triangles, and each triangle refers to:</p>
+<ul>
+<li><b>positions</b>: the 3D coordinates of its vertices;</li>
+<li><b>normals</b>: directions perpendicular to the surface, used for lighting;</li>
+<li><b>texture coordinates</b>: <code>(u, v)</code> coordinates telling which part of a texture image maps to each vertex;</li>
+<li><b>material information</b>: color, lighting coefficients and optional texture image.</li>
+</ul>
+<p >TGX can draw individual triangles directly, but static models should usually be converted to a mesh format so that the renderer can reuse data, cull invisible parts and reduce per-frame overhead.</p>
 <p ><a class="el" href="structtgx_1_1_mesh3_dv2.html">tgx::Mesh3Dv2</a> is the preferred format for new static models. It stores compact 16-bit meshlet payloads, material records, optional textures and precomputed meshlet visibility data. Compared with legacy <a class="el" href="structtgx_1_1_mesh3_d.html">tgx::Mesh3D</a>, it usually reduces memory traffic and can discard invisible meshlets before decoding their triangles.</p>
 <p >At a high level, a <code>Mesh3Dv2</code> model contains:</p>
 <ul>
@@ -365,17 +411,28 @@ Drawing primitives directly</h1>
 <div class="line">renderer.drawTriangle(P1, P2, P3, &amp;N, &amp;N, &amp;N);</div>
 <div class="ttc" id="astructtgx_1_1_vec3_html"><div class="ttname"><a href="structtgx_1_1_vec3.html">tgx::Vec3&lt; float &gt;</a></div></div>
 </div><!-- fragment --><p >Available solid primitives include:</p>
-<ul>
-<li><code>drawTriangle()</code>;</li>
-<li><code>drawTriangleWithVertexColor()</code>;</li>
-<li><code>drawTriangles()</code>;</li>
-<li><code>drawQuad()</code>;</li>
-<li><code>drawQuadWithVertexColor()</code>;</li>
-<li><code>drawQuads()</code>;</li>
-<li><code>drawCube()</code>;</li>
-<li><code>drawSphere()</code>;</li>
-<li><code>drawAdaptativeSphere()</code>.</li>
-</ul>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Use    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>drawTriangle()</code>   </td><td class="markdownTableBodyNone">Draw one triangle with optional normals, texture coordinates and texture.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>drawTriangleWithVertexColor()</code>   </td><td class="markdownTableBodyNone">Draw one triangle with explicit per-vertex colors.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>drawTriangles()</code>   </td><td class="markdownTableBodyNone">Draw an indexed array of triangles sharing vertex, normal and texture-coordinate arrays.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>drawQuad()</code>   </td><td class="markdownTableBodyNone">Draw one quad, internally split into two triangles.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>drawQuadWithVertexColor()</code>   </td><td class="markdownTableBodyNone">Draw one quad with explicit per-vertex colors.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>drawQuads()</code>   </td><td class="markdownTableBodyNone">Draw an indexed array of quads.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>drawCube()</code>   </td><td class="markdownTableBodyNone">Draw the unit cube, optionally textured per face.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>drawSphere()</code>   </td><td class="markdownTableBodyNone">Draw a generated sphere with a chosen tessellation.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>drawAdaptativeSphere()</code>   </td><td class="markdownTableBodyNone">Draw a generated sphere with tessellation chosen from its projected size.   </td></tr>
+</table>
 <p >When many triangles or quads share arrays of vertices, normals and texture coordinates, prefer <code>drawTriangles()</code> or <code>drawQuads()</code> over many individual calls. For fully static geometry, prefer <code>drawMesh()</code>.</p>
 <p >Normals must be unit vectors when Gouraud shading is used. Flat shading can compute a face normal from the geometry when no normal is provided, but supplying correct normals is still recommended for predictable lighting.</p>
 <h1><a class="anchor" id="sec_3D_textures"></a>

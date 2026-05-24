@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="410" viewBox="0 0 980 410" role="img" aria-labelledby="title desc">
+  <title id="title">Perspective and orthographic projection</title>
+  <desc id="desc">Side-view comparison of perspective and orthographic projection in TGX.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#3f4854"/>
+    </marker>
+    <style>
+      .panel { fill:#fbfcfd; stroke:#c9d2dc; stroke-width:1.4; }
+      .frustum { fill:#edf4fb; stroke:#8da3bd; stroke-width:1.2; opacity:.82; }
+      .ray { stroke:#356fd0; stroke-width:1.8; fill:none; }
+      .ray-soft { stroke:#7fa7e5; stroke-width:1.5; fill:none; }
+      .near-plane { stroke:#d58b2f; stroke-width:4; }
+      .far-plane { stroke:#d58b2f; stroke-width:3; opacity:.55; }
+      .object { fill:#d9483f; stroke:#9e2d28; stroke-width:1.4; }
+      .object-far { fill:#d9483f; stroke:#9e2d28; stroke-width:1.4; opacity:.55; }
+      .projection-near { stroke:#d9483f; stroke-width:6; stroke-linecap:round; }
+      .projection-far { stroke:#356fd0; stroke-width:6; stroke-linecap:round; }
+      .axis { stroke:#3f4854; stroke-width:2; fill:none; marker-end:url(#arrow); }
+      .title { font:700 16px Arial, sans-serif; fill:#182330; }
+      .label { font:13px Arial, sans-serif; fill:#263241; }
+      .small { font:12px Arial, sans-serif; fill:#5c6875; }
+      .tiny { font:11px Arial, sans-serif; fill:#66717f; }
+    </style>
+  </defs>
+
+  <rect x="24" y="30" width="450" height="338" rx="9" class="panel"/>
+  <text x="249" y="58" text-anchor="middle" class="title">Perspective projection</text>
+  <text x="249" y="79" text-anchor="middle" class="small">Rays start at the camera. Farther objects project smaller.</text>
+
+  <polygon points="86,205 396,105 396,305" class="frustum"/>
+  <circle cx="86" cy="205" r="6" fill="#263241"/>
+  <text x="86" y="229" text-anchor="middle" class="tiny">camera</text>
+  <line x1="174" y1="177" x2="174" y2="233" class="near-plane"/>
+  <line x1="396" y1="105" x2="396" y2="305" class="far-plane"/>
+  <text x="174" y="160" text-anchor="middle" class="tiny">image / near plane</text>
+  <text x="396" y="94" text-anchor="middle" class="tiny">far plane</text>
+
+  <rect x="246" y="169" width="26" height="72" class="object"/>
+  <rect x="346" y="169" width="26" height="72" class="object-far"/>
+  <text x="259" y="262" text-anchor="middle" class="tiny">near object</text>
+  <text x="359" y="262" text-anchor="middle" class="tiny">same size, farther</text>
+
+  <path d="M86,205 L246,169" class="ray-soft"/>
+  <path d="M86,205 L246,241" class="ray-soft"/>
+  <path d="M86,205 L346,169" class="ray-soft"/>
+  <path d="M86,205 L346,241" class="ray-soft"/>
+  <path d="M86,205 L396,105" class="ray"/>
+  <path d="M86,205 L396,305" class="ray"/>
+
+  <line x1="86" y1="344" x2="188" y2="344" class="axis"/>
+  <text x="197" y="348" class="tiny">view direction = -Z</text>
+
+  <rect x="506" y="30" width="450" height="338" rx="9" class="panel"/>
+  <text x="731" y="58" text-anchor="middle" class="title">Orthographic projection</text>
+  <text x="731" y="79" text-anchor="middle" class="small">Rays are parallel. Object size does not depend on depth.</text>
+
+  <rect x="612" y="130" width="272" height="148" class="frustum"/>
+  <circle cx="552" cy="204" r="6" fill="#263241"/>
+  <text x="552" y="228" text-anchor="middle" class="tiny">camera</text>
+  <line x1="612" y1="130" x2="612" y2="278" class="near-plane"/>
+  <line x1="884" y1="130" x2="884" y2="278" class="far-plane"/>
+  <text x="612" y="112" text-anchor="middle" class="tiny">image / near plane</text>
+  <text x="884" y="112" text-anchor="middle" class="tiny">far plane</text>
+
+  <rect x="686" y="168" width="26" height="72" class="object"/>
+  <rect x="802" y="168" width="26" height="72" class="object-far"/>
+  <text x="699" y="255" text-anchor="middle" class="tiny">near object</text>
+  <text x="815" y="255" text-anchor="middle" class="tiny">same size, farther</text>
+
+  <path d="M548,168 L900,168" class="ray"/>
+  <path d="M548,204 L900,204" class="ray"/>
+  <path d="M548,240 L900,240" class="ray"/>
+  <text x="666" y="300" class="tiny">same projected height on the image plane</text>
+
+  <line x1="552" y1="344" x2="654" y2="344" class="axis"/>
+  <text x="663" y="348" class="tiny">view direction = -Z</text>
+</svg>

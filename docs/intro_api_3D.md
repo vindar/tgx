@@ -13,6 +13,11 @@ Instead, it gives direct control over a software rasterizer that draws triangles
 into an image buffer. That image can then be displayed on a screen, copied to a DMA buffer, saved on a desktop target,
 or used as a texture by other TGX drawing code.
 
+If you are new to 3D rendering, the most important idea is that TGX always draws triangles into a normal 2D
+\ref tgx::Image. A 3D model is transformed by matrices, clipped to the camera view, projected to screen coordinates,
+and finally rasterized as pixels. TGX exposes these steps because embedded programs often need direct control over
+memory, shader variants and the exact cost of each draw call.
+
 
 ![buddha](../buddha.png)
 
@@ -83,6 +88,18 @@ void drawFrame(float angle)
 On an embedded display, the last step is usually an upload of `image` to the screen driver. On a desktop target,
 the same image can be displayed in a window, written to a BMP/PNG file, or compared against a reference image.
 
+The most useful `Renderer3D` methods are grouped below:
+
+| Group | Purpose | Typical methods |
+|-------|---------|-----------------|
+| Target and viewport | Select the destination image, Z-buffer and virtual viewport. | `setImage()`, `setViewportSize()`, `setOffset()`, `setZbuffer()`, `clearZbuffer()` |
+| Camera and projection | Define what part of the 3D world is visible. | `setPerspective()`, `setOrtho()`, `setFrustum()`, `setLookAt()`, `setViewMatrix()` |
+| Object transform | Place the object currently being drawn. | `setModelMatrix()`, `setModelPosScaleRot()`, `modelToNDC()`, `modelToImage()` |
+| Shader state | Select the compiled rendering path used by subsequent draw calls. | `setShaders()`, `setTextureQuality()`, `setTextureWrappingMode()` |
+| Lighting and material | Control directional light, object color and specular highlights. | `setLightDirection()`, `setLight()`, `setMaterial()`, `setMaterialColor()` |
+| Solid drawing | Draw optimized solid geometry. | `drawMesh()`, `drawTriangle()`, `drawQuad()`, `drawCube()`, `drawSphere()` |
+| Debug drawing | Inspect geometry or transforms. | `drawWireFrameMesh()`, `drawWireFrameTriangle()`, `drawPixel()`, `drawDot()` |
+
 
 @section sec_3D_pipeline Coordinate spaces and matrices
 
@@ -95,14 +112,16 @@ application can keep control over CPU time and memory:
 4. **NDC**: perspective projection divides by `w`, giving normalized coordinates in roughly `[-1, 1]`.
 5. **Framebuffer space**: the rasterizer maps NDC to pixels in the target \ref tgx::Image.
 
+![3d_coordinate_spaces](../3d_coordinate_spaces.svg)
+
+TGX uses a right-handed convention for the 3D spaces used by the renderer. In view space, the camera is at the origin
+and looks toward negative Z. Image coordinates are different: once projected, pixels use the usual TGX image convention
+with `(0, 0)` at the upper-left corner, X increasing to the right and Y increasing downward.
+
 The important point is that the mesh data itself is not modified. Each frame, TGX transforms the original vertices
 through the current matrices and rasterizes the projected triangles:
 
-~~~
-model coordinates      object placement       camera transform       projection          screen
-      P_model       ->      P_world       ->      P_view       ->      P_clip      ->    pixels
-                    model matrix             view matrix          projection
-~~~
+![3d_pipeline](../3d_pipeline.svg)
 
 The combined transform used by the renderer is:
 
@@ -205,6 +224,23 @@ The renderer combines several independent shader choices:
 - texture sampling: `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`;
 - texture addressing: `SHADER_TEXTURE_WRAP_POW2` or `SHADER_TEXTURE_CLAMP`.
 
+These flags are combined in two places: first in the renderer template parameter, to decide which code paths are
+compiled, and then at runtime with `setShaders()` and the texture setters, to choose which compiled path is active.
+
+| Shader choice | Meaning | Typical use |
+|---------------|---------|-------------|
+| `SHADER_PERSPECTIVE` | Use perspective projection with division by `w`. | Normal 3D scenes. |
+| `SHADER_ORTHO` | Use orthographic projection without perspective shrinking. | CAD-like views, debug views, 3D sprites. |
+| `SHADER_ZBUFFER` | Use depth testing. | Solid objects that can overlap. |
+| `SHADER_NOZBUFFER` | Draw without depth testing. | Ordered overlays or special effects. |
+| `SHADER_FLAT` | One lighting result per triangle. | Fast faceted rendering. |
+| `SHADER_GOURAUD` | Lighting at vertices, interpolated across triangles. | Smoother curved meshes. |
+| `SHADER_NOTEXTURE` | Use material or vertex colors only. | Untextured models and debug views. |
+| `SHADER_TEXTURE_NEAREST` | Nearest-neighbor texture lookup. | Fast textured rendering. |
+| `SHADER_TEXTURE_BILINEAR` | Bilinear texture filtering. | Smoother textures when speed allows. |
+| `SHADER_TEXTURE_WRAP_POW2` | Repeat power-of-two textures. | Fast tiling textures. |
+| `SHADER_TEXTURE_CLAMP` | Clamp texture coordinates to the edge. | Non-power-of-two textures or non-repeating images. |
+
 The most common runtime call is:
 
 ~~~{.cpp}
@@ -289,18 +325,7 @@ or `usePerspectiveProjection()` afterward.
 
 The frustum is the visible volume. In perspective projection it looks like a truncated pyramid:
 
-~~~
-          far plane
-       +-------------+
-      /             /|
-     /             / |
-    +-------------+  |
-     \             \ |
-      \             \|
-       +-------------+
-        near plane
-             camera
-~~~
+![3d_projection](../3d_projection.svg)
 
 `zNear` should be positive and not too close to zero. A very small near plane reduces depth precision and can make
 Z-buffer artifacts more visible. `zFar` should be far enough for the scene, but not arbitrarily huge for the same
@@ -334,6 +359,16 @@ rendering. Keeping old depth values is a very common cause of missing or partial
 
 
 @section sec_3D_meshes Mesh3Dv2, Mesh3D and generated models
+
+Most real 3D objects are stored as meshes. A mesh is made of triangles, and each triangle refers to:
+
+- **positions**: the 3D coordinates of its vertices;
+- **normals**: directions perpendicular to the surface, used for lighting;
+- **texture coordinates**: `(u, v)` coordinates telling which part of a texture image maps to each vertex;
+- **material information**: color, lighting coefficients and optional texture image.
+
+TGX can draw individual triangles directly, but static models should usually be converted to a mesh format so that
+the renderer can reuse data, cull invisible parts and reduce per-frame overhead.
 
 \ref tgx::Mesh3Dv2 is the preferred format for new static models. It stores compact 16-bit meshlet payloads, material
 records, optional textures and precomputed meshlet visibility data. Compared with legacy \ref tgx::Mesh3D, it usually
@@ -410,15 +445,17 @@ renderer.drawTriangle(P1, P2, P3, &N, &N, &N);
 
 Available solid primitives include:
 
-- `drawTriangle()`;
-- `drawTriangleWithVertexColor()`;
-- `drawTriangles()`;
-- `drawQuad()`;
-- `drawQuadWithVertexColor()`;
-- `drawQuads()`;
-- `drawCube()`;
-- `drawSphere()`;
-- `drawAdaptativeSphere()`.
+| Method | Use |
+|--------|-----|
+| `drawTriangle()` | Draw one triangle with optional normals, texture coordinates and texture. |
+| `drawTriangleWithVertexColor()` | Draw one triangle with explicit per-vertex colors. |
+| `drawTriangles()` | Draw an indexed array of triangles sharing vertex, normal and texture-coordinate arrays. |
+| `drawQuad()` | Draw one quad, internally split into two triangles. |
+| `drawQuadWithVertexColor()` | Draw one quad with explicit per-vertex colors. |
+| `drawQuads()` | Draw an indexed array of quads. |
+| `drawCube()` | Draw the unit cube, optionally textured per face. |
+| `drawSphere()` | Draw a generated sphere with a chosen tessellation. |
+| `drawAdaptativeSphere()` | Draw a generated sphere with tessellation chosen from its projected size. |
 
 When many triangles or quads share arrays of vertices, normals and texture coordinates, prefer `drawTriangles()` or
 `drawQuads()` over many individual calls. For fully static geometry, prefer `drawMesh()`.

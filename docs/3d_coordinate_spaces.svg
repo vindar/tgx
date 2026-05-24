@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="430" viewBox="0 0 980 430" role="img" aria-labelledby="title desc">
+  <title id="title">TGX 3D coordinate spaces</title>
+  <desc id="desc">How model coordinates become world, view, NDC and image coordinates in TGX.</desc>
+  <defs>
+    <marker id="arrow-red" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#c83b35"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#2f8f4e"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#356fd0"/>
+    </marker>
+    <marker id="arrow-dark" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#3f4854"/>
+    </marker>
+    <style>
+      .panel { fill:#fbfcfd; stroke:#c9d2dc; stroke-width:1.4; }
+      .soft { fill:#eef4fb; stroke:#8da3bd; stroke-width:1.2; }
+      .mesh { fill:#f6c56f; stroke:#876126; stroke-width:1.4; }
+      .axis { stroke-width:2.8; stroke-linecap:round; fill:none; }
+      .flow { stroke:#3f4854; stroke-width:2.2; fill:none; marker-end:url(#arrow-dark); }
+      .grid { stroke:#dde4ec; stroke-width:1; }
+      .title { font:700 16px Arial, sans-serif; fill:#182330; }
+      .label { font:13px Arial, sans-serif; fill:#263241; }
+      .small { font:12px Arial, sans-serif; fill:#5c6875; }
+      .tiny { font:11px Arial, sans-serif; fill:#66717f; }
+    </style>
+  </defs>
+
+  <rect x="18" y="32" width="220" height="330" rx="9" class="panel"/>
+  <text x="128" y="60" text-anchor="middle" class="title">Model space</text>
+  <text x="128" y="82" text-anchor="middle" class="small">local coordinates stored in the mesh</text>
+  <polygon points="105,190 153,158 168,223 93,232" class="mesh"/>
+  <polygon points="105,190 126,136 153,158" fill="#f9d995" stroke="#876126" stroke-width="1.2"/>
+  <circle cx="126" cy="196" r="4" fill="#263241"/>
+  <line x1="126" y1="196" x2="184" y2="196" class="axis" stroke="#c83b35" marker-end="url(#arrow-red)"/>
+  <line x1="126" y1="196" x2="126" y2="128" class="axis" stroke="#2f8f4e" marker-end="url(#arrow-green)"/>
+  <line x1="126" y1="196" x2="82" y2="240" class="axis" stroke="#356fd0" marker-end="url(#arrow-blue)"/>
+  <text x="188" y="192" class="label" fill="#c83b35">+X</text>
+  <text x="132" y="128" class="label" fill="#2f8f4e">+Y</text>
+  <text x="58" y="255" class="label" fill="#356fd0">+Z</text>
+
+  <path d="M244,198 C266,198 278,198 302,198" class="flow"/>
+  <text x="273" y="181" text-anchor="middle" class="tiny">model matrix</text>
+
+  <rect x="308" y="32" width="220" height="330" rx="9" class="panel"/>
+  <text x="418" y="60" text-anchor="middle" class="title">World space</text>
+  <text x="418" y="82" text-anchor="middle" class="small">object placed in the scene</text>
+  <line x1="352" y1="274" x2="474" y2="274" class="grid"/>
+  <line x1="352" y1="238" x2="474" y2="238" class="grid"/>
+  <line x1="352" y1="202" x2="474" y2="202" class="grid"/>
+  <line x1="368" y1="188" x2="368" y2="290" class="grid"/>
+  <line x1="404" y1="188" x2="404" y2="290" class="grid"/>
+  <line x1="440" y1="188" x2="440" y2="290" class="grid"/>
+  <line x1="362" y1="264" x2="424" y2="264" class="axis" stroke="#c83b35" marker-end="url(#arrow-red)"/>
+  <line x1="362" y1="264" x2="362" y2="196" class="axis" stroke="#2f8f4e" marker-end="url(#arrow-green)"/>
+  <line x1="362" y1="264" x2="326" y2="298" class="axis" stroke="#356fd0" marker-end="url(#arrow-blue)"/>
+  <text x="428" y="260" class="tiny" fill="#c83b35">world +X</text>
+  <text x="368" y="195" class="tiny" fill="#2f8f4e">+Y</text>
+  <text x="318" y="314" class="tiny" fill="#356fd0">+Z</text>
+  <polygon points="410,181 469,165 478,236 400,234" class="mesh" transform="rotate(-17 439 204)"/>
+  <path d="M469,132 L504,149 L469,166 Z" fill="#dbe7f4" stroke="#617894" stroke-width="1.3"/>
+  <circle cx="469" cy="149" r="4" fill="#617894"/>
+  <line x1="469" y1="149" x2="424" y2="194" stroke="#617894" stroke-width="1.6" stroke-dasharray="5 4"/>
+  <text x="484" y="128" class="small">camera</text>
+
+  <path d="M534,198 C556,198 568,198 592,198" class="flow"/>
+  <text x="563" y="181" text-anchor="middle" class="tiny">view matrix</text>
+
+  <rect x="598" y="32" width="170" height="330" rx="9" class="panel"/>
+  <text x="683" y="60" text-anchor="middle" class="title">View space</text>
+  <text x="683" y="82" text-anchor="middle" class="small">camera at the origin</text>
+  <circle cx="654" cy="250" r="5" fill="#263241"/>
+  <path d="M654,250 L732,250" class="axis" stroke="#356fd0" marker-end="url(#arrow-blue)"/>
+  <text x="735" y="254" class="label" fill="#356fd0">-Z</text>
+  <path d="M654,250 L654,176" class="axis" stroke="#2f8f4e" marker-end="url(#arrow-green)"/>
+  <text x="661" y="176" class="label" fill="#2f8f4e">+Y</text>
+  <path d="M654,250 L612,250" class="axis" stroke="#356fd0" marker-end="url(#arrow-blue)" opacity=".55"/>
+  <text x="603" y="238" class="tiny" fill="#356fd0">+Z behind</text>
+  <line x1="694" y1="186" x2="694" y2="314" stroke="#d58b2f" stroke-width="4"/>
+  <line x1="742" y1="164" x2="742" y2="336" stroke="#d58b2f" stroke-width="3" opacity=".55"/>
+  <text x="694" y="158" text-anchor="middle" class="tiny">near</text>
+  <text x="742" y="151" text-anchor="middle" class="tiny">far</text>
+  <text x="626" y="313" text-anchor="middle" class="small">camera looks</text>
+  <text x="626" y="331" text-anchor="middle" class="small">along -Z</text>
+  <text x="683" y="350" text-anchor="middle" class="small">X is left/right on screen</text>
+
+  <path d="M774,198 C793,198 803,198 822,198" class="flow"/>
+  <text x="798" y="181" text-anchor="middle" class="tiny">projection</text>
+
+  <rect x="828" y="32" width="134" height="142" rx="9" class="panel"/>
+  <text x="895" y="58" text-anchor="middle" class="title">NDC</text>
+  <rect x="866" y="78" width="58" height="58" class="soft"/>
+  <line x1="895" y1="107" x2="929" y2="107" class="axis" stroke="#c83b35" marker-end="url(#arrow-red)"/>
+  <line x1="895" y1="107" x2="895" y2="72" class="axis" stroke="#2f8f4e" marker-end="url(#arrow-green)"/>
+  <text x="931" y="111" class="tiny" fill="#c83b35">+x</text>
+  <text x="900" y="73" class="tiny" fill="#2f8f4e">+y</text>
+  <text x="895" y="156" text-anchor="middle" class="tiny">after divide by w</text>
+
+  <rect x="828" y="220" width="134" height="142" rx="9" class="panel"/>
+  <text x="895" y="246" text-anchor="middle" class="title">Image</text>
+  <rect x="861" y="265" width="72" height="54" class="soft"/>
+  <circle cx="861" cy="265" r="3.5" fill="#263241"/>
+  <line x1="861" y1="265" x2="928" y2="265" class="axis" stroke="#c83b35" marker-end="url(#arrow-red)"/>
+  <line x1="861" y1="265" x2="861" y2="315" class="axis" stroke="#2f8f4e" marker-end="url(#arrow-green)"/>
+  <text x="930" y="263" class="tiny" fill="#c83b35">x</text>
+  <text x="866" y="326" class="tiny" fill="#2f8f4e">y</text>
+  <text x="856" y="257" text-anchor="end" class="tiny">(0,0)</text>
+  <text x="895" y="347" text-anchor="middle" class="tiny">TGX pixel coordinates</text>
+</svg>

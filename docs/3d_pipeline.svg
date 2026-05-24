@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="300" viewBox="0 0 980 300" role="img" aria-labelledby="title desc">
+  <title id="title">TGX 3D rendering pipeline</title>
+  <desc id="desc">Pipeline from model vertices to framebuffer pixels.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#3f4854"/>
+    </marker>
+    <style>
+      .stage { fill:#fbfcfd; stroke:#c9d2dc; stroke-width:1.4; }
+      .op { fill:#fff5dd; stroke:#cf9d37; stroke-width:1.4; }
+      .raster { fill:#e9f4ea; stroke:#7aa97d; stroke-width:1.4; }
+      .arrow { stroke:#3f4854; stroke-width:2.1; fill:none; marker-end:url(#arrow); }
+      .title { font:700 15px Arial, sans-serif; fill:#182330; }
+      .label { font:13px Arial, sans-serif; fill:#263241; }
+      .small { font:12px Arial, sans-serif; fill:#5c6875; }
+      .tiny { font:11px Arial, sans-serif; fill:#66717f; }
+      .code { font:12px Consolas, monospace; fill:#263241; }
+    </style>
+  </defs>
+
+  <rect x="24" y="52" width="122" height="76" rx="8" class="stage"/>
+  <text x="85" y="79" text-anchor="middle" class="title">Model data</text>
+  <text x="85" y="101" text-anchor="middle" class="small">positions, normals</text>
+  <text x="85" y="117" text-anchor="middle" class="small">and UVs</text>
+
+  <path d="M150,90 L185,90" class="arrow"/>
+  <rect x="190" y="52" width="108" height="76" rx="8" class="op"/>
+  <text x="244" y="78" text-anchor="middle" class="title">Model</text>
+  <text x="244" y="99" text-anchor="middle" class="small">scale / rotate</text>
+  <text x="244" y="117" text-anchor="middle" class="small">translate</text>
+
+  <path d="M302,90 L337,90" class="arrow"/>
+  <rect x="342" y="52" width="108" height="76" rx="8" class="op"/>
+  <text x="396" y="78" text-anchor="middle" class="title">View</text>
+  <text x="396" y="99" text-anchor="middle" class="small">move scene</text>
+  <text x="396" y="117" text-anchor="middle" class="small">into camera space</text>
+
+  <path d="M454,90 L489,90" class="arrow"/>
+  <rect x="494" y="52" width="122" height="76" rx="8" class="op"/>
+  <text x="555" y="78" text-anchor="middle" class="title">Projection</text>
+  <text x="555" y="99" text-anchor="middle" class="small">perspective or ortho</text>
+  <text x="555" y="117" text-anchor="middle" class="tiny">creates clip coords</text>
+
+  <path d="M620,90 L655,90" class="arrow"/>
+  <rect x="660" y="52" width="116" height="76" rx="8" class="stage"/>
+  <text x="718" y="78" text-anchor="middle" class="title">Clip / NDC</text>
+  <text x="718" y="99" text-anchor="middle" class="small">clip triangles</text>
+  <text x="718" y="117" text-anchor="middle" class="tiny">then divide by w</text>
+
+  <path d="M780,90 L815,90" class="arrow"/>
+  <rect x="820" y="52" width="136" height="76" rx="8" class="raster"/>
+  <text x="888" y="78" text-anchor="middle" class="title">Rasterizer</text>
+  <text x="888" y="99" text-anchor="middle" class="small">pixels + Z-buffer</text>
+  <text x="888" y="117" text-anchor="middle" class="tiny">tgx::Image</text>
+
+  <path d="M244,142 L244,186 L718,186 L718,142" stroke="#cf9d37" stroke-width="1.5" fill="none" stroke-dasharray="5 5"/>
+  <rect x="332" y="157" width="298" height="31" rx="6" fill="#fbfcfd" stroke="#d7dde5" stroke-width="1"/>
+  <text x="481" y="177" text-anchor="middle" class="code">clip = projection * view * model * position</text>
+  <rect x="252" y="195" width="458" height="25" rx="6" fill="#fbfcfd" stroke="#d7dde5" stroke-width="1"/>
+  <text x="481" y="212" text-anchor="middle" class="small">Original mesh unchanged; transforms are applied when drawing.</text>
+
+  <rect x="74" y="228" width="832" height="42" rx="8" fill="#f6f8fa" stroke="#d7dde5" stroke-width="1"/>
+  <text x="490" y="254" text-anchor="middle" class="small">Lighting, texture sampling and color interpolation happen while triangles are converted into pixels.</text>
+</svg>
