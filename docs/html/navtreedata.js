@@ -71,11 +71,12 @@ var NAVTREE =
     ] ],
     [ "Using the 3D API.", "md_docs_intro_api_3_d.html", [
       [ "Rendering model", "md_docs_intro_api_3_d.html#sec_3D_overview", null ],
+      [ "Coordinate spaces and matrices", "md_docs_intro_api_3_d.html#sec_3D_pipeline", null ],
       [ "Renderer template parameters", "md_docs_intro_api_3_d.html#sec_3D_renderer_template", null ],
       [ "Shader state", "md_docs_intro_api_3_d.html#sec_3D_shaders", null ],
       [ "Projection, camera and model transform", "md_docs_intro_api_3_d.html#sec_3D_projection", null ],
       [ "Z-buffer", "md_docs_intro_api_3_d.html#sec_3D_zbuffer", null ],
-      [ "Mesh3D and generated models", "md_docs_intro_api_3_d.html#sec_3D_meshes", null ],
+      [ "Mesh3Dv2, Mesh3D and generated models", "md_docs_intro_api_3_d.html#sec_3D_meshes", null ],
       [ "Drawing primitives directly", "md_docs_intro_api_3_d.html#sec_3D_primitives", null ],
       [ "Textures", "md_docs_intro_api_3_d.html#sec_3D_textures", null ],
       [ "Light and material", "md_docs_intro_api_3_d.html#sec_3D_lighting", null ],
@@ -83,6 +84,7 @@ var NAVTREE =
       [ "Tile rendering", "md_docs_intro_api_3_d.html#sec_3D_tiling", null ],
       [ "Wireframe and debug drawing", "md_docs_intro_api_3_d.html#sec_3D_wireframe", null ],
       [ "Embedded performance checklist", "md_docs_intro_api_3_d.html#sec_3D_performance", null ],
+      [ "Complete embedded example", "md_docs_intro_api_3_d.html#sec_3D_complete_example", null ],
       [ "Useful examples", "md_docs_intro_api_3_d.html#sec_3D_examples", null ],
       [ "Common pitfalls", "md_docs_intro_api_3_d.html#sec_3D_pitfalls", null ]
     ] ],
@@ -110,11 +112,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_box2_8h.html",
-"_vec3_8h.html#aacd876f2ec45812c62f215ea7bf2ae41",
-"classtgx_1_1_renderer3_d.html#a7ca1f0b53ca7460869fc3031f8422240",
-"struct_i_l_i9341__t3__font__t.html#a829bafcaba75c5db249df293c3be73d0",
-"structtgx_1_1_r_g_b24.html#ab651cd7fbc4d990b7390b06f835228fe",
-"structtgx_1_1_vec2.html#a79668061ab638aa414c21ded96b73b14"
+"_vec3_8h.html#ac1caa239be43f9aa85c0016e491b726a",
+"classtgx_1_1_renderer3_d.html#a845bbd628cfd96f379f3f23d880aa60a",
+"struct_i_l_i9341__t3__font__t.html#a9cfe03e7fd5495eaf5cde6ceb91e0933",
+"structtgx_1_1_r_g_b24.html#ab704a73d03068fc1a8cde273d7fdfc92",
+"structtgx_1_1_vec2.html#a87c59336da78c86e10ba23c69a01cbd0"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

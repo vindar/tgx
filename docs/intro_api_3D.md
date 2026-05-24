@@ -4,7 +4,8 @@
 **This page introduces the TGX 3D renderer and shows the usual way to render solid 3D objects onto a `tgx::Image`.**
 
 - For the complete list of methods, see the \ref tgx::Renderer3D class documentation.
-- For the mesh container format, see \ref tgx::Mesh3D.
+- For the legacy mesh container, see \ref tgx::Mesh3D.
+- For the current compact meshlet container, see \ref tgx::Mesh3Dv2.
 - For ready-to-run code, see the 3D examples in the `/examples/` directory.
 
 The 3D engine is designed for small embedded targets. It does not try to be a full scene graph or a desktop GPU API.
@@ -84,6 +85,44 @@ On an embedded display, the last step is usually an upload of `image` to the scr
 the same image can be displayed with CImg, written to a BMP/PNG file, or compared against a reference image.
 
 
+@section sec_3D_pipeline Coordinate spaces and matrices
+
+TGX follows the same conceptual pipeline as a small OpenGL-style renderer, but it exposes the steps directly so the
+application can keep control over CPU time and memory:
+
+1. **Model space**: coordinates stored in the mesh or passed to `drawTriangle()`, `drawCube()` and similar methods.
+2. **World/view space**: the model matrix places the object, then the view matrix places the camera.
+3. **Clip space**: the projection matrix maps the view frustum to homogeneous coordinates.
+4. **NDC**: perspective projection divides by `w`, giving normalized coordinates in roughly `[-1, 1]`.
+5. **Framebuffer space**: the rasterizer maps NDC to pixels in the target \ref tgx::Image.
+
+The combined transform used by the renderer is:
+
+~~~{.cpp}
+clip_position = projection_matrix * view_matrix * model_matrix * model_position;
+~~~
+
+The most common calls are:
+
+~~~{.cpp}
+renderer.setPerspective(fovy_degrees, aspect, zNear, zFar);
+renderer.setLookAt(eye, center, up);
+renderer.setModelPosScaleRot(position, scale, angle_degrees, axis);
+~~~
+
+`setLookAt()` builds the view matrix. The camera is located at `eye`, looks toward `center`, and uses `up` to define
+which direction should appear vertical on screen. In view space, the camera looks along the negative Z direction.
+
+The projection can be perspective or orthographic:
+
+- **Perspective** makes distant objects smaller. It is the usual choice for 3D scenes.
+- **Orthographic** keeps object size independent of distance. It is useful for CAD-like views, sprites in 3D space
+  or debugging a model without perspective distortion.
+
+Use `modelToNDC()` when debugging transforms. It returns the projected position of a model-space point after the
+current model, view and projection matrices have been applied.
+
+
 @section sec_3D_renderer_template Renderer template parameters
 
 \ref tgx::Renderer3D has three template parameters:
@@ -148,6 +187,11 @@ renderer.setTextureWrappingMode(tgx::SHADER_TEXTURE_WRAP_POW2);
 surfaces, especially on curved meshes. Textured Gouraud rendering is often the best visual compromise for embedded
 solid 3D rendering.
 
+Internally, `Renderer3D` dispatches to templated shader variants. `LOADED_SHADERS` tells the compiler which variants
+must exist in the binary. Runtime calls such as `setShaders()` then select among these already compiled variants.
+Keeping `LOADED_SHADERS` narrow saves flash and helps the compiler remove unused branches. This is important on MCU
+targets where code size and instruction cache behavior affect frame time.
+
 
 @section sec_3D_projection Projection, camera and model transform
 
@@ -211,11 +255,15 @@ void drawFrame()
 rendering. Keeping old depth values is a very common cause of missing or partially erased geometry.
 
 
-@section sec_3D_meshes Mesh3D and generated models
+@section sec_3D_meshes Mesh3Dv2, Mesh3D and generated models
 
-\ref tgx::Mesh3D is the preferred way to render static geometry. It stores the arrays of vertices, normals, texture
-coordinates, face indices, material color and texture pointer. Meshes can also be chained, which is useful for OBJ
-files that contain several material groups.
+\ref tgx::Mesh3Dv2 is the preferred format for new static models. It stores compact 16-bit meshlet payloads, material
+records, optional textures and precomputed meshlet visibility data. Compared with legacy \ref tgx::Mesh3D, it usually
+reduces memory traffic and can discard invisible meshlets before decoding their triangles.
+
+Legacy \ref tgx::Mesh3D is still supported for existing projects. It stores global arrays of vertices, normals,
+texture coordinates and chained triangle strips. Existing sketches do not need to be converted, but new examples and
+new converted models should generally use `Mesh3Dv2`.
 
 Typical generated mesh usage:
 
@@ -223,20 +271,29 @@ Typical generated mesh usage:
 #include "buddha.h"
 
 renderer.setShaders(tgx::SHADER_GOURAUD | tgx::SHADER_NOTEXTURE);
-renderer.drawMesh(&buddha, true, true);
+renderer.drawMesh(&buddha);
 ~~~
 
-The parameters of `drawMesh(mesh, use_mesh_material, draw_chained_meshes)` are:
+For `Mesh3Dv2`, `drawMesh(mesh, use_mesh_material)` renders all meshlets in the model:
 
-- `mesh`: the first mesh to render;
-- `use_mesh_material`: when true, use the material and texture stored in the mesh;
+- `mesh`: the model to render;
+- `use_mesh_material`: when true, use the material colors, lighting strengths and texture pointers stored in the mesh.
+
+For legacy `Mesh3D`, `drawMesh(mesh, use_mesh_material, draw_chained_meshes)` also has:
+
 - `draw_chained_meshes`: when true, also draw linked meshes.
 
-For static meshes on Teensy 4.x, `cacheMesh()` can copy the most frequently accessed data into faster memory:
+For static meshes on Teensy 4.x, `cacheMesh()` can copy the most frequently accessed data into faster memory. With
+`Mesh3Dv2`, the cache order string controls which parts are copied first:
+
+- `M`: material table;
+- `I`: meshlet table;
+- `P`: meshlet payload;
+- `L`: texture image pixels.
 
 ~~~{.cpp}
-const tgx::Mesh3D<tgx::RGB565>* cached =
-    tgx::cacheMesh(&mesh, buf_DTCM, DTCM_buf_size, buf_DMAMEM, DMAMEM_buf_size);
+const tgx::Mesh3Dv2<tgx::RGB565>* cached =
+    tgx::cacheMesh(&mesh, buf_DTCM, DTCM_buf_size, buf_DMAMEM, DMAMEM_buf_size, "LMPI");
 
 renderer.drawMesh(cached);
 ~~~
@@ -309,7 +366,8 @@ power-of-two wrapping and moving textures to faster memory can make a large diff
 
 @section sec_3D_lighting Light and material
 
-The built-in lighting model is intentionally compact. It combines a directional light, material color and ambient,
+The built-in lighting model is intentionally compact. It is a Phong-style lighting model evaluated per vertex for
+Gouraud shading, or once per face for flat shading. It combines a directional light, material color and ambient,
 diffuse and specular strengths:
 
 ~~~{.cpp}
@@ -330,6 +388,15 @@ The convenience method `setLight()` sets all light colors and the direction at o
 
 If `drawMesh()` is called with `use_mesh_material = true`, the mesh material color and texture override the current
 material settings for that mesh. This is the usual mode for generated OBJ models.
+
+Flat and Gouraud shading differ in where lighting is evaluated:
+
+- **Flat shading** computes one color for the whole triangle. It is fast and gives a faceted look.
+- **Gouraud shading** computes lighting at vertices and interpolates the resulting colors across the triangle. It is
+  smoother on curved models, but costs more math and interpolation.
+
+TGX does not implement per-pixel Phong normal interpolation; that would be much more expensive on the intended MCU
+targets.
 
 
 @section sec_3D_culling Back-face culling
@@ -390,7 +457,7 @@ For MCU targets, the largest wins usually come from these choices:
 - restrict `LOADED_SHADERS` to the variants the program really uses;
 - use `RGB565` for display rendering;
 - use a `uint16_t` Z-buffer when depth precision is sufficient;
-- use `drawMesh()` and `cacheMesh()` for static models;
+- use `Mesh3Dv2`, `drawMesh()` and `cacheMesh()` for static models;
 - keep normals normalized and mesh data well formed;
 - enable back-face culling for closed meshes;
 - prefer `SHADER_TEXTURE_NEAREST` and `SHADER_TEXTURE_WRAP_POW2` when quality allows it;
@@ -398,6 +465,62 @@ For MCU targets, the largest wins usually come from these choices:
 - split very large textured faces if texture cache locality is poor;
 - clear the image and Z-buffer once per frame, not before every object;
 - avoid drawing debug wireframe on top of every frame unless it is needed.
+
+
+@section sec_3D_complete_example Complete embedded example
+
+The following sketch skeleton shows the usual structure for a textured `Mesh3Dv2` model on an MCU framebuffer. It
+omits the display-driver upload, because that part depends on the screen library.
+
+~~~{.cpp}
+#include <tgx.h>
+#include "my_model.h"     // generated Mesh3Dv2<RGB565> and texture headers
+
+constexpr int W = 320;
+constexpr int H = 240;
+
+DMAMEM tgx::RGB565 framebuffer[W * H];
+DMAMEM uint16_t zbuffer[W * H];
+
+tgx::Image<tgx::RGB565> image(framebuffer, W, H);
+
+constexpr tgx::Shader LOADED =
+    tgx::SHADER_PERSPECTIVE |
+    tgx::SHADER_ZBUFFER |
+    tgx::SHADER_FLAT |
+    tgx::SHADER_GOURAUD |
+    tgx::SHADER_TEXTURE_NEAREST |
+    tgx::SHADER_TEXTURE_BILINEAR |
+    tgx::SHADER_TEXTURE_WRAP_POW2;
+
+tgx::Renderer3D<tgx::RGB565, LOADED, uint16_t> renderer({ W, H }, &image, zbuffer);
+
+void setup3D()
+{
+    renderer.setPerspective(45.0f, float(W) / float(H), 0.1f, 100.0f);
+    renderer.setLookAt({ 0.0f, 1.0f, 5.0f }, { 0.0f, 0.4f, 0.0f }, { 0.0f, 1.0f, 0.0f });
+    renderer.setLightDirection({ -0.35f, -0.55f, -1.0f });
+    renderer.setCulling(1);
+    renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);
+    renderer.setTextureWrappingMode(tgx::SHADER_TEXTURE_WRAP_POW2);
+}
+
+void drawFrame(float angle)
+{
+    image.clear(tgx::RGB565_Black);
+    renderer.clearZbuffer();
+
+    renderer.setModelPosScaleRot({ 0.0f, 0.0f, 0.0f },
+                                 { 1.0f, 1.0f, 1.0f },
+                                 angle,
+                                 { 0.0f, 1.0f, 0.0f });
+
+    renderer.setShaders(tgx::SHADER_GOURAUD | tgx::SHADER_TEXTURE);
+    renderer.drawMesh(&my_model, true);
+
+    // Upload image to the display here.
+}
+~~~
 
 
 @section sec_3D_examples Useful examples
@@ -427,4 +550,3 @@ The repository contains several examples that exercise different parts of the 3D
 - Gouraud lighting looks strange: verify that normals are normalized and match the model transform.
 - Orthographic and perspective views do not match: compare the visible height at the object depth and keep the same
   camera/view matrix while switching projection.
-

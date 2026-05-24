@@ -132,8 +132,9 @@ About the library</h1>
 <li>Optional backface culling.</li>
 <li>Tile rasterization: it is possible to render the viewport in multiple passes to save RAM.</li>
 <li>Template classes for all the needed maths: <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>, <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>, <a class="el" href="structtgx_1_1_vec4.html">Vec4</a> (vectors), <a class="el" href="structtgx_1_1_mat4.html">Mat4</a> (4x4 matrix) and <a class="el" href="structtgx_1_1_box2.html">Box2</a>, <a class="el" href="structtgx_1_1_box3.html">Box3</a> (boxes).</li>
-<li>Optimized <a class="el" href="structtgx_1_1_mesh3_d.html">mesh</a> data format: meshes and textures can be read directly from flash memory to save RAM.</li>
-<li>Python scripts provided for easy conversion of texture images and 3D meshes from Wavefront's .obj format into C files.</li>
+<li>Legacy <a class="el" href="structtgx_1_1_mesh3_d.html">Mesh3D</a> and compact meshlet-based <a class="el" href="structtgx_1_1_mesh3_dv2.html">Mesh3Dv2</a> model formats.</li>
+<li>Meshes and textures can be read directly from flash memory to save RAM, or cached/copied to faster memory when available.</li>
+<li>Python tools provided for texture conversion, Wavefront <code>.obj</code> conversion and migration of existing <code>Mesh3D</code> headers to <code>Mesh3Dv2</code>.</li>
 </ul>
 </li>
 </ul>
@@ -168,12 +169,14 @@ References</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Main class for drawing a 3D scene   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html" title="Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].">tgx::Renderer3D</a>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">3D model class   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data structure.">tgx::Mesh3D</a>    </td></tr>
+<td class="markdownTableBodyNone">Legacy 3D model class   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data structure.">tgx::Mesh3D</a>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">3D Box   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_box3.html" title="Generic 3D Box [specializations iBox3, fBox3, dBox3].">tgx::Box3</a>    </td></tr>
+<td class="markdownTableBodyNone">Compact meshlet model class   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_mesh3_dv2.html" title="Compact meshlet-based 3D mesh data structure.">tgx::Mesh3Dv2</a>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">3D and 4D vectors   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_vec3.html" title="Generic 3D vector [specializations iVec3, fVec3, dVec3].">tgx::Vec3</a>, <a class="el" href="structtgx_1_1_vec4.html" title="Geenric 4D vector [specializations iVec4, fVec4, dVec4].">tgx::Vec4</a>    </td></tr>
+<td class="markdownTableBodyNone">3D Box   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_box3.html" title="Generic 3D Box [specializations iBox3, fBox3, dBox3].">tgx::Box3</a>    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">3D and 4D vectors   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_vec3.html" title="Generic 3D vector [specializations iVec3, fVec3, dVec3].">tgx::Vec3</a>, <a class="el" href="structtgx_1_1_vec4.html" title="Geenric 4D vector [specializations iVec4, fVec4, dVec4].">tgx::Vec4</a>    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">4x4 matrix for 3D (quaternions)   </td><td class="markdownTableBodyNone"><a class="el" href="structtgx_1_1_mat4.html" title="Generic 4x4 matrix [specializations fMat4, dMat4].">tgx::Mat4</a>   </td></tr>
 </table>
 </div></div><!-- PageDoc -->

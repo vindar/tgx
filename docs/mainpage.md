@@ -36,8 +36,9 @@ The library runs on both microprocessors and microcontrollers but specifically t
     - Optional backface culling.
     - Tile rasterization: it is possible to render the viewport in multiple passes to save RAM.
     - Template classes for all the needed maths: \ref tgx::Vec2 "Vec2", \ref tgx::Vec3 "Vec3", \ref tgx::Vec4 "Vec4" (vectors), \ref tgx::Mat4 "Mat4" (4x4 matrix) and \ref tgx::Box2 "Box2", \ref tgx::Box3 "Box3" (boxes).
-    - Optimized \ref tgx::Mesh3D "mesh" data format: meshes and textures can be read directly from flash memory to save RAM.
-    - Python scripts provided for easy conversion of texture images and 3D meshes from Wavefront's .obj format into C files.
+    - Legacy \ref tgx::Mesh3D "Mesh3D" and compact meshlet-based \ref tgx::Mesh3Dv2 "Mesh3Dv2" model formats.
+    - Meshes and textures can be read directly from flash memory to save RAM, or cached/copied to faster memory when available.
+    - Python tools provided for texture conversion, Wavefront `.obj` conversion and migration of existing `Mesh3D` headers to `Mesh3Dv2`.
 
 
 
@@ -76,7 +77,8 @@ The library runs on both microprocessors and microcontrollers but specifically t
 |                                   |                            |
 |-----------------------------------|----------------------------|
 | Main class for drawing a 3D scene | #tgx::Renderer3D           |
-| 3D model class                    | #tgx::Mesh3D               |
+| Legacy 3D model class             | #tgx::Mesh3D               |
+| Compact meshlet model class       | #tgx::Mesh3Dv2             |
 | 3D Box                            | #tgx::Box3                 |
 | 3D and 4D vectors                 | #tgx::Vec3, #tgx::Vec4     |
 | 4x4 matrix for 3D (quaternions)   | #tgx::Mat4                 |

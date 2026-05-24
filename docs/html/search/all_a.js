@@ -8,10 +8,7 @@ var searchData=
   ['lerp_5',['lerp',['../_vec2_8h.html#a7325880238f88d232c33e15a51a94489',1,'tgx::lerp(Tfloat alpha, Vec2&lt; T &gt; V1, Vec2&lt; T &gt; V2)'],['../_vec3_8h.html#a4fb8b31e33d079c44d457e0db987194c',1,'tgx::lerp(Tfloat alpha, Vec3&lt; T &gt; V1, Vec3&lt; T &gt; V2)'],['../_vec4_8h.html#a7577247073d3dea513efc002527762c5',1,'tgx::lerp(Tfloat alpha, Vec4&lt; T &gt; V1, Vec4&lt; T &gt; V2)']]],
   ['lfloorf_6',['lfloorf',['../_misc_8h.html#a069a8413ad3930a20497382aa087ea9b',1,'tgx']]],
   ['line_5fspace_7',['line_space',['../struct_i_l_i9341__t3__font__t.html#a24ebdaa78b500dbb3141c24022fb3c7f',1,'ILI9341_t3_font_t']]],
-  ['load_5fnormal_8',['load_normal',['../_mesh3_dv2_8h.html#a293d1b7bfd2faa50be713a8a1660530f',1,'tgx::Mesh3Dv2_detail']]],
-  ['load_5ftexcoord_9',['load_texcoord',['../_mesh3_dv2_8h.html#abfc36df27631375fcf8effdf2e3ab6fc',1,'tgx::Mesh3Dv2_detail']]],
-  ['load_5fvertex_10',['load_vertex',['../_mesh3_dv2_8h.html#a6686bb1d50729164a63806f4b15626e9',1,'tgx::Mesh3Dv2_detail']]],
-  ['lx_11',['lx',['../structtgx_1_1_box2.html#ab32b1bb2e59b82bb87d0e87d850a3874',1,'tgx::Box2::lx()'],['../structtgx_1_1_box3.html#ac81f2a22c85fc8f79ad33223a0e0d893',1,'tgx::Box3::lx()'],['../classtgx_1_1_image.html#a9d703268591c2d95cc2be2427fb62a3f',1,'tgx::Image::lx()']]],
-  ['ly_12',['ly',['../structtgx_1_1_box2.html#a5e5b94b8b824fbde820a041b8f1486b0',1,'tgx::Box2::ly()'],['../structtgx_1_1_box3.html#a14b62c4be3dd366ace261a3e761a3dec',1,'tgx::Box3::ly()'],['../classtgx_1_1_image.html#a9f18af07e65db0c8afb794f295e8bb40',1,'tgx::Image::ly()']]],
-  ['lz_13',['lz',['../structtgx_1_1_box3.html#ad52977bdf3fb602ee81af3a1f22559c9',1,'tgx::Box3']]]
+  ['lx_8',['lx',['../structtgx_1_1_box2.html#ab32b1bb2e59b82bb87d0e87d850a3874',1,'tgx::Box2::lx()'],['../structtgx_1_1_box3.html#ac81f2a22c85fc8f79ad33223a0e0d893',1,'tgx::Box3::lx()'],['../classtgx_1_1_image.html#a9d703268591c2d95cc2be2427fb62a3f',1,'tgx::Image::lx()']]],
+  ['ly_9',['ly',['../structtgx_1_1_box2.html#a5e5b94b8b824fbde820a041b8f1486b0',1,'tgx::Box2::ly()'],['../structtgx_1_1_box3.html#a14b62c4be3dd366ace261a3e761a3dec',1,'tgx::Box3::ly()'],['../classtgx_1_1_image.html#a9f18af07e65db0c8afb794f295e8bb40',1,'tgx::Image::ly()']]],
+  ['lz_10',['lz',['../structtgx_1_1_box3.html#ad52977bdf3fb602ee81af3a1f22559c9',1,'tgx::Box3']]]
 ];
