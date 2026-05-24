@@ -95,6 +95,30 @@ The position of a pixel inside an image is given in row major order:
 
 for 0 &le; `i` &lt; `lx` and 0 &le; `j` &lt; `ly`.
 
+The `stride` is the distance, in pixels, between the beginning of one row and the beginning of the next row. For a
+standalone image, it is usually equal to `lx`. For a sub-image, it is often larger because the sub-image still points
+inside the original parent buffer:
+
+~~~{.text}
+Parent image buffer
+
+row 0:  [0,0] [1,0] [2,0] [3,0] [4,0] [5,0]
+row 1:  [0,1] [1,1] [2,1] [3,1] [4,1] [5,1]
+row 2:  [0,2] [1,2] [2,2] [3,2] [4,2] [5,2]
+row 3:  [0,3] [1,3] [2,3] [3,3] [4,3] [5,3]
+
+Sub-image covering x = 1..3 and y = 1..2
+
+row 1:        [1,1] [2,1] [3,1]
+row 2:        [1,2] [2,2] [3,2]
+
+sub-image lx = 3, ly = 2, but stride = 6 because the next row is still
+6 pixels farther in the parent buffer.
+~~~
+
+This is why TGX can create sub-images without copying pixels: it only changes the starting pointer, width, height and
+stride stored in the \ref tgx::Image object.
+
 Example:
 ~~~{.cpp}
 tgx::RGB32 buff[320*240];  // memory buffer for a 320x240 image in RGB32 color format.
@@ -133,9 +157,24 @@ The tgx library defines classes for 2D vectors and boxes:
 
 @note 3D variants for vectors and boxes are also available: \ref tgx::iVec3, \ref tgx::fVec3, \ref tgx::iBox3, \ref tgx::fBox3. See @ref intro_api_3D "the 3D API tutorial" for details.
 
+TGX uses the usual framebuffer coordinate system: the pixel `(0,0)` is located at the **top-left** corner of the image,
+the X coordinate grows to the right, and the Y coordinate grows downward.
+
+![pixel_coordinates](../pixel_coordinates.svg)
+
 @warning Pixel addressing varies slightly when using integer-valued coordinates vs floating point-valued coordinates.
 - **Integer-valued coordinates**: `iVec2(i,j)` represents the location of pixel `(i,j)` in the image. The whole image corresponds to the integer-valued box `iBox2(0, lx - 1, 0, ly - 1)`.
 - **Floating point-valued coordinates**: `fVec2(i,j)` represents the **center** of pixel `(i,j)` in the image. The pixel itself is a unit-length square box centered around this location, i.e. represented by `fBox2( i-0.5f, i+0.5f, j-0.5f, j+0.5f)`. The whole image corresponds to the floating point-valued box `fBox2( -0.5f, lx - 0.5f, -0.5f, ly - 0.5f)`.
+
+The difference matters when mixing exact pixel primitives and anti-aliased or sub-pixel primitives:
+
+| Coordinate type | Meaning of `(i,j)` | Whole image box for an image of size `lx` x `ly` |
+|-----------------|--------------------|--------------------------------------------------|
+| `iVec2`, `iBox2` | Pixel index/location | `iBox2(0, lx - 1, 0, ly - 1)` |
+| `fVec2`, `fBox2` | Center of pixel `(i,j)` | `fBox2(-0.5f, lx - 0.5f, -0.5f, ly - 0.5f)` |
+
+For example, the floating point box occupied by pixel `(0,0)` is
+`fBox2(-0.5f, 0.5f, -0.5f, 0.5f)`, centered at `fVec2(0.0f, 0.0f)`.
 
 Vectors and boxes support all the usual operations: arithmetic (addition, dot product...), copy, type conversion...
 

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="430" viewBox="0 0 760 430">
+  <rect width="760" height="430" fill="#ffffff"/>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#333333"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="36" font-family="Arial, sans-serif" font-size="22" fill="#222222">TGX 2D pixel coordinates</text>
+  <text x="40" y="62" font-family="Arial, sans-serif" font-size="14" fill="#555555">(0,0) is the top-left pixel. X grows to the right, Y grows downward.</text>
+
+  <line x1="90" y1="110" x2="500" y2="110" stroke="#333333" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="90" y1="110" x2="90" y2="360" stroke="#333333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="510" y="116" font-family="Arial, sans-serif" font-size="16" fill="#222222">x</text>
+  <text x="84" y="382" font-family="Arial, sans-serif" font-size="16" fill="#222222">y</text>
+
+  <g transform="translate(120 130)">
+    <rect x="0" y="0" width="80" height="80" fill="#f8fbff" stroke="#6b8ec1" stroke-width="2"/>
+    <rect x="80" y="0" width="80" height="80" fill="#f8fbff" stroke="#6b8ec1" stroke-width="2"/>
+    <rect x="160" y="0" width="80" height="80" fill="#f8fbff" stroke="#6b8ec1" stroke-width="2"/>
+    <rect x="240" y="0" width="80" height="80" fill="#f8fbff" stroke="#6b8ec1" stroke-width="2"/>
+    <rect x="0" y="80" width="80" height="80" fill="#f8fbff" stroke="#6b8ec1" stroke-width="2"/>
+    <rect x="80" y="80" width="80" height="80" fill="#fff7e8" stroke="#d28a2e" stroke-width="3"/>
+    <rect x="160" y="80" width="80" height="80" fill="#f8fbff" stroke="#6b8ec1" stroke-width="2"/>
+    <rect x="240" y="80" width="80" height="80" fill="#f8fbff" stroke="#6b8ec1" stroke-width="2"/>
+    <rect x="0" y="160" width="80" height="80" fill="#f8fbff" stroke="#6b8ec1" stroke-width="2"/>
+    <rect x="80" y="160" width="80" height="80" fill="#f8fbff" stroke="#6b8ec1" stroke-width="2"/>
+    <rect x="160" y="160" width="80" height="80" fill="#f8fbff" stroke="#6b8ec1" stroke-width="2"/>
+    <rect x="240" y="160" width="80" height="80" fill="#f8fbff" stroke="#6b8ec1" stroke-width="2"/>
+
+    <circle cx="40" cy="40" r="5" fill="#2b6cb0"/>
+    <circle cx="120" cy="120" r="7" fill="#d35400"/>
+    <circle cx="160" cy="80" r="4" fill="#444444"/>
+    <circle cx="80" cy="160" r="4" fill="#444444"/>
+
+    <text x="18" y="45" font-family="Arial, sans-serif" font-size="14" fill="#1f4e79">iVec2(0,0)</text>
+    <text x="92" y="125" font-family="Arial, sans-serif" font-size="14" fill="#963c00">fVec2(1,1)</text>
+    <text x="84" y="292" font-family="Arial, sans-serif" font-size="14" fill="#333333">pixel centers</text>
+  </g>
+
+  <path d="M200,250 C250,255 265,285 305,292" fill="none" stroke="#d35400" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="318" y="304" font-family="Arial, sans-serif" font-size="14" fill="#963c00">center of pixel (1,1)</text>
+
+  <path d="M200,210 C560,160 580,180 600,205" fill="none" stroke="#444444" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="520" y="205" width="190" height="96" rx="6" ry="6" fill="#f7f7f7" stroke="#bbbbbb"/>
+  <text x="535" y="230" font-family="Arial, sans-serif" font-size="15" fill="#222222">Integer coordinates</text>
+  <text x="535" y="252" font-family="Arial, sans-serif" font-size="13" fill="#444444">iVec2(i,j) names</text>
+  <text x="535" y="270" font-family="Arial, sans-serif" font-size="13" fill="#444444">the pixel location.</text>
+  <text x="535" y="288" font-family="Arial, sans-serif" font-size="13" fill="#444444">Pixel (0,0) is top-left.</text>
+
+  <rect x="520" y="318" width="190" height="72" rx="6" ry="6" fill="#fff7e8" stroke="#d28a2e"/>
+  <text x="535" y="343" font-family="Arial, sans-serif" font-size="15" fill="#222222">Floating coordinates</text>
+  <text x="535" y="365" font-family="Arial, sans-serif" font-size="13" fill="#444444">fVec2(i,j) is the</text>
+  <text x="535" y="383" font-family="Arial, sans-serif" font-size="13" fill="#444444">center of pixel (i,j).</text>
+</svg>
