@@ -81,21 +81,24 @@ var NAVTREE =
       [ "Where to go next", "md_docs_intro_api_2_d.html#sec_2D_next", null ]
     ] ],
     [ "Using the 3D API.", "md_docs_intro_api_3_d.html", [
-      [ "Rendering model", "md_docs_intro_api_3_d.html#sec_3D_overview", null ],
-      [ "Coordinate spaces and matrices", "md_docs_intro_api_3_d.html#sec_3D_pipeline", [
-        [ "Short math reminder", "md_docs_intro_api_3_d.html#sec_3D_vectors_matrices", null ]
+      [ "What Renderer3D Does", "md_docs_intro_api_3_d.html#sec_3D_overview", null ],
+      [ "Coordinate Spaces", "md_docs_intro_api_3_d.html#sec_3D_pipeline", [
+        [ "Vectors, Points and Matrices", "md_docs_intro_api_3_d.html#sec_3D_math", null ],
+        [ "Renderer Matrices", "md_docs_intro_api_3_d.html#sec_3D_matrices", null ],
+        [ "Projection and Viewport Mapping", "md_docs_intro_api_3_d.html#sec_3D_projection", null ]
       ] ],
-      [ "Renderer template parameters", "md_docs_intro_api_3_d.html#sec_3D_renderer_template", null ],
-      [ "Shader state", "md_docs_intro_api_3_d.html#sec_3D_shaders", null ],
-      [ "Projection, camera and model transform", "md_docs_intro_api_3_d.html#sec_3D_projection", null ],
-      [ "Z-buffer", "md_docs_intro_api_3_d.html#sec_3D_zbuffer", null ],
-      [ "Mesh3Dv2, Mesh3D and generated models", "md_docs_intro_api_3_d.html#sec_3D_meshes", null ],
-      [ "Drawing primitives directly", "md_docs_intro_api_3_d.html#sec_3D_primitives", null ],
-      [ "Textures", "md_docs_intro_api_3_d.html#sec_3D_textures", null ],
-      [ "Light and material", "md_docs_intro_api_3_d.html#sec_3D_lighting", null ],
-      [ "Back-face culling", "md_docs_intro_api_3_d.html#sec_3D_culling", null ],
-      [ "Tile rendering", "md_docs_intro_api_3_d.html#sec_3D_tiling", null ],
-      [ "Wireframe and debug drawing", "md_docs_intro_api_3_d.html#sec_3D_wireframe", null ],
+      [ "Renderer template parameters", "md_docs_intro_api_3_d.html#sec_3D_renderer_template", [
+        [ "Shader state", "md_docs_intro_api_3_d.html#sec_3D_shaders", null ],
+        [ "Z-buffer", "md_docs_intro_api_3_d.html#sec_3D_zbuffer", null ]
+      ] ],
+      [ "Mesh3Dv2, Mesh3D and generated models", "md_docs_intro_api_3_d.html#sec_3D_meshes", [
+        [ "Drawing primitives directly", "md_docs_intro_api_3_d.html#sec_3D_primitives", null ],
+        [ "Textures", "md_docs_intro_api_3_d.html#sec_3D_textures", null ],
+        [ "Light and material", "md_docs_intro_api_3_d.html#sec_3D_lighting", null ],
+        [ "Back-face culling", "md_docs_intro_api_3_d.html#sec_3D_culling", null ],
+        [ "Tile rendering", "md_docs_intro_api_3_d.html#sec_3D_tiling", null ],
+        [ "Wireframe and debug drawing", "md_docs_intro_api_3_d.html#sec_3D_wireframe", null ]
+      ] ],
       [ "Embedded performance checklist", "md_docs_intro_api_3_d.html#sec_3D_performance", null ],
       [ "Complete embedded example", "md_docs_intro_api_3_d.html#sec_3D_complete_example", null ],
       [ "Useful examples", "md_docs_intro_api_3_d.html#sec_3D_examples", null ],
@@ -139,9 +142,9 @@ var NAVTREEINDEX =
 "_box2_8h.html",
 "_vec3_8h.html#ac1caa239be43f9aa85c0016e491b726a",
 "classtgx_1_1_renderer3_d.html#a845bbd628cfd96f379f3f23d880aa60a",
-"md_docs_tools.html#tools_stripifiers",
-"structtgx_1_1_r_g_b24.html#a4ab2a21ebf091abe62f3861ef0a51eeb",
-"structtgx_1_1_vec2.html#a0dd3317719c780a7614027f9b50edb17"
+"md_docs_tools.html#tools_setup",
+"structtgx_1_1_r_g_b24.html#a49f27cf054e924ad5b30dd28b7e7c5b5",
+"structtgx_1_1_vec2.html#a0aeac47d85bafdec79122005cc7e4432"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
