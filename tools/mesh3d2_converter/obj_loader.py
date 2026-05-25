@@ -41,6 +41,50 @@ def _triangulate(face: list[FaceVertex]) -> list[tuple[FaceVertex, FaceVertex, F
     return [(face[0], face[i], face[i + 1]) for i in range(1, len(face) - 1)]
 
 
+def _float3(parts: list[str]) -> tuple[float, float, float]:
+    return float(parts[1]), float(parts[2]), float(parts[3])
+
+
+def _mean3(values: tuple[float, float, float]) -> float:
+    return max(0.0, min(1.0, float(sum(values) / 3.0)))
+
+
+def _texture_token(parts: list[str]) -> str:
+    """Return the texture path part of an MTL map line.
+
+    MTL map statements may contain options before the file name, for example
+    `map_Kd -s 1 1 1 diffuse texture.png`. We skip common options and then keep
+    the remaining tokens as the path so file names with spaces still work.
+    """
+    tokens = parts[1:]
+    i = 0
+    option_args = {
+        "-blendu": 1,
+        "-blendv": 1,
+        "-boost": 1,
+        "-mm": 2,
+        "-o": 3,
+        "-s": 3,
+        "-t": 3,
+        "-texres": 1,
+        "-clamp": 1,
+        "-bm": 1,
+        "-type": 1,
+    }
+    while i < len(tokens):
+        token = tokens[i]
+        if not token.startswith("-"):
+            return " ".join(tokens[i:])
+        option = token.lower()
+        i += 1
+        count = option_args.get(option, 0)
+        for _ in range(count):
+            if i >= len(tokens) or tokens[i].startswith("-"):
+                break
+            i += 1
+    return tokens[-1] if tokens else ""
+
+
 def _parse_mtl(path: Path) -> dict[str, Material]:
     materials: dict[str, Material] = {}
     current: Material | None = None
@@ -53,17 +97,24 @@ def _parse_mtl(path: Path) -> dict[str, Material]:
             if not line:
                 continue
             parts = line.split()
-            tag = parts[0].lower()
+            tag = parts[0].lstrip("\ufeff").lower()
             if tag == "newmtl":
                 name = " ".join(parts[1:]) if len(parts) > 1 else ""
                 current = Material(name)
                 materials[name] = current
             elif current is not None and tag == "kd" and len(parts) >= 4:
-                current.diffuse = (float(parts[1]), float(parts[2]), float(parts[3]))
-            elif current is not None and tag == "map_kd" and len(parts) >= 2:
-                # OBJ exporters sometimes put options before the texture path. Keep the last
-                # token, which is the common and most robust interpretation for simple MTL files.
-                current.texture_path = (path.parent / parts[-1]).resolve()
+                current.diffuse = _float3(parts)
+            elif current is not None and tag == "ka" and len(parts) >= 4:
+                current.ambiant_strength = _mean3(_float3(parts))
+            elif current is not None and tag == "ks" and len(parts) >= 4:
+                current.specular_strength = _mean3(_float3(parts))
+            elif current is not None and tag == "ns" and len(parts) >= 2:
+                current.specular_exponent = max(1, min(128, int(round(float(parts[1])))))
+            elif current is not None and (tag.startswith("map_") or tag in ("bump", "disp", "decal", "refl")) and len(parts) >= 2:
+                texture_path = (path.parent / _texture_token(parts)).resolve()
+                current.texture_refs[tag] = texture_path
+                if tag == "map_kd":
+                    current.texture_path = texture_path
     return materials
 
 
@@ -85,7 +136,7 @@ def load_obj(path: str | Path) -> ObjMesh:
             if not line:
                 continue
             parts = line.split()
-            tag = parts[0]
+            tag = parts[0].lstrip("\ufeff")
 
             if tag == "v":
                 if len(parts) < 4:

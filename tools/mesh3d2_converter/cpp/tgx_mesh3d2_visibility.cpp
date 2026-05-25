@@ -68,10 +68,12 @@ void write_value(std::ostream& out, const T& value)
 tgx::RGBf color_from_index(uint32_t index)
 {
     if (index >= static_cast<uint32_t>(MAX_COLORS)) throw std::runtime_error("too many meshlets for RGB32 color indexing");
+    // Index 0 is reserved for the black background and for off-batch occluders.
+    // The +1 therefore gives COLOR_BASE^3 - 1 non-black colors per render batch.
     const int j = static_cast<int>(index) + 1;
     const float r = static_cast<float>(j % COLOR_BASE) / COLOR_BASE;
     const float g = static_cast<float>((j / COLOR_BASE) % COLOR_BASE) / COLOR_BASE;
-    const float b = static_cast<float>((COLOR_BASE - 1) - ((j / (COLOR_BASE * COLOR_BASE)) % COLOR_BASE)) / COLOR_BASE;
+    const float b = static_cast<float>((j / (COLOR_BASE * COLOR_BASE)) % COLOR_BASE) / COLOR_BASE;
     return tgx::RGBf(r, g, b);
 }
 
@@ -109,9 +111,6 @@ Scene read_scene(const std::string& path)
     read_value(in, scene.nb_meshlets);
     if ((scene.width == 0) || (scene.height == 0) || (scene.nb_views == 0) || (scene.nb_vertices == 0))
         throw std::runtime_error("invalid empty visibility scene");
-    if (scene.nb_meshlets > static_cast<uint32_t>(MAX_COLORS))
-        throw std::runtime_error("too many meshlets for color-indexed visibility rendering");
-
     scene.views.resize(scene.nb_views);
     scene.vertices.resize(scene.nb_vertices);
     scene.triangles.resize(scene.nb_triangles);
@@ -142,7 +141,7 @@ Scene read_scene(const std::string& path)
     return scene;
 }
 
-std::unordered_map<uint32_t, int> build_color_map(uint32_t nb_meshlets)
+std::unordered_map<uint32_t, int> build_color_map(uint32_t nb_colors)
 {
     std::vector<float> zbuf(25);
     std::vector<tgx::RGB32> buffer(25);
@@ -160,13 +159,18 @@ std::unordered_map<uint32_t, int> build_color_map(uint32_t nb_meshlets)
     std::unordered_map<uint32_t, int> map;
     image.clear(tgx::RGB32_Black);
     map.emplace(static_cast<const uint32_t&>(image(2, 2)), -1);
-    for (uint32_t i = 0; i < nb_meshlets; ++i)
+    if (nb_colors > static_cast<uint32_t>(MAX_COLORS))
+        throw std::runtime_error("internal visibility color batch is too large");
+
+    for (uint32_t i = 0; i < nb_colors; ++i)
         {
         image.clear(tgx::RGB32_Black);
         renderer.clearZbuffer();
         renderer.setMaterial(color_from_index(i), 1.0f, 0.0f, 0.0f, 1);
         renderer.drawQuad({-0.5f, -0.5f, 0.0f}, {0.5f, -0.5f, 0.0f}, {0.5f, 0.5f, 0.0f}, {-0.5f, 0.5f, 0.0f});
-        map.emplace(static_cast<const uint32_t&>(image(2, 2)), static_cast<int>(i));
+        const uint32_t key = static_cast<const uint32_t&>(image(2, 2));
+        if (!map.emplace(key, static_cast<int>(i)).second)
+            throw std::runtime_error("visibility color table collision");
         }
     return map;
 }
@@ -184,64 +188,78 @@ std::vector<uint8_t> compute_visibility(const Scene& scene)
     renderer.setShaders(tgx::SHADER_FLAT);
     renderer.setModelPosScaleRot({0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}, 0.0f);
 
-    const auto color_map = build_color_map(scene.nb_meshlets);
     std::vector<uint8_t> visibility(static_cast<size_t>(scene.nb_views) * scene.nb_meshlets, 0);
 
-    for (uint32_t nv = 0; nv < scene.nb_views; ++nv)
+    for (uint32_t batch_start = 0; batch_start < scene.nb_meshlets; batch_start += static_cast<uint32_t>(MAX_COLORS))
         {
-        image.clear(tgx::RGB32_Black);
-        renderer.clearZbuffer();
+        const uint32_t batch_size = std::min<uint32_t>(static_cast<uint32_t>(MAX_COLORS), scene.nb_meshlets - batch_start);
+        const uint32_t batch_end = batch_start + batch_size;
+        const auto color_map = build_color_map(batch_size);
 
-        tgx::fVec3 oz = scene.views[nv];
-        oz.normalize();
-        const tgx::fVec3 oy = orthogonal(oz);
-        const tgx::fVec3 ox = tgx::crossProduct(oy, oz).getNormalize();
-
-        float minx = tgx::dotProduct(scene.vertices[0], -ox);
-        float maxx = minx;
-        float miny = tgx::dotProduct(scene.vertices[0], -oy);
-        float maxy = miny;
-        float minz = tgx::dotProduct(scene.vertices[0], oz);
-        float maxz = minz;
-        for (const auto& v : scene.vertices)
+        for (uint32_t nv = 0; nv < scene.nb_views; ++nv)
             {
-            const float x = tgx::dotProduct(v, -ox);
-            const float y = tgx::dotProduct(v, -oy);
-            const float z = tgx::dotProduct(v, oz);
-            minx = std::min(minx, x);
-            maxx = std::max(maxx, x);
-            miny = std::min(miny, y);
-            maxy = std::max(maxy, y);
-            minz = std::min(minz, z);
-            maxz = std::max(maxz, z);
-            }
+            image.clear(tgx::RGB32_Black);
+            renderer.clearZbuffer();
 
-        const float cx = (minx + maxx) * 0.5f;
-        const float cy = (miny + maxy) * 0.5f;
-        const float r = 1.1f * std::max((maxx - minx) * 0.5f, (maxy - miny) * 0.5f);
-        const float lz = std::max(1.0e-5f, 2.0f * (maxz - minz));
-        renderer.setOrtho(cx - r, cx + r, cy - r, cy + r, lz * 0.1f, lz);
-        renderer.setLookAt(oz * (minz - lz * 0.25f), {0.0f, 0.0f, 0.0f}, oy);
+            tgx::fVec3 oz = scene.views[nv];
+            oz.normalize();
+            const tgx::fVec3 oy = orthogonal(oz);
+            const tgx::fVec3 ox = tgx::crossProduct(oy, oz).getNormalize();
 
-        uint32_t current_meshlet = UINT32_MAX;
-        for (const auto& tri : scene.triangles)
-            {
-            if (tri.meshlet != current_meshlet)
+            float minx = tgx::dotProduct(scene.vertices[0], -ox);
+            float maxx = minx;
+            float miny = tgx::dotProduct(scene.vertices[0], -oy);
+            float maxy = miny;
+            float minz = tgx::dotProduct(scene.vertices[0], oz);
+            float maxz = minz;
+            for (const auto& v : scene.vertices)
                 {
-                current_meshlet = tri.meshlet;
-                renderer.setMaterial(color_from_index(current_meshlet), 1.0f, 0.0f, 0.0f, 1);
+                const float x = tgx::dotProduct(v, -ox);
+                const float y = tgx::dotProduct(v, -oy);
+                const float z = tgx::dotProduct(v, oz);
+                minx = std::min(minx, x);
+                maxx = std::max(maxx, x);
+                miny = std::min(miny, y);
+                maxy = std::max(maxy, y);
+                minz = std::min(minz, z);
+                maxz = std::max(maxz, z);
                 }
-            renderer.drawTriangle(scene.vertices[tri.v[0]], scene.vertices[tri.v[1]], scene.vertices[tri.v[2]]);
-            }
 
-        uint8_t* row = visibility.data() + static_cast<size_t>(nv) * scene.nb_meshlets;
-        for (const auto& pixel : buffer)
-            {
-            const uint32_t key = static_cast<const uint32_t&>(pixel);
-            const auto it = color_map.find(key);
-            if (it == color_map.end())
-                throw std::runtime_error("rendered color is not in the meshlet color map");
-            if (it->second >= 0) row[it->second] = 1;
+            const float cx = (minx + maxx) * 0.5f;
+            const float cy = (miny + maxy) * 0.5f;
+            const float r = 1.1f * std::max((maxx - minx) * 0.5f, (maxy - miny) * 0.5f);
+            const float lz = std::max(1.0e-5f, 2.0f * (maxz - minz));
+            renderer.setOrtho(cx - r, cx + r, cy - r, cy + r, lz * 0.1f, lz);
+            renderer.setLookAt(oz * (minz - lz * 0.25f), {0.0f, 0.0f, 0.0f}, oy);
+
+            // Render all triangles every batch. Triangles outside the current
+            // batch are black, so they still write the z-buffer and occlude the
+            // colored batch triangles without being counted as visible.
+            int32_t current_color_index = INT32_MIN;
+            for (const auto& tri : scene.triangles)
+                {
+                const bool in_batch = (tri.meshlet >= batch_start) && (tri.meshlet < batch_end);
+                const int32_t color_index = in_batch ? static_cast<int32_t>(tri.meshlet - batch_start) : -1;
+                if (color_index != current_color_index)
+                    {
+                    current_color_index = color_index;
+                    if (color_index >= 0)
+                        renderer.setMaterial(color_from_index(static_cast<uint32_t>(color_index)), 1.0f, 0.0f, 0.0f, 1);
+                    else
+                        renderer.setMaterial(tgx::RGBf(0.0f, 0.0f, 0.0f), 1.0f, 0.0f, 0.0f, 1);
+                    }
+                renderer.drawTriangle(scene.vertices[tri.v[0]], scene.vertices[tri.v[1]], scene.vertices[tri.v[2]]);
+                }
+
+            uint8_t* row = visibility.data() + static_cast<size_t>(nv) * scene.nb_meshlets;
+            for (const auto& pixel : buffer)
+                {
+                const uint32_t key = static_cast<const uint32_t&>(pixel);
+                const auto it = color_map.find(key);
+                if (it == color_map.end())
+                    throw std::runtime_error("rendered color is not in the meshlet color map");
+                if (it->second >= 0) row[batch_start + static_cast<uint32_t>(it->second)] = 1;
+                }
             }
         }
     return visibility;

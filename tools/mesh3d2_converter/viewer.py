@@ -10,6 +10,30 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from .mesh import Meshlet, ObjMesh
 
 
+def _load_pyvista_texture(pv, path: Path, *, resize: tuple[int, int] | None = None, resample: str = "lanczos"):
+    """Load a texture through Pillow so previews support formats VTK may not read."""
+    from PIL import Image
+
+    def resample_filter(name: str) -> int:
+        resampling = getattr(Image, "Resampling", Image)
+        name = name.lower()
+        if name == "nearest":
+            return resampling.NEAREST
+        if name == "bilinear":
+            return resampling.BILINEAR
+        if name == "bicubic":
+            return resampling.BICUBIC
+        return resampling.LANCZOS
+
+    with Image.open(path) as img:
+        if img.mode not in ("RGB", "RGBA"):
+            img = img.convert("RGBA" if "A" in img.getbands() else "RGB")
+        if resize is not None:
+            img = img.resize(resize, resample_filter(resample))
+        data = np.asarray(img)
+    return pv.Texture(data)
+
+
 def _set_axes_equal(ax, vertices: np.ndarray) -> None:
     bb_min = np.min(vertices, axis=0)
     bb_max = np.max(vertices, axis=0)
@@ -108,6 +132,7 @@ def show_meshlets_pyvista(
     camera_target: np.ndarray | None = None,
     cull_from_camera: bool = False,
     texture: bool = False,
+    texture_options: dict[str, tuple[tuple[int, int] | None, str]] | None = None,
 ) -> None:
     import pyvista as pv
 
@@ -143,6 +168,7 @@ def show_meshlets_pyvista(
             camera_pos=camera_pos,
             camera_target=camera_target,
             view_dir=view_dir,
+            texture_options=texture_options,
         )
         return
 
@@ -220,6 +246,7 @@ def _show_textured_pyvista(
     camera_pos: np.ndarray | None,
     camera_target: np.ndarray | None,
     view_dir: np.ndarray | None,
+    texture_options: dict[str, tuple[tuple[int, int] | None, str]] | None = None,
 ) -> None:
     tri_indices = list(range(len(mesh.triangles))) if meshlets is None else [ti for m in meshlets for ti in m.triangles]
     by_material: dict[str, list[int]] = {}
@@ -248,7 +275,8 @@ def _show_textured_pyvista(
         desc = mesh.materials.get(material)
         tex = None
         if desc is not None and desc.texture_path is not None and desc.texture_path.exists():
-            tex = pv.Texture(str(desc.texture_path))
+            resize, resample = (texture_options or {}).get(material, (None, "lanczos"))
+            tex = _load_pyvista_texture(pv, desc.texture_path, resize=resize, resample=resample)
         if tex is not None:
             plotter.add_mesh(pv_mesh, texture=tex, show_edges=show_edges, edge_color=(0.05, 0.05, 0.05), line_width=0.2, lighting=True)
         else:

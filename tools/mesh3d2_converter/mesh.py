@@ -29,6 +29,7 @@ class Material:
     name: str
     diffuse: tuple[float, float, float] = (0.75, 0.75, 0.75)
     texture_path: Path | None = None
+    texture_refs: dict[str, Path] = field(default_factory=dict)
     ambiant_strength: float = 0.1
     diffuse_strength: float = 0.7
     specular_strength: float = 0.6

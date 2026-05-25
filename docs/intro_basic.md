@@ -304,7 +304,7 @@ C(0xffff), C(0xef7d), C(0xcdd2), C(0xb4a8), C(0xaba0), C(0xaba0), C(0xb4a8), C(0
 const tgx::Image<tgx::RGB565> smiley(smiley_data, 10, 10);
 ~~~
 
-The `/tools/` subdirectory of the library contains the Python script `image_converter.py` which converts an image from a classical format (jpeg/png/bmp...) into a `.cpp` file.
+The `/tools/` subdirectory of the library contains the `tgx_image_cli.py` and `tgx_image_gui.py` converters, which turn classical image files (PNG/JPEG/BMP...) into TGX image headers or `.h + .cpp` pairs.
 
 @note The TGX library also makes it easy to directly load PNG, JPEG and GIF images (which may be stored in RAM/FLASH or on another medium such as an SD card) by using bindings with external libraries. See section \ref sec_extensions for more details.
 
