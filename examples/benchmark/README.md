@@ -6,13 +6,13 @@ same uploaded sketch can be restarted from a serial monitor.
 
 Regular hardware targets:
 
-- Teensy 4.1 + ILI9341_T4
-- Teensy 3.6 + ST7735
-- ESP32 Core2
+- Teensy 4.1
+- Teensy 3.6
+- ESP32
+- ESP32-S2
 - ESP32-S3 CoreS3
-- ESP32-S2 Feather TFT + ILI9341
-- RP2040 Pico W + ILI9341
-- RP2350 Pico 2 + ILI9341
+- RP2040 Pico
+- RP2350 Pico 2
 
 Build by defining exactly one `TGX_BENCHMARK_*` symbol for the target when the
 board cannot be detected unambiguously. The benchmark intentionally avoids any
