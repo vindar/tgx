@@ -1,0 +1,1 @@
+Copy or extract LKH 2.x sources in this directory, then rerun tools/tgx_setup.py.

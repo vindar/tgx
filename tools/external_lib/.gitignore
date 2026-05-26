@@ -1,0 +1,9 @@
+*
+!.gitignore
+!README.md
+!GA_EAX/
+!GA_EAX/*.cpp
+!GA_EAX/*.h
+!LKH/
+!LKH/README.md
+!LKH/put_lkh_sources_here.txt

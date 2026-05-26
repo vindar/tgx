@@ -2,8 +2,7 @@ var NAVTREEINDEX3 =
 {
 "md_docs_tools.html#tools_setup":[7,0],
 "md_docs_tools.html#tools_stripifiers":[7,1],
-"md_docs_tools.html#tools_validation":[7,8],
-"md_docs_tools.html#tools_workflow":[7,9],
+"md_docs_tools.html#tools_workflow":[7,8],
 "pages.html":[],
 "struct_g_f_xfont.html":[8,0,1],
 "struct_g_f_xfont.html#a2d2ef5e8e2984dc65a7820e2906855b2":[8,0,1,3],

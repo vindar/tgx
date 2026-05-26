@@ -1,0 +1,10 @@
+numpy
+scipy
+matplotlib
+scikit-learn
+numba
+trimesh
+meshio
+pyvista
+vtk
+pillow

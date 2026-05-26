@@ -1,12 +1,11 @@
-@page tools_mesh Mesh and validation tools
+@page tools_mesh Mesh and image tools
 
 TGX can be used as a pure header-style Arduino library, but the repository also contains tools that make larger
 projects easier to maintain:
 
 - mesh conversion tools for static 3D models;
 - texture export helpers;
-- mesh inspection and visualization helpers;
-- CPU validation programs used to check rendering behavior after changes.
+- mesh inspection and visualization helpers.
 
 The tools are optional. A sketch that only uses hand-written geometry or already generated headers does not need
 Python, CMake or any external program at build time.
@@ -14,19 +13,23 @@ Python, CMake or any external program at build time.
 
 @section tools_setup Installing the tool environment
 
-The mesh tools are Python programs located in `tools/mesh3d2_converter/`. They are intended to run on the development
-computer, not on the MCU.
+The mesh tools are Python programs located in `tools/`. They are intended to run on the development computer, not on
+the MCU. Use `tools/tgx_mesh.py` for the graphical tool, or `tools/cli_tools/tgx_mesh_cli.py` for advanced command-line
+conversion and scripts.
 
 Recommended setup:
 
 ~~~{.sh}
 python --version
 python -m pip install --upgrade pip
-python -m pip install numpy pillow pyvista
+python tools/tgx_setup.py
 ~~~
 
-`numpy` is used for mesh processing, visibility masks and statistics. `Pillow` is used for texture/image conversion.
-`pyvista` is only needed for interactive visualization; conversion itself can run without opening a viewer.
+The setup script checks the Python packages, CMake, the C++ compiler and the native helper programs. It can also guide
+the installation of missing Python packages from `tools/requirements.txt`.
+
+`numpy` is used for mesh processing, visibility masks and statistics. `Pillow` is used for texture/image conversion,
+and `pyvista`/`vtk` are used for interactive visualization.
 
 The optional native helper programs require a C++ compiler and CMake:
 
@@ -40,7 +43,7 @@ On Linux and macOS, the system Python often works, but a virtual environment is 
 ~~~{.sh}
 python -m venv .venv
 source .venv/bin/activate        # Linux/macOS
-python -m pip install numpy pillow pyvista
+python -m pip install -r tools/requirements.txt
 ~~~
 
 On Windows PowerShell:
@@ -48,7 +51,7 @@ On Windows PowerShell:
 ~~~{.powershell}
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install numpy pillow pyvista
+python -m pip install -r tools/requirements.txt
 ~~~
 
 If an interactive PyVista window does not open, first verify that the model can be converted without `--view`; viewer
@@ -63,11 +66,10 @@ rendering. The converter includes a stripifier module and can use native helper 
 The setup script is:
 
 ~~~{.sh}
-python -m tools.mesh3d2_converter.setup_stripifiers
+python tools/tgx_setup.py
 ~~~
 
-It builds helper executables under `tools/mesh3d2_converter/external_libs/` when the required source trees are
-available.
+It builds helper executables under `tools/_internal/bin/` from sources in `tools/_internal/cpp/` and `tools/external_lib/`.
 
 TGX can use two solvers:
 
@@ -101,10 +103,10 @@ For Arduino examples, generated meshes can be exported either as:
 
 @section tools_obj_to_mesh3dv2 Converting an OBJ model to Mesh3Dv2
 
-Use `tgx_mesh3d2 export` for Wavefront OBJ input:
+Use the public mesh CLI for Wavefront OBJ input:
 
 ~~~{.sh}
-python -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_v2.h --name model_v2 --single-header
+python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2
 ~~~
 
 The default profile is intended to be a good MCU compromise:
@@ -120,16 +122,17 @@ management overhead dominates.
 
 Useful options:
 
-- `--single-header`: write all generated data into the header. This is convenient for Arduino examples.
+- `--layout header`: write all generated data into one header. This is the default and is convenient for Arduino
+  examples.
+- `--layout split`: write a `.h + .cpp` pair for larger C++ projects.
 - `--name SYMBOL`: name of the generated C++ mesh variable.
 - `--target-vertices N`: tune typical meshlet size. Lower values increase culling granularity; higher values reduce
   meshlet overhead.
 - `--max-normal-angle DEG`: controls how aggressively meshlets with different normal directions can be merged.
-- `--visibility-merge-samples N`: number of view directions used to build visibility masks.
-- `--visibility-merge-size N`: render size used by the visibility helper.
-- `--export-textures`: convert OBJ material textures into TGX texture headers.
-- `--texture-size W H`: resize exported textures.
-- `--texture-require-pow2`: enforce power-of-two textures, useful with `SHADER_TEXTURE_WRAP_POW2`.
+- `--visibility-samples N`: number of view directions used to build visibility masks.
+- `--visibility-size N`: render size used by the visibility helper.
+- `--texture-size WxH`: resize exported textures.
+- `--texture-layout header|split`: choose one header per texture or split `.h + .cpp` output.
 
 For most models, start with no tuning options. Change `--target-vertices` only after checking the generated statistics
 and the real framerate on the target board.
@@ -140,7 +143,7 @@ and the real framerate on the target board.
 Existing TGX legacy mesh headers can be converted directly:
 
 ~~~{.sh}
-python -m tools.mesh3d2_converter.mesh3d_to_mesh3d2 old_mesh.h -o new_mesh_v2.h --root old_mesh --name new_mesh_v2 --single-header
+python tools/cli_tools/tgx_mesh_cli.py old_mesh.h -o new_mesh_v2.h --root old_mesh --name new_mesh_v2
 ~~~
 
 `--root` is the C++ symbol of the first legacy `Mesh3D` object. If the file contains a single obvious mesh chain, the
@@ -156,13 +159,13 @@ Sometimes a project must keep the legacy \ref tgx::Mesh3D format. The newer stri
 triangle chains:
 
 ~~~{.sh}
-python -m tools.mesh3d2_converter.tgx_mesh3d model.obj -o model_legacy_opt.h --name model
+python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_legacy_opt.h --format Mesh3D --name model
 ~~~
 
 For an existing legacy header:
 
 ~~~{.sh}
-python -m tools.mesh3d2_converter.tgx_mesh3d old_mesh.h -o model_legacy_opt.h --source legacy --root old_mesh --name model
+python tools/cli_tools/tgx_mesh_cli.py old_mesh.h -o model_legacy_opt.h --format Mesh3D --root old_mesh --name model
 ~~~
 
 This does not add meshlet culling, but it can reduce the number of chains and improve legacy rendering speed.
@@ -170,19 +173,19 @@ This does not add meshlet culling, but it can reduce the number of chains and im
 
 @section tools_inspect_view Inspecting and visualizing meshes
 
-The inspection tool prints memory and structure statistics:
+The CLI prints memory and structure statistics after each conversion:
 
 ~~~{.sh}
-python -m tools.mesh3d2_converter.mesh_inspect model_v2.h
+python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2
 ~~~
 
 For `Mesh3Dv2`, it reports meshlet counts, chain counts, material counts, payload size, visibility information and
 other useful diagnostics.
 
-Interactive visualization:
+Interactive visualization is available from the graphical tool:
 
 ~~~{.sh}
-python -m tools.mesh3d2_converter.mesh_inspect model_v2.h --view --view-mode meshlets
+python tools/tgx_mesh.py
 ~~~
 
 Viewer modes:
@@ -224,23 +227,6 @@ Do not use `--texcoord-wrap` blindly. It identifies UV coordinates modulo 1 and 
 texture mapping were authored for that interpretation.
 
 
-@section tools_validation Validation tools
-
-The `tools/validation/` directory contains CPU validation programs. They are used by TGX development to check that
-2D and 3D rendering still produce expected images after code changes.
-
-Typical commands from the repository root:
-
-~~~{.powershell}
-powershell -ExecutionPolicy Bypass -File tools\validation\2d\run_cpu.ps1
-powershell -ExecutionPolicy Bypass -File tools\validation\3d\run_cpu.ps1
-~~~
-
-The 3D validation renders both legacy `Mesh3D` and `Mesh3Dv2` scenes. It compares hashes, coarse image summaries and
-tolerant image metrics. Some small pixel differences are acceptable after math or rasterizer changes, but large
-visual changes should be inspected before accepting a patch.
-
-
 @section tools_workflow Suggested workflow
 
 For a new textured model:
@@ -249,19 +235,19 @@ For a new textured model:
 2. Convert with defaults:
 
 ~~~{.sh}
-python -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_v2.h --name model_v2 --single-header --export-textures --texture-require-pow2
+python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2 --texture-size 256x256
 ~~~
 
 3. Inspect statistics:
 
 ~~~{.sh}
-python -m tools.mesh3d2_converter.mesh_inspect model_v2.h
+python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2
 ~~~
 
 4. Open the viewer:
 
 ~~~{.sh}
-python -m tools.mesh3d2_converter.mesh_inspect model_v2.h --view --view-mode tabs
+python tools/tgx_mesh.py
 ~~~
 
 5. Include the generated header in a TGX sketch and benchmark on the real target board.

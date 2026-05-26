@@ -104,7 +104,7 @@ var NAVTREE =
       [ "Useful examples", "md_docs_intro_api_3_d.html#sec_3D_examples", null ],
       [ "Common pitfalls", "md_docs_intro_api_3_d.html#sec_3D_pitfalls", null ]
     ] ],
-    [ "Mesh and validation tools", "md_docs_tools.html", [
+    [ "Mesh and image tools", "md_docs_tools.html", [
       [ "Installing the tool environment", "md_docs_tools.html#tools_setup", null ],
       [ "Optional stripifier helpers", "md_docs_tools.html#tools_stripifiers", null ],
       [ "Mesh formats in practice", "md_docs_tools.html#tools_formats", null ],
@@ -113,7 +113,6 @@ var NAVTREE =
       [ "Optimizing legacy Mesh3D output", "md_docs_tools.html#tools_legacy_mesh3d", null ],
       [ "Inspecting and visualizing meshes", "md_docs_tools.html#tools_inspect_view", null ],
       [ "Preprocessing and cleanup", "md_docs_tools.html#tools_cleanup", null ],
-      [ "Validation tools", "md_docs_tools.html#tools_validation", null ],
       [ "Suggested workflow", "md_docs_tools.html#tools_workflow", null ]
     ] ],
     [ "Classes", "annotated.html", [

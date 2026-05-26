@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TGX: Mesh and validation tools</title>
+<title>TGX: Mesh and image tools</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -91,25 +91,25 @@ $(document).ready(function(){initNavTree('md_docs_tools.html',''); initResizable
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Mesh and validation tools </div></div>
+  <div class="headertitle"><div class="title">Mesh and image tools </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p ><a class="anchor" id="tools_mesh"></a> TGX can be used as a pure header-style Arduino library, but the repository also contains tools that make larger projects easier to maintain:</p>
 <ul>
 <li>mesh conversion tools for static 3D models;</li>
 <li>texture export helpers;</li>
-<li>mesh inspection and visualization helpers;</li>
-<li>CPU validation programs used to check rendering behavior after changes.</li>
+<li>mesh inspection and visualization helpers.</li>
 </ul>
 <p >The tools are optional. A sketch that only uses hand-written geometry or already generated headers does not need Python, CMake or any external program at build time.</p>
 <h1><a class="anchor" id="tools_setup"></a>
 Installing the tool environment</h1>
-<p >The mesh tools are Python programs located in <code>tools/mesh3d2_converter/</code>. They are intended to run on the development computer, not on the MCU.</p>
+<p >The mesh tools are Python programs located in <code>tools/</code>. They are intended to run on the development computer, not on the MCU. Use <code>tools/tgx_mesh.py</code> for the graphical tool, or <code>tools/cli_tools/tgx_mesh_cli.py</code> for advanced command-line conversion and scripts.</p>
 <p >Recommended setup:</p>
 <div class="fragment"><div class="line">python --version</div>
 <div class="line">python -m pip install --upgrade pip</div>
-<div class="line">python -m pip install numpy pillow pyvista</div>
-</div><!-- fragment --><p ><code>numpy</code> is used for mesh processing, visibility masks and statistics. <code>Pillow</code> is used for texture/image conversion. <code>pyvista</code> is only needed for interactive visualization; conversion itself can run without opening a viewer.</p>
+<div class="line">python tools/tgx_setup.py</div>
+</div><!-- fragment --><p >The setup script checks the Python packages, CMake, the C++ compiler and the native helper programs. It can also guide the installation of missing Python packages from <code>tools/requirements.txt</code>.</p>
+<p ><code>numpy</code> is used for mesh processing, visibility masks and statistics. <code>Pillow</code> is used for texture/image conversion, and <code>pyvista</code>/<code>vtk</code> are used for interactive visualization.</p>
 <p >The optional native helper programs require a C++ compiler and CMake:</p>
 <ul>
 <li>Windows: install Visual Studio Community with the C++ workload, or another CMake-compatible compiler.</li>
@@ -119,18 +119,18 @@ Installing the tool environment</h1>
 <p >On Windows, a recent Python from python.org, Miniconda, Anaconda or Visual Studio's Python environment can be used. On Linux and macOS, the system Python often works, but a virtual environment is cleaner:</p>
 <div class="fragment"><div class="line">python -m venv .venv</div>
 <div class="line">source .venv/bin/activate        # Linux/macOS</div>
-<div class="line">python -m pip install numpy pillow pyvista</div>
+<div class="line">python -m pip install -r tools/requirements.txt</div>
 </div><!-- fragment --><p >On Windows PowerShell:</p>
 <div class="fragment"><div class="line">python -m venv .venv</div>
 <div class="line">.\.venv\Scripts\Activate.ps1</div>
-<div class="line">python -m pip install numpy pillow pyvista</div>
+<div class="line">python -m pip install -r tools/requirements.txt</div>
 </div><!-- fragment --><p >If an interactive PyVista window does not open, first verify that the model can be converted without <code>--view</code>; viewer problems are usually related to the local OpenGL/graphics driver setup, not to the mesh format itself.</p>
 <h1><a class="anchor" id="tools_stripifiers"></a>
 Optional stripifier helpers</h1>
 <p >TGX stores triangles as strips/chains where possible. Fewer chains usually means fewer vertex loads and faster mesh rendering. The converter includes a stripifier module and can use native helper programs for better chains.</p>
 <p >The setup script is:</p>
-<div class="fragment"><div class="line">python -m tools.mesh3d2_converter.setup_stripifiers</div>
-</div><!-- fragment --><p >It builds helper executables under <code>tools/mesh3d2_converter/external_libs/</code> when the required source trees are available.</p>
+<div class="fragment"><div class="line">python tools/tgx_setup.py</div>
+</div><!-- fragment --><p >It builds helper executables under <code>tools/_internal/bin/</code> from sources in <code>tools/_internal/cpp/</code> and <code>tools/external_lib/</code>.</p>
 <p >TGX can use two solvers:</p>
 <ul>
 <li><b>GA-EAX</b>: bundled source helper for general stripification work;</li>
@@ -153,8 +153,8 @@ Mesh formats in practice</h1>
 </ul>
 <h1><a class="anchor" id="tools_obj_to_mesh3dv2"></a>
 Converting an OBJ model to Mesh3Dv2</h1>
-<p >Use <code>tgx_mesh3d2 export</code> for Wavefront OBJ input:</p>
-<div class="fragment"><div class="line">python -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_v2.h --name model_v2 --single-header</div>
+<p >Use the public mesh CLI for Wavefront OBJ input:</p>
+<div class="fragment"><div class="line">python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2</div>
 </div><!-- fragment --><p >The default profile is intended to be a good MCU compromise:</p>
 <ul>
 <li>builder: <code>visibility_merge</code>;</li>
@@ -166,37 +166,37 @@ Converting an OBJ model to Mesh3Dv2</h1>
 <p >The default is deliberately conservative. It usually gives good culling without creating meshlets so tiny that their management overhead dominates.</p>
 <p >Useful options:</p>
 <ul>
-<li><code>--single-header</code>: write all generated data into the header. This is convenient for Arduino examples.</li>
+<li><code>--layout header</code>: write all generated data into one header. This is the default and is convenient for Arduino examples.</li>
+<li><code>--layout split</code>: write a <code>.h + .cpp</code> pair for larger C++ projects.</li>
 <li><code>--name SYMBOL</code>: name of the generated C++ mesh variable.</li>
 <li><code>--target-vertices N</code>: tune typical meshlet size. Lower values increase culling granularity; higher values reduce meshlet overhead.</li>
 <li><code>--max-normal-angle DEG</code>: controls how aggressively meshlets with different normal directions can be merged.</li>
-<li><code>--visibility-merge-samples N</code>: number of view directions used to build visibility masks.</li>
-<li><code>--visibility-merge-size N</code>: render size used by the visibility helper.</li>
-<li><code>--export-textures</code>: convert OBJ material textures into TGX texture headers.</li>
-<li><code>--texture-size W H</code>: resize exported textures.</li>
-<li><code>--texture-require-pow2</code>: enforce power-of-two textures, useful with <code>SHADER_TEXTURE_WRAP_POW2</code>.</li>
+<li><code>--visibility-samples N</code>: number of view directions used to build visibility masks.</li>
+<li><code>--visibility-size N</code>: render size used by the visibility helper.</li>
+<li><code>--texture-size WxH</code>: resize exported textures.</li>
+<li><code>--texture-layout header|split</code>: choose one header per texture or split <code>.h + .cpp</code> output.</li>
 </ul>
 <p >For most models, start with no tuning options. Change <code>--target-vertices</code> only after checking the generated statistics and the real framerate on the target board.</p>
 <h1><a class="anchor" id="tools_legacy_to_mesh3dv2"></a>
 Migrating an existing Mesh3D header</h1>
 <p >Existing TGX legacy mesh headers can be converted directly:</p>
-<div class="fragment"><div class="line">python -m tools.mesh3d2_converter.mesh3d_to_mesh3d2 old_mesh.h -o new_mesh_v2.h --root old_mesh --name new_mesh_v2 --single-header</div>
+<div class="fragment"><div class="line">python tools/cli_tools/tgx_mesh_cli.py old_mesh.h -o new_mesh_v2.h --root old_mesh --name new_mesh_v2</div>
 </div><!-- fragment --><p ><code>--root</code> is the C++ symbol of the first legacy <code>Mesh3D</code> object. If the file contains a single obvious mesh chain, the tool can often detect it automatically; when several mesh declarations exist, pass <code>--root</code> explicitly.</p>
 <p >The converter keeps material and texture references when it can parse them. If a sketch modifies a texture pointer at runtime, keep that texture/material data writable in the sketch just as with legacy <code>Mesh3D</code>.</p>
 <h1><a class="anchor" id="tools_legacy_mesh3d"></a>
 Optimizing legacy Mesh3D output</h1>
 <p >Sometimes a project must keep the legacy <a class="el" href="structtgx_1_1_mesh3_d.html">tgx::Mesh3D</a> format. The newer stripifier can still rebuild better triangle chains:</p>
-<div class="fragment"><div class="line">python -m tools.mesh3d2_converter.tgx_mesh3d model.obj -o model_legacy_opt.h --name model</div>
+<div class="fragment"><div class="line">python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_legacy_opt.h --format Mesh3D --name model</div>
 </div><!-- fragment --><p >For an existing legacy header:</p>
-<div class="fragment"><div class="line">python -m tools.mesh3d2_converter.tgx_mesh3d old_mesh.h -o model_legacy_opt.h --source legacy --root old_mesh --name model</div>
+<div class="fragment"><div class="line">python tools/cli_tools/tgx_mesh_cli.py old_mesh.h -o model_legacy_opt.h --format Mesh3D --root old_mesh --name model</div>
 </div><!-- fragment --><p >This does not add meshlet culling, but it can reduce the number of chains and improve legacy rendering speed.</p>
 <h1><a class="anchor" id="tools_inspect_view"></a>
 Inspecting and visualizing meshes</h1>
 <p >The inspection tool prints memory and structure statistics:</p>
-<div class="fragment"><div class="line">python -m tools.mesh3d2_converter.mesh_inspect model_v2.h</div>
+<div class="fragment"><div class="line">python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2</div>
 </div><!-- fragment --><p >For <code>Mesh3Dv2</code>, it reports meshlet counts, chain counts, material counts, payload size, visibility information and other useful diagnostics.</p>
 <p >Interactive visualization:</p>
-<div class="fragment"><div class="line">python -m tools.mesh3d2_converter.mesh_inspect model_v2.h --view --view-mode meshlets</div>
+<div class="fragment"><div class="line">python tools/tgx_mesh.py</div>
 </div><!-- fragment --><p >Viewer modes:</p>
 <ul>
 <li><code>texture</code>: show textured geometry when texture information is available;</li>
@@ -227,13 +227,6 @@ Preprocessing and cleanup</h1>
 <li><code>--normalize --normalize-size S</code>: center and scale OBJ input.</li>
 </ul>
 <p >Do not use <code>--texcoord-wrap</code> blindly. It identifies UV coordinates modulo 1 and is only correct when the model and texture mapping were authored for that interpretation.</p>
-<h1><a class="anchor" id="tools_validation"></a>
-Validation tools</h1>
-<p >The <code>tools/validation/</code> directory contains CPU validation programs. They are used by TGX development to check that 2D and 3D rendering still produce expected images after code changes.</p>
-<p >Typical commands from the repository root:</p>
-<div class="fragment"><div class="line">powershell -ExecutionPolicy Bypass -File tools\validation\2d\run_cpu.ps1</div>
-<div class="line">powershell -ExecutionPolicy Bypass -File tools\validation\3d\run_cpu.ps1</div>
-</div><!-- fragment --><p >The 3D validation renders both legacy <code>Mesh3D</code> and <code>Mesh3Dv2</code> scenes. It compares hashes, coarse image summaries and tolerant image metrics. Some small pixel differences are acceptable after math or rasterizer changes, but large visual changes should be inspected before accepting a patch.</p>
 <h1><a class="anchor" id="tools_workflow"></a>
 Suggested workflow</h1>
 <p >For a new textured model:</p>
@@ -241,15 +234,15 @@ Suggested workflow</h1>
 <li>Start from a clean triangulated OBJ with material/texture files.</li>
 <li>Convert with defaults:</li>
 </ol>
-<div class="fragment"><div class="line">python -m tools.mesh3d2_converter.tgx_mesh3d2 export model.obj -o model_v2.h --name model_v2 --single-header --export-textures --texture-require-pow2</div>
+<div class="fragment"><div class="line">python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2 --texture-size 256x256</div>
 </div><!-- fragment --><ol type="1">
 <li>Inspect statistics:</li>
 </ol>
-<div class="fragment"><div class="line">python -m tools.mesh3d2_converter.mesh_inspect model_v2.h</div>
+<div class="fragment"><div class="line">python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2</div>
 </div><!-- fragment --><ol type="1">
 <li>Open the viewer:</li>
 </ol>
-<div class="fragment"><div class="line">python -m tools.mesh3d2_converter.mesh_inspect model_v2.h --view --view-mode tabs</div>
+<div class="fragment"><div class="line">python tools/tgx_mesh.py</div>
 </div><!-- fragment --><ol type="1">
 <li>Include the generated header in a TGX sketch and benchmark on the real target board.</li>
 <li>Only then tune <code>--target-vertices</code>, texture size or wrapping mode if needed.</li>

@@ -2,22 +2,66 @@
 
 This directory contains optional Python tools used to generate assets and validate TGX.
 
-## Image Converter
+## First-Time Setup
 
-`tgx_image_cli.py` and `tgx_image_gui.py` convert PNG/JPEG/BMP images into C++ `tgx::Image` objects.
-
-- CLI: `python tools/tgx_image_cli.py ...`
-- GUI: `python tools/tgx_image_gui.py`
-
-Install the only required Python dependency with:
+Run the setup script before using the asset converters:
 
 ```bash
-python -m pip install pillow
+python tools/tgx_setup.py
 ```
 
-The optional graphical interface also needs `tkinter`, which is usually bundled with Python on Windows/macOS. On Linux, install your distribution's Tk package if it is missing, for example `python3-tk`.
+The setup checks the current Python environment, CMake, the C++ compiler, and
+the required TGX mesh helper programs. It then builds the C++ helpers used by
+the mesh converter:
 
-See `tools/modules/image/README.md` for details.
+- the TGX visibility helper;
+- the GA-EAX stripifier helper.
+
+The helper sources and outputs use stable locations:
+
+- `_internal/cpp/tgx_visibility/` contains the TGX visibility helper source;
+- `external_lib/GA_EAX/` contains the bundled GA-EAX source;
+- `external_lib/LKH/` is where optional LKH 2.x sources can be copied;
+- `_internal/bin/` receives generated helper executables;
+- `_internal/build/` receives generated build files.
+
+LKH is optional because it has its own license and is not bundled directly. If
+LKH is missing, the setup prints instructions. Mesh conversion still works
+without LKH, but generated triangle strips may be less optimal.
+
+To only inspect the current status:
+
+```bash
+python tools/tgx_setup.py --check
+```
+
+If Python modules are missing, install them in the same Python environment:
+
+```bash
+python -m pip install -r tools/requirements.txt
+```
+
+On Linux, the graphical tools may also need the system Tk package, for example:
+
+```bash
+sudo apt install python3-tk
+```
+
+On Windows, install CMake and Visual Studio Build Tools with the
+**Desktop development with C++** workload. On macOS, install Xcode command line
+tools and CMake.
+
+Each public tool checks the setup again at startup, so launching from the wrong
+Python environment gives a clear setup error instead of a later import/build
+failure.
+
+## Image Converter
+
+`tgx_image.py` converts PNG/JPEG/BMP images into C++ `tgx::Image` objects. A command-line version is also available
+for advanced or scripted use.
+
+- GUI: `python tools/tgx_image.py`
+- CLI: `python tools/cli_tools/tgx_image_cli.py ...`
 
 ## Legacy Tools
 
@@ -31,24 +75,21 @@ New projects should prefer the newer entry points in this directory.
 
 ## Mesh Converter
 
-`tgx_mesh_cli.py` and `tgx_mesh_gui.py` convert OBJ or existing TGX mesh headers to `Mesh3D` or `Mesh3Dv2`.
+`tgx_mesh.py` converts OBJ or existing TGX mesh headers to `Mesh3D` or `Mesh3Dv2`. A command-line version is also
+available for advanced or scripted use.
 
 ```bash
-python tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2
+python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2
 ```
 
 ```bash
-python tools/tgx_mesh_gui.py
+python tools/tgx_mesh.py
 ```
 
 The GUI is useful for OBJ files with incomplete or broken material files: it
 shows every texture reference, the automatically selected diffuse texture, and
 lets you override or resize each texture before conversion.
 
-See `tools/modules/mesh/README.md` for details.
-
-`mesh3d2_converter/` contains the older lower-level scripts and the current internal mesh conversion pipeline. They are kept for advanced debugging and compatibility while the public tools are being cleaned up.
-
-## Validation
-
-`validation/` contains the CPU and MCU validation suites.
+The reusable implementation lives under `_internal/`; users normally do not
+need to open that directory. The command-line and graphical entry points above
+are the supported interface.
