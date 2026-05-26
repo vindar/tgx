@@ -32,6 +32,7 @@ MIN_PYTHON = (3, 9)
 
 PYTHON_MODULES = {
     "Pillow": "PIL",
+    "fonttools": "fontTools",
     "NumPy": "numpy",
     "SciPy": "scipy",
     "Matplotlib": "matplotlib",
@@ -44,6 +45,10 @@ PYTHON_MODULES = {
 }
 IMAGE_MODULES = {
     "Pillow": "PIL",
+}
+FONT_MODULES = {
+    "Pillow": "PIL",
+    "fonttools": "fontTools",
 }
 
 
@@ -152,7 +157,7 @@ def check_environment(*, tool: str = "mesh", require_config: bool = True) -> Set
         status.config_missing = True
         status.add_error("TGX tools setup has not been completed in this checkout.")
 
-    modules = PYTHON_MODULES if tool == "mesh" else IMAGE_MODULES
+    modules = PYTHON_MODULES if tool == "mesh" else (FONT_MODULES if tool == "font" else IMAGE_MODULES)
     missing, missing_tk = check_python_modules(modules)
     status.missing_modules = missing
     status.missing_tkinter = missing_tk

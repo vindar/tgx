@@ -63,6 +63,19 @@ for advanced or scripted use.
 - GUI: `python tools/tgx_image.py`
 - CLI: `python tools/cli_tools/tgx_image_cli.py ...`
 
+## Font Converter
+
+`tgx_font.py` converts TrueType/OpenType fonts into TGX-compatible font
+headers. It can generate the current antialiased `ILI9341_t3_font_t` format,
+the older monochrome ILI9341_t3 format, or Adafruit `GFXfont`.
+
+- GUI: `python tools/tgx_font.py`
+- CLI: `python tools/cli_tools/tgx_font_cli.py ...`
+
+The GUI lets you choose one or more font sizes, select the character set with
+presets or by clicking characters in a grid, choose PROGMEM and output layout,
+and optionally save a PNG preview of the exported glyphs.
+
 ## Legacy Tools
 
 `legacy_tools/` contains the older conversion scripts kept for reference and compatibility:

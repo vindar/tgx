@@ -1,10 +1,11 @@
-@page tools_mesh Mesh and image tools
+@page tools_mesh Mesh, image and font tools
 
 TGX can be used as a pure header-style Arduino library, but the repository also contains tools that make larger
 projects easier to maintain:
 
 - mesh conversion tools for static 3D models;
 - texture export helpers;
+- font conversion tools;
 - mesh inspection and visualization helpers.
 
 The tools are optional. A sketch that only uses hand-written geometry or already generated headers does not need
@@ -28,8 +29,9 @@ python tools/tgx_setup.py
 The setup script checks the Python packages, CMake, the C++ compiler and the native helper programs. It can also guide
 the installation of missing Python packages from `tools/requirements.txt`.
 
-`numpy` is used for mesh processing, visibility masks and statistics. `Pillow` is used for texture/image conversion,
-and `pyvista`/`vtk` are used for interactive visualization.
+`numpy` is used for mesh processing, visibility masks and statistics. `Pillow` is used for texture/image/font
+conversion, `fonttools` is used to inspect font character maps, and `pyvista`/`vtk` are used for interactive
+visualization.
 
 The optional native helper programs require a C++ compiler and CMake:
 
@@ -79,6 +81,54 @@ TGX can use two solvers:
 
 The converter still works without optional helpers, but high-quality conversion of large models is slower or less
 optimal. When helpers are available, the tool uses them automatically.
+
+
+@section tools_images_fonts Image and font converters
+
+The graphical image converter is:
+
+~~~{.sh}
+python tools/tgx_image.py
+~~~
+
+The command-line image converter is useful for scripted texture export:
+
+~~~{.sh}
+python tools/cli_tools/tgx_image_cli.py diffuse.png --format RGB565 --name diffuse_texture --output-dir generated
+~~~
+
+The graphical font converter is:
+
+~~~{.sh}
+python tools/tgx_font.py
+~~~
+
+It converts TrueType/OpenType fonts to TGX-compatible font headers. The GUI lets you choose:
+
+- the input font file;
+- the output format: antialiased `ILI9341_t3_font_t` v2.3, monochrome ILI9341_t3 v1, or Adafruit `GFXfont`;
+- one or several pixel sizes;
+- `PROGMEM` and single-header or `.h + .cpp` output;
+- character presets or a custom per-character selection from a grid.
+
+The equivalent CLI is:
+
+~~~{.sh}
+python tools/cli_tools/tgx_font_cli.py MyFont.ttf -o my_font.h --name my_font --sizes 12,16,24 --chars printable --aa 4
+~~~
+
+Useful font options:
+
+- `--format ili9341-v23|ili9341-v1|adafruit-gfx`: choose the runtime font format.
+- `--sizes 10,12,16`: export several sizes from the same source font into the same generated font file.
+- `--chars printable`: choose a preset. Explicit ranges such as `32-126` or `0xA0-0xFF` are also accepted.
+- `--aa none|2|4|8`: choose antialiasing depth for `ili9341-v23`. Monochrome formats force 1 bit per pixel.
+- `--layout header|split`: write either one `.h` file or a `.h + .cpp` pair.
+- `--preview-png preview.png`: write a desktop preview grid of the exported glyphs, with one section per size.
+
+The generated C++ symbol always includes the pixel size. For the antialiased ILI9341 v2.3 format, it also includes
+the AA depth for compatibility with TGX font naming. For example, `--name ui_font --sizes 16 --aa 4` creates
+`ui_font_AA4_16`. Monochrome formats use names such as `ui_font_16`.
 
 
 @section tools_formats Mesh formats in practice

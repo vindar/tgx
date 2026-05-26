@@ -8,3 +8,4 @@ meshio
 pyvista
 vtk
 pillow
+fonttools
