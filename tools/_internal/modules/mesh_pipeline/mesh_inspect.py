@@ -5,6 +5,7 @@ import math
 import re
 import struct
 import sys
+import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -14,6 +15,10 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
 from tools._internal.modules.mesh_pipeline.mesh3d_to_mesh3d2 import legacy_to_objmesh, parse_legacy_header
+
+
+def _prepare_pyvista_import() -> None:
+    warnings.filterwarnings("ignore", message=".*Blowfish has been deprecated.*")
 
 
 @dataclass
@@ -557,6 +562,7 @@ def _legacy_chain_stats(face: list[int], has_texcoords: bool, has_normals: bool)
 
 
 def show_legacy_pyvista(path: str | Path) -> None:
+    _prepare_pyvista_import()
     import pyvista as pv
 
     parsed = parse_legacy_header(path)
@@ -605,7 +611,8 @@ def show_legacy_pyvista(path: str | Path) -> None:
     plotter.show()
 
 
-def _make_pyvista_polydata(mesh: DecodedHeaderMesh, *, meshlet_colors: bool, textured: bool):
+def _make_pyvista_polydata(mesh: DecodedHeaderMesh, *, textured: bool):
+    _prepare_pyvista_import()
     import pyvista as pv
 
     points: list[np.ndarray] = []
@@ -626,8 +633,7 @@ def _make_pyvista_polydata(mesh: DecodedHeaderMesh, *, meshlet_colors: bool, tex
             cell_meshlet.append(float(m.index))
             cell_material.append(m.material_index)
     pv_mesh = pv.PolyData(np.asarray(points, dtype=np.float64), np.asarray(faces, dtype=np.int64))
-    if meshlet_colors:
-        pv_mesh.cell_data["meshlet"] = np.asarray(cell_meshlet, dtype=np.float64)
+    pv_mesh.cell_data["meshlet"] = np.asarray(cell_meshlet, dtype=np.float64)
     pv_mesh.cell_data["material"] = np.asarray(cell_material, dtype=np.float64)
     if textured and tcoords:
         pv_mesh.active_texture_coordinates = np.asarray(tcoords, dtype=np.float64)
@@ -639,17 +645,21 @@ def _add_cones(plotter, pv, mesh: DecodedHeaderMesh, *, scale: float = 0.18) -> 
     diag = float(np.linalg.norm(bb[1] - bb[0]))
     length_factor = max(diag * scale, 1e-6)
     centers = []
+    line_points: list[np.ndarray] = []
+    lines: list[int] = []
     for m in mesh.meshlets:
         if m.cone_cos <= -1.0:
             continue
         centers.append(m.center)
         axis = m.cone_dir / max(float(np.linalg.norm(m.cone_dir)), 1e-12)
-        angle = math.acos(max(-1.0, min(1.0, m.cone_cos)))
         length = max(m.radius * 2.0, length_factor * 0.15)
-        radius = min(math.tan(min(angle, math.radians(80.0))) * length, length_factor * 0.5)
-        center = m.center + axis * (length * 0.5)
-        cone = pv.Cone(center=tuple(center), direction=tuple(axis), height=length, radius=radius, resolution=20)
-        plotter.add_mesh(cone, color="orange", opacity=0.18, show_edges=False)
+        base = len(line_points)
+        line_points.append(m.center)
+        line_points.append(m.center + axis * length)
+        lines.extend([2, base, base + 1])
+    if line_points:
+        line_mesh = pv.PolyData(np.asarray(line_points, dtype=np.float64), lines=np.asarray(lines, dtype=np.int64))
+        plotter.add_mesh(line_mesh, color="orange", line_width=2.0, opacity=0.75)
     if centers:
         points = pv.PolyData(np.asarray(centers, dtype=np.float64))
         points["center"] = np.arange(len(centers), dtype=np.float64)
@@ -657,6 +667,7 @@ def _add_cones(plotter, pv, mesh: DecodedHeaderMesh, *, scale: float = 0.18) -> 
 
 
 def show_mesh3d2_pyvista(mesh: DecodedHeaderMesh, mode: str = "tabs") -> None:
+    _prepare_pyvista_import()
     import pyvista as pv
 
     texture: TextureImage | None = None
@@ -668,30 +679,58 @@ def show_mesh3d2_pyvista(mesh: DecodedHeaderMesh, mode: str = "tabs") -> None:
 
     plotter = pv.Plotter()
     actors: dict[str, list[object]] = {"texture": [], "meshlets": [], "cones": []}
-
-    textured_mesh = _make_pyvista_polydata(mesh, meshlet_colors=False, textured=texture is not None)
-    meshlet_mesh = _make_pyvista_polydata(mesh, meshlet_colors=True, textured=False)
+    pv_mesh = _make_pyvista_polydata(mesh, textured=texture is not None)
 
     if texture is not None:
         tex = pv.Texture(texture.rgb)
-        actors["texture"].append(plotter.add_mesh(textured_mesh, texture=tex, show_edges=False, lighting=True))
+        actors["texture"].append(plotter.add_mesh(pv_mesh, texture=tex, show_edges=False, lighting=True))
     else:
-        actors["texture"].append(plotter.add_mesh(textured_mesh, color=(0.70, 0.72, 0.76), show_edges=True, edge_color=(0.05, 0.05, 0.05), line_width=0.25, lighting=True))
+        actors["texture"].append(plotter.add_mesh(pv_mesh, color=(0.70, 0.72, 0.76), show_edges=False, lighting=True))
 
-    actors["meshlets"].append(plotter.add_mesh(meshlet_mesh, scalars="meshlet", cmap="tab20", show_edges=True, edge_color=(0.04, 0.04, 0.04), line_width=0.25, lighting=True))
-    actors["cones"].append(plotter.add_mesh(meshlet_mesh, scalars="meshlet", cmap="tab20", show_edges=True, edge_color=(0.04, 0.04, 0.04), line_width=0.25, lighting=True))
-    before = set(plotter.actors.keys())
-    _add_cones(plotter, pv, mesh)
-    for key in set(plotter.actors.keys()) - before:
-        actors["cones"].append(plotter.actors[key])
+    def ensure_meshlets() -> None:
+        if actors["meshlets"]:
+            return
+        actors["meshlets"].append(
+            plotter.add_mesh(
+                pv_mesh,
+                scalars="meshlet",
+                cmap="tab20",
+                show_edges=True,
+                edge_color=(0.04, 0.04, 0.04),
+                line_width=0.25,
+                lighting=True,
+            )
+        )
+
+    def ensure_cones() -> None:
+        if actors["cones"]:
+            return
+        actors["cones"].append(
+            plotter.add_mesh(
+                pv_mesh,
+                scalars="meshlet",
+                cmap="tab20",
+                show_edges=False,
+                opacity=0.45,
+                lighting=True,
+            )
+        )
+        before = set(plotter.actors.keys())
+        _add_cones(plotter, pv, mesh)
+        for key in set(plotter.actors.keys()) - before:
+            actors["cones"].append(plotter.actors[key])
 
     def set_mode(name: str) -> None:
+        if name == "meshlets":
+            ensure_meshlets()
+        elif name == "cones":
+            ensure_cones()
         for group, group_actors in actors.items():
             visible = group == name
             for actor in group_actors:
                 actor.SetVisibility(visible)
         plotter.add_text(
-            f"{mesh.name or mesh.symbol} | mode: {name} | keys: 1 texture, 2 meshlets, 3 cones",
+            f"{mesh.name or mesh.symbol} | mode: {name} | Press [1] for texture, [2] for meshlets, [3] for visibility cones",
             name="mode_label",
             position="upper_left",
             font_size=10,

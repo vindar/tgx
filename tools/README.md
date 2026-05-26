@@ -1,39 +1,28 @@
-# TGX Tools
+# TGX tools
 
-This directory contains optional Python tools used to generate assets and validate TGX.
+This directory contains small Python programs that create, convert or inspect
+C++ asset files usable by TGX:
 
-## First-Time Setup
+- `tgx_image.py`: converts PNG/JPEG/BMP/TGA images to TGX `Image` headers.
+- `tgx_mesh.py`: converts OBJ files or existing TGX meshes to `Mesh3D` or `Mesh3Dv2`.
+- `tgx_font.py`: converts TrueType/OpenType fonts to TGX-compatible font headers.
+- `tgx_info.py`: inspects generated TGX image, mesh and font files.
 
-Run the setup script before using the asset converters:
+The graphical tools are the recommended entry points. Command-line versions are
+available in `cli_tools/` for scripts and batch conversion.
+
+
+## First-time setup
+
+Use a recent Python 3 installation, then run:
 
 ```bash
 python tools/tgx_setup.py
 ```
 
-The setup checks the current Python environment, CMake, the C++ compiler, and
-the required TGX mesh helper programs. It then builds the C++ helpers used by
-the mesh converter:
-
-- the TGX visibility helper;
-- the GA-EAX stripifier helper.
-
-The helper sources and outputs use stable locations:
-
-- `_internal/cpp/tgx_visibility/` contains the TGX visibility helper source;
-- `external_lib/GA_EAX/` contains the bundled GA-EAX source;
-- `external_lib/LKH/` is where optional LKH 2.x sources can be copied;
-- `_internal/bin/` receives generated helper executables;
-- `_internal/build/` receives generated build files.
-
-LKH is optional because it has its own license and is not bundled directly. If
-LKH is missing, the setup prints instructions. Mesh conversion still works
-without LKH, but generated triangle strips may be less optimal.
-
-To only inspect the current status:
-
-```bash
-python tools/tgx_setup.py --check
-```
+The setup script checks the required Python packages, CMake, a C++ compiler and
+the native helper programs used by the mesh converter. If something is missing,
+it prints what to install and can be run again afterwards.
 
 If Python modules are missing, install them in the same Python environment:
 
@@ -41,68 +30,114 @@ If Python modules are missing, install them in the same Python environment:
 python -m pip install -r tools/requirements.txt
 ```
 
-On Linux, the graphical tools may also need the system Tk package, for example:
+The graphical tools also need Tkinter. On Windows and macOS it is usually
+included with Python. On Linux, install the system Tk package if needed, for
+example:
 
 ```bash
 sudo apt install python3-tk
 ```
 
-On Windows, install CMake and Visual Studio Build Tools with the
-**Desktop development with C++** workload. On macOS, install Xcode command line
-tools and CMake.
+The mesh converter also needs CMake and a C++ compiler:
 
-Each public tool checks the setup again at startup, so launching from the wrong
-Python environment gives a clear setup error instead of a later import/build
-failure.
+- Windows: install CMake and Visual Studio Build Tools with the C++ workload.
+- Linux: install `cmake` plus `g++` or `clang++`.
+- macOS: install CMake and the Xcode command line tools.
 
-## Image Converter
+LKH is optional. If it is not installed, mesh conversion still works, but some
+triangle strips may be less optimal. `tgx_setup.py` explains where to place the
+LKH 2.x sources if you want to enable it later; then just run the setup again.
 
-`tgx_image.py` converts PNG/JPEG/BMP images into C++ `tgx::Image` objects. A command-line version is also available
-for advanced or scripted use.
-
-- GUI: `python tools/tgx_image.py`
-- CLI: `python tools/cli_tools/tgx_image_cli.py ...`
-
-## Font Converter
-
-`tgx_font.py` converts TrueType/OpenType fonts into TGX-compatible font
-headers. It can generate the current antialiased `ILI9341_t3_font_t` format,
-the older monochrome ILI9341_t3 format, or Adafruit `GFXfont`.
-
-- GUI: `python tools/tgx_font.py`
-- CLI: `python tools/cli_tools/tgx_font_cli.py ...`
-
-The GUI lets you choose one or more font sizes, select the character set with
-presets or by clicking characters in a grid, choose PROGMEM and output layout,
-and optionally save a PNG preview of the exported glyphs.
-
-## Legacy Tools
-
-`legacy_tools/` contains the older conversion scripts kept for reference and compatibility:
-
-- `image_converter.py`
-- `obj_to_h.py`
-- `texture_2_h.py`
-
-New projects should prefer the newer entry points in this directory.
-
-## Mesh Converter
-
-`tgx_mesh.py` converts OBJ or existing TGX mesh headers to `Mesh3D` or `Mesh3Dv2`. A command-line version is also
-available for advanced or scripted use.
+To only check the current setup:
 
 ```bash
-python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2
+python tools/tgx_setup.py --check
 ```
+
+Each public tool checks the setup at startup, so using the wrong Python
+environment should give a clear error message.
+
+
+## tgx_image
+
+Run:
+
+```bash
+python tools/tgx_image.py
+```
+
+`tgx_image.py` converts regular image files to C++ `tgx::Image` objects. It can:
+
+- choose the TGX color type, such as `RGB565`, `RGB24` or `RGB32`;
+- resize the image;
+- choose the generated C++ symbol name;
+- write either a single `.h` file or a `.h + .cpp` pair.
+
+
+## tgx_mesh
+
+Run:
 
 ```bash
 python tools/tgx_mesh.py
 ```
 
-The GUI is useful for OBJ files with incomplete or broken material files: it
-shows every texture reference, the automatically selected diffuse texture, and
-lets you override or resize each texture before conversion.
+`tgx_mesh.py` converts Wavefront OBJ models, or existing TGX mesh headers, to:
 
-The reusable implementation lives under `_internal/`; users normally do not
-need to open that directory. The command-line and graphical entry points above
-are the supported interface.
+- `Mesh3Dv2`, the recommended compact mesh format for new sketches;
+- `Mesh3D`, the legacy format kept for compatibility.
+
+For OBJ files, the tool reads materials and textures when available. The GUI
+shows the detected texture references and lets you override or resize each
+texture before conversion. It can also preview the mesh with PyVista.
+
+
+
+## tgx_font
+
+Run:
+
+```bash
+python tools/tgx_font.py
+```
+
+`tgx_font.py` converts TrueType/OpenType fonts to font formats supported by TGX:
+
+- antialiased `ILI9341_t3_font_t` v2.3;
+- older monochrome ILI9341_t3 fonts;
+- Adafruit `GFXfont`.
+
+The GUI lets you select one or several sizes, choose the character set, choose
+the output format, enable `PROGMEM`, and write either a single `.h` file or a
+`.h + .cpp` pair.
+
+
+
+## tgx_info
+
+Run:
+
+```bash
+python tools/tgx_info.py
+```
+
+`tgx_info.py` is a read-only inspector. Give it a generated `.h` or `.cpp` file
+and it detects whether it contains an image, mesh or font.
+
+It reports useful information such as dimensions, memory size, meshlet counts,
+triangle counts, texture list or glyph list. It can also save image/font preview
+PNGs, and can open the mesh viewer for mesh assets.
+
+
+
+## Legacy tools
+
+`legacy_tools/` contains the older TGX conversion scripts:
+
+- `image_converter.py`
+- `obj_to_h.py`
+- `texture_2_h.py`
+
+They are kept for old projects and reference. New projects should normally use
+`tgx_image.py`, `tgx_mesh.py`, `tgx_font.py` and `tgx_info.py`.
+

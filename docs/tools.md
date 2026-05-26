@@ -6,7 +6,7 @@ projects easier to maintain:
 - mesh conversion tools for static 3D models;
 - texture export helpers;
 - font conversion tools;
-- mesh inspection and visualization helpers.
+- generated asset inspection and visualization helpers.
 
 The tools are optional. A sketch that only uses hand-written geometry or already generated headers does not need
 Python, CMake or any external program at build time.
@@ -247,6 +247,40 @@ Viewer modes:
 
 Use the viewer after conversion. It is the fastest way to detect a bad material split, a broken texture mapping or
 meshlets that are too fragmented.
+
+
+@section tools_info Inspecting generated TGX assets
+
+The general-purpose inspector is:
+
+~~~{.sh}
+python tools/tgx_info.py
+~~~
+
+The command-line version is:
+
+~~~{.sh}
+python tools/cli_tools/tgx_info_cli.py generated_asset.h
+~~~
+
+It reads a generated `.h` or `.cpp`, detects the TGX asset type, and searches for the associated companion files next
+to the selected file. It is intended as a read-only inspection tool.
+
+For meshes, it reports:
+
+- legacy `Mesh3D` or current `Mesh3Dv2` format;
+- triangle, chain, meshlet and material counts;
+- payload and static memory estimates, excluding texture image data;
+- texture symbols and texture dimensions when texture headers can be found;
+- bounding box and meshlet culling information for `Mesh3Dv2`.
+
+For images, it reports the C++ symbol, TGX color type, dimensions and memory size, and can save a PNG preview.
+
+For fonts, it reports all generated font objects in the file, their format, character range, antialiasing level,
+memory size and glyph count. It can also save a PNG glyph sheet.
+
+If the file cannot be parsed reliably, the inspector reports the problem instead of guessing from partial data. This is
+useful when checking hand-edited generated files before including them in a sketch.
 
 
 @section tools_cleanup Preprocessing and cleanup
