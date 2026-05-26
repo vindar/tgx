@@ -127,12 +127,18 @@ Using TGX on a desktop computer (Windows/Linux/MacOS)</h2>
 </li>
 <li>Build the library using the generated project files.<ul>
 <li><em>On Windows.</em> Open the Visual Studio solution file 'tgx.sln' and build the library from within the IDE.</li>
-<li><em>On Linux/MacOS.</em> Use command <code>make</code> to build the library. TGX can now be added to any project by appending TGX's <code>/src</code> subdirectory to the project's include path and adding the library to the linker. </li>
+<li><em>On Linux/MacOS.</em> Use command <code>make</code> to build the library. TGX can now be added to any project by appending TGX's <code>/src</code> subdirectory to the project's include path and adding the library to the linker.</li>
 </ul>
 </li>
 </ol>
 </li>
 </ul>
+<h2><a class="anchor" id="autotoc_md2"></a>
+Installation of TGX tools</h2>
+<p >TGX also provides optional desktop tools to create and inspect generated TGX assets: images, meshes and fonts. These tools are not needed to compile a sketch that already contains its assets, but they are useful when preparing new models, textures or fonts.</p>
+<p >The tools use Python. Mesh conversion also builds small native helpers, so it requires CMake and a C++ compiler on the development computer. After installing TGX, run:</p>
+<div class="fragment"><div class="line">python tools/tgx_setup.py</div>
+</div><!-- fragment --><p >See <a class="el" href="md_docs_tools.html#tools_mesh">TGX tools</a> for the complete setup and usage overview. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

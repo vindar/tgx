@@ -132,9 +132,14 @@ About the library</h1>
 <li>Optional backface culling.</li>
 <li>Tile rasterization: it is possible to render the viewport in multiple passes to save RAM.</li>
 <li>Template classes for all the needed maths: <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>, <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>, <a class="el" href="structtgx_1_1_vec4.html">Vec4</a> (vectors), <a class="el" href="structtgx_1_1_mat4.html">Mat4</a> (4x4 matrix) and <a class="el" href="structtgx_1_1_box2.html">Box2</a>, <a class="el" href="structtgx_1_1_box3.html">Box3</a> (boxes).</li>
-<li>Legacy <a class="el" href="structtgx_1_1_mesh3_d.html">Mesh3D</a> and compact meshlet-based <a class="el" href="structtgx_1_1_mesh3_dv2.html">Mesh3Dv2</a> model formats.</li>
-<li>Meshes and textures can be read directly from flash memory to save RAM, or cached/copied to faster memory when available.</li>
-<li>Python tools provided for texture conversion, Wavefront <code>.obj</code> conversion and migration of existing <code>Mesh3D</code> headers to <code>Mesh3Dv2</code>.</li>
+<li>Legacy <a class="el" href="structtgx_1_1_mesh3_d.html">Mesh3D</a> and compact meshlet-based <a class="el" href="structtgx_1_1_mesh3_dv2.html">Mesh3Dv2</a> model formats. Meshes and textures can be read directly from flash memory to save RAM.</li>
+</ul>
+</li>
+<li><b>Graphical tools with matching command-line versions:</b><ul>
+<li><code>tgx_image.py</code> to convert common image files to TGX image headers.</li>
+<li><code>tgx_mesh.py</code> to convert Wavefront <code>.obj</code> files or existing TGX meshes to <code>Mesh3D</code> or <code>Mesh3Dv2</code>.</li>
+<li><code>tgx_font.py</code> to convert TrueType/OpenType fonts to TGX-compatible font headers.</li>
+<li><code>tgx_info.py</code> to inspect generated TGX image, mesh and font files.</li>
 </ul>
 </li>
 </ul>
@@ -145,7 +150,7 @@ Getting started</h1>
 <li><a class="el" href="md_docs_intro_basic.html#intro_basic">Basic concepts</a></li>
 <li><a class="el" href="md_docs_intro_api_2_d.html#intro_api_2D">The 2D API.</a></li>
 <li><a class="el" href="md_docs_intro_api_3_d.html#intro_api_3D">The 3D API.</a></li>
-<li><a class="el" href="md_docs_tools.html#tools_mesh">Mesh conversion and validation tools.</a></li>
+<li><a class="el" href="md_docs_tools.html#tools_mesh">TGX tools.</a></li>
 </ol>
 <dl class="section note"><dt>Note</dt><dd>Do not forget to have a look at the examples located in <code>\examples</code> subfolder of the library.</dd></dl>
 <h1><a class="anchor" id="References"></a>

@@ -107,7 +107,7 @@ $(document).ready(function(){initNavTree('md_docs_intro_basic.html',''); initRes
 <div class="ttc" id="a_color_8h_html_aeff1cf4d983230263f1855ee9df91d25"><div class="ttname"><a href="_color_8h.html#aeff1cf4d983230263f1855ee9df91d25">tgx::RGB565_Red</a></div><div class="ttdeci">const RGB565 RGB565_Red</div><div class="ttdoc">Color red in RGB565 format.</div></div>
 <div class="ttc" id="aclasstgx_1_1_image_html"><div class="ttname"><a href="classtgx_1_1_image.html">tgx::Image</a></div><div class="ttdoc">Image class [MAIN CLASS FOR THE 2D API].</div><div class="ttdef"><b>Definition:</b> Image.h:145</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:216</div></div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
 Color types</h1>
 <p >The library defines several color classes. Choosing the right one is mostly a question of memory, speed and intended use:</p>
 <table class="markdownTable">
@@ -148,7 +148,7 @@ Color types</h1>
 <p >Example: </p><div class="fragment"><div class="line">tgx::RGB32_Yellow; <span class="comment">// yellow color in RGB32</span></div>
 <div class="line">tgx::RGB565_Green; <span class="comment">//  green color in RGB565</span></div>
 </div><!-- fragment --><p >For additional details on color manipulations, look directly into the color classes definitions in <a class="el" href="_color_8h.html">color.h</a>.</p>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="autotoc_md4"></a>
 Blending and opacity parameter.</h2>
 <p >Color types <a class="el" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> and <a class="el" href="structtgx_1_1_r_g_b64.html">tgx::RGB64</a> have an alpha channel which is used for alpha-blending during drawing operations.</p>
 <dl class="section note"><dt>Note</dt><dd>Colors with an alpha channel are always assumed to have <a href="https://en.wikipedia.org/wiki/Alpha_compositing">pre-multiplied alpha</a>.</dd></dl>
@@ -163,7 +163,7 @@ Blending and opacity parameter.</h2>
 <div class="line"> </div>
 <div class="line">im.drawLine({10, 20}, {30, 40}, <a class="code hl_variable" href="_color_8h.html#aeff1cf4d983230263f1855ee9df91d25">tgx::RGB565_Red</a>, 0.5f); <span class="comment">// here opacity=0.5f so we draw a half-transparent red line instead.</span></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
 Image class, memory layout and sub-images</h1>
 <p >The <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> class is a lightweight <b>view over an existing pixel buffer</b>. It does not allocate memory and it does not own the pixels. It only records how to interpret a rectangular region of memory as an image. These four values are the whole state of an Image view:</p>
 <table class="markdownTable">
@@ -180,7 +180,7 @@ Image class, memory layout and sub-images</h1>
 </table>
 <p >This design is important on embedded targets: the application controls where buffers live, for example in RAM, external memory or flash/ROM. As a general rule, <b>the TGX library never performs dynamic memory allocation.</b></p>
 <dl class="section warning"><dt>Warning</dt><dd>Copying a <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> object is a shallow copy: the new object points to the same pixel buffer. The pixel buffer must remain alive as long as an Image points to it. Deep copies are discussed later in <a class="el" href="md_docs_intro_basic.html#subsec_basic_copy_convert">Copying/converting images to different color types</a>.</dd></dl>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Creating an image</h2>
 <p >The most common pattern is to create a pixel buffer, then attach an Image view to it directly in the constructor:</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a> buffer[320 * 240]; <span class="comment">// allocate the image buffer (about 150 KB)</span></div>
@@ -196,7 +196,7 @@ Creating an image</h2>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a>(local, 100, 100); <span class="comment">// WRONG: dangling pointer !!!</span></div>
 <div class="line">}</div>
 </div><!-- fragment --></dd></dl>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md8"></a>
 Memory layout and stride</h2>
 <p >The position of a pixel inside an image is given in row-major order:</p>
 <p ><code>Pixel(i, j) = buffer[i + stride*j]</code></p>
@@ -216,7 +216,7 @@ Memory layout and stride</h2>
 <div class="line"> </div>
 <div class="line">sub-image lx = 3, ly = 2, but stride = 6 because the next row is still</div>
 <div class="line">6 pixels farther in the parent buffer.</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
 Sub-images</h2>
 <p >A sub-image is another Image object that points to a rectangular part of an existing image. It shares the same pixel buffer and clips drawing operations to its own rectangle. Drawing coordinates are local to the sub-image:</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> buffer[320 * 240];</div>
@@ -238,7 +238,7 @@ Sub-images</h2>
 <p >See also: <a class="el" href="classtgx_1_1_image.html#a14d5fd97744c3335b775fde5ae055e02">Image::set()</a>, <a class="el" href="classtgx_1_1_image.html#a3d543dcbeddb6cd734718eb2432908c9">Image::crop()</a>, <a class="el" href="classtgx_1_1_image.html#a5fd91f6ec1804de22f1586867fcc6e61">Image::getCrop()</a>, <a class="el" href="classtgx_1_1_image.html#a5fd606e68501756f668430c6f1972672">Image::operator()</a>, <a class="el" href="classtgx_1_1_image.html#a6fe6fb2fd7cb9cb5da5c2984420ea184">Image::isValid()</a>, <a class="el" href="classtgx_1_1_image.html#a4d9fb81a7daea71a80213f3aa5dbbb18">Image::setInvalid()</a>, <a class="el" href="classtgx_1_1_image.html#a89021aa0f6408e702be35ae342d6e190">Image::imageBox()</a>.</p>
 <dl class="section note"><dt>Note</dt><dd>Creating images/sub-images is very fast and nearly cost-free, so users should not refrain from creating Image/sub-images whenever needed. It is the most efficient solution to clip/restrict any drawing operation to a given rectangular region of an image.</dd></dl>
 <hr  />
-<h1><a class="anchor" id="autotoc_md10"></a>
+<h1><a class="anchor" id="autotoc_md11"></a>
 Coordinates, vectors and boxes</h1>
 <p >TGX uses the usual framebuffer coordinate system: the pixel <code>(0,0)</code> is located at the <b>top-left</b> corner of the image, the X coordinate grows to the right, and the Y coordinate grows downward.</p>
 <p ><img src="../pixel_coordinates.svg" alt="pixel_coordinates" style="pointer-events: none;" class="inline"/></p>
@@ -253,7 +253,7 @@ Coordinates, vectors and boxes</h1>
 </table>
 <p >For example, the floating point box occupied by pixel <code>(0,0)</code> is <code>fBox2(-0.5f, 0.5f, -0.5f, 0.5f)</code>, centered at <code>fVec2(0.0f, 0.0f)</code>.</p>
 <p >The difference matters when mixing exact pixel primitives and anti-aliased or sub-pixel primitives. As a rule of thumb, use integer coordinates for exact pixel primitives and floating point coordinates for anti-aliased or sub-pixel primitives.</p>
-<h2><a class="anchor" id="autotoc_md11"></a>
+<h2><a class="anchor" id="autotoc_md12"></a>
 Vector and box classes</h2>
 <p >The tgx library defines classes for 2D vectors and boxes:</p>
 <table class="markdownTable">
@@ -295,7 +295,7 @@ Vector and box classes</h2>
 <div class="ttc" id="a_color_8h_html_a1e688542f09375307545639f49ac8d99"><div class="ttname"><a href="_color_8h.html#a1e688542f09375307545639f49ac8d99">tgx::RGB32_Black</a></div><div class="ttdeci">const RGB32 RGB32_Black</div><div class="ttdoc">Color black in RGB32 format.</div></div>
 <div class="ttc" id="aclasstgx_1_1_image_html_a8e71e57a7067f87a68c8c6e9c5d3c4d2"><div class="ttname"><a href="classtgx_1_1_image.html#a8e71e57a7067f87a68c8c6e9c5d3c4d2">tgx::Image::fillRect</a></div><div class="ttdeci">void fillRect(const iBox2 &amp;B, color_t color, float opacity=TGX_DEFAULT_NO_BLENDING)</div><div class="ttdoc">Draw a filled rectangle.</div></div>
 <div class="ttc" id="aclasstgx_1_1_image_html_ae7f071eb7e6ab2cbe10850fe408f932f"><div class="ttname"><a href="classtgx_1_1_image.html#ae7f071eb7e6ab2cbe10850fe408f932f">tgx::Image::drawCircleAA</a></div><div class="ttdeci">void drawCircleAA(fVec2 center, float r, color_t color, float opacity=1.0f)</div><div class="ttdoc">Draw a circle (high quality).</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md13"></a>
 Common beginner mistakes</h2>
 <ul>
 <li>Do not let the pixel buffer go out of scope while an Image still points to it.</li>
@@ -304,7 +304,7 @@ Common beginner mistakes</h2>
 <li>Use the native channel range when constructing low-level colors such as <code>RGB565(31, 63, 31)</code>. Use float constructors such as <code>RGB565(1.0f, 1.0f, 1.0f)</code> when you want normalized color values.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md14"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Storing images in C++ source files</h1>
 <p >The memory buffer an image points to may reside in flash/ROM and it is possible to define <code>const</code> images directly in <code>.cpp</code> files for easy inclusion in a project.</p>
 <p >For example, the 10x10 image</p>
@@ -328,7 +328,7 @@ Storing images in C++ source files</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// image object, 10x10 image with smiley_data as pixel buffer.</span></div>
 <div class="line"><span class="keyword">const</span> <a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> smiley(smiley_data, 10, 10);</div>
-</div><!-- fragment --><p >The <code>/tools/</code> subdirectory of the library contains the Python script <code>image_converter.py</code> which converts an image from a classical format (jpeg/png/bmp...) into a <code>.cpp</code> file.</p>
+</div><!-- fragment --><p >The <code>/tools/</code> subdirectory of the library contains the <code>tgx_image.py</code> graphical converter and the advanced <code>cli_tools/tgx_image_cli.py</code> command-line converter. They turn classical image files (PNG/JPEG/BMP...) into TGX image headers or <code>.h + .cpp</code> pairs.</p>
 <dl class="section note"><dt>Note</dt><dd>The TGX library also makes it easy to directly load PNG, JPEG and GIF images (which may be stored in RAM/FLASH or on another medium such as an SD card) by using bindings with external libraries. See section <a class="el" href="md_docs_intro_api_2_d.html#sec_extensions">TGX extensions via external libraries</a> for more details.</dd></dl>
 <h1><a class="anchor" id="subsec_basic_copy_convert"></a>
 Copying/converting images to different color types</h1>
@@ -358,7 +358,7 @@ Copying/converting images to different color types</h1>
 <div class="ttc" id="aclasstgx_1_1_image_html_a9613250401a0fe1d6283e81070e99ee8"><div class="ttname"><a href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">tgx::Image::convert</a></div><div class="ttdeci">Image&lt; color_dst &gt; convert()</div><div class="ttdoc">Convert this image to another type.</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b24_html"><div class="ttname"><a href="structtgx_1_1_r_g_b24.html">tgx::RGB24</a></div><div class="ttdoc">Color in R8/G8/B8 format.</div><div class="ttdef"><b>Definition:</b> Color.h:681</div></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>See also the methods for <a class="el" href="md_docs_intro_api_2_d.html#subsec_blitting">blitting sprites</a> which may be used for copy and color type conversion.</dd></dl>
-<h1><a class="anchor" id="autotoc_md15"></a>
+<h1><a class="anchor" id="autotoc_md16"></a>
 Where to go next</h1>
 <p >You now know how TGX images store pixels, how coordinates work, and how image objects refer to their pixel buffers.</p>
 <p >Choose the next tutorial depending on what you want to draw:</p>

@@ -1,341 +1,208 @@
-@page tools_mesh Mesh, image and font tools
+@page tools_mesh TGX tools
 
-TGX can be used as a pure header-style Arduino library, but the repository also contains tools that make larger
-projects easier to maintain:
+TGX provides a small set of desktop tools to prepare assets before they are
+included in a sketch or C++ project. These tools convert common image, mesh and
+font formats into C++ files directly usable by TGX, and they can inspect the
+generated files afterwards.
 
-- mesh conversion tools for static 3D models;
-- texture export helpers;
-- font conversion tools;
-- generated asset inspection and visualization helpers.
+The graphical tools are meant to be the comfortable path for everyday use. For
+example, `tgx_mesh.py` can load an OBJ or TGX mesh, preview materials and
+textures, tune conversion settings and export ready-to-include C++ files:
 
-The tools are optional. A sketch that only uses hand-written geometry or already generated headers does not need
-Python, CMake or any external program at build time.
-
-
-@section tools_setup Installing the tool environment
-
-The mesh tools are Python programs located in `tools/`. They are intended to run on the development computer, not on
-the MCU. Use `tools/tgx_mesh.py` for the graphical tool, or `tools/cli_tools/tgx_mesh_cli.py` for advanced command-line
-conversion and scripts.
-
-Recommended setup:
-
-~~~{.sh}
-python --version
-python -m pip install --upgrade pip
-python tools/tgx_setup.py
-~~~
-
-The setup script checks the Python packages, CMake, the C++ compiler and the native helper programs. It can also guide
-the installation of missing Python packages from `tools/requirements.txt`.
-
-`numpy` is used for mesh processing, visibility masks and statistics. `Pillow` is used for texture/image/font
-conversion, `fonttools` is used to inspect font character maps, and `pyvista`/`vtk` are used for interactive
-visualization.
-
-The optional native helper programs require a C++ compiler and CMake:
-
-- Windows: install Visual Studio Community with the C++ workload, or another CMake-compatible compiler.
-- Linux: install `cmake`, `make` or `ninja`, and `g++` or `clang++`.
-- macOS: install Xcode command line tools and CMake.
-
-On Windows, a recent Python from python.org, Miniconda, Anaconda or Visual Studio's Python environment can be used.
-On Linux and macOS, the system Python often works, but a virtual environment is cleaner:
-
-~~~{.sh}
-python -m venv .venv
-source .venv/bin/activate        # Linux/macOS
-python -m pip install -r tools/requirements.txt
-~~~
-
-On Windows PowerShell:
-
-~~~{.powershell}
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r tools/requirements.txt
-~~~
-
-If an interactive PyVista window does not open, first verify that the model can be converted without `--view`; viewer
-problems are usually related to the local OpenGL/graphics driver setup, not to the mesh format itself.
+![tgx_mesh graphical converter](../tgx_mesh_screenshot_small.png)
 
 
-@section tools_stripifiers Optional stripifier helpers
+| Tool | Purpose |
+|------|---------|
+| `tools/tgx_image.py` | Convert PNG/JPEG/BMP/TGA images to TGX `Image` headers. |
+| `tools/tgx_mesh.py` | Convert OBJ files or existing TGX meshes to `Mesh3D` or `Mesh3Dv2`. |
+| `tools/tgx_font.py` | Convert TrueType/OpenType fonts to TGX-compatible font headers. |
+| `tools/tgx_info.py` | Inspect generated TGX image, mesh and font files. |
 
-TGX stores triangles as strips/chains where possible. Fewer chains usually means fewer vertex loads and faster mesh
-rendering. The converter includes a stripifier module and can use native helper programs for better chains.
+The graphical tools are the recommended entry points for most users. Command
+line versions also exist under `tools/cli_tools/` for scripts, batch conversion
+and repeatable builds.
 
-The setup script is:
+The tools are optional. They run on the development computer when preparing
+assets; they are not needed by the MCU at runtime, and they are not needed to
+compile a sketch that already contains its generated assets.
+
+
+@section tools_install Installing the tools
+
+Install TGX as usual first. The tools are only needed on the development
+computer when you want to generate assets.
+
+Use a recent Python 3 installation, then run this command from the TGX
+repository root:
 
 ~~~{.sh}
 python tools/tgx_setup.py
 ~~~
 
-It builds helper executables under `tools/_internal/bin/` from sources in `tools/_internal/cpp/` and `tools/external_lib/`.
+The setup script checks:
 
-TGX can use two solvers:
+- Python packages used by the tools;
+- Tkinter, used by the graphical interfaces;
+- CMake and a C++ compiler, used by the mesh converter helpers;
+- the native helper programs needed by mesh conversion.
 
-- **GA-EAX**: bundled source helper for general stripification work;
-- **LKH**: optional solver. Its license is separate, so users who want it should place the LKH source in the expected
-  external directory and let the setup script build the local helper.
+If Python packages are missing, install them in the same Python environment:
 
-The converter still works without optional helpers, but high-quality conversion of large models is slower or less
-optimal. When helpers are available, the tool uses them automatically.
+~~~{.sh}
+python -m pip install -r tools/requirements.txt
+~~~
+
+On Linux, Tkinter may require a system package, for example:
+
+~~~{.sh}
+sudo apt install python3-tk
+~~~
+
+The mesh converter needs CMake and a C++ compiler:
+
+- Windows: install CMake and Visual Studio Build Tools with the C++ workload.
+- Linux: install `cmake` and `g++` or `clang++`.
+- macOS: install CMake and the Xcode command line tools.
+
+LKH is optional. If it is not installed, mesh conversion still works, but
+triangle strips may be less optimal. The setup script explains how to add LKH
+later if desired.
+
+To check the current setup without rebuilding anything:
+
+~~~{.sh}
+python tools/tgx_setup.py --check
+~~~
+
+Each public tool checks the setup at startup. This helps catch the common case
+where the tool is launched from the wrong Python environment.
 
 
-@section tools_images_fonts Image and font converters
+@section tools_image tgx_image
 
-The graphical image converter is:
+Run:
 
 ~~~{.sh}
 python tools/tgx_image.py
 ~~~
 
-The command-line image converter is useful for scripted texture export:
+`tgx_image.py` converts regular image files to C++ `tgx::Image` objects. It can:
+
+- choose the TGX color type, such as `RGB565`, `RGB24` or `RGB32`;
+- resize the image;
+- choose the generated C++ object name;
+- write either a single `.h` file or a `.h + .cpp` pair.
+
+This is the tool to use for sprites, icons, texture images and other fixed
+bitmap assets that should be compiled into a sketch.
+
+
+@section tools_mesh_gui tgx_mesh
+
+Run:
 
 ~~~{.sh}
-python tools/cli_tools/tgx_image_cli.py diffuse.png --format RGB565 --name diffuse_texture --output-dir generated
+python tools/tgx_mesh.py
 ~~~
 
-The graphical font converter is:
+`tgx_mesh.py` converts Wavefront OBJ models, or existing TGX mesh headers, to:
+
+- \ref tgx::Mesh3Dv2 "Mesh3Dv2", the recommended compact mesh format for new
+  static models;
+- \ref tgx::Mesh3D "Mesh3D", the legacy format kept for compatibility.
+
+For OBJ files, the tool reads materials and textures when available. The GUI
+shows the detected texture references and lets the user override or resize each
+texture before conversion. It can also preview the model with PyVista, including
+textured rendering and Mesh3Dv2 meshlet visualization.
+
+For a first conversion, keep the default parameters. They are intended to be a
+reasonable MCU compromise. Tune meshlet size or texture size only after
+inspecting the generated mesh and measuring the real sketch on the target board.
+
+
+@section tools_font tgx_font
+
+Run:
 
 ~~~{.sh}
 python tools/tgx_font.py
 ~~~
 
-It converts TrueType/OpenType fonts to TGX-compatible font headers. The GUI lets you choose:
+`tgx_font.py` converts TrueType/OpenType fonts to font formats supported by TGX:
 
-- the input font file;
-- the output format: antialiased `ILI9341_t3_font_t` v2.3, monochrome ILI9341_t3 v1, or Adafruit `GFXfont`;
-- one or several pixel sizes;
-- `PROGMEM` and single-header or `.h + .cpp` output;
-- character presets or a custom per-character selection from a grid.
+- antialiased `ILI9341_t3_font_t` v2.3;
+- older monochrome ILI9341_t3 fonts;
+- Adafruit `GFXfont`.
 
-The equivalent CLI is:
+The GUI lets the user select one or several sizes, choose the character set,
+choose the output format, enable `PROGMEM`, and write either a single `.h` file
+or a `.h + .cpp` pair.
 
-~~~{.sh}
-python tools/cli_tools/tgx_font_cli.py MyFont.ttf -o my_font.h --name my_font --sizes 12,16,24 --chars printable --aa 4
-~~~
-
-Useful font options:
-
-- `--format ili9341-v23|ili9341-v1|adafruit-gfx`: choose the runtime font format.
-- `--sizes 10,12,16`: export several sizes from the same source font into the same generated font file.
-- `--chars printable`: choose a preset. Explicit ranges such as `32-126` or `0xA0-0xFF` are also accepted.
-- `--aa none|2|4|8`: choose antialiasing depth for `ili9341-v23`. Monochrome formats force 1 bit per pixel.
-- `--layout header|split`: write either one `.h` file or a `.h + .cpp` pair.
-- `--preview-png preview.png`: write a desktop preview grid of the exported glyphs, with one section per size.
-
-The generated C++ symbol always includes the pixel size. For the ILI9341 v2.3 format, it also includes the AA depth
-for compatibility with TGX font naming (`AA0` for monochrome v2.3 output). For example,
-`--name ui_font --sizes 16 --aa 4` creates `ui_font_AA4_16`. Monochrome formats use names such as `ui_font_16`.
+This is useful when only a subset of characters is needed. Keeping only the
+characters used by a sketch can save a lot of flash memory.
 
 
-@section tools_formats Mesh formats in practice
+@section tools_info tgx_info
 
-TGX currently supports two public static mesh formats:
-
-- \ref tgx::Mesh3D "Mesh3D": legacy format, still supported for existing sketches and hand-written/generated models.
-- \ref tgx::Mesh3Dv2 "Mesh3Dv2": current compact format, recommended for new static meshes.
-
-`Mesh3D` stores global arrays of vertices, normals, UV coordinates and triangle chains. It can chain several meshes
-together, historically often to represent several materials.
-
-`Mesh3Dv2` stores a material table, a meshlet table and a compact quantized payload. Each meshlet is a small group of
-triangles associated with one material. The renderer can skip invisible meshlets and decode only the local payload of
-visible meshlets. This usually improves memory locality and reduces work on embedded targets.
-
-For Arduino examples, generated meshes can be exported either as:
-
-- a single `.h` file, easiest to include in a sketch;
-- a `.h` plus `.cpp` pair, cleaner for larger C++ projects.
-
-
-@section tools_obj_to_mesh3dv2 Converting an OBJ model to Mesh3Dv2
-
-Use the public mesh CLI for Wavefront OBJ input:
-
-~~~{.sh}
-python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2
-~~~
-
-The default profile is intended to be a good MCU compromise:
-
-- builder: `visibility_merge`;
-- target vertices per meshlet: `30`;
-- maximum triangles per meshlet: `127`;
-- maximum normal angle during visibility merging: `90` degrees;
-- visibility sampling: `1024` views at `1024 x 1024` by default.
-
-The default is deliberately conservative. It usually gives good culling without creating meshlets so tiny that their
-management overhead dominates.
-
-Useful options:
-
-- `--layout header`: write all generated data into one header. This is the default and is convenient for Arduino
-  examples.
-- `--layout split`: write a `.h + .cpp` pair for larger C++ projects.
-- `--name SYMBOL`: name of the generated C++ mesh variable.
-- `--target-vertices N`: tune typical meshlet size. Lower values increase culling granularity; higher values reduce
-  meshlet overhead.
-- `--max-normal-angle DEG`: controls how aggressively meshlets with different normal directions can be merged.
-- `--visibility-samples N`: number of view directions used to build visibility masks.
-- `--visibility-size N`: render size used by the visibility helper.
-- `--texture-size WxH`: resize exported textures.
-- `--texture-layout header|split`: choose one header per texture or split `.h + .cpp` output.
-
-For most models, start with no tuning options. Change `--target-vertices` only after checking the generated statistics
-and the real framerate on the target board.
-
-
-@section tools_legacy_to_mesh3dv2 Migrating an existing Mesh3D header
-
-Existing TGX legacy mesh headers can be converted directly:
-
-~~~{.sh}
-python tools/cli_tools/tgx_mesh_cli.py old_mesh.h -o new_mesh_v2.h --root old_mesh --name new_mesh_v2
-~~~
-
-`--root` is the C++ symbol of the first legacy `Mesh3D` object. If the file contains a single obvious mesh chain, the
-tool can often detect it automatically; when several mesh declarations exist, pass `--root` explicitly.
-
-The converter keeps material and texture references when it can parse them. If a sketch modifies a texture pointer at
-runtime, keep that texture/material data writable in the sketch just as with legacy `Mesh3D`.
-
-
-@section tools_legacy_mesh3d Optimizing legacy Mesh3D output
-
-Sometimes a project must keep the legacy \ref tgx::Mesh3D format. The newer stripifier can still rebuild better
-triangle chains:
-
-~~~{.sh}
-python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_legacy_opt.h --format Mesh3D --name model
-~~~
-
-For an existing legacy header:
-
-~~~{.sh}
-python tools/cli_tools/tgx_mesh_cli.py old_mesh.h -o model_legacy_opt.h --format Mesh3D --root old_mesh --name model
-~~~
-
-This does not add meshlet culling, but it can reduce the number of chains and improve legacy rendering speed.
-
-
-@section tools_inspect_view Inspecting and visualizing meshes
-
-The CLI prints memory and structure statistics after each conversion:
-
-~~~{.sh}
-python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2
-~~~
-
-For `Mesh3Dv2`, it reports meshlet counts, chain counts, material counts, payload size, visibility information and
-other useful diagnostics.
-
-Interactive visualization is available from the graphical tool:
-
-~~~{.sh}
-python tools/tgx_mesh.py
-~~~
-
-Viewer modes:
-
-- `texture`: show textured geometry when texture information is available;
-- `meshlets`: color meshlets differently to inspect the partition;
-- `cones`: visualize visibility directions/cones for meshlets;
-- `tabs`: start with keyboard-switchable views.
-
-Use the viewer after conversion. It is the fastest way to detect a bad material split, a broken texture mapping or
-meshlets that are too fragmented.
-
-
-@section tools_info Inspecting generated TGX assets
-
-The general-purpose inspector is:
+Run:
 
 ~~~{.sh}
 python tools/tgx_info.py
 ~~~
 
-The command-line version is:
+`tgx_info.py` is a read-only inspector. Give it a generated `.h` or `.cpp` file
+and it detects whether it contains an image, mesh or font.
 
-~~~{.sh}
-python tools/cli_tools/tgx_info_cli.py generated_asset.h
-~~~
+It reports information such as:
 
-It reads a generated `.h` or `.cpp`, detects the TGX asset type, and searches for the associated companion files next
-to the selected file. It is intended as a read-only inspection tool.
+- image dimensions, color type and memory size;
+- mesh triangle counts, meshlet counts, texture list and memory estimates;
+- font objects, glyph counts, character ranges, antialiasing and memory size.
 
-For meshes, it reports:
-
-- legacy `Mesh3D` or current `Mesh3Dv2` format;
-- triangle, chain, meshlet and material counts;
-- payload and static memory estimates, excluding texture image data;
-- texture symbols and texture dimensions when texture headers can be found;
-- bounding box and meshlet culling information for `Mesh3Dv2`.
-
-For images, it reports the C++ symbol, TGX color type, dimensions and memory size, and can save a PNG preview.
-
-For fonts, it reports all generated font objects in the file, their format, character range, antialiasing level,
-memory size and glyph count. It can also save a PNG glyph sheet.
-
-If the file cannot be parsed reliably, the inspector reports the problem instead of guessing from partial data. This is
-useful when checking hand-edited generated files before including them in a sketch.
+It can also save image/font preview PNGs, and can open the mesh viewer for mesh
+assets. Use it to check generated files before including them in a sketch.
 
 
-@section tools_cleanup Preprocessing and cleanup
+@section tools_cli Command-line tools
 
-The conversion pipeline performs cleanup before building strips or meshlets:
+Each graphical tool has a command-line counterpart under `tools/cli_tools/`:
 
-- optional normalization of OBJ geometry;
-- normal verification or recomputation when requested;
-- removal of degenerate triangles;
-- quantization/merge of nearly identical vertices;
-- quantization/merge of UV coordinates on a fixed grid;
-- quantization/merge of normals followed by renormalization;
-- material grouping and texture association.
+| CLI tool | Purpose |
+|----------|---------|
+| `tgx_image_cli.py` | Scripted image conversion. |
+| `tgx_mesh_cli.py` | Scripted OBJ/TGX mesh conversion. |
+| `tgx_font_cli.py` | Scripted font conversion. |
+| `tgx_info_cli.py` | Scripted asset inspection. |
 
-This preprocessing improves both memory use and stripification quality. For example, tiny UV differences along what
-should be a continuous edge can prevent two triangles from being chained. Snapping UVs to a controlled grid often
-recovers the intended connectivity without visibly changing the texture.
-
-Important options:
-
-- `--vertex-quant-bits N`: snap vertices relative to the model bounding box.
-- `--texcoord-quant-bits N`: snap UVs to multiples of `1 / 2^N`.
-- `--normal-quant-bits N`: snap normals to a signed fixed-point grid and renormalize.
-- `--force-normals`: recompute flat normals for OBJ input.
-- `--normalize --normalize-size S`: center and scale OBJ input.
-
-Do not use `--texcoord-wrap` blindly. It identifies UV coordinates modulo 1 and is only correct when the model and
-texture mapping were authored for that interpretation.
+The command-line tools are useful for automation and reproducible asset builds.
+They expose more options than the graphical tools. See
+`tools/cli_tools/README.md` and the `--help` output of each command for the full
+reference.
 
 
-@section tools_workflow Suggested workflow
+@section tools_generated_assets Generated files
 
-For a new textured model:
+The tools generate ordinary C++ files. They can be included in sketches like
+hand-written assets:
 
-1. Start from a clean triangulated OBJ with material/texture files.
-2. Convert with defaults:
+- single-header output is usually the simplest option for Arduino examples;
+- split `.h + .cpp` output is often cleaner for larger C++ projects;
+- `PROGMEM` output keeps large constant data in flash on Arduino-style targets.
 
-~~~{.sh}
-python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2 --texture-size 256x256
-~~~
+Generated files are meant to be readable and inspectable. They can be committed
+with a project, so users of the final sketch do not need Python or the TGX tools.
 
-3. Inspect statistics:
 
-~~~{.sh}
-python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --name model_v2
-~~~
+@section tools_legacy Legacy tools
 
-4. Open the viewer:
+`tools/legacy_tools/` contains older conversion scripts kept for old projects
+and reference:
 
-~~~{.sh}
-python tools/tgx_mesh.py
-~~~
+- `image_converter.py`
+- `obj_to_h.py`
+- `texture_2_h.py`
 
-5. Include the generated header in a TGX sketch and benchmark on the real target board.
-6. Only then tune `--target-vertices`, texture size or wrapping mode if needed.
-
-Good desktop statistics are useful, but final performance depends on the MCU, flash speed, cache behavior, display
-driver and memory layout. Always measure the real sketch when performance matters.
+New projects should normally use `tgx_image.py`, `tgx_mesh.py`, `tgx_font.py`
+and `tgx_info.py`.

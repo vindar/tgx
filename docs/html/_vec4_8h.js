@@ -20,6 +20,7 @@ var _vec4_8h =
     [ "operator*", "_vec4_8h.html#a2195f8a1a82c2d863a9b22c38393359a", null ],
     [ "operator/", "_vec4_8h.html#a8a8657acbd1d3f20aa1b3b24bac705b0", null ],
     [ "dotProduct", "_vec4_8h.html#a1ed4fbd6afa3a8a968b7d77471445014", null ],
+    [ "dotProduct", "_vec4_8h.html#abfffce23174439ba71761e20d3f3a4bb", null ],
     [ "crossProduct", "_vec4_8h.html#a88c114f4007b331d1edac1bcce23678f", null ],
     [ "lerp", "_vec4_8h.html#a7577247073d3dea513efc002527762c5", null ]
 ];

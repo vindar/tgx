@@ -30,21 +30,21 @@ var NAVTREE =
     [ "References", "index.html#References", null ],
     [ "Installation.", "md_docs_intro_install.html", null ],
     [ "Basic concepts.", "md_docs_intro_basic.html", [
-      [ "Color types", "md_docs_intro_basic.html#autotoc_md2", [
-        [ "Blending and opacity parameter.", "md_docs_intro_basic.html#autotoc_md3", null ]
+      [ "Color types", "md_docs_intro_basic.html#autotoc_md3", [
+        [ "Blending and opacity parameter.", "md_docs_intro_basic.html#autotoc_md4", null ]
       ] ],
-      [ "Image class, memory layout and sub-images", "md_docs_intro_basic.html#autotoc_md5", [
-        [ "Creating an image", "md_docs_intro_basic.html#autotoc_md6", null ],
-        [ "Memory layout and stride", "md_docs_intro_basic.html#autotoc_md7", null ],
-        [ "Sub-images", "md_docs_intro_basic.html#autotoc_md8", null ]
+      [ "Image class, memory layout and sub-images", "md_docs_intro_basic.html#autotoc_md6", [
+        [ "Creating an image", "md_docs_intro_basic.html#autotoc_md7", null ],
+        [ "Memory layout and stride", "md_docs_intro_basic.html#autotoc_md8", null ],
+        [ "Sub-images", "md_docs_intro_basic.html#autotoc_md9", null ]
       ] ],
-      [ "Coordinates, vectors and boxes", "md_docs_intro_basic.html#autotoc_md10", [
-        [ "Vector and box classes", "md_docs_intro_basic.html#autotoc_md11", null ],
-        [ "Common beginner mistakes", "md_docs_intro_basic.html#autotoc_md12", null ]
+      [ "Coordinates, vectors and boxes", "md_docs_intro_basic.html#autotoc_md11", [
+        [ "Vector and box classes", "md_docs_intro_basic.html#autotoc_md12", null ],
+        [ "Common beginner mistakes", "md_docs_intro_basic.html#autotoc_md13", null ]
       ] ],
-      [ "Storing images in C++ source files", "md_docs_intro_basic.html#autotoc_md14", null ],
+      [ "Storing images in C++ source files", "md_docs_intro_basic.html#autotoc_md15", null ],
       [ "Copying/converting images to different color types", "md_docs_intro_basic.html#subsec_basic_copy_convert", null ],
-      [ "Where to go next", "md_docs_intro_basic.html#autotoc_md15", null ]
+      [ "Where to go next", "md_docs_intro_basic.html#autotoc_md16", null ]
     ] ],
     [ "Using the 2D API.", "md_docs_intro_api_2_d.html", [
       [ "Overview of the 2D API", "md_docs_intro_api_2_d.html#sec_2D_overview", null ],
@@ -104,16 +104,15 @@ var NAVTREE =
       [ "Useful examples", "md_docs_intro_api_3_d.html#sec_3D_examples", null ],
       [ "Common pitfalls", "md_docs_intro_api_3_d.html#sec_3D_pitfalls", null ]
     ] ],
-    [ "Mesh and image tools", "md_docs_tools.html", [
-      [ "Installing the tool environment", "md_docs_tools.html#tools_setup", null ],
-      [ "Optional stripifier helpers", "md_docs_tools.html#tools_stripifiers", null ],
-      [ "Mesh formats in practice", "md_docs_tools.html#tools_formats", null ],
-      [ "Converting an OBJ model to Mesh3Dv2", "md_docs_tools.html#tools_obj_to_mesh3dv2", null ],
-      [ "Migrating an existing Mesh3D header", "md_docs_tools.html#tools_legacy_to_mesh3dv2", null ],
-      [ "Optimizing legacy Mesh3D output", "md_docs_tools.html#tools_legacy_mesh3d", null ],
-      [ "Inspecting and visualizing meshes", "md_docs_tools.html#tools_inspect_view", null ],
-      [ "Preprocessing and cleanup", "md_docs_tools.html#tools_cleanup", null ],
-      [ "Suggested workflow", "md_docs_tools.html#tools_workflow", null ]
+    [ "TGX tools", "md_docs_tools.html", [
+      [ "Installing the tools", "md_docs_tools.html#tools_install", null ],
+      [ "tgx_image", "md_docs_tools.html#tools_image", null ],
+      [ "tgx_mesh", "md_docs_tools.html#tools_mesh_gui", null ],
+      [ "tgx_font", "md_docs_tools.html#tools_font", null ],
+      [ "tgx_info", "md_docs_tools.html#tools_info", null ],
+      [ "Command-line tools", "md_docs_tools.html#tools_cli", null ],
+      [ "Generated files", "md_docs_tools.html#tools_generated_assets", null ],
+      [ "Legacy tools", "md_docs_tools.html#tools_legacy", null ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
@@ -139,11 +138,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_box2_8h.html",
-"_vec3_8h.html#ac1caa239be43f9aa85c0016e491b726a",
-"classtgx_1_1_renderer3_d.html#a845bbd628cfd96f379f3f23d880aa60a",
-"md_docs_tools.html#tools_setup",
-"structtgx_1_1_r_g_b24.html#a49f27cf054e924ad5b30dd28b7e7c5b5",
-"structtgx_1_1_vec2.html#a0aeac47d85bafdec79122005cc7e4432"
+"_vec3_8h.html#aafcf9709eee28cb7c9d08eee13255bc7",
+"classtgx_1_1_renderer3_d.html#a7ca1f0b53ca7460869fc3031f8422240",
+"md_docs_tools.html#tools_image",
+"structtgx_1_1_r_g_b24.html#a445a6485b7431310a94c8ad077b99bfd",
+"structtgx_1_1_vec2.html#a01c2cd6514d2475b47db2b3bc9f32312"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

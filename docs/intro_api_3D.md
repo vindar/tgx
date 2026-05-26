@@ -563,7 +563,7 @@ renderer.drawMesh(cached);
 On Teensy 4.x, some examples also use <code>%copyMeshEXTMEM()</code> to move large model data or textures to external
 memory. Whether this helps depends on where the data was stored before and on how the sketch uses the model.
 
-Use the \ref tools_mesh "mesh tools" to generate `Mesh3Dv2` headers from Wavefront OBJ files or to migrate existing
+Use the \ref tools_mesh "TGX tools" to generate `Mesh3Dv2` headers from Wavefront OBJ files or to migrate existing
 legacy `Mesh3D` headers.
 
 

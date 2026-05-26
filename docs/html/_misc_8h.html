@@ -109,8 +109,8 @@ $(document).ready(function(){initNavTree('_misc_8h.html',''); initResizable(); }
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a27e3491730afa8a877d59befee02a650"><td class="memItemLeft" align="right" valign="top"><a id="a27e3491730afa8a877d59befee02a650" name="a27e3491730afa8a877d59befee02a650"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_FORCED_INLINE</b>&#160;&#160;&#160;inline</td></tr>
+<tr class="memitem:a27e3491730afa8a877d59befee02a650"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_misc_8h.html#a27e3491730afa8a877d59befee02a650">TGX_FORCED_INLINE</a>&#160;&#160;&#160;inline</td></tr>
+<tr class="memdesc:a27e3491730afa8a877d59befee02a650"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force inlining for very small helper functions on compilers that support it.  <a href="_misc_8h.html#a27e3491730afa8a877d59befee02a650">More...</a><br /></td></tr>
 <tr class="separator:a27e3491730afa8a877d59befee02a650"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae71449b1cc6e6250b91f539153a7a0d3"><td class="memItemLeft" align="right" valign="top"><a id="ae71449b1cc6e6250b91f539153a7a0d3" name="ae71449b1cc6e6250b91f539153a7a0d3"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>M_PI</b>&#160;&#160;&#160;3.14159265358979323846</td></tr>
@@ -204,7 +204,25 @@ TGX_INLINE double&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::fas
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Utility/miscellaneous functions used throughout the library. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a27e3491730afa8a877d59befee02a650" name="a27e3491730afa8a877d59befee02a650"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27e3491730afa8a877d59befee02a650">&#9670;&#160;</a></span>TGX_FORCED_INLINE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TGX_FORCED_INLINE&#160;&#160;&#160;inline</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Force inlining for very small helper functions on compilers that support it. </p>
+<p >This is used only on hot internal helpers where an out-of-line call would be more expensive than the function body itself. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="ac1f902347993c1de2e39bc4fc52ff3c2" name="ac1f902347993c1de2e39bc4fc52ff3c2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac1f902347993c1de2e39bc4fc52ff3c2">&#9670;&#160;</a></span>fast_inv() <span class="overload">[1/2]</span></h2>
 

@@ -36,9 +36,12 @@ The library runs on both microprocessors and microcontrollers but specifically t
     - Optional backface culling.
     - Tile rasterization: it is possible to render the viewport in multiple passes to save RAM.
     - Template classes for all the needed maths: \ref tgx::Vec2 "Vec2", \ref tgx::Vec3 "Vec3", \ref tgx::Vec4 "Vec4" (vectors), \ref tgx::Mat4 "Mat4" (4x4 matrix) and \ref tgx::Box2 "Box2", \ref tgx::Box3 "Box3" (boxes).
-    - Legacy \ref tgx::Mesh3D "Mesh3D" and compact meshlet-based \ref tgx::Mesh3Dv2 "Mesh3Dv2" model formats.
-    - Meshes and textures can be read directly from flash memory to save RAM, or cached/copied to faster memory when available.
-    - Python tools provided for texture conversion, Wavefront `.obj` conversion and migration of existing `Mesh3D` headers to `Mesh3Dv2`.
+    - Legacy \ref tgx::Mesh3D "Mesh3D" and compact meshlet-based \ref tgx::Mesh3Dv2 "Mesh3Dv2" model formats. Meshes and textures can be read directly from flash memory to save RAM.
+- **Graphical tools with matching command-line versions:**
+    - `tgx_image.py` to convert common image files to TGX image headers.
+    - `tgx_mesh.py` to convert Wavefront `.obj` files or existing TGX meshes to `Mesh3D` or `Mesh3Dv2`.
+    - `tgx_font.py` to convert TrueType/OpenType fonts to TGX-compatible font headers.
+    - `tgx_info.py` to inspect generated TGX image, mesh and font files.
 
 
 
@@ -50,7 +53,7 @@ The library runs on both microprocessors and microcontrollers but specifically t
 2. @ref intro_basic "Basic concepts"
 3. @ref intro_api_2D "The 2D API."
 4. @ref intro_api_3D "The 3D API."
-5. @ref tools_mesh "Mesh conversion and validation tools."
+5. @ref tools_mesh "TGX tools."
 
 
 

@@ -44,4 +44,22 @@ There are two options:
   TGX can now be added to any project by appending TGX's `/src` subdirectory to the project's include path and adding the library to the linker.
 
 
+## Installation of TGX tools
+
+TGX also provides optional desktop tools to create and inspect generated TGX
+assets: images, meshes and fonts. These tools are not needed to compile a sketch
+that already contains its assets, but they are useful when preparing new models,
+textures or fonts.
+
+The tools use Python. Mesh conversion also builds small native helpers, so it
+requires CMake and a C++ compiler on the development computer. After installing
+TGX, run:
+
+~~~{.sh}
+python tools/tgx_setup.py
+~~~
+
+See @ref tools_mesh "TGX tools" for the complete setup and usage overview.
+
+
 
