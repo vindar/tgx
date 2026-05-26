@@ -20,8 +20,8 @@ if str(TOOLS_ROOT) not in sys.path:
 from _internal.modules.image.core import SUPPORTED_LAYOUTS, SUPPORTED_RESAMPLING, parse_resize, sanitize_identifier
 from _internal.modules.setup.checks import check_environment
 from _internal.modules.mesh.textures import resolve_mesh_textures
-from tools._internal.modules.mesh_pipeline.mesh3d_to_mesh3d2 import parse_legacy_header
-from tools._internal.modules.mesh_pipeline.mesh_inspect import detect_mesh_type, parse_mesh3d2_header
+from tools._internal.modules.mesh_pipeline.mesh3d_to_mesh3d2 import legacy_to_objmesh, parse_legacy_header
+from tools._internal.modules.mesh_pipeline.mesh_inspect import _parse_texture_headers, _parse_texture_image, detect_mesh_type, parse_mesh3d2_header
 from tools._internal.modules.mesh_pipeline.obj_loader import load_obj
 from tools._internal.modules.mesh_pipeline.profiles import DEFAULT_MAX_NORMAL_ANGLE_DEG, DEFAULT_TARGET_VERTICES
 
@@ -197,12 +197,19 @@ class TGXMeshConverterApp(tk.Tk):
         if getattr(self, "convert_button", None) is not None:
             self.convert_button.configure(state=convert_state)
 
-    def _texture_size_text(self, path_text: str) -> str:
+    def _texture_size_text(self, path_text: str, symbol: str = "") -> str:
         if not path_text:
             return ""
         path = Path(path_text)
         if not path.exists():
             return "missing"
+        if path.suffix.lower() in (".h", ".hpp", ".cpp", ".cxx", ".cc"):
+            if not symbol:
+                return "?"
+            texture = _parse_texture_image(path, symbol)
+            if texture is None:
+                return "?"
+            return f"{texture.width}x{texture.height}"
         try:
             with Image.open(path) as img:
                 return f"{img.width}x{img.height}"
@@ -255,7 +262,7 @@ class TGXMeshConverterApp(tk.Tk):
     def _texture_size_icon(self, row: dict[str, str]) -> tk.PhotoImage:
         return self.texture_size_icons[self._texture_size_class(self._texture_effective_size(row))]
 
-    def _update_texture_preview(self, path_text: str | None = None):
+    def _update_texture_preview(self, path_text: str | None = None, symbol: str = ""):
         path_text = self.material_texture_path.get().strip() if path_text is None else path_text.strip()
         self.texture_preview_image = None
         if not path_text:
@@ -266,16 +273,24 @@ class TGXMeshConverterApp(tk.Tk):
             self.texture_preview.configure(image="", text=f"{path.name}\nmissing file")
             return
         try:
-            with Image.open(path) as img:
-                width, height = img.size
-                preview = img.convert("RGBA")
-                resample = getattr(Image, "Resampling", Image).LANCZOS
-                preview.thumbnail((240, 160), resample)
-                self.texture_preview_image = ImageTk.PhotoImage(preview)
+            if path.suffix.lower() in (".h", ".hpp", ".cpp", ".cxx", ".cc"):
+                texture = _parse_texture_image(path, symbol)
+                if texture is None:
+                    raise ValueError("could not parse TGX texture header")
+                width, height = texture.width, texture.height
+                preview = Image.fromarray(texture.rgb, "RGB").convert("RGBA")
+            else:
+                with Image.open(path) as img:
+                    width, height = img.size
+                    preview = img.convert("RGBA")
+            resample = getattr(Image, "Resampling", Image).LANCZOS
+            preview.thumbnail((240, 160), resample)
+            self.texture_preview_image = ImageTk.PhotoImage(preview)
         except Exception as exc:
             self.texture_preview.configure(image="", text=f"{path.name}\npreview failed: {exc}")
             return
-        self.texture_preview.configure(image=self.texture_preview_image, text=f"{path.name}\n{width}x{height}")
+        title = f"{symbol}\n" if symbol else ""
+        self.texture_preview.configure(image=self.texture_preview_image, text=f"{title}{path.name}\n{width}x{height}")
 
     def choose_input(self):
         path = filedialog.askopenfilename(
@@ -393,9 +408,12 @@ class TGXMeshConverterApp(tk.Tk):
                 return
             parsed = parse_legacy_header(path)
             triangles = sum(mesh.nb_faces for mesh in parsed.meshes.values())
-            vertices = sum(mesh.nb_vertices for mesh in parsed.meshes.values())
-            texcoords = sum(mesh.nb_texcoords for mesh in parsed.meshes.values())
-            normals = sum(mesh.nb_normals for mesh in parsed.meshes.values())
+            vertex_arrays = {mesh.vertices for mesh in parsed.meshes.values() if mesh.vertices}
+            texcoord_arrays = {mesh.texcoords for mesh in parsed.meshes.values() if mesh.texcoords}
+            normal_arrays = {mesh.normals for mesh in parsed.meshes.values() if mesh.normals}
+            vertices = sum(int(parsed.vertices[name].shape[0]) for name in vertex_arrays if name in parsed.vertices)
+            texcoords = sum(int(parsed.texcoords[name].shape[0]) for name in texcoord_arrays if name in parsed.texcoords)
+            normals = sum(int(parsed.normals[name].shape[0]) for name in normal_arrays if name in parsed.normals)
             textured = sum(1 for mesh in parsed.meshes.values() if mesh.texture)
             self._set_mesh_info(
                 {
@@ -427,9 +445,11 @@ class TGXMeshConverterApp(tk.Tk):
         self.texture_table.delete(*self.texture_table.get_children())
         path = Path(self.input_path.get())
         self._update_mesh_info(path)
-        if path.suffix.lower() != ".obj" or not path.exists():
-            self._append_log("Texture list is available for OBJ inputs.")
+        if not path.exists():
             self._update_texture_preview("")
+            return
+        if path.suffix.lower() != ".obj":
+            self._reload_tgx_textures(path)
             return
         try:
             mesh = load_obj(path)
@@ -444,6 +464,7 @@ class TGXMeshConverterApp(tk.Tk):
             size = self._texture_size_text(selected)
             self.texture_rows[material] = {
                 "size": size,
+                "symbol": "",
                 "refs": refs,
                 "role": choice.role,
                 "requested": requested,
@@ -466,6 +487,61 @@ class TGXMeshConverterApp(tk.Tk):
         self._append_log(f"Found {len(choices)} material texture slot(s).")
         self._update_texture_preview("")
 
+    def _add_texture_row(self, material: str, *, symbol: str, selected: str, refs: str, role: str = "TGX", requested: str = "") -> None:
+        size = self._texture_size_text(selected, symbol)
+        self.texture_rows[material] = {
+            "size": size,
+            "symbol": symbol,
+            "refs": refs,
+            "role": role,
+            "requested": requested,
+            "selected": selected,
+            "resize": "",
+            "resize_w": "",
+            "resize_h": "",
+            "filter": "lanczos",
+        }
+        iid = f"mat_{len(self.texture_iid_to_material)}"
+        self.texture_iid_to_material[iid] = material
+        self.texture_material_to_iid[material] = iid
+        self.texture_table.insert(
+            "",
+            "end",
+            iid=iid,
+            image=self._texture_size_icon(self.texture_rows[material]),
+            values=(material or "[default]", self._texture_size_display(self.texture_rows[material]), "lanczos", refs, role, requested, selected),
+        )
+
+    def _reload_tgx_textures(self, path: Path) -> None:
+        try:
+            mesh_type = detect_mesh_type(path)
+            if mesh_type == "Mesh3Dv2":
+                mesh = parse_mesh3d2_header(path)
+                for index, material in enumerate(mesh.materials):
+                    symbol = material.texture_symbol
+                    if not symbol:
+                        continue
+                    selected = str(mesh.texture_headers.get(symbol, ""))
+                    self._add_texture_row(f"mat{index}", symbol=symbol, selected=selected, refs=symbol, requested=symbol)
+            else:
+                parsed = parse_legacy_header(path)
+                _obj, texture_symbols, _chain = legacy_to_objmesh(parsed)
+                raw = path.read_text(encoding="utf-8", errors="replace")
+                texture_headers = _parse_texture_headers(raw, path.resolve().parent)
+                for material, symbol in sorted(texture_symbols.items()):
+                    if not symbol:
+                        continue
+                    selected = str(texture_headers.get(symbol, ""))
+                    self._add_texture_row(material, symbol=symbol, selected=selected, refs=symbol, requested=symbol)
+        except Exception as exc:
+            messagebox.showerror("Texture scan failed", str(exc))
+            return
+        if self.texture_rows:
+            self._append_log(f"Found {len(self.texture_rows)} TGX texture reference(s).")
+        else:
+            self._append_log("No TGX texture reference found in this mesh.")
+        self._update_texture_preview("")
+
     def _on_texture_select(self, _event=None):
         selection = self.texture_table.selection()
         if not selection:
@@ -483,7 +559,7 @@ class TGXMeshConverterApp(tk.Tk):
         self.material_resize_width.set(row["resize_w"])
         self.material_resize_height.set(row["resize_h"])
         self.material_resample.set(row["filter"])
-        self._update_texture_preview(row["selected"])
+        self._update_texture_preview(row["selected"], row.get("symbol", ""))
 
     def choose_material_texture(self):
         path = filedialog.askopenfilename(
@@ -516,13 +592,13 @@ class TGXMeshConverterApp(tk.Tk):
         row["resize_w"] = width
         row["resize_h"] = height
         row["filter"] = resample
-        row["size"] = self._texture_size_text(row["selected"])
+        row["size"] = self._texture_size_text(row["selected"], row.get("symbol", ""))
         self.texture_table.item(
             self.selected_iid,
             image=self._texture_size_icon(row),
             values=(self.selected_material or "[default]", self._texture_size_display(row), row["filter"], row["refs"], row["role"], row["requested"], row["selected"]),
         )
-        self._update_texture_preview(row["selected"])
+        self._update_texture_preview(row["selected"], row.get("symbol", ""))
 
     def apply_material_texture_checked(self):
         try:
@@ -628,19 +704,17 @@ class TGXMeshConverterApp(tk.Tk):
         if self.mesh_format.get() == "Mesh3Dv2":
             argv += ["--target-vertices", self.target_vertices.get().strip()]
             argv += ["--max-normal-angle", self.max_normal_angle.get().strip()]
-        input_is_obj = input_path.suffix.lower() == ".obj"
-        if input_is_obj:
-            for material, row in sorted(self.texture_rows.items()):
-                selected = row["selected"].strip()
-                if selected:
-                    argv += ["--texture", f"{material}={selected}"]
-                else:
-                    argv += ["--skip-texture", material]
-                if row["resize"].strip():
-                    parse_resize(row["resize"].strip())
-                    argv += ["--texture-resize", f"{material}={row['resize'].strip()}"]
-                if row["filter"].strip():
-                    argv += ["--texture-filter", f"{material}={row['filter'].strip()}"]
+        for material, row in sorted(self.texture_rows.items()):
+            selected = row["selected"].strip()
+            if selected:
+                argv += ["--texture", f"{material}={selected}"]
+            else:
+                argv += ["--skip-texture", material]
+            if row["resize"].strip():
+                parse_resize(row["resize"].strip())
+                argv += ["--texture-resize", f"{material}={row['resize'].strip()}"]
+            if row["filter"].strip():
+                argv += ["--texture-filter", f"{material}={row['filter'].strip()}"]
         return argv
 
     def _run_command(self, argv: list[str]):

@@ -132,6 +132,11 @@ of silently producing an untextured mesh.
 Texture conversion reuses the TGX image converter, with vertical flipping
 enabled to match OBJ UV conventions.
 
+When the input is already a TGX `Mesh3D` or `Mesh3Dv2`, existing TGX texture
+headers are copied to the mesh output directory by default, and the generated
+mesh includes the local copies. This makes the converted asset self-contained
+instead of leaving references to the original example or source directory.
+
 Useful options:
 
 | Option | Meaning |
@@ -144,7 +149,7 @@ Useful options:
 | `--texture-layout` | `header` or `split`. |
 | `--texture-output-dir DIR` | Directory for generated texture files. Defaults to the mesh output directory. |
 | `--texture-search DIR` | Extra directory searched when `.mtl` texture paths are missing. |
-| `--texture MATERIAL=PATH` | Force one material to use a specific image file. |
+| `--texture MATERIAL=PATH` | Force one material to use a specific image file or TGX texture header. |
 | `--skip-texture MATERIAL` | Leave one material untextured. |
 | `--texture-symbol MATERIAL=SYMBOL` | Use an already existing TGX image symbol for one material. |
 | `--list-textures` | Print resolved texture choices and stop before mesh generation. |

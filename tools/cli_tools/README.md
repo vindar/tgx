@@ -155,7 +155,7 @@ Mesh3Dv2 meshlet options:
 
 Texture export options:
 
-- `--no-textures`: do not export OBJ material textures.
+- `--no-textures`: do not export or copy material textures.
 - `--texture-format TYPE`: TGX color type for generated textures.
 - `--texture-size WIDTHxHEIGHT`: resize all generated textures.
 - `--texture-resize MATERIAL=WIDTHxHEIGHT`: resize one material texture. Can be
@@ -168,8 +168,8 @@ Texture export options:
   to the mesh output directory.
 - `--texture-search DIR`: extra directory searched when OBJ/MTL texture paths
   are missing. Can be repeated.
-- `--texture MATERIAL=PATH`: manually choose an image file for one OBJ
-  material. Can be repeated.
+- `--texture MATERIAL=PATH`: manually choose an image file or TGX texture
+  header for one material. Can be repeated.
 - `--skip-texture MATERIAL`: leave one material untextured.
 - `--texture-straight-alpha`: keep straight alpha for generated texture images.
 - `--texture-symbol MATERIAL=SYMBOL`: use an existing texture symbol instead of
@@ -189,7 +189,9 @@ Notes:
   when installed.
 - For OBJ input, normals are verified or generated as needed by the conversion
   pipeline.
-- Texture export uses the same image exporter as `tgx_image_cli.py`.
+- Texture export uses the same image exporter as `tgx_image_cli.py`. When the
+  input is already a TGX mesh header, existing texture headers are copied next
+  to the generated mesh by default.
 - For new projects, start with default Mesh3Dv2 options, then inspect the output
   with `tgx_info_cli.py` or `tgx_info.py` before tuning parameters.
 

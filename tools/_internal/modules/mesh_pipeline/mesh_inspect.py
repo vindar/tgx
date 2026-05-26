@@ -181,6 +181,7 @@ def _identifier_or_null(text: str) -> str:
     text = text.strip()
     if text in ("nullptr", "NULL", "0"):
         return ""
+    text = re.sub(r"\([^)]*\)", "", text).strip()
     match = re.search(r"&?\s*(\w+)", text)
     return match.group(1) if match else ""
 
@@ -234,6 +235,13 @@ def _rgb565_to_rgb(value: int) -> tuple[int, int, int]:
     r5 = (value >> 11) & 31
     g6 = (value >> 5) & 63
     b5 = value & 31
+    return _rgb565_components_to_rgb(r5, g6, b5)
+
+
+def _rgb565_components_to_rgb(r5: int, g6: int, b5: int) -> tuple[int, int, int]:
+    r5 = max(0, min(31, int(r5)))
+    g6 = max(0, min(63, int(g6)))
+    b5 = max(0, min(31, int(b5)))
     return ((r5 * 255 + 15) // 31, (g6 * 255 + 31) // 63, (b5 * 255 + 15) // 31)
 
 
@@ -243,8 +251,8 @@ def _parse_texture_headers(raw_text: str, base: Path) -> dict[str, Path]:
         path = (base / inc).resolve()
         if not path.exists():
             continue
-        text = path.read_text(encoding="utf-8", errors="replace")
-        for symbol in re.findall(r"const\s+tgx::Image<[^>]+>\s+(\w+)\s*\(", text):
+        raw, text = _read_generated_pair(path)
+        for symbol in re.findall(r"(?:static\s+)?(?:extern\s+)?(?:const\s+)?tgx::Image<[^>]+>\s+(\w+)\s*(?:\(|;)", text):
             out[symbol] = path
     return out
 
@@ -258,27 +266,83 @@ def _read_generated_pair(path: Path) -> tuple[str, str]:
 
 
 def _parse_texture_image(path: Path, symbol: str) -> TextureImage | None:
-    text = _strip_comments(path.read_text(encoding="utf-8", errors="replace"))
-    data_match = re.search(rf"const\s+uint16_t\s+{re.escape(symbol)}_data\s*\[\s*(\d+)\s*\*\s*(\d+)\s*\]\s*PROGMEM\s*=", text)
-    image_match = re.search(rf"const\s+tgx::Image<[^>]+>\s+{re.escape(symbol)}\s*\([^,]+,\s*(\d+)\s*,\s*(\d+)\s*\)", text)
-    if not data_match or not image_match:
+    raw, text = _read_generated_pair(path)
+    image_match = re.search(
+        rf"(?:static\s+)?(?:const\s+)?tgx::Image<\s*tgx::(\w+)\s*>\s+{re.escape(symbol)}\s*\((.*?)\)\s*;",
+        text,
+        flags=re.S,
+    )
+    if not image_match:
         return None
-    width = int(image_match.group(1))
-    height = int(image_match.group(2))
-    body = _extract_named_array_body(text, f"{symbol}_data")
-    values = _ints(body)
-    if len(values) < width * height:
+    color_type = image_match.group(1)
+    args = _split_top_level(image_match.group(2))
+    if len(args) < 3:
+        return None
+    data_symbol = _identifier_or_null(args[0])
+    dims = _ints(",".join(args[1:3]))
+    if len(dims) < 2:
+        return None
+    width, height = int(dims[0]), int(dims[1])
+    try:
+        body = _extract_named_array_body(text, data_symbol)
+    except Exception:
+        return None
+    try:
+        rgb_values = _decode_tgx_image_pixels(body, color_type, width * height)
+    except Exception:
+        return None
+    if len(rgb_values) < width * height:
         return None
     rgb = np.zeros((height, width, 3), dtype=np.uint8)
-    for i, value in enumerate(values[: width * height]):
+    for i, value in enumerate(rgb_values[: width * height]):
         y = i // width
         x = i % width
-        rgb[y, x] = _rgb565_to_rgb(value)
+        rgb[y, x] = value
     # TGX texture headers generated from OBJ files store rows bottom-to-top to
     # match the historical renderer convention.  PyVista/NumPy expects row 0 at
     # the top of the image, so flip the decoded preview image vertically.
     rgb = np.flipud(rgb)
     return TextureImage(symbol=symbol, width=width, height=height, rgb=rgb)
+
+
+def _decode_tgx_image_pixels(body: str, color_type: str, count: int) -> list[tuple[int, int, int]]:
+    calls = re.findall(r"\bC\s*\((.*?)\)", body, flags=re.S)
+    if not calls:
+        values = _ints(body)
+        if color_type == "RGB565":
+            return [_rgb565_to_rgb(v) for v in values[:count]]
+        if color_type in ("RGB24", "RGB32", "RGB64", "RGBf"):
+            # Non-macro generated forms for these color types are uncommon in
+            # mesh textures.  Refuse them instead of guessing constructor arity.
+            raise ValueError(f"unsupported non-macro {color_type} texture data")
+        raise ValueError(f"unsupported texture color type {color_type}")
+
+    out: list[tuple[int, int, int]] = []
+    for call in calls[:count]:
+        vals = _numbers(call)
+        ints = _ints(call)
+        if color_type == "RGB565":
+            if len(ints) >= 3:
+                out.append(_rgb565_components_to_rgb(ints[0], ints[1], ints[2]))
+            elif ints:
+                out.append(_rgb565_to_rgb(ints[0]))
+            else:
+                raise ValueError("invalid RGB565 texture literal")
+        elif color_type in ("RGB24", "RGB32"):
+            if len(vals) < 3:
+                raise ValueError(f"invalid {color_type} texture literal")
+            out.append(tuple(max(0, min(255, int(round(v)))) for v in vals[:3]))  # type: ignore[arg-type]
+        elif color_type == "RGB64":
+            if len(vals) < 3:
+                raise ValueError("invalid RGB64 texture literal")
+            out.append(tuple(max(0, min(255, int(round(v / 257.0)))) for v in vals[:3]))  # type: ignore[arg-type]
+        elif color_type == "RGBf":
+            if len(vals) < 3:
+                raise ValueError("invalid RGBf texture literal")
+            out.append(tuple(max(0, min(255, int(round(v * 255.0)))) for v in vals[:3]))  # type: ignore[arg-type]
+        else:
+            raise ValueError(f"unsupported texture color type {color_type}")
+    return out
 
 
 def _parse_materials(text: str, array_name: str) -> list[DecodedMaterial]:
@@ -640,6 +704,33 @@ def _make_pyvista_polydata(mesh: DecodedHeaderMesh, *, textured: bool):
     return pv_mesh
 
 
+def _make_pyvista_polydata_for_material(mesh: DecodedHeaderMesh, material_index: int, *, textured: bool):
+    _prepare_pyvista_import()
+    import pyvista as pv
+
+    points: list[np.ndarray] = []
+    faces: list[int] = []
+    tcoords: list[tuple[float, float]] = []
+    for meshlet in mesh.meshlets:
+        if meshlet.material_index != material_index:
+            continue
+        for tri, tri_tex in zip(meshlet.triangles, meshlet.triangle_texcoords):
+            base = len(points)
+            for vi, ti in zip(tri, tri_tex):
+                points.append(meshlet.vertices[vi])
+                if textured and ti >= 0 and len(meshlet.texcoords) > ti:
+                    tcoords.append((float(meshlet.texcoords[ti][0]), float(meshlet.texcoords[ti][1])))
+                else:
+                    tcoords.append((0.0, 0.0))
+            faces.extend([3, base, base + 1, base + 2])
+    if not points:
+        return None
+    pv_mesh = pv.PolyData(np.asarray(points, dtype=np.float64), np.asarray(faces, dtype=np.int64))
+    if textured and tcoords:
+        pv_mesh.active_texture_coordinates = np.asarray(tcoords, dtype=np.float64)
+    return pv_mesh
+
+
 def _add_cones(plotter, pv, mesh: DecodedHeaderMesh, *, scale: float = 0.18) -> None:
     bb = np.asarray([[mesh.bbox[0], mesh.bbox[2], mesh.bbox[4]], [mesh.bbox[1], mesh.bbox[3], mesh.bbox[5]]], dtype=np.float64)
     diag = float(np.linalg.norm(bb[1] - bb[0]))
@@ -670,21 +761,24 @@ def show_mesh3d2_pyvista(mesh: DecodedHeaderMesh, mode: str = "tabs") -> None:
     _prepare_pyvista_import()
     import pyvista as pv
 
-    texture: TextureImage | None = None
-    if mesh.materials:
-        tex_symbol = next((m.texture_symbol for m in mesh.materials if m.texture_symbol), "")
-        tex_path = mesh.texture_headers.get(tex_symbol)
-        if tex_symbol and tex_path is not None:
-            texture = _parse_texture_image(tex_path, tex_symbol)
-
     plotter = pv.Plotter()
     actors: dict[str, list[object]] = {"texture": [], "meshlets": [], "cones": []}
-    pv_mesh = _make_pyvista_polydata(mesh, textured=texture is not None)
+    pv_mesh = _make_pyvista_polydata(mesh, textured=False)
 
-    if texture is not None:
-        tex = pv.Texture(texture.rgb)
-        actors["texture"].append(plotter.add_mesh(pv_mesh, texture=tex, show_edges=False, lighting=True))
-    else:
+    for material_index, material in enumerate(mesh.materials):
+        tex_img: TextureImage | None = None
+        tex_symbol = material.texture_symbol
+        tex_path = mesh.texture_headers.get(tex_symbol)
+        if tex_symbol and tex_path is not None:
+            tex_img = _parse_texture_image(tex_path, tex_symbol)
+        material_mesh = _make_pyvista_polydata_for_material(mesh, material_index, textured=tex_img is not None)
+        if material_mesh is None:
+            continue
+        if tex_img is not None:
+            actors["texture"].append(plotter.add_mesh(material_mesh, texture=pv.Texture(tex_img.rgb), show_edges=False, lighting=True))
+        else:
+            actors["texture"].append(plotter.add_mesh(material_mesh, color=material.color, show_edges=False, lighting=True))
+    if not actors["texture"]:
         actors["texture"].append(plotter.add_mesh(pv_mesh, color=(0.70, 0.72, 0.76), show_edges=False, lighting=True))
 
     def ensure_meshlets() -> None:
