@@ -12,6 +12,7 @@ TEnvironment::TEnvironment()
   fEvaluator = new TEvaluator();
   fMaxGenerations = 0;
   fMaxSeconds = 0;
+  fTargetValue = -1;
 }
 
 
@@ -106,6 +107,8 @@ void TEnvironment::Init()
 /* See Section 2.2 */
 bool TEnvironment::TerminationCondition()
 {
+  if( fTargetValue >= 0 && fBestValue <= fTargetValue )
+    return true;
   if( fMaxGenerations > 0 && fCurNumOfGen >= fMaxGenerations )
     return true;
   if( fMaxSeconds > 0 ){

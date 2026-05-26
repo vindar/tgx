@@ -32,7 +32,10 @@ from _internal.modules.setup.checks import (
 
 def _yes_no(prompt: str, default: bool = False) -> bool:
     suffix = " [Y/n] " if default else " [y/N] "
-    answer = input(prompt + suffix).strip().lower()
+    try:
+        answer = input(prompt + suffix).strip().lower()
+    except EOFError:
+        return default
     if not answer:
         return default
     return answer in ("y", "yes", "o", "oui")
@@ -192,7 +195,7 @@ def _build_lkh(interactive: bool, assume_yes: bool, skip_lkh: bool) -> Path | No
 
 
 def run_setup(args: argparse.Namespace) -> int:
-    interactive = not args.yes
+    interactive = not args.yes and sys.stdin.isatty()
     if args.install_python_deps:
         _install_python_deps()
         return 0

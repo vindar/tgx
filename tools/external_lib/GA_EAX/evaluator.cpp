@@ -100,7 +100,7 @@ void TEvaluator::SetInstance( char filename[] )
     }
 
     int step = 1;
-    while( pos <= fNearNumMax ){
+    while( pos <= fNearNumMax && step <= Ncity + fNearNumMax + 4 ){
       int c = ( i + step ) % Ncity;
       ++step;
       if( c == i || IsAdjacent( i, c ) )
@@ -114,10 +114,16 @@ void TEvaluator::SetInstance( char filename[] )
       fNearCity[ i ][ pos ] = c;
       fEdgeDisOrder[ i ][ pos ] = 1;
       ++pos;
-      if( step > Ncity + fNearNumMax + 4 ){
-        fNearCity[ i ][ pos - 1 ] = ( i + 1 ) % Ncity;
-        fEdgeDisOrder[ i ][ pos - 1 ] = Direct( i, fNearCity[ i ][ pos - 1 ] );
-      }
+    }
+    step = 1;
+    while( pos <= fNearNumMax ){
+      int c = ( i + step ) % Ncity;
+      ++step;
+      if( c == i )
+        continue;
+      fNearCity[ i ][ pos ] = c;
+      fEdgeDisOrder[ i ][ pos ] = Direct( i, c );
+      ++pos;
     }
   }
 }

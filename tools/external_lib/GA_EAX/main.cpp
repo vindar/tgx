@@ -2,8 +2,45 @@
 #include "env.h"
 #endif
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
+
+static bool WriteSmallExact( TEnvironment* gEnv, char* dstFile )
+{
+  const int n = gEnv->fEvaluator->Ncity;
+  if( n < 2 || n > 8 )
+    return false;
+
+  std::vector<int> order( n );
+  std::vector<int> best( n );
+  for( int i = 0; i < n; ++i )
+    order[ i ] = i;
+  best = order;
+
+  int bestValue = 0x7fffffff;
+  do {
+    int value = 0;
+    for( int i = 0; i < n; ++i )
+      value += gEnv->fEvaluator->Direct( order[ i ], order[ ( i + 1 ) % n ] );
+    if( value < bestValue ){
+      bestValue = value;
+      best = order;
+      if( bestValue <= 1 )
+        break;
+    }
+  } while( std::next_permutation( order.begin() + 1, order.end() ) );
+
+  for( int i = 0; i < n; ++i ){
+    const int current = best[ i ];
+    gEnv->tBest.fLink[ current ][ 0 ] = best[ ( i + n - 1 ) % n ];
+    gEnv->tBest.fLink[ current ][ 1 ] = best[ ( i + 1 ) % n ];
+  }
+  gEnv->tBest.fEvaluationValue = bestValue;
+  gEnv->WriteBest( dstFile );
+  return true;
+}
 
 int main( int argc, char* argv[] )
 {
@@ -22,9 +59,12 @@ int main( int argc, char* argv[] )
   gEnv->fNumOfKids = atoi( argv[4] );
   gEnv->fMaxGenerations = atoi( argv[5] );
   gEnv->fMaxSeconds = argc >= 7 ? atoi( argv[6] ) : 0;
-  gEnv->fFileNameInitPop = argc >= 8 ? argv[7] : NULL;
+  gEnv->fFileNameInitPop = ( argc >= 8 && argv[7][0] != '-' ) ? argv[7] : NULL;
+  gEnv->fTargetValue = 1;
 
   gEnv->Define();
+  if( WriteSmallExact( gEnv, dstFile ) )
+    return 0;
   gEnv->DoIt();
   gEnv->PrintOn( 0, dstFile );
   gEnv->WriteBest( dstFile );

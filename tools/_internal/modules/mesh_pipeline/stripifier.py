@@ -715,32 +715,49 @@ def _small_exact_chains(mesh: ObjMesh, tri_indices: list[int]) -> list[list[int]
     if n <= 1:
         return [tri_indices] if tri_indices else []
 
+    if n > 12:
+        return None
+
     adj = _component_adjacency(mesh, tri_indices)
-    if n == 2:
-        return [tri_indices] if 1 in adj[0] else [[tri_indices[0]], [tri_indices[1]]]
+    full_mask = (1 << n) - 1
+    inf = n + 1
+    dp = [[inf] * n for _ in range(1 << n)]
+    parent = [[-1] * n for _ in range(1 << n)]
+    for start in range(n):
+        dp[1 << start][start] = 0
 
-    if n == 3:
-        # Any connected three-triangle component has a Hamiltonian path. Testing
-        # all local orders is clearer and safer than trying to identify the
-        # center triangle explicitly.
-        orders = (
-            (0, 1, 2),
-            (0, 2, 1),
-            (1, 0, 2),
-            (1, 2, 0),
-            (2, 0, 1),
-            (2, 1, 0),
-        )
-        for order in orders:
-            if order[1] in adj[order[0]] and order[2] in adj[order[1]]:
-                return [[tri_indices[i] for i in order]]
+    def edge_cost(a: int, b: int) -> int:
+        return 0 if b in adj[a] else 1
 
-        # Defensive fallback for an invalid/non-connected caller: keep the
-        # returned chains valid instead of pretending one strip exists.
-        best = min((_split_order_into_chains(adj, list(order)) for order in orders), key=lambda chains: (len(chains), -max(len(c) for c in chains)))
-        return [[tri_indices[i] for i in chain] for chain in best]
+    for mask in range(1 << n):
+        row = dp[mask]
+        for last in range(n):
+            base = row[last]
+            if base >= inf:
+                continue
+            remaining = full_mask ^ mask
+            while remaining:
+                bit = remaining & -remaining
+                nxt = bit.bit_length() - 1
+                remaining ^= bit
+                new_mask = mask | bit
+                value = base + edge_cost(last, nxt)
+                if value < dp[new_mask][nxt]:
+                    dp[new_mask][nxt] = value
+                    parent[new_mask][nxt] = last
 
-    return None
+    best_last = min(range(n), key=lambda last: dp[full_mask][last])
+    order = [0] * n
+    mask = full_mask
+    last = best_last
+    for i in range(n - 1, -1, -1):
+        order[i] = last
+        prev = parent[mask][last]
+        mask ^= 1 << last
+        last = prev
+
+    chains = _split_order_into_chains(adj, order)
+    return [[tri_indices[i] for i in chain] for chain in chains]
 
 
 def stripify_component(mesh: ObjMesh, tri_indices: list[int], options: StripifyOptions | None = None) -> StripifyResult:
@@ -753,9 +770,8 @@ def stripify_component(mesh: ObjMesh, tri_indices: list[int], options: StripifyO
     """
     opt = options or StripifyOptions()
     tri_indices = list(tri_indices)
-    if len(tri_indices) <= 3:
-        chains = _small_exact_chains(mesh, tri_indices)
-        assert chains is not None
+    chains = _small_exact_chains(mesh, tri_indices)
+    if chains is not None:
         return StripifyResult(chains, [StripifyCandidate("trivial", chains, 0.0)])
 
     component_size = len(tri_indices)

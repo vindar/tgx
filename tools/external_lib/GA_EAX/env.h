@@ -58,6 +58,7 @@ public:
   char *fFileNameInitPop;                /* File name of an initial population */
   int fMaxGenerations;
   int fMaxSeconds;
+  int fTargetValue;
 
   int fNumOfPop;                         /* Number of population members (N_pop in the paper) */
   int fNumOfKids;                        /* Number of offspring solutions (N_ch in the paper) */

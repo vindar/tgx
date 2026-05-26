@@ -4,6 +4,8 @@
 !GA_EAX/
 !GA_EAX/*.cpp
 !GA_EAX/*.h
+!GA_EAX/LICENSE
+!GA_EAX/README.md
 !LKH/
 !LKH/README.md
 !LKH/put_lkh_sources_here.txt
