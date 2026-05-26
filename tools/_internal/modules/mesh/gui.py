@@ -18,7 +18,10 @@ if str(TOOLS_ROOT) not in sys.path:
     sys.path.insert(0, str(TOOLS_ROOT))
 
 from _internal.modules.image.core import SUPPORTED_LAYOUTS, SUPPORTED_RESAMPLING, parse_resize, sanitize_identifier
+from _internal.modules.setup.checks import check_environment
 from _internal.modules.mesh.textures import resolve_mesh_textures
+from tools._internal.modules.mesh_pipeline.mesh3d_to_mesh3d2 import parse_legacy_header
+from tools._internal.modules.mesh_pipeline.mesh_inspect import detect_mesh_type, parse_mesh3d2_header
 from tools._internal.modules.mesh_pipeline.obj_loader import load_obj
 from tools._internal.modules.mesh_pipeline.profiles import DEFAULT_MAX_NORMAL_ANGLE_DEG, DEFAULT_TARGET_VERTICES
 
@@ -54,8 +57,15 @@ class TGXMeshConverterApp(tk.Tk):
         self.material_resize_height = tk.StringVar()
         self.material_resample = tk.StringVar(value="lanczos")
         self.texture_preview_image: ImageTk.PhotoImage | None = None
+        self.conversion_running = False
+        self.texture_size_icons = self._make_texture_size_icons()
+        self.mesh_info_vars: dict[str, tk.StringVar] = {}
+        self.mesh_info_value_labels: dict[str, ttk.Label] = {}
+        self.mesh_size_indicator: tk.Canvas | None = None
 
         self._build_ui()
+        self.input_path.trace_add("write", lambda *_args: self._update_mesh_actions())
+        self._update_mesh_actions()
 
     def _build_ui(self):
         root = ttk.Frame(self, padding=12)
@@ -78,16 +88,32 @@ class TGXMeshConverterApp(tk.Tk):
         ttk.Entry(root, textvariable=self.object_name).grid(row=2, column=1, columnspan=3, sticky="ew", padx=6)
 
         format_box = ttk.Frame(root)
-        format_box.grid(row=3, column=0, columnspan=5, sticky="w")
+        format_box.grid(row=3, column=0, columnspan=5, sticky="ew")
         format_box.columnconfigure(1, minsize=140)
         format_box.columnconfigure(3, minsize=140)
+        format_box.columnconfigure(4, weight=1)
         ttk.Label(format_box, text="Format").grid(row=0, column=0, sticky="w")
         ttk.Combobox(format_box, textvariable=self.mesh_format, values=("Mesh3Dv2", "Mesh3D"), state="readonly", width=12).grid(row=0, column=1, sticky="w", padx=(6, 20))
         ttk.Label(format_box, text="Color").grid(row=0, column=2, sticky="w")
         ttk.Combobox(format_box, textvariable=self.color_type, values=COLOR_TYPES, state="readonly", width=12).grid(row=0, column=3, sticky="w", padx=(6, 0))
+        self.lkh_warning = ttk.Label(format_box, text="", foreground="red")
+        self.lkh_warning.grid(row=0, column=4, sticky="e", padx=(16, 0))
+        self._update_lkh_warning()
+
+        info_box = ttk.LabelFrame(root, text="Mesh info", padding=(8, 4))
+        info_box.grid(row=4, column=3, columnspan=2, rowspan=2, sticky="nsew", padx=(12, 0), pady=(4, 0))
+        info_box.columnconfigure(2, weight=1)
+        self.mesh_size_indicator = tk.Canvas(info_box, width=16, height=16, highlightthickness=0)
+        self.mesh_size_indicator.grid(row=0, column=0, rowspan=6, sticky="n", padx=(0, 8), pady=(2, 0))
+        for row_index, key in enumerate(("type", "vertices", "triangles", "uv", "normals", "materials")):
+            self.mesh_info_vars[key] = tk.StringVar(value="-")
+            ttk.Label(info_box, text=key).grid(row=row_index, column=1, sticky="w", padx=(0, 8))
+            label = ttk.Label(info_box, textvariable=self.mesh_info_vars[key], anchor="e")
+            label.grid(row=row_index, column=2, sticky="e")
+            self.mesh_info_value_labels[key] = label
 
         layout_box = ttk.Frame(root)
-        layout_box.grid(row=4, column=0, columnspan=5, sticky="w")
+        layout_box.grid(row=4, column=0, columnspan=3, sticky="w")
         layout_box.columnconfigure(1, minsize=140)
         ttk.Label(layout_box, text="Mesh files layout").grid(row=0, column=0, sticky="w")
         ttk.Combobox(layout_box, textvariable=self.layout, values=SUPPORTED_LAYOUTS, state="readonly", width=12).grid(row=0, column=1, sticky="w", padx=(6, 0))
@@ -95,20 +121,21 @@ class TGXMeshConverterApp(tk.Tk):
         ttk.Combobox(layout_box, textvariable=self.texture_layout, values=SUPPORTED_LAYOUTS, state="readonly", width=12).grid(row=1, column=1, sticky="w", padx=(6, 0), pady=(4, 0))
 
         meshlet_box = ttk.Frame(root)
-        meshlet_box.grid(row=5, column=1, columnspan=4, sticky="w", padx=6)
-        ttk.Checkbutton(root, text="Normalize OBJ", variable=self.normalize).grid(row=5, column=0, sticky="w")
+        meshlet_box.grid(row=5, column=1, columnspan=2, sticky="w", padx=6)
+        ttk.Checkbutton(root, text="Normalize unit bounding box", variable=self.normalize).grid(row=5, column=0, sticky="w")
         ttk.Label(meshlet_box, text="target vertices").pack(side="left")
         ttk.Entry(meshlet_box, textvariable=self.target_vertices, width=6).pack(side="left", padx=(4, 14))
         ttk.Label(meshlet_box, text="max normal angle").pack(side="left")
         ttk.Entry(meshlet_box, textvariable=self.max_normal_angle, width=6).pack(side="left", padx=(4, 0))
 
         ttk.Label(root, text="OBJ material textures").grid(row=6, column=0, sticky="w", pady=(10, 2))
-        columns = ("material", "size", "resize", "filter", "refs", "role", "requested", "selected")
-        self.texture_table = ttk.Treeview(root, columns=columns, show="headings", height=8)
+        columns = ("material", "size", "filter", "refs", "role", "requested", "selected")
+        self.texture_table = ttk.Treeview(root, columns=columns, show=("tree", "headings"), height=8)
+        self.texture_table.heading("#0", text="")
+        self.texture_table.column("#0", width=42, minwidth=42, stretch=False, anchor="center")
         for column, width in (
             ("material", 120),
-            ("size", 80),
-            ("resize", 80),
+            ("size", 160),
             ("filter", 80),
             ("refs", 170),
             ("role", 80),
@@ -139,14 +166,36 @@ class TGXMeshConverterApp(tk.Tk):
 
         buttons = ttk.Frame(root)
         buttons.grid(row=9, column=0, columnspan=5, sticky="e")
-        ttk.Button(buttons, text="Reload textures", command=self.reload_textures).pack(side="left", padx=(0, 8))
-        ttk.Button(buttons, text="Preview mesh", command=self.preview_mesh).pack(side="left", padx=(0, 8))
+        self.reload_button = ttk.Button(buttons, text="Reload textures", command=self.reload_textures)
+        self.reload_button.pack(side="left", padx=(0, 8))
+        self.preview_button = ttk.Button(buttons, text="Preview mesh", command=self.preview_mesh)
+        self.preview_button.pack(side="left", padx=(0, 8))
         self.convert_button = ttk.Button(buttons, text="Convert", command=self.convert)
         self.convert_button.pack(side="left")
 
         ttk.Label(root, text="Log").grid(row=10, column=0, sticky="w", pady=(8, 0))
         self.log = tk.Text(root, height=12, wrap="word")
         self.log.grid(row=11, column=0, columnspan=5, sticky="nsew", pady=(2, 0))
+
+    def _update_lkh_warning(self):
+        status = check_environment(tool="mesh", require_config=True)
+        if status.lkh_missing:
+            self.lkh_warning.configure(text="LKH not installed; mesh quality may be lower.")
+        else:
+            self.lkh_warning.configure(text="")
+
+    def _mesh_is_loaded(self) -> bool:
+        path_text = self.input_path.get().strip()
+        return bool(path_text) and Path(path_text).is_file()
+
+    def _update_mesh_actions(self):
+        mesh_state = "normal" if self._mesh_is_loaded() else "disabled"
+        convert_state = "disabled" if self.conversion_running else mesh_state
+        for button in (getattr(self, "reload_button", None), getattr(self, "preview_button", None)):
+            if button is not None:
+                button.configure(state=mesh_state)
+        if getattr(self, "convert_button", None) is not None:
+            self.convert_button.configure(state=convert_state)
 
     def _texture_size_text(self, path_text: str) -> str:
         if not path_text:
@@ -159,6 +208,52 @@ class TGXMeshConverterApp(tk.Tk):
                 return f"{img.width}x{img.height}"
         except Exception:
             return "?"
+
+    def _make_texture_size_icons(self) -> dict[str, tk.PhotoImage]:
+        colors = {
+            "tex_small": "#23a441",
+            "tex_medium": "#2f75b5",
+            "tex_large": "#e2b400",
+            "tex_huge": "#d33333",
+            "tex_none": "#b0b0b0",
+        }
+        icons: dict[str, tk.PhotoImage] = {}
+        for name, color in colors.items():
+            image = tk.PhotoImage(width=14, height=14)
+            image.put(color, to=(1, 1, 13, 13))
+            image.put("#666666", to=(0, 0, 14, 1))
+            image.put("#666666", to=(0, 13, 14, 14))
+            image.put("#666666", to=(0, 0, 1, 14))
+            image.put("#666666", to=(13, 0, 14, 14))
+            icons[name] = image
+        return icons
+
+    def _texture_size_class(self, size_text: str) -> str:
+        try:
+            width_text, height_text = size_text.lower().split("x", 1)
+            width = int(width_text)
+            height = int(height_text)
+        except Exception:
+            return "tex_huge" if size_text else "tex_none"
+        largest = max(width, height)
+        if largest <= 64:
+            return "tex_small"
+        if largest <= 256:
+            return "tex_medium"
+        if largest <= 1024:
+            return "tex_large"
+        return "tex_huge"
+
+    def _texture_effective_size(self, row: dict[str, str]) -> str:
+        return row["resize"] or row["size"]
+
+    def _texture_size_display(self, row: dict[str, str]) -> str:
+        if row["resize"]:
+            return f"{row['size']} -> {row['resize']}"
+        return row["size"]
+
+    def _texture_size_icon(self, row: dict[str, str]) -> tk.PhotoImage:
+        return self.texture_size_icons[self._texture_size_class(self._texture_effective_size(row))]
 
     def _update_texture_preview(self, path_text: str | None = None):
         path_text = self.material_texture_path.get().strip() if path_text is None else path_text.strip()
@@ -191,16 +286,133 @@ class TGXMeshConverterApp(tk.Tk):
             return
         self.input_path.set(path)
         stem = sanitize_identifier(Path(path).stem)
-        if not self.object_name.get().strip():
-            self.object_name.set(stem)
-        if not self.output_path.get().strip():
-            self.output_path.set(str(Path(path).with_name(stem + "_v2.h")))
+        self.object_name.set(stem)
+        self.output_path.set(str(Path(path).with_name(stem + "_v2.h")))
         self.reload_textures()
 
     def choose_output(self):
         path = filedialog.asksaveasfilename(title="Output mesh header", defaultextension=".h", filetypes=[("Header", "*.h"), ("All files", "*.*")])
         if path:
             self.output_path.set(path)
+
+    def _set_mesh_info(self, values: dict[str, object] | None = None):
+        values = values or {}
+        for key, variable in self.mesh_info_vars.items():
+            variable.set(str(values.get(key, "-")))
+        self._set_mesh_size_indicator(values.get("vertices_count"))
+        self._set_mesh_info_value_colors(values)
+
+    def _mesh_count_color(self, value: object | None) -> str:
+        colors = {
+            "none": "#b0b0b0",
+            "small": "#23a441",
+            "medium": "#2f75b5",
+            "large": "#e2b400",
+            "xlarge": "#e57b22",
+            "huge": "#d33333",
+        }
+        try:
+            count = int(value) if value is not None else -1
+        except Exception:
+            count = -1
+        if count < 0:
+            key = "none"
+        elif count < 2000:
+            key = "small"
+        elif count < 5000:
+            key = "medium"
+        elif count < 10000:
+            key = "large"
+        elif count < 25000:
+            key = "xlarge"
+        else:
+            key = "huge"
+        return colors[key]
+
+    def _set_mesh_size_indicator(self, vertices_count: object | None):
+        if self.mesh_size_indicator is None:
+            return
+        color = self._mesh_count_color(vertices_count)
+        canvas = self.mesh_size_indicator
+        canvas.delete("all")
+        canvas.create_rectangle(2, 2, 14, 14, fill=color, outline="#666666")
+
+    def _set_mesh_info_value_colors(self, values: dict[str, object]):
+        count_keys = ("vertices", "triangles", "uv", "normals")
+        for key, label in self.mesh_info_value_labels.items():
+            if key in count_keys:
+                label.configure(foreground=self._mesh_count_color(values.get(f"{key}_count", values.get(key))))
+            else:
+                label.configure(foreground="")
+
+    def _update_mesh_info(self, path: Path):
+        if not path.exists():
+            self._set_mesh_info()
+            return
+        try:
+            if path.suffix.lower() == ".obj":
+                mesh = load_obj(path)
+                textured = sum(1 for mat in mesh.materials.values() if mat.texture_path)
+                self._set_mesh_info(
+                    {
+                        "type": "OBJ",
+                        "vertices": len(mesh.vertices),
+                        "vertices_count": len(mesh.vertices),
+                        "triangles": len(mesh.triangles),
+                        "triangles_count": len(mesh.triangles),
+                        "uv": len(mesh.texcoords),
+                        "uv_count": len(mesh.texcoords),
+                        "normals": len(mesh.normals),
+                        "normals_count": len(mesh.normals),
+                        "materials": f"{len(mesh.materials)} ({textured} tex)",
+                    }
+                )
+                return
+            mesh_type = detect_mesh_type(path)
+            if mesh_type == "Mesh3Dv2":
+                mesh = parse_mesh3d2_header(path)
+                triangles = sum(len(m.triangles) for m in mesh.meshlets)
+                vertices = sum(m.nb_vertices for m in mesh.meshlets)
+                texcoords = sum(m.nb_texcoords for m in mesh.meshlets)
+                normals = sum(m.nb_normals for m in mesh.meshlets)
+                textured = sum(1 for mat in mesh.materials if mat.texture_symbol)
+                self._set_mesh_info(
+                    {
+                        "type": "Mesh3Dv2",
+                        "vertices": f"{vertices} local",
+                        "vertices_count": vertices,
+                        "triangles": triangles,
+                        "triangles_count": triangles,
+                        "uv": f"{texcoords} local",
+                        "uv_count": texcoords,
+                        "normals": f"{normals} local",
+                        "normals_count": normals,
+                        "materials": f"{len(mesh.materials)} ({textured} tex)",
+                    }
+                )
+                return
+            parsed = parse_legacy_header(path)
+            triangles = sum(mesh.nb_faces for mesh in parsed.meshes.values())
+            vertices = sum(mesh.nb_vertices for mesh in parsed.meshes.values())
+            texcoords = sum(mesh.nb_texcoords for mesh in parsed.meshes.values())
+            normals = sum(mesh.nb_normals for mesh in parsed.meshes.values())
+            textured = sum(1 for mesh in parsed.meshes.values() if mesh.texture)
+            self._set_mesh_info(
+                {
+                    "type": "Mesh3D",
+                    "vertices": vertices,
+                    "vertices_count": vertices,
+                    "triangles": triangles,
+                    "triangles_count": triangles,
+                    "uv": texcoords,
+                    "uv_count": texcoords,
+                    "normals": normals,
+                    "normals_count": normals,
+                    "materials": f"{len(parsed.meshes)} ({textured} tex)",
+                }
+            )
+        except Exception as exc:
+            self._set_mesh_info({"type": "unreadable", "triangles": exc})
 
     def reload_textures(self):
         self.texture_rows.clear()
@@ -214,6 +426,7 @@ class TGXMeshConverterApp(tk.Tk):
         self.material_resample.set("lanczos")
         self.texture_table.delete(*self.texture_table.get_children())
         path = Path(self.input_path.get())
+        self._update_mesh_info(path)
         if path.suffix.lower() != ".obj" or not path.exists():
             self._append_log("Texture list is available for OBJ inputs.")
             self._update_texture_preview("")
@@ -243,7 +456,13 @@ class TGXMeshConverterApp(tk.Tk):
             iid = f"mat_{len(self.texture_iid_to_material)}"
             self.texture_iid_to_material[iid] = material
             self.texture_material_to_iid[material] = iid
-            self.texture_table.insert("", "end", iid=iid, values=(material or "[default]", size, "", "lanczos", refs, choice.role, requested, selected))
+            self.texture_table.insert(
+                "",
+                "end",
+                iid=iid,
+                image=self._texture_size_icon(self.texture_rows[material]),
+                values=(material or "[default]", size, "lanczos", refs, choice.role, requested, selected),
+            )
         self._append_log(f"Found {len(choices)} material texture slot(s).")
         self._update_texture_preview("")
 
@@ -300,7 +519,8 @@ class TGXMeshConverterApp(tk.Tk):
         row["size"] = self._texture_size_text(row["selected"])
         self.texture_table.item(
             self.selected_iid,
-            values=(self.selected_material or "[default]", row["size"], row["resize"], row["filter"], row["refs"], row["role"], row["requested"], row["selected"]),
+            image=self._texture_size_icon(row),
+            values=(self.selected_material or "[default]", self._texture_size_display(row), row["filter"], row["refs"], row["role"], row["requested"], row["selected"]),
         )
         self._update_texture_preview(row["selected"])
 
@@ -371,7 +591,8 @@ class TGXMeshConverterApp(tk.Tk):
             messagebox.showerror("Invalid options", str(exc))
             return
         self._append_log("> " + subprocess.list2cmdline(argv))
-        self.convert_button.configure(state="disabled")
+        self.conversion_running = True
+        self._update_mesh_actions()
         threading.Thread(target=self._run_command, args=(argv,), daemon=True).start()
 
     def _build_command(self) -> list[str]:
@@ -423,6 +644,7 @@ class TGXMeshConverterApp(tk.Tk):
         return argv
 
     def _run_command(self, argv: list[str]):
+        output_lines: list[str] = []
         try:
             proc = subprocess.Popen(
                 argv,
@@ -440,13 +662,61 @@ class TGXMeshConverterApp(tk.Tk):
             return
         assert proc.stdout is not None
         for line in proc.stdout:
-            self.after(0, self._append_log, line.rstrip())
+            text = line.rstrip()
+            output_lines.append(text)
+            self.after(0, self._append_log, text)
         returncode = proc.wait()
-        self.after(0, self.convert_button.configure, {"state": "normal"})
+        self.after(0, self._finish_conversion)
         if returncode == 0:
-            self.after(0, messagebox.showinfo, "TGX Mesh Converter", "Conversion completed.")
+            self.after(0, self._show_conversion_complete, output_lines)
         else:
             self.after(0, messagebox.showerror, "Conversion failed", f"Converter exited with code {returncode}.")
+
+    def _finish_conversion(self):
+        self.conversion_running = False
+        self._update_mesh_actions()
+
+    def _show_conversion_complete(self, output_lines: list[str]):
+        files = self._generated_files_from_output(output_lines)
+        if files:
+            plural = "file" if len(files) == 1 else "files"
+            message = "Conversion completed. {} {} created:\n\n{}".format(len(files), plural, "\n".join(files))
+        else:
+            message = "Conversion completed."
+        messagebox.showinfo("TGX Mesh Converter", message)
+
+    def _generated_files_from_output(self, output_lines: list[str]) -> list[str]:
+        files: list[str] = []
+        seen: set[str] = set()
+
+        def add_file(path_text: str) -> None:
+            path_text = path_text.strip()
+            if not path_text:
+                return
+            key = str(Path(path_text).resolve()).lower()
+            if key in seen:
+                return
+            seen.add(key)
+            files.append(path_text)
+
+        for line in output_lines:
+            path_text = ""
+            if line.startswith("wrote "):
+                path_text = line[6:].strip()
+            elif line.startswith("texture: ") and " -> " in line:
+                path_text = line.split(" -> ", 1)[1].split(" (", 1)[0].strip()
+            if path_text:
+                add_file(path_text)
+                cpp_text = str(Path(path_text).with_suffix(".cpp"))
+                if Path(cpp_text).exists():
+                    add_file(cpp_text)
+
+        output = Path(self.output_path.get())
+        if output.name:
+            for path in (output, output.with_suffix(".cpp")):
+                if path.exists():
+                    add_file(str(path))
+        return files
 
     def _append_log(self, text: str):
         self.log.insert("end", text.rstrip() + "\n")
