@@ -60,6 +60,13 @@
  *
  * This is selected automatically from the target board/architecture below.
  */
+/**
+ * @def TGX_USE_FMA_MATH
+ * Use explicit fused multiply-add instructions in selected floating-point math
+ * helpers when this improves performance on the target architecture.
+ *
+ * This is selected automatically from the target board/architecture below.
+ */
 #if defined(_WIN32) || defined(_WIN64) || defined(__linux__) || defined(__APPLE__) || defined(__MACH__) || defined(__ANDROID__) || defined(__unix__)
     // TGX is running on a computer.
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 262144

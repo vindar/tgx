@@ -622,6 +622,10 @@ namespace tgx
         }
 
 #if TGX_USE_FMA_MATH
+    /**
+     * Return the dot product U.V between two float vectors using fused
+     * multiply-add operations when enabled for the target architecture.
+     */
     TGX_INLINE inline float dotProduct(const Vec4<float>& U, const Vec4<float>& V)
         {
         return fmaf(U.x, V.x, fmaf(U.y, V.y, fmaf(U.z, V.z, U.w * V.w)));

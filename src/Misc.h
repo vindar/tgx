@@ -39,6 +39,13 @@
 
 #define DEPRECATED(X) [[deprecated(" " X " ")]]
 
+/**
+ * @def TGX_FORCED_INLINE
+ * Force inlining for very small helper functions on compilers that support it.
+ *
+ * This is used only on hot internal helpers where an out-of-line call would be
+ * more expensive than the function body itself.
+ */
 #ifndef TGX_FORCED_INLINE
     #if defined(_MSC_VER)
         #define TGX_FORCED_INLINE __forceinline
