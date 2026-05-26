@@ -30,7 +30,7 @@ exported characters. When several sizes are exported, the same preview image
 contains one section per size.
 
 Generated C++ font symbols always include the pixel size suffix. For the
-antialiased ILI9341 v2.3 format, they also include the AA depth for
-compatibility with TGX font naming. For example,
+ILI9341 v2.3 format, they also include the AA depth for compatibility with TGX
+font naming (`AA0` for monochrome v2.3 output). For example,
 `--name ui_font --sizes 16 --aa 4` creates `ui_font_AA4_16`. Monochrome outputs
 use names such as `ui_font_16`.

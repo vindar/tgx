@@ -126,9 +126,9 @@ Useful font options:
 - `--layout header|split`: write either one `.h` file or a `.h + .cpp` pair.
 - `--preview-png preview.png`: write a desktop preview grid of the exported glyphs, with one section per size.
 
-The generated C++ symbol always includes the pixel size. For the antialiased ILI9341 v2.3 format, it also includes
-the AA depth for compatibility with TGX font naming. For example, `--name ui_font --sizes 16 --aa 4` creates
-`ui_font_AA4_16`. Monochrome formats use names such as `ui_font_16`.
+The generated C++ symbol always includes the pixel size. For the ILI9341 v2.3 format, it also includes the AA depth
+for compatibility with TGX font naming (`AA0` for monochrome v2.3 output). For example,
+`--name ui_font --sizes 16 --aa 4` creates `ui_font_AA4_16`. Monochrome formats use names such as `ui_font_16`.
 
 
 @section tools_formats Mesh formats in practice

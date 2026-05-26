@@ -425,14 +425,24 @@ def _num_identical_lines(glyph: FontGlyph, y: int) -> int:
     return count
 
 
-def _encode_ili_glyph(writer: BitWriter, glyph: FontGlyph, bpp: int, bits_width: int, bits_height: int, bits_xoffset: int, bits_yoffset: int, bits_delta: int) -> None:
+def _encode_ili_glyph(
+    writer: BitWriter,
+    glyph: FontGlyph,
+    bpp: int,
+    compressed_1bpp: bool,
+    bits_width: int,
+    bits_height: int,
+    bits_xoffset: int,
+    bits_yoffset: int,
+    bits_delta: int,
+) -> None:
     writer.write_unsigned(0, 3)
     writer.write_unsigned(glyph.width, bits_width)
     writer.write_unsigned(glyph.height, bits_height)
     writer.write_signed(glyph.x_offset, bits_xoffset)
     writer.write_signed(glyph.y_offset_ili, bits_yoffset)
     writer.write_unsigned(glyph.x_advance, bits_delta)
-    if bpp == 1:
+    if bpp == 1 and compressed_1bpp:
         y = 0
         while y < glyph.height:
             repeat = min(6, _num_identical_lines(glyph, y))
@@ -472,9 +482,20 @@ def encode_ili9341(font: RasterFont, symbol: str, version: int) -> IliEncodedFon
 
     data_writer = BitWriter()
     offsets: list[int] = []
+    compressed_1bpp = version == 1
     for glyph in glyph_list:
         offsets.append(data_writer.byte_count)
-        _encode_ili_glyph(data_writer, glyph, font.bpp, bits_width, bits_height, bits_xoffset, bits_yoffset, bits_delta)
+        _encode_ili_glyph(
+            data_writer,
+            glyph,
+            font.bpp,
+            compressed_1bpp,
+            bits_width,
+            bits_height,
+            bits_xoffset,
+            bits_yoffset,
+            bits_delta,
+        )
     data = data_writer.bytes()
     bits_index = bits_required_unsigned(len(data))
     index_writer = BitWriter()
@@ -571,7 +592,8 @@ def _comment(options: FontExportOptions, symbols: list[str], glyphs: int, data_b
 
 def _font_symbol(base: str, size: int, output_format: str, bpp: int) -> str:
     if output_format == "ili9341-v23":
-        return f"{base}_AA{bpp}_{size}"
+        aa_label = 0 if bpp == 1 else bpp
+        return f"{base}_AA{aa_label}_{size}"
     return f"{base}_{size}"
 
 
