@@ -15,6 +15,15 @@
 * 2. Select the board model and serial port and upload the sketch.
 ********************************************************************/
 
+/**************** DMA NOTE ****************
+* LovyanGFX DMA transfers can improve display upload speed on M5Stack boards.
+* DMA is enabled by default here.  The sketch first tries to allocate a
+* DMA-capable transfer buffer; if that fails, it automatically falls back to
+* the blocking pushImage() path.  Uncomment the line below to force that
+* non-DMA path.
+*******************************************/
+// #define DISABLE_DMA
+
 #define LGFX_AUTODETECT
 #include <LovyanGFX.hpp>
 
@@ -37,7 +46,9 @@ static const int N = 28;
 static const int M = 28;
 
 uint16_t* fb = nullptr;
+uint16_t* fb2 = nullptr;
 uint16_t* zbuf = nullptr;
+bool use_dma = false;
 
 Image<RGB565> im;
 LGFX lcd;
@@ -252,8 +263,106 @@ void updateFPS()
         {
         Serial.print("scream M5Stack fps=");
         Serial.println(fps_frames);
+        Serial.print("scream M5Stack display=");
+        Serial.println(use_dma ? "DMA" : "pushImage");
         fps_frames = 0;
         fps_last_ms = now;
+        }
+    }
+
+
+void freeRenderBuffers()
+    {
+    if (fb != nullptr)
+        {
+        free(fb);
+        fb = nullptr;
+        }
+    if (zbuf != nullptr)
+        {
+        free(zbuf);
+        zbuf = nullptr;
+        }
+    if (fb2 != nullptr)
+        {
+        free(fb2);
+        fb2 = nullptr;
+        }
+    use_dma = false;
+    }
+
+
+bool allocateRenderBuffers(size_t pixel_count)
+    {
+    const size_t bytes = pixel_count * sizeof(uint16_t);
+
+#if !defined(DISABLE_DMA)
+    // DMA needs a contiguous DMA-capable internal RAM block.  Allocate it
+    // first, then fall back cleanly if keeping it prevents fb/zbuf allocation.
+    fb2 = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_DMA);
+#endif
+
+    fb = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+    zbuf = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+
+    if ((fb == nullptr || zbuf == nullptr) && fb2 != nullptr)
+        {
+        Serial.println("scream M5Stack DMA buffer released to keep framebuffer/zbuffer");
+        freeRenderBuffers();
+        fb = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+        zbuf = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+        }
+
+    if (fb == nullptr || zbuf == nullptr)
+        {
+        freeRenderBuffers();
+        return false;
+        }
+
+#if !defined(DISABLE_DMA)
+    if (fb2 != nullptr)
+        {
+        lcd.initDMA();
+        lcd.startWrite();
+        use_dma = true;
+        Serial.println("scream M5Stack display DMA enabled");
+        }
+    else
+        {
+        Serial.println("scream M5Stack display DMA unavailable, using pushImage");
+        }
+#else
+    Serial.println("scream M5Stack display DMA disabled, using pushImage");
+#endif
+
+    return true;
+    }
+
+
+void copySwapBuffer()
+    {
+    const int n = render_lx * render_ly;
+    for (int i = 0; i < n; i++)
+        {
+        const uint16_t a = fb[i];
+        fb2[i] = (a << 8) | (a >> 8);
+        }
+    }
+
+
+void pushFrame()
+    {
+    const int x = (lcd.width() - render_lx) / 2;
+    const int y = (lcd.height() - render_ly) / 2;
+    if (use_dma)
+        {
+        lcd.waitDMA();
+        copySwapBuffer();
+        lcd.pushImageDMA(x, y, render_lx, render_ly, fb2);
+        }
+    else
+        {
+        lcd.pushImage(x, y, render_lx, render_ly, fb);
         }
     }
 
@@ -279,13 +388,12 @@ void setup()
 
     // LovyanGFX can report different display sizes on Core2/CoreS3, so the
     // buffers are allocated after the final viewport size is known.
-    fb = (uint16_t*)heap_caps_malloc(pixel_count * sizeof(uint16_t), MALLOC_CAP_8BIT);
-    zbuf = (uint16_t*)heap_caps_malloc(pixel_count * sizeof(uint16_t), MALLOC_CAP_8BIT);
-    while (fb == nullptr || zbuf == nullptr)
+    while (!allocateRenderBuffers(pixel_count))
         {
         Serial.println("Error: cannot allocate framebuffer/zbuffer");
         delay(1000);
         }
+    lcd.setSwapBytes(!use_dma);
 
     im.set(fb, render_lx, render_ly);
     renderer.setViewportSize(render_lx, render_ly);
@@ -312,10 +420,6 @@ void setup()
 void loop()
     {
     drawFrame();
-
-    lcd.pushImage((lcd.width() - render_lx) / 2,
-                  (lcd.height() - render_ly) / 2,
-                  render_lx, render_ly, fb);
-
+    pushFrame();
     updateFPS();
     }

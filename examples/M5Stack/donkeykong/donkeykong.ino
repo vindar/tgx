@@ -11,8 +11,17 @@
 * 2. Select the board model and serial port and upload the sketch
 *
 * ---
-* This example was tested with M5Stack Core2 and M5Stack Core3SE
+* This example was tested with M5Stack Core2 and M5Stack CoreS3.
 ********************************************************************/
+
+/**************** DMA NOTE ****************
+* LovyanGFX DMA transfers can improve display upload speed on M5Stack boards.
+* DMA is enabled by default here.  The sketch first tries to allocate a
+* DMA-capable transfer buffer; if that fails, it automatically falls back to
+* the blocking pushImage() path.  Uncomment the line below to force that
+* non-DMA path.
+*******************************************/
+// #define DISABLE_DMA
 
 // the screen display library (Lovyan is fast and specifically tailored to work well with M5Stack)
 #define LGFX_AUTODETECT   // detect board automatically: works with M5Stack Core2/CoreS3
@@ -29,25 +38,15 @@
 using namespace tgx;
 
 // drawing size (limited by the amount of RAM on ESP32/ESP32S3)
-#define SLX 220
+#define SLX 240
 #define SLY 180
 
-// the framebuffer we draw onto
-uint16_t fb[SLX * SLY];
-
-// second framebuffer used for DMA update
-#if defined(CONFIG_IDF_TARGET_ESP32S3)
-    uint16_t fb2[SLX * SLY];  // statically allocated on CoreS3...
-#else
-    uint16_t* fb2;  // ...but malloced on Core2
-#endif
-
-// the z-buffer in 16 bits precision
-#if defined(CONFIG_IDF_TARGET_ESP32S3)
-    uint16_t zbuf[SLX * SLY];  // statically allocated on CoreS3...
-#else
-    uint16_t* zbuf; // ..but malloced on Core2
-#endif
+// the framebuffer we draw onto, the optional DMA transfer buffer, and the
+// z-buffer in 16 bits precision.
+uint16_t* fb = nullptr;
+uint16_t* fb2 = nullptr;
+uint16_t* zbuf = nullptr;
+bool use_dma = false;
 
 // the tgx::image object that encapsulate framebuffer fb
 Image<RGB565> imfb;
@@ -70,29 +69,95 @@ void telemetryEndFrame();
 void telemetrySetScene(const char* scene);
 
 
+void freeRenderBuffers()
+    {
+    if (fb != nullptr)
+        {
+        free(fb);
+        fb = nullptr;
+        }
+    if (zbuf != nullptr)
+        {
+        free(zbuf);
+        zbuf = nullptr;
+        }
+    if (fb2 != nullptr)
+        {
+        free(fb2);
+        fb2 = nullptr;
+        }
+    use_dma = false;
+    }
+
+
+bool allocateRenderBuffers()
+    {
+    const size_t bytes = (size_t)SLX * (size_t)SLY * sizeof(uint16_t);
+
+#if !defined(DISABLE_DMA)
+    // DMA needs a contiguous DMA-capable internal RAM block.  Allocate it
+    // first, then fall back cleanly if keeping it prevents fb/zbuf allocation.
+    fb2 = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_DMA);
+#endif
+
+    fb = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+    zbuf = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+
+    if ((fb == nullptr || zbuf == nullptr) && fb2 != nullptr)
+        {
+        Serial.println("donkeykong M5Stack DMA buffer released to keep framebuffer/zbuffer");
+        freeRenderBuffers();
+        fb = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+        zbuf = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+        }
+
+    if (fb == nullptr || zbuf == nullptr)
+        {
+        freeRenderBuffers();
+        return false;
+        }
+
+#if !defined(DISABLE_DMA)
+    if (fb2 != nullptr)
+        {
+        lcd.initDMA();
+        lcd.startWrite();
+        use_dma = true;
+        Serial.println("donkeykong M5Stack display DMA enabled");
+        }
+    else
+        {
+        Serial.println("donkeykong M5Stack display DMA unavailable, using pushImage");
+        }
+#else
+    Serial.println("donkeykong M5Stack display DMA disabled, using pushImage");
+#endif
+
+    return true;
+    }
+
+
 void setup(void)
     {
     Serial.begin(115200);
     telemetryBegin();
-
-    // first, we allocate memory for the buffers: only on Core2 (not on CoreS3)
-    #if not defined(CONFIG_IDF_TARGET_ESP32S3)
-        fb2 = (uint16_t *)heap_caps_malloc(SLX * SLY * sizeof(uint16_t), MALLOC_CAP_DMA);  // allocate the second framebuffer
-        while (fb2 == nullptr) { Serial.println("Error: cannot allocate memory for fb2"); delay(1000); }
-        zbuf = (uint16_t*)malloc(SLX * SLY * sizeof(uint16_t)); // allocate the zbuffer
-        while (zbuf == nullptr) { Serial.println("Error: cannot allocate memory for zbuf"); delay(1000);}
-    #endif
 
     // setup the screen driver
     lcd.init();
     lcd.setRotation(1);
     lcd.setBrightness(200);
     lcd.setColorDepth(16);
-    lcd.setSwapBytes(false);  // do not use the library 'builtin byteswapping' because it disabled DMA...
     lcd.setTextFont(1);
     lcd.fillScreen(TFT_BLACK);
-    lcd.initDMA();
-    lcd.startWrite();
+
+    while (!allocateRenderBuffers())
+        {
+        Serial.println("Error: cannot allocate framebuffer/zbuffer");
+        delay(1000);
+        }
+    // LovyanGFX byteswapping is convenient for pushImage(), but DMA needs the
+    // pixels already byteswapped in the transfer buffer.
+    lcd.setSwapBytes(!use_dma);
 
     // setup the 3D renderer.
     imfb.set(fb, SLX, SLY);
@@ -169,7 +234,7 @@ void infos(int loopnumber)
         { // update the text for the drawing mode
         prev_loopnumber = loopnumber;
         lcd.setTextDatum(BL_DATUM);
-        lcd.waitDMA();
+        if (use_dma) lcd.waitDMA();
         switch (loopnumber % 4)
             {
             case 0: lcd.drawString("Gouraud/texture", 0, lcd.height()-1); telemetrySetScene("gouraud_texture"); break;
@@ -184,8 +249,10 @@ void infos(int loopnumber)
         itoa(nbframes,tfps + 5,10);
         tfps[strlen(tfps)] = ' ';
         lcd.setTextDatum(TL_DATUM);
-        lcd.waitDMA();
+        if (use_dma) lcd.waitDMA();
         lcd.drawString(tfps,0,0);
+        Serial.print("donkeykong M5Stack display=");
+        Serial.println(use_dma ? "DMA" : "pushImage");
         prev_millis = m;
         nbframes = 0;
         }
@@ -231,14 +298,24 @@ void loop()
     // display additional information on the screen
     infos(loopnumber);
 
-    // copy fb to fb2 with byteswapping (beware that fb2 may not be uint8_t* addressable)
-    for (int i = 0; i < SLX * SLY; i++)
+    const int x = (lcd.width() - SLX) / 2;
+    const int y = (lcd.height() - SLY) / 2;
+    if (use_dma)
         {
-        const uint16_t a = fb[i];
-        fb2[i] = (a << 8) | (a >> 8);
+        lcd.waitDMA();
+        // Copy fb to fb2 with byteswapping.  The DMA buffer may not be safely
+        // byte-addressable, so keep the conversion word-based.
+        for (int i = 0; i < SLX * SLY; i++)
+            {
+            const uint16_t a = fb[i];
+            fb2[i] = (a << 8) | (a >> 8);
+            }
+        lcd.pushImageDMA(x, y, SLX, SLY, fb2);
         }
-    // start DMA upload of the framebuffer to the screen.
-    lcd.pushImageDMA((lcd.width() - SLX) / 2, (lcd.height() - SLY) / 2, SLX, SLY, fb2);
+    else
+        {
+        lcd.pushImage(x, y, SLX, SLY, fb);
+        }
 
     telemetryEndFrame();
     }
