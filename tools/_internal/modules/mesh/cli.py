@@ -74,7 +74,9 @@ def build_parser() -> argparse.ArgumentParser:
     clean = parser.add_argument_group("mesh cleanup")
     clean.add_argument("--normalize", action="store_true", help="For OBJ input: center the model and fit it to --normalize-size")
     clean.add_argument("--normalize-size", type=float, default=2.0, help="Normalized bounding-box size")
-    clean.add_argument("--force-normals", action="store_true", help="Recompute normals")
+    normal_mode = clean.add_mutually_exclusive_group()
+    normal_mode.add_argument("--force-normals", action="store_true", help="Recompute smooth vertex normals before cleanup")
+    normal_mode.add_argument("--remove-normals", action="store_true", help="Drop all normals before cleanup")
     clean.add_argument("--no-cleanup", action="store_true", help="Disable quantize/dedupe cleanup")
     clean.add_argument("--texcoord-wrap", action="store_true", help="Identify UVs modulo 1 during cleanup; only use when this preserves the texture mapping")
 
@@ -192,6 +194,8 @@ def _load_legacy_input(args: argparse.Namespace, path: Path, output: Path) -> Lo
                 texcoord_quant_bits=DEFAULT_TEXCOORD_QUANT_BITS,
                 texcoord_wrap=args.texcoord_wrap,
                 normal_quant_bits=DEFAULT_NORMAL_QUANT_BITS,
+                force_normals=args.force_normals,
+                remove_normals=args.remove_normals,
             )
     texture_headers = _parse_texture_headers(path.read_text(encoding="utf-8", errors="replace"), path.parent)
     texture_sources = {material: texture_headers[symbol] for material, symbol in legacy_textures.items() if symbol in texture_headers}
@@ -218,6 +222,8 @@ def _load_mesh3dv2_input(args: argparse.Namespace, path: Path, output: Path) -> 
                 texcoord_quant_bits=DEFAULT_TEXCOORD_QUANT_BITS,
                 texcoord_wrap=args.texcoord_wrap,
                 normal_quant_bits=DEFAULT_NORMAL_QUANT_BITS,
+                force_normals=args.force_normals,
+                remove_normals=args.remove_normals,
             )
     texture_sources = {
         material: decoded.texture_headers[symbol]
@@ -247,6 +253,7 @@ def _preprocess_obj(args: argparse.Namespace, mesh: ObjMesh) -> ObjMesh:
             normalize_size=args.normalize_size,
             dedupe_epsilon=1e-8,
             force_normals=args.force_normals,
+            remove_normals=args.remove_normals,
             vertex_quant_bits=vertex_bits,
             texcoord_quant_bits=texcoord_bits,
             texcoord_wrap=args.texcoord_wrap,

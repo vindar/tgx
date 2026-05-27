@@ -93,7 +93,8 @@ python tools/cli_tools/tgx_mesh_cli.py model_v2.h -o model_v2_split.h --layout s
 | `--color-type` | Mesh color type: `RGB565`, `RGB24`, `RGB32`, or `RGBf`. |
 | `--normalize` | For OBJ input, center and scale the model. |
 | `--normalize-size` | Size used by `--normalize`. |
-| `--force-normals` | Recompute normals. |
+| `--force-normals` | Recompute smooth vertex normals before quantize/dedupe cleanup. Mutually exclusive with `--remove-normals`. |
+| `--remove-normals` | Drop all normals before quantize/dedupe cleanup. Mutually exclusive with `--force-normals`. |
 | `--no-cleanup` | Disable quantize/dedupe cleanup. |
 
 ## Mesh3Dv2 Options

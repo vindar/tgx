@@ -243,7 +243,12 @@ def print_preprocess_stats(stats: PreprocessStats) -> None:
     print("preprocess:")
     print(f"  vertices : {stats.vertices_before} -> {stats.vertices_after}")
     print(f"  texcoords: {stats.texcoords_before} -> {stats.texcoords_after}")
-    print(f"  normals  : {stats.normals_before} -> {stats.normals_after}" + (" (generated)" if stats.normals_generated else ""))
+    normal_note = ""
+    if stats.normals_removed:
+        normal_note = " (removed)"
+    elif stats.normals_generated:
+        normal_note = " (smooth recomputed)" if stats.normals_before else " (generated)"
+    print(f"  normals  : {stats.normals_before} -> {stats.normals_after}{normal_note}")
     if stats.degenerate_triangles_removed:
         print(f"  degenerate triangles removed: {stats.degenerate_triangles_removed}")
     print(f"  normalize: {'yes' if stats.normalized else 'no'}")

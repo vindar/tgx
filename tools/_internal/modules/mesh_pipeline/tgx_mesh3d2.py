@@ -111,6 +111,7 @@ def cmd_export(args: argparse.Namespace) -> None:
             normalize_size=args.normalize_size,
             dedupe_epsilon=args.dedupe_epsilon,
             force_normals=args.force_normals,
+            remove_normals=args.remove_normals,
             vertex_quant_bits=args.vertex_quant_bits,
             texcoord_quant_bits=args.texcoord_quant_bits,
             texcoord_wrap=args.texcoord_wrap,
@@ -203,6 +204,7 @@ def cmd_wizard(args: argparse.Namespace) -> None:
         normalize_size=2.0,
         dedupe_epsilon=1e-9,
         force_normals=False,
+        remove_normals=False,
         vertex_quant_bits=DEFAULT_VERTEX_QUANT_BITS,
         texcoord_quant_bits=DEFAULT_TEXCOORD_QUANT_BITS,
         texcoord_wrap=False,
@@ -351,7 +353,9 @@ def main(argv: list[str] | None = None) -> int:
     p_export.add_argument("--normalize", action="store_true", help="center the model and fit its largest extent to --normalize-size")
     p_export.add_argument("--normalize-size", type=float, default=2.0)
     p_export.add_argument("--dedupe-epsilon", type=float, default=1e-9)
-    p_export.add_argument("--force-normals", action="store_true")
+    normal_mode = p_export.add_mutually_exclusive_group()
+    normal_mode.add_argument("--force-normals", action="store_true", help="recompute smooth vertex normals before cleanup")
+    normal_mode.add_argument("--remove-normals", action="store_true", help="drop all normals before cleanup")
     p_export.add_argument("--vertex-quant-bits", type=int, default=DEFAULT_VERTEX_QUANT_BITS, help="quantize and merge vertices to this many bounding-box bits; negative disables")
     p_export.add_argument("--texcoord-quant-bits", type=int, default=DEFAULT_TEXCOORD_QUANT_BITS, help="snap and merge UVs to a 1/(2^bits) grid; negative disables")
     p_export.add_argument("--texcoord-wrap", action="store_true", help="identify UVs modulo 1 during UV quantization; only use when this preserves texture mapping")

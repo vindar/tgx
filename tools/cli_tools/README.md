@@ -136,7 +136,9 @@ Mesh cleanup options:
 - `--normalize`: for OBJ input, center the model and fit it to
   `--normalize-size`.
 - `--normalize-size FLOAT`: normalized bounding-box size. Default is `2.0`.
-- `--force-normals`: recompute normals.
+- `--force-normals`: recompute smooth vertex normals before cleanup.
+- `--remove-normals`: drop all normals before cleanup.
+  This is mutually exclusive with `--force-normals`.
 - `--no-cleanup`: disable the quantize/dedupe cleanup pass.
 - `--texcoord-wrap`: identify UVs modulo 1 during cleanup. Use only when this
   is correct for the model and texture mapping.

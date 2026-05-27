@@ -21,6 +21,7 @@ class PreprocessStats:
     normals_before: int
     normals_after: int
     normals_generated: bool
+    normals_removed: bool
     normalized: bool
     degenerate_triangles_removed: int = 0
 
@@ -169,12 +170,16 @@ def preprocess_mesh(
     normalize_size: float = 2.0,
     dedupe_epsilon: float = 1e-9,
     force_normals: bool = False,
+    remove_normals: bool = False,
     vertex_quant_bits: int = DEFAULT_VERTEX_QUANT_BITS,
     texcoord_quant_bits: int = DEFAULT_TEXCOORD_QUANT_BITS,
     texcoord_wrap: bool = False,
     normal_quant_bits: int = DEFAULT_NORMAL_QUANT_BITS,
 ) -> tuple[ObjMesh, PreprocessStats]:
     """Return a cleaned mesh suitable for meshlet export."""
+    if force_normals and remove_normals:
+        raise ValueError("force_normals and remove_normals are mutually exclusive")
+
     vertices_before = len(mesh.vertices)
     texcoords_before = len(mesh.texcoords)
     normals_before = len(mesh.normals)
@@ -191,6 +196,20 @@ def preprocess_mesh(
         extent = float(np.max(bb_max - bb_min))
         if extent > 0.0:
             vertices = (vertices - center) * (float(normalize_size) / extent)
+
+    normals_generated = False
+    normals_removed = False
+    tmp_before_quant = ObjMesh(vertices, texcoords, normals, triangles, mesh.name, mesh.materials.copy(), mesh.source_path)
+    if remove_normals:
+        normals = np.zeros((0, 3), dtype=np.float64)
+        triangles = [
+            Triangle(tuple(FaceVertex(c.v, c.vt, -1) for c in tri.corners), tri.material, tri.group)
+            for tri in triangles
+        ]
+        normals_removed = True
+    elif force_normals or not tmp_before_quant.has_normals():
+        normals, triangles = _generate_smooth_normals(tmp_before_quant)
+        normals_generated = True
 
     if vertex_quant_bits >= 0:
         vertices, v_remap = _quantize_dedupe_vertices(vertices, vertex_quant_bits)
@@ -228,8 +247,7 @@ def preprocess_mesh(
         ]
         tmp = ObjMesh(vertices, texcoords, normals, triangles, mesh.name, mesh.materials.copy(), mesh.source_path)
 
-    normals_generated = False
-    if force_normals or not tmp.has_normals():
+    if not remove_normals and not tmp.has_normals():
         normals, triangles = _generate_smooth_normals(tmp)
         normals_generated = True
         if normal_quant_bits >= 0:
@@ -250,6 +268,7 @@ def preprocess_mesh(
         normals_before=normals_before,
         normals_after=len(cleaned.normals),
         normals_generated=normals_generated,
+        normals_removed=normals_removed,
         normalized=normalize,
         degenerate_triangles_removed=degenerate_removed,
     )

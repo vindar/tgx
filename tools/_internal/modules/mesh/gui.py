@@ -46,6 +46,8 @@ class TGXMeshConverterApp(tk.Tk):
         self.target_vertices = tk.StringVar(value=str(DEFAULT_TARGET_VERTICES))
         self.max_normal_angle = tk.StringVar(value=str(DEFAULT_MAX_NORMAL_ANGLE_DEG))
         self.texture_layout = tk.StringVar(value="header")
+        self.force_normals = tk.BooleanVar(value=False)
+        self.remove_normals = tk.BooleanVar(value=False)
 
         self.texture_rows: dict[str, dict[str, str]] = {}
         self.texture_iid_to_material: dict[str, str] = {}
@@ -73,8 +75,8 @@ class TGXMeshConverterApp(tk.Tk):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         root.columnconfigure(1, weight=1)
-        root.rowconfigure(7, weight=1)
-        root.rowconfigure(11, weight=1)
+        root.rowconfigure(8, weight=1)
+        root.rowconfigure(12, weight=1)
 
         ttk.Label(root, text="Input OBJ / TGX mesh").grid(row=0, column=0, sticky="w")
         ttk.Entry(root, textvariable=self.input_path).grid(row=0, column=1, columnspan=3, sticky="ew", padx=6)
@@ -128,7 +130,12 @@ class TGXMeshConverterApp(tk.Tk):
         ttk.Label(meshlet_box, text="max normal angle").pack(side="left")
         ttk.Entry(meshlet_box, textvariable=self.max_normal_angle, width=6).pack(side="left", padx=(4, 0))
 
-        ttk.Label(root, text="OBJ material textures").grid(row=6, column=0, sticky="w", pady=(10, 2))
+        normal_box = ttk.Frame(root)
+        normal_box.grid(row=6, column=0, columnspan=5, sticky="w", pady=(8, 0))
+        ttk.Checkbutton(normal_box, text="Force smooth normal recomputation", variable=self.force_normals, command=self._on_force_normals).pack(side="left")
+        ttk.Checkbutton(normal_box, text="Remove normals", variable=self.remove_normals, command=self._on_remove_normals).pack(side="left", padx=(18, 0))
+
+        ttk.Label(root, text="OBJ material textures").grid(row=7, column=0, sticky="w", pady=(10, 2))
         columns = ("material", "size", "filter", "refs", "role", "requested", "selected")
         self.texture_table = ttk.Treeview(root, columns=columns, show=("tree", "headings"), height=8)
         self.texture_table.heading("#0", text="")
@@ -144,11 +151,11 @@ class TGXMeshConverterApp(tk.Tk):
         ):
             self.texture_table.heading(column, text=column)
             self.texture_table.column(column, width=width, stretch=column in ("requested", "selected"))
-        self.texture_table.grid(row=7, column=0, columnspan=5, sticky="nsew")
+        self.texture_table.grid(row=8, column=0, columnspan=5, sticky="nsew")
         self.texture_table.bind("<<TreeviewSelect>>", self._on_texture_select)
 
         edit_box = ttk.Frame(root)
-        edit_box.grid(row=8, column=0, columnspan=5, sticky="ew", pady=(6, 8))
+        edit_box.grid(row=9, column=0, columnspan=5, sticky="ew", pady=(6, 8))
         edit_box.columnconfigure(1, weight=1)
         ttk.Label(edit_box, text="Selected texture").grid(row=0, column=0, sticky="w")
         ttk.Entry(edit_box, textvariable=self.material_texture_path).grid(row=0, column=1, sticky="ew", padx=6)
@@ -165,7 +172,7 @@ class TGXMeshConverterApp(tk.Tk):
         self.texture_preview.grid(row=1, column=1, columnspan=10, sticky="ew", padx=6, pady=(6, 0))
 
         buttons = ttk.Frame(root)
-        buttons.grid(row=9, column=0, columnspan=5, sticky="e")
+        buttons.grid(row=10, column=0, columnspan=5, sticky="e")
         self.reload_button = ttk.Button(buttons, text="Reload textures", command=self.reload_textures)
         self.reload_button.pack(side="left", padx=(0, 8))
         self.preview_button = ttk.Button(buttons, text="Preview mesh", command=self.preview_mesh)
@@ -173,9 +180,17 @@ class TGXMeshConverterApp(tk.Tk):
         self.convert_button = ttk.Button(buttons, text="Convert", command=self.convert)
         self.convert_button.pack(side="left")
 
-        ttk.Label(root, text="Log").grid(row=10, column=0, sticky="w", pady=(8, 0))
+        ttk.Label(root, text="Log").grid(row=11, column=0, sticky="w", pady=(8, 0))
         self.log = tk.Text(root, height=12, wrap="word")
-        self.log.grid(row=11, column=0, columnspan=5, sticky="nsew", pady=(2, 0))
+        self.log.grid(row=12, column=0, columnspan=5, sticky="nsew", pady=(2, 0))
+
+    def _on_force_normals(self):
+        if self.force_normals.get():
+            self.remove_normals.set(False)
+
+    def _on_remove_normals(self):
+        if self.remove_normals.get():
+            self.force_normals.set(False)
 
     def _update_lkh_warning(self):
         status = check_environment(tool="mesh", require_config=True)
@@ -701,6 +716,10 @@ class TGXMeshConverterApp(tk.Tk):
             argv += ["--name", self.object_name.get().strip()]
         if self.normalize.get():
             argv.append("--normalize")
+        if self.force_normals.get():
+            argv.append("--force-normals")
+        if self.remove_normals.get():
+            argv.append("--remove-normals")
         if self.mesh_format.get() == "Mesh3Dv2":
             argv += ["--target-vertices", self.target_vertices.get().strip()]
             argv += ["--max-normal-angle", self.max_normal_angle.get().strip()]

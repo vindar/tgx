@@ -430,12 +430,15 @@ def preprocess_legacy_mesh(
     texcoord_quant_bits: int,
     texcoord_wrap: bool,
     normal_quant_bits: int,
+    force_normals: bool = False,
+    remove_normals: bool = False,
 ) -> ObjMesh:
     """Apply the same cleanup used by OBJ inputs to a legacy Mesh3D-derived mesh."""
     cleaned, _ = preprocess_mesh(
         mesh,
         normalize=False,
-        force_normals=False,
+        force_normals=force_normals,
+        remove_normals=remove_normals,
         vertex_quant_bits=vertex_quant_bits,
         texcoord_quant_bits=texcoord_quant_bits,
         texcoord_wrap=texcoord_wrap,
@@ -647,6 +650,8 @@ def convert(args: argparse.Namespace) -> None:
                 texcoord_quant_bits=args.texcoord_quant_bits,
                 texcoord_wrap=args.texcoord_wrap,
                 normal_quant_bits=args.normal_quant_bits,
+                force_normals=args.force_normals,
+                remove_normals=args.remove_normals,
             )
 
     output = Path(args.output)
@@ -723,6 +728,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--texcoord-quant-bits", type=int, default=DEFAULT_TEXCOORD_QUANT_BITS, help="snap and merge UVs to a 1/(2^bits) grid; negative disables")
     parser.add_argument("--texcoord-wrap", action="store_true", help="identify UVs modulo 1 during UV quantization; only use when this is known to preserve the model texture mapping")
     parser.add_argument("--normal-quant-bits", type=int, default=DEFAULT_NORMAL_QUANT_BITS, help="quantize and merge normals to signed fixed-point bits per coordinate; negative disables")
+    normal_mode = parser.add_mutually_exclusive_group()
+    normal_mode.add_argument("--force-normals", action="store_true", help="recompute smooth vertex normals before cleanup")
+    normal_mode.add_argument("--remove-normals", action="store_true", help="drop all normals before cleanup")
     parser.add_argument("--auto-tune", choices=("off", "fast", "thorough"), default="off", help="try several meshlet profiles and keep the best estimated runtime/profile tradeoff")
     parser.add_argument("--auto-tune-finalists", type=int, default=3, help="number of first-pass candidates that get the slower TGX visibility pass")
     parser.add_argument("--auto-tune-cull-samples", type=int, default=256, help="view samples used to score candidate culling quality")

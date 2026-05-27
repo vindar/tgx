@@ -86,12 +86,14 @@ def _load_input(args: argparse.Namespace):
         if args.preprocess_legacy:
             with step("preprocess mesh", f"{len(mesh.triangles)} triangles"):
                 mesh = preprocess_legacy_mesh(
-                    mesh,
-                    vertex_quant_bits=args.vertex_quant_bits,
-                    texcoord_quant_bits=args.texcoord_quant_bits,
-                    texcoord_wrap=args.texcoord_wrap,
-                    normal_quant_bits=args.normal_quant_bits,
-                )
+                mesh,
+                vertex_quant_bits=args.vertex_quant_bits,
+                texcoord_quant_bits=args.texcoord_quant_bits,
+                texcoord_wrap=args.texcoord_wrap,
+                normal_quant_bits=args.normal_quant_bits,
+                force_normals=args.force_normals,
+                remove_normals=args.remove_normals,
+            )
         return mesh, source, color_type or "tgx::RGB565", texture_symbols, extra_includes
 
     with step("load OBJ", str(input_path)):
@@ -103,6 +105,7 @@ def _load_input(args: argparse.Namespace):
             normalize_size=args.normalize_size,
             dedupe_epsilon=args.dedupe_epsilon,
             force_normals=args.force_normals,
+            remove_normals=args.remove_normals,
             vertex_quant_bits=args.vertex_quant_bits,
             texcoord_quant_bits=args.texcoord_quant_bits,
             texcoord_wrap=args.texcoord_wrap,
@@ -176,7 +179,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--normalize", action="store_true", help="OBJ input: normalize to a centered box")
     parser.add_argument("--normalize-size", type=float, default=2.0, help="OBJ input: normalized box size")
     parser.add_argument("--dedupe-epsilon", type=float, default=1e-8, help="OBJ input: merge nearly identical vertices/UVs/normals")
-    parser.add_argument("--force-normals", action="store_true", help="OBJ input: recompute flat normals")
+    normal_mode = parser.add_mutually_exclusive_group()
+    normal_mode.add_argument("--force-normals", action="store_true", help="recompute smooth vertex normals before cleanup")
+    normal_mode.add_argument("--remove-normals", action="store_true", help="drop all normals before cleanup")
     parser.add_argument("--texture-symbol", action="append", default=[], metavar="MATERIAL=SYMBOL", help="link a material to an existing tgx::Image symbol")
     parser.add_argument("--include", action="append", default=[], help="extra quoted include to add to the generated header")
     parser.add_argument("--export-textures", action="store_true", help="OBJ input: convert map_Kd textures to RGB565 TGX headers")
