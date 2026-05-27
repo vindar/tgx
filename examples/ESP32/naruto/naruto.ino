@@ -5,7 +5,7 @@
 *
 * Instructions:
 *
-* 1. download and install Bodmer's TFT_eSPI library via Arduino's libray manager or
+* 1. download and install Bodmer's TFT_eSPI library via Arduino's library manager or
 *    directly from: https://github.com/Bodmer/TFT_eSPI
 *
 * 2. Configure the TFT_eSPI library for the screen used
@@ -20,13 +20,15 @@
 ********************************************************************/
 
 
-/**************** WARNING *****************
-* DMA transfer is curently bugged on ESP32.
-* Two solutions:
-*   1. Apply the fix provided by @tgghtp in https://github.com/Bodmer/TFT_eSPI/discussions/2233
-*   2. ... Or disable DMA by uncommenting the line below:
+/**************** DMA NOTE ****************
+* TFT_eSPI DMA transfers can improve display upload speed on ESP32 boards, but
+* older TFT_eSPI / Espressif ESP32 core combinations have had DMA issues.
+* Use a recent TFT_eSPI release and keep the Espressif ESP32 board package up
+* to date.  DMA is enabled by default here; if the DMA buffer cannot be
+* allocated, the sketch automatically falls back to the blocking pushImage()
+* path.  Uncomment the line below to force that non-DMA path.
 *******************************************/
-// #define DISABLE_DMA   //<-- Uncomment this to disable DMA
+// #define DISABLE_DMA
 
 // screen driver library
 #include <TFT_eSPI.h>
@@ -41,7 +43,9 @@
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
 
-// default drawing size (limited by the amount of RAM on ESP32/ESP32S3)
+// Maximum drawing size.  The real viewport is clamped at run time if the TFT
+// is smaller, so the same sketch can run on 320x240 ILI9341 and smaller ST7735
+// screens.
 #define SLX 150
 #define SLY 210
 
@@ -57,8 +61,9 @@ uint16_t fb[SLX * SLY];
 #elif defined(CONFIG_IDF_TARGET_ESP32S3)
     uint16_t fb2[SLX * SLY];  // statically allocated on ESP32 S3...
 #else
-    uint16_t* fb2;  // ...but malloced on ESP32
+    uint16_t* fb2 = nullptr;  // ...but malloced on ESP32
 #endif
+bool use_dma = false;
 
 // the z-buffer in 16 bits precision
 #if defined(CONFIG_IDF_TARGET_ESP32S3)
@@ -100,19 +105,36 @@ void setup()
     tft.setSwapBytes(true);
     tft.fillScreen(TFT_BLACK);
     tft.setTextColor(TFT_RED,TFT_BLACK,true);
-    tft.initDMA();
-    tft.startWrite();
 
-    // fix the drawing size in case the screen is smaller than SLXxSLY.
+    // Fix the drawing size in case the screen is smaller than SLXxSLY.
+    // Leave a small text strip at the bottom when the display is tall enough.
     slx =  std::min<int>(tft.width(),SLX);
-    sly =  std::min<int>(tft.height()-20,SLY);
+    const int available_y = (tft.height() > 20) ? (tft.height() - 20) : tft.height();
+    sly =  std::min<int>(available_y,SLY);
+
+    #if !defined(DISABLE_DMA)
+        #if defined(CONFIG_IDF_TARGET_ESP32S3)
+            use_dma = true;
+        #else
+            fb2 = (uint16_t*)heap_caps_malloc(slx * sly * sizeof(uint16_t), MALLOC_CAP_DMA);
+            use_dma = (fb2 != nullptr);
+        #endif
+        if (use_dma)
+            {
+            tft.initDMA();
+            tft.startWrite();
+            Serial.println("naruto ESP32 display DMA enabled");
+            }
+        else
+            {
+            Serial.println("naruto ESP32 display DMA unavailable, using pushImage");
+            }
+    #else
+        Serial.println("naruto ESP32 display DMA disabled, using pushImage");
+    #endif
 
     // Allocate memory for the buffers: only on ESP32 (not on ESP32 S3)
     #if not defined(CONFIG_IDF_TARGET_ESP32S3)
-        #if not defined(DISABLE_DMA)
-        fb2 = (uint16_t *)heap_caps_malloc(slx * sly * sizeof(uint16_t), MALLOC_CAP_DMA);  // allocate the second framebuffer
-        while (fb2 == nullptr) { Serial.println("Error: cannot allocate memory for fb2"); delay(1000); }
-        #endif
         zbuf = (uint16_t*)malloc(slx * sly * sizeof(uint16_t)); // allocate the zbuffer
         while (zbuf == nullptr) { Serial.println("Error: cannot allocate memory for zbuf"); delay(1000);}
     #endif
@@ -195,8 +217,10 @@ void infos(int loopnumber)
         itoa(nbframes,tfps + 5,10);
         tfps[strlen(tfps)] = ' ';
         tft.setTextDatum(TL_DATUM);
-        tft.dmaWait();
+        if (use_dma) tft.dmaWait();
         tft.drawString(tfps,0,0);
+        Serial.print("naruto ESP32 display=");
+        Serial.println(use_dma ? "DMA" : "pushImage");
         prev_millis = m;
         nbframes = 0;
         }
@@ -204,7 +228,7 @@ void infos(int loopnumber)
         { // update the text for the drawing mode
         prev_loopnumber = loopnumber;
         tft.setTextDatum(BL_DATUM);
-        tft.dmaWait();
+        if (use_dma) tft.dmaWait();
         switch (loopnumber % 4)
             {
             case 0: tft.drawString("Gouraud/texture", 0, tft.height()-1); telemetrySetScene("gouraud_texture"); break;
@@ -252,11 +276,12 @@ void loop()
     infos(loopnumber);
 
     // upload the framebuffer to the screen
-    #if defined(DISABLE_DMA)
-        tft.pushImage((tft.width() - slx) / 2, (tft.height() - sly) / 2, slx, sly, fb); // direct transfer without DMA
-    #else
-        tft.pushImageDMA((tft.width() - slx) / 2, (tft.height() - sly) / 2, slx, sly, fb, fb2); // initiate DMA transfer
-    #endif
+    const int x = (tft.width() - slx) / 2;
+    const int y = (tft.height() - sly) / 2;
+    if (use_dma)
+        tft.pushImageDMA(x, y, slx, sly, fb, fb2); // initiate DMA transfer
+    else
+        tft.pushImage(x, y, slx, sly, fb);         // direct transfer without DMA
 
     telemetryEndFrame();
     }

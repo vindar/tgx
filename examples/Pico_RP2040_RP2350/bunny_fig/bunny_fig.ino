@@ -5,7 +5,7 @@
 *
 * Instructions:
 *
-* 1. download and install Bodmer's TFT_eSPI library via Arduino's libray manager or
+* 1. download and install Bodmer's TFT_eSPI library via Arduino's library manager or
 *    directly from: https://github.com/Bodmer/TFT_eSPI
 *
 * 2. Configure the TFT_eSPI library for the screen used

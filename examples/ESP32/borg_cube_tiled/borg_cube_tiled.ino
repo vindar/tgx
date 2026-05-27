@@ -1,14 +1,14 @@
 /********************************************************************
-* tgx library example : animated textured Borg cube.
+* tgx library example : animated textured Borg cube with tile rendering.
 *
 *                    EXAMPLE FOR ESP32 / ESP32-S2 / ESP32-S3
 *
 * This sketch renders a rotating cube with a texture that is modified in
-* real time.  It draws the full viewport into a TGX framebuffer, then sends
-* that framebuffer to the TFT screen with TFT_eSPI.
+* real time.  Unlike the regular borg_cube example, it renders the viewport
+* in two horizontal tiles.  The smaller tile framebuffer makes it easier to
+* keep TFT_eSPI DMA enabled on RAM-constrained ESP32 boards.
 *
-* See also "borg_cube_tiled" for a more advanced version that renders the
-* same scene in two smaller tiles to recover DMA on memory-constrained boards.
+* See also "borg_cube" for the simpler full-framebuffer version.
 *
 * Instructions:
 *
@@ -42,12 +42,13 @@ using namespace tgx;
 // The sketch centers this viewport in the physical screen.  MAX_LX/MAX_LY are
 // only upper limits: on a smaller TFT, the actual render size is clamped to the
 // screen size at run time.
-static const int MAX_LX = 300;
+static const int MAX_LX = 290;
 static const int MAX_LY = 220;
+static const int TILE_COUNT = 2;
 static const int TEX_SIZE = 64;
 
 uint16_t* fb = nullptr;
-uint16_t* fb2 = nullptr;
+uint16_t* dma_buffer = nullptr;
 uint16_t* zbuf = nullptr;
 uint16_t texture_buf[TEX_SIZE * TEX_SIZE];
 bool use_dma = false;
@@ -57,6 +58,7 @@ Image<RGB565> texture;
 
 int render_lx = 0;
 int render_ly = 0;
+int tile_h = 0;
 float render_ratio = 1.0f;
 bool perspective_mode = true;
 uint32_t last_projection_switch_ms = 0;
@@ -142,7 +144,6 @@ void updateTexture()
 void setupRenderer()
     {
     renderer.setViewportSize(render_lx, render_ly);
-    renderer.setOffset(0, 0);
     renderer.setImage(&im);
     renderer.setZbuffer(zbuf);
     renderer.setCulling(1);
@@ -171,7 +172,7 @@ void updateProjection()
     }
 
 
-void drawFrame()
+void drawTile(int tile_y)
     {
     uint32_t t = millis();
 
@@ -183,13 +184,19 @@ void drawFrame()
     M.multRotate(t / 43.0f, { 0, 0, 1 });
     M.multTranslate({ 0, 0, -5 });
 
+    // The renderer still sees the full virtual viewport.  The smaller image is
+    // only the current tile inside that viewport, selected with setOffset().
+    renderer.setOffset(0, tile_y);
     im.fillScreen(perspective_mode ? rgb888(2, 5, 10) : rgb888(26, 28, 32));
     renderer.clearZbuffer();
     renderer.setModelMatrix(M);
     renderer.drawCube(&texture, &texture, &texture, &texture, &texture, &texture);
 
-    im.drawText(perspective_mode ? "Perspective" : "Orthographic",
-                { 4, 13 }, font_tgx_OpenSans_Bold_10, rgb888(235, 190, 70));
+    if (tile_y == 0)
+        {
+        im.drawText(perspective_mode ? "Perspective" : "Orthographic",
+                    { 4, 13 }, font_tgx_OpenSans_Bold_10, rgb888(235, 190, 70));
+        }
     }
 
 
@@ -199,9 +206,9 @@ void updateFPS()
     uint32_t now = millis();
     if (now - fps_last_ms >= 1000)
         {
-        Serial.print("borg_cube ESP32 fps=");
+        Serial.print("borg_cube_tiled ESP32 fps=");
         Serial.println(fps_frames);
-        Serial.print("borg_cube ESP32 display=");
+        Serial.print("borg_cube_tiled ESP32 display=");
         Serial.println(use_dma ? "DMA" : "pushImage");
         fps_frames = 0;
         fps_last_ms = now;
@@ -209,33 +216,107 @@ void updateFPS()
     }
 
 
-void setupDMA(size_t pixel_count)
+void pushTile(int tile_y, int current_tile_h)
     {
+    const int x = (tft.width() - render_lx) / 2;
+    const int y = (tft.height() - render_ly) / 2 + tile_y;
+    if (use_dma)
+        {
+        // The same DMA bounce buffer is reused for both tiles.  Rendering of
+        // the next tile can happen while the previous DMA transfer is running,
+        // but we must wait here before copying new pixels into dma_buffer.
+        tft.dmaWait();
+        tft.pushImageDMA(x, y, render_lx, current_tile_h, fb, dma_buffer);
+        }
+    else
+        tft.pushImage(x, y, render_lx, current_tile_h, fb);
+    }
+
+
+void drawAndPushTile(int tile_y, int current_tile_h)
+    {
+    drawTile(tile_y);
+    pushTile(tile_y, current_tile_h);
+    }
+
+
+void drawAndPushFrame()
+    {
+    for (int tile_y = 0; tile_y < render_ly; tile_y += tile_h)
+        {
+        int current_tile_h = render_ly - tile_y;
+        if (current_tile_h > tile_h) current_tile_h = tile_h;
+        drawAndPushTile(tile_y, current_tile_h);
+        }
+    }
+
+
+void freeTileBuffers()
+    {
+    if (fb != nullptr)
+        {
+        free(fb);
+        fb = nullptr;
+        }
+    if (zbuf != nullptr)
+        {
+        free(zbuf);
+        zbuf = nullptr;
+        }
+    if (dma_buffer != nullptr)
+        {
+        free(dma_buffer);
+        dma_buffer = nullptr;
+        }
+    use_dma = false;
+    }
+
+
+bool allocateTileBuffers(size_t tile_pixel_count)
+    {
+    const size_t bytes = tile_pixel_count * sizeof(uint16_t);
+
 #if !defined(DISABLE_DMA)
-    fb2 = (uint16_t*)heap_caps_malloc(pixel_count * sizeof(uint16_t), MALLOC_CAP_DMA);
-    if (fb2 != nullptr)
+    // Try DMA first because it requires a large contiguous DMA-capable block.
+    dma_buffer = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_DMA);
+#endif
+
+    fb = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+    zbuf = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+
+    // If reserving DMA prevented the normal buffers from fitting, drop DMA and
+    // retry.  The example should keep running even when DMA cannot be used.
+    if ((fb == nullptr || zbuf == nullptr) && dma_buffer != nullptr)
+        {
+        Serial.println("borg_cube_tiled ESP32 DMA buffer released to keep framebuffer/zbuffer");
+        freeTileBuffers();
+        fb = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+        zbuf = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+        }
+
+    if (fb == nullptr || zbuf == nullptr)
+        {
+        freeTileBuffers();
+        return false;
+        }
+
+#if !defined(DISABLE_DMA)
+    if (dma_buffer != nullptr)
         {
         tft.initDMA();
         tft.startWrite();
         use_dma = true;
-        Serial.println("borg_cube ESP32 display DMA enabled");
+        Serial.println("borg_cube_tiled ESP32 display DMA enabled");
         }
     else
         {
-        Serial.println("borg_cube ESP32 display DMA unavailable, using pushImage");
+        Serial.println("borg_cube_tiled ESP32 display DMA unavailable, using pushImage");
         }
+#else
+    Serial.println("borg_cube_tiled ESP32 display DMA disabled, using pushImage");
 #endif
-    }
 
-
-void pushFrame()
-    {
-    const int x = (tft.width() - render_lx) / 2;
-    const int y = (tft.height() - render_ly) / 2;
-    if (use_dma)
-        tft.pushImageDMA(x, y, render_lx, render_ly, fb, fb2);
-    else
-        tft.pushImage(x, y, render_lx, render_ly, fb);
+    return true;
     }
 
 
@@ -268,22 +349,20 @@ void setup()
     render_ly = tft.height();
     if (render_lx > MAX_LX) render_lx = MAX_LX;
     if (render_ly > MAX_LY) render_ly = MAX_LY;
+    tile_h = (render_ly + TILE_COUNT - 1) / TILE_COUNT;
     render_ratio = (float)render_lx / (float)render_ly;
 
-    size_t pixel_count = (size_t)render_lx * (size_t)render_ly;
+    size_t tile_pixel_count = (size_t)render_lx * (size_t)tile_h;
 
-    // Framebuffer and zbuffer are allocated at run time so the same sketch can
-    // adapt to several ESP32 boards and TFT sizes.
-    fb = (uint16_t*)heap_caps_malloc(pixel_count * sizeof(uint16_t), MALLOC_CAP_8BIT);
-    zbuf = (uint16_t*)heap_caps_malloc(pixel_count * sizeof(uint16_t), MALLOC_CAP_8BIT);
-    while (fb == nullptr || zbuf == nullptr)
+    // Only one tile framebuffer and one tile zbuffer are needed.  This keeps
+    // memory low while the full viewport is preserved through setOffset().
+    while (!allocateTileBuffers(tile_pixel_count))
         {
-        Serial.println("Error: cannot allocate framebuffer/zbuffer");
+        Serial.println("Error: cannot allocate tile framebuffer/zbuffer");
         delay(1000);
         }
-    setupDMA(pixel_count);
 
-    im.set(fb, render_lx, render_ly);
+    im.set(fb, render_lx, tile_h);
     initializeTexture();
     setupRenderer();
 
@@ -297,7 +376,6 @@ void loop()
     {
     updateProjection();
     updateTexture();
-    drawFrame();
-    pushFrame();
+    drawAndPushFrame();
     updateFPS();
     }

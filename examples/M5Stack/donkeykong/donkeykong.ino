@@ -5,7 +5,7 @@
 *
 * Instructions:
 *
-* 1. download and install LovyanGFX library via Arduino's libray manager or
+* 1. download and install LovyanGFX library via Arduino's library manager or
 *    directly from: https://github.com/lovyan03/LovyanGFX
 *
 * 2. Select the board model and serial port and upload the sketch

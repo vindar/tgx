@@ -22,6 +22,16 @@
 * This example is intentionally 2D-only and focuses on TGX drawing primitives.
 ********************************************************************/
 
+/**************** DMA NOTE ****************
+* TFT_eSPI DMA transfers can improve display upload speed on ESP32 boards, but
+* older TFT_eSPI / Espressif ESP32 core combinations have had DMA issues.
+* Use a recent TFT_eSPI release and keep the Espressif ESP32 board package up
+* to date.  DMA is enabled by default here; if the DMA buffer cannot be
+* allocated, the sketch automatically falls back to the blocking pushImage()
+* path.  Uncomment the line below to force that non-DMA path.
+*******************************************/
+// #define DISABLE_DMA
+
 #include <TFT_eSPI.h>
 
 #include <tgx.h>
@@ -35,7 +45,9 @@ static const int SPRITE_LX = 56;
 static const int SPRITE_LY = 56;
 
 uint16_t* fb = nullptr;
+uint16_t* fb2 = nullptr;
 uint16_t sprite_buf[SPRITE_LX * SPRITE_LY];
+bool use_dma = false;
 
 Image<RGB565> im;
 Image<RGB565> sprite;
@@ -279,7 +291,39 @@ void updateFPS()
 
         Serial.print("TGX_2D_Showcase ESP32 fps=");
         Serial.println(fps_value);
+        Serial.print("TGX_2D_Showcase ESP32 display=");
+        Serial.println(use_dma ? "DMA" : "pushImage");
         }
+    }
+
+
+void setupDMA(size_t pixel_count)
+    {
+#if !defined(DISABLE_DMA)
+    fb2 = (uint16_t*)heap_caps_malloc(pixel_count * sizeof(uint16_t), MALLOC_CAP_DMA);
+    if (fb2 != nullptr)
+        {
+        tft.initDMA();
+        tft.startWrite();
+        use_dma = true;
+        Serial.println("TGX_2D_Showcase ESP32 display DMA enabled");
+        }
+    else
+        {
+        Serial.println("TGX_2D_Showcase ESP32 display DMA unavailable, using pushImage");
+        }
+#endif
+    }
+
+
+void pushFrame()
+    {
+    const int x = (tft.width() - screen_lx) / 2;
+    const int y = (tft.height() - screen_ly) / 2;
+    if (use_dma)
+        tft.pushImageDMA(x, y, screen_lx, screen_ly, fb, fb2);
+    else
+        tft.pushImage(x, y, screen_lx, screen_ly, fb);
     }
 
 
@@ -316,16 +360,18 @@ void setup()
     // Allocate the framebuffer dynamically.  If PSRAM is available, the ESP32
     // core may place the allocation there; otherwise it falls back to internal
     // RAM.
-    fb = (uint16_t*)heap_caps_malloc(screen_lx * screen_ly * sizeof(uint16_t),
+    const size_t pixel_count = (size_t)screen_lx * (size_t)screen_ly;
+    fb = (uint16_t*)heap_caps_malloc(pixel_count * sizeof(uint16_t),
                                      MALLOC_CAP_8BIT | MALLOC_CAP_SPIRAM);
     if (fb == nullptr)
-        fb = (uint16_t*)heap_caps_malloc(screen_lx * screen_ly * sizeof(uint16_t),
+        fb = (uint16_t*)heap_caps_malloc(pixel_count * sizeof(uint16_t),
                                          MALLOC_CAP_8BIT);
     while (fb == nullptr)
         {
         Serial.println("Error: cannot allocate framebuffer");
         delay(1000);
         }
+    setupDMA(pixel_count);
 
     im.set(fb, screen_lx, screen_ly);
     buildSprite();
@@ -337,10 +383,6 @@ void setup()
 void loop()
     {
     drawFrame();
-
-    tft.pushImage((tft.width() - screen_lx) / 2,
-                  (tft.height() - screen_ly) / 2,
-                  screen_lx, screen_ly, fb);
-
+    pushFrame();
     updateFPS();
     }

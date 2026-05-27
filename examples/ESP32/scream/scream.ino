@@ -19,6 +19,16 @@
 * 3. Select the board model and serial port and upload the sketch.
 ********************************************************************/
 
+/**************** DMA NOTE ****************
+* TFT_eSPI DMA transfers can improve display upload speed on ESP32 boards, but
+* older TFT_eSPI / Espressif ESP32 core combinations have had DMA issues.
+* Use a recent TFT_eSPI release and keep the Espressif ESP32 board package up
+* to date.  DMA is enabled by default here; if the DMA buffer cannot be
+* allocated, the sketch automatically falls back to the blocking pushImage()
+* path.  Uncomment the line below to force that non-DMA path.
+*******************************************/
+// #define DISABLE_DMA
+
 #include <TFT_eSPI.h>
 
 #include <tgx.h>
@@ -29,9 +39,10 @@
 using namespace tgx;
 
 // Render into an off-screen TGX image, then copy that image to the display.
-// This compact viewport keeps RAM and CPU cost acceptable on small ESP32 TFTs.
-static const int MAX_LX = 160;
-static const int MAX_LY = 120;
+// MAX_LX/MAX_LY are only upper limits: on a smaller TFT, the actual render
+// size is clamped to the screen size at run time.
+static const int MAX_LX = 200;
+static const int MAX_LY = 150;
 
 // The sheet is a regular grid.  More cells gives smoother deformation, but
 // also more vertices, normals and quads to update every frame.
@@ -39,7 +50,9 @@ static const int N = 22;
 static const int M = 22;
 
 uint16_t* fb = nullptr;
+uint16_t* fb2 = nullptr;
 uint16_t* zbuf = nullptr;
+bool use_dma = false;
 
 Image<RGB565> im;
 TFT_eSPI tft = TFT_eSPI();
@@ -52,6 +65,8 @@ const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER |
                               SHADER_TEXTURE_WRAP_POW2;
 
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
+
+const uint16_t SCREEN_BORDER_COLOR = TFT_DARKGREY;
 
 fVec3 vertices[(N + 1) * (M + 1)];
 fVec3 normals[(N + 1) * (M + 1)];
@@ -254,9 +269,90 @@ void updateFPS()
         {
         Serial.print("scream ESP32 fps=");
         Serial.println(fps_frames);
+        Serial.print("scream ESP32 display=");
+        Serial.println(use_dma ? "DMA" : "pushImage");
         fps_frames = 0;
         fps_last_ms = now;
         }
+    }
+
+
+void freeRenderBuffers()
+    {
+    if (fb != nullptr)
+        {
+        free(fb);
+        fb = nullptr;
+        }
+    if (zbuf != nullptr)
+        {
+        free(zbuf);
+        zbuf = nullptr;
+        }
+    if (fb2 != nullptr)
+        {
+        free(fb2);
+        fb2 = nullptr;
+        }
+    use_dma = false;
+    }
+
+
+bool allocateRenderBuffers(size_t pixel_count)
+    {
+    const size_t bytes = pixel_count * sizeof(uint16_t);
+
+#if !defined(DISABLE_DMA)
+    // DMA needs a contiguous DMA-capable internal RAM block.  Allocate it
+    // first, then fall back cleanly if keeping it prevents fb/zbuf allocation.
+    fb2 = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_DMA);
+#endif
+
+    fb = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+    zbuf = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+
+    if ((fb == nullptr || zbuf == nullptr) && fb2 != nullptr)
+        {
+        Serial.println("scream ESP32 DMA buffer released to keep framebuffer/zbuffer");
+        freeRenderBuffers();
+        fb = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+        zbuf = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+        }
+
+    if (fb == nullptr || zbuf == nullptr)
+        {
+        freeRenderBuffers();
+        return false;
+        }
+
+#if !defined(DISABLE_DMA)
+    if (fb2 != nullptr)
+        {
+        tft.initDMA();
+        tft.startWrite();
+        use_dma = true;
+        Serial.println("scream ESP32 display DMA enabled");
+        }
+    else
+        {
+        Serial.println("scream ESP32 display DMA unavailable, using pushImage");
+        }
+#else
+    Serial.println("scream ESP32 display DMA disabled, using pushImage");
+#endif
+
+    return true;
+    }
+
+
+void pushFrame()
+    {
+    const int x = (tft.width() - render_lx) / 2;
+    const int y = (tft.height() - render_ly) / 2;
+    if (use_dma)
+        tft.pushImageDMA(x, y, render_lx, render_ly, fb, fb2);
+    else
+        tft.pushImage(x, y, render_lx, render_ly, fb);
     }
 
 
@@ -281,7 +377,7 @@ void setup()
     tft.init();
     tft.setRotation(1);
     tft.setSwapBytes(true);
-    tft.fillScreen(TFT_BLACK);
+    tft.fillScreen(SCREEN_BORDER_COLOR);
 
     render_lx = tft.width();
     render_ly = tft.height();
@@ -292,10 +388,8 @@ void setup()
     size_t pixel_count = (size_t)render_lx * (size_t)render_ly;
 
     // The final viewport depends on the physical TFT size, so allocate the
-    // framebuffer and zbuffer once that size is known.
-    fb = (uint16_t*)heap_caps_malloc(pixel_count * sizeof(uint16_t), MALLOC_CAP_8BIT);
-    zbuf = (uint16_t*)heap_caps_malloc(pixel_count * sizeof(uint16_t), MALLOC_CAP_8BIT);
-    while (fb == nullptr || zbuf == nullptr)
+    // framebuffer/zbuffer once that size is known.
+    while (!allocateRenderBuffers(pixel_count))
         {
         Serial.println("Error: cannot allocate framebuffer/zbuffer");
         delay(1000);
@@ -326,10 +420,6 @@ void setup()
 void loop()
     {
     drawFrame();
-
-    tft.pushImage((tft.width() - render_lx) / 2,
-                  (tft.height() - render_ly) / 2,
-                  render_lx, render_ly, fb);
-
+    pushFrame();
     updateFPS();
     }
