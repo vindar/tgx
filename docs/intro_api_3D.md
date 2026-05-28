@@ -392,7 +392,7 @@ The renderer combines several independent shader choices:
 
 - projection: `SHADER_PERSPECTIVE` or `SHADER_ORTHO`;
 - depth mode: `SHADER_ZBUFFER` or `SHADER_NOZBUFFER`;
-- lighting interpolation: `SHADER_FLAT` or `SHADER_GOURAUD`;
+- shading path: `SHADER_UNLIT`, `SHADER_FLAT` or `SHADER_GOURAUD`;
 - texture usage: `SHADER_NOTEXTURE` or `SHADER_TEXTURE`;
 - texture sampling: `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`;
 - texture addressing: `SHADER_TEXTURE_WRAP_POW2` or `SHADER_TEXTURE_CLAMP`.
@@ -406,7 +406,7 @@ Runtime shader state describes the next draw call:
 |-----------------------|----------|
 | Projection path | perspective or orthographic. |
 | Depth path | with or without Z-buffer. |
-| Lighting path | flat or Gouraud. |
+| Shading path | unlit, flat or Gouraud. |
 | Texture path | no texture, nearest texture, or bilinear texture. |
 | Addressing path | wrapping or clamping texture coordinates. |
 
@@ -416,6 +416,7 @@ Runtime shader state describes the next draw call:
 | `SHADER_ORTHO` | Use orthographic projection without perspective shrinking. | CAD-like views, debug views, 3D sprites. |
 | `SHADER_ZBUFFER` | Use depth testing. | Solid objects that can overlap. |
 | `SHADER_NOZBUFFER` | Draw without depth testing. | Ordered overlays or special effects. |
+| `SHADER_UNLIT` | Use the material color or texture color directly, without lighting. | UI-like 3D, emissive objects, lightmaps, debug views. |
 | `SHADER_FLAT` | One lighting result per triangle. | Fast faceted rendering. |
 | `SHADER_GOURAUD` | Lighting at vertices, interpolated across triangles. | Smoother curved meshes. |
 | `SHADER_NOTEXTURE` | Use material or vertex colors only. | Untextured models and debug views. |
@@ -438,6 +439,7 @@ Think of `LOADED_SHADERS` as "what exists in the binary", and `setShaders()` as 
 const tgx::Shader shaders_loaded =
     tgx::SHADER_PERSPECTIVE |
     tgx::SHADER_ZBUFFER |
+    tgx::SHADER_UNLIT |
     tgx::SHADER_FLAT |
     tgx::SHADER_GOURAUD |
     tgx::SHADER_NOTEXTURE |
@@ -452,8 +454,8 @@ renderer.setShaders(tgx::SHADER_GOURAUD | tgx::SHADER_TEXTURE);
 renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);
 ~~~
 
-If a sketch only uses flat untextured geometry, do not load bilinear texture shaders. If it switches between a flat
-debug view and a textured view, load both `SHADER_FLAT` and the texture mode.
+If a sketch only uses unlit textured geometry, do not load the flat or Gouraud lighting paths. If it switches between
+a flat debug view and a textured view, load both `SHADER_FLAT` and the texture mode.
 
 Texture quality and wrapping may also be selected explicitly:
 
@@ -462,9 +464,10 @@ renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);
 renderer.setTextureWrappingMode(tgx::SHADER_TEXTURE_WRAP_POW2);
 ~~~
 
-`SHADER_FLAT` is often the fastest lighting mode. `SHADER_GOURAUD` interpolates vertex lighting and gives smoother
-surfaces, especially on curved meshes. Textured Gouraud rendering is often the best visual compromise for embedded
-solid 3D rendering.
+`SHADER_UNLIT` is the cheapest solid shading path because it skips lighting computations: textured geometry keeps
+its texture colors, and untextured geometry uses the current material color. `SHADER_FLAT` is usually the fastest
+lit mode. `SHADER_GOURAUD` interpolates vertex lighting and gives smoother surfaces, especially on curved meshes.
+Textured Gouraud rendering is often the best visual compromise for embedded solid 3D rendering.
 
 Internally, `Renderer3D` dispatches to templated shader variants. Keeping `LOADED_SHADERS` narrow saves flash and
 helps the compiler remove unused branches.
@@ -664,8 +667,10 @@ The convenience method `setLight()` sets all light colors and the direction at o
 If `drawMesh()` is called with `use_mesh_material = true`, the mesh material color and texture override the current
 material settings for that mesh. Most generated OBJ models use this mode.
 
-Flat and Gouraud shading differ only in where lighting is evaluated:
+Unlit, flat and Gouraud shading differ in how much lighting work they do:
 
+- **Unlit shading** skips lighting. Textured geometry uses the texture color directly; untextured geometry uses the
+  current material color. This is useful for emissive objects, lightmaps, debug views and the cheapest textured path.
 - **Flat shading** computes one color for the whole triangle. It is fast and gives a faceted look.
 - **Gouraud shading** computes lighting at vertices and interpolates the resulting colors across the triangle. It is
   smoother on curved models, but costs more math and interpolation.
