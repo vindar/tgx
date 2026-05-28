@@ -15,7 +15,7 @@
 *
 * ---
 * This example was tested with:
-*    - boards:  Raspberry Pico W (RP2040) and Raspeberry Pico 2 (RP2350)
+*    - boards:  Raspberry Pico W (RP2040) and Raspberry Pico 2 (RP2350)
 *    - screens: ILI9341 (320x240) and ST7735 (160x128)
 ********************************************************************/
 
@@ -32,9 +32,15 @@
 // let's not burden ourselves with the tgx:: prefix
 using namespace tgx;
 
-// default drawing size (limited by the amount of RAM on RP2040/RP2350)
+// Default drawing size.  Pico 2 has enough RAM for a much larger viewport,
+// while Pico W keeps the smaller size to leave safe stack/heap margin.
+#if defined(ARDUINO_ARCH_RP2350) || defined(PICO_RP2350) || defined(__ARM_ARCH_8M_MAIN__)
+#define SLX 240
+#define SLY 300
+#else
 #define SLX 140
 #define SLY 160
+#endif
 
 // real drawing size
 int slx, sly;
@@ -44,11 +50,13 @@ uint16_t fb[SLX * SLY];
 
 // second framebuffer used for DMA update
 uint16_t fb2[SLX * SLY];
+bool use_dma = false;
+int draw_buffer_index = 0;
 
 // the zbuffer
 uint16_t zbuf[SLX * SLY];
 
-// the tgx::image object that encapsulate framebuffer fb
+// the tgx::image object that encapsulates framebuffer fb
 Image<RGB565> imfb;
 
 // only load the shaders we need.
@@ -81,12 +89,22 @@ void setup()
     tft.setSwapBytes(true);
     tft.fillScreen(TFT_BLACK);
     tft.setTextColor(TFT_RED,TFT_BLACK,true);
-    tft.initDMA();
-    tft.startWrite();
+    use_dma = tft.initDMA();
+    if (use_dma)
+        {
+        tft.startWrite();
+        Serial.println("bunny_fig display DMA enabled");
+        }
+    else
+        {
+        Serial.println("bunny_fig display DMA unavailable, using pushImage");
+        }
 
-    // resize the drawing size in case the screen is smaller than SLXxSLY.
-    slx =  std::min<int>(tft.width(),SLX);
-    sly =  std::min<int>(tft.height()-20,SLY);
+    // Resize the drawing size in case the screen is smaller than SLXxSLY.
+    // Keep a little vertical room for the direct-to-screen FPS/mode labels.
+    slx = std::min<int>(tft.width(), SLX);
+    const int available_y = (tft.height() > 20) ? (tft.height() - 20) : tft.height();
+    sly = std::min<int>(available_y, SLY);
 
     // setup the 3D renderer.
     imfb.set(fb,slx,sly);
@@ -165,7 +183,7 @@ void infos(int loopnumber)
         itoa(nbframes,tfps + 5,10);
         tfps[strlen(tfps)] = ' ';
         tft.setTextDatum(TL_DATUM);
-        tft.dmaWait();
+        if (use_dma) tft.dmaWait();
         tft.drawString(tfps,0,0);
         prev_millis = m;
         nbframes = 0;
@@ -174,7 +192,7 @@ void infos(int loopnumber)
         { // update the text for the drawing mode
         prev_loopnumber = loopnumber;
         tft.setTextDatum(BL_DATUM);
-        tft.dmaWait();
+        if (use_dma) tft.dmaWait();
         switch (loopnumber % 4)
             {
             case 0: tft.drawString("Gouraud/texture", 0, tft.height()-1); telemetrySetScene("gouraud_texture"); break;
@@ -220,8 +238,23 @@ void loop()
     // display additional information (drawing type and FPS)
     infos(loopnumber);
 
-    // upload the framebuffer to the screen (async. via DMA)
-    tft.pushImageDMA((tft.width() - slx) / 2, (tft.height() - sly) / 2, slx, sly, fb, fb2);
+    // Upload the framebuffer to the screen.  When DMA is available, the two
+    // framebuffers are alternated so the renderer never writes into the buffer
+    // currently being read by DMA.
+    const int x = (tft.width() - slx) / 2;
+    const int y = (tft.height() - sly) / 2;
+    if (use_dma)
+        {
+        uint16_t* current = (draw_buffer_index == 0) ? fb : fb2;
+        tft.pushImageDMA(x, y, slx, sly, current);
+        draw_buffer_index = 1 - draw_buffer_index;
+        imfb.set((draw_buffer_index == 0) ? fb : fb2, slx, sly);
+        renderer.setImage(&imfb);
+        }
+    else
+        {
+        tft.pushImage(x, y, slx, sly, fb);
+        }
 
     telemetryEndFrame();
     }
@@ -306,6 +339,8 @@ void telemetryEndFrame()
         Serial.print(telemetry_min_us);
         Serial.print(" frame_max_us=");
         Serial.print(telemetry_max_us);
+        Serial.print(" display=");
+        Serial.print(use_dma ? "DMA" : "pushImage");
         Serial.print(" frames=");
         Serial.println(telemetry_frames);
 

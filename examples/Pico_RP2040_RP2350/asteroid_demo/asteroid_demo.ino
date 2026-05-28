@@ -39,6 +39,7 @@ static const int MAX_LY = 96;
 #endif
 
 uint16_t fb[MAX_LX * MAX_LY];
+uint16_t fb2[MAX_LX * MAX_LY];
 uint16_t zbuf[MAX_LX * MAX_LY];
 
 Image<RGB565> im;
@@ -47,6 +48,8 @@ TFT_eSPI tft = TFT_eSPI();
 int render_lx = 0;
 int render_ly = 0;
 float render_ratio = 1.0f;
+bool use_dma = false;
+int draw_buffer_index = 0;
 
 const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER |
                               SHADER_FLAT | SHADER_GOURAUD |
@@ -221,10 +224,46 @@ void updateFPS()
         Serial.print(phaseName(telemetry_phase));
         Serial.print(" fps=");
         Serial.print(fps_frames);
+        Serial.print(" display=");
+        Serial.print(use_dma ? "DMA" : "pushImage");
         Serial.print(" margin=");
         Serial.println(validated_collision_margin, 2);
         fps_frames = 0;
         fps_last_ms = now;
+        }
+    }
+
+
+void setupDMA()
+    {
+    use_dma = tft.initDMA();
+    if (use_dma)
+        {
+        tft.startWrite();
+        Serial.println("asteroid_demo display DMA enabled");
+        }
+    else
+        {
+        Serial.println("asteroid_demo display DMA unavailable, using pushImage");
+        }
+    }
+
+
+void pushFrame()
+    {
+    const int x = (tft.width() - render_lx) / 2;
+    const int y = (tft.height() - render_ly) / 2;
+    if (use_dma)
+        {
+        uint16_t* current = (draw_buffer_index == 0) ? fb : fb2;
+        tft.pushImageDMA(x, y, render_lx, render_ly, current);
+        draw_buffer_index = 1 - draw_buffer_index;
+        im.set((draw_buffer_index == 0) ? fb : fb2, render_lx, render_ly);
+        renderer.setImage(&im);
+        }
+    else
+        {
+        tft.pushImage(x, y, render_lx, render_ly, fb);
         }
     }
 
@@ -243,6 +282,7 @@ void setup()
     if (render_lx > MAX_LX) render_lx = MAX_LX;
     if (render_ly > MAX_LY) render_ly = MAX_LY;
     render_ratio = (float)render_lx / (float)render_ly;
+    setupDMA();
 
     im.set(fb, render_lx, render_ly);
     setupRenderer();
@@ -259,9 +299,7 @@ void loop()
     {
     const float seconds = (float)(millis() % MOVIE_MS) * 0.001f;
     drawScene(seconds);
-    tft.pushImage((tft.width() - render_lx) / 2,
-                  (tft.height() - render_ly) / 2,
-                  render_lx, render_ly, fb);
+    pushFrame();
     updateFPS();
     }
 

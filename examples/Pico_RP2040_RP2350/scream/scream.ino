@@ -31,8 +31,8 @@ using namespace tgx;
 // Pico W/RP2040 is much tighter than Pico 2/RP2350.  The two profiles share
 // the same animation, but use different viewport and grid sizes.
 #if defined(ARDUINO_ARCH_RP2350) || defined(PICO_RP2350) || defined(__ARM_ARCH_8M_MAIN__)
-static const int MAX_LX = 200;
-static const int MAX_LY = 150;
+static const int MAX_LX = 240;
+static const int MAX_LY = 180;
 static const int N = 24;
 static const int M = 24;
 #else
@@ -43,10 +43,13 @@ static const int M = 12;
 #endif
 
 uint16_t fb[MAX_LX * MAX_LY];
+uint16_t fb2[MAX_LX * MAX_LY];
 uint16_t zbuf[MAX_LX * MAX_LY];
 
 Image<RGB565> im;
 TFT_eSPI tft = TFT_eSPI();
+
+const uint16_t SCREEN_BORDER_COLOR = TFT_BLACK;
 
 // Only the shader paths used below are compiled in.  The sheet is textured and
 // lit with Gouraud shading, and needs a zbuffer because it folds in 3D.
@@ -65,6 +68,8 @@ uint16_t faces[4 * N * M];
 int render_lx = 0;
 int render_ly = 0;
 float render_ratio = 1.0f;
+bool use_dma = false;
+int draw_buffer_index = 0;
 
 uint32_t fps_last_ms = 0;
 uint32_t fps_frames = 0;
@@ -246,7 +251,6 @@ void drawFrame()
     renderer.setLookAt(cameraPosition(), { 0, 0, 0 }, { 0, 1, 0 });
     renderer.drawQuads(N * M, faces, vertices, faces, normals, faces, texcoords, &scream_texture);
 
-    im.drawText("Dynamic geometry", { 4, 13 }, font_tgx_OpenSans_Bold_10, rgb888(240, 190, 80));
     }
 
 
@@ -258,8 +262,53 @@ void updateFPS()
         {
         Serial.print("scream Pico fps=");
         Serial.println(fps_frames);
+        Serial.print("scream Pico display=");
+        Serial.println(use_dma ? "DMA" : "pushImage");
         fps_frames = 0;
         fps_last_ms = now;
+        }
+    }
+
+
+void setupDMA()
+    {
+    use_dma = tft.initDMA();
+    if (use_dma)
+        {
+        tft.startWrite();
+        Serial.println("scream Pico display DMA enabled");
+        }
+    else
+        {
+        Serial.println("scream Pico display DMA unavailable, using pushImage");
+        }
+    }
+
+
+void drawScreenLabel()
+    {
+    if (use_dma) tft.dmaWait();
+    tft.setTextDatum(TL_DATUM);
+    tft.setTextColor(TFT_YELLOW, SCREEN_BORDER_COLOR, true);
+    tft.drawString("Dynamic geometry", 0, 0);
+    }
+
+
+void pushFrame()
+    {
+    const int x = (tft.width() - render_lx) / 2;
+    const int y = (tft.height() - render_ly) / 2;
+    if (use_dma)
+        {
+        uint16_t* current = (draw_buffer_index == 0) ? fb : fb2;
+        tft.pushImageDMA(x, y, render_lx, render_ly, current);
+        draw_buffer_index = 1 - draw_buffer_index;
+        im.set((draw_buffer_index == 0) ? fb : fb2, render_lx, render_ly);
+        renderer.setImage(&im);
+        }
+    else
+        {
+        tft.pushImage(x, y, render_lx, render_ly, fb);
         }
     }
 
@@ -271,13 +320,17 @@ void setup()
     tft.init();
     tft.setRotation(1);
     tft.setSwapBytes(true);
-    tft.fillScreen(TFT_BLACK);
+    tft.fillScreen(SCREEN_BORDER_COLOR);
 
     render_lx = tft.width();
     render_ly = tft.height();
     if (render_lx > MAX_LX) render_lx = MAX_LX;
+    const int available_y = (tft.height() > 20) ? (tft.height() - 20) : tft.height();
+    if (render_ly > available_y) render_ly = available_y;
     if (render_ly > MAX_LY) render_ly = MAX_LY;
     render_ratio = (float)render_lx / (float)render_ly;
+    setupDMA();
+    drawScreenLabel();
 
     im.set(fb, render_lx, render_ly);
     renderer.setViewportSize(render_lx, render_ly);
@@ -304,10 +357,6 @@ void setup()
 void loop()
     {
     drawFrame();
-
-    tft.pushImage((tft.width() - render_lx) / 2,
-                  (tft.height() - render_ly) / 2,
-                  render_lx, render_ly, fb);
-
+    pushFrame();
     updateFPS();
     }

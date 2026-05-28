@@ -192,11 +192,6 @@ void drawTile(int tile_y)
     renderer.setModelMatrix(M);
     renderer.drawCube(&texture, &texture, &texture, &texture, &texture, &texture);
 
-    if (tile_y == 0)
-        {
-        im.drawText(perspective_mode ? "Perspective" : "Orthographic",
-                    { 4, 13 }, font_tgx_OpenSans_Bold_10, rgb888(235, 190, 70));
-        }
     }
 
 
@@ -230,6 +225,15 @@ void pushTile(int tile_y, int current_tile_h)
         }
     else
         tft.pushImage(x, y, render_lx, current_tile_h, fb);
+    }
+
+
+void drawScreenLabel()
+    {
+    if (use_dma) tft.dmaWait();
+    tft.setTextDatum(TL_DATUM);
+    tft.setTextColor(TFT_YELLOW, SCREEN_BORDER_COLOR, true);
+    tft.drawString(perspective_mode ? "Perspective  " : "Orthographic", 0, 0);
     }
 
 
@@ -348,6 +352,8 @@ void setup()
     render_lx = tft.width();
     render_ly = tft.height();
     if (render_lx > MAX_LX) render_lx = MAX_LX;
+    const int available_y = (tft.height() > 20) ? (tft.height() - 20) : tft.height();
+    if (render_ly > available_y) render_ly = available_y;
     if (render_ly > MAX_LY) render_ly = MAX_LY;
     tile_h = (render_ly + TILE_COUNT - 1) / TILE_COUNT;
     render_ratio = (float)render_lx / (float)render_ly;
@@ -361,6 +367,7 @@ void setup()
         Serial.println("Error: cannot allocate tile framebuffer/zbuffer");
         delay(1000);
         }
+    drawScreenLabel();
 
     im.set(fb, render_lx, tile_h);
     initializeTexture();
@@ -375,6 +382,12 @@ void setup()
 void loop()
     {
     updateProjection();
+    static bool previous_perspective_mode = perspective_mode;
+    if (previous_perspective_mode != perspective_mode)
+        {
+        previous_perspective_mode = perspective_mode;
+        drawScreenLabel();
+        }
     updateTexture();
     drawAndPushFrame();
     updateFPS();

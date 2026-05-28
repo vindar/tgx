@@ -24,6 +24,13 @@
 *    - screens: ILI9341 (320x240) and smaller TFT_eSPI displays
 ********************************************************************/
 
+/**************** DMA NOTE ****************
+* TFT_eSPI DMA transfers work well on RP2040/RP2350 and are enabled by
+* default here.  The sketch needs a second framebuffer for DMA, so a Pico 2 can
+* usually use full-screen DMA while a Pico W may fall back to pushImage() when
+* there is not enough RAM for two full framebuffers.
+*******************************************/
+
 #include <TFT_eSPI.h>
 
 #include <tgx.h>
@@ -31,17 +38,26 @@
 
 using namespace tgx;
 
-// Maximum framebuffer size.  A full 320x240 RGB565 framebuffer uses 150 KiB,
-// which is acceptable here because this is a 2D example and no z-buffer is used.
+// Maximum framebuffer size.  Pico 2 can handle a full 320x240 double buffer.
+// Pico W has less RAM, so setup() keeps a smaller, still well-proportioned
+// area rather than assuming a fixed horizontal strip.
+#if defined(ARDUINO_ARCH_RP2040) && !defined(__ARM_ARCH_8M_MAIN__)
+static const int MAX_LX = 240;
+static const int MAX_LY = 170;
+#else
 static const int MAX_LX = 320;
 static const int MAX_LY = 240;
+#endif
 
 // Small sprite generated in RAM and then blitted/rotated every frame.
 static const int SPRITE_LX = 56;
 static const int SPRITE_LY = 56;
 
-uint16_t fb[MAX_LX * MAX_LY];
+uint16_t* fb = nullptr;
+uint16_t* fb2 = nullptr;
 uint16_t sprite_buf[SPRITE_LX * SPRITE_LY];
+bool use_dma = false;
+int draw_buffer_index = 0;
 
 Image<RGB565> im;
 Image<RGB565> sprite;
@@ -293,7 +309,42 @@ void updateFPS()
 
         Serial.print("TGX_2D_Showcase Pico fps=");
         Serial.println(fps_value);
+        Serial.print("TGX_2D_Showcase Pico display=");
+        Serial.println(use_dma ? "DMA" : "pushImage");
         }
+    }
+
+
+void setupDMA(size_t pixel_count)
+    {
+    fb2 = (uint16_t*)malloc(pixel_count * sizeof(uint16_t));
+    if (fb2 != nullptr)
+        {
+        tft.initDMA();
+        tft.startWrite();
+        use_dma = true;
+        Serial.println("TGX_2D_Showcase Pico display DMA enabled");
+        }
+    else
+        {
+        Serial.println("TGX_2D_Showcase Pico display DMA unavailable, using pushImage");
+        }
+    }
+
+
+void pushFrame()
+    {
+    const int x = (tft.width() - screen_lx) / 2;
+    const int y = (tft.height() - screen_ly) / 2;
+    if (use_dma)
+        {
+        uint16_t* current = (draw_buffer_index == 0) ? fb : fb2;
+        tft.pushImageDMA(x, y, screen_lx, screen_ly, current);
+        draw_buffer_index = 1 - draw_buffer_index;
+        im.set((draw_buffer_index == 0) ? fb : fb2, screen_lx, screen_ly);
+        }
+    else
+        tft.pushImage(x, y, screen_lx, screen_ly, fb);
     }
 
 
@@ -311,6 +362,15 @@ void setup()
     if (screen_lx > MAX_LX) screen_lx = MAX_LX;
     if (screen_ly > MAX_LY) screen_ly = MAX_LY;
 
+    const size_t pixel_count = (size_t)screen_lx * (size_t)screen_ly;
+    fb = (uint16_t*)malloc(pixel_count * sizeof(uint16_t));
+    while (fb == nullptr)
+        {
+        Serial.println("Error: cannot allocate framebuffer");
+        delay(1000);
+        }
+    setupDMA(pixel_count);
+
     im.set(fb, screen_lx, screen_ly);
     buildSprite();
 
@@ -321,12 +381,6 @@ void setup()
 void loop()
     {
     drawFrame();
-
-    // Blocking upload.  It is slower than DMA but keeps the example simple and
-    // avoids a second full framebuffer on memory-constrained boards.
-    tft.pushImage((tft.width() - screen_lx) / 2,
-                  (tft.height() - screen_ly) / 2,
-                  screen_lx, screen_ly, fb);
-
+    pushFrame();
     updateFPS();
     }

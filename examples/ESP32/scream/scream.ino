@@ -257,7 +257,6 @@ void drawFrame()
     renderer.setLookAt(cameraPosition(), { 0, 0, 0 }, { 0, 1, 0 });
     renderer.drawQuads(N * M, faces, vertices, faces, normals, faces, texcoords, &scream_texture);
 
-    im.drawText("Dynamic geometry", { 4, 13 }, font_tgx_OpenSans_Bold_10, rgb888(240, 190, 80));
     }
 
 
@@ -356,6 +355,15 @@ void pushFrame()
     }
 
 
+void drawScreenLabel()
+    {
+    if (use_dma) tft.dmaWait();
+    tft.setTextDatum(TL_DATUM);
+    tft.setTextColor(TFT_YELLOW, SCREEN_BORDER_COLOR, true);
+    tft.drawString("Dynamic geometry", 0, 0);
+    }
+
+
 void setup()
     {
     Serial.begin(115200);
@@ -382,6 +390,8 @@ void setup()
     render_lx = tft.width();
     render_ly = tft.height();
     if (render_lx > MAX_LX) render_lx = MAX_LX;
+    const int available_y = (tft.height() > 20) ? (tft.height() - 20) : tft.height();
+    if (render_ly > available_y) render_ly = available_y;
     if (render_ly > MAX_LY) render_ly = MAX_LY;
     render_ratio = (float)render_lx / (float)render_ly;
 
@@ -394,6 +404,7 @@ void setup()
         Serial.println("Error: cannot allocate framebuffer/zbuffer");
         delay(1000);
         }
+    drawScreenLabel();
 
     im.set(fb, render_lx, render_ly);
     renderer.setViewportSize(render_lx, render_ly);

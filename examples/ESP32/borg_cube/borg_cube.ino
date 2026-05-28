@@ -188,8 +188,6 @@ void drawFrame()
     renderer.setModelMatrix(M);
     renderer.drawCube(&texture, &texture, &texture, &texture, &texture, &texture);
 
-    im.drawText(perspective_mode ? "Perspective" : "Orthographic",
-                { 4, 13 }, font_tgx_OpenSans_Bold_10, rgb888(235, 190, 70));
     }
 
 
@@ -225,6 +223,15 @@ void setupDMA(size_t pixel_count)
         Serial.println("borg_cube ESP32 display DMA unavailable, using pushImage");
         }
 #endif
+    }
+
+
+void drawScreenLabel()
+    {
+    if (use_dma) tft.dmaWait();
+    tft.setTextDatum(TL_DATUM);
+    tft.setTextColor(TFT_YELLOW, SCREEN_BORDER_COLOR, true);
+    tft.drawString(perspective_mode ? "Perspective  " : "Orthographic", 0, 0);
     }
 
 
@@ -267,6 +274,8 @@ void setup()
     render_lx = tft.width();
     render_ly = tft.height();
     if (render_lx > MAX_LX) render_lx = MAX_LX;
+    const int available_y = (tft.height() > 20) ? (tft.height() - 20) : tft.height();
+    if (render_ly > available_y) render_ly = available_y;
     if (render_ly > MAX_LY) render_ly = MAX_LY;
     render_ratio = (float)render_lx / (float)render_ly;
 
@@ -282,6 +291,7 @@ void setup()
         delay(1000);
         }
     setupDMA(pixel_count);
+    drawScreenLabel();
 
     im.set(fb, render_lx, render_ly);
     initializeTexture();
@@ -296,6 +306,12 @@ void setup()
 void loop()
     {
     updateProjection();
+    static bool previous_perspective_mode = perspective_mode;
+    if (previous_perspective_mode != perspective_mode)
+        {
+        previous_perspective_mode = perspective_mode;
+        drawScreenLabel();
+        }
     updateTexture();
     drawFrame();
     pushFrame();

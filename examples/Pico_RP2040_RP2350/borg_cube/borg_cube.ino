@@ -34,17 +34,18 @@ using namespace tgx;
 // RP2040 RAM is tight once framebuffer + zbuffer + texture are all present.
 // Pico 2 has more RAM, so it can render a larger viewport.
 #if defined(ARDUINO_ARCH_RP2350) || defined(PICO_RP2350) || defined(__ARM_ARCH_8M_MAIN__)
-static const int MAX_LX = 240;
-static const int MAX_LY = 180;
+static const int MAX_LX = 320;
+static const int MAX_LY = 220;
 #else
-static const int MAX_LX = 160;
-static const int MAX_LY = 120;
+static const int MAX_LX = 180;
+static const int MAX_LY = 135;
 #endif
 
 // A 64x64 texture is small, but it is enough for this procedural cube demo.
 static const int TEX_SIZE = 64;
 
 uint16_t fb[MAX_LX * MAX_LY];
+uint16_t fb2[MAX_LX * MAX_LY];
 uint16_t zbuf[MAX_LX * MAX_LY];
 uint16_t texture_buf[TEX_SIZE * TEX_SIZE];
 
@@ -55,9 +56,12 @@ int render_lx = 0;
 int render_ly = 0;
 float render_ratio = 1.0f;
 bool perspective_mode = true;
+bool use_dma = false;
+int draw_buffer_index = 0;
 uint32_t last_projection_switch_ms = 0;
 
 TFT_eSPI tft = TFT_eSPI();
+const uint16_t SCREEN_BORDER_COLOR = TFT_BLACK;
 
 // Only the shader paths used by this sketch are compiled in.
 const Shader LOADED_SHADERS = SHADER_ORTHO | SHADER_PERSPECTIVE |
@@ -185,8 +189,6 @@ void drawFrame()
     renderer.setModelMatrix(M);
     renderer.drawCube(&texture, &texture, &texture, &texture, &texture, &texture);
 
-    im.drawText(perspective_mode ? "Perspective" : "Orthographic",
-                { 4, 13 }, font_tgx_OpenSans_Bold_10, rgb888(235, 190, 70));
     }
 
 
@@ -198,8 +200,53 @@ void updateFPS()
         {
         Serial.print("borg_cube Pico fps=");
         Serial.println(fps_frames);
+        Serial.print("borg_cube Pico display=");
+        Serial.println(use_dma ? "DMA" : "pushImage");
         fps_frames = 0;
         fps_last_ms = now;
+        }
+    }
+
+
+void setupDMA()
+    {
+    use_dma = tft.initDMA();
+    if (use_dma)
+        {
+        tft.startWrite();
+        Serial.println("borg_cube Pico display DMA enabled");
+        }
+    else
+        {
+        Serial.println("borg_cube Pico display DMA unavailable, using pushImage");
+        }
+    }
+
+
+void drawScreenLabel()
+    {
+    if (use_dma) tft.dmaWait();
+    tft.setTextDatum(TL_DATUM);
+    tft.setTextColor(TFT_YELLOW, SCREEN_BORDER_COLOR, true);
+    tft.drawString(perspective_mode ? "Perspective  " : "Orthographic", 0, 0);
+    }
+
+
+void pushFrame()
+    {
+    const int x = (tft.width() - render_lx) / 2;
+    const int y = (tft.height() - render_ly) / 2;
+    if (use_dma)
+        {
+        uint16_t* current = (draw_buffer_index == 0) ? fb : fb2;
+        tft.pushImageDMA(x, y, render_lx, render_ly, current);
+        draw_buffer_index = 1 - draw_buffer_index;
+        im.set((draw_buffer_index == 0) ? fb : fb2, render_lx, render_ly);
+        renderer.setImage(&im);
+        }
+    else
+        {
+        tft.pushImage(x, y, render_lx, render_ly, fb);
         }
     }
 
@@ -211,13 +258,17 @@ void setup()
     tft.init();
     tft.setRotation(1);
     tft.setSwapBytes(true);
-    tft.fillScreen(TFT_BLACK);
+    tft.fillScreen(SCREEN_BORDER_COLOR);
 
     render_lx = tft.width();
     render_ly = tft.height();
     if (render_lx > MAX_LX) render_lx = MAX_LX;
+    const int available_y = (tft.height() > 20) ? (tft.height() - 20) : tft.height();
+    if (render_ly > available_y) render_ly = available_y;
     if (render_ly > MAX_LY) render_ly = MAX_LY;
     render_ratio = (float)render_lx / (float)render_ly;
+    setupDMA();
+    drawScreenLabel();
 
     im.set(fb, render_lx, render_ly);
     initializeTexture();
@@ -232,12 +283,14 @@ void setup()
 void loop()
     {
     updateProjection();
+    static bool previous_perspective_mode = perspective_mode;
+    if (previous_perspective_mode != perspective_mode)
+        {
+        previous_perspective_mode = perspective_mode;
+        drawScreenLabel();
+        }
     updateTexture();
     drawFrame();
-
-    tft.pushImage((tft.width() - render_lx) / 2,
-                  (tft.height() - render_ly) / 2,
-                  render_lx, render_ly, fb);
-
+    pushFrame();
     updateFPS();
     }

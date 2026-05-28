@@ -72,7 +72,7 @@ bool use_dma = false;
     uint16_t* zbuf; // ..but malloced on ESP32
 #endif
 
-// the tgx::image object that encapsulate framebuffer fb
+// the tgx::image object that encapsulates framebuffer fb
 Image<RGB565> imfb;
 
 // only load the shaders we need.
