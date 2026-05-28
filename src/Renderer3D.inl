@@ -733,16 +733,7 @@ namespace tgx
                 }
             else
                 { // flat shading
-                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
-                faceN.normalize_fast();
-                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
-                    {
-                    _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
-                    }
-                else
-                    {
-                    _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
-                    }
+                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURE(RASTER_TYPE), faceN, cu);
                 PPC0.color = _uni.facecolor; // unneeded but
                 PPC1.color = _uni.facecolor; // does no harm
                 PPC2.color = _uni.facecolor; // and remove a warning
@@ -979,16 +970,7 @@ namespace tgx
                 }
             else
                 { // flat shading
-                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
-                faceN.normalize_fast();
-                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
-                    {
-                    _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
-                    }
-                else
-                    {
-                    _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
-                    }
+                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURE(RASTER_TYPE), faceN, cu);
                 }
 
             if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
@@ -1116,16 +1098,7 @@ namespace tgx
                 }
             else
                 { // flat shading
-                const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
-                faceN.normalize_fast();
-                if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
-                    {
-                    _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
-                    }
-                else
-                    {
-                    _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
-                    }
+                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURE(RASTER_TYPE), faceN, cu);
                 }
 
             if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
@@ -1346,12 +1319,7 @@ namespace tgx
                         }
                     else
                         { // flat shading : color on faces
-                        const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
-                        faceN.normalize_fast();
-                        if (TEXTURE)
-                            _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
-                        else
-                            _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TEXTURE, faceN, cu);
                         }
 
                     if (TEXTURE)
@@ -1679,12 +1647,7 @@ namespace tgx
                             }
                         else
                             { // flat shading : color on faces
-                            const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
-                            faceN.normalize_fast();
-                            if (TEXTURE)
-                                _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
-                            else
-                                _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                            _setFlatOrUnlitFaceColor(raster_type, TEXTURE, faceN, cu);
                             }
 
                         if (TEXTURE)
@@ -3688,10 +3651,18 @@ namespace tgx
                 {
                 TGX_SHADER_ADD_GOURAUD(_shaders)
                 TGX_SHADER_REMOVE_FLAT(_shaders)
+                TGX_SHADER_REMOVE_UNLIT(_shaders)
+                }
+            else if (TGX_SHADER_HAS_FLAT(new_shaders))
+                {
+                TGX_SHADER_ADD_FLAT(_shaders)
+                TGX_SHADER_REMOVE_GOURAUD(_shaders)
+                TGX_SHADER_REMOVE_UNLIT(_shaders)
                 }
             else
                 {
-                TGX_SHADER_ADD_FLAT(_shaders)
+                TGX_SHADER_ADD_UNLIT(_shaders)
+                TGX_SHADER_REMOVE_FLAT(_shaders)
                 TGX_SHADER_REMOVE_GOURAUD(_shaders)
                 }
 

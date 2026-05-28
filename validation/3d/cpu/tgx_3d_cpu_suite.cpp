@@ -48,7 +48,7 @@ constexpr int BLOCK_Y = 12;
 
 const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ORTHO |
                               SHADER_ZBUFFER |
-                              SHADER_GOURAUD | SHADER_FLAT |
+                              SHADER_GOURAUD | SHADER_FLAT | SHADER_UNLIT |
                               SHADER_NOTEXTURE | SHADER_TEXTURE |
                               SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_BILINEAR |
                               SHADER_TEXTURE_WRAP_POW2 | SHADER_TEXTURE_CLAMP;
@@ -63,9 +63,11 @@ enum class SceneId
     BunnyV2TextureNearest,
     BunnyV2TextureBilinear,
     BuddhaV2Flat,
+    BuddhaV2Unlit,
     R2D2TextureBilinear,
     R2D2V2TextureBilinear,
     FalconV2TextureNearest,
+    FalconV2TextureUnlit,
     OrthoBunny,
     OrthoBunnyV2,
     NearClip,
@@ -97,9 +99,11 @@ const SceneDef SCENES[] = {
     { SceneId::BunnyV2TextureNearest,"bunny_v2_texture_nearest","Mesh3Dv2 mesh, perspective-correct nearest texture" },
     { SceneId::BunnyV2TextureBilinear,"bunny_v2_texture_bilinear","Mesh3Dv2 mesh, perspective-correct bilinear texture" },
     { SceneId::BuddhaV2Flat,        "buddha_v2_flat",        "dense Mesh3Dv2 mesh, flat shading" },
+    { SceneId::BuddhaV2Unlit,       "buddha_v2_unlit",       "dense Mesh3Dv2 mesh, unlit material color" },
     { SceneId::R2D2TextureBilinear,  "r2d2_texture_bilinear", "legacy Mesh3D textured model with bilinear filtering" },
     { SceneId::R2D2V2TextureBilinear,"r2d2_v2_texture_bilinear","textured Mesh3Dv2 model with bilinear filtering" },
     { SceneId::FalconV2TextureNearest,"falcon_v2_texture_nearest","multi-material textured Mesh3Dv2 model" },
+    { SceneId::FalconV2TextureUnlit, "falcon_v2_texture_unlit","multi-material textured Mesh3Dv2 model, unlit texture" },
     { SceneId::OrthoBunny,          "ortho_bunny",           "orthographic projection" },
     { SceneId::OrthoBunnyV2,        "ortho_bunny_v2",        "Mesh3Dv2 orthographic projection" },
     { SceneId::NearClip,            "near_clip",             "near-plane clipping" },
@@ -781,6 +785,14 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             r.drawMesh(&ctx.meshes.buddha_v2, false);
             break;
 
+        case SceneId::BuddhaV2Unlit:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            r.setMaterial(RGBf(0.9f, 0.62f, 0.28f), 0.20f, 0.72f, 0.35f, 18);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_UNLIT);
+            r.setModelPosScaleRot({ 0.0f, 0.45f, -32.0f }, { 13.0f, 13.0f, 13.0f }, -28.0f, { 0.0f, 1.0f, 0.0f });
+            r.drawMesh(&ctx.meshes.buddha_v2, false);
+            break;
+
         case SceneId::R2D2TextureBilinear:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
             r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_CLAMP);
@@ -798,6 +810,13 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
         case SceneId::FalconV2TextureNearest:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
             r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+            r.setModelPosScaleRot({ 0.0f, -0.05f, -8.4f }, { 3.15f, 3.15f, 3.15f }, 68.0f, { 0.32f, 1.0f, 0.08f });
+            r.drawMesh(&ctx.meshes.falcon_v2, true);
+            break;
+
+        case SceneId::FalconV2TextureUnlit:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_UNLIT | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
             r.setModelPosScaleRot({ 0.0f, -0.05f, -8.4f }, { 3.15f, 3.15f, 3.15f }, 68.0f, { 0.32f, 1.0f, 0.08f });
             r.drawMesh(&ctx.meshes.falcon_v2, true);
             break;

@@ -50,9 +50,10 @@ namespace tgx
         SHADER_NOZBUFFER = (1 << 2),            ///< disable Z-buffer testing
         SHADER_ZBUFFER = (1 << 3),              ///< enable Z-buffer testing
 
-        // Shaders for shading algorithm: flat, gouraud or phong
+        // Shaders for shading algorithm: unlit, flat or Gouraud
         SHADER_FLAT = (1 << 4),                 ///< enable flat shading
         SHADER_GOURAUD = (1 << 5),              ///< enable Gouraud shading
+        SHADER_UNLIT = (1 << 6),                ///< enable unlit shading: no lighting computation
 
         // Shaders for texturing mode: no-texture, texture-wrap, texture-clamp 
         SHADER_NOTEXTURE = (1 << 7),            ///< disable texture mapping
@@ -87,7 +88,7 @@ namespace tgx
 
     #define TGX_SHADER_MASK_PROJECTION      (SHADER_PERSPECTIVE | SHADER_ORTHO)
     #define TGX_SHADER_MASK_ZBUFFER         (SHADER_NOZBUFFER | SHADER_ZBUFFER)
-    #define TGX_SHADER_MASK_SHADING         (SHADER_FLAT | SHADER_GOURAUD)
+    #define TGX_SHADER_MASK_SHADING         (SHADER_FLAT | SHADER_GOURAUD | SHADER_UNLIT)
     #define TGX_SHADER_MASK_TEXTURE         (SHADER_NOTEXTURE | SHADER_TEXTURE)
     #define TGX_SHADER_MASK_TEXTURE_QUALITY (SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_NEAREST)
     #define TGX_SHADER_MASK_TEXTURE_MODE    (SHADER_TEXTURE_WRAP_POW2 | SHADER_TEXTURE_CLAMP)
@@ -105,6 +106,11 @@ namespace tgx
     #define TGX_SHADER_HAS_ZBUFFER(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_ZBUFFER))
     #define TGX_SHADER_HAS_FLAT(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_FLAT))
     #define TGX_SHADER_HAS_GOURAUD(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_GOURAUD))
+    #define TGX_SHADER_HAS_UNLIT(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_UNLIT))
+    #define TGX_SHADER_CAN_USE_FLAT_OR_UNLIT(enabled_shader_type, shader_type) \
+        (TGX_SHADER_HAS_UNLIT(enabled_shader_type) ? \
+            (TGX_SHADER_HAS_UNLIT(shader_type) || (TGX_SHADER_HAS_FLAT(enabled_shader_type) && !TGX_SHADER_HAS_GOURAUD(shader_type))) : \
+            TGX_SHADER_HAS_FLAT(enabled_shader_type))
     #define TGX_SHADER_HAS_NOTEXTURE(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_NOTEXTURE))
     #define TGX_SHADER_HAS_TEXTURE(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE))
     #define TGX_SHADER_HAS_TEXTURE_NEAREST(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE_NEAREST))
@@ -118,6 +124,7 @@ namespace tgx
     #define TGX_SHADER_REMOVE_ZBUFFER(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_ZBUFFER)
     #define TGX_SHADER_REMOVE_FLAT(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_FLAT)
     #define TGX_SHADER_REMOVE_GOURAUD(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_GOURAUD)
+    #define TGX_SHADER_REMOVE_UNLIT(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_UNLIT)
     #define TGX_SHADER_REMOVE_NOTEXTURE(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_NOTEXTURE)
     #define TGX_SHADER_REMOVE_TEXTURE(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE)
     #define TGX_SHADER_REMOVE_TEXTURE_NEAREST(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE_NEAREST)
@@ -131,6 +138,7 @@ namespace tgx
     #define TGX_SHADER_ADD_ZBUFFER(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_ZBUFFER)
     #define TGX_SHADER_ADD_FLAT(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_FLAT)
     #define TGX_SHADER_ADD_GOURAUD(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_GOURAUD)
+    #define TGX_SHADER_ADD_UNLIT(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_UNLIT)
     #define TGX_SHADER_ADD_NOTEXTURE(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_NOTEXTURE)
     #define TGX_SHADER_ADD_TEXTURE(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE)
     #define TGX_SHADER_ADD_TEXTURE_NEAREST(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE_NEAREST)

@@ -22,8 +22,8 @@ formats:
   `validation_R2D2_v2`, plus the multi-material textured
   `validation_falcon_v2`.
 
-The fixed scene set contains 23 scenes per color type. It includes legacy and
-Mesh3Dv2 real-mesh rendering, flat and Gouraud shading, nearest and bilinear
+The fixed scene set contains 25 scenes per color type. It includes legacy and
+Mesh3Dv2 real-mesh rendering, unlit/flat/Gouraud shading, nearest and bilinear
 texturing, orthographic projection, near/far clipping, z-buffer overlap, direct
 triangle/cube/sphere helpers, small-triangle grids, point/dot drawing and
 wireframe paths.

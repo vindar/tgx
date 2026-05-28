@@ -66,8 +66,9 @@ namespace tgx
     *                               - `SHADER_ORTHO`: enable orthographic projection
     *                               - `SHADER_NOZBUFFER`: enable rendering without using a z-buffer
     *                               - `SHADER_ZBUFFER`: enable rendering with a z-buffer
+    *                               - `SHADER_UNLIT`: enable unlit shading
     *                               - `SHADER_FLAT`: enable flat shading
-    *                               - `SHADER_GOURAUD`: enable gouraud shading
+    *                               - `SHADER_GOURAUD`: enable Gouraud shading
     *                               - `SHADER_NOTEXTURE`: enable rendering without texturing
     *                               - `SHADER_TEXTURE_NEAREST`: enable rendering with texturing using point sampling
     *                               - `SHADER_TEXTURE_BILINEAR`: enable rendering with texturing using bilinear sampling
@@ -120,7 +121,7 @@ namespace tgx
         // check that disabled shaders do not completely disable all drawing operations.
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), "At least one of the two shaders SHADER_PERSPECTIVE or SHADER_ORTHO must be enabled");
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), "At least one of the two shaders SHADER_NOZBUFFER or SHADER_ZBUFFER must be enabled");
-        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), "At least one of the two shaders SHADER_FLAT or SHADER_GOURAUD must be enabled");
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), "At least one of the shaders SHADER_UNLIT, SHADER_FLAT or SHADER_GOURAUD must be enabled");
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), "At least one of the two shaders SHADER_TEXTURE or SHADER_NOTEXTURE must be enabled");
         static_assert((!TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled");
         static_assert((!TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled");
@@ -391,6 +392,8 @@ namespace tgx
         *
         * **Main flags**
         *
+        * - `SHADER_UNLIT`:   Use material color or texture color directly, without any lighting computation.
+        *
         * - `SHADER_FLAT`:     Use flat shading (i.e. uniform color on faces). This is the fastest drawing method but it usually gives poor results when combined with
         *   texturing. Lighting transitions between bright to dark aera may appear to flicker when using color with low resolution such as RGB565.
         *
@@ -404,12 +407,13 @@ namespace tgx
         * @remark
         * 1. If a shader flag is set with SetShaders() but is disabled in the template parameter LOADED_SHADER,
         *    then the drawing calls will silently fail (draw nothing).
-        * 2. The color on the face (for flat shading) or on the vertices (for gouraud shading) is computed
+        * 2. `SHADER_UNLIT` skips lighting: textured pixels use the texture color directly and untextured pixels use
+        *    the current material color.
+        * 3. The color on the face (for flat shading) or on the vertices (for gouraud shading) is computed
         *    according to Phong's lighting https://en.wikipedia.org/wiki/Phong_reflection_model.
-        * 3. Texture mapping is 'perspective correct' and can be done with either SHADER_FLAT or SHADER_GOURAUD
-        *    selected. The color of a pixel is obtained by combining the texture color at that pixel with the lighting
-        *    at the position according to Phong's lighting model.
-        * 4. Large textures stored in flash memory may be VERY slow to access when the texture is not
+        * 4. Texture mapping is 'perspective correct'. With `SHADER_FLAT` or `SHADER_GOURAUD`, the texture color is
+        *    combined with the lighting. With `SHADER_UNLIT`, the texture color is copied directly.
+        * 5. Large textures stored in flash memory may be VERY slow to access when the texture is not
         *    read linearly which will happens for some (bad) triangle orientations and then cache becomes useless...
         *    This problem can be somewhat mitigated by:
         *    - splitting large textured triangles into smaller ones: then each triangle only accesses a small part
@@ -2152,6 +2156,27 @@ namespace tgx
             col *= color;
             col.clamp();
             return col;
+            }
+
+
+        /** compute the uniform face color for flat or unlit shading */
+        TGX_INLINE inline void _setFlatOrUnlitFaceColor(int raster_type, bool texture, fVec3& faceN, float cu)
+            {
+            if constexpr (TGX_SHADER_HAS_UNLIT(ENABLED_SHADERS))
+                {
+                if (TGX_SHADER_HAS_UNLIT(raster_type))
+                    {
+                    _uni.facecolor = texture ? RGBf(1.0f, 1.0f, 1.0f) : _r_objectColor;
+                    return;
+                    }
+                }
+
+            const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
+            faceN.normalize_fast();
+            if (texture)
+                _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+            else
+                _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
             }
 
 
