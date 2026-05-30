@@ -117,9 +117,19 @@ shows the detected texture references and lets the user override or resize each
 texture before conversion. It can also preview the model with PyVista, including
 textured rendering and Mesh3Dv2 meshlet visualization.
 
-For a first conversion, keep the default parameters. They are intended to be a
-reasonable MCU compromise. Tune meshlet size or texture size only after
-inspecting the generated mesh and measuring the real sketch on the target board.
+For a first conversion, keep the GUI defaults:
+
+- `Mesh3Dv2` output;
+- `RGB565` color, recommended on embedded displays;
+- `Compact` meshlet generation;
+- `Non-adjacent packing` set to `0`.
+
+This usually gives a good embedded compromise: compact mesh data, no aggressive
+second packing pass, and visibility cones still generated for runtime culling.
+The alternate `Visibility culling` mode exposes `target vertices` and
+`max normal angle` when culling quality is more important than static memory
+size. Tune meshlet or texture options only after inspecting the generated mesh
+and measuring the real sketch on the target board.
 
 
 @section tools_font tgx_font
