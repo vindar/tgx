@@ -159,7 +159,14 @@ tgx_mesh</h1>
 <li><a class="el" href="structtgx_1_1_mesh3_d.html">Mesh3D</a>, the legacy format kept for compatibility.</li>
 </ul>
 <p >For OBJ files, the tool reads materials and textures when available. The GUI shows the detected texture references and lets the user override or resize each texture before conversion. It can also preview the model with PyVista, including textured rendering and Mesh3Dv2 meshlet visualization.</p>
-<p >For a first conversion, keep the default parameters. They are intended to be a reasonable MCU compromise. Tune meshlet size or texture size only after inspecting the generated mesh and measuring the real sketch on the target board.</p>
+<p >For a first conversion, keep the GUI defaults:</p>
+<ul>
+<li><code>Mesh3Dv2</code> output;</li>
+<li><code>RGB565</code> color, recommended on embedded displays;</li>
+<li><code>Compact</code> meshlet generation;</li>
+<li><code>Non-adjacent packing</code> set to <code>0</code>.</li>
+</ul>
+<p >This usually gives a good embedded compromise: compact mesh data, no aggressive second packing pass, and visibility cones still generated for runtime culling. The alternate <code>Visibility culling</code> mode exposes <code>target vertices</code> and <code>max normal angle</code> when culling quality is more important than static memory size. Tune meshlet or texture options only after inspecting the generated mesh and measuring the real sketch on the target board.</p>
 <h1><a class="anchor" id="tools_font"></a>
 tgx_font</h1>
 <p >Run:</p>
