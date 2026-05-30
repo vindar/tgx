@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"md_docs_tools.html#tools_generated_assets":[7,6],
 "md_docs_tools.html#tools_image":[7,1],
 "md_docs_tools.html#tools_info":[7,4],
 "md_docs_tools.html#tools_install":[7,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "structtgx_1_1_r_g_b24.html#a337b5b6eb2d1a323634978ed6260eb3a":[8,0,0,10,14],
 "structtgx_1_1_r_g_b24.html#a35177162554466411a0591c27bef4d2f":[8,0,0,10,46],
 "structtgx_1_1_r_g_b24.html#a37e58e9031d26b7d439dbc02d81a10c3":[8,0,0,10,22],
-"structtgx_1_1_r_g_b24.html#a3bf162803f2b2f34fe6bd3dee2a4fe66":[8,0,0,10,41],
-"structtgx_1_1_r_g_b24.html#a4099f5f5e4e5eed3b5cbd761a4e2d9d1":[8,0,0,10,1]
+"structtgx_1_1_r_g_b24.html#a3bf162803f2b2f34fe6bd3dee2a4fe66":[8,0,0,10,41]
 };

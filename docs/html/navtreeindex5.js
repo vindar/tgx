@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"structtgx_1_1_vec2.html#a0005f516d2e1fd7cca3c08799f6ed33e":[8,0,0,15,12],
 "structtgx_1_1_vec2.html#a01c2cd6514d2475b47db2b3bc9f32312":[8,0,0,15,25],
 "structtgx_1_1_vec2.html#a0aeac47d85bafdec79122005cc7e4432":[8,0,0,15,20],
 "structtgx_1_1_vec2.html#a0dd3317719c780a7614027f9b50edb17":[8,0,0,15,34],

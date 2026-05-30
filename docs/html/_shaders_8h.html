@@ -114,10 +114,10 @@ template&lt;typename color_t , typename ZBUFFER_t &gt; </td></tr>
 <tr class="memitem:a8514413de53a2b80f9c1cbc0f3d2717c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tgx::shader_test</b> (const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly, const int32_t dx1, const int32_t dy1, int32_t O1, const tgx::RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const tgx::RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const tgx::RasterizerVec4 &amp;fP3, const tgx::RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>
 <tr class="memdesc:a8514413de53a2b80f9c1cbc0f3d2717c"><td class="mdescLeft">&#160;</td><td class="mdescRight">For test purposes... <br /></td></tr>
 <tr class="separator:a8514413de53a2b80f9c1cbc0f3d2717c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20be6f5df74b139e586027f08972248d"><td class="memTemplParams" colspan="2">template&lt;typename color_t , typename ZBUFFER_t , bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE, bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP&gt; </td></tr>
-<tr class="memitem:a20be6f5df74b139e586027f08972248d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_shaders_8h.html#a20be6f5df74b139e586027f08972248d">tgx::uber_shader</a> (const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly, const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 &amp;fP3, const RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>
-<tr class="memdesc:a20be6f5df74b139e586027f08972248d"><td class="mdescLeft">&#160;</td><td class="mdescRight">UBER-SHADER for all 3D rendering variants.  <a href="_shaders_8h.html#a20be6f5df74b139e586027f08972248d">More...</a><br /></td></tr>
-<tr class="separator:a20be6f5df74b139e586027f08972248d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad055163be1eee2b98dac500ac8f9a662"><td class="memTemplParams" colspan="2">template&lt;typename color_t , typename ZBUFFER_t , bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE, bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP, bool USE_UNLIT = false&gt; </td></tr>
+<tr class="memitem:ad055163be1eee2b98dac500ac8f9a662"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_shaders_8h.html#ad055163be1eee2b98dac500ac8f9a662">tgx::uber_shader</a> (const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly, const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 &amp;fP3, const RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>
+<tr class="memdesc:ad055163be1eee2b98dac500ac8f9a662"><td class="mdescLeft">&#160;</td><td class="mdescRight">UBER-SHADER for all 3D rendering variants.  <a href="_shaders_8h.html#ad055163be1eee2b98dac500ac8f9a662">More...</a><br /></td></tr>
+<tr class="separator:ad055163be1eee2b98dac500ac8f9a662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab05d02568eafd7a5ad92b0841254183b"><td class="memTemplParams" colspan="2"><a id="ab05d02568eafd7a5ad92b0841254183b" name="ab05d02568eafd7a5ad92b0841254183b"></a>
 template&lt;int SHADER_FLAGS_ENABLED, typename color_t , typename ZBUFFER_t &gt; </td></tr>
 <tr class="memitem:ab05d02568eafd7a5ad92b0841254183b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tgx::shader_select</b> (const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly, const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 &amp;fP3, const RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>
@@ -142,13 +142,13 @@ template&lt;typename BLEND_OP , typename color_t_im , typename color_t_tex &gt; 
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Triangle shader functions. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a20be6f5df74b139e586027f08972248d" name="a20be6f5df74b139e586027f08972248d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20be6f5df74b139e586027f08972248d">&#9670;&#160;</a></span>uber_shader()</h2>
+<a id="ad055163be1eee2b98dac500ac8f9a662" name="ad055163be1eee2b98dac500ac8f9a662"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad055163be1eee2b98dac500ac8f9a662">&#9670;&#160;</a></span>uber_shader()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename color_t , typename ZBUFFER_t , bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE, bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP&gt; </div>
+template&lt;typename color_t , typename ZBUFFER_t , bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE, bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP, bool USE_UNLIT = false&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void tgx::uber_shader </td>

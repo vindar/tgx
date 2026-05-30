@@ -419,8 +419,9 @@ class tgx::Renderer3D&lt; color_t, LOADED_SHADERS, ZBUFFER_t &gt;</div><p >Class
 <li><code>SHADER_ORTHO</code>: enable orthographic projection</li>
 <li><code>SHADER_NOZBUFFER</code>: enable rendering without using a z-buffer</li>
 <li><code>SHADER_ZBUFFER</code>: enable rendering with a z-buffer</li>
+<li><code>SHADER_UNLIT</code>: enable unlit shading</li>
 <li><code>SHADER_FLAT</code>: enable flat shading</li>
-<li><code>SHADER_GOURAUD</code>: enable gouraud shading</li>
+<li><code>SHADER_GOURAUD</code>: enable Gouraud shading</li>
 <li><code>SHADER_NOTEXTURE</code>: enable rendering without texturing</li>
 <li><code>SHADER_TEXTURE_NEAREST</code>: enable rendering with texturing using point sampling</li>
 <li><code>SHADER_TEXTURE_BILINEAR</code>: enable rendering with texturing using bilinear sampling</li>
@@ -1099,6 +1100,7 @@ template&lt;typename color_t , <a class="el" href="_shader_params_8h.html#ab8454
 <p>See enum <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07" title="List of shaders available for 3D graphics.">tgx::Shader</a> for a complete list of flags.</p>
 <p ><b>Main flags</b></p>
 <ul>
+<li><code>SHADER_UNLIT</code>: Use material color or texture color directly, without any lighting computation.</li>
 <li><code>SHADER_FLAT</code>: Use flat shading (i.e. uniform color on faces). This is the fastest drawing method but it usually gives poor results when combined with texturing. Lighting transitions between bright to dark aera may appear to flicker when using color with low resolution such as <a class="el" href="structtgx_1_1_r_g_b565.html" title="Color in R5/G6/B5 format.">RGB565</a>.</li>
 <li><code>SHADER_GOURAUD</code>: Use gouraud shading (linear interpolation of vertex colors) This results in smoother color transitions and works well with texturing but is more CPU intensive.</li>
 <li><code>SHADER_TEXTURE</code>: enable texture mapping. A texture must be stored in an Image&lt;color_t&gt; object.<ul>
@@ -1109,8 +1111,9 @@ template&lt;typename color_t , <a class="el" href="_shader_params_8h.html#ab8454
 </ul>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>If a shader flag is set with SetShaders() but is disabled in the template parameter LOADED_SHADER, then the drawing calls will silently fail (draw nothing).</li>
+<li><code>SHADER_UNLIT</code> skips lighting: textured pixels use the texture color directly and untextured pixels use the current material color.</li>
 <li>The color on the face (for flat shading) or on the vertices (for gouraud shading) is computed according to Phong's lighting <a href="https://en.wikipedia.org/wiki/Phong_reflection_model">https://en.wikipedia.org/wiki/Phong_reflection_model</a>.</li>
-<li>Texture mapping is 'perspective correct' and can be done with either SHADER_FLAT or SHADER_GOURAUD selected. The color of a pixel is obtained by combining the texture color at that pixel with the lighting at the position according to Phong's lighting model.</li>
+<li>Texture mapping is 'perspective correct'. With <code>SHADER_FLAT</code> or <code>SHADER_GOURAUD</code>, the texture color is combined with the lighting. With <code>SHADER_UNLIT</code>, the texture color is copied directly.</li>
 <li>Large textures stored in flash memory may be VERY slow to access when the texture is not read linearly which will happens for some (bad) triangle orientations and then cache becomes useless... This problem can be somewhat mitigated by:<ul>
 <li>splitting large textured triangles into smaller ones: then each triangle only accesses a small part of the texture. This helps a lot wich cache optimization (this is why models with thousands of faces may display faster that a simple textured cube in some cases).</li>
 <li>moving the image into RAM if possible. Even moving the texture from FLASH to EXTMEM (if available) will usually give a great speed boost ! </li>

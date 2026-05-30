@@ -92,6 +92,7 @@ $(document).ready(function(){initNavTree('_shader_params_8h.html',''); initResiz
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">ShaderParams.h File Reference</div></div>
@@ -110,6 +111,11 @@ $(document).ready(function(){initNavTree('_shader_params_8h.html',''); initResiz
 </div>
 <p><a href="_shader_params_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:aa0e7775f50060815f177a13abcc0ee73"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_shader_params_8h.html#aa0e7775f50060815f177a13abcc0ee73">TGX_SHADER_CAN_USE_FLAT_OR_UNLIT</a>(enabled_shader_type,  shader_type)</td></tr>
+<tr class="separator:aa0e7775f50060815f177a13abcc0ee73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:ab84545b1975d51484ba2f5970b858d07"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">tgx::Shader</a> { <br />
@@ -120,13 +126,15 @@ Enumerations</h2></td></tr>
 , <br />
 &#160;&#160;<a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a2c46b631292df566e7240b2e7010fa82">tgx::SHADER_FLAT</a> = (1 &lt;&lt; 4)
 , <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a0d659a982904bf68ee55bb5b93b10e69">tgx::SHADER_GOURAUD</a> = (1 &lt;&lt; 5)
+, <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a9511f1424480c9eea8160d365a08f502">tgx::SHADER_UNLIT</a> = (1 &lt;&lt; 6)
 , <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a612eed5a49521db755ed897ececc898f">tgx::SHADER_NOTEXTURE</a> = (1 &lt;&lt; 7)
-, <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a948fe24bc5b2f298510991b6d505fcb1">tgx::SHADER_TEXTURE</a> = (1 &lt;&lt; 8)
 , <br />
-&#160;&#160;<a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a57b5d6d50ba084c8555af3ef00dfec58">tgx::SHADER_TEXTURE_NEAREST</a> = (1 &lt;&lt; 11)
+&#160;&#160;<a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a948fe24bc5b2f298510991b6d505fcb1">tgx::SHADER_TEXTURE</a> = (1 &lt;&lt; 8)
+, <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a57b5d6d50ba084c8555af3ef00dfec58">tgx::SHADER_TEXTURE_NEAREST</a> = (1 &lt;&lt; 11)
 , <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07aa5581a155be5220223a3583b265a443c">tgx::SHADER_TEXTURE_BILINEAR</a> = (1 &lt;&lt; 12)
 , <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07ae79f091d5822a4c1a59a43c7ef890f4e">tgx::SHADER_TEXTURE_WRAP_POW2</a> = (1 &lt;&lt; 13)
-, <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07aecffed38f41d96bb98cf0f073c199a0f">tgx::SHADER_TEXTURE_CLAMP</a> = (1 &lt;&lt; 14)
+, <br />
+&#160;&#160;<a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07aecffed38f41d96bb98cf0f073c199a0f">tgx::SHADER_TEXTURE_CLAMP</a> = (1 &lt;&lt; 14)
 <br />
  }</td></tr>
 <tr class="memdesc:ab84545b1975d51484ba2f5970b858d07"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of shaders available for 3D graphics.  <a href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">More...</a><br /></td></tr>
@@ -157,7 +165,39 @@ constexpr Shader&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::oper
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Triangle shader parameters. </p>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="aa0e7775f50060815f177a13abcc0ee73" name="aa0e7775f50060815f177a13abcc0ee73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0e7775f50060815f177a13abcc0ee73">&#9670;&#160;</a></span>TGX_SHADER_CAN_USE_FLAT_OR_UNLIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TGX_SHADER_CAN_USE_FLAT_OR_UNLIT</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">enabled_shader_type, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">shader_type&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">        (TGX_SHADER_HAS_UNLIT(enabled_shader_type) ? \</div>
+<div class="line">            (TGX_SHADER_HAS_UNLIT(shader_type) || (TGX_SHADER_HAS_FLAT(enabled_shader_type) &amp;&amp; !TGX_SHADER_HAS_GOURAUD(shader_type))) : \</div>
+<div class="line">            TGX_SHADER_HAS_FLAT(enabled_shader_type))</div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="ab84545b1975d51484ba2f5970b858d07" name="ab84545b1975d51484ba2f5970b858d07"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab84545b1975d51484ba2f5970b858d07">&#9670;&#160;</a></span>Shader</h2>
 
@@ -183,6 +223,8 @@ constexpr Shader&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::oper
 <tr><td class="fieldname"><a id="ab84545b1975d51484ba2f5970b858d07a2c46b631292df566e7240b2e7010fa82" name="ab84545b1975d51484ba2f5970b858d07a2c46b631292df566e7240b2e7010fa82"></a>SHADER_FLAT&#160;</td><td class="fielddoc"><p >enable flat shading </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ab84545b1975d51484ba2f5970b858d07a0d659a982904bf68ee55bb5b93b10e69" name="ab84545b1975d51484ba2f5970b858d07a0d659a982904bf68ee55bb5b93b10e69"></a>SHADER_GOURAUD&#160;</td><td class="fielddoc"><p >enable Gouraud shading </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab84545b1975d51484ba2f5970b858d07a9511f1424480c9eea8160d365a08f502" name="ab84545b1975d51484ba2f5970b858d07a9511f1424480c9eea8160d365a08f502"></a>SHADER_UNLIT&#160;</td><td class="fielddoc"><p >enable unlit shading: no lighting computation </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ab84545b1975d51484ba2f5970b858d07a612eed5a49521db755ed897ececc898f" name="ab84545b1975d51484ba2f5970b858d07a612eed5a49521db755ed897ececc898f"></a>SHADER_NOTEXTURE&#160;</td><td class="fielddoc"><p >disable texture mapping </p>
 </td></tr>

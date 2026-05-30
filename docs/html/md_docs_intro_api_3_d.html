@@ -178,7 +178,7 @@ What Renderer3D Does</h1>
 <div class="line">}</div>
 <div class="ttc" id="a_shader_params_8h_html_ab84545b1975d51484ba2f5970b858d07"><div class="ttname"><a href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">tgx::Shader</a></div><div class="ttdeci">Shader</div><div class="ttdoc">List of shaders available for 3D graphics.</div><div class="ttdef"><b>Definition:</b> ShaderParams.h:44</div></div>
 <div class="ttc" id="aclasstgx_1_1_image_html"><div class="ttname"><a href="classtgx_1_1_image.html">tgx::Image</a></div><div class="ttdoc">Image class [MAIN CLASS FOR THE 2D API].</div><div class="ttdef"><b>Definition:</b> Image.h:145</div></div>
-<div class="ttc" id="aclasstgx_1_1_renderer3_d_html"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a></div><div class="ttdoc">Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].</div><div class="ttdef"><b>Definition:</b> Renderer3D.h:107</div></div>
+<div class="ttc" id="aclasstgx_1_1_renderer3_d_html"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a></div><div class="ttdoc">Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].</div><div class="ttdef"><b>Definition:</b> Renderer3D.h:108</div></div>
 <div class="ttc" id="aclasstgx_1_1_renderer3_d_html_ad613bdffc57596703abe1a2a47583003"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#ad613bdffc57596703abe1a2a47583003">tgx::Renderer3D::clearZbuffer</a></div><div class="ttdeci">void clearZbuffer()</div><div class="ttdoc">Clear the Zbuffer.</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:216</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_bf_html"><div class="ttname"><a href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a></div><div class="ttdoc">Color in R,G,B float format.</div><div class="ttdef"><b>Definition:</b> Color.h:2407</div></div>
@@ -455,7 +455,7 @@ Shader state</h2>
 <ul>
 <li>projection: <code>SHADER_PERSPECTIVE</code> or <code>SHADER_ORTHO</code>;</li>
 <li>depth mode: <code>SHADER_ZBUFFER</code> or <code>SHADER_NOZBUFFER</code>;</li>
-<li>lighting interpolation: <code>SHADER_FLAT</code> or <code>SHADER_GOURAUD</code>;</li>
+<li>shading path: <code>SHADER_UNLIT</code>, <code>SHADER_FLAT</code> or <code>SHADER_GOURAUD</code>;</li>
 <li>texture usage: <code>SHADER_NOTEXTURE</code> or <code>SHADER_TEXTURE</code>;</li>
 <li>texture sampling: <code>SHADER_TEXTURE_NEAREST</code> or <code>SHADER_TEXTURE_BILINEAR</code>;</li>
 <li>texture addressing: <code>SHADER_TEXTURE_WRAP_POW2</code> or <code>SHADER_TEXTURE_CLAMP</code>.</li>
@@ -470,7 +470,7 @@ Shader state</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Depth path   </td><td class="markdownTableBodyNone">with or without Z-buffer.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Lighting path   </td><td class="markdownTableBodyNone">flat or Gouraud.    </td></tr>
+<td class="markdownTableBodyNone">Shading path   </td><td class="markdownTableBodyNone">unlit, flat or Gouraud.    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Texture path   </td><td class="markdownTableBodyNone">no texture, nearest texture, or bilinear texture.    </td></tr>
 <tr class="markdownTableRowOdd">
@@ -488,20 +488,22 @@ Shader state</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>SHADER_NOZBUFFER</code>   </td><td class="markdownTableBodyNone">Draw without depth testing.   </td><td class="markdownTableBodyNone">Ordered overlays or special effects.    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>SHADER_UNLIT</code>   </td><td class="markdownTableBodyNone">Use the material color or texture color directly, without lighting.   </td><td class="markdownTableBodyNone">UI-like 3D, emissive objects, lightmaps, debug views.    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>SHADER_FLAT</code>   </td><td class="markdownTableBodyNone">One lighting result per triangle.   </td><td class="markdownTableBodyNone">Fast faceted rendering.    </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>SHADER_GOURAUD</code>   </td><td class="markdownTableBodyNone">Lighting at vertices, interpolated across triangles.   </td><td class="markdownTableBodyNone">Smoother curved meshes.    </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>SHADER_NOTEXTURE</code>   </td><td class="markdownTableBodyNone">Use material or vertex colors only.   </td><td class="markdownTableBodyNone">Untextured models and debug views.    </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>SHADER_TEXTURE</code>   </td><td class="markdownTableBodyNone">Enable texture mapping for the next draw call.   </td><td class="markdownTableBodyNone">Textured meshes or textured primitives.    </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>SHADER_TEXTURE_NEAREST</code>   </td><td class="markdownTableBodyNone">Nearest-neighbor texture lookup.   </td><td class="markdownTableBodyNone">Fast textured rendering.    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_BILINEAR</code>   </td><td class="markdownTableBodyNone">Bilinear texture filtering.   </td><td class="markdownTableBodyNone">Smoother textures when speed allows.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_WRAP_POW2</code>   </td><td class="markdownTableBodyNone">Repeat power-of-two textures.   </td><td class="markdownTableBodyNone">Fast tiling textures.    </td></tr>
+<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_BILINEAR</code>   </td><td class="markdownTableBodyNone">Bilinear texture filtering.   </td><td class="markdownTableBodyNone">Smoother textures when speed allows.    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_WRAP_POW2</code>   </td><td class="markdownTableBodyNone">Repeat power-of-two textures.   </td><td class="markdownTableBodyNone">Fast tiling textures.    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>SHADER_TEXTURE_CLAMP</code>   </td><td class="markdownTableBodyNone">Clamp texture coordinates to the edge.   </td><td class="markdownTableBodyNone">Non-power-of-two textures or non-repeating images.   </td></tr>
 </table>
 <p >The most common runtime call is:</p>
@@ -511,6 +513,7 @@ Shader state</h2>
 <div class="line"><span class="keyword">const</span> <a class="code hl_enumeration" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">tgx::Shader</a> shaders_loaded =</div>
 <div class="line">    tgx::SHADER_PERSPECTIVE |</div>
 <div class="line">    tgx::SHADER_ZBUFFER |</div>
+<div class="line">    tgx::SHADER_UNLIT |</div>
 <div class="line">    tgx::SHADER_FLAT |</div>
 <div class="line">    tgx::SHADER_GOURAUD |</div>
 <div class="line">    tgx::SHADER_NOTEXTURE |</div>
@@ -524,11 +527,11 @@ Shader state</h2>
 <div class="line">renderer.<a class="code hl_function" href="classtgx_1_1_renderer3_d.html#a2547893a21094d5f23473ca8d3f7ee36">setShaders</a>(tgx::SHADER_GOURAUD | tgx::SHADER_TEXTURE);</div>
 <div class="line">renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);</div>
 <div class="ttc" id="aclasstgx_1_1_renderer3_d_html_a2547893a21094d5f23473ca8d3f7ee36"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#a2547893a21094d5f23473ca8d3f7ee36">tgx::Renderer3D::setShaders</a></div><div class="ttdeci">void setShaders(Shader shaders)</div><div class="ttdoc">Set the shaders to use for subsequent drawing operations.</div></div>
-</div><!-- fragment --><p >If a sketch only uses flat untextured geometry, do not load bilinear texture shaders. If it switches between a flat debug view and a textured view, load both <code>SHADER_FLAT</code> and the texture mode.</p>
+</div><!-- fragment --><p >If a sketch only uses unlit textured geometry, do not load the flat or Gouraud lighting paths. If it switches between a flat debug view and a textured view, load both <code>SHADER_FLAT</code> and the texture mode.</p>
 <p >Texture quality and wrapping may also be selected explicitly:</p>
 <div class="fragment"><div class="line">renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);</div>
 <div class="line">renderer.setTextureWrappingMode(tgx::SHADER_TEXTURE_WRAP_POW2);</div>
-</div><!-- fragment --><p ><code>SHADER_FLAT</code> is often the fastest lighting mode. <code>SHADER_GOURAUD</code> interpolates vertex lighting and gives smoother surfaces, especially on curved meshes. Textured Gouraud rendering is often the best visual compromise for embedded solid 3D rendering.</p>
+</div><!-- fragment --><p ><code>SHADER_UNLIT</code> is the cheapest solid shading path because it skips lighting computations: textured geometry keeps its texture colors, and untextured geometry uses the current material color. <code>SHADER_FLAT</code> is usually the fastest lit mode. <code>SHADER_GOURAUD</code> interpolates vertex lighting and gives smoother surfaces, especially on curved meshes. Textured Gouraud rendering is often the best visual compromise for embedded solid 3D rendering.</p>
 <p >Internally, <code>Renderer3D</code> dispatches to templated shader variants. Keeping <code>LOADED_SHADERS</code> narrow saves flash and helps the compiler remove unused branches.</p>
 <h2><a class="anchor" id="sec_3D_zbuffer"></a>
 Z-buffer</h2>
@@ -675,8 +678,9 @@ Light and material</h2>
 <div class="line">renderer.setMaterialSpecularExponent(16);</div>
 </div><!-- fragment --><p >The convenience method <code>setLight()</code> sets all light colors and the direction at once. The convenience method <code>setMaterial()</code> sets all material parameters at once.</p>
 <p >If <code>drawMesh()</code> is called with <code>use_mesh_material = true</code>, the mesh material color and texture override the current material settings for that mesh. Most generated OBJ models use this mode.</p>
-<p >Flat and Gouraud shading differ only in where lighting is evaluated:</p>
+<p >Unlit, flat and Gouraud shading differ in how much lighting work they do:</p>
 <ul>
+<li><b>Unlit shading</b> skips lighting. Textured geometry uses the texture color directly; untextured geometry uses the current material color. This is useful for emissive objects, lightmaps, debug views and the cheapest textured path.</li>
 <li><b>Flat shading</b> computes one color for the whole triangle. It is fast and gives a faceted look.</li>
 <li><b>Gouraud shading</b> computes lighting at vertices and interpolates the resulting colors across the triangle. It is smoother on curved models, but costs more math and interpolation.</li>
 </ul>
