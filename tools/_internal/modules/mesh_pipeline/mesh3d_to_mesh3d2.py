@@ -412,10 +412,6 @@ def _print_stats(mesh: ObjMesh, meshlets, result: MeshletExportResult, chain: li
     print(f"  chains         : {stats.chains} ({100.0 * stats.chains / max(1, stats.triangles):.2f}% of triangles)")
     print(f"  vertex refs    : {stats.vertex_refs_loaded} ({stats.vertex_refs_loaded / max(1, stats.triangles):.3f} per tri)")
     print(f"  payload        : {stats.payload_bytes} bytes ({stats.payload_words} uint32 words)")
-    if cone_source == "nocull":
-        print("Meshlet culling estimate:")
-        print("  cone source    : disabled")
-        return
     q = cull_ratio_stats(meshlets, samples=128, meshlet_cost=3.0, cone_source=cone_source)
     print("Meshlet culling estimate:")
     print(f"  cone source    : {cone_source}")

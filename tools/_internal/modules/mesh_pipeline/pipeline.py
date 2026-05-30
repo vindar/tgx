@@ -22,7 +22,7 @@ def add_build_options(parser: argparse.ArgumentParser, *, source: str = "obj") -
     include_obj = source != "legacy"
     include_legacy = True
     parser.add_argument("--profile", choices=profile_names(include_obj=include_obj, include_legacy=include_legacy), default=DEFAULT_MESHLET_PROFILE, help=f"meshlet tuning profile; default is {DEFAULT_MESHLET_PROFILE} (target vertices {DEFAULT_TARGET_VERTICES}, max normal angle {DEFAULT_MAX_NORMAL_ANGLE_DEG:g})")
-    parser.add_argument("--builder", choices=("greedy", "hybrid", "nocull", "visibility_merge"), default=None)
+    parser.add_argument("--builder", choices=("greedy", "hybrid", "visibility_merge"), default=None)
     parser.add_argument("--target-vertices", type=int, default=None)
     parser.add_argument("--max-vertices", type=int, default=None)
     parser.add_argument("--max-triangles", type=int, default=None)
@@ -34,8 +34,6 @@ def add_build_options(parser: argparse.ArgumentParser, *, source: str = "obj") -
     parser.add_argument("--compatible-edge-weight", type=float, default=None)
     parser.add_argument("--incompatible-edge-penalty", type=float, default=None)
     parser.add_argument("--compatible-merge-weight", type=float, default=None)
-    parser.add_argument("--nocull-lkh-component-limit", type=int, default=None)
-    parser.add_argument("--nocull-lkh-time-limit", type=float, default=None, help="override automatic stripifier budget for nocull components")
     parser.add_argument("--visibility-merge-samples", type=int, default=None)
     parser.add_argument("--visibility-merge-size", type=int, default=None)
     parser.add_argument("--visibility-merge-margin", type=float, default=None)
@@ -158,9 +156,7 @@ def finalize_meshlets_for_export(args: argparse.Namespace, mesh: ObjMesh, meshle
     resolved_options = getattr(args, "_resolved_meshlet_options", None)
     resolved_builder = getattr(resolved_options, "builder", getattr(args, "builder", ""))
     resolved = "visibility" if getattr(args, "visibility_cones", False) else "normal"
-    if resolved_builder == "nocull":
-        resolved = "nocull"
-    elif resolved_builder == "visibility_merge":
+    if resolved_builder == "visibility_merge":
         resolved = "visibility"
     return meshlets, resolved
 

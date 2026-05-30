@@ -5,9 +5,6 @@ from dataclasses import dataclass
 from dataclasses import replace
 import heapq
 import math
-from pathlib import Path
-import subprocess
-import tempfile
 import time
 
 import numpy as np
@@ -35,12 +32,12 @@ class MeshletBuildOptions:
     incompatible_edge_penalty: float = 0.0
     compatible_merge_weight: float = 0.0
     lkh_exe: str | None = None
-    nocull_lkh_component_limit: int = 500
-    nocull_lkh_time_limit: float | None = None
     visibility_merge_samples: int = 1024
     visibility_merge_size: int = 1024
     visibility_merge_margin_deg: float = -1.0
     visibility_merge_cone_weight: float = 45.0
+    visibility_pack_mode: str = "none"
+    visibility_pack_compression: float = 50.0
     fill_holes: bool = True
     merge_passes: int = 1
     smooth_passes: int = 0
@@ -230,44 +227,9 @@ def _make_meshlet(mesh: ObjMesh, tri_indices: list[int], triangle_normals: np.nd
     return Meshlet(tri_indices, material, vertices, texcoords, normals, center, radius, normal_axis, normal_min_dot, cull_axis, cull_cos)
 
 
-def _make_nocull_meshlet(mesh: ObjMesh, tri_indices: list[int]) -> Meshlet:
-    vertices: set[int] = set()
-    texcoords: set[int] = set()
-    normals: set[int] = set()
-    for ti in tri_indices:
-        v, vt, vn = _triangle_sets(mesh, ti)
-        vertices.update(v)
-        texcoords.update(vt)
-        normals.update(vn)
-
-    center, radius = _sphere_from_vertices(mesh.vertices[list(vertices)])
-    axis = np.array([0.0, 0.0, 1.0], dtype=np.float64)
-    material = mesh.triangles[tri_indices[0]].material
-    return Meshlet(
-        tri_indices.copy(),
-        material,
-        vertices,
-        texcoords,
-        normals,
-        center,
-        radius,
-        axis,
-        1.0,
-        axis,
-        2.0,
-        visibility_axis=axis,
-        visibility_cos=-1.0,
-        visibility_cull_axis=axis,
-        visibility_cull_cos=2.0,
-        visibility_samples=0,
-    )
-
-
 def build_meshlets(mesh: ObjMesh, options: MeshletBuildOptions | None = None) -> list[Meshlet]:
     """Build connected, local, normal-coherent meshlets under meshlet index limits."""
     opt = options or MeshletBuildOptions()
-    if opt.builder == "nocull":
-        return build_meshlets_nocull(mesh, opt)
     if opt.builder == "visibility_merge":
         return build_meshlets_visibility_merge(mesh, opt)
     if opt.builder == "hybrid":
@@ -375,339 +337,6 @@ def build_meshlets(mesh: ObjMesh, options: MeshletBuildOptions | None = None) ->
 def sort_meshlets_by_material(meshlets: list[Meshlet]) -> list[Meshlet]:
     """Return meshlets grouped by material while preserving local order inside each group."""
     return [meshlet for _, meshlet in sorted(enumerate(meshlets), key=lambda item: (item[1].material, item[0]))]
-
-
-def build_meshlets_nocull(mesh: ObjMesh, options: MeshletBuildOptions | None = None) -> list[Meshlet]:
-    """Build large, compact meshlets with meshlet culling disabled.
-
-    This builder is intended as a compact Mesh3D-like mode. It first splits the mesh into
-    strong compatible connected components: two triangles are connected only when they share an
-    edge with identical vertex/texcoord/normal corners and the same material. Components that
-    already fit in one meshlet are kept whole. Other components are ordered with LKH under a
-    configurable time limit, then packed into the largest local-index meshlets possible.
-    """
-    opt = options or MeshletBuildOptions(builder="nocull")
-    with step("nocull components", f"{len(mesh.triangles)} triangles"):
-        components = _compatible_components_by_material(mesh)
-    log(f"nocull components: {len(components)} components; largest {len(components[0]) if components else 0} triangles")
-    meshlets: list[Meshlet] = []
-
-    heartbeat = Heartbeat("nocull build")
-    processed = 0
-    for index, component in enumerate(components, start=1):
-        if len(component) >= 128:
-            log(f"nocull component {index}/{len(components)}: {len(component)} triangles")
-        if _fits_nocull(mesh, component, opt):
-            meshlets.append(_make_nocull_meshlet(mesh, component))
-        else:
-            ordered = _lkh_order_for_component(mesh, component, opt.lkh_exe, opt.nocull_lkh_time_limit)
-            meshlets.extend(_pack_nocull_order(mesh, ordered, opt))
-        processed += len(component)
-        heartbeat.ping(f"{processed}/{len(mesh.triangles)} triangles, {len(meshlets)} meshlets")
-
-    if opt.merge_passes <= 0:
-        return meshlets
-    return _merge_nocull_meshlets(mesh, meshlets, opt)
-
-
-def _compatible_components_by_material(mesh: ObjMesh) -> list[list[int]]:
-    edge_to_tris = build_compatible_edge_to_triangles(mesh)
-    adjacency = [set() for _ in mesh.triangles]
-    for tris in edge_to_tris.values():
-        if len(tris) < 2:
-            continue
-        for a in tris:
-            for b in tris:
-                if a != b and mesh.triangles[a].material == mesh.triangles[b].material:
-                    adjacency[a].add(b)
-
-    seen: set[int] = set()
-    components: list[list[int]] = []
-    for ti in range(len(mesh.triangles)):
-        if ti in seen:
-            continue
-        stack = [ti]
-        seen.add(ti)
-        component: list[int] = []
-        while stack:
-            current = stack.pop()
-            component.append(current)
-            for other in adjacency[current]:
-                if other not in seen:
-                    seen.add(other)
-                    stack.append(other)
-        components.append(component)
-    components.sort(key=len, reverse=True)
-    return components
-
-
-def _lkh_order_for_component(mesh: ObjMesh, tri_indices: list[int], lkh_exe: str | Path, time_limit: float | None) -> list[int]:
-    if len(tri_indices) <= 2:
-        return tri_indices.copy()
-    try:
-        from .stripifier import StripifyOptions, stripify_component
-    except Exception:
-        return tri_indices.copy()
-
-    try:
-        result = stripify_component(mesh, tri_indices, StripifyOptions(max_time_s=time_limit, lkh_exe=lkh_exe))
-        if len(tri_indices) >= 128:
-            log(f"nocull component strips: {len(result.chains)} chains from {result.source}")
-        return [ti for chain in result.chains for ti in chain]
-    except Exception:
-        return tri_indices.copy()
-
-
-def _fits_nocull(mesh: ObjMesh, tri_indices: list[int], opt: MeshletBuildOptions) -> bool:
-    if not tri_indices or len(tri_indices) > opt.max_triangles:
-        return False
-    material = mesh.triangles[tri_indices[0]].material
-    vertices: set[int] = set()
-    texcoords: set[int] = set()
-    normals: set[int] = set()
-    for ti in tri_indices:
-        if mesh.triangles[ti].material != material:
-            return False
-        v, vt, vn = _triangle_sets(mesh, ti)
-        vertices.update(v)
-        texcoords.update(vt)
-        normals.update(vn)
-        if len(vertices) > opt.max_vertices or len(texcoords) > opt.max_texcoords or len(normals) > opt.max_normals:
-            return False
-    return True
-
-
-def _pack_nocull_order(mesh: ObjMesh, ordered: list[int], opt: MeshletBuildOptions) -> list[Meshlet]:
-    return _pack_nocull_units(mesh, _nocull_chain_units(mesh, ordered, opt), opt)
-
-
-def _nocull_chain_units(mesh: ObjMesh, ordered: list[int], opt: MeshletBuildOptions) -> list[list[int]]:
-    if not ordered:
-        return []
-    try:
-        from .exporter import _is_chain_adjacent
-    except Exception:
-        return [[ti] for ti in ordered]
-
-    triangles = [mesh.triangles[i].corners for i in ordered]
-    if len(triangles) > 1:
-        for i in range(len(triangles)):
-            if not _is_chain_adjacent(triangles[i - 1], triangles[i]):
-                ordered = ordered[i:] + ordered[:i]
-                triangles = triangles[i:] + triangles[:i]
-                break
-
-    units: list[list[int]] = []
-    current: list[int] = []
-    for ti, tri in zip(ordered, triangles):
-        can_continue = bool(current) and len(current) < 255 and _is_chain_adjacent(mesh.triangles[current[-1]].corners, tri)
-        if not can_continue:
-            if current:
-                units.extend(_split_nocull_unit_to_fit(mesh, current, opt))
-            current = [ti]
-        else:
-            current.append(ti)
-    if current:
-        units.extend(_split_nocull_unit_to_fit(mesh, current, opt))
-    return units
-
-
-def _split_nocull_unit_to_fit(mesh: ObjMesh, tri_indices: list[int], opt: MeshletBuildOptions) -> list[list[int]]:
-    units: list[list[int]] = []
-    current: list[int] = []
-    vertices: set[int] = set()
-    texcoords: set[int] = set()
-    normals: set[int] = set()
-    for ti in tri_indices:
-        v, vt, vn = _triangle_sets(mesh, ti)
-        fits = (
-            current
-            and len(current) < 255
-            and len(current) < opt.max_triangles
-            and len(vertices | v) <= opt.max_vertices
-            and len(texcoords | vt) <= opt.max_texcoords
-            and len(normals | vn) <= opt.max_normals
-        )
-        if not current:
-            fits = True
-        if not fits:
-            units.append(current)
-            current = []
-            vertices = set()
-            texcoords = set()
-            normals = set()
-        current.append(ti)
-        vertices.update(v)
-        texcoords.update(vt)
-        normals.update(vn)
-    if current:
-        units.append(current)
-    return units
-
-
-def _pack_nocull_units(mesh: ObjMesh, units: list[list[int]], opt: MeshletBuildOptions) -> list[Meshlet]:
-    meshlets: list[Meshlet] = []
-    unit_data = []
-    for unit in units:
-        vertices: set[int] = set()
-        texcoords: set[int] = set()
-        normals: set[int] = set()
-        for ti in unit:
-            v, vt, vn = _triangle_sets(mesh, ti)
-            vertices.update(v)
-            texcoords.update(vt)
-            normals.update(vn)
-        unit_data.append((unit, mesh.triangles[unit[0]].material, vertices, texcoords, normals))
-
-    # Large units are hardest to place. Smaller chains are then packed into the best compatible bin.
-    unit_data.sort(key=lambda item: (len(item[2]), len(item[4]), len(item[3]), len(item[0])), reverse=True)
-
-    bins: list[dict] = []
-    for unit, material, vertices, texcoords, normals in unit_data:
-        best: tuple[tuple[int, int, int, int, int], int] | None = None
-        for bi, bin_item in enumerate(bins):
-            if bin_item["material"] != material:
-                continue
-            tri_count = len(bin_item["triangles"]) + len(unit)
-            if tri_count > opt.max_triangles:
-                continue
-            new_vertices = bin_item["vertices"] | vertices
-            if len(new_vertices) > opt.max_vertices:
-                continue
-            new_texcoords = bin_item["texcoords"] | texcoords
-            if len(new_texcoords) > opt.max_texcoords:
-                continue
-            new_normals = bin_item["normals"] | normals
-            if len(new_normals) > opt.max_normals:
-                continue
-            score = (
-                len(bin_item["vertices"] & vertices),
-                len(bin_item["normals"] & normals),
-                len(bin_item["texcoords"] & texcoords),
-                -len(new_vertices) - len(new_normals) - len(new_texcoords),
-                tri_count,
-            )
-            if best is None or score > best[0]:
-                best = (score, bi)
-        if best is None:
-            bins.append(
-                {
-                    "material": material,
-                    "triangles": list(unit),
-                    "vertices": set(vertices),
-                    "texcoords": set(texcoords),
-                    "normals": set(normals),
-                }
-            )
-            continue
-        _, bi = best
-        bin_item = bins[bi]
-        bin_item["triangles"].extend(unit)
-        bin_item["vertices"].update(vertices)
-        bin_item["texcoords"].update(texcoords)
-        bin_item["normals"].update(normals)
-
-    for bin_item in bins:
-        meshlets.append(_make_nocull_meshlet(mesh, bin_item["triangles"]))
-    return meshlets
-
-
-def _split_large_component_nocull(mesh: ObjMesh, component: list[int], opt: MeshletBuildOptions) -> list[list[int]]:
-    edge_to_tris = build_compatible_edge_to_triangles(mesh)
-    adjacency = {ti: set() for ti in component}
-    component_set = set(component)
-    for tris in edge_to_tris.values():
-        local = [ti for ti in tris if ti in component_set]
-        if len(local) < 2:
-            continue
-        for a in local:
-            adjacency[a].update(b for b in local if b != a and mesh.triangles[a].material == mesh.triangles[b].material)
-
-    remaining = set(component)
-    blocks: list[list[int]] = []
-    centers = compute_triangle_centers(mesh)
-
-    while remaining:
-        seed = max(remaining, key=lambda ti: len(adjacency[ti] & remaining))
-        current = [seed]
-        remaining.remove(seed)
-        vertices, texcoords, normals = _triangle_sets(mesh, seed)
-        frontier = set(adjacency[seed] & remaining)
-
-        while frontier:
-            scored = []
-            current_set = set(current)
-            current_center = np.mean(centers[current], axis=0)
-            for ti in sorted(frontier):
-                v, vt, vn = _triangle_sets(mesh, ti)
-                if len(current) >= opt.max_triangles or len(current) >= opt.nocull_lkh_component_limit:
-                    continue
-                if len(vertices | v) > opt.max_vertices or len(texcoords | vt) > opt.max_texcoords or len(normals | vn) > opt.max_normals:
-                    continue
-                links = len(adjacency[ti] & current_set)
-                future_links = len(adjacency[ti] & remaining)
-                new_indices = len((vertices | v)) - len(vertices)
-                distance = float(np.linalg.norm(centers[ti] - current_center))
-                scored.append((-links, -future_links, new_indices, distance, ti))
-            if not scored:
-                break
-            *_, chosen = min(scored)
-            frontier.discard(chosen)
-            if chosen not in remaining:
-                continue
-            current.append(chosen)
-            remaining.remove(chosen)
-            v, vt, vn = _triangle_sets(mesh, chosen)
-            vertices.update(v)
-            texcoords.update(vt)
-            normals.update(vn)
-            frontier.update(adjacency[chosen] & remaining)
-
-        blocks.append(current)
-    return blocks
-
-
-def _merge_nocull_meshlets(mesh: ObjMesh, meshlets: list[Meshlet], opt: MeshletBuildOptions) -> list[Meshlet]:
-    merges = 0
-    heartbeat = Heartbeat("nocull merge")
-    while True:
-        best: tuple[tuple[int, int, int], int, int] | None = None
-        for i, a in enumerate(meshlets):
-            for j in range(i + 1, len(meshlets)):
-                b = meshlets[j]
-                if a.material != b.material:
-                    continue
-                tri_count = len(a.triangles) + len(b.triangles)
-                if tri_count > opt.max_triangles:
-                    continue
-                vertices = a.vertices | b.vertices
-                if len(vertices) > opt.max_vertices:
-                    continue
-                normals = a.normals | b.normals
-                if len(normals) > opt.max_normals:
-                    continue
-                texcoords = a.texcoords | b.texcoords
-                if len(texcoords) > opt.max_texcoords:
-                    continue
-
-                payload_saved = 12 * len(a.vertices & b.vertices) + 12 * len(a.normals & b.normals) + 8 * len(a.texcoords & b.texcoords)
-                fill = len(vertices) + len(normals) + len(texcoords)
-                score = (payload_saved, tri_count, -fill)
-                if best is None or score > best[0]:
-                    best = (score, i, j)
-
-        if best is None:
-            print(f"nocull merge: {merges} merges, {len(meshlets)} meshlets")
-            break
-        _, i, j = best
-        meshlets[i] = _make_nocull_meshlet(mesh, meshlets[i].triangles + meshlets[j].triangles)
-        del meshlets[j]
-        merges += 1
-        if (merges % 50) == 0:
-            print(f"nocull merge: {merges} merges, {len(meshlets)} meshlets")
-        else:
-            heartbeat.ping(f"{merges} merges, {len(meshlets)} meshlets")
-    return meshlets
 
 
 def _cone_angle(cos_angle: float) -> float:
@@ -890,6 +519,243 @@ def _visibility_merge_candidate(
     return score, candidate, candidate_mask
 
 
+def _visibility_pack_mode(opt: MeshletBuildOptions) -> str:
+    mode = str(opt.visibility_pack_mode or "none").strip().lower().replace("-", "_")
+    if mode in ("", "0", "false", "no", "none", "off", "disabled"):
+        return "none"
+    compression = max(0.0, min(100.0, float(opt.visibility_pack_compression)))
+    if compression <= 0.0:
+        return "none"
+    if mode == "compact" and compression >= 100.0:
+        return "ultra"
+    if mode in ("compact", "ultra"):
+        return mode
+    raise ValueError(f"unknown visibility non-adjacent packing mode: {opt.visibility_pack_mode!r}")
+
+
+def _visibility_pack_thresholds(opt: MeshletBuildOptions) -> tuple[float, float, float, float]:
+    compression = max(0.0, min(100.0, float(opt.visibility_pack_compression)))
+    if compression <= 50.0:
+        t = compression / 50.0
+        return (
+            1.0 - 0.25 * t,  # bad-visible ratio: 1.00 -> 0.75
+            0.08 * t,        # normal visible growth: 0.00 -> 0.08
+            0.18 * t,        # relaxed visible growth: 0.00 -> 0.18
+            0.15 * t,        # radius growth: 0.00 -> 0.15
+        )
+    t = (compression - 50.0) / 50.0
+    return (
+        0.75 * (1.0 - t),          # bad-visible ratio: 0.75 -> 0.00
+        0.08 + (1.00 - 0.08) * t,  # normal visible growth: 0.08 -> 1.00
+        0.18 + (1.00 - 0.18) * t,  # relaxed visible growth: 0.18 -> 1.00
+        0.15 + (10.0 - 0.15) * t,  # radius growth: 0.15 -> effectively unbounded
+    )
+
+
+def _visibility_pack_candidate(
+    mesh: ObjMesh,
+    a: Meshlet,
+    b: Meshlet,
+    mask_a: np.ndarray,
+    mask_b: np.ndarray,
+    nb_views: int,
+    tri_normals: np.ndarray,
+    opt: MeshletBuildOptions,
+    scale: float,
+    mode: str,
+) -> tuple[float, Meshlet, np.ndarray] | None:
+    if a.material != b.material:
+        return None
+
+    vertices = a.vertices | b.vertices
+    texcoords = a.texcoords | b.texcoords
+    normals = a.normals | b.normals
+    if len(vertices) > opt.max_vertices or len(texcoords) > opt.max_texcoords or len(normals) > opt.max_normals:
+        return None
+
+    candidate_mask = np.logical_or(mask_a, mask_b)
+    visible_a = a.visibility_samples if a.visibility_samples > 0 else int(np.count_nonzero(mask_a))
+    visible_b = b.visibility_samples if b.visibility_samples > 0 else int(np.count_nonzero(mask_b))
+    visible_count = int(np.count_nonzero(candidate_mask))
+    nb_views = max(1, nb_views)
+    visible_growth = max(0, visible_count - max(visible_a, visible_b)) / nb_views
+    union_visible_ratio = visible_count / nb_views
+    min_visible_ratio = min(visible_a, visible_b) / nb_views
+
+    old_radius = max(float(a.radius), float(b.radius), 1.0e-20)
+    safe_scale = max(float(scale), 1.0e-20)
+    center, radius = _sphere_from_vertices(mesh.vertices[list(vertices)])
+    radius_growth = max(0.0, float(radius) - old_radius) / safe_scale
+    radius_ratio_growth = max(0.0, float(radius) / old_radius - 1.0)
+
+    if mode == "compact":
+        bad_visible_ratio, max_growth, bad_max_growth, max_radius_growth = _visibility_pack_thresholds(opt)
+        already_bad = min_visible_ratio >= bad_visible_ratio
+        low_visibility_cost = visible_growth <= max_growth
+        close_enough = radius_growth <= max_radius_growth
+        relaxed_visibility_cost = visible_growth <= bad_max_growth
+        if not (low_visibility_cost or (already_bad and relaxed_visibility_cost) or (close_enough and relaxed_visibility_cost)):
+            return None
+    elif mode != "ultra":
+        return None
+
+    tri_indices = a.triangles + b.triangles
+    normal_axis, normal_min_dot = _normal_cone_fast(tri_normals[tri_indices])
+    cull_axis, cull_cos = _backface_cull_cone(normal_axis, normal_min_dot)
+    candidate = Meshlet(
+        tri_indices,
+        a.material,
+        vertices,
+        texcoords,
+        normals,
+        center,
+        radius,
+        normal_axis,
+        normal_min_dot,
+        cull_axis,
+        cull_cos,
+    )
+    visibility_axis = a.visibility_axis if a.visibility_axis is not None else np.array([0.0, 0.0, 1.0], dtype=np.float64)
+    candidate = _meshlet_with_visibility(candidate, visibility_axis, -1.0, visible_count)
+
+    fill = max(
+        len(vertices) / max(1, opt.max_vertices),
+        len(texcoords) / max(1, opt.max_texcoords),
+        len(normals) / max(1, opt.max_normals),
+    )
+    tri_fill = min(1.0, len(tri_indices) / max(1, opt.max_triangles))
+    shared_refs = len(a.vertices & b.vertices) + len(a.texcoords & b.texcoords) + len(a.normals & b.normals)
+    new_ref_cost = (
+        (len(vertices) - max(len(a.vertices), len(b.vertices)))
+        + (len(texcoords) - max(len(a.texcoords), len(b.texcoords)))
+        + (len(normals) - max(len(a.normals), len(b.normals)))
+    )
+    if mode == "ultra":
+        score = -120.0 * fill - 12.0 * tri_fill + 4.0 * radius_growth + 0.5 * union_visible_ratio + 0.08 * new_ref_cost - 0.04 * shared_refs
+    else:
+        score = (
+            120.0 * visible_growth
+            + 18.0 * radius_growth
+            + 4.0 * radius_ratio_growth
+            + 3.0 * union_visible_ratio
+            + 0.12 * new_ref_cost
+            - 18.0 * fill
+            - 4.0 * tri_fill
+            - 5.0 * min_visible_ratio
+            - 0.06 * shared_refs
+        )
+    return score, candidate, candidate_mask
+
+
+def _visibility_nonadjacent_pack_pass(
+    mesh: ObjMesh,
+    meshlets: list[Meshlet],
+    masks: list[np.ndarray],
+    views: np.ndarray,
+    tri_normals: np.ndarray,
+    opt: MeshletBuildOptions,
+    scale: float,
+) -> tuple[list[Meshlet], list[np.ndarray], int, float, float, int]:
+    mode = _visibility_pack_mode(opt)
+    if mode == "none" or len(meshlets) < 2:
+        return meshlets, masks, 0, 0.0, 0.0, 0
+
+    t_total = time.perf_counter()
+    print(f"visibility-pack: mode={mode}, start {len(meshlets)} meshlets")
+    alive: set[int] = set(range(len(meshlets)))
+    versions = [0 for _ in meshlets]
+    heap: list[tuple[float, int, int, int, int, int, Meshlet, np.ndarray]] = []
+    serial = 0
+    candidate_time = 0.0
+    candidate_count = 0
+
+    def push_pair(i: int, j: int) -> None:
+        nonlocal serial, candidate_time, candidate_count
+        if i == j or i not in alive or j not in alive:
+            return
+        if i > j:
+            i, j = j, i
+        if meshlets[i].material != meshlets[j].material:
+            return
+        t_candidate = time.perf_counter()
+        result = _visibility_pack_candidate(
+            mesh,
+            meshlets[i],
+            meshlets[j],
+            masks[i],
+            masks[j],
+            len(views),
+            tri_normals,
+            opt,
+            scale,
+            mode,
+        )
+        candidate_time += time.perf_counter() - t_candidate
+        candidate_count += 1
+        if result is None:
+            return
+        score, candidate, candidate_mask = result
+        heapq.heappush(heap, (score, versions[i], versions[j], serial, i, j, candidate, candidate_mask))
+        serial += 1
+
+    by_material: dict[str, list[int]] = defaultdict(list)
+    for idx, meshlet in enumerate(meshlets):
+        by_material[meshlet.material].append(idx)
+    for group in by_material.values():
+        for pos, i in enumerate(group):
+            for j in group[pos + 1 :]:
+                push_pair(i, j)
+
+    merges = 0
+    while heap:
+        score, version_i, version_j, _, i, j, candidate, candidate_mask = heapq.heappop(heap)
+        if i not in alive or j not in alive:
+            continue
+        if versions[i] != version_i or versions[j] != version_j:
+            continue
+
+        keep, kill = (i, j) if len(meshlets[i].triangles) >= len(meshlets[j].triangles) else (j, i)
+        if keep != i:
+            t_candidate = time.perf_counter()
+            result = _visibility_pack_candidate(
+                mesh,
+                meshlets[keep],
+                meshlets[kill],
+                masks[keep],
+                masks[kill],
+                len(views),
+                tri_normals,
+                opt,
+                scale,
+                mode,
+            )
+            candidate_time += time.perf_counter() - t_candidate
+            candidate_count += 1
+            if result is None:
+                continue
+            _, candidate, candidate_mask = result
+
+        meshlets[keep] = candidate
+        masks[keep] = candidate_mask
+        versions[keep] += 1
+        alive.remove(kill)
+        versions[kill] += 1
+        merges += 1
+        if (merges % 100) == 0:
+            print(f"visibility-pack: {merges} merges, {len(alive)} meshlets, best score {score:.3f}")
+
+        for n in list(alive):
+            if n != keep and meshlets[n].material == candidate.material:
+                push_pair(keep, n)
+
+    ordered_alive = sorted(alive, key=lambda idx: min(meshlets[idx].triangles))
+    packed_meshlets = [meshlets[i] for i in ordered_alive]
+    packed_masks = [masks[i] for i in ordered_alive]
+    total_time = time.perf_counter() - t_total
+    print(f"visibility-pack: {merges} merges, {len(packed_meshlets)} meshlets")
+    return packed_meshlets, packed_masks, merges, total_time, candidate_time, candidate_count
+
+
 def build_meshlets_visibility_merge(mesh: ObjMesh, options: MeshletBuildOptions | None = None) -> list[Meshlet]:
     """Build meshlets by merging triangle visibility masks computed by the TGX helper.
 
@@ -899,6 +765,7 @@ def build_meshlets_visibility_merge(mesh: ObjMesh, options: MeshletBuildOptions 
     """
     t_total = time.perf_counter()
     opt = options or MeshletBuildOptions(builder="visibility_merge")
+    pack_mode = _visibility_pack_mode(opt)
     tri_normals = compute_triangle_normals(mesh)
     meshlets, views, masks, visibility_margin, tgx_time = _triangle_visibility_meshlets(mesh, opt, tri_normals)
     scale = mesh.scale_hint()
@@ -1011,15 +878,35 @@ def build_meshlets_visibility_merge(mesh: ObjMesh, options: MeshletBuildOptions 
     ordered_alive = sorted(alive, key=lambda idx: min(meshlets[idx].triangles))
     result = [meshlets[i] for i in ordered_alive]
     result_masks = [masks[i] for i in ordered_alive]
+    pack_merges = 0
+    pack_time = 0.0
+    pack_candidate_time = 0.0
+    pack_candidate_count = 0
+    if pack_mode != "none":
+        result, result_masks, pack_merges, pack_time, pack_candidate_time, pack_candidate_count = _visibility_nonadjacent_pack_pass(
+            mesh,
+            result,
+            result_masks,
+            views,
+            tri_normals,
+            opt,
+            scale,
+        )
     t_final = time.perf_counter()
     result = _apply_mask_visibility_cones(result, views, result_masks, visibility_margin, fast=False)
     final_cone_time = time.perf_counter() - t_final
-    print(f"visibility-merge: {merges} merges, {len(result)} meshlets")
+    if pack_mode == "none":
+        print(f"visibility-merge: {merges} merges, {len(result)} meshlets")
+    else:
+        print(f"visibility-merge: {merges} adjacent merges, {pack_merges} non-adjacent merges, {len(result)} meshlets")
     total_time = time.perf_counter() - t_total
     print("visibility-merge timings:")
     print(f"  TGX seed masks : {tgx_time:.3f} s")
     print(f"  merge loop     : {merge_time:.3f} s")
     print(f"  candidates     : {candidate_time:.3f} s for {candidate_count}")
+    if pack_mode != "none":
+        print(f"  pack loop      : {pack_time:.3f} s")
+        print(f"  pack candidates: {pack_candidate_time:.3f} s for {pack_candidate_count}")
     print(f"  final cones    : {final_cone_time:.3f} s")
     print(f"  total builder  : {total_time:.3f} s")
     return result

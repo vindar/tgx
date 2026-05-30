@@ -18,6 +18,12 @@ It can write:
 The reusable implementation is in `tools/_internal/modules/mesh_pipeline/`; most users
 should use the public GUI or CLI entry points above.
 
+In the graphical tool, the default `Mesh3Dv2` mode is **Compact** with
+**Non-adjacent packing** set to `0`. This builds larger meshlets to reduce
+static memory, keeps visibility cones, and avoids the optional second packing
+pass. The alternate **Visibility culling** mode exposes `target vertices` and
+`max normal angle`.
+
 ## Dependencies and Setup
 
 Run the public setup script before using the mesh converter:
@@ -99,23 +105,37 @@ python tools/cli_tools/tgx_mesh_cli.py model_v2.h -o model_v2_split.h --layout s
 
 ## Mesh3Dv2 Options
 
-`Mesh3Dv2` always uses the visibility-merge meshlet builder in this public CLI.
-The default settings are the MCU-tuned values used by the TGX examples:
+`Mesh3Dv2` always uses the visibility-merge meshlet builder in the public tools.
+The command-line default is the classic visibility-culling mode with the
+MCU-tuned values used by the TGX examples:
 
 - target vertices: `30`
 - max normal angle: `90`
 - visibility views: `1024`
 - visibility render size: `1024`
 
+The GUI default is the compact mode with non-adjacent packing set to `0`. To
+match that from the CLI, use:
+
+```bash
+python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --compact --compact-compression 0
+```
+
 The main advanced knobs are:
 
 | Option | Meaning |
 | --- | --- |
+| `--compact` | Use larger meshlets to reduce static memory while still exporting visibility cones. |
+| `--compact-compression N` | Optional non-adjacent packing strength for `--compact`, from `0` to `100`. `0` disables this second pass and is the conservative GUI default. If omitted after `--compact`, the CLI uses `50`. |
 | `--target-vertices N` | Preferred meshlet size. Larger values reduce meshlet overhead but may reduce culling. |
 | `--max-normal-angle DEG` | Maximum normal spread accepted while merging meshlets. |
-| `--visibility-samples N` | Number of visibility directions used by the builder. |
+| `--visibility-samples N` | Number of visibility directions used by visibility-merge. |
 | `--visibility-size N` | Offscreen render size used to estimate visibility. |
 | `--visibility-margin DEG` | Extra visibility cone margin; negative means automatic. |
+
+`--target-vertices` and `--max-normal-angle` tune the classic visibility mode.
+They are not used together with `--compact`; use `--compact-compression` for
+the compact mode.
 
 ## Texture Export
 

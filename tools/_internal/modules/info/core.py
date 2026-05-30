@@ -368,8 +368,11 @@ def mesh3dv2_report(mesh: DecodedHeaderMesh, files: list[Path]) -> str:
     local_vertices = sum(m.nb_vertices for m in mesh.meshlets)
     local_normals = sum(m.nb_normals for m in mesh.meshlets)
     local_texcoords = sum(m.nb_texcoords for m in mesh.meshlets)
+    # 32-bit MCU ABI estimate, kept in sync with the Mesh3Dv2 exporter.
+    # Meshlet3Dv2 is 24 bytes, MeshMaterial3Dv2 is 32 bytes with a 32-bit
+    # texture pointer, and Mesh3Dv2 itself is 48 bytes.
     material_bytes = len(mesh.materials) * 32
-    meshlet_bytes = len(mesh.meshlets) * 32
+    meshlet_bytes = len(mesh.meshlets) * 24
     static_estimate = payload_bytes + material_bytes + meshlet_bytes + 48
     texture_lines = texture_report_lines(mesh.texture_headers)
     active_cones = [m for m in mesh.meshlets if m.cone_cos > -1.0]

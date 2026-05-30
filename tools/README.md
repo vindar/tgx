@@ -91,6 +91,13 @@ For OBJ files, the tool reads materials and textures when available. The GUI
 shows the detected texture references and lets you override or resize each
 texture before conversion. It can also preview the mesh with PyVista.
 
+For `Mesh3Dv2`, the GUI defaults to **Compact** meshlet generation with
+**Non-adjacent packing** set to `0`. This is the usual starting point for
+embedded projects: it reduces static mesh data while avoiding the extra
+aggressive packing pass. The alternate **Visibility culling** mode exposes
+`target vertices` and `max normal angle` for users who want to favor meshlet
+culling over compactness.
+
 
 
 ## tgx_font
@@ -140,4 +147,3 @@ PNGs, and can open the mesh viewer for mesh assets.
 
 They are kept for old projects and reference. New projects should normally use
 `tgx_image.py`, `tgx_mesh.py`, `tgx_font.py` and `tgx_info.py`.
-

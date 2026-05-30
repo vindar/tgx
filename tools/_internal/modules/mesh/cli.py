@@ -81,11 +81,13 @@ def build_parser() -> argparse.ArgumentParser:
     clean.add_argument("--texcoord-wrap", action="store_true", help="Identify UVs modulo 1 during cleanup; only use when this preserves the texture mapping")
 
     meshlets = parser.add_argument_group("Mesh3Dv2 advanced meshlet options")
-    meshlets.add_argument("--target-vertices", type=int, default=DEFAULT_TARGET_VERTICES, help="Preferred meshlet vertex count")
-    meshlets.add_argument("--max-normal-angle", type=float, default=DEFAULT_MAX_NORMAL_ANGLE_DEG, help="Maximum normal spread accepted during visibility-merge")
-    meshlets.add_argument("--visibility-samples", type=int, default=1024, help="Number of TGX visibility directions used by visibility-merge")
-    meshlets.add_argument("--visibility-size", type=int, default=1024, help="Visibility render size used by visibility-merge")
-    meshlets.add_argument("--visibility-margin", type=float, default=-1.0, help="Visibility cone margin in degrees; negative selects the automatic margin")
+    meshlets.add_argument("--compact", action="store_true", help="Build larger Mesh3Dv2 meshlets to minimize static memory while still exporting visibility cones")
+    meshlets.add_argument("--compact-compression", type=float, default=None, metavar="0..100", help="Non-adjacent packing strength used with --compact: 0 disables the second pass and is the conservative GUI default; if omitted after --compact, the CLI uses 50; 100 is ultra-compact")
+    meshlets.add_argument("--target-vertices", type=int, default=None, help=f"Preferred meshlet vertex count for classic visibility mode; default is {DEFAULT_TARGET_VERTICES}")
+    meshlets.add_argument("--max-normal-angle", type=float, default=None, help=f"Maximum normal spread accepted during classic visibility-merge; default is {DEFAULT_MAX_NORMAL_ANGLE_DEG:g}")
+    meshlets.add_argument("--visibility-samples", type=int, default=None, help="Number of TGX visibility directions used by visibility-merge; default is 1024")
+    meshlets.add_argument("--visibility-size", type=int, default=None, help="Visibility render size used by visibility-merge; default is 1024")
+    meshlets.add_argument("--visibility-margin", type=float, default=None, help="Visibility cone margin in degrees; default is automatic")
 
     textures = parser.add_argument_group("texture export")
     textures.add_argument("--no-textures", action="store_true", help="Do not export or copy material textures")
@@ -332,10 +334,23 @@ def _export_mesh3dv2(args: argparse.Namespace, loaded: LoadedMesh, output: Path)
 
 def _prepare_meshlet_args(args: argparse.Namespace) -> None:
     args.mesh_format = "mesh3dv2"
-    args.profile = "visibility_merge"
+    if args.compact:
+        args.profile = "compact"
+    else:
+        args.profile = "visibility_merge"
+    if args.compact_compression is not None and not args.compact:
+        raise ValueError("--compact-compression can only be used with --compact")
+    if args.compact and args.target_vertices is not None:
+        raise ValueError("--target-vertices is only available in classic visibility mode; use --compact-compression with --compact")
+    if args.compact and args.max_normal_angle is not None:
+        raise ValueError("--max-normal-angle is only available in classic visibility mode; use --compact-compression with --compact")
+    compression = 50.0 if args.compact_compression is None else float(args.compact_compression)
+    if compression < 0.0 or compression > 100.0:
+        raise ValueError("--compact-compression must be between 0 and 100")
+    args.visibility_pack_compression = compression if args.compact else None
     args.builder = None
     args.max_vertices = None
-    args.max_triangles = 127
+    args.max_triangles = None
     args.max_normal_angle = args.max_normal_angle
     args.radius_weight = None
     args.normal_weight = None
@@ -344,8 +359,6 @@ def _prepare_meshlet_args(args: argparse.Namespace) -> None:
     args.compatible_edge_weight = None
     args.incompatible_edge_penalty = None
     args.compatible_merge_weight = None
-    args.nocull_lkh_component_limit = None
-    args.nocull_lkh_time_limit = None
     args.visibility_merge_samples = args.visibility_samples
     args.visibility_merge_size = args.visibility_size
     args.visibility_merge_margin = args.visibility_margin

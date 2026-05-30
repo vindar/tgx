@@ -22,7 +22,7 @@ The conversion pipeline is shared by OBJ input and existing TGX mesh headers:
 6. Snap vertices, normals and UVs to conservative grids, then remove duplicate
    entries to improve strict triangle adjacency.
 7. Build triangle chains with the stripifier module.
-8. For `Mesh3Dv2`, build meshlets with the default visibility-merge builder.
+8. For `Mesh3Dv2`, build meshlets with the visibility-merge builder.
 9. Export C++ data and print memory, strip and meshlet statistics.
 
 `Mesh3Dv2` stores vertices, normals and UVs quantized in each meshlet payload.
@@ -102,12 +102,14 @@ tools/external_lib/LKH
 Then run `tools/tgx_setup.py` again. The converter automatically uses all
 available helpers and keeps the best chain result.
 
-## Default Mesh3Dv2 Profile
+## Mesh3Dv2 Meshlet Path
 
-By default, export uses the MCU-tuned visibility-merge profile:
+The public converter exposes two user-facing `Mesh3Dv2` modes built on the same
+visibility-merge builder.
+
+The classic visibility-culling mode uses the MCU-tuned settings:
 
 ```text
-builder          : visibility_merge
 target vertices  : 30
 max triangles    : 127
 max normal angle : 90 degrees
@@ -119,6 +121,16 @@ These defaults came from measuring multiple textured and untextured models on
 Teensy 4.1, ESP32/ESP32-S3 and RP2350. They are a good starting point. Larger
 `--target-vertices` values can reduce meshlet overhead on some large textured
 models, but can also reduce culling efficiency.
+
+The compact mode keeps visibility cones but tunes the merge pass for fewer,
+larger meshlets and lower static memory use. This is the default mode in the
+graphical `tgx_mesh.py` tool, with non-adjacent packing set to `0`.
+`--compact-compression` controls the optional non-adjacent packing pass:
+
+- `0`: disable the second pass; conservative and usually the best embedded
+  starting point;
+- `50`: moderate non-adjacent packing;
+- `100`: ultra-compact packing.
 
 ## Export From OBJ
 

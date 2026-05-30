@@ -390,13 +390,9 @@ def _quantize_meshlet16b_metadata(
     q_radius = _clamp_u16(int(math.ceil(radius_needed / radius_scale)))
     decoded_radius = max(float(q_radius) * radius_scale, 1.0e-12)
 
-    if cone_source == "nocull":
-        cone_dir = np.asarray([0.0, 0.0, 1.0], dtype=np.float64)
+    cone_dir, cone_cos = meshlet.selected_cull_cone(cone_source)
+    if cone_cos > 1.0:
         cone_cos = -2.0
-    else:
-        cone_dir, cone_cos = meshlet.selected_cull_cone(cone_source)
-        if cone_cos > 1.0:
-            cone_cos = -2.0
     q_dir = [_q_snorm16(float(x)) for x in cone_dir]
     if cone_cos <= -1.0:
         q_cos = -32768

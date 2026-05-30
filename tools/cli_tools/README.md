@@ -112,8 +112,30 @@ Generate optimized legacy Mesh3D output:
 python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_legacy.h --format Mesh3D --name model
 ```
 
-The default output format is `Mesh3Dv2`. It uses the visibility-merge meshlet
-builder with MCU-oriented defaults.
+The default output format is `Mesh3Dv2`. Mesh3Dv2 generation always uses the
+visibility-merge meshlet builder. In the command-line tool, the default mode is
+the classic visibility-culling configuration; pass `--compact` when static mesh
+memory size is the main goal. The graphical `tgx_mesh.py` front-end selects the
+compact mode by default because it is usually the best first choice on embedded
+boards.
+
+Generate a compact Mesh3Dv2 mesh:
+
+```bash
+python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_compact.h --compact
+```
+
+Use the same conservative compact mode as the GUI:
+
+```bash
+python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_compact.h --compact --compact-compression 0
+```
+
+Tune the optional non-adjacent packing strength:
+
+```bash
+python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_compact.h --compact --compact-compression 75
+```
 
 Input and output options:
 
@@ -145,10 +167,18 @@ Mesh cleanup options:
 
 Mesh3Dv2 meshlet options:
 
-- `--target-vertices N`: preferred meshlet vertex count. Default is tuned for a
-  good MCU speed/memory compromise.
+- `--compact`: use the compact Mesh3Dv2 mode. The first merge pass is tuned to
+  build large meshlets with low payload duplication, while visibility cones are
+  still computed and exported.
+- `--compact-compression N`: non-adjacent packing strength used with
+  `--compact`, from `0` to `100`. `0` disables the second pass and is the
+  recommended conservative value. If `--compact` is used without this option,
+  the CLI uses `50`. `100` is ultra-compact.
+- `--target-vertices N`: preferred meshlet vertex count for classic visibility
+  mode. Default is tuned for a good MCU speed/memory compromise. This option is
+  not available with `--compact`.
 - `--max-normal-angle DEG`: maximum normal spread accepted during
-  visibility-merge.
+  classic visibility-merge. This option is not available with `--compact`.
 - `--visibility-samples N`: number of TGX visibility directions used by
   visibility-merge.
 - `--visibility-size N`: render size used by the visibility helper.
@@ -196,6 +226,9 @@ Notes:
   to the generated mesh by default.
 - For new projects, start with default Mesh3Dv2 options, then inspect the output
   with `tgx_info_cli.py` or `tgx_info.py` before tuning parameters.
+- For embedded projects, the usual first CLI choice is
+  `--compact --compact-compression 0`. Use the classic default mode when runtime
+  culling efficiency is more important than static memory size.
 
 
 ## tgx_font_cli.py

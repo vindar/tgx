@@ -28,6 +28,63 @@ from tools._internal.modules.mesh_pipeline.profiles import DEFAULT_MAX_NORMAL_AN
 
 COLOR_TYPES = ("RGB565", "RGB24", "RGB32")
 RESIZE_VALUES = ("", "4", "8", "16", "32", "64", "128", "256", "512", "1024", "2048")
+LAYOUT_CHOICES = ("header (.h)", "split (.h + .cpp)")
+LAYOUT_TO_CLI = {
+    "header (.h)": "header",
+    "split (.h + .cpp)": "split",
+    "header": "header",
+    "split": "split",
+}
+
+
+class ToolTip:
+    def __init__(self, widget: tk.Widget, text: str, delay_ms: int = 450):
+        self.widget = widget
+        self.text = text
+        self.delay_ms = delay_ms
+        self.after_id: str | None = None
+        self.window: tk.Toplevel | None = None
+        widget.bind("<Enter>", self._schedule, add="+")
+        widget.bind("<Leave>", self._hide, add="+")
+        widget.bind("<ButtonPress>", self._hide, add="+")
+
+    def _schedule(self, _event=None):
+        self._cancel()
+        self.after_id = self.widget.after(self.delay_ms, self._show)
+
+    def _cancel(self):
+        if self.after_id is not None:
+            self.widget.after_cancel(self.after_id)
+            self.after_id = None
+
+    def _show(self):
+        self.after_id = None
+        if self.window is not None or not self.text:
+            return
+        x = self.widget.winfo_rootx() + 18
+        y = self.widget.winfo_rooty() + self.widget.winfo_height() + 8
+        self.window = tk.Toplevel(self.widget)
+        self.window.wm_overrideredirect(True)
+        self.window.wm_geometry(f"+{x}+{y}")
+        label = tk.Label(
+            self.window,
+            text=self.text,
+            justify="left",
+            background="#ffffe8",
+            foreground="#202020",
+            relief="solid",
+            borderwidth=1,
+            padx=6,
+            pady=4,
+            wraplength=360,
+        )
+        label.pack()
+
+    def _hide(self, _event=None):
+        self._cancel()
+        if self.window is not None:
+            self.window.destroy()
+            self.window = None
 
 
 class TGXMeshConverterApp(tk.Tk):
@@ -40,14 +97,19 @@ class TGXMeshConverterApp(tk.Tk):
         self.output_path = tk.StringVar()
         self.object_name = tk.StringVar()
         self.mesh_format = tk.StringVar(value="Mesh3Dv2")
-        self.layout = tk.StringVar(value="header")
+        self.layout = tk.StringVar(value="header (.h)")
         self.color_type = tk.StringVar(value="RGB565")
         self.normalize = tk.BooleanVar(value=True)
+        self.meshlet_mode = tk.StringVar(value="compact")
+        self.compact_compression = tk.IntVar(value=0)
         self.target_vertices = tk.StringVar(value=str(DEFAULT_TARGET_VERTICES))
         self.max_normal_angle = tk.StringVar(value=str(DEFAULT_MAX_NORMAL_ANGLE_DEG))
-        self.texture_layout = tk.StringVar(value="header")
+        self.texture_layout = tk.StringVar(value="header (.h)")
         self.force_normals = tk.BooleanVar(value=False)
         self.remove_normals = tk.BooleanVar(value=False)
+        self.meshlet_mode_widgets: list[tk.Widget] = []
+        self.classic_meshlet_widgets: list[tk.Widget] = []
+        self.compact_meshlet_widgets: list[tk.Widget] = []
 
         self.texture_rows: dict[str, dict[str, str]] = {}
         self.texture_iid_to_material: dict[str, str] = {}
@@ -64,10 +126,17 @@ class TGXMeshConverterApp(tk.Tk):
         self.mesh_info_vars: dict[str, tk.StringVar] = {}
         self.mesh_info_value_labels: dict[str, ttk.Label] = {}
         self.mesh_size_indicator: tk.Canvas | None = None
+        self._tooltips: list[ToolTip] = []
 
         self._build_ui()
         self.input_path.trace_add("write", lambda *_args: self._update_mesh_actions())
+        self.mesh_format.trace_add("write", lambda *_args: self._update_meshlet_options_state())
+        self.meshlet_mode.trace_add("write", lambda *_args: self._update_meshlet_options_state())
         self._update_mesh_actions()
+        self._update_meshlet_options_state()
+
+    def _tip(self, widget: tk.Widget, text: str) -> None:
+        self._tooltips.append(ToolTip(widget, text))
 
     def _build_ui(self):
         root = ttk.Frame(self, padding=12)
@@ -78,28 +147,55 @@ class TGXMeshConverterApp(tk.Tk):
         root.rowconfigure(8, weight=1)
         root.rowconfigure(12, weight=1)
 
-        ttk.Label(root, text="Input OBJ / TGX mesh").grid(row=0, column=0, sticky="w")
-        ttk.Entry(root, textvariable=self.input_path).grid(row=0, column=1, columnspan=3, sticky="ew", padx=6)
-        ttk.Button(root, text="Browse...", command=self.choose_input).grid(row=0, column=4)
+        input_label = ttk.Label(root, text="Input OBJ / TGX mesh")
+        input_label.grid(row=0, column=0, sticky="w")
+        self._tip(input_label, "OBJ file, legacy Mesh3D header, or Mesh3Dv2 header to convert.")
+        input_entry = ttk.Entry(root, textvariable=self.input_path)
+        input_entry.grid(row=0, column=1, columnspan=3, sticky="ew", padx=6)
+        browse_input = ttk.Button(root, text="Browse...", command=self.choose_input)
+        browse_input.grid(row=0, column=4)
+        self._tip(browse_input, "Choose the source mesh file.")
 
-        ttk.Label(root, text="Output mesh .h").grid(row=1, column=0, sticky="w")
-        ttk.Entry(root, textvariable=self.output_path).grid(row=1, column=1, columnspan=3, sticky="ew", padx=6)
-        ttk.Button(root, text="Browse...", command=self.choose_output).grid(row=1, column=4)
+        output_label = ttk.Label(root, text="Output mesh .h")
+        output_label.grid(row=1, column=0, sticky="w")
+        self._tip(output_label, "Header path for the generated TGX mesh. Split layout also creates a matching .cpp file.")
+        output_entry = ttk.Entry(root, textvariable=self.output_path)
+        output_entry.grid(row=1, column=1, columnspan=3, sticky="ew", padx=6)
+        browse_output = ttk.Button(root, text="Browse...", command=self.choose_output)
+        browse_output.grid(row=1, column=4)
+        self._tip(browse_output, "Choose where to write the generated mesh header.")
 
-        ttk.Label(root, text="Object name").grid(row=2, column=0, sticky="w")
+        object_label = ttk.Label(root, text="Object name")
+        object_label.grid(row=2, column=0, sticky="w")
+        self._tip(object_label, "C++ symbol name for the generated mesh object.")
         ttk.Entry(root, textvariable=self.object_name).grid(row=2, column=1, columnspan=3, sticky="ew", padx=6)
 
         format_box = ttk.Frame(root)
         format_box.grid(row=3, column=0, columnspan=5, sticky="ew")
         format_box.columnconfigure(1, minsize=140)
         format_box.columnconfigure(3, minsize=140)
-        format_box.columnconfigure(4, weight=1)
-        ttk.Label(format_box, text="Format").grid(row=0, column=0, sticky="w")
-        ttk.Combobox(format_box, textvariable=self.mesh_format, values=("Mesh3Dv2", "Mesh3D"), state="readonly", width=12).grid(row=0, column=1, sticky="w", padx=(6, 20))
-        ttk.Label(format_box, text="Color").grid(row=0, column=2, sticky="w")
-        ttk.Combobox(format_box, textvariable=self.color_type, values=COLOR_TYPES, state="readonly", width=12).grid(row=0, column=3, sticky="w", padx=(6, 0))
+        format_box.columnconfigure(5, minsize=140)
+        format_box.columnconfigure(7, minsize=140)
+        format_box.columnconfigure(8, weight=1)
+        format_label = ttk.Label(format_box, text="Format")
+        format_label.grid(row=0, column=0, sticky="w")
+        self._tip(format_label, "Mesh3Dv2 is the recommended compact runtime format. Mesh3D keeps the legacy format.")
+        format_combo = ttk.Combobox(format_box, textvariable=self.mesh_format, values=("Mesh3Dv2", "Mesh3D"), state="readonly", width=12)
+        format_combo.grid(row=0, column=1, sticky="w", padx=(6, 20))
+        color_label = ttk.Label(format_box, text="Color")
+        color_label.grid(row=0, column=2, sticky="w")
+        self._tip(color_label, "Pixel type used by materials and generated textures. RGB565 is recommended on embedded boards.")
+        ttk.Combobox(format_box, textvariable=self.color_type, values=COLOR_TYPES, state="readonly", width=12).grid(row=0, column=3, sticky="w", padx=(6, 20))
+        mesh_files_label = ttk.Label(format_box, text="Mesh files")
+        mesh_files_label.grid(row=0, column=4, sticky="w")
+        self._tip(mesh_files_label, "header creates one .h file. split creates a small .h plus a .cpp with arrays.")
+        ttk.Combobox(format_box, textvariable=self.layout, values=LAYOUT_CHOICES, state="readonly", width=12).grid(row=0, column=5, sticky="w", padx=(6, 20))
+        texture_files_label = ttk.Label(format_box, text="Texture files")
+        texture_files_label.grid(row=0, column=6, sticky="w")
+        self._tip(texture_files_label, "Layout used for generated texture images referenced by the mesh.")
+        ttk.Combobox(format_box, textvariable=self.texture_layout, values=LAYOUT_CHOICES, state="readonly", width=12).grid(row=0, column=7, sticky="w", padx=(6, 0))
         self.lkh_warning = ttk.Label(format_box, text="", foreground="red")
-        self.lkh_warning.grid(row=0, column=4, sticky="e", padx=(16, 0))
+        self.lkh_warning.grid(row=1, column=0, columnspan=9, sticky="w", pady=(4, 0))
         self._update_lkh_warning()
 
         info_box = ttk.LabelFrame(root, text="Mesh info", padding=(8, 4))
@@ -114,28 +210,59 @@ class TGXMeshConverterApp(tk.Tk):
             label.grid(row=row_index, column=2, sticky="e")
             self.mesh_info_value_labels[key] = label
 
-        layout_box = ttk.Frame(root)
-        layout_box.grid(row=4, column=0, columnspan=3, sticky="w")
-        layout_box.columnconfigure(1, minsize=140)
-        ttk.Label(layout_box, text="Mesh files layout").grid(row=0, column=0, sticky="w")
-        ttk.Combobox(layout_box, textvariable=self.layout, values=SUPPORTED_LAYOUTS, state="readonly", width=12).grid(row=0, column=1, sticky="w", padx=(6, 0))
-        ttk.Label(layout_box, text="Texture files layout").grid(row=1, column=0, sticky="w", pady=(4, 0))
-        ttk.Combobox(layout_box, textvariable=self.texture_layout, values=SUPPORTED_LAYOUTS, state="readonly", width=12).grid(row=1, column=1, sticky="w", padx=(6, 0), pady=(4, 0))
-
-        meshlet_box = ttk.Frame(root)
-        meshlet_box.grid(row=5, column=1, columnspan=2, sticky="w", padx=6)
-        ttk.Checkbutton(root, text="Normalize unit bounding box", variable=self.normalize).grid(row=5, column=0, sticky="w")
-        ttk.Label(meshlet_box, text="target vertices").pack(side="left")
-        ttk.Entry(meshlet_box, textvariable=self.target_vertices, width=6).pack(side="left", padx=(4, 14))
-        ttk.Label(meshlet_box, text="max normal angle").pack(side="left")
-        ttk.Entry(meshlet_box, textvariable=self.max_normal_angle, width=6).pack(side="left", padx=(4, 0))
-
         normal_box = ttk.Frame(root)
-        normal_box.grid(row=6, column=0, columnspan=5, sticky="w", pady=(8, 0))
-        ttk.Checkbutton(normal_box, text="Force smooth normal recomputation", variable=self.force_normals, command=self._on_force_normals).pack(side="left")
-        ttk.Checkbutton(normal_box, text="Remove normals", variable=self.remove_normals, command=self._on_remove_normals).pack(side="left", padx=(18, 0))
+        normal_box.grid(row=4, column=0, columnspan=3, sticky="w", pady=(8, 0))
+        force_normals = ttk.Checkbutton(normal_box, text="Force smooth normal recomputation", variable=self.force_normals, command=self._on_force_normals)
+        force_normals.pack(side="left")
+        self._tip(force_normals, "Ignore existing normals and rebuild smooth vertex normals.")
+        remove_normals = ttk.Checkbutton(normal_box, text="Remove normals", variable=self.remove_normals, command=self._on_remove_normals)
+        remove_normals.pack(side="left", padx=(18, 0))
+        self._tip(remove_normals, "Export a mesh without normals. This reduces data and disables Gouraud shading for this mesh.")
 
-        ttk.Label(root, text="OBJ material textures").grid(row=7, column=0, sticky="w", pady=(10, 2))
+        normalize_check = ttk.Checkbutton(root, text="Normalize unit bounding box", variable=self.normalize)
+        normalize_check.grid(row=5, column=0, columnspan=3, sticky="w", pady=(8, 0))
+        self._tip(normalize_check, "Center and scale OBJ input so the mesh fits inside the [-1,1]^3 box.")
+
+        meshlet_box = ttk.LabelFrame(root, text="Mesh3Dv2 meshlet generation", padding=(8, 6))
+        meshlet_box.grid(row=6, column=0, columnspan=5, sticky="ew", pady=(10, 2))
+        meshlet_box.columnconfigure(5, weight=1)
+        compact_radio = ttk.Radiobutton(meshlet_box, text="Compact", variable=self.meshlet_mode, value="compact")
+        compact_radio.grid(row=0, column=0, sticky="w")
+        self._tip(compact_radio, "Default mode. Builds larger meshlets to reduce memory. Often the best choice on embedded boards.")
+        compact_label = ttk.Label(meshlet_box, text="Non-adjacent packing")
+        compact_label.grid(row=0, column=1, sticky="w", padx=(16, 4))
+        self._tip(compact_label, "Extra pass that may merge distant meshlets. In general, 0 is the best choice.")
+        compact_scale = ttk.Scale(meshlet_box, variable=self.compact_compression, from_=0, to=100, orient="horizontal", length=180)
+        compact_scale.grid(row=0, column=2, sticky="w")
+        self._tip(compact_scale, "0 is usually best. Increase only when smaller flash size matters more than culling quality.")
+        compact_value = ttk.Label(meshlet_box, textvariable=self.compact_compression, width=4, anchor="e")
+        compact_value.grid(row=0, column=3, sticky="w", padx=(4, 0))
+        self.compact_meshlet_widgets.extend([compact_label, compact_scale, compact_value])
+
+        classic_radio = ttk.Radiobutton(meshlet_box, text="Visibility culling", variable=self.meshlet_mode, value="visibility")
+        classic_radio.grid(row=1, column=0, sticky="w", pady=(6, 0))
+        self._tip(classic_radio, "Classic visibility-optimized mode. Usually creates more meshlets but better culling.")
+        target_label = ttk.Label(meshlet_box, text="target vertices")
+        target_label.grid(row=1, column=1, sticky="w", padx=(16, 4), pady=(6, 0))
+        self._tip(target_label, "Preferred meshlet vertex count in visibility culling mode.")
+        target_entry = ttk.Entry(meshlet_box, textvariable=self.target_vertices, width=6)
+        target_entry.grid(row=1, column=2, sticky="w", pady=(6, 0))
+        angle_label = ttk.Label(meshlet_box, text="max normal angle")
+        angle_label.grid(row=1, column=3, sticky="w", padx=(18, 4), pady=(6, 0))
+        self._tip(angle_label, "Maximum normal spread accepted while merging meshlets in visibility culling mode.")
+        angle_entry = ttk.Entry(meshlet_box, textvariable=self.max_normal_angle, width=6)
+        angle_entry.grid(row=1, column=4, sticky="w", pady=(6, 0))
+        self.classic_meshlet_widgets.extend([target_label, target_entry, angle_label, angle_entry])
+        self.meshlet_mode_widgets.extend([compact_radio, classic_radio])
+
+        texture_header = ttk.Frame(root)
+        texture_header.grid(row=7, column=0, columnspan=5, sticky="ew", pady=(10, 2))
+        texture_header.columnconfigure(0, weight=1)
+        ttk.Label(texture_header, text="OBJ material textures").grid(row=0, column=0, sticky="w")
+        self.reload_button = ttk.Button(texture_header, text="Reload textures", command=self.reload_textures)
+        self.reload_button.grid(row=0, column=1, sticky="e")
+        self._tip(self.reload_button, "Rescan materials and texture references from the selected input mesh.")
+
         columns = ("material", "size", "filter", "refs", "role", "requested", "selected")
         self.texture_table = ttk.Treeview(root, columns=columns, show=("tree", "headings"), height=8)
         self.texture_table.heading("#0", text="")
@@ -166,19 +293,33 @@ class TGXMeshConverterApp(tk.Tk):
         ttk.Combobox(edit_box, textvariable=self.material_resize_height, values=RESIZE_VALUES, state="readonly", width=5).grid(row=0, column=6)
         ttk.Label(edit_box, text="Filter").grid(row=0, column=7, padx=(12, 4))
         ttk.Combobox(edit_box, textvariable=self.material_resample, values=SUPPORTED_RESAMPLING, state="readonly", width=10).grid(row=0, column=8)
-        ttk.Button(edit_box, text="Apply", command=self.apply_material_texture_checked).grid(row=0, column=9, padx=(8, 0))
-        ttk.Button(edit_box, text="No texture", command=self.clear_material_texture).grid(row=0, column=10, padx=(8, 0))
+        apply_texture = ttk.Button(edit_box, text="Apply", command=self.apply_material_texture_checked)
+        apply_texture.grid(row=0, column=9, padx=(8, 0))
+        self._tip(apply_texture, "Apply the selected texture, resize and filter settings to this material.")
+        no_texture = ttk.Button(edit_box, text="No texture", command=self.clear_material_texture)
+        no_texture.grid(row=0, column=10, padx=(8, 0))
+        self._tip(no_texture, "Remove the texture from this material in the generated mesh.")
         self.texture_preview = ttk.Label(edit_box, text="No texture selected", anchor="center", relief="sunken", compound="top")
         self.texture_preview.grid(row=1, column=1, columnspan=10, sticky="ew", padx=6, pady=(6, 0))
 
         buttons = ttk.Frame(root)
-        buttons.grid(row=10, column=0, columnspan=5, sticky="e")
-        self.reload_button = ttk.Button(buttons, text="Reload textures", command=self.reload_textures)
-        self.reload_button.pack(side="left", padx=(0, 8))
-        self.preview_button = ttk.Button(buttons, text="Preview mesh", command=self.preview_mesh)
+        buttons.grid(row=10, column=0, columnspan=5, sticky="ew")
+        action_buttons = ttk.Frame(buttons)
+        action_buttons.pack(anchor="center")
+        self.preview_button = ttk.Button(action_buttons, text="Preview mesh", command=self.preview_mesh)
         self.preview_button.pack(side="left", padx=(0, 8))
-        self.convert_button = ttk.Button(buttons, text="Convert", command=self.convert)
+        self._tip(self.preview_button, "Open a PyVista preview of the current mesh and selected textures.")
+        self.convert_button = tk.Button(
+            action_buttons,
+            text="Convert",
+            command=self.convert,
+            padx=18,
+            pady=2,
+            relief="raised",
+            borderwidth=1,
+        )
         self.convert_button.pack(side="left")
+        self._tip(self.convert_button, "Run the converter and write the generated TGX files.")
 
         ttk.Label(root, text="Log").grid(row=11, column=0, sticky="w", pady=(8, 0))
         self.log = tk.Text(root, height=12, wrap="word")
@@ -192,10 +333,20 @@ class TGXMeshConverterApp(tk.Tk):
         if self.remove_normals.get():
             self.force_normals.set(False)
 
+    def _update_meshlet_options_state(self):
+        is_mesh3dv2 = self.mesh_format.get() == "Mesh3Dv2"
+        use_compact = self.meshlet_mode.get() == "compact"
+        for widget in self.meshlet_mode_widgets:
+            widget.configure(state="normal" if is_mesh3dv2 else "disabled")
+        for widget in self.compact_meshlet_widgets:
+            widget.configure(state="normal" if is_mesh3dv2 and use_compact else "disabled")
+        for widget in self.classic_meshlet_widgets:
+            widget.configure(state="normal" if is_mesh3dv2 and not use_compact else "disabled")
+
     def _update_lkh_warning(self):
         status = check_environment(tool="mesh", require_config=True)
         if status.lkh_missing:
-            self.lkh_warning.configure(text="LKH not installed; mesh quality may be lower.")
+            self.lkh_warning.configure(text="LKH not installed: strip quality may be lower.")
         else:
             self.lkh_warning.configure(text="")
 
@@ -210,7 +361,27 @@ class TGXMeshConverterApp(tk.Tk):
             if button is not None:
                 button.configure(state=mesh_state)
         if getattr(self, "convert_button", None) is not None:
-            self.convert_button.configure(state=convert_state)
+            self._set_convert_button_state(convert_state)
+
+    def _set_convert_button_state(self, state: str):
+        if state == "normal":
+            self.convert_button.configure(
+                state="normal",
+                background="#23823a",
+                foreground="white",
+                activebackground="#1b6d30",
+                activeforeground="white",
+                disabledforeground="#6b6b6b",
+            )
+        else:
+            self.convert_button.configure(
+                state="disabled",
+                background="#c9d2c9",
+                foreground="#6b6b6b",
+                activebackground="#c9d2c9",
+                activeforeground="#6b6b6b",
+                disabledforeground="#6b6b6b",
+            )
 
     def _texture_size_text(self, path_text: str, symbol: str = "") -> str:
         if not path_text:
@@ -693,6 +864,12 @@ class TGXMeshConverterApp(tk.Tk):
             raise ValueError("Input mesh does not exist.")
         if not output_path.name:
             raise ValueError("Choose an output header.")
+        mesh_layout = LAYOUT_TO_CLI.get(self.layout.get())
+        texture_layout = LAYOUT_TO_CLI.get(self.texture_layout.get())
+        if mesh_layout not in SUPPORTED_LAYOUTS:
+            raise ValueError("Choose a valid mesh file layout.")
+        if texture_layout not in SUPPORTED_LAYOUTS:
+            raise ValueError("Choose a valid texture file layout.")
 
         argv = [
             sys.executable,
@@ -704,13 +881,13 @@ class TGXMeshConverterApp(tk.Tk):
             "--format",
             self.mesh_format.get(),
             "--layout",
-            self.layout.get(),
+            mesh_layout,
             "--color-type",
             self.color_type.get(),
             "--texture-format",
             self.color_type.get(),
             "--texture-layout",
-            self.texture_layout.get(),
+            texture_layout,
         ]
         if self.object_name.get().strip():
             argv += ["--name", self.object_name.get().strip()]
@@ -721,8 +898,20 @@ class TGXMeshConverterApp(tk.Tk):
         if self.remove_normals.get():
             argv.append("--remove-normals")
         if self.mesh_format.get() == "Mesh3Dv2":
-            argv += ["--target-vertices", self.target_vertices.get().strip()]
-            argv += ["--max-normal-angle", self.max_normal_angle.get().strip()]
+            if self.meshlet_mode.get() == "compact":
+                compression = int(round(float(self.compact_compression.get())))
+                if compression < 0 or compression > 100:
+                    raise ValueError("Non-adjacent packing must be between 0 and 100.")
+                argv += ["--compact", "--compact-compression", str(compression)]
+            else:
+                target_vertices = self.target_vertices.get().strip()
+                max_normal_angle = self.max_normal_angle.get().strip()
+                if not target_vertices:
+                    raise ValueError("Target vertices is required in visibility culling mode.")
+                if not max_normal_angle:
+                    raise ValueError("Max normal angle is required in visibility culling mode.")
+                argv += ["--target-vertices", target_vertices]
+                argv += ["--max-normal-angle", max_normal_angle]
         for material, row in sorted(self.texture_rows.items()):
             selected = row["selected"].strip()
             if selected:
@@ -751,7 +940,7 @@ class TGXMeshConverterApp(tk.Tk):
             )
         except Exception as exc:
             self.after(0, self._append_log, f"error: {exc}")
-            self.after(0, self.convert_button.configure, {"state": "normal"})
+            self.after(0, self._finish_conversion)
             return
         assert proc.stdout is not None
         for line in proc.stdout:
