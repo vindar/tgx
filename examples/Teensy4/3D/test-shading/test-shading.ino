@@ -126,7 +126,7 @@ void drawInfo(tgx::Image<tgx::RGB565>& im, int t, const char* mesh_name, int nb_
     im.drawText((mesh_name != nullptr ? mesh_name : "[unnamed mesh]"), { 3,12 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     sprintf(buf, "%d triangles", nb_triangles);
     im.drawText(buf, { 3,SLY - 21 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
-    sprintf(buf, "%s", (t == 0) ? "Wireframe" : ((t == 1) ? "Flat shading" : "Gouraud shading"));
+    sprintf(buf, "%s", (t == 0) ? "Wireframe AA" : ((t == 1) ? "Flat shading" : "Gouraud shading"));
     im.drawText(buf, { 3, SLY - 5 }, font_tgx_OpenSans_Bold_10, RGB565_Red);
     }
 
@@ -197,7 +197,7 @@ void drawModel(const Mesh3Dv2<RGB565>* mesh, int nb_triangles, float scale, cons
             }
 
         if (t == 0)
-            renderer.drawWireFrameMesh(cached_mesh);
+            renderer.drawWireFrameMeshAA(cached_mesh);
         else if (t == 1)
             {
             renderer.setShaders(SHADER_FLAT);
@@ -226,13 +226,13 @@ void drawModel(const Mesh3Dv2<RGB565>* mesh, int nb_triangles, float scale, cons
 void loop()
 {
     renderer.setMaterial(RGBf(0.15f, 0.7f, 0.39f), 0.2f, 0.8f, 0.5f, 8); // teapot
-    drawModel(&teapot, 2256, 15, "teapot_wireframe", "teapot_flat", "teapot_gouraud", 30);
+    drawModel(&teapot, 2256, 15, "teapot_wireframe_aa", "teapot_flat", "teapot_gouraud", 30);
 
     renderer.setMaterial(RGBf(1.0f, 1.0f, 1.0f), 0.15f, 0.7f, 0.8f, 48); // bunny
-    drawModel(&bunny, 4968, 12, "bunny_wireframe", "bunny_flat", "bunny_gouraud");
+    drawModel(&bunny, 4968, 12, "bunny_wireframe_aa", "bunny_flat", "bunny_gouraud");
 
     renderer.setMaterial(RGBf(166 / 256.0f, 130 / 256.0f, 110.0f / 256.0f), 0.15f, 0.7f, 0.4f, 16); // skull
-    drawModel(&skull_1, 9535, 12, "skull_wireframe", "skull_flat", "skull_gouraud");
+    drawModel(&skull_1, 9535, 12, "skull_wireframe_aa", "skull_flat", "skull_gouraud");
 
     // let's have some fun with lighting
     renderer.setLightAmbiant({ 0, 0, 1.0f });  // blue
@@ -240,7 +240,7 @@ void loop()
     renderer.setLightSpecular({ 1.0f, 1.0f, 1.0f }); // white
 
     renderer.setMaterial(RGBf(1.0f, 1.0f, 1.0f), 0.2f, 0.8f, 0.8f, 32); // suzanne
-    drawModel(&suzanne, 15744, 13, "suzanne_wireframe", "suzanne_flat", "suzanne_gouraud");
+    drawModel(&suzanne, 15744, 13, "suzanne_wireframe_aa", "suzanne_flat", "suzanne_gouraud");
 
     // back to normal lighting
     renderer.setLightAmbiant({ 1.0f, 1.0f, 1.0f }); // white
@@ -248,7 +248,7 @@ void loop()
     renderer.setLightSpecular({ 1.0f, 1.0f, 1.0f }); // white
 
     renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // dragon
-    drawModel(&dragon, 23000, 15, "dragon_wireframe", "dragon_flat", "dragon_gouraud");
+    drawModel(&dragon, 23000, 15, "dragon_wireframe_aa", "dragon_flat", "dragon_gouraud");
 
     // choose new random light orientation.
     const float angle = M_PI * random(0, 360) / 180.0f;

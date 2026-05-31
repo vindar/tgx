@@ -730,10 +730,30 @@ The projection and viewport remain the same for every tile. Only the image offse
 @subsection sec_3D_wireframe Wireframe and debug drawing
 
 The renderer also contains wireframe, dot and normal-visualization methods. They are useful for inspecting geometry
-and debugging transforms. They are not the main optimized path of the 3D engine, so high-quality wireframe drawing can
-be much slower than solid rendering.
+and debugging transforms. Wireframe methods ignore lighting and use the current material color.
 
-For performance-sensitive rendering, prefer the solid mesh path first:
+There are three practical wireframe paths:
+
+| Call style | Rendering path | Notes |
+|------------|----------------|-------|
+| `drawWireFrame...(object)` | fast aliased wireframe | No thickness, no blending and no anti-aliasing. This is the fastest debug path. |
+| `drawWireFrame...AA(object)` | antialiased wireframe | One-pixel antialiased line drawing with a lightweight 3D-specific rasterizer and the current material color. |
+| `drawWireFrame...(object, thickness, color, opacity)` | adjustable thickness + AA wireframe | Uses the general adjustable thickness + AA line path. This is very slow and is mostly useful when visible line width or opacity matters more than speed. |
+
+@note In most sketches, use \ref tgx::Renderer3D::drawMesh "drawMesh()" for the normal solid render path. When a clean
+wireframe view is needed, prefer `drawWireFrame...AA()`. Use the adjustable-thickness overloads only for occasional
+debug views or special effects, because they are much slower.
+
+For performance-sensitive rendering, prefer solid \ref tgx::Renderer3D::drawMesh "drawMesh()" first, or use the fast
+wireframe path only for diagnostics.
+
+~~~{.cpp}
+renderer.drawWireFrameMesh(&mesh);        // fast, aliased
+renderer.drawWireFrameMeshAA(&mesh);      // one-pixel antialiased, optimized
+renderer.drawWireFrameMesh(&mesh, 1.6f, RGB565_Red, 0.9f); // adjustable thickness + AA, very slow
+~~~
+
+The solid mesh path is still the main optimized rendering path:
 
 ~~~{.cpp}
 renderer.drawMesh(&mesh);
@@ -754,7 +774,8 @@ For MCU targets, these choices often matter most:
 - keep textures in faster memory when possible;
 - split very large textured faces if texture cache locality is poor;
 - clear the image and Z-buffer once per frame, not before every object;
-- avoid drawing debug wireframe on top of every frame unless it is needed.
+- avoid drawing debug wireframe on top of every frame unless it is needed; if antialiasing is useful, prefer the
+  explicit `drawWireFrame...AA()` methods over the adjustable-thickness overloads.
 
 
 @section sec_3D_complete_example Complete embedded example

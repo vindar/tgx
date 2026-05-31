@@ -511,7 +511,7 @@ TGX_NOINLINE FLASHMEM void movie()
         setModelPosScaleRot(wsphere_pos, { wsphere_size, wsphere_size, wsphere_size }, 360 * a, { 0,1,0 });
         renderer.setMaterialColor(tgx::RGBf(1.0f, 0.0f, 0.0f));
         renderer.setCulling(0);
-        renderer.drawWireFrameSphere(25, 25);
+        renderer.drawWireFrameSphereAA(25, 25);
 
         redraw();
         }
@@ -542,7 +542,7 @@ TGX_NOINLINE FLASHMEM void movie()
             setModelPosScaleRot(sphere_pos, { sphere_r, sphere_r, sphere_r });
             renderer.setMaterialColor(tgx::RGBf(1.0f - a, 0.0f, a));
             renderer.setCulling(0);
-            renderer.drawWireFrameSphere(25, 25);
+            renderer.drawWireFrameSphereAA(25, 25);
             }
 
         renderer.setCulling(1);
@@ -560,7 +560,7 @@ TGX_NOINLINE FLASHMEM void movie()
             setModelPosScaleRot(sphere_pos, { sphere_r, sphere_r, sphere_r });
             renderer.setMaterialColor(tgx::RGBf(1.0f - a, 0.0f, a));
             renderer.setCulling(1);
-            renderer.drawWireFrameSphere(25, 25);
+            renderer.drawWireFrameSphereAA(25, 25);
             }
 
 
@@ -745,7 +745,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 360 * a, { 0,1,0 });
         renderer.setMaterialColor(tgx::RGBf(1.0f, 0.0f, 0.0f));
-        renderer.drawWireFrameMesh(falcon_mesh);
+        renderer.drawWireFrameMeshAA(falcon_mesh);
 
         redraw();
         }
@@ -782,7 +782,7 @@ TGX_NOINLINE FLASHMEM void movie()
             {
             setModelPosScaleRot(falcon_pos, { falcon_max_size, falcon_max_size, falcon_max_size }, 0, { 0,1,0 });
             renderer.setMaterialColor(tgx::RGBf(1-a, 0, 0));
-            renderer.drawWireFrameMesh(falcon_mesh);
+            renderer.drawWireFrameMeshAA(falcon_mesh);
             }
 
         redraw();

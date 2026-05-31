@@ -46,7 +46,7 @@ Here are the main features of the library:
 
 - Heavily optimized pixel-perfect triangle rasterizer with selectable sub-pixel precision (2, 4, 6, or 8 bits).
 - Depth buffer testing (16-bit or 32-bit precision).
-- Two wireframe drawing modes: *fast* (simple lines, lower quality) and *slow* (higher quality, sub-pixel precision, anti-aliasing, customizable thickness).
+- Three wireframe drawing paths: *fast* aliased lines, optimized one-pixel antialiased lines, and a much slower adjustable thickness + AA path.
 - Flat and Gouraud shading.
 - Phong lighting model with separate ambient, diffuse, and specular components (currently supports one directional light source).
 - Per-object material properties.

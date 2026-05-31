@@ -1,5 +1,6 @@
 var _shader_params_8h =
 [
+    [ "TGX_SHADER_CAN_USE_FLAT_OR_UNLIT", "_shader_params_8h.html#aa0e7775f50060815f177a13abcc0ee73", null ],
     [ "Shader", "_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07", [
       [ "SHADER_PERSPECTIVE", "_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07af6c0bae68ad39bd8df84f29f7f9e4cfd", null ],
       [ "SHADER_ORTHO", "_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a315d3e7a578184dabd8c62479cf746ef", null ],

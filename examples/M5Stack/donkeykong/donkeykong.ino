@@ -277,7 +277,7 @@ void loop()
             renderer.drawMesh(MESH, false);
             break;
         case 1:
-            renderer.drawWireFrameMesh(MESH);
+            renderer.drawWireFrameMeshAA(MESH);
             break;
         case 2:
             renderer.setShaders(SHADER_FLAT);

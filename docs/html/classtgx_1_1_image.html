@@ -436,7 +436,7 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: triangles (SPECIAL METHODS).</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >ADVANCED METHODS USING THE 3D RASTERIZER BACKEND.</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
-<li>These method use sub-pixel precision (but not anti-aliasing).</li>
+<li>These methods use sub-pixel precision (but not anti-aliasing).</li>
 <li>Sprite images and gradient colors can have different types from the destination (ie this) image. </li>
 </ol>
 </dd></dl>
@@ -492,7 +492,7 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: quads (SPECIAL METHODS).</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >ADVANCED METHODS USING THE 3D RASTERIZER BACKEND.</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
-<li>These method use sub-pixel precision (but not anti-aliasing).</li>
+<li>These methods use sub-pixel precision (but not anti-aliasing).</li>
 <li>Sprite images and gradient colors can have different types from the destination (ie this) image. </li>
 </ol>
 </dd></dl>
@@ -552,28 +552,28 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >FAST/REGULAR METHODS </p>
 </div></td></tr>
 <tr class="memitem:ad0e2f2ba12a7a1c9bf53ddb913d8ad69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ad0e2f2ba12a7a1c9bf53ddb913d8ad69">drawPolygon</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
-<tr class="memdesc:ad0e2f2ba12a7a1c9bf53ddb913d8ad69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed polygon with vertices [P0,P2,,, PN].  <a href="classtgx_1_1_image.html#ad0e2f2ba12a7a1c9bf53ddb913d8ad69">More...</a><br /></td></tr>
+<tr class="memdesc:ad0e2f2ba12a7a1c9bf53ddb913d8ad69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed polygon with vertices [P0, P1, ..., PN].  <a href="classtgx_1_1_image.html#ad0e2f2ba12a7a1c9bf53ddb913d8ad69">More...</a><br /></td></tr>
 <tr class="separator:ad0e2f2ba12a7a1c9bf53ddb913d8ad69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a743f07b3927846d55acb2f1fd94d2ed7"><td class="memTemplParams" colspan="2">template&lt;typename FUNCTOR_NEXT &gt; </td></tr>
 <tr class="memitem:a743f07b3927846d55acb2f1fd94d2ed7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a743f07b3927846d55acb2f1fd94d2ed7">drawPolygon</a> (FUNCTOR_NEXT next_point, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
-<tr class="memdesc:a743f07b3927846d55acb2f1fd94d2ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed polygon with vertices [P0,P2,,, PN].  <a href="classtgx_1_1_image.html#a743f07b3927846d55acb2f1fd94d2ed7">More...</a><br /></td></tr>
+<tr class="memdesc:a743f07b3927846d55acb2f1fd94d2ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed polygon with vertices [P0, P1, ..., PN].  <a href="classtgx_1_1_image.html#a743f07b3927846d55acb2f1fd94d2ed7">More...</a><br /></td></tr>
 <tr class="separator:a743f07b3927846d55acb2f1fd94d2ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7387e3a24d3df0de9b19c2097f557f54"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a7387e3a24d3df0de9b19c2097f557f54">fillPolygon</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a37eab41759a1a4093ac2fbde648b4c0f">iVec2</a> tabPoints[], color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
-<tr class="memdesc:a7387e3a24d3df0de9b19c2097f557f54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled polygon with vertices [P0,P2,,, PN].  <a href="classtgx_1_1_image.html#a7387e3a24d3df0de9b19c2097f557f54">More...</a><br /></td></tr>
+<tr class="memdesc:a7387e3a24d3df0de9b19c2097f557f54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled polygon with vertices [P0, P1, ..., PN].  <a href="classtgx_1_1_image.html#a7387e3a24d3df0de9b19c2097f557f54">More...</a><br /></td></tr>
 <tr class="separator:a7387e3a24d3df0de9b19c2097f557f54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab641b0c1c7c8bdd483ed763749e699db"><td class="memTemplParams" colspan="2">template&lt;typename FUNCTOR_NEXT &gt; </td></tr>
 <tr class="memitem:ab641b0c1c7c8bdd483ed763749e699db"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#ab641b0c1c7c8bdd483ed763749e699db">fillPolygon</a> (FUNCTOR_NEXT next_point, color_t color, float opacity=<a class="el" href="tgx__config_8h.html#a81eb65bd1399d12fda0fc66baa213901">TGX_DEFAULT_NO_BLENDING</a>)</td></tr>
-<tr class="memdesc:ab641b0c1c7c8bdd483ed763749e699db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled polygon with vertices [P0,P2,,, PN].  <a href="classtgx_1_1_image.html#ab641b0c1c7c8bdd483ed763749e699db">More...</a><br /></td></tr>
+<tr class="memdesc:ab641b0c1c7c8bdd483ed763749e699db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled polygon with vertices [P0, P1, ..., PN].  <a href="classtgx_1_1_image.html#ab641b0c1c7c8bdd483ed763749e699db">More...</a><br /></td></tr>
 <tr class="separator:ab641b0c1c7c8bdd483ed763749e699db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Drawing primitives: polygons (AA).</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p >HIGH QUALITY DRAWING </p>
 </div></td></tr>
 <tr class="memitem:a053ba2a60d3e700a4e4c2be50c414528"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a053ba2a60d3e700a4e4c2be50c414528">drawPolygonAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], color_t color, float opacity=1.0f)</td></tr>
-<tr class="memdesc:a053ba2a60d3e700a4e4c2be50c414528"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed polygon with vertices [P0,P2,,, PN] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#a053ba2a60d3e700a4e4c2be50c414528">More...</a><br /></td></tr>
+<tr class="memdesc:a053ba2a60d3e700a4e4c2be50c414528"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed polygon with vertices [P0, P1, ..., PN] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#a053ba2a60d3e700a4e4c2be50c414528">More...</a><br /></td></tr>
 <tr class="separator:a053ba2a60d3e700a4e4c2be50c414528"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a859ec26b564cfc3356959df322873b70"><td class="memTemplParams" colspan="2">template&lt;typename FUNCTOR_NEXT &gt; </td></tr>
 <tr class="memitem:a859ec26b564cfc3356959df322873b70"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#a859ec26b564cfc3356959df322873b70">drawPolygonAA</a> (FUNCTOR_NEXT next_point, color_t color, float opacity=1.0f)</td></tr>
-<tr class="memdesc:a859ec26b564cfc3356959df322873b70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed polygon with vertices [P0,P2,,, PN] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#a859ec26b564cfc3356959df322873b70">More...</a><br /></td></tr>
+<tr class="memdesc:a859ec26b564cfc3356959df322873b70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a closed polygon with vertices [P0, P1, ..., PN] (<b>High quality</b>).  <a href="classtgx_1_1_image.html#a859ec26b564cfc3356959df322873b70">More...</a><br /></td></tr>
 <tr class="separator:a859ec26b564cfc3356959df322873b70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf8f5225b814e4778e4ae5e2544f3071"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtgx_1_1_image.html#aaf8f5225b814e4778e4ae5e2544f3071">drawThickPolygonAA</a> (int nbpoints, const <a class="el" href="_vec2_8h.html#a21109f9665da891178228a1fb80b90b6">fVec2</a> tabPoints[], float thickness, color_t color, float opacity=1.0f)</td></tr>
 <tr class="memdesc:aaf8f5225b814e4778e4ae5e2544f3071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a polygon with thick lines (<b>High quality</b>).  <a href="classtgx_1_1_image.html#aaf8f5225b814e4778e4ae5e2544f3071">More...</a><br /></td></tr>
@@ -805,16 +805,16 @@ class tgx::Image&lt; color_t &gt;</div><p ><a class="el" href="classtgx_1_1_imag
 <li><p class="startli">The library defines many drawing primitives with naming convention: </p><div class="fragment"><div class="line">[draw/<a class="code hl_function" href="classtgx_1_1_image.html#a2a2f1a3381d697f8863277f36f60efdb">fill</a>][Thick/-]MethodName[AA/-]</div>
 <div class="ttc" id="aclasstgx_1_1_image_html_a2a2f1a3381d697f8863277f36f60efdb"><div class="ttname"><a href="classtgx_1_1_image.html#a2a2f1a3381d697f8863277f36f60efdb">tgx::Image::fill</a></div><div class="ttdeci">int fill(iVec2 start_pos, color_t new_color)</div><div class="ttdoc">'Flood fill' a 4-connected region of the image.</div></div>
 </div><!-- fragment --><p> where</p><ul>
-<li><code>[draw]</code> means that the method draw a path whereas [fill] means that the method create a solid shape.</li>
+<li><code>[draw]</code> means that the method draws a path whereas [fill] means that the method creates a solid shape.</li>
 <li><code>[thick]</code> means that the outline of the shape has selectable thickness (not just a single pixel wide). The thickness is usually a float and should be at least 1.</li>
-<li><code>[AA]</code> means that the method is <em>high quality</em>: it is drawn with anti-aliasing and sub-pixel precision. Method with this suffix take fVec2 parameters for coordinates inputs whereas regular 'low quality' methods (without the AA suffix) take iVec2 parameters.</li>
+<li><code>[AA]</code> means that the method is <em>high quality</em>: it is drawn with anti-aliasing and sub-pixel precision. Methods with this suffix take fVec2 parameters for coordinate inputs whereas regular 'low quality' methods (without the AA suffix) take iVec2 parameters.</li>
 </ul>
 <p class="startli">For example:</p><ul>
-<li><code><a class="el" href="classtgx_1_1_image.html#a9420ed2b65cadd55373b0a7af164e232" title="Draw a circle with a thick border (high quality).">drawThickCircleAA()</a></code> : draw a high quality circle with user defined outline thickness, antialiasing and sub-pixel precision.</li>
-<li><code><a class="el" href="classtgx_1_1_image.html#adc3f4da7c4b2062077d0c6e88345751c" title="Draw a filled triangle with different colors for the outline and the interior.">fillTriangle()</a></code> : draw a low quality filled triangle (no antialiasing or subpixel precision).</li>
+<li><code><a class="el" href="classtgx_1_1_image.html#a9420ed2b65cadd55373b0a7af164e232" title="Draw a circle with a thick border (high quality).">drawThickCircleAA()</a></code> : draw a high-quality circle with user-defined outline thickness, anti-aliasing and sub-pixel precision.</li>
+<li><code><a class="el" href="classtgx_1_1_image.html#adc3f4da7c4b2062077d0c6e88345751c" title="Draw a filled triangle with different colors for the outline and the interior.">fillTriangle()</a></code> : draw a low-quality filled triangle (no anti-aliasing or sub-pixel precision).</li>
 </ul>
 </li>
-<li>All drawing methods that take a <code>color</code> parameter also take an <code>opacity</code> float parameter which allows to add transparency effects even when color type used do not have an alpha channel:<ul>
+<li>All drawing methods that take a <code>color</code> parameter also take an <code>opacity</code> float parameter which allows to add transparency effects even when the color type used does not have an alpha channel:<ul>
 <li>Passing <code>TGX_DEFAULT_NO_BLENDING</code> or a negative value for the opacity will disable blending so the method will simply overwrite the destination pixels. For antialiased or filtered methods, fully covered pixels are overwritten but partially covered edge/filter pixels may still be alpha-composited to preserve smooth edges.</li>
 <li>Passing <code>0.0f &lt; opacity &lt;= 1.0f</code> will enable blending and the alpha channel of the colors will be used if present.</li>
 </ul>
@@ -3977,7 +3977,7 @@ template&lt;typename color_t &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">B</td><td>box that delimits the rectangle to draw. </td></tr>
-    <tr><td class="paramname">thickness</td><td>thickness of the border (going 'inside the rectangle) </td></tr>
+    <tr><td class="paramname">thickness</td><td>thickness of the border (going 'inside' the rectangle) </td></tr>
     <tr><td class="paramname">color_interior</td><td>color for the rectangle interior. </td></tr>
     <tr><td class="paramname">color_border</td><td>color for the rectangle border. </td></tr>
     <tr><td class="paramname">opacity</td><td>(Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or negative to disable blending. </td></tr>
@@ -6956,7 +6956,7 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a closed polygon with vertices [P0,P2,,, PN]. </p>
+<p>Draw a closed polygon with vertices [P0, P1, ..., PN]. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">nbpoints</td><td>number of points in tabPoints. </td></tr>
@@ -7005,7 +7005,7 @@ template&lt;typename FUNCTOR_NEXT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a closed polygon with vertices [P0,P2,,, PN]. </p>
+<p>Draw a closed polygon with vertices [P0, P1, ..., PN]. </p>
 <p >Points are queried in order P0, P1,... using a functor callback which must have a signature compatible with: </p><div class="fragment"><div class="line"><span class="keywordtype">bool</span> next_point(<a class="code hl_struct" href="structtgx_1_1_vec2.html">iVec2</a> &amp; P)</div>
 </div><!-- fragment --><p> The callback must store the next point in the reference <code>P</code> and return:</p><ul>
 <li><code>true</code>: if there are additional points to plot after this one.</li>
@@ -7062,7 +7062,7 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a filled polygon with vertices [P0,P2,,, PN]. </p>
+<p>Draw a filled polygon with vertices [P0, P1, ..., PN]. </p>
 <dl class="section warning"><dt>Warning</dt><dd>The polygon must be <b>convex</b> (or at least star-shaped from its center of mass).</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -7112,7 +7112,7 @@ template&lt;typename FUNCTOR_NEXT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a filled polygon with vertices [P0,P2,,, PN]. </p>
+<p>Draw a filled polygon with vertices [P0, P1, ..., PN]. </p>
 <p >Points are queried in order P0, P1,... using a functor callback which must have a signature compatible with: </p><div class="fragment"><div class="line"><span class="keywordtype">bool</span> next_point(<a class="code hl_struct" href="structtgx_1_1_vec2.html">iVec2</a> &amp; P)</div>
 </div><!-- fragment --><p> The callback must store the next point in the reference <code>P</code> and return:</p><ul>
 <li><code>true</code>: if there are additional points to plot after this one.</li>
@@ -7172,7 +7172,7 @@ template&lt;typename color_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a closed polygon with vertices [P0,P2,,, PN] (<b>High quality</b>). </p>
+<p>Draw a closed polygon with vertices [P0, P1, ..., PN] (<b>High quality</b>). </p>
 <dl class="section note"><dt>Note</dt><dd>High quality drawing with anti-aliasing and sub-pixel precision.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -7222,7 +7222,7 @@ template&lt;typename FUNCTOR_NEXT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Draw a closed polygon with vertices [P0,P2,,, PN] (<b>High quality</b>). </p>
+<p>Draw a closed polygon with vertices [P0, P1, ..., PN] (<b>High quality</b>). </p>
 <dl class="section note"><dt>Note</dt><dd>High quality drawing with anti-aliasing and sub-pixel precision.</dd></dl>
 <p>Points are queried in order P0, P1,... using a functor callback which must have a signature compatible with: </p><div class="fragment"><div class="line"><span class="keywordtype">bool</span> next_point(<a class="code hl_class" href="structtgx_1_1_vec2.html">fVec2</a> &amp; P)</div>
 </div><!-- fragment --><p> The callback must store the next point in the reference <code>P</code> and return:</p><ul>
@@ -10526,7 +10526,7 @@ template&lt;typename GIF_T &gt; </div>
 <p>Decode a (possibly animated) GIF image into this image using the AnimatedGIF library: <a href="https://github.com/bitbank2/AnimatedGIF/">https://github.com/bitbank2/AnimatedGIF/</a>. </p>
 <p >This method is a wrapper around the <code>JPEGDEC.playFrame()</code> method from the AnimatedGIF library and takes the same arguments and return values.</p>
 <ul>
-<li>In the case of animated GIF. Each call to the method draws the nexct frame. The method returns 1 when there is still another frame to draw, 0 when finished. See the <code>gif.playFrame()</code> method from the AnimatedGIF library for additional details.</li>
+<li>In the case of animated GIF. Each call to the method draws the next frame. The method returns 1 when there is still another frame to draw, 0 when finished. See the <code>gif.playFrame()</code> method from the AnimatedGIF library for additional details.</li>
 <li>The image is cropped if it does not fit completely into this image.</li>
 </ul>
 <dl class="tparams"><dt>Template Parameters</dt><dd>

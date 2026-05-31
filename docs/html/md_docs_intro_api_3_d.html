@@ -178,7 +178,7 @@ What Renderer3D Does</h1>
 <div class="line">}</div>
 <div class="ttc" id="a_shader_params_8h_html_ab84545b1975d51484ba2f5970b858d07"><div class="ttname"><a href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">tgx::Shader</a></div><div class="ttdeci">Shader</div><div class="ttdoc">List of shaders available for 3D graphics.</div><div class="ttdef"><b>Definition:</b> ShaderParams.h:44</div></div>
 <div class="ttc" id="aclasstgx_1_1_image_html"><div class="ttname"><a href="classtgx_1_1_image.html">tgx::Image</a></div><div class="ttdoc">Image class [MAIN CLASS FOR THE 2D API].</div><div class="ttdef"><b>Definition:</b> Image.h:145</div></div>
-<div class="ttc" id="aclasstgx_1_1_renderer3_d_html"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a></div><div class="ttdoc">Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].</div><div class="ttdef"><b>Definition:</b> Renderer3D.h:108</div></div>
+<div class="ttc" id="aclasstgx_1_1_renderer3_d_html"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a></div><div class="ttdoc">Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].</div><div class="ttdef"><b>Definition:</b> Renderer3D.h:109</div></div>
 <div class="ttc" id="aclasstgx_1_1_renderer3_d_html_ad613bdffc57596703abe1a2a47583003"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#ad613bdffc57596703abe1a2a47583003">tgx::Renderer3D::clearZbuffer</a></div><div class="ttdeci">void clearZbuffer()</div><div class="ttdoc">Clear the Zbuffer.</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:216</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_bf_html"><div class="ttname"><a href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a></div><div class="ttdoc">Color in R,G,B float format.</div><div class="ttdef"><b>Definition:</b> Color.h:2407</div></div>
@@ -713,8 +713,24 @@ Tile rendering</h2>
 </div><!-- fragment --><p >The projection and viewport remain the same for every tile. Only the image offset changes.</p>
 <h2><a class="anchor" id="sec_3D_wireframe"></a>
 Wireframe and debug drawing</h2>
-<p >The renderer also contains wireframe, dot and normal-visualization methods. They are useful for inspecting geometry and debugging transforms. They are not the main optimized path of the 3D engine, so high-quality wireframe drawing can be much slower than solid rendering.</p>
-<p >For performance-sensitive rendering, prefer the solid mesh path first:</p>
+<p >The renderer also contains wireframe, dot and normal-visualization methods. They are useful for inspecting geometry and debugging transforms. Wireframe methods ignore lighting and use the current material color.</p>
+<p >There are three practical wireframe paths:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Call style   </th><th class="markdownTableHeadNone">Rendering path   </th><th class="markdownTableHeadNone">Notes    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>drawWireFrame...(object)</code>   </td><td class="markdownTableBodyNone">fast aliased wireframe   </td><td class="markdownTableBodyNone">No thickness, no blending and no anti-aliasing. This is the fastest debug path.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>drawWireFrame...AA(object)</code>   </td><td class="markdownTableBodyNone">antialiased wireframe   </td><td class="markdownTableBodyNone">One-pixel antialiased line drawing with a lightweight 3D-specific rasterizer and the current material color.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>drawWireFrame...(object, thickness, color, opacity)</code>   </td><td class="markdownTableBodyNone">adjustable thickness + AA wireframe   </td><td class="markdownTableBodyNone">Uses the general adjustable thickness + AA line path. This is very slow and is mostly useful when visible line width or opacity matters more than speed.   </td></tr>
+</table>
+<dl class="section note"><dt>Note</dt><dd>In most sketches, use <a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh()</a> for the normal solid render path. When a clean wireframe view is needed, prefer <code>drawWireFrame...AA()</code>. Use the adjustable-thickness overloads only for occasional debug views or special effects, because they are much slower.</dd></dl>
+<p>For performance-sensitive rendering, prefer solid <a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh()</a> first, or use the fast wireframe path only for diagnostics.</p>
+<div class="fragment"><div class="line">renderer.drawWireFrameMesh(&amp;mesh);        <span class="comment">// fast, aliased</span></div>
+<div class="line">renderer.drawWireFrameMeshAA(&amp;mesh);      <span class="comment">// one-pixel antialiased, optimized</span></div>
+<div class="line">renderer.drawWireFrameMesh(&amp;mesh, 1.6f, RGB565_Red, 0.9f); <span class="comment">// adjustable thickness + AA, very slow</span></div>
+</div><!-- fragment --><p >The solid mesh path is still the main optimized rendering path:</p>
 <div class="fragment"><div class="line">renderer.drawMesh(&amp;mesh);</div>
 </div><!-- fragment --><h1><a class="anchor" id="sec_3D_performance"></a>
 Embedded performance checklist</h1>
@@ -730,7 +746,7 @@ Embedded performance checklist</h1>
 <li>keep textures in faster memory when possible;</li>
 <li>split very large textured faces if texture cache locality is poor;</li>
 <li>clear the image and Z-buffer once per frame, not before every object;</li>
-<li>avoid drawing debug wireframe on top of every frame unless it is needed.</li>
+<li>avoid drawing debug wireframe on top of every frame unless it is needed; if antialiasing is useful, prefer the explicit <code>drawWireFrame...AA()</code> methods over the adjustable-thickness overloads.</li>
 </ul>
 <h1><a class="anchor" id="sec_3D_complete_example"></a>
 Complete embedded example</h1>

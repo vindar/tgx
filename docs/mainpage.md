@@ -27,7 +27,7 @@ The library runs on both microprocessors and microcontrollers but specifically t
 - **Extensive 3D API:**
     - Optimized 'pixel perfect' triangle rasterizer with adjustable sub-pixel precision.
     - Depth buffer testing (selectable 16 bits or 32 bits precision).
-    - Multiple drawing modes: wireframe (selectable low/high quality) and solid (i.e. with shaders).
+    - Multiple drawing modes: fast wireframe, antialiased wireframe and solid rendering with shaders.
     - Unlit, flat and Gouraud shading.
     - Phong lighting model with separate ambient/diffuse/specular color components.
     - Per object material properties.

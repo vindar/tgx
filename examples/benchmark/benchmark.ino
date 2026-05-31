@@ -289,9 +289,15 @@ bool setRenderer(int slx, int sly)
 #define SCENE_VERTEX_COLOR       7
 #define SCENE_PIXELS             8
 #define SCENE_DOTS               9
-#define SCENE_WIRE_CUBE          10
-#define SCENE_WIRE_SPHERE        11
-#define SCENE_WIRE_BUNNY         12
+#define SCENE_WIRE_CUBE_FAST     10
+#define SCENE_WIRE_CUBE_AA       11
+#define SCENE_WIRE_CUBE_THICK    12
+#define SCENE_WIRE_SPHERE_FAST   13
+#define SCENE_WIRE_SPHERE_AA     14
+#define SCENE_WIRE_SPHERE_THICK  15
+#define SCENE_WIRE_BUNNY_FAST    16
+#define SCENE_WIRE_BUNNY_AA      17
+#define SCENE_WIRE_BUNNY_THICK   18
 
 
 static const int DIRECT_TEXTURE_LX = 64;
@@ -548,7 +554,9 @@ FLASHMEM void setModelForScene(int scene, float a)
         case SCENE_DOTS:
             renderer.setModelPosScaleRot({ 0, 0.0f, -8.0f }, { 3.3f, 3.3f, 3.3f }, a, { 0.3f, 1.0f, 0.1f });
             break;
-        case SCENE_WIRE_BUNNY:
+        case SCENE_WIRE_BUNNY_FAST:
+        case SCENE_WIRE_BUNNY_AA:
+        case SCENE_WIRE_BUNNY_THICK:
             renderer.setModelPosScaleRot({ 0, 0.4f, -10.0f }, { 5.0f, 5.0f, 5.0f }, a, { 0.2f, 1.0f, 0.0f });
             break;
         default:
@@ -604,17 +612,43 @@ FLASHMEM void drawSyntheticScene(int scene)
         case SCENE_DOTS:
             renderer.drawDots(POINT_COUNT, point_positions, point_radius_indices, point_radii, point_color_indices, point_colors, point_opacity_indices, point_opacities);
             break;
-        case SCENE_WIRE_CUBE:
-            renderer.drawWireFrameCube(1.6f, RGB565_Yellow, 1.0f);
+        case SCENE_WIRE_CUBE_FAST:
+            renderer.drawWireFrameCube();
             break;
-        case SCENE_WIRE_SPHERE:
-            renderer.drawWireFrameSphere(16, 8, 1.4f, RGB565_Cyan, 1.0f);
+        case SCENE_WIRE_CUBE_AA:
+            renderer.drawWireFrameCubeAA();
             break;
-        case SCENE_WIRE_BUNNY:
+        case SCENE_WIRE_CUBE_THICK:
+            renderer.drawWireFrameCube(1.501f, RGB565_Yellow, 1.0f);
+            break;
+        case SCENE_WIRE_SPHERE_FAST:
+            renderer.drawWireFrameSphere(16, 8);
+            break;
+        case SCENE_WIRE_SPHERE_AA:
+            renderer.drawWireFrameSphereAA(16, 8);
+            break;
+        case SCENE_WIRE_SPHERE_THICK:
+            renderer.drawWireFrameSphere(16, 8, 1.501f, RGB565_Cyan, 1.0f);
+            break;
+        case SCENE_WIRE_BUNNY_FAST:
             #if TGX_BENCHMARK_USE_MESH3DV2
-            renderer.drawWireFrameMesh(&bunny_fig_small, 1.2f, RGB565_White, 1.0f);
+            renderer.drawWireFrameMesh(&bunny_fig_small);
             #else
-            renderer.drawWireFrameMesh(&bunny_fig_small, true, 1.2f, RGB565_White, 1.0f);
+            renderer.drawWireFrameMesh(&bunny_fig_small, true);
+            #endif
+            break;
+        case SCENE_WIRE_BUNNY_AA:
+            #if TGX_BENCHMARK_USE_MESH3DV2
+            renderer.drawWireFrameMeshAA(&bunny_fig_small);
+            #else
+            renderer.drawWireFrameMeshAA(&bunny_fig_small, true);
+            #endif
+            break;
+        case SCENE_WIRE_BUNNY_THICK:
+            #if TGX_BENCHMARK_USE_MESH3DV2
+            renderer.drawWireFrameMesh(&bunny_fig_small, 1.501f, RGB565_White, 1.0f);
+            #else
+            renderer.drawWireFrameMesh(&bunny_fig_small, true, 1.501f, RGB565_White, 1.0f);
             #endif
             break;
         }
@@ -875,9 +909,15 @@ void setup()
         computeSceneScore(sfinalSynthetic, 3, "Vertex color direct ", SCENE_VERTEX_COLOR, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD, benchFrames(2));
         computeSceneScore(sfinalSynthetic, 2, "Point cloud pixels  ", SCENE_PIXELS, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(2));
         computeSceneScore(sfinalSynthetic, 2, "Point cloud dots    ", SCENE_DOTS, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(3));
-        computeSceneScore(sfinalSynthetic, 2, "Wire cube thick     ", SCENE_WIRE_CUBE, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(3));
-        computeSceneScore(sfinalSynthetic, 2, "Wire sphere thick   ", SCENE_WIRE_SPHERE, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
-        computeSceneScore(sfinalSynthetic, 1, "Wire bunny mesh     ", SCENE_WIRE_BUNNY, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 2, "Wire cube fast      ", SCENE_WIRE_CUBE_FAST, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(3));
+        computeSceneScore(sfinalSynthetic, 2, "Wire cube AA        ", SCENE_WIRE_CUBE_AA, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(3));
+        computeSceneScore(sfinalSynthetic, 1, "Wire cube thick     ", SCENE_WIRE_CUBE_THICK, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(3));
+        computeSceneScore(sfinalSynthetic, 2, "Wire sphere fast    ", SCENE_WIRE_SPHERE_FAST, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 2, "Wire sphere AA      ", SCENE_WIRE_SPHERE_AA, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 1, "Wire sphere thick   ", SCENE_WIRE_SPHERE_THICK, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 1, "Wire bunny fast     ", SCENE_WIRE_BUNNY_FAST, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 1, "Wire bunny AA       ", SCENE_WIRE_BUNNY_AA, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 1, "Wire bunny thick    ", SCENE_WIRE_BUNNY_THICK, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
         Serial.print("total: "); sfinalSynthetic.print();
         Serial.printf("-> SYNTHETIC SCORE : %.2f fps\n\n", sfinalSynthetic.fps());
 
