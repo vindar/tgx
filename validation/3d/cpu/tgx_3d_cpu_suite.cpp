@@ -80,7 +80,26 @@ enum class SceneId
     DirectShapes,
     WirePoints,
     WirePointsV2,
+    WireFast,
+    WireAA,
+    WireThickness05,
+    WireThickness10,
+    WireThickness20,
+    WireV2Fast,
+    WireV2AA,
+    WireV2Thickness05,
+    WireV2Thickness10,
+    WireV2Thickness20,
     Count
+    };
+
+enum class WirePath
+    {
+    Fast,
+    Antialiased,
+    Thickness05,
+    Thickness10,
+    Thickness20
     };
 
 struct SceneDef
@@ -115,7 +134,17 @@ const SceneDef SCENES[] = {
     { SceneId::SmallTriangleGrid,   "small_triangle_grid",   "many small textured triangles" },
     { SceneId::DirectShapes,        "direct_shapes",         "direct cube and sphere helpers" },
     { SceneId::WirePoints,          "wire_points",           "wireframe plus pixels/dots" },
-    { SceneId::WirePointsV2,        "wire_points_v2",        "Mesh3Dv2 wireframe plus pixels/dots" }
+    { SceneId::WirePointsV2,        "wire_points_v2",        "Mesh3Dv2 wireframe plus pixels/dots" },
+    { SceneId::WireFast,            "wire_fast",             "legacy Mesh3D fast wireframe path" },
+    { SceneId::WireAA,              "wire_aa",               "legacy Mesh3D optimized antialiased wireframe path" },
+    { SceneId::WireThickness05,     "wire_thickness_05",     "legacy Mesh3D adjustable thickness + AA path, thickness 0.5" },
+    { SceneId::WireThickness10,     "wire_thickness_10",     "legacy Mesh3D adjustable thickness + AA path, thickness 1.0" },
+    { SceneId::WireThickness20,     "wire_thickness_20",     "legacy Mesh3D adjustable thickness + AA path, thickness 2.0" },
+    { SceneId::WireV2Fast,          "wire_v2_fast",          "Mesh3Dv2 fast wireframe path" },
+    { SceneId::WireV2AA,            "wire_v2_aa",            "Mesh3Dv2 optimized antialiased wireframe path" },
+    { SceneId::WireV2Thickness05,   "wire_v2_thickness_05",  "Mesh3Dv2 adjustable thickness + AA path, thickness 0.5" },
+    { SceneId::WireV2Thickness10,   "wire_v2_thickness_10",  "Mesh3Dv2 adjustable thickness + AA path, thickness 1.0" },
+    { SceneId::WireV2Thickness20,   "wire_v2_thickness_20",  "Mesh3Dv2 adjustable thickness + AA path, thickness 2.0" }
 };
 
 struct Options
@@ -717,6 +746,190 @@ struct RenderContext
         }
     };
 
+inline float wirePathThickness(WirePath path)
+{
+    switch (path)
+        {
+        case WirePath::Thickness05: return 0.5f;
+        case WirePath::Thickness10: return 1.0f;
+        case WirePath::Thickness20: return 2.0f;
+        case WirePath::Fast:
+        case WirePath::Antialiased:
+            return 1.0f;
+        }
+    return 1.0f;
+}
+
+template<typename color_t>
+void drawWirePathLine(Renderer3D<color_t, LOADED_SHADERS, uint16_t>& r, WirePath path,
+                      const fVec3& a, const fVec3& b, color_t color)
+{
+    r.setMaterialColor(color);
+    if (path == WirePath::Fast) r.drawWireFrameLine(a, b);
+    else if (path == WirePath::Antialiased) r.drawWireFrameLineAA(a, b);
+    else r.drawWireFrameLine(a, b, wirePathThickness(path), color, 0.88f);
+}
+
+template<typename color_t>
+void drawWirePathLines(Renderer3D<color_t, LOADED_SHADERS, uint16_t>& r, WirePath path,
+                       int n, const uint16_t* indices, const fVec3* vertices, color_t color)
+{
+    r.setMaterialColor(color);
+    if (path == WirePath::Fast) r.drawWireFrameLines(n, indices, vertices);
+    else if (path == WirePath::Antialiased) r.drawWireFrameLinesAA(n, indices, vertices);
+    else r.drawWireFrameLines(n, indices, vertices, wirePathThickness(path), color, 0.88f);
+}
+
+template<typename color_t>
+void drawWirePathTriangle(Renderer3D<color_t, LOADED_SHADERS, uint16_t>& r, WirePath path,
+                          const fVec3& a, const fVec3& b, const fVec3& c, color_t color)
+{
+    r.setMaterialColor(color);
+    if (path == WirePath::Fast) r.drawWireFrameTriangle(a, b, c);
+    else if (path == WirePath::Antialiased) r.drawWireFrameTriangleAA(a, b, c);
+    else r.drawWireFrameTriangle(a, b, c, wirePathThickness(path), color, 0.88f);
+}
+
+template<typename color_t>
+void drawWirePathTriangles(Renderer3D<color_t, LOADED_SHADERS, uint16_t>& r, WirePath path,
+                           int n, const uint16_t* indices, const fVec3* vertices, color_t color)
+{
+    r.setMaterialColor(color);
+    if (path == WirePath::Fast) r.drawWireFrameTriangles(n, indices, vertices);
+    else if (path == WirePath::Antialiased) r.drawWireFrameTrianglesAA(n, indices, vertices);
+    else r.drawWireFrameTriangles(n, indices, vertices, wirePathThickness(path), color, 0.88f);
+}
+
+template<typename color_t>
+void drawWirePathQuad(Renderer3D<color_t, LOADED_SHADERS, uint16_t>& r, WirePath path,
+                      const fVec3& a, const fVec3& b, const fVec3& c, const fVec3& d, color_t color)
+{
+    r.setMaterialColor(color);
+    if (path == WirePath::Fast) r.drawWireFrameQuad(a, b, c, d);
+    else if (path == WirePath::Antialiased) r.drawWireFrameQuadAA(a, b, c, d);
+    else r.drawWireFrameQuad(a, b, c, d, wirePathThickness(path), color, 0.88f);
+}
+
+template<typename color_t>
+void drawWirePathQuads(Renderer3D<color_t, LOADED_SHADERS, uint16_t>& r, WirePath path,
+                       int n, const uint16_t* indices, const fVec3* vertices, color_t color)
+{
+    r.setMaterialColor(color);
+    if (path == WirePath::Fast) r.drawWireFrameQuads(n, indices, vertices);
+    else if (path == WirePath::Antialiased) r.drawWireFrameQuadsAA(n, indices, vertices);
+    else r.drawWireFrameQuads(n, indices, vertices, wirePathThickness(path), color, 0.88f);
+}
+
+template<typename color_t>
+void drawWirePathCube(Renderer3D<color_t, LOADED_SHADERS, uint16_t>& r, WirePath path, color_t color)
+{
+    r.setMaterialColor(color);
+    if (path == WirePath::Fast) r.drawWireFrameCube();
+    else if (path == WirePath::Antialiased) r.drawWireFrameCubeAA();
+    else r.drawWireFrameCube(wirePathThickness(path), color, 0.88f);
+}
+
+template<typename color_t>
+void drawWirePathSphere(Renderer3D<color_t, LOADED_SHADERS, uint16_t>& r, WirePath path, color_t color)
+{
+    r.setMaterialColor(color);
+    if (path == WirePath::Fast) r.drawWireFrameSphere(9, 6);
+    else if (path == WirePath::Antialiased) r.drawWireFrameSphereAA(9, 6);
+    else r.drawWireFrameSphere(9, 6, wirePathThickness(path), color, 0.88f);
+}
+
+template<typename color_t>
+void drawWirePathAdaptativeSphere(Renderer3D<color_t, LOADED_SHADERS, uint16_t>& r, WirePath path, color_t color)
+{
+    r.setMaterialColor(color);
+    if (path == WirePath::Fast) r.drawWireFrameAdaptativeSphere(0.75f);
+    else if (path == WirePath::Antialiased) r.drawWireFrameAdaptativeSphereAA(0.75f);
+    else r.drawWireFrameAdaptativeSphere(0.75f, wirePathThickness(path), color, 0.88f);
+}
+
+template<typename color_t>
+void drawWirePathMesh(RenderContext<color_t>& ctx, WirePath path, bool mesh_v2, color_t color)
+{
+    auto& r = ctx.renderer;
+    r.setMaterialColor(color);
+    if (mesh_v2)
+        {
+        if (path == WirePath::Fast) r.drawWireFrameMesh(&ctx.meshes.bunny_v2);
+        else if (path == WirePath::Antialiased) r.drawWireFrameMeshAA(&ctx.meshes.bunny_v2);
+        else r.drawWireFrameMesh(&ctx.meshes.bunny_v2, wirePathThickness(path), color, 0.88f);
+        }
+    else
+        {
+        if (path == WirePath::Fast) r.drawWireFrameMesh(&ctx.meshes.bunny, true);
+        else if (path == WirePath::Antialiased) r.drawWireFrameMeshAA(&ctx.meshes.bunny, true);
+        else r.drawWireFrameMesh(&ctx.meshes.bunny, true, wirePathThickness(path), color, 0.88f);
+        }
+}
+
+template<typename color_t>
+void renderWirePathScene(RenderContext<color_t>& ctx, WirePath path, bool mesh_v2)
+{
+    auto& r = ctx.renderer;
+    const color_t mesh_color = C<color_t>(230, 232, 248);
+    const color_t orange = C<color_t>(255, 178, 80);
+    const color_t cyan = C<color_t>(72, 224, 255);
+    const color_t lime = C<color_t>(205, 255, 95);
+    const color_t pink = C<color_t>(255, 125, 195);
+    const color_t violet = C<color_t>(168, 138, 255);
+    const color_t green = C<color_t>(100, 255, 170);
+    const color_t yellow = C<color_t>(255, 226, 95);
+
+    const fVec3 line_vertices[] = {
+        { -0.95f, -0.55f, 0.0f }, { -0.30f, 0.52f, 0.0f },
+        { -0.30f, 0.52f, 0.0f }, {  0.42f, -0.48f, 0.0f },
+        {  0.42f, -0.48f, 0.0f }, {  0.95f, 0.50f, 0.0f }
+    };
+    const uint16_t line_indices[] = { 0, 1, 2, 3, 4, 5 };
+    const fVec3 triangle_vertices[] = {
+        { -0.82f, -0.55f, 0.0f }, { 0.05f, 0.72f, 0.0f }, { 0.86f, -0.46f, 0.0f },
+        { -0.66f,  0.40f, 0.0f }, { 0.12f, -0.70f, 0.0f }, { 0.78f,  0.34f, 0.0f }
+    };
+    const uint16_t triangle_indices[] = { 0, 1, 2, 3, 4, 5 };
+    const fVec3 quad_vertices[] = {
+        { -0.72f, -0.56f, 0.0f }, { 0.58f, -0.52f, 0.0f }, { 0.72f, 0.48f, 0.0f }, { -0.62f, 0.56f, 0.0f },
+        { -0.45f, -0.42f, 0.0f }, { 0.52f, -0.34f, 0.0f }, { 0.42f, 0.52f, 0.0f }, { -0.55f, 0.32f, 0.0f }
+    };
+    const uint16_t quad_indices[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+
+    r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
+    r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+
+    r.setModelPosScaleRot({ -1.45f, 0.15f, -9.2f }, { 3.55f, 3.55f, 3.55f }, 36.0f, { 0.1f, 1.0f, 0.0f });
+    drawWirePathMesh(ctx, path, mesh_v2, mesh_color);
+
+    r.setModelPosScaleRot({ 2.25f, 1.32f, -7.2f }, { 0.75f, 0.75f, 0.75f }, -14.0f, { 0.2f, 1.0f, 0.0f });
+    drawWirePathLine(r, path, { -0.95f, -0.32f, 0.0f }, { 0.92f, 0.28f, 0.0f }, orange);
+
+    r.setModelPosScaleRot({ 2.25f, 0.36f, -7.2f }, { 0.62f, 0.62f, 0.62f }, 12.0f, { 0.0f, 1.0f, 0.0f });
+    drawWirePathLines(r, path, 3, line_indices, line_vertices, cyan);
+
+    r.setModelPosScaleRot({ 2.25f, -0.78f, -7.3f }, { 0.58f, 0.58f, 0.58f }, 21.0f, { 0.0f, 1.0f, 0.0f });
+    drawWirePathTriangle(r, path, { -0.82f, -0.52f, 0.0f }, { 0.78f, -0.42f, 0.0f }, { -0.02f, 0.74f, 0.0f }, lime);
+
+    r.setModelPosScaleRot({ -2.95f, 1.45f, -7.6f }, { 0.55f, 0.55f, 0.55f }, -19.0f, { 0.2f, 1.0f, 0.0f });
+    drawWirePathTriangles(r, path, 2, triangle_indices, triangle_vertices, pink);
+
+    r.setModelPosScaleRot({ -3.0f, 0.18f, -7.6f }, { 0.58f, 0.58f, 0.58f }, 24.0f, { 0.2f, 1.0f, 0.0f });
+    drawWirePathQuad(r, path, { -0.76f, -0.50f, 0.0f }, { 0.62f, -0.58f, 0.0f }, { 0.78f, 0.54f, 0.0f }, { -0.64f, 0.45f, 0.0f }, violet);
+
+    r.setModelPosScaleRot({ -3.0f, -1.02f, -7.8f }, { 0.48f, 0.48f, 0.48f }, -28.0f, { 0.2f, 1.0f, 0.0f });
+    drawWirePathQuads(r, path, 2, quad_indices, quad_vertices, green);
+
+    r.setModelPosScaleRot({ 0.35f, -1.95f, -7.6f }, { 0.48f, 0.48f, 0.48f }, 31.0f, { 0.3f, 1.0f, 0.1f });
+    drawWirePathCube(r, path, yellow);
+
+    r.setModelPosScaleRot({ 1.70f, -1.92f, -7.7f }, { 0.43f, 0.43f, 0.43f }, -18.0f, { 0.0f, 1.0f, 0.0f });
+    drawWirePathSphere(r, path, cyan);
+
+    r.setModelPosScaleRot({ 2.88f, -1.90f, -7.7f }, { 0.42f, 0.42f, 0.42f }, 0.0f, { 0.0f, 1.0f, 0.0f });
+    drawWirePathAdaptativeSphere(r, path, pink);
+}
+
 template<typename color_t>
 void renderScene(RenderContext<color_t>& ctx, SceneId scene)
 {
@@ -914,18 +1127,75 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
             r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
             r.setModelPosScaleRot({ -0.8f, 0.15f, -9.0f }, { 4.4f, 4.4f, 4.4f }, 38.0f, { 0.1f, 1.0f, 0.0f });
-            r.drawWireFrameMesh(&ctx.meshes.bunny, true, 1.15f, C<color_t>(230, 230, 245), 1.0f);
+            r.setMaterialColor(C<color_t>(230, 230, 245));
+            r.drawWireFrameMeshAA(&ctx.meshes.bunny, true);
             r.setModelPosScaleRot({ 1.45f, 0.0f, -8.4f }, { 2.2f, 2.2f, 2.2f }, 20.0f, { 0.2f, 1.0f, 0.0f });
             r.drawDots(POINT_COUNT, ctx.point_positions.data(), ctx.point_radius_ind.data(), ctx.point_radii, ctx.point_colors_ind.data(), ctx.point_colors, ctx.point_opacity_ind.data(), ctx.point_opacities);
+            r.setMaterialColor(C<color_t>(255, 180, 80));
+            r.setModelPosScaleRot({ -2.65f, -1.55f, -7.2f }, { 1.0f, 1.0f, 1.0f }, 0.0f, { 0.0f, 1.0f, 0.0f });
+            r.drawWireFrameLineAA({ -0.7f, -0.35f, 0.0f }, { 0.7f, 0.25f, 0.0f });
+            r.setMaterialColor(C<color_t>(80, 220, 255));
+            r.setModelPosScaleRot({ -2.1f, 1.45f, -7.5f }, { 0.8f, 0.8f, 0.8f }, 24.0f, { 0.0f, 1.0f, 0.0f });
+            r.drawWireFrameTriangleAA({ -0.7f, -0.55f, 0.0f }, { 0.75f, -0.45f, 0.0f }, { 0.05f, 0.7f, 0.0f });
+            r.setMaterialColor(C<color_t>(220, 255, 100));
+            r.setModelPosScaleRot({ 2.55f, 1.35f, -7.8f }, { 0.75f, 0.75f, 0.75f }, -18.0f, { 0.2f, 1.0f, 0.0f });
+            r.drawWireFrameQuadAA({ -0.7f, -0.5f, 0.0f }, { 0.65f, -0.55f, 0.0f }, { 0.75f, 0.55f, 0.0f }, { -0.65f, 0.45f, 0.0f });
+            r.setMaterialColor(C<color_t>(255, 120, 190));
+            r.setModelPosScaleRot({ 2.7f, -1.6f, -8.0f }, { 0.52f, 0.52f, 0.52f }, 28.0f, { 0.2f, 1.0f, 0.1f });
+            r.drawWireFrameCubeAA();
             break;
 
         case SceneId::WirePointsV2:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
             r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
             r.setModelPosScaleRot({ -0.8f, 0.15f, -9.0f }, { 4.4f, 4.4f, 4.4f }, 38.0f, { 0.1f, 1.0f, 0.0f });
-            r.drawWireFrameMesh(&ctx.meshes.bunny_v2, 1.15f, C<color_t>(230, 230, 245), 1.0f);
+            r.setMaterialColor(C<color_t>(230, 230, 245));
+            r.drawWireFrameMeshAA(&ctx.meshes.bunny_v2);
             r.setModelPosScaleRot({ 1.45f, 0.0f, -8.4f }, { 2.2f, 2.2f, 2.2f }, 20.0f, { 0.2f, 1.0f, 0.0f });
             r.drawDots(POINT_COUNT, ctx.point_positions.data(), ctx.point_radius_ind.data(), ctx.point_radii, ctx.point_colors_ind.data(), ctx.point_colors, ctx.point_opacity_ind.data(), ctx.point_opacities);
+            r.setMaterialColor(C<color_t>(100, 255, 170));
+            r.setModelPosScaleRot({ 2.65f, -1.55f, -8.2f }, { 0.5f, 0.5f, 0.5f }, -20.0f, { 0.2f, 1.0f, 0.2f });
+            r.drawWireFrameSphereAA(8, 5);
+            break;
+
+        case SceneId::WireFast:
+            renderWirePathScene(ctx, WirePath::Fast, false);
+            break;
+
+        case SceneId::WireAA:
+            renderWirePathScene(ctx, WirePath::Antialiased, false);
+            break;
+
+        case SceneId::WireThickness05:
+            renderWirePathScene(ctx, WirePath::Thickness05, false);
+            break;
+
+        case SceneId::WireThickness10:
+            renderWirePathScene(ctx, WirePath::Thickness10, false);
+            break;
+
+        case SceneId::WireThickness20:
+            renderWirePathScene(ctx, WirePath::Thickness20, false);
+            break;
+
+        case SceneId::WireV2Fast:
+            renderWirePathScene(ctx, WirePath::Fast, true);
+            break;
+
+        case SceneId::WireV2AA:
+            renderWirePathScene(ctx, WirePath::Antialiased, true);
+            break;
+
+        case SceneId::WireV2Thickness05:
+            renderWirePathScene(ctx, WirePath::Thickness05, true);
+            break;
+
+        case SceneId::WireV2Thickness10:
+            renderWirePathScene(ctx, WirePath::Thickness10, true);
+            break;
+
+        case SceneId::WireV2Thickness20:
+            renderWirePathScene(ctx, WirePath::Thickness20, true);
             break;
 
         case SceneId::Count:
