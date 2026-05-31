@@ -106,19 +106,19 @@ namespace tgx
      *    [draw/fill][Thick/-]MethodName[AA/-]
      *    ```
      *    where
-     *    - `[draw]`  means that the method draw a path whereas [fill] means that the method create a solid shape.
+     *    - `[draw]`  means that the method draws a path whereas [fill] means that the method creates a solid shape.
      *    - `[thick]` means that the outline of the shape has selectable thickness (not just a single pixel
      *                wide). The thickness is usually a float and should be at least 1.
      *    - `[AA]`    means that the method is *high quality*: it is drawn with anti-aliasing and sub-pixel
-     *                precision. Method with this suffix take fVec2 parameters for coordinates inputs whereas
+     *                precision. Methods with this suffix take fVec2 parameters for coordinate inputs whereas
      *                regular 'low quality' methods (without the AA suffix) take iVec2 parameters.
      *
      *    For example:
-     *    - `drawThickCircleAA()` :  draw a high quality circle with user defined outline thickness, antialiasing and sub-pixel precision.
-     *    - `fillTriangle()`      :  draw a low quality filled triangle (no antialiasing or subpixel precision).
+     *    - `drawThickCircleAA()` :  draw a high-quality circle with user-defined outline thickness, anti-aliasing and sub-pixel precision.
+     *    - `fillTriangle()`      :  draw a low-quality filled triangle (no anti-aliasing or sub-pixel precision).
      *
      * 4. All drawing methods that take a `color` parameter also take an `opacity` float parameter which allows to
-     *    add transparency effects even when color type used do not have an alpha channel:
+     *    add transparency effects even when the color type used does not have an alpha channel:
      *    - Passing `TGX_DEFAULT_NO_BLENDING` or a negative value for the opacity will disable blending so the method
      *      will simply overwrite the destination pixels. For antialiased or filtered methods, fully covered pixels
      *      are overwritten but partially covered edge/filter pixels may still be alpha-composited to preserve smooth
@@ -1217,7 +1217,7 @@ namespace tgx
     /**
     * @name Drawing primitives: lines. (DEPRECATED METHODS)
     *
-    * @warning These method are still available for compatibility but will be removed 'soon'...
+    * @warning These methods are still available for compatibility but may be removed in a future version.
     */
     ///@{
 
@@ -1308,7 +1308,7 @@ namespace tgx
          * Draw a filled rectangle with a thick border of a possibly different color.
          *
          * @param   B               box that delimits the rectangle to draw.
-         * @param   thickness       thickness of the border (going 'inside the rectangle)
+         * @param   thickness       thickness of the border (going 'inside' the rectangle)
          * @param   color_interior  color for the rectangle interior.
          * @param   color_border    color for the rectangle border.
          * @param   opacity         (Optional) opacity multiplier when blending (in [0.0f, 1.0f]) or
@@ -1655,7 +1655,7 @@ namespace tgx
     * ADVANCED METHODS USING THE 3D RASTERIZER BACKEND.
     *
     * @remark
-    *   1. These method use sub-pixel precision (but not anti-aliasing).
+    *   1. These methods use sub-pixel precision (but not anti-aliasing).
     *   2. Sprite images and gradient colors can have different types from the destination (ie this) image.
     */
     ///@{
@@ -1975,7 +1975,7 @@ namespace tgx
     * ADVANCED METHODS USING THE 3D RASTERIZER BACKEND.
     *
     * @remark
-    *   1. These method use sub-pixel precision (but not anti-aliasing).
+    *   1. These methods use sub-pixel precision (but not anti-aliasing).
     *   2. Sprite images and gradient colors can have different types from the destination (ie this) image.
     */
     ///@{
@@ -2207,7 +2207,7 @@ namespace tgx
 
 
         /**
-         * Draw a closed polygon with vertices [P0,P2,,, PN].
+         * Draw a closed polygon with vertices [P0, P1, ..., PN].
          *
          * @param   nbpoints    number of points in tabPoints.
          * @param   tabPoints   array of points of the polygon.
@@ -2219,7 +2219,7 @@ namespace tgx
 
 
         /**
-         * Draw a closed polygon with vertices [P0,P2,,, PN].
+         * Draw a closed polygon with vertices [P0, P1, ..., PN].
          *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with:
@@ -2240,7 +2240,7 @@ namespace tgx
 
 
         /**
-         * Draw a filled polygon with vertices [P0,P2,,, PN]
+         * Draw a filled polygon with vertices [P0, P1, ..., PN].
          *
          * @warning The polygon must be **convex** (or at least star-shaped from its center of mass).
          *
@@ -2254,7 +2254,7 @@ namespace tgx
 
 
         /**
-         * Draw a filled polygon with vertices [P0,P2,,, PN]
+         * Draw a filled polygon with vertices [P0, P1, ..., PN].
          *
          * Points are queried in order P0, P1,... using a functor callback which must have a signature
          * compatible with:
@@ -2295,7 +2295,7 @@ namespace tgx
 
 
         /**
-         * Draw a closed polygon with vertices [P0,P2,,, PN] (**High quality**).
+         * Draw a closed polygon with vertices [P0, P1, ..., PN] (**High quality**).
          *
          * @note High quality drawing with anti-aliasing and sub-pixel precision.
          *
@@ -2309,7 +2309,7 @@ namespace tgx
 
 
         /**
-         * Draw a closed polygon with vertices [P0,P2,,, PN] (**High quality**).
+         * Draw a closed polygon with vertices [P0, P1, ..., PN] (**High quality**).
          *
          * @note High quality drawing with anti-aliasing and sub-pixel precision.
          *
@@ -3372,21 +3372,21 @@ namespace tgx
     /**
     * @name Drawing primitives: Text DEPRECATED METHODS.
     *
-    * @warning These method are still available for compatibility but will be removed 'soon'...
+    * @warning These methods are still available for compatibility but may be removed in a future version.
     */
     //*************************************************************************************************************
     ///@{
 
 
         /**
-        * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
+        * DEPRECATED: Use the new signature drawText(text, pos, font, color, opacity) or the new method drawTextEx() instead.
         */
         DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
         iVec2 drawText(const char* text, iVec2 pos, color_t color, const ILI9341_t3_font_t& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0, color, opacity); }
 
 
         /**
-        * DEPRECATED: Use the new signature drawText(text, pos, font, color opacity) or the new method drawTextEx() instead.
+        * DEPRECATED: Use the new signature drawText(text, pos, font, color, opacity) or the new method drawTextEx() instead.
         */
         DEPRECATED("Use new signature: drawText(text, pos, font, color, opacity) or the new method drawTextEx()")
         iVec2 drawText(const char* text, iVec2 pos, color_t color, const GFXfont& font, bool start_newline_at_0, float opacity = 1.0f) { return drawTextEx(text, pos, font, DEFAULT_TEXT_ANCHOR, false, start_newline_at_0, color, opacity); }
@@ -3515,7 +3515,7 @@ namespace tgx
          * This method is a wrapper around the `JPEGDEC.playFrame()` method from the AnimatedGIF library
          * and takes the same arguments and return values.
          *
-         * - In the case of animated GIF. Each call to the method draws the nexct frame. The method
+         * - In the case of animated GIF. Each call to the method draws the next frame. The method
          *   returns 1 when there is still another frame to draw, 0 when finished. See the
          *   `gif.playFrame()` method from the AnimatedGIF library for additional details.
          *

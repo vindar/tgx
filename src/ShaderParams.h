@@ -107,6 +107,8 @@ namespace tgx
     #define TGX_SHADER_HAS_FLAT(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_FLAT))
     #define TGX_SHADER_HAS_GOURAUD(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_GOURAUD))
     #define TGX_SHADER_HAS_UNLIT(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_UNLIT))
+
+    /** True when a shader configuration can use either flat shading or unlit shading. */
     #define TGX_SHADER_CAN_USE_FLAT_OR_UNLIT(enabled_shader_type, shader_type) \
         (TGX_SHADER_HAS_UNLIT(enabled_shader_type) ? \
             (TGX_SHADER_HAS_UNLIT(shader_type) || (TGX_SHADER_HAS_FLAT(enabled_shader_type) && !TGX_SHADER_HAS_GOURAUD(shader_type))) : \

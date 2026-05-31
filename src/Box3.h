@@ -159,7 +159,7 @@ namespace tgx
          */
         inline T lx() const
             {
-            if (std::is_integral<T>::value) // compiler optimize this away.
+            if (std::is_integral<T>::value) // compiler optimizes this away.
                 {
                 return (maxX - minX + 1); // for integer, return the number of points
                 }
@@ -179,7 +179,7 @@ namespace tgx
          */
         inline T ly() const
             {
-            if (std::is_integral<T>::value) // compiler optimize this away.
+            if (std::is_integral<T>::value) // compiler optimizes this away.
                 {
                 return (maxY - minY + 1); // for integer, return the number of points
                 }
@@ -199,7 +199,7 @@ namespace tgx
          */
         inline T lz() const
             {
-            if (std::is_integral<T>::value) // compiler optimize this away.
+            if (std::is_integral<T>::value) // compiler optimizes this away.
                 {
                 return (maxZ - minZ + 1); // for integer, return the number of points
                 }
