@@ -1,5 +1,9 @@
 @page intro_install Installation.
 
+<div style="text-align:center; margin: 1.2rem 0 2.0rem;">
+<img src="tgx_mcu.png" alt="TGX on microcontrollers" style="width:min(380px, 70vw); height:auto;">
+</div>
+
 The library is cross-platform: it can be used on a CPU or on an embedded platform together with [PlatformIO](https://platformio.org/) or the [Arduino framework](https://www.arduino.cc/).
 
 It is written in pure C++ and all the sources are located in the `/src` subdirectory. This source folder contains both the header files (`.h`) and the implementation files (`.cpp`, `.inl`).

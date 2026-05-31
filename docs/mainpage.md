@@ -1,5 +1,9 @@
 @mainpage TGX
 
+<div style="text-align:center; margin: 1.4rem 0 2.0rem;">
+<img src="tgx_logo_large.png" alt="TGX logo" style="width:min(364px, 60vw); height:auto;">
+</div>
+
 @section about About the library
 
 TGX is a tiny but full-featured C++ library for drawing 2D and 3D graphics onto a memory framebuffer.

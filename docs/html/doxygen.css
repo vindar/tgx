@@ -1,352 +1,28 @@
 /* The standard CSS for doxygen 1.9.5*/
 
-html {
-/* page base colors */
---page-background-color: white;
---page-foreground-color: black;
---page-link-color: #582921;
---page-visited-link-color: #6F342A;
-
-/* index */
---index-odd-item-bg-color: #FAF5F4;
---index-even-item-bg-color: white;
---index-header-color: black;
---index-separator-color: #A0A0A0;
-
-/* header */
---header-background-color: #FBF6F6;
---header-separator-color: #DDAEA6;
---header-gradient-image: url('nav_h.png');
---group-header-separator-color: #BD6252;
---group-header-color: #48221B;
---inherit-header-color: gray;
-
---footer-foreground-color: #331813;
---footer-logo-width: 104px;
---citation-label-color: #431F19;
---glow-color: cyan;
-
---title-background-color: white;
---title-separator-color: #863F32;
---directory-separator-color: #C87B6D;
---separator-color: #77382D;
-
---blockquote-background-color: #FAF3F2;
---blockquote-border-color: #C87B6D;
-
---scrollbar-thumb-color: #C87B6D;
---scrollbar-background-color: #FBF6F6;
-
---icon-background-color: #AA5040;
---icon-foreground-color: white;
---icon-doc-image: url('doc.png');
-
-/* brief member declaration list */
---memdecl-background-color: #FBF6F6;
---memdecl-separator-color: #EBD0CB;
---memdecl-foreground-color: #555;
---memdecl-template-color: #6F342A;
-
-/* detailed member list */
---memdef-border-color: #CE8A7E;
---memdef-title-background-color: #EED7D2;
---memdef-title-gradient-image: url('nav_f.png');
---memdef-proto-background-color: #ECD2CD;
---memdef-proto-text-color: #29130F;
---memdef-proto-text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
---memdef-doc-background-color: white;
---memdef-param-name-color: #602020;
---memdef-template-color: #6F342A;
-
-/* tables */
---table-cell-border-color: #381A15;
---table-header-background-color: #4C241D;
---table-header-foreground-color: #FFFFFF;
-
-/* labels */
---label-background-color: #AA5040;
---label-left-top-border-color: #863F32;
---label-right-bottom-border-color: #DDAEA6;
---label-foreground-color: white;
-
-/** navigation bar/tree/menu */
---nav-background-color: #FBF6F6;
---nav-foreground-color: #4A221C;
---nav-gradient-image: url('tab_b.png');
---nav-gradient-hover-image: url('tab_h.png');
---nav-gradient-active-image: url('tab_a.png');
---nav-gradient-active-image-parent: url("../tab_a.png");
---nav-separator-image: url('tab_s.png');
---nav-breadcrumb-image: url('bc_s.png');
---nav-breadcrumb-border-color: #DCABA2;
---nav-splitbar-image: url('splitbar.png');
---nav-font-size-level1: 13px;
---nav-font-size-level2: 10px;
---nav-font-size-level3: 9px;
---nav-text-normal-color: #2F1611;
---nav-text-hover-color: white;
---nav-text-active-color: white;
---nav-text-normal-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
---nav-text-hover-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
---nav-text-active-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
---nav-menu-button-color: #4A221C;
---nav-menu-background-color: white;
---nav-menu-foreground-color: #555555;
---nav-menu-toggle-color: rgba(255, 255, 255, 0.5);
---nav-arrow-color: #C87B6D;
---nav-arrow-selected-color: #C87B6D;
-
-/* table of contents */
---toc-background-color: #F8F0EF;
---toc-border-color: #E8C8C3;
---toc-header-color: #6F342A;
-
-/** search field */
---search-background-color: white;
---search-foreground-color: #909090;
---search-magnification-image: url('mag.svg');
---search-magnification-select-image: url('mag_sel.svg');
---search-active-color: black;
---search-filter-background-color: #FBF6F6;
---search-filter-foreground-color: black;
---search-filter-border-color: #C16C5D;
---search-filter-highlight-text-color: white;
---search-filter-highlight-bg-color: #582921;
---search-results-foreground-color: #632F25;
---search-results-background-color: #F4E6E4;
---search-results-border-color: black;
---search-box-shadow: inset 0.5px 0.5px 3px 0px #555;
-
-/** code fragments */
---code-keyword-color: #008000;
---code-type-keyword-color: #604020;
---code-flow-keyword-color: #E08000;
---code-comment-color: #800000;
---code-preprocessor-color: #806020;
---code-string-literal-color: #002080;
---code-char-literal-color: #008080;
---code-vhdl-digit-color: #FF00FF;
---code-vhdl-char-color: #000000;
---code-vhdl-keyword-color: #700070;
---code-vhdl-logic-color: #FF0000;
---code-link-color: #6F342A;
---code-external-link-color: #6F342A;
---fragment-foreground-color: black;
---fragment-background-color: #FCFAF9;
---fragment-border-color: #DDAEA6;
---fragment-lineno-border-color: #00FF00;
---fragment-lineno-background-color: #E8E8E8;
---fragment-lineno-foreground-color: black;
---fragment-lineno-link-fg-color: #6F342A;
---fragment-lineno-link-bg-color: #D8D8D8;
---fragment-lineno-link-hover-fg-color: #6F342A;
---fragment-lineno-link-hover-bg-color: #C8C8C8;
---tooltip-foreground-color: black;
---tooltip-background-color: white;
---tooltip-border-color: gray;
---tooltip-doc-color: grey;
---tooltip-declaration-color: #006318;
---tooltip-link-color: #6F342A;
---tooltip-shadow: 1px 1px 7px gray;
-
-/** font-family */
---font-family-normal: Roboto,sans-serif;
---font-family-monospace: monospace,fixed;
---font-family-nav: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
---font-family-title: Tahoma,Arial,sans-serif;
---font-family-toc: Verdana,'DejaVu Sans',Geneva,sans-serif;
---font-family-search: Arial,Verdana,sans-serif;
---font-family-icon: Arial,Helvetica;
---font-family-tooltip: Roboto,sans-serif;
-
-}
-
-@media (prefers-color-scheme: dark) {
-  html:not(.dark-mode) {
-    color-scheme: dark;
-
-/* page base colors */
---page-background-color: black;
---page-foreground-color: #C9D1D9;
---page-link-color: #C16C5D;
---page-visited-link-color: #CB8477;
-
-/* index */
---index-odd-item-bg-color: #060302;
---index-even-item-bg-color: black;
---index-header-color: #DDAEA6;
---index-separator-color: #431F19;
-
-/* header */
---header-background-color: #030101;
---header-separator-color: #100706;
---header-gradient-image: url('nav_hd.png');
---group-header-separator-color: #2F1611;
---group-header-color: #C16C5D;
---inherit-header-color: #A0A0A0;
-
---footer-foreground-color: #8F4336;
---footer-logo-width: 60px;
---citation-label-color: #C16C5D;
---glow-color: cyan;
-
---title-background-color: #050201;
---title-separator-color: #47211B;
---directory-separator-color: #2F1611;
---separator-color: #2F1611;
-
---blockquote-background-color: #0C0504;
---blockquote-border-color: #2F1611;
-
---scrollbar-thumb-color: #2F1611;
---scrollbar-background-color: #030101;
-
---icon-background-color: #431F19;
---icon-foreground-color: #DDAEA6;
---icon-doc-image: url('docd.png');
-
-/* brief member declaration list */
---memdecl-background-color: #060302;
---memdecl-separator-color: #351914;
---memdecl-foreground-color: #BBB;
---memdecl-template-color: #B75645;
-
-/* detailed member list */
---memdef-border-color: #25110E;
---memdef-title-background-color: #1A0C0A;
---memdef-title-gradient-image: url('nav_fd.png');
---memdef-proto-background-color: #170B08;
---memdef-proto-text-color: #C87C6F;
---memdef-proto-text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.9);
---memdef-doc-background-color: black;
---memdef-param-name-color: #D28757;
---memdef-template-color: #B75645;
-
-/* tables */
---table-cell-border-color: #2F1611;
---table-header-background-color: #2F1611;
---table-header-foreground-color: #DDAEA6;
-
-/* labels */
---label-background-color: #48221B;
---label-left-top-border-color: #6F342A;
---label-right-bottom-border-color: #2F1611;
---label-foreground-color: #CCCCCC;
-
-/** navigation bar/tree/menu */
---nav-background-color: #0C0504;
---nav-foreground-color: #4A221C;
---nav-gradient-image: url('tab_bd.png');
---nav-gradient-hover-image: url('tab_hd.png');
---nav-gradient-active-image: url('tab_ad.png');
---nav-gradient-active-image-parent: url("../tab_ad.png");
---nav-separator-image: url('tab_sd.png');
---nav-breadcrumb-image: url('bc_sd.png');
---nav-breadcrumb-border-color: #331813;
---nav-splitbar-image: url('splitbard.png');
---nav-font-size-level1: 13px;
---nav-font-size-level2: 10px;
---nav-font-size-level3: 9px;
---nav-text-normal-color: #D59C91;
---nav-text-hover-color: #EACDC8;
---nav-text-active-color: #EACDC8;
---nav-text-normal-shadow: 0px 1px 1px black;
---nav-text-hover-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
---nav-text-active-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
---nav-menu-button-color: #D59C91;
---nav-menu-background-color: #020100;
---nav-menu-foreground-color: #BBBBBB;
---nav-menu-toggle-color: rgba(255, 255, 255, 0.2);
---nav-arrow-color: #431F19;
---nav-arrow-selected-color: #C16C5D;
-
-/* table of contents */
---toc-background-color: #110806;
---toc-border-color: #210F0C;
---toc-header-color: #CB8477;
-
-/** search field */
---search-background-color: black;
---search-foreground-color: #C5C5C5;
---search-magnification-image: url('mag_d.svg');
---search-magnification-select-image: url('mag_seld.svg');
---search-active-color: #C5C5C5;
---search-filter-background-color: #0C0504;
---search-filter-foreground-color: #C16C5D;
---search-filter-border-color: #B75645;
---search-filter-highlight-text-color: #D8A39A;
---search-filter-highlight-bg-color: #2F1611;
---search-results-background-color: #0C0504;
---search-results-foreground-color: #C16C5D;
---search-results-border-color: #B75645;
---search-box-shadow: inset 0.5px 0.5px 3px 0px #3B1C16;
-
-/** code fragments */
---code-keyword-color: #CC99CD;
---code-type-keyword-color: #AB99CD;
---code-flow-keyword-color: #E08000;
---code-comment-color: #717790;
---code-preprocessor-color: #65CABE;
---code-string-literal-color: #7EC699;
---code-char-literal-color: #00E0F0;
---code-vhdl-digit-color: #FF00FF;
---code-vhdl-char-color: #000000;
---code-vhdl-keyword-color: #700070;
---code-vhdl-logic-color: #FF0000;
---code-link-color: #79C0FF;
---code-external-link-color: #79C0FF;
---fragment-foreground-color: #C9D1D9;
---fragment-background-color: black;
---fragment-border-color: #30363D;
---fragment-lineno-border-color: #30363D;
---fragment-lineno-background-color: black;
---fragment-lineno-foreground-color: #6E7681;
---fragment-lineno-link-fg-color: #6E7681;
---fragment-lineno-link-bg-color: #303030;
---fragment-lineno-link-hover-fg-color: #8E96A1;
---fragment-lineno-link-hover-bg-color: #505050;
---tooltip-foreground-color: #C9D1D9;
---tooltip-background-color: #202020;
---tooltip-border-color: #C9D1D9;
---tooltip-doc-color: #D9E1E9;
---tooltip-declaration-color: #20C348;
---tooltip-link-color: #79C0FF;
---tooltip-shadow: none;
-
-/** font-family */
---font-family-normal: Roboto,sans-serif;
---font-family-monospace: monospace,fixed;
---font-family-nav: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
---font-family-title: Tahoma,Arial,sans-serif;
---font-family-toc: Verdana,'DejaVu Sans',Geneva,sans-serif;
---font-family-search: Arial,Verdana,sans-serif;
---font-family-icon: Arial,Helvetica;
---font-family-tooltip: Roboto,sans-serif;
-
-}}
 body {
-    background-color: var(--page-background-color);
-    color: var(--page-foreground-color);
-    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-background-color);
+    background-color: white;
+    color: black;
+    scrollbar-color: #43A4FF #F3F9FE;
 }
 
 ::-webkit-scrollbar {
-        background-color: var(--scrollbar-background-color);
+        background-color: #F3F9FE;
 	height: 10px;
         width: 10px;
 }
 ::-webkit-scrollbar-thumb {
-        background-color: var(--scrollbar-thumb-color);
+        background-color: #43A4FF;
         border-radius: 8px;
 }
 ::-webkit-scrollbar-corner {
-        background-color: var(--scrollbar-background-color);
+        background-color: #F3F9FE;
 }
 
 body, table, div, p, dl {
 	font-weight: 400;
 	font-size: 14px;
-	font-family: var(--font-family-normal);
+	font-family: Roboto,sans-serif;
 	line-height: 22px;
 }
 
@@ -355,7 +31,7 @@ body, table, div, p, dl {
 .title {
 	font-weight: 400;
 	font-size: 14px;
-	font-family: var(--font-family-normal);
+	font-family: Roboto,sans-serif;
 	line-height: 28px;
 	font-size: 150%;
 	font-weight: bold;
@@ -367,8 +43,8 @@ h1.groupheader {
 }
 
 h2.groupheader {
-	border-bottom: 1px solid var(--group-header-separator-color);
-	color: var(--group-header-color);
+	border-bottom: 1px solid #1F92FF;
+	color: #003B72;
 	font-size: 150%;
 	font-weight: normal;
 	margin-top: 1.75em;
@@ -391,7 +67,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1.glow, h2.glow, h3.glow, h4.glow, h5.glow, h6.glow {
-	text-shadow: 0 0 15px var(--glow-color);
+	text-shadow: 0 0 15px cyan;
 }
 
 dt {
@@ -464,15 +140,15 @@ td.navtab {
 }
 
 td.navtabHL {
-	background-image: var(--nav-gradient-active-image);
+	background-image: url('tab_a.png');
 	background-repeat:repeat-x;
 	padding-right: 6px;
 	padding-left: 6px;
 }
 
 td.navtabHL a, td.navtabHL a:visited {
-	color: var(--nav-text-hover-color);
-	text-shadow: var(--nav-text-hover-shadow);
+	color: white;
+	text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
 }
 
 a.navtab {
@@ -484,7 +160,7 @@ div.qindex{
 	width: 100%;
 	line-height: 140%;
 	font-size: 130%;
-	color: var(--index-separator-color);
+	color: #A0A0A0;
 }
 
 dt.alphachar{
@@ -493,7 +169,7 @@ dt.alphachar{
 }
 
 .alphachar a{
-	color: var(--index-header-color);
+	color: black;
 }
 
 .alphachar a:hover, .alphachar a:visited{
@@ -513,11 +189,11 @@ dt.alphachar{
 }
 
 .classindex dl.even {
-	background-color: var(--index-even-item-bg-color);
+	background-color: white;
 }
 
 .classindex dl.odd {
-	background-color: var(--index-odd-item-bg-color);
+	background-color: #F1F8FF;
 }
 
 @media(min-width: 1120px) {
@@ -536,13 +212,13 @@ dt.alphachar{
 /* @group Link Styling */
 
 a {
-	color: var(--page-link-color);
+	color: #004789;
 	font-weight: normal;
 	text-decoration: none;
 }
 
 .contents a:visited {
-	color: var(--page-visited-link-color);
+	color: #0057A9;
 }
 
 a:hover {
@@ -557,11 +233,11 @@ a.elRef {
 }
 
 a.code, a.code:visited, a.line, a.line:visited {
-	color: var(--code-link-color);
+	color: #0057A9;
 }
 
 a.codeRef, a.codeRef:visited, a.lineRef, a.lineRef:visited {
-	color: var(--code-external-link-color);
+	color: #0057A9;
 }
 
 a.code.hl_class { /* style for links to class names in code snippets */ }
@@ -617,29 +293,29 @@ ul {
 }
 
 pre.fragment {
-        border: 1px solid var(--fragment-border-color);
-        background-color: var(--fragment-background-color);
-	color: var(--fragment-foreground-color);
+        border: 1px solid #8DC8FF;
+        background-color: #F8FBFF;
+	color: black;
         padding: 4px 6px;
         margin: 4px 8px 4px 2px;
         overflow: auto;
         word-wrap: break-word;
         font-size:  9pt;
         line-height: 125%;
-        font-family: var(--font-family-monospace);
+        font-family: monospace,fixed;
         font-size: 105%;
 }
 
 div.fragment {
 	padding: 0 0 1px 0; /*Fixed: last line underline overlap border*/
 	margin: 4px 8px 4px 2px;
-	color: var(--fragment-foreground-color);
-	background-color: var(--fragment-background-color);
-	border: 1px solid var(--fragment-border-color);
+	color: black;
+	background-color: #F8FBFF;
+	border: 1px solid #8DC8FF;
 }
 
 div.line {
-	font-family: var(--font-family-monospace);
+	font-family: monospace,fixed;
         font-size: 13px;
 	min-height: 13px;
 	line-height: 1.0;
@@ -671,8 +347,8 @@ div.line:after {
 }
 
 div.line.glow {
-	background-color: var(--glow-color);
-	box-shadow: 0 0 10px var(--glow-color);
+	background-color: cyan;
+	box-shadow: 0 0 10px cyan;
 }
 
 
@@ -680,19 +356,19 @@ span.lineno {
 	padding-right: 4px;
         margin-right: 9px;
 	text-align: right;
-	border-right: 2px solid var(--fragment-lineno-border-color);
-	color: var(--fragment-lineno-foreground-color);
-	background-color: var(--fragment-lineno-background-color);
+	border-right: 2px solid #00FF00;
+	color: black;
+	background-color: #E8E8E8;
         white-space: pre;
 }
 span.lineno a, span.lineno a:visited {
-	color: var(--fragment-lineno-link-fg-color);
-	background-color: var(--fragment-lineno-link-bg-color);
+	color: #0057A9;
+	background-color: #D8D8D8;
 }
 
 span.lineno a:hover {
-	color: var(--fragment-lineno-link-hover-fg-color);
-	background-color: var(--fragment-lineno-link-hover-bg-color);
+	color: #0057A9;
+	background-color: #C8C8C8;
 }
 
 .lineno {
@@ -725,7 +401,7 @@ div.groupText {
 }
 
 body {
-	color: var(--page-foreground-color);
+	color: black;
         margin: 0;
 }
 
@@ -773,11 +449,11 @@ address.footer {
 img.footer {
 	border: 0px;
 	vertical-align: middle;
-	width: var(--footer-logo-width);
+	width: 104px;
 }
 
 .compoundTemplParams {
-	color: var(--memdecl-template-color);
+	color: #0057A9;
 	font-size: 80%;
 	line-height: 120%;
 }
@@ -785,52 +461,52 @@ img.footer {
 /* @group Code Colorization */
 
 span.keyword {
-	color: var(--code-keyword-color);
+	color: #008000;
 }
 
 span.keywordtype {
-	color: var(--code-type-keyword-color);
+	color: #604020;
 }
 
 span.keywordflow {
-	color: var(--code-flow-keyword-color);
+	color: #E08000;
 }
 
 span.comment {
-	color: var(--code-comment-color);
+	color: #800000;
 }
 
 span.preprocessor {
-	color: var(--code-preprocessor-color);
+	color: #806020;
 }
 
 span.stringliteral {
-	color: var(--code-string-literal-color);
+	color: #002080;
 }
 
 span.charliteral {
-	color: var(--code-char-literal-color);
+	color: #008080;
 }
 
 span.vhdldigit { 
-	color: var(--code-vhdl-digit-color);
+	color: #FF00FF;
 }
 
 span.vhdlchar { 
-	color: var(--code-vhdl-char-color);
+	color: #000000;
 }
 
 span.vhdlkeyword { 
-	color: var(--code-vhdl-keyword-color);
+	color: #700070;
 }
 
 span.vhdllogic { 
-	color: var(--code-vhdl-logic-color);
+	color: #FF0000;
 }
 
 blockquote {
-        background-color: var(--blockquote-background-color);
-        border-left: 2px solid var(--blockquote-border-color);
+        background-color: #EFF7FF;
+        border-left: 2px solid #43A4FF;
         margin: 0 24px 0 4px;
         padding: 0 12px 0 16px;
 }
@@ -844,19 +520,19 @@ td.tiny {
 .dirtab {
 	padding: 4px;
 	border-collapse: collapse;
-	border: 1px solid var(--table-cell-border-color);
+	border: 1px solid #002E5A;
 }
 
 th.dirtab {
-	background-color: var(--table-header-background-color);
-	color: var(--table-header-foreground-color);
+	background-color: #003E78;
+	color: #FFFFFF;
 	font-weight: bold;
 }
 
 hr {
 	height: 0px;
 	border: none;
-	border-top: 1px solid var(--separator-color);
+	border-top: 1px solid #005DB5;
 }
 
 hr.footer {
@@ -884,14 +560,14 @@ table.memberdecls {
 }
 
 .memberdecls td.glow, .fieldtable tr.glow {
-	background-color: var(--glow-color);
-	box-shadow: 0 0 15px var(--glow-color);
+	background-color: cyan;
+	box-shadow: 0 0 15px cyan;
 }
 
 .mdescLeft, .mdescRight,
 .memItemLeft, .memItemRight,
 .memTemplItemLeft, .memTemplItemRight, .memTemplParams {
-	background-color: var(--memdecl-background-color);
+	background-color: #F3F9FE;
 	border: none;
 	margin: 4px;
 	padding: 1px 0 0 8px;
@@ -899,11 +575,11 @@ table.memberdecls {
 
 .mdescLeft, .mdescRight {
 	padding: 0px 8px 4px 8px;
-	color: var(--memdecl-foreground-color);
+	color: #555;
 }
 
 .memSeparator {
-        border-bottom: 1px solid var(--memdecl-separator-color);
+        border-bottom: 1px solid #BDDFFF;
         line-height: 1px;
         margin: 0px;
         padding: 0px;
@@ -918,7 +594,7 @@ table.memberdecls {
 }
 
 .memTemplParams {
-	color: var(--memdecl-template-color);
+	color: #0057A9;
         white-space: nowrap;
 	font-size: 80%;
 }
@@ -931,15 +607,15 @@ table.memberdecls {
 
 .memtitle {
 	padding: 8px;
-	border-top: 1px solid var(--memdef-border-color);
-	border-left: 1px solid var(--memdef-border-color);
-	border-right: 1px solid var(--memdef-border-color);
+	border-top: 1px solid #59AEFF;
+	border-left: 1px solid #59AEFF;
+	border-right: 1px solid #59AEFF;
 	border-top-right-radius: 4px;
 	border-top-left-radius: 4px;
 	margin-bottom: -1px;
-	background-image: var(--memdef-title-gradient-image);
+	background-image: url('nav_f.png');
 	background-repeat: repeat-x;
-	background-color: var(--memdef-title-background-color);
+	background-color: #C6E3FE;
 	line-height: 1.25;
 	font-weight: 300;
 	float:left;
@@ -954,7 +630,7 @@ table.memberdecls {
 
 .memtemplate {
 	font-size: 80%;
-	color: var(--memdef-template-color);
+	color: #0057A9;
 	font-weight: normal;
 	margin-left: 9px;
 }
@@ -977,7 +653,7 @@ table.memberdecls {
 }
 
 .memitem.glow {
-         box-shadow: 0 0 15px var(--glow-color);
+         box-shadow: 0 0 15px cyan;
 }
 
 .memname {
@@ -990,32 +666,32 @@ table.memberdecls {
 }
 
 .memproto, dl.reflist dt {
-        border-top: 1px solid var(--memdef-border-color);
-        border-left: 1px solid var(--memdef-border-color);
-        border-right: 1px solid var(--memdef-border-color);
+        border-top: 1px solid #59AEFF;
+        border-left: 1px solid #59AEFF;
+        border-right: 1px solid #59AEFF;
         padding: 6px 0px 6px 0px;
-        color: var(--memdef-proto-text-color);
+        color: #002344;
         font-weight: bold;
-        text-shadow: var(--memdef-proto-text-shadow);
-        background-color: var(--memdef-proto-background-color);
+        text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
+        background-color: #C0E0FF;
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
         border-top-right-radius: 4px;
 }
 
 .overload {
-        font-family: var(--font-family-monospace);
+        font-family: monospace,fixed;
 	font-size: 65%;
 }
 
 .memdoc, dl.reflist dd {
-        border-bottom: 1px solid var(--memdef-border-color);
-        border-left: 1px solid var(--memdef-border-color);
-        border-right: 1px solid var(--memdef-border-color);
+        border-bottom: 1px solid #59AEFF;
+        border-left: 1px solid #59AEFF;
+        border-right: 1px solid #59AEFF;
         padding: 6px 10px 2px 10px;
         border-top-width: 0;
         background-image:url('nav_g.png');
         background-repeat:repeat-x;
-        background-color: var(--memdef-doc-background-color);
+        background-color: white;
         /* opera specific markup */
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
@@ -1048,7 +724,7 @@ dl.reflist dd {
 }
 
 .paramname {
-	color: var(--memdef-param-name-color);
+	color: #602020;
 	white-space: nowrap;
 }
 .paramname em {
@@ -1074,7 +750,7 @@ dl.reflist dd {
 }
 
 .params .paramdir, .tparams .paramdir {
-        font-family: var(--font-family-monospace);
+        font-family: monospace,fixed;
         vertical-align: top;
 }
 
@@ -1098,13 +774,13 @@ span.mlabels {
 }
 
 span.mlabel {
-        background-color: var(--label-background-color);
-        border-top:1px solid var(--label-left-top-border-color);
-        border-left:1px solid var(--label-left-top-border-color);
-        border-right:1px solid var(--label-right-bottom-border-color);
-        border-bottom:1px solid var(--label-right-bottom-border-color);
+        background-color: #0081FA;
+        border-top:1px solid #0067C9;
+        border-left:1px solid #0067C9;
+        border-right:1px solid #8DC8FF;
+        border-bottom:1px solid #8DC8FF;
 	text-shadow: none;
-	color: var(--label-foreground-color);
+	color: white;
 	margin-right: 4px;
 	padding: 2px 3px;
 	border-radius: 3px;
@@ -1121,8 +797,8 @@ span.mlabel {
 
 div.directory {
         margin: 10px 0px;
-        border-top: 1px solid var(--directory-separator-color);
-        border-bottom: 1px solid var(--directory-separator-color);
+        border-top: 1px solid #43A4FF;
+        border-bottom: 1px solid #43A4FF;
         width: 100%;
 }
 
@@ -1160,12 +836,12 @@ div.directory {
 
 .directory tr.odd {
 	padding-left: 6px;
-	background-color: var(--index-odd-item-bg-color);
+	background-color: #F1F8FF;
 }
 
 .directory tr.even {
 	padding-left: 6px;
-	background-color: var(--index-even-item-bg-color);
+	background-color: white;
 }
 
 .directory img {
@@ -1183,11 +859,11 @@ div.directory {
         cursor: pointer;
         padding-left: 2px;
         padding-right: 2px;
-	color: var(--page-link-color);
+	color: #004789;
 }
 
 .arrow {
-    color: var(--nav-arrow-color);
+    color: #43A4FF;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
@@ -1201,15 +877,15 @@ div.directory {
 }
 
 .icon {
-    font-family: var(--font-family-icon);
+    font-family: Arial,Helvetica;
     line-height: normal;
     font-weight: bold;
     font-size: 12px;
     height: 14px;
     width: 16px;
     display: inline-block;
-    background-color: var(--icon-background-color);
-    color: var(--icon-foreground-color);
+    background-color: #0081FA;
+    color: white;
     text-align: center;
     border-radius: 4px;
     margin-left: 2px;
@@ -1248,7 +924,7 @@ div.directory {
     width: 24px;
     height: 18px;
     margin-bottom: 4px;
-    background-image:var(--icon-doc-image);
+    background-image:url('doc.png');
     background-position: 0px -4px;
     background-repeat: repeat-y;
     vertical-align:top;
@@ -1269,7 +945,7 @@ div.dynheader {
 
 address {
 	font-style: normal;
-	color: var(--footer-foreground-color);
+	color: #002A52;
 }
 
 table.doxtable caption {
@@ -1283,13 +959,13 @@ table.doxtable {
 }
 
 table.doxtable td, table.doxtable th {
-	border: 1px solid var(--table-cell-border-color);
+	border: 1px solid #002E5A;
 	padding: 3px 7px 2px;
 }
 
 table.doxtable th {
-	background-color: var(--table-header-background-color);
-	color: var(--table-header-foreground-color);
+	background-color: #003E78;
+	color: #FFFFFF;
 	font-size: 110%;
 	padding-bottom: 4px;
 	padding-top: 5px;
@@ -1297,7 +973,7 @@ table.doxtable th {
 
 table.fieldtable {
         margin-bottom: 10px;
-        border: 1px solid var(--memdef-border-color);
+        border: 1px solid #59AEFF;
         border-spacing: 0px;
         border-radius: 4px;
         box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
@@ -1309,8 +985,8 @@ table.fieldtable {
 
 .fieldtable td.fieldtype, .fieldtable td.fieldname {
         white-space: nowrap;
-        border-right: 1px solid var(--memdef-border-color);
-        border-bottom: 1px solid var(--memdef-border-color);
+        border-right: 1px solid #59AEFF;
+        border-bottom: 1px solid #59AEFF;
         vertical-align: top;
 }
 
@@ -1319,7 +995,7 @@ table.fieldtable {
 }
 
 .fieldtable td.fielddoc {
-        border-bottom: 1px solid var(--memdef-border-color);
+        border-bottom: 1px solid #59AEFF;
 }
 
 .fieldtable td.fielddoc p:first-child {
@@ -1335,18 +1011,18 @@ table.fieldtable {
 }
 
 .fieldtable th {
-        background-image: var(--memdef-title-gradient-image);
+        background-image: url('nav_f.png');
         background-repeat:repeat-x;
-        background-color: var(--memdef-title-background-color);
+        background-color: #C6E3FE;
         font-size: 90%;
-        color: var(--memdef-proto-text-color);
+        color: #002344;
         padding-bottom: 4px;
         padding-top: 5px;
         text-align:left;
         font-weight: 400;
         border-top-left-radius: 4px;
         border-top-right-radius: 4px;
-        border-bottom: 1px solid var(--memdef-border-color);
+        border-bottom: 1px solid #59AEFF;
 }
 
 
@@ -1354,7 +1030,7 @@ table.fieldtable {
 	top: 0px;
 	left: 10px;
 	height: 36px;
-	background-image: var(--nav-gradient-image);
+	background-image: url('tab_b.png');
 	z-index: 101;
 	overflow: hidden;
 	font-size: 13px;
@@ -1363,13 +1039,13 @@ table.fieldtable {
 .navpath ul
 {
 	font-size: 11px;
-	background-image: var(--nav-gradient-image);
+	background-image: url('tab_b.png');
 	background-repeat:repeat-x;
 	background-position: 0 -5px;
 	height:30px;
 	line-height:30px;
-	color:var(--nav-text-normal-color);
-	border:solid 1px var(--nav-breadcrumb-border-color);
+	color:#00274D;
+	border:solid 1px #88C5FF;
 	overflow:hidden;
 	margin:0px;
 	padding:0px;
@@ -1381,10 +1057,10 @@ table.fieldtable {
 	float:left;
 	padding-left:10px;
 	padding-right:15px;
-	background-image:var(--nav-breadcrumb-image);
+	background-image:url('bc_s.png');
 	background-repeat:no-repeat;
 	background-position:right;
-	color: var(--nav-foreground-color);
+	color: #003C74;
 }
 
 .navpath li.navelem a
@@ -1393,16 +1069,16 @@ table.fieldtable {
 	display:block;
 	text-decoration: none;
 	outline: none;
-	color: var(--nav-text-normal-color);
-	font-family: var(--font-family-nav);
-	text-shadow: var(--nav-text-normal-shadow);
+	color: #00274D;
+	font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
+	text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
 	text-decoration: none;
 }
 
 .navpath li.navelem a:hover
 {
-	color: var(--nav-text-hover-color);
-	text-shadow: var(--nav-text-hover-shadow);
+	color: white;
+	text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
 }
 
 .navpath li.footer
@@ -1414,7 +1090,7 @@ table.fieldtable {
         background-image:none;
         background-repeat:no-repeat;
         background-position:right;
-        color: var(--footer-foreground-color);
+        color: #002A52;
         font-size: 8pt;
 }
 
@@ -1459,11 +1135,11 @@ div.ingroups a
 
 div.header
 {
-        background-image: var(--header-gradient-image);
+        background-image: url('nav_h.png');
         background-repeat:repeat-x;
-	background-color: var(--header-background-color);
+	background-color: #F3F9FE;
 	margin:  0px;
-	border-bottom: 1px solid var(--header-separator-color);
+	border-bottom: 1px solid #8DC8FF;
 }
 
 div.headertitle
@@ -1566,7 +1242,7 @@ dl.section dd {
 #projectname
 {
 	font-size: 200%;
-	font-family: var(--font-family-title);
+	font-family: Tahoma,Arial,sans-serif;
 	margin: 0px;
 	padding: 2px 0px;
 }
@@ -1574,7 +1250,7 @@ dl.section dd {
 #projectbrief
 {
 	font-size: 90%;
-        font-family: var(--font-family-title);
+        font-family: Tahoma,Arial,sans-serif;
 	margin: 0px;
 	padding: 0px;
 }
@@ -1582,7 +1258,7 @@ dl.section dd {
 #projectnumber
 {
 	font-size: 50%;
-	font-family: 50% var(--font-family-title);
+	font-family: 50% Tahoma,Arial,sans-serif;
 	margin: 0px;
 	padding: 0px;
 }
@@ -1592,8 +1268,8 @@ dl.section dd {
 	padding: 0px;
 	margin: 0px;
 	width: 100%;
-	border-bottom: 1px solid var(--title-separator-color);
-	background-color: var(--title-background-color);
+	border-bottom: 1px solid #0067C9;
+	background-color: white;
 }
 
 .image
@@ -1631,7 +1307,7 @@ dl.citelist {
 }
 
 dl.citelist dt {
-        color:var(--citation-label-color);
+        color:#00376A;
         float:left;
         font-weight:bold;
         margin-right:10px;
@@ -1647,8 +1323,8 @@ dl.citelist dd {
 
 div.toc {
         padding: 14px 25px;
-        background-color: var(--toc-background-color);
-        border: 1px solid var(--toc-border-color);
+        background-color: #EAF5FE;
+        border: 1px solid #B2DAFF;
         border-radius: 7px 7px 7px 7px;
         float: right;
         height: auto;
@@ -1658,15 +1334,15 @@ div.toc {
 
 div.toc li {
         background: url("bdwn.png") no-repeat scroll 0 5px transparent;
-        font: 10px/1.2 var(--font-family-toc);
+        font: 10px/1.2 Verdana,'DejaVu Sans',Geneva,sans-serif;
         margin-top: 5px;
         padding-left: 10px;
         padding-top: 2px;
 }
 
 div.toc h3 {
-        font: bold 12px/1.2 var(--font-family-toc);
-	color: var(--toc-header-color);
+        font: bold 12px/1.2 Verdana,'DejaVu Sans',Geneva,sans-serif;
+	color: #0057A9;
         border-bottom: 0 none;
         margin: 0;
 }
@@ -1705,7 +1381,7 @@ span.obfuscator {
 
 .inherit_header {
         font-weight: bold;
-        color: var(--inherit-header-color);
+        color: gray;
         cursor: pointer;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -1738,11 +1414,11 @@ tr.heading h2 {
 #powerTip {
 	cursor: default;
 	/*white-space: nowrap;*/
-        color: var(--tooltip-foreground-color);
-	background-color: var(--tooltip-background-color);
-	border: 1px solid var(--tooltip-border-color);
+        color: black;
+	background-color: white;
+	border: 1px solid gray;
 	border-radius: 4px 4px 4px 4px;
-	box-shadow: var(--tooltip-shadow);
+	box-shadow: 1px 1px 7px gray;
 	display: none;
 	font-size: smaller;
 	max-width: 80%;
@@ -1753,7 +1429,7 @@ tr.heading h2 {
 }
 
 #powerTip div.ttdoc {
-        color: var(--tooltip-doc-color);
+        color: grey;
 	font-style: italic;
 }
 
@@ -1762,7 +1438,7 @@ tr.heading h2 {
 }
 
 #powerTip a {
-	color: var(--tooltip-link-color);
+	color: #0057A9;
 }
 
 #powerTip div.ttname {
@@ -1770,14 +1446,14 @@ tr.heading h2 {
 }
 
 #powerTip div.ttdeci {
-        color: var(--tooltip-declaration-color);
+        color: #006318;
 }
 
 #powerTip div {
         margin: 0px;
         padding: 0px;
         font-size: 12px;
-       	font-family: var(--font-family-tooltip);
+       	font-family: Roboto,sans-serif;
 	line-height: 16px;
 }
 
@@ -1823,12 +1499,12 @@ tr.heading h2 {
 }
 
 #powerTip.n:after, #powerTip.ne:after, #powerTip.nw:after {
-	border-top-color: var(--tooltip-background-color);
+	border-top-color: white;
 	border-width: 10px;
 	margin: 0px -10px;
 }
 #powerTip.n:before, #powerTip.ne:before, #powerTip.nw:before {
-	border-top-color: var(--tooltip-border-color);
+	border-top-color: gray;
 	border-width: 11px;
 	margin: 0px -11px;
 }
@@ -1851,13 +1527,13 @@ tr.heading h2 {
 }
 
 #powerTip.s:after, #powerTip.se:after, #powerTip.sw:after {
-	border-bottom-color: var(--tooltip-background-color);
+	border-bottom-color: white;
 	border-width: 10px;
 	margin: 0px -10px;
 }
 
 #powerTip.s:before, #powerTip.se:before, #powerTip.sw:before {
-	border-bottom-color: var(--tooltip-border-color);
+	border-bottom-color: gray;
 	border-width: 11px;
 	margin: 0px -11px;
 }
@@ -1878,13 +1554,13 @@ tr.heading h2 {
 	left: 100%;
 }
 #powerTip.e:after {
-	border-left-color: var(--tooltip-border-color);
+	border-left-color: gray;
 	border-width: 10px;
 	top: 50%;
 	margin-top: -10px;
 }
 #powerTip.e:before {
-	border-left-color: var(--tooltip-border-color);
+	border-left-color: gray;
 	border-width: 11px;
 	top: 50%;
 	margin-top: -11px;
@@ -1894,13 +1570,13 @@ tr.heading h2 {
 	right: 100%;
 }
 #powerTip.w:after {
-	border-right-color: var(--tooltip-border-color);
+	border-right-color: gray;
 	border-width: 10px;
 	top: 50%;
 	margin-top: -10px;
 }
 #powerTip.w:before {
-	border-right-color: var(--tooltip-border-color);
+	border-right-color: gray;
 	border-width: 11px;
 	top: 50%;
 	margin-top: -11px;
@@ -1934,7 +1610,7 @@ table.markdownTable {
 }
 
 table.markdownTable td, table.markdownTable th {
-	border: 1px solid var(--table-cell-border-color);
+	border: 1px solid #002E5A;
 	padding: 3px 7px 2px;
 }
 
@@ -1942,8 +1618,8 @@ table.markdownTable tr {
 }
 
 th.markdownTableHeadLeft, th.markdownTableHeadRight, th.markdownTableHeadCenter, th.markdownTableHeadNone {
-	background-color: var(--table-header-background-color);
-	color: var(--table-header-foreground-color);
+	background-color: #003E78;
+	color: #FFFFFF;
 	font-size: 110%;
 	padding-bottom: 4px;
 	padding-top: 5px;

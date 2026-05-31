@@ -9,7 +9,7 @@ The graphical tools are meant to be the comfortable path for everyday use. For
 example, `tgx_mesh.py` can load an OBJ or TGX mesh, preview materials and
 textures, tune conversion settings and export ready-to-include C++ files:
 
-![tgx_mesh graphical converter](../tgx_mesh_screenshot_small.png)
+![tgx_mesh graphical converter](../tgx_mesh_screenshot.png)
 
 
 | Tool | Purpose |
