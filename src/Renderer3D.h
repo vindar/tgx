@@ -1829,6 +1829,8 @@ namespace tgx
         * Drawing wireframe
         ************************************************************/
 
+        inline void _drawWireFrameLineFast(iVec2 P0, iVec2 P1, color_t color);
+
 
         template<bool DRAW_FAST> void _drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness);
 

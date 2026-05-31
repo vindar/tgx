@@ -2030,6 +2030,103 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        inline
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameLineFast(iVec2 P0, iVec2 P1, color_t color)
+            {
+            Image<color_t>* const im = _uni.im;
+            const int lx = im->lx();
+            const int ly = im->ly();
+            const int stride = im->stride();
+            color_t* const buf = im->data();
+
+            if (P0.y == P1.y)
+                {
+                const int y = P0.y;
+                if ((y < 0) || (y >= ly)) return;
+                int x0 = P0.x;
+                int x1 = P1.x;
+                if (x1 < x0) tgx::swap(x0, x1);
+                if ((x1 < 0) || (x0 >= lx)) return;
+                if (x0 < 0) x0 = 0;
+                if (x1 >= lx) x1 = lx - 1;
+                color_t* p = buf + TGX_CAST32(x0) + TGX_CAST32(y) * TGX_CAST32(stride);
+                int n = x1 - x0 + 1;
+                while (n-- > 0) *p++ = color;
+                return;
+                }
+
+            if (P0.x == P1.x)
+                {
+                const int x = P0.x;
+                if ((x < 0) || (x >= lx)) return;
+                int y0 = P0.y;
+                int y1 = P1.y;
+                if (y1 < y0) tgx::swap(y0, y1);
+                if ((y1 < 0) || (y0 >= ly)) return;
+                if (y0 < 0) y0 = 0;
+                if (y1 >= ly) y1 = ly - 1;
+                color_t* p = buf + TGX_CAST32(x) + TGX_CAST32(y0) * TGX_CAST32(stride);
+                int n = y1 - y0 + 1;
+                while (n-- > 0) { *p = color; p += stride; }
+                return;
+                }
+
+            const bool inside = (((unsigned)P0.x < (unsigned)lx) && ((unsigned)P1.x < (unsigned)lx)
+                              && ((unsigned)P0.y < (unsigned)ly) && ((unsigned)P1.y < (unsigned)ly));
+
+            if ((!inside)
+             && (((P0.x < 0) && (P1.x < 0)) || ((P0.x >= lx) && (P1.x >= lx))
+             || ((P0.y < 0) && (P1.y < 0)) || ((P0.y >= ly) && (P1.y >= ly))))
+                return;
+
+            BSeg seg(P0, P1);
+            seg.inclen();
+
+            if (!inside)
+                {
+                const iBox2 B(0, lx - 1, 0, ly - 1);
+                seg.move_inside_box(B);
+                const int32_t l = seg.lenght_inside_box(B);
+                if (seg.len() > l) seg.len() = l;
+                }
+
+            int32_t len = seg.len();
+            if (len <= 0) return;
+
+            color_t* p = buf + TGX_CAST32(seg.X()) + TGX_CAST32(seg.Y()) * TGX_CAST32(stride);
+            int32_t frac = seg._frac;
+            if (seg.x_major())
+                {
+                const int32_t sx = seg.step_x();
+                const int32_t sy_stride = seg.step_y() * stride;
+                const int32_t dx = seg._dx;
+                const int32_t dy = seg._dy;
+                while (len-- > 0)
+                    {
+                    *p = color;
+                    if (frac >= 0) { p += sy_stride; frac -= dx; }
+                    p += sx;
+                    frac += dy;
+                    }
+                }
+            else
+                {
+                const int32_t sx = seg.step_x();
+                const int32_t sy_stride = seg.step_y() * stride;
+                const int32_t dx = seg._dx;
+                const int32_t dy = seg._dy;
+                while (len-- > 0)
+                    {
+                    *p = color;
+                    if (frac >= 0) { p += sx; frac -= dy; }
+                    p += sy_stride;
+                    frac += dx;
+                    }
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         template<bool DRAW_FAST> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness)
             {
@@ -2066,6 +2163,10 @@ namespace tgx
                 ExtVec4* PPC0 = &QQA;
                 ExtVec4* PPC1 = &QQB;
                 ExtVec4* PPC2 = &QQC;
+                iVec2 IIA, IIB, IIC;
+                iVec2* PPI0 = &IIA;
+                iVec2* PPI1 = &IIB;
+                iVec2* PPI2 = &IIC;
 
                 int nbt;
                 while ((nbt = *(face++)) > 0)
@@ -2111,18 +2212,21 @@ namespace tgx
                         *((fVec4*)PPC2) = _projM * PPC2->P;
                         if (ortho) { PPC2->w = 1.0f - PPC2->z; } else { PPC2->zdivide(); }
                         *((fVec4*)PPC2) = M.mult1(*((fVec4*)PPC2));
+                        if (DRAW_FAST) *PPI2 = iVec2(*((fVec2*)PPC2));
 
                         if (PPC0->missedP)
                             {
                             *((fVec4*)PPC0) = _projM * PPC0->P;
                             if (ortho) { PPC0->w = 1.0f - PPC0->z; } else { PPC0->zdivide(); }
                             *((fVec4*)PPC0) = M.mult1(*((fVec4*)PPC0));
+                            if (DRAW_FAST) *PPI0 = iVec2(*((fVec2*)PPC0));
                             }
                         if (PPC1->missedP)
                             {
                             *((fVec4*)PPC1) = _projM * PPC1->P;
                             if (ortho) { PPC1->w = 1.0f - PPC1->z; } else { PPC1->zdivide(); }
                             *((fVec4*)PPC1) = M.mult1(*((fVec4*)PPC1));
+                            if (DRAW_FAST) *PPI1 = iVec2(*((fVec2*)PPC1));
                             }
 
                         // attributes are now all up to date
@@ -2139,26 +2243,26 @@ namespace tgx
                         // draw triangle
                         if (DRAW_FAST)
                             {
-                            iVec2 PP0(*((fVec2*)PPC0));
-                            iVec2 PP1(*((fVec2*)PPC1));
-                            iVec2 PP2(*((fVec2*)PPC2));
+                            const iVec2& PP0 = *PPI0;
+                            const iVec2& PP1 = *PPI1;
+                            const iVec2& PP2 = *PPI2;
                             if (PP0 == PP1)
                                 {
-                                _uni.im->drawLine(PP0, PP2, color);
+                                _drawWireFrameLineFast(PP0, PP2, color);
                                 }
                             else if (PP0 == PP2)
                                 {
-                                _uni.im->drawLine(PP0, PP1, color);
+                                _drawWireFrameLineFast(PP0, PP1, color);
                                 }
                             else if (PP1 == PP2)
                                 {
-                                _uni.im->drawLine(PP0, PP1, color);
+                                _drawWireFrameLineFast(PP0, PP1, color);
                                 }
                             else
                                 {
-                                if (!skip_shared_edge) _uni.im->drawLine(PP0, PP1, color);
-                                _uni.im->drawLine(PP1, PP2, color);
-                                _uni.im->drawLine(PP2, PP0, color);
+                                if (!skip_shared_edge) _drawWireFrameLineFast(PP0, PP1, color);
+                                _drawWireFrameLineFast(PP1, PP2, color);
+                                _drawWireFrameLineFast(PP2, PP0, color);
                                 }
                             }
                         else
@@ -2177,6 +2281,7 @@ namespace tgx
                         // get the next triangle
                         const uint16_t nv2 = *(face++);
                         swap(((nv2 & 32768) ? PPC0 : PPC1), PPC2);
+                        if (DRAW_FAST) swap(((nv2 & 32768) ? PPI0 : PPI1), PPI2);
                         if (tab_tex) face++;
                         if (tab_norm) face++;
                         PPC2->P = _r_modelViewM.mult1(tab_vert[nv2 & 32767]);
@@ -2213,6 +2318,10 @@ namespace tgx
             ExtVec4* PPC0 = &QQA;
             ExtVec4* PPC1 = &QQB;
             ExtVec4* PPC2 = &QQC;
+            iVec2 IIA, IIB, IIC;
+            iVec2* PPI0 = &IIA;
+            iVec2* PPI1 = &IIB;
+            iVec2* PPI2 = &IIC;
 
             // Mesh3Dv2 stores meshlet sphere metadata as 16-bit values relative
             // to the global bounding box. Decode the common scales once per mesh.
@@ -2327,18 +2436,21 @@ namespace tgx
                         *((fVec4*)PPC2) = _projM * PPC2->P;
                         if (ortho) { PPC2->w = 1.0f - PPC2->z; } else { PPC2->zdivide(); }
                         *((fVec4*)PPC2) = M.mult1(*((fVec4*)PPC2));
+                        if (DRAW_FAST) *PPI2 = iVec2(*((fVec2*)PPC2));
 
                         if (PPC0->missedP)
                             {
                             *((fVec4*)PPC0) = _projM * PPC0->P;
                             if (ortho) { PPC0->w = 1.0f - PPC0->z; } else { PPC0->zdivide(); }
                             *((fVec4*)PPC0) = M.mult1(*((fVec4*)PPC0));
+                            if (DRAW_FAST) *PPI0 = iVec2(*((fVec2*)PPC0));
                             }
                         if (PPC1->missedP)
                             {
                             *((fVec4*)PPC1) = _projM * PPC1->P;
                             if (ortho) { PPC1->w = 1.0f - PPC1->z; } else { PPC1->zdivide(); }
                             *((fVec4*)PPC1) = M.mult1(*((fVec4*)PPC1));
+                            if (DRAW_FAST) *PPI1 = iVec2(*((fVec2*)PPC1));
                             }
 
                         // attributes are now all up to date
@@ -2355,26 +2467,26 @@ namespace tgx
                         // draw triangle
                         if (DRAW_FAST)
                             {
-                            iVec2 PP0(*((fVec2*)PPC0));
-                            iVec2 PP1(*((fVec2*)PPC1));
-                            iVec2 PP2(*((fVec2*)PPC2));
+                            const iVec2& PP0 = *PPI0;
+                            const iVec2& PP1 = *PPI1;
+                            const iVec2& PP2 = *PPI2;
                             if (PP0 == PP1)
                                 {
-                                _uni.im->drawLine(PP0, PP2, color);
+                                _drawWireFrameLineFast(PP0, PP2, color);
                                 }
                             else if (PP0 == PP2)
                                 {
-                                _uni.im->drawLine(PP0, PP1, color);
+                                _drawWireFrameLineFast(PP0, PP1, color);
                                 }
                             else if (PP1 == PP2)
                                 {
-                                _uni.im->drawLine(PP0, PP1, color);
+                                _drawWireFrameLineFast(PP0, PP1, color);
                                 }
                             else
                                 {
-                                if (!skip_shared_edge) _uni.im->drawLine(PP0, PP1, color);
-                                _uni.im->drawLine(PP1, PP2, color);
-                                _uni.im->drawLine(PP2, PP0, color);
+                                if (!skip_shared_edge) _drawWireFrameLineFast(PP0, PP1, color);
+                                _drawWireFrameLineFast(PP1, PP2, color);
+                                _drawWireFrameLineFast(PP2, PP0, color);
                                 }
                             }
                         else
@@ -2393,6 +2505,7 @@ namespace tgx
                         // get the next triangle
                         const uint8_t nv2 = *(face++);
                         swap(((nv2 & 128) ? PPC0 : PPC1), PPC2);
+                        if (DRAW_FAST) swap(((nv2 & 128) ? PPI0 : PPI1), PPI2);
                         if (HAS_TEXCOORDS) face++;
                         if (HAS_NORMALS) face++;
                         PPC2->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, nv2 & 127, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
@@ -2446,7 +2559,7 @@ namespace tgx
                 {
                 iVec2 PP0(H0);
                 iVec2 PP1(H1);
-                _uni.im->drawLine(PP0, PP1, color);
+                _drawWireFrameLineFast(PP0, PP1, color);
                 }
             else
                 {
@@ -2502,7 +2615,7 @@ namespace tgx
                     {
                     iVec2 PP0(H0);
                     iVec2 PP1(H1);
-                    _uni.im->drawLine(PP0, PP1, color);
+                    _drawWireFrameLineFast(PP0, PP1, color);
                     }
                 else
                     {
@@ -2571,21 +2684,21 @@ namespace tgx
                 iVec2 PP2(H2);
                 if (PP0 == PP1)
                     {
-                    _uni.im->drawLine(PP0, PP2, color);
+                    _drawWireFrameLineFast(PP0, PP2, color);
                     }
                 else if (PP0 == PP2)
                     {
-                    _uni.im->drawLine(PP0, PP1, color);
+                    _drawWireFrameLineFast(PP0, PP1, color);
                     }
                 else if (PP1 == PP2)
                     {
-                    _uni.im->drawLine(PP0, PP1, color);
+                    _drawWireFrameLineFast(PP0, PP1, color);
                     }
                 else
                     {
-                    _uni.im->drawLine(PP0, PP1, color);
-                    _uni.im->drawLine(PP1, PP2, color);
-                    _uni.im->drawLine(PP2, PP0, color);
+                    _drawWireFrameLineFast(PP0, PP1, color);
+                    _drawWireFrameLineFast(PP1, PP2, color);
+                    _drawWireFrameLineFast(PP2, PP0, color);
                     }
                 }
             else
@@ -2658,21 +2771,21 @@ namespace tgx
                     iVec2 PP2(H2);
                     if (PP0 == PP1)
                         {
-                        _uni.im->drawLine(PP0, PP2, color);
+                        _drawWireFrameLineFast(PP0, PP2, color);
                         }
                     else if (PP0 == PP2)
                         {
-                        _uni.im->drawLine(PP0, PP1, color);
+                        _drawWireFrameLineFast(PP0, PP1, color);
                         }
                     else if (PP1 == PP2)
                         {
-                        _uni.im->drawLine(PP0, PP1, color);
+                        _drawWireFrameLineFast(PP0, PP1, color);
                         }
                     else
                         {
-                        _uni.im->drawLine(PP0, PP1, color);
-                        _uni.im->drawLine(PP1, PP2, color);
-                        _uni.im->drawLine(PP2, PP0, color);
+                        _drawWireFrameLineFast(PP0, PP1, color);
+                        _drawWireFrameLineFast(PP1, PP2, color);
+                        _drawWireFrameLineFast(PP2, PP0, color);
                         }
                     }
                 else
@@ -2752,10 +2865,10 @@ namespace tgx
                 iVec2 PP1(H1);
                 iVec2 PP2(H2);
                 iVec2 PP3(H3);
-                if (PP0 != PP1) _uni.im->drawLine(PP0, PP1, color);
-                if (PP1 != PP2) _uni.im->drawLine(PP1, PP2, color);
-                if (PP2 != PP3) _uni.im->drawLine(PP2, PP3, color);
-                if (PP3 != PP0) _uni.im->drawLine(PP3, PP0, color);
+                if (PP0 != PP1) _drawWireFrameLineFast(PP0, PP1, color);
+                if (PP1 != PP2) _drawWireFrameLineFast(PP1, PP2, color);
+                if (PP2 != PP3) _drawWireFrameLineFast(PP2, PP3, color);
+                if (PP3 != PP0) _drawWireFrameLineFast(PP3, PP0, color);
                 }
             else
                 {
@@ -2829,10 +2942,10 @@ namespace tgx
                     iVec2 PP1(H1);
                     iVec2 PP2(H2);
                     iVec2 PP3(H3);
-                    if (PP0 != PP1) _uni.im->drawLine(PP0, PP1, color);
-                    if (PP1 != PP2) _uni.im->drawLine(PP1, PP2, color);
-                    if (PP2 != PP3) _uni.im->drawLine(PP2, PP3, color);
-                    if (PP3 != PP0) _uni.im->drawLine(PP3, PP0, color);
+                    if (PP0 != PP1) _drawWireFrameLineFast(PP0, PP1, color);
+                    if (PP1 != PP2) _drawWireFrameLineFast(PP1, PP2, color);
+                    if (PP2 != PP3) _drawWireFrameLineFast(PP2, PP3, color);
+                    if (PP3 != PP0) _drawWireFrameLineFast(PP3, PP0, color);
                     }
                 else
                     {
