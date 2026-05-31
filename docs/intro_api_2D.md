@@ -692,6 +692,7 @@ TGX can draw bitmap fonts directly from the font headers included with the proje
 | Anchor | `drawTextEx()` interprets the position according to the selected \ref tgx::Anchor. |
 | Measurement | `measureText()` and `measureChar()` return bounding boxes without drawing anything. |
 | Built-in fonts | TGX ships bitmap font headers that must be explicitly included when used. |
+| Converted fonts | The recommended way to create new TGX font headers is the bundled \ref tools_font "`tools/tgx_font.py`" converter. |
 | TrueType fonts | For TrueType rendering, use the optional OpenFontRender binding described in \ref subsec_openfontrender. |
 
 *additional includes for the text fonts*
@@ -775,8 +776,10 @@ The TGX library supports fonts using:
 - ILI9341_t3 v1 format                  (https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format)
 - ILI9341_t3 v2 format (antialiased)    (https://github.com/projectitis/packedbdf/blob/master/packedbdf.md)
 
-@note tgx-font (https://github.com/vindar/tgx-font) contains a collection of ILI9341_t3 v1 and v2 (antialiased) fonts
-that can be used directly with the methods below (and instructions on how to convert a TTF font to this format).
+@note For new projects, prefer the bundled \ref tools_font "`tools/tgx_font.py`" converter. It creates Adafruit GFX,
+ILI9341_t3 v1 and ILI9341_t3 v2.3 font headers from TrueType/OpenType fonts, with graphical and command-line
+interfaces. The older tgx-font repository (https://github.com/vindar/tgx-font) is still useful as a ready-made
+collection of ILI9341_t3 v1 and v2 antialiased fonts.
 
 The following fonts are already packaged with TGX but must be included explicitly in the project when used:
 - **Arial** (non-AA font): `#include "font_tgx_Arial.h"`

@@ -3113,8 +3113,11 @@ namespace tgx
     * - ILI9341_t3 v1                   (https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format)
     * - ILI9341_t3 v23 (antialiased)    (https://github.com/projectitis/packedbdf/blob/master/packedbdf.md)
     *
-    * @note tgx-font (https://github.com/vindar/tgx-font) contains a collection ILI9341_t3 v1 and v2 (antialiased) fonts
-    *       that can be used directly with the methods below (and the instruction on how to convert a ttf font to  this format).
+    * @note For new projects, prefer the bundled `tools/tgx_font.py` converter, or
+    *       `tools/cli_tools/tgx_font_cli.py` for scripts. These tools create Adafruit GFX,
+    *       ILI9341_t3 v1 and ILI9341_t3 v2.3 font headers from TrueType/OpenType fonts.
+    *       The older tgx-font repository (https://github.com/vindar/tgx-font) is still
+    *       useful as a ready-made collection of compatible fonts.
     */
     ///@{
     //*************************************************************************************************************

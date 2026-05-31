@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;1.0.8</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.0</span>
    </div>
    <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
@@ -788,6 +788,8 @@ Drawing text</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Built-in fonts   </td><td class="markdownTableBodyNone">TGX ships bitmap font headers that must be explicitly included when used.    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Converted fonts   </td><td class="markdownTableBodyNone">The recommended way to create new TGX font headers is the bundled <a class="el" href="md_docs_tools.html#tools_font">`tools/tgx_font.py`</a> converter.    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">TrueType fonts   </td><td class="markdownTableBodyNone">For TrueType rendering, use the optional OpenFontRender binding described in <a class="el" href="md_docs_intro_api_2_d.html#subsec_openfontrender">Drawing text with TrueType fonts</a>.   </td></tr>
 </table>
 <p ><em>additional includes for the text fonts</em> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="font__tgx___arial_8h.html">font_tgx_Arial.h</a>&quot;</span></div>
@@ -872,7 +874,7 @@ Drawing text</h2>
 <li>ILI9341_t3 v1 format (<a href="https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format">https://forum.pjrc.com/threads/54316-ILI9341_t-font-structure-format</a>)</li>
 <li>ILI9341_t3 v2 format (antialiased) (<a href="https://github.com/projectitis/packedbdf/blob/master/packedbdf.md">https://github.com/projectitis/packedbdf/blob/master/packedbdf.md</a>)</li>
 </ul>
-<dl class="section note"><dt>Note</dt><dd>tgx-font (<a href="https://github.com/vindar/tgx-font">https://github.com/vindar/tgx-font</a>) contains a collection of ILI9341_t3 v1 and v2 (antialiased) fonts that can be used directly with the methods below (and instructions on how to convert a TTF font to this format).</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>For new projects, prefer the bundled <a class="el" href="md_docs_tools.html#tools_font">`tools/tgx_font.py`</a> converter. It creates Adafruit GFX, ILI9341_t3 v1 and ILI9341_t3 v2.3 font headers from TrueType/OpenType fonts, with graphical and command-line interfaces. The older tgx-font repository (<a href="https://github.com/vindar/tgx-font">https://github.com/vindar/tgx-font</a>) is still useful as a ready-made collection of ILI9341_t3 v1 and v2 antialiased fonts.</dd></dl>
 <p>The following fonts are already packaged with TGX but must be included explicitly in the project when used:</p><ul>
 <li><b>Arial</b> (non-AA font): <code>#include "font_tgx_Arial.h"</code></li>
 <li><b>Arial Bold</b> (non-AA font): <code>#include "font_tgx_Arial_Bold.h"</code></li>
