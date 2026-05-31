@@ -60,8 +60,8 @@ namespace tgx
     * draw 3D primitives onto this viewport which is  then mapped to a `tgx::Image`.
     *
     * @tparam LOADED_SHADERS    list of all shaders that may be used. By default, all shaders are enabled but
-    *                           if is possible to select only a subset of shaders to improve rendering speed and
-    *                           decrease memory usage significantly. Must a `|` combination of the following flags:
+    *                           it is possible to select only a subset of shaders to improve rendering speed and
+    *                           decrease memory usage significantly. Must be a `|` combination of the following flags:
     *                               - `SHADER_PERSPECTIVE`: enable perspective projection
     *                               - `SHADER_ORTHO`: enable orthographic projection
     *                               - `SHADER_NOZBUFFER`: enable rendering without using a z-buffer
@@ -83,7 +83,7 @@ namespace tgx
     *
     * 1. If a drawing call is made that requires a shader that was not enabled in the template parameter `LOADED_SHADERS` or
     *    if the Renderer3D object state is not valid (e.g. incorrect image size, enabled but missing z-buffer...) then the operation
-    *    will fails silently. In particular, if drawing without a Z-buffer is performed, the flag `SHADER_NOZBUFFER` **must** be set
+    *    will fail silently. In particular, if drawing without a Z-buffer is performed, the flag `SHADER_NOZBUFFER` **must** be set
     *    in LOADED_SHADERS. Similarly, if drawing without texturing is performed, the flag `SHADER_NOTEXTURE` **must** be set in LOADED_SHADERS.
     *
     * 2. Z-buffer testing is enabled as soon as a valid z-buffer is provided (with `Renderer3D::setZbuffer()`).
@@ -94,13 +94,14 @@ namespace tgx
     * 4. Texture dimensions must be powers of two when flag `SHADER_TEXTURE_WRAP_POW2` is set.
     *
     * 5. Back-face culling is set with `Renderer3D::setCulling()`. Triangles and quads must then be provided in the
-    *    choosen winding order.
+    *    chosen winding order.
     *
-    * 6. It is more efficient to use methods that draws several primitives at once rather than issuing
+    * 6. It is more efficient to use methods that draw several primitives at once rather than issuing
     *    multiple commands for drawing triangle/quads. For static geometry, `Renderer3D::drawMesh()` should be
-    *    use whenever possible insteaed of `Renderer3D::drawQuads()`, `Renderer3D::drawTriangles()`...
+    *    used whenever possible instead of `Renderer3D::drawQuads()`, `Renderer3D::drawTriangles()`...
     *
-    * 7. Wireframe drawing with 'high quality' is (currently) very slow. Use 'low quality' drawing if speed is required.
+    * 7. Wireframe drawing has a fast aliased path and a one-pixel antialiased path. Full overloads
+    *    with adjustable thickness + AA use the general thick-line path and can be very slow.
     *
     */
     template<typename color_t, Shader LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float>
@@ -163,7 +164,7 @@ namespace tgx
         * The normalized coordinates in `[-1,1]x[-1,1]` are mapped to `[0,lx-1]x[0,ly-1]` just before rasterization.
         *
         * It is possible to use a viewport larger than the image drawn onto by using an offset for the image inside
-        * the viewport in order to perform 'tile rendering'. see `setOffset()`.
+        * the viewport in order to perform 'tile rendering'. See `setOffset()`.
         *
         * the maximum viewport size depends on `TGX_RASTERIZE_SUBPIXEL_BITS` which specifies the sub-pixel precision
         * value used by the 3D rasterizer:
@@ -414,11 +415,11 @@ namespace tgx
         * 4. Texture mapping is 'perspective correct'. With `SHADER_FLAT` or `SHADER_GOURAUD`, the texture color is
         *    combined with the lighting. With `SHADER_UNLIT`, the texture color is copied directly.
         * 5. Large textures stored in flash memory may be VERY slow to access when the texture is not
-        *    read linearly which will happens for some (bad) triangle orientations and then cache becomes useless...
+        *    read linearly, which happens for some triangle orientations and can make the cache ineffective.
         *    This problem can be somewhat mitigated by:
         *    - splitting large textured triangles into smaller ones: then each triangle only accesses a small part
-        *      of the texture. This helps a lot wich cache optimization (this is why models with thousands of faces
-        *      may display faster that a simple textured cube in some cases).
+        *      of the texture. This helps cache locality a lot (this is why models with thousands of faces
+        *      may display faster than a simple textured cube in some cases).
         *    - moving the image into RAM if possible. Even moving the texture from FLASH to EXTMEM (if available) will usually give a great speed boost !
         */
         void setShaders(Shader shaders);
@@ -519,7 +520,7 @@ namespace tgx
         /**
          * Convert from world coordinates to normalized device coordinates (NDC).
          *
-         * @param   P   Point in the word coordinate system.
+         * @param   P   Point in the world coordinate system.
          *
          * @returns the coordinates of `P` on the standard viewport `[-1,1]^2` according to the current
          *          position of the camera.
@@ -534,7 +535,7 @@ namespace tgx
         /**
          * Convert from world coordinates to the corresponding image pixel.
          *
-         * @param   P   Point in the word coordinate system.
+         * @param   P   Point in the world coordinate system.
          *
          * @returns the coordinates of the associated pixel on the image.
          *
@@ -548,9 +549,9 @@ namespace tgx
         /**
          * Set the light source direction.
          *
-         * The 3d rendered uses a single 'directional light' i.e. a light source comming from infinity (such as the sun).
+         * The 3D renderer uses a single 'directional light' i.e. a light source coming from infinity (such as the sun).
          *
-         * @param   direction   The direction the light point toward given in world coordinates.
+         * @param   direction   The direction the light points toward, given in world coordinates.
          *
          * @sa setLight(), setLightAmbiant(), setLightDiffuse(), setLightSpecular()
          */
@@ -574,7 +575,7 @@ namespace tgx
          *
          * See Phong's lighting model: https://en.wikipedia.org/wiki/Phong_reflection_model.
          *
-         * @param   color   color for the difuse light.
+         * @param   color   color for the diffuse light.
          *
          * @sa setLight(), setLightDirection(), setLightAmbiant(), setLightSpecular()
          */
@@ -596,11 +597,11 @@ namespace tgx
         /**
          * Set all the lighting parameters of the scene at once.
          *
-         * The 3d rendered uses a single 'directional light' i.e. a light source comming from infinity (such as the sun).
+         * The 3D renderer uses a single 'directional light' i.e. a light source coming from infinity (such as the sun).
          *
          * See Phong's lighting model: https://en.wikipedia.org/wiki/Phong_reflection_model.
          *
-         * @param   direction       direction the light source point toward.
+         * @param   direction       direction the light source points toward.
          * @param   ambiantColor    light ambiant color.
          * @param   diffuseColor    light diffuse color.
          * @param   specularColor   light specular color.
@@ -628,7 +629,7 @@ namespace tgx
 
 
         /**
-         * Set the model tranformation matrix.
+         * Set the model transformation matrix.
          *
          * This matrix describes the transformation from local object space to view space. (i.e. the
          * matrix specifies the position of the object in world space).
@@ -641,9 +642,9 @@ namespace tgx
 
 
         /**
-         * Return the model tranformation matrix.
+         * Return the model transformation matrix.
          *
-         * @returns a copy of the current model tranformation matrix.
+         * @returns a copy of the current model transformation matrix.
          *
          * @sa  setModelMatrix(), setModelPosScaleRot()
         **/
@@ -651,18 +652,18 @@ namespace tgx
 
 
         /**
-         * Set the model tranformation matrix to move an object to a given a given location, scale and
+         * Set the model transformation matrix to move an object to a given location, scale and
          * rotation.
          *
          * The method is such that, if a model is initially centered around the origin in model
-         * coordinate, then it will be placed at a given position/scale/rotation in the world
+         * coordinates, then it will be placed at a given position/scale/rotation in the world
          * coordinates after multiplication by the model transformation matrix.
          *
          * Transforms are done in the following order:
          *
-         * 1. The model is scaled in each direction in the model coord. according to `scale`
-         * 2. The model is rotated in model coord. around direction `rot_dir` and with an angle `rot_angle` (in degree).
-         * 3. The model is translated to position `center` in the world coord.
+         * 1. The model is scaled in each direction in model coordinates according to `scale`
+         * 2. The model is rotated in model coordinates around direction `rot_dir` and with an angle `rot_angle` (in degrees).
+         * 3. The model is translated to position `center` in world coordinates.
          *
          * @param   center      new center position after transformation.
          * @param   scale       scaling factor in each direction.
@@ -679,7 +680,7 @@ namespace tgx
         *
         * @param P  Point given in the model coordinate system.
         *
-        * @returns the projection of `P` on the standard viewport `[-1,1]^2`` according
+        * @returns the projection of `P` on the standard viewport `[-1,1]^2` according
         *          to the current position of the camera.
         *
         * @remark the .w value can be used for depth testing.
@@ -717,7 +718,7 @@ namespace tgx
         /**
          * Set how much the object material reflects the ambient light.
          *
-         * @param   strenght    ambiant lightreflection strength in [0.0f,1.0f]. Default value 0.1f.
+         * @param   strenght    ambient light reflection strength in [0.0f,1.0f]. Default value 0.1f.
          *
          * @sa  setMaterialColor(), setMaterialDiffuseStrength(),
          *      setMaterialSpecularStrength(), setMaterialSpecularExponent(), setMaterial()
@@ -764,7 +765,7 @@ namespace tgx
          * Set all the object material properties at once.
          *
          * @param   color               The material color.
-         * @param   ambiantStrength     The ambiant light reflection strength.
+         * @param   ambiantStrength     The ambient light reflection strength.
          * @param   diffuseStrength     The diffuse light reflection strength.
          * @param   specularStrength    The specular light reflection strength.
          * @param   specularExponent    The specular exponent.
@@ -792,7 +793,7 @@ namespace tgx
          * @remark
          * 1. Normal vectors are mandatory when using Gouraud shading and must be normalized (unit length).
          * 2. Texture dimension must be power of two when using flag `SHADER_TEXTURE_WRAP_POW2`.
-         * 3. Triangle and quads must be given in the correct winding order. The 4 vertices of a quads must be co-planar.
+         * 3. Triangles and quads must be given in the correct winding order. The 4 vertices of a quad must be co-planar.
          * 4. The fastest method to display 'static' geometry is to use the drawMesh() method. Other methods are slower and should be reserved for 'dynamic' geometry.
          * 5. Do not forget to clear the z-buffer with `clearZbuffer()` at the beggining of each new frame.
          */
@@ -813,9 +814,9 @@ namespace tgx
          *
          * @remark
          * - Drawing a mesh is the most effective way of drawing a 3D object (faster than drawing individual
-         *   triangles/quads) so it should be the prefered method whenever working with static geometry.
+         *   triangles/quads) so it should be the preferred method whenever working with static geometry.
          * - The mesh can be located in any memory region (RAM, FLASH...) but using a fast memory will
-         *   improve renderin speed noticeably. The methods `cacheMesh()` (or `copyMeshEXTMEM()` on Teensy) are
+         *   improve rendering speed noticeably. The methods `cacheMesh()` (or `copyMeshEXTMEM()` on Teensy) are
          *   available to copy a mesh to a faster memory location before rendering.
          */
         void drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material = true, bool draw_chained_meshes = true);
@@ -1095,8 +1096,8 @@ namespace tgx
          * Draw a unit radius sphere centered at the origin `S(0,1)` in model space.
          *
          * @remark
-         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
-         * - The mesh created is a UV-sphere with a given number of sector and stacks.
+         * - The model transform matrix may be used to position the sphere anywhere in world space and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere with a given number of sectors and stacks.
          *
          * @param   nb_sectors  number of sectors of the UV sphere.
          * @param   nb_stacks   number of stacks of the UV sphere.
@@ -1108,13 +1109,13 @@ namespace tgx
          * Draw a textured unit radius sphere centered at the origin S(0,1) in model space.
          *
          * @remark
-         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
-         * - The mesh created is a UV-sphere with a given number of sector and stacks.
+         * - The model transform matrix may be used to position the sphere anywhere in world space and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere with a given number of sectors and stacks.
          * - The texture is mapped using the Mercator projection.
          *
          * @param   nb_sectors  number of sectors of the UV sphere.
          * @param   nb_stacks   number of stacks of the UV sphere.
-         * @param   texture     The texture (mapped via Mercoator projection)
+         * @param   texture     The texture (mapped via Mercator projection)
          */
         void drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture);
 
@@ -1123,9 +1124,9 @@ namespace tgx
          * Draw a unit radius sphere centered at the origin S(0,1) in model space.
          *
          * @remark
-         * - The model transform matrix may be used position the sphere anywhere in world space and
+         * - The model transform matrix may be used to position the sphere anywhere in world space and
          * change it to an ellipsoid.
-         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted
+         * - The mesh created is a UV-sphere and the number of sectors and stacks is adjusted
          * automatically according to the apparent size on the screen.
          *
          * @param   quality Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
@@ -1140,9 +1141,9 @@ namespace tgx
          * Draw a textured unit radius sphere centered at the origin S(0,1) in model space.
          *
          * @remark
-         * - The model transform matrix may be used position the sphere anywhere in world space
+         * - The model transform matrix may be used to position the sphere anywhere in world space
          *   and change it to an ellipsoid.
-         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted
+         * - The mesh created is a UV-sphere and the number of sectors and stacks is adjusted
          *   automatically according to the apparent size on the screen.
          * - The texture is mapped using the Mercator projection.
          *
@@ -1170,9 +1171,11 @@ namespace tgx
          *
          * Methods for drawing wireframe meshes, triangles and quads.
          *
-         * Two versions for each method :
-         * 1. Fast but low quality drawing.
-         * 2. Slow but high quality drawing (adjustable thickness, alpha-blending, anti-aliasing).
+         * Two versions for each method:
+         * 1. Fast drawing: no thickness, no blending, no anti-aliasing.
+         * 2. Antialiased drawing: use the explicit `drawWireFrame...AA()` methods for optimized
+         *    one-pixel antialiased lines, or the full overloads with adjustable thickness + AA.
+         *    The latter use the general thick-line path and are very slow.
          *
          * @remark Wireframe methods do not take the scene lighting into account.
          */
@@ -1183,10 +1186,10 @@ namespace tgx
 
 
         /**
-         * Draw a mesh in wireframe [*low quality*].
+         * Draw a mesh in wireframe [*fast*].
          *
          * @remark
-         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
          * - The mesh is drawn with the current material color (not that of the mesh). This method does not
          *   require a zbuffer but back face culling is used if it is enabled.
          *
@@ -1197,10 +1200,10 @@ namespace tgx
 
 
         /**
-         * Draw a Mesh3Dv2 object in wireframe [*low quality*].
+         * Draw a Mesh3Dv2 object in wireframe [*fast*].
          *
          * @remark
-         * - This method uses fast low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
          * - The mesh is drawn with the current material color, not with the Mesh3Dv2 materials.
          * - This method does not require a zbuffer but back face culling is used if it is enabled.
          * - Meshlet visibility cones are used when `TGX_MESHLET_WIREFRAME_CULL` is enabled.
@@ -1211,13 +1214,39 @@ namespace tgx
 
 
         /**
-         * Draw a mesh in wireframe [*high quality*].
+         * Draw a mesh in wireframe [*antialiased*] with the current material color.
          *
          * @remark
-         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
+         *
+         * @param   mesh                The mesh to draw.
+         * @param   draw_chained_meshes True to draw also the chained meshes.
+        **/
+        void drawWireFrameMeshAA(const Mesh3D<color_t>* mesh, bool draw_chained_meshes = true);
+
+
+        /**
+         * Draw a Mesh3Dv2 object in wireframe [*antialiased*] with the current material color.
+         *
+         * @remark
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
+         *
+         * @param   mesh        The Mesh3Dv2 object to draw.
+        **/
+        void drawWireFrameMeshAA(const Mesh3Dv2<color_t>* mesh);
+
+
+        /**
+         * Draw a mesh in wireframe [*adjustable thickness + AA*].
+         *
+         * @remark
+         * - This method uses the general adjustable thickness + AA line path with explicit color and opacity.
+         * - It is very slow compared with `drawWireFrameMesh()` and `drawWireFrameMeshAA()`.
          * - This method does not require a zbuffer but back face culling is used if it is enabled.
          *
-         * @warning This method is very slow (may be slower that solid drawing) !
+         * @warning This method is very slow and may be slower than solid drawing.
          *
          * @param   mesh                The mesh to draw
          * @param   draw_chained_meshes True to draw also the chained meshes.
@@ -1229,14 +1258,15 @@ namespace tgx
 
 
         /**
-         * Draw a Mesh3Dv2 object in wireframe [*high quality*].
+         * Draw a Mesh3Dv2 object in wireframe [*adjustable thickness + AA*].
          *
          * @remark
-         * - This method uses high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - This method uses the general adjustable thickness + AA line path with explicit color and opacity.
+         * - It is very slow compared with `drawWireFrameMesh()` and `drawWireFrameMeshAA()`.
          * - This method does not require a zbuffer but back face culling is used if it is enabled.
          * - Meshlet visibility cones are used when `TGX_MESHLET_WIREFRAME_CULL` is enabled.
          *
-         * @warning This method is very slow (may be slower that solid drawing) !
+         * @warning This method is very slow and may be slower than solid drawing.
          *
          * @param   mesh                The Mesh3Dv2 object to draw.
          * @param   thickness           thickness of the lines.
@@ -1247,10 +1277,10 @@ namespace tgx
 
 
         /**
-         * Draw a wireframe line segment [*low quality*].
+         * Draw a wireframe line segment [*fast*].
          *
          * @remark
-         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
          * - The line is drawn with the current material color.
          *
          * @param   P1,P2  endpoints in model space.
@@ -1259,11 +1289,23 @@ namespace tgx
 
 
         /**
-         * Draw a wireframe line segment [*high quality*].
+         * Draw a wireframe line segment [*antialiased*] with the current material color.
          *
-         * @remark This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * @remark
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
          *
-         * @warning This method is very slow (may be slower that solid drawing) !
+         * @param   P1,P2       endpoints in model space.
+        **/
+        void drawWireFrameLineAA(const fVec3& P1, const fVec3& P2);
+
+
+        /**
+         * Draw a wireframe line segment [*adjustable thickness + AA*].
+         *
+         * @remark This method uses the general adjustable thickness + AA line path with explicit color and opacity.
+         *
+         * @warning This method is very slow and may be slower than solid drawing.
          *
          * @param   P1,P2       endpoints in model space.
          * @param   thickness   thickness of the line
@@ -1274,10 +1316,10 @@ namespace tgx
 
 
         /**
-         * Draw a collection of wireframe line segments [*low quality*].
+         * Draw a collection of wireframe line segments [*fast*].
          *
          * @remark
-         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
          * - The lines are drawn with the current material color.
          *
          * @param   nb_lines        number of lines to draw
@@ -1288,11 +1330,25 @@ namespace tgx
 
 
         /**
-         * Draw a collection of wireframe line segments [*high quality*].
+         * Draw wireframe line segments [*antialiased*] with the current material color.
          *
-         * @remark This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * @remark
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
          *
-         * @warning This method is very slow (may be slower that solid drawing) !
+         * @param   nb_lines        number of lines to draw.
+         * @param   ind_vertices    array of vertex indices.
+         * @param   vertices        The array of vertices in model space.
+        **/
+        void drawWireFrameLinesAA(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices);
+
+
+        /**
+         * Draw a collection of wireframe line segments [*adjustable thickness + AA*].
+         *
+         * @remark This method uses the general adjustable thickness + AA line path with explicit color and opacity.
+         *
+         * @warning This method is very slow and may be slower than solid drawing.
          *
          * @param   nb_lines        number of lines to draw
          * @param   ind_vertices    array of vertex indices. The length of the array is `nb_lines*2` and each 2 consecutive values represent a line segment.
@@ -1305,10 +1361,10 @@ namespace tgx
 
 
         /**
-         * Draw a wireframe triangle [*low quality*].
+         * Draw a wireframe triangle [*fast*].
          *
          * @remark
-         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
          * - The lines are drawn with the current material color.
          * - This method does not use the z-buffer but backface culling is used if enabled.
          *
@@ -1318,13 +1374,25 @@ namespace tgx
 
 
         /**
-         * Draw a wireframe triangle [*high quality*].
+         * Draw a wireframe triangle [*antialiased*] with the current material color.
          *
          * @remark
-         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
+         *
+         * @param   P1, P2, P3      triangle vertices in model space.
+        **/
+        void drawWireFrameTriangleAA(const fVec3& P1, const fVec3& P2, const fVec3& P3);
+
+
+        /**
+         * Draw a wireframe triangle [*adjustable thickness + AA*].
+         *
+         * @remark
+         * - This method uses the general adjustable thickness + AA line path with explicit color and opacity.
          * - This method does not use the z-buffer but backface culling is used if enabled.
          *
-         * @warning This method is very slow (may be slower that solid drawing) !
+         * @warning This method is very slow and may be slower than solid drawing.
          *
          * @param   P1, P2, P3      triangle vertices in model space.
          * @param   thickness       thickness of the lines
@@ -1335,10 +1403,10 @@ namespace tgx
 
 
         /**
-         * Draw a collection of wireframe triangles [*low quality*].
+         * Draw a collection of wireframe triangles [*fast*].
          *
          * @remark
-         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
          * - The lines are drawn with the current material color.
          * - This method does not use the z-buffer but backface culling is used if enabled.
          *
@@ -1350,13 +1418,27 @@ namespace tgx
 
 
         /**
-         * Draw a collection of wireframe triangles [*high quality*].
+         * Draw wireframe triangles [*antialiased*] with the current material color.
          *
          * @remark
-         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
+         *
+         * @param   nb_triangles    number of triangles to draw.
+         * @param   ind_vertices    Array of vertex indexes.
+         * @param   vertices        Array of vertices in model space.
+        **/
+        void drawWireFrameTrianglesAA(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices);
+
+
+        /**
+         * Draw a collection of wireframe triangles [*adjustable thickness + AA*].
+         *
+         * @remark
+         * - This method uses the general adjustable thickness + AA line path with explicit color and opacity.
          * - This method does not use the z-buffer but backface culling is used if enabled.
          *
-         * @warning This method is very slow (may be slower that solid drawing) !
+         * @warning This method is very slow and may be slower than solid drawing.
          *
          * @param   nb_triangles    number of triangles to draw.
          * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_triangles*3` and each 3 consecutive values represent a triangle.
@@ -1369,13 +1451,13 @@ namespace tgx
 
 
         /**
-         * Draw a wireframe quad [*low quality*].
+         * Draw a wireframe quad [*fast*].
          *
          * @remark
-         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
          * - The lines are drawn with the current material color.
          * - This method does not use the z-buffer but backface culling is used if enabled.
-         * - The four vertices of the quads must be co-planar.
+         * - The four vertices of each quad must be co-planar.
          *
          * @param   P1, P2, P3,P4       the quad vertices in model space.
         **/
@@ -1383,14 +1465,26 @@ namespace tgx
 
 
         /**
-         * Draw a wireframe quad [*high quality*].
+         * Draw a wireframe quad [*antialiased*] with the current material color.
          *
          * @remark
-         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
-         * - This method does not use the z-buffer but backface culling is used if enabled.
-         * - The four vertices of the quads must be co-planar.
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
          *
-         * @warning This method is very slow (may be slower that solid drawing) !
+         * @param   P1, P2, P3,P4   the quad vertices in model space.
+         */
+        void drawWireFrameQuadAA(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4);
+
+
+        /**
+         * Draw a wireframe quad [*adjustable thickness + AA*].
+         *
+         * @remark
+         * - This method uses the general adjustable thickness + AA line path with explicit color and opacity.
+         * - This method does not use the z-buffer but backface culling is used if enabled.
+         * - The four vertices of each quad must be co-planar.
+         *
+         * @warning This method is very slow and may be slower than solid drawing.
          *
          * @param   P1, P2, P3,P4       the quad vertices in model space.
          * @param   thickness           thickness of the lines
@@ -1401,30 +1495,44 @@ namespace tgx
 
 
         /**
-         * Draw a collection of wireframe quads [*low quality*].
+         * Draw a collection of wireframe quads [*fast*].
          *
          * @remark
-         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
          * - The lines are drawn with the current material color.
          * - This method does not use the z-buffer but backface culling is used if enabled.
-         * - The four vertices of the quads must be co-planar.
+         * - The four vertices of each quad must be co-planar.
          *
          * @param   nb_quads        number of quads to draw.
          * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_quads*4` and each 4 consecutive values represent a quad.
          * @param   vertices        Array of vertices in model space.
-         */
+        */
         void drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices);
 
 
         /**
-         * Draw a collection of wireframe quads [*high quality*].
+         * Draw wireframe quads [*antialiased*] with the current material color.
          *
          * @remark
-         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
-         * - This method does not use the z-buffer but backface culling is used if enabled.
-         * - The four vertices of the quads must be co-planar.
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
          *
-         * @warning This method is very slow (may be slower that solid drawing) !
+         * @param   nb_quads        number of quads to draw.
+         * @param   ind_vertices    Array of vertex indexes.
+         * @param   vertices        Array of vertices in model space.
+         */
+        void drawWireFrameQuadsAA(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices);
+
+
+        /**
+         * Draw a collection of wireframe quads [*adjustable thickness + AA*].
+         *
+         * @remark
+         * - This method uses the general adjustable thickness + AA line path with explicit color and opacity.
+         * - This method does not use the z-buffer but backface culling is used if enabled.
+         * - The four vertices of each quad must be co-planar.
+         *
+         * @warning This method is very slow and may be slower than solid drawing.
          *
          * @param   nb_quads        number of quads to draw.
          * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_quads*4` and each 4 consecutive values represent a quad.
@@ -1446,9 +1554,11 @@ namespace tgx
          *
          * Methods for drawing wireframe cubes and spheres.
          *
-         * Two versions for each method :
-         * 1. Fast but low quality drawing.
-         * 2. Slow but high quality drawin (adjustable thickness, alpha-blending, anti-aliasing).
+         * Two versions for each method:
+         * 1. Fast drawing: no thickness, no blending, no anti-aliasing.
+         * 2. Antialiased drawing: use the explicit `drawWireFrame...AA()` methods for optimized
+         *    one-pixel antialiased lines, or the full overloads with adjustable thickness + AA.
+         *    The latter use the general thick-line path and are very slow.
          *
          * @remark Wireframe methods do not take the scene lighting into account.
          */
@@ -1458,23 +1568,33 @@ namespace tgx
 
 
         /**
-         * Draw the wireframe cube [0,1]^3 (in model space) [*low quality*].
+         * Draw the wireframe cube [0,1]^3 (in model space) [*fast*].
          *
          * @remark
-         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
          * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
          */
         void drawWireFrameCube();
 
 
         /**
-         * Draw the wireframe cube [0,1]^3 (in model space) [*high quality*].
+         * Draw the wireframe cube [0,1]^3 [*antialiased*] with the current material color.
          *
          * @remark
-         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
+         */
+        void drawWireFrameCubeAA();
+
+
+        /**
+         * Draw the wireframe cube [0,1]^3 (in model space) [*adjustable thickness + AA*].
+         *
+         * @remark
+         * - This method uses the general adjustable thickness + AA line path with explicit color and opacity.
          * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
          *
-         * @warning This method is very slow (may be slower that solid drawing) !
+         * @warning This method is very slow and may be slower than solid drawing.
          *
          * @param   thickness       thickness of the lines
          * @param   color           color to use
@@ -1484,12 +1604,12 @@ namespace tgx
 
 
         /**
-         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*low quality*].
+         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*fast*].
          *
          * @remark
-         * - Create a UV-sphere with a given number of sector and stacks.
-         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
-         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         * - Creates a UV-sphere with a given number of sectors and stacks.
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
+         * - The model transform matrix may be used to position the sphere anywhere in world space and change it to an ellipsoid.
          *
          * @param   nb_sectors  number of sectors in the UV sphere.
          * @param   nb_stacks   number of stacks in the UV sphere.
@@ -1498,14 +1618,27 @@ namespace tgx
 
 
         /**
-         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*high quality*].
+         * Draw a wireframe unit radius sphere [*antialiased*] with the current material color.
          *
          * @remark
-         * - Create a UV-sphere with a given number of sector and stacks.
-         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
-         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
          *
-         * @warning This method is very slow (may be slower that solid drawing) !
+         * @param   nb_sectors      number of sectors in the UV sphere.
+         * @param   nb_stacks       number of stacks in the UV sphere.
+        **/
+        void drawWireFrameSphereAA(int nb_sectors, int nb_stacks);
+
+
+        /**
+         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*adjustable thickness + AA*].
+         *
+         * @remark
+         * - Creates a UV-sphere with a given number of sectors and stacks.
+         * - This method uses the general adjustable thickness + AA line path with explicit color and opacity.
+         * - The model transform matrix may be used to position the sphere anywhere in world space and change it to an ellipsoid.
+         *
+         * @warning This method is very slow and may be slower than solid drawing.
          *
          * @param   nb_sectors      number of sectors in the UV sphere.
          * @param   nb_stacks       number of stacks in the UV sphere.
@@ -1517,12 +1650,12 @@ namespace tgx
 
 
         /**
-         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*low quality*].
+         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*fast*].
          *
          * @remark
-         * - This method use (fast) low quality drawing: no thickness, no blending, no anti-aliasing.
-         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
-         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted automatically according to the apparent size on the screen.
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
+         * - The model transform matrix may be used to position the sphere anywhere in world space and change it to an ellipsoid.
+         * - The mesh created is a UV-sphere and the number of sectors and stacks is adjusted automatically according to the apparent size on the screen.
          *
          * @param quality   Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
          *                  - `1` : default quality
@@ -1533,14 +1666,26 @@ namespace tgx
 
 
         /**
-         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*high quality*].
+         * Draw an adaptive wireframe sphere [*antialiased*] with the current material color.
          *
          * @remark
-         * - The model transform matrix may be used position the sphere anywhere in world space and change it to an ellipsoid.
-         * - This method use high quality drawing: blending with opacity, thickness, and anti-aliasing.
-         * - The mesh created is a UV-sphere and the number of sector and stacks is adjusted automatically according to the apparent size on the screen.
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
          *
-         * @warning This method is very slow (may be slower that solid drawing) !
+         * @param quality       Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
+         */
+        void drawWireFrameAdaptativeSphereAA(float quality = 1.0f);
+
+
+        /**
+         * Draw a wireframe unit radius sphere centered at the origin (in model space) [*adjustable thickness + AA*].
+         *
+         * @remark
+         * - The model transform matrix may be used to position the sphere anywhere in world space and change it to an ellipsoid.
+         * - This method uses the general adjustable thickness + AA line path with explicit color and opacity.
+         * - The mesh created is a UV-sphere and the number of sectors and stacks is adjusted automatically according to the apparent size on the screen.
+         *
+         * @warning This method is very slow and may be slower than solid drawing.
          *
          * @param quality       Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
          *                      - `1` : default quality
@@ -1831,22 +1976,23 @@ namespace tgx
 
         inline void _drawWireFrameLineFast(iVec2 P0, iVec2 P1, color_t color);
 
+        template<bool CHECK_NEIGHBOR> inline void _drawWireFrameLineAAFast(const fVec2& P0, const fVec2& P1, color_t color, int32_t op);
 
-        template<bool DRAW_FAST> void _drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness);
+        template<int MODE> void _drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> void _drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, color_t color, float opacity, float thickness);
+        template<int MODE> void _drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> void _drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness);
+        template<int MODE> void _drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> void _drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
+        template<int MODE> void _drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> void _drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness);
+        template<int MODE> void _drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> void _drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
+        template<int MODE> void _drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> void _drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness);
+        template<int MODE> void _drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness);
 
-        template<bool DRAW_FAST> void _drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
+        template<int MODE> void _drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
 
 
 
@@ -1901,12 +2047,12 @@ namespace tgx
 
 
         /**
-        * For adaptative mesh: compute the diameter (in pixels) of the unit sphere S(0,1) once projected the screen
+        * For adaptive mesh: compute the diameter (in pixels) of the unit sphere S(0,1) once projected on the screen
         **/
         float _unitSphereScreenDiameter();
 
 
-        template<bool WIREFRAME, bool DRAWFAST> void _drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity);
+        template<bool WIREFRAME, int MODE> void _drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity);
 
 
 
@@ -2015,6 +2161,42 @@ namespace tgx
                  || _clip2(clipboundXY, fVec3(bb.maxX, bb.minY, bb.maxZ), M)
                  || _clip2(clipboundXY, fVec3(bb.maxX, bb.maxY, bb.minZ), M)
                  || _clip2(clipboundXY, fVec3(bb.maxX, bb.maxY, bb.maxZ), M));
+            }
+
+
+        /** Return true when AA wireframe lines still need to range-check their secondary pixel. */
+        bool _wireFrameAANeighborCheckNeeded(const fBox3& bb, const fMat4& proj_modelview)
+            {
+            if ((_uni.im == nullptr) || (_uni.im->lx() <= 2) || (_uni.im->ly() <= 2)) return true;
+
+            const float bx = (_ox + 1.0f) * _ilx - 1.0f;
+            const float Bx = (_ox + (float)(_uni.im->lx() - 2)) * _ilx - 1.0f;
+            const float by = (_oy + 1.0f) * _ily - 1.0f;
+            const float By = (_oy + (float)(_uni.im->ly() - 2)) * _ily - 1.0f;
+
+            const fVec3 C[8] = {
+                fVec3(bb.minX, bb.minY, bb.minZ),
+                fVec3(bb.minX, bb.minY, bb.maxZ),
+                fVec3(bb.minX, bb.maxY, bb.minZ),
+                fVec3(bb.minX, bb.maxY, bb.maxZ),
+                fVec3(bb.maxX, bb.minY, bb.minZ),
+                fVec3(bb.maxX, bb.minY, bb.maxZ),
+                fVec3(bb.maxX, bb.maxY, bb.minZ),
+                fVec3(bb.maxX, bb.maxY, bb.maxZ)
+                };
+
+            for (int i = 0; i < 8; i++)
+                {
+                fVec4 P = proj_modelview.mult1(C[i]);
+                if (!_ortho)
+                    {
+                    if (P.w <= 0) return true;
+                    P.zdivide();
+                    }
+                if ((P.z < -1.0f) || (P.z > 1.0f)) return true;
+                if ((P.x < bx) || (P.x > Bx) || (P.y < by) || (P.y > By)) return true;
+                }
+            return false;
             }
 
 
@@ -2232,12 +2414,12 @@ namespace tgx
         float _r_inorm;             // Fast normal scaling for lighting. Assumes rotation/uniform scale;
                                     // Gouraud lighting is approximate with non-uniform model scaling.
         fVec3 _r_light;             // light vector in view space (inverted and normalized)
-        fVec3 _r_light_inorm;       // same as above but alreadsy muliplied by inorm
+        fVec3 _r_light_inorm;       // same as above but already multiplied by inorm
         fVec3 _r_H;                 // halfway vector.
-        fVec3 _r_H_inorm;           // same as above but already muliplied by inorm
-        RGBf _r_ambiantColor;       // ambient color multipled by object ambient strenght
-        RGBf _r_diffuseColor;       // diffuse color multipled by object diffuse strenght
-        RGBf _r_specularColor;      // specular color multipled by object specular strenght
+        fVec3 _r_H_inorm;           // same as above but already multiplied by inorm
+        RGBf _r_ambiantColor;       // ambient color multiplied by object ambient strength
+        RGBf _r_diffuseColor;       // diffuse color multiplied by object diffuse strength
+        RGBf _r_specularColor;      // specular color multiplied by object specular strength
         RGBf _r_objectColor;        // color to use for drawing the object (either _color or mesh->color).
 
 

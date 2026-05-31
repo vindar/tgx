@@ -1917,115 +1917,184 @@ namespace tgx
 
 
 
+        namespace Renderer3D_detail
+            {
+            enum WireFrameDrawMode
+                {
+                WIREFRAME_FAST = 0,
+                WIREFRAME_AA_FAST = 1,
+                WIREFRAME_AA_FAST_CHECK = 2,
+                WIREFRAME_AA_FAST_NOCHECK = 3,
+                WIREFRAME_AA_THICK = 4
+                };
+            }
+
+
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes)
             {
-            _drawWireFrameMesh<true>(mesh, draw_chained_meshes, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_FAST>(mesh, draw_chained_meshes, color_t(_color), 1.0f, 1.0f);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh)
             {
-            _drawWireFrameMesh<true>(mesh, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_FAST>(mesh, color_t(_color), 1.0f, 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMeshAA(const Mesh3D<color_t>* mesh, bool draw_chained_meshes)
+            {
+            _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_FAST>(mesh, draw_chained_meshes, color_t(_color), 1.0f, 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMeshAA(const Mesh3Dv2<color_t>* mesh)
+            {
+            _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_FAST>(mesh, color_t(_color), 1.0f, 1.0f);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness, color_t color, float opacity)
             {
-            _drawWireFrameMesh<false>(mesh, draw_chained_meshes, color, opacity, thickness);
+            _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_THICK>(mesh, draw_chained_meshes, color, opacity, thickness);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, float thickness, color_t color, float opacity)
             {
-            _drawWireFrameMesh<false>(mesh, color, opacity, thickness);
+            _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_THICK>(mesh, color, opacity, thickness);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLine(const fVec3& P1, const fVec3& P2)
             {
-            _drawWireFrameLine<true>(P1, P2, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameLine<Renderer3D_detail::WIREFRAME_FAST>(P1, P2, color_t(_color), 1.0f, 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLineAA(const fVec3& P1, const fVec3& P2)
+            {
+            _drawWireFrameLine<Renderer3D_detail::WIREFRAME_AA_FAST>(P1, P2, color_t(_color), 1.0f, 1.0f);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness, color_t color, float opacity)
             {
-            _drawWireFrameLine<false>(P1, P2, color, opacity, thickness);
+            _drawWireFrameLine<Renderer3D_detail::WIREFRAME_AA_THICK>(P1, P2, color, opacity, thickness);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices)
             {
-            _drawWireFrameLines<true>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameLines<Renderer3D_detail::WIREFRAME_FAST>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLinesAA(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices)
+            {
+            _drawWireFrameLines<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
-            _drawWireFrameLines<false>(nb_lines, ind_vertices, vertices, color, opacity, thickness);
+            _drawWireFrameLines<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_lines, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3)
             {
-            _drawWireFrameTriangle<true>(P1, P2, P3, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameTriangle<Renderer3D_detail::WIREFRAME_FAST>(P1, P2, P3, color_t(_color), 1.0f, 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangleAA(const fVec3& P1, const fVec3& P2, const fVec3& P3)
+            {
+            _drawWireFrameTriangle<Renderer3D_detail::WIREFRAME_AA_FAST>(P1, P2, P3, color_t(_color), 1.0f, 1.0f);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness, color_t color, float opacity)
             {
-            _drawWireFrameTriangle<false>(P1, P2, P3, color, opacity, thickness);
+            _drawWireFrameTriangle<Renderer3D_detail::WIREFRAME_AA_THICK>(P1, P2, P3, color, opacity, thickness);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices)
             {
-            _drawWireFrameTriangles<true>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameTriangles<Renderer3D_detail::WIREFRAME_FAST>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTrianglesAA(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices)
+            {
+            _drawWireFrameTriangles<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
-            _drawWireFrameTriangles<false>(nb_triangles, ind_vertices, vertices, color, opacity, thickness);
+            _drawWireFrameTriangles<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_triangles, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
             {
-            _drawWireFrameQuad<true>(P1, P2, P3, P4, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameQuad<Renderer3D_detail::WIREFRAME_FAST>(P1, P2, P3, P4, color_t(_color), 1.0f, 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuadAA(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
+            {
+            _drawWireFrameQuad<Renderer3D_detail::WIREFRAME_AA_FAST>(P1, P2, P3, P4, color_t(_color), 1.0f, 1.0f);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness, color_t color, float opacity)
             {
-            _drawWireFrameQuad<false>(P1, P2, P3, P4, color, opacity, thickness);
+            _drawWireFrameQuad<Renderer3D_detail::WIREFRAME_AA_THICK>(P1, P2, P3, P4, color, opacity, thickness);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices)
             {
-            _drawWireFrameQuads<true>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
+            _drawWireFrameQuads<Renderer3D_detail::WIREFRAME_FAST>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuadsAA(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices)
+            {
+            _drawWireFrameQuads<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
-            _drawWireFrameQuads<false>(nb_quads, ind_vertices, vertices, color, opacity, thickness);
+            _drawWireFrameQuads<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_quads, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
@@ -2127,18 +2196,111 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        template<bool DRAW_FAST> TGX_NOINLINE
+        template<bool CHECK_NEIGHBOR> inline
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameLineAAFast(const fVec2& P0, const fVec2& P1, color_t color, int32_t op)
+            {
+            Image<color_t>* const im = _uni.im;
+            const int lx = im->lx();
+            const int ly = im->ly();
+            const int stride = im->stride();
+            color_t* const buf = im->data();
+
+            BSeg seg(P0, P1);
+            seg.inclen();
+
+            const iBox2 B(0, lx - 1, 0, ly - 1);
+            seg.move_inside_box(B);
+            const int32_t l = seg.lenght_inside_box(B);
+            if (seg.len() > l) seg.len() = l;
+            if (seg.len() <= 0) return;
+
+            if (seg.x_major())
+                {
+                int32_t len = seg.len();
+                int32_t frac = seg._frac;
+                const int32_t sx = seg.step_x();
+                const int32_t sy = seg.step_y();
+                const int32_t sy_stride = sy * stride;
+                const int32_t dx = seg._dx;
+                const int32_t dy = seg._dy;
+                const int32_t amul = seg._amul;
+                int y = seg.Y();
+                color_t* p = buf + TGX_CAST32(seg.X()) + TGX_CAST32(y) * TGX_CAST32(stride);
+                while (len-- > 0)
+                    {
+                    int dir;
+                    int aa = (((dy - frac) * amul) >> 20);
+                    if (aa > 127) { dir = -sy; aa = 384 - aa; } else { dir = sy; aa += 128; }
+                    p->blend256(color, (uint32_t)((op * aa) >> 8));
+                    const int yy = y + dir;
+                    if ((!CHECK_NEIGHBOR) || ((unsigned)yy < (unsigned)ly))
+                        (p + TGX_CAST32(dir) * TGX_CAST32(stride))->blend256(color, (uint32_t)((op * (256 - aa)) >> 8));
+                    if (frac >= 0) { y += sy; p += sy_stride; frac -= dx; }
+                    p += sx;
+                    frac += dy;
+                    }
+                }
+            else
+                {
+                int32_t len = seg.len();
+                int32_t frac = seg._frac;
+                const int32_t sx = seg.step_x();
+                const int32_t sy_stride = seg.step_y() * stride;
+                const int32_t dx = seg._dx;
+                const int32_t dy = seg._dy;
+                const int32_t amul = seg._amul;
+                int x = seg.X();
+                color_t* p = buf + TGX_CAST32(x) + TGX_CAST32(seg.Y()) * TGX_CAST32(stride);
+                while (len-- > 0)
+                    {
+                    int dir;
+                    int aa = (((dx - frac) * amul) >> 20);
+                    if (aa > 127) { dir = -sx; aa = 384 - aa; } else { dir = sx; aa += 128; }
+                    p->blend256(color, (uint32_t)((op * aa) >> 8));
+                    const int xx = x + dir;
+                    if ((!CHECK_NEIGHBOR) || ((unsigned)xx < (unsigned)lx))
+                        (p + dir)->blend256(color, (uint32_t)((op * (256 - aa)) >> 8));
+                    if (frac >= 0) { x += sx; p += sx; frac -= dy; }
+                    p += sy_stride;
+                    frac += dx;
+                    }
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<int MODE> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
 
+            if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST)
+                {
+                const tgx::fMat4 proj_modelview = _projM * _r_modelViewM;
+                while (mesh != nullptr)
+                    {
+                    const bool bbox_uninitialized = ((mesh->bounding_box.minX == 0) && (mesh->bounding_box.maxX == 0) &&
+                                                     (mesh->bounding_box.minY == 0) && (mesh->bounding_box.maxY == 0) &&
+                                                     (mesh->bounding_box.minZ == 0) && (mesh->bounding_box.maxZ == 0));
+                    const bool check_neighbor = bbox_uninitialized || _wireFrameAANeighborCheckNeeded(mesh->bounding_box, proj_modelview);
+                    if (check_neighbor)
+                        _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_FAST_CHECK>(mesh, false, color, opacity, thickness);
+                    else
+                        _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_FAST_NOCHECK>(mesh, false, color, opacity, thickness);
+                    mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
+                    }
+                return;
+                }
+
+            const int32_t op = ((opacity < 0) || (opacity > 1)) ? 256 : (int32_t)(256 * opacity);
             const bool ortho = _ortho;
 
             const tgx::fMat4 M(_lx/2.0f, 0, 0, _lx / 2.0f - _ox,
                                0, _ly / 2.0f, 0, _ly / 2.0f - _oy,
                                0, 0, 1, 0,
                                0, 0, 0, 0);
+            const tgx::fMat4 proj_modelview = _projM * _r_modelViewM;
 
             while (mesh != nullptr)
                 {
@@ -2147,7 +2309,7 @@ namespace tgx
                                                  (mesh->bounding_box.minZ == 0) && (mesh->bounding_box.maxZ == 0));
 
                 // check if the object is completely outside of the image for fast discard.
-                if ((!bbox_uninitialized) && _discardBox(mesh->bounding_box, _projM * _r_modelViewM))
+                if ((!bbox_uninitialized) && _discardBox(mesh->bounding_box, proj_modelview))
                     {
                     mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
                     continue;
@@ -2212,21 +2374,21 @@ namespace tgx
                         *((fVec4*)PPC2) = _projM * PPC2->P;
                         if (ortho) { PPC2->w = 1.0f - PPC2->z; } else { PPC2->zdivide(); }
                         *((fVec4*)PPC2) = M.mult1(*((fVec4*)PPC2));
-                        if (DRAW_FAST) *PPI2 = iVec2(*((fVec2*)PPC2));
+                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) *PPI2 = iVec2(*((fVec2*)PPC2));
 
                         if (PPC0->missedP)
                             {
                             *((fVec4*)PPC0) = _projM * PPC0->P;
                             if (ortho) { PPC0->w = 1.0f - PPC0->z; } else { PPC0->zdivide(); }
                             *((fVec4*)PPC0) = M.mult1(*((fVec4*)PPC0));
-                            if (DRAW_FAST) *PPI0 = iVec2(*((fVec2*)PPC0));
+                            if (MODE == Renderer3D_detail::WIREFRAME_FAST) *PPI0 = iVec2(*((fVec2*)PPC0));
                             }
                         if (PPC1->missedP)
                             {
                             *((fVec4*)PPC1) = _projM * PPC1->P;
                             if (ortho) { PPC1->w = 1.0f - PPC1->z; } else { PPC1->zdivide(); }
                             *((fVec4*)PPC1) = M.mult1(*((fVec4*)PPC1));
-                            if (DRAW_FAST) *PPI1 = iVec2(*((fVec2*)PPC1));
+                            if (MODE == Renderer3D_detail::WIREFRAME_FAST) *PPI1 = iVec2(*((fVec2*)PPC1));
                             }
 
                         // attributes are now all up to date
@@ -2241,7 +2403,7 @@ namespace tgx
                             goto rasterize_next_wireframetriangle;
 
                         // draw triangle
-                        if (DRAW_FAST)
+                        if (MODE == Renderer3D_detail::WIREFRAME_FAST)
                             {
                             const iVec2& PP0 = *PPI0;
                             const iVec2& PP1 = *PPI1;
@@ -2265,6 +2427,18 @@ namespace tgx
                                 _drawWireFrameLineFast(PP2, PP0, color);
                                 }
                             }
+                        else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST_CHECK)
+                            {
+                            if (!skip_shared_edge) _drawWireFrameLineAAFast<true>(*((fVec2*)PPC0), *((fVec2*)PPC1), color, op);
+                            _drawWireFrameLineAAFast<true>(*((fVec2*)PPC1), *((fVec2*)PPC2), color, op);
+                            _drawWireFrameLineAAFast<true>(*((fVec2*)PPC2), *((fVec2*)PPC0), color, op);
+                            }
+                        else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST_NOCHECK)
+                            {
+                            if (!skip_shared_edge) _drawWireFrameLineAAFast<false>(*((fVec2*)PPC0), *((fVec2*)PPC1), color, op);
+                            _drawWireFrameLineAAFast<false>(*((fVec2*)PPC1), *((fVec2*)PPC2), color, op);
+                            _drawWireFrameLineAAFast<false>(*((fVec2*)PPC2), *((fVec2*)PPC0), color, op);
+                            }
                         else
                             {
                             if (!skip_shared_edge) _uni.im->drawThickLineAA(*((fVec2*)PPC0), *((fVec2*)PPC1), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
@@ -2281,7 +2455,7 @@ namespace tgx
                         // get the next triangle
                         const uint16_t nv2 = *(face++);
                         swap(((nv2 & 32768) ? PPC0 : PPC1), PPC2);
-                        if (DRAW_FAST) swap(((nv2 & 32768) ? PPI0 : PPI1), PPI2);
+                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) swap(((nv2 & 32768) ? PPI0 : PPI1), PPI2);
                         if (tab_tex) face++;
                         if (tab_norm) face++;
                         PPC2->P = _r_modelViewM.mult1(tab_vert[nv2 & 32767]);
@@ -2294,25 +2468,41 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        template<bool DRAW_FAST> TGX_NOINLINE
+        template<int MODE> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if ((mesh == nullptr) || (thickness <= 0)) return;
 
+            if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST)
+                {
+                const bool bbox_uninitialized = ((mesh->bounding_box.minX == 0) && (mesh->bounding_box.maxX == 0) &&
+                                                 (mesh->bounding_box.minY == 0) && (mesh->bounding_box.maxY == 0) &&
+                                                 (mesh->bounding_box.minZ == 0) && (mesh->bounding_box.maxZ == 0));
+                const tgx::fMat4 proj_modelview = _projM * _r_modelViewM;
+                const bool check_neighbor = bbox_uninitialized || _wireFrameAANeighborCheckNeeded(mesh->bounding_box, proj_modelview);
+                if (check_neighbor)
+                    _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_FAST_CHECK>(mesh, color, opacity, thickness);
+                else
+                    _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_FAST_NOCHECK>(mesh, color, opacity, thickness);
+                return;
+                }
+
+            const int32_t op = ((opacity < 0) || (opacity > 1)) ? 256 : (int32_t)(256 * opacity);
             const bool ortho = _ortho;
 
             const tgx::fMat4 M(_lx/2.0f, 0, 0, _lx / 2.0f - _ox,
                                0, _ly / 2.0f, 0, _ly / 2.0f - _oy,
                                0, 0, 1, 0,
                                0, 0, 0, 0);
+            const tgx::fMat4 proj_modelview = _projM * _r_modelViewM;
 
             const bool bbox_uninitialized = ((mesh->bounding_box.minX == 0) && (mesh->bounding_box.maxX == 0) &&
                                              (mesh->bounding_box.minY == 0) && (mesh->bounding_box.maxY == 0) &&
                                              (mesh->bounding_box.minZ == 0) && (mesh->bounding_box.maxZ == 0));
 
             // check if the object is completely outside of the image for fast discard.
-            if ((!bbox_uninitialized) && _discardBox(mesh->bounding_box, _projM * _r_modelViewM)) return;
+            if ((!bbox_uninitialized) && _discardBox(mesh->bounding_box, proj_modelview)) return;
 
             ExtVec4 QQA, QQB, QQC;
             ExtVec4* PPC0 = &QQA;
@@ -2436,21 +2626,21 @@ namespace tgx
                         *((fVec4*)PPC2) = _projM * PPC2->P;
                         if (ortho) { PPC2->w = 1.0f - PPC2->z; } else { PPC2->zdivide(); }
                         *((fVec4*)PPC2) = M.mult1(*((fVec4*)PPC2));
-                        if (DRAW_FAST) *PPI2 = iVec2(*((fVec2*)PPC2));
+                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) *PPI2 = iVec2(*((fVec2*)PPC2));
 
                         if (PPC0->missedP)
                             {
                             *((fVec4*)PPC0) = _projM * PPC0->P;
                             if (ortho) { PPC0->w = 1.0f - PPC0->z; } else { PPC0->zdivide(); }
                             *((fVec4*)PPC0) = M.mult1(*((fVec4*)PPC0));
-                            if (DRAW_FAST) *PPI0 = iVec2(*((fVec2*)PPC0));
+                            if (MODE == Renderer3D_detail::WIREFRAME_FAST) *PPI0 = iVec2(*((fVec2*)PPC0));
                             }
                         if (PPC1->missedP)
                             {
                             *((fVec4*)PPC1) = _projM * PPC1->P;
                             if (ortho) { PPC1->w = 1.0f - PPC1->z; } else { PPC1->zdivide(); }
                             *((fVec4*)PPC1) = M.mult1(*((fVec4*)PPC1));
-                            if (DRAW_FAST) *PPI1 = iVec2(*((fVec2*)PPC1));
+                            if (MODE == Renderer3D_detail::WIREFRAME_FAST) *PPI1 = iVec2(*((fVec2*)PPC1));
                             }
 
                         // attributes are now all up to date
@@ -2465,7 +2655,7 @@ namespace tgx
                             goto rasterize_next_meshlet_wireframetriangle;
 
                         // draw triangle
-                        if (DRAW_FAST)
+                        if (MODE == Renderer3D_detail::WIREFRAME_FAST)
                             {
                             const iVec2& PP0 = *PPI0;
                             const iVec2& PP1 = *PPI1;
@@ -2489,6 +2679,18 @@ namespace tgx
                                 _drawWireFrameLineFast(PP2, PP0, color);
                                 }
                             }
+                        else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST_CHECK)
+                            {
+                            if (!skip_shared_edge) _drawWireFrameLineAAFast<true>(*((fVec2*)PPC0), *((fVec2*)PPC1), color, op);
+                            _drawWireFrameLineAAFast<true>(*((fVec2*)PPC1), *((fVec2*)PPC2), color, op);
+                            _drawWireFrameLineAAFast<true>(*((fVec2*)PPC2), *((fVec2*)PPC0), color, op);
+                            }
+                        else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST_NOCHECK)
+                            {
+                            if (!skip_shared_edge) _drawWireFrameLineAAFast<false>(*((fVec2*)PPC0), *((fVec2*)PPC1), color, op);
+                            _drawWireFrameLineAAFast<false>(*((fVec2*)PPC1), *((fVec2*)PPC2), color, op);
+                            _drawWireFrameLineAAFast<false>(*((fVec2*)PPC2), *((fVec2*)PPC0), color, op);
+                            }
                         else
                             {
                             if (!skip_shared_edge) _uni.im->drawThickLineAA(*((fVec2*)PPC0), *((fVec2*)PPC1), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
@@ -2505,7 +2707,7 @@ namespace tgx
                         // get the next triangle
                         const uint8_t nv2 = *(face++);
                         swap(((nv2 & 128) ? PPC0 : PPC1), PPC2);
-                        if (DRAW_FAST) swap(((nv2 & 128) ? PPI0 : PPI1), PPI2);
+                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) swap(((nv2 & 128) ? PPI0 : PPI1), PPI2);
                         if (HAS_TEXCOORDS) face++;
                         if (HAS_NORMALS) face++;
                         PPC2->P = Mesh3Dv2_detail::load_vertex_transformed(tab_vert, nv2 & 127, vertex_base_view, vertex_sx, vertex_sy, vertex_sz);
@@ -2518,12 +2720,13 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        template<bool DRAW_FAST> TGX_NOINLINE
+        template<int MODE> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
 
+            const int32_t op = ((opacity < 0) || (opacity > 1)) ? 256 : (int32_t)(256 * opacity);
             const bool ortho = _ortho;
 
             // compute position in wiew space.
@@ -2555,11 +2758,15 @@ namespace tgx
             if ((H1.z < -1) | (H1.z > 1)) return;
             H1 = M.mult1(H1);
 
-            if (DRAW_FAST)
+            if (MODE == Renderer3D_detail::WIREFRAME_FAST)
                 {
                 iVec2 PP0(H0);
                 iVec2 PP1(H1);
                 _drawWireFrameLineFast(PP0, PP1, color);
+                }
+            else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST)
+                {
+                _drawWireFrameLineAAFast<true>(H0, H1, color, op);
                 }
             else
                 {
@@ -2570,7 +2777,7 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        template<bool DRAW_FAST> TGX_NOINLINE
+        template<int MODE> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
 
@@ -2578,6 +2785,7 @@ namespace tgx
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return; // invalid vertices
             if (thickness <= 0) return;
 
+            const int32_t op = ((opacity < 0) || (opacity > 1)) ? 256 : (int32_t)(256 * opacity);
             const bool ortho = _ortho;
 
             const tgx::fMat4 M(_lx / 2.0f, 0, 0, _lx / 2.0f - _ox,
@@ -2611,11 +2819,15 @@ namespace tgx
                 if ((H1.z < -1) | (H1.z > 1)) continue;
                 H1 = M.mult1(H1);
 
-                if (DRAW_FAST)
+                if (MODE == Renderer3D_detail::WIREFRAME_FAST)
                     {
                     iVec2 PP0(H0);
                     iVec2 PP1(H1);
                     _drawWireFrameLineFast(PP0, PP1, color);
+                    }
+                else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST)
+                    {
+                    _drawWireFrameLineAAFast<true>(H0, H1, color, op);
                     }
                 else
                     {
@@ -2628,12 +2840,13 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        template<bool DRAW_FAST> TGX_NOINLINE
+        template<int MODE> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
 
+            const int32_t op = ((opacity < 0) || (opacity > 1)) ? 256 : (int32_t)(256 * opacity);
             const bool ortho = _ortho;
 
             // compute position in wiew space.
@@ -2677,7 +2890,7 @@ namespace tgx
             H2 = M.mult1(H2);
 
             // draw triangle
-            if (DRAW_FAST)
+            if (MODE == Renderer3D_detail::WIREFRAME_FAST)
                 {
                 iVec2 PP0(H0);
                 iVec2 PP1(H1);
@@ -2701,6 +2914,12 @@ namespace tgx
                     _drawWireFrameLineFast(PP2, PP0, color);
                     }
                 }
+            else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST)
+                {
+                _drawWireFrameLineAAFast<true>(H0, H1, color, op);
+                _drawWireFrameLineAAFast<true>(H1, H2, color, op);
+                _drawWireFrameLineAAFast<true>(H2, H0, color, op);
+                }
             else
                 {
                 _uni.im->drawThickLineAA(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
@@ -2712,13 +2931,14 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        template<bool DRAW_FAST> TGX_NOINLINE
+        template<int MODE> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return; // invalid vertices
             if (thickness <= 0) return;
 
+            const int32_t op = ((opacity < 0) || (opacity > 1)) ? 256 : (int32_t)(256 * opacity);
             const bool ortho = _ortho;
 
             const tgx::fMat4 M(_lx / 2.0f, 0, 0, _lx / 2.0f - _ox,
@@ -2764,7 +2984,7 @@ namespace tgx
                 H2 = M.mult1(H2);
 
                 // draw triangle
-                if (DRAW_FAST)
+                if (MODE == Renderer3D_detail::WIREFRAME_FAST)
                     {
                     iVec2 PP0(H0);
                     iVec2 PP1(H1);
@@ -2788,6 +3008,12 @@ namespace tgx
                         _drawWireFrameLineFast(PP2, PP0, color);
                         }
                     }
+                else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST)
+                    {
+                    _drawWireFrameLineAAFast<true>(H0, H1, color, op);
+                    _drawWireFrameLineAAFast<true>(H1, H2, color, op);
+                    _drawWireFrameLineAAFast<true>(H2, H0, color, op);
+                    }
                 else
                     {
                     _uni.im->drawThickLineAA(H0, H1, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
@@ -2801,12 +3027,13 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        template<bool DRAW_FAST> TGX_NOINLINE
+        template<int MODE> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
 
+            const int32_t op = ((opacity < 0) || (opacity > 1)) ? 256 : (int32_t)(256 * opacity);
             const bool ortho = _ortho;
 
             // compute position in wiew space.
@@ -2859,7 +3086,7 @@ namespace tgx
             H3 = M.mult1(H3);
 
             // draw quad
-            if (DRAW_FAST)
+            if (MODE == Renderer3D_detail::WIREFRAME_FAST)
                 {
                 iVec2 PP0(H0);
                 iVec2 PP1(H1);
@@ -2869,6 +3096,13 @@ namespace tgx
                 if (PP1 != PP2) _drawWireFrameLineFast(PP1, PP2, color);
                 if (PP2 != PP3) _drawWireFrameLineFast(PP2, PP3, color);
                 if (PP3 != PP0) _drawWireFrameLineFast(PP3, PP0, color);
+                }
+            else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST)
+                {
+                _drawWireFrameLineAAFast<true>(H0, H1, color, op);
+                _drawWireFrameLineAAFast<true>(H1, H2, color, op);
+                _drawWireFrameLineAAFast<true>(H2, H3, color, op);
+                _drawWireFrameLineAAFast<true>(H3, H0, color, op);
                 }
             else
                 {
@@ -2882,13 +3116,14 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        template<bool DRAW_FAST> TGX_NOINLINE
+        template<int MODE> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return; // invalid vertices
             if (thickness <= 0) return;
 
+            const int32_t op = ((opacity < 0) || (opacity > 1)) ? 256 : (int32_t)(256 * opacity);
             const bool ortho = _ortho;
 
             const tgx::fMat4 M(_lx / 2.0f, 0, 0, _lx / 2.0f - _ox,
@@ -2936,7 +3171,7 @@ namespace tgx
                 H3 = M.mult1(H3);
 
                 // draw quad
-                if (DRAW_FAST)
+                if (MODE == Renderer3D_detail::WIREFRAME_FAST)
                     {
                     iVec2 PP0(H0);
                     iVec2 PP1(H1);
@@ -2946,6 +3181,13 @@ namespace tgx
                     if (PP1 != PP2) _drawWireFrameLineFast(PP1, PP2, color);
                     if (PP2 != PP3) _drawWireFrameLineFast(PP2, PP3, color);
                     if (PP3 != PP0) _drawWireFrameLineFast(PP3, PP0, color);
+                    }
+                else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST)
+                    {
+                    _drawWireFrameLineAAFast<true>(H0, H1, color, op);
+                    _drawWireFrameLineAAFast<true>(H1, H2, color, op);
+                    _drawWireFrameLineAAFast<true>(H2, H3, color, op);
+                    _drawWireFrameLineAAFast<true>(H3, H0, color, op);
                     }
                 else
                     {
@@ -3418,7 +3660,7 @@ namespace tgx
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture)
             {
-            _drawSphere<false, false>(nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
+            _drawSphere<false, Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
             }
 
 
@@ -3441,7 +3683,7 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        template<bool WIREFRAME, bool DRAWFAST> TGX_NOINLINE
+        template<bool WIREFRAME, int MODE> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
             {
 
@@ -3502,7 +3744,9 @@ namespace tgx
 
                 if (WIREFRAME)
                     {
-                    if (DRAWFAST) drawWireFrameTriangle(P1, P3, P2); else drawWireFrameTriangle(P1, P3, P2, thickness, color, opacity);
+                    if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameTriangle(P1, P3, P2);
+                    else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameTriangleAA(P1, P3, P2);
+                    else drawWireFrameTriangle(P1, P3, P2, thickness, color, opacity);
                     }
                 else
                     {
@@ -3551,7 +3795,9 @@ namespace tgx
 
                     if (WIREFRAME)
                         {
-                        if (DRAWFAST) drawWireFrameQuad(P1, P3, P4, P2); else drawWireFrameQuad(P1, P3, P4, P2, thickness, color, opacity);
+                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameQuad(P1, P3, P4, P2);
+                        else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameQuadAA(P1, P3, P4, P2);
+                        else drawWireFrameQuad(P1, P3, P4, P2, thickness, color, opacity);
                         }
                         else
                         {
@@ -3592,7 +3838,9 @@ namespace tgx
 
                 if (WIREFRAME)
                     {
-                    if (DRAWFAST) drawWireFrameTriangle(P1, P2, P3); else drawWireFrameTriangle(P1, P2, P3, thickness, color, opacity);
+                    if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameTriangle(P1, P2, P3);
+                    else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameTriangleAA(P1, P2, P3);
+                    else drawWireFrameTriangle(P1, P2, P3, thickness, color, opacity);
                     }
                 else
                     {
@@ -3631,6 +3879,18 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameCubeAA()
+            {
+            // set culling direction = 1 and save previous value
+            float save_culling = _culling_dir;
+            if (_culling_dir != 0) _culling_dir = 1;
+            drawWireFrameQuadsAA(6, UNIT_CUBE_FACES, UNIT_CUBE_VERTICES);
+            // restore culling direction
+            _culling_dir = save_culling;
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameCube(float thickness, color_t color, float opacity)
             {
             // set culling direction = 1 and save previous value
@@ -3645,14 +3905,21 @@ namespace tgx
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameSphere(int nb_sectors, int nb_stacks)
             {
-            _drawSphere<true, true>(nb_sectors, nb_stacks, nullptr, 1.0f, color_t(_color), 1.0f);
+            _drawSphere<true, Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, nb_stacks, nullptr, 1.0f, color_t(_color), 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameSphereAA(int nb_sectors, int nb_stacks)
+            {
+            _drawSphere<true, Renderer3D_detail::WIREFRAME_AA_FAST>(nb_sectors, nb_stacks, nullptr, 1.0f, color_t(_color), 1.0f);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity)
             {
-            _drawSphere<true,false>(nb_sectors, nb_stacks, nullptr, thickness, color, opacity);
+            _drawSphere<true, Renderer3D_detail::WIREFRAME_AA_THICK>(nb_sectors, nb_stacks, nullptr, thickness, color, opacity);
             }
 
 
@@ -3662,6 +3929,15 @@ namespace tgx
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
             drawWireFrameSphere(nb_stacks*2 - 2, nb_stacks);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameAdaptativeSphereAA(float quality)
+            {
+            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
+            drawWireFrameSphereAA(nb_stacks * 2 - 2, nb_stacks);
             }
 
 
