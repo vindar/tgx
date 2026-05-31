@@ -1,8 +1,16 @@
 # TGX - A Tiny Graphics Library
 
-***LATEST VERSION 1.0.8***
+***LATEST VERSION 1.1.0***
 
-Full documentation is now available at https://vindar.github.io/tgx/
+Release highlights:
+- New `Mesh3Dv2` format: more compact, faster, and designed for meshlet culling.
+- New graphical and command-line tools to create, convert, inspect and analyze TGX assets.
+- Faster 3D rendering pipeline, including a new efficient anti-aliased wireframe path.
+- New `SHADER_UNLIT` rendering mode.
+- New and updated examples for Teensy, ESP32, Pico/RP2040/RP2350 and M5Stack boards.
+- Expanded documentation, including a much more complete 3D guide.
+
+***Full documentation is now available at https://vindar.github.io/tgx/***
 
 <p align="center">
 <img src="./tgx.jpg" height="300" />
@@ -38,8 +46,8 @@ Here are the main features of the library:
 - Color type conversion and image resizing.
 - Transparency support for all drawing methods. The `RGB32` and `RGB64` color types include an alpha channel for alpha blending. Types without an alpha channel still support basic blending via an opacity parameter available for most drawing primitives.
 - Anti-aliased methods for drawing thick lines and circles.
-- Support for Adafruit fonts and PJRC's ILI9341_t3 v1 and v2.3 anti-aliased fonts (see also <a href="https://github.com/vindar/tgx-font">tgx-font</a>).
-- Python script to convert an image into a C file that can be directly imported into a project.
+- Support for Adafruit fonts and PJRC's ILI9341_t3 v1 and v2.3 anti-aliased fonts.
+- Graphical and command-line tools to convert images, meshes and fonts into C++ files that can be directly imported into a project.
 - Seamless integration with external libraries: [OpenFontRender](https://github.com/takkaO/OpenFontRender) (for TrueType fonts), [PNGdec](https://github.com/bitbank2/PNGdec) (for PNG), [JPEGDEC](https://github.com/bitbank2/JPEGDEC) (for JPEG), [AnimatedGIF](https://github.com/bitbank2/AnimatedGIF) (for GIF).
 
 ### 3D Graphics
@@ -56,9 +64,9 @@ Here are the main features of the library:
 - Tile rasterization: render only part of the viewport at a time to save RAM, using a smaller image and z-buffer.
 - Template classes for all required math operations: `Vec2`, `Vec3`, `Vec4` (vectors), `Mat4` (4×4 matrices), and `Box2` (2D box).
 - Optimized mesh data format: meshes and textures can be read directly from flash memory to save RAM.
-- Python scripts for easy conversion of texture images and 3D meshes (in Wavefront `.obj` format) into C files that can be directly imported into an Arduino project.
+- Python tools for easy conversion of texture images, fonts and 3D meshes (in Wavefront `.obj` format) into C++ files that can be directly imported into an Arduino project.
 
-**Note:** A companion library, <a href="https://github.com/vindar/tgx-font">tgx-font</a>, provides a collection of plain and anti-aliased fonts for use with this library.
+**Note:** The recommended way to create new TGX font headers is now `tools/tgx_font.py` or `tools/cli_tools/tgx_font_cli.py`. The companion <a href="https://github.com/vindar/tgx-font">tgx-font</a> repository remains available for older projects and as a collection of plain and anti-aliased fonts.
 
 ## Using the Library
 
