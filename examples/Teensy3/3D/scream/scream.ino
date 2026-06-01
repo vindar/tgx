@@ -67,7 +67,8 @@ const float dy = 2.0f/M;
 fVec3 vertices[(N+1)*(M+1)];        //  arrays of vertices : grid with y coordinate giving the height of the sheet at that point
 fVec3 normals[(N + 1) * (M + 1)];   // arrays of normals
 fVec2 texcoords[(N+1)*(M+1)];       // array of texture coordinates
-uint16_t faces[4*N*M];       // arrays of quads (in DMAMEM because when are running out of memory in DTCM).  
+static const int STRIP_INDEX_COUNT = 2 * (N + 1) + (M - 1) * (2 * (N + 1) + 2);
+uint16_t strip[STRIP_INDEX_COUNT];   // single triangle strip with degenerate row connectors
 
 
 /** Launch screen update and switch framebuffers **/
@@ -88,7 +89,7 @@ tgx::Image<tgx::RGB565>* currentFB()
 
 
 /**
-* Initialise the vertices, texcoords and faces arrays
+* Initialise the vertices, texcoords and triangle strip arrays.
 **/
 void initSheet()
     {
@@ -102,14 +103,30 @@ void initSheet()
             texcoords[(N + 1)*j + i] = fVec2(i*dx / 2, j*dy / 2);
             }
         }
+
+    int k = 0;
     for (int j = 0; j < M; j++)
         {
-        for (int i = 0; i < N; i++)
+        if (j > 0)
             {
-            faces[4 * (N * j + i) + 0] = (uint16_t)(j*(N+1) + i);
-            faces[4 * (N * j + i) + 1] = (uint16_t)((j + 1) * (N + 1) + i);
-            faces[4 * (N * j + i) + 2] = (uint16_t)((j+1)*(N+1) + i + 1);
-            faces[4 * (N * j + i) + 3] = (uint16_t)(j * (N + 1) + i + 1);
+            const uint16_t first = (uint16_t)(j * (N + 1));
+            strip[k] = strip[k - 1]; k++; // degenerate connector
+            strip[k++] = first;
+            strip[k++] = first;
+            strip[k++] = (uint16_t)((j + 1) * (N + 1));
+            for (int i = 1; i <= N; i++)
+                {
+                strip[k++] = (uint16_t)(j * (N + 1) + i);
+                strip[k++] = (uint16_t)((j + 1) * (N + 1) + i);
+                }
+            }
+        else
+            {
+            for (int i = 0; i <= N; i++)
+                {
+                strip[k++] = (uint16_t)(j * (N + 1) + i);
+                strip[k++] = (uint16_t)((j + 1) * (N + 1) + i);
+                }
             }
         }
     }
@@ -254,22 +271,29 @@ void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
         renderer.setLookAt(cameraPosition(), { 0,0,0 }, { 0,1,0 });
 
         // draw !
-        renderer.drawQuads(N * M, faces, vertices, faces, normals, faces, texcoords, &scream_texture);
+        renderer.drawTriangleStrip(STRIP_INDEX_COUNT, strip, vertices, strip, normals, strip, texcoords, &scream_texture);
 
-       // remove the line above ('renderer.drawQuads(...') and uncomment the code below 
-       // to draw the sheet without texturing but wher the color depend in the height. 
+       // remove the line above ('renderer.drawTriangleStrip(...') and uncomment the code below
+       // to draw the sheet without texturing but where the color depends on the height.
        /*       
-       for(int j=0; j < N*M; j++)
+       for (int j = 0; j < M; j++)
+        {
+        for (int i = 0; i < N; i++)
           {
-          const fVec3 V1 = vertices[faces[4*j]];
-          const fVec3 V2 = vertices[faces[4*j + 1]];
-          const fVec3 V3 = vertices[faces[4*j + 2]];
-          const fVec3 V4 = vertices[faces[4*j + 3]];      
+          const int i1 = j * (N + 1) + i;
+          const int i2 = (j + 1) * (N + 1) + i;
+          const int i3 = (j + 1) * (N + 1) + i + 1;
+          const int i4 = j * (N + 1) + i + 1;
 
-          const fVec3 N1 = normals[faces[4*j]];
-          const fVec3 N2 = normals[faces[4*j + 1]];
-          const fVec3 N3 = normals[faces[4*j + 2]];
-          const fVec3 N4 = normals[faces[4*j + 3]];
+          const fVec3 V1 = vertices[i1];
+          const fVec3 V2 = vertices[i2];
+          const fVec3 V3 = vertices[i3];
+          const fVec3 V4 = vertices[i4];
+
+          const fVec3 N1 = normals[i1];
+          const fVec3 N2 = normals[i2];
+          const fVec3 N3 = normals[i3];
+          const fVec3 N4 = normals[i4];
      
           const float h1 = V1.y * 3.0f +0.4f;
           const float h2 = V2.y * 3.0f +0.4f;
@@ -282,6 +306,7 @@ void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
 
           renderer.drawQuadWithVertexColor(V1,V2,V3,V4, C1,C2,C3,C4, &N1, &N2, &N3, &N4);                   
          }
+        }
         */
        
         // update the screen (asynchronous). 
