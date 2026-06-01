@@ -17,6 +17,11 @@ Regular hardware targets:
 Build by defining exactly one `TGX_BENCHMARK_*` symbol for the target when the
 board cannot be detected unambiguously. The benchmark intentionally avoids any
 display driver dependency; it measures TGX rendering into memory buffers only.
+It includes a dynamic ribbon drawn three ways (`drawTriangles()`,
+`drawTriangleStrip()` and `drawQuads()`) to track indexed strip rendering
+against the older direct primitive paths. The same ribbon is also rendered in
+wireframe fast, antialiased and adjustable-thickness modes to compare
+`drawWireFrameTriangleStrip()` with triangle and quad lists.
 
 Typical Arduino CLI examples:
 

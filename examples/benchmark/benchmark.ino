@@ -282,22 +282,34 @@ bool setRenderer(int slx, int sly)
 #define SCENE_BIG_TRIANGLES      0
 #define SCENE_SMALL_TRI_GRID     1
 #define SCENE_SMALL_TRI_CLIPPED  2
-#define SCENE_DIRECT_CUBE        3
-#define SCENE_DIRECT_TEX_CUBE    4
-#define SCENE_DIRECT_SPHERE      5
-#define SCENE_DIRECT_TEX_SPHERE  6
-#define SCENE_VERTEX_COLOR       7
-#define SCENE_PIXELS             8
-#define SCENE_DOTS               9
-#define SCENE_WIRE_CUBE_FAST     10
-#define SCENE_WIRE_CUBE_AA       11
-#define SCENE_WIRE_CUBE_THICK    12
-#define SCENE_WIRE_SPHERE_FAST   13
-#define SCENE_WIRE_SPHERE_AA     14
-#define SCENE_WIRE_SPHERE_THICK  15
-#define SCENE_WIRE_BUNNY_FAST    16
-#define SCENE_WIRE_BUNNY_AA      17
-#define SCENE_WIRE_BUNNY_THICK   18
+#define SCENE_RIBBON_TRIANGLES   3
+#define SCENE_RIBBON_STRIP       4
+#define SCENE_RIBBON_QUADS       5
+#define SCENE_DIRECT_CUBE        6
+#define SCENE_DIRECT_TEX_CUBE    7
+#define SCENE_DIRECT_SPHERE      8
+#define SCENE_DIRECT_TEX_SPHERE  9
+#define SCENE_VERTEX_COLOR       10
+#define SCENE_PIXELS             11
+#define SCENE_DOTS               12
+#define SCENE_WIRE_CUBE_FAST     13
+#define SCENE_WIRE_CUBE_AA       14
+#define SCENE_WIRE_CUBE_THICK    15
+#define SCENE_WIRE_SPHERE_FAST   16
+#define SCENE_WIRE_SPHERE_AA     17
+#define SCENE_WIRE_SPHERE_THICK  18
+#define SCENE_WIRE_BUNNY_FAST    19
+#define SCENE_WIRE_BUNNY_AA      20
+#define SCENE_WIRE_BUNNY_THICK   21
+#define SCENE_WIRE_RIBBON_TRI_FAST   22
+#define SCENE_WIRE_RIBBON_STRIP_FAST 23
+#define SCENE_WIRE_RIBBON_QUAD_FAST  24
+#define SCENE_WIRE_RIBBON_TRI_AA     25
+#define SCENE_WIRE_RIBBON_STRIP_AA   26
+#define SCENE_WIRE_RIBBON_QUAD_AA    27
+#define SCENE_WIRE_RIBBON_TRI_THICK  28
+#define SCENE_WIRE_RIBBON_STRIP_THICK 29
+#define SCENE_WIRE_RIBBON_QUAD_THICK 30
 
 
 static const int DIRECT_TEXTURE_LX = 64;
@@ -312,6 +324,17 @@ static fVec3* grid_vertices = nullptr;
 static fVec3* grid_normals = nullptr;
 static fVec2* grid_texcoords = nullptr;
 static uint16_t* grid_triangle_indices = nullptr;
+
+static const int RIBBON_SEGMENTS = 196;
+static const int RIBBON_VERTICES = 2 * (RIBBON_SEGMENTS + 1);
+static const int RIBBON_TRIANGLES = 2 * RIBBON_SEGMENTS;
+static const int RIBBON_QUADS = RIBBON_SEGMENTS;
+static fVec3* ribbon_vertices = nullptr;
+static fVec3* ribbon_normals = nullptr;
+static fVec2* ribbon_texcoords = nullptr;
+static uint16_t* ribbon_strip_indices = nullptr;
+static uint16_t* ribbon_triangle_indices = nullptr;
+static uint16_t* ribbon_quad_indices = nullptr;
 
 static const int POINT_COUNT = 256;
 static fVec3* point_positions = nullptr;
@@ -405,6 +428,12 @@ FLASHMEM void initSyntheticAssets()
         grid_normals = (fVec3*)benchAlloc(GRID_VERTICES * sizeof(fVec3));
         grid_texcoords = (fVec2*)benchAlloc(GRID_VERTICES * sizeof(fVec2));
         grid_triangle_indices = (uint16_t*)benchAlloc(GRID_TRIANGLES * 3 * sizeof(uint16_t));
+        ribbon_vertices = (fVec3*)benchAlloc(RIBBON_VERTICES * sizeof(fVec3));
+        ribbon_normals = (fVec3*)benchAlloc(RIBBON_VERTICES * sizeof(fVec3));
+        ribbon_texcoords = (fVec2*)benchAlloc(RIBBON_VERTICES * sizeof(fVec2));
+        ribbon_strip_indices = (uint16_t*)benchAlloc(RIBBON_VERTICES * sizeof(uint16_t));
+        ribbon_triangle_indices = (uint16_t*)benchAlloc(RIBBON_TRIANGLES * 3 * sizeof(uint16_t));
+        ribbon_quad_indices = (uint16_t*)benchAlloc(RIBBON_QUADS * 4 * sizeof(uint16_t));
         point_positions = (fVec3*)benchAlloc(POINT_COUNT * sizeof(fVec3));
         point_color_indices = (int*)benchAlloc(POINT_COUNT * sizeof(int));
         point_opacity_indices = (int*)benchAlloc(POINT_COUNT * sizeof(int));
@@ -456,6 +485,43 @@ FLASHMEM void initSyntheticAssets()
             }
         }
 
+    for (int i = 0; i <= RIBBON_SEGMENTS; i++)
+        {
+        const float u = (float)i / RIBBON_SEGMENTS;
+        const float x = -1.7f + 3.4f * u;
+        const float y = 0.24f * sinf(6.2831853f * 2.0f * u);
+        const float half_w = 0.16f + 0.04f * sinf(6.2831853f * 5.0f * u);
+        const int a = 2 * i;
+        ribbon_vertices[a] = { x, y + half_w, 0.0f };
+        ribbon_vertices[a + 1] = { x, y - half_w, 0.0f };
+        ribbon_normals[a] = { 0.0f, 0.0f, 1.0f };
+        ribbon_normals[a + 1] = { 0.0f, 0.0f, 1.0f };
+        ribbon_texcoords[a] = { 4.0f * u, 0.0f };
+        ribbon_texcoords[a + 1] = { 4.0f * u, 1.0f };
+        ribbon_strip_indices[a] = (uint16_t)a;
+        ribbon_strip_indices[a + 1] = (uint16_t)(a + 1);
+        }
+
+    int kt = 0;
+    int kq = 0;
+    for (int i = 0; i < RIBBON_SEGMENTS; i++)
+        {
+        const uint16_t u0 = (uint16_t)(2 * i);
+        const uint16_t l0 = (uint16_t)(2 * i + 1);
+        const uint16_t u1 = (uint16_t)(2 * (i + 1));
+        const uint16_t l1 = (uint16_t)(2 * (i + 1) + 1);
+        ribbon_triangle_indices[kt++] = u0;
+        ribbon_triangle_indices[kt++] = l0;
+        ribbon_triangle_indices[kt++] = u1;
+        ribbon_triangle_indices[kt++] = u1;
+        ribbon_triangle_indices[kt++] = l0;
+        ribbon_triangle_indices[kt++] = l1;
+        ribbon_quad_indices[kq++] = u0;
+        ribbon_quad_indices[kq++] = l0;
+        ribbon_quad_indices[kq++] = l1;
+        ribbon_quad_indices[kq++] = u1;
+        }
+
     for (int i = 0; i < POINT_COUNT; i++)
         {
         const float u = (float)i / POINT_COUNT;
@@ -482,7 +548,7 @@ FLASHMEM void printBenchmarkProfile()
     Serial.println("Real meshes: Bunny textured 2.1k triangles");
     Serial.println("Shaders: flat, gouraud, nearest texture, perspective, near/far clipping");
 #endif
-    Serial.println("Synthetic scenes: large triangles, small-triangle grid, clipped grid, direct cube/sphere, vertex colors, pixels/dots, wireframe");
+    Serial.println("Synthetic scenes: large triangles, small-triangle grid, triangle strip/triangles/quads ribbon, clipped grid, direct cube/sphere, vertex colors, pixels/dots, wireframe");
     Serial.println("Renderer sizes:");
     for (int i = 0; i < NB_RENDERER_SIZES; i++)
         {
@@ -546,6 +612,20 @@ FLASHMEM void setModelForScene(int scene, float a)
         case SCENE_SMALL_TRI_CLIPPED:
             renderer.setModelPosScaleRot({ 0, 0.0f, -2.6f }, { 3.6f, 3.0f, 1.0f }, a, { 0.2f, 1.0f, 0.0f });
             break;
+        case SCENE_RIBBON_TRIANGLES:
+        case SCENE_RIBBON_STRIP:
+        case SCENE_RIBBON_QUADS:
+        case SCENE_WIRE_RIBBON_TRI_FAST:
+        case SCENE_WIRE_RIBBON_STRIP_FAST:
+        case SCENE_WIRE_RIBBON_QUAD_FAST:
+        case SCENE_WIRE_RIBBON_TRI_AA:
+        case SCENE_WIRE_RIBBON_STRIP_AA:
+        case SCENE_WIRE_RIBBON_QUAD_AA:
+        case SCENE_WIRE_RIBBON_TRI_THICK:
+        case SCENE_WIRE_RIBBON_STRIP_THICK:
+        case SCENE_WIRE_RIBBON_QUAD_THICK:
+            renderer.setModelPosScaleRot({ 0, 0.0f, -6.2f }, { 2.6f, 2.6f, 1.0f }, a, { 0.25f, 1.0f, 0.1f });
+            break;
         case SCENE_DIRECT_SPHERE:
         case SCENE_DIRECT_TEX_SPHERE:
             renderer.setModelPosScaleRot({ 0, 0.0f, -8.0f }, { 2.6f, 2.6f, 2.6f }, a, { 0.2f, 1.0f, 0.0f });
@@ -589,6 +669,48 @@ FLASHMEM void drawSyntheticScene(int scene)
         case SCENE_SMALL_TRI_GRID:
         case SCENE_SMALL_TRI_CLIPPED:
             renderer.drawTriangles(GRID_TRIANGLES, grid_triangle_indices, grid_vertices, grid_triangle_indices, grid_normals, grid_triangle_indices, grid_texcoords, &direct_texture);
+            break;
+        case SCENE_RIBBON_TRIANGLES:
+            renderer.drawTriangles(RIBBON_TRIANGLES, ribbon_triangle_indices, ribbon_vertices, ribbon_triangle_indices, ribbon_normals, ribbon_triangle_indices, ribbon_texcoords, &direct_texture);
+            break;
+        case SCENE_RIBBON_STRIP:
+            renderer.drawTriangleStrip(RIBBON_VERTICES, ribbon_strip_indices, ribbon_vertices, ribbon_strip_indices, ribbon_normals, ribbon_strip_indices, ribbon_texcoords, &direct_texture);
+            break;
+        case SCENE_RIBBON_QUADS:
+            renderer.drawQuads(RIBBON_QUADS, ribbon_quad_indices, ribbon_vertices, ribbon_quad_indices, ribbon_normals, ribbon_quad_indices, ribbon_texcoords, &direct_texture);
+            break;
+        case SCENE_WIRE_RIBBON_TRI_FAST:
+            renderer.setMaterialColor(RGB565_Yellow);
+            renderer.drawWireFrameTriangles(RIBBON_TRIANGLES, ribbon_triangle_indices, ribbon_vertices);
+            break;
+        case SCENE_WIRE_RIBBON_STRIP_FAST:
+            renderer.setMaterialColor(RGB565_Yellow);
+            renderer.drawWireFrameTriangleStrip(RIBBON_VERTICES, ribbon_strip_indices, ribbon_vertices);
+            break;
+        case SCENE_WIRE_RIBBON_QUAD_FAST:
+            renderer.setMaterialColor(RGB565_Yellow);
+            renderer.drawWireFrameQuads(RIBBON_QUADS, ribbon_quad_indices, ribbon_vertices);
+            break;
+        case SCENE_WIRE_RIBBON_TRI_AA:
+            renderer.setMaterialColor(RGB565_Cyan);
+            renderer.drawWireFrameTrianglesAA(RIBBON_TRIANGLES, ribbon_triangle_indices, ribbon_vertices);
+            break;
+        case SCENE_WIRE_RIBBON_STRIP_AA:
+            renderer.setMaterialColor(RGB565_Cyan);
+            renderer.drawWireFrameTriangleStripAA(RIBBON_VERTICES, ribbon_strip_indices, ribbon_vertices);
+            break;
+        case SCENE_WIRE_RIBBON_QUAD_AA:
+            renderer.setMaterialColor(RGB565_Cyan);
+            renderer.drawWireFrameQuadsAA(RIBBON_QUADS, ribbon_quad_indices, ribbon_vertices);
+            break;
+        case SCENE_WIRE_RIBBON_TRI_THICK:
+            renderer.drawWireFrameTriangles(RIBBON_TRIANGLES, ribbon_triangle_indices, ribbon_vertices, 1.501f, RGB565_Orange, 1.0f);
+            break;
+        case SCENE_WIRE_RIBBON_STRIP_THICK:
+            renderer.drawWireFrameTriangleStrip(RIBBON_VERTICES, ribbon_strip_indices, ribbon_vertices, 1.501f, RGB565_Orange, 1.0f);
+            break;
+        case SCENE_WIRE_RIBBON_QUAD_THICK:
+            renderer.drawWireFrameQuads(RIBBON_QUADS, ribbon_quad_indices, ribbon_vertices, 1.501f, RGB565_Orange, 1.0f);
             break;
         case SCENE_DIRECT_CUBE:
             renderer.drawCube();
@@ -897,6 +1019,18 @@ void setup()
         computeSceneScore(sfinalSynthetic, 5, "Large tris FLAT Z   ", SCENE_BIG_TRIANGLES, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(2));
         computeSceneScore(sfinalSynthetic, 5, "Grid small FLAT     ", SCENE_SMALL_TRI_GRID, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(2));
         computeSceneScore(sfinalSynthetic, 5, "Grid small TEX      ", SCENE_SMALL_TRI_GRID, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2, benchFrames(2));
+        computeSceneScore(sfinalSynthetic, 4, "Ribbon triangles   ", SCENE_RIBBON_TRIANGLES, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2, benchFrames(2));
+        computeSceneScore(sfinalSynthetic, 4, "Ribbon strip       ", SCENE_RIBBON_STRIP, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2, benchFrames(2));
+        computeSceneScore(sfinalSynthetic, 4, "Ribbon quads       ", SCENE_RIBBON_QUADS, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2, benchFrames(2));
+        computeSceneScore(sfinalSynthetic, 2, "Wire rib tri fast   ", SCENE_WIRE_RIBBON_TRI_FAST, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 2, "Wire rib strip fast ", SCENE_WIRE_RIBBON_STRIP_FAST, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 2, "Wire rib quad fast  ", SCENE_WIRE_RIBBON_QUAD_FAST, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 2, "Wire rib tri AA     ", SCENE_WIRE_RIBBON_TRI_AA, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 2, "Wire rib strip AA   ", SCENE_WIRE_RIBBON_STRIP_AA, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 2, "Wire rib quad AA    ", SCENE_WIRE_RIBBON_QUAD_AA, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(4));
+        computeSceneScore(sfinalSynthetic, 1, "Wire rib tri thick  ", SCENE_WIRE_RIBBON_TRI_THICK, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(5));
+        computeSceneScore(sfinalSynthetic, 1, "Wire rib strip thick", SCENE_WIRE_RIBBON_STRIP_THICK, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(5));
+        computeSceneScore(sfinalSynthetic, 1, "Wire rib quad thick ", SCENE_WIRE_RIBBON_QUAD_THICK, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(5));
         computeSceneScore(sfinalSynthetic, 3, "Grid near clip TEX  ", SCENE_SMALL_TRI_CLIPPED, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2, benchFrames(3));
         computeSceneScore(sfinalSynthetic, 5, "Cube direct FLAT    ", SCENE_DIRECT_CUBE, SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT, benchFrames(2));
 #if TGX_BENCHMARK_FULL_PROFILE
