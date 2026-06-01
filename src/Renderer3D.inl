@@ -987,6 +987,190 @@ namespace tgx
             }
 
 
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawTriangleStrip(const int RASTER_TYPE, int nb_indices,
+            const uint16_t* ind_vertices, const fVec3* vertices,
+            const uint16_t* ind_normals, const fVec3* normals,
+            const uint16_t* ind_texture, const fVec2* textures)
+            {
+            _uni.shader_type = RASTER_TYPE;
+            const bool ortho = _ortho;
+
+            const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURE(RASTER_TYPE));
+            const bool GOURAUD = (bool)(TGX_SHADER_HAS_GOURAUD(RASTER_TYPE));
+
+            fBox3 bb;
+            bb.empty();
+            for (int i = 0; i < nb_indices; i++)
+                {
+                bb |= vertices[ind_vertices[i]];
+                }
+
+            const fMat4 proj_modelview = _projM * _r_modelViewM;
+            if (_discardBox(bb, proj_modelview)) return;
+
+            const float CLIPBOUND_XY = _clipbound_xy();
+            const bool cliptestneeded = _clipTestNeeded(CLIPBOUND_XY, bb, proj_modelview);
+
+            ExtVec4 QQA, QQB, QQC;
+            ExtVec4* PPC0 = &QQA;
+            ExtVec4* PPC1 = &QQB;
+            ExtVec4* PPC2 = &QQC;
+
+            uint16_t iv0 = ind_vertices[0];
+            uint16_t iv1 = ind_vertices[1];
+            uint16_t iv2 = ind_vertices[2];
+
+            PPC0->P = _r_modelViewM.mult1(vertices[iv0]);
+            PPC1->P = _r_modelViewM.mult1(vertices[iv1]);
+            PPC2->P = _r_modelViewM.mult1(vertices[iv2]);
+
+            if (TEXTURE)
+                {
+                PPC0->indt = ind_texture[0];
+                PPC1->indt = ind_texture[1];
+                PPC2->indt = ind_texture[2];
+                }
+            if (GOURAUD)
+                {
+                PPC0->indn = ind_normals[0];
+                PPC1->indn = ind_normals[1];
+                PPC2->indn = ind_normals[2];
+                }
+
+            PPC0->missedP = true;
+            PPC1->missedP = true;
+            PPC2->missedP = true;
+
+            for (int tri = 0; ; tri++)
+                {
+                if ((iv0 != iv1) && (iv0 != iv2) && (iv1 != iv2))
+                    {
+                    // face culling
+                    fVec3 faceN = crossProduct(PPC1->P - PPC0->P, PPC2->P - PPC0->P);
+                    const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, PPC0->P);
+                    if (cu * _culling_dir > 0) goto rasterize_next_strip_triangle; // skip triangle !
+                    // triangle is not culled
+
+                    *((fVec4*)PPC2) = _projM * PPC2->P;
+                    if (ortho) { PPC2->w = 1.0f - PPC2->z; } else { PPC2->zdivide(); }
+
+                    if (PPC0->missedP)
+                        {
+                        *((fVec4*)PPC0) = _projM * PPC0->P;
+                        if (ortho) { PPC0->w = 1.0f - PPC0->z; } else { PPC0->zdivide(); }
+                        }
+                    if (PPC1->missedP)
+                        {
+                        *((fVec4*)PPC1) = _projM * PPC1->P;
+                        if (ortho) { PPC1->w = 1.0f - PPC1->z; } else { PPC1->zdivide(); }
+                        }
+
+                    // test if triangle must be clipped
+                    if (cliptestneeded)
+                        {
+                        const bool needclip = (PPC2->P.z >= 0)
+                            | (PPC2->x < -CLIPBOUND_XY) | (PPC2->x > CLIPBOUND_XY)
+                            | (PPC2->y < -CLIPBOUND_XY) | (PPC2->y > CLIPBOUND_XY)
+                            | (PPC2->z < -1) | (PPC2->z > 1)
+                            | (PPC0->P.z >= 0)
+                            | (PPC0->x < -CLIPBOUND_XY) | (PPC0->x > CLIPBOUND_XY)
+                            | (PPC0->y < -CLIPBOUND_XY) | (PPC0->y > CLIPBOUND_XY)
+                            | (PPC0->z < -1) | (PPC0->z > 1)
+                            | (PPC1->P.z >= 0)
+                            | (PPC1->x < -CLIPBOUND_XY) | (PPC1->x > CLIPBOUND_XY)
+                            | (PPC1->y < -CLIPBOUND_XY) | (PPC1->y > CLIPBOUND_XY)
+                            | (PPC1->z < -1) | (PPC1->z > 1);
+                        if (needclip)
+                            { // need clipping, test if we can just discard the triangle if not shown on screen
+                            if (!_discardTriangle(*((fVec4*)PPC0), *((fVec4*)PPC1), *((fVec4*)PPC2)))
+                                { // no, use the slow drawing method with clipping
+                                _drawTriangleClipped(RASTER_TYPE,
+                                                &(PPC0->P), &(PPC1->P), &(PPC2->P),
+                                                ((GOURAUD) ? normals + PPC0->indn : nullptr), ((GOURAUD) ? normals + PPC1->indn : nullptr), ((GOURAUD) ? normals + PPC2->indn : nullptr),
+                                                ((TEXTURE) ? textures + PPC0->indt : nullptr), ((TEXTURE) ? textures + PPC1->indt : nullptr), ((TEXTURE) ? textures + PPC2->indt : nullptr),
+                                                _r_objectColor, _r_objectColor, _r_objectColor);
+                                }
+                            goto rasterize_next_strip_triangle;
+                            }
+                        }
+
+                    // ok, the triangle must be rasterized !
+                    if (GOURAUD)
+                        { // Gouraud shading : color on vertices
+
+                        // reverse normal only when culling is disabled (and we assume in this case that normals are given for the CCW face).
+                        const float icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
+                        if (PPC0->missedP)
+                            {
+                            PPC0->N = _r_modelViewM.mult0(normals[PPC0->indn]);
+                            if (TEXTURE)
+                                PPC0->color = _phong<true>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
+                            else
+                                PPC0->color = _phong<false>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
+                            }
+                        if (PPC1->missedP)
+                            {
+                            PPC1->N = _r_modelViewM.mult0(normals[PPC1->indn]);
+                            if (TEXTURE)
+                                PPC1->color = _phong<true>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
+                            else
+                                PPC1->color = _phong<false>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
+                            }
+                        PPC2->N = _r_modelViewM.mult0(normals[PPC2->indn]);
+                        if (TEXTURE)
+                            PPC2->color = _phong<true>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
+                        else
+                            PPC2->color = _phong<false>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
+
+                        }
+                    else
+                        { // flat shading : color on faces
+                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TEXTURE, faceN, cu);
+                        }
+
+                    if (TEXTURE)
+                        { // compute texture vectors if needed
+                        if (PPC0->missedP) { PPC0->T = textures[PPC0->indt]; }
+                        if (PPC1->missedP) { PPC1->T = textures[PPC1->indt]; }
+                        PPC2->T = textures[PPC2->indt];
+                        }
+
+                    // attributes are now all up to date
+                    PPC0->missedP = false;
+                    PPC1->missedP = false;
+                    PPC2->missedP = false;
+
+                    // go rasterize !
+                    rasterizeTriangle(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+                    }
+
+            rasterize_next_strip_triangle:
+
+                if (tri >= nb_indices - 3) break; // exit loop at end of strip
+
+                // get the next triangle. The swap alternates the strip winding as in OpenGL.
+                const uint16_t nv2 = ind_vertices[tri + 3];
+                if ((tri & 1) == 0)
+                    {
+                    swap(PPC0, PPC2);
+                    iv0 = iv2;
+                    }
+                else
+                    {
+                    swap(PPC1, PPC2);
+                    iv1 = iv2;
+                    }
+                iv2 = nv2;
+
+                if (TEXTURE) PPC2->indt = ind_texture[tri + 3];
+                if (GOURAUD) PPC2->indn = ind_normals[tri + 3];
+                PPC2->P = _r_modelViewM.mult1(vertices[iv2]);
+                PPC2->missedP = true;
+                }
+            }
+
+
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawQuad(const int RASTER_TYPE,
@@ -1795,6 +1979,25 @@ namespace tgx
             }
 
 
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawTriangleStrip(int nb_indices,
+            const uint16_t* ind_vertices, const fVec3* vertices,
+            const uint16_t* ind_normals, const fVec3* normals,
+            const uint16_t* ind_texture, const fVec2* textures,
+            const Image<color_t>* texture_image)
+            {
+            if (!_validDraw()) return;
+            if ((nb_indices < 3) || (ind_vertices == nullptr) || (vertices == nullptr)) return;
+
+            int shader = _shaders;
+            if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud
+            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) TGX_SHADER_REMOVE_TEXTURE(shader) // disable texture
+            _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
+            if (TGX_SHADER_HAS_TEXTURE(shader)) _uni.tex = (const Image<color_t>*)texture_image;
+            _drawTriangleStrip(shader, nb_indices, ind_vertices, vertices, ind_normals, normals, ind_texture, textures);
+            }
+
+
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
             const fVec3* N1, const fVec3* N2, const fVec3* N3, const fVec3* N4,
@@ -2053,6 +2256,27 @@ namespace tgx
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
             _drawWireFrameTriangles<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_triangles, ind_vertices, vertices, color, opacity, thickness);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices)
+            {
+            _drawWireFrameTriangleStrip<Renderer3D_detail::WIREFRAME_FAST>(nb_indices, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangleStripAA(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices)
+            {
+            _drawWireFrameTriangleStrip<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_indices, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
+            {
+            _drawWireFrameTriangleStrip<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_indices, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
@@ -3021,6 +3245,177 @@ namespace tgx
                     _uni.im->drawThickLineAA(H2, H0, thickness, END_ROUNDED, END_ROUNDED, color, opacity);
                     }
 
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<int MODE> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+            {
+            if (!_validDraw()) return;
+            if ((nb_indices < 3) || (ind_vertices == nullptr) || (vertices == nullptr)) return;
+            if (thickness <= 0) return;
+
+            const int32_t op = ((opacity < 0) || (opacity > 1)) ? 256 : (int32_t)(256 * opacity);
+            const bool ortho = _ortho;
+
+            bool check_neighbor = true;
+            if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST)
+                {
+                fBox3 bb;
+                bb.empty();
+                for (int i = 0; i < nb_indices; i++)
+                    {
+                    bb |= vertices[ind_vertices[i]];
+                    }
+
+                const tgx::fMat4 proj_modelview = _projM * _r_modelViewM;
+                if (_discardBox(bb, proj_modelview)) return;
+                check_neighbor = _wireFrameAANeighborCheckNeeded(bb, proj_modelview);
+                }
+
+            const tgx::fMat4 M(_lx / 2.0f, 0, 0, _lx / 2.0f - _ox,
+                               0, _ly / 2.0f, 0, _ly / 2.0f - _oy,
+                               0, 0, 1, 0,
+                               0, 0, 0, 0);
+
+            ExtVec4 QQA, QQB, QQC;
+            ExtVec4* PPC0 = &QQA;
+            ExtVec4* PPC1 = &QQB;
+            ExtVec4* PPC2 = &QQC;
+            iVec2 IIA, IIB, IIC;
+            iVec2* PPI0 = &IIA;
+            iVec2* PPI1 = &IIB;
+            iVec2* PPI2 = &IIC;
+
+            uint16_t iv0 = ind_vertices[0];
+            uint16_t iv1 = ind_vertices[1];
+            uint16_t iv2 = ind_vertices[2];
+
+            PPC0->P = _r_modelViewM.mult1(vertices[iv0]);
+            PPC1->P = _r_modelViewM.mult1(vertices[iv1]);
+            PPC2->P = _r_modelViewM.mult1(vertices[iv2]);
+
+            PPC0->missedP = true;
+            PPC1->missedP = true;
+            PPC2->missedP = true;
+
+            bool previous_wire_triangle_drawn = false;
+
+            for (int tri = 0; ; tri++)
+                {
+                const bool skip_shared_edge = previous_wire_triangle_drawn;
+                bool current_wire_triangle_drawn = false;
+
+                if ((iv0 != iv1) && (iv0 != iv2) && (iv1 != iv2))
+                    {
+                    // face culling
+                    fVec3 faceN = crossProduct(PPC1->P - PPC0->P, PPC2->P - PPC0->P);
+                    const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, PPC0->P);
+                    if (cu * _culling_dir > 0) goto rasterize_next_wireframe_strip_triangle; // skip triangle !
+
+                    // triangle is not culled
+                    *((fVec4*)PPC2) = _projM * PPC2->P;
+                    if (ortho) { PPC2->w = 1.0f - PPC2->z; } else { PPC2->zdivide(); }
+                    *((fVec4*)PPC2) = M.mult1(*((fVec4*)PPC2));
+                    if (MODE == Renderer3D_detail::WIREFRAME_FAST) *PPI2 = iVec2(*((fVec2*)PPC2));
+
+                    if (PPC0->missedP)
+                        {
+                        *((fVec4*)PPC0) = _projM * PPC0->P;
+                        if (ortho) { PPC0->w = 1.0f - PPC0->z; } else { PPC0->zdivide(); }
+                        *((fVec4*)PPC0) = M.mult1(*((fVec4*)PPC0));
+                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) *PPI0 = iVec2(*((fVec2*)PPC0));
+                        }
+                    if (PPC1->missedP)
+                        {
+                        *((fVec4*)PPC1) = _projM * PPC1->P;
+                        if (ortho) { PPC1->w = 1.0f - PPC1->z; } else { PPC1->zdivide(); }
+                        *((fVec4*)PPC1) = M.mult1(*((fVec4*)PPC1));
+                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) *PPI1 = iVec2(*((fVec2*)PPC1));
+                        }
+
+                    // attributes are now all up to date
+                    PPC0->missedP = false;
+                    PPC1->missedP = false;
+                    PPC2->missedP = false;
+
+                    // clip test. Screen x/y clipping is handled by the 2D line drawers.
+                    if ((PPC0->P.z >= 0) || (PPC0->z < -1) || (PPC0->z > 1)
+                     || (PPC1->P.z >= 0) || (PPC1->z < -1) || (PPC1->z > 1)
+                     || (PPC2->P.z >= 0) || (PPC2->z < -1) || (PPC2->z > 1))
+                        goto rasterize_next_wireframe_strip_triangle;
+
+                    // draw triangle
+                    if (MODE == Renderer3D_detail::WIREFRAME_FAST)
+                        {
+                        const iVec2& PP0 = *PPI0;
+                        const iVec2& PP1 = *PPI1;
+                        const iVec2& PP2 = *PPI2;
+                        if (PP0 == PP1)
+                            {
+                            _drawWireFrameLineFast(PP0, PP2, color);
+                            }
+                        else if (PP0 == PP2)
+                            {
+                            _drawWireFrameLineFast(PP0, PP1, color);
+                            }
+                        else if (PP1 == PP2)
+                            {
+                            _drawWireFrameLineFast(PP0, PP1, color);
+                            }
+                        else
+                            {
+                            if (!skip_shared_edge) _drawWireFrameLineFast(PP0, PP1, color);
+                            _drawWireFrameLineFast(PP1, PP2, color);
+                            _drawWireFrameLineFast(PP2, PP0, color);
+                            }
+                        }
+                    else if ((MODE == Renderer3D_detail::WIREFRAME_AA_FAST_CHECK) || ((MODE == Renderer3D_detail::WIREFRAME_AA_FAST) && check_neighbor))
+                        {
+                        if (!skip_shared_edge) _drawWireFrameLineAAFast<true>(*((fVec2*)PPC0), *((fVec2*)PPC1), color, op);
+                        _drawWireFrameLineAAFast<true>(*((fVec2*)PPC1), *((fVec2*)PPC2), color, op);
+                        _drawWireFrameLineAAFast<true>(*((fVec2*)PPC2), *((fVec2*)PPC0), color, op);
+                        }
+                    else if ((MODE == Renderer3D_detail::WIREFRAME_AA_FAST_NOCHECK) || (MODE == Renderer3D_detail::WIREFRAME_AA_FAST))
+                        {
+                        if (!skip_shared_edge) _drawWireFrameLineAAFast<false>(*((fVec2*)PPC0), *((fVec2*)PPC1), color, op);
+                        _drawWireFrameLineAAFast<false>(*((fVec2*)PPC1), *((fVec2*)PPC2), color, op);
+                        _drawWireFrameLineAAFast<false>(*((fVec2*)PPC2), *((fVec2*)PPC0), color, op);
+                        }
+                    else
+                        {
+                        if (!skip_shared_edge) _uni.im->drawThickLineAA(*((fVec2*)PPC0), *((fVec2*)PPC1), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                        _uni.im->drawThickLineAA(*((fVec2*)PPC1), *((fVec2*)PPC2), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                        _uni.im->drawThickLineAA(*((fVec2*)PPC2), *((fVec2*)PPC0), thickness, END_ROUNDED, END_ROUNDED, color, opacity);
+                        }
+                    current_wire_triangle_drawn = true;
+                    }
+
+            rasterize_next_wireframe_strip_triangle:
+
+                previous_wire_triangle_drawn = current_wire_triangle_drawn;
+                if (tri >= nb_indices - 3) break; // exit loop at end of strip
+
+                // Get the next triangle. The swap alternates the strip winding as in OpenGL.
+                const uint16_t nv2 = ind_vertices[tri + 3];
+                if ((tri & 1) == 0)
+                    {
+                    swap(PPC0, PPC2);
+                    if (MODE == Renderer3D_detail::WIREFRAME_FAST) swap(PPI0, PPI2);
+                    iv0 = iv2;
+                    }
+                else
+                    {
+                    swap(PPC1, PPC2);
+                    if (MODE == Renderer3D_detail::WIREFRAME_FAST) swap(PPI1, PPI2);
+                    iv1 = iv2;
+                    }
+                iv2 = nv2;
+
+                PPC2->P = _r_modelViewM.mult1(vertices[iv2]);
+                PPC2->missedP = true;
                 }
             }
 

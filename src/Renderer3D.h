@@ -886,7 +886,7 @@ namespace tgx
          * @param   texture_image   The texture image to use or `nullptr` if not used
          *
          * @remark
-         * - If Gouraud shading is enabled, the normal vector must all have have unit norm.
+         * - If Gouraud shading is enabled, the normal vectors must all have unit norm.
          * - If Gouraud shading is disabled, `ind_normals` and `normals` should be set to `nullptr`.
          * - If texturing is disabled, `ind_texture`, `textures` and `texture_image` should be set to `nullptr`.
          * - If texturing is disabled, the current material color is used to draw the triangles.
@@ -896,6 +896,35 @@ namespace tgx
                            const uint16_t * ind_normals = nullptr, const fVec3* normals = nullptr,
                            const uint16_t * ind_texture = nullptr, const fVec2* textures = nullptr,
                            const Image<color_t> * texture_image = nullptr);
+
+
+        /**
+         * Draw a triangle strip.
+         *
+         * @param   nb_indices      Number of indexes in the strip.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_indices`.
+         * @param   vertices        The array of vertices (in model space).
+         * @param   ind_normals     Array of normal indexes. If specified, the array must have length `nb_indices`.
+         * @param   normals         The array of normals vectors (in model space).
+         * @param   ind_texture     Array of texture indexes. If specified, the array must have length `nb_indices`.
+         * @param   textures        The array of texture coords.
+         * @param   texture_image   The texture image to use or `nullptr` if not used.
+         *
+         * @remark
+         * - The first triangle is `(0,1,2)`, then winding alternates like OpenGL triangle strips:
+         *   `(2,1,3)`, `(2,3,4)`, `(4,3,5)`...
+         * - Repeated vertex indexes create degenerate triangles that are skipped. This can be used
+         *   to bridge parts of a strip without drawing connecting triangles.
+         * - If Gouraud shading is enabled, the normal vectors must all have unit norm.
+         * - If Gouraud shading is disabled, `ind_normals` and `normals` should be set to `nullptr`.
+         * - If texturing is disabled, `ind_texture`, `textures` and `texture_image` should be set to `nullptr`.
+         * - If texturing is disabled, the current material color is used to draw the strip.
+         */
+        void drawTriangleStrip(int nb_indices,
+                               const uint16_t* ind_vertices, const fVec3* vertices,
+                               const uint16_t* ind_normals = nullptr, const fVec3* normals = nullptr,
+                               const uint16_t* ind_texture = nullptr, const fVec2* textures = nullptr,
+                               const Image<color_t>* texture_image = nullptr);
 
 
 
@@ -958,7 +987,7 @@ namespace tgx
          * @param   texture_image   The texture image to use or `nullptr` if not used
          *
          * @remark
-         * - If Gouraud shading is enabled, the normal vector must all have have unit norm.
+         * - If Gouraud shading is enabled, the normal vectors must all have unit norm.
          * - If Gouraud shading is disabled, `ind_normals` and `normals` should be set to `nullptr`.
          * - If texturing is disabled, `ind_texture`, `textures` and `texture_image` should be set to `nullptr`.
          * - If texturing is disabled, the current material color is used to draw the quads.
@@ -1451,6 +1480,60 @@ namespace tgx
 
 
         /**
+         * Draw a triangle strip in wireframe [*fast*].
+         *
+         * @remark
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
+         * - The lines are drawn with the current material color.
+         * - This method uses the same strip winding convention as `drawTriangleStrip()`.
+         * - Repeated vertex indexes create degenerate triangles that are skipped.
+         * - This method does not use the z-buffer but backface culling is used if enabled.
+         *
+         * @param   nb_indices      Number of indexes in the strip.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_indices`.
+         * @param   vertices        Array of vertices in model space.
+        **/
+        void drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices);
+
+
+        /**
+         * Draw a triangle strip in wireframe [*antialiased*] with the current material color.
+         *
+         * @remark
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
+         * - This method uses the same strip winding convention as `drawTriangleStrip()`.
+         * - Repeated vertex indexes create degenerate triangles that are skipped.
+         *
+         * @param   nb_indices      Number of indexes in the strip.
+         * @param   ind_vertices    Array of vertex indexes.
+         * @param   vertices        Array of vertices in model space.
+        **/
+        void drawWireFrameTriangleStripAA(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices);
+
+
+        /**
+         * Draw a triangle strip in wireframe [*adjustable thickness + AA*].
+         *
+         * @remark
+         * - This method uses the general adjustable thickness + AA line path with explicit color and opacity.
+         * - This method uses the same strip winding convention as `drawTriangleStrip()`.
+         * - Repeated vertex indexes create degenerate triangles that are skipped.
+         * - This method does not use the z-buffer but backface culling is used if enabled.
+         *
+         * @warning This method is very slow and may be slower than solid drawing.
+         *
+         * @param   nb_indices      Number of indexes in the strip.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_indices`.
+         * @param   vertices        Array of vertices in model space.
+         * @param   thickness       Thickness of the lines.
+         * @param   color           Color to use.
+         * @param   opacity         Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity);
+
+
+        /**
          * Draw a wireframe quad [*fast*].
          *
          * @remark
@@ -1922,6 +2005,13 @@ namespace tgx
             const RGBf& Vcol0, const RGBf& Vcol1, const RGBf& Vcol2);
 
 
+        /** draw a triangle strip */
+        void _drawTriangleStrip(const int RASTER_TYPE, int nb_indices,
+            const uint16_t* ind_vertices, const fVec3* vertices,
+            const uint16_t* ind_normals, const fVec3* normals,
+            const uint16_t* ind_texture, const fVec2* textures);
+
+
         /** draw a single quad : the 4 points are assumed to be coplanar */
         void _drawQuad(const int RASTER_TYPE,
             const fVec3* P0, const fVec3* P1, const fVec3* P2, const fVec3* P3,
@@ -1989,6 +2079,8 @@ namespace tgx
         template<int MODE> void _drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness);
 
         template<int MODE> void _drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
+
+        template<int MODE> void _drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
 
         template<int MODE> void _drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness);
 
