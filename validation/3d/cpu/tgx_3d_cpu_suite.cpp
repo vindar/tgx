@@ -42,6 +42,7 @@ using namespace cimg_library;
 constexpr int W = 800;
 constexpr int H = 600;
 constexpr int GRID_N = 18;
+constexpr int STRIP_SEGMENTS = 160;
 constexpr int POINT_COUNT = 320;
 constexpr int BLOCK_X = 16;
 constexpr int BLOCK_Y = 12;
@@ -77,6 +78,10 @@ enum class SceneId
     ZBufferOverlap,
     LargeTriangles,
     SmallTriangleGrid,
+    TriangleStripRibbon,
+    WireTriangleStripFast,
+    WireTriangleStripAA,
+    WireTriangleStripThickness,
     DirectShapes,
     WirePoints,
     WirePointsV2,
@@ -132,6 +137,10 @@ const SceneDef SCENES[] = {
     { SceneId::ZBufferOverlap,      "zbuffer_overlap",       "overlapping direct geometry" },
     { SceneId::LargeTriangles,      "large_triangles",       "few large filled triangles" },
     { SceneId::SmallTriangleGrid,   "small_triangle_grid",   "many small textured triangles" },
+    { SceneId::TriangleStripRibbon, "triangle_strip_ribbon", "textured dynamic geometry drawn as a triangle strip" },
+    { SceneId::WireTriangleStripFast, "wire_triangle_strip_fast", "dynamic triangle strip, fast wireframe path" },
+    { SceneId::WireTriangleStripAA, "wire_triangle_strip_aa", "dynamic triangle strip, optimized antialiased wireframe path" },
+    { SceneId::WireTriangleStripThickness, "wire_triangle_strip_thickness", "dynamic triangle strip, adjustable thickness + AA path" },
     { SceneId::DirectShapes,        "direct_shapes",         "direct cube and sphere helpers" },
     { SceneId::WirePoints,          "wire_points",           "wireframe plus pixels/dots" },
     { SceneId::WirePointsV2,        "wire_points_v2",        "Mesh3Dv2 wireframe plus pixels/dots" },
@@ -648,6 +657,10 @@ struct RenderContext
     std::vector<fVec3> grid_normals;
     std::vector<fVec2> grid_texcoords;
     std::vector<uint16_t> grid_indices;
+    std::vector<fVec3> strip_vertices;
+    std::vector<fVec3> strip_normals;
+    std::vector<fVec2> strip_texcoords;
+    std::vector<uint16_t> strip_indices;
     std::vector<fVec3> point_positions;
     std::vector<int> point_colors_ind;
     std::vector<int> point_opacity_ind;
@@ -677,6 +690,7 @@ struct RenderContext
         point_colors[5] = C<color_t>(230, 80, 200);
 
         buildGrid();
+        buildStrip();
         buildPoints();
         }
 
@@ -723,6 +737,33 @@ struct RenderContext
                 grid_indices.push_back(i11);
                 grid_indices.push_back(i01);
                 }
+            }
+        }
+
+    void buildStrip()
+        {
+        const int nv = 2 * (STRIP_SEGMENTS + 1);
+        strip_vertices.resize(nv);
+        strip_normals.resize(nv);
+        strip_texcoords.resize(nv);
+        strip_indices.resize(nv);
+
+        for (int i = 0; i <= STRIP_SEGMENTS; i++)
+            {
+            const float u = float(i) / STRIP_SEGMENTS;
+            const float x = -1.8f + 3.6f * u;
+            const float y = 0.28f * std::sin(6.2831853f * 2.25f * u);
+            const float z = 0.10f * std::cos(6.2831853f * 3.0f * u);
+            const float half_w = 0.20f + 0.05f * std::sin(6.2831853f * 5.0f * u);
+            const int a = 2 * i;
+            strip_vertices[a] = { x, y + half_w, z };
+            strip_vertices[a + 1] = { x, y - half_w, z };
+            strip_normals[a] = { 0.0f, 0.0f, 1.0f };
+            strip_normals[a + 1] = { 0.0f, 0.0f, 1.0f };
+            strip_texcoords[a] = { 4.0f * u, 0.0f };
+            strip_texcoords[a + 1] = { 4.0f * u, 1.0f };
+            strip_indices[a] = uint16_t(a);
+            strip_indices[a + 1] = uint16_t(a + 1);
             }
         }
 
@@ -1112,6 +1153,38 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             r.drawTriangles(int(ctx.grid_indices.size() / 3), ctx.grid_indices.data(), ctx.grid_vertices.data(),
                             ctx.grid_indices.data(), ctx.grid_normals.data(),
                             ctx.grid_indices.data(), ctx.grid_texcoords.data(), &ctx.meshes.bunny_texture);
+            break;
+
+        case SceneId::TriangleStripRibbon:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2);
+            r.setModelPosScaleRot({ 0.0f, 0.0f, -5.8f }, { 2.25f, 2.25f, 1.0f }, -26.0f, { 0.25f, 1.0f, 0.1f });
+            r.drawTriangleStrip(int(ctx.strip_indices.size()), ctx.strip_indices.data(), ctx.strip_vertices.data(),
+                                ctx.strip_indices.data(), ctx.strip_normals.data(),
+                                ctx.strip_indices.data(), ctx.strip_texcoords.data(), &ctx.meshes.bunny_texture);
+            break;
+
+        case SceneId::WireTriangleStripFast:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setMaterialColor(C<color_t>(255, 230, 110));
+            r.setModelPosScaleRot({ 0.0f, 0.0f, -5.8f }, { 2.25f, 2.25f, 1.0f }, -26.0f, { 0.25f, 1.0f, 0.1f });
+            r.drawWireFrameTriangleStrip(int(ctx.strip_indices.size()), ctx.strip_indices.data(), ctx.strip_vertices.data());
+            break;
+
+        case SceneId::WireTriangleStripAA:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setMaterialColor(C<color_t>(100, 230, 255));
+            r.setModelPosScaleRot({ 0.0f, 0.0f, -5.8f }, { 2.25f, 2.25f, 1.0f }, -26.0f, { 0.25f, 1.0f, 0.1f });
+            r.drawWireFrameTriangleStripAA(int(ctx.strip_indices.size()), ctx.strip_indices.data(), ctx.strip_vertices.data());
+            break;
+
+        case SceneId::WireTriangleStripThickness:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setModelPosScaleRot({ 0.0f, 0.0f, -5.8f }, { 2.25f, 2.25f, 1.0f }, -26.0f, { 0.25f, 1.0f, 0.1f });
+            r.drawWireFrameTriangleStrip(int(ctx.strip_indices.size()), ctx.strip_indices.data(), ctx.strip_vertices.data(), 1.501f, C<color_t>(255, 150, 210), 1.0f);
             break;
 
         case SceneId::DirectShapes:
