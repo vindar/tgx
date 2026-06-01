@@ -592,6 +592,7 @@ Available solid primitives include:
 | \ref tgx::Renderer3D::drawTriangle "drawTriangle()" | Draw one triangle with optional normals, texture coordinates and texture. |
 | \ref tgx::Renderer3D::drawTriangleWithVertexColor "drawTriangleWithVertexColor()" | Draw one triangle with explicit per-vertex colors. |
 | \ref tgx::Renderer3D::drawTriangles "drawTriangles()" | Draw an indexed array of triangles sharing vertex, normal and texture-coordinate arrays. |
+| \ref tgx::Renderer3D::drawTriangleStrip "drawTriangleStrip()" | Draw one indexed triangle strip, reusing the two previous vertices for dynamic strip geometry. |
 | \ref tgx::Renderer3D::drawQuad "drawQuad()" | Draw one quad, internally split into two triangles. |
 | \ref tgx::Renderer3D::drawQuadWithVertexColor "drawQuadWithVertexColor()" | Draw one quad with explicit per-vertex colors. |
 | \ref tgx::Renderer3D::drawQuads "drawQuads()" | Draw an indexed array of quads. |
@@ -599,8 +600,9 @@ Available solid primitives include:
 | \ref tgx::Renderer3D::drawSphere "drawSphere()" | Draw a generated sphere with a chosen tessellation. |
 | \ref tgx::Renderer3D::drawAdaptativeSphere "drawAdaptativeSphere()" | Draw a generated sphere with tessellation chosen from its projected size. |
 
-When many triangles or quads share arrays of vertices, normals and texture coordinates, use `drawTriangles()` or
-`drawQuads()` instead of many individual calls. For fully static geometry, use `drawMesh()`.
+When many triangles or quads share arrays of vertices, normals and texture coordinates, use `drawTriangles()`,
+`drawTriangleStrip()` or `drawQuads()` instead of many individual calls. `drawTriangleStrip()` should be fastest in general. 
+For fully static geometry, use `drawMesh()`.
 
 Normals should be unit vectors for Gouraud shading. Flat shading can compute a face normal from the geometry when no
 normal is provided, but explicit normals give more predictable lighting.
@@ -744,6 +746,10 @@ There are three practical wireframe paths:
 wireframe view is needed, prefer `drawWireFrame...AA()`. Use the adjustable-thickness overloads only for occasional
 debug views or special effects, because they are much slower.
 
+Indexed wireframe helpers are available for line lists, triangle lists, triangle strips and quad lists. For dynamic
+strip geometry, \ref tgx::Renderer3D::drawWireFrameTriangleStrip "drawWireFrameTriangleStrip()" and
+\ref tgx::Renderer3D::drawWireFrameTriangleStripAA "drawWireFrameTriangleStripAA()" reuse the previous strip vertices and draw shared strip edges only once.
+
 For performance-sensitive rendering, prefer solid \ref tgx::Renderer3D::drawMesh "drawMesh()" first, or use the fast
 wireframe path only for diagnostics.
 
@@ -837,7 +843,7 @@ Useful starting points:
 - `examples/Teensy4/3D/borg_cube/`: dynamic texture generation and textured cube rendering.
 - `examples/Teensy4/3D/test-shading/`: flat and Gouraud shading comparisons on several meshes.
 - `examples/Teensy4/3D/test-texture/`: textured mesh rendering.
-- `examples/Teensy4/3D/scream/`: dynamic textured surface built from quads.
+- `examples/Teensy4/3D/scream/`: dynamic textured surface built as a triangle strip.
 - `examples/Teensy4/3D/characters/`: larger textured character models and chained meshes.
 - `examples/Teensy4/3D/mars/`: a more complete scene with skybox-like rendering and textured objects.
 - `examples/ESP32/naruto/`: ESP32 textured mesh rendering.

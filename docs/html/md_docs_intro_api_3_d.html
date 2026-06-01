@@ -623,19 +623,21 @@ Drawing primitives directly</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ad54f3bb4aedeeee2efbb8aa9956bf17a">drawTriangles()</a>   </td><td class="markdownTableBodyNone">Draw an indexed array of triangles sharing vertex, normal and texture-coordinate arrays.    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ab084f646ca1985114e8e50f030a5b5c7">drawTriangleStrip()</a>   </td><td class="markdownTableBodyNone">Draw one indexed triangle strip, reusing the two previous vertices for dynamic strip geometry.    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#afc1acda7d8cb5a16666acdb3306dcdd3">drawQuad()</a>   </td><td class="markdownTableBodyNone">Draw one quad, internally split into two triangles.    </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#addff7a6a3a439659704d29b524b7f6b2">drawQuadWithVertexColor()</a>   </td><td class="markdownTableBodyNone">Draw one quad with explicit per-vertex colors.    </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a01fe01f23d0925292db43938f164d5ad">drawQuads()</a>   </td><td class="markdownTableBodyNone">Draw an indexed array of quads.    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a44f87bfade3e549ef8b3ec2468705e77">drawCube()</a>   </td><td class="markdownTableBodyNone">Draw the unit cube, optionally textured per face.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a0737d0bed8e991bdda9c956e6842478d">drawSphere()</a>   </td><td class="markdownTableBodyNone">Draw a generated sphere with a chosen tessellation.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a44f87bfade3e549ef8b3ec2468705e77">drawCube()</a>   </td><td class="markdownTableBodyNone">Draw the unit cube, optionally textured per face.    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a0737d0bed8e991bdda9c956e6842478d">drawSphere()</a>   </td><td class="markdownTableBodyNone">Draw a generated sphere with a chosen tessellation.    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a00c59fee77ca3d42b19d62e9eade1203">drawAdaptativeSphere()</a>   </td><td class="markdownTableBodyNone">Draw a generated sphere with tessellation chosen from its projected size.   </td></tr>
 </table>
-<p >When many triangles or quads share arrays of vertices, normals and texture coordinates, use <code>drawTriangles()</code> or <code>drawQuads()</code> instead of many individual calls. For fully static geometry, use <code>drawMesh()</code>.</p>
+<p >When many triangles or quads share arrays of vertices, normals and texture coordinates, use <code>drawTriangles()</code>, <code>drawTriangleStrip()</code> or <code>drawQuads()</code> instead of many individual calls. <code>drawTriangleStrip()</code> should be fastest in general. For fully static geometry, use <code>drawMesh()</code>.</p>
 <p >Normals should be unit vectors for Gouraud shading. Flat shading can compute a face normal from the geometry when no normal is provided, but explicit normals give more predictable lighting.</p>
 <h2><a class="anchor" id="sec_3D_textures"></a>
 Textures</h2>
@@ -728,7 +730,8 @@ Wireframe and debug drawing</h2>
 <td class="markdownTableBodyNone"><code>drawWireFrame...(object, thickness, color, opacity)</code>   </td><td class="markdownTableBodyNone">adjustable thickness + AA wireframe   </td><td class="markdownTableBodyNone">Uses the general adjustable thickness + AA line path. This is very slow and is mostly useful when visible line width or opacity matters more than speed.   </td></tr>
 </table>
 <dl class="section note"><dt>Note</dt><dd>In most sketches, use <a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh()</a> for the normal solid render path. When a clean wireframe view is needed, prefer <code>drawWireFrame...AA()</code>. Use the adjustable-thickness overloads only for occasional debug views or special effects, because they are much slower.</dd></dl>
-<p>For performance-sensitive rendering, prefer solid <a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh()</a> first, or use the fast wireframe path only for diagnostics.</p>
+<p>Indexed wireframe helpers are available for line lists, triangle lists, triangle strips and quad lists. For dynamic strip geometry, <a class="el" href="classtgx_1_1_renderer3_d.html#a9b3fc7c8d0c1c7fd3a95032ed4a89363">drawWireFrameTriangleStrip()</a> and <a class="el" href="classtgx_1_1_renderer3_d.html#a104f91234d7cf000cf6930cb81bb8fe8">drawWireFrameTriangleStripAA()</a> reuse the previous strip vertices and draw shared strip edges only once.</p>
+<p >For performance-sensitive rendering, prefer solid <a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh()</a> first, or use the fast wireframe path only for diagnostics.</p>
 <div class="fragment"><div class="line">renderer.drawWireFrameMesh(&amp;mesh);        <span class="comment">// fast, aliased</span></div>
 <div class="line">renderer.drawWireFrameMeshAA(&amp;mesh);      <span class="comment">// one-pixel antialiased, optimized</span></div>
 <div class="line">renderer.drawWireFrameMesh(&amp;mesh, 1.6f, RGB565_Red, 0.9f); <span class="comment">// adjustable thickness + AA, very slow</span></div>
@@ -804,7 +807,7 @@ Useful examples</h1>
 <li><code>examples/Teensy4/3D/borg_cube/</code>: dynamic texture generation and textured cube rendering.</li>
 <li><code>examples/Teensy4/3D/test-shading/</code>: flat and Gouraud shading comparisons on several meshes.</li>
 <li><code>examples/Teensy4/3D/test-texture/</code>: textured mesh rendering.</li>
-<li><code>examples/Teensy4/3D/scream/</code>: dynamic textured surface built from quads.</li>
+<li><code>examples/Teensy4/3D/scream/</code>: dynamic textured surface built as a triangle strip.</li>
 <li><code>examples/Teensy4/3D/characters/</code>: larger textured character models and chained meshes.</li>
 <li><code>examples/Teensy4/3D/mars/</code>: a more complete scene with skybox-like rendering and textured objects.</li>
 <li><code>examples/ESP32/naruto/</code>: ESP32 textured mesh rendering.</li>
