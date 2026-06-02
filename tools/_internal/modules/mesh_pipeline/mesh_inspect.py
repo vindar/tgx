@@ -35,6 +35,7 @@ class DecodedMaterial:
     emissive_texture_symbol: str = ""
     material_extra_flags: int = 0
     material_extra_present: bool = False
+    material_extra_row_present: bool = False
 
 
 @dataclass
@@ -351,9 +352,25 @@ def _decode_tgx_image_pixels(body: str, color_type: str, count: int) -> list[tup
     return out
 
 
-def _parse_materials(text: str, array_name: str) -> list[DecodedMaterial]:
+def _array_entry_comments(raw_text: str, array_name: str) -> list[str]:
+    if not raw_text or not array_name:
+        return []
+    try:
+        body = _extract_named_array_body(raw_text, array_name)
+    except Exception:
+        return []
+    comments: list[str] = []
+    for line in body.splitlines():
+        match = re.search(r"\}\s*,?\s*//\s*(.*?)\s*$", line)
+        if match:
+            comments.append(match.group(1).strip())
+    return comments
+
+
+def _parse_materials(text: str, array_name: str, raw_text: str = "") -> list[DecodedMaterial]:
     body = _extract_named_array_body(text, array_name)
     entries = _split_top_level(body)
+    names = _array_entry_comments(raw_text, array_name)
     materials: list[DecodedMaterial] = []
     for i, entry in enumerate(entries):
         fields = _split_top_level(entry.strip().strip("{}").strip())
@@ -364,7 +381,7 @@ def _parse_materials(text: str, array_name: str) -> list[DecodedMaterial]:
         color = tuple(float(v) for v in color_vals[:3]) if len(color_vals) >= 3 else (0.75, 0.75, 0.75)
         materials.append(
             DecodedMaterial(
-                name=f"mat{i}",
+                name=names[i] if i < len(names) and names[i] else f"mat{i}",
                 texture_symbol=texture,
                 color=color,  # type: ignore[arg-type]
                 ambiant=float(_numbers(fields[2])[0]),
@@ -382,6 +399,7 @@ def _apply_material_extras(text: str, array_name: str, materials: list[DecodedMa
     body = _extract_named_array_body(text, array_name)
     entries = _split_top_level(body)
     for i, entry in enumerate(entries[: len(materials)]):
+        materials[i].material_extra_row_present = True
         fields = _split_top_level(entry.strip().strip("{}").strip())
         if len(fields) < 4:
             continue
@@ -536,7 +554,7 @@ def parse_mesh3d2_header(path: str | Path) -> DecodedHeaderMesh:
     material_extra_array = _identifier_or_null(fields[8]) if len(fields) >= 9 else ""
     payload_array = _identifier_or_null(fields[payload_field])
     payload_words = _ints(_extract_named_array_body(text, payload_array))
-    materials = _parse_materials(text, material_array)
+    materials = _parse_materials(text, material_array, raw)
     material_extras_present = _apply_material_extras(text, material_extra_array, materials)
     mesh = DecodedHeaderMesh(
         path=header,

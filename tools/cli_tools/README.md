@@ -216,8 +216,27 @@ Texture export options:
   exporting an image for that material.
 - `--emissive-texture-symbol MATERIAL=SYMBOL`: use an existing texture symbol
   as one material's emissive texture.
+- `--texture-name MATERIAL=NAME`: choose the generated texture symbol name for
+  one diffuse texture export.
+- `--emissive-texture-name MATERIAL=NAME`: choose the generated texture symbol
+  name for one emissive texture export.
 - `--list-textures`: print resolved OBJ texture choices and exit.
 - `--confirm-textures`: interactively confirm or override OBJ texture choices.
+
+Material override options:
+
+- `--material-color MATERIAL=R,G,B`: override one material's diffuse color.
+- `--material-ambiant MATERIAL=VALUE`: override one material's ambient strength.
+  `--material-ambient` is accepted as an alias.
+- `--material-diffuse MATERIAL=VALUE`: override one material's diffuse strength.
+- `--material-specular MATERIAL=VALUE`: override one material's specular strength.
+- `--material-exponent MATERIAL=VALUE`: override one material's specular exponent.
+- `--emissive-color MATERIAL=R,G,B`: override one material's emissive color.
+- `--emissive-strength MATERIAL=VALUE`: override one material's emissive strength.
+- `--material-simple MATERIAL`: force one material to omit
+  `MeshMaterialExtra3Dv2` data.
+- `--material-rename OLD=NEW`: rename a material after loading and texture
+  processing.
 
 Stripifier options:
 
@@ -234,10 +253,18 @@ Notes:
 - Texture export uses the same image exporter as `tgx_image_cli.py`. OBJ/MTL
   `map_Kd` becomes the material diffuse texture. `Ke` is stored as emissive
   color, and `map_Ke` becomes the material emissive texture in Mesh3Dv2
-  `material_extras`. TGX 1.1.1 stores this emissive metadata but does not render
-  it yet.
-- When the input is already a TGX mesh header, existing texture headers are
-  copied next to the generated mesh by default.
+  `material_extras`. TGX stores this emissive metadata but does not render it
+  yet.
+- A `Mesh3Dv2` output writes a `material_extras` table only when at least one
+  material needs extended emissive data. When the table is present, it has one
+  row per material; materials without emissive data receive a neutral row with
+  black color, zero strength, `nullptr` texture and zero flags.
+- A `Mesh3D` legacy output cannot store emissive material data. Diffuse
+  materials and diffuse textures are preserved, but emissive colors and emissive
+  textures are omitted.
+- When the input is already a TGX mesh header, existing TGX texture headers
+  referenced by exported material links are copied next to the generated mesh by
+  default. Included textures that are not linked by a material are omitted.
 - For new projects, start with default Mesh3Dv2 options, then inspect the output
   with `tgx_info_cli.py` or `tgx_info.py` before tuning parameters.
 - For embedded projects, the usual first CLI choice is
@@ -331,10 +358,11 @@ Options:
 
 The inspector detects the asset type automatically and searches for associated
 `.h/.cpp` files next to the selected file. For meshes, it reports geometry,
-materials, textures, memory estimates, chain counts and meshlet information.
-For images, it reports dimensions, color type and memory size. For fonts, it
-reports generated font objects, glyph counts, memory size, character ranges and
-antialiasing information.
+materials, diffuse and emissive texture links, Mesh3Dv2 material extras, memory
+estimates, chain counts and meshlet information. For images, it reports
+dimensions, color type and memory size. For fonts, it reports generated font
+objects, glyph counts, memory size, character ranges and antialiasing
+information.
 
 
 ## Exit behavior

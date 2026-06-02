@@ -54,7 +54,12 @@ def resolve_mesh_textures(
     choices: dict[str, TextureChoice] = {}
     role = role.lower()
 
-    for material, desc in sorted(mesh.materials.items()):
+    used_materials = sorted({tri.material for tri in mesh.triangles})
+    for material in used_materials:
+        desc = mesh.materials.get(material)
+        if desc is None:
+            desc = Material(material)
+            mesh.materials[material] = desc
         requested_role, requested = _requested_texture(desc.texture_refs, desc.texture_path, role)
         selected: Path | None = None
         candidates: list[TextureCandidate] = []

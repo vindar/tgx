@@ -380,6 +380,8 @@ def mesh3dv2_report(mesh: DecodedHeaderMesh, files: list[Path]) -> str:
     textured = sum(1 for m in mesh.materials if m.texture_symbol)
     emissive = sum(1 for m in mesh.materials if m.material_extra_present)
     emissive_textured = sum(1 for m in mesh.materials if m.emissive_texture_symbol)
+    material_extra_rows = sum(1 for m in mesh.materials if getattr(m, "material_extra_row_present", False))
+    material_lines = mesh3dv2_material_report_lines(mesh)
     texture_lines = texture_report_lines(mesh.texture_headers)
     active_cones = [m for m in mesh.meshlets if m.cone_cos > -1.0]
     cone_line = f"{len(active_cones)} active, {len(mesh.meshlets) - len(active_cones)} disabled"
@@ -398,6 +400,7 @@ def mesh3dv2_report(mesh: DecodedHeaderMesh, files: list[Path]) -> str:
             f"  triangles       : {triangles}",
             f"  meshlets        : {len(mesh.meshlets)}",
             f"  materials       : {len(mesh.materials)} ({textured} textured, {emissive} emissive, {emissive_textured} emissive textured)",
+            f"  material extras : {'yes' if mesh.material_extras_present else 'no'} ({material_extra_rows} rows, {emissive} with emissive data)",
             f"  chains          : {chains} ({chains / max(1, triangles):.3f} per triangle)",
             f"  vertex refs     : {refs} ({refs / max(1, triangles):.3f} per triangle)",
             f"  local vertices  : {local_vertices}",
@@ -420,10 +423,72 @@ def mesh3dv2_report(mesh: DecodedHeaderMesh, files: list[Path]) -> str:
             f"  payload bytes   : {_distribution([m.payload_bytes for m in mesh.meshlets])}",
             f"  culling cones   : {cone_line}",
             "",
+            "Materials",
+            *(material_lines or ["  none"]),
+            "",
             "Textures",
             *(texture_lines or ["  none"]),
         ]
     )
+
+
+def mesh3dv2_material_report_lines(mesh: DecodedHeaderMesh) -> list[str]:
+    triangle_counts = {index: 0 for index in range(len(mesh.materials))}
+    for meshlet in mesh.meshlets:
+        if 0 <= meshlet.material_index < len(mesh.materials):
+            triangle_counts[meshlet.material_index] += len(meshlet.triangles)
+    lines: list[str] = []
+    for index, material in enumerate(mesh.materials):
+        has_extra_row = bool(getattr(material, "material_extra_row_present", False))
+        if material.material_extra_present:
+            mode = "extended"
+        elif has_extra_row:
+            mode = "standard, empty extra row"
+        else:
+            mode = "standard"
+        name = material.name or f"mat{index}"
+        diffuse_texture = _mesh3dv2_texture_text(material.texture_symbol, mesh.texture_headers)
+        emissive_texture = _mesh3dv2_texture_text(material.emissive_texture_symbol, mesh.texture_headers)
+        lines.append(f"  mat {index:3d}: {name} [{mode}], triangles={triangle_counts.get(index, 0)}")
+        lines.append(
+            "    diffuse : color={}, ka/kd/ks={}/{}/{}, exp={}, texture={}".format(
+                _format_float3(material.color),
+                _format_number(material.ambiant),
+                _format_number(material.diffuse),
+                _format_number(material.specular),
+                material.exponent,
+                diffuse_texture,
+            )
+        )
+        if has_extra_row or material.material_extra_present:
+            lines.append(
+                "    emissive: color={}, strength={}, texture={}, flags={}".format(
+                    _format_float3(material.emissive_color),
+                    _format_number(material.emissive_strength),
+                    emissive_texture,
+                    material.material_extra_flags,
+                )
+            )
+        else:
+            lines.append("    emissive: none")
+    return lines
+
+
+def _mesh3dv2_texture_text(symbol: str, texture_headers: dict[str, Path]) -> str:
+    if not symbol:
+        return "none"
+    path = texture_headers.get(symbol)
+    if path is None:
+        return f"{symbol} (unresolved)"
+    return f"{symbol} ({path.name})"
+
+
+def _format_float3(values: tuple[float, float, float]) -> str:
+    return "({}, {}, {})".format(*(_format_number(value) for value in values))
+
+
+def _format_number(value: float) -> str:
+    return f"{value:.6g}"
 
 
 def legacy_mesh_report(parsed, obj, texture_symbols: dict[str, str], files: list[Path]) -> str:

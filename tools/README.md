@@ -88,10 +88,22 @@ python tools/tgx_mesh.py
 - `Mesh3D`, the legacy format kept for compatibility.
 
 For OBJ files, the tool reads materials and textures when available. The GUI
-shows the detected diffuse (`map_Kd`) and emissive (`map_Ke`) texture slots and
-lets you override or resize each texture before conversion. MTL `Ke` is stored
-as Mesh3Dv2 emissive color. TGX stores emissive metadata in optional
-Mesh3Dv2 material extras. It can also preview the mesh with PyVista.
+shows two asset lists:
+
+- **Materials**: one row per material used by the mesh. A mesh always has at
+  least one material, using silver defaults if the source provides none.
+  Materials can be renamed and edited. Each material stores diffuse color,
+  ambient/diffuse/specular strengths, specular exponent, and an optional diffuse
+  texture link.
+- **Textures**: one row per image asset. Textures can be added, removed,
+  renamed and resized independently, then linked from one or more materials.
+
+For `Mesh3Dv2`, a material can also enable an extended material entry with
+emissive color, emissive strength and an optional emissive texture link. OBJ/MTL
+`Ke` becomes emissive color and `map_Ke` becomes the emissive texture. TGX
+stores this metadata in the optional Mesh3Dv2 `material_extras` table. It can
+also preview the mesh with PyVista, using resized texture previews when
+applicable.
 
 For `Mesh3Dv2`, the GUI defaults to **Compact** meshlet generation with
 **Non-adjacent packing** set to `0`. This is the usual starting point for
@@ -134,8 +146,9 @@ python tools/tgx_info.py
 and it detects whether it contains an image, mesh or font.
 
 It reports useful information such as dimensions, memory size, meshlet counts,
-triangle counts, texture list or glyph list. It can also save image/font preview
-PNGs, and can open the mesh viewer for mesh assets.
+triangle counts, material tables, diffuse/emissive texture links, Mesh3Dv2
+material extras, texture lists or glyph lists. It can also save image/font
+preview PNGs, and can open the mesh viewer for mesh assets.
 
 
 

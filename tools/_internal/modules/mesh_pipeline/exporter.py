@@ -616,7 +616,14 @@ def _export_meshlet_header_impl(
                 color = material.emissive
                 strength = material.emissive_strength
                 flags = material.material_extra_flags
-                if texture and strength == 0.0:
+                if (
+                    texture
+                    and strength == 0.0
+                    and not getattr(material, "_emissive_strength_overridden", False)
+                    and not material.material_extra_present
+                    and color == (0.0, 0.0, 0.0)
+                    and flags == 0
+                ):
                     strength = 1.0
             elif needed:
                 color = (0.0, 0.0, 0.0)
