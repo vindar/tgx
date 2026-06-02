@@ -139,16 +139,32 @@ the compact mode.
 
 ## Texture Export
 
-For OBJ inputs, TGX can attach one texture to each material. The converter
-therefore uses the diffuse/albedo map (`map_Kd`) as the TGX texture. Other OBJ
-maps such as specular, normal/bump, emissive or reflection maps are kept as
-references for inspection but are not exported to TGX materials.
+For OBJ inputs, TGX can attach one diffuse texture and one emissive texture to
+each `Mesh3Dv2` material. The converter uses the diffuse/albedo map (`map_Kd`)
+as the base TGX texture, parses MTL `Ke` as the material emissive color, and
+uses `map_Ke` as the material emissive texture.
+
+`Mesh3Dv2` stores emissive data in an optional `material_extras` table. The
+table may be `nullptr`; when it is present, it has exactly `nb_materials`
+entries and `material_extras[i]` extends `materials[i]`. TGX 1.1.1 stores and
+preserves this emissive metadata, but the renderer does not use it yet.
+Renderer/shader support for emissive color and emissive texture is planned for
+a later release.
+
+Other OBJ maps such as specular, normal/bump or reflection maps are kept as
+references for inspection; they are ignored by TGX material export.
 
 The converter first tries the exact `map_Kd` path from the `.mtl` file. If that
 file is missing, it scans the OBJ directory and any `--texture-search` directory
 for image files with similar names. The chosen texture and the best candidates
 are printed before conversion, so broken `.mtl` references are visible instead
 of silently producing an untextured mesh.
+
+For `map_Ke`, the converter uses the exact emissive texture path or an explicit
+`--emissive-texture` override; it does not guess a diffuse texture as an
+emissive map. If `Ke` or `map_Ke` is present, `emissive_strength` is stored as
+`1.0f`. If only `map_Ke` is present, the emissive color is black and the
+emissive texture pointer is set.
 
 Texture conversion reuses the TGX image converter, with vertical flipping
 enabled to match OBJ UV conventions.
@@ -172,7 +188,12 @@ Useful options:
 | `--texture-search DIR` | Extra directory searched when `.mtl` texture paths are missing. |
 | `--texture MATERIAL=PATH` | Force one material to use a specific image file or TGX texture header. |
 | `--skip-texture MATERIAL` | Leave one material untextured. |
+| `--emissive-texture MATERIAL=PATH` | Force one material to use a specific image file or TGX texture header as its emissive texture. |
+| `--skip-emissive-texture MATERIAL` | Leave one material without an emissive texture. |
+| `--emissive-texture-resize MATERIAL=WxH` | Resize one material emissive texture; overrides `--texture-size` for that material. |
+| `--emissive-texture-filter MATERIAL=FILTER` | Resize filter for one material emissive texture; overrides `--texture-resample`. |
 | `--texture-symbol MATERIAL=SYMBOL` | Use an already existing TGX image symbol for one material. |
+| `--emissive-texture-symbol MATERIAL=SYMBOL` | Use an already existing TGX image symbol for one material emissive texture. |
 | `--list-textures` | Print resolved texture choices and stop before mesh generation. |
 | `--confirm-textures` | Ask interactively before exporting ambiguous or repaired texture choices. |
 | `--include FILE` | Add an include for an existing texture header. |
@@ -191,9 +212,9 @@ python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --list-textures
 python tools/cli_tools/tgx_mesh_cli.py model.obj -o model_v2.h --texture Body=body_albedo.png --texture-resize Body=256x256
 ```
 
-In the GUI, choose an OBJ file and press **Reload textures**. Each material is
-listed with the texture requested by the `.mtl`, the automatically selected
-image, and an optional resize. Use **Browse...** on a selected material to
-override the automatic choice.
+In the GUI, choose an OBJ file and press **Reload textures**. Each material can
+show separate diffuse and emissive texture slots, with the texture requested by
+the `.mtl`, the automatically selected image, and an optional resize. Use
+**Browse...** on a selected slot to override the automatic choice.
 
 Run `python tools/cli_tools/tgx_mesh_cli.py --help` for the exact command-line reference.

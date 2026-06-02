@@ -203,9 +203,19 @@ Texture export options:
 - `--texture MATERIAL=PATH`: manually choose an image file or TGX texture
   header for one material. Can be repeated.
 - `--skip-texture MATERIAL`: leave one material untextured.
+- `--emissive-texture MATERIAL=PATH`: manually choose an image file or TGX
+  texture header as one material's emissive texture. Can be repeated.
+- `--skip-emissive-texture MATERIAL`: leave one material without an emissive
+  texture.
+- `--emissive-texture-resize MATERIAL=WIDTHxHEIGHT`: resize one material
+  emissive texture. Can be repeated and overrides `--texture-size`.
+- `--emissive-texture-filter MATERIAL=FILTER`: resize filter for one material
+  emissive texture. Can be repeated.
 - `--texture-straight-alpha`: keep straight alpha for generated texture images.
 - `--texture-symbol MATERIAL=SYMBOL`: use an existing texture symbol instead of
   exporting an image for that material.
+- `--emissive-texture-symbol MATERIAL=SYMBOL`: use an existing texture symbol
+  as one material's emissive texture.
 - `--list-textures`: print resolved OBJ texture choices and exit.
 - `--confirm-textures`: interactively confirm or override OBJ texture choices.
 
@@ -221,9 +231,13 @@ Notes:
   when installed.
 - For OBJ input, normals are verified or generated as needed by the conversion
   pipeline.
-- Texture export uses the same image exporter as `tgx_image_cli.py`. When the
-  input is already a TGX mesh header, existing texture headers are copied next
-  to the generated mesh by default.
+- Texture export uses the same image exporter as `tgx_image_cli.py`. OBJ/MTL
+  `map_Kd` becomes the material diffuse texture. `Ke` is stored as emissive
+  color, and `map_Ke` becomes the material emissive texture in Mesh3Dv2
+  `material_extras`. TGX 1.1.1 stores this emissive metadata but does not render
+  it yet.
+- When the input is already a TGX mesh header, existing texture headers are
+  copied next to the generated mesh by default.
 - For new projects, start with default Mesh3Dv2 options, then inspect the output
   with `tgx_info_cli.py` or `tgx_info.py` before tuning parameters.
 - For embedded projects, the usual first CLI choice is

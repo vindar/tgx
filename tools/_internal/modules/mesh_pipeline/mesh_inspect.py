@@ -393,7 +393,12 @@ def _apply_material_extras(text: str, array_name: str, materials: list[DecodedMa
         materials[i].emissive_strength = float(strength_vals[0]) if strength_vals else 0.0
         materials[i].emissive_texture_symbol = _identifier_or_null(fields[2])
         materials[i].material_extra_flags = int(flag_vals[0]) if flag_vals else 0
-        materials[i].material_extra_present = True
+        materials[i].material_extra_present = (
+            materials[i].emissive_color != (0.0, 0.0, 0.0)
+            or materials[i].emissive_strength != 0.0
+            or bool(materials[i].emissive_texture_symbol)
+            or materials[i].material_extra_flags != 0
+        )
     return True
 
 

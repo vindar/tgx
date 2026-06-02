@@ -309,6 +309,18 @@ namespace tgx
             }
 
 
+        template<typename color_t>
+        bool has_emissive_textures(const Mesh3Dv2<color_t>* mesh)
+            {
+            if ((mesh == nullptr) || (mesh->material_extras == nullptr)) return false;
+            for (uint16_t i = 0; i < mesh->nb_materials; i++)
+                {
+                if (mesh->material_extras[i].emissive_texture != nullptr) return true;
+                }
+            return false;
+            }
+
+
 #if defined(ARDUINO_TEENSY41)
 
         class ExtMemMap
@@ -318,6 +330,11 @@ namespace tgx
             ExtMemMap() : _nb(0), _used(0) {}
 
             size_t used() const { return _used; }
+
+            bool contains(const void* p) const
+                {
+                return (p != nullptr) && (_find(p) != nullptr);
+                }
 
             void free(const void* p)
                 {
@@ -408,6 +425,15 @@ namespace tgx
             return im;
             }
 
+
+        template<typename color_t>
+        void free_image_extmem(ExtMemMap& map, const Image<color_t>* im)
+            {
+            if ((im == nullptr) || (!TGX_IS_EXTMEM(im)) || map.contains(im)) return;
+            if (TGX_IS_EXTMEM(im->data())) map.free(im->data());
+            map.free(im);
+            }
+
 #endif
 
         }
@@ -433,6 +459,7 @@ namespace tgx
         if (copy_order == nullptr) copy_order = "";
 
         const size_t payload_size = Mesh3Dv2_detail::payload_size_bytes(mesh);
+        const bool has_emissive_textures = Mesh3Dv2_detail::has_emissive_textures(mesh);
         bool material_writable = (new_mesh->materials != mesh->materials);
         bool material_extras_writable = (new_mesh->material_extras == nullptr) || (new_mesh->material_extras != mesh->material_extras);
 
@@ -486,12 +513,12 @@ namespace tgx
                         materials[i].texture = CM.cache_image(materials[i].texture);
                         }
                     }
-                if ((new_mesh->material_extras != nullptr) && (!material_extras_writable))
+                if (has_emissive_textures && (new_mesh->material_extras != nullptr) && (!material_extras_writable))
                     {
                     new_mesh->material_extras = CM.cache_material_extras(new_mesh->nb_materials, new_mesh->material_extras);
                     material_extras_writable = (new_mesh->material_extras != mesh->material_extras);
                     }
-                if (material_extras_writable && (new_mesh->material_extras != nullptr))
+                if (has_emissive_textures && material_extras_writable && (new_mesh->material_extras != nullptr))
                     {
                     MeshMaterialExtra3Dv2<color_t>* const material_extras = const_cast<MeshMaterialExtra3Dv2<color_t>*>(new_mesh->material_extras);
                     for (uint16_t i = 0; i < new_mesh->nb_materials; i++)
@@ -534,11 +561,7 @@ namespace tgx
             for (uint16_t i = 0; i < mesh->nb_materials; i++)
                 {
                 const Image<color_t>* im = materials[i].texture;
-                if (TGX_IS_EXTMEM(im))
-                    {
-                    if (TGX_IS_EXTMEM(im->data())) map.free(im->data());
-                    map.free(im);
-                    }
+                Mesh3Dv2_detail::free_image_extmem<color_t>(map, im);
                 }
             map.free(mesh->materials);
             }
@@ -548,11 +571,7 @@ namespace tgx
             for (uint16_t i = 0; i < mesh->nb_materials; i++)
                 {
                 const Image<color_t>* im = material_extras[i].emissive_texture;
-                if (TGX_IS_EXTMEM(im))
-                    {
-                    if (TGX_IS_EXTMEM(im->data())) map.free(im->data());
-                    map.free(im);
-                    }
+                Mesh3Dv2_detail::free_image_extmem<color_t>(map, im);
                 }
             map.free(mesh->material_extras);
             }
@@ -599,6 +618,7 @@ namespace tgx
         if (new_mesh == nullptr) return nullptr;
 
         const size_t payload_size = Mesh3Dv2_detail::payload_size_bytes(mesh);
+        const bool has_emissive_textures = Mesh3Dv2_detail::has_emissive_textures(mesh);
 
         if ((copy_materials || copy_textures) && (mesh->nb_materials > 0))
             {
@@ -607,7 +627,7 @@ namespace tgx
             new_mesh->materials = p;
             }
 
-        if ((copy_materials || copy_textures) && (mesh->material_extras != nullptr) && (mesh->nb_materials > 0))
+        if ((copy_materials || (copy_textures && has_emissive_textures)) && (mesh->material_extras != nullptr) && (mesh->nb_materials > 0))
             {
             const MeshMaterialExtra3Dv2<color_t>* p = (const MeshMaterialExtra3Dv2<color_t>*)map.malloc(mesh->material_extras, ((size_t)mesh->nb_materials) * sizeof(MeshMaterialExtra3Dv2<color_t>));
             if (p == nullptr) return nullptr;

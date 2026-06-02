@@ -88,8 +88,10 @@ python tools/tgx_mesh.py
 - `Mesh3D`, the legacy format kept for compatibility.
 
 For OBJ files, the tool reads materials and textures when available. The GUI
-shows the detected texture references and lets you override or resize each
-texture before conversion. It can also preview the mesh with PyVista.
+shows the detected diffuse (`map_Kd`) and emissive (`map_Ke`) texture slots and
+lets you override or resize each texture before conversion. MTL `Ke` is stored
+as Mesh3Dv2 emissive color. TGX stores emissive metadata in optional
+Mesh3Dv2 material extras. It can also preview the mesh with PyVista.
 
 For `Mesh3Dv2`, the GUI defaults to **Compact** meshlet generation with
 **Non-adjacent packing** set to `0`. This is the usual starting point for
