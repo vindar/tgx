@@ -166,6 +166,11 @@ namespace tgx
                 return (const MeshMaterial3Dv2<color_t>*)cache_array(((size_t)nb_materials) * sizeof(MeshMaterial3Dv2<color_t>), (const char*)materials);
                 }
 
+            const MeshMaterialExtra3Dv2<color_t>* cache_material_extras(uint16_t nb_materials, const MeshMaterialExtra3Dv2<color_t>* material_extras)
+                {
+                return (const MeshMaterialExtra3Dv2<color_t>*)cache_array(((size_t)nb_materials) * sizeof(MeshMaterialExtra3Dv2<color_t>), (const char*)material_extras);
+                }
+
             const Image<color_t>* cache_image(const Image<color_t>* im)
                 {
                 if (im == nullptr) return nullptr;
@@ -253,8 +258,8 @@ namespace tgx
             char*       _ram1_ptr;
             char*       _ram2_ptr;
 
-            // payload + meshlet array + material array + up to 256 texture objects.
-            static const int MAX_NB_KEYS = 320;
+            // payload + meshlet array + material arrays + diffuse/emissive texture objects.
+            static const int MAX_NB_KEYS = 640;
 
             int         _nb_entries;
             const char* _keys[MAX_NB_KEYS];
@@ -376,13 +381,32 @@ namespace tgx
                 return nullptr;
                 }
 
-            static const int MAXPTR = 560;
+            static const int MAXPTR = 1100;
 
             int         _nb;
             size_t      _used;
             const void* _keys[MAXPTR];
             void*       _vals[MAXPTR];
             };
+
+
+        template<typename color_t>
+        const Image<color_t>* copy_image_extmem(ExtMemMap& map, const Image<color_t>* im)
+            {
+            if (im == nullptr) return nullptr;
+            if (im->isValid() && TGX_IS_PROGMEM(im->data()))
+                {
+                const size_t data_size = ((size_t)im->stride()) * ((size_t)im->ly()) * sizeof(color_t);
+                color_t* imdata = (color_t*)map.malloc(im->data(), data_size);
+                if (imdata == nullptr) return nullptr;
+
+                Image<color_t>* imp = (Image<color_t>*)map.malloc(im, sizeof(Image<color_t>));
+                if (imp == nullptr) return nullptr;
+                imp->set(imdata, im->lx(), im->ly(), im->stride());
+                return imp;
+                }
+            return im;
+            }
 
 #endif
 
@@ -410,6 +434,7 @@ namespace tgx
 
         const size_t payload_size = Mesh3Dv2_detail::payload_size_bytes(mesh);
         bool material_writable = (new_mesh->materials != mesh->materials);
+        bool material_extras_writable = (new_mesh->material_extras == nullptr) || (new_mesh->material_extras != mesh->material_extras);
 
         for (int k = 0; copy_order[k] != 0; k++)
             {
@@ -439,6 +464,11 @@ namespace tgx
                     new_mesh->materials = CM.cache_materials(new_mesh->nb_materials, new_mesh->materials);
                     material_writable = (new_mesh->materials != mesh->materials);
                     }
+                if ((new_mesh->material_extras != nullptr) && (!material_extras_writable))
+                    {
+                    new_mesh->material_extras = CM.cache_material_extras(new_mesh->nb_materials, new_mesh->material_extras);
+                    material_extras_writable = (new_mesh->material_extras != mesh->material_extras);
+                    }
                 break;
 
             case 'I':
@@ -454,6 +484,19 @@ namespace tgx
                     for (uint16_t i = 0; i < new_mesh->nb_materials; i++)
                         {
                         materials[i].texture = CM.cache_image(materials[i].texture);
+                        }
+                    }
+                if ((new_mesh->material_extras != nullptr) && (!material_extras_writable))
+                    {
+                    new_mesh->material_extras = CM.cache_material_extras(new_mesh->nb_materials, new_mesh->material_extras);
+                    material_extras_writable = (new_mesh->material_extras != mesh->material_extras);
+                    }
+                if (material_extras_writable && (new_mesh->material_extras != nullptr))
+                    {
+                    MeshMaterialExtra3Dv2<color_t>* const material_extras = const_cast<MeshMaterialExtra3Dv2<color_t>*>(new_mesh->material_extras);
+                    for (uint16_t i = 0; i < new_mesh->nb_materials; i++)
+                        {
+                        material_extras[i].emissive_texture = CM.cache_image(material_extras[i].emissive_texture);
                         }
                     }
                 break;
@@ -499,6 +542,20 @@ namespace tgx
                 }
             map.free(mesh->materials);
             }
+        if (TGX_IS_EXTMEM(mesh->material_extras))
+            {
+            MeshMaterialExtra3Dv2<color_t>* material_extras = const_cast<MeshMaterialExtra3Dv2<color_t>*>(mesh->material_extras);
+            for (uint16_t i = 0; i < mesh->nb_materials; i++)
+                {
+                const Image<color_t>* im = material_extras[i].emissive_texture;
+                if (TGX_IS_EXTMEM(im))
+                    {
+                    if (TGX_IS_EXTMEM(im->data())) map.free(im->data());
+                    map.free(im);
+                    }
+                }
+            map.free(mesh->material_extras);
+            }
         map.free(mesh);
         }
 
@@ -513,12 +570,23 @@ namespace tgx
         if (extmem_used) { *extmem_used = 0; }
         if (external_psram_size <= 0) return nullptr;
         if ((mesh == nullptr) || (TGX_IS_EXTMEM(mesh))) return nullptr;
-        if (TGX_IS_EXTMEM(mesh->payload) || TGX_IS_EXTMEM(mesh->meshlets) || TGX_IS_EXTMEM(mesh->materials)) return nullptr;
+        if (TGX_IS_EXTMEM(mesh->payload) || TGX_IS_EXTMEM(mesh->meshlets) || TGX_IS_EXTMEM(mesh->materials) || TGX_IS_EXTMEM(mesh->material_extras)) return nullptr;
         if (mesh->materials != nullptr)
             {
             for (uint16_t i = 0; i < mesh->nb_materials; i++)
                 {
                 const Image<color_t>* im = mesh->materials[i].texture;
+                if (im != nullptr)
+                    {
+                    if (TGX_IS_EXTMEM(im) || TGX_IS_EXTMEM(im->data())) return nullptr;
+                    }
+                }
+            }
+        if (mesh->material_extras != nullptr)
+            {
+            for (uint16_t i = 0; i < mesh->nb_materials; i++)
+                {
+                const Image<color_t>* im = mesh->material_extras[i].emissive_texture;
                 if (im != nullptr)
                     {
                     if (TGX_IS_EXTMEM(im) || TGX_IS_EXTMEM(im->data())) return nullptr;
@@ -539,6 +607,13 @@ namespace tgx
             new_mesh->materials = p;
             }
 
+        if ((copy_materials || copy_textures) && (mesh->material_extras != nullptr) && (mesh->nb_materials > 0))
+            {
+            const MeshMaterialExtra3Dv2<color_t>* p = (const MeshMaterialExtra3Dv2<color_t>*)map.malloc(mesh->material_extras, ((size_t)mesh->nb_materials) * sizeof(MeshMaterialExtra3Dv2<color_t>));
+            if (p == nullptr) return nullptr;
+            new_mesh->material_extras = p;
+            }
+
         if (copy_textures && (new_mesh->materials != mesh->materials))
             {
             MeshMaterial3Dv2<color_t>* materials = const_cast<MeshMaterial3Dv2<color_t>*>(new_mesh->materials);
@@ -546,17 +621,22 @@ namespace tgx
                 {
                 const Image<color_t>* im = materials[i].texture;
                 if (im == nullptr) continue;
-                if (im->isValid() && TGX_IS_PROGMEM(im->data()))
-                    {
-                    const size_t data_size = ((size_t)im->stride()) * ((size_t)im->ly()) * sizeof(color_t);
-                    color_t* imdata = (color_t*)map.malloc(im->data(), data_size);
-                    if (imdata == nullptr) return nullptr;
+                const Image<color_t>* imp = Mesh3Dv2_detail::copy_image_extmem<color_t>(map, im);
+                if (imp == nullptr) return nullptr;
+                materials[i].texture = imp;
+                }
+            }
 
-                    Image<color_t>* imp = (Image<color_t>*)map.malloc(im, sizeof(Image<color_t>));
-                    if (imp == nullptr) return nullptr;
-                    imp->set(imdata, im->lx(), im->ly(), im->stride());
-                    materials[i].texture = imp;
-                    }
+        if (copy_textures && (new_mesh->material_extras != nullptr) && (new_mesh->material_extras != mesh->material_extras))
+            {
+            MeshMaterialExtra3Dv2<color_t>* material_extras = const_cast<MeshMaterialExtra3Dv2<color_t>*>(new_mesh->material_extras);
+            for (uint16_t i = 0; i < new_mesh->nb_materials; i++)
+                {
+                const Image<color_t>* im = material_extras[i].emissive_texture;
+                if (im == nullptr) continue;
+                const Image<color_t>* imp = Mesh3Dv2_detail::copy_image_extmem<color_t>(map, im);
+                if (imp == nullptr) return nullptr;
+                material_extras[i].emissive_texture = imp;
                 }
             }
 

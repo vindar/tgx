@@ -370,10 +370,16 @@ def mesh3dv2_report(mesh: DecodedHeaderMesh, files: list[Path]) -> str:
     local_texcoords = sum(m.nb_texcoords for m in mesh.meshlets)
     # 32-bit MCU ABI estimate, kept in sync with the Mesh3Dv2 exporter.
     # Meshlet3Dv2 is 24 bytes, MeshMaterial3Dv2 is 32 bytes with a 32-bit
-    # texture pointer, and Mesh3Dv2 itself is 48 bytes.
+    # texture pointer, MeshMaterialExtra3Dv2 is 24 bytes when present, and
+    # Mesh3Dv2 itself is 52 bytes with the optional extras pointer.
     material_bytes = len(mesh.materials) * 32
+    material_extra_bytes = len(mesh.materials) * 24 if mesh.material_extras_present else 0
     meshlet_bytes = len(mesh.meshlets) * 24
-    static_estimate = payload_bytes + material_bytes + meshlet_bytes + 48
+    mesh_struct_bytes = 52
+    static_estimate = payload_bytes + material_bytes + material_extra_bytes + meshlet_bytes + mesh_struct_bytes
+    textured = sum(1 for m in mesh.materials if m.texture_symbol)
+    emissive = sum(1 for m in mesh.materials if m.material_extra_present)
+    emissive_textured = sum(1 for m in mesh.materials if m.emissive_texture_symbol)
     texture_lines = texture_report_lines(mesh.texture_headers)
     active_cones = [m for m in mesh.meshlets if m.cone_cos > -1.0]
     cone_line = f"{len(active_cones)} active, {len(mesh.meshlets) - len(active_cones)} disabled"
@@ -391,7 +397,7 @@ def mesh3dv2_report(mesh: DecodedHeaderMesh, files: list[Path]) -> str:
             "Geometry",
             f"  triangles       : {triangles}",
             f"  meshlets        : {len(mesh.meshlets)}",
-            f"  materials       : {len(mesh.materials)}",
+            f"  materials       : {len(mesh.materials)} ({textured} textured, {emissive} emissive, {emissive_textured} emissive textured)",
             f"  chains          : {chains} ({chains / max(1, triangles):.3f} per triangle)",
             f"  vertex refs     : {refs} ({refs / max(1, triangles):.3f} per triangle)",
             f"  local vertices  : {local_vertices}",
@@ -403,7 +409,8 @@ def mesh3dv2_report(mesh: DecodedHeaderMesh, files: list[Path]) -> str:
             f"  payload         : {payload_bytes} bytes",
             f"  meshlets        : {meshlet_bytes} bytes",
             f"  materials       : {material_bytes} bytes",
-            f"  mesh structure  : 48 bytes",
+            f"  material extras : {material_extra_bytes} bytes",
+            f"  mesh structure  : {mesh_struct_bytes} bytes",
             f"  total           : {static_estimate} bytes ({static_estimate / 1024.0:.1f} KiB)",
             "",
             "Meshlet stats",

@@ -258,17 +258,18 @@ class TGXMeshConverterApp(tk.Tk):
         texture_header = ttk.Frame(root)
         texture_header.grid(row=7, column=0, columnspan=5, sticky="ew", pady=(10, 2))
         texture_header.columnconfigure(0, weight=1)
-        ttk.Label(texture_header, text="OBJ material textures").grid(row=0, column=0, sticky="w")
+        ttk.Label(texture_header, text="Material texture slots").grid(row=0, column=0, sticky="w")
         self.reload_button = ttk.Button(texture_header, text="Reload textures", command=self.reload_textures)
         self.reload_button.grid(row=0, column=1, sticky="e")
         self._tip(self.reload_button, "Rescan materials and texture references from the selected input mesh.")
 
-        columns = ("material", "size", "filter", "refs", "role", "requested", "selected")
+        columns = ("material", "slot", "size", "filter", "refs", "role", "requested", "selected")
         self.texture_table = ttk.Treeview(root, columns=columns, show=("tree", "headings"), height=8)
         self.texture_table.heading("#0", text="")
         self.texture_table.column("#0", width=42, minwidth=42, stretch=False, anchor="center")
         for column, width in (
             ("material", 120),
+            ("slot", 80),
             ("size", 160),
             ("filter", 80),
             ("refs", 170),
@@ -448,6 +449,12 @@ class TGXMeshConverterApp(tk.Tk):
     def _texture_size_icon(self, row: dict[str, str]) -> tk.PhotoImage:
         return self.texture_size_icons[self._texture_size_class(self._texture_effective_size(row))]
 
+    def _texture_row_id(self, material: str, slot: str) -> str:
+        return f"{slot}:{material}"
+
+    def _texture_rows_for_slot(self, slot: str) -> dict[str, dict[str, str]]:
+        return {row["material"]: row for row in self.texture_rows.values() if row.get("slot") == slot}
+
     def _update_texture_preview(self, path_text: str | None = None, symbol: str = ""):
         path_text = self.material_texture_path.get().strip() if path_text is None else path_text.strip()
         self.texture_preview_image = None
@@ -554,6 +561,7 @@ class TGXMeshConverterApp(tk.Tk):
             if path.suffix.lower() == ".obj":
                 mesh = load_obj(path)
                 textured = sum(1 for mat in mesh.materials.values() if mat.texture_path)
+                emissive_textured = sum(1 for mat in mesh.materials.values() if mat.emissive_texture_path)
                 self._set_mesh_info(
                     {
                         "type": "OBJ",
@@ -565,7 +573,7 @@ class TGXMeshConverterApp(tk.Tk):
                         "uv_count": len(mesh.texcoords),
                         "normals": len(mesh.normals),
                         "normals_count": len(mesh.normals),
-                        "materials": f"{len(mesh.materials)} ({textured} tex)",
+                        "materials": f"{len(mesh.materials)} ({textured} tex, {emissive_textured} emit)",
                     }
                 )
                 return
@@ -577,6 +585,7 @@ class TGXMeshConverterApp(tk.Tk):
                 texcoords = sum(m.nb_texcoords for m in mesh.meshlets)
                 normals = sum(m.nb_normals for m in mesh.meshlets)
                 textured = sum(1 for mat in mesh.materials if mat.texture_symbol)
+                emissive_textured = sum(1 for mat in mesh.materials if mat.emissive_texture_symbol)
                 self._set_mesh_info(
                     {
                         "type": "Mesh3Dv2",
@@ -588,7 +597,7 @@ class TGXMeshConverterApp(tk.Tk):
                         "uv_count": texcoords,
                         "normals": f"{normals} local",
                         "normals_count": normals,
-                        "materials": f"{len(mesh.materials)} ({textured} tex)",
+                        "materials": f"{len(mesh.materials)} ({textured} tex, {emissive_textured} emit)",
                     }
                 )
                 return
@@ -640,42 +649,33 @@ class TGXMeshConverterApp(tk.Tk):
         try:
             mesh = load_obj(path)
             choices = resolve_mesh_textures(mesh)
+            emissive_choices = resolve_mesh_textures(mesh, role="map_ke", guess_when_missing=False)
         except Exception as exc:
             messagebox.showerror("Texture scan failed", str(exc))
             return
-        for material, choice in choices.items():
-            selected = str(choice.selected) if choice.selected else ""
-            requested = str(choice.requested) if choice.requested else ""
-            refs = ", ".join(f"{role}:{path.name}" for role, path in sorted(choice.refs.items()))
-            size = self._texture_size_text(selected)
-            self.texture_rows[material] = {
-                "size": size,
-                "symbol": "",
-                "refs": refs,
-                "role": choice.role,
-                "requested": requested,
-                "selected": selected,
-                "resize": "",
-                "resize_w": "",
-                "resize_h": "",
-                "filter": "lanczos",
-            }
-            iid = f"mat_{len(self.texture_iid_to_material)}"
-            self.texture_iid_to_material[iid] = material
-            self.texture_material_to_iid[material] = iid
-            self.texture_table.insert(
-                "",
-                "end",
-                iid=iid,
-                image=self._texture_size_icon(self.texture_rows[material]),
-                values=(material or "[default]", size, "lanczos", refs, choice.role, requested, selected),
-            )
-        self._append_log(f"Found {len(choices)} material texture slot(s).")
+        materials = sorted(set(choices) | set(emissive_choices))
+        for material in materials:
+            choice = choices.get(material)
+            if choice is not None:
+                selected = str(choice.selected) if choice.selected else ""
+                requested = str(choice.requested) if choice.requested else ""
+                refs = ", ".join(f"{role}:{path.name}" for role, path in sorted(choice.refs.items()))
+                self._add_texture_row(material, slot="diffuse", symbol="", selected=selected, refs=refs, role=choice.role, requested=requested)
+            emissive_choice = emissive_choices.get(material)
+            if emissive_choice is not None:
+                selected = str(emissive_choice.selected) if emissive_choice.selected else ""
+                requested = str(emissive_choice.requested) if emissive_choice.requested else ""
+                refs = ", ".join(f"{role}:{path.name}" for role, path in sorted(emissive_choice.refs.items()))
+                self._add_texture_row(material, slot="emissive", symbol="", selected=selected, refs=refs, role=emissive_choice.role, requested=requested)
+        self._append_log(f"Found {len(self.texture_rows)} material texture slot(s).")
         self._update_texture_preview("")
 
-    def _add_texture_row(self, material: str, *, symbol: str, selected: str, refs: str, role: str = "TGX", requested: str = "") -> None:
+    def _add_texture_row(self, material: str, *, slot: str, symbol: str, selected: str, refs: str, role: str = "TGX", requested: str = "") -> None:
+        row_id = self._texture_row_id(material, slot)
         size = self._texture_size_text(selected, symbol)
-        self.texture_rows[material] = {
+        self.texture_rows[row_id] = {
+            "material": material,
+            "slot": slot,
             "size": size,
             "symbol": symbol,
             "refs": refs,
@@ -688,14 +688,14 @@ class TGXMeshConverterApp(tk.Tk):
             "filter": "lanczos",
         }
         iid = f"mat_{len(self.texture_iid_to_material)}"
-        self.texture_iid_to_material[iid] = material
-        self.texture_material_to_iid[material] = iid
+        self.texture_iid_to_material[iid] = row_id
+        self.texture_material_to_iid[row_id] = iid
         self.texture_table.insert(
             "",
             "end",
             iid=iid,
-            image=self._texture_size_icon(self.texture_rows[material]),
-            values=(material or "[default]", self._texture_size_display(self.texture_rows[material]), "lanczos", refs, role, requested, selected),
+            image=self._texture_size_icon(self.texture_rows[row_id]),
+            values=(material or "[default]", slot, self._texture_size_display(self.texture_rows[row_id]), "lanczos", refs, role, requested, selected),
         )
 
     def _reload_tgx_textures(self, path: Path) -> None:
@@ -705,20 +705,21 @@ class TGXMeshConverterApp(tk.Tk):
                 mesh = parse_mesh3d2_header(path)
                 for index, material in enumerate(mesh.materials):
                     symbol = material.texture_symbol
-                    if not symbol:
-                        continue
-                    selected = str(mesh.texture_headers.get(symbol, ""))
-                    self._add_texture_row(f"mat{index}", symbol=symbol, selected=selected, refs=symbol, requested=symbol)
+                    selected = str(mesh.texture_headers.get(symbol, "")) if symbol else ""
+                    self._add_texture_row(f"mat{index}", slot="diffuse", symbol=symbol, selected=selected, refs=symbol, requested=symbol)
+                    emissive_symbol = material.emissive_texture_symbol
+                    emissive_selected = str(mesh.texture_headers.get(emissive_symbol, "")) if emissive_symbol else ""
+                    self._add_texture_row(f"mat{index}", slot="emissive", symbol=emissive_symbol, selected=emissive_selected, refs=emissive_symbol, requested=emissive_symbol)
             else:
                 parsed = parse_legacy_header(path)
                 _obj, texture_symbols, _chain = legacy_to_objmesh(parsed)
                 raw = path.read_text(encoding="utf-8", errors="replace")
                 texture_headers = _parse_texture_headers(raw, path.resolve().parent)
-                for material, symbol in sorted(texture_symbols.items()):
-                    if not symbol:
-                        continue
-                    selected = str(texture_headers.get(symbol, ""))
-                    self._add_texture_row(material, symbol=symbol, selected=selected, refs=symbol, requested=symbol)
+                for material in sorted(_obj.materials):
+                    symbol = texture_symbols.get(material, "")
+                    selected = str(texture_headers.get(symbol, "")) if symbol else ""
+                    self._add_texture_row(material, slot="diffuse", symbol=symbol, selected=selected, refs=symbol, requested=symbol)
+                    self._add_texture_row(material, slot="emissive", symbol="", selected="", refs="", requested="")
         except Exception as exc:
             messagebox.showerror("Texture scan failed", str(exc))
             return
@@ -733,13 +734,13 @@ class TGXMeshConverterApp(tk.Tk):
         if not selection:
             return
         iid = selection[0]
-        material = self.texture_iid_to_material.get(iid)
-        if material is None:
+        row_id = self.texture_iid_to_material.get(iid)
+        if row_id is None:
             return
-        row = self.texture_rows.get(material)
+        row = self.texture_rows.get(row_id)
         if row is None:
             return
-        self.selected_material = material
+        self.selected_material = row_id
         self.selected_iid = iid
         self.material_texture_path.set(row["selected"])
         self.material_resize_width.set(row["resize_w"])
@@ -782,7 +783,7 @@ class TGXMeshConverterApp(tk.Tk):
         self.texture_table.item(
             self.selected_iid,
             image=self._texture_size_icon(row),
-            values=(self.selected_material or "[default]", self._texture_size_display(row), row["filter"], row["refs"], row["role"], row["requested"], row["selected"]),
+            values=(row["material"] or "[default]", row["slot"], self._texture_size_display(row), row["filter"], row["refs"], row["role"], row["requested"], row["selected"]),
         )
         self._update_texture_preview(row["selected"], row.get("symbol", ""))
 
@@ -813,8 +814,9 @@ class TGXMeshConverterApp(tk.Tk):
         except Exception as exc:
             messagebox.showerror("Invalid texture options", str(exc))
             return
-        texture_overrides = {material: row["selected"].strip() for material, row in self.texture_rows.items()}
-        texture_options = {material: (parse_resize(row["resize"]) if row["resize"].strip() else None, row["filter"].strip() or "lanczos") for material, row in self.texture_rows.items()}
+        diffuse_rows = self._texture_rows_for_slot("diffuse")
+        texture_overrides = {material: row["selected"].strip() for material, row in diffuse_rows.items()}
+        texture_options = {material: (parse_resize(row["resize"]) if row["resize"].strip() else None, row["filter"].strip() or "lanczos") for material, row in diffuse_rows.items()}
         self._append_log(f"Opening PyVista preview for {path.name}...")
         threading.Thread(target=self._preview_mesh_worker, args=(path, texture_overrides, texture_options), daemon=True).start()
 
@@ -912,17 +914,29 @@ class TGXMeshConverterApp(tk.Tk):
                     raise ValueError("Max normal angle is required in visibility culling mode.")
                 argv += ["--target-vertices", target_vertices]
                 argv += ["--max-normal-angle", max_normal_angle]
-        for material, row in sorted(self.texture_rows.items()):
+        for _row_id, row in sorted(self.texture_rows.items()):
+            material = row["material"]
             selected = row["selected"].strip()
-            if selected:
-                argv += ["--texture", f"{material}={selected}"]
+            slot = row["slot"]
+            if slot == "emissive":
+                texture_arg = "--emissive-texture"
+                skip_arg = "--skip-emissive-texture"
+                resize_arg = "--emissive-texture-resize"
+                filter_arg = "--emissive-texture-filter"
             else:
-                argv += ["--skip-texture", material]
+                texture_arg = "--texture"
+                skip_arg = "--skip-texture"
+                resize_arg = "--texture-resize"
+                filter_arg = "--texture-filter"
+            if selected:
+                argv += [texture_arg, f"{material}={selected}"]
+            else:
+                argv += [skip_arg, material]
             if row["resize"].strip():
                 parse_resize(row["resize"].strip())
-                argv += ["--texture-resize", f"{material}={row['resize'].strip()}"]
+                argv += [resize_arg, f"{material}={row['resize'].strip()}"]
             if row["filter"].strip():
-                argv += ["--texture-filter", f"{material}={row['filter'].strip()}"]
+                argv += [filter_arg, f"{material}={row['filter'].strip()}"]
         return argv
 
     def _run_command(self, argv: list[str]):

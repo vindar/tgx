@@ -126,6 +126,12 @@ def cmd_export(args: argparse.Namespace) -> None:
             raise ValueError("--texture-symbol expects MATERIAL=SYMBOL")
         material, symbol = item.split("=", 1)
         texture_symbols[material] = symbol
+    emissive_texture_symbols: dict[str, str] = {}
+    for item in args.emissive_texture_symbol:
+        if "=" not in item:
+            raise ValueError("--emissive-texture-symbol expects MATERIAL=SYMBOL")
+        material, symbol = item.split("=", 1)
+        emissive_texture_symbols[material] = symbol
     extra_includes = list(args.include)
     output = Path(args.output)
 
@@ -133,20 +139,32 @@ def cmd_export(args: argparse.Namespace) -> None:
         texture_dir = Path(args.texture_output_dir) if args.texture_output_dir else output.parent
         resize = tuple(args.texture_size) if args.texture_size else None
         for material, desc in sorted(mesh.materials.items()):
-            if not desc.texture_path or material in texture_symbols:
-                continue
-            tex_symbol = texture_identifier(f"{(args.name or output.stem)}_{material or 'default'}_texture")
-            tex = export_texture_rgb565_header(
-                desc.texture_path,
-                texture_dir,
-                symbol=tex_symbol,
-                resize=resize,
-                require_pow2=args.texture_require_pow2,
-            )
-            texture_symbols[material] = tex.symbol
-            rel = tex.header.name if tex.header.parent == output.parent else str(tex.header)
-            extra_includes.append(rel.replace("\\", "/"))
-            print(f"texture: {material or '[default]'} -> {tex.header} ({tex.width}x{tex.height})")
+            if desc.texture_path and material not in texture_symbols:
+                tex_symbol = texture_identifier(f"{(args.name or output.stem)}_{material or 'default'}_texture")
+                tex = export_texture_rgb565_header(
+                    desc.texture_path,
+                    texture_dir,
+                    symbol=tex_symbol,
+                    resize=resize,
+                    require_pow2=args.texture_require_pow2,
+                )
+                texture_symbols[material] = tex.symbol
+                rel = tex.header.name if tex.header.parent == output.parent else str(tex.header)
+                extra_includes.append(rel.replace("\\", "/"))
+                print(f"texture: {material or '[default]'} -> {tex.header} ({tex.width}x{tex.height})")
+            if desc.emissive_texture_path and material not in emissive_texture_symbols:
+                emissive_symbol = texture_identifier(f"{(args.name or output.stem)}_{material or 'default'}_emissive_texture")
+                emissive = export_texture_rgb565_header(
+                    desc.emissive_texture_path,
+                    texture_dir,
+                    symbol=emissive_symbol,
+                    resize=resize,
+                    require_pow2=args.texture_require_pow2,
+                )
+                emissive_texture_symbols[material] = emissive.symbol
+                rel = emissive.header.name if emissive.header.parent == output.parent else str(emissive.header)
+                extra_includes.append(rel.replace("\\", "/"))
+                print(f"emissive texture: {material or '[default]'} -> {emissive.header} ({emissive.width}x{emissive.height})")
 
     result = export_common(
         args,
@@ -156,6 +174,7 @@ def cmd_export(args: argparse.Namespace) -> None:
         color_type=args.color_type,
         cone_source=cone_source,
         texture_symbols=texture_symbols,
+        emissive_texture_symbols=emissive_texture_symbols,
         extra_includes=extra_includes,
     )
 
@@ -169,6 +188,8 @@ def cmd_export(args: argparse.Namespace) -> None:
     print(f"  materials       : {stats.materials}")
     if texture_symbols:
         print(f"  texture links   : {len(texture_symbols)}")
+    if emissive_texture_symbols:
+        print(f"  emissive links  : {len(emissive_texture_symbols)}")
     print(f"  chains          : {stats.chains} ({100.0 * stats.chains / stats.triangles:.2f}% of triangles)")
     print(f"  vertex refs     : {stats.vertex_refs_loaded} ({stats.vertex_refs_loaded / stats.triangles:.3f} per tri)")
     print(f"  payload         : {stats.payload_bytes} bytes ({stats.payload_words} uint32 words)")
@@ -211,6 +232,7 @@ def cmd_wizard(args: argparse.Namespace) -> None:
         normal_quant_bits=DEFAULT_NORMAL_QUANT_BITS,
         lkh=str(DEFAULT_LKH_EXE),
         texture_symbol=[],
+        emissive_texture_symbol=[],
         export_textures=textures,
         texture_output_dir=None,
         texture_size=None,
@@ -358,7 +380,8 @@ def main(argv: list[str] | None = None) -> int:
     p_export.add_argument("--normal-quant-bits", type=int, default=DEFAULT_NORMAL_QUANT_BITS, help="quantize and merge normals to signed fixed-point bits per coordinate; negative disables")
     p_export.add_argument("--lkh", default=str(DEFAULT_LKH_EXE))
     p_export.add_argument("--texture-symbol", action="append", default=[], metavar="MATERIAL=SYMBOL", help="link an OBJ material to an existing tgx::Image symbol")
-    p_export.add_argument("--export-textures", action="store_true", help="convert map_Kd textures from OBJ materials to RGB565 TGX headers")
+    p_export.add_argument("--emissive-texture-symbol", action="append", default=[], metavar="MATERIAL=SYMBOL", help="link an OBJ material to an existing tgx::Image emissive texture symbol")
+    p_export.add_argument("--export-textures", action="store_true", help="convert map_Kd and map_Ke textures from OBJ materials to RGB565 TGX headers")
     p_export.add_argument("--texture-output-dir", help="directory for generated texture headers; defaults to the mesh header directory")
     p_export.add_argument("--texture-size", nargs=2, type=int, metavar=("W", "H"), help="resize all exported textures to W x H")
     p_export.add_argument("--texture-require-pow2", action="store_true", help="fail when exported textures are not power-of-two sized")

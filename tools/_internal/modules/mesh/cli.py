@@ -39,6 +39,7 @@ from _internal.modules.image.core import ImageExportOptions, SUPPORTED_COLOR_TYP
 from _internal.modules.mesh.textures import (
     IMAGE_EXTENSIONS,
     apply_texture_choices,
+    clear_emissive_texture,
     confirm_texture_choices,
     parse_texture_overrides,
     resolve_mesh_textures,
@@ -52,8 +53,11 @@ class LoadedMesh:
     source: str
     color_type: str
     texture_symbols: dict[str, str]
+    emissive_texture_symbols: dict[str, str]
     texture_sources: dict[str, Path]
     texture_source_symbols: dict[str, str]
+    emissive_texture_sources: dict[str, Path]
+    emissive_texture_source_symbols: dict[str, str]
     extra_includes: list[str]
 
 
@@ -101,8 +105,13 @@ def build_parser() -> argparse.ArgumentParser:
     textures.add_argument("--texture-search", action="append", default=[], metavar="DIR", help="Extra directory searched when OBJ/MTL texture paths are missing")
     textures.add_argument("--texture", action="append", default=[], metavar="MATERIAL=PATH", help="Use this image or TGX texture header for one material")
     textures.add_argument("--skip-texture", action="append", default=[], metavar="MATERIAL", help="Do not assign a texture to this material")
+    textures.add_argument("--emissive-texture", action="append", default=[], metavar="MATERIAL=PATH", help="Use this image or TGX texture header as the emissive texture for one material")
+    textures.add_argument("--skip-emissive-texture", action="append", default=[], metavar="MATERIAL", help="Do not assign an emissive texture to this material")
+    textures.add_argument("--emissive-texture-resize", action="append", default=[], metavar="MATERIAL=WIDTHxHEIGHT", help="Resize one material emissive texture; overrides --texture-size for that material")
+    textures.add_argument("--emissive-texture-filter", action="append", default=[], metavar="MATERIAL=FILTER", help="Resize filter for one material emissive texture; overrides --texture-resample")
     textures.add_argument("--texture-straight-alpha", action="store_true", help="Keep RGB32/RGB64 alpha straight instead of TGX pre-multiplied alpha")
     textures.add_argument("--texture-symbol", action="append", default=[], metavar="MATERIAL=SYMBOL", help="Use an existing texture symbol for a material")
+    textures.add_argument("--emissive-texture-symbol", action="append", default=[], metavar="MATERIAL=SYMBOL", help="Use an existing emissive texture symbol for a material")
     textures.add_argument("--list-textures", action="store_true", help="Print resolved OBJ texture choices and exit")
     textures.add_argument("--confirm-textures", action="store_true", help="Interactively confirm or override OBJ texture choices")
     textures.add_argument("--include", action="append", default=[], help="Extra quoted include to add before the mesh declaration")
@@ -162,6 +171,7 @@ def _load_obj_input(args: argparse.Namespace, path: Path, output: Path) -> Loade
     mesh = _preprocess_obj(args, mesh)
     color_type = _color_type(args.color_type, "tgx::RGB565")
     texture_symbols = _parse_texture_symbols(args.texture_symbol)
+    emissive_texture_symbols = _parse_texture_symbols(args.emissive_texture_symbol)
     extra_includes = list(args.include)
     if not args.no_textures:
         choices = resolve_mesh_textures(
@@ -169,19 +179,35 @@ def _load_obj_input(args: argparse.Namespace, path: Path, output: Path) -> Loade
             search_roots=[Path(p) for p in args.texture_search],
             overrides=parse_texture_overrides(args.texture),
         )
+        emissive_choices = resolve_mesh_textures(
+            mesh,
+            search_roots=[Path(p) for p in args.texture_search],
+            overrides=parse_texture_overrides(args.emissive_texture),
+            role="map_ke",
+            guess_when_missing=False,
+        )
         for material in args.skip_texture:
             if material in choices:
                 choices[material].selected = None
                 mesh.materials[material].texture_path = None
+        for material in args.skip_emissive_texture:
+            if material in emissive_choices:
+                emissive_choices[material].selected = None
+                clear_emissive_texture(mesh.materials[material])
         print("texture choices:")
         print(texture_choices_text(choices) or "  none")
+        print("emissive texture choices:")
+        print(texture_choices_text(emissive_choices) or "  none")
         if args.confirm_textures:
             confirm_texture_choices(choices)
             apply_texture_choices(mesh, choices)
+            confirm_texture_choices(emissive_choices)
+            apply_texture_choices(mesh, emissive_choices)
         if args.list_textures:
             raise SystemExit(0)
-        _export_obj_textures(args, mesh, output, texture_symbols, extra_includes)
-    return LoadedMesh(mesh, "obj", color_type, texture_symbols, {}, {}, extra_includes)
+        _export_obj_textures(args, mesh, output, texture_symbols, extra_includes, role="diffuse")
+        _export_obj_textures(args, mesh, output, emissive_texture_symbols, extra_includes, role="emissive")
+    return LoadedMesh(mesh, "obj", color_type, texture_symbols, emissive_texture_symbols, {}, {}, {}, {}, extra_includes)
 
 
 def _load_legacy_input(args: argparse.Namespace, path: Path, output: Path) -> LoadedMesh:
@@ -203,19 +229,38 @@ def _load_legacy_input(args: argparse.Namespace, path: Path, output: Path) -> Lo
     texture_sources = {material: texture_headers[symbol] for material, symbol in legacy_textures.items() if symbol in texture_headers}
     texture_source_symbols = dict(legacy_textures)
     texture_symbols = {**legacy_textures, **_parse_texture_symbols(args.texture_symbol)}
+    emissive_texture_symbols = _parse_texture_symbols(args.emissive_texture_symbol)
     texture_include_paths = {p.resolve() for p in texture_headers.values()}
     non_texture_includes = [inc for inc in parsed.includes if not isinstance(inc, Path) or inc.resolve() not in texture_include_paths]
     extra_includes = _relative_includes(non_texture_includes, output) + list(args.include)
     _export_tgx_textures(args, output, texture_symbols, texture_sources, texture_source_symbols, extra_includes, all_texture_headers=texture_headers)
+    _export_tgx_textures(
+        args,
+        output,
+        emissive_texture_symbols,
+        {},
+        {},
+        extra_includes,
+        overrides_items=args.emissive_texture,
+        skipped_items=args.skip_emissive_texture,
+        resize_items=args.emissive_texture_resize,
+        filter_items=args.emissive_texture_filter,
+        label="emissive texture",
+        symbol_suffix="emissive_texture",
+    )
     color_type = _color_type(args.color_type, chain[0].color_type)
-    return LoadedMesh(mesh, "mesh3d", color_type, texture_symbols, texture_sources, texture_source_symbols, extra_includes)
+    for material in args.skip_emissive_texture:
+        if material in mesh.materials:
+            clear_emissive_texture(mesh.materials[material])
+    return LoadedMesh(mesh, "mesh3d", color_type, texture_symbols, emissive_texture_symbols, texture_sources, texture_source_symbols, {}, {}, extra_includes)
 
 
 def _load_mesh3dv2_input(args: argparse.Namespace, path: Path, output: Path) -> LoadedMesh:
     with step("parse Mesh3Dv2", str(path)):
         decoded = parse_mesh3d2_header(path)
-    mesh, texture_symbols = _decoded_mesh3dv2_to_objmesh(decoded)
+    mesh, texture_symbols, emissive_texture_symbols = _decoded_mesh3dv2_to_objmesh(decoded)
     texture_source_symbols = dict(texture_symbols)
+    emissive_texture_source_symbols = dict(emissive_texture_symbols)
     if not args.no_cleanup:
         with step("preprocess mesh", f"{len(mesh.triangles)} triangles"):
             mesh = preprocess_legacy_mesh(
@@ -232,11 +277,40 @@ def _load_mesh3dv2_input(args: argparse.Namespace, path: Path, output: Path) -> 
         for material, symbol in texture_symbols.items()
         if symbol in decoded.texture_headers
     }
+    emissive_texture_sources = {
+        material: decoded.texture_headers[symbol]
+        for material, symbol in emissive_texture_symbols.items()
+        if symbol in decoded.texture_headers
+    }
+    linked_texture_header_symbols = set(texture_source_symbols.values()) | set(emissive_texture_source_symbols.values())
+    unlinked_texture_headers = {
+        symbol: header
+        for symbol, header in decoded.texture_headers.items()
+        if symbol not in linked_texture_header_symbols
+    }
     extra_includes = list(args.include)
     color_type = _color_type(args.color_type, decoded.color_type)
     texture_symbols.update(_parse_texture_symbols(args.texture_symbol))
-    _export_tgx_textures(args, output, texture_symbols, texture_sources, texture_source_symbols, extra_includes, all_texture_headers=decoded.texture_headers)
-    return LoadedMesh(mesh, "mesh3dv2", color_type, texture_symbols, texture_sources, texture_source_symbols, extra_includes)
+    emissive_texture_symbols.update(_parse_texture_symbols(args.emissive_texture_symbol))
+    for material in args.skip_emissive_texture:
+        if material in mesh.materials:
+            clear_emissive_texture(mesh.materials[material])
+    _export_tgx_textures(args, output, texture_symbols, texture_sources, texture_source_symbols, extra_includes, all_texture_headers=unlinked_texture_headers)
+    _export_tgx_textures(
+        args,
+        output,
+        emissive_texture_symbols,
+        emissive_texture_sources,
+        emissive_texture_source_symbols,
+        extra_includes,
+        overrides_items=args.emissive_texture,
+        skipped_items=args.skip_emissive_texture,
+        resize_items=args.emissive_texture_resize,
+        filter_items=args.emissive_texture_filter,
+        label="emissive texture",
+        symbol_suffix="emissive_texture",
+    )
+    return LoadedMesh(mesh, "mesh3dv2", color_type, texture_symbols, emissive_texture_symbols, texture_sources, texture_source_symbols, emissive_texture_sources, emissive_texture_source_symbols, extra_includes)
 
 
 def _preprocess_obj(args: argparse.Namespace, mesh: ObjMesh) -> ObjMesh:
@@ -315,6 +389,7 @@ def _export_mesh3dv2(args: argparse.Namespace, loaded: LoadedMesh, output: Path)
         color_type=loaded.color_type,
         cone_source=cone_source,
         texture_symbols=loaded.texture_symbols,
+        emissive_texture_symbols=loaded.emissive_texture_symbols,
         extra_includes=loaded.extra_includes,
     )
     print_mesh_stats(loaded.mesh, meshlets)
@@ -329,6 +404,7 @@ def _export_mesh3dv2(args: argparse.Namespace, loaded: LoadedMesh, output: Path)
     print(f"  payload       : {result.stats.payload_bytes} bytes")
     print(f"  static memory : {result.stats.static_bytes} bytes, excluding texture images")
     print(f"  textures      : {len(loaded.texture_symbols)}")
+    print(f"  emissive textures: {len(loaded.emissive_texture_symbols)}")
     return result
 
 
@@ -375,21 +451,33 @@ def _prepare_meshlet_args(args: argparse.Namespace) -> None:
     args.single_header = args.layout == "header"
 
 
-def _export_obj_textures(args: argparse.Namespace, mesh: ObjMesh, output: Path, texture_symbols: dict[str, str], extra_includes: list[str]) -> None:
+def _export_obj_textures(args: argparse.Namespace, mesh: ObjMesh, output: Path, texture_symbols: dict[str, str], extra_includes: list[str], *, role: str = "diffuse") -> None:
     texture_dir = Path(args.texture_output_dir) if args.texture_output_dir else output.parent
     texture_dir.mkdir(parents=True, exist_ok=True)
-    material_resizes = _parse_material_resizes(args.texture_resize)
-    material_filters = _parse_material_filters(args.texture_filter)
-    skipped = set(args.skip_texture)
+    if role == "emissive":
+        material_resizes = _parse_material_resizes(args.emissive_texture_resize)
+        material_filters = _parse_material_filters(args.emissive_texture_filter)
+        skipped = set(args.skip_emissive_texture)
+        path_attr = "emissive_texture_path"
+        symbol_suffix = "emissive_texture"
+        label = "emissive texture"
+    else:
+        material_resizes = _parse_material_resizes(args.texture_resize)
+        material_filters = _parse_material_filters(args.texture_filter)
+        skipped = set(args.skip_texture)
+        path_attr = "texture_path"
+        symbol_suffix = "texture"
+        label = "texture"
     for material, desc in sorted(mesh.materials.items()):
-        if material in skipped or not desc.texture_path or material in texture_symbols:
+        texture_path = getattr(desc, path_attr)
+        if material in skipped or not texture_path or material in texture_symbols:
             continue
-        symbol = sanitize_identifier(f"{(args.name or output.stem)}_{material or 'default'}_texture")
+        symbol = _generated_texture_symbol(args, output, material, symbol_suffix)
         resize = material_resizes.get(material, args.texture_size)
         resample = material_filters.get(material, args.texture_resample)
         result = export_image(
             ImageExportOptions(
-                input_path=desc.texture_path,
+                input_path=texture_path,
                 output_dir=texture_dir,
                 color_type=args.texture_format,
                 object_name=symbol,
@@ -405,7 +493,7 @@ def _export_obj_textures(args: argparse.Namespace, mesh: ObjMesh, output: Path, 
         texture_symbols[material] = result.object_name
         include_path = _relative_include(result.header_path, output.parent)
         extra_includes.append(include_path)
-        print(f"texture: {material or '[default]'} -> {result.header_path} ({result.width}x{result.height}, {result.color_type}, {resample})")
+        print(f"{label}: {material or '[default]'} -> {result.header_path} ({result.width}x{result.height}, {result.color_type}, {resample})")
 
 
 def _export_tgx_textures(
@@ -417,6 +505,12 @@ def _export_tgx_textures(
     extra_includes: list[str],
     *,
     all_texture_headers: dict[str, Path] | None = None,
+    overrides_items: list[str] | None = None,
+    skipped_items: list[str] | None = None,
+    resize_items: list[str] | None = None,
+    filter_items: list[str] | None = None,
+    label: str = "texture",
+    symbol_suffix: str = "texture",
 ) -> None:
     if args.no_textures:
         texture_symbols.clear()
@@ -424,14 +518,21 @@ def _export_tgx_textures(
 
     texture_dir = Path(args.texture_output_dir) if args.texture_output_dir else output.parent
     texture_dir.mkdir(parents=True, exist_ok=True)
-    overrides = parse_texture_overrides(args.texture)
-    skipped = set(args.skip_texture)
-    material_resizes = _parse_material_resizes(args.texture_resize)
-    material_filters = _parse_material_filters(args.texture_filter)
+    overrides = parse_texture_overrides(args.texture if overrides_items is None else overrides_items)
+    skipped = set(args.skip_texture if skipped_items is None else skipped_items)
+    material_resizes = _parse_material_resizes(args.texture_resize if resize_items is None else resize_items)
+    material_filters = _parse_material_filters(args.texture_filter if filter_items is None else filter_items)
     exported_symbols: set[str] = set()
     exported_source_symbols: set[str] = set()
     exported_headers: set[Path] = set()
     skipped_source_symbols: set[str] = set()
+    synthesized_symbols: set[str] = set()
+
+    for material, selected in sorted(overrides.items()):
+        if material in skipped or material in texture_symbols or selected is None:
+            continue
+        texture_symbols[material] = _generated_texture_symbol(args, output, material, symbol_suffix)
+        synthesized_symbols.add(material)
 
     for material in sorted(list(texture_symbols)):
         if material in skipped:
@@ -441,7 +542,7 @@ def _export_tgx_textures(
             del texture_symbols[material]
             continue
         symbol = texture_symbols[material]
-        source_symbol = texture_source_symbols.get(material, symbol)
+        source_symbol = "" if material in synthesized_symbols else texture_source_symbols.get(material, symbol)
         selected = overrides.get(material, texture_sources.get(material))
         if selected is None:
             continue
@@ -453,8 +554,10 @@ def _export_tgx_textures(
 
         if selected.suffix.lower() in (".h", ".hpp", ".cpp", ".cxx", ".cc"):
             source_color = _tgx_texture_color_type(selected, source_symbol)
+            source_symbol_available = bool(source_symbol) and _parse_texture_image(selected, source_symbol) is not None
             can_copy = (
-                resize is None
+                source_symbol_available
+                and resize is None
                 and args.texture_layout == "header"
                 and source_color == normalize_color_type(args.texture_format)
                 and symbol == source_symbol
@@ -463,9 +566,9 @@ def _export_tgx_textures(
                 header_path, copied = _copy_tgx_texture_header(selected, texture_dir)
                 _append_unique_include(extra_includes, _relative_include(header_path, output.parent))
                 exported_headers.add(header_path.resolve())
-                print(f"texture: {material or '[default]'} -> {header_path} (copied TGX texture)")
+                print(f"{label}: {material or '[default]'} -> {header_path} (copied TGX texture)")
                 if copied is not None:
-                    print(f"texture source: {copied}")
+                    print(f"{label} source: {copied}")
             else:
                 result = _export_tgx_texture_from_header(
                     selected,
@@ -480,7 +583,7 @@ def _export_tgx_textures(
                 )
                 _append_unique_include(extra_includes, _relative_include(result.header_path, output.parent))
                 exported_headers.add(result.header_path.resolve())
-                print(f"texture: {material or '[default]'} -> {result.header_path} ({result.width}x{result.height}, {result.color_type}, {resample})")
+                print(f"{label}: {material or '[default]'} -> {result.header_path} ({result.width}x{result.height}, {result.color_type}, {resample})")
         elif selected.suffix.lower() in IMAGE_EXTENSIONS:
             result = export_image(
                 ImageExportOptions(
@@ -499,9 +602,9 @@ def _export_tgx_textures(
             )
             _append_unique_include(extra_includes, _relative_include(result.header_path, output.parent))
             exported_headers.add(result.header_path.resolve())
-            print(f"texture: {material or '[default]'} -> {result.header_path} ({result.width}x{result.height}, {result.color_type}, {resample})")
+            print(f"{label}: {material or '[default]'} -> {result.header_path} ({result.width}x{result.height}, {result.color_type}, {resample})")
         else:
-            raise ValueError(f"unsupported texture input for material {material or '[default]'}: {selected}")
+            raise ValueError(f"unsupported {label} input for material {material or '[default]'}: {selected}")
         exported_symbols.add(symbol)
         if source_symbol:
             exported_source_symbols.add(source_symbol)
@@ -514,9 +617,13 @@ def _export_tgx_textures(
             continue
         _append_unique_include(extra_includes, _relative_include(header_path, output.parent))
         exported_headers.add(header_path.resolve())
-        print(f"texture: {symbol} -> {header_path} (copied TGX texture)")
+        print(f"{label}: {symbol} -> {header_path} (copied TGX texture)")
         if copied is not None:
-            print(f"texture source: {copied}")
+            print(f"{label} source: {copied}")
+
+
+def _generated_texture_symbol(args: argparse.Namespace, output: Path, material: str, suffix: str) -> str:
+    return sanitize_identifier(f"{(args.name or output.stem)}_{material or 'default'}_{suffix}")
 
 
 def _copy_tgx_texture_header(path: Path, texture_dir: Path) -> tuple[Path, Path | None]:
@@ -610,19 +717,24 @@ def _append_unique_include(includes: list[str], include: str) -> None:
         includes.append(include)
 
 
-def _decoded_mesh3dv2_to_objmesh(decoded: DecodedHeaderMesh) -> tuple[ObjMesh, dict[str, str]]:
+def _decoded_mesh3dv2_to_objmesh(decoded: DecodedHeaderMesh) -> tuple[ObjMesh, dict[str, str], dict[str, str]]:
     vertices: list[np.ndarray] = []
     texcoords: list[np.ndarray] = []
     normals: list[np.ndarray] = []
     triangles: list[Triangle] = []
     materials: dict[str, Material] = {}
     texture_symbols: dict[str, str] = {}
+    emissive_texture_symbols: dict[str, str] = {}
 
     for index, material in enumerate(decoded.materials):
         name = material.name or f"mat{index}"
         materials[name] = Material(
             name=name,
             diffuse=material.color,
+            emissive=material.emissive_color,
+            emissive_strength=material.emissive_strength,
+            material_extra_flags=material.material_extra_flags,
+            material_extra_present=material.material_extra_present,
             ambiant_strength=material.ambiant,
             diffuse_strength=material.diffuse,
             specular_strength=material.specular,
@@ -630,6 +742,8 @@ def _decoded_mesh3dv2_to_objmesh(decoded: DecodedHeaderMesh) -> tuple[ObjMesh, d
         )
         if material.texture_symbol:
             texture_symbols[name] = material.texture_symbol
+        if material.emissive_texture_symbol:
+            emissive_texture_symbols[name] = material.emissive_texture_symbol
 
     for meshlet in decoded.meshlets:
         material_name = decoded.materials[meshlet.material_index].name if meshlet.material_index < len(decoded.materials) else ""
@@ -665,6 +779,7 @@ def _decoded_mesh3dv2_to_objmesh(decoded: DecodedHeaderMesh) -> tuple[ObjMesh, d
             source_path=decoded.path,
         ),
         texture_symbols,
+        emissive_texture_symbols,
     )
 
 

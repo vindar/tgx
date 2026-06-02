@@ -5,13 +5,16 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from tools._internal.modules.mesh_pipeline.mesh import ObjMesh
+from tools._internal.modules.mesh_pipeline.mesh import Material, ObjMesh
 
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".bmp", ".tga", ".tif", ".tiff", ".gif"}
 DIFFUSE_ROLES = ("map_kd", "map_basecolor", "map_albedo", "map_diffuse")
+EMISSIVE_ROLES = ("map_ke", "map_emissive", "map_emission", "map_emit")
 DIFFUSE_HINTS = ("diffuse", "diff", "albedo", "basecolor", "base_color", "color", "col", "_d")
 NON_DIFFUSE_HINTS = ("normal", "norm", "bump", "spec", "rough", "metal", "emit", "emiss", "reflection", "refl")
+EMISSIVE_HINTS = ("emissive", "emission", "emiss", "emit", "glow", "_e")
+NON_EMISSIVE_HINTS = ("normal", "norm", "bump", "spec", "rough", "metal", "diffuse", "diff", "albedo", "basecolor", "base_color")
 
 
 @dataclass
@@ -41,8 +44,9 @@ def resolve_mesh_textures(
     search_roots: list[Path] | None = None,
     overrides: dict[str, Path] | None = None,
     role: str = "map_kd",
+    guess_when_missing: bool = True,
 ) -> dict[str, TextureChoice]:
-    """Resolve one TGX texture per material, preferring OBJ/MTL diffuse maps."""
+    """Resolve one TGX texture per material for a requested material texture role."""
 
     roots = _search_roots(mesh, search_roots or [])
     images = _collect_images(roots)
@@ -60,8 +64,8 @@ def resolve_mesh_textures(
             candidates = [TextureCandidate(selected, 10_000.0, "user override")]
         elif requested is not None:
             selected, candidates = _resolve_requested_texture(requested, material, requested_role, images)
-        else:
-            candidates = _guess_material_texture(material, images)
+        elif guess_when_missing:
+            candidates = _guess_material_texture(material, images, role)
             selected = candidates[0].path if candidates and candidates[0].score >= 0.70 else None
 
         choices[material] = TextureChoice(
@@ -72,7 +76,15 @@ def resolve_mesh_textures(
             refs=dict(desc.texture_refs),
             candidates=candidates,
         )
-        desc.texture_path = selected
+        if role in EMISSIVE_ROLES:
+            if selected is not None:
+                desc.emissive_texture_path = selected
+                desc.emissive_strength = 1.0
+                desc.material_extra_present = True
+            else:
+                clear_emissive_texture(desc)
+        else:
+            desc.texture_path = selected
 
     return choices
 
@@ -133,7 +145,22 @@ def confirm_texture_choices(choices: dict[str, TextureChoice]) -> None:
 def apply_texture_choices(mesh: ObjMesh, choices: dict[str, TextureChoice]) -> None:
     for material, choice in choices.items():
         if material in mesh.materials:
-            mesh.materials[material].texture_path = choice.selected
+            if choice.role in EMISSIVE_ROLES:
+                if choice.selected is not None:
+                    mesh.materials[material].emissive_strength = 1.0
+                    mesh.materials[material].emissive_texture_path = choice.selected
+                    mesh.materials[material].material_extra_present = True
+                else:
+                    clear_emissive_texture(mesh.materials[material])
+            else:
+                mesh.materials[material].texture_path = choice.selected
+
+
+def clear_emissive_texture(material: Material) -> None:
+    material.emissive_texture_path = None
+    if material.emissive == (0.0, 0.0, 0.0) and material.material_extra_flags == 0:
+        material.emissive_strength = 0.0
+        material.material_extra_present = False
 
 
 def _search_roots(mesh: ObjMesh, extra: list[Path]) -> list[Path]:
@@ -174,11 +201,14 @@ def _collect_images(roots: list[Path]) -> list[Path]:
 def _requested_texture(refs: dict[str, Path], texture_path: Path | None, preferred_role: str) -> tuple[str, Path | None]:
     if preferred_role in refs:
         return preferred_role, refs[preferred_role]
-    for role in DIFFUSE_ROLES:
+    roles = EMISSIVE_ROLES if preferred_role in EMISSIVE_ROLES else DIFFUSE_ROLES
+    for role in roles:
         if role in refs:
             return role, refs[role]
-    if texture_path is not None:
+    if preferred_role in DIFFUSE_ROLES and texture_path is not None:
         return "map_kd", texture_path
+    if preferred_role in EMISSIVE_ROLES:
+        return preferred_role, None
     return preferred_role, None
 
 
@@ -193,9 +223,9 @@ def _resolve_requested_texture(requested: Path, material: str, role: str, images
     return selected, candidates
 
 
-def _guess_material_texture(material: str, images: list[Path]) -> list[TextureCandidate]:
+def _guess_material_texture(material: str, images: list[Path], role: str = "map_kd") -> list[TextureCandidate]:
     pseudo = Path(material or "texture")
-    return _score_candidates(pseudo, material, "map_kd", images)
+    return _score_candidates(pseudo, material, role, images)
 
 
 def _score_candidates(requested: Path, material: str, role: str, images: list[Path]) -> list[TextureCandidate]:
@@ -227,6 +257,13 @@ def _score_candidates(requested: Path, material: str, role: str, images: list[Pa
             if any(h in stem for h in NON_DIFFUSE_HINTS):
                 score -= 0.25
                 reasons.append("non-diffuse-like name")
+        elif role in EMISSIVE_ROLES:
+            if any(h in stem for h in EMISSIVE_HINTS):
+                score += 0.18
+                reasons.append("emissive-like name")
+            if any(h in stem for h in NON_EMISSIVE_HINTS):
+                score -= 0.20
+                reasons.append("non-emissive-like name")
         if req_stem and (stem.startswith(req_stem) or req_stem.startswith(stem)):
             score += 0.15
             reasons.append("prefix match")
