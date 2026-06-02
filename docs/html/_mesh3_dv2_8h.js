@@ -1,6 +1,7 @@
 var _mesh3_dv2_8h =
 [
     [ "tgx::MeshMaterial3Dv2< color_t >", "structtgx_1_1_mesh_material3_dv2.html", "structtgx_1_1_mesh_material3_dv2" ],
+    [ "tgx::MeshMaterialExtra3Dv2< color_t >", "structtgx_1_1_mesh_material_extra3_dv2.html", "structtgx_1_1_mesh_material_extra3_dv2" ],
     [ "tgx::Meshlet3Dv2", "structtgx_1_1_meshlet3_dv2.html", "structtgx_1_1_meshlet3_dv2" ],
     [ "tgx::Mesh3Dv2< color_t >", "structtgx_1_1_mesh3_dv2.html", "structtgx_1_1_mesh3_dv2" ],
     [ "cacheMesh", "_mesh3_dv2_8h.html#a991f380dc7fefc04a8150f491030b86c", null ],

@@ -1,12 +1,14 @@
 var searchData=
 [
-  ['name_0',['name',['../structtgx_1_1_mesh3_d.html#a468079f727ef3bc72e1e1637f00bdaa1',1,'tgx::Mesh3D::name()'],['../structtgx_1_1_mesh3_dv2.html#a661fb801c08d6ec60656f92a24053c07',1,'tgx::Mesh3Dv2::name()']]],
-  ['nb_5ffaces_1',['nb_faces',['../structtgx_1_1_mesh3_d.html#acc4914f8f7a11c102f7246f23a04402a',1,'tgx::Mesh3D']]],
-  ['nb_5fmaterials_2',['nb_materials',['../structtgx_1_1_mesh3_dv2.html#a87cd7568811c3a0f1289376b32b4fe51',1,'tgx::Mesh3Dv2']]],
-  ['nb_5fmeshlets_3',['nb_meshlets',['../structtgx_1_1_mesh3_dv2.html#a6b2aea27505dacb6336b1a96caefcc96',1,'tgx::Mesh3Dv2']]],
-  ['nb_5fnormals_4',['nb_normals',['../structtgx_1_1_mesh3_d.html#ac2bbc7b91a893bcb989ecbcd1726cec1',1,'tgx::Mesh3D::nb_normals()'],['../structtgx_1_1_meshlet3_dv2.html#a0c845086886c7f902e335ab5d8438ed0',1,'tgx::Meshlet3Dv2::nb_normals()']]],
-  ['nb_5ftexcoords_5',['nb_texcoords',['../structtgx_1_1_mesh3_d.html#a69fbe97a266029477ccf604bf2783ece',1,'tgx::Mesh3D::nb_texcoords()'],['../structtgx_1_1_meshlet3_dv2.html#ab21fc8f2ce4c8671f0c15fb3766cae0f',1,'tgx::Meshlet3Dv2::nb_texcoords()']]],
-  ['nb_5fvertices_6',['nb_vertices',['../structtgx_1_1_mesh3_d.html#a4afd0ba1345c6980aae3f8bfad301c9e',1,'tgx::Mesh3D::nb_vertices()'],['../structtgx_1_1_meshlet3_dv2.html#a32f26fce122eceef3dcce807f246984d',1,'tgx::Meshlet3Dv2::nb_vertices()']]],
-  ['next_7',['next',['../structtgx_1_1_mesh3_d.html#a553ef003bb9d42fcfa314b21e03a8cd3',1,'tgx::Mesh3D']]],
-  ['normal_8',['normal',['../structtgx_1_1_mesh3_d.html#af18df1f7793fc848e60f44da0b68f71f',1,'tgx::Mesh3D']]]
+  ['m_0',['M',['../structtgx_1_1_mat4.html#af073688b88d40378504b7d22dd4195c7',1,'tgx::Mat4']]],
+  ['material_5fextras_1',['material_extras',['../structtgx_1_1_mesh3_dv2.html#ac27f5bd09cbc8fb180c84de4a6c6813f',1,'tgx::Mesh3Dv2']]],
+  ['material_5findex_2',['material_index',['../structtgx_1_1_meshlet3_dv2.html#a5d459caf10b0f6405f86d7f8dde3efc6',1,'tgx::Meshlet3Dv2']]],
+  ['materials_3',['materials',['../structtgx_1_1_mesh3_dv2.html#a4604fd61d2f5f3fe79fdd964b1257836',1,'tgx::Mesh3Dv2']]],
+  ['maxx_4',['maxX',['../structtgx_1_1_box2.html#a8d204d9b85cda17089a59747e4ae4d29',1,'tgx::Box2::maxX()'],['../structtgx_1_1_box3.html#adad62b1ca05be2ed7479425df3ef428f',1,'tgx::Box3::maxX()']]],
+  ['maxy_5',['maxY',['../structtgx_1_1_box2.html#a24d72d9ac6cd12bc216de9be36b00ffd',1,'tgx::Box2::maxY()'],['../structtgx_1_1_box3.html#a10040f264e971790921c23a19c108d0b',1,'tgx::Box3::maxY()']]],
+  ['maxz_6',['maxZ',['../structtgx_1_1_box3.html#a71abb747ba038932d196583543b55f5a',1,'tgx::Box3']]],
+  ['meshlets_7',['meshlets',['../structtgx_1_1_mesh3_dv2.html#ad9cf39d386f99b3a2b9efcc33a04823e',1,'tgx::Mesh3Dv2']]],
+  ['minx_8',['minX',['../structtgx_1_1_box2.html#ab4d9c33f38bd07cad4439a83d9deb271',1,'tgx::Box2::minX()'],['../structtgx_1_1_box3.html#a0ec18c942ee1a22ceae123624c5ae149',1,'tgx::Box3::minX()']]],
+  ['miny_9',['minY',['../structtgx_1_1_box2.html#af88f0511a98f244ed8750e00ae1670a1',1,'tgx::Box2::minY()'],['../structtgx_1_1_box3.html#a61ccd1113fa235efd644db11534512f2',1,'tgx::Box3::minY()']]],
+  ['minz_10',['minZ',['../structtgx_1_1_box3.html#ab564725a67765f210a174ce474db60a9',1,'tgx::Box3']]]
 ];

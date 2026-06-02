@@ -2475,5 +2475,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> spot PROGMEM =
     -0.984004391f, 0.984004391f,
     -1.0f, 1.0f
     },
-    "spot"
+    "spot",
+    nullptr
     };

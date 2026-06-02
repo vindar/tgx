@@ -8447,5 +8447,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> suzanne PROGMEM =
     -0.719569409f, 0.719569409f,
     -0.60374439f, 0.60374439f
     },
-    "suzanne"
+    "suzanne",
+    nullptr
     };

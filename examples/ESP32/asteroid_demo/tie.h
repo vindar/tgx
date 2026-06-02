@@ -507,5 +507,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> tie PROGMEM =
     -1.0f, 1.0f,
     -0.870318192f, 0.870318192f
     },
-    "tie"
+    "tie",
+    nullptr
     };

@@ -3923,5 +3923,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> nanosuit_v2 PROGMEM =
     -1.0f, 1.0f,
     -0.248331383f, 0.248331383f
     },
-    "nanosuit_v2"
+    "nanosuit_v2",
+    nullptr
     };

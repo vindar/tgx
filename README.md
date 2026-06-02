@@ -1,6 +1,6 @@
 # TGX - A Tiny Graphics Library
 
-***LATEST VERSION 1.1.0***
+***LATEST VERSION 1.1.1***
 
 Release highlights:
 - New `Mesh3Dv2` format: more compact, faster, and designed for meshlet culling.

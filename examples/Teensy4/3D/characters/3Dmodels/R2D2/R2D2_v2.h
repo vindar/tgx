@@ -6130,5 +6130,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> R2D2_v2 PROGMEM =
     -1.0f, 1.0f,
     -0.465025661f, 0.465025661f
     },
-    "R2D2_v2"
+    "R2D2_v2",
+    nullptr
     };

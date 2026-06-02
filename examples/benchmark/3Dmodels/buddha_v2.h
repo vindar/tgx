@@ -8652,5 +8652,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> buddha PROGMEM =
     -1.0f, 1.0f,
     -0.39971945f, 0.39971945f
     },
-    "buddha"
+    "buddha",
+    nullptr
     };

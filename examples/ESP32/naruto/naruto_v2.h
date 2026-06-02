@@ -1119,5 +1119,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> naruto_v2 PROGMEM =
     -1.0f, 1.0f,
     -0.195223555f, 0.195223555f
     },
-    "naruto_v2"
+    "naruto_v2",
+    nullptr
     };

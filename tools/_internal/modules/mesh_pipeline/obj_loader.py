@@ -104,6 +104,10 @@ def _parse_mtl(path: Path) -> dict[str, Material]:
                 materials[name] = current
             elif current is not None and tag == "kd" and len(parts) >= 4:
                 current.diffuse = _float3(parts)
+            elif current is not None and tag == "ke" and len(parts) >= 4:
+                current.emissive = _float3(parts)
+                current.emissive_strength = 1.0
+                current.material_extra_present = True
             elif current is not None and tag == "ka" and len(parts) >= 4:
                 current.ambiant_strength = _mean3(_float3(parts))
             elif current is not None and tag == "ks" and len(parts) >= 4:
@@ -115,6 +119,9 @@ def _parse_mtl(path: Path) -> dict[str, Material]:
                 current.texture_refs[tag] = texture_path
                 if tag == "map_kd":
                     current.texture_path = texture_path
+                elif tag == "map_ke":
+                    current.emissive_texture_path = texture_path
+                    current.emissive_strength = 1.0
     return materials
 
 

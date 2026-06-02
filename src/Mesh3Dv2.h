@@ -67,6 +67,30 @@ namespace tgx
 
 
     /**
+     * Optional material extension for a Mesh3Dv2 object.
+     *
+     * MeshMaterialExtra3Dv2 entries are stored in a separate optional array so
+     * the base MeshMaterial3Dv2 structure remains unchanged. When present,
+     * Mesh3Dv2::material_extras has exactly Mesh3Dv2::nb_materials entries and
+     * entry `i` extends Mesh3Dv2::materials[i].
+     *
+     * The current renderer ignores this metadata. It is provided so generated
+     * meshes can already carry emissive material data for future shader paths.
+     */
+    template<typename color_t>
+    struct MeshMaterialExtra3Dv2
+        {
+        // make sure right away that the template parameter is admissible to prevent cryptic error message later.
+        static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in Color.h");
+
+        RGBf emissive_color;                       ///< Emissive color. Black means no color emission.
+        float emissive_strength;                   ///< Emissive multiplier. 0.0f disables emission.
+        const Image<color_t>* emissive_texture;    ///< Optional emissive texture image, or nullptr.
+        uint32_t flags;                            ///< Reserved per-material behavior flags. 0 means default behavior.
+        };
+
+
+    /**
      * Header for a single meshlet inside a Mesh3Dv2 object.
      *
      * Meshlet headers are stored in a compact linear array and are read before
@@ -122,6 +146,7 @@ namespace tgx
      *
      * - a global bounding box for fast rejection of the whole mesh,
      * - an array of materials, each with an optional texture and lighting coefficients,
+     * - an optional parallel material extension array for metadata such as emissive material data,
      * - a linear array of compact meshlet headers used for culling,
      * - a 32-bit aligned payload blob containing local arrays and face streams.
      *
@@ -201,6 +226,13 @@ namespace tgx
      * multiple of 4 bytes. The generated payload is intended for little-endian
      * targets, which covers the current TGX targets (x86/x64, Teensy 3/4,
      * ESP32, RP2040 and RP2350).
+     *
+     * **Material extensions**
+     *
+     * Mesh3Dv2::material_extras is optional and may be nullptr. If present, it
+     * contains Mesh3Dv2::nb_materials entries and entry `i` extends
+     * Mesh3Dv2::materials[i]. The Mesh3Dv2 id remains 2162 because the
+     * geometry and payload format are unchanged.
      */
     template<typename color_t>
     struct Mesh3Dv2
@@ -219,6 +251,8 @@ namespace tgx
         fBox3 bounding_box;                                 ///< Global object bounding box.
 
         const char* name;                                   ///< Mesh name, or nullptr.
+
+        const MeshMaterialExtra3Dv2<color_t>* material_extras; ///< Optional material extension array, or nullptr.
         };
 
 
@@ -237,13 +271,16 @@ namespace tgx
      *
      * - "P" = meshlet payload blob.
      * - "L" = meshlet header array.
-     * - "M" = material array.
-     * - "I" = texture images referenced by the material array.
+     * - "M" = material array and optional material extension array.
+     * - "I" = texture images referenced by the material and material extension arrays.
      *
-     * Texture caching requires a writable material array because texture pointers
-     * inside materials must be remapped. Therefore, requesting "I" implicitly tries
-     * to cache the material array first if it has not already been cached. If the
-     * material array cannot be cached, textures are left untouched.
+     * Diffuse texture caching requires a writable material array because texture
+     * pointers inside materials must be remapped. Emissive texture caching
+     * similarly requires a writable material extension array when
+     * material_extras is present. Therefore, requesting "I" implicitly tries to
+     * cache the arrays it needs if they have not already been cached. If one
+     * array cannot be cached, only the texture pointers in that array are left
+     * untouched.
      *
      * @remark
      * 1. The memory buffers supplied do not need to be aligned; the method aligns
@@ -294,15 +331,16 @@ namespace tgx
      *
      * Requested payload, meshlet and texture-pixel arrays are copied only when
      * their source pointer is in PROGMEM; otherwise the original pointer is kept.
-     * The material array is the exception: it is copied when copy_materials or
-     * copy_textures is true, because it may need writable texture pointers.
+     * The material arrays are the exception: the base material array and the
+     * optional material extension array are copied when copy_materials or
+     * copy_textures is true, because they may need writable texture pointers.
      *
      * If any source pointer belonging to the mesh is already in EXTMEM, the method
      * fails to avoid ambiguous ownership.
      *
-     * Requesting texture copies also creates a writable EXTMEM copy of the material
-     * array, even when copy_materials is false, so that texture pointers can be
-     * remapped to their EXTMEM copies.
+     * Requesting texture copies also creates writable EXTMEM copies of the
+     * material arrays that contain texture pointers, even when copy_materials is
+     * false, so that texture pointers can be remapped to their EXTMEM copies.
      *
      * @param mesh           Pointer to the source Mesh3Dv2 object.
      * @param copy_payload   Copy the meshlet payload blob to EXTMEM when it is in PROGMEM.

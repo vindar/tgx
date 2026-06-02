@@ -30,6 +30,12 @@ class DecodedMaterial:
     diffuse: float = 0.7
     specular: float = 0.6
     exponent: int = 32
+    emissive_color: tuple[float, float, float] = (0.0, 0.0, 0.0)
+    emissive_strength: float = 0.0
+    emissive_texture_symbol: str = ""
+    material_extra_flags: int = 0
+    material_extra_present: bool = False
+    material_extra_row_present: bool = False
 
 
 @dataclass
@@ -70,6 +76,7 @@ class DecodedHeaderMesh:
     name: str
     materials: list[DecodedMaterial]
     meshlets: list[DecodedMeshlet]
+    material_extras_present: bool = False
     texture_headers: dict[str, Path] = field(default_factory=dict)
 
 
@@ -345,9 +352,25 @@ def _decode_tgx_image_pixels(body: str, color_type: str, count: int) -> list[tup
     return out
 
 
-def _parse_materials(text: str, array_name: str) -> list[DecodedMaterial]:
+def _array_entry_comments(raw_text: str, array_name: str) -> list[str]:
+    if not raw_text or not array_name:
+        return []
+    try:
+        body = _extract_named_array_body(raw_text, array_name)
+    except Exception:
+        return []
+    comments: list[str] = []
+    for line in body.splitlines():
+        match = re.search(r"\}\s*,?\s*//\s*(.*?)\s*$", line)
+        if match:
+            comments.append(match.group(1).strip())
+    return comments
+
+
+def _parse_materials(text: str, array_name: str, raw_text: str = "") -> list[DecodedMaterial]:
     body = _extract_named_array_body(text, array_name)
     entries = _split_top_level(body)
+    names = _array_entry_comments(raw_text, array_name)
     materials: list[DecodedMaterial] = []
     for i, entry in enumerate(entries):
         fields = _split_top_level(entry.strip().strip("{}").strip())
@@ -358,7 +381,7 @@ def _parse_materials(text: str, array_name: str) -> list[DecodedMaterial]:
         color = tuple(float(v) for v in color_vals[:3]) if len(color_vals) >= 3 else (0.75, 0.75, 0.75)
         materials.append(
             DecodedMaterial(
-                name=f"mat{i}",
+                name=names[i] if i < len(names) and names[i] else f"mat{i}",
                 texture_symbol=texture,
                 color=color,  # type: ignore[arg-type]
                 ambiant=float(_numbers(fields[2])[0]),
@@ -368,6 +391,33 @@ def _parse_materials(text: str, array_name: str) -> list[DecodedMaterial]:
             )
         )
     return materials
+
+
+def _apply_material_extras(text: str, array_name: str, materials: list[DecodedMaterial]) -> bool:
+    if not array_name:
+        return False
+    body = _extract_named_array_body(text, array_name)
+    entries = _split_top_level(body)
+    for i, entry in enumerate(entries[: len(materials)]):
+        materials[i].material_extra_row_present = True
+        fields = _split_top_level(entry.strip().strip("{}").strip())
+        if len(fields) < 4:
+            continue
+        color_vals = _numbers(fields[0])
+        color = tuple(float(v) for v in color_vals[:3]) if len(color_vals) >= 3 else (0.0, 0.0, 0.0)
+        strength_vals = _numbers(fields[1])
+        flag_vals = _ints(fields[3])
+        materials[i].emissive_color = color  # type: ignore[assignment]
+        materials[i].emissive_strength = float(strength_vals[0]) if strength_vals else 0.0
+        materials[i].emissive_texture_symbol = _identifier_or_null(fields[2])
+        materials[i].material_extra_flags = int(flag_vals[0]) if flag_vals else 0
+        materials[i].material_extra_present = (
+            materials[i].emissive_color != (0.0, 0.0, 0.0)
+            or materials[i].emissive_strength != 0.0
+            or bool(materials[i].emissive_texture_symbol)
+            or materials[i].material_extra_flags != 0
+        )
+    return True
 
 
 def _parse_meshlet_headers(text: str, array_name: str, fmt: str = "Mesh3Dv2", bbox: tuple[float, float, float, float, float, float] | None = None) -> list[DecodedMeshlet]:
@@ -501,8 +551,11 @@ def parse_mesh3d2_header(path: str | Path) -> DecodedHeaderMesh:
     payload_field = 5
     bbox_field = 6
     name_field = 7
+    material_extra_array = _identifier_or_null(fields[8]) if len(fields) >= 9 else ""
     payload_array = _identifier_or_null(fields[payload_field])
     payload_words = _ints(_extract_named_array_body(text, payload_array))
+    materials = _parse_materials(text, material_array, raw)
+    material_extras_present = _apply_material_extras(text, material_extra_array, materials)
     mesh = DecodedHeaderMesh(
         path=header,
         format=fmt,
@@ -514,8 +567,9 @@ def parse_mesh3d2_header(path: str | Path) -> DecodedHeaderMesh:
         nb_materials_declared=int(_numbers(fields[2])[0]),
         bbox=_box(fields[bbox_field]),
         name=_string_field(fields[name_field]),
-        materials=_parse_materials(text, material_array),
+        materials=materials,
         meshlets=_parse_meshlet_headers(text, meshlet_array, fmt, _box(fields[bbox_field])),
+        material_extras_present=material_extras_present,
         texture_headers=_parse_texture_headers(raw, header.parent),
     )
     _decode_payload(mesh, payload_words)
@@ -548,15 +602,18 @@ def print_mesh3d2_stats(mesh: DecodedHeaderMesh) -> None:
     normals_local = sum(m.nb_normals for m in mesh.meshlets)
     texcoords_local = sum(m.nb_texcoords for m in mesh.meshlets)
     textured = sum(1 for m in mesh.materials if m.texture_symbol)
+    emissive = sum(1 for m in mesh.materials if m.material_extra_present)
+    emissive_textured = sum(1 for m in mesh.materials if m.emissive_texture_symbol)
     print(f"file           : {mesh.path}")
     print(f"type           : {mesh.format} ({mesh.color_type})")
     print(f"symbol/name    : {mesh.symbol} / {mesh.name}")
     print(f"id             : {mesh.id}")
     print(f"bbox           : x[{mesh.bbox[0]:.6g}, {mesh.bbox[1]:.6g}] y[{mesh.bbox[2]:.6g}, {mesh.bbox[3]:.6g}] z[{mesh.bbox[4]:.6g}, {mesh.bbox[5]:.6g}]")
-    print(f"materials      : {len(mesh.materials)} ({textured} textured)")
+    print(f"materials      : {len(mesh.materials)} ({textured} textured, {emissive} emissive, {emissive_textured} emissive textured)")
     for i, mat in enumerate(mesh.materials):
         tex = mat.texture_symbol or "none"
-        print(f"  mat {i:3d}: tex={tex}, color=({mat.color[0]:.3g}, {mat.color[1]:.3g}, {mat.color[2]:.3g}), ka/kd/ks={mat.ambiant:.3g}/{mat.diffuse:.3g}/{mat.specular:.3g}, exp={mat.exponent}")
+        emit_tex = mat.emissive_texture_symbol or "none"
+        print(f"  mat {i:3d}: tex={tex}, color=({mat.color[0]:.3g}, {mat.color[1]:.3g}, {mat.color[2]:.3g}), ka/kd/ks={mat.ambiant:.3g}/{mat.diffuse:.3g}/{mat.specular:.3g}, exp={mat.exponent}, emit=({mat.emissive_color[0]:.3g}, {mat.emissive_color[1]:.3g}, {mat.emissive_color[2]:.3g})*{mat.emissive_strength:.3g}, emit_tex={emit_tex}, flags={mat.material_extra_flags}")
     print(f"meshlets       : {len(mesh.meshlets)} declared {mesh.nb_meshlets_declared}")
     print(f"triangles      : {triangles} decoded")
     print(f"chains         : {chains} ({100.0 * chains / max(1, triangles):.2f}% of triangles)")

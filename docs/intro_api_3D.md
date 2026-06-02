@@ -518,6 +518,9 @@ uses less memory bandwidth and can skip invisible meshlets before decoding their
 At a high level, a `Mesh3Dv2` model contains:
 
 - one material table: colors, lighting strengths and optional texture pointers;
+- optionally, one material extension table. If present, it has one entry per
+  material and stores metadata such as emissive color, emissive strength and
+  optional emissive texture pointers;
 - one meshlet table: small local groups of triangles, each attached to one material;
 - one compact payload: quantized vertices, normals, UVs and triangle chains for the meshlets;
 - visibility information used to skip meshlets that cannot contribute to the current view.
@@ -551,10 +554,10 @@ For static meshes, <code>%cacheMesh()</code> can copy selected mesh data into RA
 is useful on boards where some RAM regions are faster than flash, external RAM, or another memory region. With
 `Mesh3Dv2`, the cache order string controls which parts are copied first:
 
-- `M`: material table;
-- `I`: meshlet table;
+- `M`: material table (and optional material extension table);
+- `I`: texture image pixels referenced by material (and material extension tables);
 - `P`: meshlet payload;
-- `L`: texture image pixels.
+- `L`: meshlet table.
 
 ~~~{.cpp}
 const tgx::Mesh3Dv2<tgx::RGB565>* cached =

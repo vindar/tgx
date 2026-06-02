@@ -141,8 +141,8 @@ var NAVTREEINDEX =
 "_vec3_8h.html#aa66986f6d4db428a3fca04c45507c860",
 "classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa",
 "md_docs_intro_basic.html#autotoc_md11",
-"structtgx_1_1_meshlet3_dv2.html#a5d459caf10b0f6405f86d7f8dde3efc6",
-"structtgx_1_1_r_g_bf.html#a970e8001b059f297e4a5a2fd08ec6bed"
+"structtgx_1_1_mesh_material_extra3_dv2.html#a890775100b08f50fe1d39e7f10985389",
+"structtgx_1_1_r_g_bf.html#a85e44be686f26cf43f307f6c04881775"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
