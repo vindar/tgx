@@ -7,5 +7,6 @@ var structtgx_1_1_mesh3_dv2 =
     [ "meshlets", "structtgx_1_1_mesh3_dv2.html#ad9cf39d386f99b3a2b9efcc33a04823e", null ],
     [ "payload", "structtgx_1_1_mesh3_dv2.html#ad6007397772cd49c2304ca4a01468bc6", null ],
     [ "bounding_box", "structtgx_1_1_mesh3_dv2.html#a878dc51e1655d8d45eadf915285058dc", null ],
-    [ "name", "structtgx_1_1_mesh3_dv2.html#a661fb801c08d6ec60656f92a24053c07", null ]
+    [ "name", "structtgx_1_1_mesh3_dv2.html#a661fb801c08d6ec60656f92a24053c07", null ],
+    [ "material_extras", "structtgx_1_1_mesh3_dv2.html#ac27f5bd09cbc8fb180c84de4a6c6813f", null ]
 ];

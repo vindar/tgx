@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.0</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.1</span>
    </div>
    <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
@@ -118,6 +118,9 @@ $(document).ready(function(){initNavTree('_mesh3_dv2_8h.html',''); initResizable
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_mesh_material3_dv2.html">tgx::MeshMaterial3Dv2&lt; color_t &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Material definition for a <a class="el" href="structtgx_1_1_mesh3_dv2.html" title="Compact meshlet-based 3D mesh data structure.">Mesh3Dv2</a> object.  <a href="structtgx_1_1_mesh_material3_dv2.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_mesh_material_extra3_dv2.html">tgx::MeshMaterialExtra3Dv2&lt; color_t &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional material extension for a <a class="el" href="structtgx_1_1_mesh3_dv2.html" title="Compact meshlet-based 3D mesh data structure.">Mesh3Dv2</a> object.  <a href="structtgx_1_1_mesh_material_extra3_dv2.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_meshlet3_dv2.html">tgx::Meshlet3Dv2</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Header for a single meshlet inside a <a class="el" href="structtgx_1_1_mesh3_dv2.html" title="Compact meshlet-based 3D mesh data structure.">Mesh3Dv2</a> object.  <a href="structtgx_1_1_meshlet3_dv2.html#details">More...</a><br /></td></tr>
@@ -219,10 +222,10 @@ template&lt;typename color_t &gt; </div>
 <ul>
 <li>"P" = meshlet payload blob.</li>
 <li>"L" = meshlet header array.</li>
-<li>"M" = material array.</li>
-<li>"I" = texture images referenced by the material array.</li>
+<li>"M" = material array and optional material extension array.</li>
+<li>"I" = texture images referenced by the material and material extension arrays.</li>
 </ul>
-<p >Texture caching requires a writable material array because texture pointers inside materials must be remapped. Therefore, requesting "I" implicitly tries to cache the material array first if it has not already been cached. If the material array cannot be cached, textures are left untouched.</p>
+<p >Diffuse texture caching requires a writable material array because texture pointers inside materials must be remapped. Emissive texture caching similarly requires a writable material extension array when material_extras is present. Therefore, requesting "I" implicitly tries to cache the arrays it needs if they have not already been cached. If one array cannot be cached, only the texture pointers in that array are left untouched.</p>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
 <li>The memory buffers supplied do not need to be aligned; the method aligns allocations internally.</li>
 <li>Mesh3Dv2 has no linked sub-meshes. Multi-material models are represented by the material array and per-meshlet material indices.</li>
@@ -301,9 +304,9 @@ template&lt;typename color_t &gt; </div>
 
 <p>Create a copy of a Mesh3Dv2 object where selected PROGMEM arrays are copied to EXTMEM. </p>
 <dl class="section attention"><dt>Attention</dt><dd>This method is defined only for Teensy 4.1.</dd></dl>
-<p>Requested payload, meshlet and texture-pixel arrays are copied only when their source pointer is in PROGMEM; otherwise the original pointer is kept. The material array is the exception: it is copied when copy_materials or copy_textures is true, because it may need writable texture pointers.</p>
+<p>Requested payload, meshlet and texture-pixel arrays are copied only when their source pointer is in PROGMEM; otherwise the original pointer is kept. The material arrays are the exception: the base material array and the optional material extension array are copied when copy_materials or copy_textures is true, because they may need writable texture pointers.</p>
 <p >If any source pointer belonging to the mesh is already in EXTMEM, the method fails to avoid ambiguous ownership.</p>
-<p >Requesting texture copies also creates a writable EXTMEM copy of the material array, even when copy_materials is false, so that texture pointers can be remapped to their EXTMEM copies.</p>
+<p >Requesting texture copies also creates writable EXTMEM copies of the material arrays that contain texture pointers, even when copy_materials is false, so that texture pointers can be remapped to their EXTMEM copies.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mesh</td><td>Pointer to the source Mesh3Dv2 object. </td></tr>

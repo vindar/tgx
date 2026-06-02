@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['x_0',['x',['../structtgx_1_1_vec2.html#a0dd3317719c780a7614027f9b50edb17',1,'tgx::Vec2']]]
+  ['w_0',['w',['../structtgx_1_1_vec4.html#a24cc93bb10f7595d12456a736016c376',1,'tgx::Vec4']]]
 ];

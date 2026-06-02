@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.0</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.1</span>
    </div>
    <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
@@ -189,7 +189,7 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td>
 struct tgx::Mesh3D&lt; color_t &gt;</div><p >3D mesh data structure. </p>
 <p >A <a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data structure.">Mesh3D</a> structure contains all the information about an object's geometry, color, material properties and textures. A mesh can be rendered onto an <code><a class="el" href="classtgx_1_1_image.html" title="Image class [MAIN CLASS FOR THE 2D API].">Image</a></code> object using the <code><a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e" title="Draw a Mesh3D object.">Renderer3D::drawMesh()</a></code> method.</p>
 <p >The mesh data format is designed to be compact and favors linear access to elements in order to improve cache coherency so that meshes can be stored and rendered directly from "slow" memory such as FLASH on a MCU.</p>
-<p >The Python script <code>obj_to_h</code> located in the <code>\tools</code> directory of the library can be used to create a <code><a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data structure.">Mesh3D</a></code> object directly from an .obj file. The associated image textures (if any) can be converted using the Python script <code>texture_2_h</code>.</p>
+<p >The Python tool <code>tools/tgx_mesh.py</code>, or its command-line counterpart <code>tools/cli_tools/tgx_mesh_cli.py</code>, can create legacy <code><a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data structure.">Mesh3D</a></code> objects from <code>.obj</code> files when <code><a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data structure.">Mesh3D</a></code> output is requested. New projects should normally prefer <code><a class="el" href="structtgx_1_1_mesh3_dv2.html" title="Compact meshlet-based 3D mesh data structure.">Mesh3Dv2</a></code>; legacy <code><a class="el" href="structtgx_1_1_mesh3_d.html" title="3D mesh data structure.">Mesh3D</a></code> remains available for compatibility with existing sketches.</p>
 <p ><b>MESH FORMAT</b></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -225,7 +225,7 @@ struct tgx::Mesh3D&lt; color_t &gt;</div><p >3D mesh data structure. </p>
 <p >We assume here <code>texcoord = nullptr</code> but <code>normal != nullptr</code> so that each element is coded on 2 <code>uint16_t</code>.</p>
 <p >Let us consider the following face array composed of 19 <code>uint16_t</code>:</p>
 <div class="fragment"><div class="line"><a class="code hl_variable" href="structtgx_1_1_mesh3_d.html#ad88b21201134a76b31e577921201e04e">face</a> = {3,0,1,2,2,4,6,32773,8,7,7,1,8,7,9,4,5,5,0}</div>
-<div class="ttc" id="astructtgx_1_1_mesh3_d_html_ad88b21201134a76b31e577921201e04e"><div class="ttname"><a href="structtgx_1_1_mesh3_d.html#ad88b21201134a76b31e577921201e04e">tgx::Mesh3D::face</a></div><div class="ttdeci">const uint16_t * face</div><div class="ttdoc">Array of triangles (format described above).</div><div class="ttdef"><b>Definition:</b> Mesh3D.h:170</div></div>
+<div class="ttc" id="astructtgx_1_1_mesh3_d_html_ad88b21201134a76b31e577921201e04e"><div class="ttname"><a href="structtgx_1_1_mesh3_d.html#ad88b21201134a76b31e577921201e04e">tgx::Mesh3D::face</a></div><div class="ttdeci">const uint16_t * face</div><div class="ttdoc">Array of triangles (format described above).</div><div class="ttdef"><b>Definition:</b> Mesh3D.h:172</div></div>
 </div><!-- fragment --><p >It should be read as</p>
 <div class="fragment"><div class="line">3                the first chain has 3 triangles</div>
 <div class="line">0/1   2/2  4/6   first triangle with vertex 0,2,4 and normals 1,2,6</div>
