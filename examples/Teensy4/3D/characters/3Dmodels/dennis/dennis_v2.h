@@ -4247,5 +4247,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> dennis_v2 PROGMEM =
     -1.0f, 1.0f,
     -0.243315662f, 0.243315662f
     },
-    "dennis_v2"
+    "dennis_v2",
+    nullptr
     };

@@ -1039,5 +1039,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> xwing_demo PROGMEM =
     -0.29076834f, 0.29076834f,
     -1.0f, 1.0f
     },
-    "xwing_demo"
+    "xwing_demo",
+    nullptr
     };

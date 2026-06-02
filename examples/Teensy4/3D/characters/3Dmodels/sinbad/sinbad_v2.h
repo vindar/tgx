@@ -3134,5 +3134,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> sinbad_v2 PROGMEM =
     -1.0f, 1.0f,
     -0.419043252f, 0.419043252f
     },
-    "sinbad_v2"
+    "sinbad_v2",
+    nullptr
     };

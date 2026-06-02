@@ -106,5 +106,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> asteroid_a PROGMEM =
     -0.843702694f, 0.843702694f,
     -1.0f, 1.0f
     },
-    "asteroid_a"
+    "asteroid_a",
+    nullptr
     };

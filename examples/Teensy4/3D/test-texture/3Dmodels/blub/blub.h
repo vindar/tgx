@@ -5872,5 +5872,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> blub PROGMEM =
     -0.600741057f, 0.600741057f,
     -1.0f, 1.0f
     },
-    "blub"
+    "blub",
+    nullptr
     };

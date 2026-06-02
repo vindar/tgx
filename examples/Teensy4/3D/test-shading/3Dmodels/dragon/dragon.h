@@ -8995,5 +8995,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> dragon PROGMEM =
     -0.704998196f, 0.704998196f,
     -1.0f, 1.0f
     },
-    "dragon"
+    "dragon",
+    nullptr
     };

@@ -2408,5 +2408,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> elementalist_v2 PROGMEM =
     -1.0f, 1.0f,
     -0.319972199f, 0.319972199f
     },
-    "elementalist_v2"
+    "elementalist_v2",
+    nullptr
     };

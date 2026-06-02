@@ -1895,5 +1895,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> bunny PROGMEM =
     -0.99050588f, 0.99050588f,
     -0.775936586f, 0.775936586f
     },
-    "bunny"
+    "bunny",
+    nullptr
     };

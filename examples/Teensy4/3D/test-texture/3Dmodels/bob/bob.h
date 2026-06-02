@@ -4589,5 +4589,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> bob PROGMEM =
     -0.523999489f, 0.523999489f,
     -0.788369683f, 0.788369683f
     },
-    "bob"
+    "bob",
+    nullptr
     };
