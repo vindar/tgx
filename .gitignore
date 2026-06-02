@@ -34,3 +34,9 @@
 tmp/
 __pycache__/
 tools/mesh3d2_converter/cpp/build/
+
+# ESP-IDF generated files for local examples
+examples/ESP32-P4-Waveshare/**/build/
+examples/ESP32-P4-Waveshare/**/managed_components/
+examples/ESP32-P4-Waveshare/**/sdkconfig
+examples/ESP32-P4-Waveshare/**/dependencies.lock
