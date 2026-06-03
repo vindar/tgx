@@ -19,7 +19,7 @@
 
 /************************************************************************************
 *
-* Implementation file for the template class Renderer3D<color_t, LOADED_SHADERS>
+* Implementation file for the template class Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>
 *
 *************************************************************************************/
 namespace tgx
@@ -53,7 +53,13 @@ namespace tgx
             M.setIdentity();
             _modelM = M; // no transformation on the mesh.
             _viewM = M;  // valid view matrix before setLookAt() recomputes derived values.
-            _light = fVec3(-1.0f, -1.0f, -1.0f);
+            _directionalLightCount = 1;
+            for (int i = 0; i < MAX_DIRECTIONAL_LIGHTS; i++)
+                {
+                _light[i] = fVec3(-1.0f, -1.0f, -1.0f);
+                _diffuseColor[i] = RGBf(0.0f, 0.0f, 0.0f);
+                _specularColor[i] = RGBf(0.0f, 0.0f, 0.0f);
+                }
 
             const float ar = _validDraw() ? (((float)_lx) / _ly) : 1.5f;
             if (_ortho)
@@ -66,10 +72,10 @@ namespace tgx
 
             this->setLookAt({ 0,0,0 }, { 0,0,-1 }, { 0,1,0 }); // look toward the negative z axis (id matrix)
 
-           _ambiantStrength = 1.0f;
-           _diffuseStrength = 1.0f;
-           _specularStrength = 1.0f;
-           _specularExponent = 1;
+            _ambiantStrength = 1.0f;
+            _diffuseStrength = 1.0f;
+            _specularStrength = 1.0f;
+            _specularExponent = 1;
             this->setLight(fVec3(-1.0f, -1.0f, -1.0f), // white light coming from the right, above, in front.
                 RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f), RGBf(1.0f, 1.0f, 1.0f)); // full white.
 
@@ -323,14 +329,7 @@ namespace tgx
             // recompute
             _r_modelViewM = _viewM * _modelM;
             _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
-            _r_light = _viewM.mult0(_light);
-            _r_light = -_r_light;
-            _r_light.normalize();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)...
-            _r_H += _r_light;
-            _r_H.normalize();
-            _r_H_inorm = _r_H * _r_inorm;
+            _updateActiveDirectionalLightTransforms();
             }
 
 
@@ -380,21 +379,65 @@ namespace tgx
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLightDirection(const fVec3 & direction)
             {
-            _light = direction;
-            // recompute
-            _r_light = _viewM.mult0(_light);
-            _r_light = -_r_light;
-            _r_light.normalize();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)...
-            _r_H += _r_light;
-            _r_H.normalize();
-            _r_H_inorm = _r_H * _r_inorm;
+            _light[0] = direction;
+            _updateDirectionalLightTransform(0);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLightAmbiant(const RGBf & color)
+            {
+            setDirectionalLightAmbiant(color);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLightDiffuse(const RGBf & color)
+            {
+            _diffuseColor[0] = color;
+            // recompute
+            _r_diffuseColor[0] = _diffuseColor[0] * _diffuseStrength;
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLightSpecular(const RGBf & color)
+            {
+            _specularColor[0] = color;
+            // recompute
+            _r_specularColor[0] = _specularColor[0] * _specularStrength;
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLight(const fVec3 direction, const RGBf & ambiantColor, const RGBf & diffuseColor, const RGBf & specularColor)
+            {
+            if (_directionalLightCount < 1) _directionalLightCount = 1;
+            this->setLightDirection(direction);
+            this->setLightAmbiant(ambiantColor);
+            this->setLightDiffuse(diffuseColor);
+            this->setLightSpecular(specularColor);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setDirectionalLightCount(int count)
+            {
+            _directionalLightCount = clamp(count, 0, MAX_DIRECTIONAL_LIGHTS);
+            _updateActiveDirectionalLightTransforms();
+            _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        int Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::directionalLightCount() const
+            {
+            return _directionalLightCount;
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setDirectionalLightAmbiant(const RGBf & color)
             {
             _ambiantColor = color;
             // recompute
@@ -403,30 +446,41 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLightDiffuse(const RGBf & color)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setDirectionalLightDirection(int index, const fVec3& direction)
             {
-            _diffuseColor = color;
-            // recompute
-            _r_diffuseColor = _diffuseColor * _diffuseStrength;
+            if ((index < 0) || (index >= MAX_DIRECTIONAL_LIGHTS)) return;
+            _light[index] = direction;
+            _updateDirectionalLightTransform(index);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLightSpecular(const RGBf & color)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setDirectionalLightDiffuse(int index, const RGBf& color)
             {
-            _specularColor = color;
-            // recompute
-            _r_specularColor = _specularColor * _specularStrength;
+            if ((index < 0) || (index >= MAX_DIRECTIONAL_LIGHTS)) return;
+            _diffuseColor[index] = color;
+            _updateDirectionalLightColor(index);
             }
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLight(const fVec3 direction, const RGBf & ambiantColor, const RGBf & diffuseColor, const RGBf & specularColor)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setDirectionalLightSpecular(int index, const RGBf& color)
             {
-            this->setLightDirection(direction);
-            this->setLightAmbiant(ambiantColor);
-            this->setLightDiffuse(diffuseColor);
-            this->setLightSpecular(specularColor);
+            if ((index < 0) || (index >= MAX_DIRECTIONAL_LIGHTS)) return;
+            _specularColor[index] = color;
+            _updateDirectionalLightColor(index);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setDirectionalLight(int index, const fVec3& direction, const RGBf& diffuseColor, const RGBf& specularColor)
+            {
+            if ((index < 0) || (index >= MAX_DIRECTIONAL_LIGHTS)) return;
+            _light[index] = direction;
+            _diffuseColor[index] = diffuseColor;
+            _specularColor[index] = specularColor;
+            _updateDirectionalLightTransform(index);
+            _updateDirectionalLightColor(index);
             }
 
 
@@ -446,8 +500,7 @@ namespace tgx
             // recompute
             _r_modelViewM = _viewM * _modelM;
             _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H_inorm = _r_H * _r_inorm;
+            _updateActiveDirectionalLightInorms();
             }
 
 
@@ -467,8 +520,7 @@ namespace tgx
             // recompute
             _r_modelViewM = _viewM * _modelM;
             _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
-            _r_light_inorm = _r_light * _r_inorm;
-            _r_H_inorm = _r_H * _r_inorm;
+            _updateActiveDirectionalLightInorms();
             }
 
 
@@ -506,7 +558,7 @@ namespace tgx
             {
             _ambiantStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
             // recompute
-            _r_ambiantColor = _ambiantColor * _ambiantStrength;
+            _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength);
             }
 
 
@@ -515,7 +567,7 @@ namespace tgx
             {
             _diffuseStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
             // recompute
-            _r_diffuseColor = _diffuseColor * _diffuseStrength;
+            _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength);
             }
 
 
@@ -524,7 +576,7 @@ namespace tgx
             {
             _specularStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
             // recompute
-            _r_specularColor = _specularColor * _specularStrength;
+            _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength);
             }
 
 
@@ -720,15 +772,15 @@ namespace tgx
 
                 if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
-                    PPC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
-                    PPC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
-                    PPC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
+                    PPC0.color = _shadeVertex<true>(icu, NN0);
+                    PPC1.color = _shadeVertex<true>(icu, NN1);
+                    PPC2.color = _shadeVertex<true>(icu, NN2);
                     }
                 else
                     {
-                    PPC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm), col0);
-                    PPC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm), col1);
-                    PPC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm), col2);
+                    PPC0.color = _shadeVertex(icu, NN0, col0);
+                    PPC1.color = _shadeVertex(icu, NN1, col1);
+                    PPC2.color = _shadeVertex(icu, NN2, col2);
                     }
                 }
             else
@@ -957,15 +1009,15 @@ namespace tgx
 
                 if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
-                    PPC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
-                    PPC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
-                    PPC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
+                    PPC0.color = _shadeVertex<true>(icu, NN0);
+                    PPC1.color = _shadeVertex<true>(icu, NN1);
+                    PPC2.color = _shadeVertex<true>(icu, NN2);
                     }
                 else
                     {
-                    PPC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm),Vcol0);
-                    PPC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm),Vcol1);
-                    PPC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm),Vcol2);
+                    PPC0.color = _shadeVertex(icu, NN0, Vcol0);
+                    PPC1.color = _shadeVertex(icu, NN1, Vcol1);
+                    PPC2.color = _shadeVertex(icu, NN2, Vcol2);
                     }
                 }
             else
@@ -1105,23 +1157,23 @@ namespace tgx
                             {
                             PPC0->N = _r_modelViewM.mult0(normals[PPC0->indn]);
                             if (TEXTURE)
-                                PPC0->color = _phong<true>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
+                                PPC0->color = _shadeVertex<true>(icu, PPC0->N);
                             else
-                                PPC0->color = _phong<false>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
+                                PPC0->color = _shadeVertex<false>(icu, PPC0->N);
                             }
                         if (PPC1->missedP)
                             {
                             PPC1->N = _r_modelViewM.mult0(normals[PPC1->indn]);
                             if (TEXTURE)
-                                PPC1->color = _phong<true>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
+                                PPC1->color = _shadeVertex<true>(icu, PPC1->N);
                             else
-                                PPC1->color = _phong<false>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
+                                PPC1->color = _shadeVertex<false>(icu, PPC1->N);
                             }
                         PPC2->N = _r_modelViewM.mult0(normals[PPC2->indn]);
                         if (TEXTURE)
-                            PPC2->color = _phong<true>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
+                            PPC2->color = _shadeVertex<true>(icu, PPC2->N);
                         else
-                            PPC2->color = _phong<false>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
+                            PPC2->color = _shadeVertex<false>(icu, PPC2->N);
 
                         }
                     else
@@ -1267,17 +1319,17 @@ namespace tgx
 
                 if (TGX_SHADER_HAS_TEXTURE(RASTER_TYPE))
                     {
-                    PPC0.color = _phong<true>(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm));
-                    PPC1.color = _phong<true>(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm));
-                    PPC2.color = _phong<true>(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm));
-                    PPC3.color = _phong<true>(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm));
+                    PPC0.color = _shadeVertex<true>(icu, NN0);
+                    PPC1.color = _shadeVertex<true>(icu, NN1);
+                    PPC2.color = _shadeVertex<true>(icu, NN2);
+                    PPC3.color = _shadeVertex<true>(icu, NN3);
                     }
                 else
                     {
-                    PPC0.color = _phong(icu * dotProduct(NN0, _r_light_inorm), icu * dotProduct(NN0, _r_H_inorm), Vcol0);
-                    PPC1.color = _phong(icu * dotProduct(NN1, _r_light_inorm), icu * dotProduct(NN1, _r_H_inorm), Vcol1);
-                    PPC2.color = _phong(icu * dotProduct(NN2, _r_light_inorm), icu * dotProduct(NN2, _r_H_inorm), Vcol2);
-                    PPC3.color = _phong(icu * dotProduct(NN3, _r_light_inorm), icu * dotProduct(NN3, _r_H_inorm), Vcol3);
+                    PPC0.color = _shadeVertex(icu, NN0, Vcol0);
+                    PPC1.color = _shadeVertex(icu, NN1, Vcol1);
+                    PPC2.color = _shadeVertex(icu, NN2, Vcol2);
+                    PPC3.color = _shadeVertex(icu, NN3, Vcol3);
                     }
                 }
             else
@@ -1315,9 +1367,7 @@ namespace tgx
                     {
                     if (use_mesh_material)
                         {   // use mesh material if requested
-                        _r_ambiantColor = _ambiantColor * mesh->ambiant_strength;
-                        _r_diffuseColor = _diffuseColor * mesh->diffuse_strength;
-                        _r_specularColor = _specularColor * mesh->specular_strength;
+                        _setRuntimeMaterialLighting(mesh->ambiant_strength, mesh->diffuse_strength, mesh->specular_strength);
                         _r_objectColor = mesh->color;
                         }
                     // precompute pow(.,specularExponent) table if needed
@@ -1333,9 +1383,7 @@ namespace tgx
 
             if (use_mesh_material)
                 { // restore material pre-computed values
-                _r_ambiantColor = _ambiantColor * _ambiantStrength;
-                _r_diffuseColor = _diffuseColor * _diffuseStrength;
-                _r_specularColor = _specularColor * _specularStrength;
+                _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength);
                 _r_objectColor = _color;
                 }
             }
@@ -1351,9 +1399,7 @@ namespace tgx
 
             if (use_mesh_material)
                 { // restore material pre-computed values
-                _r_ambiantColor = _ambiantColor * _ambiantStrength;
-                _r_diffuseColor = _diffuseColor * _diffuseStrength;
-                _r_specularColor = _specularColor * _specularStrength;
+                _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength);
                 _r_objectColor = _color;
                 }
             }
@@ -1482,23 +1528,23 @@ namespace tgx
                             {
                             PPC0->N = _r_modelViewM.mult0(tab_norm[PPC0->indn]);
                             if (TEXTURE)
-                                PPC0->color = _phong<true>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
+                                PPC0->color = _shadeVertex<true>(icu, PPC0->N);
                             else
-                                PPC0->color = _phong<false>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
+                                PPC0->color = _shadeVertex<false>(icu, PPC0->N);
                             }
                         if (PPC1->missedP)
                             {
                             PPC1->N = _r_modelViewM.mult0(tab_norm[PPC1->indn]);
                             if (TEXTURE)
-                                PPC1->color = _phong<true>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
+                                PPC1->color = _shadeVertex<true>(icu, PPC1->N);
                             else
-                                PPC1->color = _phong<false>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
+                                PPC1->color = _shadeVertex<false>(icu, PPC1->N);
                             }
                         PPC2->N = _r_modelViewM.mult0(tab_norm[PPC2->indn]);
                         if (TEXTURE)
-                            PPC2->color = _phong<true>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
+                            PPC2->color = _shadeVertex<true>(icu, PPC2->N);
                         else
-                            PPC2->color = _phong<false>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
+                            PPC2->color = _shadeVertex<false>(icu, PPC2->N);
 
                         }
                     else
@@ -1659,9 +1705,7 @@ namespace tgx
 
                     if (use_mesh_material)
                         {
-                        _r_ambiantColor = _ambiantColor * material.ambiant_strength;
-                        _r_diffuseColor = _diffuseColor * material.diffuse_strength;
-                        _r_specularColor = _specularColor * material.specular_strength;
+                        _setRuntimeMaterialLighting(material.ambiant_strength, material.diffuse_strength, material.specular_strength);
                         _r_objectColor = material.color;
                         if (current_exponent != material.specular_exponent)
                             {
@@ -1810,23 +1854,23 @@ namespace tgx
                                 {
                                 PPC0->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC0->indn, normal_sx, normal_sy, normal_sz);
                                 if (TEXTURE)
-                                    PPC0->color = _phong<true>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
+                                    PPC0->color = _shadeVertex<true>(icu, PPC0->N);
                                 else
-                                    PPC0->color = _phong<false>(icu * dotProduct(PPC0->N, _r_light_inorm), icu * dotProduct(PPC0->N, _r_H_inorm));
+                                    PPC0->color = _shadeVertex<false>(icu, PPC0->N);
                                 }
                             if (PPC1->missedP)
                                 {
                                 PPC1->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC1->indn, normal_sx, normal_sy, normal_sz);
                                 if (TEXTURE)
-                                    PPC1->color = _phong<true>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
+                                    PPC1->color = _shadeVertex<true>(icu, PPC1->N);
                                 else
-                                    PPC1->color = _phong<false>(icu * dotProduct(PPC1->N, _r_light_inorm), icu * dotProduct(PPC1->N, _r_H_inorm));
+                                    PPC1->color = _shadeVertex<false>(icu, PPC1->N);
                                 }
                             PPC2->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC2->indn, normal_sx, normal_sy, normal_sz);
                             if (TEXTURE)
-                                PPC2->color = _phong<true>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
+                                PPC2->color = _shadeVertex<true>(icu, PPC2->N);
                             else
-                                PPC2->color = _phong<false>(icu * dotProduct(PPC2->N, _r_light_inorm), icu * dotProduct(PPC2->N, _r_H_inorm));
+                                PPC2->color = _shadeVertex<false>(icu, PPC2->N);
 
                             }
                         else
