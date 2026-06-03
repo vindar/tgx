@@ -32,8 +32,8 @@ namespace tgx
     *********************************************************/
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::Renderer3D(const iVec2& viewportSize, Image<color_t> * im, ZBUFFER_t * zbuffer) : _currentpow(-1), _uni(), _culling_dir(1)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::Renderer3D(const iVec2& viewportSize, Image<color_t> * im, ZBUFFER_t * zbuffer) : _currentpow(-1), _uni(), _culling_dir(1)
             {
             _shaders = 0;
             _ortho = TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS) ? false : true; // default projection is perspective if not disabled)
@@ -92,8 +92,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_precomputeSpecularTable2(int exponent)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_precomputeSpecularTable2(int exponent)
             {
             _currentpow = exponent;
             float specularExponent = (float)exponent;
@@ -129,8 +129,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setViewportSize(int lx, int ly)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setViewportSize(int lx, int ly)
             {
             _lx = clamp(lx, 0, MAXVIEWPORTDIMENSION);
             _ly = clamp(ly, 0, MAXVIEWPORTDIMENSION);
@@ -139,37 +139,37 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setViewportSize(const iVec2& viewport_dim)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setViewportSize(const iVec2& viewport_dim)
             {
             setViewportSize(viewport_dim.x, viewport_dim.y);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setImage(Image<color_t>* im)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setImage(Image<color_t>* im)
             {
             _uni.im = im;
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setOffset(int ox, int oy)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setOffset(int ox, int oy)
             {
             _ox = clamp(ox, 0, MAXVIEWPORTDIMENSION);
             _oy = clamp(oy, 0, MAXVIEWPORTDIMENSION);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setOffset(const iVec2& offset)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setOffset(const iVec2& offset)
             {
             this->setOffset(offset.x, offset.y);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setProjectionMatrix(const fMat4& M)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setProjectionMatrix(const fMat4& M)
             {
             _projM = M;
             _projM.invertYaxis();
@@ -177,8 +177,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        fMat4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::getProjectionMatrix() const
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        fMat4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::getProjectionMatrix() const
             {
             fMat4 M = _projM;
             M.invertYaxis();
@@ -186,8 +186,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::useOrthographicProjection()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::useOrthographicProjection()
             {
             static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use useOrthographicProjection()");
             _ortho = true;
@@ -196,8 +196,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::usePerspectiveProjection()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::usePerspectiveProjection()
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use usePerspectiveProjection()");
             _ortho = false;
@@ -206,8 +206,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_ORTHO(ENABLED_SHADERS), "shader TGX_SHADER_ORTHO must be enabled to use setOrtho()");
             _projM.setOrtho(left, right, bottom, top, zNear, zFar);
@@ -216,8 +216,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setFrustum(float left, float right, float bottom, float top, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setFrustum()");
             _projM.setFrustum(left, right, bottom, top, zNear, zFar);
@@ -226,8 +226,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setPerspective(float fovy, float aspect, float zNear, float zFar)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setPerspective(float fovy, float aspect, float zNear, float zFar)
             {
             static_assert(TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS), "shader TGX_SHADER_PERSPECTIVE must be enabled to use setPerspective()");
             _projM.setPerspective(fovy, aspect, zNear, zFar);
@@ -236,15 +236,15 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setCulling(int w)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setCulling(int w)
             {
             _culling_dir = (w > 0) ? 1.0f : ((w < 0) ? -1.0f : 0.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setZbuffer(ZBUFFER_t* zbuffer)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setZbuffer(ZBUFFER_t* zbuffer)
             {
             static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use setZbuffer()");
             _uni.zbuf = zbuffer;
@@ -252,8 +252,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::clearZbuffer()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::clearZbuffer()
             {
             static_assert(TGX_SHADER_HAS_ZBUFFER(ENABLED_SHADERS), "shader TGX_SHADER_ZBUFFER must be enabled to use clearZbuffer()");
             if ((_uni.zbuf) && (_uni.im != nullptr) && (_uni.im->isValid()))
@@ -263,15 +263,15 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setShaders(Shader shaders)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setShaders(Shader shaders)
             {
             _rectifyShaderShading(shaders);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setTextureWrappingMode(Shader wrap_mode)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setTextureWrappingMode(Shader wrap_mode)
             {
             if (TGX_SHADER_HAS_TEXTURE_CLAMP(wrap_mode))
                 {
@@ -290,8 +290,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setTextureQuality(Shader quality)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setTextureQuality(Shader quality)
             {
             if (TGX_SHADER_HAS_TEXTURE_BILINEAR(quality))
                 {
@@ -316,8 +316,8 @@ namespace tgx
      ********************************************************/
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setViewMatrix(const fMat4& M)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setViewMatrix(const fMat4& M)
             {
             _viewM = M;
             // recompute
@@ -334,15 +334,15 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        fMat4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::getViewMatrix() const
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        fMat4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::getViewMatrix() const
             {
             return _viewM;
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ)
             {
             fMat4 M;
             M.setLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
@@ -350,15 +350,15 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLookAt(const fVec3 eye, const fVec3 center, const fVec3 up)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLookAt(const fVec3 eye, const fVec3 center, const fVec3 up)
             {
             setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, up.x, up.y, up.z);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        fVec4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::worldToNDC(fVec3 P)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        fVec4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::worldToNDC(fVec3 P)
             {
             fVec4 Q = _projM * _viewM.mult1(P);
             if (!_ortho) Q.zdivide();
@@ -366,8 +366,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        iVec2 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::worldToImage(fVec3 P)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        iVec2 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::worldToImage(fVec3 P)
             {
             fVec4 Q = _projM * _viewM.mult1(P);
             if (!_ortho) Q.zdivide();
@@ -377,8 +377,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLightDirection(const fVec3 & direction)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLightDirection(const fVec3 & direction)
             {
             _light = direction;
             // recompute
@@ -393,8 +393,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLightAmbiant(const RGBf & color)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLightAmbiant(const RGBf & color)
             {
             _ambiantColor = color;
             // recompute
@@ -402,8 +402,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLightDiffuse(const RGBf & color)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLightDiffuse(const RGBf & color)
             {
             _diffuseColor = color;
             // recompute
@@ -411,8 +411,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLightSpecular(const RGBf & color)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLightSpecular(const RGBf & color)
             {
             _specularColor = color;
             // recompute
@@ -420,8 +420,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setLight(const fVec3 direction, const RGBf & ambiantColor, const RGBf & diffuseColor, const RGBf & specularColor)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setLight(const fVec3 direction, const RGBf & ambiantColor, const RGBf & diffuseColor, const RGBf & specularColor)
             {
             this->setLightDirection(direction);
             this->setLightAmbiant(ambiantColor);
@@ -439,8 +439,8 @@ namespace tgx
      ********************************************************/
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setModelMatrix(const fMat4& M)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setModelMatrix(const fMat4& M)
             {
             _modelM = M;
             // recompute
@@ -451,15 +451,15 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        fMat4  Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::getModelMatrix() const
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        fMat4  Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::getModelMatrix() const
             {
             return _modelM;
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setModelPosScaleRot(const fVec3& center, const fVec3& scale, float rot_angle, const fVec3& rot_dir)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setModelPosScaleRot(const fVec3& center, const fVec3& scale, float rot_angle, const fVec3& rot_dir)
             {
             _modelM.setScale(scale);
             _modelM.multRotate(rot_angle, rot_dir);
@@ -472,8 +472,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        fVec4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::modelToNDC(fVec3 P)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        fVec4 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::modelToNDC(fVec3 P)
             {
             fVec4 Q = _projM * _r_modelViewM.mult1(P);
             if (!_ortho) Q.zdivide();
@@ -481,8 +481,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        iVec2 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::modelToImage(fVec3 P)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        iVec2 Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::modelToImage(fVec3 P)
             {
             fVec4 Q = _projM * _r_modelViewM.mult1(P);
             if (!_ortho) Q.zdivide();
@@ -492,8 +492,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterialColor(RGBf color)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setMaterialColor(RGBf color)
             {
             _color = color;
             // recompute
@@ -501,8 +501,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterialAmbiantStrength(float strenght)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setMaterialAmbiantStrength(float strenght)
             {
             _ambiantStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
             // recompute
@@ -510,8 +510,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterialDiffuseStrength(float strenght)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setMaterialDiffuseStrength(float strenght)
             {
             _diffuseStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
             // recompute
@@ -519,8 +519,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterialSpecularStrength(float strenght)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setMaterialSpecularStrength(float strenght)
             {
             _specularStrength = clamp(strenght, 0.0f, 10.0f); // allow values larger than 1 to simulate emissive surfaces.
             // recompute
@@ -528,15 +528,15 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterialSpecularExponent(int exponent)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setMaterialSpecularExponent(int exponent)
             {
             _specularExponent = clamp(exponent, 0, 100);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::setMaterial(RGBf color, float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setMaterial(RGBf color, float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)
             {
             this->setMaterialColor(color);
             this->setMaterialAmbiantStrength(ambiantStrength);
@@ -561,8 +561,8 @@ namespace tgx
         *********************************************************/
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_triangleClip1in(int shader, tgx::fVec4 CP,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_triangleClip1in(int shader, tgx::fVec4 CP,
             float cp1, float cp2, float cp3,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
@@ -593,8 +593,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_triangleClip2in(int shader, tgx::fVec4 CP,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_triangleClip2in(int shader, tgx::fVec4 CP,
             float cp1, float cp2, float cp3,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
@@ -630,8 +630,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        int Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_triangleClip(int shader, tgx::fVec4 CP, float off,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        int Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_triangleClip(int shader, tgx::fVec4 CP, float off,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
             {
@@ -686,8 +686,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawTriangleClipped(const int RASTER_TYPE,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangleClipped(const int RASTER_TYPE,
             const fVec4* Q0, const fVec4* Q1, const fVec4* Q2,
             const fVec3* N0, const fVec3* N1, const fVec3* N2,
             const fVec2* T0, const fVec2* T1, const fVec2* T2,
@@ -751,8 +751,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawTriangleClippedSub(const int RASTER_TYPE, const int plane, const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangleClippedSub(const int RASTER_TYPE, const int plane, const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3)
             {
 
             const float CLIPBOUND_XY = _clipbound_xy();
@@ -880,8 +880,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawTriangle(const int RASTER_TYPE,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangle(const int RASTER_TYPE,
                            const fVec3 * P0, const fVec3 * P1, const fVec3 * P2,
                            const fVec3 * N0, const fVec3 * N1, const fVec3 * N2,
                            const fVec2 * T0, const fVec2 * T1, const fVec2 * T2,
@@ -987,8 +987,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawTriangleStrip(const int RASTER_TYPE, int nb_indices,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangleStrip(const int RASTER_TYPE, int nb_indices,
             const uint16_t* ind_vertices, const fVec3* vertices,
             const uint16_t* ind_normals, const fVec3* normals,
             const uint16_t* ind_texture, const fVec2* textures)
@@ -1172,8 +1172,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawQuad(const int RASTER_TYPE,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawQuad(const int RASTER_TYPE,
             const fVec3* P0, const fVec3* P1, const fVec3* P2, const fVec3* P3,
             const fVec3* N0, const fVec3* N1, const fVec3* N2, const fVec3* N3,
             const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3,
@@ -1304,8 +1304,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material, bool draw_chained_meshes)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material, bool draw_chained_meshes)
             {
             if (!_validDraw()) return;
 
@@ -1341,8 +1341,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawMesh(const Mesh3Dv2<color_t>* mesh, bool use_mesh_material)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawMesh(const Mesh3Dv2<color_t>* mesh, bool use_mesh_material)
             {
             if (!_validDraw()) return;
             if ((mesh == nullptr) || (mesh->meshlets == nullptr) || (mesh->payload == nullptr) || (mesh->materials == nullptr)) return;
@@ -1359,8 +1359,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>  TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawMesh(const int RASTER_TYPE, const Mesh3D<color_t>* mesh)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>  TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawMesh(const int RASTER_TYPE, const Mesh3D<color_t>* mesh)
             {
             _uni.shader_type = RASTER_TYPE;
             const bool ortho = _ortho;
@@ -1537,8 +1537,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>  TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawMesh(const int RASTER_TYPE, const Mesh3Dv2<color_t>* mesh, bool use_mesh_material)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>  TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawMesh(const int RASTER_TYPE, const Mesh3Dv2<color_t>* mesh, bool use_mesh_material)
             {
             const bool bbox_uninitialized = ((mesh->bounding_box.minX == 0) && (mesh->bounding_box.maxX == 0) &&
                                              (mesh->bounding_box.minY == 0) && (mesh->bounding_box.maxY == 0) &&
@@ -1866,8 +1866,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3,
                 const fVec3* N1, const fVec3* N2, const fVec3* N3,
                 const fVec2* T1, const fVec2* T2, const fVec2* T3,
                 const Image<color_t>* texture)
@@ -1882,8 +1882,8 @@ namespace tgx
                 }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawTriangleWithVertexColor(const fVec3& P1, const fVec3& P2, const fVec3& P3,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawTriangleWithVertexColor(const fVec3& P1, const fVec3& P2, const fVec3& P3,
                 const RGBf& col1, const RGBf& col2, const RGBf& col3,
                 const fVec3* N1, const fVec3* N2, const fVec3* N3)
                 {
@@ -1913,8 +1913,8 @@ namespace tgx
                 }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawTriangles(int nb_triangles,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawTriangles(int nb_triangles,
             const uint16_t* ind_vertices, const fVec3* vertices,
             const uint16_t* ind_normals, const fVec3* normals,
             const uint16_t* ind_texture, const fVec2* textures,
@@ -1979,8 +1979,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawTriangleStrip(int nb_indices,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawTriangleStrip(int nb_indices,
             const uint16_t* ind_vertices, const fVec3* vertices,
             const uint16_t* ind_normals, const fVec3* normals,
             const uint16_t* ind_texture, const fVec2* textures,
@@ -1998,8 +1998,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
             const fVec3* N1, const fVec3* N2, const fVec3* N3, const fVec3* N4,
             const fVec2* T1, const fVec2* T2, const fVec2* T3, const fVec2* T4,
             const Image<color_t>* texture)
@@ -2014,8 +2014,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawQuadWithVertexColor(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawQuadWithVertexColor(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4,
             const RGBf& col1, const RGBf& col2, const RGBf& col3, const RGBf& col4,
             const fVec3* N1, const fVec3* N2, const fVec3* N3, const fVec3* N4)
             {
@@ -2045,8 +2045,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawQuads(int nb_quads,
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawQuads(int nb_quads,
             const uint16_t* ind_vertices, const fVec3* vertices,
             const uint16_t* ind_normals, const fVec3* normals,
             const uint16_t* ind_texture, const fVec2* textures,
@@ -2133,198 +2133,198 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes)
             {
             _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_FAST>(mesh, draw_chained_meshes, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh)
             {
             _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_FAST>(mesh, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMeshAA(const Mesh3D<color_t>* mesh, bool draw_chained_meshes)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameMeshAA(const Mesh3D<color_t>* mesh, bool draw_chained_meshes)
             {
             _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_FAST>(mesh, draw_chained_meshes, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMeshAA(const Mesh3Dv2<color_t>* mesh)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameMeshAA(const Mesh3Dv2<color_t>* mesh)
             {
             _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_FAST>(mesh, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, float thickness, color_t color, float opacity)
             {
             _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_THICK>(mesh, draw_chained_meshes, color, opacity, thickness);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, float thickness, color_t color, float opacity)
             {
             _drawWireFrameMesh<Renderer3D_detail::WIREFRAME_AA_THICK>(mesh, color, opacity, thickness);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLine(const fVec3& P1, const fVec3& P2)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameLine(const fVec3& P1, const fVec3& P2)
             {
             _drawWireFrameLine<Renderer3D_detail::WIREFRAME_FAST>(P1, P2, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLineAA(const fVec3& P1, const fVec3& P2)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameLineAA(const fVec3& P1, const fVec3& P2)
             {
             _drawWireFrameLine<Renderer3D_detail::WIREFRAME_AA_FAST>(P1, P2, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameLine(const fVec3& P1, const fVec3& P2, float thickness, color_t color, float opacity)
             {
             _drawWireFrameLine<Renderer3D_detail::WIREFRAME_AA_THICK>(P1, P2, color, opacity, thickness);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices)
             {
             _drawWireFrameLines<Renderer3D_detail::WIREFRAME_FAST>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLinesAA(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameLinesAA(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices)
             {
             _drawWireFrameLines<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_lines, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
             _drawWireFrameLines<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_lines, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3)
             {
             _drawWireFrameTriangle<Renderer3D_detail::WIREFRAME_FAST>(P1, P2, P3, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangleAA(const fVec3& P1, const fVec3& P2, const fVec3& P3)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTriangleAA(const fVec3& P1, const fVec3& P2, const fVec3& P3)
             {
             _drawWireFrameTriangle<Renderer3D_detail::WIREFRAME_AA_FAST>(P1, P2, P3, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, float thickness, color_t color, float opacity)
             {
             _drawWireFrameTriangle<Renderer3D_detail::WIREFRAME_AA_THICK>(P1, P2, P3, color, opacity, thickness);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices)
             {
             _drawWireFrameTriangles<Renderer3D_detail::WIREFRAME_FAST>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTrianglesAA(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTrianglesAA(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices)
             {
             _drawWireFrameTriangles<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_triangles, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
             _drawWireFrameTriangles<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_triangles, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices)
             {
             _drawWireFrameTriangleStrip<Renderer3D_detail::WIREFRAME_FAST>(nb_indices, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangleStripAA(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTriangleStripAA(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices)
             {
             _drawWireFrameTriangleStrip<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_indices, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
             _drawWireFrameTriangleStrip<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_indices, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
             {
             _drawWireFrameQuad<Renderer3D_detail::WIREFRAME_FAST>(P1, P2, P3, P4, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuadAA(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameQuadAA(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4)
             {
             _drawWireFrameQuad<Renderer3D_detail::WIREFRAME_AA_FAST>(P1, P2, P3, P4, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, float thickness, color_t color, float opacity)
             {
             _drawWireFrameQuad<Renderer3D_detail::WIREFRAME_AA_THICK>(P1, P2, P3, P4, color, opacity, thickness);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices)
             {
             _drawWireFrameQuads<Renderer3D_detail::WIREFRAME_FAST>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuadsAA(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameQuadsAA(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices)
             {
             _drawWireFrameQuads<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_quads, ind_vertices, vertices, color_t(_color), 1.0f, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity)
             {
             _drawWireFrameQuads<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_quads, ind_vertices, vertices, color, opacity, thickness);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         inline
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameLineFast(iVec2 P0, iVec2 P1, color_t color)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameLineFast(iVec2 P0, iVec2 P1, color_t color)
             {
             Image<color_t>* const im = _uni.im;
             const int lx = im->lx();
@@ -2419,9 +2419,9 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<bool CHECK_NEIGHBOR> inline
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameLineAAFast(const fVec2& P0, const fVec2& P1, color_t color, int32_t op)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameLineAAFast(const fVec2& P0, const fVec2& P1, color_t color, int32_t op)
             {
             Image<color_t>* const im = _uni.im;
             const int lx = im->lx();
@@ -2492,9 +2492,9 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<int MODE> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameMesh(const Mesh3D<color_t>* mesh, bool draw_chained_meshes, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
@@ -2691,9 +2691,9 @@ namespace tgx
         }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<int MODE> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameMesh(const Mesh3Dv2<color_t>* mesh, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if ((mesh == nullptr) || (thickness <= 0)) return;
@@ -2943,9 +2943,9 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<int MODE> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameLine(const fVec3& P1, const fVec3& P2, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
@@ -3000,9 +3000,9 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<int MODE> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameLines(int nb_lines, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
 
             if (!_validDraw()) return;
@@ -3063,9 +3063,9 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<int MODE> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
@@ -3154,9 +3154,9 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<int MODE> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return; // invalid vertices
@@ -3249,9 +3249,9 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<int MODE> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if ((nb_indices < 3) || (ind_vertices == nullptr) || (vertices == nullptr)) return;
@@ -3421,9 +3421,9 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<int MODE> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if (thickness <= 0) return;
@@ -3510,9 +3510,9 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<int MODE> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameQuads(int nb_quads, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness)
             {
             if (!_validDraw()) return;
             if ((ind_vertices == nullptr) || (vertices == nullptr)) return; // invalid vertices
@@ -3604,9 +3604,9 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<bool USE_BLENDING> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawPixel(const fVec3& pos, color_t color, float opacity)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawPixel(const fVec3& pos, color_t color, float opacity)
             {
             if (!_validDraw()) return;
             const bool has_zbuffer = TGX_SHADER_HAS_ZBUFFER(_shaders);
@@ -3629,9 +3629,9 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<bool USE_COLORS, bool USE_BLENDING> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             if (!_validDraw()) return;
             if (pos_list == nullptr) return;
@@ -3675,29 +3675,29 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawPixel(const fVec3& pos)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawPixel(const fVec3& pos)
             {
             _drawPixel<false>(pos, _color, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawPixel(const fVec3& pos, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawPixel(const fVec3& pos, color_t color, float opacity)
             {
             _drawPixel<true>(pos, color, opacity);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawPixels(int nb_pixels, const fVec3* pos_list)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawPixels(int nb_pixels, const fVec3* pos_list)
             {
             _drawPixels<false, false>(nb_pixels, pos_list, nullptr, nullptr, nullptr, nullptr);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawPixels(int nb_pixels, const fVec3* pos_list, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             _drawPixels<true, true>(nb_pixels, pos_list, colors_ind, colors, opacities_ind, opacities);
             }
@@ -3705,9 +3705,9 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<bool USE_BLENDING> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawDot(const fVec3& pos, int r, color_t color, float opacity)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawDot(const fVec3& pos, int r, color_t color, float opacity)
             {
             if (!_validDraw()) return;
             const bool has_zbuffer = TGX_SHADER_HAS_ZBUFFER(_shaders);
@@ -3740,9 +3740,9 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<bool USE_RADIUS, bool USE_COLORS, bool USE_BLENDING> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             if (!_validDraw()) return;
             if ((pos_list == nullptr) || (radius == nullptr)) return;
@@ -3803,9 +3803,9 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<bool CHECKRANGE, bool USE_BLENDING> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawCircleZbuf(int xm, int ym, int r, color_t color, float opacity, float z)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawCircleZbuf(int xm, int ym, int r, color_t color, float opacity, float z)
             {
             if ((CHECKRANGE) && (r > 2))
                 { // circle is large enough to check first if there is something to draw.
@@ -3874,22 +3874,22 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawDot(const fVec3& pos, int r)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawDot(const fVec3& pos, int r)
             {
             _drawDot<false>(pos, r, _color, 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawDot(const fVec3& pos, int r, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawDot(const fVec3& pos, int r, color_t color, float opacity)
             {
             _drawDot<true>(pos, r, color, opacity);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawDots(int nb_dots, const fVec3* pos_list, const int radius)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawDots(int nb_dots, const fVec3* pos_list, const int radius)
             {
             _drawDots<false, false, false>(nb_dots, pos_list, nullptr, &radius, nullptr, nullptr, nullptr, nullptr);
             }
@@ -3899,8 +3899,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawDots(int nb_dots, const fVec3* pos_list, const int* radius_ind, const int* radius, const int* colors_ind, const color_t* colors, const int* opacities_ind, const float* opacities)
             {
             _drawDots<true, true, true>(nb_dots, pos_list, radius_ind, radius, colors_ind, colors, opacities_ind, opacities);
             }
@@ -3909,8 +3909,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        float Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_unitSphereScreenDiameter()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        float Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_unitSphereScreenDiameter()
             {
             const float ONEOVERSQRT2 = 0.70710678118f;
             fVec4 P0 = _r_modelViewM.mult1(fVec3(0, 0, 0));
@@ -3930,8 +3930,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawCube()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawCube()
             {
             // set culling direction = -1 and save previous value
             float save_culling = _culling_dir;
@@ -3943,8 +3943,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawCube(
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawCube(
             const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
             const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
             const fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
@@ -3980,8 +3980,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawCube(
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawCube(
             const Image<color_t>* texture_front,
             const Image<color_t>* texture_back,
             const Image<color_t>* texture_top,
@@ -4045,22 +4045,22 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawSphere(int nb_sectors, int nb_stacks)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSphere(int nb_sectors, int nb_stacks)
             {
             drawSphere(nb_sectors, nb_stacks, nullptr);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture)
             {
             _drawSphere<false, Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawAdaptativeSphere(float quality)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawAdaptativeSphere(float quality)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
@@ -4068,8 +4068,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawAdaptativeSphere(const Image<color_t>* texture, float quality)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawAdaptativeSphere(const Image<color_t>* texture, float quality)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
@@ -4077,9 +4077,9 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<bool WIREFRAME, int MODE> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
             {
 
             const int save_shaders = _shaders;
@@ -4261,8 +4261,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameCube()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCube()
             {
             // set culling direction = 1 and save previous value
             float save_culling = _culling_dir;
@@ -4273,8 +4273,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameCubeAA()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCubeAA()
             {
             // set culling direction = 1 and save previous value
             float save_culling = _culling_dir;
@@ -4285,8 +4285,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameCube(float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCube(float thickness, color_t color, float opacity)
             {
             // set culling direction = 1 and save previous value
             float save_culling = _culling_dir;
@@ -4297,29 +4297,29 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameSphere(int nb_sectors, int nb_stacks)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameSphere(int nb_sectors, int nb_stacks)
             {
             _drawSphere<true, Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, nb_stacks, nullptr, 1.0f, color_t(_color), 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameSphereAA(int nb_sectors, int nb_stacks)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameSphereAA(int nb_sectors, int nb_stacks)
             {
             _drawSphere<true, Renderer3D_detail::WIREFRAME_AA_FAST>(nb_sectors, nb_stacks, nullptr, 1.0f, color_t(_color), 1.0f);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameSphere(int nb_sectors, int nb_stacks, float thickness, color_t color, float opacity)
             {
             _drawSphere<true, Renderer3D_detail::WIREFRAME_AA_THICK>(nb_sectors, nb_stacks, nullptr, thickness, color, opacity);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameAdaptativeSphere(float quality)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameAdaptativeSphere(float quality)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
@@ -4327,8 +4327,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameAdaptativeSphereAA(float quality)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameAdaptativeSphereAA(float quality)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
@@ -4336,8 +4336,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::drawWireFrameAdaptativeSphere(float quality, float thickness, color_t color, float opacity)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameAdaptativeSphere(float quality, float thickness, color_t color, float opacity)
             {
             const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
             const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
@@ -4361,8 +4361,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_recompute_wa_wb()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_recompute_wa_wb()
             {
             if (_ortho)
                 { // orthographic projection
@@ -4394,8 +4394,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_rectifyShaderOrtho()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_rectifyShaderOrtho()
             {
             if (_ortho)
                 {
@@ -4411,8 +4411,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_rectifyShaderZbuffer()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_rectifyShaderZbuffer()
             {
             if (_uni.zbuf)
                 {
@@ -4428,8 +4428,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_rectifyShaderShading(Shader new_shaders)
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_rectifyShaderShading(Shader new_shaders)
             {
             if (TGX_SHADER_HAS_GOURAUD(new_shaders))
                 {
@@ -4486,8 +4486,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_rectifyShaderTextureWrapping()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_rectifyShaderTextureWrapping()
             {
             if (_texture_wrap_mode == SHADER_TEXTURE_WRAP_POW2)
                 {
@@ -4503,8 +4503,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t>
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>::_rectifyShaderTextureQuality()
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_rectifyShaderTextureQuality()
             {
             if (_texture_quality == SHADER_TEXTURE_BILINEAR)
                 {
