@@ -146,15 +146,15 @@ namespace tgx
 
 
     /** Don't know why but faster than fminf() for floats. */
-    template<typename T> TGX_INLINE inline T min(const T & a, const T & b) { return((a < b) ? a : b); }
+    template<typename T> TGX_INLINE inline T min(T a, T b) { return((a < b) ? a : b); }
 
     
     /** Don't know why but much faster than fmaxf() for floats. */
-    template<typename T> TGX_INLINE inline T max(const T & a, const T & b) { return((a > b) ? a : b); }
+    template<typename T> TGX_INLINE inline T max(T a, T b) { return((a > b) ? a : b); }
 
         
     /** Template clamp version */
-    template<typename T> TGX_INLINE inline T clamp(const T & v, const T & vmin, const T & vmax)
+    template<typename T> TGX_INLINE inline T clamp(T v, T vmin, T vmax)
         {
         return max(vmin, min(vmax, v));
         }
