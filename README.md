@@ -56,7 +56,7 @@ Here are the main features of the library:
 - Depth buffer testing (16-bit or 32-bit precision).
 - Three wireframe drawing paths: *fast* aliased lines, optimized one-pixel antialiased lines, and a much slower adjustable thickness + AA path.
 - Flat and Gouraud shading.
-- Phong lighting model with separate ambient, diffuse, and specular components (currently supports one directional light source).
+- Phong lighting model with separate ambient, diffuse, and specular components. The default renderer uses one directional light; `Renderer3D` can also be instantiated with a fixed capacity for multiple directional lights.
 - Per-object material properties.
 - Perspective-correct texture mapping with selectable point sampling or bilinear filtering. Wrap modes: repeat (for power-of-two textures) or clamp to edge.
 - Perspective and orthographic projection.

@@ -355,19 +355,30 @@ rendering, keep the viewport equal to the final screen size and draw smaller ima
 
 @section sec_3D_renderer_template Renderer template parameters
 
-\ref tgx::Renderer3D has three template parameters:
+\ref tgx::Renderer3D has five template parameters. The last two are optional and keep the historical one-light
+renderer by default:
 
 ~~~{.cpp}
-tgx::Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t>
+tgx::Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>
 ~~~
 
 - `color_t` is the destination color type, usually `tgx::RGB565` on MCU displays and `tgx::RGB24`,
   `tgx::RGB32` or `tgx::RGBf` on CPU.
 - `LOADED_SHADERS` is the compile-time list of shader variants that may be used.
 - `ZBUFFER_t` is either `float` or `uint16_t`.
+- `MAX_DIRECTIONAL_LIGHTS` is the compile-time capacity for directional lights. It defaults to `1`.
+- `MAX_SPOT_LIGHTS` is reserved for future spotlight support and defaults to `0`; spotlights are not rendered yet.
 
 The default `LOADED_SHADERS` enables every shader variant. This is convenient while experimenting. On MCU targets,
 load only the variants you use: it reduces code size and can help speed.
+
+No shader flag is needed for multiple directional lights. To keep the fastest legacy path, leave
+`MAX_DIRECTIONAL_LIGHTS` at its default value. To enable the advanced directional-light API, instantiate the renderer
+with a larger capacity, for example:
+
+~~~{.cpp}
+using Renderer = tgx::Renderer3D<tgx::RGB565, shaders_loaded, uint16_t, 4>;
+~~~
 
 This compile-time shader list is one of the ways TGX stays small. Unused rasterizer paths can be removed by the
 compiler.
@@ -651,7 +662,8 @@ With `SHADER_TEXTURE_CLAMP`, TGX accepts arbitrary texture sizes, but each looku
 @subsection sec_3D_lighting Light and material
 
 TGX uses a compact Phong-style lighting model. It is evaluated per vertex for Gouraud shading, or once per face for
-flat shading. It combines a directional light, material color and ambient, diffuse and specular strengths:
+flat shading. The default renderer uses one directional light and combines it with material color plus ambient,
+diffuse and specular strengths:
 
 ~~~{.cpp}
 renderer.setLightDirection({ -0.3f, -0.7f, -1.0f });
@@ -668,6 +680,36 @@ renderer.setMaterialSpecularExponent(16);
 
 The convenience method `setLight()` sets all light colors and the direction at once. The convenience method
 `setMaterial()` sets all material parameters at once.
+
+The simple light API remains the recommended starting point and always controls directional light 0. If the renderer
+was instantiated with `MAX_DIRECTIONAL_LIGHTS > 1`, use the advanced indexed API to activate and configure additional
+directional lights:
+
+~~~{.cpp}
+using Renderer = tgx::Renderer3D<tgx::RGB565, shaders_loaded, uint16_t, 4>;
+Renderer renderer({ W, H }, &image, zbuffer);
+
+renderer.setDirectionalLightCount(4);
+renderer.setDirectionalLightAmbiant(tgx::RGBf(0.08f, 0.08f, 0.10f)); // global ambient
+renderer.setDirectionalLight(0, { -0.45f, -0.60f, -1.0f },
+                             tgx::RGBf(0.55f, 0.50f, 0.42f),
+                             tgx::RGBf(0.22f, 0.20f, 0.18f));
+renderer.setDirectionalLight(1, { 0.80f, -0.25f, -0.55f },
+                             tgx::RGBf(0.18f, 0.34f, 0.90f),
+                             tgx::RGBf(0.06f, 0.12f, 0.30f));
+renderer.setDirectionalLight(2, { -0.35f, 0.70f, -0.45f },
+                             tgx::RGBf(0.85f, 0.20f, 0.16f),
+                             tgx::RGBf(0.22f, 0.06f, 0.05f));
+renderer.setDirectionalLight(3, { 0.18f, 0.35f, -0.90f },
+                             tgx::RGBf(0.16f, 0.75f, 0.36f),
+                             tgx::RGBf(0.05f, 0.16f, 0.08f));
+~~~
+
+Ambient light is global across all directional lights. Diffuse and specular colors are per light. A runtime light
+count of `0` gives ambient-only rendering. Multi-directional lighting is still evaluated at the face/vertex lighting
+stage; TGX does not do per-pixel Phong lighting.
+
+Mesh3Dv2 can store emissive material metadata, but the current renderer does not render emissive materials yet.
 
 If `drawMesh()` is called with `use_mesh_material = true`, the mesh material color and texture override the current
 material settings for that mesh. Most generated OBJ models use this mode.
