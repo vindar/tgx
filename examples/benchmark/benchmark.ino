@@ -312,12 +312,21 @@ bool setRenderer(int slx, int sly)
 #define SCENE_WIRE_RIBBON_QUAD_THICK 30
 
 
+#ifdef TGX_BENCHMARK_RP2040
+static const int DIRECT_TEXTURE_LX = 32;
+static const int DIRECT_TEXTURE_LY = 32;
+#else
 static const int DIRECT_TEXTURE_LX = 64;
 static const int DIRECT_TEXTURE_LY = 64;
+#endif
 static RGB565* direct_texture_buffer = nullptr;
 static Image<RGB565> direct_texture;
 
+#ifdef TGX_BENCHMARK_RP2040
+static const int GRID_N = 9;
+#else
 static const int GRID_N = 14;
+#endif
 static const int GRID_VERTICES = (GRID_N + 1) * (GRID_N + 1);
 static const int GRID_TRIANGLES = GRID_N * GRID_N * 2;
 static fVec3* grid_vertices = nullptr;
@@ -325,7 +334,11 @@ static fVec3* grid_normals = nullptr;
 static fVec2* grid_texcoords = nullptr;
 static uint16_t* grid_triangle_indices = nullptr;
 
+#ifdef TGX_BENCHMARK_RP2040
+static const int RIBBON_SEGMENTS = 96;
+#else
 static const int RIBBON_SEGMENTS = 196;
+#endif
 static const int RIBBON_VERTICES = 2 * (RIBBON_SEGMENTS + 1);
 static const int RIBBON_TRIANGLES = 2 * RIBBON_SEGMENTS;
 static const int RIBBON_QUADS = RIBBON_SEGMENTS;
@@ -336,7 +349,11 @@ static uint16_t* ribbon_strip_indices = nullptr;
 static uint16_t* ribbon_triangle_indices = nullptr;
 static uint16_t* ribbon_quad_indices = nullptr;
 
+#ifdef TGX_BENCHMARK_RP2040
+static const int POINT_COUNT = 128;
+#else
 static const int POINT_COUNT = 256;
+#endif
 static fVec3* point_positions = nullptr;
 static int* point_color_indices = nullptr;
 static int* point_opacity_indices = nullptr;

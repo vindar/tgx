@@ -267,12 +267,24 @@ namespace tgx
                 }
 
             // --- Pixel loop ---
+#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+            color_t* pix = buf + bx;
+            ZBUFFER_t* zpix = nullptr;
+            if constexpr (USE_ZBUFFER)
+                {
+                zpix = zbuf + bx;
+                }
+#endif
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
                 bool z_pass = true;
                 if constexpr (USE_ZBUFFER)
                     {
+#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+                    ZBUFFER_t& W = *zpix;
+#else
                     ZBUFFER_t& W = zbuf[bx];
+#endif
                     ZBUFFER_t current_z;
 
                     if constexpr (std::is_same<ZBUFFER_t, uint16_t>::value)
@@ -355,15 +367,25 @@ namespace tgx
                             final_color = flat_color;
                             }
                         }
+#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+                    *pix = final_color;
+#else
                     buf[bx] = final_color;
+#endif
                     }
 
                 // --- Increment for next pixel ---
                 C2 += dx2;
                 C3 += dx3;
                 bx++;
+#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+                pix++;
+#endif
 
                 if constexpr (USE_ZBUFFER) cw_z += dw_z;
+#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+                if constexpr (USE_ZBUFFER) zpix++;
+#endif
 
                 if constexpr (USE_TEXTURE)
                     {

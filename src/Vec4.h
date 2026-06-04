@@ -475,7 +475,7 @@ namespace tgx
         * - z = z/w
         * - w = 1/w
         **/
-        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void zdivide() 
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE_ZDIVIDE inline void zdivide()
             {
             const Tfloat iw = tgx::fast_inv((Tfloat)w);
             x = iw*x;
