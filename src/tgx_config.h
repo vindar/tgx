@@ -88,7 +88,7 @@
     #define TGX_USE_FMA_MATH 1
     #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
-    #define TGX_INLINE_ZDIVIDE
+    #define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_NOINLINE
 
 #elif defined(ARDUINO_TEENSY36)
@@ -184,7 +184,7 @@
     #define TGX_USE_FMA_MATH 0
     #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
-    #define TGX_INLINE_ZDIVIDE
+    #define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_NOINLINE
 
 #elif defined(CONFIG_IDF_TARGET_ESP32P4) || defined(ESP32P4)
