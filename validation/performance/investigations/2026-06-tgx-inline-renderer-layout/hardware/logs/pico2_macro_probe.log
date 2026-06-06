@@ -1,0 +1,85 @@
+
+2026-06-05 18:47:57.877 BOARD=pico2
+2026-06-05 18:47:57.890 PORT=COM21
+2026-06-05 18:47:57.892 UPLOAD_PORT=COM21
+2026-06-05 18:47:57.893 FQBN=rp2040:rp2040:rpipico2
+2026-06-05 18:47:57.897 SKETCH=D:\Programmation\tgx\tmp\hardware_validation\sketches\TgxMacroProbe
+2026-06-05 18:47:57.899 PARSE_MODE=probe
+2026-06-05 18:47:57.901 VISIBLE_PORTS_BEFORE=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-05 18:47:57.902 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-05 18:47:57.907 ATTEMPT=1
+2026-06-05 18:47:58.228 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-05 18:47:58.237 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn rp2040:rp2040:rpipico2 --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\tmp\hardware_validation\builds\pico2_macro_probe --port COM21 --upload D:\Programmation\tgx\tmp\hardware_validation\sketches\TgxMacroProbe
+2026-06-05 18:48:26.838 ARDUINO: Le croquis utilise 51244 octets (1%) de l'espace de stockage de programmes. Le maximum est de 4186112 octets.
+2026-06-05 18:48:26.840 ARDUINO: Les variables globales utilisent 9088 octets (1%) de mémoire dynamique, ce qui laisse 515200 octets pour les variables locales. Le maximum est de 524288 octets.
+2026-06-05 18:48:26.842 ARDUINO: Resetting COM21
+2026-06-05 18:48:26.844 ARDUINO: Converting to uf2, output size: 138752, start address: 0x2000
+2026-06-05 18:48:26.845 ARDUINO: Scanning for RP2040 devices
+2026-06-05 18:48:26.847 ARDUINO: Flashing F: (RP2350)
+2026-06-05 18:48:26.849 ARDUINO: Wrote 138752 bytes to F:/NEW.UF2
+2026-06-05 18:48:26.850 ARDUINO_EXIT_CODE=0
+2026-06-05 18:48:31.351 VISIBLE_PORTS_AFTER_UPLOAD=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-05 18:48:31.353 ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_AFTER_UPLOAD_END
+2026-06-05 18:48:31.356 POST_UPLOAD_DELAY_SECONDS=2
+2026-06-05 18:48:33.417 WAIT_PORT_OK=True SEEN=True PORTS=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-05 18:49:53.584 CAPTURE_STATUS=SERIAL_TIMEOUT LINES=0 START=False END=False MATCHES=0
+2026-06-05 18:49:53.586 RETRY_AFTER_STATUS=SERIAL_TIMEOUT
+2026-06-05 18:49:55.603 ATTEMPT=2
+2026-06-05 18:49:55.904 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-05 18:49:56.006 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn rp2040:rp2040:rpipico2 --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\tmp\hardware_validation\builds\pico2_macro_probe --port COM21 --upload D:\Programmation\tgx\tmp\hardware_validation\sketches\TgxMacroProbe
+2026-06-05 18:50:24.918 ARDUINO: Le croquis utilise 51244 octets (1%) de l'espace de stockage de programmes. Le maximum est de 4186112 octets.
+2026-06-05 18:50:24.920 ARDUINO: Les variables globales utilisent 9088 octets (1%) de mémoire dynamique, ce qui laisse 515200 octets pour les variables locales. Le maximum est de 524288 octets.
+2026-06-05 18:50:24.922 ARDUINO: Resetting COM21
+2026-06-05 18:50:24.924 ARDUINO: Converting to uf2, output size: 138752, start address: 0x2000
+2026-06-05 18:50:24.926 ARDUINO: Scanning for RP2040 devices
+2026-06-05 18:50:24.928 ARDUINO: Flashing F: (RP2350)
+2026-06-05 18:50:24.929 ARDUINO: Wrote 138752 bytes to F:/NEW.UF2
+2026-06-05 18:50:24.931 ARDUINO_EXIT_CODE=0
+2026-06-05 18:50:29.452 VISIBLE_PORTS_AFTER_UPLOAD=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-05 18:50:29.454 ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_AFTER_UPLOAD_END
+2026-06-05 18:50:29.456 POST_UPLOAD_DELAY_SECONDS=2
+2026-06-05 18:50:31.506 WAIT_PORT_OK=True SEEN=True PORTS=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-05 18:51:51.691 CAPTURE_STATUS=SERIAL_TIMEOUT LINES=0 START=False END=False MATCHES=0
+2026-06-05 18:51:51.711 FINAL_STATUS=SERIAL_TIMEOUT

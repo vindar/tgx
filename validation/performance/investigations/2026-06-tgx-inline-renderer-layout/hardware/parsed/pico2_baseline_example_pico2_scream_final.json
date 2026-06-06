@@ -1,0 +1,43 @@
+{
+    "board":  "pico2",
+    "port":  "COM21",
+    "upload_port":  "COM21",
+    "fqbn":  "rp2040:rp2040:rpipico2",
+    "sketch":  "D:\\Programmation\\tgx\\examples\\Pico_RP2040_RP2350\\scream",
+    "command":  "C:\\Users\\Vindar\\AppData\\Local\\Programs\\Arduino IDE\\resources\\app\\lib\\backend\\resources\\arduino-cli.exe compile --fqbn rp2040:rp2040:rpipico2 --libraries D:\\Programmation\\arduino\\libraries --library D:\\Programmation\\tgx --build-path D:\\Programmation\\tgx\\tmp\\hardware_validation\\builds\\pico2_baseline_example_pico2_scream_final --port COM21 --upload D:\\Programmation\\tgx\\examples\\Pico_RP2040_RP2350\\scream",
+    "start_time":  "2026-06-05T22:45:50.5893576+02:00",
+    "end_time":  "2026-06-05T22:47:44.4868157+02:00",
+    "upload_status":  "UPLOAD_OK",
+    "serial_status":  "SUCCESS",
+    "run_status":  "SUCCESS",
+    "attempts":  1,
+    "telemetry_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\telemetry\\pico2_baseline_example_pico2_scream_final.txt",
+    "log_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\logs\\pico2_baseline_example_pico2_scream_final.log",
+    "metadata_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\parsed\\pico2_baseline_example_pico2_scream_final.json",
+    "captured_lines":  129,
+    "start_marker_seen":  true,
+    "completion_marker_seen":  true,
+    "parse_mode":  "example",
+    "parse_succeeded":  true,
+    "parsed_global_scores":  null,
+    "parsed_subtests":  null,
+    "parsed_telemetry_rows":  59,
+    "visible_ports_before":  [
+                                 "COM10",
+                                 "COM21",
+                                 "COM28",
+                                 "COM3",
+                                 "COM5",
+                                 "COM6",
+                                 "COM7"
+                             ],
+    "visible_ports_after":  [
+                                "COM10",
+                                "COM21",
+                                "COM28",
+                                "COM3",
+                                "COM5",
+                                "COM6",
+                                "COM7"
+                            ]
+}

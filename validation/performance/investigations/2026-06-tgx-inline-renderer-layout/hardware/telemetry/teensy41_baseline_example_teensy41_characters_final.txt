@@ -1,0 +1,119 @@
+
+[TGX scene] cycle=1 scene=nanosuit_v2
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=50.40 frame_avg_us=19850.0 frame_min_us=18337 frame_max_us=43346 frames=51
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=50.75 frame_avg_us=19697.1 frame_min_us=18510 frame_max_us=20389 frames=51
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=51.13 frame_avg_us=19549.9 frame_min_us=18291 frame_max_us=20305 frames=52
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=51.79 frame_avg_us=19319.6 frame_min_us=18135 frame_max_us=20045 frames=52
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=51.59 frame_avg_us=19380.9 frame_min_us=18434 frame_max_us=19956 frames=52
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=50.65 frame_avg_us=19749.2 frame_min_us=18480 frame_max_us=20395 frames=51
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=48.95 frame_avg_us=20425.4 frame_min_us=19223 frame_max_us=21010 frames=49
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=47.71 frame_avg_us=20960.9 frame_min_us=19212 frame_max_us=22704 frames=48
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=47.11 frame_avg_us=21211.7 frame_min_us=20692 frame_max_us=21646 frames=48
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=45.14 frame_avg_us=22160.8 frame_min_us=20601 frame_max_us=23324 frames=46
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=45.41 frame_avg_us=22024.1 frame_min_us=20353 frame_max_us=23455 frames=46
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=47.29 frame_avg_us=21149.7 frame_min_us=20790 frame_max_us=21534 frames=48
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=47.15 frame_avg_us=21202.0 frame_min_us=20577 frame_max_us=21655 frames=48
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=44.87 frame_avg_us=22285.5 frame_min_us=20639 frame_max_us=23353 frames=45
+
+[TGX telemetry] cycle=1 scene=nanosuit_v2 fps=46.72 frame_avg_us=21398.5 frame_min_us=19093 frame_max_us=23220 frames=47
+
+[TGX scene] cycle=2 scene=elementalist_v2
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=67.73 frame_avg_us=14865.2 frame_min_us=14171 frame_max_us=20991 frames=68
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=66.14 frame_avg_us=15123.6 frame_min_us=14309 frame_max_us=15756 frames=67
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=69.17 frame_avg_us=14449.3 frame_min_us=13021 frame_max_us=15022 frames=70
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=70.86 frame_avg_us=14108.5 frame_min_us=13097 frame_max_us=14834 frames=71
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=67.73 frame_avg_us=14768.2 frame_min_us=14150 frame_max_us=15240 frames=68
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=66.14 frame_avg_us=15121.6 frame_min_us=14312 frame_max_us=15791 frames=67
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=61.08 frame_avg_us=16363.6 frame_min_us=14428 frame_max_us=17421 frames=62
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=52.99 frame_avg_us=18869.6 frame_min_us=16386 frame_max_us=20120 frames=54
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=50.95 frame_avg_us=19643.5 frame_min_us=19162 frame_max_us=20056 frames=51
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=54.40 frame_avg_us=18378.6 frame_min_us=17263 frame_max_us=19659 frames=55
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=53.89 frame_avg_us=18553.9 frame_min_us=17590 frame_max_us=19422 frames=54
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=51.64 frame_avg_us=19368.0 frame_min_us=18233 frame_max_us=19937 frames=52
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=50.90 frame_avg_us=19639.9 frame_min_us=19165 frame_max_us=20068 frames=51
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=54.46 frame_avg_us=18357.7 frame_min_us=17303 frame_max_us=19637 frames=55
+
+[TGX telemetry] cycle=2 scene=elementalist_v2 fps=55.67 frame_avg_us=17966.9 frame_min_us=15789 frame_max_us=19025 frames=56
+
+[TGX scene] cycle=3 scene=sinbad_v2
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=52.53 frame_avg_us=19168.4 frame_min_us=16512 frame_max_us=26108 frames=53
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=55.56 frame_avg_us=17993.4 frame_min_us=16635 frame_max_us=18560 frames=56
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=56.16 frame_avg_us=17809.2 frame_min_us=16595 frame_max_us=18478 frames=57
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=51.59 frame_avg_us=19396.3 frame_min_us=16974 frame_max_us=20545 frames=52
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=52.89 frame_avg_us=18902.3 frame_min_us=16507 frame_max_us=20565 frames=53
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=55.39 frame_avg_us=18054.4 frame_min_us=16625 frame_max_us=18570 frames=56
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=51.00 frame_avg_us=19594.9 frame_min_us=18470 frame_max_us=19968 frames=51
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=36.63 frame_avg_us=27292.5 frame_min_us=20299 frame_max_us=30982 frames=37
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=35.79 frame_avg_us=27955.0 frame_min_us=23910 frame_max_us=30626 frames=36
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=39.53 frame_avg_us=25302.8 frame_min_us=23302 frame_max_us=26674 frames=40
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=40.67 frame_avg_us=24579.4 frame_min_us=22137 frame_max_us=26635 frames=41
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=33.53 frame_avg_us=29825.9 frame_min_us=26301 frame_max_us=31246 frames=34
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=36.20 frame_avg_us=27615.1 frame_min_us=23752 frame_max_us=30465 frames=37
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=39.33 frame_avg_us=25422.6 frame_min_us=23217 frame_max_us=26727 frames=40
+
+[TGX telemetry] cycle=3 scene=sinbad_v2 fps=44.16 frame_avg_us=22661.3 frame_min_us=19390 frame_max_us=26072 frames=45
+
+[TGX scene] cycle=4 scene=cyborg_v2
+
+[TGX telemetry] cycle=4 scene=cyborg_v2 fps=56.38 frame_avg_us=17776.7 frame_min_us=15281 frame_max_us=21314 frames=57
+
+[TGX telemetry] cycle=4 scene=cyborg_v2 fps=62.25 frame_avg_us=16054.6 frame_min_us=15287 frame_max_us=16609 frames=63
+
+[TGX telemetry] cycle=4 scene=cyborg_v2 fps=62.13 frame_avg_us=16100.1 frame_min_us=15367 frame_max_us=16714 frames=63
+
+[TGX telemetry] cycle=4 scene=cyborg_v2 fps=55.61 frame_avg_us=17972.2 frame_min_us=15480 frame_max_us=18954 frames=56
+
+[TGX telemetry] cycle=4 scene=cyborg_v2 fps=56.94 frame_avg_us=17568.7 frame_min_us=15251 frame_max_us=18982 frames=57
+
+[TGX telemetry] cycle=4 scene=cyborg_v2 fps=62.25 frame_avg_us=16069.3 frame_min_us=15333 frame_max_us=16619 frames=63
+
+[TGX telemetry] cycle=4 scene=cyborg_v2 fps=57.26 frame_avg_us=17448.7 frame_min_us=15831 frame_max_us=18194 frames=58
+
+[TGX telemetry] cycle=4 scene=cyborg_v2 fps=49.85 frame_avg_us=20076.7 frame_min_us=18246 frame_max_us=22338 frames=50
+
+[TGX telemetry] cycle=4 scene=cyborg_v2 fps=48.95 frame_avg_us=20421.3 frame_min_us=18588 frame_max_us=21587 frames=49
+
+[TGX telemetry] cycle=4 scene=cyborg_v2 fps=43.91 frame_avg_us=22767.4 frame_min_us=18377 frame_max_us=24573 frames=44
+

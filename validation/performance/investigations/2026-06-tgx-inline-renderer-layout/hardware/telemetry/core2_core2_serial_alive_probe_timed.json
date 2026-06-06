@@ -1,0 +1,22 @@
+[
+    {
+        "t_ms":  891,
+        "line":  "?9?\b\u0011?0??N?.?j1?9\u001c?z?!??,?HTGX_HW_PROBE_BEGIN"
+    },
+    {
+        "t_ms":  897,
+        "line":  "BOARD_MACRO=ESP32"
+    },
+    {
+        "t_ms":  898,
+        "line":  "MILLIS=236"
+    },
+    {
+        "t_ms":  909,
+        "line":  "TGX_HW_PROBE_OK"
+    },
+    {
+        "t_ms":  910,
+        "line":  "TGX_HW_PROBE_END"
+    }
+]

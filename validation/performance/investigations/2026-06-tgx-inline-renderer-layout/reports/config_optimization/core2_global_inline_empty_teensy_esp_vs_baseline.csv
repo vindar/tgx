@@ -1,0 +1,109 @@
+board,baseline,variant,score_index,renderer_size,subtest,baseline_fps,variant_fps,pct_delta
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Ribbon strip,263.48,118.79,-54.91
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Ribbon strip,137.80,82.72,-39.97
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib tri fast,536.48,371.21,-30.81
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire rib tri fast,387.99,293.55,-24.34
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha (clipped),24.82,18.93,-23.73
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny (far),122.10,93.68,-23.28
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny (farclip),118.54,91.40,-22.90
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 (far),35.16,27.17,-22.72
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Bunny (far),106.18,82.21,-22.57
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha (far),16.24,12.58,-22.54
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha (farclip),15.94,12.36,-22.46
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 (farclip),34.33,26.64,-22.40
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Bunny (farclip),105.11,81.92,-22.06
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha (close),18.86,14.71,-22.00
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib strip fast,763.29,595.55,-21.98
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Buddha (farclip),15.41,12.08,-21.61
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),R2D2 (far),32.12,25.21,-21.51
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Buddha (far),15.57,12.23,-21.45
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),R2D2 (farclip),31.98,25.15,-21.36
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Buddha (clipped),20.96,16.49,-21.33
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire sphere fast,1376.94,1090.36,-20.81
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha ORTHO,14.21,11.33,-20.27
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Ribbon quads,280.47,224.75,-19.87
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib quad fast,732.00,587.67,-19.72
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny FLAT,114.43,92.63,-19.05
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Buddha (close),14.77,12.01,-18.69
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,68.25,55.69,-18.40
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha FLAT,14.90,12.19,-18.19
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire sphere fast,1153.24,945.18,-18.04
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire rib strip fast,596.61,489.33,-17.98
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,22.27,18.28,-17.92
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny GOURAUD,93.50,76.98,-17.67
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha GOURAUD,12.98,10.70,-17.57
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Buddha ORTHO,12.01,9.90,-17.57
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Buddha FLAT,13.24,10.97,-17.15
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,27.67,22.96,-17.02
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire bunny fast,172.42,144.00,-16.48
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire rib quad fast,582.28,487.12,-16.34
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Bunny FLAT,91.68,76.88,-16.14
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Sphere direct GOUR,286.39,240.48,-16.03
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 FLAT,32.75,27.55,-15.88
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire sphere thick,44.18,37.22,-15.75
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Buddha GOURAUD,11.06,9.34,-15.55
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Grid near clip TEX,160.32,135.61,-15.41
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire bunny fast,153.68,130.82,-14.88
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Bunny TEX_NEAREST,40.23,34.43,-14.42
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny (close),57.27,49.14,-14.20
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Bunny GOURAUD,67.40,57.85,-14.17
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire sphere thick,35.35,30.37,-14.09
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Ribbon triangles,212.34,182.79,-13.92
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire bunny AA,56.55,48.77,-13.76
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,19.73,17.02,-13.74
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),R2D2 GOURAUD,20.89,18.02,-13.74
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Point cloud dots,375.71,324.21,-13.71
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),R2D2 TEX_NEAREST,13.87,11.97,-13.70
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),R2D2 FLAT,26.67,23.06,-13.54
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,72.50,62.69,-13.53
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Ribbon quads,142.95,123.88,-13.34
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Point cloud dots,354.28,308.56,-12.91
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire bunny thick,4.00,3.50,-12.50
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Point cloud pixels,2092.05,1839.36,-12.08
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Sphere direct TEX,141.85,124.79,-12.03
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Point cloud pixels,2092.78,1841.34,-12.01
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire bunny thick,3.67,3.23,-11.99
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,59.05,52.15,-11.69
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire bunny AA,46.70,41.28,-11.61
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib strip thick,16.23,14.39,-11.34
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 (close),18.90,16.82,-11.01
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Grid small TEX,147.94,131.98,-10.79
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Ribbon triangles,122.67,109.86,-10.44
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire rib strip thick,13.30,11.96,-10.08
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib quad thick,16.23,14.62,-9.92
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib tri thick,10.15,9.18,-9.56
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Grid near clip TEX,53.45,48.43,-9.39
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Bunny (close),19.85,18.02,-9.22
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Sphere direct GOUR,101.56,92.22,-9.20
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire rib quad thick,13.32,12.11,-9.08
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib tri AA,114.49,104.51,-8.72
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Bunny ORTHO TEX,47.63,43.50,-8.67
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire rib tri thick,8.03,7.34,-8.59
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire sphere AA,425.03,391.68,-7.85
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Grid small TEX,55.42,51.07,-7.85
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Sphere direct TEX,41.56,38.30,-7.84
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),R2D2 TEX_BILINEAR,11.40,10.53,-7.63
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib strip AA,189.01,175.24,-7.29
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire rib tri AA,78.69,73.84,-6.16
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib quad AA,188.92,177.50,-6.04
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Bunny TEX_BILINEAR,31.87,30.08,-5.62
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire sphere AA,297.59,280.99,-5.58
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire rib strip AA,135.95,128.64,-5.38
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire cube thick,375.73,355.90,-5.28
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire cube thick,584.11,554.02,-5.15
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Vertex color direct,703.32,669.53,-4.80
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire rib quad AA,136.09,130.02,-4.46
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Vertex color direct,184.98,177.50,-4.04
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Cube direct TEX,86.10,82.81,-3.82
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Cube direct TEX,21.79,20.96,-3.81
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),R2D2 (close),7.30,7.04,-3.56
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire cube AA,4054.74,3960.40,-2.33
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1327.58,1299.55,-2.11
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Cube direct FLAT,659.45,646.24,-2.00
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire cube AA,2546.96,2509.41,-1.47
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Large tris FLAT Z,356.43,353.59,-0.80
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Cube direct FLAT,175.10,173.90,-0.69
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Grid small FLAT,180.81,186.58,3.19
+core2,baseline_head_run1,global_inline_empty_teensy_esp,2,200 x 200 (large for this target),Wire cube fast,7897.33,8205.13,3.90
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Grid small FLAT,285.79,303.29,6.12
+core2,baseline_head_run1,global_inline_empty_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire cube fast,9334.89,10012.52,7.26

@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+1651188	  12288	 231764	1895240	 1ceb48	tmp\config_optimization\builds\pico2_rp2350_fast_math_off_v2\benchmark.ino.elf

@@ -1,0 +1,94 @@
+diff --git a/src/Shaders.h b/src/Shaders.h
+index 5108fa9..9ab9388 100644
+--- a/src/Shaders.h
++++ b/src/Shaders.h
+@@ -415,6 +415,72 @@ namespace tgx
+         const RasterizerParams<color_t, color_t, ZBUFFER_t> & data)
+         {
+         int raster_type = data.shader_type;
++#if TGX_RP2350_SHADER_SELECT_FASTPATH
++        if constexpr (TGX_SHADER_HAS_ZBUFFER(SHADER_FLAGS_ENABLED))
++            {
++            switch (raster_type)
++                {
++                case (SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD):
++                    if constexpr (TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
++                        {
++                        uber_shader<color_t, ZBUFFER_t, true, true, false, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
++                        return;
++                        }
++                    break;
++
++                case (SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT):
++                    if constexpr (TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
++                        {
++                        uber_shader<color_t, ZBUFFER_t, true, false, false, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
++                        return;
++                        }
++                    break;
++
++                case (SHADER_ORTHO | SHADER_ZBUFFER | SHADER_GOURAUD):
++                    if constexpr (TGX_SHADER_HAS_ORTHO(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
++                        {
++                        uber_shader<color_t, ZBUFFER_t, true, true, false, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
++                        return;
++                        }
++                    break;
++
++                case (SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2):
++                    if constexpr (TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
++                        {
++                        uber_shader<color_t, ZBUFFER_t, true, true, true, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
++                        return;
++                        }
++                    break;
++
++                case (SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_CLAMP):
++                    if constexpr (TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED))
++                        {
++                        uber_shader<color_t, ZBUFFER_t, true, true, true, false, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
++                        return;
++                        }
++                    break;
++
++                case (SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2):
++                    if constexpr (TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
++                        {
++                        uber_shader<color_t, ZBUFFER_t, true, true, true, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
++                        return;
++                        }
++                    break;
++
++                case (SHADER_ORTHO | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2):
++                    if constexpr (TGX_SHADER_HAS_ORTHO(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
++                        {
++                        uber_shader<color_t, ZBUFFER_t, true, true, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
++                        return;
++                        }
++                    break;
++
++                default:
++                    break;
++                }
++            }
++#endif
+         if (TGX_SHADER_HAS_ZBUFFER(SHADER_FLAGS_ENABLED) && (TGX_SHADER_HAS_ZBUFFER(raster_type)))
+             { // USING ZBUFFER
+             if (TGX_SHADER_HAS_ORTHO(SHADER_FLAGS_ENABLED) && (TGX_SHADER_HAS_ORTHO(raster_type)))
+diff --git a/src/tgx_config.h b/src/tgx_config.h
+index 93dcbd9..2901fc3 100644
+--- a/src/tgx_config.h
++++ b/src/tgx_config.h
+@@ -1,3 +1,12 @@
++#ifndef TGX_RP2350_SHADER_SELECT_FASTPATH
++    #if (defined(ARDUINO_ARCH_RP2350) || defined(PICO_RP2350) || defined(TARGET_RP2350))
++        #define TGX_RP2350_SHADER_SELECT_FASTPATH 1
++    #else
++        #define TGX_RP2350_SHADER_SELECT_FASTPATH 0
++    #endif
++#endif
++
++
+ /**
+  * @file tgx_config.h
+  * Configuration file depending on the architecture

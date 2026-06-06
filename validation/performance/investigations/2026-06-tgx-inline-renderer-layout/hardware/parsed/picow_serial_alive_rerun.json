@@ -1,0 +1,43 @@
+{
+    "board":  "picow",
+    "port":  "COM28",
+    "upload_port":  "COM28",
+    "fqbn":  "rp2040:rp2040:rpipicow",
+    "sketch":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\sketches\\SerialAliveProbe",
+    "command":  "C:\\Users\\Vindar\\AppData\\Local\\Programs\\Arduino IDE\\resources\\app\\lib\\backend\\resources\\arduino-cli.exe compile --fqbn rp2040:rp2040:rpipicow --libraries D:\\Programmation\\arduino\\libraries --library D:\\Programmation\\tgx --build-path D:\\Programmation\\tgx\\tmp\\hardware_validation\\builds\\picow_serial_alive_rerun --port COM28 --upload D:\\Programmation\\tgx\\tmp\\hardware_validation\\sketches\\SerialAliveProbe",
+    "start_time":  "2026-06-05T19:05:31.5089199+02:00",
+    "end_time":  "2026-06-05T19:06:03.8394970+02:00",
+    "upload_status":  "UPLOAD_FAILED",
+    "serial_status":  "",
+    "run_status":  "UPLOAD_FAILED",
+    "attempts":  1,
+    "telemetry_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\telemetry\\picow_serial_alive_rerun.txt",
+    "log_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\logs\\picow_serial_alive_rerun.log",
+    "metadata_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\parsed\\picow_serial_alive_rerun.json",
+    "captured_lines":  0,
+    "start_marker_seen":  false,
+    "completion_marker_seen":  false,
+    "parse_mode":  "probe",
+    "parse_succeeded":  true,
+    "parsed_global_scores":  0,
+    "parsed_subtests":  0,
+    "parsed_telemetry_rows":  0,
+    "visible_ports_before":  [
+                                 "COM10",
+                                 "COM21",
+                                 "COM28",
+                                 "COM3",
+                                 "COM5",
+                                 "COM6",
+                                 "COM7"
+                             ],
+    "visible_ports_after":  [
+                                "COM10",
+                                "COM21",
+                                "COM28",
+                                "COM3",
+                                "COM5",
+                                "COM6",
+                                "COM7"
+                            ]
+}

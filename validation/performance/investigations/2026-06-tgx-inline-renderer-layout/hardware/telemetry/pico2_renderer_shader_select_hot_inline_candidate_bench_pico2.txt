@@ -1,0 +1,235 @@
+--------------------------------------
+TGX Benchmark for [RP2350]
+--------------------------------------
+
+Profile: full real meshes + synthetic stress scenes
+Real meshes: Buddha 20k triangles, R2D2 textured 8k triangles, Bunny textured 2.1k triangles
+Shaders: flat, gouraud, nearest/bilinear texture, perspective/ortho, near/far clipping
+Synthetic scenes: large triangles, small-triangle grid, triangle strip/triangles/quads ribbon, clipped grid, direct cube/sphere, vertex colors, pixels/dots, wireframe
+Renderer sizes:
+  - 100x100: small / vertex-heavy
+  - 200x200: medium / balanced
+  - 320x240: large / ILI9341
+
+
+-------------------------
+RENDERER SIZE: 100 x 100 (small / vertex-heavy)
+BASE FRAMES: 16
+-------------------------
+Buddha GOURAUD    [.........]  frames: 16	 min: 78269 us	 max: 128272 us	 avg: 104701.38 us	 stddev: 18730.00 us	 fps: 9.55
+Buddha FLAT      [.........]  frames: 16	 min: 64221 us	 max: 104371 us	 avg: 85576.62 us	 stddev: 15185.37 us	 fps: 11.69
+Buddha ORTHO     [.........]  frames: 16	 min: 78422 us	 max: 123582 us	 avg: 102911.38 us	 stddev: 16608.54 us	 fps: 9.72
+Buddha (close)    [.........]  frames: 16	 min: 55314 us	 max: 94696 us	 avg: 74291.62 us	 stddev: 14834.54 us	 fps: 13.46
+Buddha (clipped)  [.........]  frames: 16	 min: 40771 us	 max: 78356 us	 avg: 59394.44 us	 stddev: 12511.36 us	 fps: 16.84
+Buddha (far)      [.........]  frames: 16	 min: 64617 us	 max: 105581 us	 avg: 86759.00 us	 stddev: 15067.19 us	 fps: 11.53
+Buddha (farclip)  [.........]  frames: 16	 min: 65768 us	 max: 115296 us	 avg: 94636.06 us	 stddev: 17877.28 us	 fps: 10.57
+total:  frames: 480	 min: 40771 us	 max: 128272 us	 avg: 91526.16 us	 stddev: 20439.89 us	 fps: 10.93
+-> FINAL SCORE : 10.93 fps
+
+R2D2 GOURAUD         [.........]  frames: 16	 min: 45254 us	 max: 54940 us	 avg: 50580.44 us	 stddev: 3195.58 us	 fps: 19.77
+R2D2 FLAT            [.........]  frames: 16	 min: 36373 us	 max: 44093 us	 avg: 40584.56 us	 stddev: 2614.93 us	 fps: 24.64
+R2D2 TEX_NEAREST    [.........]  frames: 16	 min: 58655 us	 max: 71439 us	 avg: 65793.88 us	 stddev: 3976.97 us	 fps: 15.20
+R2D2 TEX_BILINEAR   [.........]  frames: 16	 min: 75469 us	 max: 93763 us	 avg: 85399.75 us	 stddev: 5810.33 us	 fps: 11.71
+R2D2 (close)        [.........]  frames: 16	 min: 67449 us	 max: 114887 us	 avg: 87477.44 us	 stddev: 16974.76 us	 fps: 11.43
+R2D2 (far)          [.........]  frames: 16	 min: 50154 us	 max: 63576 us	 avg: 58397.94 us	 stddev: 3876.53 us	 fps: 17.12
+R2D2 (farclip)      [.........]  frames: 16	 min: 62285 us	 max: 84638 us	 avg: 72767.62 us	 stddev: 7130.89 us	 fps: 13.74
+total:  frames: 688	 min: 36373 us	 max: 114887 us	 avg: 63991.86 us	 stddev: 17950.66 us	 fps: 15.63
+-> FINAL SCORE : 15.63 fps
+
+Bunny GOURAUD       [.........]  frames: 16	 min: 14264 us	 max: 16615 us	 avg: 15385.25 us	 stddev: 788.28 us	 fps: 65.00
+Bunny FLAT          [.........]  frames: 16	 min: 11203 us	 max: 13160 us	 avg: 12145.25 us	 stddev: 652.85 us	 fps: 82.34
+Bunny TEX_NEAREST  [.........]  frames: 16	 min: 20448 us	 max: 23181 us	 avg: 21622.69 us	 stddev: 929.68 us	 fps: 46.25
+Bunny TEX_BILINEAR [.........]  frames: 16	 min: 29286 us	 max: 33110 us	 avg: 30923.62 us	 stddev: 1303.29 us	 fps: 32.34
+Bunny ORTHO TEX    [.........]  frames: 16	 min: 34020 us	 max: 37629 us	 avg: 35928.81 us	 stddev: 1234.67 us	 fps: 27.83
+Bunny (close)       [.........]  frames: 16	 min: 21859 us	 max: 25611 us	 avg: 23102.88 us	 stddev: 1133.78 us	 fps: 43.28
+Bunny (far)         [.........]  frames: 16	 min: 12223 us	 max: 14598 us	 avg: 13304.44 us	 stddev: 740.51 us	 fps: 75.16
+Bunny (farclip)     [.........]  frames: 16	 min: 11935 us	 max: 20468 us	 avg: 17276.56 us	 stddev: 2569.34 us	 fps: 57.88
+total:  frames: 720	 min: 11203 us	 max: 37629 us	 avg: 20979.18 us	 stddev: 7553.94 us	 fps: 47.67
+-> FINAL SCORE : 47.67 fps
+
+Large tris FLAT Z    [.......]  frames: 8	 min: 134 us	 max: 1564 us	 avg: 900.50 us	 stddev: 465.77 us	 fps: 1110.49
+Grid small FLAT      [.......]  frames: 8	 min: 717 us	 max: 6313 us	 avg: 3390.62 us	 stddev: 2365.68 us	 fps: 294.93
+Grid small TEX       [.......]  frames: 8	 min: 748 us	 max: 16811 us	 avg: 7261.12 us	 stddev: 6596.21 us	 fps: 137.72
+Ribbon triangles    [.......]  frames: 8	 min: 772 us	 max: 9977 us	 avg: 5978.25 us	 stddev: 4049.51 us	 fps: 167.27
+Ribbon strip        [.......]  frames: 8	 min: 634 us	 max: 8808 us	 avg: 5257.00 us	 stddev: 3572.85 us	 fps: 190.22
+Ribbon quads        [.......]  frames: 8	 min: 424 us	 max: 8867 us	 avg: 5214.00 us	 stddev: 3721.43 us	 fps: 191.79
+Wire rib tri fast    [.......]  frames: 8	 min: 411 us	 max: 2963 us	 avg: 1903.75 us	 stddev: 1154.89 us	 fps: 525.28
+Wire rib strip fast  [.......]  frames: 8	 min: 374 us	 max: 2181 us	 avg: 1415.50 us	 stddev: 807.69 us	 fps: 706.46
+Wire rib quad fast   [.......]  frames: 8	 min: 272 us	 max: 2333 us	 avg: 1446.00 us	 stddev: 911.42 us	 fps: 691.56
+Wire rib tri AA      [.......]  frames: 8	 min: 417 us	 max: 17496 us	 avg: 9274.38 us	 stddev: 7023.04 us	 fps: 107.82
+Wire rib strip AA    [.......]  frames: 8	 min: 560 us	 max: 9963 us	 avg: 5615.12 us	 stddev: 3966.68 us	 fps: 178.09
+Wire rib quad AA     [.......]  frames: 8	 min: 260 us	 max: 10013 us	 avg: 5489.50 us	 stddev: 4102.90 us	 fps: 182.17
+Wire rib tri thick   [.......]  frames: 8	 min: 436 us	 max: 183480 us	 avg: 100600.75 us	 stddev: 78525.03 us	 fps: 9.94
+Wire rib strip thick [.......]  frames: 8	 min: 308 us	 max: 117744 us	 avg: 65307.62 us	 stddev: 50876.65 us	 fps: 15.31
+Wire rib quad thick  [.......]  frames: 8	 min: 269 us	 max: 158207 us	 avg: 89829.75 us	 stddev: 69820.61 us	 fps: 11.13
+Grid near clip TEX   [.......]  frames: 8	 min: 761 us	 max: 15755 us	 avg: 7236.00 us	 stddev: 6707.82 us	 fps: 138.20
+Cube direct FLAT     [.......]  frames: 8	 min: 1671 us	 max: 2066 us	 avg: 1846.88 us	 stddev: 112.77 us	 fps: 541.46
+Cube direct TEX      [.......]  frames: 8	 min: 15572 us	 max: 17963 us	 avg: 16513.12 us	 stddev: 720.71 us	 fps: 60.56
+Sphere direct GOUR   [.......]  frames: 8	 min: 5936 us	 max: 6481 us	 avg: 6116.62 us	 stddev: 180.82 us	 fps: 163.49
+Sphere direct TEX    [.......]  frames: 8	 min: 8241 us	 max: 8657 us	 avg: 8396.25 us	 stddev: 128.23 us	 fps: 119.10
+Vertex color direct  [.......]  frames: 8	 min: 25 us	 max: 4560 us	 avg: 1677.00 us	 stddev: 1882.04 us	 fps: 596.30
+Point cloud pixels   [.......]  frames: 8	 min: 384 us	 max: 490 us	 avg: 403.12 us	 stddev: 33.18 us	 fps: 2480.62
+Point cloud dots     [.......]  frames: 8	 min: 2408 us	 max: 2753 us	 avg: 2529.62 us	 stddev: 106.18 us	 fps: 395.32
+Wire cube fast       [.......]  frames: 8	 min: 124 us	 max: 235 us	 avg: 167.12 us	 stddev: 33.87 us	 fps: 5983.55
+Wire cube AA         [.......]  frames: 8	 min: 165 us	 max: 544 us	 avg: 331.75 us	 stddev: 114.87 us	 fps: 3014.32
+Wire cube thick      [.......]  frames: 8	 min: 1117 us	 max: 4055 us	 avg: 2362.38 us	 stddev: 928.97 us	 fps: 423.30
+Wire sphere fast     [.......]  frames: 8	 min: 665 us	 max: 863 us	 avg: 745.62 us	 stddev: 63.95 us	 fps: 1341.16
+Wire sphere AA       [.......]  frames: 8	 min: 2351 us	 max: 2764 us	 avg: 2582.75 us	 stddev: 152.58 us	 fps: 387.18
+Wire sphere thick    [.......]  frames: 8	 min: 26273 us	 max: 30008 us	 avg: 28045.62 us	 stddev: 1365.25 us	 fps: 35.66
+Wire bunny fast      [.......]  frames: 8	 min: 7242 us	 max: 8382 us	 avg: 7781.38 us	 stddev: 405.09 us	 fps: 128.51
+Wire bunny AA        [.......]  frames: 8	 min: 19794 us	 max: 22130 us	 avg: 20895.25 us	 stddev: 835.83 us	 fps: 47.86
+Wire bunny thick     [.......]  frames: 8	 min: 264969 us	 max: 298951 us	 avg: 283795.75 us	 stddev: 13415.18 us	 fps: 3.52
+total:  frames: 664	 min: 25 us	 max: 298951 us	 avg: 11597.30 us	 stddev: 36516.12 us	 fps: 86.23
+-> SYNTHETIC SCORE : 86.23 fps
+
+*** BENCHMARK FINAL SCORE: 23.04 fps ***
+
+
+-------------------------
+RENDERER SIZE: 200 x 200 (medium / balanced)
+BASE FRAMES: 16
+-------------------------
+Buddha GOURAUD    [.........]  frames: 16	 min: 91864 us	 max: 146800 us	 avg: 120596.19 us	 stddev: 20722.45 us	 fps: 8.29
+Buddha FLAT      [.........]  frames: 16	 min: 73512 us	 max: 117138 us	 avg: 96748.88 us	 stddev: 16547.41 us	 fps: 10.34
+Buddha ORTHO     [.........]  frames: 16	 min: 90960 us	 max: 142824 us	 avg: 118699.25 us	 stddev: 19007.46 us	 fps: 8.42
+Buddha (close)    [.........]  frames: 16	 min: 69534 us	 max: 113337 us	 avg: 90185.38 us	 stddev: 15673.04 us	 fps: 11.09
+Buddha (clipped)  [.........]  frames: 16	 min: 40837 us	 max: 90962 us	 avg: 66970.31 us	 stddev: 15478.81 us	 fps: 14.93
+Buddha (far)      [.........]  frames: 16	 min: 67370 us	 max: 109142 us	 avg: 89901.94 us	 stddev: 15255.22 us	 fps: 11.12
+Buddha (farclip)  [.........]  frames: 16	 min: 68337 us	 max: 119469 us	 avg: 97878.44 us	 stddev: 18214.39 us	 fps: 10.22
+total:  frames: 480	 min: 40837 us	 max: 146800 us	 avg: 103865.33 us	 stddev: 23130.48 us	 fps: 9.63
+-> FINAL SCORE : 9.63 fps
+
+R2D2 GOURAUD         [.........]  frames: 16	 min: 56830 us	 max: 68780 us	 avg: 63719.56 us	 stddev: 3874.99 us	 fps: 15.69
+R2D2 FLAT            [.........]  frames: 16	 min: 44227 us	 max: 53395 us	 avg: 49447.81 us	 stddev: 3058.81 us	 fps: 20.22
+R2D2 TEX_NEAREST    [.........]  frames: 16	 min: 87741 us	 max: 107513 us	 avg: 99694.19 us	 stddev: 5912.18 us	 fps: 10.03
+R2D2 TEX_BILINEAR   [.........]  frames: 16	 min: 120827 us	 max: 151993 us	 avg: 138985.12 us	 stddev: 9291.69 us	 fps: 7.20
+R2D2 (close)        [.........]  frames: 16	 min: 138054 us	 max: 292395 us	 avg: 198846.50 us	 stddev: 56346.96 us	 fps: 5.03
+R2D2 (far)          [.........]  frames: 16	 min: 71455 us	 max: 89382 us	 avg: 81849.88 us	 stddev: 5224.16 us	 fps: 12.22
+R2D2 (farclip)      [.........]  frames: 16	 min: 82185 us	 max: 109894 us	 avg: 94058.69 us	 stddev: 9287.87 us	 fps: 10.63
+total:  frames: 688	 min: 44227 us	 max: 292395 us	 avg: 98332.09 us	 stddev: 45107.22 us	 fps: 10.17
+-> FINAL SCORE : 10.17 fps
+
+Bunny GOURAUD       [.........]  frames: 16	 min: 18835 us	 max: 21572 us	 avg: 19919.69 us	 stddev: 891.96 us	 fps: 50.20
+Bunny FLAT          [.........]  frames: 16	 min: 13872 us	 max: 15944 us	 avg: 14840.81 us	 stddev: 690.52 us	 fps: 67.38
+Bunny TEX_NEAREST  [.........]  frames: 16	 min: 33033 us	 max: 37714 us	 avg: 35019.38 us	 stddev: 1448.15 us	 fps: 28.56
+Bunny TEX_BILINEAR [.........]  frames: 16	 min: 46908 us	 max: 55964 us	 avg: 51697.00 us	 stddev: 2423.89 us	 fps: 19.34
+Bunny ORTHO TEX    [.........]  frames: 16	 min: 44692 us	 max: 48771 us	 avg: 46477.38 us	 stddev: 1484.83 us	 fps: 21.52
+Bunny (close)       [.........]  frames: 16	 min: 54614 us	 max: 66327 us	 avg: 59006.12 us	 stddev: 3004.61 us	 fps: 16.95
+Bunny (far)         [.........]  frames: 16	 min: 13955 us	 max: 16176 us	 avg: 14995.12 us	 stddev: 728.89 us	 fps: 66.69
+Bunny (farclip)     [.........]  frames: 16	 min: 13717 us	 max: 22130 us	 avg: 18934.69 us	 stddev: 2597.90 us	 fps: 52.81
+total:  frames: 720	 min: 13717 us	 max: 66327 us	 avg: 32869.80 us	 stddev: 15800.79 us	 fps: 30.42
+-> FINAL SCORE : 30.42 fps
+
+Large tris FLAT Z    [.......]  frames: 8	 min: 325 us	 max: 5360 us	 avg: 3211.12 us	 stddev: 1729.98 us	 fps: 311.42
+Grid small FLAT      [.......]  frames: 8	 min: 699 us	 max: 12270 us	 avg: 5689.12 us	 stddev: 4775.84 us	 fps: 175.77
+Grid small TEX       [.......]  frames: 8	 min: 753 us	 max: 49633 us	 avg: 18754.25 us	 stddev: 20182.43 us	 fps: 53.32
+Ribbon triangles    [.......]  frames: 8	 min: 759 us	 max: 17036 us	 avg: 10202.62 us	 stddev: 7371.08 us	 fps: 98.01
+Ribbon strip        [.......]  frames: 8	 min: 641 us	 max: 16002 us	 avg: 9479.38 us	 stddev: 6889.00 us	 fps: 105.49
+Ribbon quads        [.......]  frames: 8	 min: 434 us	 max: 16002 us	 avg: 9432.00 us	 stddev: 7036.46 us	 fps: 106.02
+Wire rib tri fast    [.......]  frames: 8	 min: 413 us	 max: 4008 us	 avg: 2430.50 us	 stddev: 1580.53 us	 fps: 411.44
+Wire rib strip fast  [.......]  frames: 8	 min: 382 us	 max: 2739 us	 avg: 1711.25 us	 stddev: 1034.48 us	 fps: 584.37
+Wire rib quad fast   [.......]  frames: 8	 min: 283 us	 max: 2883 us	 avg: 1717.88 us	 stddev: 1125.92 us	 fps: 582.11
+Wire rib tri AA      [.......]  frames: 8	 min: 424 us	 max: 27041 us	 avg: 13615.25 us	 stddev: 10620.63 us	 fps: 73.45
+Wire rib strip AA    [.......]  frames: 8	 min: 572 us	 max: 14821 us	 avg: 7822.38 us	 stddev: 5778.39 us	 fps: 127.84
+Wire rib quad AA     [.......]  frames: 8	 min: 261 us	 max: 14784 us	 avg: 7677.00 us	 stddev: 5899.76 us	 fps: 130.26
+Wire rib tri thick   [.......]  frames: 8	 min: 430 us	 max: 243443 us	 avg: 129220.38 us	 stddev: 101489.21 us	 fps: 7.74
+Wire rib strip thick [.......]  frames: 8	 min: 320 us	 max: 149392 us	 avg: 80574.12 us	 stddev: 63057.49 us	 fps: 12.41
+Wire rib quad thick  [.......]  frames: 8	 min: 272 us	 max: 188741 us	 avg: 104856.75 us	 stddev: 81750.60 us	 fps: 9.54
+Grid near clip TEX   [.......]  frames: 8	 min: 761 us	 max: 49294 us	 avg: 20522.25 us	 stddev: 22226.66 us	 fps: 48.73
+Cube direct FLAT     [.......]  frames: 8	 min: 6160 us	 max: 7208 us	 avg: 6615.25 us	 stddev: 306.57 us	 fps: 151.17
+Cube direct TEX      [.......]  frames: 8	 min: 61444 us	 max: 70202 us	 avg: 64921.62 us	 stddev: 2703.93 us	 fps: 15.40
+Sphere direct GOUR   [.......]  frames: 8	 min: 12428 us	 max: 13089 us	 avg: 12666.62 us	 stddev: 211.74 us	 fps: 78.95
+Sphere direct TEX    [.......]  frames: 8	 min: 26695 us	 max: 27340 us	 avg: 26931.00 us	 stddev: 186.65 us	 fps: 37.13
+Vertex color direct  [.......]  frames: 8	 min: 16 us	 max: 16567 us	 avg: 5715.00 us	 stddev: 6879.57 us	 fps: 174.98
+Point cloud pixels   [.......]  frames: 8	 min: 384 us	 max: 481 us	 avg: 404.75 us	 stddev: 29.35 us	 fps: 2470.66
+Point cloud dots     [.......]  frames: 8	 min: 2573 us	 max: 2817 us	 avg: 2647.62 us	 stddev: 76.01 us	 fps: 377.70
+Wire cube fast       [.......]  frames: 8	 min: 123 us	 max: 277 us	 avg: 187.38 us	 stddev: 46.74 us	 fps: 5336.89
+Wire cube AA         [.......]  frames: 8	 min: 218 us	 max: 807 us	 avg: 496.00 us	 stddev: 197.49 us	 fps: 2016.13
+Wire cube thick      [.......]  frames: 8	 min: 1440 us	 max: 5831 us	 avg: 3409.12 us	 stddev: 1406.21 us	 fps: 293.33
+Wire sphere fast     [.......]  frames: 8	 min: 789 us	 max: 1027 us	 avg: 867.38 us	 stddev: 70.50 us	 fps: 1152.90
+Wire sphere AA       [.......]  frames: 8	 min: 3308 us	 max: 3942 us	 avg: 3667.00 us	 stddev: 227.52 us	 fps: 272.70
+Wire sphere thick    [.......]  frames: 8	 min: 32253 us	 max: 37364 us	 avg: 34451.88 us	 stddev: 1895.75 us	 fps: 29.03
+Wire bunny fast      [.......]  frames: 8	 min: 7786 us	 max: 8978 us	 avg: 8404.38 us	 stddev: 421.78 us	 fps: 118.99
+Wire bunny AA        [.......]  frames: 8	 min: 23572 us	 max: 26225 us	 avg: 24908.75 us	 stddev: 877.38 us	 fps: 40.15
+Wire bunny thick     [.......]  frames: 8	 min: 290007 us	 max: 323521 us	 avg: 308824.88 us	 stddev: 13547.18 us	 fps: 3.24
+total:  frames: 664	 min: 16 us	 max: 323521 us	 avg: 19646.44 us	 stddev: 43262.07 us	 fps: 50.90
+-> SYNTHETIC SCORE : 50.90 fps
+
+*** BENCHMARK FINAL SCORE: 16.55 fps ***
+
+
+-------------------------
+RENDERER SIZE: 320 x 240 (large / ILI9341)
+BASE FRAMES: 16
+-------------------------
+Buddha GOURAUD    [.........]  frames: 16	 min: 97073 us	 max: 153026 us	 avg: 126144.19 us	 stddev: 20998.78 us	 fps: 7.93
+Buddha FLAT      [.........]  frames: 16	 min: 77068 us	 max: 121395 us	 avg: 100553.25 us	 stddev: 16781.54 us	 fps: 9.94
+Buddha ORTHO     [.........]  frames: 16	 min: 95114 us	 max: 148361 us	 avg: 123420.81 us	 stddev: 19452.51 us	 fps: 8.10
+Buddha (close)    [.........]  frames: 16	 min: 89624 us	 max: 132844 us	 avg: 110692.81 us	 stddev: 16070.04 us	 fps: 9.03
+Buddha (clipped)  [.........]  frames: 16	 min: 40226 us	 max: 105842 us	 avg: 75881.44 us	 stddev: 20728.12 us	 fps: 13.18
+Buddha (far)      [.........]  frames: 16	 min: 68980 us	 max: 111044 us	 avg: 91396.25 us	 stddev: 15353.71 us	 fps: 10.94
+Buddha (farclip)  [.........]  frames: 16	 min: 69564 us	 max: 121416 us	 avg: 99624.94 us	 stddev: 18460.34 us	 fps: 10.04
+total:  frames: 480	 min: 40226 us	 max: 153026 us	 avg: 109852.98 us	 stddev: 23384.23 us	 fps: 9.10
+-> FINAL SCORE : 9.10 fps
+
+R2D2 GOURAUD         [.........]  frames: 16	 min: 62398 us	 max: 75614 us	 avg: 70126.50 us	 stddev: 4213.34 us	 fps: 14.26
+R2D2 FLAT            [.........]  frames: 16	 min: 47912 us	 max: 57615 us	 avg: 53584.44 us	 stddev: 3225.81 us	 fps: 18.66
+R2D2 TEX_NEAREST    [.........]  frames: 16	 min: 101739 us	 max: 124933 us	 avg: 115958.88 us	 stddev: 6871.49 us	 fps: 8.62
+R2D2 TEX_BILINEAR   [.........]  frames: 16	 min: 142422 us	 max: 179166 us	 avg: 164555.06 us	 stddev: 10942.63 us	 fps: 6.08
+R2D2 (close)        [.........]  frames: 16	 min: 233247 us	 max: 540639 us	 avg: 349576.38 us	 stddev: 104462.20 us	 fps: 2.86
+R2D2 (far)          [.........]  frames: 16	 min: 79957 us	 max: 97594 us	 avg: 90215.50 us	 stddev: 5113.00 us	 fps: 11.08
+R2D2 (farclip)      [.........]  frames: 16	 min: 86599 us	 max: 119448 us	 avg: 101745.06 us	 stddev: 10044.00 us	 fps: 9.83
+total:  frames: 688	 min: 47912 us	 max: 540639 us	 avg: 121301.10 us	 stddev: 79394.66 us	 fps: 8.24
+-> FINAL SCORE : 8.24 fps
+
+Bunny GOURAUD       [.........]  frames: 16	 min: 21126 us	 max: 24085 us	 avg: 22243.88 us	 stddev: 966.98 us	 fps: 44.96
+Bunny FLAT          [.........]  frames: 16	 min: 15218 us	 max: 17379 us	 avg: 16163.88 us	 stddev: 715.53 us	 fps: 61.87
+Bunny TEX_NEAREST  [.........]  frames: 16	 min: 38475 us	 max: 44831 us	 avg: 41323.44 us	 stddev: 1821.05 us	 fps: 24.20
+Bunny TEX_BILINEAR [.........]  frames: 16	 min: 55509 us	 max: 67970 us	 avg: 62178.75 us	 stddev: 3270.16 us	 fps: 16.08
+Bunny ORTHO TEX    [.........]  frames: 16	 min: 48920 us	 max: 53248 us	 avg: 50767.88 us	 stddev: 1608.11 us	 fps: 19.70
+Bunny (close)       [.........]  frames: 16	 min: 92095 us	 max: 110707 us	 avg: 99246.69 us	 stddev: 4942.02 us	 fps: 10.08
+Bunny (far)         [.........]  frames: 16	 min: 14372 us	 max: 16568 us	 avg: 15532.69 us	 stddev: 733.86 us	 fps: 64.38
+Bunny (farclip)     [.........]  frames: 16	 min: 14085 us	 max: 22824 us	 avg: 19468.56 us	 stddev: 2644.81 us	 fps: 51.36
+total:  frames: 720	 min: 14085 us	 max: 110707 us	 avg: 40169.47 us	 stddev: 23674.34 us	 fps: 24.89
+-> FINAL SCORE : 24.89 fps
+
+Large tris FLAT Z    [.......]  frames: 8	 min: 424 us	 max: 8525 us	 avg: 4900.00 us	 stddev: 2806.88 us	 fps: 204.08
+Grid small FLAT      [.......]  frames: 8	 min: 699 us	 max: 18614 us	 avg: 7785.75 us	 stddev: 7237.39 us	 fps: 128.44
+Grid small TEX       [.......]  frames: 8	 min: 755 us	 max: 85628 us	 avg: 30145.50 us	 stddev: 34448.14 us	 fps: 33.17
+Ribbon triangles    [.......]  frames: 8	 min: 749 us	 max: 25442 us	 avg: 13799.50 us	 stddev: 10604.24 us	 fps: 72.47
+Ribbon strip        [.......]  frames: 8	 min: 629 us	 max: 24346 us	 avg: 13053.62 us	 stddev: 10136.57 us	 fps: 76.61
+Ribbon quads        [.......]  frames: 8	 min: 425 us	 max: 24690 us	 avg: 13033.75 us	 stddev: 10321.46 us	 fps: 76.72
+Wire rib tri fast    [.......]  frames: 8	 min: 413 us	 max: 4419 us	 avg: 2724.12 us	 stddev: 1794.90 us	 fps: 367.09
+Wire rib strip fast  [.......]  frames: 8	 min: 374 us	 max: 2952 us	 avg: 1853.75 us	 stddev: 1149.02 us	 fps: 539.45
+Wire rib quad fast   [.......]  frames: 8	 min: 276 us	 max: 3099 us	 avg: 1856.75 us	 stddev: 1235.14 us	 fps: 538.58
+Wire rib tri AA      [.......]  frames: 8	 min: 417 us	 max: 30846 us	 avg: 16346.50 us	 stddev: 12549.17 us	 fps: 61.18
+Wire rib strip AA    [.......]  frames: 8	 min: 559 us	 max: 16709 us	 avg: 9212.88 us	 stddev: 6774.48 us	 fps: 108.54
+Wire rib quad AA     [.......]  frames: 8	 min: 262 us	 max: 16663 us	 avg: 9037.88 us	 stddev: 6882.57 us	 fps: 110.65
+Wire rib tri thick   [.......]  frames: 8	 min: 432 us	 max: 266674 us	 avg: 146557.62 us	 stddev: 114121.28 us	 fps: 6.82
+Wire rib strip thick [.......]  frames: 8	 min: 310 us	 max: 161500 us	 avg: 90031.25 us	 stddev: 69938.06 us	 fps: 11.11
+Wire rib quad thick  [.......]  frames: 8	 min: 272 us	 max: 201078 us	 avg: 114301.62 us	 stddev: 88712.08 us	 fps: 8.75
+Grid near clip TEX   [.......]  frames: 8	 min: 754 us	 max: 88204 us	 avg: 35154.75 us	 stddev: 40239.53 us	 fps: 28.45
+Cube direct FLAT     [.......]  frames: 8	 min: 9546 us	 max: 11096 us	 avg: 10206.88 us	 stddev: 428.53 us	 fps: 97.97
+Cube direct TEX      [.......]  frames: 8	 min: 93861 us	 max: 110877 us	 avg: 101868.38 us	 stddev: 4702.26 us	 fps: 9.82
+Sphere direct GOUR   [.......]  frames: 8	 min: 16156 us	 max: 16912 us	 avg: 16417.12 us	 stddev: 234.38 us	 fps: 60.91
+Sphere direct TEX    [.......]  frames: 8	 min: 37345 us	 max: 38072 us	 avg: 37609.50 us	 stddev: 208.01 us	 fps: 26.59
+Vertex color direct  [.......]  frames: 8	 min: 27 us	 max: 24313 us	 avg: 8124.00 us	 stddev: 9918.60 us	 fps: 123.09
+Point cloud pixels   [.......]  frames: 8	 min: 393 us	 max: 454 us	 avg: 404.38 us	 stddev: 19.04 us	 fps: 2472.95
+Point cloud dots     [.......]  frames: 8	 min: 2771 us	 max: 2981 us	 avg: 2831.38 us	 stddev: 65.08 us	 fps: 353.19
+Wire cube fast       [.......]  frames: 8	 min: 146 us	 max: 285 us	 avg: 207.75 us	 stddev: 49.51 us	 fps: 4813.48
+Wire cube AA         [.......]  frames: 8	 min: 456 us	 max: 1122 us	 avg: 777.00 us	 stddev: 231.57 us	 fps: 1287.00
+Wire cube thick      [.......]  frames: 8	 min: 2688 us	 max: 7466 us	 avg: 4799.75 us	 stddev: 1640.63 us	 fps: 208.34
+Wire sphere fast     [.......]  frames: 8	 min: 833 us	 max: 1022 us	 avg: 902.12 us	 stddev: 60.06 us	 fps: 1108.49
+Wire sphere AA       [.......]  frames: 8	 min: 3700 us	 max: 4412 us	 avg: 4090.50 us	 stddev: 247.87 us	 fps: 244.47
+Wire sphere thick    [.......]  frames: 8	 min: 34502 us	 max: 39991 us	 avg: 36928.12 us	 stddev: 1959.98 us	 fps: 27.08
+Wire bunny fast      [.......]  frames: 8	 min: 7932 us	 max: 9161 us	 avg: 8589.25 us	 stddev: 435.68 us	 fps: 116.42
+Wire bunny AA        [.......]  frames: 8	 min: 25169 us	 max: 28055 us	 avg: 26528.50 us	 stddev: 934.99 us	 fps: 37.70
+Wire bunny thick     [.......]  frames: 8	 min: 300041 us	 max: 333352 us	 avg: 318345.25 us	 stddev: 13455.87 us	 fps: 3.14
+total:  frames: 664	 min: 27 us	 max: 333352 us	 avg: 25621.62 us	 stddev: 49336.72 us	 fps: 39.03
+-> SYNTHETIC SCORE : 39.03 fps
+
+*** BENCHMARK FINAL SCORE: 14.01 fps ***
+
+
+
+Benchmark completed in 101.79 seconds

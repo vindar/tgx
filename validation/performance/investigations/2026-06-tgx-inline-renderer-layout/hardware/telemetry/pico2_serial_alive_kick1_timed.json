@@ -1,0 +1,22 @@
+[
+    {
+        "t_ms":  111,
+        "line":  "TGX_HW_PROBE_BEGIN"
+    },
+    {
+        "t_ms":  117,
+        "line":  "BOARD_MACRO=RP2350"
+    },
+    {
+        "t_ms":  117,
+        "line":  "MILLIS=13708"
+    },
+    {
+        "t_ms":  121,
+        "line":  "TGX_HW_PROBE_OK"
+    },
+    {
+        "t_ms":  122,
+        "line":  "TGX_HW_PROBE_END"
+    }
+]

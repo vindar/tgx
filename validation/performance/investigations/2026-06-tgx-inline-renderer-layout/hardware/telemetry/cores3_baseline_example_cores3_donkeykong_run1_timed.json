@@ -1,0 +1,566 @@
+[
+    {
+        "t_ms":  9,
+        "line":  "=gouraud_texture fps=30.16 frame_avg_us=33153.5 frame_min_us=32730 frame_max_us=33709 frames=31"
+    },
+    {
+        "t_ms":  15,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  15,
+        "line":  ""
+    },
+    {
+        "t_ms":  16,
+        "line":  "[TGX telemetry] cycle=1 scene=gouraud_texture fps=30.45 frame_avg_us=32831.9 frame_min_us=31858 frame_max_us=33326 frames=31"
+    },
+    {
+        "t_ms":  16,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  161,
+        "line":  ""
+    },
+    {
+        "t_ms":  162,
+        "line":  "[TGX telemetry] cycle=1 scene=gouraud_texture fps=28.40 frame_avg_us=35196.0 frame_min_us=33124 frame_max_us=37476 frames=29"
+    },
+    {
+        "t_ms":  976,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  1200,
+        "line":  ""
+    },
+    {
+        "t_ms":  1201,
+        "line":  "[TGX telemetry] cycle=1 scene=gouraud_texture fps=25.05 frame_avg_us=39911.8 frame_min_us=37648 frame_max_us=42641 frames=26"
+    },
+    {
+        "t_ms":  2002,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  2208,
+        "line":  ""
+    },
+    {
+        "t_ms":  2209,
+        "line":  "[TGX telemetry] cycle=1 scene=gouraud_texture fps=24.78 frame_avg_us=40333.0 frame_min_us=38569 frame_max_us=42576 frames=25"
+    },
+    {
+        "t_ms":  3003,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  3226,
+        "line":  ""
+    },
+    {
+        "t_ms":  3226,
+        "line":  "[TGX telemetry] cycle=1 scene=gouraud_texture fps=27.50 frame_avg_us=36344.0 frame_min_us=34441 frame_max_us=38511 frames=28"
+    },
+    {
+        "t_ms":  4023,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  4228,
+        "line":  ""
+    },
+    {
+        "t_ms":  4229,
+        "line":  "[TGX telemetry] cycle=1 scene=gouraud_texture fps=26.95 frame_avg_us=37103.9 frame_min_us=35550 frame_max_us=39394 frames=27"
+    },
+    {
+        "t_ms":  5025,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  5249,
+        "line":  ""
+    },
+    {
+        "t_ms":  5249,
+        "line":  "[TGX telemetry] cycle=1 scene=gouraud_texture fps=24.49 frame_avg_us=40819.6 frame_min_us=39247 frame_max_us=42853 frames=25"
+    },
+    {
+        "t_ms":  6048,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  6253,
+        "line":  ""
+    },
+    {
+        "t_ms":  6254,
+        "line":  "[TGX telemetry] cycle=1 scene=gouraud_texture fps=24.90 frame_avg_us=40152.4 frame_min_us=38427 frame_max_us=42454 frames=25"
+    },
+    {
+        "t_ms":  7082,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  7273,
+        "line":  ""
+    },
+    {
+        "t_ms":  7273,
+        "line":  "[TGX telemetry] cycle=1 scene=gouraud_texture fps=27.48 frame_avg_us=36396.4 frame_min_us=34619 frame_max_us=38300 frames=28"
+    },
+    {
+        "t_ms":  8117,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  8303,
+        "line":  ""
+    },
+    {
+        "t_ms":  8304,
+        "line":  "[TGX telemetry] cycle=1 scene=gouraud_texture fps=28.16 frame_avg_us=35525.4 frame_min_us=34508 frame_max_us=36179 frames=29"
+    },
+    {
+        "t_ms":  8833,
+        "line":  ""
+    },
+    {
+        "t_ms":  8833,
+        "line":  "[TGX scene] cycle=2 scene=wireframe"
+    },
+    {
+        "t_ms":  9130,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  9838,
+        "line":  ""
+    },
+    {
+        "t_ms":  9838,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=27.83 frame_avg_us=36864.6 frame_min_us=35888 frame_max_us=38637 frames=28"
+    },
+    {
+        "t_ms":  10149,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  10871,
+        "line":  ""
+    },
+    {
+        "t_ms":  10872,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=28.10 frame_avg_us=35592.8 frame_min_us=34727 frame_max_us=36624 frames=29"
+    },
+    {
+        "t_ms":  11177,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  11871,
+        "line":  ""
+    },
+    {
+        "t_ms":  11872,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=27.97 frame_avg_us=35732.3 frame_min_us=34628 frame_max_us=36358 frames=28"
+    },
+    {
+        "t_ms":  12190,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  12905,
+        "line":  ""
+    },
+    {
+        "t_ms":  12906,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=27.08 frame_avg_us=36924.4 frame_min_us=36275 frame_max_us=37864 frames=28"
+    },
+    {
+        "t_ms":  13192,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  13934,
+        "line":  ""
+    },
+    {
+        "t_ms":  13935,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=27.24 frame_avg_us=36698.6 frame_min_us=35725 frame_max_us=37908 frames=28"
+    },
+    {
+        "t_ms":  14209,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  14965,
+        "line":  ""
+    },
+    {
+        "t_ms":  14966,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=28.13 frame_avg_us=35538.5 frame_min_us=34689 frame_max_us=36505 frames=29"
+    },
+    {
+        "t_ms":  15243,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  15964,
+        "line":  ""
+    },
+    {
+        "t_ms":  15965,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=27.00 frame_avg_us=37014.4 frame_min_us=35443 frame_max_us=37625 frames=27"
+    },
+    {
+        "t_ms":  16255,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  16966,
+        "line":  ""
+    },
+    {
+        "t_ms":  16967,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=26.97 frame_avg_us=37065.7 frame_min_us=35867 frame_max_us=38680 frames=27"
+    },
+    {
+        "t_ms":  17278,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  17984,
+        "line":  ""
+    },
+    {
+        "t_ms":  17984,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=28.49 frame_avg_us=35092.4 frame_min_us=33446 frame_max_us=36585 frames=29"
+    },
+    {
+        "t_ms":  18304,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  18996,
+        "line":  ""
+    },
+    {
+        "t_ms":  18996,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=30.63 frame_avg_us=32630.3 frame_min_us=31570 frame_max_us=33685 frames=31"
+    },
+    {
+        "t_ms":  19313,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  20003,
+        "line":  ""
+    },
+    {
+        "t_ms":  20004,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=29.79 frame_avg_us=33571.8 frame_min_us=32504 frame_max_us=34883 frames=30"
+    },
+    {
+        "t_ms":  20344,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  21005,
+        "line":  ""
+    },
+    {
+        "t_ms":  21006,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=27.97 frame_avg_us=35774.0 frame_min_us=34271 frame_max_us=36788 frames=28"
+    },
+    {
+        "t_ms":  21353,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  22021,
+        "line":  ""
+    },
+    {
+        "t_ms":  22022,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=28.57 frame_avg_us=35011.7 frame_min_us=33462 frame_max_us=36399 frames=29"
+    },
+    {
+        "t_ms":  22373,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  23033,
+        "line":  ""
+    },
+    {
+        "t_ms":  23034,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=30.60 frame_avg_us=32675.8 frame_min_us=31548 frame_max_us=33555 frames=31"
+    },
+    {
+        "t_ms":  23407,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  24046,
+        "line":  ""
+    },
+    {
+        "t_ms":  24046,
+        "line":  "[TGX telemetry] cycle=2 scene=wireframe fps=27.70 frame_avg_us=36117.8 frame_min_us=33719 frame_max_us=37828 frames=28"
+    },
+    {
+        "t_ms":  24418,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  24819,
+        "line":  ""
+    },
+    {
+        "t_ms":  24819,
+        "line":  "[TGX scene] cycle=3 scene=flat"
+    },
+    {
+        "t_ms":  25434,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  25834,
+        "line":  ""
+    },
+    {
+        "t_ms":  25835,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=41.38 frame_avg_us=24489.1 frame_min_us=24015 frame_max_us=25991 frames=42"
+    },
+    {
+        "t_ms":  26450,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  26843,
+        "line":  ""
+    },
+    {
+        "t_ms":  26844,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=41.63 frame_avg_us=24023.6 frame_min_us=23517 frame_max_us=24878 frames=42"
+    },
+    {
+        "t_ms":  27455,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  27853,
+        "line":  ""
+    },
+    {
+        "t_ms":  27854,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=41.58 frame_avg_us=24036.6 frame_min_us=23476 frame_max_us=24966 frames=42"
+    },
+    {
+        "t_ms":  28478,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  28856,
+        "line":  ""
+    },
+    {
+        "t_ms":  28857,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=40.88 frame_avg_us=24463.1 frame_min_us=24185 frame_max_us=25397 frames=41"
+    },
+    {
+        "t_ms":  29483,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  29859,
+        "line":  ""
+    },
+    {
+        "t_ms":  29859,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=40.88 frame_avg_us=24442.8 frame_min_us=24020 frame_max_us=25211 frames=41"
+    },
+    {
+        "t_ms":  30498,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  30868,
+        "line":  ""
+    },
+    {
+        "t_ms":  30868,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=41.67 frame_avg_us=24010.4 frame_min_us=23526 frame_max_us=24815 frames=42"
+    },
+    {
+        "t_ms":  31518,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  31880,
+        "line":  ""
+    },
+    {
+        "t_ms":  31881,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=40.47 frame_avg_us=24706.3 frame_min_us=23574 frame_max_us=25835 frames=41"
+    },
+    {
+        "t_ms":  32539,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  32887,
+        "line":  ""
+    },
+    {
+        "t_ms":  32888,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=38.77 frame_avg_us=25788.8 frame_min_us=25105 frame_max_us=26722 frames=39"
+    },
+    {
+        "t_ms":  33549,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  33888,
+        "line":  ""
+    },
+    {
+        "t_ms":  33888,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=39.00 frame_avg_us=25640.7 frame_min_us=24866 frame_max_us=26320 frames=39"
+    },
+    {
+        "t_ms":  34562,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  34907,
+        "line":  ""
+    },
+    {
+        "t_ms":  34907,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=41.22 frame_avg_us=24260.9 frame_min_us=23545 frame_max_us=24963 frames=42"
+    },
+    {
+        "t_ms":  35577,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  35912,
+        "line":  ""
+    },
+    {
+        "t_ms":  35912,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=40.80 frame_avg_us=24516.2 frame_min_us=23601 frame_max_us=25446 frames=41"
+    },
+    {
+        "t_ms":  36594,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  36917,
+        "line":  ""
+    },
+    {
+        "t_ms":  36917,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=38.84 frame_avg_us=25747.2 frame_min_us=24965 frame_max_us=26778 frames=39"
+    },
+    {
+        "t_ms":  37604,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  37941,
+        "line":  ""
+    },
+    {
+        "t_ms":  37941,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=39.10 frame_avg_us=25586.4 frame_min_us=24755 frame_max_us=26196 frames=40"
+    },
+    {
+        "t_ms":  38614,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  38959,
+        "line":  ""
+    },
+    {
+        "t_ms":  38959,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=41.26 frame_avg_us=24237.1 frame_min_us=23551 frame_max_us=24864 frames=42"
+    },
+    {
+        "t_ms":  39619,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  39983,
+        "line":  ""
+    },
+    {
+        "t_ms":  39984,
+        "line":  "[TGX telemetry] cycle=3 scene=flat fps=40.04 frame_avg_us=24968.5 frame_min_us=24218 frame_max_us=25866 frames=41"
+    },
+    {
+        "t_ms":  40624,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  40824,
+        "line":  ""
+    },
+    {
+        "t_ms":  40825,
+        "line":  "[TGX scene] cycle=4 scene=gouraud"
+    },
+    {
+        "t_ms":  41645,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  41845,
+        "line":  ""
+    },
+    {
+        "t_ms":  41845,
+        "line":  "[TGX telemetry] cycle=4 scene=gouraud fps=37.22 frame_avg_us=27306.2 frame_min_us=26774 frame_max_us=29048 frames=38"
+    },
+    {
+        "t_ms":  42668,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  42863,
+        "line":  ""
+    },
+    {
+        "t_ms":  42864,
+        "line":  "[TGX telemetry] cycle=4 scene=gouraud fps=37.33 frame_avg_us=26787.1 frame_min_us=26094 frame_max_us=27459 frames=38"
+    },
+    {
+        "t_ms":  43677,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  43876,
+        "line":  ""
+    },
+    {
+        "t_ms":  43876,
+        "line":  "[TGX telemetry] cycle=4 scene=gouraud fps=37.55 frame_avg_us=26621.4 frame_min_us=26047 frame_max_us=27443 frames=38"
+    },
+    {
+        "t_ms":  44678,
+        "line":  "donkeykong M5Stack display=DMA"
+    },
+    {
+        "t_ms":  44880,
+        "line":  ""
+    },
+    {
+        "t_ms":  44881,
+        "line":  "[TGX telemetry] cycle=4 scene=gouraud fps=36.85 frame_avg_us=27137.2 frame_min_us=26729 frame_max_us=27933 frames=37"
+    }
+]

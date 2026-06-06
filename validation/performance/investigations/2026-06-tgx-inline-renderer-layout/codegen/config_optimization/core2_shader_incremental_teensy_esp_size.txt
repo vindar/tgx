@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+ 344399	1252121	  98316	1694836	 19dc74	tmp\config_optimization\builds\core2_shader_incremental_teensy_esp\benchmark.ino.elf

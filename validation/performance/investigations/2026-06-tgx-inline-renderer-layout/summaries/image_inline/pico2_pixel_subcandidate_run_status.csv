@@ -1,0 +1,7 @@
+﻿"candidate","flags","status"
+"image_pixel_api_empty_pico2","-DTGX_INLINE_IMAGE_PIXEL_API=","SUCCESS"
+"image_pixel_draw_empty_pico2","-DTGX_INLINE_IMAGE_PIXEL_DRAW=","SUCCESS"
+"image_pixel_read_empty_pico2","-DTGX_INLINE_IMAGE_PIXEL_READ=","SUCCESS"
+"image_pixel_draw_read_empty_pico2","-DTGX_INLINE_IMAGE_PIXEL_DRAW= -DTGX_INLINE_IMAGE_PIXEL_READ=","SUCCESS"
+"image_mesh_safe_wire_draw_pico2","-DTGX_INLINE_IMAGE= -DTGX_INLINE_IMAGE_WIRE=__attribute__((always_inline)) -DTGX_INLINE_IMAGE_PIXEL_DRAW=__attribute__((always_inline))","SUCCESS"
+"image_mesh_safe_wire_draw_read_pico2","-DTGX_INLINE_IMAGE= -DTGX_INLINE_IMAGE_WIRE=__attribute__((always_inline)) -DTGX_INLINE_IMAGE_PIXEL_DRAW=__attribute__((always_inline)) -DTGX_INLINE_IMAGE_PIXEL_READ=__attribute__((always_inline))","SUCCESS"

@@ -1,0 +1,518 @@
+[
+    {
+        "t_ms":  566,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  572,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  1575,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  1575,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  2602,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  2603,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  3101,
+        "line":  "[scream] explosion 4"
+    },
+    {
+        "t_ms":  3652,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  3652,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  4684,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  4684,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  5725,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  5727,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  6763,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  6764,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  7774,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  7775,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  7925,
+        "line":  "[scream] explosion 5"
+    },
+    {
+        "t_ms":  8775,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  8775,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  9780,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  9780,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  10812,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  10813,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  11851,
+        "line":  "scream Pico fps=21"
+    },
+    {
+        "t_ms":  11852,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  12766,
+        "line":  "[scream] explosion 6"
+    },
+    {
+        "t_ms":  12868,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  12868,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  13908,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  13909,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  14918,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  14918,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  15935,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  15936,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  16978,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  16979,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  17576,
+        "line":  "[scream] explosion 7"
+    },
+    {
+        "t_ms":  18017,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  18017,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  19025,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  19026,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  20050,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  20050,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  21080,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  21080,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  22127,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  22127,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  22398,
+        "line":  "[scream] explosion 8"
+    },
+    {
+        "t_ms":  23147,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  23147,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  24193,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  24193,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  25222,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  25223,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  26252,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  26253,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  27207,
+        "line":  "[scream] explosion 9"
+    },
+    {
+        "t_ms":  27257,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  27258,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  28304,
+        "line":  "scream Pico fps=21"
+    },
+    {
+        "t_ms":  28304,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  29308,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  29309,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  30333,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  30333,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  31357,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  31357,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  32022,
+        "line":  "[scream] explosion 10"
+    },
+    {
+        "t_ms":  32381,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  32382,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  33424,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  33424,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  34455,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  34455,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  35491,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  35492,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  36496,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  36496,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  36828,
+        "line":  "[scream] explosion 11"
+    },
+    {
+        "t_ms":  37496,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  37496,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  38511,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  38511,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  39547,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  39549,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  40588,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  40589,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  41588,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  41589,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  41640,
+        "line":  "[scream] explosion 12"
+    },
+    {
+        "t_ms":  42620,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  42621,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  43643,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  43643,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  44675,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  44676,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  45713,
+        "line":  "scream Pico fps=21"
+    },
+    {
+        "t_ms":  45713,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  46487,
+        "line":  "[scream] explosion 13"
+    },
+    {
+        "t_ms":  46730,
+        "line":  "scream Pico fps=21"
+    },
+    {
+        "t_ms":  46731,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  47778,
+        "line":  "scream Pico fps=21"
+    },
+    {
+        "t_ms":  47779,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  48793,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  48794,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  49836,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  49836,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  50861,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  50861,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  51326,
+        "line":  "[scream] explosion 14"
+    },
+    {
+        "t_ms":  51910,
+        "line":  "scream Pico fps=20"
+    },
+    {
+        "t_ms":  51911,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  52959,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  52959,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  53992,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  53992,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  55017,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  55018,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  56030,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  56030,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  56143,
+        "line":  "[scream] explosion 15"
+    },
+    {
+        "t_ms":  57039,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  57040,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  58038,
+        "line":  "scream Pico fps=18"
+    },
+    {
+        "t_ms":  58038,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  59061,
+        "line":  "scream Pico fps=19"
+    },
+    {
+        "t_ms":  59061,
+        "line":  "scream Pico display=DMA"
+    },
+    {
+        "t_ms":  60070,
+        "line":  "scream Pico fps=19"
+    }
+]

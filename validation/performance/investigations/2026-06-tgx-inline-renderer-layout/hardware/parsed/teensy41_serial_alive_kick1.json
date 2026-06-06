@@ -1,0 +1,43 @@
+{
+    "board":  "teensy41",
+    "port":  "COM3",
+    "upload_port":  "usb:80000/3/0/1",
+    "fqbn":  "teensy:avr:teensy41:usb=serial,speed=600,opt=o3std",
+    "sketch":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\sketches\\SerialAliveProbe",
+    "command":  "C:\\Users\\Vindar\\AppData\\Local\\Programs\\Arduino IDE\\resources\\app\\lib\\backend\\resources\\arduino-cli.exe compile --fqbn teensy:avr:teensy41:usb=serial,speed=600,opt=o3std --libraries D:\\Programmation\\arduino\\libraries --library D:\\Programmation\\tgx --build-path D:\\Programmation\\tgx\\tmp\\hardware_validation\\builds\\teensy41_serial_alive_kick1 --port usb:80000/3/0/1 --upload D:\\Programmation\\tgx\\tmp\\hardware_validation\\sketches\\SerialAliveProbe",
+    "start_time":  "2026-06-05T19:35:37.8527161+02:00",
+    "end_time":  "2026-06-05T19:35:59.3110142+02:00",
+    "upload_status":  "UPLOAD_FAILED",
+    "serial_status":  "",
+    "run_status":  "UPLOAD_FAILED",
+    "attempts":  1,
+    "telemetry_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\telemetry\\teensy41_serial_alive_kick1.txt",
+    "log_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\logs\\teensy41_serial_alive_kick1.log",
+    "metadata_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\parsed\\teensy41_serial_alive_kick1.json",
+    "captured_lines":  0,
+    "start_marker_seen":  false,
+    "completion_marker_seen":  false,
+    "parse_mode":  "probe",
+    "parse_succeeded":  true,
+    "parsed_global_scores":  0,
+    "parsed_subtests":  0,
+    "parsed_telemetry_rows":  0,
+    "visible_ports_before":  [
+                                 "COM10",
+                                 "COM21",
+                                 "COM28",
+                                 "COM3",
+                                 "COM5",
+                                 "COM6",
+                                 "COM7"
+                             ],
+    "visible_ports_after":  [
+                                "COM10",
+                                "COM21",
+                                "COM28",
+                                "COM3",
+                                "COM5",
+                                "COM6",
+                                "COM7"
+                            ]
+}

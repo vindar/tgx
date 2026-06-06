@@ -1,0 +1,120 @@
+
+[TGX scene] cycle=1 scene=spot_gouraud
+
+[TGX telemetry] cycle=1 scene=spot_gouraud fps=103.00 frame_avg_us=9706.8 frame_min_us=8001 frame_max_us=43365 frames=103
+
+[TGX telemetry] cycle=1 scene=spot_gouraud fps=109.56 frame_avg_us=9129.9 frame_min_us=8939 frame_max_us=9273 frames=110
+
+[TGX telemetry] cycle=1 scene=spot_gouraud fps=109.78 frame_avg_us=9110.5 frame_min_us=8927 frame_max_us=9260 frames=110
+
+[TGX telemetry] cycle=1 scene=spot_gouraud fps=111.67 frame_avg_us=8949.7 frame_min_us=8569 frame_max_us=9182 frames=112
+
+[TGX telemetry] cycle=1 scene=spot_gouraud fps=116.42 frame_avg_us=8592.1 frame_min_us=7924 frame_max_us=9066 frames=117
+
+[TGX scene] cycle=2 scene=spot_tex_nearest
+
+[TGX telemetry] cycle=2 scene=spot_tex_nearest fps=98.21 frame_avg_us=10181.1 frame_min_us=9923 frame_max_us=11158 frames=99
+
+[TGX telemetry] cycle=2 scene=spot_tex_nearest fps=92.26 frame_avg_us=10847.9 frame_min_us=10337 frame_max_us=11029 frames=93
+
+[TGX telemetry] cycle=2 scene=spot_tex_nearest fps=87.56 frame_avg_us=11426.8 frame_min_us=10974 frame_max_us=11713 frames=88
+
+[TGX telemetry] cycle=2 scene=spot_tex_nearest fps=91.27 frame_avg_us=10956.1 frame_min_us=10579 frame_max_us=11418 frames=92
+
+[TGX telemetry] cycle=2 scene=spot_tex_nearest fps=92.00 frame_avg_us=10864.1 frame_min_us=10549 frame_max_us=11297 frames=92
+
+[TGX scene] cycle=3 scene=spot_tex_bilinear
+
+[TGX telemetry] cycle=3 scene=spot_tex_bilinear fps=75.85 frame_avg_us=13183.6 frame_min_us=12811 frame_max_us=13727 frames=76
+
+[TGX telemetry] cycle=3 scene=spot_tex_bilinear fps=81.92 frame_avg_us=12203.7 frame_min_us=11753 frame_max_us=12835 frames=82
+
+[TGX telemetry] cycle=3 scene=spot_tex_bilinear fps=80.68 frame_avg_us=12406.5 frame_min_us=11948 frame_max_us=13131 frames=81
+
+[TGX telemetry] cycle=3 scene=spot_tex_bilinear fps=81.11 frame_avg_us=12323.1 frame_min_us=11546 frame_max_us=13135 frames=82
+
+[TGX telemetry] cycle=3 scene=spot_tex_bilinear fps=78.92 frame_avg_us=12664.9 frame_min_us=12229 frame_max_us=13115 frames=79
+
+[TGX scene] cycle=4 scene=bob_gouraud
+
+[TGX telemetry] cycle=4 scene=bob_gouraud fps=74.00 frame_avg_us=13505.1 frame_min_us=12988 frame_max_us=15847 frames=74
+
+[TGX telemetry] cycle=4 scene=bob_gouraud fps=70.16 frame_avg_us=14251.2 frame_min_us=13669 frame_max_us=14803 frames=71
+
+[TGX telemetry] cycle=4 scene=bob_gouraud fps=69.31 frame_avg_us=14427.8 frame_min_us=13831 frame_max_us=14817 frames=70
+
+[TGX telemetry] cycle=4 scene=bob_gouraud fps=74.78 frame_avg_us=13372.4 frame_min_us=13006 frame_max_us=13785 frames=75
+
+[TGX telemetry] cycle=4 scene=bob_gouraud fps=72.35 frame_avg_us=13829.1 frame_min_us=12950 frame_max_us=14669 frames=73
+
+[TGX scene] cycle=5 scene=bob_tex_nearest
+
+[TGX telemetry] cycle=5 scene=bob_tex_nearest fps=56.21 frame_avg_us=17792.1 frame_min_us=17341 frame_max_us=18175 frames=57
+
+[TGX telemetry] cycle=5 scene=bob_tex_nearest fps=61.63 frame_avg_us=16218.5 frame_min_us=14910 frame_max_us=17332 frames=62
+
+[TGX telemetry] cycle=5 scene=bob_tex_nearest fps=62.07 frame_avg_us=16106.2 frame_min_us=14960 frame_max_us=16722 frames=63
+
+[TGX telemetry] cycle=5 scene=bob_tex_nearest fps=60.34 frame_avg_us=16583.5 frame_min_us=16387 frame_max_us=17023 frames=61
+
+[TGX telemetry] cycle=5 scene=bob_tex_nearest fps=58.07 frame_avg_us=17220.3 frame_min_us=16868 frame_max_us=17442 frames=59
+
+[TGX scene] cycle=6 scene=bob_tex_bilinear
+
+[TGX telemetry] cycle=6 scene=bob_tex_bilinear fps=57.54 frame_avg_us=17381.1 frame_min_us=16518 frame_max_us=19019 frames=58
+
+[TGX telemetry] cycle=6 scene=bob_tex_bilinear fps=50.05 frame_avg_us=19989.0 frame_min_us=19024 frame_max_us=20808 frames=51
+
+[TGX telemetry] cycle=6 scene=bob_tex_bilinear fps=49.00 frame_avg_us=20412.9 frame_min_us=19731 frame_max_us=20758 frames=49
+
+[TGX telemetry] cycle=6 scene=bob_tex_bilinear fps=53.68 frame_avg_us=18622.7 frame_min_us=17477 frame_max_us=19689 frames=54
+
+[TGX telemetry] cycle=6 scene=bob_tex_bilinear fps=55.12 frame_avg_us=18132.8 frame_min_us=17336 frame_max_us=19210 frames=56
+
+[TGX scene] cycle=7 scene=blub_gouraud
+
+[TGX telemetry] cycle=7 scene=blub_gouraud fps=66.60 frame_avg_us=15019.7 frame_min_us=14139 frame_max_us=15534 frames=67
+
+[TGX telemetry] cycle=7 scene=blub_gouraud fps=61.57 frame_avg_us=16234.2 frame_min_us=15481 frame_max_us=17046 frames=62
+
+[TGX telemetry] cycle=7 scene=blub_gouraud fps=62.31 frame_avg_us=16051.9 frame_min_us=15523 frame_max_us=16913 frames=63
+
+[TGX telemetry] cycle=7 scene=blub_gouraud fps=65.80 frame_avg_us=15198.3 frame_min_us=14855 frame_max_us=15484 frames=66
+
+[TGX telemetry] cycle=7 scene=blub_gouraud fps=64.04 frame_avg_us=15610.8 frame_min_us=15327 frame_max_us=16011 frames=65
+
+[TGX scene] cycle=8 scene=blub_tex_nearest
+
+[TGX telemetry] cycle=8 scene=blub_tex_nearest fps=58.82 frame_avg_us=17002.3 frame_min_us=16235 frame_max_us=17366 frames=59
+
+[TGX telemetry] cycle=8 scene=blub_tex_nearest fps=57.37 frame_avg_us=17422.7 frame_min_us=17091 frame_max_us=17866 frames=58
+
+[TGX telemetry] cycle=8 scene=blub_tex_nearest fps=59.58 frame_avg_us=16780.1 frame_min_us=15382 frame_max_us=17963 frames=60
+
+[TGX telemetry] cycle=8 scene=blub_tex_nearest fps=59.41 frame_avg_us=16842.2 frame_min_us=15444 frame_max_us=17299 frames=60
+
+[TGX telemetry] cycle=8 scene=blub_tex_nearest fps=58.76 frame_avg_us=17011.3 frame_min_us=16438 frame_max_us=17197 frames=59
+
+[TGX scene] cycle=9 scene=blub_tex_bilinear
+
+[TGX telemetry] cycle=9 scene=blub_tex_bilinear fps=52.37 frame_avg_us=19090.1 frame_min_us=18361 frame_max_us=19481 frames=53
+
+[TGX telemetry] cycle=9 scene=blub_tex_bilinear fps=54.56 frame_avg_us=18319.5 frame_min_us=18048 frame_max_us=18531 frames=55
+
+[TGX telemetry] cycle=9 scene=blub_tex_bilinear fps=55.06 frame_avg_us=18166.5 frame_min_us=17704 frame_max_us=18727 frames=56
+
+[TGX telemetry] cycle=9 scene=blub_tex_bilinear fps=56.00 frame_avg_us=17856.6 frame_min_us=17186 frame_max_us=18580 frames=56
+
+[TGX telemetry] cycle=9 scene=blub_tex_bilinear fps=55.00 frame_avg_us=18190.4 frame_min_us=17279 frame_max_us=18776 frames=55
+
+[TGX scene] cycle=10 scene=spot_gouraud
+
+[TGX telemetry] cycle=10 scene=spot_gouraud fps=107.25 frame_avg_us=9324.6 frame_min_us=8542 frame_max_us=10124 frames=108
+
+[TGX telemetry] cycle=10 scene=spot_gouraud fps=111.44 frame_avg_us=8973.3 frame_min_us=8725 frame_max_us=9127 frames=112
+
+[TGX telemetry] cycle=10 scene=spot_gouraud fps=110.89 frame_avg_us=9017.0 frame_min_us=8775 frame_max_us=9186 frames=111
+
+[TGX telemetry] cycle=10 scene=spot_gouraud fps=111.78 frame_avg_us=8953.6 frame_min_us=8612 frame_max_us=9327 frames=112
+
+[TGX telemetry] cycle=10 scene=spot_gouraud fps=119.88 frame_avg_us=8335.7 frame_min_us=7896 frame_max_us=8667 frames=120

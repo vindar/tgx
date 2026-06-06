@@ -1,0 +1,54 @@
+
+2026-06-06 02:59:29.035 BOARD=pico2
+2026-06-06 02:59:29.047 PORT=COM21
+2026-06-06 02:59:29.048 UPLOAD_PORT=COM21
+2026-06-06 02:59:29.050 FQBN=rp2040:rp2040:rpipico2
+2026-06-06 02:59:29.052 SKETCH=D:\Programmation\tgx\examples\benchmark
+2026-06-06 02:59:29.053 PARSE_MODE=benchmark
+2026-06-06 02:59:29.054 VISIBLE_PORTS_BEFORE=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-06 02:59:29.056 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-06 02:59:29.060 ATTEMPT=1
+2026-06-06 02:59:29.394 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-06 02:59:29.403 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn rp2040:rp2040:rpipico2 --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\tmp\hardware_validation\builds\pico2_image_mesh_safe_keep_draw_wire_pico2_bench_pico2 --build-property compiler.cpp.extra_flags=-DTGX_BENCHMARK_RP2350 -DTGX_INLINE_IMAGE= -DTGX_INLINE_IMAGE_PIXEL_API_DRAW=__attribute__((always_inline)) -DTGX_INLINE_IMAGE_PIXEL_DRAW=__attribute__((always_inline)) -DTGX_INLINE_IMAGE_WIRE=__attribute__((always_inline)) --port COM21 --upload D:\Programmation\tgx\examples\benchmark
+2026-06-06 03:00:23.614 ARDUINO: Le croquis utilise 1358560 octets (32%) de l'espace de stockage de programmes. Le maximum est de 4186112 octets.
+2026-06-06 03:00:23.616 ARDUINO: Les variables globales utilisent 239816 octets (45%) de mémoire dynamique, ce qui laisse 284472 octets pour les variables locales. Le maximum est de 524288 octets.
+2026-06-06 03:00:23.617 ARDUINO: Resetting COM21
+2026-06-06 03:00:23.618 ARDUINO: Converting to uf2, output size: 2762752, start address: 0x2000
+2026-06-06 03:00:23.620 ARDUINO: Scanning for RP2040 devices
+2026-06-06 03:00:23.621 ARDUINO: Flashing F: (RP2350)
+2026-06-06 03:00:23.622 ARDUINO: Wrote 2762752 bytes to F:/NEW.UF2
+2026-06-06 03:00:23.624 ARDUINO_EXIT_CODE=0
+2026-06-06 03:00:28.073 VISIBLE_PORTS_AFTER_UPLOAD=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-06 03:00:28.075 ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_AFTER_UPLOAD_END
+2026-06-06 03:00:28.077 POST_UPLOAD_DELAY_SECONDS=2
+2026-06-06 03:00:30.102 WAIT_PORT_OK=True SEEN=True PORTS=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-06 03:02:12.499 CAPTURE_STATUS=SUCCESS LINES=235 START=True END=True MATCHES=0
+2026-06-06 03:02:12.542 FINAL_STATUS=SUCCESS

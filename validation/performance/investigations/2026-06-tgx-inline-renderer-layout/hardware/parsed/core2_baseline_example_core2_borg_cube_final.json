@@ -1,0 +1,43 @@
+{
+    "board":  "core2",
+    "port":  "COM5",
+    "upload_port":  "COM5",
+    "fqbn":  "esp32:esp32:m5stack_core2",
+    "sketch":  "D:\\Programmation\\tgx\\examples\\M5Stack\\borg_cube",
+    "command":  "C:\\Users\\Vindar\\AppData\\Local\\Programs\\Arduino IDE\\resources\\app\\lib\\backend\\resources\\arduino-cli.exe compile --fqbn esp32:esp32:m5stack_core2 --libraries D:\\Programmation\\arduino\\libraries --library D:\\Programmation\\tgx --build-path D:\\Programmation\\tgx\\tmp\\hardware_validation\\builds\\core2_baseline_example_core2_borg_cube_final --port COM5 --upload D:\\Programmation\\tgx\\examples\\M5Stack\\borg_cube",
+    "start_time":  "2026-06-05T22:28:59.9356424+02:00",
+    "end_time":  "2026-06-05T22:31:30.0724324+02:00",
+    "upload_status":  "UPLOAD_OK",
+    "serial_status":  "SUCCESS",
+    "run_status":  "SUCCESS",
+    "attempts":  1,
+    "telemetry_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\telemetry\\core2_baseline_example_core2_borg_cube_final.txt",
+    "log_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\logs\\core2_baseline_example_core2_borg_cube_final.log",
+    "metadata_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\parsed\\core2_baseline_example_core2_borg_cube_final.json",
+    "captured_lines":  118,
+    "start_marker_seen":  true,
+    "completion_marker_seen":  true,
+    "parse_mode":  "example",
+    "parse_succeeded":  true,
+    "parsed_global_scores":  null,
+    "parsed_subtests":  null,
+    "parsed_telemetry_rows":  59,
+    "visible_ports_before":  [
+                                 "COM10",
+                                 "COM21",
+                                 "COM28",
+                                 "COM3",
+                                 "COM5",
+                                 "COM6",
+                                 "COM7"
+                             ],
+    "visible_ports_after":  [
+                                "COM10",
+                                "COM21",
+                                "COM28",
+                                "COM3",
+                                "COM5",
+                                "COM6",
+                                "COM7"
+                            ]
+}

@@ -1,0 +1,2 @@
+﻿"candidate","board","port","label","extra_flags","exit_code","status","parsed_global_scores","parsed_subtests","metadata"
+"vec3_empty_pico2","pico2","COM21","vec3_empty_pico2_bench_pico2","-DTGX_INLINE_VEC3=","0","SUCCESS","3","162","D:\Programmation\tgx\tmp\hardware_validation\parsed\pico2_vec3_empty_pico2_bench_pico2.json"

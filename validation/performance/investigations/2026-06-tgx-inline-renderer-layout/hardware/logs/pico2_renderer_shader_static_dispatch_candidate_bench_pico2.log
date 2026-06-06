@@ -1,0 +1,52 @@
+
+2026-06-06 11:20:58.899 BOARD=pico2
+2026-06-06 11:20:58.912 PORT=COM21
+2026-06-06 11:20:58.914 UPLOAD_PORT=COM21
+2026-06-06 11:20:58.916 FQBN=rp2040:rp2040:rpipico2
+2026-06-06 11:20:58.918 SKETCH=D:\Programmation\tgx\examples\benchmark
+2026-06-06 11:20:58.920 PARSE_MODE=benchmark
+2026-06-06 11:20:58.921 VISIBLE_PORTS_BEFORE=COM10,COM21,COM3,COM5,COM6,COM7
+2026-06-06 11:20:58.922 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-06 11:20:58.939 ATTEMPT=1
+2026-06-06 11:20:59.246 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-06 11:20:59.256 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn rp2040:rp2040:rpipico2 --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\tmp\hardware_validation\builds\pico2_renderer_shader_static_dispatch_candidate_bench_pico2 --build-property compiler.cpp.extra_flags=-DTGX_BENCHMARK_RP2350 --port COM21 --upload D:\Programmation\tgx\examples\benchmark
+2026-06-06 11:21:54.068 ARDUINO: Le croquis utilise 1358832 octets (32%) de l'espace de stockage de programmes. Le maximum est de 4186112 octets.
+2026-06-06 11:21:54.069 ARDUINO: Les variables globales utilisent 239816 octets (45%) de mémoire dynamique, ce qui laisse 284472 octets pour les variables locales. Le maximum est de 524288 octets.
+2026-06-06 11:21:54.071 ARDUINO: Resetting COM21
+2026-06-06 11:21:54.073 ARDUINO: Converting to uf2, output size: 2763264, start address: 0x2000
+2026-06-06 11:21:54.074 ARDUINO: Scanning for RP2040 devices
+2026-06-06 11:21:54.076 ARDUINO: Flashing F: (RP2350)
+2026-06-06 11:21:54.077 ARDUINO: Wrote 2763264 bytes to F:/NEW.UF2
+2026-06-06 11:21:54.078 ARDUINO_EXIT_CODE=0
+2026-06-06 11:21:58.546 VISIBLE_PORTS_AFTER_UPLOAD=COM10,COM21,COM3,COM5,COM6,COM7
+2026-06-06 11:21:58.548 ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_AFTER_UPLOAD_END
+2026-06-06 11:21:58.550 POST_UPLOAD_DELAY_SECONDS=2
+2026-06-06 11:22:00.570 WAIT_PORT_OK=True SEEN=True PORTS=COM10,COM21,COM3,COM5,COM6,COM7
+2026-06-06 11:23:42.930 CAPTURE_STATUS=SUCCESS LINES=235 START=True END=True MATCHES=0
+2026-06-06 11:23:42.972 FINAL_STATUS=SUCCESS

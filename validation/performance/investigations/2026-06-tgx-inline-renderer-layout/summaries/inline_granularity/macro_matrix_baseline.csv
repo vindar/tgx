@@ -1,0 +1,7 @@
+board,status,TGX_INLINE,TGX_NOINLINE,TGX_INLINE_ZDIVIDE,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FMA_MATH,ARDUINO_TEENSY41,ARDUINO_ARCH_RP2040,ARDUINO_ARCH_RP2350,PICO_RP2040,PICO_RP2350,ESP32,ESP32S3,CONFIG_IDF_TARGET_ESP32,CONFIG_IDF_TARGET_ESP32S3,__ARM_ARCH_8M_MAIN__
+Core2,probe_ok,__attribute__((always_inline)),"__attribute__((noinline, noclone))",,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0
+CoreS3,probe_ok,__attribute__((always_inline)),,__attribute__((always_inline)),0,0,0,0,0,0,0,0,0,0,1,0,0,1,0
+Pico2/RP2350,probe_ok,__attribute__((always_inline)),,__attribute__((always_inline)),1,1,1,1,0,0,1,0,0,1,0,0,0,0,1
+Teensy4.1,probe_ok,__attribute__((always_inline)),,__attribute__((always_inline)),0,1,1,1,1,1,0,0,0,0,0,0,0,0,0
+PicoW/RP2040,upload_unavailable,inferred empty from tgx_config.h,,inferred empty from tgx_config.h,inferred 0,inferred 0,inferred 0,inferred 0,inferred 0,,,,,,,,,,
+CPU,inferred,empty,,empty,0,0,0,0,0,,,,,,,,,,

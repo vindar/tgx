@@ -1,0 +1,50 @@
+
+2026-06-05 20:25:17.728 BOARD=teensy41
+2026-06-05 20:25:17.740 PORT=COM3
+2026-06-05 20:25:17.742 UPLOAD_PORT=usb:80000/3/0/1
+2026-06-05 20:25:17.743 FQBN=teensy:avr:teensy41:usb=serial,speed=600,opt=o3std
+2026-06-05 20:25:17.745 SKETCH=D:\Programmation\tgx\examples\Teensy4\3D\test-texture
+2026-06-05 20:25:17.746 PARSE_MODE=example
+2026-06-05 20:25:17.748 VISIBLE_PORTS_BEFORE=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-05 20:25:17.749 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-05 20:25:17.753 ATTEMPT=1
+2026-06-05 20:25:18.052 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-05 20:25:18.060 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn teensy:avr:teensy41:usb=serial,speed=600,opt=o3std --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\tmp\hardware_validation\builds\teensy41_baseline_example_teensy41_test_texture_run1 --port usb:80000/3/0/1 --upload D:\Programmation\tgx\examples\Teensy4\3D\test-texture
+2026-06-05 20:26:19.064 ARDUINO: Memory Usage on Teensy 4.1:
+2026-06-05 20:26:19.066 ARDUINO:   FLASH: code:176164, data:1050608, headers:9192   free for files:6890500
+2026-06-05 20:26:19.067 ARDUINO:    RAM1: variables:340512, code:119864, padding:11208   free for local variables:52704
+2026-06-05 20:26:19.069 ARDUINO:    RAM2: variables:521024  free for malloc/new:3264
+2026-06-05 20:26:19.070 ARDUINO_EXIT_CODE=0
+2026-06-05 20:26:23.509 VISIBLE_PORTS_AFTER_UPLOAD=COM10,COM21,COM28,COM5,COM6,COM7
+2026-06-05 20:26:23.511 ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_AFTER_UPLOAD_END
+2026-06-05 20:26:23.513 POST_UPLOAD_DELAY_SECONDS=4
+2026-06-05 20:26:35.193 WAIT_PORT_OK=True SEEN=True PORTS=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-05 20:27:35.297 CAPTURE_STATUS=SUCCESS LINES=120 START=True END=True MATCHES=50
+2026-06-05 20:27:35.331 FINAL_STATUS=SUCCESS

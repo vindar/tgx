@@ -1,0 +1,8 @@
+run_id,board,label,phase,run_status,commit,elf_bytes,elf_files,bin_bytes,bin_files,map_bytes,map_files,uf2_bytes,uf2_files,hex_bytes,hex_files
+core2_baseline_bench_core2_run1,core2,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf,8636188,benchmark.ino.elf,18401680,benchmark.ino.bin;benchmark.ino.bootloader.bin;benchmark.ino.merged.bin;benchmark.ino.partitions.bin,12746829,benchmark.ino.map,,,,
+cores3_parse_sanity_bench_cores3,cores3,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf,9846216,benchmark.ino.elf,18407760,benchmark.ino.bin;benchmark.ino.bootloader.bin;benchmark.ino.merged.bin;benchmark.ino.partitions.bin,8659511,benchmark.ino.map,,,,
+cores3_baseline_bench_cores3_run2,cores3,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf,9846216,benchmark.ino.elf,18407760,benchmark.ino.bin;benchmark.ino.bootloader.bin;benchmark.ino.merged.bin;benchmark.ino.partitions.bin,8663435,benchmark.ino.map,,,,
+pico2_parse_sanity_bench_pico2,pico2,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf,3780216,benchmark.ino.elf,1380968,benchmark.ino.bin,1312844,benchmark.ino.map,2762752,benchmark.ino.uf2,,
+pico2_baseline_bench_pico2_run2,pico2,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf,3780216,benchmark.ino.elf,1380968,benchmark.ino.bin,1315094,benchmark.ino.map,2762752,benchmark.ino.uf2,,
+teensy41_baseline_bench_teensy41_run1,teensy41,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf,3496080,benchmark.ino.elf,,,,,,,4000780,benchmark.ino.hex
+teensy41_baseline_bench_teensy41_run2,teensy41,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf,3496080,benchmark.ino.elf,,,,,,,4000780,benchmark.ino.hex

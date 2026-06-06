@@ -1,0 +1,22 @@
+[
+    {
+        "t_ms":  10,
+        "line":  "TGX_HW_PROBE_BEGIN"
+    },
+    {
+        "t_ms":  16,
+        "line":  "BOARD_MACRO=ESP32S3"
+    },
+    {
+        "t_ms":  16,
+        "line":  "MILLIS=215"
+    },
+    {
+        "t_ms":  17,
+        "line":  "TGX_HW_PROBE_OK"
+    },
+    {
+        "t_ms":  17,
+        "line":  "TGX_HW_PROBE_END"
+    }
+]

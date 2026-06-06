@@ -1,0 +1,25 @@
+diff --git a/src/Shaders.h b/src/Shaders.h
+index 5108fa9..2e38f1d 100644
+--- a/src/Shaders.h
++++ b/src/Shaders.h
+@@ -289,11 +289,18 @@ namespace tgx
+ 
+                     if constexpr (std::is_same<ZBUFFER_t, uint16_t>::value)
+                         {
+-                         current_z = (USE_ORTHO) ? ((ZBUFFER_t)(cw_z * wa + wb)) : ((ZBUFFER_t)cw_z);
++                        if constexpr (USE_ORTHO)
++                            {
++                            current_z = (ZBUFFER_t)(cw_z * wa + wb);
++                            }
++                        else
++                            {
++                            current_z = (ZBUFFER_t)cw_z;
++                            }
+                         }
+                     else
+                         {
+-                         current_z = (ZBUFFER_t)cw_z;
++                        current_z = (ZBUFFER_t)cw_z;
+                         }
+ 
+                     if (W < current_z)

@@ -1,0 +1,163 @@
+board,baseline,variant,score_index,renderer_size,subtest,baseline_fps,variant_fps,pct_delta
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Large tris FLAT Z,360.34,292.05,-18.95
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Large tris FLAT Z,515.09,418.15,-18.82
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Cube direct FLAT,175.92,142.92,-18.76
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Cube direct FLAT,251.04,204.22,-18.65
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1961.75,1603.21,-18.28
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Cube direct FLAT,942.06,774.54,-17.78
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Grid small FLAT,234.33,209.05,-10.79
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Grid small FLAT,286.81,259.91,-9.38
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Vertex color direct,188.30,175.16,-6.98
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Vertex color direct,268.53,249.96,-6.92
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Vertex color direct,1028.37,960.77,-6.57
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Sphere direct GOUR,105.61,100.22,-5.10
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Sphere direct GOUR,143.58,136.61,-4.85
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Bunny FLAT,117.35,112.01,-4.55
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Grid small FLAT,488.30,466.84,-4.39
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),R2D2 FLAT,35.38,33.98,-3.96
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Bunny FLAT,128.80,124.22,-3.56
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Sphere direct GOUR,384.63,371.64,-3.38
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),R2D2 FLAT,38.57,37.39,-3.06
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Cube direct TEX,19.76,19.34,-2.13
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Cube direct TEX,28.40,27.80,-2.11
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Cube direct TEX,112.25,109.93,-2.07
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Bunny GOURAUD,84.75,83.06,-1.99
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Buddha (close),18.74,18.38,-1.92
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),R2D2 GOURAUD,26.85,26.38,-1.75
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Buddha (clipped),27.50,27.03,-1.71
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),R2D2 (close),7.20,7.08,-1.67
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),R2D2 (close),9.80,9.64,-1.63
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Bunny GOURAUD,96.94,95.42,-1.57
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Buddha (close),20.92,20.61,-1.48
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),R2D2 GOURAUD,30.09,29.68,-1.36
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire cube fast,15238.10,15037.59,-1.32
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Buddha (clipped),29.80,29.41,-1.31
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny FLAT,161.10,159.09,-1.25
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Buddha FLAT,17.74,17.54,-1.13
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Ribbon strip,331.41,327.87,-1.07
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 FLAT,47.77,47.27,-1.05
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 (close),25.98,25.71,-1.04
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Ribbon quads,342.46,338.94,-1.03
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Ribbon triangles,298.47,295.69,-0.93
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Ribbon strip,178.47,176.89,-0.89
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Bunny ORTHO TEX,63.54,62.98,-0.88
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Buddha FLAT,18.42,18.26,-0.87
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Bunny ORTHO TEX,74.27,73.63,-0.86
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),R2D2 TEX_BILINEAR,12.82,12.71,-0.86
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Ribbon quads,182.21,180.76,-0.80
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Bunny TEX_BILINEAR,35.13,34.86,-0.77
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Ribbon triangles,168.74,167.46,-0.76
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Ribbon strip,144.83,143.75,-0.75
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,15.63,15.52,-0.70
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Buddha ORTHO,15.69,15.58,-0.70
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,116.15,115.36,-0.68
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,44.20,43.90,-0.68
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Ribbon quads,147.35,146.37,-0.67
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Ribbon triangles,138.42,137.53,-0.64
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Buddha ORTHO,16.41,16.32,-0.55
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire cube AA,5830.90,5801.31,-0.51
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha (close),26.58,26.45,-0.49
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny GOURAUD,134.39,133.76,-0.47
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Buddha GOURAUD,14.80,14.74,-0.41
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha (clipped),35.19,35.05,-0.40
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,39.95,39.79,-0.40
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha FLAT,20.78,20.71,-0.34
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire sphere fast,1589.51,1584.47,-0.32
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib quad fast,897.46,895.05,-0.27
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha ORTHO,19.37,19.32,-0.26
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,27.07,27.00,-0.26
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Buddha GOURAUD,15.58,15.54,-0.26
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,84.09,83.88,-0.25
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib strip fast,1026.96,1024.46,-0.24
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Point cloud pixels,2559.73,2554.82,-0.19
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,31.78,31.73,-0.16
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Bunny (far),150.92,150.68,-0.16
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Point cloud pixels,2554.82,2551.02,-0.15
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib tri fast,673.17,672.21,-0.14
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Bunny (far),158.39,158.17,-0.14
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,100.38,100.26,-0.12
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Bunny (farclip),152.96,152.81,-0.10
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire sphere fast,1505.17,1504.04,-0.08
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Bunny (farclip),159.39,159.29,-0.06
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire rib strip fast,788.80,788.33,-0.06
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire rib quad fast,716.46,716.01,-0.06
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire bunny fast,222.77,222.64,-0.06
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha GOURAUD,18.31,18.30,-0.05
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny (far),183.48,183.40,-0.04
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire sphere AA,391.45,391.31,-0.04
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire rib tri fast,486.32,486.14,-0.04
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib quad AA,237.40,237.33,-0.03
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire bunny fast,255.77,255.70,-0.03
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire bunny fast,230.21,230.17,-0.02
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire rib strip AA,160.53,160.50,-0.02
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire sphere AA,351.11,351.05,-0.02
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha (far),22.67,22.67,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Buddha (farclip),22.35,22.35,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib strip thick,24.91,24.91,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire sphere fast,1827.32,1827.32,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire bunny AA,73.93,73.93,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire bunny thick,7.05,7.05,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Buddha (far),21.87,21.87,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Buddha (farclip),21.73,21.73,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire rib quad AA,174.84,174.84,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire rib tri thick,12.06,12.06,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire rib strip thick,20.13,20.13,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire bunny AA,61.58,61.58,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire bunny thick,6.34,6.34,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Buddha (far),21.49,21.49,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Buddha (farclip),21.40,21.40,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire rib tri thick,11.08,11.08,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire rib strip thick,18.72,18.72,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire cube AA,3125.00,3125.00,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire bunny AA,57.81,57.81,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire bunny thick,6.11,6.11,0.00
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib tri AA,146.28,146.29,0.01
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire rib strip fast,840.95,841.04,0.01
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire rib tri AA,102.63,102.64,0.01
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Point cloud dots,482.92,482.95,0.01
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Point cloud dots,481.17,481.20,0.01
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny (farclip),180.94,180.98,0.02
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Point cloud dots,510.11,510.20,0.02
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire rib strip AA,177.35,177.38,0.02
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire rib tri AA,91.79,91.81,0.02
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire sphere AA,547.46,547.61,0.03
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib strip AA,242.44,242.54,0.04
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib quad thick,24.87,24.88,0.04
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire rib quad AA,158.42,158.48,0.04
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,19.70,19.71,0.05
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire rib tri fast,525.28,525.56,0.05
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire rib quad thick,20.12,20.13,0.05
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire rib quad thick,18.72,18.73,0.05
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 (far),50.27,50.30,0.06
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire rib tri thick,15.49,15.50,0.06
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),R2D2 (farclip),49.63,49.67,0.08
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire sphere thick,49.99,50.03,0.08
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire rib quad fast,757.43,758.08,0.09
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire sphere thick,69.59,69.66,0.10
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),R2D2 (far),45.28,45.33,0.11
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),R2D2 (farclip),45.73,45.78,0.11
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),R2D2 (farclip),44.20,44.25,0.11
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),R2D2 TEX_NEAREST,16.52,16.54,0.12
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),R2D2 (far),43.36,43.41,0.12
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire sphere thick,54.31,54.38,0.13
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire cube fast,12121.21,12139.61,0.15
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire cube AA,3600.36,3606.85,0.18
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Wire cube thick,479.24,480.22,0.20
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Point cloud pixels,2553.73,2559.18,0.21
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Bunny TEX_NEAREST,57.78,57.93,0.26
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire cube thick,550.28,552.10,0.33
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Bunny TEX_NEAREST,47.32,47.51,0.40
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Wire cube fast,12779.55,12841.09,0.48
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Grid small TEX,208.34,209.38,0.50
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Wire cube thick,875.18,879.70,0.52
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Grid near clip TEX,214.22,215.91,0.79
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Bunny (close),82.56,83.33,0.93
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Grid small TEX,76.58,77.38,1.04
+cores3,baseline_head_run1,shader_incremental_teensy_esp,1,100 x 100 (small / vertex-heavy),Sphere direct TEX,187.00,188.96,1.05
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Grid small TEX,56.14,56.79,1.16
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Grid near clip TEX,72.54,73.46,1.27
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Grid near clip TEX,52.44,53.14,1.33
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Bunny (close),27.52,27.89,1.34
+cores3,baseline_head_run1,shader_incremental_teensy_esp,2,200 x 200 (medium / balanced),Sphere direct TEX,55.97,56.72,1.34
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Bunny (close),19.81,20.09,1.41
+cores3,baseline_head_run1,shader_incremental_teensy_esp,3,240 x 240 (large for this target),Sphere direct TEX,39.79,40.35,1.41

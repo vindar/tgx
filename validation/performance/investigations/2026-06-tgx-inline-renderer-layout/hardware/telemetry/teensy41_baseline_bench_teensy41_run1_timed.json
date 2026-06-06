@@ -1,0 +1,950 @@
+[
+    {
+        "t_ms":  9,
+        "line":  "Press any key to start benchmark..."
+    },
+    {
+        "t_ms":  17,
+        "line":  ""
+    },
+    {
+        "t_ms":  17,
+        "line":  "--------------------------------------"
+    },
+    {
+        "t_ms":  17,
+        "line":  "TGX Benchmark for [Teensy 4.0/4.1]"
+    },
+    {
+        "t_ms":  18,
+        "line":  "--------------------------------------"
+    },
+    {
+        "t_ms":  18,
+        "line":  ""
+    },
+    {
+        "t_ms":  18,
+        "line":  "Profile: full real meshes + synthetic stress scenes"
+    },
+    {
+        "t_ms":  19,
+        "line":  "Real meshes: Buddha 20k triangles, R2D2 textured 8k triangles, Bunny textured 2.1k triangles"
+    },
+    {
+        "t_ms":  19,
+        "line":  "Shaders: flat, gouraud, nearest/bilinear texture, perspective/ortho, near/far clipping"
+    },
+    {
+        "t_ms":  20,
+        "line":  "Synthetic scenes: large triangles, small-triangle grid, triangle strip/triangles/quads ribbon, clipped grid, direct cube/sphere, vertex colors, pixels/dots, wireframe"
+    },
+    {
+        "t_ms":  20,
+        "line":  "Renderer sizes:"
+    },
+    {
+        "t_ms":  20,
+        "line":  "  - 100x100: small / vertex-heavy"
+    },
+    {
+        "t_ms":  21,
+        "line":  "  - 200x200: medium / balanced"
+    },
+    {
+        "t_ms":  21,
+        "line":  "  - 320x240: large / ILI9341"
+    },
+    {
+        "t_ms":  21,
+        "line":  ""
+    },
+    {
+        "t_ms":  21,
+        "line":  ""
+    },
+    {
+        "t_ms":  21,
+        "line":  "-------------------------"
+    },
+    {
+        "t_ms":  22,
+        "line":  "RENDERER SIZE: 100 x 100 (small / vertex-heavy)"
+    },
+    {
+        "t_ms":  22,
+        "line":  "BASE FRAMES: 30"
+    },
+    {
+        "t_ms":  22,
+        "line":  "-------------------------"
+    },
+    {
+        "t_ms":  568,
+        "line":  "Buddha GOURAUD    [.........]  frames: 30\t min: 13945 us\t max: 22637 us\t avg: 18496.20 us\t stddev: 3233.24 us\t fps: 54.07"
+    },
+    {
+        "t_ms":  1054,
+        "line":  "Buddha FLAT      [.........]  frames: 30\t min: 12149 us\t max: 19800 us\t avg: 16182.10 us\t stddev: 2843.15 us\t fps: 61.80"
+    },
+    {
+        "t_ms":  1581,
+        "line":  "Buddha ORTHO     [.........]  frames: 30\t min: 13466 us\t max: 20996 us\t avg: 17511.83 us\t stddev: 2767.13 us\t fps: 57.10"
+    },
+    {
+        "t_ms":  1966,
+        "line":  "Buddha (close)    [.........]  frames: 30\t min: 9441 us\t max: 16261 us\t avg: 12803.23 us\t stddev: 2557.23 us\t fps: 78.11"
+    },
+    {
+        "t_ms":  2268,
+        "line":  "Buddha (clipped)  [.........]  frames: 30\t min: 7092 us\t max: 13176 us\t avg: 10015.53 us\t stddev: 2032.61 us\t fps: 99.84"
+    },
+    {
+        "t_ms":  2727,
+        "line":  "Buddha (far)      [.........]  frames: 30\t min: 11426 us\t max: 18619 us\t avg: 15271.70 us\t stddev: 2642.47 us\t fps: 65.48"
+    },
+    {
+        "t_ms":  3194,
+        "line":  "Buddha (farclip)  [.........]  frames: 30\t min: 11574 us\t max: 18863 us\t avg: 15508.57 us\t stddev: 2695.69 us\t fps: 64.48"
+    },
+    {
+        "t_ms":  3194,
+        "line":  "total:  frames: 900\t min: 7092 us\t max: 22637 us\t avg: 16385.19 us\t stddev: 3576.39 us\t fps: 61.03"
+    },
+    {
+        "t_ms":  3195,
+        "line":  "-\u003e FINAL SCORE : 61.03 fps"
+    },
+    {
+        "t_ms":  3195,
+        "line":  ""
+    },
+    {
+        "t_ms":  3470,
+        "line":  "R2D2 GOURAUD         [.........]  frames: 30\t min: 8065 us\t max: 10020 us\t avg: 9124.80 us\t stddev: 682.63 us\t fps: 109.59"
+    },
+    {
+        "t_ms":  3705,
+        "line":  "R2D2 FLAT            [.........]  frames: 30\t min: 6942 us\t max: 8615 us\t avg: 7816.80 us\t stddev: 585.88 us\t fps: 127.93"
+    },
+    {
+        "t_ms":  4109,
+        "line":  "R2D2 TEX_NEAREST    [.........]  frames: 30\t min: 11562 us\t max: 14902 us\t avg: 13409.83 us\t stddev: 1003.49 us\t fps: 74.57"
+    },
+    {
+        "t_ms":  4611,
+        "line":  "R2D2 TEX_BILINEAR   [.........]  frames: 30\t min: 14197 us\t max: 18507 us\t avg: 16674.90 us\t stddev: 1225.34 us\t fps: 59.97"
+    },
+    {
+        "t_ms":  4973,
+        "line":  "R2D2 (close)        [.........]  frames: 30\t min: 9114 us\t max: 15940 us\t avg: 12039.27 us\t stddev: 2238.07 us\t fps: 83.06"
+    },
+    {
+        "t_ms":  5212,
+        "line":  "R2D2 (far)          [.........]  frames: 30\t min: 6983 us\t max: 8549 us\t avg: 7906.20 us\t stddev: 554.64 us\t fps: 126.48"
+    },
+    {
+        "t_ms":  5449,
+        "line":  "R2D2 (farclip)      [.........]  frames: 30\t min: 6760 us\t max: 8764 us\t avg: 7854.50 us\t stddev: 618.30 us\t fps: 127.32"
+    },
+    {
+        "t_ms":  5450,
+        "line":  "total:  frames: 1290\t min: 6760 us\t max: 18507 us\t avg: 11722.58 us\t stddev: 3597.80 us\t fps: 85.31"
+    },
+    {
+        "t_ms":  5450,
+        "line":  "-\u003e FINAL SCORE : 85.31 fps"
+    },
+    {
+        "t_ms":  5450,
+        "line":  ""
+    },
+    {
+        "t_ms":  5526,
+        "line":  "Bunny GOURAUD       [.........]  frames: 30\t min: 2316 us\t max: 2865 us\t avg: 2512.17 us\t stddev: 133.13 us\t fps: 398.06"
+    },
+    {
+        "t_ms":  5590,
+        "line":  "Bunny FLAT          [.........]  frames: 30\t min: 1920 us\t max: 2262 us\t avg: 2100.60 us\t stddev: 103.95 us\t fps: 476.05"
+    },
+    {
+        "t_ms":  5735,
+        "line":  "Bunny TEX_NEAREST  [.........]  frames: 30\t min: 4394 us\t max: 5248 us\t avg: 4793.77 us\t stddev: 250.58 us\t fps: 208.60"
+    },
+    {
+        "t_ms":  5897,
+        "line":  "Bunny TEX_BILINEAR [.........]  frames: 30\t min: 4994 us\t max: 5678 us\t avg: 5359.23 us\t stddev: 246.09 us\t fps: 186.59"
+    },
+    {
+        "t_ms":  6021,
+        "line":  "Bunny ORTHO TEX    [.........]  frames: 30\t min: 3881 us\t max: 4306 us\t avg: 4113.37 us\t stddev: 118.26 us\t fps: 243.11"
+    },
+    {
+        "t_ms":  6132,
+        "line":  "Bunny (close)       [.........]  frames: 30\t min: 3398 us\t max: 4013 us\t avg: 3616.87 us\t stddev: 165.71 us\t fps: 276.48"
+    },
+    {
+        "t_ms":  6190,
+        "line":  "Bunny (far)         [.........]  frames: 30\t min: 1713 us\t max: 2215 us\t avg: 1907.00 us\t stddev: 114.57 us\t fps: 524.38"
+    },
+    {
+        "t_ms":  6249,
+        "line":  "Bunny (farclip)     [.........]  frames: 30\t min: 1720 us\t max: 2066 us\t avg: 1908.63 us\t stddev: 83.04 us\t fps: 523.94"
+    },
+    {
+        "t_ms":  6250,
+        "line":  "total:  frames: 1350\t min: 1713 us\t max: 5678 us\t avg: 3669.76 us\t stddev: 1382.74 us\t fps: 272.50"
+    },
+    {
+        "t_ms":  6250,
+        "line":  "-\u003e FINAL SCORE : 272.50 fps"
+    },
+    {
+        "t_ms":  6250,
+        "line":  ""
+    },
+    {
+        "t_ms":  6251,
+        "line":  "Large tris FLAT Z    [.........]  frames: 15\t min: 1 us\t max: 186 us\t avg: 89.27 us\t stddev: 48.30 us\t fps: 11202.39"
+    },
+    {
+        "t_ms":  6260,
+        "line":  "Grid small FLAT      [.........]  frames: 15\t min: 129 us\t max: 1140 us\t avg: 593.87 us\t stddev: 488.28 us\t fps: 1683.88"
+    },
+    {
+        "t_ms":  6279,
+        "line":  "Grid small TEX       [.........]  frames: 15\t min: 147 us\t max: 2650 us\t avg: 1226.27 us\t stddev: 1147.98 us\t fps: 815.48"
+    },
+    {
+        "t_ms":  6293,
+        "line":  "Ribbon triangles    [.........]  frames: 15\t min: 148 us\t max: 1964 us\t avg: 871.07 us\t stddev: 777.66 us\t fps: 1148.02"
+    },
+    {
+        "t_ms":  6304,
+        "line":  "Ribbon strip        [.........]  frames: 15\t min: 104 us\t max: 1713 us\t avg: 723.53 us\t stddev: 669.17 us\t fps: 1382.11"
+    },
+    {
+        "t_ms":  6316,
+        "line":  "Ribbon quads        [.........]  frames: 15\t min: 90 us\t max: 1754 us\t avg: 737.60 us\t stddev: 696.99 us\t fps: 1355.75"
+    },
+    {
+        "t_ms":  6318,
+        "line":  "Wire rib tri fast    [.......]  frames: 8\t min: 96 us\t max: 598 us\t avg: 388.00 us\t stddev: 227.07 us\t fps: 2577.32"
+    },
+    {
+        "t_ms":  6321,
+        "line":  "Wire rib strip fast  [.......]  frames: 8\t min: 58 us\t max: 418 us\t avg: 266.25 us\t stddev: 161.80 us\t fps: 3755.87"
+    },
+    {
+        "t_ms":  6323,
+        "line":  "Wire rib quad fast   [.......]  frames: 8\t min: 49 us\t max: 476 us\t avg: 291.00 us\t stddev: 189.19 us\t fps: 3436.43"
+    },
+    {
+        "t_ms":  6335,
+        "line":  "Wire rib tri AA      [.......]  frames: 8\t min: 101 us\t max: 2548 us\t avg: 1394.62 us\t stddev: 1021.71 us\t fps: 717.04"
+    },
+    {
+        "t_ms":  6343,
+        "line":  "Wire rib strip AA    [.......]  frames: 8\t min: 102 us\t max: 1532 us\t avg: 885.00 us\t stddev: 612.38 us\t fps: 1129.94"
+    },
+    {
+        "t_ms":  6350,
+        "line":  "Wire rib quad AA     [.......]  frames: 8\t min: 44 us\t max: 1529 us\t avg: 858.75 us\t stddev: 638.48 us\t fps: 1164.48"
+    },
+    {
+        "t_ms":  6446,
+        "line":  "Wire rib tri thick   [.......]  frames: 8\t min: 96 us\t max: 21579 us\t avg: 11939.25 us\t stddev: 9271.69 us\t fps: 83.76"
+    },
+    {
+        "t_ms":  6507,
+        "line":  "Wire rib strip thick [.......]  frames: 8\t min: 58 us\t max: 13570 us\t avg: 7654.12 us\t stddev: 5928.99 us\t fps: 130.65"
+    },
+    {
+        "t_ms":  6568,
+        "line":  "Wire rib quad thick  [.......]  frames: 8\t min: 46 us\t max: 13525 us\t avg: 7609.12 us\t stddev: 5907.08 us\t fps: 131.42"
+    },
+    {
+        "t_ms":  6580,
+        "line":  "Grid near clip TEX   [.........]  frames: 10\t min: 148 us\t max: 2365 us\t avg: 1211.60 us\t stddev: 1064.63 us\t fps: 825.35"
+    },
+    {
+        "t_ms":  6583,
+        "line":  "Cube direct FLAT     [.........]  frames: 15\t min: 167 us\t max: 203 us\t avg: 188.53 us\t stddev: 11.02 us\t fps: 5304.10"
+    },
+    {
+        "t_ms":  6614,
+        "line":  "Cube direct TEX      [.........]  frames: 15\t min: 1818 us\t max: 2224 us\t avg: 2015.33 us\t stddev: 98.75 us\t fps: 496.20"
+    },
+    {
+        "t_ms":  6622,
+        "line":  "Sphere direct GOUR   [.........]  frames: 10\t min: 677 us\t max: 704 us\t avg: 688.40 us\t stddev: 7.59 us\t fps: 1452.64"
+    },
+    {
+        "t_ms":  6634,
+        "line":  "Sphere direct TEX    [.........]  frames: 10\t min: 1208 us\t max: 1239 us\t avg: 1223.00 us\t stddev: 8.87 us\t fps: 817.66"
+    },
+    {
+        "t_ms":  6637,
+        "line":  "Vertex color direct  [.........]  frames: 15\t min: 1 us\t max: 620 us\t avg: 220.40 us\t stddev: 248.79 us\t fps: 4537.21"
+    },
+    {
+        "t_ms":  6639,
+        "line":  "Point cloud pixels   [.........]  frames: 15\t min: 81 us\t max: 91 us\t avg: 83.13 us\t stddev: 2.28 us\t fps: 12028.87"
+    },
+    {
+        "t_ms":  6644,
+        "line":  "Point cloud dots     [.........]  frames: 10\t min: 461 us\t max: 504 us\t avg: 478.80 us\t stddev: 12.42 us\t fps: 2088.55"
+    },
+    {
+        "t_ms":  6645,
+        "line":  "Wire cube fast       [.........]  frames: 10\t min: 8 us\t max: 20 us\t avg: 12.80 us\t stddev: 3.68 us\t fps: 78125.00"
+    },
+    {
+        "t_ms":  6646,
+        "line":  "Wire cube AA         [.........]  frames: 10\t min: 8 us\t max: 61 us\t avg: 34.70 us\t stddev: 15.92 us\t fps: 28818.44"
+    },
+    {
+        "t_ms":  6647,
+        "line":  "Wire cube thick      [.........]  frames: 10\t min: 63 us\t max: 316 us\t avg: 194.70 us\t stddev: 78.74 us\t fps: 5136.11"
+    },
+    {
+        "t_ms":  6648,
+        "line":  "Wire sphere fast     [.......]  frames: 8\t min: 129 us\t max: 139 us\t avg: 133.38 us\t stddev: 3.53 us\t fps: 7497.66"
+    },
+    {
+        "t_ms":  6651,
+        "line":  "Wire sphere AA       [.......]  frames: 8\t min: 350 us\t max: 400 us\t avg: 373.00 us\t stddev: 17.13 us\t fps: 2680.97"
+    },
+    {
+        "t_ms":  6674,
+        "line":  "Wire sphere thick    [.......]  frames: 8\t min: 2575 us\t max: 2978 us\t avg: 2743.25 us\t stddev: 147.97 us\t fps: 364.53"
+    },
+    {
+        "t_ms":  6685,
+        "line":  "Wire bunny fast      [.......]  frames: 8\t min: 1126 us\t max: 1573 us\t avg: 1267.12 us\t stddev: 142.36 us\t fps: 789.19"
+    },
+    {
+        "t_ms":  6709,
+        "line":  "Wire bunny AA        [.......]  frames: 8\t min: 2838 us\t max: 3143 us\t avg: 3007.38 us\t stddev: 121.73 us\t fps: 332.52"
+    },
+    {
+        "t_ms":  6943,
+        "line":  "Wire bunny thick     [.......]  frames: 8\t min: 27280 us\t max: 30737 us\t avg: 29201.12 us\t stddev: 1376.47 us\t fps: 34.25"
+    },
+    {
+        "t_ms":  6944,
+        "line":  "total:  frames: 994\t min: 1 us\t max: 30737 us\t avg: 1173.97 us\t stddev: 3165.56 us\t fps: 851.81"
+    },
+    {
+        "t_ms":  6944,
+        "line":  "-\u003e SYNTHETIC SCORE : 851.81 fps"
+    },
+    {
+        "t_ms":  6944,
+        "line":  ""
+    },
+    {
+        "t_ms":  6944,
+        "line":  "*** BENCHMARK FINAL SCORE: 125.98 fps ***"
+    },
+    {
+        "t_ms":  6944,
+        "line":  ""
+    },
+    {
+        "t_ms":  6945,
+        "line":  ""
+    },
+    {
+        "t_ms":  6945,
+        "line":  "-------------------------"
+    },
+    {
+        "t_ms":  6945,
+        "line":  "RENDERER SIZE: 200 x 200 (medium / balanced)"
+    },
+    {
+        "t_ms":  6945,
+        "line":  "BASE FRAMES: 30"
+    },
+    {
+        "t_ms":  6945,
+        "line":  "-------------------------"
+    },
+    {
+        "t_ms":  7591,
+        "line":  "Buddha GOURAUD    [.........]  frames: 30\t min: 16381 us\t max: 26046 us\t avg: 21438.27 us\t stddev: 3609.44 us\t fps: 46.65"
+    },
+    {
+        "t_ms":  8147,
+        "line":  "Buddha FLAT      [.........]  frames: 30\t min: 13945 us\t max: 22365 us\t avg: 18374.10 us\t stddev: 3143.83 us\t fps: 54.42"
+    },
+    {
+        "t_ms":  8762,
+        "line":  "Buddha ORTHO     [.........]  frames: 30\t min: 15746 us\t max: 24436 us\t avg: 20342.30 us\t stddev: 3196.64 us\t fps: 49.16"
+    },
+    {
+        "t_ms":  9230,
+        "line":  "Buddha (close)    [.........]  frames: 30\t min: 11848 us\t max: 19365 us\t avg: 15437.00 us\t stddev: 2684.64 us\t fps: 64.78"
+    },
+    {
+        "t_ms":  9573,
+        "line":  "Buddha (clipped)  [.........]  frames: 30\t min: 7195 us\t max: 15044 us\t avg: 11260.70 us\t stddev: 2459.25 us\t fps: 88.80"
+    },
+    {
+        "t_ms":  10053,
+        "line":  "Buddha (far)      [.........]  frames: 30\t min: 11952 us\t max: 19204 us\t avg: 15808.63 us\t stddev: 2668.76 us\t fps: 63.26"
+    },
+    {
+        "t_ms":  10536,
+        "line":  "Buddha (farclip)  [.........]  frames: 30\t min: 11946 us\t max: 19315 us\t avg: 15929.90 us\t stddev: 2721.89 us\t fps: 62.78"
+    },
+    {
+        "t_ms":  10537,
+        "line":  "total:  frames: 900\t min: 7195 us\t max: 26046 us\t avg: 18657.86 us\t stddev: 4112.68 us\t fps: 53.60"
+    },
+    {
+        "t_ms":  10537,
+        "line":  "-\u003e FINAL SCORE : 53.60 fps"
+    },
+    {
+        "t_ms":  10537,
+        "line":  ""
+    },
+    {
+        "t_ms":  10882,
+        "line":  "R2D2 GOURAUD         [.........]  frames: 30\t min: 10043 us\t max: 12439 us\t avg: 11371.13 us\t stddev: 798.33 us\t fps: 87.94"
+    },
+    {
+        "t_ms":  11165,
+        "line":  "R2D2 FLAT            [.........]  frames: 30\t min: 8208 us\t max: 10176 us\t avg: 9260.53 us\t stddev: 657.11 us\t fps: 107.99"
+    },
+    {
+        "t_ms":  11783,
+        "line":  "R2D2 TEX_NEAREST    [.........]  frames: 30\t min: 17687 us\t max: 22333 us\t avg: 20412.83 us\t stddev: 1406.10 us\t fps: 48.99"
+    },
+    {
+        "t_ms":  12544,
+        "line":  "R2D2 TEX_BILINEAR   [.........]  frames: 30\t min: 21897 us\t max: 27427 us\t avg: 25209.40 us\t stddev: 1670.77 us\t fps: 39.67"
+    },
+    {
+        "t_ms":  13349,
+        "line":  "R2D2 (close)        [.........]  frames: 30\t min: 18551 us\t max: 39524 us\t avg: 26664.70 us\t stddev: 7368.18 us\t fps: 37.50"
+    },
+    {
+        "t_ms":  13627,
+        "line":  "R2D2 (far)          [.........]  frames: 30\t min: 8089 us\t max: 9831 us\t avg: 9082.83 us\t stddev: 608.51 us\t fps: 110.10"
+    },
+    {
+        "t_ms":  13896,
+        "line":  "R2D2 (farclip)      [.........]  frames: 30\t min: 7683 us\t max: 9879 us\t avg: 8796.67 us\t stddev: 674.95 us\t fps: 113.68"
+    },
+    {
+        "t_ms":  13897,
+        "line":  "total:  frames: 1290\t min: 7683 us\t max: 39524 us\t avg: 17146.86 us\t stddev: 7279.14 us\t fps: 58.32"
+    },
+    {
+        "t_ms":  13897,
+        "line":  "-\u003e FINAL SCORE : 58.32 fps"
+    },
+    {
+        "t_ms":  13897,
+        "line":  ""
+    },
+    {
+        "t_ms":  14003,
+        "line":  "Bunny GOURAUD       [.........]  frames: 30\t min: 3216 us\t max: 3712 us\t avg: 3413.57 us\t stddev: 146.44 us\t fps: 292.95"
+    },
+    {
+        "t_ms":  14087,
+        "line":  "Bunny FLAT          [.........]  frames: 30\t min: 2495 us\t max: 2813 us\t avg: 2668.60 us\t stddev: 112.17 us\t fps: 374.73"
+    },
+    {
+        "t_ms":  14315,
+        "line":  "Bunny TEX_NEAREST  [.........]  frames: 30\t min: 6824 us\t max: 7899 us\t avg: 7425.20 us\t stddev: 318.83 us\t fps: 134.68"
+    },
+    {
+        "t_ms":  14576,
+        "line":  "Bunny TEX_BILINEAR [.........]  frames: 30\t min: 7851 us\t max: 9205 us\t avg: 8504.33 us\t stddev: 386.03 us\t fps: 117.59"
+    },
+    {
+        "t_ms":  14781,
+        "line":  "Bunny ORTHO TEX    [.........]  frames: 30\t min: 6322 us\t max: 7146 us\t avg: 6698.13 us\t stddev: 239.54 us\t fps: 149.30"
+    },
+    {
+        "t_ms":  15051,
+        "line":  "Bunny (close)       [.........]  frames: 30\t min: 8207 us\t max: 9767 us\t avg: 8816.23 us\t stddev: 397.78 us\t fps: 113.43"
+    },
+    {
+        "t_ms":  15126,
+        "line":  "Bunny (far)         [.........]  frames: 30\t min: 2175 us\t max: 2734 us\t avg: 2345.97 us\t stddev: 135.86 us\t fps: 426.26"
+    },
+    {
+        "t_ms":  15200,
+        "line":  "Bunny (farclip)     [.........]  frames: 30\t min: 2065 us\t max: 2462 us\t avg: 2268.90 us\t stddev: 101.11 us\t fps: 440.74"
+    },
+    {
+        "t_ms":  15201,
+        "line":  "total:  frames: 1350\t min: 2065 us\t max: 9767 us\t avg: 5713.43 us\t stddev: 2598.36 us\t fps: 175.03"
+    },
+    {
+        "t_ms":  15201,
+        "line":  "-\u003e FINAL SCORE : 175.03 fps"
+    },
+    {
+        "t_ms":  15201,
+        "line":  ""
+    },
+    {
+        "t_ms":  15207,
+        "line":  "Large tris FLAT Z    [.........]  frames: 15\t min: 1 us\t max: 606 us\t avg: 351.07 us\t stddev: 187.65 us\t fps: 2848.46"
+    },
+    {
+        "t_ms":  15223,
+        "line":  "Grid small FLAT      [.........]  frames: 15\t min: 129 us\t max: 1906 us\t avg: 923.00 us\t stddev: 837.87 us\t fps: 1083.42"
+    },
+    {
+        "t_ms":  15269,
+        "line":  "Grid small TEX       [.........]  frames: 15\t min: 148 us\t max: 7087 us\t avg: 2937.87 us\t stddev: 3024.00 us\t fps: 340.38"
+    },
+    {
+        "t_ms":  15293,
+        "line":  "Ribbon triangles    [.........]  frames: 15\t min: 148 us\t max: 3449 us\t avg: 1459.60 us\t stddev: 1409.63 us\t fps: 685.12"
+    },
+    {
+        "t_ms":  15315,
+        "line":  "Ribbon strip        [.........]  frames: 15\t min: 103 us\t max: 3205 us\t avg: 1315.73 us\t stddev: 1304.89 us\t fps: 760.03"
+    },
+    {
+        "t_ms":  15338,
+        "line":  "Ribbon quads        [.........]  frames: 15\t min: 90 us\t max: 3238 us\t avg: 1326.13 us\t stddev: 1329.89 us\t fps: 754.07"
+    },
+    {
+        "t_ms":  15343,
+        "line":  "Wire rib tri fast    [.......]  frames: 8\t min: 95 us\t max: 771 us\t avg: 463.00 us\t stddev: 288.96 us\t fps: 2159.83"
+    },
+    {
+        "t_ms":  15347,
+        "line":  "Wire rib strip fast  [.......]  frames: 8\t min: 57 us\t max: 507 us\t avg: 300.12 us\t stddev: 191.28 us\t fps: 3331.95"
+    },
+    {
+        "t_ms":  15351,
+        "line":  "Wire rib quad fast   [.......]  frames: 8\t min: 48 us\t max: 564 us\t avg: 329.00 us\t stddev: 220.79 us\t fps: 3039.51"
+    },
+    {
+        "t_ms":  15367,
+        "line":  "Wire rib tri AA      [.......]  frames: 8\t min: 101 us\t max: 3709 us\t avg: 1916.75 us\t stddev: 1455.50 us\t fps: 521.72"
+    },
+    {
+        "t_ms":  15377,
+        "line":  "Wire rib strip AA    [.......]  frames: 8\t min: 102 us\t max: 2145 us\t avg: 1159.75 us\t stddev: 839.03 us\t fps: 862.25"
+    },
+    {
+        "t_ms":  15387,
+        "line":  "Wire rib quad AA     [.......]  frames: 8\t min: 44 us\t max: 2126 us\t avg: 1127.75 us\t stddev: 859.73 us\t fps: 886.72"
+    },
+    {
+        "t_ms":  15503,
+        "line":  "Wire rib tri thick   [.......]  frames: 8\t min: 95 us\t max: 26681 us\t avg: 14218.88 us\t stddev: 11120.89 us\t fps: 70.33"
+    },
+    {
+        "t_ms":  15575,
+        "line":  "Wire rib strip thick [.......]  frames: 8\t min: 57 us\t max: 16253 us\t avg: 8866.25 us\t stddev: 6905.49 us\t fps: 112.79"
+    },
+    {
+        "t_ms":  15646,
+        "line":  "Wire rib quad thick  [.......]  frames: 8\t min: 46 us\t max: 16189 us\t avg: 8810.75 us\t stddev: 6875.35 us\t fps: 113.50"
+    },
+    {
+        "t_ms":  15680,
+        "line":  "Grid near clip TEX   [.........]  frames: 10\t min: 148 us\t max: 6853 us\t avg: 3239.50 us\t stddev: 3116.04 us\t fps: 308.69"
+    },
+    {
+        "t_ms":  15693,
+        "line":  "Cube direct FLAT     [.........]  frames: 15\t min: 670 us\t max: 799 us\t avg: 741.13 us\t stddev: 35.91 us\t fps: 1349.28"
+    },
+    {
+        "t_ms":  15816,
+        "line":  "Cube direct TEX      [.........]  frames: 15\t min: 7216 us\t max: 8887 us\t avg: 8026.20 us\t stddev: 400.19 us\t fps: 124.59"
+    },
+    {
+        "t_ms":  15835,
+        "line":  "Sphere direct GOUR   [.........]  frames: 10\t min: 1723 us\t max: 1778 us\t avg: 1744.70 us\t stddev: 14.67 us\t fps: 573.16"
+    },
+    {
+        "t_ms":  15875,
+        "line":  "Sphere direct TEX    [.........]  frames: 10\t min: 3790 us\t max: 3860 us\t avg: 3819.80 us\t stddev: 18.70 us\t fps: 261.79"
+    },
+    {
+        "t_ms":  15889,
+        "line":  "Vertex color direct  [.........]  frames: 15\t min: 1 us\t max: 2429 us\t avg: 859.60 us\t stddev: 992.66 us\t fps: 1163.33"
+    },
+    {
+        "t_ms":  15892,
+        "line":  "Point cloud pixels   [.........]  frames: 15\t min: 86 us\t max: 94 us\t avg: 87.93 us\t stddev: 1.84 us\t fps: 11372.25"
+    },
+    {
+        "t_ms":  15899,
+        "line":  "Point cloud dots     [.........]  frames: 10\t min: 516 us\t max: 543 us\t avg: 529.10 us\t stddev: 6.73 us\t fps: 1890.00"
+    },
+    {
+        "t_ms":  15901,
+        "line":  "Wire cube fast       [.........]  frames: 10\t min: 5 us\t max: 26 us\t avg: 15.20 us\t stddev: 5.86 us\t fps: 65789.48"
+    },
+    {
+        "t_ms":  15902,
+        "line":  "Wire cube AA         [.........]  frames: 10\t min: 5 us\t max: 104 us\t avg: 56.70 us\t stddev: 28.05 us\t fps: 17636.68"
+    },
+    {
+        "t_ms":  15910,
+        "line":  "Wire cube thick      [.........]  frames: 10\t min: 70 us\t max: 475 us\t avg: 290.20 us\t stddev: 121.35 us\t fps: 3445.90"
+    },
+    {
+        "t_ms":  15910,
+        "line":  "Wire sphere fast     [.......]  frames: 8\t min: 144 us\t max: 156 us\t avg: 149.00 us\t stddev: 4.33 us\t fps: 6711.41"
+    },
+    {
+        "t_ms":  15914,
+        "line":  "Wire sphere AA       [.......]  frames: 8\t min: 473 us\t max: 544 us\t avg: 506.62 us\t stddev: 24.71 us\t fps: 1973.85"
+    },
+    {
+        "t_ms":  15941,
+        "line":  "Wire sphere thick    [.......]  frames: 8\t min: 3104 us\t max: 3572 us\t avg: 3272.75 us\t stddev: 188.49 us\t fps: 305.55"
+    },
+    {
+        "t_ms":  15954,
+        "line":  "Wire bunny fast      [.......]  frames: 8\t min: 1221 us\t max: 1646 us\t avg: 1356.62 us\t stddev: 133.72 us\t fps: 737.12"
+    },
+    {
+        "t_ms":  15983,
+        "line":  "Wire bunny AA        [.......]  frames: 8\t min: 3337 us\t max: 3682 us\t avg: 3528.38 us\t stddev: 127.09 us\t fps: 283.42"
+    },
+    {
+        "t_ms":  16237,
+        "line":  "Wire bunny thick     [.......]  frames: 8\t min: 29509 us\t max: 32964 us\t avg: 31486.50 us\t stddev: 1387.74 us\t fps: 31.76"
+    },
+    {
+        "t_ms":  16237,
+        "line":  "total:  frames: 994\t min: 1 us\t max: 32964 us\t avg: 2276.75 us\t stddev: 4035.76 us\t fps: 439.22"
+    },
+    {
+        "t_ms":  16237,
+        "line":  "-\u003e SYNTHETIC SCORE : 439.22 fps"
+    },
+    {
+        "t_ms":  16237,
+        "line":  ""
+    },
+    {
+        "t_ms":  16238,
+        "line":  "*** BENCHMARK FINAL SCORE: 92.74 fps ***"
+    },
+    {
+        "t_ms":  16238,
+        "line":  ""
+    },
+    {
+        "t_ms":  16238,
+        "line":  ""
+    },
+    {
+        "t_ms":  16238,
+        "line":  "-------------------------"
+    },
+    {
+        "t_ms":  16238,
+        "line":  "RENDERER SIZE: 320 x 240 (large / ILI9341)"
+    },
+    {
+        "t_ms":  16238,
+        "line":  "BASE FRAMES: 30"
+    },
+    {
+        "t_ms":  16239,
+        "line":  "-------------------------"
+    },
+    {
+        "t_ms":  16919,
+        "line":  "Buddha GOURAUD    [.........]  frames: 30\t min: 17306 us\t max: 27144 us\t avg: 22448.40 us\t stddev: 3674.38 us\t fps: 44.55"
+    },
+    {
+        "t_ms":  17501,
+        "line":  "Buddha FLAT      [.........]  frames: 30\t min: 14542 us\t max: 23113 us\t avg: 19062.30 us\t stddev: 3200.15 us\t fps: 52.46"
+    },
+    {
+        "t_ms":  18147,
+        "line":  "Buddha ORTHO     [.........]  frames: 30\t min: 16483 us\t max: 25437 us\t avg: 21198.93 us\t stddev: 3295.19 us\t fps: 47.17"
+    },
+    {
+        "t_ms":  18722,
+        "line":  "Buddha (close)    [.........]  frames: 30\t min: 15259 us\t max: 22831 us\t avg: 18868.37 us\t stddev: 2778.50 us\t fps: 53.00"
+    },
+    {
+        "t_ms":  19110,
+        "line":  "Buddha (clipped)  [.........]  frames: 30\t min: 7080 us\t max: 17481 us\t avg: 12606.03 us\t stddev: 3271.27 us\t fps: 79.33"
+    },
+    {
+        "t_ms":  19602,
+        "line":  "Buddha (far)      [.........]  frames: 30\t min: 12217 us\t max: 19508 us\t avg: 16071.13 us\t stddev: 2682.12 us\t fps: 62.22"
+    },
+    {
+        "t_ms":  20097,
+        "line":  "Buddha (farclip)  [.........]  frames: 30\t min: 12174 us\t max: 19572 us\t avg: 16153.97 us\t stddev: 2731.17 us\t fps: 61.90"
+    },
+    {
+        "t_ms":  20097,
+        "line":  "total:  frames: 900\t min: 7080 us\t max: 27144 us\t avg: 19702.78 us\t stddev: 4125.60 us\t fps: 50.75"
+    },
+    {
+        "t_ms":  20097,
+        "line":  "-\u003e FINAL SCORE : 50.75 fps"
+    },
+    {
+        "t_ms":  20098,
+        "line":  ""
+    },
+    {
+        "t_ms":  20479,
+        "line":  "R2D2 GOURAUD         [.........]  frames: 30\t min: 10962 us\t max: 13532 us\t avg: 12411.17 us\t stddev: 852.02 us\t fps: 80.57"
+    },
+    {
+        "t_ms":  20784,
+        "line":  "R2D2 FLAT            [.........]  frames: 30\t min: 8750 us\t max: 10787 us\t avg: 9860.20 us\t stddev: 683.96 us\t fps: 101.42"
+    },
+    {
+        "t_ms":  21492,
+        "line":  "R2D2 TEX_NEAREST    [.........]  frames: 30\t min: 20233 us\t max: 25295 us\t avg: 23252.77 us\t stddev: 1513.33 us\t fps: 43.01"
+    },
+    {
+        "t_ms":  22363,
+        "line":  "R2D2 TEX_BILINEAR   [.........]  frames: 30\t min: 24918 us\t max: 31000 us\t avg: 28719.53 us\t stddev: 1796.65 us\t fps: 34.82"
+    },
+    {
+        "t_ms":  23763,
+        "line":  "R2D2 (close)        [.........]  frames: 30\t min: 31268 us\t max: 72926 us\t avg: 46358.46 us\t stddev: 13340.52 us\t fps: 21.57"
+    },
+    {
+        "t_ms":  24062,
+        "line":  "R2D2 (far)          [.........]  frames: 30\t min: 8405 us\t max: 10441 us\t avg: 9618.73 us\t stddev: 659.61 us\t fps: 103.96"
+    },
+    {
+        "t_ms":  24347,
+        "line":  "R2D2 (farclip)      [.........]  frames: 30\t min: 8160 us\t max: 10379 us\t avg: 9186.70 us\t stddev: 686.00 us\t fps: 108.85"
+    },
+    {
+        "t_ms":  24347,
+        "line":  "total:  frames: 1290\t min: 8160 us\t max: 72926 us\t avg: 20349.12 us\t stddev: 11069.62 us\t fps: 49.14"
+    },
+    {
+        "t_ms":  24348,
+        "line":  "-\u003e FINAL SCORE : 49.14 fps"
+    },
+    {
+        "t_ms":  24348,
+        "line":  ""
+    },
+    {
+        "t_ms":  24472,
+        "line":  "Bunny GOURAUD       [.........]  frames: 30\t min: 3669 us\t max: 4140 us\t avg: 3843.63 us\t stddev: 155.60 us\t fps: 260.17"
+    },
+    {
+        "t_ms":  24568,
+        "line":  "Bunny FLAT          [.........]  frames: 30\t min: 2715 us\t max: 3106 us\t avg: 2910.27 us\t stddev: 123.13 us\t fps: 343.61"
+    },
+    {
+        "t_ms":  24830,
+        "line":  "Bunny TEX_NEAREST  [.........]  frames: 30\t min: 7583 us\t max: 8859 us\t avg: 8389.03 us\t stddev: 350.90 us\t fps: 119.20"
+    },
+    {
+        "t_ms":  25140,
+        "line":  "Bunny TEX_BILINEAR [.........]  frames: 30\t min: 9034 us\t max: 10851 us\t avg: 10020.27 us\t stddev: 495.65 us\t fps: 99.80"
+    },
+    {
+        "t_ms":  25370,
+        "line":  "Bunny ORTHO TEX    [.........]  frames: 30\t min: 6899 us\t max: 7716 us\t avg: 7362.20 us\t stddev: 236.49 us\t fps: 135.83"
+    },
+    {
+        "t_ms":  25817,
+        "line":  "Bunny (close)       [.........]  frames: 30\t min: 13569 us\t max: 16100 us\t avg: 14552.13 us\t stddev: 694.85 us\t fps: 68.72"
+    },
+    {
+        "t_ms":  25902,
+        "line":  "Bunny (far)         [.........]  frames: 30\t min: 2318 us\t max: 2875 us\t avg: 2523.17 us\t stddev: 125.50 us\t fps: 396.33"
+    },
+    {
+        "t_ms":  25985,
+        "line":  "Bunny (farclip)     [.........]  frames: 30\t min: 2241 us\t max: 2633 us\t avg: 2432.70 us\t stddev: 100.56 us\t fps: 411.07"
+    },
+    {
+        "t_ms":  25986,
+        "line":  "total:  frames: 1350\t min: 2241 us\t max: 16100 us\t avg: 6811.27 us\t stddev: 3591.33 us\t fps: 146.82"
+    },
+    {
+        "t_ms":  25986,
+        "line":  "-\u003e FINAL SCORE : 146.82 fps"
+    },
+    {
+        "t_ms":  25986,
+        "line":  ""
+    },
+    {
+        "t_ms":  25998,
+        "line":  "Large tris FLAT Z    [.........]  frames: 15\t min: 1 us\t max: 967 us\t avg: 541.00 us\t stddev: 310.48 us\t fps: 1848.43"
+    },
+    {
+        "t_ms":  26020,
+        "line":  "Grid small FLAT      [.........]  frames: 15\t min: 129 us\t max: 2685 us\t avg: 1187.20 us\t stddev: 1130.55 us\t fps: 842.32"
+    },
+    {
+        "t_ms":  26092,
+        "line":  "Grid small TEX       [.........]  frames: 15\t min: 148 us\t max: 11932 us\t avg: 4453.07 us\t stddev: 4786.55 us\t fps: 224.56"
+    },
+    {
+        "t_ms":  26128,
+        "line":  "Ribbon triangles    [.........]  frames: 15\t min: 148 us\t max: 4739 us\t avg: 2081.40 us\t stddev: 2072.29 us\t fps: 480.45"
+    },
+    {
+        "t_ms":  26161,
+        "line":  "Ribbon strip        [.........]  frames: 15\t min: 103 us\t max: 4503 us\t avg: 1942.13 us\t stddev: 1971.69 us\t fps: 514.90"
+    },
+    {
+        "t_ms":  26195,
+        "line":  "Ribbon quads        [.........]  frames: 15\t min: 90 us\t max: 4515 us\t avg: 1947.80 us\t stddev: 1991.04 us\t fps: 513.40"
+    },
+    {
+        "t_ms":  26201,
+        "line":  "Wire rib tri fast    [.......]  frames: 8\t min: 95 us\t max: 836 us\t avg: 506.38 us\t stddev: 321.16 us\t fps: 1974.82"
+    },
+    {
+        "t_ms":  26206,
+        "line":  "Wire rib strip fast  [.......]  frames: 8\t min: 57 us\t max: 540 us\t avg: 322.62 us\t stddev: 207.76 us\t fps: 3099.57"
+    },
+    {
+        "t_ms":  26212,
+        "line":  "Wire rib quad fast   [.......]  frames: 8\t min: 48 us\t max: 596 us\t avg: 350.12 us\t stddev: 236.67 us\t fps: 2856.12"
+    },
+    {
+        "t_ms":  26232,
+        "line":  "Wire rib tri AA      [.......]  frames: 8\t min: 101 us\t max: 4181 us\t avg: 2240.38 us\t stddev: 1687.18 us\t fps: 446.35"
+    },
+    {
+        "t_ms":  26245,
+        "line":  "Wire rib strip AA    [.......]  frames: 8\t min: 101 us\t max: 2385 us\t avg: 1331.62 us\t stddev: 963.97 us\t fps: 750.96"
+    },
+    {
+        "t_ms":  26258,
+        "line":  "Wire rib quad AA     [.......]  frames: 8\t min: 44 us\t max: 2363 us\t avg: 1295.50 us\t stddev: 981.13 us\t fps: 771.90"
+    },
+    {
+        "t_ms":  26386,
+        "line":  "Wire rib tri thick   [.......]  frames: 8\t min: 95 us\t max: 28628 us\t avg: 15655.50 us\t stddev: 12163.80 us\t fps: 63.88"
+    },
+    {
+        "t_ms":  26465,
+        "line":  "Wire rib strip thick [.......]  frames: 8\t min: 57 us\t max: 17259 us\t avg: 9650.62 us\t stddev: 7477.18 us\t fps: 103.62"
+    },
+    {
+        "t_ms":  26545,
+        "line":  "Wire rib quad thick  [.......]  frames: 8\t min: 46 us\t max: 17188 us\t avg: 9589.88 us\t stddev: 7441.33 us\t fps: 104.28"
+    },
+    {
+        "t_ms":  26602,
+        "line":  "Grid near clip TEX   [.........]  frames: 10\t min: 148 us\t max: 12362 us\t avg: 5459.30 us\t stddev: 5467.58 us\t fps: 183.17"
+    },
+    {
+        "t_ms":  26624,
+        "line":  "Cube direct FLAT     [.........]  frames: 15\t min: 1061 us\t max: 1250 us\t avg: 1156.07 us\t stddev: 48.65 us\t fps: 865.00"
+    },
+    {
+        "t_ms":  26818,
+        "line":  "Cube direct TEX      [.........]  frames: 15\t min: 11455 us\t max: 14064 us\t avg: 12598.27 us\t stddev: 627.14 us\t fps: 79.38"
+    },
+    {
+        "t_ms":  26844,
+        "line":  "Sphere direct GOUR   [.........]  frames: 10\t min: 2333 us\t max: 2391 us\t avg: 2355.90 us\t stddev: 15.32 us\t fps: 424.47"
+    },
+    {
+        "t_ms":  26900,
+        "line":  "Sphere direct TEX    [.........]  frames: 10\t min: 5292 us\t max: 5381 us\t avg: 5329.80 us\t stddev: 24.04 us\t fps: 187.62"
+    },
+    {
+        "t_ms":  26923,
+        "line":  "Vertex color direct  [.........]  frames: 15\t min: 1 us\t max: 3591 us\t avg: 1238.00 us\t stddev: 1447.08 us\t fps: 807.75"
+    },
+    {
+        "t_ms":  26929,
+        "line":  "Point cloud pixels   [.........]  frames: 15\t min: 90 us\t max: 97 us\t avg: 91.40 us\t stddev: 1.70 us\t fps: 10940.92"
+    },
+    {
+        "t_ms":  26938,
+        "line":  "Point cloud dots     [.........]  frames: 10\t min: 571 us\t max: 588 us\t avg: 578.50 us\t stddev: 4.84 us\t fps: 1728.61"
+    },
+    {
+        "t_ms":  26941,
+        "line":  "Wire cube fast       [.........]  frames: 10\t min: 9 us\t max: 27 us\t avg: 18.20 us\t stddev: 5.46 us\t fps: 54945.05"
+    },
+    {
+        "t_ms":  26945,
+        "line":  "Wire cube AA         [.........]  frames: 10\t min: 39 us\t max: 146 us\t avg: 88.60 us\t stddev: 32.54 us\t fps: 11286.68"
+    },
+    {
+        "t_ms":  26951,
+        "line":  "Wire cube thick      [.........]  frames: 10\t min: 163 us\t max: 616 us\t avg: 398.80 us\t stddev: 140.17 us\t fps: 2507.52"
+    },
+    {
+        "t_ms":  26955,
+        "line":  "Wire sphere fast     [.......]  frames: 8\t min: 150 us\t max: 163 us\t avg: 155.25 us\t stddev: 4.92 us\t fps: 6441.22"
+    },
+    {
+        "t_ms":  26962,
+        "line":  "Wire sphere AA       [.......]  frames: 8\t min: 523 us\t max: 603 us\t avg: 560.50 us\t stddev: 27.65 us\t fps: 1784.12"
+    },
+    {
+        "t_ms":  26992,
+        "line":  "Wire sphere thick    [.......]  frames: 8\t min: 3275 us\t max: 3793 us\t avg: 3476.38 us\t stddev: 197.69 us\t fps: 287.66"
+    },
+    {
+        "t_ms":  27005,
+        "line":  "Wire bunny fast      [.......]  frames: 8\t min: 1236 us\t max: 1684 us\t avg: 1385.12 us\t stddev: 134.82 us\t fps: 721.96"
+    },
+    {
+        "t_ms":  27038,
+        "line":  "Wire bunny AA        [.......]  frames: 8\t min: 3522 us\t max: 3869 us\t avg: 3709.38 us\t stddev: 127.91 us\t fps: 269.59"
+    },
+    {
+        "t_ms":  27300,
+        "line":  "Wire bunny thick     [.......]  frames: 8\t min: 30404 us\t max: 33887 us\t avg: 32313.12 us\t stddev: 1397.74 us\t fps: 30.95"
+    },
+    {
+        "t_ms":  27300,
+        "line":  "total:  frames: 994\t min: 1 us\t max: 33887 us\t avg: 3134.05 us\t stddev: 4995.50 us\t fps: 319.08"
+    },
+    {
+        "t_ms":  27300,
+        "line":  "-\u003e SYNTHETIC SCORE : 319.08 fps"
+    },
+    {
+        "t_ms":  27300,
+        "line":  ""
+    },
+    {
+        "t_ms":  27301,
+        "line":  "*** BENCHMARK FINAL SCORE: 80.54 fps ***"
+    },
+    {
+        "t_ms":  27301,
+        "line":  ""
+    },
+    {
+        "t_ms":  27301,
+        "line":  ""
+    },
+    {
+        "t_ms":  27301,
+        "line":  ""
+    },
+    {
+        "t_ms":  27301,
+        "line":  "Benchmark completed in 27.29 seconds"
+    }
+]

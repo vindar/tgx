@@ -1,0 +1,4 @@
+﻿"group","board","port","example","label","exit_code","status","parsed_rows","metadata"
+"pico2","pico2","COM21","bunny_fig","baseline_example_pico2_bunny_fig_run1","0","SUCCESS","56","D:\Programmation\tgx\tmp\hardware_validation\parsed\pico2_baseline_example_pico2_bunny_fig_run1.json"
+"pico2","pico2","COM21","borg_cube","baseline_example_pico2_borg_cube_run1","0","SUCCESS","59","D:\Programmation\tgx\tmp\hardware_validation\parsed\pico2_baseline_example_pico2_borg_cube_run1.json"
+"pico2","pico2","COM21","scream","baseline_example_pico2_scream_run1","0","SUCCESS","59","D:\Programmation\tgx\tmp\hardware_validation\parsed\pico2_baseline_example_pico2_scream_run1.json"

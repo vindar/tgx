@@ -1,0 +1,35 @@
+
+2026-06-05 19:06:44.555 BOARD=picow
+2026-06-05 19:06:44.568 PORT=COM28
+2026-06-05 19:06:44.569 UPLOAD_PORT=COM28
+2026-06-05 19:06:44.571 FQBN=rp2040:rp2040:rpipicow
+2026-06-05 19:06:44.573 SKETCH=D:\Programmation\tgx\tmp\hardware_validation\sketches\TelemetryStreamProbe
+2026-06-05 19:06:44.576 PARSE_MODE=probe
+2026-06-05 19:06:44.578 VISIBLE_PORTS_BEFORE=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-05 19:06:44.579 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-05 19:06:44.584 ATTEMPT=1
+2026-06-05 19:06:44.910 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-05 19:06:44.919 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn rp2040:rp2040:rpipicow --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\tmp\hardware_validation\builds\picow_telemetry_probe_rerun --port COM28 --upload D:\Programmation\tgx\tmp\hardware_validation\sketches\TelemetryStreamProbe
+2026-06-05 19:07:13.020 ARDUINO: Le croquis utilise 78572 octets (3%) de l'espace de stockage de programmes. Le maximum est de 2093056 octets.
+2026-06-05 19:07:13.022 ARDUINO: Les variables globales utilisent 69520 octets (26%) de mémoire dynamique, ce qui laisse 192624 octets pour les variables locales. Le maximum est de 262144 octets.
+2026-06-05 19:07:13.024 ARDUINO: Resetting COM28
+2026-06-05 19:07:13.026 ARDUINO: Converting to uf2, output size: 191488, start address: 0x2000
+2026-06-05 19:07:13.027 ARDUINO: Scanning for RP2040 devices
+2026-06-05 19:07:13.029 ARDUINO: No drive to deploy.
+2026-06-05 19:07:13.032 ARDUINO: Error during Upload: Failed uploading: uploading error: exit status 1
+2026-06-05 19:07:13.034 ARDUINO_EXIT_CODE=1
+2026-06-05 19:07:13.059 FINAL_STATUS=UPLOAD_FAILED

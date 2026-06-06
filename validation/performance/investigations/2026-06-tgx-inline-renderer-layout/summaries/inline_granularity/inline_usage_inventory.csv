@@ -1,0 +1,504 @@
+file,line,macro,function_or_context,category,tiny,likely_hot,path_type,risk_note,source
+src/bseg.h,579,TGX_INLINE,unitVec,bseg,maybe,maybe,line-drawing,,TGX_INLINE inline fVec2 unitVec() const
+src/bseg.h,587,TGX_INLINE,x_major,bseg,yes,maybe,line-drawing,,TGX_INLINE inline bool x_major() const { return _x_major; }
+src/bseg.h,593,TGX_INLINE,step_x,bseg,yes,maybe,line-drawing,,TGX_INLINE inline int32_t step_x() const { return _stepx; }
+src/bseg.h,599,TGX_INLINE,step_y,bseg,yes,maybe,line-drawing,,TGX_INLINE inline int32_t step_y() const { return _stepy; }
+src/bseg.h,605,TGX_INLINE,len,bseg,yes,maybe,line-drawing,,TGX_INLINE inline const int32_t & len() const { return _len; }
+src/bseg.h,611,TGX_INLINE,len,bseg,yes,maybe,line-drawing,,TGX_INLINE inline int32_t & len() { return _len; }
+src/bseg.h,617,TGX_INLINE,inclen,bseg,yes,maybe,line-drawing,,TGX_INLINE inline void inclen() { _len++; }
+src/bseg.h,622,TGX_INLINE,declen,bseg,yes,maybe,line-drawing,,TGX_INLINE inline void declen() { _len--; }
+src/bseg.h,627,TGX_INLINE,pos,bseg,yes,maybe,line-drawing,,"TGX_INLINE inline tgx::iVec2 pos() const { return { _x,_y }; }"
+src/bseg.h,633,TGX_INLINE,X,bseg,yes,maybe,line-drawing,,TGX_INLINE inline int32_t X() const { return _x; }
+src/bseg.h,639,TGX_INLINE,Y,bseg,yes,maybe,line-drawing,,TGX_INLINE inline int32_t Y() const { return _y; }
+src/bseg.h,645,TGX_INLINE,,bseg,maybe,maybe,line-drawing,,TGX_INLINE inline bool operator==(const BSeg& seg) const
+src/bseg.h,654,TGX_INLINE,,bseg,maybe,maybe,line-drawing,,TGX_INLINE inline bool operator!=(const BSeg& seg) const
+src/bseg.h,663,TGX_INLINE,save,bseg,maybe,maybe,line-drawing,,TGX_INLINE inline BSegState save() const;
+src/bseg.h,669,TGX_INLINE,restore,bseg,maybe,maybe,line-drawing,,TGX_INLINE inline void restore(const BSegState& state);
+src/Color.h,591,TGX_INLINE,interpolateColorsTriangle,pixel-color,no,yes,per-pixel,forced inline may alter code size/register pressure,"TGX_INLINE inline RGB565 interpolateColorsTriangle(const RGB565 & col1, int32_t C1, const  RGB565 & col2, int32_t C2, const  RGB565 & col3, const int32_t totC)"
+src/Color.h,621,TGX_INLINE,interpolateColorsBilinear,pixel-color,no,yes,per-pixel,forced inline may alter code size/register pressure,"TGX_INLINE inline RGB565 interpolateColorsBilinear(const RGB565 & C00, const RGB565 & C10, const RGB565 & C01, const RGB565 & C11, const float ax, const float ay)"
+src/Color.h,1100,TGX_INLINE,interpolateColorsTriangle,pixel-color,no,yes,per-pixel,forced inline may alter code size/register pressure,"TGX_INLINE inline RGB24 interpolateColorsTriangle(const RGB24& col1, int32_t C1, const  RGB24& col2, int32_t C2, const  RGB24& col3, const int32_t totC)"
+src/Color.h,1124,TGX_INLINE,interpolateColorsBilinear,pixel-color,no,yes,per-pixel,forced inline may alter code size/register pressure,"TGX_INLINE inline RGB24 interpolateColorsBilinear(const RGB24 & C00, const RGB24 & C10, const RGB24 & C01, const RGB24 & C11, const float ax, const float ay)"
+src/Color.h,1711,TGX_INLINE,interpolateColorsTriangle,pixel-color,no,yes,per-pixel,forced inline may alter code size/register pressure,"TGX_INLINE inline RGB32 interpolateColorsTriangle(const RGB32& col1, int32_t C1, const  RGB32& col2, int32_t C2, const  RGB32& col3, const int32_t totC)"
+src/Color.h,1736,TGX_INLINE,interpolateColorsBilinear,pixel-color,no,yes,per-pixel,forced inline may alter code size/register pressure,"TGX_INLINE inline RGB32 interpolateColorsBilinear(const RGB32 & C00, const RGB32 & C10, const RGB32 & C01, const RGB32 & C11, const float ax, const float ay)"
+src/Color.h,2334,TGX_INLINE,interpolateColorsTriangle,pixel-color,no,yes,per-pixel,forced inline may alter code size/register pressure,"TGX_INLINE inline RGB64 interpolateColorsTriangle(const RGB64& col1, int32_t C1, const  RGB64& col2, int32_t C2, const  RGB64& col3, const int32_t totC)"
+src/Color.h,2357,TGX_INLINE,interpolateColorsBilinear,pixel-color,no,yes,per-pixel,forced inline may alter code size/register pressure,"TGX_INLINE inline RGB64 interpolateColorsBilinear(const RGB64 & C00, const RGB64 & C10, const RGB64 & C01, const RGB64 & C11, const float ax, const float ay)"
+src/Color.h,2569,TGX_INLINE,,rgbf,maybe,yes,lighting/color,,TGX_INLINE inline void operator+=(const RGBf& c)
+src/Color.h,2580,TGX_INLINE,,rgbf,maybe,yes,lighting/color,,TGX_INLINE inline void operator-=(const RGBf& c)
+src/Color.h,2591,TGX_INLINE,,rgbf,maybe,yes,lighting/color,,TGX_INLINE inline void operator*=(const RGBf & c)
+src/Color.h,2601,TGX_INLINE,,rgbf,maybe,yes,lighting/color,,TGX_INLINE inline RGBf operator*(const RGBf & c) const
+src/Color.h,2609,TGX_INLINE,,rgbf,maybe,yes,lighting/color,,TGX_INLINE inline void operator*=(float a)
+src/Color.h,2620,TGX_INLINE,,rgbf,maybe,yes,lighting/color,,TGX_INLINE inline RGBf operator*(float a) const
+src/Color.h,2647,TGX_INLINE,clamp,rgbf,maybe,yes,lighting/color,,TGX_INLINE inline void clamp()
+src/Color.h,2662,TGX_INLINE,blend256,rgbf,maybe,yes,lighting/color,,"TGX_INLINE inline void blend256(const RGBf& fg_col, uint32_t alpha)"
+src/Color.h,2675,TGX_INLINE,blend,rgbf,maybe,yes,lighting/color,,"TGX_INLINE inline void blend(const RGBf & fg_col, float alpha)"
+src/Color.h,2686,TGX_INLINE,mult256,rgbf,maybe,yes,lighting/color,,"TGX_INLINE inline void mult256(int mr, int mg, int mb)"
+src/Color.h,2698,TGX_INLINE,mult256,rgbf,maybe,yes,lighting/color,,"TGX_INLINE inline void mult256(int mr, int mg, int mb, int ma)"
+src/Color.h,2709,TGX_INLINE,premultiply,rgbf,maybe,yes,lighting/color,,TGX_INLINE inline void premultiply()
+src/Color.h,2721,TGX_INLINE,opacity,rgbf,maybe,yes,lighting/color,,TGX_INLINE inline float opacity() const
+src/Color.h,2732,TGX_INLINE,setOpacity,rgbf,maybe,yes,lighting/color,,TGX_INLINE inline void setOpacity(float op)
+src/Color.h,2748,TGX_INLINE,interpolate,rgbf,maybe,yes,lighting/color,,"TGX_INLINE inline RGBf interpolate(const RGBf& col1, const  RGBf& col2, float alpha)"
+src/Color.h,2761,TGX_INLINE,interpolateColorsTriangle,rgbf,no,yes,lighting/color,forced inline may alter code size/register pressure,"TGX_INLINE inline RGBf interpolateColorsTriangle(const RGBf & col1, int32_t C1, const  RGBf & col2, int32_t C2, const  RGBf & col3, int32_t totC)"
+src/Color.h,2785,TGX_INLINE,interpolateColorsBilinear,rgbf,no,yes,lighting/color,forced inline may alter code size/register pressure,"TGX_INLINE inline RGBf interpolateColorsBilinear(const RGBf & C00, const RGBf & C10, const RGBf & C01, const RGBf & C11, const float ax, const float ay)"
+src/Color.h,2799,TGX_INLINE,meanColor,rgbf,maybe,yes,lighting/color,,"TGX_INLINE inline RGBf meanColor(const RGBf & colA, const  RGBf & colB)"
+src/Color.h,2808,TGX_INLINE,meanColor,rgbf,maybe,yes,lighting/color,,"TGX_INLINE inline RGBf meanColor(const RGBf & colA, const  RGBf & colB, const  RGBf & colC, const  RGBf & colD)"
+src/Image.h,340,TGX_INLINE,isValid,image,yes,maybe,mixed,,inline TGX_INLINE bool isValid() const { return (_buffer != nullptr); }
+src/Image.h,356,TGX_INLINE,width,image,yes,maybe,mixed,,inline TGX_INLINE int width() const { return _lx; }
+src/Image.h,364,TGX_INLINE,lx,image,yes,maybe,mixed,,inline TGX_INLINE int lx() const { return _lx; }
+src/Image.h,372,TGX_INLINE,height,image,yes,maybe,mixed,,inline TGX_INLINE int height() const { return _ly; }
+src/Image.h,380,TGX_INLINE,ly,image,yes,maybe,mixed,,inline TGX_INLINE int ly() const { return _ly; }
+src/Image.h,388,TGX_INLINE,stride,image,yes,maybe,mixed,,inline TGX_INLINE int stride() const { return _stride; }
+src/Image.h,396,TGX_INLINE,dim,image,yes,maybe,mixed,,"inline TGX_INLINE iVec2 dim() const { return iVec2{ _lx, _ly }; }"
+src/Image.h,404,TGX_INLINE,imageBox,image,yes,maybe,mixed,,"inline TGX_INLINE iBox2 imageBox() const { return iBox2(0, _lx - 1, 0, _ly - 1); }"
+src/Image.h,414,TGX_INLINE,data,image,yes,maybe,mixed,,inline TGX_INLINE const color_t * data() const { return _buffer; }
+src/Image.h,424,TGX_INLINE,data,image,yes,maybe,mixed,,inline TGX_INLINE color_t * data() { return _buffer; }
+src/Image.h,455,TGX_INLINE,drawPixel,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE>(pos, color); }"
+src/Image.h,467,TGX_INLINE,drawPixelf,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixelf(fVec2 pos, color_t color) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE>({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, color); }"
+src/Image.h,481,TGX_INLINE,drawPixel,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixel(iVec2 pos, color_t color, float opacity) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE,true>(pos, color, opacity); }"
+src/Image.h,497,TGX_INLINE,drawPixelf,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool CHECKRANGE = true> TGX_INLINE inline void drawPixelf(fVec2 pos, color_t color, float opacity) { if ((CHECKRANGE) && (!isValid())) return; _drawPixel<CHECKRANGE, true>({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, color, opacity); }"
+src/Image.h,510,TGX_INLINE,readPixel,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool CHECKRANGE = true> TGX_INLINE inline color_t readPixel(iVec2 pos, color_t outside_color = color_t()) const { if ((CHECKRANGE) && (!isValid())) return outside_color; return _readPixel(pos, outside_color); }"
+src/Image.h,525,TGX_INLINE,readPixelf,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool CHECKRANGE = true> TGX_INLINE inline color_t readPixelf(fVec2 pos, color_t outside_color = color_t()) const { if ((CHECKRANGE) && (!isValid())) return outside_color; return _readPixel({ (int32_t)roundf(pos.x) , (int32_t)roundf(pos.y) }, outside_color); }"
+src/Image.h,537,TGX_INLINE,operator,image,yes,maybe,mixed,,TGX_INLINE inline const color_t& operator()(iVec2 pos) const { return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)]; }
+src/Image.h,548,TGX_INLINE,operator,image,yes,maybe,mixed,,TGX_INLINE inline color_t& operator()(iVec2 pos) { return _buffer[TGX_CAST32(pos.x) + TGX_CAST32(_stride) * TGX_CAST32(pos.y)]; }
+src/Image.h,561,TGX_INLINE,operator,image,yes,maybe,mixed,,"TGX_INLINE inline const color_t& operator()(int x, int y) const { return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)]; }"
+src/Image.h,574,TGX_INLINE,operator,image,yes,maybe,mixed,,"TGX_INLINE inline color_t& operator()(int x, int y) { return _buffer[TGX_CAST32(x) + TGX_CAST32(_stride) * TGX_CAST32(y)];}"
+src/Image.h,3632,TGX_INLINE,_bseg_update_pixel,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool X_MAJOR, bool BLEND, int SIDE, bool CHECKRANGE = false> inline TGX_INLINE void _bseg_update_pixel(const BSeg & seg, color_t color, int32_t op)"
+src/Image.h,3641,TGX_INLINE,_bseg_update_pixel,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool CHECKRANGE = false> inline TGX_INLINE void _bseg_update_pixel(const BSeg & seg, color_t color, int32_t op, int32_t aa)"
+src/Image.h,3690,TGX_INLINE,_drawPixel,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool CHECKRANGE, bool CHECK_VALID_BLEND = true> TGX_INLINE inline void _drawPixel(iVec2 pos, color_t color, float opacity)"
+src/Image.h,3696,TGX_INLINE,_drawPixel,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool CHECKRANGE> TGX_INLINE inline void _drawPixel(iVec2 pos, color_t color)"
+src/Image.h,3702,TGX_INLINE,_drawPixel,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"TGX_INLINE inline void _drawPixel(bool checkrange, iVec2 pos, color_t color, float opacity)"
+src/Image.h,3708,TGX_INLINE,_drawPixel,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"TGX_INLINE inline void _drawPixel(bool checkrange, iVec2 pos, color_t color)"
+src/Image.h,3714,TGX_INLINE,_readPixel,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool CHECKRANGE = true> TGX_INLINE inline color_t _readPixel(iVec2 pos, color_t outside_color) const"
+src/Image.h,3725,TGX_INLINE,_drawFastVLine,image,maybe,maybe,mixed,,"inline TGX_INLINE void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color, float opacity) { if (checkrange) _drawFastVLine<true>(pos, h, color, opacity); else _drawFastVLine<false>(pos, h, color, opacity); }"
+src/Image.h,3726,TGX_INLINE,_drawFastHLine,image,maybe,maybe,mixed,,"inline TGX_INLINE void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color, float opacity) { if (checkrange) _drawFastHLine<true>(pos, w, color, opacity); else _drawFastHLine<false>(pos, w, color, opacity); }"
+src/Image.h,3727,TGX_INLINE,_drawFastVLine,image,maybe,maybe,mixed,,"inline TGX_INLINE void _drawFastVLine(bool checkrange, iVec2 pos, int h, color_t color) { if (checkrange) _drawFastVLine<true>(pos, h, color); else _drawFastVLine<false>(pos, h, color); }"
+src/Image.h,3728,TGX_INLINE,_drawFastHLine,image,maybe,maybe,mixed,,"inline TGX_INLINE void _drawFastHLine(bool checkrange, iVec2 pos, int w, color_t color) { if (checkrange) _drawFastHLine<true>(pos, w, color); else _drawFastHLine<false>(pos, w, color); }"
+src/Image.h,3729,TGX_INLINE,_drawSeg,image,maybe,maybe,mixed,,"inline TGX_INLINE void _drawSeg(iVec2 P1, bool drawP1, iVec2 P2, bool drawP2, color_t color, float opacity) { BSeg seg(P1, P2); _bseg_draw(seg, drawP1, drawP2, color, 0, (int32_t)(opacity * 256), true); }"
+src/Image.h,3768,TGX_INLINE,_coord_texture,image,maybe,maybe,mixed,,"inline TGX_INLINE tgx::fVec2 _coord_texture(tgx::fVec2 pos, tgx::iVec2 size) { return tgx::fVec2(pos.x / ((float)size.x), pos.y / ((float)size.y)); } // Convert to texture coordinates"
+src/Image.h,3769,TGX_INLINE,_coord_viewport,image,maybe,maybe,mixed,,"inline TGX_INLINE tgx::fVec2 _coord_viewport(tgx::fVec2 pos, tgx::iVec2 size) { return tgx::fVec2((2.0f / ((float)size.x)) * (pos.x) - 1.0f, (2.0f / ((float)size.y)) * (pos.y) - 1.0f); } // Convert to viewport coordinates"
+src/Image.h,3892,TGX_INLINE,_drawFontPixel,image-pixel,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"template<bool BLEND> static TGX_INLINE inline void _drawFontPixel(color_t* p, color_t col, uint32_t alpha256)"
+src/Image.inl,78,TGX_NOINLINE,_pngdec_color_convert,image-codec,maybe,no,cold,keeps cold or large functions out of hot code,"TGX_NOINLINE void _pngdec_color_convert(int skipx, int lx, PNGDraw_T* pDraw, color_t* pDest, float op)"
+src/Image.inl,223,TGX_NOINLINE,::PNGDecode,image-codec,maybe,no,cold,keeps cold or large functions out of hot code,"template<typename PNG_T> TGX_NOINLINE int Image<color_t>::PNGDecode(PNG_T& png, iVec2 topleft, float opacity)"
+src/Image.inl,237,TGX_NOINLINE,PNGDraw,image-codec,maybe,no,cold,keeps cold or large functions out of hot code,"template<typename PNG_T, typename PNGDraw_T> TGX_NOINLINE int PNGDraw(PNGDraw_T* pDraw)"
+src/Image.inl,334,TGX_NOINLINE,::JPEGDecode,image-codec,maybe,no,cold,keeps cold or large functions out of hot code,"template<typename JPEG_T> TGX_NOINLINE int Image<color_t>::JPEGDecode(JPEG_T& jpeg, iVec2 topleft, int options, float opacity)"
+src/Image.inl,357,TGX_NOINLINE,_jpegdec_color_convert8888,image-codec,maybe,no,cold,keeps cold or large functions out of hot code,"TGX_NOINLINE void _jpegdec_color_convert8888(int x, int y, JPEGDraw_T* pDraw, Image<color_t> * im, float op)"
+src/Image.inl,390,TGX_NOINLINE,_jpegdec_color_convert565,image-codec,maybe,no,cold,keeps cold or large functions out of hot code,"TGX_NOINLINE void _jpegdec_color_convert565(int x, int y, JPEGDraw_T* pDraw, Image<RGB565>* im, float op)"
+src/Image.inl,421,TGX_NOINLINE,JPEGDraw,image-codec,maybe,no,cold,keeps cold or large functions out of hot code,"template<typename JPEG_T, typename JPEGDraw_T> TGX_NOINLINE int JPEGDraw(JPEGDraw_T* pDraw)"
+src/Image.inl,509,TGX_NOINLINE,::GIFplayFrame,image-codec,maybe,no,cold,keeps cold or large functions out of hot code,"template<typename GIF_T> TGX_NOINLINE int Image<color_t>::GIFplayFrame(GIF_T& gif, iVec2 topleft, float opacity)"
+src/Image.inl,524,TGX_NOINLINE,gif_decode,image-codec,maybe,no,cold,keeps cold or large functions out of hot code,"template<typename color_t, typename GIFDraw_T> TGX_NOINLINE void gif_decode(Image<color_t>* im, GIFDraw_T* pDraw)"
+src/Image.inl,684,TGX_NOINLINE,GIFDraw,image-codec,maybe,no,cold,keeps cold or large functions out of hot code,"template<typename GIF_T, typename GIFDraw_T> TGX_NOINLINE void GIFDraw(GIFDraw_T* pDraw)"
+src/Mat4.h,524,TGX_INLINE,mult,matrix,maybe,yes,per-vertex,,TGX_INLINE inline Vec4<T> mult(const Vec4<T> V) const
+src/Mat4.h,536,TGX_INLINE,mult,matrix,maybe,yes,per-vertex,,"TGX_INLINE inline Vec4<T> mult(const Vec3<T> & V, T w) const"
+src/Mat4.h,538,TGX_USE_FMA_MATH,constexpr,matrix,maybe,yes,per-vertex,,#if TGX_USE_FMA_MATH
+src/Mat4.h,557,TGX_INLINE,mult0,matrix,maybe,yes,per-vertex,,TGX_INLINE inline Vec4<T> mult0(const Vec3<T> & V) const
+src/Mat4.h,559,TGX_USE_FMA_MATH,constexpr,matrix,maybe,yes,per-vertex,,#if TGX_USE_FMA_MATH
+src/Mat4.h,578,TGX_INLINE,mult1,matrix,maybe,yes,per-vertex,,TGX_INLINE inline Vec4<T> mult1(const Vec3<T> & V) const
+src/Mat4.h,580,TGX_USE_FMA_MATH,constexpr,matrix,maybe,yes,per-vertex,,#if TGX_USE_FMA_MATH
+src/Mat4.h,667,TGX_INLINE,,matrix,maybe,yes,per-vertex,,"template<typename T> TGX_INLINE inline Vec4<T> operator*(const Mat4<T> & M, const Vec4<T> V)"
+src/Mat4.h,669,TGX_USE_FMA_MATH,constexpr,matrix,maybe,yes,per-vertex,,#if TGX_USE_FMA_MATH
+src/Mesh3Dv2.inl,32,TGX_USE_FMA_MATH,fVec3,other,maybe,maybe,unknown,,#if TGX_USE_FMA_MATH
+src/Mesh3Dv2.inl,55,TGX_USE_FMA_MATH,fVec4,other,maybe,maybe,unknown,,#if TGX_USE_FMA_MATH
+src/Mesh3Dv2.inl,89,TGX_USE_FMA_MATH,fVec4,other,maybe,maybe,unknown,,#if TGX_USE_FMA_MATH
+src/Misc.h,53,always_inline,__attribute__,math,maybe,yes,mixed hot math,,#define TGX_FORCED_INLINE inline __attribute__((always_inline))
+src/Misc.h,134,TGX_INLINE,BigEndian16,math,maybe,yes,mixed hot math,,TGX_INLINE inline uint16_t BigEndian16(uint16_t v)
+src/Misc.h,145,TGX_INLINE,swap,math,yes,yes,mixed hot math,,"template<typename T> TGX_INLINE inline void swap(T& a, T& b) { T c(a); a = b; b = c; }"
+src/Misc.h,149,TGX_INLINE,min,math,yes,yes,mixed hot math,,"template<typename T> TGX_INLINE inline T min(T a, T b) { return((a < b) ? a : b); }"
+src/Misc.h,153,TGX_INLINE,max,math,yes,yes,mixed hot math,,"template<typename T> TGX_INLINE inline T max(T a, T b) { return((a > b) ? a : b); }"
+src/Misc.h,157,TGX_INLINE,clamp,math,maybe,yes,mixed hot math,,"template<typename T> TGX_INLINE inline T clamp(T v, T vmin, T vmax)"
+src/Misc.h,164,TGX_INLINE,roundfp,math,yes,yes,mixed hot math,,TGX_INLINE inline float roundfp(const float f) { return roundf(f);  }
+src/Misc.h,168,TGX_INLINE,roundfp,math,yes,yes,mixed hot math,,TGX_INLINE inline double roundfp(const double f) { return round(f); }
+src/Misc.h,172,TGX_INLINE,float_as_uint32,math,yes,yes,mixed hot math,,"TGX_INLINE inline uint32_t float_as_uint32(float f) { uint32_t u; memcpy(&u, &f, sizeof(uint32_t)); return u; }"
+src/Misc.h,176,TGX_INLINE,uint32_as_float,math,yes,yes,mixed hot math,,"TGX_INLINE inline float uint32_as_float(uint32_t u) { float f; memcpy(&f, &u, sizeof(float)); return f; }"
+src/Misc.h,182,TGX_INLINE,safeMultB,math,maybe,yes,mixed hot math,,"TGX_INLINE inline int32_t safeMultB(int32_t A, int32_t B)"
+src/Misc.h,197,TGX_INLINE,fast_inv,math,maybe,yes,mixed hot math,,TGX_INLINE inline float fast_inv(float x)
+src/Misc.h,202,asm volatile,,math,maybe,yes,mixed hot math,,asm volatile (
+src/Misc.h,215,TGX_USE_FAST_INV_TRICK,ULP,math,maybe,yes,mixed hot math,,#elif TGX_USE_FAST_INV_TRICK
+src/Misc.h,237,TGX_INLINE,fast_inv,math,maybe,yes,mixed hot math,,TGX_INLINE inline double fast_inv(double x)
+src/Misc.h,248,TGX_INLINE,precise_sqrt,math,maybe,yes,mixed hot math,,TGX_INLINE inline float precise_sqrt(float x)
+src/Misc.h,257,TGX_INLINE,precise_sqrt,math,maybe,yes,mixed hot math,,TGX_INLINE inline double precise_sqrt(double x)
+src/Misc.h,268,TGX_INLINE,fast_sqrt,math,maybe,yes,mixed hot math,,TGX_INLINE inline float fast_sqrt(float x)
+src/Misc.h,270,TGX_USE_FAST_SQRT_TRICK,ULP,math,maybe,yes,mixed hot math,,#if TGX_USE_FAST_SQRT_TRICK
+src/Misc.h,284,TGX_INLINE,fast_sqrt,math,maybe,yes,mixed hot math,,TGX_INLINE inline double fast_sqrt(double x)
+src/Misc.h,296,TGX_INLINE,precise_invsqrt,math,maybe,yes,mixed hot math,,TGX_INLINE inline float precise_invsqrt(float x)
+src/Misc.h,301,asm volatile,,math,maybe,yes,mixed hot math,,asm volatile (
+src/Misc.h,332,TGX_INLINE,precise_invsqrt,math,maybe,yes,mixed hot math,,TGX_INLINE inline double precise_invsqrt(double x)
+src/Misc.h,344,TGX_INLINE,fast_invsqrt,math,no,yes,mixed hot math,forced inline may alter code size/register pressure,TGX_INLINE inline float fast_invsqrt(float x)
+src/Misc.h,349,asm volatile,,math,maybe,yes,mixed hot math,,asm volatile (
+src/Misc.h,365,TGX_USE_FAST_INV_SQRT_TRICK,ULP,math,maybe,yes,mixed hot math,,#elif TGX_USE_FAST_INV_SQRT_TRICK
+src/Misc.h,379,TGX_INLINE,fast_invsqrt,math,no,yes,mixed hot math,forced inline may alter code size/register pressure,TGX_INLINE inline double fast_invsqrt(double x)
+src/Misc.h,391,TGX_INLINE,lfloorf,math,maybe,yes,mixed hot math,,TGX_INLINE inline int32_t lfloorf(float x)
+src/Misc.h,395,asm volatile,,math,maybe,yes,mixed hot math,,asm volatile (
+src/Renderer3D.h,151,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"TGX_NOINLINE Renderer3D(const iVec2& viewportSize = {0,0}, Image<color_t> * im = nullptr, ZBUFFER_t * zbuffer = nullptr);"
+src/Renderer3D.h,2052,TGX_INLINE,_clipbound_xy,renderer-hot-helper,maybe,yes,per-vertex/per-pixel,,TGX_INLINE float _clipbound_xy() const
+src/Renderer3D.h,2060,TGX_INLINE,_validDraw,renderer,maybe,maybe,per-triangle/setup,,TGX_INLINE bool _validDraw() const
+src/Renderer3D.h,2067,TGX_NOINLINE,_recompute_wa_wb,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,TGX_NOINLINE void _recompute_wa_wb();
+src/Renderer3D.h,2074,TGX_NOINLINE,_rectifyShaderOrtho,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,TGX_NOINLINE void _rectifyShaderOrtho();
+src/Renderer3D.h,2077,TGX_NOINLINE,_rectifyShaderZbuffer,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,TGX_NOINLINE void _rectifyShaderZbuffer();
+src/Renderer3D.h,2080,TGX_NOINLINE,_rectifyShaderShading,renderer-hot-helper,maybe,yes,per-vertex/per-pixel,keeps cold or large functions out of hot code,TGX_NOINLINE void _rectifyShaderShading(Shader new_shaders);
+src/Renderer3D.h,2083,TGX_NOINLINE,_rectifyShaderTextureWrapping,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,TGX_NOINLINE void _rectifyShaderTextureWrapping();
+src/Renderer3D.h,2086,TGX_NOINLINE,_rectifyShaderTextureQuality,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,TGX_NOINLINE void _rectifyShaderTextureQuality();
+src/Renderer3D.h,2137,TGX_INLINE,_discardMeshlet16b,renderer,maybe,maybe,per-triangle/setup,,"TGX_INLINE inline bool _discardMeshlet16b(const fVec3& sphere_center, float sphere_radius, const fVec3& cone_dir, float cone_cos) const"
+src/Renderer3D.h,2217,TGX_INLINE,drawPixelZbuf,renderer-hot-helper,maybe,yes,per-vertex/per-pixel,,"template<bool CHECKRANGE, bool USE_BLENDING> TGX_INLINE inline void drawPixelZbuf(int x, int y, color_t color, float opacity, float z)"
+src/Renderer3D.h,2230,TGX_INLINE,drawHLineZbuf,renderer,maybe,maybe,per-triangle/setup,,"template<bool CHECKRANGE, bool USE_BLENDING> TGX_INLINE inline void drawHLineZbuf(int x, int y, int w, color_t color, float opacity, float z)"
+src/Renderer3D.h,2264,TGX_INLINE,_clip,renderer-hot-helper,maybe,yes,per-vertex/per-pixel,,"TGX_INLINE inline void _clip(int & fl, const fVec4 & P, float bx, float Bx, float by, float By)"
+src/Renderer3D.h,2276,TGX_INLINE,_clip,renderer-hot-helper,maybe,yes,per-vertex/per-pixel,,"TGX_INLINE inline void _clip(int & fl, const fVec3 & P, float bx, float Bx, float by, float By, const fMat4 & M)"
+src/Renderer3D.h,2404,TGX_INLINE,_meshletClipPlanes,renderer,maybe,maybe,per-triangle/setup,,"TGX_INLINE inline void _meshletClipPlanes(float clipboundXY, const fMat4& M, fVec4* planes, float* plane_norms) const"
+src/Renderer3D.h,2422,TGX_INLINE,_meshletSphereClip,renderer,maybe,maybe,per-triangle/setup,,"TGX_INLINE inline int _meshletSphereClip(const fVec3& center, float radius, const fVec4* planes, const float* plane_norms) const"
+src/Renderer3D.h,2503,TGX_INLINE,_precomputeSpecularTable,renderer-setup,maybe,no,setup,,TGX_INLINE inline void _precomputeSpecularTable(int exponent)
+src/Renderer3D.h,2509,TGX_NOINLINE,_precomputeSpecularTable2,renderer-setup,maybe,no,setup,keeps cold or large functions out of hot code,TGX_NOINLINE void _precomputeSpecularTable2(int exponent);
+src/Renderer3D.h,2513,TGX_INLINE,_powSpecular,renderer-hot-helper,maybe,yes,per-vertex/per-pixel,,TGX_INLINE inline float _powSpecular(float x) const
+src/Renderer3D.h,2524,TGX_INLINE,_updateDirectionalLightTransform,renderer-setup,maybe,no,setup,,TGX_INLINE inline void _updateDirectionalLightTransform(int index)
+src/Renderer3D.h,2538,TGX_INLINE,_updateActiveDirectionalLightInorms,renderer-setup,maybe,no,setup,,TGX_INLINE inline void _updateActiveDirectionalLightInorms()
+src/Renderer3D.h,2549,TGX_INLINE,_updateActiveDirectionalLightTransforms,renderer-setup,maybe,no,setup,,TGX_INLINE inline void _updateActiveDirectionalLightTransforms()
+src/Renderer3D.h,2559,TGX_INLINE,_setRuntimeMaterialLighting,renderer-setup,maybe,no,setup,,"TGX_INLINE inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength)"
+src/Renderer3D.h,2571,TGX_INLINE,_updateDirectionalLightColor,renderer-setup,maybe,no,setup,,TGX_INLINE inline void _updateDirectionalLightColor(int index)
+src/Renderer3D.h,2583,TGX_INLINE,_shadeVertex,renderer-hot-helper,maybe,yes,per-vertex/per-pixel,,"template<bool TEXTURE> TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N) const"
+src/Renderer3D.h,2606,TGX_INLINE,_shadeVertex,renderer-hot-helper,maybe,yes,per-vertex/per-pixel,,"TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const RGBf & color) const"
+src/Renderer3D.h,2630,TGX_INLINE,_shadeFace,renderer-hot-helper,maybe,yes,per-vertex/per-pixel,,"template<bool TEXTURE> TGX_INLINE inline RGBf _shadeFace(const float icu, const fVec3 & N) const"
+src/Renderer3D.h,2653,TGX_INLINE,_setFlatOrUnlitFaceColor,renderer,maybe,maybe,per-triangle/setup,,"TGX_INLINE inline void _setFlatOrUnlitFaceColor(int raster_type, bool texture, fVec3& faceN, float cu)"
+src/Renderer3D.inl,35,TGX_NOINLINE,::Renderer3D,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,101,TGX_NOINLINE,::_precomputeSpecularTable2,renderer-setup,maybe,no,setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,138,TGX_NOINLINE,::setViewportSize,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,148,TGX_NOINLINE,::setViewportSize,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,155,TGX_NOINLINE,::setImage,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,162,TGX_NOINLINE,::setOffset,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,170,TGX_NOINLINE,::setOffset,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,177,TGX_NOINLINE,::setProjectionMatrix,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,186,TGX_NOINLINE,::getProjectionMatrix,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,195,TGX_NOINLINE,::useOrthographicProjection,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,205,TGX_NOINLINE,::usePerspectiveProjection,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,215,TGX_NOINLINE,::setOrtho,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,225,TGX_NOINLINE,::setFrustum,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,235,TGX_NOINLINE,::setPerspective,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,245,TGX_NOINLINE,::setCulling,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,252,TGX_NOINLINE,::setZbuffer,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,261,TGX_NOINLINE,::clearZbuffer,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,272,TGX_NOINLINE,::setShaders,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,279,TGX_NOINLINE,::setTextureWrappingMode,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,299,TGX_NOINLINE,::setTextureQuality,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,325,TGX_NOINLINE,::setViewMatrix,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,336,TGX_NOINLINE,::getViewMatrix,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,343,TGX_NOINLINE,::setLookAt,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,352,TGX_NOINLINE,::setLookAt,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,359,TGX_NOINLINE,::worldToNDC,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,368,TGX_NOINLINE,::worldToImage,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,379,TGX_NOINLINE,::setLightDirection,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,387,TGX_NOINLINE,::setLightAmbiant,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,394,TGX_NOINLINE,::setLightDiffuse,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,403,TGX_NOINLINE,::setLightSpecular,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,412,TGX_NOINLINE,::setLight,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,423,TGX_NOINLINE,::setDirectionalLightCount,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,432,TGX_NOINLINE,::directionalLightCount,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,439,TGX_NOINLINE,::setDirectionalLightAmbiant,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,448,TGX_NOINLINE,::setDirectionalLightDirection,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,457,TGX_NOINLINE,::setDirectionalLightDiffuse,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,466,TGX_NOINLINE,::setDirectionalLightSpecular,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,475,TGX_NOINLINE,::setDirectionalLight,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,496,TGX_NOINLINE,::setModelMatrix,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,507,TGX_NOINLINE,::getModelMatrix,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,514,TGX_NOINLINE,::setModelPosScaleRot,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,527,TGX_NOINLINE,::modelToNDC,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,536,TGX_NOINLINE,::modelToImage,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,547,TGX_NOINLINE,::setMaterialColor,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,556,TGX_NOINLINE,::setMaterialAmbiantStrength,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,565,TGX_NOINLINE,::setMaterialDiffuseStrength,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,574,TGX_NOINLINE,::setMaterialSpecularStrength,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,583,TGX_NOINLINE,::setMaterialSpecularExponent,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,590,TGX_NOINLINE,::setMaterial,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,616,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,648,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,685,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,741,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,806,TGX_NOINLINE,::_drawTriangleClippedSub,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,935,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,1042,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,1227,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,1359,TGX_NOINLINE,::drawMesh,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,1392,TGX_NOINLINE,::drawMesh,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,1408,TGX_NOINLINE,::_drawMesh,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>  TGX_NOINLINE"
+src/Renderer3D.inl,1586,TGX_NOINLINE,::_drawMesh,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>  TGX_NOINLINE"
+src/Renderer3D.inl,1960,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,2026,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,2092,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,2540,TGX_NOINLINE,::_drawWireFrameMesh,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,template<int MODE> TGX_NOINLINE
+src/Renderer3D.inl,2739,TGX_NOINLINE,::_drawWireFrameMesh,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,template<int MODE> TGX_NOINLINE
+src/Renderer3D.inl,2991,TGX_NOINLINE,::_drawWireFrameLine,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,template<int MODE> TGX_NOINLINE
+src/Renderer3D.inl,3048,TGX_NOINLINE,::_drawWireFrameLines,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,template<int MODE> TGX_NOINLINE
+src/Renderer3D.inl,3111,TGX_NOINLINE,::_drawWireFrameTriangle,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,template<int MODE> TGX_NOINLINE
+src/Renderer3D.inl,3202,TGX_NOINLINE,::_drawWireFrameTriangles,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,template<int MODE> TGX_NOINLINE
+src/Renderer3D.inl,3297,TGX_NOINLINE,::_drawWireFrameTriangleStrip,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,template<int MODE> TGX_NOINLINE
+src/Renderer3D.inl,3469,TGX_NOINLINE,::_drawWireFrameQuad,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,template<int MODE> TGX_NOINLINE
+src/Renderer3D.inl,3558,TGX_NOINLINE,::_drawWireFrameQuads,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,template<int MODE> TGX_NOINLINE
+src/Renderer3D.inl,3652,TGX_NOINLINE,::_drawPixel,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,template<bool USE_BLENDING> TGX_NOINLINE
+src/Renderer3D.inl,3677,TGX_NOINLINE,::_drawPixels,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<bool USE_COLORS, bool USE_BLENDING> TGX_NOINLINE"
+src/Renderer3D.inl,3753,TGX_NOINLINE,::_drawDot,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,template<bool USE_BLENDING> TGX_NOINLINE
+src/Renderer3D.inl,3788,TGX_NOINLINE,::_drawDots,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<bool USE_RADIUS, bool USE_COLORS, bool USE_BLENDING> TGX_NOINLINE"
+src/Renderer3D.inl,3851,TGX_NOINLINE,::_drawCircleZbuf,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<bool CHECKRANGE, bool USE_BLENDING> TGX_NOINLINE"
+src/Renderer3D.inl,3956,TGX_NOINLINE,::_unitSphereScreenDiameter,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,3977,TGX_NOINLINE,::drawCube,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,3990,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,4027,TGX_NOINLINE,,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE"
+src/Renderer3D.inl,4125,TGX_NOINLINE,::_drawSphere,renderer,maybe,maybe,per-triangle/setup,keeps cold or large functions out of hot code,"template<bool WIREFRAME, int MODE> TGX_NOINLINE"
+src/Shaders.h,34,TGX_INLINE,shaderclip,shader,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,"inline TGX_INLINE int shaderclip(int v, int maxv)"
+src/Shaders.h,270,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,,shader,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+src/Shaders.h,283,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,,shader,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+src/Shaders.h,370,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,,shader,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+src/Shaders.h,381,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,,shader,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+src/Shaders.h,386,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,constexpr,shader,maybe,yes,per-pixel,per-pixel helper; local regressions matter more than global score,#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+src/tgx_config.h,50,TGX_USE_FAST_INV_SQRT_TRICK,,config,maybe,no,configuration,,// - TGX_USE_FAST_INV_SQRT_TRICK : fast inverse 'quake like' square root trick to speed up computations.
+src/tgx_config.h,51,TGX_USE_FAST_SQRT_TRICK,,config,maybe,no,configuration,,// - TGX_USE_FAST_SQRT_TRICK : fast 'quake like' square root trick to speed up computations.
+src/tgx_config.h,52,TGX_USE_FAST_INV_TRICK,,config,maybe,no,configuration,,// - TGX_USE_FAST_INV_TRICK : fast inverse 'quake like' trick to speed up computations.
+src/tgx_config.h,53,TGX_USE_FMA_MATH,,config,maybe,no,configuration,,// - TGX_USE_FMA_MATH : use explicit fused multiply-add in small floating-point vector/matrix operations.
+src/tgx_config.h,55,TGX_INLINE,,config,maybe,no,configuration,,// - TGX_INLINE/TGX_NOINLINE : inlining strategy for time critical/non-critical functions.
+src/tgx_config.h,55,TGX_NOINLINE,,config,maybe,no,configuration,keeps cold or large functions out of hot code,// - TGX_INLINE/TGX_NOINLINE : inlining strategy for time critical/non-critical functions.
+src/tgx_config.h,58,TGX_USE_FAST_INV_TRICK,,config,maybe,no,configuration,,* @def TGX_USE_FAST_INV_TRICK
+src/tgx_config.h,64,TGX_USE_FMA_MATH,,config,maybe,no,configuration,,* @def TGX_USE_FMA_MATH
+src/tgx_config.h,73,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 0
+src/tgx_config.h,74,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0
+src/tgx_config.h,75,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 0
+src/tgx_config.h,76,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,77,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,78,TGX_INLINE,TGX_INLINE,config,maybe,no,configuration,,#define TGX_INLINE
+src/tgx_config.h,79,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,79,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,80,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,85,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 1
+src/tgx_config.h,86,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 1
+src/tgx_config.h,87,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 1
+src/tgx_config.h,88,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 1
+src/tgx_config.h,89,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,90,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE __attribute__((always_inline))
+src/tgx_config.h,91,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
+src/tgx_config.h,91,TGX_INLINE_ZDIVIDE,__attribute__,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
+src/tgx_config.h,92,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,97,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 1
+src/tgx_config.h,98,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0
+src/tgx_config.h,99,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 1
+src/tgx_config.h,100,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,101,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,102,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE __attribute__((always_inline))
+src/tgx_config.h,103,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,103,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,104,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,109,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 1
+src/tgx_config.h,110,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0
+src/tgx_config.h,111,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 1
+src/tgx_config.h,112,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,113,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,114,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE __attribute__((always_inline))
+src/tgx_config.h,115,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,115,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,116,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,121,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 1
+src/tgx_config.h,122,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0
+src/tgx_config.h,123,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 1
+src/tgx_config.h,124,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,125,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,126,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE __attribute__((always_inline))
+src/tgx_config.h,127,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,127,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,128,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,133,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 0
+src/tgx_config.h,134,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0
+src/tgx_config.h,135,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 0
+src/tgx_config.h,136,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,137,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,138,TGX_INLINE,TGX_INLINE,config,maybe,no,configuration,,#define TGX_INLINE
+src/tgx_config.h,139,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,139,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,140,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,145,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 1
+src/tgx_config.h,146,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 1
+src/tgx_config.h,147,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 1
+src/tgx_config.h,148,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,149,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
+src/tgx_config.h,150,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE  __attribute__((always_inline))
+src/tgx_config.h,151,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
+src/tgx_config.h,151,TGX_INLINE_ZDIVIDE,__attribute__,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
+src/tgx_config.h,152,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,157,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 0
+src/tgx_config.h,158,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0
+src/tgx_config.h,159,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 0
+src/tgx_config.h,160,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,161,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,162,TGX_INLINE,TGX_INLINE,config,maybe,no,configuration,,#define TGX_INLINE
+src/tgx_config.h,163,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,163,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,164,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,169,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 0
+src/tgx_config.h,170,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0
+src/tgx_config.h,171,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 0
+src/tgx_config.h,172,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,173,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,174,TGX_INLINE,TGX_INLINE,config,maybe,no,configuration,,#define TGX_INLINE
+src/tgx_config.h,175,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,175,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,176,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,181,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 0 // unused: specific assembly code used instead.
+src/tgx_config.h,182,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0     //
+src/tgx_config.h,183,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 0      // unused: specific assembly code used instead.
+src/tgx_config.h,184,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,185,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,186,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE __attribute__((always_inline))
+src/tgx_config.h,187,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
+src/tgx_config.h,187,TGX_INLINE_ZDIVIDE,__attribute__,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
+src/tgx_config.h,188,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,193,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 1
+src/tgx_config.h,194,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 1
+src/tgx_config.h,195,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 1
+src/tgx_config.h,196,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,197,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,198,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE __attribute__((always_inline))
+src/tgx_config.h,199,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,199,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,200,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,206,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 0 // unused: specific assembly code used instead.
+src/tgx_config.h,207,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0     //
+src/tgx_config.h,208,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 0      //
+src/tgx_config.h,209,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,210,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,211,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE __attribute__((always_inline))
+src/tgx_config.h,212,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,212,TGX_INLINE_ZDIVIDE,__attribute__,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,213,TGX_NOINLINE,__attribute__,config,maybe,no,configuration,keeps cold or large functions out of hot code,"#define TGX_NOINLINE __attribute__((noinline, noclone))"
+src/tgx_config.h,218,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 0
+src/tgx_config.h,219,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0
+src/tgx_config.h,220,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 0
+src/tgx_config.h,221,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,222,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,223,TGX_INLINE,TGX_INLINE,config,maybe,no,configuration,,#define TGX_INLINE
+src/tgx_config.h,224,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,224,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,225,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,230,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 1
+src/tgx_config.h,231,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0
+src/tgx_config.h,232,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 1
+src/tgx_config.h,233,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,234,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,235,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE  __attribute__((always_inline))
+src/tgx_config.h,236,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,236,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,237,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,242,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 1
+src/tgx_config.h,243,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 1
+src/tgx_config.h,244,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 1
+src/tgx_config.h,245,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 1
+src/tgx_config.h,246,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,247,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE __attribute__((always_inline))
+src/tgx_config.h,248,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,248,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,249,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,254,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 1
+src/tgx_config.h,255,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0
+src/tgx_config.h,256,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 1
+src/tgx_config.h,257,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,258,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,259,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE __attribute__((always_inline))
+src/tgx_config.h,260,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,260,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,261,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,266,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 1
+src/tgx_config.h,267,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 1
+src/tgx_config.h,268,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 1
+src/tgx_config.h,269,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,270,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,__attribute__,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
+src/tgx_config.h,271,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE __attribute__((always_inline))
+src/tgx_config.h,272,TGX_INLINE,__attribute__,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
+src/tgx_config.h,272,TGX_INLINE_ZDIVIDE,__attribute__,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
+src/tgx_config.h,273,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/tgx_config.h,278,TGX_USE_FAST_INV_SQRT_TRICK,TGX_USE_FAST_INV_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_SQRT_TRICK 0
+src/tgx_config.h,279,TGX_USE_FAST_SQRT_TRICK,TGX_USE_FAST_SQRT_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_SQRT_TRICK 0
+src/tgx_config.h,280,TGX_USE_FAST_INV_TRICK,TGX_USE_FAST_INV_TRICK,config,maybe,no,configuration,,#define TGX_USE_FAST_INV_TRICK 0
+src/tgx_config.h,281,TGX_USE_FMA_MATH,TGX_USE_FMA_MATH,config,maybe,no,configuration,,#define TGX_USE_FMA_MATH 0
+src/tgx_config.h,282,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS,config,maybe,no,configuration,,#define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+src/tgx_config.h,283,TGX_INLINE,TGX_INLINE,config,maybe,no,configuration,,#define TGX_INLINE
+src/tgx_config.h,284,TGX_INLINE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,284,TGX_INLINE_ZDIVIDE,TGX_INLINE_ZDIVIDE,config,maybe,no,configuration,already board-specific baseline; do not mix with generic vec4 tests,#define TGX_INLINE_ZDIVIDE
+src/tgx_config.h,285,TGX_NOINLINE,TGX_NOINLINE,config,maybe,no,configuration,keeps cold or large functions out of hot code,#define TGX_NOINLINE
+src/Vec2.h,173,TGX_INLINE,,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator+=(const Vec2 & V)
+src/Vec2.h,183,TGX_INLINE,,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator-=(const Vec2 & V)
+src/Vec2.h,193,TGX_INLINE,,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator*=(const Vec2 & V)
+src/Vec2.h,203,TGX_INLINE,,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator/=(const Vec2 & V)
+src/Vec2.h,213,TGX_INLINE,,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator+=(T v)
+src/Vec2.h,223,TGX_INLINE,,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator-=(T v)
+src/Vec2.h,232,TGX_INLINE,,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator*=(T v)
+src/Vec2.h,241,TGX_INLINE,,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator/=(T v)
+src/Vec2.h,459,TGX_INLINE,normalize,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline  Vec2<T> normalize(Vec2<T> V)"
+src/Vec2.h,473,TGX_INLINE,normalize_fast,vec2,no,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline  Vec2<T> normalize_fast(Vec2<T> V)"
+src/Vec2.h,483,TGX_INLINE,dist2,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline T dist2(const Vec2<T> & V1, const Vec2<T> & V2)"
+src/Vec2.h,497,TGX_INLINE,dist,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat dist(const Vec2<T> & V1, const Vec2<T> & V2)"
+src/Vec2.h,512,TGX_INLINE,dist_fast,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat dist_fast(const Vec2<T> & V1, const Vec2<T> & V2)"
+src/Vec2.h,521,TGX_INLINE,,vec2,yes,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec2<T> operator+(Vec2<T> V1, const Vec2<T> & V2) { V1 += V2; return V1; }"
+src/Vec2.h,524,TGX_INLINE,,vec2,yes,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec2<T> operator-(Vec2<T> V1, const Vec2<T> & V2) { V1 -= V2; return V1; }"
+src/Vec2.h,527,TGX_INLINE,,vec2,yes,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec2<T> operator*(Vec2<T> V1, const Vec2<T> & V2) { V1 *= V2; return V1; }"
+src/Vec2.h,530,TGX_INLINE,,vec2,yes,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec2<T> operator/(Vec2<T> V1, const Vec2<T> & V2) { V1 /= V2; return V1; }"
+src/Vec2.h,533,TGX_INLINE,,vec2,yes,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec2<T> operator+(const T a, Vec2<T> V) { V += a; return V; }"
+src/Vec2.h,536,TGX_INLINE,,vec2,yes,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec2<T> operator+(Vec2<T> V, const T a) { V += a; return V; }"
+src/Vec2.h,539,TGX_INLINE,,vec2,yes,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec2<T> operator-(Vec2<T> V, const T a) { V -= a; return V; }"
+src/Vec2.h,542,TGX_INLINE,,vec2,yes,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec2<T> operator*(const T a, Vec2<T> V) { V *= a; return V; }"
+src/Vec2.h,545,TGX_INLINE,,vec2,yes,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec2<T> operator*(Vec2<T> V, const T a) { V *= a; return V; }"
+src/Vec2.h,548,TGX_INLINE,,vec2,yes,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec2<T> operator/(Vec2<T> V, const T a) { V /= a; return V; }"
+src/Vec2.h,554,TGX_INLINE,dotProduct,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline T dotProduct(const Vec2<T> & U, const Vec2<T> & V)"
+src/Vec2.h,559,TGX_USE_FMA_MATH,,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,#if TGX_USE_FMA_MATH
+src/Vec2.h,564,TGX_INLINE,dotProduct,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"TGX_INLINE inline float dotProduct(const Vec2<float>& U, const Vec2<float>& V)"
+src/Vec2.h,574,TGX_INLINE,crossProduct,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline T crossProduct(const Vec2<T>& U, const Vec2<T>& V)"
+src/Vec2.h,583,TGX_INLINE,lerp,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Vec2<T> lerp(Tfloat alpha, const Vec2<T> & V1, const Vec2<T> & V2)"
+src/Vec2.h,591,TGX_INLINE,::leftOf,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline int Vec2<T>::leftOf(const Vec2<T> & LA, const Vec2<T> & LB) const"
+src/Vec2.h,598,TGX_INLINE,::setAsIntersection,vec2,maybe,yes,per-vertex,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline bool Vec2<T>::setAsIntersection(const Vec2<T> & LA1, const Vec2<T> & LA2, const Vec2<T> & LB1, const Vec2<T> & LB2)"
+src/Vec3.h,212,TGX_INLINE,,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator+=(const Vec3 & V)
+src/Vec3.h,223,TGX_INLINE,,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator-=(const Vec3 & V)
+src/Vec3.h,234,TGX_INLINE,,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator*=(const Vec3 & V)
+src/Vec3.h,245,TGX_INLINE,,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator/=(const Vec3 & V)
+src/Vec3.h,256,TGX_INLINE,,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator+=(T v)
+src/Vec3.h,267,TGX_INLINE,,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator-=(T v)
+src/Vec3.h,277,TGX_INLINE,,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator*=(T v)
+src/Vec3.h,287,TGX_INLINE,,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator/=(T v)
+src/Vec3.h,467,TGX_INLINE,normalize,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline  Vec3<T> normalize(Vec3<T> V)"
+src/Vec3.h,481,TGX_INLINE,normalize_fast,vec3,no,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline  Vec3<T> normalize_fast(Vec3<T> V)"
+src/Vec3.h,491,TGX_INLINE,dist2,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline T dist2(const Vec3<T> & V1, const Vec3<T> & V2)"
+src/Vec3.h,506,TGX_INLINE,dist,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat dist(const Vec3<T> & V1, const Vec3<T> & V2)"
+src/Vec3.h,522,TGX_INLINE,dist_fast,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat dist_fast(const Vec3<T> & V1, const Vec3<T> & V2)"
+src/Vec3.h,532,TGX_INLINE,,vec3,yes,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec3<T> operator+(Vec3<T> V1, const Vec3<T> & V2) { V1 += V2; return V1; }"
+src/Vec3.h,535,TGX_INLINE,,vec3,yes,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec3<T> operator-(Vec3<T> V1, const Vec3<T> & V2) { V1 -= V2; return V1; }"
+src/Vec3.h,538,TGX_INLINE,,vec3,yes,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec3<T> operator*(Vec3<T> V1, const Vec3<T> & V2) { V1 *= V2; return V1; }"
+src/Vec3.h,541,TGX_INLINE,,vec3,yes,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec3<T> operator/(Vec3<T> V1, const Vec3<T> & V2) { V1 /= V2; return V1; }"
+src/Vec3.h,544,TGX_INLINE,,vec3,yes,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec3<T> operator+(const T a, Vec3<T> V) { V += a; return V; }"
+src/Vec3.h,547,TGX_INLINE,,vec3,yes,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec3<T> operator+(Vec3<T> V, const T a) { V += a; return V; }"
+src/Vec3.h,550,TGX_INLINE,,vec3,yes,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec3<T> operator-(Vec3<T> V, const T a) { V -= a; return V; }"
+src/Vec3.h,553,TGX_INLINE,,vec3,yes,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec3<T> operator*(const T a, Vec3<T> V) { V *= a; return V; }"
+src/Vec3.h,556,TGX_INLINE,,vec3,yes,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec3<T> operator*(Vec3<T> V, const T a) { V *= a; return V; }"
+src/Vec3.h,559,TGX_INLINE,,vec3,yes,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec3<T> operator/(Vec3<T> V, const T a) { V /= a; return V; }"
+src/Vec3.h,565,TGX_INLINE,dotProduct,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline T dotProduct(const Vec3<T> & U, const Vec3<T> & V)"
+src/Vec3.h,570,TGX_USE_FMA_MATH,,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,#if TGX_USE_FMA_MATH
+src/Vec3.h,575,TGX_INLINE,dotProduct,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"TGX_INLINE inline float dotProduct(const Vec3<float>& U, const Vec3<float>& V)"
+src/Vec3.h,585,TGX_INLINE,crossProduct,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec3<T> crossProduct(const Vec3<T>& U, const Vec3<T>& V)"
+src/Vec3.h,596,TGX_INLINE,lerp,vec3,maybe,yes,per-vertex/lighting,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Vec3<T> lerp(const Tfloat alpha, const Vec3<T> & V1, const Vec3<T> & V2)"
+src/Vec4.h,229,TGX_INLINE,,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator+=(const Vec4 & V)
+src/Vec4.h,241,TGX_INLINE,,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator-=(const Vec4 & V)
+src/Vec4.h,253,TGX_INLINE,,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator*=(const Vec4 & V)
+src/Vec4.h,265,TGX_INLINE,,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator/=(const Vec4 & V)
+src/Vec4.h,277,TGX_INLINE,,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator+=(T v)
+src/Vec4.h,289,TGX_INLINE,,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator-=(T v)
+src/Vec4.h,300,TGX_INLINE,,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator*=(T v)
+src/Vec4.h,311,TGX_INLINE,,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,TGX_INLINE inline void operator/=(T v)
+src/Vec4.h,478,TGX_INLINE,zdivide,vec4,no,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE_ZDIVIDE inline void zdivide()
+src/Vec4.h,478,TGX_INLINE_ZDIVIDE,zdivide,vec4,no,yes,per-vertex/clip,already board-specific baseline; do not mix with generic vec4 tests,template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE_ZDIVIDE inline void zdivide()
+src/Vec4.h,512,TGX_INLINE,normalize,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline  Vec4<T> normalize(Vec4<T> V)"
+src/Vec4.h,526,TGX_INLINE,normalize_fast,vec4,no,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline  Vec4<T> normalize_fast(Vec4<T> V)"
+src/Vec4.h,536,TGX_INLINE,dist2,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline T dist2(const Vec4<T>  & V1, const Vec4<T>  & V2)"
+src/Vec4.h,552,TGX_INLINE,dist,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat dist(const Vec4<T> & V1, const Vec4<T> & V2)"
+src/Vec4.h,569,TGX_INLINE,dist_fast,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat dist_fast(const Vec4<T> & V1, const Vec4<T> & V2)"
+src/Vec4.h,580,TGX_INLINE,,vec4,yes,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec4<T> operator+(Vec4<T> V1, const Vec4<T> & V2) { V1 += V2; return V1; }"
+src/Vec4.h,583,TGX_INLINE,,vec4,yes,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec4<T> operator-(Vec4<T> V1, const Vec4<T> & V2) { V1 -= V2; return V1; }"
+src/Vec4.h,586,TGX_INLINE,,vec4,yes,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec4<T> operator*(Vec4<T> V1, const Vec4<T> & V2) { V1 *= V2; return V1; }"
+src/Vec4.h,589,TGX_INLINE,,vec4,yes,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec4<T> operator/(Vec4<T> V1, const Vec4<T> & V2) { V1 /= V2; return V1; }"
+src/Vec4.h,592,TGX_INLINE,,vec4,yes,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec4<T> operator+(const T a, Vec4<T> V) { V += a; return V; }"
+src/Vec4.h,595,TGX_INLINE,,vec4,yes,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec4<T> operator+(Vec4<T> V, const T a) { V += a; return V; }"
+src/Vec4.h,598,TGX_INLINE,,vec4,yes,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec4<T> operator-(Vec4<T> V, const T a) { V -= a; return V; }"
+src/Vec4.h,601,TGX_INLINE,,vec4,yes,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec4<T> operator*(const T a, Vec4<T> V) { V *= a; return V; }"
+src/Vec4.h,604,TGX_INLINE,,vec4,yes,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec4<T> operator*(Vec4<T> V, const T a) { V *= a; return V; }"
+src/Vec4.h,610,TGX_INLINE,,vec4,yes,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec4<T> operator/(Vec4<T> V, const T a) { V /= a; return V; }"
+src/Vec4.h,616,TGX_INLINE,dotProduct,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline T dotProduct(const Vec4<T> & U, const Vec4<T> & V)"
+src/Vec4.h,621,TGX_USE_FMA_MATH,,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,#if TGX_USE_FMA_MATH
+src/Vec4.h,626,TGX_INLINE,dotProduct,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"TGX_INLINE inline float dotProduct(const Vec4<float>& U, const Vec4<float>& V)"
+src/Vec4.h,636,TGX_INLINE,crossProduct,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T> TGX_INLINE inline Vec4<T> crossProduct(const Vec4<T>& U, const Vec4<T>& V)"
+src/Vec4.h,649,TGX_INLINE,lerp,vec4,maybe,yes,per-vertex/clip,small object ABI/aliasing and inlining policy candidate,"template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Vec4<T> lerp(const Tfloat alpha, const Vec4<T> & V1, const Vec4<T> & V2)"

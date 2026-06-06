@@ -1,0 +1,51 @@
+
+2026-06-05 20:29:37.031 BOARD=teensy41
+2026-06-05 20:29:37.043 PORT=COM3
+2026-06-05 20:29:37.045 UPLOAD_PORT=usb:80000/3/0/1
+2026-06-05 20:29:37.046 FQBN=teensy:avr:teensy41:usb=serial,speed=600,opt=o3std
+2026-06-05 20:29:37.049 SKETCH=D:\Programmation\tgx\examples\Teensy4\3D\borg_cube
+2026-06-05 20:29:37.050 PARSE_MODE=example
+2026-06-05 20:29:37.051 VISIBLE_PORTS_BEFORE=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-05 20:29:37.053 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-05 20:29:37.057 ATTEMPT=1
+2026-06-05 20:29:37.349 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-05 20:29:37.357 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn teensy:avr:teensy41:usb=serial,speed=600,opt=o3std --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\tmp\hardware_validation\builds\teensy41_baseline_example_teensy41_borg_cube_run1 --port usb:80000/3/0/1 --upload D:\Programmation\tgx\examples\Teensy4\3D\borg_cube
+2026-06-05 20:30:12.157 ARDUINO: Memory Usage on Teensy 4.1:
+2026-06-05 20:30:12.158 ARDUINO:   FLASH: code:144580, data:247948, headers:8876   free for files:7725060
+2026-06-05 20:30:12.160 ARDUINO:    RAM1: variables:366144, code:88280, padding:10024   free for local variables:59840
+2026-06-05 20:30:12.161 ARDUINO:    RAM2: variables:166016  free for malloc/new:358272
+2026-06-05 20:30:12.163 ARDUINO_EXIT_CODE=0
+2026-06-05 20:30:16.701 VISIBLE_PORTS_AFTER_UPLOAD=COM10,COM21,COM28,COM5,COM6,COM7
+2026-06-05 20:30:16.703 ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_AFTER_UPLOAD_END
+2026-06-05 20:30:16.705 POST_UPLOAD_DELAY_SECONDS=4
+2026-06-05 20:30:20.728 WAIT_PORT_OK=True SEEN=True PORTS=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-05 20:31:20.961 CAPTURE_STATUS=SUCCESS LINES=130 START=True END=True MATCHES=60
+2026-06-05 20:31:20.996 FINAL_STATUS=SUCCESS

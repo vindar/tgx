@@ -1,0 +1,398 @@
+[
+    {
+        "t_ms":  9,
+        "line":  "g_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  15,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  15,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  15,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  16,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  16,
+        "line":  "borg_cube M5Stack fps=45"
+    },
+    {
+        "t_ms":  16,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  16,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  17,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  17,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  17,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  967,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  967,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  1968,
+        "line":  "borg_cube M5Stack fps=48"
+    },
+    {
+        "t_ms":  1968,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  2981,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  2981,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  3993,
+        "line":  "borg_cube M5Stack fps=49"
+    },
+    {
+        "t_ms":  3993,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  4999,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  4999,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  6008,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  6008,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  7021,
+        "line":  "borg_cube M5Stack fps=49"
+    },
+    {
+        "t_ms":  7022,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  8022,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  8022,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  9027,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  9027,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  10027,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  10027,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  11030,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  11030,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  12031,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  12032,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  13032,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  13033,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  14038,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  14038,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  15039,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  15039,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  16048,
+        "line":  "borg_cube M5Stack fps=49"
+    },
+    {
+        "t_ms":  16049,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  17052,
+        "line":  "borg_cube M5Stack fps=49"
+    },
+    {
+        "t_ms":  17053,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  18058,
+        "line":  "borg_cube M5Stack fps=49"
+    },
+    {
+        "t_ms":  18059,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  19059,
+        "line":  "borg_cube M5Stack fps=49"
+    },
+    {
+        "t_ms":  19060,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  20059,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  20059,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  21066,
+        "line":  "borg_cube M5Stack fps=49"
+    },
+    {
+        "t_ms":  21066,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  22069,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  22069,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  23074,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  23075,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  24075,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  24075,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  25075,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  25075,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  26078,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  26078,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  27080,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  27080,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  28085,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  28085,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  29103,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  29103,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  30109,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  30110,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  31110,
+        "line":  "borg_cube M5Stack fps=48"
+    },
+    {
+        "t_ms":  31110,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  32123,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  32124,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  33136,
+        "line":  "borg_cube M5Stack fps=49"
+    },
+    {
+        "t_ms":  33136,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  34144,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  34145,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  35146,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  35146,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  36153,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  36154,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  37154,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  37154,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  38158,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  38158,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  39158,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  39158,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  40160,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  40160,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  41163,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  41163,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  42167,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  42167,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  43184,
+        "line":  "borg_cube M5Stack fps=49"
+    },
+    {
+        "t_ms":  43184,
+        "line":  "borg_cube M5Stack display=DMA"
+    },
+    {
+        "t_ms":  44183,
+        "line":  "borg_cube M5Stack fps=50"
+    },
+    {
+        "t_ms":  44184,
+        "line":  "borg_cube M5Stack display=DMA"
+    }
+]

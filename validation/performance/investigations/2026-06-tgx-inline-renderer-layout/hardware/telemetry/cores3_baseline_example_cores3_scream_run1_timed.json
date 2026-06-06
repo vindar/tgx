@@ -1,0 +1,434 @@
+[
+    {
+        "t_ms":  8,
+        "line":  ""
+    },
+    {
+        "t_ms":  14,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  14,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  15,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  15,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  15,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  15,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  16,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  16,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  16,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  16,
+        "line":  "[scream] explosion 2"
+    },
+    {
+        "t_ms":  163,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  163,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  1203,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  1203,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  2225,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  2225,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  3236,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  3236,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  4048,
+        "line":  "[scream] explosion 3"
+    },
+    {
+        "t_ms":  4239,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  4239,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  5268,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  5268,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  6279,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  6279,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  7318,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  7318,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  8328,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  8328,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  8881,
+        "line":  "[scream] explosion 4"
+    },
+    {
+        "t_ms":  9333,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  9333,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  10337,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  10338,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  11377,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  11377,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  12393,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  12393,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  13424,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  13425,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  13702,
+        "line":  "[scream] explosion 5"
+    },
+    {
+        "t_ms":  14441,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  14441,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  15465,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  15466,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  16482,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  16482,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  17507,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  17507,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  18503,
+        "line":  "[scream] explosion 6"
+    },
+    {
+        "t_ms":  18551,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  18552,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  19559,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  19559,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  20585,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  20585,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  21592,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  21592,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  22600,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  22600,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  23314,
+        "line":  "[scream] explosion 7"
+    },
+    {
+        "t_ms":  23621,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  23621,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  24649,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  24649,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  25681,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  25681,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  26707,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  26707,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  27757,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  27757,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  28152,
+        "line":  "[scream] explosion 8"
+    },
+    {
+        "t_ms":  28788,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  28788,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  29800,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  29800,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  30804,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  30804,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  31829,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  31829,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  32839,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  32839,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  32976,
+        "line":  "[scream] explosion 9"
+    },
+    {
+        "t_ms":  33848,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  33849,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  34862,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  34862,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  35888,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  35889,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  36912,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  36912,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  37798,
+        "line":  "[scream] explosion 10"
+    },
+    {
+        "t_ms":  37939,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  37939,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  38975,
+        "line":  "scream M5Stack fps=22"
+    },
+    {
+        "t_ms":  38975,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  39994,
+        "line":  "scream M5Stack fps=21"
+    },
+    {
+        "t_ms":  39994,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  41002,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  41002,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  42020,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  42020,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  42628,
+        "line":  "[scream] explosion 11"
+    },
+    {
+        "t_ms":  43033,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  43034,
+        "line":  "scream M5Stack display=DMA"
+    },
+    {
+        "t_ms":  44050,
+        "line":  "scream M5Stack fps=20"
+    },
+    {
+        "t_ms":  44051,
+        "line":  "scream M5Stack display=DMA"
+    }
+]

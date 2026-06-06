@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+1406272	  14016	 464896	1885184	 1cc400	tmp\config_optimization\builds\teensy41_teensy_fast_math_off\benchmark.ino.elf

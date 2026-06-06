@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+ 344135	1252121	  98316	1694572	 19db6c	tmp\config_optimization\builds\core2_baseline_head_run1\benchmark.ino.elf

@@ -1,0 +1,124 @@
+
+2026-06-06 01:55:37.695 BOARD=cores3
+2026-06-06 01:55:37.709 PORT=COM10
+2026-06-06 01:55:37.711 UPLOAD_PORT=COM10
+2026-06-06 01:55:37.712 FQBN=esp32:esp32:m5stack_cores3
+2026-06-06 01:55:37.715 SKETCH=D:\Programmation\tgx\tmp\hardware_validation\sketches\TgxMacroProbe
+2026-06-06 01:55:37.717 PARSE_MODE=probe
+2026-06-06 01:55:37.718 VISIBLE_PORTS_BEFORE=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-06 01:55:37.720 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-06 01:55:37.723 ATTEMPT=1
+2026-06-06 01:55:38.055 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-06 01:55:38.066 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn esp32:esp32:m5stack_cores3 --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\tmp\hardware_validation\builds\cores3_image_session_macro_probe_20260606_015532 --port COM10 --upload D:\Programmation\tgx\tmp\hardware_validation\sketches\TgxMacroProbe
+2026-06-06 01:56:21.892 ARDUINO: Le croquis utilise 312374 octets (9%) de l'espace de stockage de programmes. Le maximum est de 3145728 octets.
+2026-06-06 01:56:21.894 ARDUINO: Les variables globales utilisent 22180 octets (6%) de mémoire dynamique, ce qui laisse 305500 octets pour les variables locales. Le maximum est de 327680 octets.
+2026-06-06 01:56:21.896 ARDUINO: esptool v5.2.0
+2026-06-06 01:56:21.898 ARDUINO: Serial port COM10:
+2026-06-06 01:56:21.899 ARDUINO: Connecting...
+2026-06-06 01:56:21.901 ARDUINO: Connected to ESP32-S3 on COM10:
+2026-06-06 01:56:21.903 ARDUINO: Chip type:          ESP32-S3 (QFN56) (revision v0.2)
+2026-06-06 01:56:21.904 ARDUINO: Features:           Wi-Fi, BT 5 (LE), Dual Core + LP Core, 240MHz
+2026-06-06 01:56:21.906 ARDUINO: Crystal frequency:  40MHz
+2026-06-06 01:56:21.907 ARDUINO: USB mode:           USB-Serial/JTAG
+2026-06-06 01:56:21.909 ARDUINO: MAC:                30:30:f9:00:29:0c
+2026-06-06 01:56:21.911 ARDUINO: 
+2026-06-06 01:56:21.912 ARDUINO: Uploading stub flasher...
+2026-06-06 01:56:21.914 ARDUINO: Running stub flasher...
+2026-06-06 01:56:21.915 ARDUINO: Stub flasher running.
+2026-06-06 01:56:21.917 ARDUINO: Changing baud rate to 921600...
+2026-06-06 01:56:21.919 ARDUINO: Changed.
+2026-06-06 01:56:21.920 ARDUINO: 
+2026-06-06 01:56:21.922 ARDUINO: Configuring flash size...
+2026-06-06 01:56:21.923 ARDUINO: Flash will be erased from 0x00000000 to 0x00004fff...
+2026-06-06 01:56:21.925 ARDUINO: Compressed 19984 bytes to 13013...
+2026-06-06 01:56:21.926 ARDUINO: 
+2026-06-06 01:56:21.929 ARDUINO: Writing at 0x00000000 [                              ]   0.0% 0/13013 bytes... 
+2026-06-06 01:56:21.931 ARDUINO: 
+2026-06-06 01:56:21.933 ARDUINO: Writing at 0x00004e10 [==============================] 100.0% 13013/13013 bytes... 
+2026-06-06 01:56:21.934 ARDUINO: Wrote 19984 bytes (13013 compressed) at 0x00000000 in 0.4 seconds (417.4 kbit/s).
+2026-06-06 01:56:21.938 ARDUINO: Verifying written data...
+2026-06-06 01:56:21.940 ARDUINO: Hash of data verified.
+2026-06-06 01:56:21.942 ARDUINO: Flash will be erased from 0x00008000 to 0x00008fff...
+2026-06-06 01:56:21.944 ARDUINO: Compressed 3072 bytes to 144...
+2026-06-06 01:56:21.946 ARDUINO: 
+2026-06-06 01:56:21.948 ARDUINO: Writing at 0x00008000 [                              ]   0.0% 0/144 bytes... 
+2026-06-06 01:56:21.950 ARDUINO: 
+2026-06-06 01:56:21.951 ARDUINO: Writing at 0x00008c00 [==============================] 100.0% 144/144 bytes... 
+2026-06-06 01:56:21.953 ARDUINO: Wrote 3072 bytes (144 compressed) at 0x00008000 in 0.1 seconds (307.2 kbit/s).
+2026-06-06 01:56:21.955 ARDUINO: Verifying written data...
+2026-06-06 01:56:21.957 ARDUINO: Hash of data verified.
+2026-06-06 01:56:21.958 ARDUINO: Flash will be erased from 0x0000e000 to 0x0000ffff...
+2026-06-06 01:56:21.960 ARDUINO: Compressed 8192 bytes to 47...
+2026-06-06 01:56:21.962 ARDUINO: 
+2026-06-06 01:56:21.964 ARDUINO: Writing at 0x0000e000 [                              ]   0.0% 0/47 bytes... 
+2026-06-06 01:56:21.965 ARDUINO: 
+2026-06-06 01:56:21.967 ARDUINO: Writing at 0x00010000 [==============================] 100.0% 47/47 bytes... 
+2026-06-06 01:56:21.969 ARDUINO: Wrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (464.8 kbit/s).
+2026-06-06 01:56:21.971 ARDUINO: Verifying written data...
+2026-06-06 01:56:21.972 ARDUINO: Hash of data verified.
+2026-06-06 01:56:21.974 ARDUINO: Flash will be erased from 0x00010000 to 0x0005cfff...
+2026-06-06 01:56:21.975 ARDUINO: Compressed 312528 bytes to 171281...
+2026-06-06 01:56:21.977 ARDUINO: 
+2026-06-06 01:56:21.979 ARDUINO: Writing at 0x00010000 [                              ]   0.0% 0/171281 bytes... 
+2026-06-06 01:56:21.980 ARDUINO: 
+2026-06-06 01:56:21.982 ARDUINO: Writing at 0x0001bf86 [=>                            ]   9.6% 16384/171281 bytes... 
+2026-06-06 01:56:21.983 ARDUINO: 
+2026-06-06 01:56:21.985 ARDUINO: Writing at 0x00028fd3 [====>                         ]  19.1% 32768/171281 bytes... 
+2026-06-06 01:56:21.986 ARDUINO: 
+2026-06-06 01:56:21.988 ARDUINO: Writing at 0x0002e7fb [=======>                      ]  28.7% 49152/171281 bytes... 
+2026-06-06 01:56:21.990 ARDUINO: 
+2026-06-06 01:56:21.991 ARDUINO: Writing at 0x00034282 [==========>                   ]  38.3% 65536/171281 bytes... 
+2026-06-06 01:56:21.992 ARDUINO: 
+2026-06-06 01:56:21.994 ARDUINO: Writing at 0x00039b59 [=============>                ]  47.8% 81920/171281 bytes... 
+2026-06-06 01:56:21.996 ARDUINO: 
+2026-06-06 01:56:21.998 ARDUINO: Writing at 0x0003f164 [================>             ]  57.4% 98304/171281 bytes... 
+2026-06-06 01:56:21.999 ARDUINO: 
+2026-06-06 01:56:22.001 ARDUINO: Writing at 0x00044b98 [===================>          ]  67.0% 114688/171281 bytes... 
+2026-06-06 01:56:22.002 ARDUINO: 
+2026-06-06 01:56:22.004 ARDUINO: Writing at 0x0004c0ca [=====================>        ]  76.5% 131072/171281 bytes... 
+2026-06-06 01:56:22.005 ARDUINO: 
+2026-06-06 01:56:22.007 ARDUINO: Writing at 0x000534f5 [========================>     ]  86.1% 147456/171281 bytes... 
+2026-06-06 01:56:22.008 ARDUINO: 
+2026-06-06 01:56:22.010 ARDUINO: Writing at 0x00059795 [===========================>  ]  95.7% 163840/171281 bytes... 
+2026-06-06 01:56:22.012 ARDUINO: 
+2026-06-06 01:56:22.013 ARDUINO: Writing at 0x0005c4d0 [==============================] 100.0% 171281/171281 bytes... 
+2026-06-06 01:56:22.015 ARDUINO: Wrote 312528 bytes (171281 compressed) at 0x00010000 in 2.9 seconds (865.1 kbit/s).
+2026-06-06 01:56:22.016 ARDUINO: Verifying written data...
+2026-06-06 01:56:22.018 ARDUINO: Hash of data verified.
+2026-06-06 01:56:22.019 ARDUINO: 
+2026-06-06 01:56:22.021 ARDUINO: Hard resetting via RTS pin...
+2026-06-06 01:56:22.023 ARDUINO_EXIT_CODE=0
+2026-06-06 01:56:26.491 VISIBLE_PORTS_AFTER_UPLOAD=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-06 01:56:26.493 ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM28           serial   Serial Port (USB) Unknown
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_AFTER_UPLOAD_END
+2026-06-06 01:56:26.495 POST_UPLOAD_DELAY_SECONDS=2
+2026-06-06 01:56:28.523 WAIT_PORT_OK=True SEEN=True PORTS=COM10,COM21,COM28,COM3,COM5,COM6,COM7
+2026-06-06 01:56:29.267 CAPTURE_STATUS=SUCCESS LINES=21 START=True END=True MATCHES=1
+2026-06-06 01:56:29.293 FINAL_STATUS=SUCCESS

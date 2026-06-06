@@ -1,0 +1,1081 @@
+board,label,renderer_size,subtest,frames,min_us,max_us,avg_us,stddev_us,fps,line_number,run_id,phase,run_status,commit
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Buddha GOURAUD,24,57918,95268,77031.25,13823.51,12.98,18,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Buddha FLAT,24,50496,82798,67120.25,12029,14.9,19,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Buddha ORTHO,24,53618,85037,70390.71,11313.76,14.21,20,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Buddha (close),24,39105,68211,53028.42,10756.6,18.86,21,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Buddha (clipped),24,27435,53609,40292.08,8721.34,24.82,22,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Buddha (far),24,45161,75574,61558,10988.97,16.24,23,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Buddha (farclip),24,45821,77054,62745.12,11244.07,15.94,24,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,24,31732,39538,36140.08,2688.49,27.67,28,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),R2D2 FLAT,24,26939,33575,30534.5,2288.41,32.75,29,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,24,39295,48882,44906.71,3086.28,22.27,30,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,24,44496,54759,50672.08,3243.53,19.73,31,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),R2D2 (close),24,39344,74501,52903.75,11378.84,18.9,32,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),R2D2 (far),24,25260,30726,28438.42,1980.22,35.16,33,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),R2D2 (farclip),24,25577,32806,29130.04,2244.6,34.33,34,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Bunny GOURAUD,24,9985,11707,10695.12,491.35,93.5,38,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Bunny FLAT,24,8123,9435,8739.75,406.19,114.42,39,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,24,14019,15533,14652.92,553.89,68.25,40,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,24,16117,17969,16933.46,663.48,59.05,41,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,24,13100,14391,13792.25,440.98,72.5,42,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Bunny (close),24,16365,19684,17460.58,841.32,57.27,43,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Bunny (far),24,7647,8956,8189.96,361.63,122.1,44,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Bunny (farclip),24,7512,9002,8436.12,346.31,118.54,45,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Large tris FLAT Z,12,109,1307,752.67,384.7,1328.61,49,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Grid small FLAT,12,478,6586,3498.58,2770.33,285.83,50,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Grid small TEX,12,540,15388,6758.67,6327.44,147.96,51,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Ribbon triangles,12,540,8292,4708.58,3536.14,212.38,52,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Ribbon strip,12,537,6588,3796.33,2754.12,263.41,53,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Ribbon quads,12,329,6346,3565,2737.88,280.5,54,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire rib tri fast,8,376,3048,1862.75,1164.58,536.84,55,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire rib strip fast,8,363,2097,1309.25,743.7,763.8,56,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire rib quad fast,8,236,2299,1365.75,888.96,732.2,57,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire rib tri AA,8,385,16430,8733.38,6623.08,114.5,58,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire rib strip AA,8,487,9451,5291.5,3777.14,188.98,59,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire rib quad AA,8,239,9659,5293.88,3978.27,188.9,60,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire rib tri thick,8,377,175223,98481.75,76586.34,10.15,61,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire rib strip thick,8,334,107944,61622,47749.54,16.23,62,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire rib quad thick,8,232,107991,61621.25,47835.18,16.23,63,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Grid near clip TEX,8,540,14037,6237.62,6035.5,160.32,64,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Cube direct FLAT,12,1422,1701,1516.83,73.14,659.27,65,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Cube direct TEX,12,10758,12809,11614.83,513.46,86.1,66,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Sphere direct GOUR,8,3403,3703,3492.25,92.87,286.35,67,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Sphere direct TEX,8,6970,7206,7050.88,71.54,141.83,68,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Vertex color direct,12,5,4092,1424.42,1636.04,702.04,69,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Point cloud pixels,12,471,503,477.67,8.04,2093.51,70,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Point cloud dots,8,2534,2781,2661.75,77.89,375.69,71,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire cube fast,8,68,148,106.62,28.58,9378.66,72,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire cube AA,8,132,402,247.12,85.57,4046.54,73,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire cube thick,8,835,2969,1713,695.19,583.77,74,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire sphere fast,8,676,834,726,47.24,1377.41,75,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire sphere AA,8,2168,2508,2352.62,121.13,425.06,76,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire sphere thick,8,21130,24412,22635.38,1184.62,44.18,77,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire bunny fast,8,5452,6253,5800.88,260.87,172.39,78,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire bunny AA,8,16723,18658,17684.88,701.53,56.55,79,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,100 x 100 (small / vertex-heavy),Wire bunny thick,8,233722,262543,250104.5,11746.21,4,80,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Buddha GOURAUD,24,69326,110847,90454.91,15446.3,11.06,91,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Buddha FLAT,24,57538,92570,75543.25,13116.35,13.24,92,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Buddha ORTHO,24,63871,100473,83265.12,13258.49,12.01,93,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Buddha (close),24,52664,85143,67690.38,11391.55,14.77,94,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Buddha (clipped),24,27891,65258,47698.92,12033.33,20.96,95,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Buddha (far),24,47535,78526,64239.33,11188.59,15.57,96,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Buddha (farclip),24,47685,79426,64911.67,11417.13,15.41,97,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),R2D2 GOURAUD,24,41836,51905,47877.12,3325,20.89,101,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),R2D2 FLAT,24,33015,40915,37518.04,2661.88,26.65,102,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),R2D2 TEX_NEAREST,24,62846,77773,72086.71,4542.81,13.87,103,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),R2D2 TEX_BILINEAR,24,76348,94430,87694.21,5344.06,11.4,104,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),R2D2 (close),24,93662,214465,136967.33,41286.77,7.3,105,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),R2D2 (far),24,27608,33713,31133.08,2119.82,32.12,106,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),R2D2 (farclip),24,27721,35135,31266.75,2362.56,31.98,107,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Bunny GOURAUD,24,14206,16270,14838.04,601.01,67.39,111,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Bunny FLAT,24,10287,11763,10906.96,439.34,91.68,112,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Bunny TEX_NEAREST,24,22985,26859,24853.33,1089.55,40.24,113,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Bunny TEX_BILINEAR,24,28398,34253,31381,1562.81,31.87,114,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Bunny ORTHO TEX,24,19293,22020,20994.5,692.05,47.63,115,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Bunny (close),24,46483,56840,50375.54,2483.75,19.85,116,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Bunny (far),24,8915,10072,9419.25,333.43,106.17,117,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Bunny (farclip),24,8664,10071,9513.67,329.9,105.11,118,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Large tris FLAT Z,12,257,4725,2806.08,1503.91,356.37,122,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Grid small FLAT,12,478,11669,5530.92,4888.71,180.8,123,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Grid small TEX,12,540,46006,18042.75,19129.65,55.42,124,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Ribbon triangles,12,540,15168,8151.08,6512.01,122.68,125,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Ribbon strip,12,533,13577,7256.75,5785.63,137.8,126,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Ribbon quads,12,326,13281,6996.83,5746.23,142.92,127,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire rib tri fast,8,378,4492,2576.25,1741.51,388.16,128,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire rib strip fast,8,363,2876,1676.12,1044.23,596.61,129,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire rib quad fast,8,235,3063,1717.12,1181.85,582.37,130,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire rib tri AA,8,384,25106,12707,9906.5,78.7,131,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire rib strip AA,8,482,13938,7353.5,5472.06,135.99,132,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire rib quad AA,8,238,14113,7347.5,5663.34,136.1,133,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire rib tri thick,8,377,229696,124552.62,97452.02,8.03,134,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire rib strip thick,8,334,136082,75185,58553.74,13.3,135,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire rib quad thick,8,232,135905,75047.62,58537.72,13.32,136,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Grid near clip TEX,8,540,45576,18708,20732.02,53.45,137,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Cube direct FLAT,12,5319,6279,5707.67,247.57,175.2,138,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Cube direct TEX,12,42378,50566,45893.75,2041.24,21.79,139,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Sphere direct GOUR,8,9728,10111,9845.5,114.24,101.57,140,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Sphere direct TEX,8,23930,24322,24058.12,116.88,41.57,141,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Vertex color direct,12,4,15686,5406.25,6349.4,184.97,142,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Point cloud pixels,12,472,504,478.42,7.96,2090.23,143,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Point cloud dots,8,2760,2933,2823.75,57.41,354.14,144,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire cube fast,8,75,180,126.62,36.52,7897.33,145,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire cube AA,8,176,685,393,167.71,2544.53,146,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire cube thick,8,1017,4627,2658.38,1147.92,376.17,147,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire sphere fast,8,799,972,867,52.43,1153.4,148,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire sphere AA,8,3084,3600,3359.88,177.62,297.63,149,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire sphere thick,8,26589,30621,28289.75,1525.61,35.35,150,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire bunny fast,8,6114,6973,6508.25,282.82,153.65,151,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire bunny AA,8,20297,22564,21408.38,757.77,46.71,152,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+core2,baseline_bench_core2_run1,200 x 200 (large for this target),Wire bunny thick,8,255405,284754,272243.75,11782.68,3.67,153,core2_baseline_bench_core2_run1,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Buddha GOURAUD,24,41128,66523,54040.67,9425.56,18.5,25,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Buddha FLAT,24,35968,58597,47610.04,8484.34,21,26,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Buddha ORTHO,24,39597,62292,51644.71,8244.92,19.36,27,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Buddha (close),24,27751,47482,37149.04,7379.26,26.92,28,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Buddha (clipped),24,19249,37519,28070.79,6056.39,35.62,29,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Buddha (far),24,32114,53075,43442.21,7657.67,23.02,30,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Buddha (farclip),24,32539,53910,44080.12,7808.4,22.69,31,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,24,21926,27244,24824.33,1807.77,40.28,35,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),R2D2 FLAT,24,18384,22789,20785.42,1546.01,48.11,36,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,24,27574,34000,31227.54,2086.03,32.02,37,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,24,32359,39590,36704.83,2308.27,27.24,38,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),R2D2 (close),24,28470,54280,38291.04,8458.8,26.12,39,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),R2D2 (far),24,17524,21259,19626.75,1339.16,50.95,40,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),R2D2 (farclip),24,17543,22337,19869.62,1513.7,50.33,41,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Bunny GOURAUD,24,6890,8232,7379.12,346.57,135.52,45,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Bunny FLAT,24,5740,6492,6167.92,273.63,162.13,46,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,24,9189,10647,9892.04,481.36,101.09,47,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,24,11085,12657,11823.46,548.58,84.58,48,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,24,8090,9062,8597.83,308.23,116.31,49,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Bunny (close),24,11348,13611,12062.92,561.2,82.9,50,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Bunny (far),24,5032,5788,5366.88,215.92,186.33,51,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Bunny (farclip),24,4906,5754,5440.62,218.56,183.8,52,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Large tris FLAT Z,12,61,947,513.75,274.27,1946.47,56,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Grid small FLAT,12,419,3699,2004.58,1471.45,498.86,57,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Grid small TEX,12,454,10934,4743.33,4415.32,210.82,58,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Ribbon triangles,12,454,5663,3286.08,2399.04,304.31,59,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Ribbon strip,12,440,5167,3002.5,2169.78,333.06,60,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Ribbon quads,12,295,5117,2905,2210.4,344.23,61,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire rib tri fast,8,362,2122,1359.12,778.23,735.77,62,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire rib strip fast,8,298,1457,942,503.88,1061.57,63,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire rib quad fast,8,230,1602,991,597.08,1009.08,64,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire rib tri AA,8,338,12504,6739.25,5062.84,148.38,65,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire rib strip AA,8,385,7184,4067,2888.76,245.88,66,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire rib quad AA,8,224,7375,4100.88,3043.57,243.85,67,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire rib tri thick,8,348,115839,64426.5,50107.9,15.52,68,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire rib strip thick,8,273,70950,40108.12,31079.61,24.93,69,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire rib quad thick,8,224,70979,40081.75,31108.09,24.95,70,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Grid near clip TEX,8,454,10274,4613,4433.33,216.78,71,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Cube direct FLAT,12,985,1259,1064.17,68.1,939.7,72,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Cube direct TEX,12,8246,9839,8906.75,397.06,112.27,73,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Sphere direct GOUR,8,2521,2791,2589.38,81.7,386.19,74,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Sphere direct TEX,8,5275,5477,5343,60.09,187.16,75,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Vertex color direct,12,4,2795,971.25,1121.31,1029.6,76,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Point cloud pixels,12,348,386,354.17,10.32,2823.53,77,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Point cloud dots,8,1829,2049,1928.38,65.9,518.57,78,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire cube fast,8,30,106,64.25,26.9,15564.2,79,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire cube AA,8,77,277,168.38,61.19,5939.12,80,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire cube thick,8,586,1957,1138,451.31,878.73,81,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire sphere fast,8,484,637,519.38,46.45,1925.39,82,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire sphere AA,8,1653,1941,1802.38,101.62,554.82,83,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire sphere thick,8,13309,15455,14305.38,769.81,69.9,84,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire bunny fast,8,3469,4077,3748.75,194.6,266.76,85,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire bunny AA,8,12599,14089,13372.88,551.86,74.78,86,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,100 x 100 (small / vertex-heavy),Wire bunny thick,8,132327,149254,141673.38,6586.64,7.06,87,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Buddha GOURAUD,24,49251,77567,63623.75,10602.3,15.72,98,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Buddha FLAT,24,41238,65887,53896.58,9273.63,18.55,99,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Buddha ORTHO,24,47048,73476,60947.12,9688.05,16.41,100,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Buddha (close),24,37160,59300,47323.83,7833.19,21.13,101,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Buddha (clipped),24,19574,45498,33212.04,8387.98,30.11,102,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Buddha (far),24,33651,54816,45065.33,7727.63,22.19,103,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Buddha (farclip),24,33715,55291,45359,7869.66,22.05,104,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),R2D2 GOURAUD,24,29013,35857,33022.46,2219.42,30.28,108,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),R2D2 FLAT,24,22819,28096,25855.33,1780.05,38.68,109,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,24,44162,54531,50523.62,3101.73,19.79,110,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,24,55528,68845,63765.29,3862.25,15.68,111,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),R2D2 (close),24,69569,160148,101872.46,31082.05,9.82,112,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),R2D2 (far),24,19463,23625,21822.42,1427.82,45.82,113,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),R2D2 (farclip),24,19247,24248,21591.29,1615.78,46.31,114,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Bunny GOURAUD,24,9820,11417,10254.33,435.4,97.52,118,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Bunny FLAT,24,7325,8194,7747.25,304.9,129.08,119,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Bunny TEX_NEAREST,24,16018,18711,17238.5,833.83,58.01,120,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,24,20578,24597,22558.54,1162.78,44.33,121,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Bunny ORTHO TEX,24,12498,14249,13434.38,501.12,74.44,122,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Bunny (close),24,33507,41006,36291.58,1778.88,27.55,123,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Bunny (far),24,5915,6676,6232.75,211.96,160.44,124,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Bunny (farclip),24,5713,6497,6189.08,205.55,161.57,125,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Large tris FLAT Z,12,174,3317,1942.42,1049.22,514.82,129,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Grid small FLAT,12,419,7302,3455,2984.84,289.44,130,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Grid small TEX,12,454,33320,13001.33,13786.23,76.92,131,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Ribbon triangles,12,454,10850,5863.33,4637.3,170.55,132,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Ribbon strip,12,440,10385,5588.17,4420.61,178.95,133,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Ribbon quads,12,295,10301,5471.75,4448.73,182.76,134,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire rib tri fast,8,361,2976,1778.5,1118.88,562.27,135,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire rib strip fast,8,297,1913,1156.88,680.43,864.4,136,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire rib quad fast,8,230,2049,1195.88,767.17,836.21,137,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire rib tri AA,8,338,18742,9604.25,7426.7,104.12,138,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire rib strip AA,8,384,10419,5559.12,4111.58,179.88,139,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire rib quad AA,8,224,10589,5587,4262.49,178.99,140,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire rib tri thick,8,347,154465,82835.25,64872.87,12.07,141,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire rib strip thick,8,273,90882,49640.5,38696,20.14,142,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire rib quad thick,8,224,90761,49551.75,38673.77,20.18,143,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Grid near clip TEX,8,454,33326,13731,15171.91,72.83,144,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Cube direct FLAT,12,3716,4454,3989,187.52,250.69,145,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Cube direct TEX,12,32512,38811,35211.33,1570.58,28.4,146,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Sphere direct GOUR,8,6863,7198,6955.88,99.37,143.76,147,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Sphere direct TEX,8,17751,18085,17861.5,97.17,55.99,148,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Vertex color direct,12,4,10808,3723.08,4378.75,268.59,149,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Point cloud pixels,12,349,390,354.25,11.1,2822.87,150,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Point cloud dots,8,1988,2170,2040.38,56.6,490.11,151,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire cube fast,8,35,120,74.38,29.09,13445.38,152,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire cube AA,8,125,482,273.62,117.64,3654.64,153,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire cube thick,8,777,3146,1811,772.58,552.18,154,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire sphere fast,8,559,714,600.5,46.56,1665.28,155,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire sphere AA,8,2313,2689,2524.5,136.54,396.12,156,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire sphere thick,8,17232,19899,18342.38,1013.98,54.52,157,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire bunny fast,8,3888,4506,4182.88,207.33,239.07,158,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire bunny AA,8,15170,16932,16063.25,598.25,62.25,159,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,200 x 200 (medium / balanced),Wire bunny thick,8,147817,164896,157500.62,6633.21,6.35,160,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Buddha GOURAUD,24,52511,81326,66986,10757.99,14.93,171,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Buddha FLAT,24,43264,68163,56023.75,9391.99,17.85,172,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Buddha ORTHO,24,49419,76696,63754.75,9982.33,15.69,173,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Buddha (close),24,42233,65524,52880.83,8055.68,18.91,174,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Buddha (clipped),24,19236,50255,36017.54,10194.63,27.76,175,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Buddha (far),24,34333,55717,45880.71,7771.51,21.8,176,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Buddha (farclip),24,34383,56009,46065.58,7898.68,21.71,177,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),R2D2 GOURAUD,24,32521,40120,37033.92,2473.92,27,181,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),R2D2 FLAT,24,24941,30593,28229.25,1919.47,35.42,182,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),R2D2 TEX_NEAREST,24,52521,65082,60309.62,3715.16,16.58,183,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),R2D2 TEX_BILINEAR,24,67494,83932,77790.46,4820.79,12.86,184,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),R2D2 (close),24,93244,221438,138700.08,44257.7,7.21,185,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),R2D2 (far),24,20385,24633,22800.88,1458.04,43.86,186,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),R2D2 (farclip),24,20017,25076,22351.25,1644.1,44.74,187,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Bunny GOURAUD,24,11263,13070,11737.92,501.24,85.19,191,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Bunny FLAT,24,8101,9031,8514.04,324.24,117.45,192,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Bunny TEX_NEAREST,24,19329,23022,21061.88,1079.83,47.48,193,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Bunny TEX_BILINEAR,24,25495,31242,28394.21,1598.46,35.22,194,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Bunny ORTHO TEX,24,14345,16640,15694.54,624.06,63.72,195,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Bunny (close),24,46476,56932,50427.83,2501.18,19.83,196,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Bunny (far),24,6163,6905,6546.46,222.98,152.75,197,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Bunny (farclip),24,5951,6749,6451.75,219.78,155,198,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Large tris FLAT Z,12,229,4707,2777.25,1506.25,360.07,202,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Grid small FLAT,12,419,9309,4241.33,3826.89,235.77,203,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Grid small TEX,12,454,46312,17756.83,19227.27,56.32,204,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Ribbon triangles,12,454,13524,7161.25,5815.26,139.64,205,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Ribbon strip,12,440,13070,6889.33,5605.51,145.15,206,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Ribbon quads,12,295,12972,6770.17,5631.69,147.71,207,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire rib tri fast,8,362,3313,1932,1245.3,517.6,208,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire rib strip fast,8,297,2092,1237.25,746.98,808.24,209,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire rib quad fast,8,230,2221,1272.12,833.02,786.09,210,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire rib tri AA,8,337,21270,10737.88,8369.34,93.13,211,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire rib strip AA,8,384,11717,6143.62,4593.28,162.77,212,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire rib quad AA,8,224,11877,6169,4741.7,162.1,213,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire rib tri thick,8,347,169450,90125.25,70719.33,11.1,214,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire rib strip thick,8,273,98542,53385,41689.83,18.73,215,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire rib quad thick,8,224,98356,53278.62,41648.71,18.77,216,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Grid near clip TEX,8,459,46724,19015.5,21439.54,52.59,217,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Cube direct FLAT,12,5293,6320,5690.92,260.51,175.72,218,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Cube direct TEX,12,46710,55789,50617.42,2261.78,19.76,219,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Sphere direct GOUR,8,9359,9732,9460.75,110.17,105.7,220,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Sphere direct TEX,8,25007,25348,25119.38,105.11,39.81,221,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Vertex color direct,12,4,15545,5311,6282.76,188.29,222,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Point cloud pixels,12,349,384,353.42,9.41,2829.52,223,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Point cloud dots,8,2003,2172,2047.38,53.03,488.43,224,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire cube fast,8,37,129,79.75,30.96,12539.18,225,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire cube AA,8,144,560,315.12,139.95,3173.34,226,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire cube thick,8,835,3611,2083.75,899.66,479.9,227,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire sphere fast,8,588,757,636,49.8,1572.33,228,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire sphere AA,8,2574,3013,2813.25,155.9,355.46,229,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire sphere thick,8,18611,21634,19933.88,1086.17,50.17,230,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire bunny fast,8,4022,4671,4327.5,215.48,231.08,231,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire bunny AA,8,16183,18030,17113.88,611.74,58.43,232,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,parse_sanity_bench_cores3,240 x 240 (large for this target),Wire bunny thick,8,153947,171587,163565.38,6752.25,6.11,233,cores3_parse_sanity_bench_cores3,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Buddha GOURAUD,24,41126,66524,54040.75,9425.73,18.5,25,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Buddha FLAT,24,35967,58596,47610.25,8484.53,21,26,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Buddha ORTHO,24,39596,62293,51644.83,8244.86,19.36,27,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Buddha (close),24,27752,47483,37149.29,7379.76,26.92,28,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Buddha (clipped),24,19249,37522,28070.96,6056.75,35.62,29,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Buddha (far),24,32116,53071,43442.54,7657.4,23.02,30,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Buddha (farclip),24,32539,53912,44080.88,7808.88,22.69,31,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,24,21926,27243,24823.67,1807.67,40.28,35,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),R2D2 FLAT,24,18385,22789,20785.75,1545.63,48.11,36,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,24,27577,33999,31229.08,2086.24,32.02,37,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,24,32359,39586,36704,2307.14,27.24,38,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),R2D2 (close),24,28469,54283,38291.29,8459.85,26.12,39,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),R2D2 (far),24,17521,21256,19626.96,1339.77,50.95,40,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),R2D2 (farclip),24,17549,22331,19871.42,1512.89,50.32,41,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Bunny GOURAUD,24,6892,8220,7378.5,345.3,135.53,45,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Bunny FLAT,24,5740,6485,6168.33,273.94,162.12,46,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,24,9189,10646,9891.88,480.95,101.09,47,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,24,11085,12652,11823.62,549.21,84.58,48,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,24,8091,9065,8598.04,308.26,116.31,49,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Bunny (close),24,11347,13623,12064.08,562.55,82.89,50,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Bunny (far),24,5031,5785,5367.12,215.62,186.32,51,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Bunny (farclip),24,4910,5753,5440.46,217.88,183.81,52,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Large tris FLAT Z,12,61,944,512.75,273.95,1950.27,56,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Grid small FLAT,12,420,3699,2005.92,1469.5,498.53,57,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Grid small TEX,12,453,10954,4744.75,4417.39,210.76,58,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Ribbon triangles,12,454,5664,3286.92,2399.61,304.24,59,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Ribbon strip,12,441,5167,3001.58,2168.95,333.16,60,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Ribbon quads,12,295,5118,2904.42,2210.29,344.3,61,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire rib tri fast,8,361,2122,1358.38,778.96,736.17,62,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire rib strip fast,8,296,1457,941.88,505.69,1061.71,63,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire rib quad fast,8,230,1602,990.12,597.08,1009.97,64,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire rib tri AA,8,338,12504,6738.62,5062.41,148.4,65,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire rib strip AA,8,385,7184,4068.25,2889.24,245.81,66,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire rib quad AA,8,224,7380,4101.5,3045.63,243.81,67,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire rib tri thick,8,347,115842,64423.88,50108.03,15.52,68,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire rib strip thick,8,274,70945,40111.75,31080.26,24.93,69,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire rib quad thick,8,224,70981,40078.62,31106.52,24.95,70,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Grid near clip TEX,8,454,10272,4612.25,4433.48,216.81,71,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Cube direct FLAT,12,985,1260,1064.17,68.52,939.7,72,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Cube direct TEX,12,8246,9841,8907,397.5,112.27,73,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Sphere direct GOUR,8,2521,2793,2591,82.13,385.95,74,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Sphere direct TEX,8,5274,5445,5337.88,51.35,187.34,75,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Vertex color direct,12,4,2809,972.5,1123.39,1028.28,76,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Point cloud pixels,12,348,386,353.83,9.94,2826.19,77,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Point cloud dots,8,1829,2050,1927.25,67.48,518.87,78,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire cube fast,8,30,104,62.12,27.62,16096.58,79,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire cube AA,8,78,277,168.75,61.32,5925.93,80,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire cube thick,8,586,1957,1136.5,452.1,879.89,81,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire sphere fast,8,484,638,518.62,46.93,1928.18,82,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire sphere AA,8,1653,1937,1801.5,100.68,555.09,83,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire sphere thick,8,13310,15455,14303.75,767.43,69.91,84,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire bunny fast,8,3469,4064,3745.75,191.07,266.97,85,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire bunny AA,8,12598,14097,13374,555.35,74.77,86,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,100 x 100 (small / vertex-heavy),Wire bunny thick,8,132325,149230,141671,6583.62,7.06,87,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Buddha GOURAUD,24,49255,77563,63623.04,10601.99,15.72,98,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Buddha FLAT,24,41238,65884,53897.62,9273.16,18.55,99,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Buddha ORTHO,24,47043,73478,60945.92,9688.17,16.41,100,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Buddha (close),24,37157,59292,47323.17,7832.46,21.13,101,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Buddha (clipped),24,19580,45497,33212.17,8387.16,30.11,102,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Buddha (far),24,33653,54815,45065.54,7725.84,22.19,103,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Buddha (farclip),24,33724,55291,45359.08,7868.33,22.05,104,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),R2D2 GOURAUD,24,29013,35855,33023.21,2220.15,30.28,108,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),R2D2 FLAT,24,22820,28095,25856.25,1780.44,38.68,109,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,24,44168,54526,50523.29,3100.91,19.79,110,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,24,55520,68838,63764.75,3863.69,15.68,111,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),R2D2 (close),24,69565,160149,101871.75,31083.26,9.82,112,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),R2D2 (far),24,19461,23620,21821.88,1427.66,45.83,113,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),R2D2 (farclip),24,19250,24247,21592.96,1616.08,46.31,114,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Bunny GOURAUD,24,9819,11443,10255.38,438.82,97.51,118,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Bunny FLAT,24,7325,8212,7748.29,306.42,129.06,119,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Bunny TEX_NEAREST,24,16015,18716,17238.29,834.77,58.01,120,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,24,20576,24597,22558.71,1163.16,44.33,121,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Bunny ORTHO TEX,24,12496,14248,13433.33,501.08,74.44,122,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Bunny (close),24,33506,40982,36290.58,1775.75,27.56,123,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Bunny (far),24,5916,6670,6232.12,210.86,160.46,124,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Bunny (farclip),24,5714,6491,6190.04,207.67,161.55,125,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Large tris FLAT Z,12,174,3321,1943.17,1049.81,514.62,129,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Grid small FLAT,12,419,7302,3455,2984.67,289.44,130,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Grid small TEX,12,454,33318,13001.75,13786.5,76.91,131,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Ribbon triangles,12,454,10850,5863.67,4637.64,170.54,132,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Ribbon strip,12,442,10386,5587.92,4420.8,178.96,133,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Ribbon quads,12,295,10300,5472,4448.92,182.75,134,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire rib tri fast,8,362,2976,1778.5,1118.4,562.27,135,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire rib strip fast,8,297,1913,1156.75,680.26,864.49,136,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire rib quad fast,8,230,2049,1194.38,767.5,837.26,137,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire rib tri AA,8,337,18742,9603.88,7426.85,104.12,138,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire rib strip AA,8,384,10419,5559.25,4111.46,179.88,139,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire rib quad AA,8,224,10590,5586.38,4262.48,179.01,140,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire rib tri thick,8,347,154465,82837,64872.73,12.07,141,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire rib strip thick,8,273,90883,49639,38696.32,20.15,142,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire rib quad thick,8,224,90760,49552.62,38674.32,20.18,143,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Grid near clip TEX,8,454,33325,13731.25,15171.4,72.83,144,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Cube direct FLAT,12,3717,4452,3989.5,187.22,250.66,145,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Cube direct TEX,12,32512,38809,35211.83,1570.17,28.4,146,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Sphere direct GOUR,8,6865,7201,6956.75,100.01,143.75,147,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Sphere direct TEX,8,17753,18055,17855.38,89.71,56.01,148,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Vertex color direct,12,3,10833,3725.33,4382.43,268.43,149,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Point cloud pixels,12,349,389,354.5,10.73,2820.87,150,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Point cloud dots,8,1988,2167,2039.88,55.81,490.23,151,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire cube fast,8,35,121,74.75,29.33,13377.93,152,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire cube AA,8,125,481,273.38,117.1,3657.98,153,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire cube thick,8,780,3147,1812.38,772.07,551.76,154,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire sphere fast,8,559,712,600.25,45.51,1665.97,155,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire sphere AA,8,2313,2690,2524.88,138.81,396.06,156,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire sphere thick,8,17233,19897,18348.62,1011.36,54.5,157,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire bunny fast,8,3888,4503,4181.75,206.16,239.13,158,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire bunny AA,8,15171,16932,16063.25,598.34,62.25,159,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,200 x 200 (medium / balanced),Wire bunny thick,8,147801,164892,157497.12,6636.65,6.35,160,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Buddha GOURAUD,24,52515,81332,66985.04,10758.24,14.93,171,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Buddha FLAT,24,43267,68164,56024.38,9393.15,17.85,172,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Buddha ORTHO,24,49417,76695,63755.08,9983.48,15.69,173,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Buddha (close),24,42233,65524,52882.58,8056.52,18.91,174,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Buddha (clipped),24,19235,50251,36018.12,10194.67,27.76,175,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Buddha (far),24,34340,55722,45882.92,7773.44,21.79,176,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Buddha (farclip),24,34382,56004,46068.38,7900.06,21.71,177,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),R2D2 GOURAUD,24,32527,40111,37034.71,2472.71,27,181,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),R2D2 FLAT,24,24935,30595,28229.08,1920.39,35.42,182,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),R2D2 TEX_NEAREST,24,52518,65081,60309.79,3714.92,16.58,183,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),R2D2 TEX_BILINEAR,24,67492,83938,77789.5,4820.1,12.86,184,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),R2D2 (close),24,93243,221429,138699.8,44256.2,7.21,185,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),R2D2 (far),24,20378,24642,22800.62,1459.74,43.86,186,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),R2D2 (farclip),24,20016,25072,22353.62,1644.33,44.74,187,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Bunny GOURAUD,24,11265,13099,11739.12,504.95,85.19,191,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Bunny FLAT,24,8102,9033,8515.71,325.02,117.43,192,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Bunny TEX_NEAREST,24,19328,23026,21062,1080.44,47.48,193,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Bunny TEX_BILINEAR,24,25502,31225,28394.29,1595.54,35.22,194,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Bunny ORTHO TEX,24,14349,16633,15693.75,622.8,63.72,195,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Bunny (close),24,46477,56938,50427.71,2500.63,19.83,196,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Bunny (far),24,6168,6904,6545.42,222.18,152.78,197,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Bunny (farclip),24,5952,6755,6452.29,220.31,154.98,198,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Large tris FLAT Z,12,234,4714,2779.25,1506.41,359.81,202,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Grid small FLAT,12,420,9312,4241.75,3827.49,235.75,203,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Grid small TEX,12,454,46309,17756,19227.28,56.32,204,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Ribbon triangles,12,454,13528,7162.08,5816.37,139.62,205,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Ribbon strip,12,441,13069,6889.42,5605.31,145.15,206,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Ribbon quads,12,295,12973,6770.33,5632.03,147.7,207,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire rib tri fast,8,362,3308,1931,1244.68,517.87,208,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire rib strip fast,8,296,2092,1234.75,746.99,809.88,209,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire rib quad fast,8,230,2226,1271.75,833.36,786.32,210,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire rib tri AA,8,337,21270,10738.62,8368.94,93.12,211,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire rib strip AA,8,385,11717,6143.12,4594.07,162.78,212,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire rib quad AA,8,224,11877,6169,4741.75,162.1,213,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire rib tri thick,8,348,169445,90123.12,70716.43,11.1,214,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire rib strip thick,8,273,98534,53386.25,41689.83,18.73,215,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire rib quad thick,8,224,98360,53279.12,41649.46,18.77,216,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Grid near clip TEX,8,454,46726,19013.88,21440.28,52.59,217,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Cube direct FLAT,12,5288,6318,5690.42,260.27,175.73,218,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Cube direct TEX,12,46714,55785,50617.25,2260.79,19.76,219,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Sphere direct GOUR,8,9356,9721,9460.12,106.93,105.71,220,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Sphere direct TEX,8,25008,25369,25122.62,110.64,39.8,221,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Vertex color direct,12,3,15526,5310.58,6280.07,188.3,222,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Point cloud pixels,12,349,391,354.5,11.26,2820.87,223,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Point cloud dots,8,2003,2167,2046.5,51.47,488.64,224,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire cube fast,8,38,128,79.62,30.49,12558.87,225,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire cube AA,8,145,557,316.38,139.87,3160.81,226,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire cube thick,8,831,3616,2084.38,900.58,479.76,227,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire sphere fast,8,584,745,631.38,47.58,1583.84,228,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire sphere AA,8,2578,3012,2815.88,154.57,355.13,229,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire sphere thick,8,18611,21636,19938,1087.28,50.16,230,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire bunny fast,8,4022,4659,4326.25,212.46,231.15,231,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire bunny AA,8,16182,18031,17112.62,613.31,58.44,232,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+cores3,baseline_bench_cores3_run2,240 x 240 (large for this target),Wire bunny thick,8,153947,171574,163566.88,6750.34,6.11,233,cores3_baseline_bench_cores3_run2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Buddha GOURAUD,16,78438,128309,104698.5,18689.25,9.55,19,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Buddha FLAT,16,64228,104401,85599.38,15177.45,11.68,20,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Buddha ORTHO,16,78528,123524,102908.75,16583.17,9.72,21,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Buddha (close),16,55470,94801,74317.5,14862.48,13.46,22,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Buddha (clipped),16,40583,78299,59352.12,12525.84,16.85,23,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Buddha (far),16,64607,105746,86837.94,15097.02,11.52,24,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Buddha (farclip),16,65845,115142,94651.12,17840.49,10.57,25,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,16,45363,55059,50594.56,3227.92,19.76,29,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),R2D2 FLAT,16,36403,44033,40564.25,2612.99,24.65,30,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,16,58766,71470,65775.75,3997.68,15.2,31,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,16,75368,93649,85439.25,5813.28,11.7,32,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),R2D2 (close),16,67621,114851,87461,16950.02,11.43,33,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),R2D2 (far),16,50580,63552,58432.88,3815.64,17.11,34,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),R2D2 (farclip),16,62384,84921,72828.75,7108.45,13.73,35,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Bunny GOURAUD,16,14220,16582,15361.75,805.46,65.1,39,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Bunny FLAT,16,11157,13055,12128.38,653.68,82.45,40,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,16,20505,23263,21634.88,926.46,46.22,41,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,16,29358,32971,30929.75,1248.71,32.33,42,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,16,34074,37633,35953,1229.15,27.81,43,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Bunny (close),16,21899,25648,23101.5,1149.01,43.29,44,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Bunny (far),16,12237,14503,13307.56,724.22,75.15,45,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Bunny (farclip),16,12012,20491,17274.38,2547.66,57.89,46,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Large tris FLAT Z,8,134,1595,896.5,478.73,1115.45,50,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Grid small FLAT,8,692,6372,3395.88,2383.72,294.47,51,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Grid small TEX,8,773,16867,7285.75,6591.92,137.25,52,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Ribbon triangles,8,774,10004,5985.25,4054.35,167.08,53,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Ribbon strip,8,636,8814,5265.25,3566.01,189.92,54,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Ribbon quads,8,424,8888,5225,3727.48,191.39,55,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire rib tri fast,8,413,2959,1890.12,1143.38,529.07,56,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire rib strip fast,8,374,2175,1422,811.17,703.23,57,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire rib quad fast,8,275,2317,1444.75,910.9,692.16,58,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire rib tri AA,8,416,17498,9276.25,7028.13,107.8,59,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire rib strip AA,8,578,9971,5610.25,3951.29,178.25,60,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire rib quad AA,8,256,10025,5475.75,4105.66,182.62,61,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire rib tri thick,8,439,183338,100612.5,78517.66,9.94,62,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire rib strip thick,8,308,117759,65360.25,50913.22,15.3,63,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire rib quad thick,8,270,157998,89843.75,69824.98,11.13,64,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Grid near clip TEX,8,766,15759,7242.75,6700.07,138.07,65,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Cube direct FLAT,8,1666,2113,1843.75,126.62,542.37,66,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Cube direct TEX,8,15568,17943,16508.38,712.46,60.58,67,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Sphere direct GOUR,8,5897,6528,6112.62,196.24,163.6,68,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Sphere direct TEX,8,8229,8689,8397.12,137.04,119.09,69,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Vertex color direct,8,31,4557,1678.75,1878.74,595.68,70,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Point cloud pixels,8,384,491,404.38,33.18,2472.95,71,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Point cloud dots,8,2415,2767,2533.88,109.87,394.65,72,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire cube fast,8,120,241,165.25,38.43,6051.44,73,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire cube AA,8,166,535,326.12,111.95,3066.31,74,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire cube thick,8,1166,4101,2374.38,933.66,421.16,75,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire sphere fast,8,701,901,762.75,62.89,1311.05,76,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire sphere AA,8,2340,2766,2578.5,156.7,387.82,77,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire sphere thick,8,26266,30098,28100.88,1398.27,35.59,78,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire bunny fast,8,7235,8362,7799.25,398.42,128.22,79,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire bunny AA,8,19787,22003,20868.88,829.48,47.92,80,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,100 x 100 (small / vertex-heavy),Wire bunny thick,8,265201,298685,283758.38,13399.42,3.52,81,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Buddha GOURAUD,16,91737,146881,120642.56,20730.18,8.29,92,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Buddha FLAT,16,73528,117234,96797.75,16549.86,10.33,93,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Buddha ORTHO,16,90937,142764,118667.81,19004.51,8.43,94,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Buddha (close),16,69432,113195,90186.56,15635.7,11.09,95,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Buddha (clipped),16,40764,91018,66978.19,15532.69,14.93,96,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Buddha (far),16,67415,109347,89913.06,15256.26,11.12,97,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Buddha (farclip),16,68440,119359,97868,18189.16,10.22,98,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),R2D2 GOURAUD,16,56961,68768,63739.62,3864.18,15.69,102,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),R2D2 FLAT,16,44088,53284,49463,3050.89,20.22,103,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,16,87865,107484,99699.19,5887.83,10.03,104,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,16,121017,152246,139009.25,9268.88,7.19,105,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),R2D2 (close),16,138085,292404,198760.94,56357.24,5.03,106,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),R2D2 (far),16,71399,89415,81800.94,5244.06,12.22,107,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),R2D2 (farclip),16,82290,110127,94099.75,9309.06,10.63,108,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Bunny GOURAUD,16,18740,21642,19947.56,920.43,50.13,112,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Bunny FLAT,16,13880,16011,14871.5,698.13,67.24,113,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Bunny TEX_NEAREST,16,33086,37718,35002.19,1439.96,28.57,114,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,16,46803,56010,51759.5,2459.02,19.32,115,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Bunny ORTHO TEX,16,44666,48764,46478.94,1480.74,21.52,116,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Bunny (close),16,54615,66231,59000.94,2976.41,16.95,117,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Bunny (far),16,13880,16095,14953.25,711.15,66.88,118,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Bunny (farclip),16,13574,22134,18943.12,2589,52.79,119,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Large tris FLAT Z,8,340,5401,3224.38,1731.67,310.14,123,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Grid small FLAT,8,700,12227,5693.88,4776.62,175.63,124,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Grid small TEX,8,757,49600,18748.88,20148.31,53.34,125,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Ribbon triangles,8,751,17057,10216.5,7382.07,97.88,126,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Ribbon strip,8,626,16007,9475.12,6886.99,105.54,127,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Ribbon quads,8,426,16004,9418.75,7035.52,106.17,128,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire rib tri fast,8,428,4018,2430.5,1567.41,411.44,129,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire rib strip fast,8,377,2731,1692.5,1030.18,590.84,130,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire rib quad fast,8,270,2888,1706.88,1126.1,585.87,131,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire rib tri AA,8,427,26989,13602.88,10604.93,73.51,132,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire rib strip AA,8,583,14775,7827.88,5762.16,127.75,133,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire rib quad AA,8,258,14778,7657.62,5897.15,130.59,134,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire rib tri thick,8,432,243240,129247.75,101490.4,7.74,135,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire rib strip thick,8,309,149251,80530.88,63035.79,12.42,136,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire rib quad thick,8,269,188983,104828.38,81746.44,9.54,137,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Grid near clip TEX,8,762,49288,20519.88,22246.08,48.73,138,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Cube direct FLAT,8,6150,7172,6606.88,304.39,151.36,139,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Cube direct TEX,8,61442,70218,64921.25,2704.89,15.4,140,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Sphere direct GOUR,8,12395,13075,12659.12,209.86,78.99,141,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Sphere direct TEX,8,26722,27391,26941.38,189.51,37.12,142,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Vertex color direct,8,24,16632,5725.25,6891.62,174.66,143,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Point cloud pixels,8,386,423,396.75,11.62,2520.48,144,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Point cloud dots,8,2587,2822,2649.88,74.53,377.38,145,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire cube fast,8,127,253,182.88,45.8,5468.22,146,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire cube AA,8,217,844,487.38,207.41,2051.81,147,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire cube thick,8,1329,5868,3396,1424.96,294.46,148,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire sphere fast,8,788,1063,869.62,82.04,1149.92,149,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire sphere AA,8,3339,3934,3678.5,210.52,271.85,150,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire sphere thick,8,32410,37442,34460.5,1834.17,29.02,151,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire bunny fast,8,7835,8987,8399.75,420.74,119.05,152,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire bunny AA,8,23581,26269,24922.75,898.86,40.12,153,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,200 x 200 (medium / balanced),Wire bunny thick,8,290082,323525,308909.12,13493.54,3.24,154,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Buddha GOURAUD,16,96869,152767,126120.12,21020.9,7.93,165,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Buddha FLAT,16,76929,121431,100571.12,16838.13,9.94,166,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Buddha ORTHO,16,94932,148138,123395.75,19454.85,8.1,167,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Buddha (close),16,89540,132991,110729.44,16068.94,9.03,168,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Buddha (clipped),16,40167,105848,75889.62,20722.31,13.18,169,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Buddha (far),16,68876,111080,91391.81,15343.59,10.94,170,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Buddha (farclip),16,69539,121188,99579.38,18433.43,10.04,171,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),R2D2 GOURAUD,16,62375,75504,70137.81,4213.64,14.26,175,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),R2D2 FLAT,16,47960,57789,53604.81,3234.28,18.66,176,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,16,101594,124628,115933.12,6843.44,8.63,177,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,16,142564,179262,164550.06,10957.35,6.08,178,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),R2D2 (close),16,233513,540778,349563.62,104467.82,2.86,179,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),R2D2 (far),16,79841,97624,90209.56,5097.42,11.09,180,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),R2D2 (farclip),16,86696,119612,101801.81,10086.6,9.82,181,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Bunny GOURAUD,16,21122,24135,22259.5,985.69,44.92,185,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Bunny FLAT,16,15208,17374,16177,722.53,61.82,186,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,16,38449,44725,41274.31,1839.38,24.23,187,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,16,55624,67884,62157.06,3243.52,16.09,188,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Bunny ORTHO TEX,16,49066,53235,50770.5,1551.62,19.7,189,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Bunny (close),16,92036,110638,99255.94,4938.59,10.07,190,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Bunny (far),16,14341,16535,15539.88,730.65,64.35,191,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Bunny (farclip),16,14114,22714,19460.31,2646.85,51.39,192,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Large tris FLAT Z,8,431,8535,4898.25,2801.76,204.15,196,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Grid small FLAT,8,699,18613,7781.25,7234.48,128.51,197,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Grid small TEX,8,756,85628,30152.62,34453.3,33.16,198,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Ribbon triangles,8,754,25441,13798.75,10607.9,72.47,199,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Ribbon strip,8,623,24344,13056.38,10134.83,76.59,200,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Ribbon quads,8,423,24731,13026.25,10319.25,76.77,201,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire rib tri fast,8,414,4426,2723.25,1796.79,367.21,202,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire rib strip fast,8,377,2955,1850.75,1143.85,540.32,203,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire rib quad fast,8,272,3097,1856,1234.83,538.79,204,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire rib tri AA,8,417,30843,16333.25,12543.41,61.22,205,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire rib strip AA,8,553,16726,9205.62,6777.78,108.63,206,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire rib quad AA,8,261,16658,9046.38,6883.75,110.54,207,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire rib tri thick,8,433,266796,146546.88,114115.52,6.82,208,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire rib strip thick,8,309,161508,90066.88,69960.05,11.1,209,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire rib quad thick,8,274,201118,114390.5,88769.22,8.74,210,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Grid near clip TEX,8,749,88263,35155.12,40255.07,28.45,211,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Cube direct FLAT,8,9548,11096,10206.62,428.12,97.98,212,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Cube direct TEX,8,93846,110897,101864.75,4710.66,9.82,213,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Sphere direct GOUR,8,16164,16919,16417.38,231.11,60.91,214,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Sphere direct TEX,8,37341,38084,37610.38,214.02,26.59,215,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Vertex color direct,8,25,24339,8128.88,9922.79,123.02,216,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Point cloud pixels,8,393,442,405.62,15.07,2465.33,217,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Point cloud dots,8,2778,2983,2836.88,63.32,352.5,218,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire cube fast,8,150,297,204,48.25,4901.96,219,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire cube AA,8,456,1122,769.62,240.24,1299.33,220,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire cube thick,8,2677,7451,4796.38,1641.57,208.49,221,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire sphere fast,8,830,1058,904.75,70.79,1105.28,222,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire sphere AA,8,3724,4407,4089.25,238.22,244.54,223,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire sphere thick,8,34650,39976,36945.5,1894.87,27.07,224,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire bunny fast,8,7985,9146,8592.75,413.46,116.38,225,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire bunny AA,8,25202,27925,26503.75,899.74,37.73,226,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,parse_sanity_bench_pico2,320 x 240 (large / ILI9341),Wire bunny thick,8,300021,333122,318320.62,13514.43,3.14,227,pico2_parse_sanity_bench_pico2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Buddha GOURAUD,16,78340,128018,104642.06,18657.03,9.56,19,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Buddha FLAT,16,64109,104387,85583,15172.77,11.68,20,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Buddha ORTHO,16,78450,123798,102884.62,16627.58,9.72,21,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Buddha (close),16,55315,94937,74311.88,14848.17,13.46,22,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Buddha (clipped),16,40795,78372,59403.25,12500.64,16.83,23,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Buddha (far),16,64591,105855,86858.06,15117.23,11.51,24,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Buddha (farclip),16,65835,114916,94655.25,17857.02,10.56,25,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,16,45335,54923,50551.88,3203.84,19.78,29,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),R2D2 FLAT,16,36461,44005,40587.75,2596.8,24.64,30,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,16,58546,71471,65772.44,3997.62,15.2,31,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,16,75389,93758,85448.19,5803.23,11.7,32,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),R2D2 (close),16,67661,114888,87518.81,16955.14,11.43,33,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),R2D2 (far),16,50372,63531,58381.06,3846.69,17.13,34,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),R2D2 (farclip),16,62230,84645,72786.19,7146.6,13.74,35,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Bunny GOURAUD,16,14206,16507,15381.75,802.77,65.01,39,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Bunny FLAT,16,11123,13068,12119.62,652.22,82.51,40,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,16,20406,23203,21644.44,945.15,46.2,41,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,16,29369,33034,30905.81,1264.22,32.36,42,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,16,34105,37574,35926.88,1199.52,27.83,43,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Bunny (close),16,21976,25871,23103.06,1158.38,43.28,44,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Bunny (far),16,12233,14432,13301.62,709.11,75.18,45,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Bunny (farclip),16,12051,20607,17276.44,2547.88,57.88,46,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Large tris FLAT Z,8,138,1603,905.62,473.82,1104.21,50,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Grid small FLAT,8,718,6351,3400.5,2369.95,294.07,51,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Grid small TEX,8,775,16753,7272.88,6575.35,137.5,52,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Ribbon triangles,8,769,9981,5987.88,4057.04,167,53,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Ribbon strip,8,627,8817,5262,3569.1,190.04,54,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Ribbon quads,8,422,8915,5213.38,3723.73,191.81,55,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire rib tri fast,8,411,2963,1905.38,1154.56,524.83,56,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire rib strip fast,8,376,2178,1425.62,812.14,701.45,57,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire rib quad fast,8,273,2315,1447.12,910.53,691.03,58,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire rib tri AA,8,413,17492,9274.75,7029.33,107.82,59,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire rib strip AA,8,577,9978,5609.25,3949.75,178.28,60,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire rib quad AA,8,257,9979,5471,4098.99,182.78,61,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire rib tri thick,8,430,183310,100575.62,78493.59,9.94,62,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire rib strip thick,8,315,117802,65349.38,50902.3,15.3,63,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire rib quad thick,8,268,158231,89848.38,69826.52,11.13,64,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Grid near clip TEX,8,767,15751,7236.62,6688.85,138.19,65,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Cube direct FLAT,8,1655,2122,1843,134.23,542.59,66,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Cube direct TEX,8,15573,17915,16508.75,702.38,60.57,67,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Sphere direct GOUR,8,5930,6446,6101.88,177.52,163.88,68,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Sphere direct TEX,8,8221,8625,8389.12,125.02,119.2,69,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Vertex color direct,8,24,4564,1675,1881.31,597.01,70,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Point cloud pixels,8,386,452,397.25,21.03,2517.31,71,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Point cloud dots,8,2410,2763,2532.5,106.62,394.87,72,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire cube fast,8,119,261,165,41.74,6060.61,73,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire cube AA,8,179,471,322,104.56,3105.59,74,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire cube thick,8,1128,4025,2367.75,931.04,422.34,75,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire sphere fast,8,697,941,766.75,73.12,1304.21,76,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire sphere AA,8,2356,2805,2599.38,163.07,384.71,77,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire sphere thick,8,26325,30080,28080.75,1377.44,35.61,78,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire bunny fast,8,7199,8366,7791,395.1,128.35,79,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire bunny AA,8,19734,21973,20854,838.49,47.95,80,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,100 x 100 (small / vertex-heavy),Wire bunny thick,8,265270,298775,283791.5,13375.88,3.52,81,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Buddha GOURAUD,16,91707,146952,120618,20705.52,8.29,92,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Buddha FLAT,16,73613,117274,96797.38,16557.62,10.33,93,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Buddha ORTHO,16,91023,142711,118700.5,18997.93,8.42,94,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Buddha (close),16,69410,113303,90146.69,15642.45,11.09,95,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Buddha (clipped),16,40922,90907,66974.44,15461.89,14.93,96,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Buddha (far),16,67433,109200,89933.56,15252.34,11.12,97,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Buddha (farclip),16,68357,119595,97910.94,18232.96,10.21,98,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),R2D2 GOURAUD,16,56959,68797,63723.19,3862.73,15.69,102,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),R2D2 FLAT,16,44209,53364,49461.69,3047.12,20.22,103,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,16,88068,107461,99662.19,5853.43,10.03,104,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,16,120944,151950,138997.94,9287.71,7.19,105,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),R2D2 (close),16,138190,292590,198785.25,56377.85,5.03,106,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),R2D2 (far),16,71133,89658,81816.81,5258.34,12.22,107,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),R2D2 (farclip),16,82017,109970,94020.19,9303.53,10.64,108,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Bunny GOURAUD,16,18802,21591,19909.12,903.34,50.23,112,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Bunny FLAT,16,13884,16101,14856.88,705.19,67.31,113,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Bunny TEX_NEAREST,16,33009,37853,35000.69,1485.22,28.57,114,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,16,46842,55884,51722.94,2456.29,19.33,115,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Bunny ORTHO TEX,16,44610,48652,46503.81,1451.32,21.5,116,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Bunny (close),16,54615,66188,58991.06,2958.62,16.95,117,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Bunny (far),16,13921,16159,14969.88,721.96,66.8,118,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Bunny (farclip),16,13531,22053,18930.81,2608.67,52.82,119,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Large tris FLAT Z,8,316,5417,3218.25,1737.28,310.73,123,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Grid small FLAT,8,697,12278,5694.88,4779.37,175.6,124,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Grid small TEX,8,752,49687,18760.5,20187.36,53.3,125,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Ribbon triangles,8,761,17048,10207.62,7375.16,97.97,126,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Ribbon strip,8,641,15999,9482.5,6889.05,105.46,127,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Ribbon quads,8,436,16008,9436.12,7037.07,105.98,128,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire rib tri fast,8,416,4004,2432.12,1578.75,411.16,129,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire rib strip fast,8,373,2743,1711.5,1045.16,584.28,130,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire rib quad fast,8,272,2895,1715.38,1131.56,582.96,131,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire rib tri AA,8,427,26998,13610.5,10613.58,73.47,132,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire rib strip AA,8,572,14799,7815.38,5768.23,127.95,133,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire rib quad AA,8,267,14775,7674.38,5894.19,130.3,134,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire rib tri thick,8,426,243252,129267.62,101502.77,7.74,135,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire rib strip thick,8,311,149209,80538.25,63031.4,12.42,136,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire rib quad thick,8,270,189277,104872,81785.62,9.54,137,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Grid near clip TEX,8,752,49315,20528.25,22249,48.71,138,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Cube direct FLAT,8,6147,7164,6599.62,301.13,151.52,139,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Cube direct TEX,8,61478,70267,64945.12,2707.51,15.4,140,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Sphere direct GOUR,8,12448,13106,12684.25,210.39,78.84,141,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Sphere direct TEX,8,26728,27359,26929.38,182.94,37.13,142,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Vertex color direct,8,16,16624,5715.5,6885.33,174.96,143,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Point cloud pixels,8,382,423,391.5,12.5,2554.28,144,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Point cloud dots,8,2581,2881,2651.12,94.53,377.2,145,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire cube fast,8,126,249,181.12,43.18,5521.05,146,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire cube AA,8,223,818,492.12,202.72,2032,147,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire cube thick,8,1316,5856,3393.62,1421.83,294.67,148,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire sphere fast,8,777,1017,858.12,69.72,1165.33,149,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire sphere AA,8,3336,3946,3678.25,215.2,271.87,150,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire sphere thick,8,32400,37286,34461.62,1828.41,29.02,151,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire bunny fast,8,7804,8984,8395.88,422.91,119.11,152,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire bunny AA,8,23661,26362,24959.88,911.56,40.06,153,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,200 x 200 (medium / balanced),Wire bunny thick,8,290149,323509,308908.75,13634.95,3.24,154,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Buddha GOURAUD,16,97066,152833,126112.94,20994.44,7.93,165,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Buddha FLAT,16,76988,121350,100550.31,16783.06,9.95,166,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Buddha ORTHO,16,95121,148482,123369.69,19523.64,8.11,167,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Buddha (close),16,89530,133060,110717.25,16088.51,9.03,168,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Buddha (clipped),16,40308,105792,75880.38,20699.47,13.18,169,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Buddha (far),16,69022,110991,91379.62,15394.95,10.94,170,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Buddha (farclip),16,69497,121294,99579.44,18428.34,10.04,171,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),R2D2 GOURAUD,16,62392,75558,70115.06,4215.95,14.26,175,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),R2D2 FLAT,16,47992,57624,53600,3241.61,18.66,176,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,16,101840,124904,116005.94,6873.8,8.62,177,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,16,142605,179276,164556.69,10938.5,6.08,178,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),R2D2 (close),16,233299,540828,349566.31,104497.52,2.86,179,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),R2D2 (far),16,79959,97525,90269.69,5074.82,11.08,180,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),R2D2 (farclip),16,86520,119446,101702.44,10085.04,9.83,181,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Bunny GOURAUD,16,21130,24116,22219.12,966.04,45.01,185,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Bunny FLAT,16,15222,17424,16173.25,728.7,61.83,186,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,16,38476,44818,41285.81,1856.02,24.22,187,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,16,55725,67770,62187,3210.11,16.08,188,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Bunny ORTHO TEX,16,48978,53201,50759.19,1573.13,19.7,189,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Bunny (close),16,92031,110660,99261.69,4933.64,10.07,190,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Bunny (far),16,14384,16475,15524.94,737.77,64.41,191,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Bunny (farclip),16,14068,22751,19439.88,2649.7,51.44,192,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Large tris FLAT Z,8,417,8541,4901.38,2807.44,204.02,196,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Grid small FLAT,8,701,18619,7787.38,7233.11,128.41,197,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Grid small TEX,8,753,85639,30145.62,34455.25,33.17,198,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Ribbon triangles,8,757,25520,13805.62,10611.71,72.43,199,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Ribbon strip,8,625,24351,13060.88,10141.22,76.56,200,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Ribbon quads,8,422,24693,13028.75,10316.56,76.75,201,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire rib tri fast,8,413,4418,2725.12,1797.18,366.96,202,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire rib strip fast,8,376,2977,1853.75,1148.84,539.45,203,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire rib quad fast,8,274,3100,1860.12,1236.26,537.6,204,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire rib tri AA,8,412,30868,16342,12550.91,61.19,205,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire rib strip AA,8,560,16731,9212.75,6778.38,108.55,206,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire rib quad AA,8,262,16664,9047.12,6886.8,110.53,207,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire rib tri thick,8,426,266676,146566.75,114125.8,6.82,208,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire rib strip thick,8,311,161509,90031.75,69938.18,11.11,209,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire rib quad thick,8,275,200980,114379.62,88761.22,8.74,210,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Grid near clip TEX,8,750,88233,35157.38,40252.26,28.44,211,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Cube direct FLAT,8,9555,11108,10206.38,429.2,97.98,212,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Cube direct TEX,8,93840,110867,101863.25,4703.09,9.82,213,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Sphere direct GOUR,8,16163,16864,16421.75,223.39,60.89,214,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Sphere direct TEX,8,37335,38072,37601.12,208.94,26.59,215,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Vertex color direct,8,28,24322,8127.38,9917.11,123.04,216,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Point cloud pixels,8,394,455,405.75,18.87,2464.57,217,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Point cloud dots,8,2777,2967,2832.88,59.56,353,218,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire cube fast,8,147,277,203.25,45.06,4920.05,219,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire cube AA,8,465,1125,771.62,231.74,1295.97,220,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire cube thick,8,2673,7439,4793.25,1635.7,208.63,221,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire sphere fast,8,830,1058,903.5,70.15,1106.81,222,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire sphere AA,8,3714,4404,4087.88,241.19,244.63,223,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire sphere thick,8,34540,40094,36932.12,1965.65,27.08,224,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire bunny fast,8,7952,9184,8588.38,424.72,116.44,225,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire bunny AA,8,25203,27953,26533.88,888.4,37.69,226,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+pico2,baseline_bench_pico2_run2,320 x 240 (large / ILI9341),Wire bunny thick,8,299759,333545,318380,13694.25,3.14,227,pico2_baseline_bench_pico2_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Buddha GOURAUD,30,13945,22637,18496.2,3233.24,54.07,21,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Buddha FLAT,30,12149,19800,16182.1,2843.15,61.8,22,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Buddha ORTHO,30,13466,20996,17511.83,2767.13,57.1,23,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Buddha (close),30,9441,16261,12803.23,2557.23,78.11,24,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Buddha (clipped),30,7092,13176,10015.53,2032.61,99.84,25,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Buddha (far),30,11426,18619,15271.7,2642.47,65.48,26,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Buddha (farclip),30,11574,18863,15508.57,2695.69,64.48,27,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,30,8065,10020,9124.8,682.63,109.59,31,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),R2D2 FLAT,30,6942,8615,7816.8,585.88,127.93,32,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,30,11562,14902,13409.83,1003.49,74.57,33,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,30,14197,18507,16674.9,1225.34,59.97,34,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),R2D2 (close),30,9114,15940,12039.27,2238.07,83.06,35,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),R2D2 (far),30,6983,8549,7906.2,554.64,126.48,36,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),R2D2 (farclip),30,6760,8764,7854.5,618.3,127.32,37,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Bunny GOURAUD,30,2316,2865,2512.17,133.13,398.06,41,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Bunny FLAT,30,1920,2262,2100.6,103.95,476.05,42,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,30,4394,5248,4793.77,250.58,208.6,43,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,30,4994,5678,5359.23,246.09,186.59,44,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,30,3881,4306,4113.37,118.26,243.11,45,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Bunny (close),30,3398,4013,3616.87,165.71,276.48,46,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Bunny (far),30,1713,2215,1907,114.57,524.38,47,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Bunny (farclip),30,1720,2066,1908.63,83.04,523.94,48,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Large tris FLAT Z,15,1,186,89.27,48.3,11202.39,52,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Grid small FLAT,15,129,1140,593.87,488.28,1683.88,53,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Grid small TEX,15,147,2650,1226.27,1147.98,815.48,54,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Ribbon triangles,15,148,1964,871.07,777.66,1148.02,55,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Ribbon strip,15,104,1713,723.53,669.17,1382.11,56,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Ribbon quads,15,90,1754,737.6,696.99,1355.75,57,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire rib tri fast,8,96,598,388,227.07,2577.32,58,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire rib strip fast,8,58,418,266.25,161.8,3755.87,59,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire rib quad fast,8,49,476,291,189.19,3436.43,60,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire rib tri AA,8,101,2548,1394.62,1021.71,717.04,61,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire rib strip AA,8,102,1532,885,612.38,1129.94,62,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire rib quad AA,8,44,1529,858.75,638.48,1164.48,63,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire rib tri thick,8,96,21579,11939.25,9271.69,83.76,64,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire rib strip thick,8,58,13570,7654.12,5928.99,130.65,65,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire rib quad thick,8,46,13525,7609.12,5907.08,131.42,66,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Grid near clip TEX,10,148,2365,1211.6,1064.63,825.35,67,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Cube direct FLAT,15,167,203,188.53,11.02,5304.1,68,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Cube direct TEX,15,1818,2224,2015.33,98.75,496.2,69,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Sphere direct GOUR,10,677,704,688.4,7.59,1452.64,70,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Sphere direct TEX,10,1208,1239,1223,8.87,817.66,71,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Vertex color direct,15,1,620,220.4,248.79,4537.21,72,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Point cloud pixels,15,81,91,83.13,2.28,12028.87,73,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Point cloud dots,10,461,504,478.8,12.42,2088.55,74,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire cube fast,10,8,20,12.8,3.68,78125,75,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire cube AA,10,8,61,34.7,15.92,28818.44,76,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire cube thick,10,63,316,194.7,78.74,5136.11,77,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire sphere fast,8,129,139,133.38,3.53,7497.66,78,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire sphere AA,8,350,400,373,17.13,2680.97,79,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire sphere thick,8,2575,2978,2743.25,147.97,364.53,80,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire bunny fast,8,1126,1573,1267.12,142.36,789.19,81,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire bunny AA,8,2838,3143,3007.38,121.73,332.52,82,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,100 x 100 (small / vertex-heavy),Wire bunny thick,8,27280,30737,29201.12,1376.47,34.25,83,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Buddha GOURAUD,30,16381,26046,21438.27,3609.44,46.65,94,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Buddha FLAT,30,13945,22365,18374.1,3143.83,54.42,95,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Buddha ORTHO,30,15746,24436,20342.3,3196.64,49.16,96,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Buddha (close),30,11848,19365,15437,2684.64,64.78,97,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Buddha (clipped),30,7195,15044,11260.7,2459.25,88.8,98,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Buddha (far),30,11952,19204,15808.63,2668.76,63.26,99,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Buddha (farclip),30,11946,19315,15929.9,2721.89,62.78,100,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),R2D2 GOURAUD,30,10043,12439,11371.13,798.33,87.94,104,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),R2D2 FLAT,30,8208,10176,9260.53,657.11,107.99,105,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,30,17687,22333,20412.83,1406.1,48.99,106,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,30,21897,27427,25209.4,1670.77,39.67,107,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),R2D2 (close),30,18551,39524,26664.7,7368.18,37.5,108,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),R2D2 (far),30,8089,9831,9082.83,608.51,110.1,109,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),R2D2 (farclip),30,7683,9879,8796.67,674.95,113.68,110,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Bunny GOURAUD,30,3216,3712,3413.57,146.44,292.95,114,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Bunny FLAT,30,2495,2813,2668.6,112.17,374.73,115,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Bunny TEX_NEAREST,30,6824,7899,7425.2,318.83,134.68,116,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,30,7851,9205,8504.33,386.03,117.59,117,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Bunny ORTHO TEX,30,6322,7146,6698.13,239.54,149.3,118,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Bunny (close),30,8207,9767,8816.23,397.78,113.43,119,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Bunny (far),30,2175,2734,2345.97,135.86,426.26,120,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Bunny (farclip),30,2065,2462,2268.9,101.11,440.74,121,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Large tris FLAT Z,15,1,606,351.07,187.65,2848.46,125,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Grid small FLAT,15,129,1906,923,837.87,1083.42,126,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Grid small TEX,15,148,7087,2937.87,3024,340.38,127,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Ribbon triangles,15,148,3449,1459.6,1409.63,685.12,128,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Ribbon strip,15,103,3205,1315.73,1304.89,760.03,129,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Ribbon quads,15,90,3238,1326.13,1329.89,754.07,130,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire rib tri fast,8,95,771,463,288.96,2159.83,131,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire rib strip fast,8,57,507,300.12,191.28,3331.95,132,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire rib quad fast,8,48,564,329,220.79,3039.51,133,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire rib tri AA,8,101,3709,1916.75,1455.5,521.72,134,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire rib strip AA,8,102,2145,1159.75,839.03,862.25,135,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire rib quad AA,8,44,2126,1127.75,859.73,886.72,136,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire rib tri thick,8,95,26681,14218.88,11120.89,70.33,137,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire rib strip thick,8,57,16253,8866.25,6905.49,112.79,138,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire rib quad thick,8,46,16189,8810.75,6875.35,113.5,139,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Grid near clip TEX,10,148,6853,3239.5,3116.04,308.69,140,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Cube direct FLAT,15,670,799,741.13,35.91,1349.28,141,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Cube direct TEX,15,7216,8887,8026.2,400.19,124.59,142,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Sphere direct GOUR,10,1723,1778,1744.7,14.67,573.16,143,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Sphere direct TEX,10,3790,3860,3819.8,18.7,261.79,144,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Vertex color direct,15,1,2429,859.6,992.66,1163.33,145,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Point cloud pixels,15,86,94,87.93,1.84,11372.25,146,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Point cloud dots,10,516,543,529.1,6.73,1890,147,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire cube fast,10,5,26,15.2,5.86,65789.48,148,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire cube AA,10,5,104,56.7,28.05,17636.68,149,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire cube thick,10,70,475,290.2,121.35,3445.9,150,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire sphere fast,8,144,156,149,4.33,6711.41,151,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire sphere AA,8,473,544,506.62,24.71,1973.85,152,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire sphere thick,8,3104,3572,3272.75,188.49,305.55,153,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire bunny fast,8,1221,1646,1356.62,133.72,737.12,154,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire bunny AA,8,3337,3682,3528.38,127.09,283.42,155,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,200 x 200 (medium / balanced),Wire bunny thick,8,29509,32964,31486.5,1387.74,31.76,156,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Buddha GOURAUD,30,17306,27144,22448.4,3674.38,44.55,167,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Buddha FLAT,30,14542,23113,19062.3,3200.15,52.46,168,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Buddha ORTHO,30,16483,25437,21198.93,3295.19,47.17,169,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Buddha (close),30,15259,22831,18868.37,2778.5,53,170,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Buddha (clipped),30,7080,17481,12606.03,3271.27,79.33,171,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Buddha (far),30,12217,19508,16071.13,2682.12,62.22,172,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Buddha (farclip),30,12174,19572,16153.97,2731.17,61.9,173,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),R2D2 GOURAUD,30,10962,13532,12411.17,852.02,80.57,177,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),R2D2 FLAT,30,8750,10787,9860.2,683.96,101.42,178,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,30,20233,25295,23252.77,1513.33,43.01,179,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,30,24918,31000,28719.53,1796.65,34.82,180,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),R2D2 (close),30,31268,72926,46358.46,13340.52,21.57,181,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),R2D2 (far),30,8405,10441,9618.73,659.61,103.96,182,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),R2D2 (farclip),30,8160,10379,9186.7,686,108.85,183,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Bunny GOURAUD,30,3669,4140,3843.63,155.6,260.17,187,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Bunny FLAT,30,2715,3106,2910.27,123.13,343.61,188,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,30,7583,8859,8389.03,350.9,119.2,189,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,30,9034,10851,10020.27,495.65,99.8,190,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Bunny ORTHO TEX,30,6899,7716,7362.2,236.49,135.83,191,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Bunny (close),30,13569,16100,14552.13,694.85,68.72,192,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Bunny (far),30,2318,2875,2523.17,125.5,396.33,193,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Bunny (farclip),30,2241,2633,2432.7,100.56,411.07,194,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Large tris FLAT Z,15,1,967,541,310.48,1848.43,198,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Grid small FLAT,15,129,2685,1187.2,1130.55,842.32,199,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Grid small TEX,15,148,11932,4453.07,4786.55,224.56,200,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Ribbon triangles,15,148,4739,2081.4,2072.29,480.45,201,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Ribbon strip,15,103,4503,1942.13,1971.69,514.9,202,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Ribbon quads,15,90,4515,1947.8,1991.04,513.4,203,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire rib tri fast,8,95,836,506.38,321.16,1974.82,204,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire rib strip fast,8,57,540,322.62,207.76,3099.57,205,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire rib quad fast,8,48,596,350.12,236.67,2856.12,206,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire rib tri AA,8,101,4181,2240.38,1687.18,446.35,207,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire rib strip AA,8,101,2385,1331.62,963.97,750.96,208,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire rib quad AA,8,44,2363,1295.5,981.13,771.9,209,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire rib tri thick,8,95,28628,15655.5,12163.8,63.88,210,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire rib strip thick,8,57,17259,9650.62,7477.18,103.62,211,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire rib quad thick,8,46,17188,9589.88,7441.33,104.28,212,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Grid near clip TEX,10,148,12362,5459.3,5467.58,183.17,213,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Cube direct FLAT,15,1061,1250,1156.07,48.65,865,214,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Cube direct TEX,15,11455,14064,12598.27,627.14,79.38,215,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Sphere direct GOUR,10,2333,2391,2355.9,15.32,424.47,216,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Sphere direct TEX,10,5292,5381,5329.8,24.04,187.62,217,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Vertex color direct,15,1,3591,1238,1447.08,807.75,218,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Point cloud pixels,15,90,97,91.4,1.7,10940.92,219,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Point cloud dots,10,571,588,578.5,4.84,1728.61,220,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire cube fast,10,9,27,18.2,5.46,54945.05,221,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire cube AA,10,39,146,88.6,32.54,11286.68,222,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire cube thick,10,163,616,398.8,140.17,2507.52,223,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire sphere fast,8,150,163,155.25,4.92,6441.22,224,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire sphere AA,8,523,603,560.5,27.65,1784.12,225,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire sphere thick,8,3275,3793,3476.38,197.69,287.66,226,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire bunny fast,8,1236,1684,1385.12,134.82,721.96,227,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire bunny AA,8,3522,3869,3709.38,127.91,269.59,228,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run1,320 x 240 (large / ILI9341),Wire bunny thick,8,30404,33887,32313.12,1397.74,30.95,229,teensy41_baseline_bench_teensy41_run1,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Buddha GOURAUD,30,13933,22633,18496.9,3232.42,54.06,21,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Buddha FLAT,30,12154,19800,16184.17,2842.42,61.79,22,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Buddha ORTHO,30,13463,21007,17514.27,2768.15,57.1,23,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Buddha (close),30,9446,16251,12805.1,2553.01,78.09,24,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Buddha (clipped),30,7089,13194,10018.63,2031.73,99.81,25,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Buddha (far),30,11440,18636,15271.67,2642.49,65.48,26,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Buddha (farclip),30,11555,18864,15505.23,2695.65,64.49,27,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,30,8092,10040,9122.23,675.78,109.62,31,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),R2D2 FLAT,30,6903,8584,7808.1,588.71,128.07,32,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,30,11552,14946,13409.37,1008.14,74.57,33,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,30,14269,18484,16658.33,1227.83,60.03,34,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),R2D2 (close),30,9090,15933,12038.43,2238.43,83.07,35,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),R2D2 (far),30,6956,8542,7906.03,551.47,126.49,36,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),R2D2 (farclip),30,6737,8790,7860.83,613.92,127.21,37,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Bunny GOURAUD,30,2310,2868,2519.1,137.91,396.97,41,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Bunny FLAT,30,1925,2259,2101.33,98.32,475.89,42,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,30,4388,5205,4779.43,241.31,209.23,43,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,30,4950,5677,5349.5,244.94,186.93,44,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,30,3878,4395,4105.2,121.27,243.59,45,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Bunny (close),30,3367,4003,3623.37,168.6,275.99,46,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Bunny (far),30,1727,2191,1906.53,110.7,524.51,47,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Bunny (farclip),30,1718,2021,1906,89.1,524.66,48,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Large tris FLAT Z,15,1,186,89.47,48.33,11177.35,52,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Grid small FLAT,15,129,1135,592.07,485.91,1689,53,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Grid small TEX,15,147,2666,1226.27,1148.71,815.48,54,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Ribbon triangles,15,148,1965,872.07,778.37,1146.7,55,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Ribbon strip,15,103,1712,723.33,668.92,1382.49,56,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Ribbon quads,15,90,1754,737.6,697.21,1355.75,57,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire rib tri fast,8,96,598,388,226.8,2577.32,58,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire rib strip fast,8,58,419,263.75,160.44,3791.47,59,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire rib quad fast,8,49,475,290.62,188.67,3440.86,60,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire rib tri AA,8,101,2548,1394.25,1021.94,717.23,61,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire rib strip AA,8,103,1531,885,612.12,1129.94,62,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire rib quad AA,8,44,1528,858.62,638.35,1164.65,63,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire rib tri thick,8,96,21578,11939.12,9271.56,83.76,64,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire rib strip thick,8,58,13570,7654,5928.9,130.65,65,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire rib quad thick,8,46,13525,7609.12,5906.83,131.42,66,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Grid near clip TEX,10,149,2365,1211.4,1064.25,825.49,67,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Cube direct FLAT,15,166,205,188.47,11.13,5305.98,68,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Cube direct TEX,15,1818,2225,2015.93,98.83,496.05,69,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Sphere direct GOUR,10,676,704,688.4,7.9,1452.64,70,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Sphere direct TEX,10,1207,1240,1222.9,9.09,817.73,71,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Vertex color direct,15,1,620,219.93,248.49,4546.83,72,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Point cloud pixels,15,81,91,83.27,2.2,12009.61,73,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Point cloud dots,10,461,504,478.8,12.29,2088.55,74,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire cube fast,10,6,20,12.7,4.1,78740.16,75,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire cube AA,10,8,62,34.7,15.81,28818.44,76,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire cube thick,10,64,316,194.6,78.42,5138.75,77,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire sphere fast,8,130,140,133.5,3.67,7490.64,78,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire sphere AA,8,350,399,372.62,17.12,2683.66,79,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire sphere thick,8,2574,2978,2743.12,148.4,364.55,80,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire bunny fast,8,1127,1563,1282.75,136.86,779.58,81,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire bunny AA,8,2848,3142,3013.25,120.35,331.87,82,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,100 x 100 (small / vertex-heavy),Wire bunny thick,8,27271,30720,29200.88,1373.24,34.25,83,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Buddha GOURAUD,30,16396,26063,21438.5,3609.55,46.65,94,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Buddha FLAT,30,13944,22365,18371.67,3145.31,54.43,95,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Buddha ORTHO,30,15757,24423,20342.7,3194.63,49.16,96,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Buddha (close),30,11838,19340,15435.97,2685.26,64.78,97,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Buddha (clipped),30,7212,15063,11259.87,2460.48,88.81,98,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Buddha (far),30,11945,19210,15807.5,2669.67,63.26,99,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Buddha (farclip),30,11936,19314,15930.43,2718.99,62.77,100,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),R2D2 GOURAUD,30,10038,12440,11369.1,797.68,87.96,104,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),R2D2 FLAT,30,8238,10161,9265.8,652.08,107.92,105,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,30,17716,22306,20408.5,1387.66,49,106,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,30,21951,27455,25210.5,1660.26,39.67,107,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),R2D2 (close),30,18497,39517,26662.8,7376.23,37.51,108,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),R2D2 (far),30,8053,9828,9081.5,610.98,110.11,109,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),R2D2 (farclip),30,7651,9877,8800.6,678.3,113.63,110,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Bunny GOURAUD,30,3228,3701,3416.9,141.36,292.66,114,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Bunny FLAT,30,2478,2846,2666.27,118.61,375.06,115,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Bunny TEX_NEAREST,30,6769,7920,7447.33,333.45,134.28,116,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,30,7777,9148,8519.23,380.13,117.38,117,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Bunny ORTHO TEX,30,6350,7060,6698.07,223.59,149.3,118,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Bunny (close),30,8246,9795,8814.67,398.95,113.45,119,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Bunny (far),30,2152,2714,2351.9,126.93,425.19,120,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Bunny (farclip),30,2080,2415,2268.83,103.62,440.76,121,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Large tris FLAT Z,15,3,605,348.53,188.19,2869.17,125,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Grid small FLAT,15,129,1897,921.67,836.59,1084.99,126,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Grid small TEX,15,147,7087,2938,3023.98,340.37,127,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Ribbon triangles,15,148,3449,1460.13,1410.45,684.87,128,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Ribbon strip,15,103,3204,1315.53,1304.79,760.15,129,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Ribbon quads,15,90,3234,1326.6,1329.76,753.81,130,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire rib tri fast,8,95,771,463.12,289.05,2159.24,131,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire rib strip fast,8,57,508,300.25,191.18,3330.56,132,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire rib quad fast,8,49,563,328.62,220.27,3042.98,133,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire rib tri AA,8,101,3709,1914.88,1454.03,522.23,134,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire rib strip AA,8,102,2144,1160.12,838.97,861.98,135,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire rib quad AA,8,44,2126,1127.88,859.77,886.62,136,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire rib tri thick,8,95,26681,14218.88,11120.84,70.33,137,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire rib strip thick,8,57,16253,8866.25,6905.24,112.79,138,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire rib quad thick,8,46,16190,8811.25,6875.26,113.49,139,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Grid near clip TEX,10,148,6853,3240.1,3116.48,308.63,140,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Cube direct FLAT,15,670,800,741.33,36.58,1348.92,141,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Cube direct TEX,15,7215,8888,8026.27,400.22,124.59,142,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Sphere direct GOUR,10,1723,1776,1744.9,14.05,573.1,143,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Sphere direct TEX,10,3788,3860,3819.2,19.92,261.83,144,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Vertex color direct,15,1,2428,859,992.2,1164.14,145,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Point cloud pixels,15,86,95,88.2,2.04,11337.87,146,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Point cloud dots,10,517,543,529.4,6.97,1888.93,147,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire cube fast,10,4,24,15.2,5.65,65789.48,148,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire cube AA,10,5,105,57,28.27,17543.86,149,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire cube thick,10,71,474,290.1,121.26,3447.09,150,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire sphere fast,8,144,156,148.88,4.37,6717.04,151,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire sphere AA,8,473,544,506.62,24.56,1973.85,152,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire sphere thick,8,3104,3573,3272.5,188.48,305.58,153,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire bunny fast,8,1210,1653,1366.62,135.87,731.73,154,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire bunny AA,8,3332,3667,3519.62,125.24,284.12,155,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,200 x 200 (medium / balanced),Wire bunny thick,8,29512,32969,31487.75,1387.79,31.76,156,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Buddha GOURAUD,30,17309,27158,22446.87,3674.21,44.55,167,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Buddha FLAT,30,14537,23103,19059.07,3198.89,52.47,168,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Buddha ORTHO,30,16458,25451,21199.27,3294.1,47.17,169,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Buddha (close),30,15256,22824,18871.3,2778.95,52.99,170,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Buddha (clipped),30,7071,17475,12606.07,3272.77,79.33,171,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Buddha (far),30,12204,19506,16070.3,2683.01,62.23,172,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Buddha (farclip),30,12176,19573,16155.93,2732.41,61.9,173,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),R2D2 GOURAUD,30,10958,13554,12415.43,849.04,80.54,177,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),R2D2 FLAT,30,8751,10786,9860.3,681.95,101.42,178,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,30,20203,25316,23252.23,1507.38,43.01,179,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,30,24860,31041,28693.8,1809.95,34.85,180,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),R2D2 (close),30,31305,72936,46361.3,13336.87,21.57,181,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),R2D2 (far),30,8425,10451,9614.57,659.16,104.01,182,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),R2D2 (farclip),30,8181,10382,9190.23,683.84,108.81,183,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Bunny GOURAUD,30,3656,4141,3848.43,154.21,259.85,187,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Bunny FLAT,30,2737,3085,2912.77,112.14,343.32,188,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,30,7595,8909,8381.37,364.92,119.31,189,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,30,8962,10776,10000,480.72,100,190,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Bunny ORTHO TEX,30,6859,7764,7357.97,249.11,135.91,191,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Bunny (close),30,13555,16079,14542.37,691.2,68.76,192,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Bunny (far),30,2315,2899,2522.13,119.81,396.49,193,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Bunny (farclip),30,2245,2643,2423.9,105.95,412.56,194,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Large tris FLAT Z,15,1,968,539.53,310.91,1853.45,198,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Grid small FLAT,15,129,2685,1188.2,1131.71,841.61,199,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Grid small TEX,15,148,11932,4453.07,4786.63,224.56,200,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Ribbon triangles,15,148,4740,2082.47,2071.89,480.2,201,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Ribbon strip,15,103,4505,1942.33,1971.86,514.84,202,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Ribbon quads,15,90,4517,1948.13,1991.99,513.31,203,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire rib tri fast,8,95,835,506.62,321.27,1973.85,204,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire rib strip fast,8,57,539,322.75,207.54,3098.37,205,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire rib quad fast,8,48,595,349.88,236.66,2858.16,206,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire rib tri AA,8,100,4180,2240.25,1687.36,446.38,207,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire rib strip AA,8,101,2384,1331.62,963.91,750.96,208,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire rib quad AA,8,44,2364,1295.75,981.33,771.75,209,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire rib tri thick,8,95,28629,15655.5,12163.85,63.88,210,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire rib strip thick,8,57,17259,9650.88,7477.36,103.62,211,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire rib quad thick,8,46,17188,9589.88,7441.33,104.28,212,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Grid near clip TEX,10,148,12361,5459.2,5467.54,183.18,213,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Cube direct FLAT,15,1062,1249,1155.67,48.42,865.3,214,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Cube direct TEX,15,11454,14064,12598.4,627.33,79.38,215,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Sphere direct GOUR,10,2336,2391,2356.4,14.49,424.38,216,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Sphere direct TEX,10,5294,5383,5330,24,187.62,217,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Vertex color direct,15,1,3587,1237.67,1446.69,807.97,218,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Point cloud pixels,15,90,98,91.53,1.89,10924.98,219,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Point cloud dots,10,573,589,578.8,4.49,1727.71,220,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire cube fast,10,8,27,18.3,5.78,54644.81,221,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire cube AA,10,39,147,88.5,32.95,11299.43,222,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire cube thick,10,163,617,398.8,140.32,2507.52,223,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire sphere fast,8,151,163,155.5,4.69,6430.87,224,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire sphere AA,8,523,603,560.62,27.69,1783.72,225,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire sphere thick,8,3275,3793,3475.88,197.81,287.7,226,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire bunny fast,8,1221,1671,1387.75,137.3,720.59,227,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire bunny AA,8,3535,3884,3714.25,128.98,269.23,228,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf
+teensy41,baseline_bench_teensy41_run2,320 x 240 (large / ILI9341),Wire bunny thick,8,30404,33898,32313.25,1397.73,30.95,229,teensy41_baseline_bench_teensy41_run2,baseline,SUCCESS,5fbe8cf

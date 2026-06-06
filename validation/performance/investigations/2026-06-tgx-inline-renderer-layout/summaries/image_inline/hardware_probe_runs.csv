@@ -1,0 +1,5 @@
+﻿"board","port","label","status","metadata"
+"core2","COM5","image_session_macro_probe_20260606_015438","SUCCESS","tmp\hardware_validation\parsed\core2_image_session_macro_probe_20260606_015438.json"
+"cores3","COM10","image_session_macro_probe_20260606_015532","SUCCESS","tmp\hardware_validation\parsed\cores3_image_session_macro_probe_20260606_015532.json"
+"pico2","COM21","image_session_macro_probe_20260606_015629","SUCCESS","tmp\hardware_validation\parsed\pico2_image_session_macro_probe_20260606_015629.json"
+"teensy41","COM3","image_session_macro_probe_20260606_015710","SUCCESS","tmp\hardware_validation\parsed\teensy41_image_session_macro_probe_20260606_015710.json"

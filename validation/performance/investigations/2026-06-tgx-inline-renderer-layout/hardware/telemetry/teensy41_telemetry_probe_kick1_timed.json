@@ -1,0 +1,50 @@
+[
+    {
+        "t_ms":  108,
+        "line":  "TGX_TELEMETRY_PROBE_BEGIN"
+    },
+    {
+        "t_ms":  114,
+        "line":  "SCENE=alpha FPS=30.00 FRAME_US=33333 SAMPLE=1"
+    },
+    {
+        "t_ms":  224,
+        "line":  "SCENE=alpha FPS=30.25 FRAME_US=33233 SAMPLE=2"
+    },
+    {
+        "t_ms":  344,
+        "line":  "SCENE=alpha FPS=30.50 FRAME_US=33133 SAMPLE=3"
+    },
+    {
+        "t_ms":  463,
+        "line":  "SCENE=beta FPS=35.00 FRAME_US=31333 SAMPLE=1"
+    },
+    {
+        "t_ms":  584,
+        "line":  "SCENE=beta FPS=35.25 FRAME_US=31233 SAMPLE=2"
+    },
+    {
+        "t_ms":  703,
+        "line":  "SCENE=beta FPS=35.50 FRAME_US=31133 SAMPLE=3"
+    },
+    {
+        "t_ms":  823,
+        "line":  "SCENE=gamma FPS=40.00 FRAME_US=29333 SAMPLE=1"
+    },
+    {
+        "t_ms":  944,
+        "line":  "SCENE=gamma FPS=40.25 FRAME_US=29233 SAMPLE=2"
+    },
+    {
+        "t_ms":  1064,
+        "line":  "SCENE=gamma FPS=40.50 FRAME_US=29133 SAMPLE=3"
+    },
+    {
+        "t_ms":  1183,
+        "line":  "TGX_TELEMETRY_PROBE_OK"
+    },
+    {
+        "t_ms":  1183,
+        "line":  "TGX_TELEMETRY_PROBE_END"
+    }
+]

@@ -1,0 +1,55 @@
+diff --git a/src/Image.inl b/src/Image.inl
+index 10df231..7ff7eff 100644
+--- a/src/Image.inl
++++ b/src/Image.inl
+@@ -1854,7 +1854,7 @@ namespace tgx
+ 
+ 
+     template<typename color_t>
+-    template<int SIDE> void Image<color_t>::_bseg_draw_template(BSeg& seg, bool draw_first, bool draw_last, color_t color, int32_t op, bool checkrange)
++    template<int SIDE> TGX_RP2350_BSEG_ALIGN void Image<color_t>::_bseg_draw_template(BSeg& seg, bool draw_first, bool draw_last, color_t color, int32_t op, bool checkrange)
+         {
+         if (!draw_first) seg.move();
+         if (draw_last) seg.inclen();
+diff --git a/src/Rasterizer.h b/src/Rasterizer.h
+index 2bef30b..0f442c6 100644
+--- a/src/Rasterizer.h
++++ b/src/Rasterizer.h
+@@ -105,7 +105,7 @@ namespace tgx
+     * - Color are passed in RGBf format irrespectively of the image color type to improve quality and simplify handling of different image types.
+     */
+     template<typename SHADER_FUNCTION, typename RASTERIZER_PARAMS> 
+-    void rasterizeTriangle(const int LX, const int LY, const RasterizerVec4 & V0, const RasterizerVec4 & V1, const RasterizerVec4 & V2, const int32_t offset_x, const int32_t offset_y, const RASTERIZER_PARAMS & data, SHADER_FUNCTION shader_fun)
++    TGX_RP2350_RASTERIZE_TRIANGLE_INLINE void rasterizeTriangle(const int LX, const int LY, const RasterizerVec4 & V0, const RasterizerVec4 & V1, const RasterizerVec4 & V2, const int32_t offset_x, const int32_t offset_y, const RASTERIZER_PARAMS & data, SHADER_FUNCTION shader_fun)
+         {
+         
+         // assuming that clipping was already perfomed and that V0, V1, V2 are in a reasonable "range" so no overflow will occur. 
+diff --git a/src/tgx_config.h b/src/tgx_config.h
+index 93dcbd9..3a129b5 100644
+--- a/src/tgx_config.h
++++ b/src/tgx_config.h
+@@ -286,6 +286,24 @@
+ #endif
+ 
+ 
++#ifndef TGX_RP2350_RASTERIZE_TRIANGLE_INLINE
++    #if (defined(ARDUINO_ARCH_RP2350) || defined(PICO_RP2350) || defined(TARGET_RP2350)) && defined(__GNUC__)
++        #define TGX_RP2350_RASTERIZE_TRIANGLE_INLINE inline __attribute__((always_inline))
++    #else
++        #define TGX_RP2350_RASTERIZE_TRIANGLE_INLINE
++    #endif
++#endif
++
++
++#ifndef TGX_RP2350_BSEG_ALIGN
++    #if (defined(ARDUINO_ARCH_RP2350) || defined(PICO_RP2350) || defined(TARGET_RP2350)) && defined(__GNUC__)
++        #define TGX_RP2350_BSEG_ALIGN __attribute__((aligned(32)))
++    #else
++        #define TGX_RP2350_BSEG_ALIGN
++    #endif
++#endif
++
++
+ 
+ 
+ 

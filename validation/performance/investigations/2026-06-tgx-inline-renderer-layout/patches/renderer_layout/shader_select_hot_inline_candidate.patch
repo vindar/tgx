@@ -1,0 +1,33 @@
+diff --git a/src/Shaders.h b/src/Shaders.h
+index 5108fa9..5a0255a 100644
+--- a/src/Shaders.h
++++ b/src/Shaders.h
+@@ -408,7 +408,7 @@ namespace tgx
+     /**
+     * META-Shader THAT DISPATCH TO THE CORRECT Shader ABOVE (IF ENABLED).
+     **/
+-    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t> void shader_select(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
++    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t> TGX_RP2350_SHADER_SELECT_INLINE void shader_select(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+diff --git a/src/tgx_config.h b/src/tgx_config.h
+index 93dcbd9..3440640 100644
+--- a/src/tgx_config.h
++++ b/src/tgx_config.h
+@@ -286,6 +286,15 @@
+ #endif
+ 
+ 
++#ifndef TGX_RP2350_SHADER_SELECT_INLINE
++    #if (defined(ARDUINO_ARCH_RP2350) || defined(PICO_RP2350) || defined(TARGET_RP2350)) && defined(__GNUC__)
++        #define TGX_RP2350_SHADER_SELECT_INLINE inline __attribute__((always_inline))
++    #else
++        #define TGX_RP2350_SHADER_SELECT_INLINE
++    #endif
++#endif
++
++
+ 
+ 
+ 

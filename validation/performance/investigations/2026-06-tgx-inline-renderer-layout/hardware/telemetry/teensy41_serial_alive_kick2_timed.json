@@ -1,0 +1,22 @@
+[
+    {
+        "t_ms":  113,
+        "line":  "TGX_HW_PROBE_BEGIN"
+    },
+    {
+        "t_ms":  119,
+        "line":  "BOARD_MACRO=ARDUINO_TEENSY41"
+    },
+    {
+        "t_ms":  119,
+        "line":  "MILLIS=10651"
+    },
+    {
+        "t_ms":  119,
+        "line":  "TGX_HW_PROBE_OK"
+    },
+    {
+        "t_ms":  119,
+        "line":  "TGX_HW_PROBE_END"
+    }
+]

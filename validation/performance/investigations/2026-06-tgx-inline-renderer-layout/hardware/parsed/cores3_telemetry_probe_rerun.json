@@ -1,0 +1,43 @@
+{
+    "board":  "cores3",
+    "port":  "COM10",
+    "upload_port":  "COM10",
+    "fqbn":  "esp32:esp32:m5stack_cores3",
+    "sketch":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\sketches\\TelemetryStreamProbe",
+    "command":  "C:\\Users\\Vindar\\AppData\\Local\\Programs\\Arduino IDE\\resources\\app\\lib\\backend\\resources\\arduino-cli.exe compile --fqbn esp32:esp32:m5stack_cores3 --libraries D:\\Programmation\\arduino\\libraries --library D:\\Programmation\\tgx --build-path D:\\Programmation\\tgx\\tmp\\hardware_validation\\builds\\cores3_telemetry_probe_rerun --port COM10 --upload D:\\Programmation\\tgx\\tmp\\hardware_validation\\sketches\\TelemetryStreamProbe",
+    "start_time":  "2026-06-05T19:04:03.2088140+02:00",
+    "end_time":  "2026-06-05T19:05:31.1729613+02:00",
+    "upload_status":  "UPLOAD_OK",
+    "serial_status":  "PARTIAL_TELEMETRY",
+    "run_status":  "PARTIAL_TELEMETRY",
+    "attempts":  2,
+    "telemetry_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\telemetry\\cores3_telemetry_probe_rerun.txt",
+    "log_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\logs\\cores3_telemetry_probe_rerun.log",
+    "metadata_file":  "D:\\Programmation\\tgx\\tmp\\hardware_validation\\parsed\\cores3_telemetry_probe_rerun.json",
+    "captured_lines":  7,
+    "start_marker_seen":  false,
+    "completion_marker_seen":  true,
+    "parse_mode":  "probe",
+    "parse_succeeded":  true,
+    "parsed_global_scores":  0,
+    "parsed_subtests":  0,
+    "parsed_telemetry_rows":  0,
+    "visible_ports_before":  [
+                                 "COM10",
+                                 "COM21",
+                                 "COM28",
+                                 "COM3",
+                                 "COM5",
+                                 "COM6",
+                                 "COM7"
+                             ],
+    "visible_ports_after":  [
+                                "COM10",
+                                "COM21",
+                                "COM28",
+                                "COM3",
+                                "COM5",
+                                "COM6",
+                                "COM7"
+                            ]
+}

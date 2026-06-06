@@ -1,0 +1,394 @@
+[
+    {
+        "t_ms":  8,
+        "line":  ""
+    },
+    {
+        "t_ms":  14,
+        "line":  "[TGX scene] cycle=1 scene=explosion"
+    },
+    {
+        "t_ms":  14,
+        "line":  ""
+    },
+    {
+        "t_ms":  15,
+        "line":  "[TGX telemetry] cycle=1 scene=explosion fps=41.75 frame_avg_us=23949.6 frame_min_us=19920 frame_max_us=43374 frames=42"
+    },
+    {
+        "t_ms":  15,
+        "line":  ""
+    },
+    {
+        "t_ms":  16,
+        "line":  "[TGX telemetry] cycle=1 scene=explosion fps=43.52 frame_avg_us=22980.1 frame_min_us=22783 frame_max_us=23239 frames=44"
+    },
+    {
+        "t_ms":  16,
+        "line":  ""
+    },
+    {
+        "t_ms":  16,
+        "line":  "[TGX telemetry] cycle=1 scene=explosion fps=43.74 frame_avg_us=22866.2 frame_min_us=22661 frame_max_us=22963 frames=44"
+    },
+    {
+        "t_ms":  756,
+        "line":  ""
+    },
+    {
+        "t_ms":  757,
+        "line":  "[TGX telemetry] cycle=2 scene=explosion fps=47.86 frame_avg_us=20904.4 frame_min_us=20420 frame_max_us=21252 frames=48"
+    },
+    {
+        "t_ms":  1764,
+        "line":  ""
+    },
+    {
+        "t_ms":  1765,
+        "line":  "[TGX telemetry] cycle=2 scene=explosion fps=49.55 frame_avg_us=20171.9 frame_min_us=19957 frame_max_us=20597 frames=50"
+    },
+    {
+        "t_ms":  2778,
+        "line":  ""
+    },
+    {
+        "t_ms":  2778,
+        "line":  "[TGX telemetry] cycle=2 scene=explosion fps=44.42 frame_avg_us=22512.6 frame_min_us=19934 frame_max_us=24196 frames=45"
+    },
+    {
+        "t_ms":  3784,
+        "line":  ""
+    },
+    {
+        "t_ms":  3785,
+        "line":  "[TGX telemetry] cycle=2 scene=explosion fps=48.66 frame_avg_us=20549.8 frame_min_us=19216 frame_max_us=22544 frames=49"
+    },
+    {
+        "t_ms":  4759,
+        "line":  ""
+    },
+    {
+        "t_ms":  4759,
+        "line":  "[TGX scene] cycle=3 scene=explosion"
+    },
+    {
+        "t_ms":  5760,
+        "line":  ""
+    },
+    {
+        "t_ms":  5761,
+        "line":  "[TGX telemetry] cycle=3 scene=explosion fps=50.90 frame_avg_us=19640.4 frame_min_us=19461 frame_max_us=19794 frames=51"
+    },
+    {
+        "t_ms":  6774,
+        "line":  ""
+    },
+    {
+        "t_ms":  6774,
+        "line":  "[TGX telemetry] cycle=3 scene=explosion fps=50.35 frame_avg_us=19867.0 frame_min_us=19744 frame_max_us=20010 frames=51"
+    },
+    {
+        "t_ms":  7784,
+        "line":  ""
+    },
+    {
+        "t_ms":  7784,
+        "line":  "[TGX telemetry] cycle=3 scene=explosion fps=50.50 frame_avg_us=19804.6 frame_min_us=19461 frame_max_us=20711 frames=51"
+    },
+    {
+        "t_ms":  8802,
+        "line":  ""
+    },
+    {
+        "t_ms":  8803,
+        "line":  "[TGX telemetry] cycle=3 scene=explosion fps=50.05 frame_avg_us=19975.5 frame_min_us=19708 frame_max_us=20376 frames=51"
+    },
+    {
+        "t_ms":  9758,
+        "line":  ""
+    },
+    {
+        "t_ms":  9759,
+        "line":  "[TGX scene] cycle=4 scene=explosion"
+    },
+    {
+        "t_ms":  10762,
+        "line":  ""
+    },
+    {
+        "t_ms":  10763,
+        "line":  "[TGX telemetry] cycle=4 scene=explosion fps=49.85 frame_avg_us=20065.5 frame_min_us=19895 frame_max_us=20179 frames=50"
+    },
+    {
+        "t_ms":  11774,
+        "line":  ""
+    },
+    {
+        "t_ms":  11775,
+        "line":  "[TGX telemetry] cycle=4 scene=explosion fps=49.36 frame_avg_us=20253.1 frame_min_us=20116 frame_max_us=20404 frames=50"
+    },
+    {
+        "t_ms":  12776,
+        "line":  ""
+    },
+    {
+        "t_ms":  12776,
+        "line":  "[TGX telemetry] cycle=4 scene=explosion fps=43.91 frame_avg_us=22763.7 frame_min_us=20328 frame_max_us=23848 frames=44"
+    },
+    {
+        "t_ms":  13785,
+        "line":  ""
+    },
+    {
+        "t_ms":  13786,
+        "line":  "[TGX telemetry] cycle=4 scene=explosion fps=47.57 frame_avg_us=21034.0 frame_min_us=20206 frame_max_us=23097 frames=48"
+    },
+    {
+        "t_ms":  14770,
+        "line":  ""
+    },
+    {
+        "t_ms":  14770,
+        "line":  "[TGX scene] cycle=5 scene=explosion"
+    },
+    {
+        "t_ms":  15770,
+        "line":  ""
+    },
+    {
+        "t_ms":  15771,
+        "line":  "[TGX telemetry] cycle=5 scene=explosion fps=49.00 frame_avg_us=20402.8 frame_min_us=20238 frame_max_us=20541 frames=49"
+    },
+    {
+        "t_ms":  16782,
+        "line":  ""
+    },
+    {
+        "t_ms":  16783,
+        "line":  "[TGX telemetry] cycle=5 scene=explosion fps=49.41 frame_avg_us=20251.2 frame_min_us=20161 frame_max_us=20352 frames=50"
+    },
+    {
+        "t_ms":  17792,
+        "line":  ""
+    },
+    {
+        "t_ms":  17792,
+        "line":  "[TGX telemetry] cycle=5 scene=explosion fps=49.55 frame_avg_us=20183.6 frame_min_us=20085 frame_max_us=20329 frames=50"
+    },
+    {
+        "t_ms":  18800,
+        "line":  ""
+    },
+    {
+        "t_ms":  18800,
+        "line":  "[TGX telemetry] cycle=5 scene=explosion fps=48.56 frame_avg_us=20577.3 frame_min_us=20274 frame_max_us=20907 frames=49"
+    },
+    {
+        "t_ms":  19780,
+        "line":  ""
+    },
+    {
+        "t_ms":  19781,
+        "line":  "[TGX scene] cycle=6 scene=explosion"
+    },
+    {
+        "t_ms":  20801,
+        "line":  ""
+    },
+    {
+        "t_ms":  20801,
+        "line":  "[TGX telemetry] cycle=6 scene=explosion fps=45.05 frame_avg_us=22195.3 frame_min_us=21740 frame_max_us=22509 frames=46"
+    },
+    {
+        "t_ms":  21824,
+        "line":  ""
+    },
+    {
+        "t_ms":  21824,
+        "line":  "[TGX telemetry] cycle=6 scene=explosion fps=44.03 frame_avg_us=22719.3 frame_min_us=22467 frame_max_us=23105 frames=45"
+    },
+    {
+        "t_ms":  22851,
+        "line":  ""
+    },
+    {
+        "t_ms":  22852,
+        "line":  "[TGX telemetry] cycle=6 scene=explosion fps=35.02 frame_avg_us=28550.5 frame_min_us=25658 frame_max_us=30431 frames=36"
+    },
+    {
+        "t_ms":  23871,
+        "line":  ""
+    },
+    {
+        "t_ms":  23871,
+        "line":  "[TGX telemetry] cycle=6 scene=explosion fps=35.29 frame_avg_us=28323.4 frame_min_us=24751 frame_max_us=30519 frames=36"
+    },
+    {
+        "t_ms":  24788,
+        "line":  ""
+    },
+    {
+        "t_ms":  24788,
+        "line":  "[TGX scene] cycle=7 scene=explosion"
+    },
+    {
+        "t_ms":  25802,
+        "line":  ""
+    },
+    {
+        "t_ms":  25803,
+        "line":  "[TGX telemetry] cycle=7 scene=explosion fps=42.41 frame_avg_us=23583.9 frame_min_us=23395 frame_max_us=23867 frames=43"
+    },
+    {
+        "t_ms":  26806,
+        "line":  ""
+    },
+    {
+        "t_ms":  26806,
+        "line":  "[TGX telemetry] cycle=7 scene=explosion fps=41.83 frame_avg_us=23913.3 frame_min_us=23588 frame_max_us=24054 frames=42"
+    },
+    {
+        "t_ms":  27825,
+        "line":  ""
+    },
+    {
+        "t_ms":  27825,
+        "line":  "[TGX telemetry] cycle=7 scene=explosion fps=34.35 frame_avg_us=29110.9 frame_min_us=24007 frame_max_us=30483 frames=35"
+    },
+    {
+        "t_ms":  28847,
+        "line":  ""
+    },
+    {
+        "t_ms":  28847,
+        "line":  "[TGX telemetry] cycle=7 scene=explosion fps=38.16 frame_avg_us=26201.5 frame_min_us=23837 frame_max_us=29095 frames=39"
+    },
+    {
+        "t_ms":  29808,
+        "line":  ""
+    },
+    {
+        "t_ms":  29808,
+        "line":  "[TGX scene] cycle=8 scene=explosion"
+    },
+    {
+        "t_ms":  30824,
+        "line":  ""
+    },
+    {
+        "t_ms":  30825,
+        "line":  "[TGX telemetry] cycle=8 scene=explosion fps=35.43 frame_avg_us=28224.1 frame_min_us=24048 frame_max_us=29136 frames=36"
+    },
+    {
+        "t_ms":  31835,
+        "line":  ""
+    },
+    {
+        "t_ms":  31836,
+        "line":  "[TGX telemetry] cycle=8 scene=explosion fps=34.58 frame_avg_us=28891.7 frame_min_us=28199 frame_max_us=29310 frames=35"
+    },
+    {
+        "t_ms":  32842,
+        "line":  ""
+    },
+    {
+        "t_ms":  32843,
+        "line":  "[TGX telemetry] cycle=8 scene=explosion fps=30.82 frame_avg_us=32460.3 frame_min_us=28005 frame_max_us=33453 frames=31"
+    },
+    {
+        "t_ms":  33872,
+        "line":  ""
+    },
+    {
+        "t_ms":  33873,
+        "line":  "[TGX telemetry] cycle=8 scene=explosion fps=30.10 frame_avg_us=33237.6 frame_min_us=31850 frame_max_us=34055 frames=31"
+    },
+    {
+        "t_ms":  34818,
+        "line":  ""
+    },
+    {
+        "t_ms":  34819,
+        "line":  "[TGX scene] cycle=9 scene=explosion"
+    },
+    {
+        "t_ms":  35819,
+        "line":  ""
+    },
+    {
+        "t_ms":  35820,
+        "line":  "[TGX telemetry] cycle=9 scene=explosion fps=40.96 frame_avg_us=24407.3 frame_min_us=23917 frame_max_us=25086 frames=41"
+    },
+    {
+        "t_ms":  36822,
+        "line":  ""
+    },
+    {
+        "t_ms":  36823,
+        "line":  "[TGX telemetry] cycle=9 scene=explosion fps=40.92 frame_avg_us=24448.7 frame_min_us=24206 frame_max_us=24694 frames=41"
+    },
+    {
+        "t_ms":  37829,
+        "line":  ""
+    },
+    {
+        "t_ms":  37829,
+        "line":  "[TGX telemetry] cycle=9 scene=explosion fps=28.80 frame_avg_us=34726.7 frame_min_us=24632 frame_max_us=36311 frames=29"
+    },
+    {
+        "t_ms":  38842,
+        "line":  ""
+    },
+    {
+        "t_ms":  38842,
+        "line":  "[TGX telemetry] cycle=9 scene=explosion fps=31.62 frame_avg_us=31631.7 frame_min_us=27055 frame_max_us=35103 frames=32"
+    },
+    {
+        "t_ms":  39824,
+        "line":  ""
+    },
+    {
+        "t_ms":  39824,
+        "line":  "[TGX scene] cycle=10 scene=explosion"
+    },
+    {
+        "t_ms":  40848,
+        "line":  ""
+    },
+    {
+        "t_ms":  40848,
+        "line":  "[TGX telemetry] cycle=10 scene=explosion fps=40.04 frame_avg_us=24979.1 frame_min_us=24814 frame_max_us=25147 frames=41"
+    },
+    {
+        "t_ms":  41867,
+        "line":  ""
+    },
+    {
+        "t_ms":  41868,
+        "line":  "[TGX telemetry] cycle=10 scene=explosion fps=39.22 frame_avg_us=25502.1 frame_min_us=25126 frame_max_us=26071 frames=40"
+    },
+    {
+        "t_ms":  42889,
+        "line":  ""
+    },
+    {
+        "t_ms":  42890,
+        "line":  "[TGX telemetry] cycle=10 scene=explosion fps=33.30 frame_avg_us=30033.6 frame_min_us=27272 frame_max_us=30855 frames=34"
+    },
+    {
+        "t_ms":  43914,
+        "line":  ""
+    },
+    {
+        "t_ms":  43914,
+        "line":  "[TGX telemetry] cycle=10 scene=explosion fps=34.15 frame_avg_us=29284.4 frame_min_us=26842 frame_max_us=30723 frames=35"
+    },
+    {
+        "t_ms":  44840,
+        "line":  ""
+    },
+    {
+        "t_ms":  44840,
+        "line":  "[TGX scene] cycle=11 scene=explosion"
+    }
+]

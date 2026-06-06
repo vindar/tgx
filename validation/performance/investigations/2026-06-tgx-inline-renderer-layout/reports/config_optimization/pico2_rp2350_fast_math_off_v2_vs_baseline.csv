@@ -1,0 +1,163 @@
+board,baseline,variant,score_index,renderer_size,subtest,baseline_fps,variant_fps,pct_delta
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),R2D2 FLAT,24.64,14.68,-40.42
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Buddha FLAT,11.68,6.96,-40.41
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Buddha FLAT,10.33,6.29,-39.11
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Ribbon strip,190.03,116.56,-38.66
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Buddha FLAT,9.95,6.11,-38.59
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),R2D2 FLAT,20.21,12.48,-38.25
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Bunny FLAT,82.41,50.94,-38.19
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,15.20,9.49,-37.57
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),R2D2 FLAT,18.65,11.75,-37.00
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Bunny FLAT,67.30,43.65,-35.14
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Bunny FLAT,61.85,41.00,-33.71
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Bunny (far),64.40,43.12,-33.04
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Bunny (far),66.82,45.23,-32.31
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,10.03,6.99,-30.31
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,46.26,32.81,-29.07
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,8.62,6.26,-27.38
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Ribbon strip,105.47,77.20,-26.80
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Grid small FLAT,294.52,217.07,-26.30
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Bunny (far),75.20,56.37,-25.04
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Ribbon strip,76.60,59.22,-22.69
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Bunny (farclip),51.43,40.02,-22.19
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Bunny (farclip),52.72,41.58,-21.13
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Bunny TEX_NEAREST,28.58,22.58,-20.99
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Grid small FLAT,175.47,138.92,-20.83
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Grid small FLAT,128.45,104.75,-18.45
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,24.19,19.75,-18.35
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire rib strip thick,15.31,13.05,-14.76
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1126.60,971.82,-13.74
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire rib strip thick,12.42,10.87,-12.48
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Bunny (farclip),57.82,50.83,-12.09
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire rib strip thick,11.10,9.82,-11.53
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Large tris FLAT Z,310.08,275.57,-11.13
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Large tris FLAT Z,204.21,181.58,-11.08
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Cube direct FLAT,151.29,134.66,-10.99
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Cube direct FLAT,540.94,481.55,-10.98
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Cube direct FLAT,97.96,87.40,-10.78
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire cube fast,5468.22,5208.33,-4.75
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire rib tri thick,9.94,9.49,-4.53
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Bunny (close),43.29,41.47,-4.20
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire bunny thick,3.24,3.11,-4.01
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire bunny thick,3.14,3.02,-3.82
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Ribbon quads,191.91,184.63,-3.79
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire bunny thick,3.52,3.39,-3.69
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire rib tri thick,7.74,7.46,-3.62
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire sphere fast,1157.41,1115.92,-3.58
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire sphere fast,1303.14,1259.05,-3.38
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire rib tri thick,6.82,6.60,-3.23
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Ribbon quads,105.99,102.92,-2.90
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Ribbon quads,76.77,74.64,-2.77
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire bunny fast,128.41,125.37,-2.37
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire sphere fast,1109.72,1083.72,-2.34
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire cube fast,4889.98,4784.69,-2.15
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire bunny fast,119.10,116.67,-2.04
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Vertex color direct,122.96,120.51,-1.99
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Vertex color direct,174.82,171.56,-1.86
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire bunny fast,116.40,114.24,-1.86
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Ribbon triangles,167.21,164.36,-1.70
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Grid small TEX,137.71,135.59,-1.54
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Ribbon triangles,97.94,96.47,-1.50
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Ribbon triangles,72.43,71.39,-1.44
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire sphere AA,385.77,381.44,-1.12
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Grid near clip TEX,137.97,136.47,-1.09
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Bunny (close),16.95,16.77,-1.06
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Vertex color direct,596.13,591.32,-0.81
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Bunny (close),10.08,10.01,-0.69
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Grid small TEX,53.30,52.96,-0.64
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire sphere AA,272.29,270.83,-0.54
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Grid small TEX,33.18,33.00,-0.54
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire sphere AA,244.44,243.49,-0.39
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire rib tri fast,411.44,410.05,-0.34
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire rib tri fast,524.80,523.22,-0.30
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire rib quad fast,583.73,582.37,-0.23
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire rib tri fast,367.48,366.74,-0.20
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire rib quad fast,691.98,690.73,-0.18
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Grid near clip TEX,48.72,48.68,-0.08
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),R2D2 GOURAUD,14.26,14.27,0.07
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),R2D2 GOURAUD,15.68,15.70,0.13
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Sphere direct TEX,37.14,37.20,0.16
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,19.77,19.81,0.20
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Sphere direct TEX,26.59,26.65,0.23
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire rib quad AA,110.57,110.92,0.32
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Grid near clip TEX,28.46,28.55,0.32
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire rib quad fast,538.07,539.92,0.34
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire rib quad AA,130.31,130.83,0.40
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire rib strip AA,127.90,128.49,0.46
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire rib quad AA,182.58,183.48,0.49
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire rib strip AA,108.58,109.16,0.53
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Sphere direct TEX,118.90,119.56,0.56
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Point cloud dots,352.97,355.07,0.59
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire rib strip AA,177.98,179.11,0.63
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Bunny GOURAUD,50.20,50.54,0.68
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Bunny GOURAUD,44.97,45.31,0.76
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Bunny GOURAUD,64.98,65.58,0.92
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Point cloud dots,377.20,380.92,0.99
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Buddha (close),9.03,9.12,1.00
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Buddha (far),10.95,11.06,1.00
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Buddha (far),11.52,11.64,1.04
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Buddha (far),11.12,11.24,1.08
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Point cloud dots,394.52,398.98,1.13
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Cube direct TEX,60.54,61.23,1.14
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Buddha (close),11.09,11.22,1.17
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire rib tri AA,107.98,109.31,1.23
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Buddha (close),13.46,13.63,1.26
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Buddha GOURAUD,7.93,8.03,1.26
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Buddha GOURAUD,8.29,8.40,1.33
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Cube direct TEX,15.40,15.62,1.43
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Cube direct TEX,9.82,9.96,1.43
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire rib tri AA,73.47,74.54,1.46
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire bunny AA,37.73,38.28,1.46
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Buddha GOURAUD,9.55,9.69,1.47
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire rib tri AA,61.19,62.10,1.49
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire bunny AA,40.13,40.73,1.50
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire rib strip fast,539.56,548.32,1.62
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire rib strip fast,700.03,711.87,1.69
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire bunny AA,47.85,48.66,1.69
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire rib strip fast,587.46,598.04,1.80
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Point cloud pixels,2564.92,2613.52,1.89
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Buddha (clipped),13.18,13.55,2.81
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire sphere thick,29.01,29.84,2.86
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire sphere thick,35.67,36.72,2.94
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Buddha (clipped),14.94,15.38,2.95
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Buddha (farclip),10.56,10.88,3.03
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Buddha (clipped),16.84,17.42,3.44
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire cube AA,1289.91,1336.45,3.61
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Buddha (farclip),10.21,10.59,3.72
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire sphere thick,27.06,28.13,3.95
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Buddha ORTHO,8.11,8.44,4.07
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Buddha (farclip),10.04,10.45,4.08
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Point cloud pixels,2510.99,2614.38,4.12
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Buddha ORTHO,8.43,8.78,4.15
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire cube fast,5747.13,5988.02,4.19
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Buddha ORTHO,9.72,10.13,4.22
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire cube thick,208.98,217.83,4.23
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire cube AA,3093.58,3267.97,5.64
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Point cloud pixels,2470.66,2613.52,5.78
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),R2D2 (close),2.86,3.03,5.94
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire cube AA,2013.59,2138.47,6.20
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire cube thick,293.86,312.41,6.31
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),R2D2 (close),5.03,5.37,6.76
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,6.08,6.50,6.91
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,7.19,7.75,7.79
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,11.70,12.69,8.46
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire cube thick,420.46,457.14,8.72
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,16.08,17.72,10.20
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Sphere direct GOUR,60.88,67.52,10.91
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,19.34,21.62,11.79
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),R2D2 (close),11.43,12.88,12.69
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Sphere direct GOUR,78.87,91.31,15.77
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,32.34,37.70,16.57
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Wire rib quad thick,8.74,10.21,16.82
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),R2D2 (far),17.12,20.23,18.17
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Wire rib quad thick,9.53,11.34,18.99
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Wire rib quad thick,11.13,13.76,23.63
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),R2D2 (farclip),13.74,17.33,26.13
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Sphere direct GOUR,163.42,236.27,44.58
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),R2D2 (far),12.22,17.71,44.93
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),R2D2 (farclip),10.63,15.60,46.75
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),R2D2 (far),11.08,16.87,52.26
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),R2D2 (farclip),9.83,15.04,53.00
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,3,320 x 240 (large / ILI9341),Bunny ORTHO TEX,19.69,30.56,55.21
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,2,200 x 200 (medium / balanced),Bunny ORTHO TEX,21.51,35.04,62.90
+pico2,baseline_head_run1,rp2350_fast_math_off_v2,1,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,27.83,51.46,84.91

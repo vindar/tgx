@@ -1,0 +1,5 @@
+﻿"candidate","board","port","label","extra_flags","exit_code","status","parsed_global_scores","parsed_subtests","metadata"
+"vec_policy_default","pico2","COM21","vec_policy_default_bench_pico2","","0","SUCCESS","3","162","D:\Programmation\tgx\tmp\hardware_validation\parsed\pico2_vec_policy_default_bench_pico2.json"
+"vec_policy_default","cores3","COM10","vec_policy_default_bench_cores3","","0","SUCCESS","3","162","D:\Programmation\tgx\tmp\hardware_validation\parsed\cores3_vec_policy_default_bench_cores3.json"
+"vec_policy_default","teensy41","COM3","vec_policy_default_bench_teensy41","","0","SUCCESS","3","162","D:\Programmation\tgx\tmp\hardware_validation\parsed\teensy41_vec_policy_default_bench_teensy41.json"
+"vec_policy_default","core2","COM5","vec_policy_default_bench_core2","","2","SERIAL_TIMEOUT","0","0","D:\Programmation\tgx\tmp\hardware_validation\parsed\core2_vec_policy_default_bench_core2.json"
