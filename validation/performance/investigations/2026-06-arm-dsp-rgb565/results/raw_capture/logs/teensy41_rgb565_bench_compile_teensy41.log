@@ -1,0 +1,91 @@
+
+2026-06-06 14:11:16.679 BOARD=teensy41
+2026-06-06 14:11:16.692 PORT=COM3
+2026-06-06 14:11:16.694 UPLOAD_PORT=usb:80000/3/0/1
+2026-06-06 14:11:16.696 FQBN=teensy:avr:teensy41:usb=serial,speed=600,opt=o3std
+2026-06-06 14:11:16.699 SKETCH=D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench
+2026-06-06 14:11:16.700 PARSE_MODE=generic
+2026-06-06 14:11:16.702 VISIBLE_PORTS_BEFORE=COM10,COM21,COM3,COM5,COM6,COM7
+2026-06-06 14:11:16.704 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-06 14:11:16.708 ATTEMPT=1
+2026-06-06 14:11:17.009 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-06 14:11:17.018 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn teensy:avr:teensy41:usb=serial,speed=600,opt=o3std --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\validation\performance\builds\teensy41_rgb565_bench_compile_teensy41 D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench
+2026-06-06 14:11:25.901 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:682:47: error: 'SpanMean2Fn' has not been declared
+2026-06-06 14:11:25.903 ARDUINO:   682 | static void runSpanMean2(const char* variant, SpanMean2Fn fn, uint32_t n, uint32_t offset)
+2026-06-06 14:11:25.905 ARDUINO:       |                                               ^~~~~~~~~~~
+2026-06-06 14:11:25.907 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:702:47: error: 'SpanBlendFn' has not been declared
+2026-06-06 14:11:25.909 ARDUINO:   702 | static void runSpanBlend(const char* variant, SpanBlendFn fn, uint32_t n, uint32_t offset)
+2026-06-06 14:11:25.910 ARDUINO:       |                                               ^~~~~~~~~~~
+2026-06-06 14:11:25.911 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:722:50: error: 'SpanBilinearFn' has not been declared
+2026-06-06 14:11:25.913 ARDUINO:   722 | static void runSpanBilinear(const char* variant, SpanBilinearFn fn, uint32_t n, uint32_t offset)
+2026-06-06 14:11:25.915 ARDUINO:       |                                                  ^~~~~~~~~~~~~~
+2026-06-06 14:11:25.917 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:742:46: error: 'SpanCopyFn' has not been declared
+2026-06-06 14:11:25.919 ARDUINO:   742 | static void runSpanCopy(const char* variant, SpanCopyFn fn, uint32_t n, uint32_t offset)
+2026-06-06 14:11:25.921 ARDUINO:       |                                              ^~~~~~~~~~
+2026-06-06 14:11:25.922 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:762:46: error: 'SpanFillFn' has not been declared
+2026-06-06 14:11:25.924 ARDUINO:   762 | static void runSpanFill(const char* variant, SpanFillFn fn, uint32_t n, uint32_t offset)
+2026-06-06 14:11:25.925 ARDUINO:       |                                              ^~~~~~~~~~
+2026-06-06 14:11:25.927 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:446:13: warning: 'void runBlendFixed(const char*, uint32_t)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.928 ARDUINO:   446 | static void runBlendFixed(const char* variant, uint32_t alpha)
+2026-06-06 14:11:25.930 ARDUINO:       |             ^~~~~~~~~~~~~
+2026-06-06 14:11:25.932 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:470:13: warning: 'void runBlendRandom(const char*)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.934 ARDUINO:   470 | static void runBlendRandom(const char* variant)
+2026-06-06 14:11:25.936 ARDUINO:       |             ^~~~~~~~~~~~~~
+2026-06-06 14:11:25.937 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:492:13: warning: 'void runMean2(const char*)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.940 ARDUINO:   492 | static void runMean2(const char* variant)
+2026-06-06 14:11:25.941 ARDUINO:       |             ^~~~~~~~
+2026-06-06 14:11:25.943 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:514:13: warning: 'void runMean4(const char*)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.947 ARDUINO:   514 | static void runMean4(const char* variant)
+2026-06-06 14:11:25.949 ARDUINO:       |             ^~~~~~~~
+2026-06-06 14:11:25.951 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:536:13: warning: 'void runTriangle(const char*)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.953 ARDUINO:   536 | static void runTriangle(const char* variant)
+2026-06-06 14:11:25.954 ARDUINO:       |             ^~~~~~~~~~~
+2026-06-06 14:11:25.956 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:558:13: warning: 'void runBilinear(const char*)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.958 ARDUINO:   558 | static void runBilinear(const char* variant)
+2026-06-06 14:11:25.960 ARDUINO:       |             ^~~~~~~~~~~
+2026-06-06 14:11:25.961 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:580:13: warning: 'void runRgbfTo565(const char*)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.963 ARDUINO:   580 | static void runRgbfTo565(const char* variant)
+2026-06-06 14:11:25.964 ARDUINO:       |             ^~~~~~~~~~~~
+2026-06-06 14:11:25.966 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:682:13: warning: 'void runSpanMean2(const char*, int, uint32_t, uint32_t)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.968 ARDUINO:   682 | static void runSpanMean2(const char* variant, SpanMean2Fn fn, uint32_t n, uint32_t offset)
+2026-06-06 14:11:25.969 ARDUINO:       |             ^~~~~~~~~~~~
+2026-06-06 14:11:25.971 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:702:13: warning: 'void runSpanBlend(const char*, int, uint32_t, uint32_t)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.973 ARDUINO:   702 | static void runSpanBlend(const char* variant, SpanBlendFn fn, uint32_t n, uint32_t offset)
+2026-06-06 14:11:25.975 ARDUINO:       |             ^~~~~~~~~~~~
+2026-06-06 14:11:25.976 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:722:13: warning: 'void runSpanBilinear(const char*, int, uint32_t, uint32_t)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.978 ARDUINO:   722 | static void runSpanBilinear(const char* variant, SpanBilinearFn fn, uint32_t n, uint32_t offset)
+2026-06-06 14:11:25.979 ARDUINO:       |             ^~~~~~~~~~~~~~~
+2026-06-06 14:11:25.981 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:742:13: warning: 'void runSpanCopy(const char*, int, uint32_t, uint32_t)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.983 ARDUINO:   742 | static void runSpanCopy(const char* variant, SpanCopyFn fn, uint32_t n, uint32_t offset)
+2026-06-06 14:11:25.985 ARDUINO:       |             ^~~~~~~~~~~
+2026-06-06 14:11:25.987 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:762:13: warning: 'void runSpanFill(const char*, int, uint32_t, uint32_t)' declared 'static' but never defined [-Wunused-function]
+2026-06-06 14:11:25.989 ARDUINO:   762 | static void runSpanFill(const char* variant, SpanFillFn fn, uint32_t n, uint32_t offset)
+2026-06-06 14:11:25.991 ARDUINO:       |             ^~~~~~~~~~~
+2026-06-06 14:11:25.993 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-arm-dsp-rgb565\sketches\RGB565KernelBench\RGB565KernelBench.ino:104:17: warning: 'uint32_t asmUqadd16(uint32_t, uint32_t)' defined but not used [-Wunused-function]
+2026-06-06 14:11:25.994 ARDUINO:   104 | static uint32_t asmUqadd16(uint32_t a, uint32_t b)
+2026-06-06 14:11:25.996 ARDUINO:       |                 ^~~~~~~~~~
+2026-06-06 14:11:25.998 ARDUINO: Plusieurs bibliothèque trouvées pour "tgx.h"
+2026-06-06 14:11:26.000 ARDUINO:   Utilisé: D:\Programmation\tgx
+2026-06-06 14:11:26.003 ARDUINO:   Non utilisé: D:\Programmation\tgx
+2026-06-06 14:11:26.004 ARDUINO: Error during build: exit status 1
+2026-06-06 14:11:26.006 ARDUINO: 
+2026-06-06 14:11:26.008 ARDUINO: [92mUsed library[0m [92mVersion[0m [90mPath[0m
+2026-06-06 14:11:26.009 ARDUINO: [93mtgx[0m          1.1.1   [90mD:\Programmation\tgx[0m
+2026-06-06 14:11:26.011 ARDUINO: 
+2026-06-06 14:11:26.012 ARDUINO: [92mUsed platform[0m [92mVersion[0m [90mPath[0m
+2026-06-06 14:11:26.014 ARDUINO: [93mteensy:avr[0m    1.61.0  [90mC:\Users\Vindar\AppData\Local\Arduino15\packages\teensy\hardware\avr\1.61.0[0m
+2026-06-06 14:11:26.016 ARDUINO_EXIT_CODE=1
+2026-06-06 14:11:26.040 FINAL_STATUS=UPLOAD_FAILED

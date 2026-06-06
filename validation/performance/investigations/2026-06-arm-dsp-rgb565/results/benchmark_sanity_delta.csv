@@ -1,0 +1,325 @@
+board,renderer_size,subtest,baseline_fps,patch_fps,delta_pct,patch_avg_us
+pico2,100 x 100 (small / vertex-heavy),Buddha GOURAUD,9.56,9.56,0.0,104634.88
+pico2,100 x 100 (small / vertex-heavy),Buddha FLAT,11.68,11.68,0.0,85602.88
+pico2,100 x 100 (small / vertex-heavy),Buddha ORTHO,9.72,9.72,0.0,102904.81
+pico2,100 x 100 (small / vertex-heavy),Buddha (close),13.46,13.46,0.0,74309.12
+pico2,100 x 100 (small / vertex-heavy),Buddha (clipped),16.83,16.84,0.05941770647654998,59379.31
+pico2,100 x 100 (small / vertex-heavy),Buddha (far),11.51,11.52,0.08688097306690512,86814.12
+pico2,100 x 100 (small / vertex-heavy),Buddha (farclip),10.56,10.56,0.0,94662.31
+pico2,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,19.78,19.78,0.0,50563.62
+pico2,100 x 100 (small / vertex-heavy),R2D2 FLAT,24.64,24.64,0.0,40577.56
+pico2,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,15.2,15.21,0.06578947368423016,65760.06
+pico2,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,11.7,11.7,0.0,85438.38
+pico2,100 x 100 (small / vertex-heavy),R2D2 (close),11.43,11.43,0.0,87506.06
+pico2,100 x 100 (small / vertex-heavy),R2D2 (far),17.13,17.11,-0.11675423234092097,58435.5
+pico2,100 x 100 (small / vertex-heavy),R2D2 (farclip),13.74,13.73,-0.07278020378457262,72831.81
+pico2,100 x 100 (small / vertex-heavy),Bunny GOURAUD,65.01,64.98,-0.046146746654363024,15388.44
+pico2,100 x 100 (small / vertex-heavy),Bunny FLAT,82.51,82.48,-0.0363592291843462,12123.88
+pico2,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,46.2,46.24,0.08658008658009031,21625.38
+pico2,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,32.36,32.31,-0.15451174289244918,30950.31
+pico2,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,27.83,27.83,0.0,35937.69
+pico2,100 x 100 (small / vertex-heavy),Bunny (close),43.28,43.3,0.046210720887240875,23092.69
+pico2,100 x 100 (small / vertex-heavy),Bunny (far),75.18,75.22,0.05320563979780424,13295.06
+pico2,100 x 100 (small / vertex-heavy),Bunny (farclip),57.88,57.89,0.01727712508639012,17274.62
+pico2,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1104.21,1105.43,0.11048622997438251,904.62
+pico2,100 x 100 (small / vertex-heavy),Grid small FLAT,294.07,294.37,0.10201652667731764,3397.12
+pico2,100 x 100 (small / vertex-heavy),Grid small TEX,137.5,137.26,-0.17454545454546055,7285.38
+pico2,100 x 100 (small / vertex-heavy),Ribbon triangles,167.0,167.54,0.32335329341317554,5968.62
+pico2,100 x 100 (small / vertex-heavy),Ribbon strip,190.04,189.98,-0.03157230056830551,5263.75
+pico2,100 x 100 (small / vertex-heavy),Ribbon quads,191.81,191.37,-0.22939367082007722,5225.38
+pico2,100 x 100 (small / vertex-heavy),Wire rib tri fast,524.83,528.05,0.6135320008383571,1893.75
+pico2,100 x 100 (small / vertex-heavy),Wire rib strip fast,701.45,701.63,0.025661130515364228,1425.25
+pico2,100 x 100 (small / vertex-heavy),Wire rib quad fast,691.03,691.03,0.0,1447.12
+pico2,100 x 100 (small / vertex-heavy),Wire rib tri AA,107.82,107.82,0.0,9274.88
+pico2,100 x 100 (small / vertex-heavy),Wire rib strip AA,178.28,178.16,-0.06730984967466824,5613
+pico2,100 x 100 (small / vertex-heavy),Wire rib quad AA,182.78,182.36,-0.22978444031075407,5483.62
+pico2,100 x 100 (small / vertex-heavy),Wire rib tri thick,9.94,9.94,0.0,100589.88
+pico2,100 x 100 (small / vertex-heavy),Wire rib strip thick,15.3,15.31,0.06535947712418277,65316.12
+pico2,100 x 100 (small / vertex-heavy),Wire rib quad thick,11.13,11.13,0.0,89860.38
+pico2,100 x 100 (small / vertex-heavy),Grid near clip TEX,138.19,138.1,-0.06512772270063083,7241
+pico2,100 x 100 (small / vertex-heavy),Cube direct FLAT,542.59,540.98,-0.2967249672865324,1848.5
+pico2,100 x 100 (small / vertex-heavy),Cube direct TEX,60.57,60.54,-0.04952947003467045,16519.12
+pico2,100 x 100 (small / vertex-heavy),Sphere direct GOUR,163.88,163.72,-0.09763241396143485,6108.12
+pico2,100 x 100 (small / vertex-heavy),Sphere direct TEX,119.2,118.88,-0.26845637583893245,8411.5
+pico2,100 x 100 (small / vertex-heavy),Vertex color direct,597.01,595.28,-0.2897773906634815,1679.88
+pico2,100 x 100 (small / vertex-heavy),Point cloud pixels,2517.31,2497.66,-0.7805951591182692,400.38
+pico2,100 x 100 (small / vertex-heavy),Point cloud dots,394.87,395.2,0.08357180844327239,2530.38
+pico2,100 x 100 (small / vertex-heavy),Wire cube fast,6060.61,6294.26,3.8552224941053925,158.88
+pico2,100 x 100 (small / vertex-heavy),Wire cube AA,3105.59,3159.56,1.737834034756669,316.5
+pico2,100 x 100 (small / vertex-heavy),Wire cube thick,422.34,422.1,-0.05682625372921413,2369.12
+pico2,100 x 100 (small / vertex-heavy),Wire sphere fast,1304.21,1292.62,-0.8886605684667481,773.62
+pico2,100 x 100 (small / vertex-heavy),Wire sphere AA,384.71,382.94,-0.46008681864261325,2611.38
+pico2,100 x 100 (small / vertex-heavy),Wire sphere thick,35.61,35.62,0.02808199943835632,28073.12
+pico2,100 x 100 (small / vertex-heavy),Wire bunny fast,128.35,128.47,0.09349435138295004,7783.88
+pico2,100 x 100 (small / vertex-heavy),Wire bunny AA,47.95,47.9,-0.10427528675704956,20878.12
+pico2,100 x 100 (small / vertex-heavy),Wire bunny thick,3.52,3.52,0.0,283771.12
+pico2,200 x 200 (medium / balanced),Buddha GOURAUD,8.29,8.29,0.0,120636.56
+pico2,200 x 200 (medium / balanced),Buddha FLAT,10.33,10.33,0.0,96816.12
+pico2,200 x 200 (medium / balanced),Buddha ORTHO,8.42,8.43,0.11876484560569,118664.12
+pico2,200 x 200 (medium / balanced),Buddha (close),11.09,11.09,0.0,90152.75
+pico2,200 x 200 (medium / balanced),Buddha (clipped),14.93,14.93,0.0,66980.31
+pico2,200 x 200 (medium / balanced),Buddha (far),11.12,11.11,-0.08992805755395628,89973.56
+pico2,200 x 200 (medium / balanced),Buddha (farclip),10.21,10.21,0.0,97919.44
+pico2,200 x 200 (medium / balanced),R2D2 GOURAUD,15.69,15.69,0.0,63727.25
+pico2,200 x 200 (medium / balanced),R2D2 FLAT,20.22,20.23,0.049455984174096024,49442
+pico2,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,10.03,10.04,0.09970089730806375,99639.06
+pico2,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,7.19,7.2,0.13908205841446364,138947.69
+pico2,200 x 200 (medium / balanced),R2D2 (close),5.03,5.03,0.0,198769.38
+pico2,200 x 200 (medium / balanced),R2D2 (far),12.22,12.22,0.0,81827.56
+pico2,200 x 200 (medium / balanced),R2D2 (farclip),10.64,10.63,-0.09398496240601295,94074.44
+pico2,200 x 200 (medium / balanced),Bunny GOURAUD,50.23,50.16,-0.13935894883535527,19936.69
+pico2,200 x 200 (medium / balanced),Bunny FLAT,67.31,67.26,-0.07428316743425256,14867.69
+pico2,200 x 200 (medium / balanced),Bunny TEX_NEAREST,28.57,28.58,0.03500175008750439,34993.06
+pico2,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,19.33,19.33,0.0,51738.75
+pico2,200 x 200 (medium / balanced),Bunny ORTHO TEX,21.5,21.51,0.0465116279069866,46486
+pico2,200 x 200 (medium / balanced),Bunny (close),16.95,16.95,0.0,58998.88
+pico2,200 x 200 (medium / balanced),Bunny (far),66.8,66.82,0.029940119760474282,14965.19
+pico2,200 x 200 (medium / balanced),Bunny (farclip),52.82,52.77,-0.09466111321468906,18949.12
+pico2,200 x 200 (medium / balanced),Large tris FLAT Z,310.73,310.57,-0.05149164869823197,3219.88
+pico2,200 x 200 (medium / balanced),Grid small FLAT,175.6,175.75,0.08542141230067912,5690
+pico2,200 x 200 (medium / balanced),Grid small TEX,53.3,53.34,0.07504690431521244,18747
+pico2,200 x 200 (medium / balanced),Ribbon triangles,97.97,98.06,0.09186485658876364,10197.62
+pico2,200 x 200 (medium / balanced),Ribbon strip,105.46,105.56,0.09482268158544915,9473
+pico2,200 x 200 (medium / balanced),Ribbon quads,105.98,106.0,0.018871485185889547,9433.62
+pico2,200 x 200 (medium / balanced),Wire rib tri fast,411.16,411.42,0.06323572331938809,2430.62
+pico2,200 x 200 (medium / balanced),Wire rib strip fast,584.28,592.15,1.346956938454169,1688.75
+pico2,200 x 200 (medium / balanced),Wire rib quad fast,582.96,585.99,0.5197612186084832,1706.5
+pico2,200 x 200 (medium / balanced),Wire rib tri AA,73.47,73.45,-0.027221995372250785,13615.62
+pico2,200 x 200 (medium / balanced),Wire rib strip AA,127.95,127.78,-0.1328644001563073,7825.75
+pico2,200 x 200 (medium / balanced),Wire rib quad AA,130.3,130.47,0.1304681504221028,7664.75
+pico2,200 x 200 (medium / balanced),Wire rib tri thick,7.74,7.74,0.0,129207
+pico2,200 x 200 (medium / balanced),Wire rib strip thick,12.42,12.42,0.0,80504.5
+pico2,200 x 200 (medium / balanced),Wire rib quad thick,9.54,9.53,-0.10482180293500676,104932.88
+pico2,200 x 200 (medium / balanced),Grid near clip TEX,48.71,48.72,0.020529665366453287,20524.5
+pico2,200 x 200 (medium / balanced),Cube direct FLAT,151.52,151.35,-0.11219640971490419,6607.12
+pico2,200 x 200 (medium / balanced),Cube direct TEX,15.4,15.4,0.0,64917.12
+pico2,200 x 200 (medium / balanced),Sphere direct GOUR,78.84,78.87,0.03805175038051889,12679.12
+pico2,200 x 200 (medium / balanced),Sphere direct TEX,37.13,37.12,-0.0269323996768267,26937.62
+pico2,200 x 200 (medium / balanced),Vertex color direct,174.96,174.86,-0.057155921353446715,5719
+pico2,200 x 200 (medium / balanced),Point cloud pixels,2554.28,2558.36,0.15973190096620904,390.88
+pico2,200 x 200 (medium / balanced),Point cloud dots,377.2,376.68,-0.13785790031812795,2654.75
+pico2,200 x 200 (medium / balanced),Wire cube fast,5521.05,5621.93,1.827188668822055,177.88
+pico2,200 x 200 (medium / balanced),Wire cube AA,2032.0,2056.56,1.2086614173228316,486.25
+pico2,200 x 200 (medium / balanced),Wire cube thick,294.67,294.2,-0.15950045813962754,3399
+pico2,200 x 200 (medium / balanced),Wire sphere fast,1165.33,1149.43,-1.3644203787768205,870
+pico2,200 x 200 (medium / balanced),Wire sphere AA,271.87,272.4,0.19494611395152184,3671.12
+pico2,200 x 200 (medium / balanced),Wire sphere thick,29.02,28.99,-0.1033769813921448,34490.62
+pico2,200 x 200 (medium / balanced),Wire bunny fast,119.11,118.9,-0.17630761480983415,8410.38
+pico2,200 x 200 (medium / balanced),Wire bunny AA,40.06,40.1,0.09985022466301174,24937.38
+pico2,200 x 200 (medium / balanced),Wire bunny thick,3.24,3.24,0.0,308804.25
+pico2,320 x 240 (large / ILI9341),Buddha GOURAUD,7.93,7.93,0.0,126073.31
+pico2,320 x 240 (large / ILI9341),Buddha FLAT,9.95,9.95,0.0,100550.31
+pico2,320 x 240 (large / ILI9341),Buddha ORTHO,8.11,8.1,-0.12330456226880004,123426.12
+pico2,320 x 240 (large / ILI9341),Buddha (close),9.03,9.03,0.0,110700.12
+pico2,320 x 240 (large / ILI9341),Buddha (clipped),13.18,13.17,-0.07587253414264028,75906.44
+pico2,320 x 240 (large / ILI9341),Buddha (far),10.94,10.95,0.0914076782449813,91347.12
+pico2,320 x 240 (large / ILI9341),Buddha (farclip),10.04,10.04,0.0,99583.62
+pico2,320 x 240 (large / ILI9341),R2D2 GOURAUD,14.26,14.26,0.0,70145
+pico2,320 x 240 (large / ILI9341),R2D2 FLAT,18.66,18.65,-0.0535905680600246,53606.56
+pico2,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,8.62,8.62,0.0,115942.38
+pico2,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,6.08,6.08,0.0,164513.12
+pico2,320 x 240 (large / ILI9341),R2D2 (close),2.86,2.86,0.0,349603.81
+pico2,320 x 240 (large / ILI9341),R2D2 (far),11.08,11.09,0.09025270758122872,90188.06
+pico2,320 x 240 (large / ILI9341),R2D2 (farclip),9.83,9.83,0.0,101754.38
+pico2,320 x 240 (large / ILI9341),Bunny GOURAUD,45.01,44.94,-0.15552099533436836,22251.19
+pico2,320 x 240 (large / ILI9341),Bunny FLAT,61.83,61.88,0.08086689309396711,16159.19
+pico2,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,24.22,24.22,0.0,41292.81
+pico2,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,16.08,16.08,0.0,62181.94
+pico2,320 x 240 (large / ILI9341),Bunny ORTHO TEX,19.7,19.71,0.05076142131981154,50745.25
+pico2,320 x 240 (large / ILI9341),Bunny (close),10.07,10.07,0.0,99257.12
+pico2,320 x 240 (large / ILI9341),Bunny (far),64.41,64.38,-0.04657661853749717,15532.81
+pico2,320 x 240 (large / ILI9341),Bunny (farclip),51.44,51.34,-0.19440124416795213,19477.12
+pico2,320 x 240 (large / ILI9341),Large tris FLAT Z,204.02,204.13,0.05391628271738114,4898.88
+pico2,320 x 240 (large / ILI9341),Grid small FLAT,128.41,128.45,0.03115022194533079,7785.12
+pico2,320 x 240 (large / ILI9341),Grid small TEX,33.17,33.17,0.0,30150.5
+pico2,320 x 240 (large / ILI9341),Ribbon triangles,72.43,72.4,-0.041419301394451935,13812.38
+pico2,320 x 240 (large / ILI9341),Ribbon strip,76.56,76.57,0.013061650992662877,13059.5
+pico2,320 x 240 (large / ILI9341),Ribbon quads,76.75,76.73,-0.02605863192182145,13033
+pico2,320 x 240 (large / ILI9341),Wire rib tri fast,366.96,367.48,0.14170481796382806,2721.25
+pico2,320 x 240 (large / ILI9341),Wire rib strip fast,539.45,540.76,0.24283992955786982,1849.25
+pico2,320 x 240 (large / ILI9341),Wire rib quad fast,537.6,539.34,0.32366071428571175,1854.12
+pico2,320 x 240 (large / ILI9341),Wire rib tri AA,61.19,61.18,-0.016342539630653796,16345
+pico2,320 x 240 (large / ILI9341),Wire rib strip AA,108.55,108.66,0.10133578995854542,9202.75
+pico2,320 x 240 (large / ILI9341),Wire rib quad AA,110.53,110.57,0.03618926988147031,9043.88
+pico2,320 x 240 (large / ILI9341),Wire rib tri thick,6.82,6.82,0.0,146548.75
+pico2,320 x 240 (large / ILI9341),Wire rib strip thick,11.11,11.1,-0.09000900090009312,90058.88
+pico2,320 x 240 (large / ILI9341),Wire rib quad thick,8.74,8.74,0.0,114372
+pico2,320 x 240 (large / ILI9341),Grid near clip TEX,28.44,28.45,0.035161744022493835,35150.25
+pico2,320 x 240 (large / ILI9341),Cube direct FLAT,97.98,97.98,0.0,10205.75
+pico2,320 x 240 (large / ILI9341),Cube direct TEX,9.82,9.82,0.0,101866.5
+pico2,320 x 240 (large / ILI9341),Sphere direct GOUR,60.89,60.92,0.049269173920185594,16414.5
+pico2,320 x 240 (large / ILI9341),Sphere direct TEX,26.59,26.58,-0.037608123354648804,37617.75
+pico2,320 x 240 (large / ILI9341),Vertex color direct,123.04,123.08,0.03250975292587999,8124.88
+pico2,320 x 240 (large / ILI9341),Point cloud pixels,2464.57,2462.3,-0.09210531654608722,406.12
+pico2,320 x 240 (large / ILI9341),Point cloud dots,353.0,352.75,-0.07082152974504652,2834.88
+pico2,320 x 240 (large / ILI9341),Wire cube fast,4920.05,4878.05,-0.8536498612819021,205
+pico2,320 x 240 (large / ILI9341),Wire cube AA,1295.97,1288.87,-0.5478521879364595,775.88
+pico2,320 x 240 (large / ILI9341),Wire cube thick,208.63,208.27,-0.17255428270143147,4801.38
+pico2,320 x 240 (large / ILI9341),Wire sphere fast,1106.81,1107.73,0.08312176434981389,902.75
+pico2,320 x 240 (large / ILI9341),Wire sphere AA,244.63,244.1,-0.21665372194743515,4096.62
+pico2,320 x 240 (large / ILI9341),Wire sphere thick,27.08,27.05,-0.11078286558344752,36966.25
+pico2,320 x 240 (large / ILI9341),Wire bunny fast,116.44,116.44,0.0,8588.25
+pico2,320 x 240 (large / ILI9341),Wire bunny AA,37.69,37.73,0.10612894667019201,26501
+pico2,320 x 240 (large / ILI9341),Wire bunny thick,3.14,3.14,0.0,318316.5
+teensy41,100 x 100 (small / vertex-heavy),Buddha GOURAUD,54.065,54.07,0.009248127254246619,18496.07
+teensy41,100 x 100 (small / vertex-heavy),Buddha FLAT,61.795,61.8,0.008091269520171807,16181.33
+teensy41,100 x 100 (small / vertex-heavy),Buddha ORTHO,57.1,57.1,0.0,17513.7
+teensy41,100 x 100 (small / vertex-heavy),Buddha (close),78.1,78.09,-0.012804097311125417,12806.2
+teensy41,100 x 100 (small / vertex-heavy),Buddha (clipped),99.825,99.83,0.005008765339331589,10017.4
+teensy41,100 x 100 (small / vertex-heavy),Buddha (far),65.48,65.48,0.0,15272.77
+teensy41,100 x 100 (small / vertex-heavy),Buddha (farclip),64.485,64.49,0.0077537411801165135,15505.9
+teensy41,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,109.605,109.61,0.004561835682670434,9123.13
+teensy41,100 x 100 (small / vertex-heavy),R2D2 FLAT,128.0,127.93,-0.05468749999999467,7817.07
+teensy41,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,74.57,74.61,0.0536408743462502,13402.3
+teensy41,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,60.0,59.97,-0.050000000000005596,16674.73
+teensy41,100 x 100 (small / vertex-heavy),R2D2 (close),83.065,83.05,-0.01805814723409016,12040.6
+teensy41,100 x 100 (small / vertex-heavy),R2D2 (far),126.485,126.46,-0.01976518954817097,7907.63
+teensy41,100 x 100 (small / vertex-heavy),R2D2 (farclip),127.26499999999999,127.3,0.02750166974423429,7855.3
+teensy41,100 x 100 (small / vertex-heavy),Bunny GOURAUD,397.515,397.55,0.00880469919375404,2515.4
+teensy41,100 x 100 (small / vertex-heavy),Bunny FLAT,475.97,474.48,-0.3130449398071278,2107.57
+teensy41,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,208.915,208.93,0.0071799535696470684,4786.3
+teensy41,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,186.76,187.17,0.21953309059754567,5342.6
+teensy41,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,243.35000000000002,243.57,0.09040476679678111,4105.67
+teensy41,100 x 100 (small / vertex-heavy),Bunny (close),276.235,276.02,-0.07783228048583446,3622.93
+teensy41,100 x 100 (small / vertex-heavy),Bunny (far),524.4449999999999,525.73,0.2450209268846315,1902.13
+teensy41,100 x 100 (small / vertex-heavy),Bunny (farclip),524.3,523.08,-0.2326912073240317,1911.77
+teensy41,100 x 100 (small / vertex-heavy),Large tris FLAT Z,11189.869999999999,11185.68,-0.037444581572432245,89.4
+teensy41,100 x 100 (small / vertex-heavy),Grid small FLAT,1686.44,1693.19,0.4002514171864924,590.6
+teensy41,100 x 100 (small / vertex-heavy),Grid small TEX,815.48,816.68,0.1471525972433385,1224.47
+teensy41,100 x 100 (small / vertex-heavy),Ribbon triangles,1147.3600000000001,1143.99,-0.2937177520569101,874.13
+teensy41,100 x 100 (small / vertex-heavy),Ribbon strip,1382.3,1382.49,0.013745207263271553,723.33
+teensy41,100 x 100 (small / vertex-heavy),Ribbon quads,1355.75,1355.63,-0.008851189378566993,737.67
+teensy41,100 x 100 (small / vertex-heavy),Wire rib tri fast,2577.32,2576.49,-0.03220399484737957,388.12
+teensy41,100 x 100 (small / vertex-heavy),Wire rib strip fast,3773.67,3793.27,0.5193882877940981,263.62
+teensy41,100 x 100 (small / vertex-heavy),Wire rib quad fast,3438.645,3434.95,-0.1074551167683846,291.12
+teensy41,100 x 100 (small / vertex-heavy),Wire rib tri AA,717.135,717.17,0.00488053155960344,1394.38
+teensy41,100 x 100 (small / vertex-heavy),Wire rib strip AA,1129.94,1129.94,0.0,885
+teensy41,100 x 100 (small / vertex-heavy),Wire rib quad AA,1164.565,1163.64,-0.07942879959469407,859.38
+teensy41,100 x 100 (small / vertex-heavy),Wire rib tri thick,83.76,83.75,-0.011938872970396197,11939.75
+teensy41,100 x 100 (small / vertex-heavy),Wire rib strip thick,130.65,130.65,0.0,7654
+teensy41,100 x 100 (small / vertex-heavy),Wire rib quad thick,131.42,131.42,0.0,7609.12
+teensy41,100 x 100 (small / vertex-heavy),Grid near clip TEX,825.4200000000001,825.15,-0.032710620047982086,1211.9
+teensy41,100 x 100 (small / vertex-heavy),Cube direct FLAT,5305.04,5300.35,-0.08840649646373322,188.67
+teensy41,100 x 100 (small / vertex-heavy),Cube direct TEX,496.125,496.05,-0.015117157974298134,2015.93
+teensy41,100 x 100 (small / vertex-heavy),Sphere direct GOUR,1452.64,1452.85,0.014456437933674238,688.3
+teensy41,100 x 100 (small / vertex-heavy),Sphere direct TEX,817.6949999999999,817.46,-0.028739322118875865,1223.3
+teensy41,100 x 100 (small / vertex-heavy),Vertex color direct,4542.02,4534.46,-0.1664457664211194,220.53
+teensy41,100 x 100 (small / vertex-heavy),Point cloud pixels,12019.240000000002,11980.83,-0.3195709545695258,83.47
+teensy41,100 x 100 (small / vertex-heavy),Point cloud dots,2088.55,2088.99,0.021067247611950002,478.7
+teensy41,100 x 100 (small / vertex-heavy),Wire cube fast,78432.58,79365.08,1.1889191965889667,12.6
+teensy41,100 x 100 (small / vertex-heavy),Wire cube AA,28818.44,28818.44,0.0,34.7
+teensy41,100 x 100 (small / vertex-heavy),Wire cube thick,5137.43,5138.75,0.025693780742508388,194.6
+teensy41,100 x 100 (small / vertex-heavy),Wire sphere fast,7494.15,7497.66,0.04683653249535347,133.38
+teensy41,100 x 100 (small / vertex-heavy),Wire sphere AA,2682.3149999999996,2689.08,0.25220751477736947,371.88
+teensy41,100 x 100 (small / vertex-heavy),Wire sphere thick,364.53999999999996,364.58,0.010972732759095827,2742.88
+teensy41,100 x 100 (small / vertex-heavy),Wire bunny fast,784.385,788.02,0.46342038667235297,1269
+teensy41,100 x 100 (small / vertex-heavy),Wire bunny AA,332.195,332.45,0.07676214271736814,3008
+teensy41,100 x 100 (small / vertex-heavy),Wire bunny thick,34.25,34.25,0.0,29199.75
+teensy41,200 x 200 (medium / balanced),Buddha GOURAUD,46.65,46.64,-0.02143622722400318,21439.9
+teensy41,200 x 200 (medium / balanced),Buddha FLAT,54.425,54.43,0.009186954524587065,18373.27
+teensy41,200 x 200 (medium / balanced),Buddha ORTHO,49.16,49.16,0.0,20343.4
+teensy41,200 x 200 (medium / balanced),Buddha (close),64.78,64.78,0.0,15435.97
+teensy41,200 x 200 (medium / balanced),Buddha (clipped),88.805,88.79,-0.016890940825409206,11262.47
+teensy41,200 x 200 (medium / balanced),Buddha (far),63.26,63.26,0.0,15807.17
+teensy41,200 x 200 (medium / balanced),Buddha (farclip),62.775000000000006,62.78,0.00796495420150034,15927.8
+teensy41,200 x 200 (medium / balanced),R2D2 GOURAUD,87.94999999999999,87.96,0.011370096645824113,11368.6
+teensy41,200 x 200 (medium / balanced),R2D2 FLAT,107.955,107.94,-0.013894678338199906,9264.1
+teensy41,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,48.995000000000005,49.0,0.010205122971718161,20406.67
+teensy41,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,39.67,39.66,-0.02520796571717776,25215.33
+teensy41,200 x 200 (medium / balanced),R2D2 (close),37.504999999999995,37.5,-0.013331555792550631,26669.73
+teensy41,200 x 200 (medium / balanced),R2D2 (far),110.10499999999999,110.08,-0.02270559920075632,9084.23
+teensy41,200 x 200 (medium / balanced),R2D2 (farclip),113.655,113.67,0.013197835554978887,8797.77
+teensy41,200 x 200 (medium / balanced),Bunny GOURAUD,292.805,292.88,0.025614316695410366,3414.4
+teensy41,200 x 200 (medium / balanced),Bunny FLAT,374.895,374.66,-0.06268421824776604,2669.1
+teensy41,200 x 200 (medium / balanced),Bunny TEX_NEAREST,134.48000000000002,134.55,0.052052349791775754,7432.4
+teensy41,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,117.485,117.68,0.1659786355705073,8497.5
+teensy41,200 x 200 (medium / balanced),Bunny ORTHO TEX,149.3,149.64,0.2277294038847799,6682.83
+teensy41,200 x 200 (medium / balanced),Bunny (close),113.44,113.48,0.03526093088859206,8812.17
+teensy41,200 x 200 (medium / balanced),Bunny (far),425.725,425.0,-0.17029772740619897,2352.97
+teensy41,200 x 200 (medium / balanced),Bunny (farclip),440.75,441.32,0.12932501418037035,2265.93
+teensy41,200 x 200 (medium / balanced),Large tris FLAT Z,2858.815,2869.71,0.38110196007785646,348.47
+teensy41,200 x 200 (medium / balanced),Grid small FLAT,1084.205,1083.82,-0.0355098897348749,922.67
+teensy41,200 x 200 (medium / balanced),Grid small TEX,340.375,340.37,-0.0014689680499446744,2938
+teensy41,200 x 200 (medium / balanced),Ribbon triangles,684.995,684.59,-0.059124519157072175,1460.73
+teensy41,200 x 200 (medium / balanced),Ribbon strip,760.0899999999999,760.03,-0.007893802049752097,1315.73
+teensy41,200 x 200 (medium / balanced),Ribbon quads,753.94,754.07,0.0172427514125717,1326.13
+teensy41,200 x 200 (medium / balanced),Wire rib tri fast,2159.535,2158.08,-0.06737561558390892,463.38
+teensy41,200 x 200 (medium / balanced),Wire rib strip fast,3331.255,3326.4,-0.1457408694320872,300.62
+teensy41,200 x 200 (medium / balanced),Wire rib quad fast,3041.245,3042.98,0.057049004601728015,328.62
+teensy41,200 x 200 (medium / balanced),Wire rib tri AA,521.975,522.3,0.06226351836773336,1914.62
+teensy41,200 x 200 (medium / balanced),Wire rib strip AA,862.115,862.35,0.02725854439373787,1159.62
+teensy41,200 x 200 (medium / balanced),Wire rib quad AA,886.6700000000001,886.72,0.005639076544827759,1127.75
+teensy41,200 x 200 (medium / balanced),Wire rib tri thick,70.33,70.33,0.0,14219
+teensy41,200 x 200 (medium / balanced),Wire rib strip thick,112.79,112.78,-0.008866034222898556,8866.62
+teensy41,200 x 200 (medium / balanced),Wire rib quad thick,113.495,113.49,-0.004405480417646324,8811.25
+teensy41,200 x 200 (medium / balanced),Grid near clip TEX,308.65999999999997,308.63,-0.009719432385135729,3240.1
+teensy41,200 x 200 (medium / balanced),Cube direct FLAT,1349.1,1349.41,0.022978281817520596,741.07
+teensy41,200 x 200 (medium / balanced),Cube direct TEX,124.59,124.59,0.0,8026.2
+teensy41,200 x 200 (medium / balanced),Sphere direct GOUR,573.13,573.43,0.0523441453073481,1743.9
+teensy41,200 x 200 (medium / balanced),Sphere direct TEX,261.81,261.82,0.0038195638058180492,3819.4
+teensy41,200 x 200 (medium / balanced),Vertex color direct,1163.7350000000001,1164.14,0.03480173750896043,859
+teensy41,200 x 200 (medium / balanced),Point cloud pixels,11355.060000000001,11355.03,-0.0002641993965712963,88.07
+teensy41,200 x 200 (medium / balanced),Point cloud dots,1889.4650000000001,1888.93,-0.028314893369296712,529.4
+teensy41,200 x 200 (medium / balanced),Wire cube fast,65789.48,66225.16,0.6622335364255827,15.1
+teensy41,200 x 200 (medium / balanced),Wire cube AA,17590.27,17667.85,0.4410392791014406,56.6
+teensy41,200 x 200 (medium / balanced),Wire cube thick,3446.495,3447.09,0.017263915949405906,290.1
+teensy41,200 x 200 (medium / balanced),Wire sphere fast,6714.225,6728.34,0.21022530522882832,148.62
+teensy41,200 x 200 (medium / balanced),Wire sphere AA,1973.85,1973.85,0.0,506.62
+teensy41,200 x 200 (medium / balanced),Wire sphere thick,305.565,305.55,-0.004908939178238647,3272.75
+teensy41,200 x 200 (medium / balanced),Wire bunny fast,734.425,732.27,-0.2934268305136656,1365.62
+teensy41,200 x 200 (medium / balanced),Wire bunny AA,283.77,284.32,0.19381893787222548,3517.12
+teensy41,200 x 200 (medium / balanced),Wire bunny thick,31.76,31.76,0.0,31487.88
+teensy41,320 x 240 (large / ILI9341),Buddha GOURAUD,44.55,44.55,0.0,22448.6
+teensy41,320 x 240 (large / ILI9341),Buddha FLAT,52.465,52.46,-0.009530162965787348,19062.37
+teensy41,320 x 240 (large / ILI9341),Buddha ORTHO,47.17,47.18,0.02119991520033171,21197.07
+teensy41,320 x 240 (large / ILI9341),Buddha (close),52.995000000000005,53.0,0.00943485234454755,18868.7
+teensy41,320 x 240 (large / ILI9341),Buddha (clipped),79.33,79.34,0.012605571662671622,12603.8
+teensy41,320 x 240 (large / ILI9341),Buddha (far),62.224999999999994,62.22,-0.00803535556447299,16071.73
+teensy41,320 x 240 (large / ILI9341),Buddha (farclip),61.9,61.9,0.0,16154.43
+teensy41,320 x 240 (large / ILI9341),R2D2 GOURAUD,80.555,80.58,0.031034696790999128,12409.67
+teensy41,320 x 240 (large / ILI9341),R2D2 FLAT,101.42,101.38,-0.03943995267206013,9864.17
+teensy41,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,43.01,43.0,-0.023250406882113772,23253.4
+teensy41,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,34.835,34.84,0.014353380221043821,28702.3
+teensy41,320 x 240 (large / ILI9341),R2D2 (close),21.57,21.57,0.0,46355.83
+teensy41,320 x 240 (large / ILI9341),R2D2 (far),103.985,103.95,-0.03365870077414179,9620.17
+teensy41,320 x 240 (large / ILI9341),R2D2 (farclip),108.83,108.81,-0.018377285674897603,9190.47
+teensy41,320 x 240 (large / ILI9341),Bunny GOURAUD,260.01,260.18,0.06538210068844919,3843.47
+teensy41,320 x 240 (large / ILI9341),Bunny FLAT,343.46500000000003,344.06,0.17323453627007268,2906.5
+teensy41,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,119.255,119.23,-0.020963481615021706,8387.43
+teensy41,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,99.9,99.8,-0.10010010010010895,10020.23
+teensy41,320 x 240 (large / ILI9341),Bunny ORTHO TEX,135.87,135.85,-0.01471995289615835,7361
+teensy41,320 x 240 (large / ILI9341),Bunny (close),68.74000000000001,68.74,-2.220446049250313e-14,14548.53
+teensy41,320 x 240 (large / ILI9341),Bunny (far),396.40999999999997,397.2,0.19928861532252373,2517.63
+teensy41,320 x 240 (large / ILI9341),Bunny (farclip),411.815,413.48,0.40430775955222487,2418.5
+teensy41,320 x 240 (large / ILI9341),Large tris FLAT Z,1850.94,1856.67,0.309572433466232,538.6
+teensy41,320 x 240 (large / ILI9341),Grid small FLAT,841.965,841.42,-0.0647295315125973,1188.47
+teensy41,320 x 240 (large / ILI9341),Grid small TEX,224.56,224.57,0.004453152832195606,4452.87
+teensy41,320 x 240 (large / ILI9341),Ribbon triangles,480.325,480.62,0.06141674907615968,2080.67
+teensy41,320 x 240 (large / ILI9341),Ribbon strip,514.87,514.86,-0.0019422378464417633,1942.27
+teensy41,320 x 240 (large / ILI9341),Ribbon quads,513.355,513.35,-0.0009739848642720261,1948
+teensy41,320 x 240 (large / ILI9341),Wire rib tri fast,1974.335,1974.33,-0.00025324982843022426,506.5
+teensy41,320 x 240 (large / ILI9341),Wire rib strip fast,3098.9700000000003,3100.78,0.05840650280577453,322.5
+teensy41,320 x 240 (large / ILI9341),Wire rib quad fast,2857.14,2856.12,-0.03570003570003699,350.12
+teensy41,320 x 240 (large / ILI9341),Wire rib tri AA,446.365,446.38,0.003360478532132838,2240.25
+teensy41,320 x 240 (large / ILI9341),Wire rib strip AA,750.96,750.96,0.0,1331.62
+teensy41,320 x 240 (large / ILI9341),Wire rib quad AA,771.825,771.75,-0.00971722864639979,1295.75
+teensy41,320 x 240 (large / ILI9341),Wire rib tri thick,63.88,63.87,-0.01565435190984399,15655.62
+teensy41,320 x 240 (large / ILI9341),Wire rib strip thick,103.62,103.62,0.0,9651
+teensy41,320 x 240 (large / ILI9341),Wire rib quad thick,104.28,104.27,-0.009589566551593265,9590.25
+teensy41,320 x 240 (large / ILI9341),Grid near clip TEX,183.175,183.17,-0.0027296301351342755,5459.5
+teensy41,320 x 240 (large / ILI9341),Cube direct FLAT,865.15,865.3,0.017338033866964864,1155.67
+teensy41,320 x 240 (large / ILI9341),Cube direct TEX,79.38,79.37,-0.012597631645239193,12598.53
+teensy41,320 x 240 (large / ILI9341),Sphere direct GOUR,424.425,424.38,-0.010602579961127567,2356.4
+teensy41,320 x 240 (large / ILI9341),Sphere direct TEX,187.62,187.65,0.015989766549417972,5329.2
+teensy41,320 x 240 (large / ILI9341),Vertex color direct,807.86,807.88,0.002475676478597144,1237.8
+teensy41,320 x 240 (large / ILI9341),Point cloud pixels,10932.95,10940.92,0.07289889736987742,91.4
+teensy41,320 x 240 (large / ILI9341),Point cloud dots,1728.1599999999999,1729.21,0.06075826312379462,578.3
+teensy41,320 x 240 (large / ILI9341),Wire cube fast,54794.93,54347.83,-0.8159514028031389,18.4
+teensy41,320 x 240 (large / ILI9341),Wire cube AA,11293.055,11273.96,-0.16908622157600917,88.7
+teensy41,320 x 240 (large / ILI9341),Wire cube thick,2507.52,2507.52,0.0,398.8
+teensy41,320 x 240 (large / ILI9341),Wire sphere fast,6436.045,6436.04,-7.768746178582475e-05,155.38
+teensy41,320 x 240 (large / ILI9341),Wire sphere AA,1783.92,1783.72,-0.011211265079158483,560.62
+teensy41,320 x 240 (large / ILI9341),Wire sphere thick,287.68,287.7,0.006952169076734904,3475.88
+teensy41,320 x 240 (large / ILI9341),Wire bunny fast,721.2750000000001,719.3,-0.2738206647949992,1390.25
+teensy41,320 x 240 (large / ILI9341),Wire bunny AA,269.40999999999997,269.25,-0.05938903529935091,3714
+teensy41,320 x 240 (large / ILI9341),Wire bunny thick,30.95,30.94,-0.03231017770597422,32317.88

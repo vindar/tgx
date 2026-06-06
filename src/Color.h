@@ -646,9 +646,7 @@ struct RGB565
     */
     inline RGB565 meanColor(RGB565 colA, RGB565 colB)
         {
-        return RGB565( ((int)colA.R + (int)colB.R) >> 1,
-                       ((int)colA.G + (int)colB.G) >> 1,
-                       ((int)colA.B + (int)colB.B) >> 1);
+        return RGB565((uint16_t)((colA.val & colB.val) + (((colA.val ^ colB.val) & 0xF7DEu) >> 1)));
         }
 
 
