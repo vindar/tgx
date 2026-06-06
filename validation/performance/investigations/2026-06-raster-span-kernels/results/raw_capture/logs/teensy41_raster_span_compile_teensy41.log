@@ -1,0 +1,38 @@
+
+2026-06-06 18:38:50.410 BOARD=teensy41
+2026-06-06 18:38:50.423 PORT=COM3
+2026-06-06 18:38:50.424 UPLOAD_PORT=usb:80000/3/0/1
+2026-06-06 18:38:50.426 FQBN=teensy:avr:teensy41:usb=serial,speed=600,opt=o3std
+2026-06-06 18:38:50.428 SKETCH=D:\Programmation\tgx\validation\performance\investigations\2026-06-raster-span-kernels\sketches\RasterSpanKernelBench
+2026-06-06 18:38:50.430 PARSE_MODE=generic
+2026-06-06 18:38:50.432 VISIBLE_PORTS_BEFORE=COM10,COM21,COM3,COM5,COM6,COM7
+2026-06-06 18:38:50.433 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot circuit kit      esp32:esp32:ozobot_circuit_kit        esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-06 18:38:50.438 ATTEMPT=1
+2026-06-06 18:38:50.733 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-06 18:38:50.742 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn teensy:avr:teensy41:usb=serial,speed=600,opt=o3std --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\validation\performance\builds\teensy41_raster_span_compile_teensy41 D:\Programmation\tgx\validation\performance\investigations\2026-06-raster-span-kernels\sketches\RasterSpanKernelBench
+2026-06-06 18:39:09.329 ARDUINO: In file included from D:\Programmation\tgx\validation\performance\investigations\2026-06-raster-span-kernels\sketches\RasterSpanKernelBench\RasterSpanKernelBench.ino:1:
+2026-06-06 18:39:09.331 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-raster-span-kernels\sketches\RasterSpanKernelBench\RasterSpanKernelBenchImpl.h:197:17: warning: 'uint32_t checksumFloatBits(const float*, uint32_t)' defined but not used [-Wunused-function]
+2026-06-06 18:39:09.333 ARDUINO:   197 | static uint32_t checksumFloatBits(const float* p, uint32_t n)
+2026-06-06 18:39:09.335 ARDUINO:       |                 ^~~~~~~~~~~~~~~~~
+2026-06-06 18:39:09.338 ARDUINO: D:\Programmation\tgx\validation\performance\investigations\2026-06-raster-span-kernels\sketches\RasterSpanKernelBench\RasterSpanKernelBenchImpl.h:187:17: warning: 'uint32_t checksum16(const uint16_t*, uint32_t)' defined but not used [-Wunused-function]
+2026-06-06 18:39:09.340 ARDUINO:   187 | static uint32_t checksum16(const uint16_t* p, uint32_t n)
+2026-06-06 18:39:09.341 ARDUINO:       |                 ^~~~~~~~~~
+2026-06-06 18:39:09.344 ARDUINO: Memory Usage on Teensy 4.1:
+2026-06-06 18:39:09.345 ARDUINO:   FLASH: code:19780, data:3016, headers:8944   free for files:8094724
+2026-06-06 18:39:09.347 ARDUINO:    RAM1: variables:232576, code:17264, padding:15504   free for local variables:258944
+2026-06-06 18:39:09.349 ARDUINO:    RAM2: variables:12416  free for malloc/new:511872
+2026-06-06 18:39:09.350 ARDUINO_EXIT_CODE=0
+2026-06-06 18:39:09.376 FINAL_STATUS=SUCCESS

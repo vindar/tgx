@@ -1,0 +1,86 @@
+[
+    {
+        "t_ms":  4084,
+        "line":  "TGX_MACRO_PROBE_BEGIN"
+    },
+    {
+        "t_ms":  4091,
+        "line":  "TGX_INLINE=__attribute__((always_inline))"
+    },
+    {
+        "t_ms":  4091,
+        "line":  "TGX_NOINLINE="
+    },
+    {
+        "t_ms":  4091,
+        "line":  "TGX_INLINE_ZDIVIDE=__attribute__((always_inline))"
+    },
+    {
+        "t_ms":  4091,
+        "line":  "TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS=1"
+    },
+    {
+        "t_ms":  4092,
+        "line":  "TGX_USE_FAST_INV_TRICK=1"
+    },
+    {
+        "t_ms":  4092,
+        "line":  "TGX_USE_FAST_SQRT_TRICK=1"
+    },
+    {
+        "t_ms":  4092,
+        "line":  "TGX_USE_FAST_INV_SQRT_TRICK=1"
+    },
+    {
+        "t_ms":  4092,
+        "line":  "TGX_USE_FMA_MATH=0"
+    },
+    {
+        "t_ms":  4092,
+        "line":  "ARDUINO_TEENSY41=0"
+    },
+    {
+        "t_ms":  4093,
+        "line":  "ARDUINO_ARCH_RP2040=1"
+    },
+    {
+        "t_ms":  4093,
+        "line":  "ARDUINO_ARCH_RP2350=0"
+    },
+    {
+        "t_ms":  4093,
+        "line":  "PICO_RP2040=0"
+    },
+    {
+        "t_ms":  4093,
+        "line":  "PICO_RP2350=1"
+    },
+    {
+        "t_ms":  4093,
+        "line":  "ESP32=0"
+    },
+    {
+        "t_ms":  4093,
+        "line":  "ESP32S3=0"
+    },
+    {
+        "t_ms":  4094,
+        "line":  "CONFIG_IDF_TARGET_ESP32=0"
+    },
+    {
+        "t_ms":  4094,
+        "line":  "CONFIG_IDF_TARGET_ESP32S3=0"
+    },
+    {
+        "t_ms":  4094,
+        "line":  "__ARM_ARCH_8M_MAIN__=1"
+    },
+    {
+        "t_ms":  4094,
+        "line":  "TGX_MACRO_PROBE_OK"
+    },
+    {
+        "t_ms":  4094,
+        "line":  "TGX_MACRO_PROBE_END"
+    }
+]
