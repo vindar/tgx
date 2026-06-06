@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+  65856	  10944	  46592	 123392	  1e200	validation\performance\builds\teensy41_hot3d_rgb565_bench_teensy41_run1\RGB565Hot3DKernelBench.ino.elf

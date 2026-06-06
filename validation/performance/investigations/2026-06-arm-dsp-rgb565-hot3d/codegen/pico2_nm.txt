@@ -1,0 +1,643 @@
+2000a352 00000001 B __otherCoreIdled
+2000a353 00000001 b _app_driver_count
+2000a354 00000001 b _cdcd_fifo_cfg
+2000a355 00000001 b _sof_enable
+2000a48c 00000001 b _usbd_queued_setup
+20001038 00000001 t _usbd_rhport
+2000a338 00000001 B _MFIFO::_doorbell
+20000f9c 00000001 t USBClass::addEntry(USBClass::Entry**, int, void (*)(int, unsigned char*, int, void*), void const*, unsigned int, int, unsigned long)::id
+20001978 00000001 b completed.1
+2000a48f 00000001 V core1_disable_systick
+2000a490 00000001 V core1_separate_stack
+2000a493 00000001 b irq_handler_chain_free_slot_head
+20001039 00000001 t striped_spin_lock_num
+2000a49c 00000001 b user_irq_claimed
+20000d1c 00000002 W __aeabi_idiv0
+20000d1c 00000002 W __aeabi_ldiv0
+10014260 00000002 T __retarget_lock_close_recursive
+2000a376 00000002 B _tusb_rhport_role
+2000a48d 00000002 b claimed
+1000879a 00000002 t core1_trampoline
+2000a491 00000002 b doorbell_claimed
+10008994 00000002 t first_per_core_initializer
+100142d6 00000002 W hidd_init
+100142dc 00000002 W hidd_reset
+10007394 00000002 W initVariant
+100142ea 00000002 W midid_init
+100142f0 00000002 W midid_reset
+100142fe 00000002 W mscd_init
+10014300 00000002 W mscd_reset
+1001430e 00000002 W netd_init
+10014314 00000002 W netd_reset
+1000a82c 00000002 T rp2040_usb_device_enumeration_fix
+10008c48 00000002 W tud_event_hook_cb
+10008c58 00000002 W tud_mount_cb
+10008c5e 00000002 W tud_resume_cb
+10008c4a 00000002 W tud_sof_cb
+10008c5c 00000002 W tud_suspend_cb
+10008c5a 00000002 W tud_umount_cb
+200019cc 00000004 B __atexit
+20001618 00000004 T __atexit_recursive_mutex
+10010754 00000004 T __localeconv_l
+200019c0 00000004 B __malloc_max_sbrked_mem
+200019c4 00000004 B __malloc_max_total_mem
+20001208 00000004 T __malloc_sbrk_base
+20001994 00000004 B __malloc_top_pad
+2000120c 00000004 T __malloc_trim_threshold
+10014424 00000004 T __pre_init_first_per_core_initializer
+1001440c 00000004 T __pre_init_runtime_init_boot_locks_reset
+10014414 00000004 T __pre_init_runtime_init_bootrom_locking_enable
+100143f8 00000004 T __pre_init_runtime_init_bootrom_reset
+10014404 00000004 T __pre_init_runtime_init_clocks
+10014420 00000004 T __pre_init_runtime_init_default_alarm_pool
+100143fc 00000004 T __pre_init_runtime_init_early_resets
+1001441c 00000004 T __pre_init_runtime_init_install_ram_vector_table
+10014418 00000004 T __pre_init_runtime_init_mutex
+10014428 00000004 T __pre_init_runtime_init_per_core_bootrom_reset
+1001442c 00000004 T __pre_init_runtime_init_per_core_enable_coprocessors
+10014434 00000004 T __pre_init_runtime_init_per_core_irq_priorities
+10014408 00000004 T __pre_init_runtime_init_post_clock_resets
+10014410 00000004 T __pre_init_runtime_init_spin_locks_reset
+10014400 00000004 T __pre_init_runtime_init_usb_power_down
+10014430 00000004 T __pre_init_spinlock_set_extexclall
+10014262 00000004 T __retarget_lock_acquire_recursive
+1001425c 00000004 T __retarget_lock_init_recursive
+10014266 00000004 T __retarget_lock_release_recursive
+1000f6a4 00000004 T __seofread
+20001670 00000004 B __stdio_exit_handler
+20007b0c 00000004 b _app_driver
+10014322 00000004 W _exit
+2000103c 00000004 T _impure_ptr
+20007e34 00000004 b _usbd_mutex
+20007e38 00000004 b _usbd_q
+1001426a 00000004 W _write
+20001a34 00000004 b _impure_ptr1
+100044bc 00000004 t spanMultAShiftPack(unsigned short*, unsigned short const*, unsigned long)
+20005ac0 00000004 b gSink
+20000f98 00000004 t rngState
+100072cc 00000004 T arduino::Print::print(int, int)
+10007248 00000004 T arduino::Print::println(char const*)
+20007e3c 00000004 b claimed
+20007e68 00000004 B core1_separate_stack_address
+1000a734 00000004 T dcd_edpt_close_all
+20007e6c 00000004 B e15_last_sof
+200019c8 00000004 B errno
+20007e7c 00000004 b heap_end.0
+100142e2 00000004 W hidd_control_xfer_cb
+100142d8 00000004 W hidd_deinit
+100142de 00000004 W hidd_open
+100142e6 00000004 W hidd_xfer_cb
+100142f6 00000004 W midid_control_xfer_cb
+100142ec 00000004 W midid_deinit
+100142f2 00000004 W midid_open
+100142fa 00000004 W midid_xfer_cb
+10014306 00000004 W mscd_control_xfer_cb
+10014302 00000004 W mscd_open
+1001430a 00000004 W mscd_xfer_cb
+1001431a 00000004 W netd_control_xfer_cb
+10014310 00000004 W netd_deinit
+10014316 00000004 W netd_open
+1001431e 00000004 W netd_xfer_cb
+20008280 00000004 b next_buffer_ptr
+1000848c 00000004 W runtime_init_boot_locks_reset
+10008a88 00000004 W runtime_init_spin_locks_reset
+200082a4 00000004 b sleep_notifier
+10008c4c 00000004 W tud_descriptor_bos_cb
+10008c50 00000004 W tud_descriptor_device_qualifier_cb
+10008c54 00000004 W tud_descriptor_other_speed_configuration_cb
+10008ba4 00000004 W tud_vendor_control_xfer_cb
+10009d28 00000004 T tusb_inited
+20000fa0 00000004 V usb_hid_poll_interval
+100142d0 00000006 W _read
+1000721c 00000006 T arduino::Print::print(char)
+10006738 00000006 W SerialUSB::begin(unsigned long, unsigned short)
+100143e0 00000008 t ____aeabi_idiv_veneer
+10014390 00000008 t ____aeabi_idivmod_veneer
+100143a8 00000008 t ____aeabi_uidiv_veneer
+10014398 00000008 t ____aeabi_uldivmod_veneer
+100143b8 00000008 t ___hw_endpoint_buffer_control_update32_veneer
+20000d14 00000008 T __aeabi_idivmod
+20000b40 00000008 T __aeabi_uidivmod
+20000f80 00000008 t __best_effort_wfe_or_timeout_veneer
+100143f0 00000008 t __e15_is_bulkin_ep_veneer
+100143c0 00000008 t __e15_is_critical_frame_period_veneer
+1000edbc 00000008 T __errno
+10014388 00000008 t __hw_endpoint_start_next_buffer_veneer
+20000f68 00000008 t __interrupts_veneer
+20001624 00000008 T __lock___arc4random_mutex
+2000164c 00000008 T __lock___at_quick_exit_mutex
+20001654 00000008 T __lock___atexit_recursive_mutex
+2000162c 00000008 T __lock___dd_hash_mutex
+2000163c 00000008 T __lock___env_recursive_mutex
+20001644 00000008 T __lock___malloc_recursive_mutex
+2000165c 00000008 T __lock___sfp_recursive_mutex
+20001664 00000008 T __lock___sinit_recursive_mutex
+20001634 00000008 T __lock___tz_mutex
+20000f58 00000008 t __memset_veneer
+100143b0 00000008 t __mutex_enter_blocking_veneer
+10014380 00000008 t __mutex_enter_timeout_ms_veneer
+100143a0 00000008 t __mutex_exit_veneer
+100143e8 00000008 t __mutex_try_enter_veneer
+20000f90 00000008 t __noInterrupts_veneer
+20000f78 00000008 t __panic_veneer
+100143d0 00000008 t __recursive_mutex_enter_blocking_veneer
+100143c8 00000008 t __recursive_mutex_exit_veneer
+100143d8 00000008 t __reset_non_control_endpoints_veneer
+20000f88 00000008 t __rp2040_usb_device_enumeration_fix_veneer
+20000f60 00000008 t __time_us_64_veneer
+20000f70 00000008 t __tu_fifo_write_veneer
+20000f50 00000008 t __tud_event_hook_cb_veneer
+10012fdc 00000008 T _getpid_r
+10010758 00000008 T _localeconv_r
+20007e2c 00000008 b _ubsd_mutexdef
+20001a38 00000008 b _irqStackTop
+2000161c 00000008 t _irqMutex
+20007b04 00000008 b _irqStack
+10007214 00000008 T arduino::Print::print(char const*)
+200017c8 00000008 b SerialUSB::write(unsigned char const*, unsigned int)::last_avail_time
+10008044 00000008 T alarm_pool_get_default
+1000a66c 00000008 T dcd_int_enable
+100072fe 00000008 W delay
+10010760 00000008 T localeconv
+10004644 00000008 T loop
+2000a494 00000008 b retrieved_id
+1000fb98 0000000a T __assert
+10006d8c 0000000a T USBClass::unregisterInterface(unsigned int)
+20000948 0000000a T hw_endpoint_reset_transfer
+1000f714 0000000c T __sclose
+200011f8 0000000c T __sglue
+10006c08 0000000c t _GLOBAL__sub_I__ZN9SerialUSBC2Ev
+10006c88 0000000c T USBClass::unregisterEndpointIn(int)
+100083e0 0000000c T busy_wait_ms
+1000a484 0000000c T clock_get_hz
+20007e70 0000000c B emptyString
+10008998 0000000c W hard_assertion_failure
+1000a3b4 0000000c T lock_init
+10007320 0000000c T micros
+10014f08 0000000c r p05.0
+10008286 0000000c T sleep_ms
+10008390 0000000c T time_us_64
+10006f3c 0000000c T tud_descriptor_configuration_cb
+10006ecc 0000000c T tud_descriptor_device_cb
+100096f0 0000000c T usbd_control_set_complete_callback
+10006cb2 0000000e T USBClass::unregisterEndpointOut(int)
+1000d128 0000000e T abort
+1000a38c 0000000e t spinlock_set_extexclall
+10009658 0000000e t status_stage_xact.isra.0
+1000f134 00000010 T __malloc_lock
+1000f144 00000010 T __malloc_unlock
+1000cfcc 00000010 T __sfp_lock_acquire
+1000cfdc 00000010 T __sfp_lock_release
+1000fa9c 00000010 T __sigtramp
+10014270 00000010 W _close
+10014280 00000010 W _fstat
+10014290 00000010 T _getpid
+100142a0 00000010 W _isatty
+100142b0 00000010 T _kill
+100142c0 00000010 W _lseek
+1000cbac 00000010 T _vprintf_r
+1000ed90 00000010 T _wctomb_r
+100037da 00000010 t spanFill16(unsigned short*, unsigned short, unsigned long)
+10007224 00000010 T arduino::Print::println()
+100153c0 00000010 r blanks.1
+10014de4 00000010 r blanks.1
+10015234 00000010 r blanks.1
+100083ec 00000010 T busy_wait_until
+1000839c 00000010 T busy_wait_us
+1000a474 00000010 T clock_configure_undivided
+1000879c 00000010 T core1_wrapper
+1000a694 00000010 T dcd_connect
+1000a684 00000010 T dcd_disconnect
+1000a674 00000010 T dcd_set_address
+10008490 00000010 T exception_get_vtable_handler
+1000d118 00000010 T fclose
+1000edd4 00000010 T free
+10007914 00000010 T irq_get_vtable_handler
+1000edc4 00000010 T malloc
+100087ac 00000010 t multicore_fifo_push_blocking_inline
+1000a9ec 00000010 T puts
+1000fa10 00000010 T raise
+1000833c 00000010 T timer_time_us_64
+10009f98 00000010 T tu_fifo_empty
+10008c60 00000010 T tud_connected
+100070ac 00000010 T tud_descriptor_string_cb
+10008cb8 00000010 T tud_inited
+10008c70 00000010 T tud_mounted
+10008c80 00000010 T tud_suspended
+100096e0 00000010 T usbd_control_reset
+10015244 00000010 r zeroes.0
+10014df4 00000010 r zeroes.0
+100153d0 00000010 r zeroes.0
+10006c14 00000012 W USBClass::simpleInterface(int, unsigned char*, int, void*)
+1000778a 00000012 T CoreMutex::~CoreMutex()
+1000778a 00000012 T CoreMutex::~CoreMutex()
+10008788 00000012 t multicore_fifo_pop_blocking_inline
+20007e18 00000014 b _ctrl_xfer
+1000349c 00000014 t mean2Packed(unsigned short, unsigned short)
+10003284 00000014 t refMean2(unsigned short, unsigned short)
+100072ea 00000014 T arduino::Print::println(unsigned long, int)
+10007234 00000014 T arduino::Print::println(arduino::__FlashStringHelper const*)
+10006b64 00000014 W SerialUSB::_cb(int, unsigned char*, int, void*)
+1000d02c 00000014 T calloc
+1000a2a0 00000014 T hw_claim_unlock
+1000d1dc 00000014 T realloc
+1000842e 00000014 T rom_func_lookup
+1000845c 00000014 W runtime_init_bootrom_locking_enable
+10008a60 00000014 W runtime_init_bootrom_reset
+10008a74 00000014 W runtime_init_per_core_bootrom_reset
+1000a518 00000014 T tick_start
+10006bd8 00000014 W tud_cdc_line_coding_cb
+100098a8 00000014 T tud_cdc_n_peek
+10008ca4 00000014 T tud_connect
+10008c90 00000014 T tud_disconnect
+10007568 00000016 T __wrap_free
+1000379c 00000016 t spanCopy16(unsigned short*, unsigned short const*, unsigned long)
+1000779c 00000016 T arduino::String::invalidate()
+1000a2b4 00000016 T hw_is_claimed
+1000834c 00000016 T timer_busy_wait_until
+1000cb94 00000016 T vprintf
+10007518 00000018 T __wrap_malloc
+10012bb8 00000018 T _fiprintf_r
+1000cbbc 00000018 T _mbtowc_r
+1000326c 00000018 t xorshift32()
+100077b2 00000018 T arduino::String::changeBuffer(unsigned int)
+10006c28 00000018 T USBClass::timerTask(long, void*)
+1000673e 00000018 T SerialUSB::write(unsigned char)
+10009e30 00000018 t advance_index
+20001004 00000018 t default_alarm_pool
+100078fc 00000018 T irq_set_pending
+1000a354 00000018 T next_striped_spin_lock_num
+2000197c 00000018 b object.0
+1000a39c 00000018 T spin_locks_reset
+100083ac 00000018 T timer_busy_wait_us_32
+10009860 00000018 T tud_cdc_n_available
+10009978 00000018 T tud_cdc_n_write_available
+100141b4 00000018 T vfiprintf
+10012a24 00000018 T vfprintf
+2000a339 00000019 b USBClass::tud_descriptor_device_cb()::idString
+100072d0 0000001a T arduino::Print::print(unsigned long, int)
+10007306 0000001a T millis
+10007c14 0000001a T mutex_init
+10007c2e 0000001a T recursive_mutex_init
+10008442 0000001a T rom_reset_usb_boot
+10012acc 0000001a T sysconf
+1000eda0 0000001c T __ascii_wctomb
+1000cd78 0000001c t __fp_lock
+1000cd94 0000001c t __fp_unlock
+100073c0 0000001c W __wrap___getreent
+10007530 0000001c T __wrap_calloc
+1000754c 0000001c T __wrap_realloc
+2000101c 0000001c T _usbd_qdef
+10006bec 0000001c W arduino::serialEventRun()
+10006a70 0000001c T SerialUSB::SerialUSB()
+10006a70 0000001c T SerialUSB::SerialUSB()
+10008470 0000001c T boot_locks_reset
+1000a3c0 0000001c T critical_section_init
+1000a6c0 0000001c T dcd_edpt0_status_complete
+1000a6a4 0000001c T dcd_sof_enable
+10008c2c 0000001c t invoke_class_control
+100088d0 0000001c T multicore_launch_core1
+10008a24 0000001c W runtime_init_per_core_enable_coprocessors
+10008a08 0000001c W runtime_init_usb_power_down
+100089a4 0000001c T runtime_run_initializers
+100089c0 0000001c T runtime_run_per_core_initializers
+200019d0 0000001c B Serial
+1000cd20 0000001c t stdio_exit_handler
+100083c4 0000001c T timer_busy_wait_ms
+100096fc 0000001c T usbd_control_set_request
+10008f64 0000001c T usbd_edpt_stalled
+10006c94 0000001e T USBClass::registerEndpointOut()
+1000cfec 00000020 T __fp_lock_all
+1000d00c 00000020 T __fp_unlock_all
+10012fe4 00000020 T __sprint_r
+2000a356 00000020 B _sw_spin_locks
+1000351c 00000020 t countMismatches(unsigned short const*, unsigned short const*, unsigned long)
+100071f4 00000020 W arduino::Print::write(char const*)
+10006d6c 00000020 T USBClass::registerInterface(int, void (*)(int, unsigned char*, int, void*), void*, unsigned int, int, unsigned long)
+10006c68 00000020 T USBClass::registerEndpointIn()
+1000f200 00000020 T exit
+100078dc 00000020 T irq_is_enabled
+20008284 00000020 b pools
+10007890 00000020 W runtime_init_per_core_irq_priorities
+10008a40 00000020 W runtime_init_post_clock_resets
+1000a36c 00000020 T spin_lock_claim_unused
+10006bb8 00000020 W tud_cdc_line_state_cb
+10008e50 00000020 T usbd_edpt_claim
+10008e70 00000020 T usbd_edpt_release
+100077ca 00000022 T arduino::String::reserve(unsigned int)
+10009f76 00000022 T tu_fifo_count
+10009fa8 00000022 T tu_fifo_full
+10012e14 00000024 T _close_r
+1001302c 00000024 T _isatty_r
+1000f154 00000024 T _sbrk_r
+100034f8 00000024 t checksum16(unsigned short const*, unsigned long)
+100037ea 00000024 t spanFill32(unsigned short*, unsigned short, unsigned long)
+1000353c 00000024 t spanMean2Ref(unsigned short*, unsigned short const*, unsigned short const*, unsigned long)
+10003560 00000024 t spanMean2Packed16(unsigned short*, unsigned short const*, unsigned short const*, unsigned long)
+20000110 00000024 W RP2040::_SystickHandler()
+1000781c 00000024 T arduino::String::String(char const*)
+1000781c 00000024 T arduino::String::String(char const*)
+10009a04 00000024 T cdcd_deinit
+1000a78c 00000024 T dcd_edpt_clear_stall
+1000a738 00000024 T dcd_edpt_xfer
+20000884 00000024 t e15_is_bulkin_ep
+1000a27c 00000024 T hw_claim_lock
+1000786c 00000024 t set_raw_irq_handler_and_unlock
+10008020 00000024 t time_reached
+10008318 00000024 T timer_hardware_alarm_claim
+10009e0c 00000024 T tu_edpt_bind_driver
+10009fca 00000024 T tu_fifo_remaining
+10009668 00000024 T tud_control_status
+10003fc4 00000026 t spanBlendRef(unsigned short*, unsigned short const*, unsigned short const*, unsigned long, unsigned long)
+100035d0 00000026 t spanBlendPacked(unsigned short*, unsigned short const*, unsigned short const*, unsigned long, unsigned long)
+10012bd0 00000026 T fiprintf
+20001998 00000028 B __malloc_current_mallinfo
+10014f40 00000028 R __mprec_bigtens
+10014f18 00000028 R __mprec_tinytens
+1000f67c 00000028 T __sread
+10013004 00000028 T _fstat_r
+10012fb4 00000028 T _kill_r
+10012e38 00000028 T _lseek_r
+10012e60 00000028 T _read_r
+10014328 00000028 W _sbrk
+10012dec 00000028 T _write_r
+10007398 00000028 T __loop()
+100037b2 00000028 t spanCopy32(unsigned short*, unsigned short const*, unsigned long)
+10003e7c 00000028 t refBlend256(unsigned short, unsigned short, unsigned long)
+1000444e 00000028 t multShiftPack(unsigned short, int, int, int)
+10003430 00000028 t blendPackedCopy(unsigned short, unsigned short, unsigned long)
+10006c40 00000028 T USBClass::usbIRQ()
+10007118 00000028 T USBClass::connect()
+20007e40 00000028 b configured_freq
+200008a8 00000028 t e15_is_critical_frame_period
+20001950 00000028 B rp2040
+10007bec 00000028 T user_irq_claim_unused
+1000a52c 00000028 T xosc_init
+2000091e 0000002a t _hw_endpoint_xfer_sync
+1000cbd4 0000002c T __ascii_mbtowc
+1000feb0 0000002c T __i2b
+1000f6e8 0000002c T __sseek
+10004422 0000002c t mean2Scalar(unsigned short, unsigned short)
+1000f8c0 0000002c T fflush
+100078b0 0000002c T irq_set_enabled
+100088a4 0000002c T multicore_launch_core1_with_stack
+10007840 0000002c T panic
+10014350 0000002c T runtime_init
+100089dc 0000002c W runtime_init_early_resets
+10007c48 0000002c W runtime_init_mutex
+10009834 0000002c T tud_cdc_n_connected
+1000f8ec 0000002e T _init_signal_r
+10008258 0000002e T sleep_us
+10008362 0000002e T timer_busy_wait_us
+100073dc 00000030 t _GLOBAL__sub_I_rp2040
+100071c4 00000030 t _GLOBAL__sub_I_USB
+100077ec 00000030 T arduino::String::copy(char const*, unsigned int)
+1000a75c 00000030 T dcd_edpt_stall
+1000a5d4 00000030 t hw_endpoint_alloc.isra.0
+1000a072 00000030 T tu_fifo_peek
+10009878 00000030 T tud_cdc_n_read
+1000fa68 00000032 T _init_signal
+10007758 00000032 T CoreMutex::CoreMutex(mutex*, unsigned char)
+10007758 00000032 T CoreMutex::CoreMutex(mutex*, unsigned char)
+100083fc 00000032 t rom_reboot.constprop.0.isra.0
+10010694 00000034 T _mprec_log10
+10008924 00000034 t _retrieve_unique_id_on_boot
+10003ea4 00000034 t spanBlendVarRef(unsigned short*, unsigned short const*, unsigned short const*, unsigned long)
+100035f8 00000034 t spanBlendVarPacked(unsigned short*, unsigned short const*, unsigned short const*, unsigned long)
+10006d38 00000034 T USBClass::removeEntry(USBClass::Entry**, unsigned int)
+100149d8 00000034 R vtable for SerialUSB
+100076d0 00000034 T interrupts
+200002ce 00000034 T mutex_enter_timeout_ms
+20000302 00000034 T mutex_exit
+10007fec 00000034 W runtime_init_default_alarm_pool
+10009d78 00000036 T tu_edpt_release
+1000a20a 00000036 T tu_fifo_clear
+1000cf94 00000038 T __sinit
+10006870 00000038 T SerialUSB::flush()
+200009fc 00000038 T hw_endpoint_xfer_continue
+100088ec 00000038 T multicore_doorbell_claim_unused
+1001028c 0000003a T __mcmp
+10008108 0000003a T alarm_pool_add_alarm_at
+1000a2ca 0000003a T hw_claim_or_assert
+1000a240 0000003a T tu_fifo_set_overwritable
+20000ef8 0000003c T __clzsi2
+1000724c 0000003c T arduino::Print::printNumber(unsigned long, unsigned char)
+10006834 0000003c T SerialUSB::availableForWrite()
+10006a34 0000003c T SerialUSB::end()
+100067a0 0000003c T SerialUSB::available()
+10006994 0000003c T SerialUSB::operator bool()
+10009a28 0000003c T cdcd_reset
+1000cd3c 0000003c t cleanup_stdio
+1000a7f0 0000003c T hw_endpoint_xfer_start
+10008958 0000003c T pico_get_unique_board_id_string
+20000594 0000003c t reset_non_control_endpoints
+10007c74 0000003c t sleep_until_callback
+1000993c 0000003c T tud_cdc_n_write
+10008f28 0000003c T usbd_edpt_clear_stall
+10008eec 0000003c T usbd_edpt_stall
+20000d20 0000003e T __aeabi_uldivmod
+100106c8 0000003e T __copybits
+10009fee 0000003e T tu_fifo_read
+1000fb58 00000040 T __assert_func
+1000f6a8 00000040 T __swrite
+10010470 00000040 T __ulp
+20007dd8 00000040 b _ctrl_epbuf
+10006b78 00000040 T SerialUSB::checkSerialReset()
+2000a2f8 00000040 b USBClass::tud_descriptor_string_cb(unsigned char, unsigned short)::desc_str
+1000a7b0 00000040 T rp2040_usb_init
+1000fb14 00000044 T _fwalk_sglue
+20000954 00000044 T _hw_endpoint_buffer_control_update32
+1000f91c 00000044 T _signal_r
+10004478 00000044 t spanMultShiftPack(unsigned short*, unsigned short const*, unsigned long)
+10003458 00000044 t blendScalarWeighted(unsigned short, unsigned short, unsigned long)
+20000134 00000044 W _MFIFO::_irq()
+10007288 00000044 T arduino::Print::print(long, int)
+10008a8c 00000044 T runtime_init_install_ram_vector_table
+10008db0 00000044 T usbd_edpt_open
+1000a02c 00000046 T tu_fifo_read_n
+100032e8 00000048 t refTriangle(unsigned short, long, unsigned short, long, unsigned short, long)
+100044c0 00000048 t blendChannelDiff(unsigned short, unsigned short, unsigned long)
+100034b0 00000048 t trianglePackedCopy(unsigned short, long, unsigned short, long, unsigned short, long)
+10007064 00000048 T USBClass::tud_descriptor_string_cb(unsigned char, unsigned short)
+10006758 00000048 T SerialUSB::peek()
+100084a0 00000048 T exception_set_exclusive_handler
+20000336 00000048 T recursive_mutex_exit
+1000fa20 00000048 T signal
+200019ec 00000048 B USB
+10010708 0000004a T __any_on
+10009e48 0000004a t _tu_fifo_peek
+1000fc28 0000004c T _Bfree
+20001040 0000004c T _impure_data
+10003584 0000004c t spanMean2Packed32(unsigned short*, unsigned short const*, unsigned short const*, unsigned long)
+10007924 0000004c T irq_set_exclusive_handler
+20000178 0000004c T mutex_enter_blocking
+2000021c 0000004c T mutex_try_enter
+10009d2c 0000004c T tu_edpt_claim
+100043d4 0000004e t mean4Scalar(unsigned short, unsigned short, unsigned short, unsigned short)
+1000a304 0000004e T hw_claim_unused_from_range
+200008d0 0000004e t sync_ep_buffer
+100033e0 00000050 t refRgbfTo565(tgx::RGBf const&)
+10003298 00000050 t refMean4(unsigned short, unsigned short, unsigned short, unsigned short)
+1000f960 00000052 T _raise_r
+2000a378 00000054 b _usbd_dev
+100040f0 00000054 t rgbfScalar(tgx::RGBf const&)
+10003748 00000054 t spanBilinearRef(unsigned short*, unsigned short const*, unsigned short const*, unsigned short const*, unsigned short const*, unsigned long)
+100042b4 00000054 t spanBilinearScalar(unsigned short*, unsigned short const*, unsigned short const*, unsigned short const*, unsigned short const*, unsigned long)
+10009604 00000054 t data_stage_xact
+10007704 00000054 T noInterrupts
+1000968c 00000054 T tud_control_xfer
+1000f318 00000058 T __ssprint_r
+10012f5c 00000058 T __swhatbuf_r
+100067dc 00000058 T SerialUSB::read()
+1000a6dc 00000058 T dcd_edpt_open
+200001c4 00000058 T recursive_mutex_enter_blocking
+1000f9b4 0000005a T __sigtramp_r
+10009f1c 0000005a T tu_fifo_config
+10003690 0000005c t spanTriangleRef(unsigned short*, unsigned short const*, unsigned short const*, unsigned short const*, unsigned long)
+100036ec 0000005c t spanTrianglePacked(unsigned short*, unsigned short const*, unsigned short const*, unsigned short const*, unsigned long)
+10004378 0000005c t spanTriangleScalar(unsigned short*, unsigned short const*, unsigned short const*, unsigned short const*, unsigned long)
+100070bc 0000005c T USBClass::disconnect()
+10006d98 0000005c T USBClass::registerString(char const*)
+1000cc00 0000005c T strlen
+1000a830 0000005c T strncpy
+10008e90 0000005c T usbd_edpt_xfer
+10008df4 0000005c T usbd_open_edpt_pair
+1000fdc0 0000005e T __hi0bits
+10009dae 0000005e T tu_edpt_validate
+1000a0a2 0000005e T tu_fifo_write
+1000f860 00000060 T _fflush_r
+20000820 00000062 t prepare_ep_buffer
+1000362c 00000064 t spanMultRef(unsigned short*, unsigned short const*, unsigned long)
+10004508 00000064 t spanMultARef(unsigned short*, unsigned short const*, unsigned long)
+10006ed8 00000064 T USBClass::setupDescHIDReport()
+100069d0 00000064 T SerialUSB::begin(unsigned long)
+20000998 00000064 T hw_endpoint_start_next_buffer
+10009cc4 00000064 T tusb_rhport_init
+20000268 00000066 T mutex_enter_block_until
+1001062c 00000068 T __ratio
+1000732c 00000068 T main1()
+1000a604 00000068 T dcd_init
+1000faac 00000068 T frexp
+10008834 0000006e T multicore_launch_core1_raw
+100097c4 00000070 t _prep_out_transaction.isra.0
+10004308 00000070 t triangleScalar(unsigned short, long, unsigned short, long, unsigned short, long)
+10008142 00000072 T alarm_pool_cancel_alarm
+10009990 00000074 T cdcd_init
+10006cc0 00000078 T USBClass::addEntry(USBClass::Entry**, int, void (*)(int, unsigned char*, int, void*), void const*, unsigned int, int, unsigned long)
+100087bc 00000078 t multicore_doorbell_claim_under_lock
+1000f220 0000007c T _snprintf_r
+1000d7ac 0000007c T memchr
+1000f29c 0000007c T snprintf
+20007b10 00000080 b _cdcd_epbuf
+1000a554 00000080 t hw_endpoint_init
+200005d0 00000080 t hw_handle_buff_status
+100098bc 00000080 T tud_cdc_n_write_flush
+1000fba4 00000084 T _Balloc
+10007140 00000084 T USBClass::begin()
+10008294 00000084 T best_effort_wfe_or_timeout
+10008ba8 00000084 t configuration_reset
+1000f178 00000084 T strcmp
+1000a490 00000088 T pll_init
+10009e92 0000008a t _tu_fifo_peek_n.constprop.0
+10007f60 0000008c t alarm_pool_post_alloc_init
+1000fe20 0000008e T __lo0bits
+10012a3c 00000090 t __sbprintf
+100141cc 00000090 t __sbprintf
+1000a88c 00000092 T memset
+1000a3dc 00000098 t clock_configure_internal
+1000fc74 0000009c T __multadd
+10014a0c 000000a0 r _usbd_driver
+1000d138 000000a4 T _calloc_r
+100081b4 000000a4 T sleep_until
+10009a64 000000a8 T cdcd_open
+10007b44 000000a8 T irq_add_tail_to_free_list
+10009718 000000ac T usbd_control_xfer_cb
+1000fd10 000000b0 T __s2b
+10003330 000000b0 t refBilinear(unsigned short, unsigned short, unsigned short, unsigned short, float, float)
+10004200 000000b2 t bilinearScalar(unsigned short, unsigned short, unsigned short, unsigned short, float, float)
+1000eaec 000000b4 T _malloc_trim_r
+100104b0 000000b8 T __b2d
+10004144 000000bc t bilinearTwoStageApprox(unsigned short, unsigned short, unsigned short, unsigned short, float, float)
+1000804c 000000bc T alarm_pool_add_alarm_at_force_in_context
+2000a3cc 000000c0 B _usbd_qdef_buf
+10010568 000000c4 T __d2b
+1000cc5c 000000c4 T memmove
+10014f68 000000c8 R __mprec_tens
+1000cecc 000000c8 T __sfp
+1000a920 000000cc T _puts_r
+10009b0c 000000cc T cdcd_control_xfer_cb
+10012ae8 000000d0 T __ssputs_r
+10012e88 000000d2 T __smakebuf_r
+100038fc 000000d4 t runSpanFill(char const*, void (*)(unsigned short*, unsigned short, unsigned long), unsigned long, unsigned long)
+10008ad0 000000d4 W runtime_init_clocks
+1000d040 000000d6 T _fclose_r
+100039d0 000000d8 t runSpanCopy(char const*, void (*)(unsigned short*, unsigned short const*, unsigned long), unsigned long, unsigned long)
+10003da4 000000d8 t runSpanMult(char const*, void (*)(unsigned short*, unsigned short const*, unsigned long), unsigned long, unsigned long)
+1000456c 000000d8 t runSpanMultA(char const*, void (*)(unsigned short*, unsigned short const*, unsigned long), unsigned long, unsigned long)
+10006df4 000000d8 T USBClass::tud_descriptor_device_cb()
+10006a8c 000000d8 T SerialUSB::interfaceCB(int, unsigned char*, int)
+10008cc8 000000e8 T tud_rhport_init
+10003810 000000ec t printResult(char const*, char const*, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, char const*) [clone .constprop.0]
+10003aa8 000000ec t runSpanMean2(char const*, void (*)(unsigned short*, unsigned short const*, unsigned short const*, unsigned long), unsigned long, unsigned long)
+10003ed8 000000ec t runSpanBlendVar(char const*, void (*)(unsigned short*, unsigned short const*, unsigned short const*, unsigned long), unsigned long, unsigned long)
+100068a8 000000ec T SerialUSB::write(unsigned char const*, unsigned int)
+10009bd8 000000ec T cdcd_xfer_cb
+10012bf8 000000f2 T __swsetup_r
+10010198 000000f4 T __lshift
+10012cec 00000100 T __call_exitprocs
+10003ca4 00000100 t runSpanTriangle(char const*, void (*)(unsigned short*, unsigned short const*, unsigned short const*, unsigned short const*, unsigned long), unsigned long, unsigned long)
+10014e04 00000101 R _ctype_
+10003fec 00000104 t runSpanBlend(char const*, void (*)(unsigned short*, unsigned short const*, unsigned short const*, unsigned long, unsigned long), unsigned long, unsigned long)
+20000a34 0000010a T __udivsi3
+1000a100 0000010a T tu_fifo_write_n
+1001008c 0000010c T __pow5mult
+1000740c 0000010c W main
+10003b94 00000110 t runSpanBilinear(char const*, void (*)(unsigned short*, unsigned short const*, unsigned short const*, unsigned short const*, unsigned short const*, unsigned long), unsigned long, unsigned long)
+20000000 00000110 B ram_vector_table
+10006f48 0000011c T USBClass::setupUSBDescriptor()
+1000cdb0 0000011c t global_stdio_init.part.0
+1000f720 00000140 T __sflush_r
+20001678 00000150 B __sf
+1000d828 00000150 t quorem
+2000108c 0000016c T __global_locale
+200017d0 00000180 b default_alarm_pool_entries
+20000d60 00000198 T __udivmoddi4
+100102c8 000001a8 T __mdiff
+1000fedc 000001b0 T __multiply
+20000b48 000001cc T __divsi3
+20000650 000001d0 t dcd_rp2040_irq
+10007970 000001d4 T irq_add_shared_handler
+1000eba0 000001f0 T _free_r
+20000380 00000214 T dcd_event_handler
+20007b90 00000248 b _cdcd_itf
+10007cb0 000002b0 t alarm_pool_irq_handler
+1000f370 0000030c T __sfvwrite_r
+1000ede4 00000350 T _realloc_r
+20007e80 00000400 b hw_endpoints
+20001210 00000408 T __malloc_av_
+200082a8 00000408 b gA
+200086b0 00000408 b gB
+20008ab8 00000408 b gC
+20008ec0 00000408 b gD
+200092c8 00000408 b gOut
+200096d0 00000408 b gRef
+20009ad8 00000410 b gSpanOut
+20009ee8 00000410 b gSpanRef
+1000d1f0 000005bc T _malloc_r
+10008f80 00000684 T tud_task_ext
+20080000 00000800 b core1_stack
+20001a40 00000810 b gAx
+20002250 00000810 b gAy
+20002a60 00000810 b gC1
+20003270 00000810 b gC2
+20003a80 00000810 b gMb
+20004290 00000810 b gMg
+20004aa0 00000810 b gMr
+200052b0 00000810 b gTot
+20005ac4 00000810 b gAlpha
+10013050 00001164 T _vfiprintf_r
+1000d978 00001174 T _dtoa_r
+200062d4 00001830 b gFloat
+1000464c 000020ec T setup
+1000a9fc 00002198 T _svfprintf_r
+10010768 000022bc T _vfprintf_r

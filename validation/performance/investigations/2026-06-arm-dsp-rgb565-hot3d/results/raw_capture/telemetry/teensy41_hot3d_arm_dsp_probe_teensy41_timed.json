@@ -1,0 +1,126 @@
+[
+    {
+        "t_ms":  9216,
+        "line":  "TGX_ARM_DSP_PROBE_BEGIN"
+    },
+    {
+        "t_ms":  9221,
+        "line":  "BOARD=TEENSY41"
+    },
+    {
+        "t_ms":  9221,
+        "line":  "TGX_INLINE=__attribute__((always_inline))"
+    },
+    {
+        "t_ms":  9221,
+        "line":  "TGX_INLINE_ZDIVIDE=__attribute__((always_inline))"
+    },
+    {
+        "t_ms":  9222,
+        "line":  "__ARM_ARCH_7EM__=1"
+    },
+    {
+        "t_ms":  9222,
+        "line":  "__ARM_ARCH_8M_MAIN__=0"
+    },
+    {
+        "t_ms":  9222,
+        "line":  "__ARM_FEATURE_DSP=1"
+    },
+    {
+        "t_ms":  9222,
+        "line":  "__ARM_FEATURE_SIMD32=1"
+    },
+    {
+        "t_ms":  9222,
+        "line":  "TGX_PROBE_HAS_DSP32=1"
+    },
+    {
+        "t_ms":  9223,
+        "line":  "TGX_PROBE_HAS_THUMB2=1"
+    },
+    {
+        "t_ms":  9223,
+        "line":  "__ARM_FP=0xE"
+    },
+    {
+        "t_ms":  9223,
+        "line":  "INTRINSIC=SCALAR_UHADD16_REF COMPILED=1 RESULT=0x50007"
+    },
+    {
+        "t_ms":  9223,
+        "line":  "INTRINSIC=SCALAR_UADD16_REF COMPILED=1 RESULT=0xA000E"
+    },
+    {
+        "t_ms":  9223,
+        "line":  "INTRINSIC=SCALAR_USUB16_REF COMPILED=1 RESULT=0x40004"
+    },
+    {
+        "t_ms":  9224,
+        "line":  "INTRINSIC=SCALAR_UQADD16_REF COMPILED=1 RESULT=0xFFFFFFFF"
+    },
+    {
+        "t_ms":  9224,
+        "line":  "INTRINSIC=SCALAR_SMLAD_REF COMPILED=1 RESULT=0x5"
+    },
+    {
+        "t_ms":  9224,
+        "line":  "INTRINSIC=SCALAR_SMUAD_REF COMPILED=1 RESULT=0xFFFFFFFE"
+    },
+    {
+        "t_ms":  9224,
+        "line":  "INTRINSIC=SCALAR_PKHBT_REF COMPILED=1 RESULT=0x56781234"
+    },
+    {
+        "t_ms":  9225,
+        "line":  "INTRINSIC=SCALAR_PKHTB_REF COMPILED=1 RESULT=0xAAAABBBB"
+    },
+    {
+        "t_ms":  9225,
+        "line":  "INTRINSIC=ASM_UHADD16 COMPILED=1 RESULT=0x50007"
+    },
+    {
+        "t_ms":  9225,
+        "line":  "INTRINSIC=ASM_UADD16 COMPILED=1 RESULT=0xA000E"
+    },
+    {
+        "t_ms":  9225,
+        "line":  "INTRINSIC=ASM_USUB16 COMPILED=1 RESULT=0x40004"
+    },
+    {
+        "t_ms":  9226,
+        "line":  "INTRINSIC=ASM_UQADD16 COMPILED=1 RESULT=0xFFFFFFFF"
+    },
+    {
+        "t_ms":  9226,
+        "line":  "INTRINSIC=ASM_SMLAD COMPILED=1 RESULT=0x5"
+    },
+    {
+        "t_ms":  9226,
+        "line":  "INTRINSIC=ASM_SMUAD COMPILED=1 RESULT=0xFFFFFFFE"
+    },
+    {
+        "t_ms":  9226,
+        "line":  "INTRINSIC=ASM_PKHBT COMPILED=1 RESULT=0x56781234"
+    },
+    {
+        "t_ms":  9227,
+        "line":  "INTRINSIC=ASM_PKHTB COMPILED=1 RESULT=0xAAAABBBB"
+    },
+    {
+        "t_ms":  9227,
+        "line":  "INTRINSIC=ASM_USAT COMPILED=1 RESULT=0xFF"
+    },
+    {
+        "t_ms":  9227,
+        "line":  "INTRINSIC=ASM_USAT16 COMPILED=1 RESULT=0xFF0000"
+    },
+    {
+        "t_ms":  9227,
+        "line":  "INTRINSIC=ASM_REV16 COMPILED=1 RESULT=0x22114433"
+    },
+    {
+        "t_ms":  9227,
+        "line":  "TGX_ARM_DSP_PROBE_END"
+    }
+]
