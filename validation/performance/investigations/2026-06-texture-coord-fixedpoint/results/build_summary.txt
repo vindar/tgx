@@ -1,0 +1,6 @@
+Teensy full-length build: validation/performance/builds/teensy41_texcoord_eq_teensy41_run5_full_lengths
+Pico2 full-length build: validation/performance/builds/pico2_texcoord_eq_pico2_run5_full_lengths
+   text	   data	    bss	    dec	    hex	filename
+  28992	   8896	  22944	  60832	   eda0	D:\Programmation\tgx\validation\performance\builds\teensy41_texcoord_eq_teensy41_run5_full_lengths\TextureCoordEquivalenceBench.ino.elf
+   text	   data	    bss	    dec	    hex	filename
+ 569492	  12288	  15152	 596932	  91bc4	D:\Programmation\tgx\validation\performance\builds\pico2_texcoord_eq_pico2_run5_full_lengths\TextureCoordEquivalenceBench.ino.elf

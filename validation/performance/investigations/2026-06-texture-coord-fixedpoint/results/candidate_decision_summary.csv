@@ -1,0 +1,5 @@
+candidate,safe_subset,decision,reason
+fixed_round,"General affine+perspective/edge model, frac 8/10/12/16",rejected,General fixed path is not safe: perspective mismatch is large and affine bilinear is slower overall on Pico2 because edge/floor handling dominates.
+fixed16_interior_nearest,"Affine interior nearest, non-negative coords, whole span inside texture, len>=4",candidate_not_integrated,Exact on both boards and very fast once setup is amortized; needs production scanline safety/fallback implementation before source integration.
+fixed16_interior_bilinear,"Affine interior bilinear, floor(x)+1/floor(y)+1 inside texture, len>=4",candidate_not_integrated,Mostly exact; nonexact long subtexel rows have max channel error 1 and no pixels above one quantization step. Needs real shader/render validation before accepting approximate output.
+perspective_fixed,Perspective endpoint-linear fixed approximation,rejected,Large mismatch percentages and max channel errors up to 63; not visually safe.

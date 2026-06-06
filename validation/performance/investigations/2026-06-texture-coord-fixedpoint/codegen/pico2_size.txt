@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+ 569492	  12288	  15152	 596932	  91bc4	D:\Programmation\tgx\validation\performance\builds\pico2_texcoord_eq_pico2_run5_full_lengths\TextureCoordEquivalenceBench.ino.elf

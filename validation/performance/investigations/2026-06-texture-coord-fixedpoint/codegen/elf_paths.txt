@@ -1,0 +1,2 @@
+teensyElf=D:\Programmation\tgx\validation\performance\builds\teensy41_texcoord_eq_teensy41_run5_full_lengths\TextureCoordEquivalenceBench.ino.elf
+picoElf=D:\Programmation\tgx\validation\performance\builds\pico2_texcoord_eq_pico2_run5_full_lengths\TextureCoordEquivalenceBench.ino.elf
