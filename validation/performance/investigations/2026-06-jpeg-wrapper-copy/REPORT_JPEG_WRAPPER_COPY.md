@@ -112,7 +112,6 @@ Selected-path local row-copy speed summary:
 
 Files:
 
-- `results/jpeg_rgb565_copy_bench.csv`
 - `results/jpeg_rgb565_copy_summary.csv`
 - `results/row_memcpy_selected_speed_summary.csv`
 - `results/jpeg_memcpy_before_after_summary.csv`
@@ -147,12 +146,14 @@ The patch is portable and uses normal `memcpy`. It does not add:
 | Pico2 | 1 | 1 | 36422 | `90420DE9` | 51524 |
 | Teensy4.1 | 1 | 1 | 5100 | `90420DE9` | 51524 |
 
-CoreS3 produced a different hash/nonzero count from the other boards. The decode returned success and was captured completely, but this should be visually checked later if display-output examples are added. The portable microbench still proved exact copy equivalence for the wrapper operation itself.
+CoreS3 produced a different hash/nonzero count from the other boards in the default build. A follow-up visual pass showed the image was visually correct and isolated the difference to JPEGDEC's ESP32-S3 SIMD YCbCr-to-RGB565 conversion path. Rebuilding the same CoreS3 sketch with `-DNO_SIMD` produced the same hash as Core2/Pico2/Teensy (`90420DE9` for the display-free decoder telemetry and `93FA7269` for the visual sketch). This is not caused by TGX's row-copy optimization.
 
 Files:
 
 - `results/jpeg_example_telemetry.csv`
 - `results/jpeg_example_delta.csv`
+- `results/jpeg_visual_upload_summary.csv`
+- `notes/cores3_jpeg_hash_difference.md`
 
 No same-session before-patch real JPEG decode baseline was collected; the before/after evidence is the display-free copy microbench.
 
@@ -213,6 +214,5 @@ src/Image.inl
 Useful follow-ups:
 
 - Add public display-backed JPEG wrapper examples for M5Stack/Core2/CoreS3 and Pico2 using the telemetry style from `JpegDecoderTelemetry`.
-- Investigate why CoreS3 real JPEG framebuffer hash differs from Core2/Pico2/Teensy despite successful decode.
 - Consider a PNG truecolor opaque RGB888-to-RGB565 row conversion microbench.
 - Consider a GIF palette-to-RGB565 span helper microbench if animated GIF examples become performance-sensitive.

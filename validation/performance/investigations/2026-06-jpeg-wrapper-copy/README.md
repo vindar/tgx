@@ -14,12 +14,15 @@ platform-specific memcpy, DSP, DMA, SIMD, renderer layout changes, or shader cha
 - `results/decoder_wrapper_inventory.csv`: wrapper inventory.
 - `sketches/JpegRgb565CopyBench/`: display-free simulated JPEG RGB565 copy benchmark.
 - `sketches/JpegDecoderTelemetry/`: display-free real JPEGDEC wrapper telemetry sketch.
+- `sketches/JpegVisual/`: display-backed JPEGDEC visual validation sketch.
 - `tools/parse_jpeg_rgb565_copy_bench.py`: parser for copy benchmark telemetry.
 - `results/jpeg_rgb565_copy_summary.csv`: local old-loop vs row-memcpy before source patch.
 - `results/jpeg_memcpy_before_after_summary.csv`: post-patch run including the `production` variant.
 - `results/row_memcpy_selected_speed_summary.csv`: speed summary for the selected threshold.
 - `results/correctness_summary.csv`: mismatch summary.
 - `results/jpeg_example_telemetry.csv`: real JPEGDEC post-patch telemetry.
+- `results/jpeg_visual_upload_summary.csv`: visual upload status on the four connected boards.
+- `notes/cores3_jpeg_hash_difference.md`: CoreS3 hash difference attribution to JPEGDEC ESP32-S3 SIMD conversion.
 - `patches/jpeg_rgb565_memcpy_candidate.patch`: production patch.
 - `REPORT_JPEG_WRAPPER_COPY.md`: final report.
 
