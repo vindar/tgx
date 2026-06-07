@@ -1,0 +1,5 @@
+board,decoder,result,open_result,time_us,fb_hash,nonzero,image_w,image_h,source_file
+Core2,JPEG,1,1,37207,90420DE9,51524,320,240,validation/performance/investigations/2026-06-jpeg-wrapper-copy/results/telemetry/core2_jpeg_decoder_core2_after.txt
+CoreS3,JPEG,1,1,21345,51B99722,52092,320,240,validation/performance/investigations/2026-06-jpeg-wrapper-copy/results/telemetry/cores3_jpeg_decoder_cores3_after.txt
+Pico2,JPEG,1,1,36422,90420DE9,51524,320,240,validation/performance/investigations/2026-06-jpeg-wrapper-copy/results/telemetry/pico2_jpeg_decoder_pico2_after.txt
+Teensy41,JPEG,1,1,5100,90420DE9,51524,320,240,validation/performance/investigations/2026-06-jpeg-wrapper-copy/results/telemetry/teensy41_jpeg_decoder_teensy41_after.txt
