@@ -142,7 +142,7 @@ Color types</h1>
 <div class="line"> </div>
 <div class="line"><a class="code hl_struct" href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a> color5(color2); <span class="comment">// conversion: create a RGB32 color from RGB565, this yields RGB32(64, 128, 128, 255) - the alpha channel is set to fully opaque.</span></div>
 <div class="line">color5.setOpacity(0.5f); <span class="comment">// adjust the alpha channel in order to make the color half transparent. Other channels are multiplied accordingly (pre-multiplied alpha).</span></div>
-<div class="ttc" id="astructtgx_1_1_r_g_b32_html"><div class="ttname"><a href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a></div><div class="ttdoc">Color in R8/G8/B8/A8 format.</div><div class="ttdef"><b>Definition:</b> Color.h:1176</div></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b32_html"><div class="ttname"><a href="structtgx_1_1_r_g_b32.html">tgx::RGB32</a></div><div class="ttdoc">Color in R8/G8/B8/A8 format.</div><div class="ttdef"><b>Definition:</b> Color.h:1174</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b565_html_a82b12f6f32e77ee85cea983a1bcaedc3"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html#a82b12f6f32e77ee85cea983a1bcaedc3">tgx::RGB565::G</a></div><div class="ttdeci">uint16_t G</div><div class="ttdoc">Green channel (6 bits)</div><div class="ttdef"><b>Definition:</b> Color.h:232</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b565_html_ad4158f42b011e2cbf5f2308d9a651e1c"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html#ad4158f42b011e2cbf5f2308d9a651e1c">tgx::RGB565::R</a></div><div class="ttdeci">uint16_t R</div><div class="ttdoc">Red channel (5 bits)</div><div class="ttdef"><b>Definition:</b> Color.h:233</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b565_html_afcd4a24a75a0ec4e349eec5fdf53d3e0"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html#afcd4a24a75a0ec4e349eec5fdf53d3e0">tgx::RGB565::B</a></div><div class="ttdeci">uint16_t B</div><div class="ttdoc">Blue channel (5 bits)</div><div class="ttdef"><b>Definition:</b> Color.h:231</div></div>
@@ -358,7 +358,7 @@ Copying/converting images to different color types</h1>
 <div class="line"><span class="comment">// Beware that im1 now contains &#39;garbage&#39; (seen as RGB32 data) but writing</span></div>
 <div class="line"><span class="comment">// on im1 will change the content of im3 as they share the same buffer !</span></div>
 <div class="ttc" id="aclasstgx_1_1_image_html_a9613250401a0fe1d6283e81070e99ee8"><div class="ttname"><a href="classtgx_1_1_image.html#a9613250401a0fe1d6283e81070e99ee8">tgx::Image::convert</a></div><div class="ttdeci">Image&lt; color_dst &gt; convert()</div><div class="ttdoc">Convert this image to another type.</div></div>
-<div class="ttc" id="astructtgx_1_1_r_g_b24_html"><div class="ttname"><a href="structtgx_1_1_r_g_b24.html">tgx::RGB24</a></div><div class="ttdoc">Color in R8/G8/B8 format.</div><div class="ttdef"><b>Definition:</b> Color.h:681</div></div>
+<div class="ttc" id="astructtgx_1_1_r_g_b24_html"><div class="ttname"><a href="structtgx_1_1_r_g_b24.html">tgx::RGB24</a></div><div class="ttdoc">Color in R8/G8/B8 format.</div><div class="ttdef"><b>Definition:</b> Color.h:679</div></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>See also the methods for <a class="el" href="md_docs_intro_api_2_d.html#subsec_blitting">blitting sprites</a> which may be used for copy and color type conversion.</dd></dl>
 <h1><a class="anchor" id="autotoc_md16"></a>
 Where to go next</h1>

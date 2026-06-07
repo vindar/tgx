@@ -97,7 +97,8 @@ var NAVTREE =
         [ "Light and material", "md_docs_intro_api_3_d.html#sec_3D_lighting", null ],
         [ "Back-face culling", "md_docs_intro_api_3_d.html#sec_3D_culling", null ],
         [ "Tile rendering", "md_docs_intro_api_3_d.html#sec_3D_tiling", null ],
-        [ "Wireframe and debug drawing", "md_docs_intro_api_3_d.html#sec_3D_wireframe", null ]
+        [ "Wireframe and debug drawing", "md_docs_intro_api_3_d.html#sec_3D_wireframe", null ],
+        [ "Skyboxes", "md_docs_intro_api_3_d.html#sec_3D_skybox", null ]
       ] ],
       [ "Embedded performance checklist", "md_docs_intro_api_3_d.html#sec_3D_performance", null ],
       [ "Complete embedded example", "md_docs_intro_api_3_d.html#sec_3D_complete_example", null ],
@@ -138,11 +139,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_box2_8h.html",
-"_vec3_8h.html#aa66986f6d4db428a3fca04c45507c860",
-"classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa",
-"md_docs_intro_basic.html#autotoc_md11",
-"structtgx_1_1_mesh_material_extra3_dv2.html#a890775100b08f50fe1d39e7f10985389",
-"structtgx_1_1_r_g_bf.html#a85e44be686f26cf43f307f6c04881775"
+"_vec3_8h.html#a5a6ae22faca39c4d3a57f49343dd63ac",
+"classtgx_1_1_renderer3_d.html#a7aa41a972196500b56f457ee1683528e",
+"md_docs_intro_api_3_d.html#sec_3D_pitfalls",
+"structtgx_1_1_mesh3_dv2.html#ad9cf39d386f99b3a2b9efcc33a04823e",
+"structtgx_1_1_r_g_bf.html#a5ab323033108de570d488b149992e0c8"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

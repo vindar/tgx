@@ -14,7 +14,7 @@ var hierarchy =
     [ "tgx::Meshlet3Dv2", "structtgx_1_1_meshlet3_dv2.html", null ],
     [ "tgx::MeshMaterial3Dv2< color_t >", "structtgx_1_1_mesh_material3_dv2.html", null ],
     [ "tgx::MeshMaterialExtra3Dv2< color_t >", "structtgx_1_1_mesh_material_extra3_dv2.html", null ],
-    [ "tgx::Renderer3D< color_t, LOADED_SHADERS, ZBUFFER_t >", "classtgx_1_1_renderer3_d.html", null ],
+    [ "tgx::Renderer3D< color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS >", "classtgx_1_1_renderer3_d.html", null ],
     [ "tgx::RGB24", "structtgx_1_1_r_g_b24.html", null ],
     [ "tgx::RGB32", "structtgx_1_1_r_g_b32.html", null ],
     [ "tgx::RGB565", "structtgx_1_1_r_g_b565.html", null ],
