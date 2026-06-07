@@ -75,10 +75,41 @@ tgx::Image<tgx::RGB565> im(fb, SLX, SLY);
 // the gif decoder object
 AnimatedGIF gif; 
 
+bool firstTelemetryPrinted = false;
+
+
+uint32_t hashFramebuffer()
+    {
+    uint32_t h = 2166136261u;
+    const int n = SLX * SLY;
+    const int step = (n > 4096) ? (n / 4096) : 1;
+    for (int i = 0; i < n; i += step)
+        {
+        const uint16_t v = fb[i];
+        h ^= (uint8_t)(v & 0xffu);
+        h *= 16777619u;
+        h ^= (uint8_t)(v >> 8);
+        h *= 16777619u;
+        }
+    return h;
+    }
+
 
 void setup()
     {
-    Serial.begin(9600);
+    Serial.begin(115200);
+    const uint32_t serialDeadline = millis() + 3000;
+    while (!Serial && millis() < serialDeadline) delay(10);
+#if defined(ESP32)
+    delay(5000);
+#else
+    delay(100);
+#endif
+
+    Serial.println("TGX_EXTENSION_EXAMPLE_BEGIN");
+    Serial.println("DECODER=GIF");
+    Serial.println("BOARD=Teensy41");
+    Serial.flush();
 
     // output debug infos to serial port. 
     tft.output(&Serial);
@@ -101,7 +132,9 @@ void setup()
     im.clear(tgx::RGB565_Black);
 
     // open the image and bind the gif decoder with tgx
-    gif.open((uint8_t*)earth_128x128, sizeof(earth_128x128), TGX_GIFDraw); 
+    const int openResult = gif.open((uint8_t*)earth_128x128, sizeof(earth_128x128), TGX_GIFDraw);
+    Serial.print("OPEN_RESULT=");
+    Serial.println(openResult);
     }
 
 
@@ -109,10 +142,33 @@ void setup()
 void loop()
     {
     // draw the image (centered)
+    const uint32_t startUs = micros();
     int rc = im.GIFplayFrame(gif, { 96, 56 }); 
+    const uint32_t frameUs = micros() - startUs;
 
     // update the screen
     tft.update(fb); 
+
+    if (!firstTelemetryPrinted)
+        {
+        Serial.print("RESULT=");
+        Serial.println(rc);
+        Serial.print("SCREEN_W=");
+        Serial.println(SLX);
+        Serial.print("SCREEN_H=");
+        Serial.println(SLY);
+        Serial.print("DRAW_X=");
+        Serial.println(96);
+        Serial.print("DRAW_Y=");
+        Serial.println(56);
+        Serial.print("TIME_US=");
+        Serial.println(frameUs);
+        Serial.print("FB_HASH=");
+        Serial.println(hashFramebuffer(), HEX);
+        Serial.println("TGX_EXTENSION_EXAMPLE_END");
+        Serial.flush();
+        firstTelemetryPrinted = true;
+        }
 
     // start again when we are done. 
     if (!rc) gif.reset(); 

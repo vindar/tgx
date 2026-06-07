@@ -59,6 +59,14 @@ $boardConfig = @{
         PostDelay = 2
         PortWait = 90
     }
+    "feathers3" = @{
+        Fqbn = "esp32:esp32:adafruit_feather_esp32s3_tft"
+        Port = "COM14"
+        UploadPort = "COM14"
+        BenchmarkDefine = "TGX_BENCHMARK_ESP32S3"
+        PostDelay = 2
+        PortWait = 90
+    }
     "picow" = @{
         Fqbn = "rp2040:rp2040:rpipicow"
         Port = "COM28"
@@ -153,9 +161,15 @@ function Test-SerialOpen {
         $sp = [System.IO.Ports.SerialPort]::new($SerialPort, $SerialBaud, [System.IO.Ports.Parity]::None, 8, [System.IO.Ports.StopBits]::One)
         $sp.ReadTimeout = 250
         $sp.WriteTimeout = 250
-        $sp.DtrEnable = $true
-        $sp.RtsEnable = $true
+        $espSerial = @("core2", "cores3", "feathers3") -contains $boardKey
+        $rpSerial = @("picow", "pico2") -contains $boardKey
+        $sp.DtrEnable = -not $espSerial
+        $sp.RtsEnable = (-not $espSerial) -and (-not $rpSerial)
         $sp.Open()
+        if ($espSerial) {
+            $sp.DtrEnable = $false
+            $sp.RtsEnable = $false
+        }
         return $true
     } catch {
         return $false
@@ -284,9 +298,15 @@ function Capture-Serial {
                 $sp = [System.IO.Ports.SerialPort]::new($Port, $Baud, [System.IO.Ports.Parity]::None, 8, [System.IO.Ports.StopBits]::One)
                 $sp.ReadTimeout = 250
                 $sp.WriteTimeout = 1000
-                $sp.DtrEnable = $true
-                $sp.RtsEnable = $true
+                $espSerial = @("core2", "cores3", "feathers3") -contains $boardKey
+                $rpSerial = @("picow", "pico2") -contains $boardKey
+                $sp.DtrEnable = -not $espSerial
+                $sp.RtsEnable = (-not $espSerial) -and (-not $rpSerial)
                 $sp.Open()
+                if ($espSerial) {
+                    $sp.DtrEnable = $false
+                    $sp.RtsEnable = $false
+                }
                 $opened = $true
             } catch {
                 if ($sp) {
@@ -337,6 +357,8 @@ function Capture-Serial {
                     $minOk = ($MinTelemetryLines -eq 0) -or ($lineMatches -ge $MinTelemetryLines) -or ($lines.Count -ge $MinTelemetryLines)
                     if ($minOk -and ($quietFor -ge $QuietPeriodSeconds)) { break }
                 }
+            } catch [System.IO.IOException] {
+                break
             }
         }
     } finally {
@@ -454,9 +476,7 @@ while ($attempt -le $RetryCount) {
     }
 
     $portsAfterUpload = @(Get-DotNetPorts)
-    $boardListAfterUpload = Get-BoardListText
     Add-Log "VISIBLE_PORTS_AFTER_UPLOAD=$($portsAfterUpload -join ',')"
-    Add-Log "ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN`n$boardListAfterUpload`nARDUINO_BOARD_LIST_AFTER_UPLOAD_END"
     if ($PostUploadDelaySeconds -gt 0) {
         Add-Log "POST_UPLOAD_DELAY_SECONDS=$PostUploadDelaySeconds"
         Start-Sleep -Seconds $PostUploadDelaySeconds
@@ -470,6 +490,8 @@ while ($attempt -le $RetryCount) {
     }
     $serialResult = Capture-Serial -Attempt $attempt
     Add-Log "CAPTURE_STATUS=$($serialResult.Status) LINES=$($serialResult.LineCount) START=$($serialResult.StartSeen) END=$($serialResult.EndSeen) MATCHES=$($serialResult.LineMatches)"
+    $boardListAfterUpload = Get-BoardListText
+    Add-Log "ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN`n$boardListAfterUpload`nARDUINO_BOARD_LIST_AFTER_UPLOAD_END"
     if ($serialResult.Status -eq "SUCCESS") {
         $finalStatus = "SUCCESS"
         break

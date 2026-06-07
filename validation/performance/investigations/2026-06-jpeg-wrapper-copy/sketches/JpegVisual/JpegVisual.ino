@@ -2,7 +2,7 @@
 #include <tgx.h>
 #include <JPEGDEC.h>
 
-#include "../../../../../examples/Teensy4/2D/JPEG_test/batman.h"
+#include "../../../../../examples/Teensy4/2D/extensions/JPEG_test/batman.h"
 
 #if defined(ARDUINO_TEENSY41)
     #include <ILI9341_T4.h>

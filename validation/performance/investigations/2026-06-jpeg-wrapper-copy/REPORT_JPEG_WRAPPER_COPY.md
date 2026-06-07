@@ -58,8 +58,8 @@ Created display-free portable validation sketches instead of duplicating display
 
 Existing Teensy PNG/GIF examples were compile-checked:
 
-- `examples/Teensy4/2D/PNG_test`: compile OK
-- `examples/Teensy4/2D/GIF_test`: compile OK
+- `examples/Teensy4/2D/extensions/PNG_test`: compile OK
+- `examples/Teensy4/2D/extensions/GIF_test`: compile OK
 
 PNG/GIF public ports for Core2/CoreS3/Pico2 were not created because no PNG/GIF production optimization was attempted and the GIF asset is large. Status is recorded in `results/png_gif_example_status.csv`.
 

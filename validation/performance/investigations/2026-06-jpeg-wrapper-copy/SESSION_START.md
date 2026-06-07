@@ -47,11 +47,11 @@ All wrappers are implemented in `src/Image.inl`:
 
 Existing decoder examples are currently Teensy-oriented:
 
-- `examples/Teensy4/2D/JPEG_test/JPEG_test.ino`
+- `examples/Teensy4/2D/extensions/JPEG_test/JPEG_test.ino`
   - asset: `batman.h`, about 69 KB
-- `examples/Teensy4/2D/PNG_test/PNG_test.ino`
+- `examples/Teensy4/2D/extensions/PNG_test/PNG_test.ino`
   - asset: `octocat_4bpp.h`, about 4.8 KB
-- `examples/Teensy4/2D/GIF_test/GIF_test.ino`
+- `examples/Teensy4/2D/extensions/GIF_test/GIF_test.ino`
   - asset: `earth_128x128.h`, about 4 MB
 
 Board display setup references:

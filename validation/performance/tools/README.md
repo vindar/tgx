@@ -21,6 +21,7 @@ These tools are intentionally stored outside `tmp/` so future optimization sessi
 | Teensy 4.1 + ILI9341 | `COM3` | Dedicated Teensy USB port |
 | Core2 | `COM5` | ESP32 Core2 runtime board |
 | CoreS3 | `COM10` | ESP32-S3 CoreS3 runtime board |
+| FeatherS3 TFT | `COM14` | ESP32-S3 TFT example board |
 | Pico W / RP2040 | `COM28` | Unavailable / ignored during final sessions |
 
 ## Quick Probe

@@ -2,7 +2,7 @@
 #include <tgx.h>
 #include <JPEGDEC.h>
 
-#include "../../../../../examples/Teensy4/2D/JPEG_test/batman.h"
+#include "../../../../../examples/Teensy4/2D/extensions/JPEG_test/batman.h"
 
 #if defined(ESP32)
     #include <esp_heap_caps.h>
