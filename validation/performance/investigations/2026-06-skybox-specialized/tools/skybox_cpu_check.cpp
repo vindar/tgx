@@ -117,7 +117,7 @@ int main()
 
     std::fill(fb_new.begin(), fb_new.end(), RGB565(RGB32_Black));
     std::fill(z_new.begin(), z_new.end(), 0);
-    new_renderer.drawSkyBox(&tex[0], &tex[1], &tex[2], &tex[3], &tex[4], &tex[5]);
+    new_renderer.drawSkyBox(&tex[0], &tex[1], &tex[2], &tex[3], &tex[4], &tex[5], 180.0f, 0.0f, 50.0f, SHADER_TEXTURE_NEAREST, SHADER_TEXTURE_WRAP_POW2);
 
     int mismatches = 0;
     for (size_t i = 0; i < fb_old.size(); ++i)
@@ -133,7 +133,7 @@ int main()
         }, z_old);
 
     const double new_us = timeDraw([&]() {
-        new_renderer.drawSkyBox(&tex[0], &tex[1], &tex[2], &tex[3], &tex[4], &tex[5]);
+        new_renderer.drawSkyBox(&tex[0], &tex[1], &tex[2], &tex[3], &tex[4], &tex[5], 180.0f, 0.0f, 50.0f, SHADER_TEXTURE_NEAREST, SHADER_TEXTURE_WRAP_POW2);
         }, z_new);
 
     std::cout << "SKYBOX_CPU_CHECK_BEGIN\n";

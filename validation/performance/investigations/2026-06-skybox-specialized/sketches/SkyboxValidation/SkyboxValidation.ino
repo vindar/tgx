@@ -110,7 +110,7 @@ static void drawOld()
 
 static void drawNew()
     {
-    renderer.drawSkyBox(&tex[0], &tex[1], &tex[2], &tex[3], &tex[4], &tex[5]);
+    renderer.drawSkyBox(&tex[0], &tex[1], &tex[2], &tex[3], &tex[4], &tex[5], 180.0f, 0.0f, 50.0f, SHADER_TEXTURE_NEAREST, SHADER_TEXTURE_WRAP_POW2);
     }
 
 static uint32_t timeOld()

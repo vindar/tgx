@@ -1157,7 +1157,6 @@ namespace tgx
          * @remark
          * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
          * - Each face may use a different texture (or set the image to `nullptr` to disable texturing a face).
-         * - This method is useful for drawing a sky-box.
          *
          * @param   v_front_ABCD    texture coords array for the front face in order ABCD
          * @param   texture_front   texture for the front face
@@ -1208,7 +1207,6 @@ namespace tgx
          * @remark
          * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
          * - Each face uses a 'whole' image. Set the texture image to `nullptr` to disable texturing a given face.
-         * - This method is useful for drawing a sky-box.
          *
          * @param   texture_front   texture for the front face.
          * @param   texture_back    texture for the back face.
@@ -1228,17 +1226,43 @@ namespace tgx
 
 
         /**
-         * Draw a textured sky-box using the current model transform.
+         * Draw a textured sky-box around the current camera.
          *
          * This method uses the same unit-cube geometry and face/texture-coordinate conventions
          * as drawCube(), but it renders through a minimal unlit textured path without z-buffer
          * testing/writing and without far-plane clipping. It is intended for sky-box/background
-         * rendering and should normally be called before drawing the z-buffered scene.
+         * rendering and should be called before drawing the z-buffered scene.
+         *
+         * Face naming and layout:
+         *
+         * ```
+         *                                                                   H--------E
+         *                                                                   |        |
+         *                                                                   |  top   |
+         *                          H-------------E                          |        |
+         *                         /.            /|                 H--------A--------D--------E
+         *                        / .   top     / |                 |        |        |        |
+         *                       /  .          /  |                 |  left  | front  |  right |
+         *                      A------------D    |  right          |        |        |        |
+         *                      |   .        |    |                 G--------B--------C--------F
+         *                      |   G .......|....F                          |        |
+         *                      |  .         |   /                           | bottom |
+         *                      | .  front   |  /                            |        |
+         *                      |.           | /                             G--------F
+         *                      B------------C                               |        |
+         *                                                                   |  back  |
+         *                                                                   |        |
+         *                                                                   H--------E
+         * ```
          *
          * @remark
-         * - The model transform matrix must be used to scale, rotate and position the sky-box in world space.
-         * - The method requires perspective textured rendering to be enabled in the Renderer3D template.
-         * - Near/screen clipping is still performed; far clipping is skipped.
+         * - The current model transform, material, culling and shader state are ignored.
+         * - `rot_angle_y` rotates the sky-box around the world Y axis.
+         * - `skybox_radius` is the half-size of the cube in world units.
+         * - `reference_height` is the world-space height of the sky-box vertical center.
+         * - The renderer ignores the current camera X/Z translation, but uses the current camera
+         *   height so the sky-box floor/ceiling can stay tied to `reference_height`. Large radii
+         *   make this vertical parallax very small and make the sky-box look farther away.
          * - `nullptr` texture faces are skipped.
          *
          * @param   v_front_ABCD    texture coords array for the front face in order ABCD.
@@ -1253,6 +1277,11 @@ namespace tgx
          * @param   texture_left    texture for the left face.
          * @param   v_right_DCFE    texture coords array for the right face in order DCFE.
          * @param   texture_right   texture for the right face.
+         * @param   rot_angle_y     additional sky-box rotation around the world Y axis, in degrees.
+         * @param   reference_height world-space height of the sky-box vertical center.
+         * @param   skybox_radius   sky-box cube half-size in world units.
+         * @param   texture_quality either `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`.
+         * @param   texture_mode    either `SHADER_TEXTURE_WRAP_POW2` or `SHADER_TEXTURE_CLAMP`.
          */
         void drawSkyBox(
             const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
@@ -1260,7 +1289,12 @@ namespace tgx
             const fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
             const fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
             const fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
-            const fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right
+            const fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right,
+            float rot_angle_y = 0.0f,
+            float reference_height = 0.0f,
+            float skybox_radius = 32768.0f,
+            Shader texture_quality = SHADER_TEXTURE_NEAREST,
+            Shader texture_mode = SHADER_TEXTURE_CLAMP
             );
 
 
@@ -1275,7 +1309,12 @@ namespace tgx
             const Image<color_t>* texture_top,
             const Image<color_t>* texture_bottom,
             const Image<color_t>* texture_left,
-            const Image<color_t>* texture_right
+            const Image<color_t>* texture_right,
+            float rot_angle_y = 0.0f,
+            float reference_height = 0.0f,
+            float skybox_radius = 32768.0f,
+            Shader texture_quality = SHADER_TEXTURE_NEAREST,
+            Shader texture_mode = SHADER_TEXTURE_CLAMP
             );
 
 
@@ -2182,25 +2221,30 @@ namespace tgx
         template<bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
         void _rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2);
 
-        /** select the active texture quality/wrap mode for a sky-box triangle */
-        void _rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2);
+        /** select the requested texture quality/wrap mode for a sky-box triangle */
+        void _rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2,
+            Shader texture_quality, Shader texture_mode);
 
         /** draw a clipped sky-box triangle; clips against screen and near planes but not far plane */
         void _drawSkyBoxTriangleClippedSub(const int plane,
-            const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3);
+            const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
+            Shader texture_quality, Shader texture_mode);
 
         /** draw a sky-box triangle and takes care of near/screen clipping */
         void _drawSkyBoxTriangleClipped(
             const fVec4* Q0, const fVec4* Q1, const fVec4* Q2,
-            const fVec2* T0, const fVec2* T1, const fVec2* T2);
+            const fVec2* T0, const fVec2* T1, const fVec2* T2,
+            Shader texture_quality, Shader texture_mode);
 
         /** draw a single sky-box quad with the dedicated no-z unlit texture path */
         void _drawSkyBoxQuad(
-            const fVec3* P0, const fVec3* P1, const fVec3* P2, const fVec3* P3,
-            const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3);
+            const fVec4* P0, const fVec4* P1, const fVec4* P2, const fVec4* P3,
+            const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3,
+            Shader texture_quality, Shader texture_mode);
 
         /** draw one named sky-box face */
-        void _drawSkyBoxFace(const uint16_t* face, const fVec2 texture_coords[4], const Image<color_t>* texture);
+        void _drawSkyBoxFace(const fVec4 skybox_vertices[8], const uint16_t* face, const fVec2 texture_coords[4], const Image<color_t>* texture,
+            Shader texture_quality, Shader texture_mode);
 
 
         /** Method called by drawMesh() which does the actual drawing. */

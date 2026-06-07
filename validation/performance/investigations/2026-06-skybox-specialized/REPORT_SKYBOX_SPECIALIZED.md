@@ -299,7 +299,6 @@ Rejected or deferred:
 Important files:
 
 - `validation/performance/investigations/2026-06-skybox-specialized/SESSION_START.md`
-- `validation/performance/investigations/2026-06-skybox-specialized/patches/draw_skybox_v1_candidate.patch`
 - `validation/performance/investigations/2026-06-skybox-specialized/results/cpu_synthetic_check.txt`
 - `validation/performance/investigations/2026-06-skybox-specialized/results/teensy_synthetic_validation_telemetry.txt`
 - `validation/performance/investigations/2026-06-skybox-specialized/results/mars_scene_delta.csv`
@@ -318,3 +317,50 @@ Recommended next work:
 3. If code size is considered too high, test a nearest-only skybox overload or compile-time policy to avoid emitting the bilinear no-z shader in examples that never need it.
 4. Benchmark the API on another board only after the v1 design is accepted.
 5. Consider a separate future full-screen skybox renderer only if cube-face rasterization remains a measurable bottleneck.
+
+## N. 2026-06-08 API refinement
+
+After the v1 source was committed, the API was refined so `drawSkyBox()` no longer depends on the current model transform. The skybox now accepts:
+
+```cpp
+rot_angle_y = 0.0f
+reference_height = 0.0f
+skybox_radius = 32768.0f
+texture_quality = SHADER_TEXTURE_NEAREST
+texture_mode = SHADER_TEXTURE_CLAMP
+```
+
+The renderer ignores camera X/Z translation, recovers camera Y from the view matrix, and places the skybox vertical center at `reference_height`. This keeps the skybox effectively infinite horizontally while preserving a world-space floor/sky reference when desired.
+
+`mars` now calls:
+
+```cpp
+renderer.drawSkyBox(&mars_front, &mars_back, &mars_top_neb, &mars_bottom, &mars_left, &mars_right,
+                    180.0f, 0.0f, 4000.0f, SHADER_TEXTURE_NEAREST, SHADER_TEXTURE_WRAP_POW2);
+```
+
+Validation for the refined API:
+
+- CPU synthetic skybox check: exact framebuffer match, +23.97%.
+- CPU 3D strict validation: 82 PASS, 0 FAIL.
+- Teensy 4.1 `mars` upload/capture: SUCCESS, 286 parsed telemetry rows.
+
+The final `mars` capture is longer than the earlier v1/old captures, so the raw overall weighted average is not directly comparable. Per-scene deltas vs the old `drawCube()` skybox are:
+
+| Scene | Delta |
+| --- | ---: |
+| beginning | -0.42% |
+| ending | +2.82% |
+| falcon | +3.29% |
+| intro | -2.11% |
+| movie | +5.69% |
+
+Final API note and artifacts:
+
+- `validation/performance/investigations/2026-06-skybox-specialized/SKYBOX_RADIUS_API.md`
+- `validation/performance/investigations/2026-06-skybox-specialized/results/cpu_synthetic_check_radius_api.txt`
+- `validation/performance/investigations/2026-06-skybox-specialized/results/mars_skybox_radius_api_capture.json`
+- `validation/performance/investigations/2026-06-skybox-specialized/results/mars_skybox_radius_api_scene_compare.csv`
+
+Raw per-frame Mars telemetry CSVs and upload logs were pruned after the compact comparison CSVs and capture metadata
+were recorded.

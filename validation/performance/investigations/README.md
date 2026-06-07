@@ -17,6 +17,7 @@ For reusable upload/capture and parsing scripts, use `../tools/`.
 | 2026-06 shader fixed-point integration | Teensy 4.1, Pico2 | No production patch | Nearest-only shader patch and follow-ups. Reasons: hidden benchmark regressions, especially bilinear texture rows, despite promising nearest rows. |
 | 2026-06 ESP32 / ESP32-S3 kernels | Core2, CoreS3 | No production patch | Broad math, RGB565, IRAM, texture-coordinate integration. Reasons: `fast_inv()` already good; IRAM neutral/negative; RGB565 exact wins too small or not relevant; fixed16 shader work needs separate guarded integration. |
 | 2026-06 ESP32-S3 Image span copy/fill | Core2, CoreS3 | Current WIP source patch in `src/Image.inl`: same-format `Image::blit()` uses direct 1x1 assignment and `memcpy()` only for provably non-overlapping ranges, keeping `memmove()` for overlap/tiny copies | `dsps_memcpy()` production path, RGB565 fill changes, manual 32-bit copy/unroll helpers. Reasons: overlap safety, dependency/threshold complexity, existing RGB565 fill already optimized. |
+| 2026-06 skybox specialized renderer | CPU, Teensy 4.1 | Dedicated `Renderer3D::drawSkyBox()` path, later refined to yaw/reference-height/radius API independent from model state | Adding a generic no-zbuffer shader variant to the main renderer path; using `drawCube()` as the recommended skybox path. Reasons: keep the central 3D path unchanged and avoid a rare-case shader branch. |
 
 ## Reports Retained
 
@@ -36,6 +37,8 @@ Retained files:
 - `2026-06-shader-fixedpoint-integration/REPORT_SHADER_FIXEDPOINT_INTEGRATION.md`
 - `2026-06-esp32-esp32s3-kernels/REPORT_ESP32_ESP32S3_KERNELS.md`
 - `2026-06-esp32s3-image-span-copyfill/REPORT_ESP32S3_IMAGE_SPAN_COPYFILL.md`
+- `2026-06-skybox-specialized/REPORT_SKYBOX_SPECIALIZED.md`
+- `2026-06-skybox-specialized/SKYBOX_RADIUS_API.md`
 
 ## Future Policy
 

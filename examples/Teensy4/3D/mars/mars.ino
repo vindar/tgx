@@ -259,15 +259,14 @@ float slide(float t, const float t_start = 0.0f, const float t_end = 1.0f)
     }
 
 
-const float skybox_size = 4000;
+const float skybox_radius = 4000;
 const float skybox_ref_height = 0;
 
 
 TGX_NOINLINE FLASHMEM void drawSkyBox()
     {
-    renderer.setModelPosScaleRot({ 0,skybox_ref_height,0 }, { skybox_size,skybox_size,skybox_size }, 180 , { 0,1,0 } );
-    renderer.setTextureQuality(SHADER_TEXTURE_NEAREST);
-    renderer.drawSkyBox(&mars_front, &mars_back, &mars_top_neb, &mars_bottom, &mars_left, &mars_right);
+    renderer.drawSkyBox(&mars_front, &mars_back, &mars_top_neb, &mars_bottom, &mars_left, &mars_right,
+                        180.0f, skybox_ref_height, skybox_radius, SHADER_TEXTURE_NEAREST, SHADER_TEXTURE_WRAP_POW2);
     }
 
 

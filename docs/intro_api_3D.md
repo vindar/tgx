@@ -19,7 +19,8 @@ In practice, using the 3D API means:
 - place the object you want to draw;
 - choose the shader, material, texture and light state;
 - call a drawing method such as \ref tgx::Renderer3D::drawMesh "drawMesh()" or
-  \ref tgx::Renderer3D::drawCube "drawCube()".
+  \ref tgx::Renderer3D::drawCube "drawCube()". For textured backgrounds, use
+  \ref tgx::Renderer3D::drawSkyBox "drawSkyBox()".
 
 TGX keeps these steps visible because, on MCUs, memory placement, shader variants and draw-call cost matter a lot.
 
@@ -300,6 +301,9 @@ matrix changes the lens.
 
 All solid primitive calls (`drawTriangle()`, `drawCube()`, `drawSphere()`, `drawMesh()`...) take coordinates in model
 space. In a render loop, update the model matrix just before drawing the object it belongs to.
+
+`drawSkyBox()` is the main exception: it is intended for backgrounds, not model geometry. It ignores the current model
+matrix and uses the current camera/view matrix directly.
 
 When debugging transforms, these methods are useful:
 
@@ -611,6 +615,7 @@ Available solid primitives include:
 | \ref tgx::Renderer3D::drawQuadWithVertexColor "drawQuadWithVertexColor()" | Draw one quad with explicit per-vertex colors. |
 | \ref tgx::Renderer3D::drawQuads "drawQuads()" | Draw an indexed array of quads. |
 | \ref tgx::Renderer3D::drawCube "drawCube()" | Draw the unit cube, optionally textured per face. |
+| \ref tgx::Renderer3D::drawSkyBox "drawSkyBox()" | Draw a six-texture skybox/background without using the normal model transform or z-buffer path. |
 | \ref tgx::Renderer3D::drawSphere "drawSphere()" | Draw a generated sphere with a chosen tessellation. |
 | \ref tgx::Renderer3D::drawAdaptativeSphere "drawAdaptativeSphere()" | Draw a generated sphere with tessellation chosen from its projected size. |
 
@@ -811,6 +816,24 @@ renderer.drawMesh(&mesh);
 ~~~
 
 
+@subsection sec_3D_skybox Skyboxes
+
+Use \ref tgx::Renderer3D::drawSkyBox "drawSkyBox()" for distant textured backgrounds. Unlike `drawCube()`, it is not
+a normal model draw call: it ignores the current model matrix, material, culling and z-buffer state, and it should
+normally be drawn before the z-buffered scene.
+
+~~~{.cpp}
+renderer.drawSkyBox(&front, &back, &top, &bottom, &left, &right,
+                    yaw_degrees,
+                    reference_height,
+                    radius,
+                    tgx::SHADER_TEXTURE_NEAREST,
+                    tgx::SHADER_TEXTURE_WRAP_POW2);
+~~~
+
+Use `drawCube()` for real cubes in the scene; use `drawSkyBox()` only for backgrounds.
+
+
 @section sec_3D_performance Embedded performance checklist
 
 For MCU targets, these choices often matter most:
@@ -890,7 +913,7 @@ Useful starting points:
 - `examples/Teensy4/3D/test-texture/`: textured mesh rendering.
 - `examples/Teensy4/3D/scream/`: dynamic textured surface built as a triangle strip.
 - `examples/Teensy4/3D/characters/`: larger textured character models and chained meshes.
-- `examples/Teensy4/3D/mars/`: a more complete scene with skybox-like rendering and textured objects.
+- `examples/Teensy4/3D/mars/`: a more complete scene using `drawSkyBox()` with textured objects.
 - `examples/ESP32/naruto/`: ESP32 textured mesh rendering.
 - `examples/Pico_RP2040_RP2350/bunny_fig/`: RP2040/RP2350 3D example.
 
