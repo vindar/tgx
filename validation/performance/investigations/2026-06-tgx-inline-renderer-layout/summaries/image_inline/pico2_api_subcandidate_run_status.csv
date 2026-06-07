@@ -1,5 +1,0 @@
-﻿"candidate","flags","status"
-"image_pixel_api_draw_empty_pico2","-DTGX_INLINE_IMAGE_PIXEL_API_DRAW=","SUCCESS"
-"image_pixel_api_read_empty_pico2","-DTGX_INLINE_IMAGE_PIXEL_API_READ=","SUCCESS"
-"image_mesh_safe_keep_draw_wire_pico2","-DTGX_INLINE_IMAGE= -DTGX_INLINE_IMAGE_PIXEL_API_DRAW=__attribute__((always_inline)) -DTGX_INLINE_IMAGE_PIXEL_DRAW=__attribute__((always_inline)) -DTGX_INLINE_IMAGE_WIRE=__attribute__((always_inline))","SUCCESS"
-"image_mesh_safe_keep_draw_wire_span_pico2","-DTGX_INLINE_IMAGE= -DTGX_INLINE_IMAGE_PIXEL_API_DRAW=__attribute__((always_inline)) -DTGX_INLINE_IMAGE_PIXEL_DRAW=__attribute__((always_inline)) -DTGX_INLINE_IMAGE_WIRE=__attribute__((always_inline)) -DTGX_INLINE_IMAGE_SPAN=__attribute__((always_inline))","SUCCESS"

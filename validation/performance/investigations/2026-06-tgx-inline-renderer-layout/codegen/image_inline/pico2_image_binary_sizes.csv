@@ -1,7 +1,0 @@
-label,run_id,elf,elf_bytes,bin_bytes,bin_files,uf2_bytes,uf2_files,map_bytes,map_files
-baseline,pico2_baseline_bench_pico2_run2,tmp\hardware_validation\builds\pico2_baseline_bench_pico2_run2\benchmark.ino.elf,3780216,1380968,benchmark.ino.bin,2762752,benchmark.ino.uf2,1315094,benchmark.ino.map
-categories_default,pico2_image_categories_default_bench_pico2,tmp\hardware_validation\builds\pico2_image_categories_default_bench_pico2\benchmark.ino.elf,3780224,1380968,benchmark.ino.bin,2762752,benchmark.ino.uf2,1339844,benchmark.ino.map
-coarse_image_empty,pico2_image_repro_image_empty_pico2_bench_pico2,tmp\hardware_validation\builds\pico2_image_repro_image_empty_pico2_bench_pico2\benchmark.ino.elf,3764140,1378824,benchmark.ino.bin,2758656,benchmark.ino.uf2,1360916,benchmark.ino.map
-pixel_api_draw_empty,pico2_image_pixel_api_draw_empty_pico2_bench_pico2,tmp\hardware_validation\builds\pico2_image_pixel_api_draw_empty_pico2_bench_pico2\benchmark.ino.elf,3769444,1380112,benchmark.ino.bin,2761216,benchmark.ino.uf2,1358627,benchmark.ino.map
-pixel_draw_empty,pico2_image_pixel_draw_empty_pico2_bench_pico2,tmp\hardware_validation\builds\pico2_image_pixel_draw_empty_pico2_bench_pico2\benchmark.ino.elf,3767984,1379320,benchmark.ino.bin,2759168,benchmark.ino.uf2,1349652,benchmark.ino.map
-mesh_safe_keep_draw_wire_span,pico2_image_mesh_safe_keep_draw_wire_span_pico2_bench_pico2,tmp\hardware_validation\builds\pico2_image_mesh_safe_keep_draw_wire_span_pico2_bench_pico2\benchmark.ino.elf,3780264,1380968,benchmark.ino.bin,2762752,benchmark.ino.uf2,1378094,benchmark.ino.map

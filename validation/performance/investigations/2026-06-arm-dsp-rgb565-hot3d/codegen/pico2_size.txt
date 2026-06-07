@@ -1,2 +1,0 @@
-   text	   data	    bss	    dec	    hex	filename
- 564404	  12288	  38720	 615412	  963f4	validation\performance\builds\pico2_hot3d_rgb565_bench_pico2_run1\RGB565Hot3DKernelBench.ino.elf

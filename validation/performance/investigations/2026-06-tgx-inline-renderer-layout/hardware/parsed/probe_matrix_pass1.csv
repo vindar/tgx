@@ -1,4 +1,0 @@
-﻿"board","port","probe","label","exit_code","status","metadata"
-"core2","COM5","serial_alive","serial_alive_pass1","2","NO_METADATA","D:\Programmation\tgx\tmp\hardware_validation\telemetry\core2_serial_alive_pass1_metadata.json"
-"core2","COM5","macro_probe","macro_probe_pass1","2","NO_METADATA","D:\Programmation\tgx\tmp\hardware_validation\telemetry\core2_macro_probe_pass1_metadata.json"
-"core2","COM5","telemetry_probe","telemetry_probe_pass1","2","NO_METADATA","D:\Programmation\tgx\tmp\hardware_validation\telemetry\core2_telemetry_probe_pass1_metadata.json"

@@ -1,2 +1,0 @@
-   text	   data	    bss	    dec	    hex	filename
- 357943	1251339	2101018	3710300	 389d5c	tmp\config_optimization\builds\cores3_baseline_head_run1\benchmark.ino.elf

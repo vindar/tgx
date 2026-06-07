@@ -1,2 +1,0 @@
-   text	   data	    bss	    dec	    hex	filename
- 549600	  12032	  67348	 628980	  998f4	tmp\config_optimization\builds\picow_baseline_head_run1\benchmark.ino.elf

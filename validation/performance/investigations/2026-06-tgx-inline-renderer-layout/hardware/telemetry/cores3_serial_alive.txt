@@ -1,4 +1,0 @@
-ESP-ROM:esp32s3-20210327
-D(USB/UART0))
-Saved PC:0x4037ca36
-waiting for download

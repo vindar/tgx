@@ -1,2 +1,0 @@
-   text	   data	    bss	    dec	    hex	filename
-1654972	  12288	 231764	1899024	 1cfa10	tmp\config_optimization\builds\pico2_rp2350_zdivide_no_forced_inline\benchmark.ino.elf

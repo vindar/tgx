@@ -1,2 +1,0 @@
-   text	   data	    bss	    dec	    hex	filename
- 312395	1252145	  98316	1662856	 195f88	tmp\config_optimization\builds\core2_global_inline_empty_teensy_esp\benchmark.ino.elf

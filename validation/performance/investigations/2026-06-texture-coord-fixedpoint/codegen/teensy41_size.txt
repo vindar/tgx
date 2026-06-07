@@ -1,2 +1,0 @@
-   text	   data	    bss	    dec	    hex	filename
-  28992	   8896	  22944	  60832	   eda0	D:\Programmation\tgx\validation\performance\builds\teensy41_texcoord_eq_teensy41_run5_full_lengths\TextureCoordEquivalenceBench.ino.elf

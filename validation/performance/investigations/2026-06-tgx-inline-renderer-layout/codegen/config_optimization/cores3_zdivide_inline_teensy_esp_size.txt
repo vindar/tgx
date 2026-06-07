@@ -1,2 +1,0 @@
-   text	   data	    bss	    dec	    hex	filename
- 356031	1251339	2101018	3708388	 3895e4	tmp\config_optimization\builds\cores3_zdivide_inline_teensy_esp\benchmark.ino.elf

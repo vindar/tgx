@@ -1,2 +1,0 @@
-   text	   data	    bss	    dec	    hex	filename
-1408320	  14016	 464896	1887232	 1ccc00	tmp\config_optimization\builds\teensy41_baseline_head_run1\benchmark.ino.elf
