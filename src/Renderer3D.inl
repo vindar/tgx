@@ -1356,6 +1356,207 @@ namespace tgx
 
 
 
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        template<bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2)
+            {
+            rasterizeTriangle(_lx, _ly, V0, V1, V2, _ox, _oy, _uni,
+                uber_shader<color_t, ZBUFFER_t, false, false, true, false, TEXTURE_BILINEAR, TEXTURE_WRAP, true>);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2)
+            {
+            if constexpr (TGX_SHADER_HAS_TEXTURE_BILINEAR(ENABLED_SHADERS))
+                {
+                if (TGX_SHADER_HAS_TEXTURE_BILINEAR(_texture_quality))
+                    {
+                    if constexpr (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(ENABLED_SHADERS) && TGX_SHADER_HAS_TEXTURE_CLAMP(ENABLED_SHADERS))
+                        {
+                        if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(_texture_wrap_mode))
+                            {
+                            _rasterizeSkyBoxTriangle<true, true>(V0, V1, V2);
+                            return;
+                            }
+                        _rasterizeSkyBoxTriangle<true, false>(V0, V1, V2);
+                        return;
+                        }
+                    else if constexpr (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(ENABLED_SHADERS))
+                        {
+                        _rasterizeSkyBoxTriangle<true, true>(V0, V1, V2);
+                        return;
+                        }
+                    else
+                        {
+                        _rasterizeSkyBoxTriangle<true, false>(V0, V1, V2);
+                        }
+                    return;
+                    }
+                }
+
+            if constexpr (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(ENABLED_SHADERS) && TGX_SHADER_HAS_TEXTURE_CLAMP(ENABLED_SHADERS))
+                {
+                if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(_texture_wrap_mode))
+                    {
+                    _rasterizeSkyBoxTriangle<false, true>(V0, V1, V2);
+                    return;
+                    }
+                _rasterizeSkyBoxTriangle<false, false>(V0, V1, V2);
+                return;
+                }
+            else if constexpr (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(ENABLED_SHADERS))
+                {
+                _rasterizeSkyBoxTriangle<false, true>(V0, V1, V2);
+                }
+            else
+                {
+                _rasterizeSkyBoxTriangle<false, false>(V0, V1, V2);
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSkyBoxTriangleClippedSub(const int plane,
+            const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3)
+            {
+            const float CLIPBOUND_XY = _clipbound_xy();
+
+            fVec4 CP;
+            float off;
+            RasterizerVec4 V1, V2, V3, V4;
+            switch (plane)
+                {
+                case 0:
+                    CP = fVec4(1, 0, 0, CLIPBOUND_XY);
+                    off = 0;
+                    break;
+                case 1:
+                    CP = fVec4(-1, 0, 0, CLIPBOUND_XY);
+                    off = 0;
+                    break;
+                case 2:
+                    CP = fVec4(0, 1, 0, CLIPBOUND_XY);
+                    off = 0;
+                    break;
+                case 3:
+                    CP = fVec4(0, -1, 0, CLIPBOUND_XY);
+                    off = 0;
+                    break;
+                case 4:
+                    CP = fVec4(0, 0, 1, 1);
+                    off = 0;
+                    break;
+                default:
+                    {
+                    V1 = P1;
+                    V2 = P2;
+                    V3 = P3;
+                    V1.zdivide();
+                    V2.zdivide();
+                    V3.zdivide();
+                    _rasterizeSkyBoxTriangle(V1, V2, V3);
+                    return;
+                    }
+                }
+
+            const int nbt = _triangleClip(SHADER_TEXTURE, CP, off, P1, P2, P3, V1, V2, V3, V4);
+            switch (nbt)
+                {
+                case 0:
+                    _drawSkyBoxTriangleClippedSub(plane + 1, P1, P2, P3);
+                    break;
+                case 2:
+                    _drawSkyBoxTriangleClippedSub(plane + 1, V1, V3, V4);
+                case 1:
+                    _drawSkyBoxTriangleClippedSub(plane + 1, V1, V2, V3);
+                }
+            return;
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSkyBoxTriangleClipped(
+            const fVec4* Q0, const fVec4* Q1, const fVec4* Q2,
+            const fVec2* T0, const fVec2* T1, const fVec2* T2)
+            {
+            RasterizerVec4 PPC0, PPC1, PPC2;
+            (*((fVec4*)&PPC0)) = _projM * (*Q0);
+            (*((fVec4*)&PPC1)) = _projM * (*Q1);
+            (*((fVec4*)&PPC2)) = _projM * (*Q2);
+            PPC0.T = *T0;
+            PPC1.T = *T1;
+            PPC2.T = *T2;
+            _drawSkyBoxTriangleClippedSub(0, PPC0, PPC1, PPC2);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSkyBoxQuad(
+            const fVec3* P0, const fVec3* P1, const fVec3* P2, const fVec3* P3,
+            const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3)
+            {
+            const fVec4 Q0 = _r_modelViewM.mult1(*P0);
+            const fVec4 Q1 = _r_modelViewM.mult1(*P1);
+            const fVec4 Q2 = _r_modelViewM.mult1(*P2);
+            const fVec4 Q3 = _r_modelViewM.mult1(*P3);
+
+            RasterizerVec4 PPC0, PPC1, PPC2, PPC3;
+
+            (*((fVec4*)&PPC0)) = _projM * Q0;
+            (*((fVec4*)&PPC1)) = _projM * Q1;
+            (*((fVec4*)&PPC2)) = _projM * Q2;
+            (*((fVec4*)&PPC3)) = _projM * Q3;
+
+            PPC0.zdivide();
+            PPC1.zdivide();
+            PPC2.zdivide();
+            PPC3.zdivide();
+
+            const float CLIPBOUND_XY = _clipbound_xy();
+
+            const bool needclip = (PPC0.x < -CLIPBOUND_XY) | (PPC0.x > CLIPBOUND_XY)
+                     | (PPC0.y < -CLIPBOUND_XY) | (PPC0.y > CLIPBOUND_XY)
+                     | (PPC0.z < -1) | (PPC0.w <= 0)
+                     | (PPC1.x < -CLIPBOUND_XY) | (PPC1.x > CLIPBOUND_XY)
+                     | (PPC1.y < -CLIPBOUND_XY) | (PPC1.y > CLIPBOUND_XY)
+                     | (PPC1.z < -1) | (PPC1.w <= 0)
+                     | (PPC2.x < -CLIPBOUND_XY) | (PPC2.x > CLIPBOUND_XY)
+                     | (PPC2.y < -CLIPBOUND_XY) | (PPC2.y > CLIPBOUND_XY)
+                     | (PPC2.z < -1) | (PPC2.w <= 0)
+                     | (PPC3.x < -CLIPBOUND_XY) | (PPC3.x > CLIPBOUND_XY)
+                     | (PPC3.y < -CLIPBOUND_XY) | (PPC3.y > CLIPBOUND_XY)
+                     | (PPC3.z < -1) | (PPC3.w <= 0);
+
+            if (needclip)
+                {
+                _drawSkyBoxTriangleClipped(&Q0, &Q1, &Q2, T0, T1, T2);
+                _drawSkyBoxTriangleClipped(&Q0, &Q2, &Q3, T0, T2, T3);
+                return;
+                }
+
+            PPC0.T = *T0;
+            PPC1.T = *T1;
+            PPC2.T = *T2;
+            PPC3.T = *T3;
+
+            _rasterizeSkyBoxTriangle(PPC0, PPC1, PPC2);
+            _rasterizeSkyBoxTriangle(PPC0, PPC2, PPC3);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSkyBoxFace(const uint16_t* face, const fVec2 texture_coords[4], const Image<color_t>* texture)
+            {
+            if ((texture == nullptr) || (!texture->isValid())) return;
+            _uni.tex = texture;
+            _drawSkyBoxQuad(UNIT_CUBE_VERTICES + face[0], UNIT_CUBE_VERTICES + face[1], UNIT_CUBE_VERTICES + face[2], UNIT_CUBE_VERTICES + face[3],
+                texture_coords, texture_coords + 1, texture_coords + 2, texture_coords + 3);
+            }
+
+
+
+
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material, bool draw_chained_meshes)
             {
@@ -4078,6 +4279,94 @@ namespace tgx
             tgx::fVec2 t_right[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
 
             drawCube(
+                t_front, texture_front,
+                t_back, texture_back,
+                t_top, texture_top,
+                t_bottom, texture_bottom,
+                t_left, texture_left,
+                t_right, texture_right);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSkyBox(
+            const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
+            const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
+            const fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
+            const fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
+            const fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
+            const fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right
+            )
+            {
+            if (!_validDraw()) return;
+            if (_ortho) return;
+
+            if constexpr (TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS) && TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS))
+                {
+                _drawSkyBoxFace(UNIT_CUBE_FACES,      v_front_ABCD,  texture_front);
+                _drawSkyBoxFace(UNIT_CUBE_FACES + 4,  v_back_EFGH,   texture_back);
+                _drawSkyBoxFace(UNIT_CUBE_FACES + 8,  v_top_HADE,    texture_top);
+                _drawSkyBoxFace(UNIT_CUBE_FACES + 12, v_bottom_BGFC, texture_bottom);
+                _drawSkyBoxFace(UNIT_CUBE_FACES + 16, v_left_HGBA,   texture_left);
+                _drawSkyBoxFace(UNIT_CUBE_FACES + 20, v_right_DCFE,  texture_right);
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSkyBox(
+            const Image<color_t>* texture_front,
+            const Image<color_t>* texture_back,
+            const Image<color_t>* texture_top,
+            const Image<color_t>* texture_bottom,
+            const Image<color_t>* texture_left,
+            const Image<color_t>* texture_right
+            )
+            {
+            float epsx = 0, epsy = 0;
+            if (texture_front)
+                {
+                epsx = fast_inv((float)(texture_front->lx() - 1));
+                epsy = fast_inv((float)(texture_front->ly() - 1));
+                }
+            tgx::fVec2 t_front[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            if (texture_back)
+                {
+                epsx = fast_inv((float)(texture_back->lx() - 1));
+                epsy = fast_inv((float)(texture_back->ly() - 1));
+                }
+            tgx::fVec2 t_back[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            if (texture_top)
+                {
+                epsx = fast_inv((float)(texture_top->lx() - 1));
+                epsy = fast_inv((float)(texture_top->ly() - 1));
+                }
+            tgx::fVec2 t_top[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            if (texture_bottom)
+                {
+                epsx = fast_inv((float)(texture_bottom->lx() - 1));
+                epsy = fast_inv((float)(texture_bottom->ly() - 1));
+                }
+            tgx::fVec2 t_bottom[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            if (texture_left)
+                {
+                epsx = fast_inv((float)(texture_left->lx() - 1));
+                epsy = fast_inv((float)(texture_left->ly() - 1));
+                }
+            tgx::fVec2 t_left[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            if (texture_right)
+                {
+                epsx = fast_inv((float)(texture_right->lx() - 1));
+                epsy = fast_inv((float)(texture_right->ly() - 1));
+                }
+            tgx::fVec2 t_right[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+
+            drawSkyBox(
                 t_front, texture_front,
                 t_back, texture_back,
                 t_top, texture_top,

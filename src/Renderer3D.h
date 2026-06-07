@@ -1227,6 +1227,58 @@ namespace tgx
             );
 
 
+        /**
+         * Draw a textured sky-box using the current model transform.
+         *
+         * This method uses the same unit-cube geometry and face/texture-coordinate conventions
+         * as drawCube(), but it renders through a minimal unlit textured path without z-buffer
+         * testing/writing and without far-plane clipping. It is intended for sky-box/background
+         * rendering and should normally be called before drawing the z-buffered scene.
+         *
+         * @remark
+         * - The model transform matrix must be used to scale, rotate and position the sky-box in world space.
+         * - The method requires perspective textured rendering to be enabled in the Renderer3D template.
+         * - Near/screen clipping is still performed; far clipping is skipped.
+         * - `nullptr` texture faces are skipped.
+         *
+         * @param   v_front_ABCD    texture coords array for the front face in order ABCD.
+         * @param   texture_front   texture for the front face.
+         * @param   v_back_EFGH     texture coords array for the back face in order EFGH.
+         * @param   texture_back    texture for the back face.
+         * @param   v_top_HADE      texture coords array for the top face in order HADE.
+         * @param   texture_top     texture for the top face.
+         * @param   v_bottom_BGFC   texture coords array for the bottom face in order BGFC.
+         * @param   texture_bottom  texture for the bottom face.
+         * @param   v_left_HGBA     texture coords array for the left face in order HGBA.
+         * @param   texture_left    texture for the left face.
+         * @param   v_right_DCFE    texture coords array for the right face in order DCFE.
+         * @param   texture_right   texture for the right face.
+         */
+        void drawSkyBox(
+            const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
+            const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
+            const fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
+            const fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
+            const fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
+            const fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right
+            );
+
+
+        /**
+         * Draw a textured sky-box using whole images for each face.
+         *
+         * Texture coordinates are generated with the same convention as drawCube().
+         */
+        void drawSkyBox(
+            const Image<color_t>* texture_front,
+            const Image<color_t>* texture_back,
+            const Image<color_t>* texture_top,
+            const Image<color_t>* texture_bottom,
+            const Image<color_t>* texture_left,
+            const Image<color_t>* texture_right
+            );
+
+
 
         /**
          * Draw a unit radius sphere centered at the origin `S(0,1)` in model space.
@@ -2125,6 +2177,30 @@ namespace tgx
             const fVec3* N0, const fVec3* N1, const fVec3* N2, const fVec3* N3,
             const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3,
             const RGBf& Vcol0, const RGBf& Vcol1, const RGBf& Vcol2, const RGBf& Vcol3);
+
+        /** draw one sky-box triangle with a direct minimal shader */
+        template<bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+        void _rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2);
+
+        /** select the active texture quality/wrap mode for a sky-box triangle */
+        void _rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2);
+
+        /** draw a clipped sky-box triangle; clips against screen and near planes but not far plane */
+        void _drawSkyBoxTriangleClippedSub(const int plane,
+            const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3);
+
+        /** draw a sky-box triangle and takes care of near/screen clipping */
+        void _drawSkyBoxTriangleClipped(
+            const fVec4* Q0, const fVec4* Q1, const fVec4* Q2,
+            const fVec2* T0, const fVec2* T1, const fVec2* T2);
+
+        /** draw a single sky-box quad with the dedicated no-z unlit texture path */
+        void _drawSkyBoxQuad(
+            const fVec3* P0, const fVec3* P1, const fVec3* P2, const fVec3* P3,
+            const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3);
+
+        /** draw one named sky-box face */
+        void _drawSkyBoxFace(const uint16_t* face, const fVec2 texture_coords[4], const Image<color_t>* texture);
 
 
         /** Method called by drawMesh() which does the actual drawing. */
