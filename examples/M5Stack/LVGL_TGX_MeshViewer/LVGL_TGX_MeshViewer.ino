@@ -1,71 +1,77 @@
 /********************************************************************
 *
-* TGX + LVGL + ILI9341_T4 mesh viewer for Teensy 4.1.
+* TGX + LVGL + LovyanGFX mesh viewer for M5Stack Core2 and CoreS3.
+*
+* tested with LVGL 9.5, LovyanGFX, M5Stack Core2, and M5Stack CoreS3.
 *
 * LVGL provides the widgets and touch dispatch.
 * TGX renders the 3D viewport into a memory framebuffer.
-* ILI9341_T4 uploads LVGL-rendered regions to the ILI9341 display.
+* LovyanGFX uploads LVGL-rendered regions to the built-in M5Stack display
+* and reports touch coordinates to LVGL.
+*
+* Notes:
+* - This sketch is RAM heavy and uses PSRAM when available.
+* - Keep LVGL configured for 16-bit color. If memory gets tight, reducing
+*   LV_MEM_SIZE in lv_conf.h to 32 KB is usually enough for this UI.
 *
 ********************************************************************/
 
 #include <Arduino.h>
-#include <ILI9341_T4.h>
+#include <esp_heap_caps.h>
+
+#define LGFX_AUTODETECT
+#include <LovyanGFX.hpp>
+
 #include <lvgl.h>
 #include <tgx.h>
 
 using namespace tgx;
 
-#include "teapot.h"
-#include "bunny.h"
-#include "bob.h"
-#include "blub.h"
-#include "falcon_vs_v2.h"
-#include "donkeykong_small.h"
-#include "cyborg_v2.h"
-#include "spot.h"
-
-#ifndef TGX_LVGL_MESHVIEWER_RUN_TOUCH_CALIBRATION
-#define TGX_LVGL_MESHVIEWER_RUN_TOUCH_CALIBRATION 0
+// Meshes and textures are stored under 3Dmodels/. The fallback keeps the
+// sketch compatible with Arduino builders that flatten sketch subfolders.
+#if __has_include("teapot.h")
+    #include "teapot.h"
+    #include "bunny.h"
+    #include "bob.h"
+    #include "blub.h"
+    #include "falcon_vs_v2.h"
+    #include "donkeykong_small.h"
+    #include "cyborg_v2.h"
+    #include "spot.h"
+#else
+    #include "3Dmodels/teapot/teapot.h"
+    #include "3Dmodels/bunny/bunny.h"
+    #include "3Dmodels/bob/bob.h"
+    #include "3Dmodels/blub/blub.h"
+    #include "3Dmodels/falcon/falcon_vs_v2.h"
+    #include "3Dmodels/donkeykong/donkeykong_small.h"
+    #include "3Dmodels/cyborg/cyborg_v2.h"
+    #include "3Dmodels/spot/spot.h"
 #endif
-
-#ifndef TGX_LVGL_MESHVIEWER_COLOR_TEST
-#define TGX_LVGL_MESHVIEWER_COLOR_TEST 0
-#endif
-
-#define PIN_SCK       13
-#define PIN_MISO      12
-#define PIN_MOSI      11
-#define PIN_DC        10
-#define PIN_CS        9
-#define PIN_RESET     6
-#define PIN_BACKLIGHT 255
-#define PIN_TOUCH_CS  4
-#define PIN_TOUCH_IRQ 3
-
-#define SPI_SPEED 40000000
-
 static const int SCREEN_W = 320;
 static const int SCREEN_H = 240;
-static const int LVGL_BUF_LINES = 40;
+static const int LVGL_BUF_LINES = 24;
 
-static const int VIEW_W = 240;
-static const int VIEW_H = 160;
+static const int VIEW_W = 220;
+static const int VIEW_H = 150;
 
-DMAMEM ILI9341_T4::DiffBuffStatic<8000> diff1;
-DMAMEM ILI9341_T4::DiffBuffStatic<8000> diff2;
-DMAMEM uint16_t internal_fb[SCREEN_W * SCREEN_H];
-DMAMEM lv_color_t lvgl_buf[SCREEN_W * LVGL_BUF_LINES];
+// Large buffers are allocated at runtime so Core2/CoreS3 can place them in
+// PSRAM when available. LVGL draws into lvgl_buf; TGX draws into viewport_fb.
+lv_color_t* lvgl_buf = nullptr;
+uint16_t* viewport_fb = nullptr;
+uint16_t* zbuf = nullptr;
+Image<RGB565> viewport_image;
 
-DMAMEM uint16_t viewport_fb[VIEW_W * VIEW_H];
-DMAMEM uint16_t zbuf[VIEW_W * VIEW_H];
-Image<RGB565> viewport_image(viewport_fb, VIEW_W, VIEW_H);
-
+// The renderer is compiled with all shader variants this UI can select.
 static const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2;
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
 
+// One cache buffer is reused for the currently selected mesh. Large meshes may
+// keep some data in PROGMEM if the full converted representation does not fit.
 static const size_t MESH_CACHE_SIZE = 96000;
-DMAMEM char mesh_cache[MESH_CACHE_SIZE];
+char* mesh_cache = nullptr;
 
+// Per-mesh display data used by the dropdown and by renderViewport().
 struct MeshChoice
     {
     const char* label;
@@ -98,7 +104,7 @@ enum RenderMode
     RENDER_SMOOTH,
     };
 
-ILI9341_T4::ILI9341Driver tft(PIN_CS, PIN_DC, PIN_SCK, PIN_MOSI, PIN_MISO, PIN_RESET, PIN_TOUCH_CS, PIN_TOUCH_IRQ);
+LGFX lcd;
 
 lv_display_t* disp = nullptr;
 lv_indev_t* indev = nullptr;
@@ -110,11 +116,14 @@ lv_obj_t* render_mode_dropdown = nullptr;
 lv_obj_t* zoom_slider = nullptr;
 lv_obj_t* auto_switch = nullptr;
 
+// Current mesh/render state. cached_mesh points either to mesh_cache data or to
+// a mixed cached/PROGMEM representation returned by tgx::cacheMesh().
 const Mesh3Dv2<RGB565>* cached_mesh = nullptr;
 int selected_mesh = 0;
 int render_mode = RENDER_SMOOTH;
 size_t mesh_cache_used = 0;
 
+// model_orientation is updated by touch drags and by the auto-rotation mode.
 fMat4 model_orientation;
 int zoom_percent = 100;
 bool auto_rotate = true;
@@ -141,19 +150,23 @@ static uint32_t lvgl_tick(void)
     return millis();
     }
 
+// LVGL calls this when it has rendered a dirty region into lvgl_buf. LovyanGFX
+// uploads that rectangle to the built-in display; TGX is never rendered here.
 void lvgl_flush(lv_display_t* display, const lv_area_t* area, uint8_t* px_map)
     {
-    const bool redraw_now = lv_disp_flush_is_last(display);
-    tft.updateRegion(redraw_now, (uint16_t*)px_map, area->x1, area->x2, area->y1, area->y2);
+    const int w = area->x2 - area->x1 + 1;
+    const int h = area->y2 - area->y1 + 1;
+    lcd.pushImage(area->x1, area->y1, w, h, (uint16_t*)px_map);
     lv_disp_flush_ready(display);
     }
 
+// Convert LovyanGFX touch coordinates into LVGL pointer events.
 void lvgl_touch_read(lv_indev_t* input, lv_indev_data_t* data)
     {
     (void)input;
 
-    int touch_x, touch_y, touch_z;
-    const bool touched = tft.readTouch(touch_x, touch_y, touch_z);
+    uint16_t touch_x, touch_y;
+    const bool touched = lcd.getTouch(&touch_x, &touch_y);
     if (!touched)
         {
         data->state = LV_INDEV_STATE_REL;
@@ -181,6 +194,9 @@ void cacheSelectedMesh()
     {
     mesh_cache_used = 0;
     const MeshChoice& choice = mesh_choices[selected_mesh];
+
+    // "MLP" asks TGX to cache meshlet/material/light-relevant data while still
+    // allowing very large assets to leave overflow data in PROGMEM.
     cached_mesh = tgx::cacheMesh(choice.mesh, mesh_cache, MESH_CACHE_SIZE, "MLP", &mesh_cache_used);
 
     Serial.print("Selected mesh: ");
@@ -218,20 +234,6 @@ void updateStatsLabel()
     lv_label_set_text(stats_label, buf);
     }
 
-void drawColorTest()
-    {
-    for (int y = 0; y < VIEW_H; y++)
-        {
-        for (int x = 0; x < VIEW_W; x++)
-            {
-            uint16_t color = RGB565_Blue.val;
-            if (x < VIEW_W / 3) color = RGB565_Red.val;
-            else if (x < (2 * VIEW_W) / 3) color = RGB565_Green.val;
-            viewport_fb[y * VIEW_W + x] = color;
-            }
-        }
-    }
-
 uint16_t makeRGB565(uint8_t r, uint8_t g, uint8_t b)
     {
     return RGB565(r / 255.0f, g / 255.0f, b / 255.0f).val;
@@ -239,6 +241,7 @@ uint16_t makeRGB565(uint8_t r, uint8_t g, uint8_t b)
 
 void fillViewportBackground()
     {
+    // The viewport background is drawn by TGX, independently of the LVGL theme.
     const uint16_t gray = makeRGB565(226, 228, 232);
     for (int y = 0; y < VIEW_H; y++)
         {
@@ -249,11 +252,8 @@ void fillViewportBackground()
 
 void renderViewport()
     {
-    elapsedMicros render_timer = 0;
+    const uint32_t render_start_us = micros();
 
-#if TGX_LVGL_MESHVIEWER_COLOR_TEST
-    drawColorTest();
-#else
     fillViewportBackground();
     renderer.clearZbuffer();
 
@@ -270,7 +270,8 @@ void renderViewport()
         {
         if (render_mode == RENDER_WIRE)
             {
-            renderer.setMaterial(RGBf(1.0f, 0.66f, 0.16f), 0.15f, 0.70f, 1.0f, 96);
+            // Dark wireframe lines remain readable on the light viewport.
+            renderer.setMaterial(RGBf(0.16f, 0.17f, 0.18f), 0.15f, 0.70f, 1.0f, 96);
             renderer.drawWireFrameMeshAA(cached_mesh);
             }
         else
@@ -290,9 +291,8 @@ void renderViewport()
             renderer.drawMesh(cached_mesh, false);
             }
         }
-#endif
 
-    last_render_us = render_timer;
+    last_render_us = micros() - render_start_us;
     frames_since_stats++;
 
     const uint32_t now = millis();
@@ -309,10 +309,14 @@ void renderViewport()
         Serial.println(last_fps, 1);
         }
 
+    // Mark the LVGL canvas dirty. LVGL will later call lvgl_flush() with the
+    // affected screen region.
     lv_obj_invalidate(viewport_canvas);
     render_requested = false;
     }
 
+// Dragging inside the canvas rotates the TGX model. The UI state itself is
+// still managed by LVGL; this callback only updates our render state.
 void viewportEvent(lv_event_t* e)
     {
     const lv_event_code_t code = lv_event_get_code(e);
@@ -472,6 +476,8 @@ void createUI()
     lv_obj_set_style_text_align(stats_label, LV_TEXT_ALIGN_RIGHT, 0);
     lv_obj_set_style_text_color(stats_label, lv_color_hex(0xfff16a), 0);
 
+    // The LVGL canvas points directly at viewport_fb, the same buffer TGX draws
+    // into. Re-rendering TGX plus invalidating this object refreshes the view.
     viewport_canvas = lv_canvas_create(screen);
     lv_canvas_set_buffer(viewport_canvas, viewport_fb, VIEW_W, VIEW_H, LV_COLOR_FORMAT_RGB565);
     lv_obj_set_pos(viewport_canvas, 4, 30);
@@ -552,47 +558,57 @@ void createUI()
     lv_obj_set_style_text_align(mesh_info_label, LV_TEXT_ALIGN_LEFT, 0);
     }
 
-void initTFT()
+void* allocateBuffer(size_t bytes, const char* label)
     {
-    Serial.println("Initializing ILI9341_T4...");
-    tft.output(&Serial);
-    while (!tft.begin(SPI_SPEED))
+    void* ptr = heap_caps_malloc(bytes, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
+    if (ptr == nullptr) ptr = heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
+
+    Serial.print(label);
+    Serial.print(" bytes: ");
+    Serial.print(bytes);
+    Serial.print(" -> ");
+    Serial.println(ptr == nullptr ? "FAILED" : "OK");
+    return ptr;
+    }
+
+bool allocateBuffers()
+    {
+    lvgl_buf = (lv_color_t*)allocateBuffer((size_t)SCREEN_W * LVGL_BUF_LINES * sizeof(lv_color_t), "LVGL draw buffer");
+    viewport_fb = (uint16_t*)allocateBuffer((size_t)VIEW_W * VIEW_H * sizeof(uint16_t), "TGX viewport buffer");
+    zbuf = (uint16_t*)allocateBuffer((size_t)VIEW_W * VIEW_H * sizeof(uint16_t), "TGX z-buffer");
+    mesh_cache = (char*)allocateBuffer(MESH_CACHE_SIZE, "TGX mesh cache");
+
+    if (lvgl_buf == nullptr || viewport_fb == nullptr || zbuf == nullptr || mesh_cache == nullptr)
         {
-        Serial.println("ILI9341_T4 begin failed, retrying...");
-        delay(250);
+        Serial.println("Error: cannot allocate required buffers.");
+        return false;
         }
 
-    if (PIN_BACKLIGHT != 255)
+    viewport_image.set(viewport_fb, VIEW_W, VIEW_H);
+    return true;
+    }
+
+void initDisplay()
+    {
+    Serial.println("Initializing LovyanGFX...");
+    lcd.init();
+    lcd.setRotation(1);
+    lcd.setBrightness(200);
+    lcd.setColorDepth(16);
+    lcd.setSwapBytes(true);
+    lcd.fillScreen(TFT_BLACK);
+
+    Serial.print("Display size: ");
+    Serial.print(lcd.width());
+    Serial.print(" x ");
+    Serial.println(lcd.height());
+
+    if (lcd.width() != SCREEN_W || lcd.height() != SCREEN_H)
         {
-        pinMode(PIN_BACKLIGHT, OUTPUT);
-        digitalWrite(PIN_BACKLIGHT, HIGH);
+        Serial.println("Warning: this UI expects a 320 x 240 landscape display.");
         }
 
-    tft.setFramebuffer(internal_fb);
-    tft.setDiffBuffers(&diff1, &diff2);
-    tft.setRotation(1);
-    tft.setDiffGap(4);
-    tft.setVSyncSpacing(1);
-    tft.setRefreshRate(100);
-    tft.clear(0);
-
-#if TGX_LVGL_MESHVIEWER_RUN_TOUCH_CALIBRATION
-    Serial.println("Touch calibration mode enabled.");
-    int touch_calib[4];
-    tft.calibrateTouch(touch_calib);
-    Serial.print("Paste these constants into touch_calib: { ");
-    Serial.print(touch_calib[0]); Serial.print(", ");
-    Serial.print(touch_calib[1]); Serial.print(", ");
-    Serial.print(touch_calib[2]); Serial.print(", ");
-    Serial.print(touch_calib[3]); Serial.println(" }");
-    tft.setTouchCalibration(touch_calib);
-#else
-    int touch_calib[4] = { 3856, 260, 3895, 431 };
-    tft.setTouchCalibration(touch_calib);
-    Serial.println("Touch calibration constants loaded.");
-#endif
-
-    Serial.println("ILI9341_T4 ready.");
+    Serial.println("LovyanGFX ready.");
     }
 
 void initLVGL()
@@ -601,9 +617,11 @@ void initLVGL()
     lv_init();
     lv_tick_set_cb(lvgl_tick);
 
+    // Partial mode: LVGL renders into lvgl_buf in strips instead of requiring a
+    // second full-screen framebuffer.
     disp = lv_display_create(SCREEN_W, SCREEN_H);
     lv_display_set_flush_cb(disp, lvgl_flush);
-    lv_display_set_buffers(disp, lvgl_buf, nullptr, SCREEN_W * LVGL_BUF_LINES * sizeof(int16_t), LV_DISPLAY_RENDER_MODE_PARTIAL);
+    lv_display_set_buffers(disp, lvgl_buf, nullptr, SCREEN_W * LVGL_BUF_LINES * sizeof(lv_color_t), LV_DISPLAY_RENDER_MODE_PARTIAL);
 
     indev = lv_indev_create();
     lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
@@ -617,6 +635,9 @@ void initTGX()
     {
     Serial.println("Initializing TGX renderer...");
     resetModelOrientation();
+
+    // TGX renders into viewport_image only. The final physical upload still
+    // goes through LVGL + LovyanGFX.
     renderer.setViewportSize(VIEW_W, VIEW_H);
     renderer.setOffset(0, 0);
     renderer.setImage(&viewport_image);
@@ -628,14 +649,12 @@ void initTGX()
     renderer.setMaterial(RGBf(1.0f, 0.66f, 0.16f), 0.15f, 0.70f, 1.0f, 96);
     renderer.setLightDirection({ -0.35f, -0.55f, -1.0f });
 
-    Serial.print("Screen framebuffer bytes: ");
-    Serial.println(sizeof(internal_fb));
     Serial.print("LVGL draw buffer bytes: ");
-    Serial.println(sizeof(lvgl_buf));
+    Serial.println((size_t)SCREEN_W * LVGL_BUF_LINES * sizeof(lv_color_t));
     Serial.print("TGX viewport buffer bytes: ");
-    Serial.println(sizeof(viewport_fb));
+    Serial.println((size_t)VIEW_W * VIEW_H * sizeof(uint16_t));
     Serial.print("TGX z-buffer bytes: ");
-    Serial.println(sizeof(zbuf));
+    Serial.println((size_t)VIEW_W * VIEW_H * sizeof(uint16_t));
     Serial.print("TGX mesh cache bytes: ");
     Serial.println(MESH_CACHE_SIZE);
 
@@ -645,23 +664,39 @@ void initTGX()
 
 void setup()
     {
-    Serial.begin(9600);
-    delay(300);
+    Serial.begin(115200);
+    delay(800);
     Serial.println();
+    Serial.println("TGX_LVGL_MESHVIEWER_BEGIN");
+#if defined(CONFIG_IDF_TARGET_ESP32S3)
+    Serial.println("BOARD=CoreS3");
+#else
+    Serial.println("BOARD=Core2");
+#endif
     Serial.println("TGX + LVGL Mesh Viewer starting.");
 
-    initTFT();
+    initDisplay();
+    if (!allocateBuffers())
+        {
+        lcd.fillScreen(TFT_RED);
+        while (true) delay(1000);
+        }
+
     initLVGL();
     initTGX();
 
     last_stats_ms = millis();
     renderViewport();
+    Serial.println("RESULT=OK");
+    Serial.println("TGX_LVGL_MESHVIEWER_READY");
     }
 
 void loop()
     {
     lv_timer_handler();
 
+    // Keep rendering demand-driven: LVGL can run every loop, while TGX redraws
+    // only when the model/UI changed or when auto-rotation advances.
     const uint32_t now = millis();
     if (auto_rotate && now - last_render_ms >= 33)
         {

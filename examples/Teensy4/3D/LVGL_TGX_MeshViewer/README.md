@@ -1,4 +1,4 @@
-# LVGL TGX Mesh Viewer ILI9341_T4
+# LVGL TGX Mesh Viewer
 
 Interactive Teensy 4.1 example combining:
 
@@ -37,35 +37,12 @@ Default SPI0 wiring:
 
 The local LVGL configuration must be enabled and set to `LV_COLOR_DEPTH 16`. The local setup used for this example has `LV_USE_CANVAS`, `LV_USE_DROPDOWN`, `LV_USE_SLIDER`, `LV_USE_SWITCH`, and Montserrat 12/14 enabled.
 
-## Compile
+This example is close to the Teensy 4.1 RAM1/ITCM limit. If the default build does not fit, either compile it with `Smallest Code with LTO`, or reduce LVGL's memory pool in `lv_conf.h`:
 
-From `D:\Programmation\tgx`:
-
-```powershell
-arduino-cli compile --fqbn teensy:avr:teensy41 --libraries D:\Programmation\arduino\libraries examples\Teensy4\LVGL_TGX_MeshViewer_ILI9341_T4
+```cpp
+#define LV_MEM_SIZE (32 * 1024U)
 ```
 
-If `arduino-cli` is not in `PATH`:
-
-```powershell
-& "C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe" compile --fqbn teensy:avr:teensy41 --libraries D:\Programmation\arduino\libraries examples\Teensy4\LVGL_TGX_MeshViewer_ILI9341_T4
-```
-
-## Upload
-
-Detect the current Teensy port:
-
-```powershell
-arduino-cli board list
-```
-
-Then compile and upload, replacing the port if needed:
-
-```powershell
-arduino-cli compile --fqbn teensy:avr:teensy41 --libraries D:\Programmation\arduino\libraries --port usb:80000/3/0/1 --upload examples\Teensy4\LVGL_TGX_MeshViewer_ILI9341_T4
-```
-
-Close any serial monitor before uploading.
 
 ## Controls
 
@@ -80,25 +57,15 @@ Close any serial monitor before uploading.
 
 ## Touch Calibration
 
-The default build does not call `tft.calibrateTouch()` because it blocks waiting for user input.
+The default build calls `tft.calibrateTouch()` at startup so the touch input can be matched to the connected screen.
 
-To run calibration manually, set:
-
-```cpp
-#define TGX_LVGL_MESHVIEWER_RUN_TOUCH_CALIBRATION 1
-```
-
-The sketch prints four calibration constants to Serial. Paste them back into the disabled-by-default calibration block, then set the macro back to `0`.
-
-## Color Test
-
-To diagnose RGB565 byte order or swapped red/blue colors, set:
+To skip calibration and use the stored constants, set:
 
 ```cpp
-#define TGX_LVGL_MESHVIEWER_COLOR_TEST 1
+#define TGX_LVGL_MESHVIEWER_RUN_TOUCH_CALIBRATION 0
 ```
 
-The TGX viewport will draw red, green, and blue bars instead of rendering the mesh.
+The sketch prints four calibration constants to Serial. Paste them back into the stored calibration block if you want to reuse them later.
 
 ## Memory Notes
 
@@ -111,21 +78,8 @@ Main buffers:
 - TGX mesh cache: 96 KB in `DMAMEM`, re-used for the selected mesh. Smaller payloads fit better in cache; larger textured meshes keep remaining payload and texture pixels mostly in PROGMEM.
 - Two ILI9341_T4 diff buffers: 8 KB each.
 
-The example caches only the selected mesh. If the cache is too small, `tgx::cacheMesh()` still returns a usable mesh pointer with the data that did not fit left in PROGMEM.
-
 ## Troubleshooting
 
 - No display: check SPI wiring, power, reset pin, and that the sketch uses landscape rotation.
-- No touch: check `PIN_TOUCH_CS`, `PIN_TOUCH_IRQ`, and run calibration manually if coordinates are wrong.
-- Swapped colors: enable `TGX_LVGL_MESHVIEWER_COLOR_TEST` and verify the red, green, and blue bars.
+- No touch: check `PIN_TOUCH_CS`, `PIN_TOUCH_IRQ`, and rerun calibration if coordinates are wrong.
 - LVGL compile errors: verify LVGL 9.5, `lv_conf.h` in the Arduino libraries root, `LV_COLOR_DEPTH 16`, and the required widgets enabled.
-- Upload problems: run `arduino-cli board list`, close serial monitors, reconnect the Teensy, or press the program button.
-- Low FPS: use the Teapot, Bunny, Donkey, Cyborg, or Spot mesh, reduce `VIEW_W`/`VIEW_H`, reduce mesh cache pressure, or disable Serial render-time prints. Textured Bob, Blub, and Falcon are heavier.
-
-## Known Limitations
-
-- One ILI9341 display only.
-- Reduced TGX viewport, not full-screen 3D.
-- Single-touch pointer input.
-- Includes local copies of all mesh and texture headers used by the sketch: Teapot, Bunny, Bob, Blub, Falcon, Donkey, Cyborg, and Spot. The sketch does not include mesh assets from another example directory.
-- Visual validation still requires checking the connected hardware after upload.
