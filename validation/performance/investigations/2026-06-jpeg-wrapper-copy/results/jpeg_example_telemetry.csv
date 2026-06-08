@@ -1,0 +1,5 @@
+board,decoder,result,open_result,time_us,fb_hash,nonzero,image_w,image_h,source_note
+Core2,JPEG,1,1,37207,90420DE9,51524,320,240,raw telemetry pruned after compact summary was retained
+CoreS3,JPEG,1,1,21345,51B99722,52092,320,240,raw telemetry pruned after compact summary was retained
+Pico2,JPEG,1,1,36422,90420DE9,51524,320,240,raw telemetry pruned after compact summary was retained
+Teensy41,JPEG,1,1,5100,90420DE9,51524,320,240,raw telemetry pruned after compact summary was retained

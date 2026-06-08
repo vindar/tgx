@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('md_docs_intro_api_3_d.html',''); initR
 <li>choose a camera and a projection;</li>
 <li>place the object you want to draw;</li>
 <li>choose the shader, material, texture and light state;</li>
-<li>call a drawing method such as <a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh()</a> or <a class="el" href="classtgx_1_1_renderer3_d.html#a44f87bfade3e549ef8b3ec2468705e77">drawCube()</a>.</li>
+<li>call a drawing method such as <a class="el" href="classtgx_1_1_renderer3_d.html#aa358d09bc8f54c866176b0c7d94a7a49">drawMesh()</a> or <a class="el" href="classtgx_1_1_renderer3_d.html#a514789feab6fba56361312d598b94a2c">drawCube()</a>. For textured backgrounds, use <a class="el" href="classtgx_1_1_renderer3_d.html#a4a5ad961cb278aa73bb55a7c3f81a8a3">drawSkyBox()</a>.</li>
 </ul>
 <p >TGX keeps these steps visible because, on MCUs, memory placement, shader variants and draw-call cost matter a lot.</p>
 <p ><img src="../buddha.png" alt="buddha" class="inline"/></p>
@@ -125,21 +125,21 @@ What Renderer3D Does</h1>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">State   </th><th class="markdownTableHeadNone">What it means   </th><th class="markdownTableHeadNone">Main methods    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Destination   </td><td class="markdownTableBodyNone">The image receiving the pixels, plus the virtual viewport and tile offset.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a99e31001994fa3444b15e7037a1d5f1d">setImage()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa">setViewportSize()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#afc1eaf179bc6573ab508ab3a7e38dab9">setOffset()</a>    </td></tr>
+<td class="markdownTableBodyNone">Destination   </td><td class="markdownTableBodyNone">The image receiving the pixels, plus the virtual viewport and tile offset.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a6676eeae84619bb44ee7fae28015a486">setImage()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a7c655ddebbc3d20e0e78511ba70940bd">setViewportSize()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#aa1320702fa0433655494872055a9c7c4">setOffset()</a>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Depth buffer   </td><td class="markdownTableBodyNone">Optional per-pixel depth storage used by solid rendering.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a516e700a5470f52cbd9a82dd59f8c968">setZbuffer()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#ad613bdffc57596703abe1a2a47583003">clearZbuffer()</a>    </td></tr>
+<td class="markdownTableBodyNone">Depth buffer   </td><td class="markdownTableBodyNone">Optional per-pixel depth storage used by solid rendering.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a43d72977c87b8ffef2a00ea8f5eeb67e">setZbuffer()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#ad03234d6a56d930f9674ad20ddf809f6">clearZbuffer()</a>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Projection   </td><td class="markdownTableBodyNone">Perspective or orthographic mapping from camera space to clip space, then to NDC.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a8437622c6b90f9429769504848d22456">setPerspective()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a8ff9976b53c527e62c95be427620685f">setOrtho()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#af0ae032c0be73580be8e61c53ad42545">setFrustum()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#af0c31304f8ec4425401629a7846adff5">setProjectionMatrix()</a>    </td></tr>
+<td class="markdownTableBodyNone">Projection   </td><td class="markdownTableBodyNone">Perspective or orthographic mapping from camera space to clip space, then to NDC.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a9d4cdff9692f778ce738e44912c105cb">setPerspective()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a881596371e928979a5d364ecfb1a3bc5">setOrtho()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a9ad6dc8e2efd278b4ad51801a00945ba">setFrustum()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a5048e35266e5ec873b832679b18044fb">setProjectionMatrix()</a>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Camera/view   </td><td class="markdownTableBodyNone">Placement and orientation of the camera.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#abd6d8dbf64d64db311eb2854bdf1ceb1">setLookAt()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a6cad095ff0d7eefbdb93ac04b6a3efff">setViewMatrix()</a>    </td></tr>
+<td class="markdownTableBodyNone">Camera/view   </td><td class="markdownTableBodyNone">Placement and orientation of the camera.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#aec104694833574c64adaa5dd6e238e99">setLookAt()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#ac859c228ad2e10110dea46cf1995e65f">setViewMatrix()</a>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Current object   </td><td class="markdownTableBodyNone">Placement, scale and rotation of the object currently being drawn.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a7ca1f0b53ca7460869fc3031f8422240">setModelMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a29025a5ef39eaf15590bdba70b0e4e9d">setModelPosScaleRot()</a>    </td></tr>
+<td class="markdownTableBodyNone">Current object   </td><td class="markdownTableBodyNone">Placement, scale and rotation of the object currently being drawn.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a9414344240ad5d325440c85094c5b199">setModelMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#abd8f14812c37ecf0a55b4ace4eeddd96">setModelPosScaleRot()</a>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Shader state   </td><td class="markdownTableBodyNone">The rendering path selected for subsequent draw calls.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a2547893a21094d5f23473ca8d3f7ee36">setShaders()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#af16b835173d22fc203451cd205cb2d34">setTextureQuality()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a5eb0863850052e0f5d4c4156cdd5e8b4">setTextureWrappingMode()</a>    </td></tr>
+<td class="markdownTableBodyNone">Shader state   </td><td class="markdownTableBodyNone">The rendering path selected for subsequent draw calls.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a5d7e2a9ffaf174ff2a6cfc0187f001b6">setShaders()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a040fde621543f0cf79f876cdca1ed969">setTextureQuality()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a7c5e6f6b50d6661ccc930fc77e8c7a6d">setTextureWrappingMode()</a>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Material and light   </td><td class="markdownTableBodyNone">Colors and lighting coefficients used by flat/Gouraud shaders.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a594bb296fe042612d4036c04ae1e2d1b">setLightDirection()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a5ad40825895c5cb3a675fb15c2035d97">setLight()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a5ae2f4be4d9c231fdd4f8f624a80a4e8">setMaterial()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a5452d61ed252f1ccdce87834ffd8491f">setMaterialColor()</a>    </td></tr>
+<td class="markdownTableBodyNone">Material and light   </td><td class="markdownTableBodyNone">Colors and lighting coefficients used by flat/Gouraud shaders.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a3f294a2e2aa2162a1b5199f19bc5cbe6">setLightDirection()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#ae12e935db2d993073550230e1ead5ebf">setLight()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#ae9248e4d0ac11d5a07fcd6cf693e115f">setMaterial()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#ad0b34dd2bee58071535279229189122e">setMaterialColor()</a>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Culling/debug   </td><td class="markdownTableBodyNone">Back-face culling and diagnostic drawing modes.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a76fa32770476cd15f717d3f103fd752d">setCulling()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#ae167aca012374ff0ebd009ca3a008df9">drawWireFrameMesh()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#ae965bedf9a2eb21f8a5cc7c2f389f367">drawDot()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a8bf2c28c514af367fd47964577f1584d">drawPixel()</a>   </td></tr>
+<td class="markdownTableBodyNone">Culling/debug   </td><td class="markdownTableBodyNone">Back-face culling and diagnostic drawing modes.   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ac1d1739c5802c4665390f5c4a3afd2de">setCulling()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a3ed28a9131fae01e6d015c413dc469f1">drawWireFrameMesh()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#ada21f8622ebd995e173d6637e7ac1fcc">drawDot()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#ad45ddef481400628e161eece3af4af0f">drawPixel()</a>   </td></tr>
 </table>
 <p >A small frame can look like this:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tgx_8h.html">tgx.h</a>&gt;</span></div>
@@ -161,7 +161,7 @@ What Renderer3D Does</h1>
 <div class="line"><span class="keywordtype">void</span> drawFrame(<span class="keywordtype">float</span> angle)</div>
 <div class="line">{</div>
 <div class="line">    image.clear(tgx::RGB565_Black);</div>
-<div class="line">    renderer.<a class="code hl_function" href="classtgx_1_1_renderer3_d.html#ad613bdffc57596703abe1a2a47583003">clearZbuffer</a>();</div>
+<div class="line">    renderer.<a class="code hl_function" href="classtgx_1_1_renderer3_d.html#ad03234d6a56d930f9674ad20ddf809f6">clearZbuffer</a>();</div>
 <div class="line"> </div>
 <div class="line">    renderer.setPerspective(45.0f, (<span class="keywordtype">float</span>)W / H, 0.1f, 100.0f);</div>
 <div class="line">    renderer.setLookAt({ 0.0f, 0.0f, 6.0f },   <span class="comment">// camera position</span></div>
@@ -180,10 +180,10 @@ What Renderer3D Does</h1>
 <div class="line">}</div>
 <div class="ttc" id="a_shader_params_8h_html_ab84545b1975d51484ba2f5970b858d07"><div class="ttname"><a href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">tgx::Shader</a></div><div class="ttdeci">Shader</div><div class="ttdoc">List of shaders available for 3D graphics.</div><div class="ttdef"><b>Definition:</b> ShaderParams.h:44</div></div>
 <div class="ttc" id="aclasstgx_1_1_image_html"><div class="ttname"><a href="classtgx_1_1_image.html">tgx::Image</a></div><div class="ttdoc">Image class [MAIN CLASS FOR THE 2D API].</div><div class="ttdef"><b>Definition:</b> Image.h:145</div></div>
-<div class="ttc" id="aclasstgx_1_1_renderer3_d_html"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a></div><div class="ttdoc">Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].</div><div class="ttdef"><b>Definition:</b> Renderer3D.h:109</div></div>
-<div class="ttc" id="aclasstgx_1_1_renderer3_d_html_ad613bdffc57596703abe1a2a47583003"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#ad613bdffc57596703abe1a2a47583003">tgx::Renderer3D::clearZbuffer</a></div><div class="ttdeci">void clearZbuffer()</div><div class="ttdoc">Clear the Zbuffer.</div></div>
+<div class="ttc" id="aclasstgx_1_1_renderer3_d_html"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a></div><div class="ttdoc">Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].</div><div class="ttdef"><b>Definition:</b> Renderer3D.h:115</div></div>
+<div class="ttc" id="aclasstgx_1_1_renderer3_d_html_ad03234d6a56d930f9674ad20ddf809f6"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#ad03234d6a56d930f9674ad20ddf809f6">tgx::Renderer3D::clearZbuffer</a></div><div class="ttdeci">void clearZbuffer()</div><div class="ttdoc">Clear the Zbuffer.</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:216</div></div>
-<div class="ttc" id="astructtgx_1_1_r_g_bf_html"><div class="ttname"><a href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a></div><div class="ttdoc">Color in R,G,B float format.</div><div class="ttdef"><b>Definition:</b> Color.h:2407</div></div>
+<div class="ttc" id="astructtgx_1_1_r_g_bf_html"><div class="ttname"><a href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a></div><div class="ttdoc">Color in R,G,B float format.</div><div class="ttdef"><b>Definition:</b> Color.h:2405</div></div>
 <div class="ttc" id="atgx_8h_html"><div class="ttname"><a href="tgx_8h.html">tgx.h</a></div><div class="ttdoc">Main header file.</div></div>
 </div><!-- fragment --><p >On an embedded display, the last step is often an upload of <code>image</code> to the screen driver. On a desktop target, the same image can be displayed in a window or written to a file.</p>
 <p >In a larger sketch, separate the state that changes rarely from the state that changes every frame:</p>
@@ -226,13 +226,13 @@ Coordinate Spaces</h1>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Transform   </th><th class="markdownTableHeadNone">Matrix/API   </th><th class="markdownTableHeadNone">Role    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Object placement   </td><td class="markdownTableBodyNone">Model matrix, <a class="el" href="classtgx_1_1_renderer3_d.html#a7ca1f0b53ca7460869fc3031f8422240">setModelMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a29025a5ef39eaf15590bdba70b0e4e9d">setModelPosScaleRot()</a>   </td><td class="markdownTableBodyNone">Converts model coordinates to world coordinates.    </td></tr>
+<td class="markdownTableBodyNone">Object placement   </td><td class="markdownTableBodyNone">Model matrix, <a class="el" href="classtgx_1_1_renderer3_d.html#a9414344240ad5d325440c85094c5b199">setModelMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#abd8f14812c37ecf0a55b4ace4eeddd96">setModelPosScaleRot()</a>   </td><td class="markdownTableBodyNone">Converts model coordinates to world coordinates.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Camera placement   </td><td class="markdownTableBodyNone">View matrix, <a class="el" href="classtgx_1_1_renderer3_d.html#a6cad095ff0d7eefbdb93ac04b6a3efff">setViewMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#abd6d8dbf64d64db311eb2854bdf1ceb1">setLookAt()</a>   </td><td class="markdownTableBodyNone">Converts world coordinates to camera/view coordinates.    </td></tr>
+<td class="markdownTableBodyNone">Camera placement   </td><td class="markdownTableBodyNone">View matrix, <a class="el" href="classtgx_1_1_renderer3_d.html#ac859c228ad2e10110dea46cf1995e65f">setViewMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#aec104694833574c64adaa5dd6e238e99">setLookAt()</a>   </td><td class="markdownTableBodyNone">Converts world coordinates to camera/view coordinates.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Camera lens   </td><td class="markdownTableBodyNone">Projection matrix, <a class="el" href="classtgx_1_1_renderer3_d.html#a8437622c6b90f9429769504848d22456">setPerspective()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a8ff9976b53c527e62c95be427620685f">setOrtho()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#af0ae032c0be73580be8e61c53ad42545">setFrustum()</a>   </td><td class="markdownTableBodyNone">Converts view coordinates to clip coordinates; perspective projection then divides by <code>w</code> to get NDC.    </td></tr>
+<td class="markdownTableBodyNone">Camera lens   </td><td class="markdownTableBodyNone">Projection matrix, <a class="el" href="classtgx_1_1_renderer3_d.html#a9d4cdff9692f778ce738e44912c105cb">setPerspective()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a881596371e928979a5d364ecfb1a3bc5">setOrtho()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a9ad6dc8e2efd278b4ad51801a00945ba">setFrustum()</a>   </td><td class="markdownTableBodyNone">Converts view coordinates to clip coordinates; perspective projection then divides by <code>w</code> to get NDC.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Pixel mapping   </td><td class="markdownTableBodyNone">Viewport and offset, <a class="el" href="classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa">setViewportSize()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#afc1eaf179bc6573ab508ab3a7e38dab9">setOffset()</a>   </td><td class="markdownTableBodyNone">Converts NDC coordinates to image pixels.   </td></tr>
+<td class="markdownTableBodyNone">Pixel mapping   </td><td class="markdownTableBodyNone">Viewport and offset, <a class="el" href="classtgx_1_1_renderer3_d.html#a7c655ddebbc3d20e0e78511ba70940bd">setViewportSize()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#aa1320702fa0433655494872055a9c7c4">setOffset()</a>   </td><td class="markdownTableBodyNone">Converts NDC coordinates to image pixels.   </td></tr>
 </table>
 <p >The full pipeline is:</p>
 <p ><img src="../3d_pipeline.svg" alt="3d_pipeline" style="pointer-events: none;" class="inline"/></p>
@@ -339,11 +339,11 @@ Renderer Matrices</h2>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Matrix   </th><th class="markdownTableHeadNone">Maps from   </th><th class="markdownTableHeadNone">Maps to   </th><th class="markdownTableHeadNone">Main TGX methods    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Model matrix   </td><td class="markdownTableBodyNone">Model space   </td><td class="markdownTableBodyNone">World space   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a7ca1f0b53ca7460869fc3031f8422240">setModelMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a92666f8cccbb7233cae2fc07322efcc3">getModelMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a29025a5ef39eaf15590bdba70b0e4e9d">setModelPosScaleRot()</a>    </td></tr>
+<td class="markdownTableBodyNone">Model matrix   </td><td class="markdownTableBodyNone">Model space   </td><td class="markdownTableBodyNone">World space   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a9414344240ad5d325440c85094c5b199">setModelMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a9375b386649b40e2de3c82492614e2a0">getModelMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#abd8f14812c37ecf0a55b4ace4eeddd96">setModelPosScaleRot()</a>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">View matrix   </td><td class="markdownTableBodyNone">World space   </td><td class="markdownTableBodyNone">View/camera space   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a6cad095ff0d7eefbdb93ac04b6a3efff">setViewMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a35bf226bb8236ad48314bca2bd0f31f8">getViewMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#abd6d8dbf64d64db311eb2854bdf1ceb1">setLookAt()</a>    </td></tr>
+<td class="markdownTableBodyNone">View matrix   </td><td class="markdownTableBodyNone">World space   </td><td class="markdownTableBodyNone">View/camera space   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ac859c228ad2e10110dea46cf1995e65f">setViewMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a7c835852a899217db08a2ccd77d1e14e">getViewMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#aec104694833574c64adaa5dd6e238e99">setLookAt()</a>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Projection matrix   </td><td class="markdownTableBodyNone">View space   </td><td class="markdownTableBodyNone">Clip space   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#af0c31304f8ec4425401629a7846adff5">setProjectionMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a4bce4752b73a38862733b4f2bcb6f04f">getProjectionMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a8437622c6b90f9429769504848d22456">setPerspective()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a8ff9976b53c527e62c95be427620685f">setOrtho()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#af0ae032c0be73580be8e61c53ad42545">setFrustum()</a>   </td></tr>
+<td class="markdownTableBodyNone">Projection matrix   </td><td class="markdownTableBodyNone">View space   </td><td class="markdownTableBodyNone">Clip space   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a5048e35266e5ec873b832679b18044fb">setProjectionMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a5252a0e6323fe799a2d01aa27c53fd4c">getProjectionMatrix()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a9d4cdff9692f778ce738e44912c105cb">setPerspective()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a881596371e928979a5d364ecfb1a3bc5">setOrtho()</a>, <a class="el" href="classtgx_1_1_renderer3_d.html#a9ad6dc8e2efd278b4ad51801a00945ba">setFrustum()</a>   </td></tr>
 </table>
 <p >Internally, the renderer also keeps a <b>model-view matrix</b> derived from <code>view * model</code>. You normally do not set it yourself; it is recomputed when the model or view matrix changes.</p>
 <p >The short version is:</p>
@@ -366,7 +366,7 @@ Renderer Matrices</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// 3. Place the current object in the world.</span></div>
 <div class="line">renderer.setModelPosScaleRot(position, scale, angle_degrees, axis);</div>
-</div><!-- fragment --><p ><a class="el" href="classtgx_1_1_renderer3_d.html#a29025a5ef39eaf15590bdba70b0e4e9d">setModelPosScaleRot()</a> is the convenient form for most objects: position, scale, rotation angle and rotation axis. Use <a class="el" href="classtgx_1_1_renderer3_d.html#a7ca1f0b53ca7460869fc3031f8422240">setModelMatrix()</a> when you already have a full matrix.</p>
+</div><!-- fragment --><p ><a class="el" href="classtgx_1_1_renderer3_d.html#abd8f14812c37ecf0a55b4ace4eeddd96">setModelPosScaleRot()</a> is the convenient form for most objects: position, scale, rotation angle and rotation axis. Use <a class="el" href="classtgx_1_1_renderer3_d.html#a9414344240ad5d325440c85094c5b199">setModelMatrix()</a> when you already have a full matrix.</p>
 <p ><code>setLookAt()</code> builds the view matrix:</p>
 <div class="fragment"><div class="line">renderer.setLookAt({ 0.0f, 2.0f, 6.0f },    <span class="comment">// eye: camera position in world space</span></div>
 <div class="line">                   { 0.0f, 0.0f, 0.0f },    <span class="comment">// center: point being looked at</span></div>
@@ -377,33 +377,34 @@ Renderer Matrices</h2>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Use    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a8437622c6b90f9429769504848d22456">setPerspective(fovy, aspect, zNear, zFar)</a>   </td><td class="markdownTableBodyNone">Usual perspective camera; distant objects appear smaller.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a9d4cdff9692f778ce738e44912c105cb">setPerspective(fovy, aspect, zNear, zFar)</a>   </td><td class="markdownTableBodyNone">Usual perspective camera; distant objects appear smaller.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#af0ae032c0be73580be8e61c53ad42545">setFrustum(left, right, bottom, top, zNear, zFar)</a>   </td><td class="markdownTableBodyNone">Explicit perspective frustum.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a9ad6dc8e2efd278b4ad51801a00945ba">setFrustum(left, right, bottom, top, zNear, zFar)</a>   </td><td class="markdownTableBodyNone">Explicit perspective frustum.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a8ff9976b53c527e62c95be427620685f">setOrtho(left, right, bottom, top, zNear, zFar)</a>   </td><td class="markdownTableBodyNone">Orthographic view; object size does not depend on distance.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a881596371e928979a5d364ecfb1a3bc5">setOrtho(left, right, bottom, top, zNear, zFar)</a>   </td><td class="markdownTableBodyNone">Orthographic view; object size does not depend on distance.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#af0c31304f8ec4425401629a7846adff5">setProjectionMatrix(M)</a>   </td><td class="markdownTableBodyNone">Use a custom projection matrix.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a5048e35266e5ec873b832679b18044fb">setProjectionMatrix(M)</a>   </td><td class="markdownTableBodyNone">Use a custom projection matrix.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a7bff46c6c71c78546267d7b75bb12644">usePerspectiveProjection()</a>   </td><td class="markdownTableBodyNone">Tell the renderer that a custom projection is perspective.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ab5047532c4ad14e138d2ac858e37b6a5">usePerspectiveProjection()</a>   </td><td class="markdownTableBodyNone">Tell the renderer that a custom projection is perspective.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#acf7c15aa00b471522a50af525cf41032">useOrthographicProjection()</a>   </td><td class="markdownTableBodyNone">Tell the renderer that a custom projection is orthographic.   </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ac784020c7ac9c32af89a733254824622">useOrthographicProjection()</a>   </td><td class="markdownTableBodyNone">Tell the renderer that a custom projection is orthographic.   </td></tr>
 </table>
 <p >The last two methods are only needed after <code>setProjectionMatrix()</code>. The standard helpers call them automatically.</p>
 <p >Changing the model matrix affects the next object. Changing the view matrix moves the camera. Changing the projection matrix changes the lens.</p>
 <p >All solid primitive calls (<code>drawTriangle()</code>, <code>drawCube()</code>, <code>drawSphere()</code>, <code>drawMesh()</code>...) take coordinates in model space. In a render loop, update the model matrix just before drawing the object it belongs to.</p>
+<p ><code>drawSkyBox()</code> is the main exception: it is intended for backgrounds, not model geometry. It ignores the current model matrix and uses the current camera/view matrix directly.</p>
 <p >When debugging transforms, these methods are useful:</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Converts    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ae5e7d7c90ab94776798b8031a30235f2">modelToNDC(P)</a>   </td><td class="markdownTableBodyNone">A model-space point to normalized device coordinates.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#aac77b6c9a682f085f491c7d606539a9d">modelToNDC(P)</a>   </td><td class="markdownTableBodyNone">A model-space point to normalized device coordinates.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a27bb400f5ad09195a860f6f7ab3db71c">modelToImage(P)</a>   </td><td class="markdownTableBodyNone">A model-space point to image pixels.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a5d2f09a13c3c0c69484109f140386885">modelToImage(P)</a>   </td><td class="markdownTableBodyNone">A model-space point to image pixels.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a63284e47ac2f832f122df06bcbd3193a">worldToNDC(P)</a>   </td><td class="markdownTableBodyNone">A world-space point to normalized device coordinates.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ad0e5ff07c10c58eb109aec814d023107">worldToNDC(P)</a>   </td><td class="markdownTableBodyNone">A world-space point to normalized device coordinates.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a76c4ce4af7e3c7da2e3a1a7d1d0d4f01">worldToImage(P)</a>   </td><td class="markdownTableBodyNone">A world-space point to image pixels.   </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a61d8e1c914bc1c8bfcf4fbc14dba4e07">worldToImage(P)</a>   </td><td class="markdownTableBodyNone">A world-space point to image pixels.   </td></tr>
 </table>
 <p >These methods are useful when placing labels, debugging a camera, or checking why an object is outside the view.</p>
 <p >Normals describe surface orientation. Non-uniform scale is a special case because normals cannot be transformed like ordinary points. TGX keeps the runtime small and works best with normalized mesh normals and mostly uniform scales.</p>
@@ -418,9 +419,9 @@ Projection and Viewport Mapping</h2>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Projection   </th><th class="markdownTableHeadNone">TGX call   </th><th class="markdownTableHeadNone">Visual effect    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Perspective   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a8437622c6b90f9429769504848d22456">setPerspective(fovy, aspect, zNear, zFar)</a>   </td><td class="markdownTableBodyNone">Distant objects become smaller. This is the standard 3D camera look.    </td></tr>
+<td class="markdownTableBodyNone">Perspective   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a9d4cdff9692f778ce738e44912c105cb">setPerspective(fovy, aspect, zNear, zFar)</a>   </td><td class="markdownTableBodyNone">Distant objects become smaller. This is the standard 3D camera look.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Orthographic   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a8ff9976b53c527e62c95be427620685f">setOrtho(left, right, bottom, top, zNear, zFar)</a>   </td><td class="markdownTableBodyNone">Object size does not depend on distance. This is useful for CAD-like views, debug views or 3D overlays.   </td></tr>
+<td class="markdownTableBodyNone">Orthographic   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a881596371e928979a5d364ecfb1a3bc5">setOrtho(left, right, bottom, top, zNear, zFar)</a>   </td><td class="markdownTableBodyNone">Object size does not depend on distance. This is useful for CAD-like views, debug views or 3D overlays.   </td></tr>
 </table>
 <p >For perspective projection, <code>fovy</code> is the vertical field of view in degrees and <code>aspect</code> is normally <code>viewport_width / viewport_height</code>. If the aspect ratio is wrong, objects look stretched.</p>
 <p >After projection and perspective division, TGX rescales NDC coordinates to the virtual viewport, then applies the image offset:</p>
@@ -428,24 +429,28 @@ Projection and Viewport Mapping</h2>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Concept   </th><th class="markdownTableHeadNone">TGX method   </th><th class="markdownTableHeadNone">Notes    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Destination image   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a99e31001994fa3444b15e7037a1d5f1d">setImage()</a>   </td><td class="markdownTableBodyNone">Selects the <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> receiving pixels.    </td></tr>
+<td class="markdownTableBodyNone">Destination image   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a6676eeae84619bb44ee7fae28015a486">setImage()</a>   </td><td class="markdownTableBodyNone">Selects the <a class="el" href="classtgx_1_1_image.html">tgx::Image</a> receiving pixels.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Virtual viewport size   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a7222e72a480ce99a8eb3d3df2dfec0aa">setViewportSize()</a>   </td><td class="markdownTableBodyNone">The full projected pixel area. Often equal to the image size.    </td></tr>
+<td class="markdownTableBodyNone">Virtual viewport size   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a7c655ddebbc3d20e0e78511ba70940bd">setViewportSize()</a>   </td><td class="markdownTableBodyNone">The full projected pixel area. Often equal to the image size.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Image offset   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#afc1eaf179bc6573ab508ab3a7e38dab9">setOffset()</a>   </td><td class="markdownTableBodyNone">Places the current image inside a larger viewport for tile rendering.   </td></tr>
+<td class="markdownTableBodyNone">Image offset   </td><td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#aa1320702fa0433655494872055a9c7c4">setOffset()</a>   </td><td class="markdownTableBodyNone">Places the current image inside a larger viewport for tile rendering.   </td></tr>
 </table>
 <p >For a normal full-frame render, the image and viewport have the same size and the offset is <code>(0,0)</code>. For tile rendering, keep the viewport equal to the final screen size and draw smaller images at different offsets.</p>
 <h1><a class="anchor" id="sec_3D_renderer_template"></a>
 Renderer template parameters</h1>
-<p ><a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a> has three template parameters:</p>
-<div class="fragment"><div class="line"><a class="code hl_class" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D&lt;color_t, LOADED_SHADERS, ZBUFFER_t&gt;</a></div>
+<p ><a class="el" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a> has five template parameters. The last two are optional and keep the historical one-light renderer by default:</p>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D&lt;color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS&gt;</a></div>
 </div><!-- fragment --><ul>
 <li><code>color_t</code> is the destination color type, usually <code><a class="el" href="structtgx_1_1_r_g_b565.html" title="Color in R5/G6/B5 format.">tgx::RGB565</a></code> on MCU displays and <code><a class="el" href="structtgx_1_1_r_g_b24.html" title="Color in R8/G8/B8 format.">tgx::RGB24</a></code>, <code><a class="el" href="structtgx_1_1_r_g_b32.html" title="Color in R8/G8/B8/A8 format.">tgx::RGB32</a></code> or <code><a class="el" href="structtgx_1_1_r_g_bf.html" title="Color in R,G,B float format.">tgx::RGBf</a></code> on CPU.</li>
 <li><code>LOADED_SHADERS</code> is the compile-time list of shader variants that may be used.</li>
 <li><code>ZBUFFER_t</code> is either <code>float</code> or <code>uint16_t</code>.</li>
+<li><code>MAX_DIRECTIONAL_LIGHTS</code> is the compile-time capacity for directional lights. It defaults to <code>1</code>.</li>
+<li><code>MAX_SPOT_LIGHTS</code> is reserved for future spotlight support and defaults to <code>0</code>; spotlights are not rendered yet.</li>
 </ul>
 <p >The default <code>LOADED_SHADERS</code> enables every shader variant. This is convenient while experimenting. On MCU targets, load only the variants you use: it reduces code size and can help speed.</p>
-<p >This compile-time shader list is one of the ways TGX stays small. Unused rasterizer paths can be removed by the compiler.</p>
+<p >No shader flag is needed for multiple directional lights. To keep the fastest legacy path, leave <code>MAX_DIRECTIONAL_LIGHTS</code> at its default value. To enable the advanced directional-light API, instantiate the renderer with a larger capacity, for example:</p>
+<div class="fragment"><div class="line"><span class="keyword">using </span>Renderer = <a class="code hl_class" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D&lt;tgx::RGB565, shaders_loaded, uint16_t, 4&gt;</a>;</div>
+</div><!-- fragment --><p >This compile-time shader list is one of the ways TGX stays small. Unused rasterizer paths can be removed by the compiler.</p>
 <p >For example, a fast textured mesh renderer using perspective projection, a Z-buffer, Gouraud lighting, nearest texture sampling and power-of-two texture wrapping can be declared as:</p>
 <div class="fragment"><div class="line"><span class="keyword">const</span> <a class="code hl_enumeration" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">tgx::Shader</a> shaders_loaded = tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER | tgx::SHADER_GOURAUD |</div>
 <div class="line">                                   tgx::SHADER_TEXTURE_NEAREST | tgx::SHADER_TEXTURE_WRAP_POW2;</div>
@@ -526,9 +531,9 @@ Shader state</h2>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D&lt;tgx::RGB565, shaders_loaded, uint16_t&gt;</a> renderer({ W, H }, &amp;image, zbuffer);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Selected at runtime, before drawing.</span></div>
-<div class="line">renderer.<a class="code hl_function" href="classtgx_1_1_renderer3_d.html#a2547893a21094d5f23473ca8d3f7ee36">setShaders</a>(tgx::SHADER_GOURAUD | tgx::SHADER_TEXTURE);</div>
+<div class="line">renderer.<a class="code hl_function" href="classtgx_1_1_renderer3_d.html#a5d7e2a9ffaf174ff2a6cfc0187f001b6">setShaders</a>(tgx::SHADER_GOURAUD | tgx::SHADER_TEXTURE);</div>
 <div class="line">renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);</div>
-<div class="ttc" id="aclasstgx_1_1_renderer3_d_html_a2547893a21094d5f23473ca8d3f7ee36"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#a2547893a21094d5f23473ca8d3f7ee36">tgx::Renderer3D::setShaders</a></div><div class="ttdeci">void setShaders(Shader shaders)</div><div class="ttdoc">Set the shaders to use for subsequent drawing operations.</div></div>
+<div class="ttc" id="aclasstgx_1_1_renderer3_d_html_a5d7e2a9ffaf174ff2a6cfc0187f001b6"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#a5d7e2a9ffaf174ff2a6cfc0187f001b6">tgx::Renderer3D::setShaders</a></div><div class="ttdeci">void setShaders(Shader shaders)</div><div class="ttdoc">Set the shaders to use for subsequent drawing operations.</div></div>
 </div><!-- fragment --><p >If a sketch only uses unlit textured geometry, do not load the flat or Gouraud lighting paths. If it switches between a flat debug view and a textured view, load both <code>SHADER_FLAT</code> and the texture mode.</p>
 <p >Texture quality and wrapping may also be selected explicitly:</p>
 <div class="fragment"><div class="line">renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);</div>
@@ -549,7 +554,7 @@ Z-buffer</h2>
 <div class="line"><span class="keywordtype">void</span> drawFrame()</div>
 <div class="line">{</div>
 <div class="line">    image.clear(tgx::RGB565_Black);</div>
-<div class="line">    renderer.<a class="code hl_function" href="classtgx_1_1_renderer3_d.html#ad613bdffc57596703abe1a2a47583003">clearZbuffer</a>();</div>
+<div class="line">    renderer.<a class="code hl_function" href="classtgx_1_1_renderer3_d.html#ad03234d6a56d930f9674ad20ddf809f6">clearZbuffer</a>();</div>
 <div class="line">    renderer.drawMesh(&amp;mesh);</div>
 <div class="line">}</div>
 </div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>Clear the Z-buffer at the start of every frame. Also clear it after changing the viewport offset during tile rendering. If old depth values are left in place, parts of the next frame can disappear.</dd></dl>
@@ -579,12 +584,12 @@ Mesh3Dv2, Mesh3D and generated models</h1>
 <div class="line"> </div>
 <div class="line">renderer.setShaders(tgx::SHADER_GOURAUD | tgx::SHADER_NOTEXTURE);</div>
 <div class="line">renderer.drawMesh(&amp;buddha);</div>
-</div><!-- fragment --><p >For <code>Mesh3Dv2</code>, <a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh(mesh, use_mesh_material)</a> renders all meshlets in the model:</p>
+</div><!-- fragment --><p >For <code>Mesh3Dv2</code>, <a class="el" href="classtgx_1_1_renderer3_d.html#aa358d09bc8f54c866176b0c7d94a7a49">drawMesh(mesh, use_mesh_material)</a> renders all meshlets in the model:</p>
 <ul>
 <li><code>mesh</code>: the model to render;</li>
 <li><code>use_mesh_material</code>: when true, use the material colors, lighting strengths and texture pointers stored in the mesh.</li>
 </ul>
-<p >For legacy <code>Mesh3D</code>, <a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh(mesh, use_mesh_material, draw_chained_meshes)</a> also has:</p>
+<p >For legacy <code>Mesh3D</code>, <a class="el" href="classtgx_1_1_renderer3_d.html#aa358d09bc8f54c866176b0c7d94a7a49">drawMesh(mesh, use_mesh_material, draw_chained_meshes)</a> also has:</p>
 <ul>
 <li><code>draw_chained_meshes</code>: when true, also draw linked meshes.</li>
 </ul>
@@ -618,25 +623,27 @@ Drawing primitives directly</h2>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Use    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ad08c1eab35027a61fee8a22c68ea348d">drawTriangle()</a>   </td><td class="markdownTableBodyNone">Draw one triangle with optional normals, texture coordinates and texture.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#aa9ca132af0b58f6693f65ea195a424cf">drawTriangle()</a>   </td><td class="markdownTableBodyNone">Draw one triangle with optional normals, texture coordinates and texture.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a7bb17f3177a24fbeccbb0d8a801aef88">drawTriangleWithVertexColor()</a>   </td><td class="markdownTableBodyNone">Draw one triangle with explicit per-vertex colors.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a8a1377da08560fee7ae7c9bf6e1466e3">drawTriangleWithVertexColor()</a>   </td><td class="markdownTableBodyNone">Draw one triangle with explicit per-vertex colors.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ad54f3bb4aedeeee2efbb8aa9956bf17a">drawTriangles()</a>   </td><td class="markdownTableBodyNone">Draw an indexed array of triangles sharing vertex, normal and texture-coordinate arrays.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#afa91c9c9434e04c84f768e6cb90406bf">drawTriangles()</a>   </td><td class="markdownTableBodyNone">Draw an indexed array of triangles sharing vertex, normal and texture-coordinate arrays.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ab084f646ca1985114e8e50f030a5b5c7">drawTriangleStrip()</a>   </td><td class="markdownTableBodyNone">Draw one indexed triangle strip, reusing the two previous vertices for dynamic strip geometry.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ac7b7357460324815b95f3febb7b29c00">drawTriangleStrip()</a>   </td><td class="markdownTableBodyNone">Draw one indexed triangle strip, reusing the two previous vertices for dynamic strip geometry.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#afc1acda7d8cb5a16666acdb3306dcdd3">drawQuad()</a>   </td><td class="markdownTableBodyNone">Draw one quad, internally split into two triangles.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#aafbb2762fa5d6749bac5f1f6adddb35f">drawQuad()</a>   </td><td class="markdownTableBodyNone">Draw one quad, internally split into two triangles.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#addff7a6a3a439659704d29b524b7f6b2">drawQuadWithVertexColor()</a>   </td><td class="markdownTableBodyNone">Draw one quad with explicit per-vertex colors.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a1cd806dda236c90c1b819a89d19fbf71">drawQuadWithVertexColor()</a>   </td><td class="markdownTableBodyNone">Draw one quad with explicit per-vertex colors.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a01fe01f23d0925292db43938f164d5ad">drawQuads()</a>   </td><td class="markdownTableBodyNone">Draw an indexed array of quads.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a010c0f11c73d90f8a0c6b3cf4e3d78d2">drawQuads()</a>   </td><td class="markdownTableBodyNone">Draw an indexed array of quads.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a44f87bfade3e549ef8b3ec2468705e77">drawCube()</a>   </td><td class="markdownTableBodyNone">Draw the unit cube, optionally textured per face.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a514789feab6fba56361312d598b94a2c">drawCube()</a>   </td><td class="markdownTableBodyNone">Draw the unit cube, optionally textured per face.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a0737d0bed8e991bdda9c956e6842478d">drawSphere()</a>   </td><td class="markdownTableBodyNone">Draw a generated sphere with a chosen tessellation.    </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a4a5ad961cb278aa73bb55a7c3f81a8a3">drawSkyBox()</a>   </td><td class="markdownTableBodyNone">Draw a six-texture skybox/background without using the normal model transform or z-buffer path.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a00c59fee77ca3d42b19d62e9eade1203">drawAdaptativeSphere()</a>   </td><td class="markdownTableBodyNone">Draw a generated sphere with tessellation chosen from its projected size.   </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#ad60d0119473cc20cfef29e9220df2e45">drawSphere()</a>   </td><td class="markdownTableBodyNone">Draw a generated sphere with a chosen tessellation.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classtgx_1_1_renderer3_d.html#a02b0a821f962466d85005d4e763a9b63">drawAdaptativeSphere()</a>   </td><td class="markdownTableBodyNone">Draw a generated sphere with tessellation chosen from its projected size.   </td></tr>
 </table>
 <p >When many triangles or quads share arrays of vertices, normals and texture coordinates, use <code>drawTriangles()</code>, <code>drawTriangleStrip()</code> or <code>drawQuads()</code> instead of many individual calls. <code>drawTriangleStrip()</code> should be fastest in general. For fully static geometry, use <code>drawMesh()</code>.</p>
 <p >Normals should be unit vectors for Gouraud shading. Flat shading can compute a face normal from the geometry when no normal is provided, but explicit normals give more predictable lighting.</p>
@@ -670,7 +677,7 @@ Textures</h2>
 <p >With <code>SHADER_TEXTURE_WRAP_POW2</code>, TGX can wrap very quickly, but the texture width and height must be powers of two. With <code>SHADER_TEXTURE_CLAMP</code>, TGX accepts arbitrary texture sizes, but each lookup needs slightly more work.</p>
 <h2><a class="anchor" id="sec_3D_lighting"></a>
 Light and material</h2>
-<p >TGX uses a compact Phong-style lighting model. It is evaluated per vertex for Gouraud shading, or once per face for flat shading. It combines a directional light, material color and ambient, diffuse and specular strengths:</p>
+<p >TGX uses a compact Phong-style lighting model. It is evaluated per vertex for Gouraud shading, or once per face for flat shading. The default renderer uses one directional light and combines it with material color plus ambient, diffuse and specular strengths:</p>
 <div class="fragment"><div class="line">renderer.setLightDirection({ -0.3f, -0.7f, -1.0f });</div>
 <div class="line">renderer.setLightAmbiant(<a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>(1.0f, 1.0f, 1.0f));</div>
 <div class="line">renderer.setLightDiffuse(<a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>(1.0f, 1.0f, 1.0f));</div>
@@ -682,6 +689,27 @@ Light and material</h2>
 <div class="line">renderer.setMaterialSpecularStrength(0.25f);</div>
 <div class="line">renderer.setMaterialSpecularExponent(16);</div>
 </div><!-- fragment --><p >The convenience method <code>setLight()</code> sets all light colors and the direction at once. The convenience method <code>setMaterial()</code> sets all material parameters at once.</p>
+<p >The simple light API remains the recommended starting point and always controls directional light 0. If the renderer was instantiated with <code>MAX_DIRECTIONAL_LIGHTS &gt; 1</code>, use the advanced indexed API to activate and configure additional directional lights:</p>
+<div class="fragment"><div class="line"><span class="keyword">using </span>Renderer = <a class="code hl_class" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D&lt;tgx::RGB565, shaders_loaded, uint16_t, 4&gt;</a>;</div>
+<div class="line">Renderer renderer({ W, H }, &amp;image, zbuffer);</div>
+<div class="line"> </div>
+<div class="line">renderer.<a class="code hl_function" href="classtgx_1_1_renderer3_d.html#a7eb9194d1192d75d09e40532f46d1eae">setDirectionalLightCount</a>(4);</div>
+<div class="line">renderer.setDirectionalLightAmbiant(<a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>(0.08f, 0.08f, 0.10f)); <span class="comment">// global ambient</span></div>
+<div class="line">renderer.setDirectionalLight(0, { -0.45f, -0.60f, -1.0f },</div>
+<div class="line">                             <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>(0.55f, 0.50f, 0.42f),</div>
+<div class="line">                             <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>(0.22f, 0.20f, 0.18f));</div>
+<div class="line">renderer.setDirectionalLight(1, { 0.80f, -0.25f, -0.55f },</div>
+<div class="line">                             <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>(0.18f, 0.34f, 0.90f),</div>
+<div class="line">                             <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>(0.06f, 0.12f, 0.30f));</div>
+<div class="line">renderer.setDirectionalLight(2, { -0.35f, 0.70f, -0.45f },</div>
+<div class="line">                             <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>(0.85f, 0.20f, 0.16f),</div>
+<div class="line">                             <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>(0.22f, 0.06f, 0.05f));</div>
+<div class="line">renderer.setDirectionalLight(3, { 0.18f, 0.35f, -0.90f },</div>
+<div class="line">                             <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>(0.16f, 0.75f, 0.36f),</div>
+<div class="line">                             <a class="code hl_struct" href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a>(0.05f, 0.16f, 0.08f));</div>
+<div class="ttc" id="aclasstgx_1_1_renderer3_d_html_a7eb9194d1192d75d09e40532f46d1eae"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#a7eb9194d1192d75d09e40532f46d1eae">tgx::Renderer3D::setDirectionalLightCount</a></div><div class="ttdeci">void setDirectionalLightCount(int count)</div><div class="ttdoc">Set the number of active directional lights.</div></div>
+</div><!-- fragment --><p >Ambient light is global across all directional lights. Diffuse and specular colors are per light. A runtime light count of <code>0</code> gives ambient-only rendering. Multi-directional lighting is still evaluated at the face/vertex lighting stage; TGX does not do per-pixel Phong lighting.</p>
+<p >Mesh3Dv2 can store emissive material metadata, but the current renderer does not render emissive materials yet.</p>
 <p >If <code>drawMesh()</code> is called with <code>use_mesh_material = true</code>, the mesh material color and texture override the current material settings for that mesh. Most generated OBJ models use this mode.</p>
 <p >Unlit, flat and Gouraud shading differ in how much lighting work they do:</p>
 <ul>
@@ -730,22 +758,32 @@ Wireframe and debug drawing</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>drawWireFrame...(object, thickness, color, opacity)</code>   </td><td class="markdownTableBodyNone">adjustable thickness + AA wireframe   </td><td class="markdownTableBodyNone">Uses the general adjustable thickness + AA line path. This is very slow and is mostly useful when visible line width or opacity matters more than speed.   </td></tr>
 </table>
-<dl class="section note"><dt>Note</dt><dd>In most sketches, use <a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh()</a> for the normal solid render path. When a clean wireframe view is needed, prefer <code>drawWireFrame...AA()</code>. Use the adjustable-thickness overloads only for occasional debug views or special effects, because they are much slower.</dd></dl>
-<p>Indexed wireframe helpers are available for line lists, triangle lists, triangle strips and quad lists. For dynamic strip geometry, <a class="el" href="classtgx_1_1_renderer3_d.html#a9b3fc7c8d0c1c7fd3a95032ed4a89363">drawWireFrameTriangleStrip()</a> and <a class="el" href="classtgx_1_1_renderer3_d.html#a104f91234d7cf000cf6930cb81bb8fe8">drawWireFrameTriangleStripAA()</a> reuse the previous strip vertices and draw shared strip edges only once.</p>
-<p >For performance-sensitive rendering, prefer solid <a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh()</a> first, or use the fast wireframe path only for diagnostics.</p>
+<dl class="section note"><dt>Note</dt><dd>In most sketches, use <a class="el" href="classtgx_1_1_renderer3_d.html#aa358d09bc8f54c866176b0c7d94a7a49">drawMesh()</a> for the normal solid render path. When a clean wireframe view is needed, prefer <code>drawWireFrame...AA()</code>. Use the adjustable-thickness overloads only for occasional debug views or special effects, because they are much slower.</dd></dl>
+<p>Indexed wireframe helpers are available for line lists, triangle lists, triangle strips and quad lists. For dynamic strip geometry, <a class="el" href="classtgx_1_1_renderer3_d.html#ac99ec3f28499d12abdcf964f21b24d09">drawWireFrameTriangleStrip()</a> and <a class="el" href="classtgx_1_1_renderer3_d.html#ad4abfa95f00a3ae1f336acb573f83894">drawWireFrameTriangleStripAA()</a> reuse the previous strip vertices and draw shared strip edges only once.</p>
+<p >For performance-sensitive rendering, prefer solid <a class="el" href="classtgx_1_1_renderer3_d.html#aa358d09bc8f54c866176b0c7d94a7a49">drawMesh()</a> first, or use the fast wireframe path only for diagnostics.</p>
 <div class="fragment"><div class="line">renderer.drawWireFrameMesh(&amp;mesh);        <span class="comment">// fast, aliased</span></div>
 <div class="line">renderer.drawWireFrameMeshAA(&amp;mesh);      <span class="comment">// one-pixel antialiased, optimized</span></div>
 <div class="line">renderer.drawWireFrameMesh(&amp;mesh, 1.6f, RGB565_Red, 0.9f); <span class="comment">// adjustable thickness + AA, very slow</span></div>
 </div><!-- fragment --><p >The solid mesh path is still the main optimized rendering path:</p>
 <div class="fragment"><div class="line">renderer.drawMesh(&amp;mesh);</div>
-</div><!-- fragment --><h1><a class="anchor" id="sec_3D_performance"></a>
+</div><!-- fragment --><h2><a class="anchor" id="sec_3D_skybox"></a>
+Skyboxes</h2>
+<p >Use <a class="el" href="classtgx_1_1_renderer3_d.html#a4a5ad961cb278aa73bb55a7c3f81a8a3">drawSkyBox()</a> for distant textured backgrounds. Unlike <code>drawCube()</code>, it is not a normal model draw call: it ignores the current model matrix, material, culling and z-buffer state, and it should normally be drawn before the z-buffered scene.</p>
+<div class="fragment"><div class="line">renderer.drawSkyBox(&amp;front, &amp;back, &amp;top, &amp;bottom, &amp;left, &amp;right,</div>
+<div class="line">                    yaw_degrees,</div>
+<div class="line">                    reference_height,</div>
+<div class="line">                    radius,</div>
+<div class="line">                    tgx::SHADER_TEXTURE_NEAREST,</div>
+<div class="line">                    tgx::SHADER_TEXTURE_WRAP_POW2);</div>
+</div><!-- fragment --><p >Use <code>drawCube()</code> for real cubes in the scene; use <code>drawSkyBox()</code> only for backgrounds.</p>
+<h1><a class="anchor" id="sec_3D_performance"></a>
 Embedded performance checklist</h1>
 <p >For MCU targets, these choices often matter most:</p>
 <ul>
 <li>restrict <code>LOADED_SHADERS</code> to the variants the program really uses;</li>
 <li>use <code>RGB565</code> for display rendering;</li>
 <li>use a <code>uint16_t</code> Z-buffer when depth precision is sufficient;</li>
-<li>use <code>Mesh3Dv2</code>, <a class="el" href="classtgx_1_1_renderer3_d.html#a0298855a66fc0063e3c935dabac4c51e">drawMesh()</a> and <code>cacheMesh()</code> for static models;</li>
+<li>use <code>Mesh3Dv2</code>, <a class="el" href="classtgx_1_1_renderer3_d.html#aa358d09bc8f54c866176b0c7d94a7a49">drawMesh()</a> and <code>cacheMesh()</code> for static models;</li>
 <li>keep normals normalized and mesh data well formed;</li>
 <li>enable back-face culling for closed meshes;</li>
 <li>prefer <code>SHADER_TEXTURE_NEAREST</code> and <code>SHADER_TEXTURE_WRAP_POW2</code> when quality allows it;</li>
@@ -775,7 +813,7 @@ Complete embedded example</h1>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> setup3D()</div>
 <div class="line">{</div>
-<div class="line">    renderer.<a class="code hl_function" href="classtgx_1_1_renderer3_d.html#a8437622c6b90f9429769504848d22456">setPerspective</a>(45.0f, <span class="keywordtype">float</span>(W) / <span class="keywordtype">float</span>(H), 0.1f, 100.0f);</div>
+<div class="line">    renderer.<a class="code hl_function" href="classtgx_1_1_renderer3_d.html#a9d4cdff9692f778ce738e44912c105cb">setPerspective</a>(45.0f, <span class="keywordtype">float</span>(W) / <span class="keywordtype">float</span>(H), 0.1f, 100.0f);</div>
 <div class="line">    renderer.setLookAt({ 0.0f, 1.0f, 5.0f }, { 0.0f, 0.4f, 0.0f }, { 0.0f, 1.0f, 0.0f });</div>
 <div class="line">    renderer.setLightDirection({ -0.35f, -0.55f, -1.0f });</div>
 <div class="line">    renderer.setCulling(1);</div>
@@ -798,7 +836,7 @@ Complete embedded example</h1>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Upload image to the display here....</span></div>
 <div class="line">}</div>
-<div class="ttc" id="aclasstgx_1_1_renderer3_d_html_a8437622c6b90f9429769504848d22456"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#a8437622c6b90f9429769504848d22456">tgx::Renderer3D::setPerspective</a></div><div class="ttdeci">void setPerspective(float fovy, float aspect, float zNear, float zFar)</div><div class="ttdoc">Set the projection matrix as a perspective matrix.</div></div>
+<div class="ttc" id="aclasstgx_1_1_renderer3_d_html_a9d4cdff9692f778ce738e44912c105cb"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#a9d4cdff9692f778ce738e44912c105cb">tgx::Renderer3D::setPerspective</a></div><div class="ttdeci">void setPerspective(float fovy, float aspect, float zNear, float zFar)</div><div class="ttdoc">Set the projection matrix as a perspective matrix.</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="sec_3D_examples"></a>
 Useful examples</h1>
 <p >Useful starting points:</p>
@@ -810,7 +848,7 @@ Useful examples</h1>
 <li><code>examples/Teensy4/3D/test-texture/</code>: textured mesh rendering.</li>
 <li><code>examples/Teensy4/3D/scream/</code>: dynamic textured surface built as a triangle strip.</li>
 <li><code>examples/Teensy4/3D/characters/</code>: larger textured character models and chained meshes.</li>
-<li><code>examples/Teensy4/3D/mars/</code>: a more complete scene with skybox-like rendering and textured objects.</li>
+<li><code>examples/Teensy4/3D/mars/</code>: a more complete scene using <code>drawSkyBox()</code> with textured objects.</li>
 <li><code>examples/ESP32/naruto/</code>: ESP32 textured mesh rendering.</li>
 <li><code>examples/Pico_RP2040_RP2350/bunny_fig/</code>: RP2040/RP2350 3D example.</li>
 </ul>

@@ -1,0 +1,5 @@
+"path","exists","file_count","size_bytes","action","reason"
+"validation/performance/builds","1","8163","2150830786","pruned_after_compact_results_archived","Arduino build outputs are reproducible and dominated repository size"
+"validation/performance/logs","1","40","399253","pruned_after_compact_results_archived","Raw capture outputs are summarized in dated investigation result CSVs and reports"
+"validation/performance/parsed","1","77","177507","pruned_after_compact_results_archived","Raw capture outputs are summarized in dated investigation result CSVs and reports"
+"validation/performance/telemetry","1","73","3689648","pruned_after_compact_results_archived","Raw capture outputs are summarized in dated investigation result CSVs and reports"

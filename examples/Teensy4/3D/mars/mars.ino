@@ -259,19 +259,14 @@ float slide(float t, const float t_start = 0.0f, const float t_end = 1.0f)
     }
 
 
-const float skybox_size = 4000;
+const float skybox_radius = 4000;
 const float skybox_ref_height = 0;
 
 
 TGX_NOINLINE FLASHMEM void drawSkyBox()
     {
-    renderer.setCulling(0);
-    renderer.setMaterialAmbiantStrength(1.8f);
-    renderer.setMaterialDiffuseStrength(0.0f);
-    renderer.setMaterialSpecularStrength(0.0f);
-    renderer.setModelPosScaleRot({ 0,skybox_ref_height,0 }, { skybox_size,skybox_size,skybox_size }, 180 , { 0,1,0 } );
-    renderer.setShaders(SHADER_FLAT | SHADER_TEXTURE_NEAREST);
-    renderer.drawCube(&mars_front, &mars_back, &mars_top_neb, &mars_bottom, &mars_left, &mars_right);
+    renderer.drawSkyBox(&mars_front, &mars_back, &mars_top_neb, &mars_bottom, &mars_left, &mars_right,
+                        180.0f, skybox_ref_height, skybox_radius, SHADER_TEXTURE_NEAREST, SHADER_TEXTURE_WRAP_POW2);
     }
 
 
@@ -468,6 +463,8 @@ TGX_NOINLINE FLASHMEM void movie()
 
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
+        drawSkyBox();
+
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         loadMarbleTexture();
 
@@ -476,7 +473,6 @@ TGX_NOINLINE FLASHMEM void movie()
 
         marble_dma.fillCircleAA({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
         drawBase(true);
-        drawSkyBox();
         redraw();
         }
 
@@ -581,6 +577,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         renderer.setLookAt({ 350 * sinf(u * 6 * M_PI), t* climb , +150 - 350 * cosf(u * 6 * M_PI) } , { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
+        drawSkyBox();
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
@@ -639,8 +636,6 @@ TGX_NOINLINE FLASHMEM void movie()
             }
 
 
-        drawSkyBox();
-
         redraw();
         }
 
@@ -655,6 +650,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
+        drawSkyBox();
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
@@ -671,7 +667,6 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.setMaterialSpecularStrength(0.9f);
 
         drawSphere(SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
-        drawSkyBox();
 
         redraw();
         }
@@ -686,9 +681,9 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.clearZbuffer();
         tgx::fVec3 eye = { 0, 2 * climb , looking_dist };
         renderer.setLookAt(eye, { 0, 0, 0 }, tgx::fVec3{ 0, 1, 0 });
+        drawSkyBox();
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
-        drawSkyBox();
         redraw();
         }
 
@@ -703,6 +698,8 @@ TGX_NOINLINE FLASHMEM void movie()
 
         renderer.setLookAt(eye, { 0, 0, 0 }, tgx::fVec3{ 0, 1, 0 });
 
+        drawSkyBox();
+
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         loadMarbleTexture();
 
@@ -711,7 +708,6 @@ TGX_NOINLINE FLASHMEM void movie()
 
         marble_dma.fillCircleAA({ 64,64 }, 60 * r,tgx::RGBf(t,0,0), op);
         drawBase(true);
-        drawSkyBox();
         redraw();
         }
 
@@ -808,6 +804,8 @@ TGX_NOINLINE FLASHMEM void movie()
 
         renderer.setLookAt(eye, { 0, 0, 0 },  tgx::fVec3{ 0, 1, 0 });
 
+        drawSkyBox();
+
         tgx::fVec3 falcon_pos = { 0, falcon_base , 0 };
         float falcon_size = sphere_r * 1.5f;
 
@@ -818,8 +816,6 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
-
-        drawSkyBox();
 
         redraw();
         }
@@ -839,6 +835,8 @@ TGX_NOINLINE FLASHMEM void movie()
 
         renderer.setLookAt(eye, { 0, 0, 0 }, tgx::fVec3{ 0, 1, 0 });
 
+        drawSkyBox();
+
         float falcon_size = sphere_r * 1.5f;
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
@@ -849,8 +847,6 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
-
-        drawSkyBox();
 
         redraw();
         }
@@ -870,6 +866,8 @@ TGX_NOINLINE FLASHMEM void movie()
 
         renderer.setLookAt(eye, { 0, 0, 0 }, tgx::fVec3{ 0, 1, 0 });
 
+        drawSkyBox();
+
         float falcon_size = sphere_r * 1.5f;
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
@@ -880,8 +878,6 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
-
-        drawSkyBox();
 
         redraw();
         }
@@ -902,6 +898,8 @@ TGX_NOINLINE FLASHMEM void movie()
 
         renderer.setLookAt(eye, falcon_pos, tgx::fVec3{ 0, 1, 0 });
 
+        drawSkyBox();
+
         float falcon_size = sphere_r * 1.5f;
 
         tgx::fMat4 M;
@@ -918,8 +916,6 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
         drawBase();
-
-        drawSkyBox();
 
         redraw();
     }
@@ -943,6 +939,8 @@ TGX_NOINLINE FLASHMEM void movie()
 
             renderer.setLookAt(eye, falcon_pos, tgx::fVec3{ 0, 1, 0 });
 
+            drawSkyBox();
+
             float falcon_size = sphere_r * 1.5f;
 
             tgx::fMat4 M;
@@ -959,8 +957,6 @@ TGX_NOINLINE FLASHMEM void movie()
 
             setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
             drawBase();
-
-            drawSkyBox();
 
             redraw();
         }
@@ -987,6 +983,8 @@ TGX_NOINLINE FLASHMEM void movie()
 
             renderer.setLookAt(eye, falcon_pos, tgx::fVec3{ 0, 1, 0 });
 
+            drawSkyBox();
+
             float falcon_size = sphere_r * 1.5f;
 
             tgx::fMat4 M;
@@ -1003,8 +1001,6 @@ TGX_NOINLINE FLASHMEM void movie()
 
             setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
             drawBase();
-
-            drawSkyBox();
 
             redraw();
         }
@@ -1031,6 +1027,8 @@ TGX_NOINLINE FLASHMEM void movie()
 
             renderer.setLookAt(eye, falcon_pos, tgx::fVec3{ 0, 1, 0 });
 
+            drawSkyBox();
+
             float falcon_size = sphere_r * 1.5f;
 
             tgx::fMat4 M;
@@ -1049,8 +1047,6 @@ TGX_NOINLINE FLASHMEM void movie()
 
             setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
             drawBase();
-
-            drawSkyBox();
 
             redraw();
         }

@@ -33,7 +33,7 @@ The library runs on both microprocessors and microcontrollers but specifically t
     - Depth buffer testing (selectable 16 bits or 32 bits precision).
     - Multiple drawing modes: fast wireframe, antialiased wireframe and solid rendering with shaders.
     - Unlit, flat and Gouraud shading.
-    - Phong lighting model with separate ambient/diffuse/specular color components.
+    - Phong lighting model with separate ambient/diffuse/specular color components and optional multiple directional lights.
     - Per object material properties.
     - Perspective-correct texture mapping with selectable point sampling/bilinear filtering and multiple wrapping modes.
     - Perspective and orthographic projections.

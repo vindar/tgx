@@ -74,7 +74,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
 #elif defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)
@@ -84,7 +86,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 1
     #define TGX_USE_FAST_INV_TRICK 1
     #define TGX_USE_FMA_MATH 1
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_NOINLINE
 
 #elif defined(ARDUINO_TEENSY36)
@@ -94,7 +98,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 1
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
 #elif defined(ARDUINO_TEENSY35)
@@ -104,7 +110,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 1
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
 #elif defined(ARDUINO_TEENSY32) || defined(ARDUINO_TEENSY31)
@@ -114,7 +122,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 1
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
 #elif defined(ARDUINO_TEENSYLC)
@@ -124,27 +134,33 @@
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
-#elif defined(ARDUINO_ARCH_RP2350) || defined(PICO_RP2350)
+#elif defined(ARDUINO_ARCH_RP2350) || defined(PICO_RP2350) || defined(TARGET_RP2350)
     // Raspberry Pico 2350
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 4096
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 1
     #define TGX_USE_FAST_INV_TRICK 1
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
     #define TGX_INLINE  __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_NOINLINE
 
-#elif defined(ARDUINO_ARCH_RP2040) || defined(PICO_RP2040)
+#elif defined(ARDUINO_ARCH_RP2040) || defined(PICO_RP2040) || defined(TARGET_RP2040)
     // Raspberry Pico 2040
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 2048
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
 #elif defined(CONFIG_IDF_TARGET_ESP32S2) || defined(ESP32S2)
@@ -154,7 +170,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
 #elif defined(CONFIG_IDF_TARGET_ESP32S3) || defined(ESP32S3)
@@ -164,7 +182,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 0     //
     #define TGX_USE_FAST_INV_TRICK 0      // unused: specific assembly code used instead.
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_NOINLINE
 
 #elif defined(CONFIG_IDF_TARGET_ESP32P4) || defined(ESP32P4)
@@ -174,7 +194,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 1
     #define TGX_USE_FAST_INV_TRICK 1
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
 #elif defined(CONFIG_IDF_TARGET_ESP32) || defined(ESP32)
@@ -185,7 +207,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 0     //
     #define TGX_USE_FAST_INV_TRICK 0      //
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE __attribute__((noinline, noclone))
 
 #elif defined(__ARM_ARCH_6M__)
@@ -195,7 +219,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
 #elif defined(__ARM_ARCH_7M__)
@@ -205,7 +231,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 1
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE  __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
 #elif (defined(__ARM_ARCH_7EM__) && defined(__ARM_FP) && (__ARM_FP == 0xC)) || defined(STM32H7xx)
@@ -215,7 +243,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 1
     #define TGX_USE_FAST_INV_TRICK 1
     #define TGX_USE_FMA_MATH 1
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
 #elif defined(__ARM_ARCH_7EM__)
@@ -225,7 +255,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 1
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 
 #elif defined(__ARM_ARCH_8M_MAIN__)
@@ -235,7 +267,9 @@
     #define TGX_USE_FAST_SQRT_TRICK 1
     #define TGX_USE_FAST_INV_TRICK 1
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
     #define TGX_INLINE __attribute__((always_inline))
+    #define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_NOINLINE
 
 #else
@@ -245,9 +279,12 @@
     #define TGX_USE_FAST_SQRT_TRICK 0
     #define TGX_USE_FAST_INV_TRICK 0
     #define TGX_USE_FMA_MATH 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE
+    #define TGX_INLINE_ZDIVIDE
     #define TGX_NOINLINE
 #endif
+
 
 
 

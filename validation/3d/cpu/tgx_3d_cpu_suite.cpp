@@ -59,10 +59,12 @@ enum class SceneId
     BunnyGouraud,
     BunnyTextureNearest,
     BunnyTextureBilinear,
+    BunnyMultiLightGouraud,
     BuddhaFlat,
     BunnyV2Gouraud,
     BunnyV2TextureNearest,
     BunnyV2TextureBilinear,
+    BunnyV2MultiLightTexture,
     BuddhaV2Flat,
     BuddhaV2Unlit,
     R2D2TextureBilinear,
@@ -118,10 +120,12 @@ const SceneDef SCENES[] = {
     { SceneId::BunnyGouraud,        "bunny_gouraud",         "real mesh, Gouraud lighting" },
     { SceneId::BunnyTextureNearest, "bunny_texture_nearest", "real mesh, perspective-correct nearest texture" },
     { SceneId::BunnyTextureBilinear,"bunny_texture_bilinear","real mesh, perspective-correct bilinear texture" },
+    { SceneId::BunnyMultiLightGouraud,"bunny_multilight_gouraud","real mesh, advanced 4 directional lights" },
     { SceneId::BuddhaFlat,          "buddha_flat",           "dense real mesh, flat shading" },
     { SceneId::BunnyV2Gouraud,      "bunny_v2_gouraud",      "Mesh3Dv2 mesh, Gouraud lighting" },
     { SceneId::BunnyV2TextureNearest,"bunny_v2_texture_nearest","Mesh3Dv2 mesh, perspective-correct nearest texture" },
     { SceneId::BunnyV2TextureBilinear,"bunny_v2_texture_bilinear","Mesh3Dv2 mesh, perspective-correct bilinear texture" },
+    { SceneId::BunnyV2MultiLightTexture,"bunny_v2_multilight_texture","Mesh3Dv2 textured mesh, advanced 4 directional lights" },
     { SceneId::BuddhaV2Flat,        "buddha_v2_flat",        "dense Mesh3Dv2 mesh, flat shading" },
     { SceneId::BuddhaV2Unlit,       "buddha_v2_unlit",       "dense Mesh3Dv2 mesh, unlit material color" },
     { SceneId::R2D2TextureBilinear,  "r2d2_texture_bilinear", "legacy Mesh3D textured model with bilinear filtering" },
@@ -652,6 +656,7 @@ struct RenderContext
     std::vector<uint16_t> zbuf;
     Image<color_t> image;
     Renderer3D<color_t, LOADED_SHADERS, uint16_t> renderer;
+    Renderer3D<color_t, LOADED_SHADERS, uint16_t, 4> multi_light_renderer;
     MeshAssets<color_t> meshes;
     std::vector<fVec3> grid_vertices;
     std::vector<fVec3> grid_normals;
@@ -681,6 +686,12 @@ struct RenderContext
         renderer.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
         renderer.setMaterial(RGBf(0.85f, 0.58f, 0.26f), 0.18f, 0.72f, 0.55f, 32);
         renderer.setLight({ -0.25f, -0.45f, -1.0f }, RGBf(0.18f, 0.20f, 0.25f), RGBf(0.85f, 0.82f, 0.72f), RGBf(0.55f, 0.60f, 0.70f));
+        multi_light_renderer.setViewportSize(W, H);
+        multi_light_renderer.setOffset(0, 0);
+        multi_light_renderer.setImage(&image);
+        multi_light_renderer.setZbuffer(zbuf.data());
+        multi_light_renderer.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+        multi_light_renderer.setMaterial(RGBf(0.85f, 0.58f, 0.26f), 0.18f, 0.72f, 0.55f, 32);
 
         point_colors[0] = C<color_t>(230, 60, 60);
         point_colors[1] = C<color_t>(60, 220, 120);
@@ -699,6 +710,7 @@ struct RenderContext
         image.fillScreen(backgroundColor<color_t>());
         renderer.clearZbuffer();
         renderer.setCulling(1);
+        multi_light_renderer.setCulling(1);
         }
 
     void buildGrid()
@@ -971,6 +983,17 @@ void renderWirePathScene(RenderContext<color_t>& ctx, WirePath path, bool mesh_v
     drawWirePathAdaptativeSphere(r, path, pink);
 }
 
+template<typename RendererT>
+void setValidationMultiDirectionalLights(RendererT& r)
+{
+    r.setDirectionalLightCount(4);
+    r.setDirectionalLightAmbiant(RGBf(0.08f, 0.09f, 0.12f));
+    r.setDirectionalLight(0, { -0.40f, -0.65f, -1.00f }, RGBf(0.58f, 0.50f, 0.42f), RGBf(0.38f, 0.34f, 0.30f));
+    r.setDirectionalLight(1, {  0.80f, -0.25f, -0.55f }, RGBf(0.18f, 0.38f, 0.92f), RGBf(0.08f, 0.15f, 0.35f));
+    r.setDirectionalLight(2, { -0.35f,  0.70f, -0.40f }, RGBf(0.85f, 0.22f, 0.20f), RGBf(0.30f, 0.08f, 0.08f));
+    r.setDirectionalLight(3, {  0.15f,  0.35f, -0.85f }, RGBf(0.18f, 0.82f, 0.42f), RGBf(0.08f, 0.22f, 0.12f));
+}
+
 template<typename color_t>
 void renderScene(RenderContext<color_t>& ctx, SceneId scene)
 {
@@ -1002,6 +1025,18 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             r.drawMesh(&ctx.meshes.bunny, false);
             break;
 
+        case SceneId::BunnyMultiLightGouraud:
+            {
+            auto& mr = ctx.multi_light_renderer;
+            setValidationMultiDirectionalLights(mr);
+            mr.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            mr.setMaterial(RGBf(0.92f, 0.64f, 0.32f), 0.16f, 0.82f, 0.46f, 30);
+            mr.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD);
+            mr.setModelPosScaleRot({ 0.0f, 0.15f, -11.0f }, { 5.0f, 5.0f, 5.0f }, -32.0f, { 0.1f, 1.0f, 0.0f });
+            mr.drawMesh(&ctx.meshes.bunny, false);
+            break;
+            }
+
         case SceneId::BuddhaFlat:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
             r.setMaterial(RGBf(0.9f, 0.62f, 0.28f), 0.20f, 0.72f, 0.35f, 18);
@@ -1030,6 +1065,17 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             r.setModelPosScaleRot({ 0.0f, 0.15f, -10.5f }, { 5.1f, 5.1f, 5.1f }, 42.0f, { 0.2f, 1.0f, 0.0f });
             r.drawMesh(&ctx.meshes.bunny_v2, true);
             break;
+
+        case SceneId::BunnyV2MultiLightTexture:
+            {
+            auto& mr = ctx.multi_light_renderer;
+            setValidationMultiDirectionalLights(mr);
+            mr.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            mr.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+            mr.setModelPosScaleRot({ 0.0f, 0.15f, -10.5f }, { 5.1f, 5.1f, 5.1f }, 58.0f, { 0.2f, 1.0f, 0.0f });
+            mr.drawMesh(&ctx.meshes.bunny_v2, true);
+            break;
+            }
 
         case SceneId::BuddhaV2Flat:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);

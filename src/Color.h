@@ -588,7 +588,7 @@ struct RGB565
     *
     * Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC.
     **/
-    inline RGB565 interpolateColorsTriangle(const RGB565 & col1, int32_t C1, const  RGB565 & col2, int32_t C2, const  RGB565 & col3, const int32_t totC)
+    TGX_INLINE inline RGB565 interpolateColorsTriangle(const RGB565 & col1, int32_t C1, const  RGB565 & col2, int32_t C2, const  RGB565 & col3, const int32_t totC)
         {
         C1 <<= 5;
         C1 /= totC;
@@ -618,7 +618,7 @@ struct RGB565
      *  C00    |     C10
      *```
      */
-    inline RGB565 interpolateColorsBilinear(const RGB565 & C00, const RGB565 & C10, const RGB565 & C01, const RGB565 & C11, const float ax, const float ay)
+    TGX_INLINE inline RGB565 interpolateColorsBilinear(const RGB565 & C00, const RGB565 & C10, const RGB565 & C01, const RGB565 & C11, const float ax, const float ay)
             {
             /* floating point version, slower...
             const float rax = 1.0f - ax;
@@ -646,9 +646,7 @@ struct RGB565
     */
     inline RGB565 meanColor(RGB565 colA, RGB565 colB)
         {
-        return RGB565( ((int)colA.R + (int)colB.R) >> 1,
-                       ((int)colA.G + (int)colB.G) >> 1,
-                       ((int)colA.B + (int)colB.B) >> 1);
+        return RGB565((uint16_t)((colA.val & colB.val) + (((colA.val ^ colB.val) & 0xF7DEu) >> 1)));
         }
 
 
@@ -1097,7 +1095,7 @@ struct RGB24
     *
     * Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC.
     **/
-    inline RGB24 interpolateColorsTriangle(const RGB24& col1, int32_t C1, const  RGB24& col2, int32_t C2, const  RGB24& col3, const int32_t totC)
+    TGX_INLINE inline RGB24 interpolateColorsTriangle(const RGB24& col1, int32_t C1, const  RGB24& col2, int32_t C2, const  RGB24& col3, const int32_t totC)
         {
         return RGB24((int)(col3.R + (C1 * (col1.R - col3.R) + C2 * (col2.R - col3.R)) / totC),
                      (int)(col3.G + (C1 * (col1.G - col3.G) + C2 * (col2.G - col3.G)) / totC),
@@ -1121,7 +1119,7 @@ struct RGB24
      *  C00    |     C10
      *```
      */
-    inline RGB24 interpolateColorsBilinear(const RGB24 & C00, const RGB24 & C10, const RGB24 & C01, const RGB24 & C11, const float ax, const float ay)
+    TGX_INLINE inline RGB24 interpolateColorsBilinear(const RGB24 & C00, const RGB24 & C10, const RGB24 & C01, const RGB24 & C11, const float ax, const float ay)
             {
             const int iax = (int)(ax * 256);
             const int iay = (int)(ay * 256);
@@ -1708,7 +1706,7 @@ struct RGB32
     *
     * Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC.
     */
-    inline RGB32 interpolateColorsTriangle(const RGB32& col1, int32_t C1, const  RGB32& col2, int32_t C2, const  RGB32& col3, const int32_t totC)
+    TGX_INLINE inline RGB32 interpolateColorsTriangle(const RGB32& col1, int32_t C1, const  RGB32& col2, int32_t C2, const  RGB32& col3, const int32_t totC)
         {
         return RGB32((int)(col3.R + (C1 * (col1.R - col3.R) + C2 * (col2.R - col3.R)) / totC),
                      (int)(col3.G + (C1 * (col1.G - col3.G) + C2 * (col2.G - col3.G)) / totC),
@@ -1733,7 +1731,7 @@ struct RGB32
      *  C00    |     C10
      *```
      */
-    inline RGB32 interpolateColorsBilinear(const RGB32 & C00, const RGB32 & C10, const RGB32 & C01, const RGB32 & C11, const float ax, const float ay)
+    TGX_INLINE inline RGB32 interpolateColorsBilinear(const RGB32 & C00, const RGB32 & C10, const RGB32 & C01, const RGB32 & C11, const float ax, const float ay)
             {
             const int iax = (int)(ax * 256);
             const int iay = (int)(ay * 256);
@@ -2331,7 +2329,7 @@ struct RGB64
     *
     * Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC.
     */
-    inline RGB64 interpolateColorsTriangle(const RGB64& col1, int32_t C1, const  RGB64& col2, int32_t C2, const  RGB64& col3, const int32_t totC)
+    TGX_INLINE inline RGB64 interpolateColorsTriangle(const RGB64& col1, int32_t C1, const  RGB64& col2, int32_t C2, const  RGB64& col3, const int32_t totC)
         {
         // forward to RGB32 (, maybe improve this but is it worth it, the method is never used ?)
         return RGB64(interpolateColorsTriangle(RGB32(col1), C1, RGB32(col2), C2, RGB32(col3), totC));
@@ -2354,7 +2352,7 @@ struct RGB64
      *  C00    |     C10
      *```
      */
-    inline RGB64 interpolateColorsBilinear(const RGB64 & C00, const RGB64 & C10, const RGB64 & C01, const RGB64 & C11, const float ax, const float ay)
+    TGX_INLINE inline RGB64 interpolateColorsBilinear(const RGB64 & C00, const RGB64 & C10, const RGB64 & C01, const RGB64 & C11, const float ax, const float ay)
             {
             // let's use floating point version for max accuraccy, RGB64 is slow anyway...
             const float rax = 1.0f - ax;
@@ -2444,14 +2442,14 @@ struct RGB64
         /**
         * Constructor from a #fVec3 with components (x=R, y=G, z=B) in [0.0f, 1.0f].
         */
-        constexpr RGBf(fVec3 v) : RGBf(v.x, v.y, v.z)
+        constexpr RGBf(const fVec3 & v) : RGBf(v.x, v.y, v.z)
         {}
 
 
         /**
         * Constructor from a #fVec4 with components (x=R, y=G, z=B, w=ignored) in [0.0f, 1.0f].
         */
-        constexpr RGBf(fVec4 v) : RGBf(v.x, v.y, v.z)
+        constexpr RGBf(const fVec4 & v) : RGBf(v.x, v.y, v.z)
         {}
 
 
@@ -2554,19 +2552,19 @@ struct RGB64
         /**
         * Assignment operator from a #fVec3 with components (x=R, y=G, z=B) in [0.0f, 1.0f].
         */
-        inline RGBf& operator=(fVec3 v);
+        inline RGBf& operator=(const fVec3 & v);
 
 
         /**
         * Assignment operator from a #fVec4 with components (x=R, y=G, z=B, w=ignored) in [0.0f, 1.0f].
         */
-        inline RGBf& operator=(fVec4 v);
+        inline RGBf& operator=(const fVec4 & v);
 
 
         /**
         * Add another color, component by component.
         */
-        void operator+=(const RGBf& c)
+        TGX_INLINE inline void operator+=(const RGBf& c)
             {
             R += c.R;
             G += c.G;
@@ -2577,7 +2575,7 @@ struct RGB64
         /**
         * Substract another color, component by component.
         */
-        void operator-=(const RGBf& c)
+        TGX_INLINE inline void operator-=(const RGBf& c)
             {
             R -= c.R;
             G -= c.G;
@@ -2588,7 +2586,7 @@ struct RGB64
         /**
         * Multiply each channel by the same channel on c.
         */
-        inline void operator*=(const RGBf & c)
+        TGX_INLINE inline void operator*=(const RGBf & c)
             {
             R *= c.R;
             G *= c.G;
@@ -2598,7 +2596,7 @@ struct RGB64
         /**
         * Return the color obtained by multipliying the channels of both colors together.
         */
-        inline RGBf operator*(const RGBf & c) const
+        TGX_INLINE inline RGBf operator*(const RGBf & c) const
             {
             return RGBf(R * c.R, G * c.G, B * c.B);
             }
@@ -2606,7 +2604,7 @@ struct RGB64
         /**
         * Multiply each channel by a constant
         */
-        inline void operator*=(float a)
+        TGX_INLINE inline void operator*=(float a)
             {
             R *= a;
             G *= a;
@@ -2617,7 +2615,7 @@ struct RGB64
         /**
         * Return the color where all components are multiplied by a
         */
-        inline RGBf operator*(float a) const
+        TGX_INLINE inline RGBf operator*(float a) const
             {
             return RGBf(R * a, G * a, B * a);
             }
@@ -2644,7 +2642,7 @@ struct RGB64
         /**
         * Clamp all color channel to [0.0f,1.0f].
         */
-        inline void clamp()
+        TGX_INLINE inline void clamp()
             {
             R = tgx::clamp(R, 0.0f, 1.0f);
             G = tgx::clamp(G, 0.0f, 1.0f);
@@ -2659,7 +2657,7 @@ struct RGB64
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,256].
          */
-        inline void blend256(const RGBf& fg_col, uint32_t alpha)
+        TGX_INLINE inline void blend256(const RGBf& fg_col, uint32_t alpha)
             {
             blend(fg_col, alpha / 256.0f);
             }
@@ -2672,7 +2670,7 @@ struct RGB64
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0.0f, 1.0f].
          */
-        inline void blend(const RGBf & fg_col, float alpha)
+        TGX_INLINE inline void blend(const RGBf & fg_col, float alpha)
             {
             R += (fg_col.R - R) * alpha;
             G += (fg_col.G - G) * alpha;
@@ -2683,7 +2681,7 @@ struct RGB64
         /**
         * multiply each color component by a given factor m/256 with m in [0,256].
         */
-        inline void mult256(int mr, int mg, int mb)
+        TGX_INLINE inline void mult256(int mr, int mg, int mb)
             {
             R = (R * mr)/256;
             G = (G * mg)/256;
@@ -2695,7 +2693,7 @@ struct RGB64
          * multiply each color component by a given factor m/256 with m in [0,256]. Parameter ma is
          * ignored since there is not alpha channel.
          */
-        inline void mult256(int mr, int mg, int mb, int ma)
+        TGX_INLINE inline void mult256(int mr, int mg, int mb, int ma)
             {
             mult256(mr, mg, mb);
             }
@@ -2706,7 +2704,7 @@ struct RGB64
         *
         * Does nothing since the color is always fully opaque.
         */
-        inline void premultiply()
+        TGX_INLINE inline void premultiply()
             {
             // nothing here.
             return;
@@ -2718,7 +2716,7 @@ struct RGB64
         *
         * Return 1.0f (fully opaque)
         */
-        float opacity() const
+        TGX_INLINE inline float opacity() const
             {
             return 1.0f;
             }
@@ -2729,7 +2727,7 @@ struct RGB64
         *
         * Does nothing since the color is always fully opaque.
         */
-        void setOpacity(float op)
+        TGX_INLINE inline void setOpacity(float op)
             {
             // nothing here.
             return;
@@ -2745,7 +2743,7 @@ struct RGB64
     *
     * Return the color  col1 + alpha*(col2 - col1)
     */
-    inline RGBf interpolate(const RGBf& col1, const  RGBf& col2, float alpha)
+    TGX_INLINE inline RGBf interpolate(const RGBf& col1, const  RGBf& col2, float alpha)
         {
         return RGBf(col1.R + alpha * (col2.R - col1.R),
                     col1.G + alpha * (col2.G - col1.G),
@@ -2758,7 +2756,7 @@ struct RGB64
      *
      * Return the color (C1*col1 + C2*col2 + (totC-C1-C2)*col3) / totC.
      */
-    inline RGBf interpolateColorsTriangle(const RGBf & col1, int32_t C1, const  RGBf & col2, int32_t C2, const  RGBf & col3, int32_t totC)
+    TGX_INLINE inline RGBf interpolateColorsTriangle(const RGBf & col1, int32_t C1, const  RGBf & col2, int32_t C2, const  RGBf & col3, int32_t totC)
         {
         return RGBf(col3.R + (C1 * (col1.R - col3.R) + C2 * (col2.R - col3.R)) / totC,
                     col3.G + (C1 * (col1.G - col3.G) + C2 * (col2.G - col3.G)) / totC,
@@ -2782,7 +2780,7 @@ struct RGB64
      *  C00    |     C10
      *```
      */
-    inline RGBf interpolateColorsBilinear(const RGBf & C00, const RGBf & C10, const RGBf & C01, const RGBf & C11, const float ax, const float ay)
+    TGX_INLINE inline RGBf interpolateColorsBilinear(const RGBf & C00, const RGBf & C10, const RGBf & C01, const RGBf & C11, const float ax, const float ay)
             {
             const float rax = 1.0f - ax;
             const float ray = 1.0f - ay;
@@ -2796,7 +2794,7 @@ struct RGB64
     /**
     * Return the average color between colA and colB.
     */
-    inline RGBf meanColor(const RGBf & colA, const  RGBf & colB)
+    TGX_INLINE inline RGBf meanColor(const RGBf & colA, const  RGBf & colB)
         {
         return RGBf((colA.R + colB.R)/2, (colA.G + colB.G)/2, (colA.B + colB.B)/2);
         }
@@ -2805,7 +2803,7 @@ struct RGB64
     /**
     * Return the average color between 4 colors.
     */
-    inline RGBf meanColor(const RGBf & colA, const  RGBf & colB, const  RGBf & colC, const  RGBf & colD)
+    TGX_INLINE inline RGBf meanColor(const RGBf & colA, const  RGBf & colB, const  RGBf & colC, const  RGBf & colD)
         {
         return RGBf((colA.R + colB.R + colC.R + colD.R) / 4, (colA.G + colB.G + colC.G + colD.G) / 4, (colA.B + colB.B + colC.B + colD.B) / 4);
         }

@@ -140,9 +140,9 @@ namespace tgx
             {
             if constexpr (USE_TEXTURE)
                 {
-                const RGBf& cf1 = (RGBf)fP1.color;
-                const RGBf& cf2 = (RGBf)fP2.color;
-                const RGBf& cf3 = (RGBf)fP3.color;
+                const RGBf& cf1 = fP1.color;
+                const RGBf& cf2 = fP2.color;
+                const RGBf& cf3 = fP3.color;
                 fP1R = (int)(256 * cf1.R); fP1G = (int)(256 * cf1.G); fP1B = (int)(256 * cf1.B);
                 fP21R = (int)(256 * (cf2.R - cf1.R)); fP21G = (int)(256 * (cf2.G - cf1.G)); fP21B = (int)(256 * (cf2.B - cf1.B));
                 fP31R = (int)(256 * (cf3.R - cf1.R)); fP31G = (int)(256 * (cf3.G - cf1.G)); fP31B = (int)(256 * (cf3.B - cf1.B));
@@ -163,7 +163,7 @@ namespace tgx
             flat_color = (color_t)data.facecolor;
             if constexpr (USE_TEXTURE && !USE_UNLIT)
                 {
-                const RGBf& cf = (RGBf)data.facecolor;
+                const RGBf& cf = data.facecolor;
                 fPR = (int)(256 * cf.R); fPG = (int)(256 * cf.G); fPB = (int)(256 * cf.B);
                 }
             }
@@ -267,12 +267,24 @@ namespace tgx
                 }
 
             // --- Pixel loop ---
+#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+            color_t* pix = buf + bx;
+            ZBUFFER_t* zpix = nullptr;
+            if constexpr (USE_ZBUFFER)
+                {
+                zpix = zbuf + bx;
+                }
+#endif
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
                 bool z_pass = true;
                 if constexpr (USE_ZBUFFER)
                     {
+#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+                    ZBUFFER_t& W = *zpix;
+#else
                     ZBUFFER_t& W = zbuf[bx];
+#endif
                     ZBUFFER_t current_z;
 
                     if constexpr (std::is_same<ZBUFFER_t, uint16_t>::value)
@@ -355,15 +367,25 @@ namespace tgx
                             final_color = flat_color;
                             }
                         }
+#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+                    *pix = final_color;
+#else
                     buf[bx] = final_color;
+#endif
                     }
 
                 // --- Increment for next pixel ---
                 C2 += dx2;
                 C3 += dx3;
                 bx++;
+#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+                pix++;
+#endif
 
                 if constexpr (USE_ZBUFFER) cw_z += dw_z;
+#if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+                if constexpr (USE_ZBUFFER) zpix++;
+#endif
 
                 if constexpr (USE_TEXTURE)
                     {
@@ -777,9 +799,9 @@ namespace tgx
 
         const color_t_tex mask_color = data.mask_color;
 
-        const RGBf& cf1 = (RGBf)fP1.color;
-        const RGBf& cf2 = (RGBf)fP2.color;
-        const RGBf& cf3 = (RGBf)fP3.color;
+        const RGBf& cf1 = fP1.color;
+        const RGBf& cf2 = fP2.color;
+        const RGBf& cf3 = fP3.color;
 
         // the texture coord
         fVec2 T1 = fP1.T;

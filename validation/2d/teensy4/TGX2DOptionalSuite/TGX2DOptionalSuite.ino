@@ -30,17 +30,17 @@
 
 #if TGX_2D_BENCH_HAS_PNGDEC
 #include <PNGdec.h>
-#include <examples/Teensy4/2D/PNG_test/octocat_4bpp.h>
+#include <examples/Teensy4/2D/extensions/PNG_test/octocat_4bpp.h>
 #endif
 
 #if TGX_2D_BENCH_HAS_JPEGDEC
 #include <JPEGDEC.h>
-#include <examples/Teensy4/2D/JPEG_test/batman.h>
+#include <examples/Teensy4/2D/extensions/JPEG_test/batman.h>
 #endif
 
 #if TGX_2D_BENCH_HAS_ANIMATEDGIF
 #include <AnimatedGIF.h>
-#include <examples/Teensy4/2D/GIF_test/earth_128x128.h>
+#include <examples/Teensy4/2D/extensions/GIF_test/earth_128x128.h>
 #endif
 
 #if TGX_2D_BENCH_HAS_OPENFONTRENDER

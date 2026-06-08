@@ -645,7 +645,7 @@ inline RGBf& RGBf::operator=(const RGB64& c)
         }
 
 
-inline RGBf& RGBf::operator=(fVec3 v)
+inline RGBf& RGBf::operator=(const fVec3 & v)
         {
         R = v.x;
         G = v.y;
@@ -654,7 +654,7 @@ inline RGBf& RGBf::operator=(fVec3 v)
         }
 
 
-inline RGBf& RGBf::operator=(fVec4 v)
+inline RGBf& RGBf::operator=(const fVec4 & v)
         {
         R = v.x;
         G = v.y;

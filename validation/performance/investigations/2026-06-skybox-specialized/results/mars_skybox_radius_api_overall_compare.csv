@@ -1,0 +1,4 @@
+run,rows,frames,weighted_frame_avg_us,weighted_fps,delta_vs_old_pct,delta_vs_v1_pct
+old_drawCube,246,14959,16669.535,59.990,0.000,-3.512
+v1_specialized_model,246,15494,16084.112,62.173,3.640,0.000
+radius_api,286,17267,16773.684,59.617,-0.621,-4.111
