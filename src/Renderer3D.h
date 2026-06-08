@@ -52,7 +52,6 @@ namespace tgx
     extern const uint16_t UNIT_CUBE_FACES_NORMALS[6 * 4];
 
 
-
     /**
     * Class for drawing 3D objects onto a `Image` [**MAIN CLASS FOR THE 3D API**].
     *
@@ -79,6 +78,13 @@ namespace tgx
     *                           as large as the image (but can be smaller than the viewport when using an offset).
     *                               - `float`: higher quality but requires 4 bytes per pixel.
     *                               - `uint16_t` : lower quality (z-fighting may occur) but only 2 bytes per pixel.
+    *
+    * @tparam MAX_DIRECTIONAL_LIGHTS : Maximum number of directional lights supported by this renderer.
+    *                           The default value `1` preserves the historical one-light rendering path.
+    *                           Instantiate with a value larger than 1 to use the advanced directional-light API.
+    *
+    * @tparam MAX_SPOT_LIGHTS : Reserved for future spotlight support. Spotlights are not rendered yet.
+    *
     * @remark
     *
     * 1. If a drawing call is made that requires a shader that was not enabled in the template parameter `LOADED_SHADERS` or
@@ -104,7 +110,7 @@ namespace tgx
     *    with adjustable thickness + AA use the general thick-line path and can be very slow.
     *
     */
-    template<typename color_t, Shader LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float>
+    template<typename color_t, Shader LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float, int MAX_DIRECTIONAL_LIGHTS = 1, int MAX_SPOT_LIGHTS = 0>
     class Renderer3D
     {
 
@@ -113,12 +119,13 @@ namespace tgx
 
         static_assert(is_color<color_t>::value, "color_t must be one of the color types defined in color.h");
         static_assert((std::is_same<ZBUFFER_t, float>::value) || (std::is_same<ZBUFFER_t, uint16_t>::value), "The Z-buffer type must be either float or uint16_t");
+        static_assert(MAX_DIRECTIONAL_LIGHTS >= 1, "MAX_DIRECTIONAL_LIGHTS must be at least 1");
+        static_assert(MAX_SPOT_LIGHTS >= 0, "MAX_SPOT_LIGHTS must be non-negative");
 
         // true if some kind of texturing may be used.
         static constexpr int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (SHADER_TEXTURE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));
 
         static constexpr Shader ENABLED_SHADERS = LOADED_SHADERS | (ENABLE_TEXTURING ? SHADER_TEXTURE : SHADER_NOTEXTURE); // enable texturing when at least one texturing related flag is set
-
         // check that disabled shaders do not completely disable all drawing operations.
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), "At least one of the two shaders SHADER_PERSPECTIVE or SHADER_ORTHO must be enabled");
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), "At least one of the two shaders SHADER_NOZBUFFER or SHADER_ZBUFFER must be enabled");
@@ -546,69 +553,169 @@ namespace tgx
         iVec2 worldToImage(fVec3 P);
 
 
-        /**
-         * Set the light source direction.
-         *
-         * The 3D renderer uses a single 'directional light' i.e. a light source coming from infinity (such as the sun).
-         *
-         * @param   direction   The direction the light points toward, given in world coordinates.
-         *
-         * @sa setLight(), setLightAmbiant(), setLightDiffuse(), setLightSpecular()
-         */
-        void setLightDirection(const fVec3& direction);
 
-
-        /**
+         /**
          * Set the scene ambiant light color.
          *
          * See Phong's lighting model: https://en.wikipedia.org/wiki/Phong_reflection_model.
          *
-         * @param   color   color for the ambiant light.
+         * Ambiant lighting is global and shared by all directional lights.
          *
-         * @sa setLight(), setLightDirection(), setLightDiffuse(), setLightSpecular()
+         * @param   color   color for the global ambiant light.
+         *
+         * @sa setLight(), setLightDirection(), setLightDiffuse(), setLightSpecular(), setDirectionalLightAmbiant()
          */
         void setLightAmbiant(const RGBf& color);
 
-
         /**
-         * Set the scene diffuse light color.
+         * Set the light source direction of the main directional light of the scene.
          *
          * See Phong's lighting model: https://en.wikipedia.org/wiki/Phong_reflection_model.
          *
+         * When using multiple directional lights (MAX_DIRECTIONAL_LIGHTS >1), the method controls directional light 0
+         * hence is equivalent to `setDirectionalLightDirection(0, direction)`.
+         *
+         * @param   direction   The direction the light points toward, given in world coordinates.
+         *
+         * @sa setLight(), setLightAmbiant(), setLightDiffuse(), setLightSpecular(), setDirectionalLightDirection()
+         */
+        void setLightDirection(const fVec3& direction);
+
+
+
+
+        /**
+         * Set the diffuse light color of the main directional light of the scene.
+         *
+         * See Phong's lighting model: https://en.wikipedia.org/wiki/Phong_reflection_model.
+         *
+         * When using multiple directional lights (MAX_DIRECTIONAL_LIGHTS >1), the method controls directional light 0
+         * hence is equivalent to `setDirectionalLightDiffuse(0, color)`.
+         *
          * @param   color   color for the diffuse light.
          *
-         * @sa setLight(), setLightDirection(), setLightAmbiant(), setLightSpecular()
+         * @sa setLight(), setLightDirection(), setLightAmbiant(), setLightSpecular(), setDirectionalLightDiffuse()
          */
         void setLightDiffuse(const RGBf& color);
 
 
         /**
-         * Set the scene specular light color.
+         * Set the specular light color of the main directional light of the scene.
          *
          * See Phong's lighting model: https://en.wikipedia.org/wiki/Phong_reflection_model.
          *
+         * When using multiple directional lights (MAX_DIRECTIONAL_LIGHTS >1), the method controls directional light 0
+         * hence is equivalent to `setDirectionalLightSpecular(0, color)`.
+         *
          * @param   color   color for the specular light.
          *
-         * @sa setLight(), setLightDirection(), setLightAmbiant(), setLightDiffuse()
+         * @sa setLight(), setLightDirection(), setLightAmbiant(), setLightDiffuse(), setDirectionalLightSpecular()
          */
         void setLightSpecular(const RGBf& color);
 
 
         /**
-         * Set all the lighting parameters of the scene at once.
-         *
-         * The 3D renderer uses a single 'directional light' i.e. a light source coming from infinity (such as the sun).
+         * Set all lighting parameters of the main directional light of the scene at once.
          *
          * See Phong's lighting model: https://en.wikipedia.org/wiki/Phong_reflection_model.
+         *
+         * When using multiple directional lights (MAX_DIRECTIONAL_LIGHTS >1), the method controls directional light 0
+         * hence is equivalent to calling `setDirectionalLight(0, direction, diffuseColor, specularColor)` with the same ambiant color for all directional lights.
          *
          * @param   direction       direction the light source points toward.
          * @param   ambiantColor    light ambiant color.
          * @param   diffuseColor    light diffuse color.
          * @param   specularColor   light specular color.
          *
-         * @sa setLightDirection(), setLightAmbiant(), setLightDiffuse(), setLightSpecular()
+         * @sa setLightDirection(), setLightAmbiant(), setLightDiffuse(), setLightSpecular(), setDirectionalLight()
          */
         void setLight(const fVec3 direction, const RGBf& ambiantColor, const RGBf& diffuseColor, const RGBf& specularColor);
+
+
+        /**
+         * Set the number of active directional lights.
+         *
+         * The count is clamped to `[0, MAX_DIRECTIONAL_LIGHTS]`. A count of 0 disables diffuse and
+         * specular directional lighting and leaves only the global ambiant term.
+         *
+         * Extra directional lights affect rendering only when the renderer is instantiated with
+         * `MAX_DIRECTIONAL_LIGHTS > 1`. No shader flag is required for multi-directional lighting.
+         *
+         * @param count number of active directional lights.
+         */
+        void setDirectionalLightCount(int count);
+
+
+        /**
+         * Return the number of active directional lights.
+         */
+        int directionalLightCount() const;
+
+
+        /**
+         * Return the compile-time directional-light capacity.
+         */
+        static constexpr int maxDirectionalLightCount() { return MAX_DIRECTIONAL_LIGHTS; }
+
+
+        /**
+         * Set the global ambiant light shared by all directional lights.
+         *
+         * The ambiant lighting is shared by all directional lights.
+         *
+         * This method is equivalent to `setLightAmbiant()`.
+         *
+         * @param color color for the ambiant light.
+         */
+        void setDirectionalLightAmbiant(const RGBf& color);
+
+
+        /**
+         * Set the direction of one directional light.
+         *
+         * Directions are expressed in world coordinates and use the same convention as `setLightDirection()`:
+         * the vector is the direction the light points toward. Directional light 0 is the default light.
+         *
+         * @param index index of the directional light in `[0, MAX_DIRECTIONAL_LIGHTS - 1]`.
+         * @param direction direction the light points toward.
+         */
+        void setDirectionalLightDirection(int index, const fVec3& direction);
+
+
+        /**
+         * Set the diffuse color of one directional light.
+         *
+         * Directional light 0 is the default light (also controlled by `setLightDiffuse()`).
+         *
+         * @param index index of the directional light in `[0, MAX_DIRECTIONAL_LIGHTS - 1]`.
+         * @param color diffuse color.
+         */
+        void setDirectionalLightDiffuse(int index, const RGBf& color);
+
+
+        /**
+         * Set the specular color of one directional light.
+         *
+         * Directional light 0 is the default light (aslo controlled by `setLightSpecular()`).
+         *
+         * @param index index of the directional light in `[0, MAX_DIRECTIONAL_LIGHTS - 1]`.
+         * @param color specular color.
+         */
+        void setDirectionalLightSpecular(int index, const RGBf& color);
+
+
+        /**
+         * Configure one directional light at once.
+         *
+         * This method does not change the global ambiant term and does not change the active light count.
+         * Use `setDirectionalLightCount()` to choose how many lights are rendered.
+         *
+         * @param index index of the directional light in `[0, MAX_DIRECTIONAL_LIGHTS - 1]`.
+         * @param direction direction the light points toward.
+         * @param diffuseColor diffuse color.
+         * @param specularColor specular color.
+         */
+        void setDirectionalLight(int index, const fVec3& direction, const RGBf& diffuseColor, const RGBf& specularColor);
 
 
 
@@ -886,7 +993,7 @@ namespace tgx
          * @param   texture_image   The texture image to use or `nullptr` if not used
          *
          * @remark
-         * - If Gouraud shading is enabled, the normal vector must all have have unit norm.
+         * - If Gouraud shading is enabled, the normal vectors must all have unit norm.
          * - If Gouraud shading is disabled, `ind_normals` and `normals` should be set to `nullptr`.
          * - If texturing is disabled, `ind_texture`, `textures` and `texture_image` should be set to `nullptr`.
          * - If texturing is disabled, the current material color is used to draw the triangles.
@@ -896,6 +1003,35 @@ namespace tgx
                            const uint16_t * ind_normals = nullptr, const fVec3* normals = nullptr,
                            const uint16_t * ind_texture = nullptr, const fVec2* textures = nullptr,
                            const Image<color_t> * texture_image = nullptr);
+
+
+        /**
+         * Draw a triangle strip.
+         *
+         * @param   nb_indices      Number of indexes in the strip.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_indices`.
+         * @param   vertices        The array of vertices (in model space).
+         * @param   ind_normals     Array of normal indexes. If specified, the array must have length `nb_indices`.
+         * @param   normals         The array of normals vectors (in model space).
+         * @param   ind_texture     Array of texture indexes. If specified, the array must have length `nb_indices`.
+         * @param   textures        The array of texture coords.
+         * @param   texture_image   The texture image to use or `nullptr` if not used.
+         *
+         * @remark
+         * - The first triangle is `(0,1,2)`, then winding alternates like OpenGL triangle strips:
+         *   `(2,1,3)`, `(2,3,4)`, `(4,3,5)`...
+         * - Repeated vertex indexes create degenerate triangles that are skipped. This can be used
+         *   to bridge parts of a strip without drawing connecting triangles.
+         * - If Gouraud shading is enabled, the normal vectors must all have unit norm.
+         * - If Gouraud shading is disabled, `ind_normals` and `normals` should be set to `nullptr`.
+         * - If texturing is disabled, `ind_texture`, `textures` and `texture_image` should be set to `nullptr`.
+         * - If texturing is disabled, the current material color is used to draw the strip.
+         */
+        void drawTriangleStrip(int nb_indices,
+                               const uint16_t* ind_vertices, const fVec3* vertices,
+                               const uint16_t* ind_normals = nullptr, const fVec3* normals = nullptr,
+                               const uint16_t* ind_texture = nullptr, const fVec2* textures = nullptr,
+                               const Image<color_t>* texture_image = nullptr);
 
 
 
@@ -958,7 +1094,7 @@ namespace tgx
          * @param   texture_image   The texture image to use or `nullptr` if not used
          *
          * @remark
-         * - If Gouraud shading is enabled, the normal vector must all have have unit norm.
+         * - If Gouraud shading is enabled, the normal vectors must all have unit norm.
          * - If Gouraud shading is disabled, `ind_normals` and `normals` should be set to `nullptr`.
          * - If texturing is disabled, `ind_texture`, `textures` and `texture_image` should be set to `nullptr`.
          * - If texturing is disabled, the current material color is used to draw the quads.
@@ -1021,7 +1157,6 @@ namespace tgx
          * @remark
          * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
          * - Each face may use a different texture (or set the image to `nullptr` to disable texturing a face).
-         * - This method is useful for drawing a sky-box.
          *
          * @param   v_front_ABCD    texture coords array for the front face in order ABCD
          * @param   texture_front   texture for the front face
@@ -1072,7 +1207,6 @@ namespace tgx
          * @remark
          * - The model transform matrix may be used to scale, rotate and position the cube anywhere in world space.
          * - Each face uses a 'whole' image. Set the texture image to `nullptr` to disable texturing a given face.
-         * - This method is useful for drawing a sky-box.
          *
          * @param   texture_front   texture for the front face.
          * @param   texture_back    texture for the back face.
@@ -1088,6 +1222,99 @@ namespace tgx
             const Image<color_t>* texture_bottom,
             const Image<color_t>* texture_left,
             const Image<color_t>* texture_right
+            );
+
+
+        /**
+         * Draw a textured sky-box around the current camera.
+         *
+         * This method uses the same unit-cube geometry and face/texture-coordinate conventions
+         * as drawCube(), but it renders through a minimal unlit textured path without z-buffer
+         * testing/writing and without far-plane clipping. It is intended for sky-box/background
+         * rendering and should be called before drawing the z-buffered scene.
+         *
+         * Face naming and layout:
+         *
+         * ```
+         *                                                                   H--------E
+         *                                                                   |        |
+         *                                                                   |  top   |
+         *                          H-------------E                          |        |
+         *                         /.            /|                 H--------A--------D--------E
+         *                        / .   top     / |                 |        |        |        |
+         *                       /  .          /  |                 |  left  | front  |  right |
+         *                      A------------D    |  right          |        |        |        |
+         *                      |   .        |    |                 G--------B--------C--------F
+         *                      |   G .......|....F                          |        |
+         *                      |  .         |   /                           | bottom |
+         *                      | .  front   |  /                            |        |
+         *                      |.           | /                             G--------F
+         *                      B------------C                               |        |
+         *                                                                   |  back  |
+         *                                                                   |        |
+         *                                                                   H--------E
+         * ```
+         *
+         * @remark
+         * - The current model transform, material, culling and shader state are ignored.
+         * - `rot_angle_y` rotates the sky-box around the world Y axis.
+         * - `skybox_radius` is the half-size of the cube in world units.
+         * - `reference_height` is the world-space height of the sky-box vertical center.
+         * - The renderer ignores the current camera X/Z translation, but uses the current camera
+         *   height so the sky-box floor/ceiling can stay tied to `reference_height`. Large radii
+         *   make this vertical parallax very small and make the sky-box look farther away.
+         * - `nullptr` texture faces are skipped.
+         *
+         * @param   v_front_ABCD    texture coords array for the front face in order ABCD.
+         * @param   texture_front   texture for the front face.
+         * @param   v_back_EFGH     texture coords array for the back face in order EFGH.
+         * @param   texture_back    texture for the back face.
+         * @param   v_top_HADE      texture coords array for the top face in order HADE.
+         * @param   texture_top     texture for the top face.
+         * @param   v_bottom_BGFC   texture coords array for the bottom face in order BGFC.
+         * @param   texture_bottom  texture for the bottom face.
+         * @param   v_left_HGBA     texture coords array for the left face in order HGBA.
+         * @param   texture_left    texture for the left face.
+         * @param   v_right_DCFE    texture coords array for the right face in order DCFE.
+         * @param   texture_right   texture for the right face.
+         * @param   rot_angle_y     additional sky-box rotation around the world Y axis, in degrees.
+         * @param   reference_height world-space height of the sky-box vertical center.
+         * @param   skybox_radius   sky-box cube half-size in world units.
+         * @param   texture_quality either `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`.
+         * @param   texture_mode    either `SHADER_TEXTURE_WRAP_POW2` or `SHADER_TEXTURE_CLAMP`.
+         */
+        void drawSkyBox(
+            const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
+            const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
+            const fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
+            const fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
+            const fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
+            const fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right,
+            float rot_angle_y = 0.0f,
+            float reference_height = 0.0f,
+            float skybox_radius = 32768.0f,
+            Shader texture_quality = SHADER_TEXTURE_NEAREST,
+            Shader texture_mode = SHADER_TEXTURE_CLAMP
+            );
+
+
+        /**
+         * Draw a textured sky-box using whole images for each face.
+         *
+         * Texture coordinates are generated with the same convention as drawCube().
+         */
+        void drawSkyBox(
+            const Image<color_t>* texture_front,
+            const Image<color_t>* texture_back,
+            const Image<color_t>* texture_top,
+            const Image<color_t>* texture_bottom,
+            const Image<color_t>* texture_left,
+            const Image<color_t>* texture_right,
+            float rot_angle_y = 0.0f,
+            float reference_height = 0.0f,
+            float skybox_radius = 32768.0f,
+            Shader texture_quality = SHADER_TEXTURE_NEAREST,
+            Shader texture_mode = SHADER_TEXTURE_CLAMP
             );
 
 
@@ -1448,6 +1675,60 @@ namespace tgx
          * @param   opacity         opacity multiplier in [0.0f, 1.0f]
         **/
         void drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity);
+
+
+        /**
+         * Draw a triangle strip in wireframe [*fast*].
+         *
+         * @remark
+         * - This method uses fast drawing: no thickness, no blending, no anti-aliasing.
+         * - The lines are drawn with the current material color.
+         * - This method uses the same strip winding convention as `drawTriangleStrip()`.
+         * - Repeated vertex indexes create degenerate triangles that are skipped.
+         * - This method does not use the z-buffer but backface culling is used if enabled.
+         *
+         * @param   nb_indices      Number of indexes in the strip.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_indices`.
+         * @param   vertices        Array of vertices in model space.
+        **/
+        void drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices);
+
+
+        /**
+         * Draw a triangle strip in wireframe [*antialiased*] with the current material color.
+         *
+         * @remark
+         * - This method uses the optimized one-pixel antialiased wireframe path.
+         * - Use the adjustable thickness + AA overload only when line thickness or opacity is needed.
+         * - This method uses the same strip winding convention as `drawTriangleStrip()`.
+         * - Repeated vertex indexes create degenerate triangles that are skipped.
+         *
+         * @param   nb_indices      Number of indexes in the strip.
+         * @param   ind_vertices    Array of vertex indexes.
+         * @param   vertices        Array of vertices in model space.
+        **/
+        void drawWireFrameTriangleStripAA(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices);
+
+
+        /**
+         * Draw a triangle strip in wireframe [*adjustable thickness + AA*].
+         *
+         * @remark
+         * - This method uses the general adjustable thickness + AA line path with explicit color and opacity.
+         * - This method uses the same strip winding convention as `drawTriangleStrip()`.
+         * - Repeated vertex indexes create degenerate triangles that are skipped.
+         * - This method does not use the z-buffer but backface culling is used if enabled.
+         *
+         * @warning This method is very slow and may be slower than solid drawing.
+         *
+         * @param   nb_indices      Number of indexes in the strip.
+         * @param   ind_vertices    Array of vertex indexes. The length of the array is `nb_indices`.
+         * @param   vertices        Array of vertices in model space.
+         * @param   thickness       Thickness of the lines.
+         * @param   color           Color to use.
+         * @param   opacity         Opacity multiplier in [0.0f, 1.0f].
+        **/
+        void drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices, float thickness, color_t color, float opacity);
 
 
         /**
@@ -1922,12 +2203,48 @@ namespace tgx
             const RGBf& Vcol0, const RGBf& Vcol1, const RGBf& Vcol2);
 
 
+        /** draw a triangle strip */
+        void _drawTriangleStrip(const int RASTER_TYPE, int nb_indices,
+            const uint16_t* ind_vertices, const fVec3* vertices,
+            const uint16_t* ind_normals, const fVec3* normals,
+            const uint16_t* ind_texture, const fVec2* textures);
+
+
         /** draw a single quad : the 4 points are assumed to be coplanar */
         void _drawQuad(const int RASTER_TYPE,
             const fVec3* P0, const fVec3* P1, const fVec3* P2, const fVec3* P3,
             const fVec3* N0, const fVec3* N1, const fVec3* N2, const fVec3* N3,
             const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3,
             const RGBf& Vcol0, const RGBf& Vcol1, const RGBf& Vcol2, const RGBf& Vcol3);
+
+        /** draw one sky-box triangle with a direct minimal shader */
+        template<bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+        void _rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2);
+
+        /** select the requested texture quality/wrap mode for a sky-box triangle */
+        void _rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2,
+            Shader texture_quality, Shader texture_mode);
+
+        /** draw a clipped sky-box triangle; clips against screen and near planes but not far plane */
+        void _drawSkyBoxTriangleClippedSub(const int plane,
+            const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
+            Shader texture_quality, Shader texture_mode);
+
+        /** draw a sky-box triangle and takes care of near/screen clipping */
+        void _drawSkyBoxTriangleClipped(
+            const fVec4* Q0, const fVec4* Q1, const fVec4* Q2,
+            const fVec2* T0, const fVec2* T1, const fVec2* T2,
+            Shader texture_quality, Shader texture_mode);
+
+        /** draw a single sky-box quad with the dedicated no-z unlit texture path */
+        void _drawSkyBoxQuad(
+            const fVec4* P0, const fVec4* P1, const fVec4* P2, const fVec4* P3,
+            const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3,
+            Shader texture_quality, Shader texture_mode);
+
+        /** draw one named sky-box face */
+        void _drawSkyBoxFace(const fVec4 skybox_vertices[8], const uint16_t* face, const fVec2 texture_coords[4], const Image<color_t>* texture,
+            Shader texture_quality, Shader texture_mode);
 
 
         /** Method called by drawMesh() which does the actual drawing. */
@@ -1989,6 +2306,8 @@ namespace tgx
         template<int MODE> void _drawWireFrameTriangle(const fVec3& P1, const fVec3& P2, const fVec3& P3, color_t color, float opacity, float thickness);
 
         template<int MODE> void _drawWireFrameTriangles(int nb_triangles, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
+
+        template<int MODE> void _drawWireFrameTriangleStrip(int nb_indices, const uint16_t* ind_vertices, const fVec3* vertices, color_t color, float opacity, float thickness);
 
         template<int MODE> void _drawWireFrameQuad(const fVec3& P1, const fVec3& P2, const fVec3& P3, const fVec3& P4, color_t color, float opacity, float thickness);
 
@@ -2319,25 +2638,132 @@ namespace tgx
             }
 
 
-        /** compute a color according to Phong lighting model, use model color */
-        template<bool TEXTURE> TGX_INLINE inline RGBf _phong(float v_diffuse, float v_specular) const
+
+
+        /** recompute a directional light after a view or light change */
+        TGX_INLINE inline void _updateDirectionalLightTransform(int index)
+            {
+            _r_light[index] = _viewM.mult0(_light[index]);
+            _r_light[index] = -_r_light[index];
+            _r_light[index].normalize();
+            _r_light_inorm[index] = _r_light[index] * _r_inorm;
+            _r_H[index] = fVec3(0, 0, 1); // cheating: should use the normalized current vertex position (but this is faster with almost the same result)...
+            _r_H[index] += _r_light[index];
+            _r_H[index].normalize();
+            _r_H_inorm[index] = _r_H[index] * _r_inorm;
+            }
+
+
+        /** recompute directional light normal-scaled vectors after a model change */
+        TGX_INLINE inline void _updateActiveDirectionalLightInorms()
+            {
+            for (int i = 0; i < _directionalLightCount; i++)
+                {
+                _r_light_inorm[i] = _r_light[i] * _r_inorm;
+                _r_H_inorm[i] = _r_H[i] * _r_inorm;
+                }
+            }
+
+
+        /** recompute all active directional light transforms after a view change */
+        TGX_INLINE inline void _updateActiveDirectionalLightTransforms()
+            {
+            for (int i = 0; i < _directionalLightCount; i++)
+                {
+                _updateDirectionalLightTransform(i);
+                }
+            }
+
+
+        /** recompute runtime light colors for the current material strengths */
+        TGX_INLINE inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength)
+            {
+            _r_ambiantColor = _ambiantColor * ambiantStrength;
+            for (int i = 0; i < _directionalLightCount; i++)
+                {
+                _r_diffuseColor[i] = _diffuseColor[i] * diffuseStrength;
+                _r_specularColor[i] = _specularColor[i] * specularStrength;
+                }
+            }
+
+
+        /** recompute one directional light runtime color for the current material strengths */
+        TGX_INLINE inline void _updateDirectionalLightColor(int index)
+            {
+            _r_diffuseColor[index] = _diffuseColor[index] * _diffuseStrength;
+            _r_specularColor[index] = _specularColor[index] * _specularStrength;
+            }
+
+
+
+            //
+        
+
+        /** compute a vertex light factor or object color according to the current lighting setup */
+        template<bool TEXTURE> TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N) const
             {
             RGBf col = _r_ambiantColor;
-            col += _r_diffuseColor * max(v_diffuse, 0.0f);
-            col += _r_specularColor * _powSpecular(v_specular); // pow() this is too slow so we use a lookup table instead
+            if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
+                {
+                col += _r_diffuseColor[0] * max(icu * dotProduct(N, _r_light_inorm[0]), 0.0f);
+                col += _r_specularColor[0] * _powSpecular(icu * dotProduct(N, _r_H_inorm[0]));
+                }
+            else
+                {
+                for (int i = 0; i < _directionalLightCount; i++)
+                    {            
+                    col += _r_diffuseColor[i] * max(icu * dotProduct(N, _r_light_inorm[i]), 0.0f);
+                    col += _r_specularColor[i] * _powSpecular(icu * dotProduct(N, _r_H_inorm[i]));
+                    }
+                }
             if (!(TEXTURE)) col *= _r_objectColor;
             col.clamp();
             return col;
             }
 
 
-        /** compute a color according to Phong lighting model, use given color */
-        TGX_INLINE  inline RGBf _phong(float v_diffuse, float v_specular, RGBf color) const
+        /** compute a vertex color according to the current lighting setup and a supplied material color */
+        TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const RGBf & color) const
             {
             RGBf col = _r_ambiantColor;
-            col += _r_diffuseColor * max(v_diffuse, 0.0f);
-            col += _r_specularColor * _powSpecular(v_specular); // pow() this is too slow so we use a lookup table instead
+            if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
+                {
+                col += _r_diffuseColor[0] * max(icu * dotProduct(N, _r_light_inorm[0]), 0.0f);
+                col += _r_specularColor[0] * _powSpecular(icu * dotProduct(N, _r_H_inorm[0]));
+                }
+            else
+                {
+                for (int i = 0; i < _directionalLightCount; i++)
+                    {            
+                    col += _r_diffuseColor[i] * max(icu * dotProduct(N, _r_light_inorm[i]), 0.0f);
+                    col += _r_specularColor[i] * _powSpecular(icu * dotProduct(N, _r_H_inorm[i]));
+                    }
+                }
+
             col *= color;
+            col.clamp();
+            return col;
+            }
+
+
+        /** compute a face light factor or object color according to the current lighting setup */
+        template<bool TEXTURE> TGX_INLINE inline RGBf _shadeFace(const float icu, const fVec3 & N) const
+            {
+            RGBf col = _r_ambiantColor;
+            if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
+                {
+                col += _r_diffuseColor[0] * max(icu * dotProduct(N,  _r_light[0]), 0.0f);
+                col += _r_specularColor[0] * _powSpecular(icu * dotProduct(N, _r_H[0]));
+                }
+            else
+                {
+                for (int i = 0; i < _directionalLightCount; i++)
+                    {            
+                    col += _r_diffuseColor[i] * max(icu * dotProduct(N,  _r_light[i]), 0.0f);
+                    col += _r_specularColor[i] * _powSpecular(icu * dotProduct(N, _r_H[i]));
+                    }
+                }
+            if (!(TEXTURE)) col *= _r_objectColor;
             col.clamp();
             return col;
             }
@@ -2358,9 +2784,9 @@ namespace tgx
             const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
             faceN.normalize_fast();
             if (texture)
-                _uni.facecolor = _phong<true>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                _uni.facecolor = _shadeFace<true>(icu, faceN);
             else
-                _uni.facecolor = _phong<false>(icu * dotProduct(faceN, _r_light), icu * dotProduct(faceN, _r_H));
+                _uni.facecolor = _shadeFace<false>(icu, faceN);
             }
 
 
@@ -2392,16 +2818,18 @@ namespace tgx
 
         fMat4   _viewM;             // view transform matrix
 
-        fVec3   _light;             // light direction
+        fVec3   _light[MAX_DIRECTIONAL_LIGHTS];         // directional light directions
         RGBf    _ambiantColor;      // light ambiant color
-        RGBf    _diffuseColor;      // light diffuse color
-        RGBf    _specularColor;     // light specular color
+        RGBf    _diffuseColor[MAX_DIRECTIONAL_LIGHTS];  // directional light diffuse colors
+        RGBf    _specularColor[MAX_DIRECTIONAL_LIGHTS]; // directional light specular colors
+        int     _directionalLightCount; // number of active directional lights
 
 
         // *** model specific parameters ***
 
         fMat4   _modelM;            // model transform matrix
 
+        // material parameters
         RGBf    _color;             // model color (use when texturing is disabled)
         float   _ambiantStrength;   // ambient light reflection strength
         float   _diffuseStrength;   // diffuse light reflection strength
@@ -2413,13 +2841,13 @@ namespace tgx
         fMat4 _r_modelViewM;        // model-view matrix
         float _r_inorm;             // Fast normal scaling for lighting. Assumes rotation/uniform scale;
                                     // Gouraud lighting is approximate with non-uniform model scaling.
-        fVec3 _r_light;             // light vector in view space (inverted and normalized)
-        fVec3 _r_light_inorm;       // same as above but already multiplied by inorm
-        fVec3 _r_H;                 // halfway vector.
-        fVec3 _r_H_inorm;           // same as above but already multiplied by inorm
+        fVec3 _r_light[MAX_DIRECTIONAL_LIGHTS];         // light vectors in view space (inverted and normalized)
+        fVec3 _r_light_inorm[MAX_DIRECTIONAL_LIGHTS];   // same as above but already multiplied by inorm
+        fVec3 _r_H[MAX_DIRECTIONAL_LIGHTS];             // halfway vectors.
+        fVec3 _r_H_inorm[MAX_DIRECTIONAL_LIGHTS];       // same as above but already multiplied by inorm
         RGBf _r_ambiantColor;       // ambient color multiplied by object ambient strength
-        RGBf _r_diffuseColor;       // diffuse color multiplied by object diffuse strength
-        RGBf _r_specularColor;      // specular color multiplied by object specular strength
+        RGBf _r_diffuseColor[MAX_DIRECTIONAL_LIGHTS];   // diffuse colors multiplied by object diffuse strength
+        RGBf _r_specularColor[MAX_DIRECTIONAL_LIGHTS];  // specular colors multiplied by object specular strength
         RGBf _r_objectColor;        // color to use for drawing the object (either _color or mesh->color).
 
 

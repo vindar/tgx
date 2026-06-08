@@ -2358,5 +2358,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> cyborg PROGMEM =
     -1.0f, 1.0f,
     -0.230755357f, 0.230755357f
     },
-    "cyborg"
+    "cyborg",
+    nullptr
     };

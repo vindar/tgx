@@ -7708,5 +7708,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> manga3_v2 PROGMEM =
     -1.0f, 1.0f,
     -0.444038457f, 0.444038457f
     },
-    "manga3_v2"
+    "manga3_v2",
+    nullptr
     };

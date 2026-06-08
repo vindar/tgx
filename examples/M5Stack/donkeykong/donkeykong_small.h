@@ -1611,5 +1611,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> donkeykong_small PROGMEM =
     -0.909225728f, 0.909225728f,
     -1.0f, 1.0f
     },
-    "donkeykong_small"
+    "donkeykong_small",
+    nullptr
     };

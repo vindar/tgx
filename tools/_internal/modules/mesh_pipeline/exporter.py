@@ -26,6 +26,10 @@ class MeshletExportStats:
     materials: int
     meshlet_array_bytes: int
     material_array_bytes: int
+    material_extra_array_present: bool
+    material_extra_array_bytes: int
+    emissive_materials: int
+    emissive_textures: int
     mesh_struct_bytes: int
     static_bytes: int
 
@@ -444,17 +448,20 @@ def _embedded_memory_estimate(
     payload_bytes: int,
     meshlets: int,
     materials: int,
-) -> tuple[int, int, int, int]:
+) -> tuple[int, int, int, int, int]:
     # 32-bit MCU ABI estimate. Meshlet3Dv2 is 24 bytes, MeshMaterial3Dv2 is
-    # 32 bytes with a 32-bit texture pointer, Mesh3Dv2 itself is 48 bytes.
+    # 32 bytes with a 32-bit texture pointer, MeshMaterialExtra3Dv2 is
+    # 24 bytes, Mesh3Dv2 itself is 52 bytes with the optional extras pointer.
     meshlet_array_bytes = meshlets * 24
     material_array_bytes = materials * 32
-    mesh_struct_bytes = 48
+    material_extra_array_bytes = materials * 24
+    mesh_struct_bytes = 52
     return (
         meshlet_array_bytes,
         material_array_bytes,
+        material_extra_array_bytes,
         mesh_struct_bytes,
-        payload_bytes + meshlet_array_bytes + material_array_bytes + mesh_struct_bytes,
+        payload_bytes + meshlet_array_bytes + material_array_bytes + material_extra_array_bytes + mesh_struct_bytes,
     )
 
 
@@ -468,6 +475,7 @@ def _export_meshlet_header_impl(
     use_lkh: bool = True,
     lkh_exe: str | Path = DEFAULT_LKH_EXE,
     texture_symbols: dict[str, str] | None = None,
+    emissive_texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
     mesh_type: str = "Mesh3Dv2",
     meshlet_type: str = "Meshlet3Dv2",
@@ -483,6 +491,7 @@ def _export_meshlet_header_impl(
         materials = [""]
     material_index = {mat: i for i, mat in enumerate(materials)}
     texture_symbols = texture_symbols or {}
+    emissive_texture_symbols = emissive_texture_symbols or {}
     extra_includes = extra_includes or []
 
     encoded: list[_EncodedMeshlet] = [None] * len(meshlets)  # type: ignore[list-item]
@@ -526,11 +535,22 @@ def _export_meshlet_header_impl(
 
     payload_words = list(struct.unpack("<" + "I" * (len(payload) // 4), payload))
     bb_min, bb_max = mesh.bounding_box()
-    meshlet_array_bytes, material_array_bytes, mesh_struct_bytes, static_bytes = _embedded_memory_estimate(
+    material_extra_needed = [
+        bool(mesh.materials.get(mat).has_material_extra(emissive_texture_symbols.get(mat, "")) if mesh.materials.get(mat) is not None else emissive_texture_symbols.get(mat, ""))
+        for mat in materials
+    ]
+    material_extra_array_present = any(material_extra_needed)
+    emissive_materials = sum(1 for needed in material_extra_needed if needed)
+    emissive_textures = sum(1 for mat in materials if emissive_texture_symbols.get(mat, ""))
+
+    meshlet_array_bytes, material_array_bytes, full_material_extra_array_bytes, mesh_struct_bytes, static_bytes = _embedded_memory_estimate(
         payload_bytes=len(payload),
         meshlets=len(meshlets),
         materials=len(materials),
     )
+    material_extra_array_bytes = full_material_extra_array_bytes if material_extra_array_present else 0
+    if not material_extra_array_present:
+        static_bytes -= full_material_extra_array_bytes
 
     header: list[str] = []
     header.append("#pragma once")
@@ -547,10 +567,14 @@ def _export_meshlet_header_impl(
     header.append(f"// Chains       : {chains} ({100.0 * chains / max(1, len(mesh.triangles)):.2f}% of triangles)")
     header.append(f"// Vertex refs  : {vertex_refs_loaded} ({vertex_refs_loaded / max(1, len(mesh.triangles)):.3f} per triangle)")
     header.append(f"// Payload      : {len(payload)} bytes ({len(payload_words)} uint32 words)")
+    header.append(f"// Material extras: {'yes' if material_extra_array_present else 'no'}")
+    header.append(f"// Emissive materials: {emissive_materials}")
+    header.append(f"// Emissive textures : {emissive_textures}")
     header.append("// Static memory estimate, excluding texture images:")
     header.append(f"//   payload array : {len(payload)} bytes")
     header.append(f"//   meshlet array : {meshlet_array_bytes} bytes")
     header.append(f"//   material array: {material_array_bytes} bytes")
+    header.append(f"//   material extra array: {material_extra_array_bytes} bytes")
     header.append(f"//   mesh structure: {mesh_struct_bytes} bytes")
     header.append(f"//   total         : {static_bytes} bytes")
     header.append(
@@ -583,6 +607,38 @@ def _export_meshlet_header_impl(
         definitions.append(f"    {{ {texture_ptr}, {{ {_fmt_float(color[0])}, {_fmt_float(color[1])}, {_fmt_float(color[2])} }}, {_fmt_float(ambiant)}, {_fmt_float(diffuse)}, {_fmt_float(specular)}, {int(exponent)} }},{suffix}")
     definitions.append("};")
     definitions.append("")
+    if material_extra_array_present:
+        definitions.append(f"const tgx::MeshMaterialExtra3Dv2<{color_type}> {symbol}_material_extras[{len(materials)}] PROGMEM = {{")
+        for mat, needed in zip(materials, material_extra_needed):
+            material = mesh.materials.get(mat)
+            texture = emissive_texture_symbols.get(mat, "")
+            if needed and material is not None:
+                color = material.emissive
+                strength = material.emissive_strength
+                flags = material.material_extra_flags
+                if (
+                    texture
+                    and strength == 0.0
+                    and not getattr(material, "_emissive_strength_overridden", False)
+                    and not material.material_extra_present
+                    and color == (0.0, 0.0, 0.0)
+                    and flags == 0
+                ):
+                    strength = 1.0
+            elif needed:
+                color = (0.0, 0.0, 0.0)
+                strength = 1.0 if texture else 0.0
+                flags = 0
+            else:
+                color = (0.0, 0.0, 0.0)
+                strength = 0.0
+                flags = 0
+                texture = ""
+            texture_ptr = f"&{texture}" if texture else "nullptr"
+            suffix = f" // {mat}" if mat else ""
+            definitions.append(f"    {{ {{ {_fmt_float(color[0])}, {_fmt_float(color[1])}, {_fmt_float(color[2])} }}, {_fmt_float(strength)}, {texture_ptr}, {int(flags)}u }},{suffix}")
+        definitions.append("};")
+        definitions.append("")
     object_prefix = "const" if single_header else "extern const"
     definitions.append(f"{object_prefix} tgx::{mesh_type}<{color_type}> {symbol} PROGMEM =")
     definitions.append("    {")
@@ -597,7 +653,8 @@ def _export_meshlet_header_impl(
     definitions.append(f"    {_fmt_float(bb_min[1])}, {_fmt_float(bb_max[1])},")
     definitions.append(f"    {_fmt_float(bb_min[2])}, {_fmt_float(bb_max[2])}")
     definitions.append("    },")
-    definitions.append(f"    \"{symbol}\"")
+    definitions.append(f"    \"{symbol}\",")
+    definitions.append(f"    {symbol}_material_extras" if material_extra_array_present else "    nullptr")
     definitions.append("    };")
     definitions.append("")
 
@@ -628,6 +685,10 @@ def _export_meshlet_header_impl(
         materials=len(materials),
         meshlet_array_bytes=meshlet_array_bytes,
         material_array_bytes=material_array_bytes,
+        material_extra_array_present=material_extra_array_present,
+        material_extra_array_bytes=material_extra_array_bytes,
+        emissive_materials=emissive_materials,
+        emissive_textures=emissive_textures,
         mesh_struct_bytes=mesh_struct_bytes,
         static_bytes=static_bytes,
     )
@@ -645,6 +706,7 @@ def export_mesh3dv2_header(
     use_lkh: bool = True,
     lkh_exe: str | Path = DEFAULT_LKH_EXE,
     texture_symbols: dict[str, str] | None = None,
+    emissive_texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
     cone_source: str = "normal",
     header_filename: str | None = None,
@@ -658,6 +720,7 @@ def export_mesh3dv2_header(
         use_lkh=use_lkh,
         lkh_exe=lkh_exe,
         texture_symbols=texture_symbols,
+        emissive_texture_symbols=emissive_texture_symbols,
         extra_includes=extra_includes,
         mesh_type="Mesh3Dv2",
         meshlet_type="Meshlet3Dv2",

@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.0</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.1</span>
    </div>
    <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
@@ -139,6 +139,10 @@ const uint32_t *&#160;</td><td class="memItemRight" valign="bottom"><b>payload</
 const char *&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td></tr>
 <tr class="memdesc:a661fb801c08d6ec60656f92a24053c07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mesh name, or nullptr. <br /></td></tr>
 <tr class="separator:a661fb801c08d6ec60656f92a24053c07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac27f5bd09cbc8fb180c84de4a6c6813f"><td class="memItemLeft" align="right" valign="top"><a id="ac27f5bd09cbc8fb180c84de4a6c6813f" name="ac27f5bd09cbc8fb180c84de4a6c6813f"></a>
+const <a class="el" href="structtgx_1_1_mesh_material_extra3_dv2.html">MeshMaterialExtra3Dv2</a>&lt; color_t &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>material_extras</b></td></tr>
+<tr class="memdesc:ac27f5bd09cbc8fb180c84de4a6c6813f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional material extension array, or nullptr. <br /></td></tr>
+<tr class="separator:ac27f5bd09cbc8fb180c84de4a6c6813f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename color_t&gt;<br />
@@ -148,6 +152,7 @@ struct tgx::Mesh3Dv2&lt; color_t &gt;</div><p >Compact meshlet-based 3D mesh dat
 <ul>
 <li>a global bounding box for fast rejection of the whole mesh,</li>
 <li>an array of materials, each with an optional texture and lighting coefficients,</li>
+<li>an optional parallel material extension array for metadata such as emissive material data,</li>
 <li>a linear array of compact meshlet headers used for culling,</li>
 <li>a 32-bit aligned payload blob containing local arrays and face streams.</li>
 </ul>
@@ -178,7 +183,9 @@ struct tgx::Mesh3Dv2&lt; color_t &gt;</div><p >Compact meshlet-based 3D mesh dat
 <li>if DBIT=1, the next triangle is [V3, V2, V4].</li>
 </ul>
 <p ><b>Alignment and endianness</b></p>
-<p ><a class="el" href="structtgx_1_1_mesh3_dv2.html#ad6007397772cd49c2304ca4a01468bc6" title="32-bit aligned meshlet payload blob.">Mesh3Dv2::payload</a> is a uint32_t array. Meshlet payload offsets are expressed in 32-bit words, and each meshlet payload is padded to a multiple of 4 bytes. The generated payload is intended for little-endian targets, which covers the current TGX targets (x86/x64, Teensy 3/4, ESP32, RP2040 and RP2350). </p>
+<p ><a class="el" href="structtgx_1_1_mesh3_dv2.html#ad6007397772cd49c2304ca4a01468bc6" title="32-bit aligned meshlet payload blob.">Mesh3Dv2::payload</a> is a uint32_t array. Meshlet payload offsets are expressed in 32-bit words, and each meshlet payload is padded to a multiple of 4 bytes. The generated payload is intended for little-endian targets, which covers the current TGX targets (x86/x64, Teensy 3/4, ESP32, RP2040 and RP2350).</p>
+<p ><b>Material extensions</b></p>
+<p ><a class="el" href="structtgx_1_1_mesh3_dv2.html#ac27f5bd09cbc8fb180c84de4a6c6813f" title="Optional material extension array, or nullptr.">Mesh3Dv2::material_extras</a> is optional and may be nullptr. If present, it contains <a class="el" href="structtgx_1_1_mesh3_dv2.html#a87cd7568811c3a0f1289376b32b4fe51" title="Number of materials. Must be &lt;= 256 because meshlet material indices are uint8_t.">Mesh3Dv2::nb_materials</a> entries and entry <code>i</code> extends <a class="el" href="structtgx_1_1_mesh3_dv2.html#a4604fd61d2f5f3fe79fdd964b1257836" title="Material array.">Mesh3Dv2::materials</a>[i]. The <a class="el" href="structtgx_1_1_mesh3_dv2.html" title="Compact meshlet-based 3D mesh data structure.">Mesh3Dv2</a> id remains 2162 because the geometry and payload format are unchanged. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/<a class="el" href="_mesh3_dv2_8h_source.html">Mesh3Dv2.h</a></li>
 </ul>

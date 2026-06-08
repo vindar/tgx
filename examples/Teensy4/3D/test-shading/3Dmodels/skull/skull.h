@@ -4446,5 +4446,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> skull_1 PROGMEM =
     -1.0f, 1.0f,
     -0.677500982f, 0.677500982f
     },
-    "skull_1"
+    "skull_1",
+    nullptr
     };

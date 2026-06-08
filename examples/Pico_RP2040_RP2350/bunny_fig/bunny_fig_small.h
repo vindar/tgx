@@ -939,5 +939,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> bunny_fig_small PROGMEM =
     -1.0f, 1.0f,
     -0.457302162f, 0.457302162f
     },
-    "bunny_fig_small"
+    "bunny_fig_small",
+    nullptr
     };

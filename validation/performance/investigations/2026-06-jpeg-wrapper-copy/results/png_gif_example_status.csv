@@ -1,0 +1,9 @@
+board,decoder,example,compile_status,upload_status,run_status,reason_or_notes
+Teensy41,PNG,examples/Teensy4/2D/extensions/PNG_test,COMPILE_OK,not_run,not_run,Existing Teensy PNGdec example compiles; production PNG path intentionally unchanged.
+Teensy41,GIF,examples/Teensy4/2D/extensions/GIF_test,COMPILE_OK,not_run,not_run,Existing Teensy AnimatedGIF example compiles; large embedded GIF asset was not duplicated or ported.
+Core2,PNG,none created,not_run,not_run,not_run,PNG production optimization was out of scope; no M5Stack PNG port created in this JPEG-focused pass.
+Core2,GIF,none created,not_run,not_run,not_run,GIF production optimization was out of scope; no M5Stack GIF port created in this JPEG-focused pass.
+CoreS3,PNG,none created,not_run,not_run,not_run,PNG production optimization was out of scope; no M5Stack PNG port created in this JPEG-focused pass.
+CoreS3,GIF,none created,not_run,not_run,not_run,GIF production optimization was out of scope; no M5Stack GIF port created in this JPEG-focused pass.
+Pico2,PNG,none created,not_run,not_run,not_run,PNG production optimization was out of scope; no Pico PNG port created in this JPEG-focused pass.
+Pico2,GIF,none created,not_run,not_run,not_run,GIF production optimization was out of scope; no Pico GIF port created in this JPEG-focused pass.

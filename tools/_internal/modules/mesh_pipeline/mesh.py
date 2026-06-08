@@ -29,11 +29,24 @@ class Material:
     name: str
     diffuse: tuple[float, float, float] = (0.75, 0.75, 0.75)
     texture_path: Path | None = None
+    emissive: tuple[float, float, float] = (0.0, 0.0, 0.0)
+    emissive_strength: float = 0.0
+    emissive_texture_path: Path | None = None
+    material_extra_flags: int = 0
+    material_extra_present: bool = False
     texture_refs: dict[str, Path] = field(default_factory=dict)
     ambiant_strength: float = 0.1
     diffuse_strength: float = 0.7
     specular_strength: float = 0.6
     specular_exponent: int = 32
+
+    def has_material_extra(self, emissive_texture_symbol: str = "") -> bool:
+        return (
+            self.material_extra_present
+            or self.emissive != (0.0, 0.0, 0.0)
+            or bool(emissive_texture_symbol)
+            or self.material_extra_flags != 0
+        )
 
 
 @dataclass

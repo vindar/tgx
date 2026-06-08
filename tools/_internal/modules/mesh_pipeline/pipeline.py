@@ -170,6 +170,7 @@ def export_common(
     color_type: str,
     cone_source: str = "normal",
     texture_symbols: dict[str, str] | None = None,
+    emissive_texture_symbols: dict[str, str] | None = None,
     extra_includes: list[str] | None = None,
 ) -> MeshletExportResult:
     fmt = getattr(args, "mesh_format", "mesh3dv2")
@@ -182,6 +183,7 @@ def export_common(
         use_lkh=True,
         lkh_exe=getattr(args, "lkh", DEFAULT_LKH_EXE),
         texture_symbols=texture_symbols or {},
+        emissive_texture_symbols=emissive_texture_symbols or {},
         extra_includes=extra_includes or [],
         header_filename=output.name,
         single_header=getattr(args, "single_header", False),

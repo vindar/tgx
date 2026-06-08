@@ -51,9 +51,11 @@ namespace tgx
      * to improve cache coherency so that meshes can be stored and rendered directly from "slow"
      * memory such as FLASH on a MCU.
      *
-     * The Python script `obj_to_h` located in the `\tools` directory of the library can be used to
-     * create a `Mesh3D` object directly from an .obj file.  The associated image textures (if any)
-     * can be converted using the Python script `texture_2_h`.
+     * The Python tool `tools/tgx_mesh.py`, or its command-line counterpart
+     * `tools/cli_tools/tgx_mesh_cli.py`, can create legacy `Mesh3D` objects
+     * from `.obj` files when `Mesh3D` output is requested. New projects should
+     * normally prefer `Mesh3Dv2`; legacy `Mesh3D` remains available for
+     * compatibility with existing sketches.
      *
      * **MESH FORMAT**
      *

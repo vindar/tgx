@@ -63,7 +63,11 @@ Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
 fVec3 vertices[(N + 1) * (M + 1)];
 fVec3 normals[(N + 1) * (M + 1)];
 fVec2 texcoords[(N + 1) * (M + 1)];
-uint16_t faces[4 * N * M];
+
+// One triangle strip covers the whole grid.  Degenerate triangles connect
+// adjacent rows without drawing visible geometry.
+static const int STRIP_INDEX_COUNT = 2 * (N + 1) + (M - 1) * (2 * (N + 1) + 2);
+uint16_t strip[STRIP_INDEX_COUNT];
 
 int render_lx = 0;
 int render_ly = 0;
@@ -119,15 +123,29 @@ void initSheet()
             }
         }
 
+    int k = 0;
     for (int j = 0; j < M; j++)
         {
-        for (int i = 0; i < N; i++)
+        if (j > 0)
             {
-            int q = 4 * (N * j + i);
-            faces[q + 0] = (uint16_t)(j * (N + 1) + i);
-            faces[q + 1] = (uint16_t)((j + 1) * (N + 1) + i);
-            faces[q + 2] = (uint16_t)((j + 1) * (N + 1) + i + 1);
-            faces[q + 3] = (uint16_t)(j * (N + 1) + i + 1);
+            const uint16_t first = (uint16_t)(j * (N + 1));
+            strip[k] = strip[k - 1]; k++; // degenerate connector
+            strip[k++] = first;
+            strip[k++] = first;
+            strip[k++] = (uint16_t)((j + 1) * (N + 1));
+            for (int i = 1; i <= N; i++)
+                {
+                strip[k++] = (uint16_t)(j * (N + 1) + i);
+                strip[k++] = (uint16_t)((j + 1) * (N + 1) + i);
+                }
+            }
+        else
+            {
+            for (int i = 0; i <= N; i++)
+                {
+                strip[k++] = (uint16_t)(j * (N + 1) + i);
+                strip[k++] = (uint16_t)((j + 1) * (N + 1) + i);
+                }
             }
         }
     }
@@ -249,7 +267,7 @@ void drawFrame()
     // The camera slowly orbits around the sheet.  The model matrix stays
     // identity because the sheet vertices are already in model space.
     renderer.setLookAt(cameraPosition(), { 0, 0, 0 }, { 0, 1, 0 });
-    renderer.drawQuads(N * M, faces, vertices, faces, normals, faces, texcoords, &scream_texture);
+    renderer.drawTriangleStrip(STRIP_INDEX_COUNT, strip, vertices, strip, normals, strip, texcoords, &scream_texture);
 
     }
 

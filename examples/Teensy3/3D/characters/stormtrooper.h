@@ -2822,5 +2822,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> stormtrooper PROGMEM =
     -1.0f, 1.0f,
     -0.213310177f, 0.213310177f
     },
-    "stormtrooper"
+    "stormtrooper",
+    nullptr
     };

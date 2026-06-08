@@ -146,7 +146,7 @@ namespace tgx
         /**
          * Equality comparator. Return true if all components compare equal.
          **/
-        inline bool operator==(const Vec4 V) const
+        inline bool operator==(const Vec4 & V) const
             {
             return ((x == V.x) && (y == V.y) && (z == V.z) && (w == V.w));
             }
@@ -155,7 +155,7 @@ namespace tgx
         /**
          * Inequality operator.
          **/
-        inline bool operator!=(const Vec4 V) const
+        inline bool operator!=(const Vec4 & V) const
             { 
             return(!(operator==(V))); 
             }
@@ -164,7 +164,7 @@ namespace tgx
         /**
          * Less-than comparison operator. Use lexicographical order.
          **/
-        inline bool operator<(const Vec4 V) const
+        inline bool operator<(const Vec4 & V) const
             { 
             if (x < V.x) return true;
             if (x == V.x)
@@ -186,7 +186,7 @@ namespace tgx
         /**
          * Less-than-or-equal comparison operator. Use lexicographical order.
          **/
-        inline bool operator<=(const Vec4 V) const
+        inline bool operator<=(const Vec4 & V) const
             {
             if (x < V.x) return true;
             if (x == V.x)
@@ -208,26 +208,26 @@ namespace tgx
         /**
          * Greater-than comparison operator. Use lexicographical order.
          **/
-        inline bool operator>(const Vec4 V) const 
-            { 
-            return(!(operator<=(V))); 
+        inline bool operator>(const Vec4 & V) const
+            {
+            return(!(operator<=(V)));
             }
 
 
         /**
          * Greater-than-or-equal comparison operator. Use lexicographical order.
          **/
-        inline bool operator>=(const Vec4 V) const
-            { 
-            return(!(operator<(V))); 
+        inline bool operator>=(const Vec4 & V) const
+            {
+            return(!(operator<(V)));
             }
 
 
         /**
         * Add another vector to this one.
         **/
-        inline void operator+=(const Vec4 V)
-            { 
+        TGX_INLINE inline void operator+=(const Vec4 & V)
+            {
             x += V.x;
             y += V.y;
             z += V.z;
@@ -238,7 +238,7 @@ namespace tgx
         /**
         * Substract another vector from this one.
         **/
-        inline void operator-=(const Vec4 V) 
+        TGX_INLINE inline void operator-=(const Vec4 & V)
             {
             x -= V.x;
             y -= V.y;
@@ -250,7 +250,7 @@ namespace tgx
         /**
          * Multiply this vector by another one (coordinate by coordinate multiplication).
          **/
-        inline void operator*=(const Vec4 V) 
+        TGX_INLINE inline void operator*=(const Vec4 & V)
             {
             x *= V.x;
             y *= V.y;
@@ -262,7 +262,7 @@ namespace tgx
         /**
          * Divide this vector by another one (coordinate by coordinate division).
          **/
-        inline void operator/=(const Vec4 V)
+        TGX_INLINE inline void operator/=(const Vec4 & V)
             {
             x /= V.x;
             y /= V.y;
@@ -272,9 +272,9 @@ namespace tgx
 
 
         /**
-         * Scalar addition. Add v to each of the vector components. 
+         * Scalar addition. Add v to each of the vector components.
          **/
-        inline void operator+=(const T v) 
+        TGX_INLINE inline void operator+=(T v)
             {
             x += v;
             y += v;
@@ -286,7 +286,7 @@ namespace tgx
         /**
          * Scalar substraction. Add v to each of the vector components.
          **/
-        inline void operator-=(const T v) 
+        TGX_INLINE inline void operator-=(T v)
             {
             x -= v;
             y -= v;
@@ -297,7 +297,7 @@ namespace tgx
         /**
          * Scalar multiplication. Multiply each of the vector components by v.
          **/
-        inline void operator*=(const T v) 
+        TGX_INLINE inline void operator*=(T v)
             {
             x *= v;
             y *= v;
@@ -308,7 +308,7 @@ namespace tgx
         /**
          * Scalar division. Divde each of the vector components by v.
          **/
-        inline void operator/=(const T v) 
+        TGX_INLINE inline void operator/=(T v)
             {
             x /= v;
             y /= v;
@@ -475,7 +475,7 @@ namespace tgx
         * - z = z/w
         * - w = 1/w
         **/
-        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void zdivide() 
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE_ZDIVIDE inline void zdivide()
             {
             const Tfloat iw = tgx::fast_inv((Tfloat)w);
             x = iw*x;
@@ -509,7 +509,7 @@ namespace tgx
      * @tparam Tfloat Floating point type used for computation (use default floating point type if
      *                unspecified).
      */
-    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > inline  Vec4<T> normalize(Vec4<T> V)
+    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline  Vec4<T> normalize(Vec4<T> V)
         {
         V.template normalize<Tfloat>();
         return V;
@@ -523,7 +523,7 @@ namespace tgx
      * @tparam  Tfloat Floating point type used for computation (use default floating point type if
      *                 unspecified).
      */
-    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > inline  Vec4<T> normalize_fast(Vec4<T> V)
+    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline  Vec4<T> normalize_fast(Vec4<T> V)
         {
         V.template normalize_fast<Tfloat>();
         return V;
@@ -533,7 +533,7 @@ namespace tgx
     /**
      * Compute the squared euclidian distance between two vectors.
      */
-    template<typename T> inline T dist2(const Vec4<T>  V1, const Vec4<T>  V2)
+    template<typename T> TGX_INLINE inline T dist2(const Vec4<T>  & V1, const Vec4<T>  & V2)
         {
         const T xx = V1.x - V2.x;
         const T yy = V1.y - V2.y;
@@ -549,7 +549,7 @@ namespace tgx
      * @tparam  Tfloat Floating point type used for computation (use default floating point type if
      *                 unspecified).
      */
-    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist(Vec4<T> V1, const Vec4<T> V2)
+    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat dist(const Vec4<T> & V1, const Vec4<T> & V2)
         {
         const T xx = V1.x - V2.x;
         const T yy = V1.y - V2.y;
@@ -566,7 +566,7 @@ namespace tgx
      * @tparam  Tfloat Floating point type used for computation (use default floating point type if
      *                 unspecified).
      */
-    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > Tfloat dist_fast(Vec4<T> V1, const Vec4<T> V2)
+    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat dist_fast(const Vec4<T> & V1, const Vec4<T> & V2)
         {
         const T xx = V1.x - V2.x;
         const T yy = V1.y - V2.y;
@@ -577,46 +577,43 @@ namespace tgx
 
 
     /** Addition operator. Coordinates by coordinates */
-    template<typename T> inline Vec4<T> operator+(Vec4<T> V1, const Vec4<T> V2) { V1 += V2; return V1; }
+    template<typename T> TGX_INLINE inline Vec4<T> operator+(Vec4<T> V1, const Vec4<T> & V2) { V1 += V2; return V1; }
 
     /** Substraction operator. Coordinates by coordinates */
-    template<typename T> inline Vec4<T> operator-(Vec4<T> V1, const Vec4<T> V2) { V1 -= V2; return V1; }
+    template<typename T> TGX_INLINE inline Vec4<T> operator-(Vec4<T> V1, const Vec4<T> & V2) { V1 -= V2; return V1; }
 
     /** Multiplication operator. Coordinates by coordinates */
-    template<typename T> inline Vec4<T> operator*(Vec4<T> V1, const Vec4<T> V2) { V1 *= V2; return V1; }
+    template<typename T> TGX_INLINE inline Vec4<T> operator*(Vec4<T> V1, const Vec4<T> & V2) { V1 *= V2; return V1; }
 
     /** Division operator. Coordinates by coordinates */
-    template<typename T> inline Vec4<T> operator/(Vec4<T> V1, const Vec4<T> V2) { V1 /= V2; return V1; }
+    template<typename T> TGX_INLINE inline Vec4<T> operator/(Vec4<T> V1, const Vec4<T> & V2) { V1 /= V2; return V1; }
 
     /** Scalar addition operator */
-    template<typename T> inline Vec4<T> operator+(const T a, Vec4<T> V) { V += a; return V; }
+    template<typename T> TGX_INLINE inline Vec4<T> operator+(const T a, Vec4<T> V) { V += a; return V; }
 
     /** Scalar addition operator */
-    template<typename T> inline Vec4<T> operator+(Vec4<T> V, const T a) { V += a; return V; }
+    template<typename T> TGX_INLINE inline Vec4<T> operator+(Vec4<T> V, const T a) { V += a; return V; }
 
     /** Scalar substraction operator */
-    //template<typename T> inline Vec4<T> operator-(const T a, Vec4<T> V) { V -= a; return V; }
-
-    /** Scalar substraction operator */
-    template<typename T> inline Vec4<T> operator-(Vec4<T> V, const T a) { V -= a; return V; }
+    template<typename T> TGX_INLINE inline Vec4<T> operator-(Vec4<T> V, const T a) { V -= a; return V; }
 
     /** Scalar multiplication operator */
-    template<typename T> inline Vec4<T> operator*(const T a, Vec4<T> V) { V *= a; return V; }
+    template<typename T> TGX_INLINE inline Vec4<T> operator*(const T a, Vec4<T> V) { V *= a; return V; }
 
     /** Scalar multiplication operator */
-    template<typename T> inline Vec4<T> operator*(Vec4<T> V, const T a) { V *= a; return V; }
+    template<typename T> TGX_INLINE inline Vec4<T> operator*(Vec4<T> V, const T a) { V *= a; return V; }
 
     /** Scalar division operator */
     //template<typename T> inline Vec4<T> operator/(const T a, Vec4<T> V) { V /= a; return V; }
 
     /** Scalar division operator */
-    template<typename T> inline Vec4<T> operator/(Vec4<T> V, const T a) { V /= a; return V; }
+    template<typename T> TGX_INLINE inline Vec4<T> operator/(Vec4<T> V, const T a) { V /= a; return V; }
 
 
     /**
      * Return the dot product U.V between two vectors.
      */
-    template<typename T> inline T dotProduct(const Vec4<T> U, const Vec4<T> V)
+    template<typename T> TGX_INLINE inline T dotProduct(const Vec4<T> & U, const Vec4<T> & V)
         {
         return U.x * V.x + U.y * V.y + U.z * V.z + U.w * V.w;
         }
@@ -636,7 +633,7 @@ namespace tgx
     /**
      * Return the cross product of u x v **as 3-dim vector (and set w = 0)**.
      */
-    template<typename T> inline Vec4<T> crossProduct(const Vec4<T>& U, const Vec4<T>& V)
+    template<typename T> TGX_INLINE inline Vec4<T> crossProduct(const Vec4<T>& U, const Vec4<T>& V)
         {
         return Vec4<T>{ U.y* V.z - U.z * V.y,
                         U.z* V.x - U.x * V.z,
@@ -649,7 +646,7 @@ namespace tgx
     /**
      * Linear interpolation: V1 + alpha(V2 - V1).
      */
-    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > inline Vec4<T> lerp(Tfloat alpha, Vec4<T> V1, Vec4<T> V2)
+    template<typename T, typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Vec4<T> lerp(const Tfloat alpha, const Vec4<T> & V1, const Vec4<T> & V2)
         {
         return Vec4<T>{ (T)(V1.x + alpha * (V2.x - V1.x)),
                         (T)(V1.y + alpha * (V2.y - V1.y)),

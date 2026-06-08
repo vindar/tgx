@@ -2889,5 +2889,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> falcon_vs_v2 PROGMEM =
     -0.219891878f, 0.219891878f,
     -1.0f, 1.0f
     },
-    "falcon_vs_v2"
+    "falcon_vs_v2",
+    nullptr
     };

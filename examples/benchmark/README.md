@@ -17,6 +17,18 @@ Regular hardware targets:
 Build by defining exactly one `TGX_BENCHMARK_*` symbol for the target when the
 board cannot be detected unambiguously. The benchmark intentionally avoids any
 display driver dependency; it measures TGX rendering into memory buffers only.
+It includes a dynamic ribbon drawn three ways (`drawTriangles()`,
+`drawTriangleStrip()` and `drawQuads()`) to track indexed strip rendering
+against the older direct primitive paths. The same ribbon is also rendered in
+wireframe fast, antialiased and adjustable-thickness modes to compare
+`drawWireFrameTriangleStrip()` with triangle and quad lists.
+
+The benchmark also prints a directional-lighting comparison after the historical
+final score for each viewport size. That section compares the default one-light
+renderer with an advanced renderer using capacity 4 / active 1, capacity 4 /
+active 2, and capacity 4 / active 4 directional lights. The integrated MCU
+comparison uses the Gouraud path to keep the full benchmark inside the Teensy
+4.x memory budget.
 
 Typical Arduino CLI examples:
 

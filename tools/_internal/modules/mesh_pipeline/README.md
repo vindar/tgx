@@ -16,7 +16,8 @@ The conversion pipeline is shared by OBJ input and existing TGX mesh headers:
 1. Load the source model.
 2. Triangulate OBJ polygons when needed.
 3. Build a common internal mesh representation with vertices, normals, UVs,
-   materials and texture references.
+   materials and texture references. OBJ/MTL `Ke` is parsed as emissive color,
+   and `map_Ke` is parsed as an emissive texture reference.
 4. Remove degenerate triangles.
 5. Generate or normalize normals when needed.
 6. Snap vertices, normals and UVs to conservative grids, then remove duplicate
@@ -29,6 +30,20 @@ The conversion pipeline is shared by OBJ input and existing TGX mesh headers:
 The runtime dequantizes them with one multiply/add per component. Meshlet
 metadata also stores a compact bounding sphere and visibility cone so TGX can
 discard invisible meshlets cheaply.
+
+`Mesh3Dv2` can also carry optional material metadata in a parallel
+`material_extras` table. The table may be `nullptr`; when it is present, it has
+exactly `nb_materials` entries and `material_extras[i]` extends
+`materials[i]`. TGX uses this table to store emissive color, emissive strength
+and optional `map_Ke` texture pointers. This metadata is preserved by the tools,
+including Mesh3Dv2-to-Mesh3Dv2 conversion, but the renderer does not shade with
+it yet. Emissive renderer/shader support is planned for a later release.
+
+If one material needs extended data, the generated `material_extras` array still
+contains one row for every material so that material index `i` can be used
+directly in both arrays. Rows for non-emissive materials are initialized with
+black color, zero strength, `nullptr` texture and zero flags. If no material
+needs extended data, `Mesh3Dv2::material_extras` is `nullptr`.
 
 ## Python Environment
 
@@ -146,17 +161,25 @@ Split `.h` + `.cpp` output:
 python -m tools._internal.modules.mesh_pipeline.tgx_mesh3d2 export model.obj -o model_v2.h --name model_v2 --normalize
 ```
 
-Useful options:
+Useful options in this lower-level entry point:
 
 - `--name SYMBOL`: C++ symbol name for the exported mesh.
 - `--normalize`: center and scale the model to a unit box.
 - `--single-header`: write payload arrays directly in the header.
 - `--target-vertices N`: preferred meshlet size before hard limits.
 - `--max-normal-angle DEG`: maximum normal spread accepted while merging.
-- `--export-textures`: generate texture headers from OBJ/MTL `map_Kd`.
+- `--export-textures`: generate texture headers from OBJ/MTL `map_Kd` and
+  `map_Ke`.
 - `--texture-size W H`: resample exported textures.
 - `--texture-symbol Material=Symbol`: link a material to an existing texture symbol.
+- `--emissive-texture-symbol Material=Symbol`: link a material to an existing
+  emissive texture symbol.
 - `--include file.h`: add an include for an existing texture header.
+
+For day-to-day use, prefer the public `tools/cli_tools/tgx_mesh_cli.py` command
+or `tools/tgx_mesh.py` GUI. They expose newer material editing options, texture
+renaming, TGX texture-header overrides and Mesh3Dv2-to-Mesh3Dv2 preservation
+paths.
 
 Example with existing textures:
 
@@ -167,7 +190,15 @@ python -m tools._internal.modules.mesh_pipeline.tgx_mesh3d2 export falcon.obj -o
 ## Convert Existing Mesh3D Headers
 
 Existing TGX `Mesh3D` headers can be converted directly. This preserves texture
-symbols and material values from the original header.
+symbols and standard material values from the original header. A legacy
+`Mesh3D` chain is interpreted as a sequence of standard materials/submeshes.
+
+Existing TGX `Mesh3Dv2` headers can also be converted through the public
+`tgx_mesh_cli.py` command. When a source Mesh3Dv2 header contains
+`material_extras`, the conversion preserves emissive color, strength and
+emissive texture symbols when the output is Mesh3Dv2. If the output is legacy
+Mesh3D, emissive data is omitted because that format has no storage for it.
+Only texture headers actually referenced by exported material links are copied.
 
 ```powershell
 python -m tools._internal.modules.mesh_pipeline.mesh3d_to_mesh3d2 examples\Teensy4\3D\mars\falcon\falcon_vs.h -o falcon_vs_v2.h --root falcon_vs_1 --name falcon_vs_v2 --single-header

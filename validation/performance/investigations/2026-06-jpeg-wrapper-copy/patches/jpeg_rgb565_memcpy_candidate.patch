@@ -1,0 +1,31 @@
+diff --git a/src/Image.inl b/src/Image.inl
+index e305eff..bd72700 100644
+--- a/src/Image.inl
++++ b/src/Image.inl
+@@ -396,11 +396,23 @@ namespace tgx
+             {
+             uint16_t * fb = (uint16_t*)im->data() + x + (y * im->stride());
+             const int str = im->stride();
+-            for (int j = 0; j < pDraw->iHeight; j++)
++            if ((pDraw->iWidth >= 16) && ((pDraw->iWidth & 7) == 0))
+                 {
+-                for (int i = 0; i < pDraw->iWidth; i++)
++                const size_t rowBytes = (size_t)pDraw->iWidth * sizeof(uint16_t);
++                for (int j = 0; j < pDraw->iHeight; j++)
+                     {
+-                    fb[i + str * j] = *(p++);
++                    memcpy(fb + str * j, p, rowBytes);
++                    p += pDraw->iWidth;
++                    }
++                }
++            else
++                {
++                for (int j = 0; j < pDraw->iHeight; j++)
++                    {
++                    for (int i = 0; i < pDraw->iWidth; i++)
++                        {
++                        fb[i + str * j] = *(p++);
++                        }
+                     }
+                 }
+             }

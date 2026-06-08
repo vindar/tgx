@@ -113,9 +113,20 @@ python tools/tgx_mesh.py
 - \ref tgx::Mesh3D "Mesh3D", the legacy format kept for compatibility.
 
 For OBJ files, the tool reads materials and textures when available. The GUI
-shows the detected texture references and lets the user override or resize each
-texture before conversion. It can also preview the model with PyVista, including
-textured rendering and Mesh3Dv2 meshlet visualization.
+shows a material list and a texture list. Materials can be renamed and edited
+without duplicating texture assets: one texture can be linked by several
+materials as a diffuse or emissive texture, and unused textures are omitted from
+the final export. Each material stores diffuse color, lighting strengths,
+specular exponent and an optional diffuse texture.
+
+For `Mesh3Dv2`, a material can also use an optional extended material entry with
+emissive color, emissive strength and an optional emissive texture. OBJ/MTL
+`Ke` becomes emissive color and `map_Ke` becomes the emissive texture. This data
+is stored in the optional `Mesh3Dv2::material_extras` table. The current
+renderer preserves and caches this metadata but does not shade with it yet.
+
+The GUI can also preview the model with PyVista, including textured rendering
+and Mesh3Dv2 meshlet visualization.
 
 For a first conversion, keep the GUI defaults:
 
@@ -168,7 +179,8 @@ and it detects whether it contains an image, mesh or font.
 It reports information such as:
 
 - image dimensions, color type and memory size;
-- mesh triangle counts, meshlet counts, texture list and memory estimates;
+- mesh triangle counts, meshlet counts, material tables, diffuse/emissive
+  texture links, Mesh3Dv2 material extras and memory estimates;
 - font objects, glyph counts, character ranges, antialiasing and memory size.
 
 It can also save image/font preview PNGs, and can open the mesh viewer for mesh

@@ -722,5 +722,6 @@ const tgx::Mesh3Dv2<tgx::RGB565> teapot PROGMEM =
     -0.489919327f, 0.489919327f,
     -0.62211978f, 0.62211978f
     },
-    "teapot"
+    "teapot",
+    nullptr
     };

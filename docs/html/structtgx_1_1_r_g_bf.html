@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.0</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.1</span>
    </div>
    <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
@@ -115,14 +115,14 @@ Public Member Functions</h2></td></tr>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>RGBf</b> (float r, float g, float b)</td></tr>
 <tr class="memdesc:a252cf33ca2f0f93da1a3cc12f998ed57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor from raw r,g,b values in [0.0f, 1.0f]. <br /></td></tr>
 <tr class="separator:a252cf33ca2f0f93da1a3cc12f998ed57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac191e520407bdadb5652b9fd9194985d"><td class="memItemLeft" align="right" valign="top"><a id="ac191e520407bdadb5652b9fd9194985d" name="ac191e520407bdadb5652b9fd9194985d"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>RGBf</b> (<a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> v)</td></tr>
-<tr class="memdesc:ac191e520407bdadb5652b9fd9194985d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor from a <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2" title="Floating point valued 3D vector with single (float) precision.">fVec3</a> with components (x=R, y=G, z=B) in [0.0f, 1.0f]. <br /></td></tr>
-<tr class="separator:ac191e520407bdadb5652b9fd9194985d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a321bc48fd00c822138417fa35890ca5a"><td class="memItemLeft" align="right" valign="top"><a id="a321bc48fd00c822138417fa35890ca5a" name="a321bc48fd00c822138417fa35890ca5a"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>RGBf</b> (<a class="el" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b">fVec4</a> v)</td></tr>
-<tr class="memdesc:a321bc48fd00c822138417fa35890ca5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor from a <a class="el" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b" title="Floating point valued 4D vector with single (float) precision.">fVec4</a> with components (x=R, y=G, z=B, w=ignored) in [0.0f, 1.0f]. <br /></td></tr>
-<tr class="separator:a321bc48fd00c822138417fa35890ca5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2ead711e2a0d6bd230dd5078b0c90fc"><td class="memItemLeft" align="right" valign="top"><a id="ae2ead711e2a0d6bd230dd5078b0c90fc" name="ae2ead711e2a0d6bd230dd5078b0c90fc"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>RGBf</b> (const <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> &amp;v)</td></tr>
+<tr class="memdesc:ae2ead711e2a0d6bd230dd5078b0c90fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor from a <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2" title="Floating point valued 3D vector with single (float) precision.">fVec3</a> with components (x=R, y=G, z=B) in [0.0f, 1.0f]. <br /></td></tr>
+<tr class="separator:ae2ead711e2a0d6bd230dd5078b0c90fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e05d8a006db4637a42b03d5a35f5593"><td class="memItemLeft" align="right" valign="top"><a id="a3e05d8a006db4637a42b03d5a35f5593" name="a3e05d8a006db4637a42b03d5a35f5593"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>RGBf</b> (const <a class="el" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b">fVec4</a> &amp;v)</td></tr>
+<tr class="memdesc:a3e05d8a006db4637a42b03d5a35f5593"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor from a <a class="el" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b" title="Floating point valued 4D vector with single (float) precision.">fVec4</a> with components (x=R, y=G, z=B, w=ignored) in [0.0f, 1.0f]. <br /></td></tr>
+<tr class="separator:a3e05d8a006db4637a42b03d5a35f5593"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae45e87f6adff69483acfd44b8f344ae6"><td class="memItemLeft" align="right" valign="top"><a id="ae45e87f6adff69483acfd44b8f344ae6" name="ae45e87f6adff69483acfd44b8f344ae6"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>RGBf</b> (uint16_t val)</td></tr>
 <tr class="memdesc:ae45e87f6adff69483acfd44b8f344ae6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor from a uint16_t (seen as <a class="el" href="structtgx_1_1_r_g_b565.html" title="Color in R5/G6/B5 format.">RGB565</a>). <br /></td></tr>
@@ -183,38 +183,38 @@ constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>RGBf</b> (const 
 <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a> &amp;c)</td></tr>
 <tr class="memdesc:a791a51d0e6b840b4254f101c6c7c1cef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator from a <a class="el" href="structtgx_1_1_h_s_v.html" title="Color in H/S/V format [experimental].">HSV</a> color. <br /></td></tr>
 <tr class="separator:a791a51d0e6b840b4254f101c6c7c1cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d2e36336079858366985f9689a767ad"><td class="memItemLeft" align="right" valign="top"><a id="a5d2e36336079858366985f9689a767ad" name="a5d2e36336079858366985f9689a767ad"></a>
-<a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> v)</td></tr>
-<tr class="memdesc:a5d2e36336079858366985f9689a767ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator from a <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2" title="Floating point valued 3D vector with single (float) precision.">fVec3</a> with components (x=R, y=G, z=B) in [0.0f, 1.0f]. <br /></td></tr>
-<tr class="separator:a5d2e36336079858366985f9689a767ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fa8d8dc206222d54b95849a7223bc15"><td class="memItemLeft" align="right" valign="top"><a id="a7fa8d8dc206222d54b95849a7223bc15" name="a7fa8d8dc206222d54b95849a7223bc15"></a>
-<a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b">fVec4</a> v)</td></tr>
-<tr class="memdesc:a7fa8d8dc206222d54b95849a7223bc15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator from a <a class="el" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b" title="Floating point valued 4D vector with single (float) precision.">fVec4</a> with components (x=R, y=G, z=B, w=ignored) in [0.0f, 1.0f]. <br /></td></tr>
-<tr class="separator:a7fa8d8dc206222d54b95849a7223bc15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a199b7537f953e4a6aec9bb381539477f"><td class="memItemLeft" align="right" valign="top"><a id="a199b7537f953e4a6aec9bb381539477f" name="a199b7537f953e4a6aec9bb381539477f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;c)</td></tr>
-<tr class="memdesc:a199b7537f953e4a6aec9bb381539477f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add another color, component by component. <br /></td></tr>
-<tr class="separator:a199b7537f953e4a6aec9bb381539477f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2abc00f88808bacb123ce8e2f002b812"><td class="memItemLeft" align="right" valign="top"><a id="a2abc00f88808bacb123ce8e2f002b812" name="a2abc00f88808bacb123ce8e2f002b812"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>operator-=</b> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;c)</td></tr>
-<tr class="memdesc:a2abc00f88808bacb123ce8e2f002b812"><td class="mdescLeft">&#160;</td><td class="mdescRight">Substract another color, component by component. <br /></td></tr>
-<tr class="separator:a2abc00f88808bacb123ce8e2f002b812"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3543ea6c22044d1188a80036e85d9fc7"><td class="memItemLeft" align="right" valign="top"><a id="a3543ea6c22044d1188a80036e85d9fc7" name="a3543ea6c22044d1188a80036e85d9fc7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>operator*=</b> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;c)</td></tr>
-<tr class="memdesc:a3543ea6c22044d1188a80036e85d9fc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply each channel by the same channel on c. <br /></td></tr>
-<tr class="separator:a3543ea6c22044d1188a80036e85d9fc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e19fbaac096e0554754864b6a7fb8bc"><td class="memItemLeft" align="right" valign="top"><a id="a7e19fbaac096e0554754864b6a7fb8bc" name="a7e19fbaac096e0554754864b6a7fb8bc"></a>
-<a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;c) const</td></tr>
-<tr class="memdesc:a7e19fbaac096e0554754864b6a7fb8bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the color obtained by multipliying the channels of both colors together. <br /></td></tr>
-<tr class="separator:a7e19fbaac096e0554754864b6a7fb8bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae31fe29150d041beafb2ccb9d5330eee"><td class="memItemLeft" align="right" valign="top"><a id="ae31fe29150d041beafb2ccb9d5330eee" name="ae31fe29150d041beafb2ccb9d5330eee"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>operator*=</b> (float a)</td></tr>
-<tr class="memdesc:ae31fe29150d041beafb2ccb9d5330eee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply each channel by a constant. <br /></td></tr>
-<tr class="separator:ae31fe29150d041beafb2ccb9d5330eee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae44d62e05a0fe1dadc30ca53a4ccc892"><td class="memItemLeft" align="right" valign="top"><a id="ae44d62e05a0fe1dadc30ca53a4ccc892" name="ae44d62e05a0fe1dadc30ca53a4ccc892"></a>
-<a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> (float a) const</td></tr>
-<tr class="memdesc:ae44d62e05a0fe1dadc30ca53a4ccc892"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the color where all components are multiplied by a. <br /></td></tr>
-<tr class="separator:ae44d62e05a0fe1dadc30ca53a4ccc892"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2063922b04ee2698bee0d9827b7c7e0"><td class="memItemLeft" align="right" valign="top"><a id="ae2063922b04ee2698bee0d9827b7c7e0" name="ae2063922b04ee2698bee0d9827b7c7e0"></a>
+<a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2">fVec3</a> &amp;v)</td></tr>
+<tr class="memdesc:ae2063922b04ee2698bee0d9827b7c7e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator from a <a class="el" href="_vec3_8h.html#a99f7adbde40341ee92cc8f2bac0b6af2" title="Floating point valued 3D vector with single (float) precision.">fVec3</a> with components (x=R, y=G, z=B) in [0.0f, 1.0f]. <br /></td></tr>
+<tr class="separator:ae2063922b04ee2698bee0d9827b7c7e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc8c2ee2d97e177ac32b7962c9769492"><td class="memItemLeft" align="right" valign="top"><a id="acc8c2ee2d97e177ac32b7962c9769492" name="acc8c2ee2d97e177ac32b7962c9769492"></a>
+<a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b">fVec4</a> &amp;v)</td></tr>
+<tr class="memdesc:acc8c2ee2d97e177ac32b7962c9769492"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator from a <a class="el" href="_vec4_8h.html#a66dc844afdc508c1137c733caa63695b" title="Floating point valued 4D vector with single (float) precision.">fVec4</a> with components (x=R, y=G, z=B, w=ignored) in [0.0f, 1.0f]. <br /></td></tr>
+<tr class="separator:acc8c2ee2d97e177ac32b7962c9769492"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4fe5332807ed02d5486b2943ea47487"><td class="memItemLeft" align="right" valign="top"><a id="af4fe5332807ed02d5486b2943ea47487" name="af4fe5332807ed02d5486b2943ea47487"></a>
+TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;c)</td></tr>
+<tr class="memdesc:af4fe5332807ed02d5486b2943ea47487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add another color, component by component. <br /></td></tr>
+<tr class="separator:af4fe5332807ed02d5486b2943ea47487"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a951792f240888ec7fb4a56ff78aaebee"><td class="memItemLeft" align="right" valign="top"><a id="a951792f240888ec7fb4a56ff78aaebee" name="a951792f240888ec7fb4a56ff78aaebee"></a>
+TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>operator-=</b> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;c)</td></tr>
+<tr class="memdesc:a951792f240888ec7fb4a56ff78aaebee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Substract another color, component by component. <br /></td></tr>
+<tr class="separator:a951792f240888ec7fb4a56ff78aaebee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5d5b7c2009f41508a7781a9ba93fd38"><td class="memItemLeft" align="right" valign="top"><a id="ad5d5b7c2009f41508a7781a9ba93fd38" name="ad5d5b7c2009f41508a7781a9ba93fd38"></a>
+TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>operator*=</b> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;c)</td></tr>
+<tr class="memdesc:ad5d5b7c2009f41508a7781a9ba93fd38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply each channel by the same channel on c. <br /></td></tr>
+<tr class="separator:ad5d5b7c2009f41508a7781a9ba93fd38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f64e3d6daee0d514cbd416c70fe7446"><td class="memItemLeft" align="right" valign="top"><a id="a2f64e3d6daee0d514cbd416c70fe7446" name="a2f64e3d6daee0d514cbd416c70fe7446"></a>
+TGX_INLINE <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;c) const</td></tr>
+<tr class="memdesc:a2f64e3d6daee0d514cbd416c70fe7446"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the color obtained by multipliying the channels of both colors together. <br /></td></tr>
+<tr class="separator:a2f64e3d6daee0d514cbd416c70fe7446"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71722cc24787eda42604e4092932a55d"><td class="memItemLeft" align="right" valign="top"><a id="a71722cc24787eda42604e4092932a55d" name="a71722cc24787eda42604e4092932a55d"></a>
+TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>operator*=</b> (float a)</td></tr>
+<tr class="memdesc:a71722cc24787eda42604e4092932a55d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply each channel by a constant. <br /></td></tr>
+<tr class="separator:a71722cc24787eda42604e4092932a55d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7394e4d22a5fe0287a7240094444e4d0"><td class="memItemLeft" align="right" valign="top"><a id="a7394e4d22a5fe0287a7240094444e4d0" name="a7394e4d22a5fe0287a7240094444e4d0"></a>
+TGX_INLINE <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> (float a) const</td></tr>
+<tr class="memdesc:a7394e4d22a5fe0287a7240094444e4d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the color where all components are multiplied by a. <br /></td></tr>
+<tr class="separator:a7394e4d22a5fe0287a7240094444e4d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac96b8cc4e10442a5572b2c8fe1a702c8"><td class="memItemLeft" align="right" valign="top"><a id="ac96b8cc4e10442a5572b2c8fe1a702c8" name="ac96b8cc4e10442a5572b2c8fe1a702c8"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;c) const</td></tr>
 <tr class="memdesc:ac96b8cc4e10442a5572b2c8fe1a702c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality comparator. <br /></td></tr>
@@ -223,32 +223,32 @@ constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==<
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;c) const</td></tr>
 <tr class="memdesc:a86d12a34e1d3bcee866192e605fb5c5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inequality comparator. <br /></td></tr>
 <tr class="separator:a86d12a34e1d3bcee866192e605fb5c5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d382cf8b662b0d21b43e14f6458627a"><td class="memItemLeft" align="right" valign="top"><a id="a4d382cf8b662b0d21b43e14f6458627a" name="a4d382cf8b662b0d21b43e14f6458627a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>clamp</b> ()</td></tr>
-<tr class="memdesc:a4d382cf8b662b0d21b43e14f6458627a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clamp all color channel to [0.0f,1.0f]. <br /></td></tr>
-<tr class="separator:a4d382cf8b662b0d21b43e14f6458627a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1b7f90e3c8b7bcf3014dfc22e6ef867"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#ac1b7f90e3c8b7bcf3014dfc22e6ef867">blend256</a> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;fg_col, uint32_t alpha)</td></tr>
-<tr class="memdesc:ac1b7f90e3c8b7bcf3014dfc22e6ef867"><td class="mdescLeft">&#160;</td><td class="mdescRight">alpha-blend <code>fg_col</code> over this one with a given opacity in the integer range 0 (fully transparent) to 256 (fully opaque).  <a href="structtgx_1_1_r_g_bf.html#ac1b7f90e3c8b7bcf3014dfc22e6ef867">More...</a><br /></td></tr>
-<tr class="separator:ac1b7f90e3c8b7bcf3014dfc22e6ef867"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f2554dc0ad01ca41973193804200a65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#a8f2554dc0ad01ca41973193804200a65">blend</a> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;fg_col, float alpha)</td></tr>
-<tr class="memdesc:a8f2554dc0ad01ca41973193804200a65"><td class="mdescLeft">&#160;</td><td class="mdescRight">alpha-blend <code>fg_col</code> over this one with a given opacity in the range 0.0f (fully transparent) to 1.0f (fully opaque).  <a href="structtgx_1_1_r_g_bf.html#a8f2554dc0ad01ca41973193804200a65">More...</a><br /></td></tr>
-<tr class="separator:a8f2554dc0ad01ca41973193804200a65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18b9768cce54ffd8dcd56f8e50d1082c"><td class="memItemLeft" align="right" valign="top"><a id="a18b9768cce54ffd8dcd56f8e50d1082c" name="a18b9768cce54ffd8dcd56f8e50d1082c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>mult256</b> (int mr, int mg, int mb)</td></tr>
-<tr class="memdesc:a18b9768cce54ffd8dcd56f8e50d1082c"><td class="mdescLeft">&#160;</td><td class="mdescRight">multiply each color component by a given factor m/256 with m in [0,256]. <br /></td></tr>
-<tr class="separator:a18b9768cce54ffd8dcd56f8e50d1082c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86fd04fb2424c04f2fb7f13d282e75f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#a86fd04fb2424c04f2fb7f13d282e75f3">mult256</a> (int mr, int mg, int mb, int ma)</td></tr>
-<tr class="memdesc:a86fd04fb2424c04f2fb7f13d282e75f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">multiply each color component by a given factor m/256 with m in [0,256].  <a href="structtgx_1_1_r_g_bf.html#a86fd04fb2424c04f2fb7f13d282e75f3">More...</a><br /></td></tr>
-<tr class="separator:a86fd04fb2424c04f2fb7f13d282e75f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd46972ad6cc337c9d03f8705260d295"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#acd46972ad6cc337c9d03f8705260d295">premultiply</a> ()</td></tr>
-<tr class="memdesc:acd46972ad6cc337c9d03f8705260d295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy function for compatibility with color types having an alpha channel.  <a href="structtgx_1_1_r_g_bf.html#acd46972ad6cc337c9d03f8705260d295">More...</a><br /></td></tr>
-<tr class="separator:acd46972ad6cc337c9d03f8705260d295"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99a9a67bde4681f0183cbba019cf92d8"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#a99a9a67bde4681f0183cbba019cf92d8">opacity</a> () const</td></tr>
-<tr class="memdesc:a99a9a67bde4681f0183cbba019cf92d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy function for compatibility with color types having an alpha channel.  <a href="structtgx_1_1_r_g_bf.html#a99a9a67bde4681f0183cbba019cf92d8">More...</a><br /></td></tr>
-<tr class="separator:a99a9a67bde4681f0183cbba019cf92d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0969713a02179e32462e2290d391419"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#ab0969713a02179e32462e2290d391419">setOpacity</a> (float op)</td></tr>
-<tr class="memdesc:ab0969713a02179e32462e2290d391419"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy function for compatibility with color types having an alpha channel.  <a href="structtgx_1_1_r_g_bf.html#ab0969713a02179e32462e2290d391419">More...</a><br /></td></tr>
-<tr class="separator:ab0969713a02179e32462e2290d391419"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c7d26c1989130d173553b72f422845e"><td class="memItemLeft" align="right" valign="top"><a id="a4c7d26c1989130d173553b72f422845e" name="a4c7d26c1989130d173553b72f422845e"></a>
+TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>clamp</b> ()</td></tr>
+<tr class="memdesc:a4c7d26c1989130d173553b72f422845e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clamp all color channel to [0.0f,1.0f]. <br /></td></tr>
+<tr class="separator:a4c7d26c1989130d173553b72f422845e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a373fc9e67df6e25c2e3259793dff6b60"><td class="memItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#a373fc9e67df6e25c2e3259793dff6b60">blend256</a> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;fg_col, uint32_t alpha)</td></tr>
+<tr class="memdesc:a373fc9e67df6e25c2e3259793dff6b60"><td class="mdescLeft">&#160;</td><td class="mdescRight">alpha-blend <code>fg_col</code> over this one with a given opacity in the integer range 0 (fully transparent) to 256 (fully opaque).  <a href="structtgx_1_1_r_g_bf.html#a373fc9e67df6e25c2e3259793dff6b60">More...</a><br /></td></tr>
+<tr class="separator:a373fc9e67df6e25c2e3259793dff6b60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff9c4a60fae681d94a3ba9c0e80778f7"><td class="memItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#aff9c4a60fae681d94a3ba9c0e80778f7">blend</a> (const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;fg_col, float alpha)</td></tr>
+<tr class="memdesc:aff9c4a60fae681d94a3ba9c0e80778f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">alpha-blend <code>fg_col</code> over this one with a given opacity in the range 0.0f (fully transparent) to 1.0f (fully opaque).  <a href="structtgx_1_1_r_g_bf.html#aff9c4a60fae681d94a3ba9c0e80778f7">More...</a><br /></td></tr>
+<tr class="separator:aff9c4a60fae681d94a3ba9c0e80778f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ab323033108de570d488b149992e0c8"><td class="memItemLeft" align="right" valign="top"><a id="a5ab323033108de570d488b149992e0c8" name="a5ab323033108de570d488b149992e0c8"></a>
+TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><b>mult256</b> (int mr, int mg, int mb)</td></tr>
+<tr class="memdesc:a5ab323033108de570d488b149992e0c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">multiply each color component by a given factor m/256 with m in [0,256]. <br /></td></tr>
+<tr class="separator:a5ab323033108de570d488b149992e0c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78d85bccaaac2b4bc7b4d388bad7553c"><td class="memItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#a78d85bccaaac2b4bc7b4d388bad7553c">mult256</a> (int mr, int mg, int mb, int ma)</td></tr>
+<tr class="memdesc:a78d85bccaaac2b4bc7b4d388bad7553c"><td class="mdescLeft">&#160;</td><td class="mdescRight">multiply each color component by a given factor m/256 with m in [0,256].  <a href="structtgx_1_1_r_g_bf.html#a78d85bccaaac2b4bc7b4d388bad7553c">More...</a><br /></td></tr>
+<tr class="separator:a78d85bccaaac2b4bc7b4d388bad7553c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc011386f695fa5d745907315643b0ea"><td class="memItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#afc011386f695fa5d745907315643b0ea">premultiply</a> ()</td></tr>
+<tr class="memdesc:afc011386f695fa5d745907315643b0ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy function for compatibility with color types having an alpha channel.  <a href="structtgx_1_1_r_g_bf.html#afc011386f695fa5d745907315643b0ea">More...</a><br /></td></tr>
+<tr class="separator:afc011386f695fa5d745907315643b0ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87bd6e53f3c12694f1b5a795e77459f6"><td class="memItemLeft" align="right" valign="top">TGX_INLINE float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#a87bd6e53f3c12694f1b5a795e77459f6">opacity</a> () const</td></tr>
+<tr class="memdesc:a87bd6e53f3c12694f1b5a795e77459f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy function for compatibility with color types having an alpha channel.  <a href="structtgx_1_1_r_g_bf.html#a87bd6e53f3c12694f1b5a795e77459f6">More...</a><br /></td></tr>
+<tr class="separator:a87bd6e53f3c12694f1b5a795e77459f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4b27733d3761cdc1cf13d3fcac02eed"><td class="memItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtgx_1_1_r_g_bf.html#af4b27733d3761cdc1cf13d3fcac02eed">setOpacity</a> (float op)</td></tr>
+<tr class="memdesc:af4b27733d3761cdc1cf13d3fcac02eed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy function for compatibility with color types having an alpha channel.  <a href="structtgx_1_1_r_g_bf.html#af4b27733d3761cdc1cf13d3fcac02eed">More...</a><br /></td></tr>
+<tr class="separator:af4b27733d3761cdc1cf13d3fcac02eed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -418,8 +418,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
 
 </div>
 </div>
-<a id="ac1b7f90e3c8b7bcf3014dfc22e6ef867" name="ac1b7f90e3c8b7bcf3014dfc22e6ef867"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1b7f90e3c8b7bcf3014dfc22e6ef867">&#9670;&#160;</a></span>blend256()</h2>
+<a id="a373fc9e67df6e25c2e3259793dff6b60" name="a373fc9e67df6e25c2e3259793dff6b60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a373fc9e67df6e25c2e3259793dff6b60">&#9670;&#160;</a></span>blend256()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -428,7 +428,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void tgx::RGBf::blend256 </td>
+          <td class="memname">TGX_INLINE void tgx::RGBf::blend256 </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
           <td class="paramname"><em>fg_col</em>, </td>
@@ -463,8 +463,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
 
 </div>
 </div>
-<a id="a8f2554dc0ad01ca41973193804200a65" name="a8f2554dc0ad01ca41973193804200a65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f2554dc0ad01ca41973193804200a65">&#9670;&#160;</a></span>blend()</h2>
+<a id="aff9c4a60fae681d94a3ba9c0e80778f7" name="aff9c4a60fae681d94a3ba9c0e80778f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff9c4a60fae681d94a3ba9c0e80778f7">&#9670;&#160;</a></span>blend()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -473,7 +473,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void tgx::RGBf::blend </td>
+          <td class="memname">TGX_INLINE void tgx::RGBf::blend </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a> &amp;&#160;</td>
           <td class="paramname"><em>fg_col</em>, </td>
@@ -508,8 +508,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
 
 </div>
 </div>
-<a id="a86fd04fb2424c04f2fb7f13d282e75f3" name="a86fd04fb2424c04f2fb7f13d282e75f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86fd04fb2424c04f2fb7f13d282e75f3">&#9670;&#160;</a></span>mult256()</h2>
+<a id="a78d85bccaaac2b4bc7b4d388bad7553c" name="a78d85bccaaac2b4bc7b4d388bad7553c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78d85bccaaac2b4bc7b4d388bad7553c">&#9670;&#160;</a></span>mult256()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -518,7 +518,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void tgx::RGBf::mult256 </td>
+          <td class="memname">TGX_INLINE void tgx::RGBf::mult256 </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>mr</em>, </td>
@@ -559,8 +559,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
 
 </div>
 </div>
-<a id="acd46972ad6cc337c9d03f8705260d295" name="acd46972ad6cc337c9d03f8705260d295"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd46972ad6cc337c9d03f8705260d295">&#9670;&#160;</a></span>premultiply()</h2>
+<a id="afc011386f695fa5d745907315643b0ea" name="afc011386f695fa5d745907315643b0ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc011386f695fa5d745907315643b0ea">&#9670;&#160;</a></span>premultiply()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -569,7 +569,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void tgx::RGBf::premultiply </td>
+          <td class="memname">TGX_INLINE void tgx::RGBf::premultiply </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -587,8 +587,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
 
 </div>
 </div>
-<a id="a99a9a67bde4681f0183cbba019cf92d8" name="a99a9a67bde4681f0183cbba019cf92d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a99a9a67bde4681f0183cbba019cf92d8">&#9670;&#160;</a></span>opacity()</h2>
+<a id="a87bd6e53f3c12694f1b5a795e77459f6" name="a87bd6e53f3c12694f1b5a795e77459f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87bd6e53f3c12694f1b5a795e77459f6">&#9670;&#160;</a></span>opacity()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -597,7 +597,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">float tgx::RGBf::opacity </td>
+          <td class="memname">TGX_INLINE float tgx::RGBf::opacity </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -615,8 +615,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
 
 </div>
 </div>
-<a id="ab0969713a02179e32462e2290d391419" name="ab0969713a02179e32462e2290d391419"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0969713a02179e32462e2290d391419">&#9670;&#160;</a></span>setOpacity()</h2>
+<a id="af4b27733d3761cdc1cf13d3fcac02eed" name="af4b27733d3761cdc1cf13d3fcac02eed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4b27733d3761cdc1cf13d3fcac02eed">&#9670;&#160;</a></span>setOpacity()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -625,7 +625,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>B</b></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void tgx::RGBf::setOpacity </td>
+          <td class="memname">TGX_INLINE void tgx::RGBf::setOpacity </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
           <td class="paramname"><em>op</em></td><td>)</td>

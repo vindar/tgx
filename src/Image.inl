@@ -396,11 +396,23 @@ namespace tgx
             {
             uint16_t * fb = (uint16_t*)im->data() + x + (y * im->stride());
             const int str = im->stride();
-            for (int j = 0; j < pDraw->iHeight; j++)
+            if ((pDraw->iWidth >= 16) && ((pDraw->iWidth & 7) == 0))
                 {
-                for (int i = 0; i < pDraw->iWidth; i++)
+                const size_t rowBytes = (size_t)pDraw->iWidth * sizeof(uint16_t);
+                for (int j = 0; j < pDraw->iHeight; j++)
                     {
-                    fb[i + str * j] = *(p++);
+                    memcpy(fb + str * j, p, rowBytes);
+                    p += pDraw->iWidth;
+                    }
+                }
+            else
+                {
+                for (int j = 0; j < pDraw->iHeight; j++)
+                    {
+                    for (int i = 0; i < pDraw->iWidth; i++)
+                        {
+                        fb[i + str * j] = *(p++);
+                        }
                     }
                 }
             }
@@ -1070,34 +1082,108 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::_blitRegionUp(color_t * pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
         {
+        if ((sx <= 0) || (sy <= 0)) return;
+        if ((sx == 1) && (sy == 1))
+            {
+            *pdest = *psrc;
+            return;
+            }
         const size_t row_bytes = (size_t)sx * sizeof(color_t);
         if ((sx == dest_stride) && (sx == src_stride))
             {
-            memmove(pdest, psrc, row_bytes * (size_t)sy);
+            const size_t total_bytes = row_bytes * (size_t)sy;
+            if (total_bytes < 8)
+                {
+                memmove(pdest, psrc, total_bytes);
+                return;
+                }
+            const size_t dest_begin = (size_t)pdest;
+            const size_t dest_end = (size_t)(pdest + TGX_CAST32(dest_stride) * TGX_CAST32(sy - 1) + TGX_CAST32(sx));
+            const size_t src_begin = (size_t)psrc;
+            const size_t src_end = (size_t)(psrc + TGX_CAST32(src_stride) * TGX_CAST32(sy - 1) + TGX_CAST32(sx));
+            if ((dest_end <= src_begin) || (src_end <= dest_begin))
+                memcpy(pdest, psrc, total_bytes);
+            else
+                memmove(pdest, psrc, total_bytes);
             return;
             }
+        if (row_bytes < 8)
+            {
+            for (int j = 0; j < sy; j++)
+                {
+                color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+                color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+                memmove(pdest2, psrc2, row_bytes);
+                }
+            return;
+            }
+        const size_t dest_begin = (size_t)pdest;
+        const size_t dest_end = (size_t)(pdest + TGX_CAST32(dest_stride) * TGX_CAST32(sy - 1) + TGX_CAST32(sx));
+        const size_t src_begin = (size_t)psrc;
+        const size_t src_end = (size_t)(psrc + TGX_CAST32(src_stride) * TGX_CAST32(sy - 1) + TGX_CAST32(sx));
+        const bool no_overlap = (dest_end <= src_begin) || (src_end <= dest_begin);
         for (int j = 0; j < sy; j++)
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
             color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            memmove(pdest2, psrc2, row_bytes);
+            if (no_overlap)
+                memcpy(pdest2, psrc2, row_bytes);
+            else
+                memmove(pdest2, psrc2, row_bytes);
             }
         }
 
     template<typename color_t>
     void Image<color_t>::_blitRegionDown(color_t* pdest, int dest_stride, color_t* psrc, int src_stride, int sx, int sy)
         {
+        if ((sx <= 0) || (sy <= 0)) return;
+        if ((sx == 1) && (sy == 1))
+            {
+            *pdest = *psrc;
+            return;
+            }
         const size_t row_bytes = (size_t)sx * sizeof(color_t);
         if ((sx == dest_stride) && (sx == src_stride))
             {
-            memmove(pdest, psrc, row_bytes * (size_t)sy);
+            const size_t total_bytes = row_bytes * (size_t)sy;
+            if (total_bytes < 8)
+                {
+                memmove(pdest, psrc, total_bytes);
+                return;
+                }
+            const size_t dest_begin = (size_t)pdest;
+            const size_t dest_end = (size_t)(pdest + TGX_CAST32(dest_stride) * TGX_CAST32(sy - 1) + TGX_CAST32(sx));
+            const size_t src_begin = (size_t)psrc;
+            const size_t src_end = (size_t)(psrc + TGX_CAST32(src_stride) * TGX_CAST32(sy - 1) + TGX_CAST32(sx));
+            if ((dest_end <= src_begin) || (src_end <= dest_begin))
+                memcpy(pdest, psrc, total_bytes);
+            else
+                memmove(pdest, psrc, total_bytes);
             return;
             }
+        if (row_bytes < 8)
+            {
+            for (int j = sy - 1; j >= 0; j--)
+                {
+                color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
+                color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
+                memmove(pdest2, psrc2, row_bytes);
+                }
+            return;
+            }
+        const size_t dest_begin = (size_t)pdest;
+        const size_t dest_end = (size_t)(pdest + TGX_CAST32(dest_stride) * TGX_CAST32(sy - 1) + TGX_CAST32(sx));
+        const size_t src_begin = (size_t)psrc;
+        const size_t src_end = (size_t)(psrc + TGX_CAST32(src_stride) * TGX_CAST32(sy - 1) + TGX_CAST32(sx));
+        const bool no_overlap = (dest_end <= src_begin) || (src_end <= dest_begin);
         for (int j = sy - 1; j >= 0; j--)
             {
             color_t* pdest2 = pdest + TGX_CAST32(j) * TGX_CAST32(dest_stride);
             color_t* psrc2 = psrc + TGX_CAST32(j) * TGX_CAST32(src_stride);
-            memmove(pdest2, psrc2, row_bytes);
+            if (no_overlap)
+                memcpy(pdest2, psrc2, row_bytes);
+            else
+                memmove(pdest2, psrc2, row_bytes);
             }
         }
 

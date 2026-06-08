@@ -42,6 +42,7 @@ using namespace cimg_library;
 constexpr int W = 800;
 constexpr int H = 600;
 constexpr int GRID_N = 18;
+constexpr int STRIP_SEGMENTS = 160;
 constexpr int POINT_COUNT = 320;
 constexpr int BLOCK_X = 16;
 constexpr int BLOCK_Y = 12;
@@ -58,10 +59,12 @@ enum class SceneId
     BunnyGouraud,
     BunnyTextureNearest,
     BunnyTextureBilinear,
+    BunnyMultiLightGouraud,
     BuddhaFlat,
     BunnyV2Gouraud,
     BunnyV2TextureNearest,
     BunnyV2TextureBilinear,
+    BunnyV2MultiLightTexture,
     BuddhaV2Flat,
     BuddhaV2Unlit,
     R2D2TextureBilinear,
@@ -77,6 +80,10 @@ enum class SceneId
     ZBufferOverlap,
     LargeTriangles,
     SmallTriangleGrid,
+    TriangleStripRibbon,
+    WireTriangleStripFast,
+    WireTriangleStripAA,
+    WireTriangleStripThickness,
     DirectShapes,
     WirePoints,
     WirePointsV2,
@@ -113,10 +120,12 @@ const SceneDef SCENES[] = {
     { SceneId::BunnyGouraud,        "bunny_gouraud",         "real mesh, Gouraud lighting" },
     { SceneId::BunnyTextureNearest, "bunny_texture_nearest", "real mesh, perspective-correct nearest texture" },
     { SceneId::BunnyTextureBilinear,"bunny_texture_bilinear","real mesh, perspective-correct bilinear texture" },
+    { SceneId::BunnyMultiLightGouraud,"bunny_multilight_gouraud","real mesh, advanced 4 directional lights" },
     { SceneId::BuddhaFlat,          "buddha_flat",           "dense real mesh, flat shading" },
     { SceneId::BunnyV2Gouraud,      "bunny_v2_gouraud",      "Mesh3Dv2 mesh, Gouraud lighting" },
     { SceneId::BunnyV2TextureNearest,"bunny_v2_texture_nearest","Mesh3Dv2 mesh, perspective-correct nearest texture" },
     { SceneId::BunnyV2TextureBilinear,"bunny_v2_texture_bilinear","Mesh3Dv2 mesh, perspective-correct bilinear texture" },
+    { SceneId::BunnyV2MultiLightTexture,"bunny_v2_multilight_texture","Mesh3Dv2 textured mesh, advanced 4 directional lights" },
     { SceneId::BuddhaV2Flat,        "buddha_v2_flat",        "dense Mesh3Dv2 mesh, flat shading" },
     { SceneId::BuddhaV2Unlit,       "buddha_v2_unlit",       "dense Mesh3Dv2 mesh, unlit material color" },
     { SceneId::R2D2TextureBilinear,  "r2d2_texture_bilinear", "legacy Mesh3D textured model with bilinear filtering" },
@@ -132,6 +141,10 @@ const SceneDef SCENES[] = {
     { SceneId::ZBufferOverlap,      "zbuffer_overlap",       "overlapping direct geometry" },
     { SceneId::LargeTriangles,      "large_triangles",       "few large filled triangles" },
     { SceneId::SmallTriangleGrid,   "small_triangle_grid",   "many small textured triangles" },
+    { SceneId::TriangleStripRibbon, "triangle_strip_ribbon", "textured dynamic geometry drawn as a triangle strip" },
+    { SceneId::WireTriangleStripFast, "wire_triangle_strip_fast", "dynamic triangle strip, fast wireframe path" },
+    { SceneId::WireTriangleStripAA, "wire_triangle_strip_aa", "dynamic triangle strip, optimized antialiased wireframe path" },
+    { SceneId::WireTriangleStripThickness, "wire_triangle_strip_thickness", "dynamic triangle strip, adjustable thickness + AA path" },
     { SceneId::DirectShapes,        "direct_shapes",         "direct cube and sphere helpers" },
     { SceneId::WirePoints,          "wire_points",           "wireframe plus pixels/dots" },
     { SceneId::WirePointsV2,        "wire_points_v2",        "Mesh3Dv2 wireframe plus pixels/dots" },
@@ -643,11 +656,16 @@ struct RenderContext
     std::vector<uint16_t> zbuf;
     Image<color_t> image;
     Renderer3D<color_t, LOADED_SHADERS, uint16_t> renderer;
+    Renderer3D<color_t, LOADED_SHADERS, uint16_t, 4> multi_light_renderer;
     MeshAssets<color_t> meshes;
     std::vector<fVec3> grid_vertices;
     std::vector<fVec3> grid_normals;
     std::vector<fVec2> grid_texcoords;
     std::vector<uint16_t> grid_indices;
+    std::vector<fVec3> strip_vertices;
+    std::vector<fVec3> strip_normals;
+    std::vector<fVec2> strip_texcoords;
+    std::vector<uint16_t> strip_indices;
     std::vector<fVec3> point_positions;
     std::vector<int> point_colors_ind;
     std::vector<int> point_opacity_ind;
@@ -668,6 +686,12 @@ struct RenderContext
         renderer.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
         renderer.setMaterial(RGBf(0.85f, 0.58f, 0.26f), 0.18f, 0.72f, 0.55f, 32);
         renderer.setLight({ -0.25f, -0.45f, -1.0f }, RGBf(0.18f, 0.20f, 0.25f), RGBf(0.85f, 0.82f, 0.72f), RGBf(0.55f, 0.60f, 0.70f));
+        multi_light_renderer.setViewportSize(W, H);
+        multi_light_renderer.setOffset(0, 0);
+        multi_light_renderer.setImage(&image);
+        multi_light_renderer.setZbuffer(zbuf.data());
+        multi_light_renderer.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+        multi_light_renderer.setMaterial(RGBf(0.85f, 0.58f, 0.26f), 0.18f, 0.72f, 0.55f, 32);
 
         point_colors[0] = C<color_t>(230, 60, 60);
         point_colors[1] = C<color_t>(60, 220, 120);
@@ -677,6 +701,7 @@ struct RenderContext
         point_colors[5] = C<color_t>(230, 80, 200);
 
         buildGrid();
+        buildStrip();
         buildPoints();
         }
 
@@ -685,6 +710,7 @@ struct RenderContext
         image.fillScreen(backgroundColor<color_t>());
         renderer.clearZbuffer();
         renderer.setCulling(1);
+        multi_light_renderer.setCulling(1);
         }
 
     void buildGrid()
@@ -723,6 +749,33 @@ struct RenderContext
                 grid_indices.push_back(i11);
                 grid_indices.push_back(i01);
                 }
+            }
+        }
+
+    void buildStrip()
+        {
+        const int nv = 2 * (STRIP_SEGMENTS + 1);
+        strip_vertices.resize(nv);
+        strip_normals.resize(nv);
+        strip_texcoords.resize(nv);
+        strip_indices.resize(nv);
+
+        for (int i = 0; i <= STRIP_SEGMENTS; i++)
+            {
+            const float u = float(i) / STRIP_SEGMENTS;
+            const float x = -1.8f + 3.6f * u;
+            const float y = 0.28f * std::sin(6.2831853f * 2.25f * u);
+            const float z = 0.10f * std::cos(6.2831853f * 3.0f * u);
+            const float half_w = 0.20f + 0.05f * std::sin(6.2831853f * 5.0f * u);
+            const int a = 2 * i;
+            strip_vertices[a] = { x, y + half_w, z };
+            strip_vertices[a + 1] = { x, y - half_w, z };
+            strip_normals[a] = { 0.0f, 0.0f, 1.0f };
+            strip_normals[a + 1] = { 0.0f, 0.0f, 1.0f };
+            strip_texcoords[a] = { 4.0f * u, 0.0f };
+            strip_texcoords[a + 1] = { 4.0f * u, 1.0f };
+            strip_indices[a] = uint16_t(a);
+            strip_indices[a + 1] = uint16_t(a + 1);
             }
         }
 
@@ -930,6 +983,17 @@ void renderWirePathScene(RenderContext<color_t>& ctx, WirePath path, bool mesh_v
     drawWirePathAdaptativeSphere(r, path, pink);
 }
 
+template<typename RendererT>
+void setValidationMultiDirectionalLights(RendererT& r)
+{
+    r.setDirectionalLightCount(4);
+    r.setDirectionalLightAmbiant(RGBf(0.08f, 0.09f, 0.12f));
+    r.setDirectionalLight(0, { -0.40f, -0.65f, -1.00f }, RGBf(0.58f, 0.50f, 0.42f), RGBf(0.38f, 0.34f, 0.30f));
+    r.setDirectionalLight(1, {  0.80f, -0.25f, -0.55f }, RGBf(0.18f, 0.38f, 0.92f), RGBf(0.08f, 0.15f, 0.35f));
+    r.setDirectionalLight(2, { -0.35f,  0.70f, -0.40f }, RGBf(0.85f, 0.22f, 0.20f), RGBf(0.30f, 0.08f, 0.08f));
+    r.setDirectionalLight(3, {  0.15f,  0.35f, -0.85f }, RGBf(0.18f, 0.82f, 0.42f), RGBf(0.08f, 0.22f, 0.12f));
+}
+
 template<typename color_t>
 void renderScene(RenderContext<color_t>& ctx, SceneId scene)
 {
@@ -961,6 +1025,18 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             r.drawMesh(&ctx.meshes.bunny, false);
             break;
 
+        case SceneId::BunnyMultiLightGouraud:
+            {
+            auto& mr = ctx.multi_light_renderer;
+            setValidationMultiDirectionalLights(mr);
+            mr.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            mr.setMaterial(RGBf(0.92f, 0.64f, 0.32f), 0.16f, 0.82f, 0.46f, 30);
+            mr.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD);
+            mr.setModelPosScaleRot({ 0.0f, 0.15f, -11.0f }, { 5.0f, 5.0f, 5.0f }, -32.0f, { 0.1f, 1.0f, 0.0f });
+            mr.drawMesh(&ctx.meshes.bunny, false);
+            break;
+            }
+
         case SceneId::BuddhaFlat:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
             r.setMaterial(RGBf(0.9f, 0.62f, 0.28f), 0.20f, 0.72f, 0.35f, 18);
@@ -989,6 +1065,17 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             r.setModelPosScaleRot({ 0.0f, 0.15f, -10.5f }, { 5.1f, 5.1f, 5.1f }, 42.0f, { 0.2f, 1.0f, 0.0f });
             r.drawMesh(&ctx.meshes.bunny_v2, true);
             break;
+
+        case SceneId::BunnyV2MultiLightTexture:
+            {
+            auto& mr = ctx.multi_light_renderer;
+            setValidationMultiDirectionalLights(mr);
+            mr.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
+            mr.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+            mr.setModelPosScaleRot({ 0.0f, 0.15f, -10.5f }, { 5.1f, 5.1f, 5.1f }, 58.0f, { 0.2f, 1.0f, 0.0f });
+            mr.drawMesh(&ctx.meshes.bunny_v2, true);
+            break;
+            }
 
         case SceneId::BuddhaV2Flat:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
@@ -1112,6 +1199,38 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             r.drawTriangles(int(ctx.grid_indices.size() / 3), ctx.grid_indices.data(), ctx.grid_vertices.data(),
                             ctx.grid_indices.data(), ctx.grid_normals.data(),
                             ctx.grid_indices.data(), ctx.grid_texcoords.data(), &ctx.meshes.bunny_texture);
+            break;
+
+        case SceneId::TriangleStripRibbon:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2);
+            r.setModelPosScaleRot({ 0.0f, 0.0f, -5.8f }, { 2.25f, 2.25f, 1.0f }, -26.0f, { 0.25f, 1.0f, 0.1f });
+            r.drawTriangleStrip(int(ctx.strip_indices.size()), ctx.strip_indices.data(), ctx.strip_vertices.data(),
+                                ctx.strip_indices.data(), ctx.strip_normals.data(),
+                                ctx.strip_indices.data(), ctx.strip_texcoords.data(), &ctx.meshes.bunny_texture);
+            break;
+
+        case SceneId::WireTriangleStripFast:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setMaterialColor(C<color_t>(255, 230, 110));
+            r.setModelPosScaleRot({ 0.0f, 0.0f, -5.8f }, { 2.25f, 2.25f, 1.0f }, -26.0f, { 0.25f, 1.0f, 0.1f });
+            r.drawWireFrameTriangleStrip(int(ctx.strip_indices.size()), ctx.strip_indices.data(), ctx.strip_vertices.data());
+            break;
+
+        case SceneId::WireTriangleStripAA:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setMaterialColor(C<color_t>(100, 230, 255));
+            r.setModelPosScaleRot({ 0.0f, 0.0f, -5.8f }, { 2.25f, 2.25f, 1.0f }, -26.0f, { 0.25f, 1.0f, 0.1f });
+            r.drawWireFrameTriangleStripAA(int(ctx.strip_indices.size()), ctx.strip_indices.data(), ctx.strip_vertices.data());
+            break;
+
+        case SceneId::WireTriangleStripThickness:
+            r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setModelPosScaleRot({ 0.0f, 0.0f, -5.8f }, { 2.25f, 2.25f, 1.0f }, -26.0f, { 0.25f, 1.0f, 0.1f });
+            r.drawWireFrameTriangleStrip(int(ctx.strip_indices.size()), ctx.strip_indices.data(), ctx.strip_vertices.data(), 1.501f, C<color_t>(255, 150, 210), 1.0f);
             break;
 
         case SceneId::DirectShapes:

@@ -874,7 +874,7 @@ png.openRAM((uint8_t*)octocat_4bpp, sizeof(octocat_4bpp), TGX_PNGDraw);
 im.PNGDecode(png, {20, 10}, 0.5f);
 ~~~
 
-@note A complete example is available in the subfolder `/examples/Teensy4/2D/PNG_test/`.
+@note A complete example is available in the subfolder `/examples/Teensy4/2D/extensions/PNG_test/`.
 
 Check the [PNGdec documentation](https://github.com/bitbank2/PNGdec/wiki) for additional details.
 
@@ -909,7 +909,7 @@ im.JPEGDecode(jpeg, {20, 10}, JPEG_SCALE_HALF, 0.5f);
 
 ~~~
 
-@note A complete example is available in the subfolder `/examples/Teensy4/2D/JPEG_test/`.
+@note A complete example is available in the subfolder `/examples/Teensy4/2D/extensions/JPEG_test/`.
 
 Check the [JPEGDEC documentation](https://github.com/bitbank2/JPEGDEC/wiki) for additional details.
 
@@ -950,7 +950,7 @@ im.GIFplayFrame(gif, { 20, 10 });
 // we can call im.GIFplayFrame(gif, { 20, 10 }) again to draw the next frame if it is an animation...
 ~~~
 
-@note A complete example is available in the subfolder `/examples/Teensy4/2D/GIF_test/`.
+@note A complete example is available in the subfolder `/examples/Teensy4/2D/extensions/GIF_test/`.
 
 Check the [AnimatedGIF documentation](https://github.com/bitbank2/AnimatedGIF/wiki) for additional details.
 

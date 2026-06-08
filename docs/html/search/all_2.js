@@ -8,9 +8,9 @@ var searchData=
   ['centerleft_5',['CENTERLEFT',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25a730d47be669d176d22df3162f881d0a6',1,'tgx']]],
   ['centerright_6',['CENTERRIGHT',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25a3e95c1715cef15c78e2649c926ef3653',1,'tgx']]],
   ['centertop_7',['CENTERTOP',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25ab335f5c9dc71f98344cfedce718a0a51',1,'tgx']]],
-  ['clamp_8',['clamp',['../structtgx_1_1_r_g_bf.html#a4d382cf8b662b0d21b43e14f6458627a',1,'tgx::RGBf::clamp()'],['../_misc_8h.html#a23d96bd931df615f13dd9a421ef0c4a0',1,'tgx::clamp()']]],
+  ['clamp_8',['clamp',['../structtgx_1_1_r_g_bf.html#a4c7d26c1989130d173553b72f422845e',1,'tgx::RGBf::clamp()'],['../_misc_8h.html#a4dbbea0e09da0767dafaf25528b1cc21',1,'tgx::clamp()']]],
   ['clear_9',['clear',['../classtgx_1_1_image.html#a81816066e883c3d17f13b4bdef22b8c1',1,'tgx::Image']]],
-  ['clearzbuffer_10',['clearZbuffer',['../classtgx_1_1_renderer3_d.html#ad613bdffc57596703abe1a2a47583003',1,'tgx::Renderer3D']]],
+  ['clearzbuffer_10',['clearZbuffer',['../classtgx_1_1_renderer3_d.html#ad03234d6a56d930f9674ad20ddf809f6',1,'tgx::Renderer3D']]],
   ['color_11',['color',['../structtgx_1_1_mesh3_d.html#ab485cba46db974c241ce8b51739335f1',1,'tgx::Mesh3D::color()'],['../structtgx_1_1_mesh_material3_dv2.html#a3bd76051dcd32fb0a322eec218c0c357',1,'tgx::MeshMaterial3Dv2::color()']]],
   ['color_2eh_12',['Color.h',['../_color_8h.html',1,'']]],
   ['cone_5fcos_13',['cone_cos',['../structtgx_1_1_meshlet3_dv2.html#ab1b241ba16df44e2ddd7e25199104739',1,'tgx::Meshlet3Dv2']]],
@@ -21,5 +21,5 @@ var searchData=
   ['copymeshextmem_18',['copyMeshEXTMEM',['../_mesh3_d_8h.html#aa0e5c4ceb583a160ecfbd2b699966a43',1,'tgx::copyMeshEXTMEM(const Mesh3D&lt; color_t &gt; *mesh, bool copy_vertices=false, bool copy_normals=false, bool copy_texcoords=false, bool copy_textures=true, bool copy_faces=false)'],['../_mesh3_dv2_8h.html#aaf9c24e957fbfdcecbc5fb14168f2074',1,'tgx::copyMeshEXTMEM(const Mesh3Dv2&lt; color_t &gt; *mesh, bool copy_payload=false, bool copy_meshlets=false, bool copy_materials=false, bool copy_textures=true, size_t *extmem_used=nullptr)']]],
   ['copyreducehalf_19',['copyReduceHalf',['../classtgx_1_1_image.html#ab1f64acc0c408c1b901f43ae80a0a57d',1,'tgx::Image']]],
   ['crop_20',['crop',['../classtgx_1_1_image.html#a3d543dcbeddb6cd734718eb2432908c9',1,'tgx::Image']]],
-  ['crossproduct_21',['crossProduct',['../_vec2_8h.html#a08e47b6838c5cacad5b61df7e995e0dc',1,'tgx::crossProduct(const Vec2&lt; T &gt; &amp;U, const Vec2&lt; T &gt; &amp;V)'],['../_vec3_8h.html#a3bdc106d9df1a0355e71a94b2257f9ea',1,'tgx::crossProduct(const Vec3&lt; T &gt; &amp;U, const Vec3&lt; T &gt; &amp;V)'],['../_vec4_8h.html#a88c114f4007b331d1edac1bcce23678f',1,'tgx::crossProduct(const Vec4&lt; T &gt; &amp;U, const Vec4&lt; T &gt; &amp;V)']]]
+  ['crossproduct_21',['crossProduct',['../_vec2_8h.html#ad5af65f8b01b0583718227200876b583',1,'tgx::crossProduct(const Vec2&lt; T &gt; &amp;U, const Vec2&lt; T &gt; &amp;V)'],['../_vec3_8h.html#a655c8e577c1115443c63c599f4fba6d5',1,'tgx::crossProduct(const Vec3&lt; T &gt; &amp;U, const Vec3&lt; T &gt; &amp;V)'],['../_vec4_8h.html#a332cadf3146bb1768137a7d87cc9a9e1',1,'tgx::crossProduct(const Vec4&lt; T &gt; &amp;U, const Vec4&lt; T &gt; &amp;V)']]]
 ];

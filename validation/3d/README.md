@@ -22,13 +22,14 @@ formats:
   `validation_R2D2_v2`, plus the multi-material textured
   `validation_falcon_v2`.
 
-The fixed scene set contains 35 scenes per color type. It includes legacy and
+The fixed scene set contains 39 scenes per color type. It includes legacy and
 Mesh3Dv2 real-mesh rendering, unlit/flat/Gouraud shading, nearest and bilinear
 texturing, orthographic projection, near/far clipping, z-buffer overlap, direct
-triangle/cube/sphere helpers, small-triangle grids, point/dot drawing and
-wireframe paths. The wireframe coverage explicitly separates the fast aliased
-path, the optimized one-pixel antialiased path, and the adjustable thickness +
-AA path with thickness values 0.5, 1.0 and 2.0, for both Mesh3D and Mesh3Dv2.
+triangle/cube/sphere helpers, small-triangle grids, a textured triangle-strip
+ribbon, triangle-strip wireframe paths, point/dot drawing and wireframe paths. The wireframe coverage
+explicitly separates the fast aliased path, the optimized one-pixel
+antialiased path, and the adjustable thickness + AA path with thickness values
+0.5, 1.0 and 2.0, for both Mesh3D and Mesh3Dv2.
 
 Build and run from the repository root:
 
