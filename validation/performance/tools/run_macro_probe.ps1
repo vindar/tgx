@@ -12,7 +12,7 @@ $buildRoot = Join-Path $repoRoot "tmp\config_optimization\macro_probe_builds"
 New-Item -ItemType Directory -Force $outDir,$buildRoot | Out-Null
 
 $boardConfig = @{
-    pico2 = @{ Fqbn = "rp2040:rp2040:rpipico2"; UploadPort = "COM21"; SerialPort = "COM21"; Baud = 115200 }
+    pico2 = @{ Fqbn = "rp2040:rp2040:rpipico2:opt=Fast"; UploadPort = "COM21"; SerialPort = "COM21"; Baud = 115200 }
     picow = @{ Fqbn = "rp2040:rp2040:rpipicow"; UploadPort = "COM19"; SerialPort = "COM19"; Baud = 115200 }
     core2 = @{ Fqbn = "esp32:esp32:m5stack_core2"; UploadPort = "COM5"; SerialPort = "COM5"; Baud = 115200 }
     cores3 = @{ Fqbn = "esp32:esp32:m5stack_cores3"; UploadPort = "COM10"; SerialPort = "COM10"; Baud = 115200 }

@@ -67,16 +67,24 @@ $boardConfig = @{
         PostDelay = 2
         PortWait = 90
     }
+    "feathers2" = @{
+        Fqbn = "esp32:esp32:adafruit_feather_esp32s2_tft"
+        Port = "COM11"
+        UploadPort = "COM11"
+        BenchmarkDefine = "TGX_BENCHMARK_ESP32S2"
+        PostDelay = 2
+        PortWait = 90
+    }
     "picow" = @{
         Fqbn = "rp2040:rp2040:rpipicow"
-        Port = "COM28"
-        UploadPort = "COM28"
+        Port = "COM19"
+        UploadPort = "COM19"
         BenchmarkDefine = "TGX_BENCHMARK_RP2040"
         PostDelay = 2
         PortWait = 150
     }
     "pico2" = @{
-        Fqbn = "rp2040:rp2040:rpipico2"
+        Fqbn = "rp2040:rp2040:rpipico2:opt=Fast"
         Port = "COM21"
         UploadPort = "COM21"
         BenchmarkDefine = "TGX_BENCHMARK_RP2350"
@@ -90,6 +98,15 @@ $boardConfig = @{
         BenchmarkDefine = "TGX_BENCHMARK_T4"
         PostDelay = 4
         PortWait = 180
+    }
+    "teensy36" = @{
+        Fqbn = "teensy:avr:teensy36:usb=serial,speed=180,opt=o3std"
+        Port = "COM23"
+        UploadPort = "usb:80000/3/0/1"
+        BenchmarkDefine = "TGX_BENCHMARK_T36"
+        PostDelay = 4
+        PortWait = 180
+        TeensyDefs = "-D__MK66FX1M0__ -DTEENSYDUINO=160"
     }
 }
 
@@ -161,10 +178,11 @@ function Test-SerialOpen {
         $sp = [System.IO.Ports.SerialPort]::new($SerialPort, $SerialBaud, [System.IO.Ports.Parity]::None, 8, [System.IO.Ports.StopBits]::One)
         $sp.ReadTimeout = 250
         $sp.WriteTimeout = 250
-        $espSerial = @("core2", "cores3", "feathers3") -contains $boardKey
+        $espSerial = @("core2", "cores3") -contains $boardKey
         $rpSerial = @("picow", "pico2") -contains $boardKey
+        $nativeUsbEsp = @("feathers2", "feathers3") -contains $boardKey
         $sp.DtrEnable = -not $espSerial
-        $sp.RtsEnable = (-not $espSerial) -and (-not $rpSerial)
+        $sp.RtsEnable = (-not $espSerial) -and (-not $rpSerial) -and (-not $nativeUsbEsp)
         $sp.Open()
         if ($espSerial) {
             $sp.DtrEnable = $false
@@ -298,10 +316,11 @@ function Capture-Serial {
                 $sp = [System.IO.Ports.SerialPort]::new($Port, $Baud, [System.IO.Ports.Parity]::None, 8, [System.IO.Ports.StopBits]::One)
                 $sp.ReadTimeout = 250
                 $sp.WriteTimeout = 1000
-                $espSerial = @("core2", "cores3", "feathers3") -contains $boardKey
+                $espSerial = @("core2", "cores3") -contains $boardKey
                 $rpSerial = @("picow", "pico2") -contains $boardKey
+                $nativeUsbEsp = @("feathers2", "feathers3") -contains $boardKey
                 $sp.DtrEnable = -not $espSerial
-                $sp.RtsEnable = (-not $espSerial) -and (-not $rpSerial)
+                $sp.RtsEnable = (-not $espSerial) -and (-not $rpSerial) -and (-not $nativeUsbEsp)
                 $sp.Open()
                 if ($espSerial) {
                     $sp.DtrEnable = $false
@@ -442,6 +461,8 @@ while ($attempt -le $RetryCount) {
         if ($extra) {
             if ($boardKey -eq "teensy41") {
                 $compileArgs += @("--build-property", "build.flags.defs=-D__IMXRT1062__ -DTEENSYDUINO=160 $extra")
+            } elseif ($cfg.ContainsKey("TeensyDefs")) {
+                $compileArgs += @("--build-property", "build.flags.defs=$($cfg.TeensyDefs) $extra")
             } else {
                 $compileArgs += @("--build-property", "compiler.cpp.extra_flags=$extra")
             }

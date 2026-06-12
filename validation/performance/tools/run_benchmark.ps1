@@ -18,7 +18,7 @@ New-Item -ItemType Directory -Force $outDir,$buildRoot | Out-Null
 
 $boardConfig = @{
     pico2 = @{
-        Fqbn = "rp2040:rp2040:rpipico2"
+        Fqbn = "rp2040:rp2040:rpipico2:opt=Fast"
         UploadPort = "COM21"
         SerialPort = "COM21"
         Define = "TGX_BENCHMARK_RP2350"
@@ -30,6 +30,22 @@ $boardConfig = @{
         UploadPort = "COM19"
         SerialPort = "COM19"
         Define = "TGX_BENCHMARK_RP2040"
+        Timeout = 420
+        Baud = 9600
+    }
+    feathers2 = @{
+        Fqbn = "esp32:esp32:adafruit_feather_esp32s2_tft"
+        UploadPort = "COM11"
+        SerialPort = "COM11"
+        Define = "TGX_BENCHMARK_ESP32S2"
+        Timeout = 420
+        Baud = 9600
+    }
+    feathers3 = @{
+        Fqbn = "esp32:esp32:adafruit_feather_esp32s3_tft"
+        UploadPort = "COM14"
+        SerialPort = "COM14"
+        Define = "TGX_BENCHMARK_ESP32S3"
         Timeout = 420
         Baud = 9600
     }
@@ -56,6 +72,15 @@ $boardConfig = @{
         Define = "TGX_BENCHMARK_T4"
         Timeout = 420
         Baud = 9600
+    }
+    teensy36 = @{
+        Fqbn = "teensy:avr:teensy36:usb=serial,speed=180,opt=o3std"
+        UploadPort = "usb:80000/3/0/1"
+        SerialPort = "COM23"
+        Define = "TGX_BENCHMARK_T36"
+        Timeout = 420
+        Baud = 9600
+        TeensyDefs = "-D__MK66FX1M0__ -DTEENSYDUINO=160"
     }
 }
 
@@ -89,6 +114,8 @@ $compileArgs = @(
 
 if ($Board -eq "teensy41") {
     $compileArgs += @("--build-property", "build.flags.defs=-D__IMXRT1062__ -DTEENSYDUINO=160 $flags")
+} elseif ($cfg.ContainsKey("TeensyDefs")) {
+    $compileArgs += @("--build-property", "build.flags.defs=$($cfg.TeensyDefs) $flags")
 } else {
     $compileArgs += @("--build-property", "compiler.cpp.extra_flags=$flags")
 }
@@ -127,7 +154,7 @@ while (-not $opened -and (Get-Date) -lt $retryDeadline) {
         $serial.ReadTimeout = 500
         $serial.WriteTimeout = 1000
         $serial.DtrEnable = $true
-        $serial.RtsEnable = $true
+        $serial.RtsEnable = -not (@("feathers2", "feathers3") -contains $Board)
         $serial.Open()
         $opened = $true
     } catch {

@@ -13,11 +13,14 @@ $buildRoot = Join-Path $repoRoot "tmp\config_optimization\example_builds"
 New-Item -ItemType Directory -Force $outDir,$buildRoot | Out-Null
 
 $boardConfig = @{
-    pico2 = @{ Fqbn = "rp2040:rp2040:rpipico2"; UploadPort = "COM21"; SerialPort = "COM21"; Baud = 115200 }
+    pico2 = @{ Fqbn = "rp2040:rp2040:rpipico2:opt=Fast"; UploadPort = "COM21"; SerialPort = "COM21"; Baud = 115200 }
     picow = @{ Fqbn = "rp2040:rp2040:rpipicow"; UploadPort = "COM19"; SerialPort = "COM19"; Baud = 115200 }
     core2 = @{ Fqbn = "esp32:esp32:m5stack_core2"; UploadPort = "COM5"; SerialPort = "COM5"; Baud = 115200 }
     cores3 = @{ Fqbn = "esp32:esp32:m5stack_cores3"; UploadPort = "COM10"; SerialPort = "COM10"; Baud = 115200 }
+    feathers2 = @{ Fqbn = "esp32:esp32:adafruit_feather_esp32s2_tft"; UploadPort = "COM11"; SerialPort = "COM11"; Baud = 115200 }
+    feathers3 = @{ Fqbn = "esp32:esp32:adafruit_feather_esp32s3_tft"; UploadPort = "COM14"; SerialPort = "COM14"; Baud = 115200 }
     teensy41 = @{ Fqbn = "teensy:avr:teensy41:usb=serial,speed=600,opt=o3std"; UploadPort = "usb:80000/3/0/1"; SerialPort = "COM3"; Baud = 9600 }
+    teensy36 = @{ Fqbn = "teensy:avr:teensy36:usb=serial,speed=180,opt=o3std"; UploadPort = "usb:80000/3/0/1"; SerialPort = "COM23"; Baud = 9600 }
 }
 
 $exampleMap = @{
@@ -34,11 +37,19 @@ $exampleMap = @{
     cores3_donkeykong = "examples\M5Stack\donkeykong"
     cores3_borg_cube = "examples\M5Stack\borg_cube"
     cores3_scream = "examples\M5Stack\scream"
+    feathers2_donkeykong = "examples\ESP32\donkeykong"
+    feathers2_borg_cube = "examples\ESP32\borg_cube"
+    feathers2_scream = "examples\ESP32\scream"
+    feathers3_donkeykong = "examples\ESP32\donkeykong"
+    feathers3_borg_cube = "examples\ESP32\borg_cube"
+    feathers3_scream = "examples\ESP32\scream"
     teensy41_characters = "examples\Teensy4\3D\characters"
     teensy41_test_texture = "examples\Teensy4\3D\test-texture"
     teensy41_test_shading = "examples\Teensy4\3D\test-shading"
     teensy41_borg_cube = "examples\Teensy4\3D\borg_cube"
     teensy41_scream = "examples\Teensy4\3D\scream"
+    teensy36_characters = "examples\Teensy3\3D\characters"
+    teensy36_scream = "examples\Teensy3\3D\scream"
 }
 
 if (-not $boardConfig.ContainsKey($Board)) { throw "Unknown board '$Board'" }
@@ -82,7 +93,7 @@ if ($CompileOnly) { Write-Host "[example] compile-only complete"; exit 0 }
 $lines = New-Object System.Collections.Generic.List[string]
 $opened = $false
 $serialOpenTimeout = 60
-if ($Board -eq "teensy41") {
+if ($Board -eq "teensy41" -or $Board -eq "teensy36") {
     $serialOpenTimeout = 150
 }
 $deadline = (Get-Date).AddSeconds($serialOpenTimeout)
@@ -91,7 +102,7 @@ while (-not $opened -and (Get-Date) -lt $deadline) {
         $serial = [System.IO.Ports.SerialPort]::new($cfg.SerialPort, $cfg.Baud, [System.IO.Ports.Parity]::None, 8, [System.IO.Ports.StopBits]::One)
         $serial.ReadTimeout = 500
         $serial.DtrEnable = $true
-        $serial.RtsEnable = $true
+        $serial.RtsEnable = -not (@("feathers2", "feathers3") -contains $Board)
         $serial.Open()
         $opened = $true
     } catch {
