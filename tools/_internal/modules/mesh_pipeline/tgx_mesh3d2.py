@@ -268,6 +268,10 @@ def cmd_wizard(args: argparse.Namespace) -> None:
         keep_visibility_files=False,
         cone_source="visibility" if visibility else "normal",
         mesh_format="mesh3dv2",
+        watertight_vertices=True,
+        watertight_report=True,
+        watertight_fail_threshold=None,
+        watertight_max_iterations=12,
     )
     cmd_export(export_args)
 
@@ -378,6 +382,12 @@ def main(argv: list[str] | None = None) -> int:
     p_export.add_argument("--texcoord-quant-bits", type=int, default=DEFAULT_TEXCOORD_QUANT_BITS, help="snap and merge UVs to a 1/(2^bits) grid; negative disables")
     p_export.add_argument("--texcoord-wrap", action="store_true", help="identify UVs modulo 1 during UV quantization; only use when this preserves texture mapping")
     p_export.add_argument("--normal-quant-bits", type=int, default=DEFAULT_NORMAL_QUANT_BITS, help="quantize and merge normals to signed fixed-point bits per coordinate; negative disables")
+    p_export.add_argument("--watertight-vertices", dest="watertight_vertices", action="store_true", default=True, help="snap Mesh3Dv2 positions onto compatible meshlet lattices so shared vertices decode identically in double precision")
+
+    p_export.add_argument("--no-watertight-vertices", dest="watertight_vertices", action="store_false", help="Disable Mesh3Dv2 watertight lattice snapping and use legacy per-meshlet quantization")
+    p_export.add_argument("--watertight-report", action="store_true", help="print Mesh3Dv2 shared-vertex decode diagnostics after export")
+    p_export.add_argument("--watertight-fail-threshold", type=float, default=None, help="fail export if decode64 shared-vertex max delta exceeds this object-space threshold")
+    p_export.add_argument("--watertight-max-iterations", type=int, default=12, help="maximum lattice-solver iterations for --watertight-vertices")
     p_export.add_argument("--lkh", default=str(DEFAULT_LKH_EXE))
     p_export.add_argument("--texture-symbol", action="append", default=[], metavar="MATERIAL=SYMBOL", help="link an OBJ material to an existing tgx::Image symbol")
     p_export.add_argument("--emissive-texture-symbol", action="append", default=[], metavar="MATERIAL=SYMBOL", help="link an OBJ material to an existing tgx::Image emissive texture symbol")

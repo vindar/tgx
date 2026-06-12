@@ -16,6 +16,7 @@ from .quality import cull_ratio_stats, fibonacci_sphere
 from .stripifier import DEFAULT_LKH_EXE, solver_stats_text
 from .validate import validate_mesh_for_export
 from .visibility import compute_tgx_visibility
+from .watertight import Mesh3Dv2WatertightOptions
 
 
 def add_build_options(parser: argparse.ArgumentParser, *, source: str = "obj") -> None:
@@ -187,6 +188,12 @@ def export_common(
         extra_includes=extra_includes or [],
         header_filename=output.name,
         single_header=getattr(args, "single_header", False),
+        watertight_options=Mesh3Dv2WatertightOptions(
+            enabled=getattr(args, "watertight_vertices", True),
+            report=getattr(args, "watertight_report", False),
+            fail_threshold=getattr(args, "watertight_fail_threshold", None),
+            max_iterations=getattr(args, "watertight_max_iterations", 12),
+        ),
     )
     kwargs.update(cone_source=cone_source)
     with step("encode/export mesh", f"{fmt}, {len(meshlets)} meshlets"):

@@ -13,6 +13,14 @@ import numpy as np
 from .mesh import FaceVertex, Meshlet, ObjMesh
 from .progress import Heartbeat, log
 from .stripifier import DEFAULT_LKH_EXE, StripifyOptions, stripify_component
+from .watertight import (
+    Mesh3Dv2WatertightMetadata,
+    Mesh3Dv2WatertightOptions,
+    check_mesh3dv2_watertightness,
+    format_watertight_stats,
+    merge_watertight_stats,
+    solve_mesh3dv2_watertight,
+)
 
 
 @dataclass
@@ -32,6 +40,12 @@ class MeshletExportStats:
     emissive_textures: int
     mesh_struct_bytes: int
     static_bytes: int
+    watertight_enabled: bool = False
+    watertight_shared_vertices: int = 0
+    watertight_max_delta64: float = 0.0
+    watertight_max_delta32: float = 0.0
+    watertight_max_displacement: float = 0.0
+    watertight_radius_inflation_max: float = 1.0
 
 
 @dataclass
@@ -337,16 +351,25 @@ def _q_texcoord16(value: float) -> int:
     return _clamp_i16(int(round(max(-4.0, min(4.0, float(value))) * (32767.0 / 4.0))))
 
 
-def _payload16_for_meshlet(mesh: ObjMesh, meshlet: Meshlet, encoded: _EncodedMeshlet, *, center: np.ndarray | None = None, radius: float | None = None) -> bytes:
+def _payload16_for_meshlet(
+    mesh: ObjMesh,
+    meshlet: Meshlet,
+    encoded: _EncodedMeshlet,
+    *,
+    center: np.ndarray | None = None,
+    radius: float | None = None,
+    positions: np.ndarray | None = None,
+) -> bytes:
     payload = bytearray()
     center = meshlet.center if center is None else np.asarray(center, dtype=np.float64)
     radius = float(meshlet.radius if radius is None else radius)
     if (not math.isfinite(radius)) or radius <= 0.0:
         raise ValueError("Mesh3Dv2 export requires each meshlet to have a positive finite bounding sphere radius")
     vertex_scale = 32767.0 / radius
+    vertex_positions = mesh.vertices if positions is None else positions
 
     for index in encoded.vertices:
-        rel = mesh.vertices[index] - center
+        rel = vertex_positions[index] - center
         if float(np.linalg.norm(rel)) > radius * (1.0 + 1e-6):
             raise ValueError("Mesh3Dv2 meshlet bounding sphere does not contain all local vertices")
         q = np.rint(rel * vertex_scale).astype(np.int64)
@@ -484,6 +507,7 @@ def _export_meshlet_header_impl(
     cone_source: str = "normal",
     header_filename: str | None = None,
     single_header: bool = False,
+    watertight_options: Mesh3Dv2WatertightOptions | None = None,
 ) -> MeshletExportResult:
     symbol = _identifier(name or mesh.name or "mesh")
     materials = sorted({m.material for m in meshlets})
@@ -523,18 +547,64 @@ def _export_meshlet_header_impl(
     chains = 0
     vertex_refs_loaded = 0
     metadata16b: list[tuple[list[int], list[int], int, int, np.ndarray, float]] = []
+    check_metadata: list[Mesh3Dv2WatertightMetadata] = []
+    positions_for_payload: np.ndarray | None = None
+    watertight_options = watertight_options or Mesh3Dv2WatertightOptions()
+    watertight_stats = None
     bbox_center, center_scale, radius_scale, snorm_scale = _meshlet16b_scales(mesh)
-    for item, meshlet in zip(encoded, meshlets):
+    bb_min, bb_max = mesh.bounding_box()
+    bbox_extent_for_check: float | None = None
+
+    if watertight_options.enabled:
+        solved = solve_mesh3dv2_watertight(mesh, meshlets, encoded, watertight_options)
+        positions_for_payload = solved.positions
+        bb_min, bb_max = solved.bbox_min, solved.bbox_max
+        bbox_extent_for_check = solved.bbox_extent
+        watertight_stats = solved.stats
+        check_metadata = solved.metadata
+        for item, meshlet, wt_meta in zip(encoded, meshlets, solved.metadata):
+            _, q_dir, _, q_cos, _, _ = _quantize_meshlet16b_metadata(
+                mesh,
+                meshlet,
+                item,
+                cone_source,
+                solved.bbox_center,
+                solved.center_scale,
+                solved.radius_scale,
+                solved.snorm_scale,
+            )
+            metadata16b.append((wt_meta.q_center, q_dir, wt_meta.q_radius, q_cos, wt_meta.decoded_center, wt_meta.decoded_radius))
+    else:
+        for item, meshlet in zip(encoded, meshlets):
+            meta = _quantize_meshlet16b_metadata(mesh, meshlet, item, cone_source, bbox_center, center_scale, radius_scale, snorm_scale)
+            metadata16b.append(meta)
+            check_metadata.append(Mesh3Dv2WatertightMetadata(meta[0], meta[2], meta[4], meta[5]))
+
+    for item, meshlet, meta in zip(encoded, meshlets, metadata16b):
         item.payload_offset32 = len(payload) // 4
-        meta = _quantize_meshlet16b_metadata(mesh, meshlet, item, cone_source, bbox_center, center_scale, radius_scale, snorm_scale)
-        metadata16b.append(meta)
-        block = _payload16_for_meshlet(mesh, meshlet, item, center=meta[4], radius=meta[5])
+        block = _payload16_for_meshlet(mesh, meshlet, item, center=meta[4], radius=meta[5], positions=positions_for_payload)
         payload.extend(block)
         chains += item.chain_count
         vertex_refs_loaded += item.vertex_refs_loaded
 
+    if watertight_options.enabled or watertight_options.report or watertight_options.fail_threshold is not None:
+        decoded_stats = check_mesh3dv2_watertightness(
+            mesh,
+            meshlets,
+            encoded,
+            check_metadata,
+            positions_for_payload,
+            enabled=watertight_options.enabled,
+            bbox_extent=bbox_extent_for_check,
+            threshold=watertight_options.fail_threshold,
+            raise_on_failure=watertight_options.fail_threshold is not None,
+        )
+        watertight_stats = decoded_stats if watertight_stats is None else merge_watertight_stats(watertight_stats, decoded_stats)
+        if watertight_options.report:
+            for line in format_watertight_stats(watertight_stats):
+                log(line)
+
     payload_words = list(struct.unpack("<" + "I" * (len(payload) // 4), payload))
-    bb_min, bb_max = mesh.bounding_box()
     material_extra_needed = [
         bool(mesh.materials.get(mat).has_material_extra(emissive_texture_symbols.get(mat, "")) if mesh.materials.get(mat) is not None else emissive_texture_symbols.get(mat, ""))
         for mat in materials
@@ -570,6 +640,12 @@ def _export_meshlet_header_impl(
     header.append(f"// Material extras: {'yes' if material_extra_array_present else 'no'}")
     header.append(f"// Emissive materials: {emissive_materials}")
     header.append(f"// Emissive textures : {emissive_textures}")
+    if watertight_stats is not None:
+        header.append(f"// Watertight vertices : {'enabled' if watertight_options.enabled else 'check-only'}")
+        header.append(f"// Watertight shared max delta64: {watertight_stats.shared_vertex_decode_max_delta:.9g}")
+        header.append(f"// Watertight shared max delta32: {watertight_stats.shared_vertex_decode_float32_max_delta:.9g}")
+        header.append(f"// Watertight max displacement : {watertight_stats.max_geometry_displacement:.9g}")
+        header.append(f"// Watertight max radius inflation: {watertight_stats.max_radius_inflation:.6g}")
     header.append("// Static memory estimate, excluding texture images:")
     header.append(f"//   payload array : {len(payload)} bytes")
     header.append(f"//   meshlet array : {meshlet_array_bytes} bytes")
@@ -691,6 +767,12 @@ def _export_meshlet_header_impl(
         emissive_textures=emissive_textures,
         mesh_struct_bytes=mesh_struct_bytes,
         static_bytes=static_bytes,
+        watertight_enabled=bool(watertight_options.enabled),
+        watertight_shared_vertices=0 if watertight_stats is None else watertight_stats.shared_vertices,
+        watertight_max_delta64=0.0 if watertight_stats is None else watertight_stats.shared_vertex_decode_max_delta,
+        watertight_max_delta32=0.0 if watertight_stats is None else watertight_stats.shared_vertex_decode_float32_max_delta,
+        watertight_max_displacement=0.0 if watertight_stats is None else watertight_stats.max_geometry_displacement,
+        watertight_radius_inflation_max=1.0 if watertight_stats is None else watertight_stats.max_radius_inflation,
     )
     return MeshletExportResult("\n".join(header), stats, None if source is None else "\n".join(source))
 
@@ -711,6 +793,7 @@ def export_mesh3dv2_header(
     cone_source: str = "normal",
     header_filename: str | None = None,
     single_header: bool = False,
+    watertight_options: Mesh3Dv2WatertightOptions | None = None,
 ) -> MeshletExportResult:
     return _export_meshlet_header_impl(
         mesh,
@@ -729,4 +812,5 @@ def export_mesh3dv2_header(
         cone_source=cone_source,
         header_filename=header_filename,
         single_header=single_header,
+        watertight_options=watertight_options,
     )

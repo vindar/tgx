@@ -92,6 +92,12 @@ def build_parser() -> argparse.ArgumentParser:
     meshlets.add_argument("--visibility-samples", type=int, default=None, help="Number of TGX visibility directions used by visibility-merge; default is 1024")
     meshlets.add_argument("--visibility-size", type=int, default=None, help="Visibility render size used by visibility-merge; default is 1024")
     meshlets.add_argument("--visibility-margin", type=float, default=None, help="Visibility cone margin in degrees; default is automatic")
+    meshlets.add_argument("--watertight-vertices", dest="watertight_vertices", action="store_true", default=True, help="snap Mesh3Dv2 positions onto compatible meshlet lattices so shared vertices decode identically in double precision")
+
+    meshlets.add_argument("--no-watertight-vertices", dest="watertight_vertices", action="store_false", help="Disable Mesh3Dv2 watertight lattice snapping and use legacy per-meshlet quantization")
+    meshlets.add_argument("--watertight-report", action="store_true", help="print Mesh3Dv2 shared-vertex decode diagnostics after export")
+    meshlets.add_argument("--watertight-fail-threshold", type=float, default=None, help="fail export if decode64 shared-vertex max delta exceeds this object-space threshold")
+    meshlets.add_argument("--watertight-max-iterations", type=int, default=12, help="maximum lattice-solver iterations for --watertight-vertices")
 
     textures = parser.add_argument_group("texture export")
     textures.add_argument("--no-textures", action="store_true", help="Do not export or copy material textures")

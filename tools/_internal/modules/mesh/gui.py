@@ -2064,6 +2064,7 @@ class TGXMeshConverterApp(tk.Tk):
         if self.remove_normals.get():
             argv.append("--remove-normals")
         if self.mesh_format.get() == "Mesh3Dv2":
+            argv.append("--watertight-vertices")
             if self.meshlet_mode.get() == "compact":
                 compression = int(round(float(self.compact_compression.get())))
                 if compression < 0 or compression > 100:
