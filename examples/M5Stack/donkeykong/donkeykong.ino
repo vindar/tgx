@@ -31,7 +31,7 @@
 #include <tgx.h>
 
 // the mesh to draw
-#include "donkeykong_small.h"
+#include "donkeykong_small_v2.h"
 #define MESH &donkeykong_small
 
 // let's not burden ourselves with the tgx:: prefix
