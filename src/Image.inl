@@ -3206,7 +3206,7 @@ namespace tgx
         ar = ar / 2.0f;
         br = br / 2.0f;
 
-        iBox2 B((int)floorf(fminf(ax - ar, bx - br)), (int)ceilf(fmaxf(ax + ar, bx + br)), (int)floorf(fminf(ay - ar, by - br)), (int)ceilf(fmaxf(ay + ar, by + br)));
+        iBox2 B((int)lfloorf(fminf(ax - ar, bx - br)), (int)ceilf(fmaxf(ax + ar, bx + br)), (int)lfloorf(fminf(ay - ar, by - br)), (int)ceilf(fmaxf(ay + ar, by + br)));
         B &= imageBox();
         if (B.isEmpty()) return;
         // Find line bounding box
@@ -3627,7 +3627,7 @@ namespace tgx
     template<typename color_t>
     void Image<color_t>::_fillSmoothRect(const fBox2& B, color_t color, float opacity)
         {
-        tgx::iBox2 eB((int)floorf(B.minX + 0.5f), (int)ceilf(B.maxX - 0.5f), (int)floorf(B.minY + 0.5f), (int)ceilf(B.maxY - 0.5f));
+        tgx::iBox2 eB((int)lfloorf(B.minX + 0.5f), (int)ceilf(B.maxX - 0.5f), (int)lfloorf(B.minY + 0.5f), (int)ceilf(B.maxY - 0.5f));
         const bool checkrange = (imageBox().contains(eB)) ? false : true;
         if (eB.minX == eB.maxX)
             { // just a vertical line
@@ -5230,9 +5230,9 @@ namespace tgx
         const int dir_y = (quarter & 2) ? -1 : 1;
         auto B = imageBox();
         B &= tgx::iBox2(
-            ((dir_x > 0) ? (int)floorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? (int)lfloorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
             ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + R - 0.5f)),
-            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - R + 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)lfloorf(C.y - R + 0.5f)),
             ((dir_y > 0) ? (int)ceilf(C.y + R - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
         if (B.isEmpty()) return;
         if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
@@ -5452,9 +5452,9 @@ namespace tgx
         const int dir_y = (quarter & 2) ? -1 : 1;
         auto B = imageBox();
         B &= tgx::iBox2(
-            ((dir_x > 0) ? (int)floorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? (int)lfloorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
             ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + R - 0.5f)),
-            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - R + 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)lfloorf(C.y - R + 0.5f)),
             ((dir_y > 0) ? (int)ceilf(C.y + R - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
         if (B.isEmpty()) return;
         if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
@@ -5624,9 +5624,9 @@ namespace tgx
         const int dir_y = (quarter & 2) ? -1 : 1;
         auto B = imageBox();
         B &= tgx::iBox2(
-            ((dir_x > 0) ? (int)floorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? (int)lfloorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
             ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + R - 0.5f)),
-            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - R + 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)lfloorf(C.y - R + 0.5f)),
             ((dir_y > 0) ? (int)ceilf(C.y + R - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
         if (B.isEmpty()) return;
         if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
@@ -5799,9 +5799,9 @@ namespace tgx
         const int dir_y = (quarter & 2) ? -1 : 1;
         auto B = imageBox();
         B &= tgx::iBox2(
-            ((dir_x > 0) ? (int)floorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? (int)lfloorf(C.x - R + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
             ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + R - 0.5f)),
-            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - R + 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)lfloorf(C.y - R + 0.5f)),
             ((dir_y > 0) ? (int)ceilf(C.y + R - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
         if (B.isEmpty()) return;
         if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
@@ -6137,9 +6137,9 @@ namespace tgx
         auto B = imageBox();
 
         B &= tgx::iBox2(
-            ((dir_x > 0) ? (int)floorf(C.x - rx + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? (int)lfloorf(C.x - rx + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
             ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + rx - 0.5f)),
-            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - ry + 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)lfloorf(C.y - ry + 0.5f)),
             ((dir_y > 0) ? (int)ceilf(C.y + ry - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
         if (B.isEmpty()) return;
         if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
@@ -6195,9 +6195,9 @@ namespace tgx
         auto B = imageBox();
 
         B &= tgx::iBox2(
-            ((dir_x > 0) ? (int)floorf(C.x - rx + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? (int)lfloorf(C.x - rx + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
             ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + rx - 0.5f)),
-            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - ry + 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)lfloorf(C.y - ry + 0.5f)),
             ((dir_y > 0) ? (int)ceilf(C.y + ry - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
         if (B.isEmpty()) return;
         if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
@@ -6262,9 +6262,9 @@ namespace tgx
         auto B = imageBox();
 
         B &= tgx::iBox2(
-            ((dir_x > 0) ? (int)floorf(C.x - rx + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? (int)lfloorf(C.x - rx + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
             ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + rx - 0.5f)),
-            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - ry + 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)lfloorf(C.y - ry + 0.5f)),
             ((dir_y > 0) ? (int)ceilf(C.y + ry - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
         if (B.isEmpty()) return;
         if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
@@ -6330,9 +6330,9 @@ namespace tgx
         auto B = imageBox();
 
         B &= tgx::iBox2(
-            ((dir_x > 0) ? (int)floorf(C.x - rx + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
+            ((dir_x > 0) ? (int)lfloorf(C.x - rx + 0.5f) : (int)roundf(C.x) + ((vertical_center_line) ? 0 : 1)),
             ((dir_x > 0) ? ((int)roundf(C.x) - ((vertical_center_line) ? 0 : 1)) : (int)ceilf(C.x + rx - 0.5f)),
-            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)floorf(C.y - ry + 0.5f)),
+            ((dir_y > 0) ? ((int)roundf(C.y) + ((horizontal_center_line) ? 0 : 1)) : (int)lfloorf(C.y - ry + 0.5f)),
             ((dir_y > 0) ? (int)ceilf(C.y + ry - 0.5f) : (int)roundf(C.y) - ((horizontal_center_line) ? 0 : 1)));
         if (B.isEmpty()) return;
         if (dir_y < 0) { tgx::swap(B.minY, B.maxY); }
@@ -6484,19 +6484,19 @@ namespace tgx
         if (w < 0.5f && (dy > xy || dx < xy))
             {
             cur = (w + 1.0f) / 2.0f; w = sqrtf(w); xy = 1.0f / (w + 1.0f);
-            sx = (int)floorf((x0 + 2.0f * w * x1 + x2) * xy / 2.0f + 0.5f);
-            sy = (int)floorf((y0 + 2.0f * w * y1 + y2) * xy / 2.0f + 0.5f);
-            dx = floorf((w * x1 + x0) * xy + 0.5f); dy = floorf((y1 * w + y0) * xy + 0.5f);
+            sx = (int)lfloorf((x0 + 2.0f * w * x1 + x2) * xy / 2.0f + 0.5f);
+            sy = (int)lfloorf((y0 + 2.0f * w * y1 + y2) * xy / 2.0f + 0.5f);
+            dx = lfloorf((w * x1 + x0) * xy + 0.5f); dy = lfloorf((y1 * w + y0) * xy + 0.5f);
             if (sw)
                 {
                 _plotQuadRationalBezierSeg(checkrange, sx, sy, (int)dx, (int)dy, x0, y0, cur, color, opacity);
-                dx = floorf((w * x1 + x2) * xy + 0.5f); dy = floorf((y1 * w + y2) * xy + 0.5f);
+                dx = lfloorf((w * x1 + x2) * xy + 0.5f); dy = lfloorf((y1 * w + y2) * xy + 0.5f);
                 _plotQuadRationalBezierSeg(checkrange, x2, y2, (int)dx, (int)dy, sx, sy, cur, color, opacity);
                 }
             else
                 {
                 _plotQuadRationalBezierSeg(checkrange, x0, y0, (int)dx, (int)dy, sx, sy, cur, color, opacity);
-                dx = floorf((w * x1 + x2) * xy + 0.5f); dy = floorf((y1 * w + y2) * xy + 0.5f);
+                dx = lfloorf((w * x1 + x2) * xy + 0.5f); dy = lfloorf((y1 * w + y2) * xy + 0.5f);
                 _plotQuadRationalBezierSeg(checkrange, sx, sy, (int)dx, (int)dy, x2, y2, cur, color, opacity);
                 }
             return;
@@ -6562,11 +6562,11 @@ namespace tgx
             yy = (t * t * (y0 - 2.0f * w * y1 + y2) + 2.0f * t * (w * y1 - y0) + y0) * q;
             ww = t * (w - 1.0f) + 1.0f; ww *= ww * q;
             w = ((1.0f - t) * (w - 1.0f) + 1.0f) * sqrtf(q);
-            x = (int)floorf(xx + 0.5f); y = (int)floorf(yy + 0.5f);
+            x = (int)lfloorf(xx + 0.5f); y = (int)lfloorf(yy + 0.5f);
             yy = (xx - x0) * (y1 - y0) / (x1 - x0) + y0;
-            _plotQuadRationalBezierSeg(checkrange, x0, y0, x, (int)floorf(yy + 0.5f), x, y, ww, color, opacity);
+            _plotQuadRationalBezierSeg(checkrange, x0, y0, x, (int)lfloorf(yy + 0.5f), x, y, ww, color, opacity);
             yy = (xx - x2) * (y1 - y2) / (x1 - x2) + y2;
-            y1 = (int)floorf(yy + 0.5f); x0 = x1 = x; y0 = y;
+            y1 = (int)lfloorf(yy + 0.5f); x0 = x1 = x; y0 = y;
             }
         if ((y0 - y1) * (y2 - y1) > 0)
             {
@@ -6582,11 +6582,11 @@ namespace tgx
             yy = (t * t * (y0 - 2.0f * w * y1 + y2) + 2.0f * t * (w * y1 - y0) + y0) * q;
             ww = t * (w - 1.0f) + 1.0f; ww *= ww * q;
             w = ((1.0f - t) * (w - 1.0f) + 1.0f) * sqrtf(q);
-            x = (int)floorf(xx + 0.5f); y = (int)floorf(yy + 0.5f);
+            x = (int)lfloorf(xx + 0.5f); y = (int)lfloorf(yy + 0.5f);
             xx = (x1 - x0) * (yy - y0) / (y1 - y0) + x0;
-            _plotQuadRationalBezierSeg(checkrange, x0, y0, (int)floorf(xx + 0.5f), y, x, y, ww, color, opacity);
+            _plotQuadRationalBezierSeg(checkrange, x0, y0, (int)lfloorf(xx + 0.5f), y, x, y, ww, color, opacity);
             xx = (x1 - x2) * (yy - y2) / (y1 - y2) + x2;
-            x1 = (int)floorf(xx + 0.5f); x0 = x; y0 = y1 = y;
+            x1 = (int)lfloorf(xx + 0.5f); x0 = x; y0 = y1 = y;
             }
         _plotQuadRationalBezierSeg(checkrange, x0, y0, x1, y1, x2, y2, w * w, color, opacity);
         }
@@ -6623,7 +6623,7 @@ namespace tgx
         float ab, ac, bc, cb, xx, xy, yy, dx, dy, ex, * pxy, EP = 0.01f;
         if (xa == 0 && ya == 0)
             {
-            sx = (int)floorf((3 * x1 - x0 + 1) / 2); sy = (int)floorf((3 * y1 - y0 + 1) / 2);
+            sx = (int)lfloorf((3 * x1 - x0 + 1) / 2); sy = (int)lfloorf((3 * y1 - y0 + 1) / 2);
             _plotQuadRationalBezierSeg(checkrange, x0, y0, sx, sy, x3, y3, 1.0f, color, opacity);
             return;
             }
@@ -6720,7 +6720,7 @@ namespace tgx
             fy2 = (t2 * (t2 * yb - 2 * yc) - t1 * (t2 * (t2 * ya - 2 * yb) + yc) + yd) / 8 - fy0;
             fx0 -= fx3 = (t2 * (t2 * (3 * xb - t2 * xa) - 3 * xc) + xd) / 8;
             fy0 -= fy3 = (t2 * (t2 * (3 * yb - t2 * ya) - 3 * yc) + yd) / 8;
-            x3 = (int)floorf(fx3 + 0.5f); y3 = (int)floorf(fy3 + 0.5f);
+            x3 = (int)lfloorf(fx3 + 0.5f); y3 = (int)lfloorf(fy3 + 0.5f);
             if (fx0 != 0.0f) { fx1 *= fx0 = (x0 - x3) / fx0; fx2 *= fx0; }
             if (fy0 != 0.0f) { fy1 *= fy0 = (y0 - y3) / fy0; fy2 *= fy0; }
             if (x0 != x3 || y0 != y3)
@@ -6761,16 +6761,16 @@ namespace tgx
         for (i = 2; i < n; i++)
             {
             if (i - 2 < M_MAX) m[i - 2] = mi = 1.0f / (6.0f - mi);
-            x[i] = x0 = (int)floorf(8 * x[i] - x0 * mi + 0.5f);
-            y[i] = y0 = (int)floorf(8 * y[i] - y0 * mi + 0.5f);
+            x[i] = x0 = (int)lfloorf(8 * x[i] - x0 * mi + 0.5f);
+            y[i] = y0 = (int)lfloorf(8 * y[i] - y0 * mi + 0.5f);
             }
-        x1 = (int)(floorf((x0 - 2 * x2) / (5.0f - mi) + 0.5f));
-        y1 = (int)(floorf((y0 - 2 * y2) / (5.0f - mi) + 0.5f));
+        x1 = (int)(lfloorf((x0 - 2 * x2) / (5.0f - mi) + 0.5f));
+        y1 = (int)(lfloorf((y0 - 2 * y2) / (5.0f - mi) + 0.5f));
         for (i = n - 2; i > 0; i--)
             {
             if (i <= M_MAX) mi = m[i - 1];
-            x0 = (int)floorf((x[i] - x1) * mi + 0.5f);
-            y0 = (int)floorf((y[i] - y1) * mi + 0.5f);
+            x0 = (int)lfloorf((x[i] - x1) * mi + 0.5f);
+            y0 = (int)lfloorf((y[i] - y1) * mi + 0.5f);
             _drawQuadBezier({ (x0 + x1) / 2, (y0 + y1) / 2 }, { x2, y2 }, { x1, y1 }, 1.0f, false, color, opacity);
             x2 = (x0 + x1) / 2; x1 = x0;
             y2 = (y0 + y1) / 2; y1 = y0;
@@ -6849,14 +6849,14 @@ namespace tgx
         float xx, yy;
         xx = a * (x[0] - (eta * ux));
         yy = a * (y[0] - (eta * uy));
-        x[0] = (int)floorf(xx + 0.5f);
-        y[0] = (int)floorf(yy + 0.5f);
+        x[0] = (int)lfloorf(xx + 0.5f);
+        y[0] = (int)lfloorf(yy + 0.5f);
         for (int i = 1; i < n; i++)
             {
             xx = a * (x[i] - xx);
             yy = a * (y[i] - yy);
-            x[i] = (int)floorf(xx + 0.5f);
-            y[i] = (int)floorf(yy + 0.5f);
+            x[i] = (int)lfloorf(xx + 0.5f);
+            y[i] = (int)lfloorf(yy + 0.5f);
             }
 
         ux = 0, uy = 0;
@@ -6870,15 +6870,15 @@ namespace tgx
 
         xx = x[n - 1] - (eta * ux);
         yy = y[n - 1] - (eta * uy);
-        x[n - 1] = (int)floorf(xx + 0.5f);
-        y[n - 1] = (int)floorf(yy + 0.5f);
+        x[n - 1] = (int)lfloorf(xx + 0.5f);
+        y[n - 1] = (int)lfloorf(yy + 0.5f);
 
         for (int i = n - 2; i >= 0; i--)
             {
             xx = x[i] - a * xx;
             yy = y[i] - a * yy;
-            x[i] = (int)floorf(xx + 0.5f);
-            y[i] = (int)floorf(yy + 0.5f);
+            x[i] = (int)lfloorf(xx + 0.5f);
+            y[i] = (int)lfloorf(yy + 0.5f);
             }
         _drawQuadBezier({ (x[n - 1] + x[0]) / 2, (y[n - 1] + y[0]) / 2 }, { (x[0] + x[1]) / 2, (y[0] + y[1]) / 2 }, { x[0], y[0] }, 1.0f, false, color, opacity);
         for (int i = 1; i < n - 1; i++)
@@ -6943,28 +6943,28 @@ namespace tgx
         for (i = 2; i < n; i++)
             {
             if (i - 2 < M_MAX) m[i - 2] = mi = 0.25f / (2.0f - mi);
-            x[i] = x0 = (int)floorf(12 * x[i] - 2 * x0 * mi + 0.5f);
-            y[i] = y0 = (int)floorf(12 * y[i] - 2 * y0 * mi + 0.5f);
+            x[i] = x0 = (int)lfloorf(12 * x[i] - 2 * x0 * mi + 0.5f);
+            y[i] = y0 = (int)lfloorf(12 * y[i] - 2 * y0 * mi + 0.5f);
             }
-        x2 = (int)(floorf((x0 - 3 * x4) / (7 - 4 * mi) + 0.5f));
-        y2 = (int)(floorf((y0 - 3 * y4) / (7 - 4 * mi) + 0.5f));
+        x2 = (int)(lfloorf((x0 - 3 * x4) / (7 - 4 * mi) + 0.5f));
+        y2 = (int)(lfloorf((y0 - 3 * y4) / (7 - 4 * mi) + 0.5f));
         _drawCubicBezier({ x3, y3 }, { x4, y4 }, { (x2 + x4) / 2, (y2 + y4) / 2 }, { x4, y4 }, false, color, opacity);
         if (n - 3 < M_MAX) mi = m[n - 3];
-        x1 = (int)floorf((x[n - 2] - 2 * x2) * mi + 0.5f);
-        y1 = (int)floorf((y[n - 2] - 2 * y2) * mi + 0.5f);
+        x1 = (int)lfloorf((x[n - 2] - 2 * x2) * mi + 0.5f);
+        y1 = (int)lfloorf((y[n - 2] - 2 * y2) * mi + 0.5f);
         for (i = n - 3; i > 0; i--)
             {
             if (i <= M_MAX) mi = m[i - 1];
-            x0 = (int)floorf((x[i] - 2 * x1) * mi + 0.5f);
-            y0 = (int)floorf((y[i] - 2 * y1) * mi + 0.5f);
-            x4 = (int)floorf((x0 + 4 * x1 + x2 + 3) / 6.0f);
-            y4 = (int)floorf((y0 + 4 * y1 + y2 + 3) / 6.0f);
-            _drawCubicBezier({ x4, y4 }, { x3, y3 }, { (int)floorf((2 * x1 + x2) / 3 + 0.5f), (int)floorf((2 * y1 + y2) / 3 + 0.5f) }, { (int)floorf((x1 + 2 * x2) / 3 + 0.5f), (int)floorf((y1 + 2 * y2) / 3 + 0.5f) }, false, color, opacity);
+            x0 = (int)lfloorf((x[i] - 2 * x1) * mi + 0.5f);
+            y0 = (int)lfloorf((y[i] - 2 * y1) * mi + 0.5f);
+            x4 = (int)lfloorf((x0 + 4 * x1 + x2 + 3) / 6.0f);
+            y4 = (int)lfloorf((y0 + 4 * y1 + y2 + 3) / 6.0f);
+            _drawCubicBezier({ x4, y4 }, { x3, y3 }, { (int)lfloorf((2 * x1 + x2) / 3 + 0.5f), (int)lfloorf((2 * y1 + y2) / 3 + 0.5f) }, { (int)lfloorf((x1 + 2 * x2) / 3 + 0.5f), (int)lfloorf((y1 + 2 * y2) / 3 + 0.5f) }, false, color, opacity);
             x3 = x4; y3 = y4; x2 = x1; y2 = y1; x1 = x0; y1 = y0;
             }
-        x0 = x[0]; x4 = (int)floorf((3 * x0 + 7 * x1 + 2 * x2 + 6) / 12.0f);
-        y0 = y[0]; y4 = (int)floorf((3 * y0 + 7 * y1 + 2 * y2 + 6) / 12.0f);
-        _drawCubicBezier({ x4, y4 }, { x3, y3 }, { (int)floorf((2 * x1 + x2) / 3 + 0.5f), (int)floorf((2 * y1 + y2) / 3 + 0.5f) }, { (int)floorf((x1 + 2 * x2) / 3 + 0.5f), (int)floorf((y1 + 2 * y2) / 3 + 0.5f) }, false, color, opacity);
+        x0 = x[0]; x4 = (int)lfloorf((3 * x0 + 7 * x1 + 2 * x2 + 6) / 12.0f);
+        y0 = y[0]; y4 = (int)lfloorf((3 * y0 + 7 * y1 + 2 * y2 + 6) / 12.0f);
+        _drawCubicBezier({ x4, y4 }, { x3, y3 }, { (int)lfloorf((2 * x1 + x2) / 3 + 0.5f), (int)lfloorf((2 * y1 + y2) / 3 + 0.5f) }, { (int)lfloorf((x1 + 2 * x2) / 3 + 0.5f), (int)lfloorf((y1 + 2 * y2) / 3 + 0.5f) }, false, color, opacity);
         _drawCubicBezier({ x0, y0 }, { x4, y4 }, { x0, y0 }, { (x0 + x1) / 2, (y0 + y1) / 2 }, false, color, opacity);
         }
 

@@ -752,8 +752,8 @@ namespace tgx
 
         if (std::is_integral<T>::value)
             {
-            T ilx = (T)floor(llx);
-            T ily = (T)floor(lly);
+            T ilx = (T)lfloorf((float)llx);
+            T ily = (T)lfloorf((float)lly);
             if (ilx < (T)1) ilx = (T)1;
             if (ily < (T)1) ily = (T)1;
             if (ilx > lx()) ilx = lx();
