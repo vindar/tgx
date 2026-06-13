@@ -1,0 +1,3 @@
+src/Image.inl
+src/Rasterizer.h
+src/Renderer3D.inl
