@@ -399,7 +399,12 @@ namespace tgx
         );
         return result;
 #else
+    #if 1
         return (int32_t)floorf(x);
+    #else
+        const int32_t i = (int32_t)x;
+        return i - ((float)i > x);
+    #endif
 #endif
         }
 }
