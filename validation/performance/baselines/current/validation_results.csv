@@ -1,2 +1,4 @@
-commit,baseline_date,suite,status,notes
-366112ea567651cecf58e51f096d62fa217fcace,2026-06-13,CPU/Teensy validation,not_run_in_this_capture,This baseline refresh captured 3D benchmarks and selected real-example telemetry only. Previous validation results are archived with the 2026-06-12 baseline.
+commit,baseline_date,validation,status,notes
+bbdba1048077b391a091f63fc4ea1e5521ba9084,2026-06-13,hardware_benchmark_and_examples,PASS,All four primary boards completed benchmark and selected example telemetry capture.
+bbdba1048077b391a091f63fc4ea1e5521ba9084,2026-06-13,CPU_2D,NOT_RUN,This pass refreshed performance baseline only.
+bbdba1048077b391a091f63fc4ea1e5521ba9084,2026-06-13,CPU_3D_strict,NOT_RUN,This pass refreshed performance baseline only.

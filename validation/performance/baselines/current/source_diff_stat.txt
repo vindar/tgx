@@ -1,4 +1,1 @@
- src/Image.inl      |  22 +++++-----
- src/Rasterizer.h   | 121 +++++++++++++++++++++++++++++++----------------------
- src/Renderer3D.inl |  17 ++++----
- 3 files changed, 91 insertions(+), 69 deletions(-)
+﻿
