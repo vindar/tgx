@@ -910,7 +910,7 @@ namespace tgx
                         V2.zdivide();
                         V3.zdivide();
                         }
-                    rasterizeTriangle(_lx, _ly, V1, V2, V3, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+                    rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, V1, V2, V3, _ox, _oy, _uni);
                     return;
                     }
                 }
@@ -1033,7 +1033,7 @@ namespace tgx
                 }
 
             // go rasterize !
-            rasterizeTriangle(_lx, _ly, PPC0, PPC1, PPC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+            rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, PPC0, PPC1, PPC2, _ox, _oy, _uni);
 
             return;
             }
@@ -1194,7 +1194,7 @@ namespace tgx
                     PPC2->missedP = false;
 
                     // go rasterize !
-                    rasterizeTriangle(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+                    rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni);
                     }
 
             rasterize_next_strip_triangle:
@@ -1346,8 +1346,8 @@ namespace tgx
                 }
 
             // go rasterize !
-            rasterizeTriangle(_lx, _ly, PPC0, PPC1, PPC2, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
-            rasterizeTriangle(_lx, _ly, PPC0, PPC2, PPC3, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+            rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, PPC0, PPC1, PPC2, _ox, _oy, _uni);
+            rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, PPC0, PPC2, PPC3, _ox, _oy, _uni);
 
             return;
             }
@@ -1360,8 +1360,7 @@ namespace tgx
         template<bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2)
             {
-            rasterizeTriangle(_lx, _ly, V0, V1, V2, _ox, _oy, _uni,
-                uber_shader<color_t, ZBUFFER_t, false, false, true, false, TEXTURE_BILINEAR, TEXTURE_WRAP, true>);
+            rasterizeTriangle<uber_shader<color_t, ZBUFFER_t, false, false, true, false, TEXTURE_BILINEAR, TEXTURE_WRAP, true> >(_lx, _ly, V0, V1, V2, _ox, _oy, _uni);
             }
 
 
@@ -1738,7 +1737,7 @@ namespace tgx
                     PPC2->missedP = false;
 
                     // go rasterize !
-                    rasterizeTriangle(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+                    rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni);
 
                 rasterize_next_triangle:
 
@@ -2064,7 +2063,7 @@ namespace tgx
                         PPC2->missedP = false;
 
                         // go rasterize !
-                        rasterizeTriangle(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni, shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t>);
+                        rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni);
 
                     rasterize_next_meshlet_triangle:
 

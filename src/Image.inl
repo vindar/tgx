@@ -4018,7 +4018,7 @@ namespace tgx
         rparam.tex = &src_im;
         rparam.p_blend_op = &blend_op;
 
-        tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture_blend_op<BLEND_OPERATOR, color_t, color_t_tex>);
+        tgx::rasterizeTriangle<tgx::shader_2D_texture_blend_op<BLEND_OPERATOR, color_t, color_t_tex> >(_lx, _ly, V1, V2, V3, 0, 0, rparam);
         }
 
 
@@ -4056,11 +4056,11 @@ namespace tgx
 
         if (USE_BLENDING)
             {
-            tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_gradient<true, color_t>);
+            tgx::rasterizeTriangle<tgx::shader_2D_gradient<true, color_t> >(_lx, _ly, V1, V2, V3, 0, 0, rparam);
             }
         else
             {
-            tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_gradient<false, color_t>);
+            tgx::rasterizeTriangle<tgx::shader_2D_gradient<false, color_t> >(_lx, _ly, V1, V2, V3, 0, 0, rparam);
             }
 
         }
@@ -4110,22 +4110,22 @@ namespace tgx
                 {
                 if (!GRADIENT)
                     {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, true, false, color_t, color_t_tex>);
+                    tgx::rasterizeTriangle<tgx::shader_2D_texture<true, true, false, color_t, color_t_tex> >(_lx, _ly, V1, V2, V3, 0, 0, rparam);
                     }
                 else
                     {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, true, true, color_t, color_t_tex>);
+                    tgx::rasterizeTriangle<tgx::shader_2D_texture<true, true, true, color_t, color_t_tex> >(_lx, _ly, V1, V2, V3, 0, 0, rparam);
                     }
                 }
             else
                 {
                 if (!GRADIENT)
                     {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<false, true, false, color_t, color_t_tex>);
+                    tgx::rasterizeTriangle<tgx::shader_2D_texture<false, true, false, color_t, color_t_tex> >(_lx, _ly, V1, V2, V3, 0, 0, rparam);
                     }
                 else
                     {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<false, true, true, color_t, color_t_tex>);
+                    tgx::rasterizeTriangle<tgx::shader_2D_texture<false, true, true, color_t, color_t_tex> >(_lx, _ly, V1, V2, V3, 0, 0, rparam);
                     }
                 }
             }
@@ -4135,22 +4135,22 @@ namespace tgx
                 {
                 if (!GRADIENT)
                     {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, false, false, color_t, color_t_tex>);
+                    tgx::rasterizeTriangle<tgx::shader_2D_texture<true, false, false, color_t, color_t_tex> >(_lx, _ly, V1, V2, V3, 0, 0, rparam);
                     }
                 else
                     {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<true, false, true, color_t, color_t_tex>);
+                    tgx::rasterizeTriangle<tgx::shader_2D_texture<true, false, true, color_t, color_t_tex> >(_lx, _ly, V1, V2, V3, 0, 0, rparam);
                     }
                 }
             else
                 {
                 if (!GRADIENT)
                     {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<false, false, false, color_t, color_t_tex>);
+                    tgx::rasterizeTriangle<tgx::shader_2D_texture<false, false, false, color_t, color_t_tex> >(_lx, _ly, V1, V2, V3, 0, 0, rparam);
                     }
                 else
                     {
-                    tgx::rasterizeTriangle(_lx, _ly, V1, V2, V3, 0, 0, rparam, tgx::shader_2D_texture<false, false, true, color_t, color_t_tex>);
+                    tgx::rasterizeTriangle<tgx::shader_2D_texture<false, false, true, color_t, color_t_tex> >(_lx, _ly, V1, V2, V3, 0, 0, rparam);
                     }
                 }
             }
