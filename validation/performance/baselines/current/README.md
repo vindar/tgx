@@ -40,9 +40,8 @@ branch: main
 - Pico W / RP2040 + ILI9341: `rp2040:rp2040:rpipicow` on `COM19`.
 - Feather S3 + ILI9341: `esp32:esp32:adafruit_feather_esp32s3_tft`, upload
   via bootloader `COM13` when needed, serial/display run on `COM14`.
-- Feather S2 + ILI9341: `esp32:esp32:adafruit_feather_esp32s2_tft` on `COM11`;
-  examples compile, but runtime baseline is missing because Windows refused to
-  open/upload `COM11` during the 2026-06-13 pass.
+- Feather S2 + ILI9341: `esp32:esp32:adafruit_feather_esp32s2_tft`, upload
+  via bootloader `COM12` when needed, serial/display run on `COM11`.
 
 For Pico2/Pico W, `TFT_eSPI/User_Setup_Select.h` was configured for
 `Setup_RP2040_RP2350_ILI9341.h`. For Feather S3/S2 compile and runtime tests it
@@ -67,7 +66,7 @@ Recorded global scores:
 | Pico2 | 19.75 | 15.47 | 13.67 |
 | Pico W | 13.97 | 9.66 | |
 | Feather S3 | 38.03 | 27.46 | 24.09 |
-| Feather S2 | unavailable | unavailable | unavailable |
+| Feather S2 | 2.51 | 2.06 | |
 
 Use `benchmark_subtests.csv` for local regressions; global scores alone are not
 enough to accept an optimization.
@@ -112,8 +111,14 @@ Feather S3:
 
 Feather S2:
 
-- The same three ESP32 examples compile, but were not uploaded/captured because
-  `COM11` was visible yet not openable by Windows/esptool.
+- `examples/ESP32/donkeykong`
+- `examples/ESP32/scream`
+- `examples/ESP32/borg_cube`
+
+Feather S2 note: this board was captured by manually entering/reusing
+bootloader `COM12` for upload and runtime `COM11` for serial. After serial
+capture it often re-enumerated as `COM12`, so future reruns may need the same
+two-port upload/capture flow.
 
 The exact upload/capture commands are in `run_manifest.csv`.
 

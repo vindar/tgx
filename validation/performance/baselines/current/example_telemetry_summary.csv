@@ -62,3 +62,7 @@
 "fe98d984feda942c88de6c036ec0439d0cd70940","2026-06-13","teensy36","characters","baseline_20260613_extended_characters","cyborg","38","15,9118","15,5500","14,8500","17,2400","63019,4500","64309,6000"
 "fe98d984feda942c88de6c036ec0439d0cd70940","2026-06-13","teensy36","characters","baseline_20260613_extended_characters","stormtrooper","33","14,6361","14,6100","13,9400","15,4300","68407,7030","68416,2000"
 "fe98d984feda942c88de6c036ec0439d0cd70940","2026-06-13","teensy36","scream","baseline_20260613_extended_scream","explosion","67","19,9515","19,8800","19,1400","20,8500","50149,5045","50314,7000"
+"31fa408d551b96663392f053a9ced3f8b6a19366","2026-06-13","feathers2","borg_cube","baseline_20260613_extended_borg_cube","unknown","24","11,1667","11,0000","10,0000","13,0000","",""
+"31fa408d551b96663392f053a9ced3f8b6a19366","2026-06-13","feathers2","donkeykong","baseline_20260613_extended_donkeykong","gouraud_texture","10","3,0980","3,0700","2,9300","3,3600","323062,2200","325323,8500"
+"31fa408d551b96663392f053a9ced3f8b6a19366","2026-06-13","feathers2","donkeykong","baseline_20260613_extended_donkeykong","wireframe","12","7,3442","7,3500","6,9000","7,9300","137698,6167","138231,1500"
+"31fa408d551b96663392f053a9ced3f8b6a19366","2026-06-13","feathers2","scream","baseline_20260613_extended_scream","unknown","22","5,0000","5,0000","5,0000","5,0000","",""

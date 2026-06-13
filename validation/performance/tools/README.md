@@ -21,8 +21,10 @@ These tools are intentionally stored outside `tmp/` so future optimization sessi
 | Teensy 4.1 + ILI9341 | `COM3` | Dedicated Teensy USB port |
 | Core2 | `COM5` | ESP32 Core2 runtime board |
 | CoreS3 | `COM10` | ESP32-S3 CoreS3 runtime board |
-| FeatherS3 TFT | `COM14` | ESP32-S3 TFT example board |
-| Pico W / RP2040 | `COM28` | Unavailable / ignored during final sessions |
+| Feather S3 + ILI9341 | `COM14` | Runtime serial/display board; bootloader may appear as `COM13` |
+| Feather S2 + ILI9341 | `COM11` | Runtime serial/display board; bootloader may appear as `COM12` |
+| Pico W / RP2040 + ILI9341 | `COM19` | Arduino runtime port after recovery from UF2/bootloader mode |
+| Teensy 3.6 + ST7735 | `COM23` | Runtime serial; Teensy upload port may share the Teensy USB path |
 
 ## Quick Probe
 
@@ -126,6 +128,15 @@ Teensyduino may report upload completion before the Teensy has fully rebooted an
 ## Pico Note
 
 Pico ports can disappear during UF2 upload and reappear after reboot. The capture script logs visible ports before/after upload and waits for the expected port (`COM21` for Pico2 in the June 2026 setup) to be readable before starting telemetry capture.
+
+## Feather S2/S3 Note
+
+Feather S2/S3 boards use native USB CDC. During upload they may switch away
+from their runtime ports. In the June 2026 setup, Feather S3 sometimes used
+bootloader `COM13` then runtime `COM14`; Feather S2 used bootloader `COM12`
+then runtime `COM11`. For sketches using `TFT_eSPI`, set
+`TFT_eSPI/User_Setup_Select.h` to
+`Setup_feather_TFT_S2_S3_ILI9341.h` before compiling.
 
 ## Future Investigation Output
 
