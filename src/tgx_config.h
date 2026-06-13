@@ -69,6 +69,7 @@
  */
 #if defined(_WIN32) || defined(_WIN64) || defined(__linux__) || defined(__APPLE__) || defined(__MACH__) || defined(__ANDROID__) || defined(__unix__)
     // TGX is running on a computer.
+    #define TGX_RUN_ON_CPU
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 262144
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
@@ -81,6 +82,7 @@
 
 #elif defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)
     // teensy 4.0 and 4.1
+    #define TGX_RUN_ON_TEENSY4
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 8192
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 1
@@ -93,6 +95,7 @@
 
 #elif defined(ARDUINO_TEENSY36)
     // teensy 3.6
+    #define TGX_RUN_ON_TEENSY3
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 2048
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 0
@@ -105,6 +108,7 @@
 
 #elif defined(ARDUINO_TEENSY35)
     // teensy 3.5
+    #define TGX_RUN_ON_TEENSY3
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 2048
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 0
@@ -117,6 +121,7 @@
 
 #elif defined(ARDUINO_TEENSY32) || defined(ARDUINO_TEENSY31)
     // teensy 3.1 and 3.2
+    #define TGX_RUN_ON_TEENSY3
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 1024
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 0
@@ -129,6 +134,7 @@
 
 #elif defined(ARDUINO_TEENSYLC)
     // teensy LC
+    #define TGX_RUN_ON_TEENSYLC 
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 256
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
@@ -141,6 +147,7 @@
 
 #elif defined(ARDUINO_ARCH_RP2350) || defined(PICO_RP2350) || defined(TARGET_RP2350)
     // Raspberry Pico 2350
+    #define TGX_RUN_ON_RP2350
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 4096
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 1
@@ -153,6 +160,7 @@
 
 #elif defined(ARDUINO_ARCH_RP2040) || defined(PICO_RP2040) || defined(TARGET_RP2040)
     // Raspberry Pico 2040
+    #define TGX_RUN_ON_RP2040
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 2048
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
@@ -165,6 +173,7 @@
 
 #elif defined(CONFIG_IDF_TARGET_ESP32S2) || defined(ESP32S2)
     // ESP32 S2
+    #define TGX_RUN_ON_ESP32S2
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 2048
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
@@ -177,6 +186,7 @@
 
 #elif defined(CONFIG_IDF_TARGET_ESP32S3) || defined(ESP32S3)
     // ESP32 S3
+    #define TGX_RUN_ON_ESP32S3
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 4096
     #define TGX_USE_FAST_INV_SQRT_TRICK 0 // unused: specific assembly code used instead.
     #define TGX_USE_FAST_SQRT_TRICK 0     //
@@ -189,6 +199,7 @@
 
 #elif defined(CONFIG_IDF_TARGET_ESP32P4) || defined(ESP32P4)
     // ESP32 P4
+    #define TGX_RUN_ON_ESP32P4
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 4096
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 1
@@ -202,6 +213,7 @@
 #elif defined(CONFIG_IDF_TARGET_ESP32) || defined(ESP32)
     // fallback to original
     // nb: `ESP32` is defined for all ESP32 variants so this case should be the last
+    #define TGX_RUN_ON_ESP32
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 4096
     #define TGX_USE_FAST_INV_SQRT_TRICK 0 // unused: specific assembly code used instead.
     #define TGX_USE_FAST_SQRT_TRICK 0     //
@@ -214,6 +226,7 @@
 
 #elif defined(__ARM_ARCH_6M__)
     // generic Cortex-M0 (use same setting as Teensy LC)
+    #define TGX_RUN_ON_TEENSYLC
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 256
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
@@ -226,6 +239,7 @@
 
 #elif defined(__ARM_ARCH_7M__)
     // generic Cortex-M3 (use same setting as Teensy3.2)
+    #define TGX_RUN_ON_TEENSY3
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 1024
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 0
@@ -238,6 +252,7 @@
 
 #elif (defined(__ARM_ARCH_7EM__) && defined(__ARM_FP) && (__ARM_FP == 0xC)) || defined(STM32H7xx)
     // generic Cortex-M7 (use same setting as Teensy 4.0/4.1)
+    #define TGX_RUN_ON_TEENSY4
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 4096
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 1
@@ -250,6 +265,7 @@
 
 #elif defined(__ARM_ARCH_7EM__)
     // generic Cortex-M4 (use same setting as Teensy 3.6/3.5)
+    #define TGX_RUN_ON_TEENSY3
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 2048
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 0
@@ -262,6 +278,7 @@
 
 #elif defined(__ARM_ARCH_8M_MAIN__)
     // generic Cortex-M33 (use same setting as RP2350)
+    #define TGX_RUN_ON_RP2350
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 4096
     #define TGX_USE_FAST_INV_SQRT_TRICK 1
     #define TGX_USE_FAST_SQRT_TRICK 1
@@ -274,6 +291,7 @@
 
 #else
     // unknown board/architecture
+    #define TGX_RUN_ON_CPU
     #define TGX_PROGMEM_DEFAULT_CACHE_SIZE 1024
     #define TGX_USE_FAST_INV_SQRT_TRICK 0
     #define TGX_USE_FAST_SQRT_TRICK 0
@@ -285,6 +303,14 @@
     #define TGX_NOINLINE
 #endif
 
+
+
+#if defined(ESP32) || defined(ESP_PLATFORM)
+    #include "esp_attr.h"
+    #define TGX_HOT_IRAM IRAM_ATTR
+#else
+    #define TGX_HOT_IRAM
+#endif
 
 
 

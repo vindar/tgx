@@ -399,11 +399,11 @@ namespace tgx
         );
         return result;
 #else
-    #if 1
-        return (int32_t)floorf(x);
-    #else
+    #if 0 // defined (TGX_RUN_ON_ESP32S2) || defined (TGX_RUN_ON_RP2040) || defined (TGX_RUN_ON_RP2350)
         const int32_t i = (int32_t)x;
         return i - ((float)i > x);
+    #else
+        return (int32_t)floorf(x);
     #endif
 #endif
         }
