@@ -61,10 +61,32 @@ TGX_INLINE inline void minmax3_i32(const int32_t a, const int32_t b, const int32
     }
 
 
-TGX_INLINE inline int32_t tgx_top_left_bias_i32(const int32_t dx, const int32_t dy)
+TGX_INLINE inline int32_t tgx_floor_div_subpixel_i32(const int32_t x)
     {
-    return (int32_t)((dx < 0) | ((dx == 0) & (dy < 0)));
+#if defined(__GNUC__) || defined(__clang__)
+    // Assumes arithmetic right shift for signed integers: his is what GCC/Clang generate on ARM, Xtensa, etc.
+    return x >> TGX_RASTERIZE_SUBPIXEL_BITS;
+#else
+    // Portable mathematical floor(x / S), S > 0.
+    const int32_t S = TGX_RASTERIZE_SUBPIXEL256;
+    return (x >= 0) ? (x / S) : -(((-x) + S - 1) / S);
+#endif
     }
+
+
+TGX_INLINE inline int32_t tgx_ceil_div_subpixel_i32(const int32_t x)
+    {
+#if defined(__GNUC__) || defined(__clang__)
+    // ceil(x / S) == floor((x + S - 1) / S) for positive power-of-two S, assuming no overflow in x + S - 1.
+    return (x + (TGX_RASTERIZE_SUBPIXEL256 - 1)) >> TGX_RASTERIZE_SUBPIXEL_BITS;
+#else
+    // Portable mathematical ceil(x / S), S > 0.
+    const int32_t S = TGX_RASTERIZE_SUBPIXEL256;
+    return (x >= 0) ? ((x + S - 1) / S) : -((-x) / S);
+#endif
+    }
+
+
 
 
     /**
@@ -133,26 +155,16 @@ TGX_INLINE inline int32_t tgx_top_left_bias_i32(const int32_t dx, const int32_t 
         minmax3_i32(P0.x, sP1.x, sP2.x, umx, uMx);
         minmax3_i32(P0.y, sP1.y, sP2.y, umy, uMy);
 
-        const int32_t bx0 = umx + hx;
-        const int32_t bx1 = uMx + hx;
-        const int32_t by0 = umy + hy;
-        const int32_t by1 = uMy + hy;
+        const int32_t bx0 = umx + hx - TGX_RASTERIZE_SUBPIXEL128;
+        const int32_t bx1 = uMx + hx - TGX_RASTERIZE_SUBPIXEL128;
+        const int32_t by0 = umy + hy - TGX_RASTERIZE_SUBPIXEL128;
+        const int32_t by1 = uMy + hy - TGX_RASTERIZE_SUBPIXEL128;
+        int32_t xmin = tgx_ceil_div_subpixel_i32(bx0);
+        int32_t xmax = tgx_floor_div_subpixel_i32(bx1);
+        int32_t ymin = tgx_ceil_div_subpixel_i32(by0);
+        int32_t ymax = tgx_floor_div_subpixel_i32(by1);
 
-        int32_t xmin, xmax, ymin, ymax;
-        if ((bx0 | bx1 | by0 | by1) >= 0)
-            {
-            xmin = bx0 >> TGX_RASTERIZE_SUBPIXEL_BITS;
-            xmax = bx1 >> TGX_RASTERIZE_SUBPIXEL_BITS;
-            ymin = by0 >> TGX_RASTERIZE_SUBPIXEL_BITS;
-            ymax = by1 >> TGX_RASTERIZE_SUBPIXEL_BITS;
-            }
-        else
-            {
-            xmin = bx0 / TGX_RASTERIZE_SUBPIXEL256;
-            xmax = bx1 / TGX_RASTERIZE_SUBPIXEL256;
-            ymin = by0 / TGX_RASTERIZE_SUBPIXEL256;
-            ymax = by1 / TGX_RASTERIZE_SUBPIXEL256;
-            }
+        //if ((xmin > xmax) || (ymin > ymax)) return;
 
         // Intersect the sub-image with the triangle bounding box.
         int32_t sx = data.im->lx();
