@@ -51,6 +51,7 @@ Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
 
 uint32_t fps_last_ms = 0;
 uint32_t fps_frames = 0;
+uint32_t fps_render_sum_us = 0;
 int telemetry_phase = 0;
 float validated_collision_margin = 0.0f;
 
@@ -196,19 +197,21 @@ void drawScene(float seconds)
     }
 
 
-void updateFPS()
+void updateFPS(uint32_t render_us)
     {
     fps_frames++;
+    fps_render_sum_us += render_us;
     const uint32_t now = millis();
     if (now - fps_last_ms >= 1000)
         {
         Serial.print("asteroid_demo phase=");
         Serial.print(phaseName(telemetry_phase));
         Serial.print(" fps=");
-        Serial.print(fps_frames);
+        Serial.print(fps_render_sum_us ? (uint32_t)((1000000ULL * fps_frames) / fps_render_sum_us) : 0);
         Serial.print(" margin=");
         Serial.println(validated_collision_margin, 2);
         fps_frames = 0;
+        fps_render_sum_us = 0;
         fps_last_ms = now;
         }
     }
@@ -254,11 +257,13 @@ void setup()
 void loop()
     {
     const float seconds = (float)(millis() % MOVIE_MS) * 0.001f;
+    const uint32_t render_start_us = micros();
     drawScene(seconds);
+    const uint32_t render_us = micros() - render_start_us;
     lcd.pushImage((lcd.width() - render_lx) / 2,
                   (lcd.height() - render_ly) / 2,
                   render_lx, render_ly, fb);
-    updateFPS();
+    updateFPS(render_us);
     }
 
 /** end of file */

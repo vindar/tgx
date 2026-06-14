@@ -271,10 +271,10 @@ void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
         // draw the current framerate on the framebuffer
         tft.overlayFPS(fb);
 
+        telemetryEndFrame();
+
         // update the screen (asynchronous). 
         tft.update(fb);
-
-        telemetryEndFrame();
 
         if ((t >= t1) && (!exploded)) exploded = true;
         }

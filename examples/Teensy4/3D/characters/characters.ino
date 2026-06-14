@@ -315,8 +315,8 @@ void loop()
     // add FPS counter
     tft.overlayFPS(fb); 
     
+    telemetryEndFrame();
+
     // update the screen
     tft.update(fb);
-
-    telemetryEndFrame();
     }

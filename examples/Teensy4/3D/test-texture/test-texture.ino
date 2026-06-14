@@ -203,9 +203,9 @@ void drawModel(const Mesh3Dv2<RGB565>* mesh, int nb_triangles, float scale, cons
         // overlay some info 
         drawInfo(im, shader, *cached_mesh, nb_triangles);
 
-        tft.update(fb);
-
         telemetryEndFrame();
+
+        tft.update(fb);
 
         }
     }

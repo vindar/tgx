@@ -162,10 +162,10 @@ void loop()
     // overlay FPS counter on the framebuffer
     tft.overlayFPS(fb); 
     
+    telemetryEndFrame();
+
     // update the screen (asynchronous). 
     tft.update(fb);
-
-    telemetryEndFrame();
   
     // increase the angle by 3 degrees.
     a += 3;

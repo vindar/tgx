@@ -292,6 +292,8 @@ void loop()
     // display additional information on the screen
     infos(loopnumber);
 
+    telemetryEndFrame();
+
     const int x = (lcd.width() - SLX) / 2;
     const int y = (lcd.height() - SLY) / 2;
     if (use_dma)
@@ -310,6 +312,4 @@ void loop()
         {
         lcd.pushImage(x, y, SLX, SLY, fb);
         }
-
-    telemetryEndFrame();
     }

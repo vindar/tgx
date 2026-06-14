@@ -45,6 +45,7 @@ LGFX lcd;
 uint32_t fps_last_ms = 0;
 uint32_t fps_frames = 0;
 uint32_t fps_value = 0;
+uint32_t fps_render_sum_us = 0;
 
 
 RGB565 rgb888(int r, int g, int b)
@@ -263,15 +264,17 @@ void drawFrame()
     }
 
 
-void updateFPS()
+void updateFPS(uint32_t render_us)
     {
     // The FPS counter is intentionally simple: one line per second on Serial.
     fps_frames++;
+    fps_render_sum_us += render_us;
     uint32_t now = millis();
     if (now - fps_last_ms >= 1000)
         {
-        fps_value = fps_frames;
+        fps_value = fps_render_sum_us ? (uint32_t)((1000000ULL * fps_frames) / fps_render_sum_us) : 0;
         fps_frames = 0;
+        fps_render_sum_us = 0;
         fps_last_ms = now;
 
         Serial.print("TGX_2D_Showcase M5Stack fps=");
@@ -319,7 +322,9 @@ void setup()
 
 void loop()
     {
+    const uint32_t render_start_us = micros();
     drawFrame();
+    const uint32_t render_us = micros() - render_start_us;
 
     // Blocking upload.  This keeps the example short and avoids a second
     // full-size framebuffer.
@@ -327,5 +332,5 @@ void loop()
                   (lcd.height() - screen_ly) / 2,
                   screen_lx, screen_ly, fb);
 
-    updateFPS();
+    updateFPS(render_us);
     }

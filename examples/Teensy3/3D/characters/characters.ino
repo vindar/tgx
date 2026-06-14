@@ -238,8 +238,8 @@ void loop()
     fps();
     #endif
     
-    updateAndSwitchFB(); // update to screen and switch framebuffers
-
     telemetryEndFrame();
+
+    updateAndSwitchFB(); // update to screen and switch framebuffers
 
     }

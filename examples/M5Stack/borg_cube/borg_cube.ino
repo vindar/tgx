@@ -70,6 +70,7 @@ Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
 
 uint32_t fps_last_ms = 0;
 uint32_t fps_frames = 0;
+uint32_t fps_render_sum_us = 0;
 
 
 RGB565 rgb888(int r, int g, int b)
@@ -191,17 +192,19 @@ void drawFrame()
     }
 
 
-void updateFPS()
+void updateFPS(uint32_t render_us)
     {
     fps_frames++;
+    fps_render_sum_us += render_us;
     uint32_t now = millis();
     if (now - fps_last_ms >= 1000)
         {
         Serial.print("borg_cube M5Stack fps=");
-        Serial.println(fps_frames);
+        Serial.println(fps_render_sum_us ? (uint32_t)((1000000ULL * fps_frames) / fps_render_sum_us) : 0);
         Serial.print("borg_cube M5Stack display=");
         Serial.println(use_dma ? "DMA" : "pushImage");
         fps_frames = 0;
+        fps_render_sum_us = 0;
         fps_last_ms = now;
         }
     }
@@ -345,7 +348,9 @@ void loop()
     {
     updateProjection();
     updateTexture();
+    const uint32_t render_start_us = micros();
     drawFrame();
+    const uint32_t render_us = micros() - render_start_us;
     pushFrame();
-    updateFPS();
+    updateFPS(render_us);
     }

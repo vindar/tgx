@@ -76,6 +76,7 @@ const uint16_t SCREEN_BORDER_COLOR = TFT_DARKGREY;
 
 uint32_t fps_last_ms = 0;
 uint32_t fps_frames = 0;
+uint32_t fps_render_sum_us = 0;
 
 
 RGB565 rgb888(int r, int g, int b)
@@ -195,17 +196,19 @@ void drawTile(int tile_y)
     }
 
 
-void updateFPS()
+void updateFPS(uint32_t render_us)
     {
     fps_frames++;
+    fps_render_sum_us += render_us;
     uint32_t now = millis();
     if (now - fps_last_ms >= 1000)
         {
         Serial.print("borg_cube_tiled ESP32 fps=");
-        Serial.println(fps_frames);
+        Serial.println(fps_render_sum_us ? (uint32_t)((1000000ULL * fps_frames) / fps_render_sum_us) : 0);
         Serial.print("borg_cube_tiled ESP32 display=");
         Serial.println(use_dma ? "DMA" : "pushImage");
         fps_frames = 0;
+        fps_render_sum_us = 0;
         fps_last_ms = now;
         }
     }
@@ -237,21 +240,26 @@ void drawScreenLabel()
     }
 
 
-void drawAndPushTile(int tile_y, int current_tile_h)
+uint32_t drawAndPushTile(int tile_y, int current_tile_h)
     {
+    const uint32_t render_start_us = micros();
     drawTile(tile_y);
+    const uint32_t render_us = micros() - render_start_us;
     pushTile(tile_y, current_tile_h);
+    return render_us;
     }
 
 
-void drawAndPushFrame()
+uint32_t drawAndPushFrame()
     {
+    uint32_t render_us = 0;
     for (int tile_y = 0; tile_y < render_ly; tile_y += tile_h)
         {
         int current_tile_h = render_ly - tile_y;
         if (current_tile_h > tile_h) current_tile_h = tile_h;
-        drawAndPushTile(tile_y, current_tile_h);
+        render_us += drawAndPushTile(tile_y, current_tile_h);
         }
+    return render_us;
     }
 
 
@@ -389,6 +397,6 @@ void loop()
         drawScreenLabel();
         }
     updateTexture();
-    drawAndPushFrame();
-    updateFPS();
+    const uint32_t render_us = drawAndPushFrame();
+    updateFPS(render_us);
     }

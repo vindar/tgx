@@ -200,10 +200,11 @@ TGX_NOINLINE FLASHMEM void redraw(bool full_redraw = false)
     // add fps counter (on top right, color white on semi-transparent black background)
     tft.overlayFPS(fb, 0, 0xFFFF, 0, 0.3f);
 
+    telemetryEndFrame();
+
     // update the screen (async).
     tft.update(fb, full_redraw);
 
-    telemetryEndFrame();
     telemetryStartFrame();
 
     yield();
@@ -1080,8 +1081,8 @@ TGX_NOINLINE FLASHMEM void ending()
                     }
                 }
             }
-        tft.update(fb);
         telemetryEndFrame();
+        tft.update(fb);
         yield();
         }
     tft.setVSyncSpacing(2);
@@ -1119,8 +1120,8 @@ TGX_NOINLINE FLASHMEM void beginning()
                     }
                 }
             }
-        tft.update(fb);
         telemetryEndFrame();
+        tft.update(fb);
         yield();
         }
     tft.setVSyncSpacing(2);
@@ -1140,8 +1141,8 @@ void intro()
         im.fillScreen(RGB565_Black);
         im.drawText("TGX library", iVec2{ 110,y1 }, font_tgx_OpenSans_Bold_18, RGB565_Red);
         im.drawText("Mars demo", iVec2{ 80,y2 }, font_tgx_OpenSans_Bold_28, RGB565_White);
-        tft.update(fb);
         telemetryEndFrame();
+        tft.update(fb);
         yield();
         }
 

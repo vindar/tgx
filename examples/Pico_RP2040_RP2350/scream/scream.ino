@@ -77,6 +77,7 @@ int draw_buffer_index = 0;
 
 uint32_t fps_last_ms = 0;
 uint32_t fps_frames = 0;
+uint32_t fps_render_sum_us = 0;
 uint32_t explosion_start_ms = 0;
 uint32_t explosion_cycle = 0;
 
@@ -272,17 +273,19 @@ void drawFrame()
     }
 
 
-void updateFPS()
+void updateFPS(uint32_t render_us)
     {
     fps_frames++;
+    fps_render_sum_us += render_us;
     uint32_t now = millis();
     if (now - fps_last_ms >= 1000)
         {
         Serial.print("scream Pico fps=");
-        Serial.println(fps_frames);
+        Serial.println(fps_render_sum_us ? (uint32_t)((1000000ULL * fps_frames) / fps_render_sum_us) : 0);
         Serial.print("scream Pico display=");
         Serial.println(use_dma ? "DMA" : "pushImage");
         fps_frames = 0;
+        fps_render_sum_us = 0;
         fps_last_ms = now;
         }
     }
@@ -374,7 +377,9 @@ void setup()
 
 void loop()
     {
+    const uint32_t render_start_us = micros();
     drawFrame();
+    const uint32_t render_us = micros() - render_start_us;
     pushFrame();
-    updateFPS();
+    updateFPS(render_us);
     }

@@ -269,6 +269,8 @@ void loop()
     // display additional information (drawing type and FPS)
     infos(loopnumber);
 
+    telemetryEndFrame();
+
     // upload the framebuffer to the screen
     const int x = (tft.width() - slx) / 2;
     const int y = (tft.height() - sly) / 2;
@@ -276,6 +278,4 @@ void loop()
         tft.pushImageDMA(x, y, slx, sly, fb, fb2); // initiate DMA transfer
     else
         tft.pushImage(x, y, slx, sly, fb);         // direct transfer without DMA
-
-    telemetryEndFrame();
     }

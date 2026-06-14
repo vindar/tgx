@@ -232,6 +232,8 @@ void loop()
     // display additional information (drawing type and FPS)
     infos(loopnumber);
 
+    telemetryEndFrame();
+
     // Upload the framebuffer to the screen.  When DMA is available, the two
     // framebuffers are alternated so the renderer never writes into the buffer
     // currently being read by DMA.
@@ -249,6 +251,4 @@ void loop()
         {
         tft.pushImage(x, y, slx, sly, fb);
         }
-
-    telemetryEndFrame();
     }

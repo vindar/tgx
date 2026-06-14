@@ -180,10 +180,10 @@ void loop()
     // add fps counter
     tft.overlayFPS(fb); 
     
+    telemetryEndFrame();
+
     // update the screen (async). 
     tft.update(fb);
-
-    telemetryEndFrame();
 
     // add a random rect on the texture.
     splash();

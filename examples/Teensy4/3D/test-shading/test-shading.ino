@@ -215,10 +215,10 @@ void drawModel(const Mesh3Dv2<RGB565>* mesh, int nb_triangles, float scale, cons
         // and the current framerate
         tft.overlayFPS(fb);
 
+        telemetryEndFrame();
+
         // update the screen (asynchronously)
         tft.update(fb);
-
-        telemetryEndFrame();
         }
 }
 

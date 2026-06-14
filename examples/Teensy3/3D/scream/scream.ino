@@ -311,10 +311,10 @@ void explosion(fVec2 center, float h, float w, float s, float start_delay = 0)
        
         // update the screen (asynchronous). 
         fps();        
+        telemetryEndFrame();
+
         updateAndSwitchFB();
         renderer.setImage(currentFB());
-
-        telemetryEndFrame();
         }
     }
 

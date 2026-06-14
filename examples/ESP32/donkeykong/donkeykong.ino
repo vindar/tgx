@@ -315,6 +315,7 @@ void loop()
         }
 
     updateSceneLabel(loopnumber);
-    pushFrame();
     telemetryEndFrame();
+
+    pushFrame();
     }
