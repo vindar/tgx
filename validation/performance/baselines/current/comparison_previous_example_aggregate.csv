@@ -1,0 +1,14 @@
+board,example,previous_mean_fps,new_mean_fps,delta_pct
+core2,borg_cube,46.4246,46.4144,-0.022
+core2,donkeykong,28.451,27.832,-2.176
+core2,scream,15.16,15.3636,+1.343
+cores3,borg_cube,49.581,49.6278,+0.094
+cores3,donkeykong,32.0311,32.4788,+1.398
+cores3,scream,23.2203,23.5337,+1.350
+pico2,borg_cube,31,30.9944,-0.018
+pico2,bunny_fig,27.6614,27.773,+0.403
+pico2,scream,25.3107,25.7416,+1.702
+teensy41,buddha,29.6431,29.681,+0.128
+teensy41,mars,62.3685,61.9863,-0.613
+teensy41,test-shading,80.9711,83.4098,+3.012
+teensy41,test-texture,73.5801,77.4054,+5.199
