@@ -1,0 +1,5 @@
+board,recommended_variant,texture_incremental,rgb565_incremental,reason
+teensy41,cand_11,1,1,"Best overall useful compromise: Gouraud examples improve strongly, texture examples improve, benchmark score2/3 improve; mars movie has a small +1.31% regression to watch."
+pico2,cand_11,1,1,"Best overall: bunny gouraud -10.30%, bunny textured -18.84%, scream +20.47%, benchmark +2.5/+4.8/+6.0%."
+core2,cand_11,1,1,"Balanced choice: donkey gouraud -8.24%, textured -9.29%, scream +11.37%; cand_10/cand_01 only win isolated rows."
+cores3,cand_11,1,1,"Balanced choice: donkey flat -4.24%, gouraud -7.55%, textured -9.21%, scream +14.35%, benchmark +2.0/+4.7/+5.8%."

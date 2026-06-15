@@ -1,0 +1,5 @@
+board,example,scene,metric,best_variant,best_value,head_value,delta_pct
+picow,bunny_fig,flat,frame_avg_us,cand_11,122172.80000000002,130111.74285714286,-6.1016343973345
+picow,bunny_fig,gouraud,frame_avg_us,cand_00,145648.57857142857,156622.59285714285,-7.006661098838911
+picow,bunny_fig,gouraud_texture,frame_avg_us,cand_00,196282.32380952378,215089.89047619049,-8.74404958086518
+picow,bunny_fig,wireframe,frame_avg_us,cand_00,76978.064,77099.892,-0.15801319151005894

@@ -1,0 +1,6 @@
+board,variant,example,sketch_bytes,globals_bytes,log
+picow,head,bunny_fig,572052,205884,validation\performance\logs\picow_fpuless_head_bunny_picow.log
+picow,cand_00,bunny_fig,571740,205884,validation\performance\logs\picow_fpuless_cand00_bunny_picow.log
+picow,cand_01,bunny_fig,572028,205884,validation\performance\logs\picow_fpuless_cand01_bunny_picow.log
+picow,cand_10,bunny_fig,571956,205884,validation\performance\logs\picow_fpuless_cand10_bunny_picow.log
+picow,cand_11,bunny_fig,572244,205884,validation\performance\logs\picow_fpuless_cand11_bunny_picow.log

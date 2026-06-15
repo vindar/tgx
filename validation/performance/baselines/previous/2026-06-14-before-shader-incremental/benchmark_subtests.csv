@@ -1,0 +1,595 @@
+commit,baseline_date,board,label,renderer_size,subtest,frames,min_us,max_us,avg_us,stddev_us,fps,line_number
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha GOURAUD,24,64007,81952,73313.34,6408.49,13.64,20
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha FLAT,24,56937,73226,65551.5,5855.59,15.26,21
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha ORTHO,24,57810,73588,66293.04,5547.07,15.08,22
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (close),24,56396,73049,64797.04,5577.14,15.43,23
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (clipped),24,49126,61777,54643.75,4425.1,18.3,24
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (far),24,51660,67423,60464.83,5498.53,16.54,25
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (farclip),24,54980,70968,64262.75,5677.62,15.56,26
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,24,40061,43308,42001.79,858.75,23.81,30
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 FLAT,24,34228,37044,35866.83,759.24,27.88,31
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,24,48914,54751,52309.83,1566.35,19.12,32
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,24,52564,58952,56516.08,1687.96,17.69,33
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (close),24,52437,84293,64176.38,10636.23,15.58,34
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (far),24,32331,34154,33405.75,527.21,29.93,35
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (farclip),24,32888,37434,35379.71,1299.89,28.26,36
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny GOURAUD,24,9993,11446,10462.46,347.81,95.58,40
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny FLAT,24,8409,9171,8684.42,172.97,115.15,41
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,24,13431,14937,14308.54,384.7,69.89,42
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,24,15151,17044,16259.54,500.09,61.5,43
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,24,11620,12529,12143,226.59,82.35,44
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (close),24,17217,20045,18367.88,675.62,54.44,45
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (far),24,7024,7864,7394.12,170.46,135.24,46
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (farclip),24,7231,9094,8293.29,467.94,120.58,47
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Large tris FLAT Z,12,98,1582,886.67,472.76,1127.82,51
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid small FLAT,12,509,5157,2666.83,2052.13,374.98,52
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid small TEX,12,565,14214,6062.17,5764.64,164.96,53
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon triangles,12,565,6787,3670.92,2660.27,272.41,54
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon strip,12,541,6420,3454.08,2488.62,289.51,55
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon quads,12,337,6096,3199.33,2451.08,312.57,56
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri fast,8,386,2778,1752.75,1067.03,570.53,57
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip fast,8,364,1942,1247.12,690.93,801.84,58
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad fast,8,238,2085,1271,810.21,786.78,59
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri AA,8,386,16195,8615.12,6528.23,116.07,60
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip AA,8,495,9385,5268.75,3746.08,189.8,61
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad AA,8,240,9547,5240.88,3934.85,190.81,62
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri thick,8,386,180263,99040.62,77409.28,10.1,63
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip thick,8,344,112831,62943.88,48995.79,15.89,64
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad thick,8,236,110672,61532.62,48014.27,16.25,65
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid near clip TEX,8,570,13665,6057.62,5923.73,165.08,66
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Cube direct FLAT,12,1732,2144,1848.92,105.01,540.86,67
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Cube direct TEX,12,10860,12976,11731.33,525.04,85.24,68
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Sphere direct GOUR,8,3603,3906,3697.12,98.27,270.48,69
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Sphere direct TEX,8,7030,7338,7128.88,91.94,140.27,70
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Vertex color direct,12,7,4194,1477.92,1666.14,676.63,71
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Point cloud pixels,12,484,524,490.58,10.44,2038.39,72
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Point cloud dots,8,2484,2731,2606.5,78.68,383.66,73
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube fast,8,43,123,79.88,29.84,12519.56,74
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube AA,8,110,377,225.75,84.52,4429.68,75
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube thick,8,761,2936,1672.88,695.63,597.77,76
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere fast,8,616,792,663.88,52.35,1506.31,77
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere AA,8,2158,2516,2347.5,126.62,425.99,78
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere thick,8,21187,24750,22935.38,1270.63,43.6,79
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny fast,8,6097,6669,6307.75,161.55,158.54,80
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny AA,8,26859,27976,27494.5,410.8,36.37,81
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny thick,8,266609,280891,272218.38,5158.03,3.67,82
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Buddha GOURAUD,24,79999,102447,91236.59,8099.12,10.96,93
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Buddha FLAT,24,68250,88051,78437.79,7128.9,12.75,94
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Buddha ORTHO,24,71334,90574,81363.21,6954.65,12.29,95
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Buddha (close),24,70674,90896,80372.21,6121.98,12.44,96
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Buddha (clipped),24,50362,73653,63032.88,8432.83,15.86,97
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Buddha (far),24,52916,68869,61789.67,5528.01,16.18,98
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Buddha (farclip),24,56243,72219,65409.08,5688.11,15.29,99
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),R2D2 GOURAUD,24,52394,58235,56058.58,1497.69,17.84,103
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),R2D2 FLAT,24,42935,47575,45783.46,1177.33,21.84,104
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),R2D2 TEX_NEAREST,24,75052,86882,82460.38,3163.77,12.13,105
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),R2D2 TEX_BILINEAR,24,86795,101774,96265.34,4016.45,10.39,106
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),R2D2 (close),24,108782,229841,151837.42,41030.41,6.59,107
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),R2D2 (far),24,34677,36503,35739.5,544.01,27.98,108
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),R2D2 (farclip),24,34603,39536,37193.92,1399.01,26.89,109
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Bunny GOURAUD,24,14190,16299,14952.71,530.23,66.88,113
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Bunny FLAT,24,11007,12108,11443.96,252.34,87.38,114
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Bunny TEX_NEAREST,24,22641,26688,24967.38,1073.78,40.05,115
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Bunny TEX_BILINEAR,24,27776,33563,30953.04,1611.42,32.31,116
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Bunny ORTHO TEX,24,17658,20154,19372.79,682.98,51.62,117
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Bunny (close),24,47905,57694,51832.5,2441.89,19.29,118
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Bunny (far),24,8067,8728,8401.88,147.54,119.02,119
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Bunny (farclip),24,7987,10312,9206.17,562.72,108.62,120
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Large tris FLAT Z,12,283,5765,3395.25,1839.85,294.53,124
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Grid small FLAT,12,509,11273,5101.5,4629.29,196.02,125
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Grid small TEX,12,569,45127,17469.83,18729.53,57.24,126
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Ribbon triangles,12,569,13782,7258.67,5769.67,137.77,127
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Ribbon strip,12,540,13463,7060.25,5617.81,141.64,128
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Ribbon quads,12,337,13085,6739.83,5535.57,148.37,129
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire rib tri fast,8,386,3908,2327.62,1525.85,429.62,130
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire rib strip fast,8,364,2555,1543.62,929.49,647.83,131
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire rib quad fast,8,238,2681,1556.88,1043.16,642.31,132
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire rib tri AA,8,386,24688,12504.88,9741.55,79.97,133
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire rib strip AA,8,491,13780,7293.25,5407.5,137.11,134
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire rib quad AA,8,240,13910,7250.38,5582.8,137.92,135
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire rib tri thick,8,389,239622,127456.25,100235.06,7.85,136
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire rib strip thick,8,343,144162,77972.62,61034.01,12.83,137
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire rib quad thick,8,236,141769,76471.75,59980.17,13.08,138
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Grid near clip TEX,8,573,45565,18675.88,20799.06,53.55,139
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Cube direct FLAT,12,6479,7735,6964.42,316.59,143.59,140
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Cube direct TEX,12,42779,51098,46340.75,2070.03,21.58,141
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Sphere direct GOUR,8,9929,10336,10062.75,123.31,99.38,142
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Sphere direct TEX,8,24194,24652,24337.5,136.05,41.09,143
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Vertex color direct,12,6,15781,5458.58,6376.57,183.2,144
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Point cloud pixels,12,486,520,491.17,8.78,2035.97,145
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Point cloud dots,8,2696,2889,2759.12,62.13,362.43,146
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire cube fast,8,49,146,95.62,33.76,10457.52,147
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire cube AA,8,160,656,369.38,165.63,2707.28,148
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire cube thick,8,956,4624,2624.5,1150.12,381.02,149
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire sphere fast,8,711,896,767.88,54.21,1302.3,150
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire sphere AA,8,3059,3607,3340.88,185.48,299.32,151
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire sphere thick,8,26300,31655,28541.25,2001.87,35.04,152
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire bunny fast,8,6696,7278,6906.62,169.82,144.79,153
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire bunny AA,8,30516,31955,31247.88,465.31,32,154
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,core2,baseline_20260614_current_benchmark,200 x 200 (large for this target),Wire bunny thick,8,284904,304347,293508.5,6693.15,3.41,155
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha GOURAUD,24,47861,62206,55223.54,5027.05,18.11,21
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha FLAT,24,43844,56940,50675,4647.56,19.73,22
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha ORTHO,24,44182,56502,50674.96,4343.94,19.73,23
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (close),24,42059,54689,48513.62,4248.72,20.61,24
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (clipped),24,36555,46531,40868.67,3386.49,24.47,25
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (far),24,39203,51450,45930.79,4285.55,21.77,26
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (farclip),24,41148,53266,47792.17,4412.3,20.92,27
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,24,29523,32195,31029.67,753.46,32.23,31
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 FLAT,24,25973,28185,27229.38,624.55,36.73,32
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,24,34516,38521,36906.96,1074.94,27.1,33
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,24,38965,43970,42037.38,1346.08,23.79,34
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (close),24,39555,63646,48406.75,8057.89,20.66,35
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (far),24,23988,25376,24754.25,438.22,40.4,36
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (farclip),24,23837,26923,25566.58,877.39,39.11,37
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny GOURAUD,24,7193,8407,7498.5,238.02,133.36,41
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny FLAT,24,6283,6881,6492.5,137.17,154.02,42
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,24,9676,10771,10267.25,283.34,97.4,43
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,24,11143,12763,12003.71,399.72,83.31,44
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,24,8352,9212,8826.83,185.22,113.29,45
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (close),24,12502,14757,13305.33,520.09,75.16,46
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (far),24,4954,5629,5244.54,138.31,190.67,47
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (farclip),24,5217,6164,5719.58,230.13,174.84,48
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Large tris FLAT Z,12,84,1203,662.58,348.92,1509.24,52
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid small FLAT,12,425,4148,2143.92,1625.09,466.44,53
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid small TEX,12,456,11137,4753.5,4457.61,210.37,54
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon triangles,12,458,5532,3033.58,2200.69,329.64,55
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon strip,12,447,5102,2768.92,1976.04,361.15,56
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon quads,12,312,5010,2660.08,2006,375.93,57
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri fast,8,370,2018,1323.12,741.4,755.79,58
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip fast,8,309,1437,955.75,501.82,1046.3,59
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad fast,8,235,1555,995.62,592.46,1004.39,60
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri AA,8,357,12387,6699.5,5012.56,149.26,61
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip AA,8,423,7239,4150.88,2906.58,240.91,62
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad AA,8,234,7355,4113.38,3042.85,243.11,63
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri thick,8,365,129081,71499.12,55691.52,13.99,64
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip thick,8,280,81962,46236.62,35886.29,21.63,65
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad thick,8,225,89526,50535.12,39303.95,19.79,66
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid near clip TEX,8,460,10480,4712.38,4498.88,212.21,67
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Cube direct FLAT,12,1316,1625,1393.25,78.36,717.75,68
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Cube direct TEX,12,8447,10116,9100.25,410.16,109.89,69
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Sphere direct GOUR,8,2749,2991,2853,84.3,350.51,70
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Sphere direct TEX,8,5633,5889,5733,81.18,174.43,71
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Vertex color direct,12,4,3162,1143.67,1229.48,874.38,72
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Point cloud pixels,12,360,413,368.33,13.63,2714.93,73
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Point cloud dots,8,1821,2019,1916.12,63.52,521.89,74
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube fast,8,42,117,71.25,25.82,14035.09,75
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube AA,8,125,317,207.62,59.95,4816.38,76
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube thick,8,693,2590,1542.25,587.94,648.4,77
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere fast,8,470,648,514.88,52.57,1942.22,78
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere AA,8,1712,1997,1873.62,105.35,533.72,79
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere thick,8,17349,20275,18766.5,1005.58,53.29,80
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny fast,8,3860,4448,4046.75,163.14,247.11,81
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny AA,8,13720,14365,14030.5,237.72,71.27,82
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny thick,8,174310,184517,179751.88,3631.73,5.56,83
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha GOURAUD,24,59551,77068,68319.59,6294.55,14.64,94
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha FLAT,24,52548,68345,60556.79,5649.09,16.51,95
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha ORTHO,24,54424,69430,62139.17,5433.8,16.09,96
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (close),24,51957,67060,59351.42,4620.53,16.85,97
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (clipped),24,37908,54732,46655.08,6056.7,21.43,98
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (far),24,40129,52458,46900.71,4320.81,21.32,99
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (farclip),24,41987,54122,48585.04,4427.34,20.58,100
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 GOURAUD,24,38269,42819,41029.25,1197.95,24.37,104
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 FLAT,24,32556,36141,34733.83,925.21,28.79,105
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,24,53261,61582,58400.46,2226.73,17.12,106
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,24,64325,75513,71280.91,3012.93,14.03,107
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 (close),24,82690,174808,115393.66,31252.4,8.67,108
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 (far),24,25729,27250,26544.88,456.29,37.67,109
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 (farclip),24,25077,28400,26892.58,938.12,37.18,110
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny GOURAUD,24,10107,11792,10633.25,355.09,94.04,114
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny FLAT,24,8214,9079,8536.83,196.07,117.14,115
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny TEX_NEAREST,24,16242,19195,17843.29,788.16,56.04,116
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,24,20434,24861,22821.58,1184,43.82,117
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny ORTHO TEX,24,12605,14537,13812.42,490.32,72.4,118
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny (close),24,35076,42501,37952.17,1826.71,26.35,119
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny (far),24,5788,6367,6013.67,129.66,166.29,120
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny (farclip),24,5843,6811,6324.58,251.02,158.11,121
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Large tris FLAT Z,12,230,4244,2489.5,1342.15,401.69,125
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Grid small FLAT,12,425,8614,3925.17,3504.74,254.77,126
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Grid small TEX,12,458,33862,13140.67,13977.8,76.1,127
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Ribbon triangles,12,458,10763,5722.5,4524.98,174.75,128
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Ribbon strip,12,450,10354,5470.67,4305.53,182.79,129
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Ribbon quads,12,314,10247,5317.5,4307.29,188.06,130
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib tri fast,8,368,2718,1684.12,1030.28,593.78,131
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib strip fast,8,308,1807,1141.12,649.72,876.33,132
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib quad fast,8,231,1924,1173.38,736.03,852.24,133
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib tri AA,8,358,18508,9509.12,7330.17,105.16,134
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib strip AA,8,424,10424,5619,4107.2,177.97,135
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib quad AA,8,236,10517,5570.12,4233.63,179.53,136
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib tri thick,8,364,171008,91196.25,71530.81,10.97,137
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib strip thick,8,280,104401,56701.75,44279.82,17.64,138
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib quad thick,8,226,110814,60785.38,47478.88,16.45,139
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Grid near clip TEX,8,457,33910,13978.38,15413.77,71.54,140
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Cube direct FLAT,12,4778,5695,5120.83,230.85,195.28,141
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Cube direct TEX,12,33024,39484,35753.83,1600.92,27.97,142
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Sphere direct GOUR,8,7099,7403,7229.5,97.87,138.32,143
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Sphere direct TEX,8,18344,18732,18480.25,119.77,54.11,144
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Vertex color direct,12,4,11246,3917.42,4506.78,255.27,145
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Point cloud pixels,12,361,412,367.92,13.42,2718.01,146
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Point cloud dots,8,1945,2124,2009.75,55.29,497.57,147
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire cube fast,8,47,119,80.25,26.42,12461.06,148
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire cube AA,8,165,508,310.12,116.42,3224.51,149
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire cube thick,8,836,3917,2240.25,941.98,446.38,150
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire sphere fast,8,522,708,579.38,53.55,1726,151
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire sphere AA,8,2355,2763,2578.5,141.8,387.82,152
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire sphere thick,8,21643,25448,23206.38,1379.05,43.09,153
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire bunny fast,8,4227,4828,4411.62,171.43,226.67,154
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire bunny AA,8,16286,17201,16692.25,311.47,59.91,155
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire bunny thick,8,191648,205593,198162.62,4280.8,5.05,156
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Buddha GOURAUD,24,63587,82249,72927,6588.15,13.71,167
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Buddha FLAT,24,55416,72037,63884.17,5864.73,15.65,168
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Buddha ORTHO,24,58130,74150,66312.38,5847.81,15.08,169
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Buddha (close),24,57333,73631,65162.58,4860.56,15.35,170
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Buddha (clipped),24,38098,59561,49810.29,7936.42,20.08,171
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Buddha (far),24,40661,53107,47424.04,4327.97,21.09,172
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Buddha (farclip),24,42367,54584,48990.33,4450.92,20.41,173
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),R2D2 GOURAUD,24,42277,47749,45659.29,1456.23,21.9,177
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),R2D2 FLAT,24,35490,39723,38126.33,1107.51,26.23,178
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),R2D2 TEX_NEAREST,24,62177,73019,69022.16,2916.13,14.49,179
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),R2D2 TEX_BILINEAR,24,76602,91457,86088.88,4029.18,11.62,180
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),R2D2 (close),24,107307,239009,154107.05,44778.75,6.49,181
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),R2D2 (far),24,26310,28201,27324.83,522.19,36.6,182
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),R2D2 (farclip),24,25628,29044,27483.96,978.42,36.38,183
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Bunny GOURAUD,24,11486,13497,12160,444.32,82.24,187
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Bunny FLAT,24,9074,10101,9483.79,239.57,105.44,188
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Bunny TEX_NEAREST,24,19633,23617,21761.54,1089.3,45.95,189
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Bunny TEX_BILINEAR,24,25422,31560,28672.83,1663.26,34.88,190
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Bunny ORTHO TEX,24,14550,17079,16158.62,647.02,61.89,191
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Bunny (close),24,48289,58676,52325.38,2588.43,19.11,192
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Bunny (far),24,6144,6692,6345,126.69,157.6,193
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Bunny (farclip),24,6164,7112,6631.46,262.98,150.8,194
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Large tris FLAT Z,12,300,6020,3554.58,1925.11,281.33,198
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Grid small FLAT,12,426,11138,4899.67,4564.26,204.1,199
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Grid small TEX,12,458,47077,17970.5,19511.79,55.65,200
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Ribbon triangles,12,459,13463,7056.17,5731.83,141.72,201
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Ribbon strip,12,446,13070,6808.33,5519.5,146.88,202
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Ribbon quads,12,313,12931,6634.42,5501.9,150.73,203
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire rib tri fast,8,367,2993,1814.12,1135.36,551.23,204
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire rib strip fast,8,309,1952,1208,703.95,827.81,205
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire rib quad fast,8,233,2070,1238.38,789.4,807.51,206
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire rib tri AA,8,358,20984,10618.62,8251.95,94.17,207
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire rib strip AA,8,423,11691,6186.38,4575.77,161.65,208
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire rib quad AA,8,227,11774,6141.38,4704.84,162.83,209
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire rib tri thick,8,365,184064,98106.25,77009.11,10.19,210
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire rib strip thick,8,280,110756,60215,47065.2,16.61,211
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire rib quad thick,8,224,119191,64721.25,50643.49,15.45,212
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Grid near clip TEX,8,458,47521,19349.25,21781.88,51.68,213
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Cube direct FLAT,12,6779,8072,7292,323.78,137.14,214
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Cube direct TEX,12,47416,56672,51361.08,2297.37,19.47,215
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Sphere direct GOUR,8,9593,9926,9732.12,103.07,102.75,216
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Sphere direct TEX,8,25726,26141,25871.5,121.65,38.65,217
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Vertex color direct,12,4,16017,5518.33,6428.93,181.21,218
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Point cloud pixels,12,360,408,367.25,12.61,2722.94,219
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Point cloud dots,8,1974,2125,2016.75,49.16,495.85,220
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire cube fast,8,46,138,85.62,31.59,11678.83,221
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire cube AA,8,188,584,353,133.79,2832.86,222
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire cube thick,8,902,4249,2502.88,1036.24,399.54,223
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire sphere fast,8,546,743,599.12,58.25,1669.1,224
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire sphere AA,8,2613,3071,2861.38,159.32,349.48,225
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire sphere thick,8,22667,26497,24514.5,1344.5,40.79,226
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire bunny fast,8,4337,4937,4531.62,168.15,220.67,227
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire bunny AA,8,17281,18259,17736.12,323.55,56.38,228
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,cores3,baseline_20260614_current_benchmark,240 x 240 (large for this target),Wire bunny thick,8,198998,212676,204628.25,4333.04,4.89,229
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha GOURAUD,16,86645,112121,100237.81,8922.26,9.98,21
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha FLAT,16,69303,87881,79516.12,6440.85,12.58,22
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha ORTHO,16,80732,103662,93672.75,7806.31,10.68,23
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (close),16,76701,99581,88791.19,7657.59,11.26,24
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (clipped),16,70612,85247,76589.5,5279.68,13.06,25
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (far),16,71168,93229,83638.12,7556.35,11.96,26
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (farclip),16,77522,101446,92146.69,8373.28,10.85,27
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,16,57894,62598,60742.19,1291.54,16.46,31
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 FLAT,16,44691,48117,46644.69,947.24,21.44,32
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,16,97366,109037,104273,3321.24,9.59,33
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,16,75018,83721,80303.88,2444.99,12.45,34
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (close),16,69278,96481,80760.88,9984.64,12.38,35
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (far),16,49618,52806,51492.06,911.69,19.42,36
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (farclip),16,53423,65904,59679.62,4194.99,16.76,37
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny GOURAUD,16,14303,15611,14756.5,367.19,67.77,41
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny FLAT,16,11105,11929,11434.19,235.69,87.46,42
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,16,24089,25891,24985,611.42,40.02,43
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,16,21513,23977,23026.12,697.38,43.43,44
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,16,15580,16756,16284.62,331.9,61.41,45
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (close),16,20218,22997,21559.19,737.39,46.38,46
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (far),16,12239,13496,13004.94,314.58,76.89,47
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (farclip),16,12583,16906,14837.56,1050.5,67.4,48
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Large tris FLAT Z,8,146,1184,698.75,340.08,1431.13,52
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid small FLAT,8,776,5450,3045.25,2002.53,328.38,53
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid small TEX,8,835,13535,6139.62,5254.17,162.88,54
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon triangles,8,824,10197,5360.5,3670.2,186.55,55
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon strip,8,465,9093,4505.5,3280.78,221.95,56
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon quads,8,468,13530,6897,5155.29,144.99,57
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri fast,8,434,3026,1979.12,1196.65,505.27,58
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip fast,8,324,1927,1247.12,717.25,801.84,59
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad fast,8,225,2047,1274.12,809.32,784.85,60
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri AA,8,449,10549,5713,4171.57,175.04,61
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip AA,8,433,6012,3451.88,2360.98,289.7,62
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad AA,8,221,6110,3411.12,2497.81,293.16,63
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri thick,8,455,478384,269024.62,209619.94,3.72,64
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip thick,8,320,288148,162086.88,126290.52,6.17,65
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad thick,8,220,324798,185310.25,144334.52,5.4,66
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid near clip TEX,8,831,12667,6119.5,5186.09,163.41,67
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Cube direct FLAT,8,1268,1629,1442.75,105.97,693.12,68
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Cube direct TEX,8,10944,12627,11648,502.38,85.85,69
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Sphere direct GOUR,8,3523,3906,3681.75,137.71,271.61,70
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Sphere direct TEX,8,8076,8653,8279.12,187.79,120.79,71
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Vertex color direct,8,23,3884,1451.62,1575.37,688.88,72
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Point cloud pixels,8,321,373,337.88,15.62,2959.67,73
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Point cloud dots,8,1815,2218,1914.38,121.69,522.36,74
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube fast,8,72,218,133.38,42.63,7497.66,75
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube AA,8,136,326,235,66.55,4255.32,76
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube thick,8,1613,7617,4097.62,1795.67,244.04,77
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere fast,8,614,895,697.62,83.72,1433.43,78
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere AA,8,1605,1962,1791.88,132.98,558.07,79
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere thick,8,70564,82399,75750,3946.24,13.2,80
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny fast,8,7925,8623,8284.75,191.89,120.7,81
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny AA,8,13744,14491,14007.62,248.18,71.39,82
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny thick,8,828485,877602,850101.5,19952.96,1.18,83
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha GOURAUD,16,104273,134136,120302.38,10747.46,8.31,94
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha FLAT,16,82395,104604,94448.5,7933.13,10.59,95
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha ORTHO,16,96602,123345,111275.25,9280.28,8.99,96
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (close),16,89335,116016,103155.75,8349.93,9.69,97
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (clipped),16,72818,96047,83804.19,7586.5,11.93,98
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (far),16,73445,96341,86319.75,7744.42,11.58,99
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (farclip),16,80107,104293,94996.12,8571.9,10.53,100
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 GOURAUD,16,71209,78553,75715.56,1987.27,13.21,104
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 FLAT,16,54179,58930,56911.38,1328.86,17.57,105
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,16,135190,152900,145647.44,4834.83,6.87,106
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,16,111161,129817,122433.44,4989.97,8.17,107
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 (close),16,120075,217590,159563.62,36924.97,6.27,108
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 (far),16,53616,56044,54922.19,848.02,18.21,109
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 (farclip),16,56643,70443,63902.88,4812.69,15.65,110
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny GOURAUD,16,18493,20283,19237.38,530.7,51.98,114
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny FLAT,16,13752,14887,14217.88,295.81,70.33,115
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny TEX_NEAREST,16,34748,38711,37141.31,1151.62,26.92,116
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,16,34576,40314,38265.56,1676.69,26.13,117
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny ORTHO TEX,16,22395,24673,23987.88,631.67,41.69,118
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny (close),16,44041,51841,47227.31,2106.45,21.17,119
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny (far),16,14778,16085,15610.19,352.54,64.06,120
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny (farclip),16,14470,19383,17117.56,1265.45,58.42,121
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Large tris FLAT Z,8,302,3971,2392.75,1253.04,417.93,125
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Grid small FLAT,8,767,10020,4919.25,3881.37,203.28,126
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Grid small TEX,8,821,37466,14738.12,15136.55,67.85,127
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Ribbon triangles,8,829,16751,9732.38,6948.75,102.75,128
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Ribbon strip,8,467,15667,8855.25,6543.39,112.93,129
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Ribbon quads,8,475,20687,11605.25,8696.28,86.17,130
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib tri fast,8,430,4022,2501.75,1613.31,399.72,131
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib strip fast,8,324,2457,1509.38,923.02,662.53,132
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib quad fast,8,235,2583,1531.88,1018.64,652.79,133
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib tri AA,8,446,16404,8409,6393.75,118.92,134
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib strip AA,8,426,9040,4846.25,3501.44,206.35,135
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib quad AA,8,225,9112,4797.12,3628.12,208.46,136
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib tri thick,8,446,515147,291386.62,226969.25,3.43,137
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib strip thick,8,320,308665,176218.5,137127.78,5.67,138
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib quad thick,8,223,342267,198818,154618.36,5.03,139
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Grid near clip TEX,8,820,36885,15766.25,16246.88,63.43,140
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Cube direct FLAT,8,4540,5336,4914.75,243.12,203.47,141
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Cube direct TEX,8,42973,49118,45454,1893.6,22,142
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Sphere direct GOUR,8,8852,9429,9059.62,178.87,110.38,143
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Sphere direct TEX,8,21894,22749,22233.38,266.68,44.98,144
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Vertex color direct,8,23,13799,4769.25,5667.8,209.68,145
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Point cloud pixels,8,320,379,335,18.14,2985.07,146
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Point cloud dots,8,1846,2173,1928.88,97.33,518.44,147
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire cube fast,8,76,271,147.88,57.32,6762.47,148
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire cube AA,8,170,555,341.5,145.05,2928.26,149
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire cube thick,8,1844,8481,4657.12,2005.94,214.72,150
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire sphere fast,8,719,970,798.38,72.22,1252.54,151
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire sphere AA,8,2224,2684,2484.62,164.75,402.48,152
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire sphere thick,8,75008,86794,80337.5,4157.46,12.45,153
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire bunny fast,8,8497,9202,8856.5,198.07,112.91,154
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire bunny AA,8,16164,17163,16563.62,306.14,60.37,155
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire bunny thick,8,865852,916910,887852,21614.72,1.13,156
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha GOURAUD,16,110693,142015,127256.19,11183.16,7.86,167
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha FLAT,16,87008,110323,99512.44,8212.97,10.05,168
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha ORTHO,16,102403,130191,117691.88,9791.28,8.5,169
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha (close),16,108645,133390,121855.81,8461.54,8.21,170
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha (clipped),16,74191,108176,92390.94,11460.07,10.82,171
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha (far),16,74317,97090,87299.81,7799.8,11.45,172
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha (farclip),16,81089,105100,95868.56,8594.17,10.43,173
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 GOURAUD,16,77194,85538,82411.94,2327.58,12.13,177
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 FLAT,16,57927,63305,61267.06,1497.87,16.32,178
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,16,149184,170202,162269.19,5578.32,6.16,179
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,16,128283,150578,142186,6067.53,7.03,180
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 (close),16,185172,388822,263964.81,68992.49,3.79,181
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 (far),16,54534,57542,56282.88,914.33,17.77,182
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 (farclip),16,57920,72942,65482.69,5486.08,15.27,183
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny GOURAUD,16,20503,22493,21288.5,581.3,46.97,187
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny FLAT,16,14893,16073,15384.81,337.25,65,188
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,16,39501,44395,42299.5,1418.3,23.64,189
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,16,41221,48917,45805.5,2234.55,21.83,190
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny ORTHO TEX,16,25080,28170,27177.25,795.81,36.8,191
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny (close),16,71124,83251,76511.31,3331.73,13.07,192
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny (far),16,15668,17073,16402,331.2,60.97,193
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny (farclip),16,15237,20448,17937,1288.27,55.75,194
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Large tris FLAT Z,8,363,6240,3606.88,2028.04,277.25,198
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Grid small FLAT,8,765,14937,6558.62,5765.55,152.47,199
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Grid small TEX,8,820,63487,23043.12,25438.43,43.4,200
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Ribbon triangles,8,821,22995,13037.62,9599.14,76.7,201
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Ribbon strip,8,478,21647,12145.75,9170.43,82.33,202
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Ribbon quads,8,464,26604,15153.12,11497.2,65.99,203
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib tri fast,8,431,4415,2766.38,1816.65,361.48,204
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib strip fast,8,319,2652,1647.38,1033.79,607.03,205
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib quad fast,8,231,2782,1660.25,1121.78,602.32,206
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib tri AA,8,437,18775,10103.12,7598.64,98.98,207
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib strip AA,8,416,10239,5714.88,4136,174.98,208
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib quad AA,8,223,10309,5670.88,4263.16,176.34,209
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib tri thick,8,439,529192,312610.62,242219.39,3.2,210
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib strip thick,8,325,316630,190020.12,147182.97,5.26,211
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib quad thick,8,223,352811,212349.75,164596.7,4.71,212
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Grid near clip TEX,8,825,63647,26233,28984.02,38.12,213
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Cube direct FLAT,8,7104,8173,7527.38,302.15,132.85,214
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Cube direct TEX,8,65706,77433,71204.38,3234.63,14.04,215
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Sphere direct GOUR,8,11889,12398,12072.12,163.87,82.84,216
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Sphere direct TEX,8,29724,30597,30075.25,243.79,33.25,217
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Vertex color direct,8,25,20012,6723.12,8123.87,148.74,218
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Point cloud pixels,8,330,419,345.25,28.21,2896.45,219
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Point cloud dots,8,1951,2222,2033.38,79.21,491.79,220
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire cube fast,8,101,263,164.25,51.93,6088.28,221
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire cube AA,8,296,743,506.75,157.61,1973.36,222
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire cube thick,8,2701,9594,5675.25,2206.21,176.2,223
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire sphere fast,8,766,1012,843.12,74.44,1186.06,224
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire sphere AA,8,2458,2962,2743.75,180.39,364.46,225
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire sphere thick,8,76097,88454,81752.5,4184.74,12.23,226
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire bunny fast,8,8674,9294,9007.75,173.27,111.02,227
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire bunny AA,8,17106,18248,17568.62,339.02,56.92,228
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,pico2,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire bunny thick,8,875782,927105,897940,21591.74,1.11,229
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha GOURAUD,30,15601,19915,17948.37,1492.48,55.72,21
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha FLAT,30,13794,17536,15831.43,1300.95,63.17,22
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha ORTHO,30,14471,18356,16616.6,1308.22,60.18,23
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (close),30,14140,18075,16283.43,1260.08,61.41,24
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (clipped),30,13042,15968,14306.5,963.81,69.9,25
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (far),30,13220,17192,15455.43,1317.67,64.7,26
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Buddha (farclip),30,13870,17822,16093.17,1346.63,62.14,27
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,30,10564,11556,11103.47,282.32,90.06,31
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 FLAT,30,9330,9955,9625.7,176.27,103.89,32
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,30,14461,16873,15702.23,657.19,63.69,33
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,30,16986,20156,18989.53,849.43,52.66,34
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (close),30,13062,19395,15627.53,2104.07,63.99,35
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (far),30,9422,10314,9909.67,265.46,100.91,36
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),R2D2 (farclip),30,9139,10574,9873.1,363.11,101.29,37
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny GOURAUD,30,2243,2682,2362.17,81.74,423.34,41
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny FLAT,30,1891,2084,1954.73,39.97,511.58,42
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,30,4443,5231,4832,170.01,206.95,43
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,30,4893,5659,5342.43,186.08,187.18,44
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,30,3829,4270,4092.3,109,244.36,45
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (close),30,3743,4215,3989.6,127.46,250.65,46
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (far),30,1567,2008,1729.5,70.84,578.2,47
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Bunny (farclip),30,1661,1948,1796.23,65.4,556.72,48
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Large tris FLAT Z,15,1,175,88.73,46.63,11269.72,52
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid small FLAT,15,143,1093,581.33,458.82,1720.18,53
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid small TEX,15,162,2726,1251.07,1161.09,799.32,54
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon triangles,15,163,1879,786.87,677.77,1270.86,55
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon strip,15,101,1603,621.67,570.74,1608.58,56
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Ribbon quads,15,94,1675,649.6,605.54,1539.41,57
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri fast,8,96,593,386,224.96,2590.67,58
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip fast,8,60,420,265.25,160.05,3770.03,59
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad fast,8,49,474,290,188.1,3448.28,60
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri AA,8,101,2548,1394.5,1022.01,717.1,61
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip AA,8,102,1529,882.88,611.08,1132.66,62
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad AA,8,45,1527,858.62,637.1,1164.65,63
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib tri thick,8,96,21728,12008.88,9328.8,83.27,64
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib strip thick,8,58,13644,7685,5954.22,130.12,65
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire rib quad thick,8,46,13633,7659.38,5947.78,130.56,66
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Grid near clip TEX,10,163,2451,1254.4,1094.45,797.19,67
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Cube direct FLAT,15,167,203,188.47,10.84,5305.98,68
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Cube direct TEX,15,1815,2226,2014.67,99.52,496.36,69
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Sphere direct GOUR,10,688,713,698.9,6.76,1430.82,70
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Sphere direct TEX,10,1259,1293,1274.5,9.07,784.62,71
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Vertex color direct,15,1,664,237.53,268.45,4209.94,72
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Point cloud pixels,15,82,93,83.67,2.57,11952.19,73
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Point cloud dots,10,461,504,479.1,12.35,2087.25,74
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube fast,10,6,20,12.8,4.12,78125,75
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube AA,10,8,62,34.7,15.93,28818.44,76
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire cube thick,10,62,315,194.3,78.85,5146.68,77
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere fast,8,129,139,132.75,3.8,7532.96,78
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere AA,8,359,408,381.75,17.3,2619.52,79
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire sphere thick,8,2590,2996,2758.88,149.04,362.47,80
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny fast,8,1228,1690,1344.75,144.05,743.63,81
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny AA,8,3056,3182,3108.38,44.68,321.71,82
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,100 x 100 (small / vertex-heavy),Wire bunny thick,8,29326,31061,30195.88,629.09,33.12,83
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha GOURAUD,30,18858,24078,21643.33,1839.09,46.2,94
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha FLAT,30,16249,20840,18724.47,1603.48,53.41,95
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha ORTHO,30,17223,21816,19672.3,1573.31,50.83,96
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (close),30,16851,21513,19252.8,1379.82,51.94,97
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (clipped),30,13477,18184,15856.63,1595.98,63.07,98
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (far),30,13481,17541,15742.97,1331.47,63.52,99
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Buddha (farclip),30,14124,18037,16324.1,1351.1,61.26,100
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 GOURAUD,30,12915,14326,13753.8,394.22,72.71,104
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 FLAT,30,10916,11811,11394.73,242.08,87.76,105
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,30,20923,24619,23199.47,1022.89,43.1,106
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,30,25081,30224,28025.87,1344.9,35.68,107
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 (close),30,23184,44667,31229.37,7515.6,32.02,108
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 (far),30,10463,11493,11048.3,297.82,90.51,109
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),R2D2 (farclip),30,9958,11554,10745.57,437.83,93.06,110
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny GOURAUD,30,3173,3603,3369.87,99.99,296.75,114
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny FLAT,30,2511,2707,2613.1,54.24,382.69,115
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny TEX_NEAREST,30,6708,8100,7603,298.85,131.53,116
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,30,7691,9162,8580.13,356.38,116.55,117
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny ORTHO TEX,30,6404,7095,6770.2,178.07,147.71,118
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny (close),30,8800,10329,9552.17,402.27,104.69,119
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny (far),30,1992,2493,2132.7,86.56,468.89,120
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Bunny (farclip),30,1899,2260,2085.63,84.75,479.47,121
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Large tris FLAT Z,15,2,608,348.73,188.72,2867.52,125
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Grid small FLAT,15,143,1863,910.47,809.88,1098.34,126
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Grid small TEX,15,162,7500,3094.87,3185.22,323.12,127
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Ribbon triangles,15,163,3451,1438.67,1373.36,695.09,128
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Ribbon strip,15,101,3181,1274.47,1265.7,784.64,129
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Ribbon quads,15,93,3247,1294.07,1294.5,772.76,130
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib tri fast,8,95,764,457.12,284.73,2187.59,131
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib strip fast,8,59,509,300,189.63,3333.33,132
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib quad fast,8,48,562,327.25,220.05,3055.77,133
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib tri AA,8,100,3717,1917.5,1457.14,521.51,134
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib strip AA,8,101,2145,1159.25,839.05,862.63,135
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib quad AA,8,45,2128,1128.38,859.94,886.23,136
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib tri thick,8,95,26845,14293.12,11182.84,69.96,137
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib strip thick,8,57,16342,8901.38,6935.06,112.34,138
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire rib quad thick,8,46,16311,8865,6920.68,112.8,139
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Grid near clip TEX,10,162,7296,3446.6,3312.78,290.14,140
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Cube direct FLAT,15,668,800,741.33,36.99,1348.92,141
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Cube direct TEX,15,7214,8884,8024.2,400,124.62,142
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Sphere direct GOUR,10,1834,1887,1853.4,13.67,539.55,143
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Sphere direct TEX,10,4032,4105,4061.8,19.09,246.2,144
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Vertex color direct,15,1,2617,928.33,1071.17,1077.2,145
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Point cloud pixels,15,86,94,87.87,1.93,11380.88,146
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Point cloud dots,10,514,540,527.9,6.85,1894.3,147
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire cube fast,10,4,24,14.8,5.47,67567.57,148
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire cube AA,10,5,105,57.1,28.38,17513.13,149
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire cube thick,10,71,475,290.4,121.43,3443.53,150
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire sphere fast,8,143,155,147.5,4.42,6779.66,151
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire sphere AA,8,482,554,516.12,24.78,1937.52,152
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire sphere thick,8,3119,3590,3289,189.21,304.04,153
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire bunny fast,8,1315,1774,1431.62,138.38,698.51,154
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire bunny AA,8,3539,3730,3630.38,65.32,275.45,155
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,200 x 200 (medium / balanced),Wire bunny thick,8,31669,33501,32532.38,628.52,30.74,156
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha GOURAUD,30,20042,25570,22968.63,1929.65,43.54,167
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha FLAT,30,17075,21887,19680.07,1682.19,50.81,168
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha ORTHO,30,18274,23095,20804.57,1671.03,48.07,169
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha (close),30,20797,25076,22978.8,1416.53,43.52,170
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha (clipped),30,13779,20828,17651.47,2536.76,56.65,171
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha (far),30,13628,17674,15889.1,1338.96,62.94,172
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Buddha (farclip),30,14242,18219,16440.6,1357.96,60.83,173
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 GOURAUD,30,13970,15602,14939.67,451.96,66.94,177
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 FLAT,30,11511,12532,12090.43,274.88,82.71,178
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,30,23621,27733,26151.87,1139.7,38.24,179
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,30,28294,34034,31682.5,1488.08,31.56,180
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 (close),30,35966,79734,52020.93,13923.04,19.22,181
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 (far),30,10835,12049,11538.1,363.2,86.67,182
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),R2D2 (farclip),30,10336,12022,11142.37,464.43,89.75,183
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny GOURAUD,30,3628,4073,3828.27,111.86,261.21,187
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny FLAT,30,2740,2981,2864.37,59.31,349.12,188
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,30,7811,9170,8609,334.54,116.16,189
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,30,8931,10813,10103.93,464.96,98.97,190
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny ORTHO TEX,30,6990,7839,7511.6,186.03,133.13,191
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny (close),30,14445,17126,15718.4,717.49,63.62,192
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny (far),30,2176,2686,2304.5,87.88,433.93,193
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Bunny (farclip),30,2078,2430,2256.47,89.12,443.17,194
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Large tris FLAT Z,15,2,968,540.93,309.38,1848.66,198
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Grid small FLAT,15,143,2640,1177.73,1105.09,849.09,199
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Grid small TEX,15,162,12721,4727.33,5087.28,211.54,200
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Ribbon triangles,15,163,4817,2097.13,2074.85,476.84,201
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Ribbon strip,15,101,4551,1937.33,1970.76,516.17,202
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Ribbon quads,15,93,4611,1951.73,1994.69,512.37,203
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib tri fast,8,95,829,498.25,315.4,2007.02,204
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib strip fast,8,58,540,321.62,205.89,3109.21,205
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib quad fast,8,48,596,348.12,235.55,2872.53,206
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib tri AA,8,101,4189,2243,1689.67,445.83,207
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib strip AA,8,101,2387,1331.75,964.28,750.89,208
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib quad AA,8,45,2368,1297,982.05,771.01,209
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib tri thick,8,95,28794,15735.38,12228.2,63.55,210
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib strip thick,8,57,17350,9689.75,7509.13,103.2,211
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire rib quad thick,8,46,17313,9648.25,7488.31,103.65,212
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Grid near clip TEX,10,162,13243,5841.3,5853.12,171.19,213
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Cube direct FLAT,15,1060,1249,1155.47,48.49,865.45,214
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Cube direct TEX,15,11449,14064,12596.07,628.18,79.39,215
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Sphere direct GOUR,10,2505,2558,2524.7,13.57,396.09,216
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Sphere direct TEX,10,5647,5739,5682.8,25.27,175.97,217
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Vertex color direct,15,1,3874,1334.93,1562.34,749.1,218
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Point cloud pixels,15,90,98,92.07,1.84,10861.69,219
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Point cloud dots,10,570,588,577,4.82,1733.1,220
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire cube fast,10,7,26,17.8,5.65,56179.78,221
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire cube AA,10,38,147,88.8,33.15,11261.26,222
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire cube thick,10,163,618,399.3,140.66,2504.38,223
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire sphere fast,8,148,161,153.75,4.82,6504.06,224
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire sphere AA,8,532,612,570.5,27.78,1752.85,225
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire sphere thick,8,3289,3810,3491.88,198.85,286.38,226
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire bunny fast,8,1344,1798,1457.5,143.08,686.11,227
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire bunny AA,8,3718,3923,3827.25,66.13,261.28,228
+0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd,2026-06-14,teensy41,baseline_20260614_current_benchmark,320 x 240 (large / ILI9341),Wire bunny thick,8,32586,34357,33369.88,643.38,29.97,229

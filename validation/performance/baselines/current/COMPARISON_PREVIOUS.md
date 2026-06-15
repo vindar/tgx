@@ -1,39 +1,60 @@
-# Baseline Comparison Against Previous Current
+# Comparison With Previous Reference
 
-New baseline: `baseline_20260614_current` at commit `0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd` with the working-tree diff recorded in `source_diff.patch`.
+This file compares the promoted 2026-06-15 shader-incremental baseline against the clean `HEAD` measurements captured in the same investigation before applying the `src/Shaders.h` candidate.
+
+The older baseline that used to live in `validation/performance/baselines/current/` was archived here:
+
+```text
+validation/performance/baselines/previous/2026-06-14-before-shader-incremental/
+```
 
 ## Benchmark Global Scores
 
-| Board | Score | Previous | New | Delta |
-| ----- | ----- | -------: | --: | ----: |
-| core2 | 1 | 26.8 | 30.97 | +15.560% |
-| core2 | 2 | 19.51 | 21.29 | +9.124% |
-| cores3 | 1 | 36.82 | 41.59 | +12.955% |
-| cores3 | 2 | 26.71 | 28.71 | +7.488% |
-| cores3 | 3 | 23.46 | 24.89 | +6.095% |
-| pico2 | 1 | 18.88 | 20.97 | +11.070% |
-| pico2 | 2 | 14.85 | 15.89 | +7.003% |
-| pico2 | 3 | 13.16 | 13.92 | +5.775% |
-| teensy41 | 1 | 106.34 | 116.42 | +9.479% |
-| teensy41 | 2 | 80.81 | 85.47 | +5.767% |
-| teensy41 | 3 | 70.95 | 74.33 | +4.764% |
+| Board | Score 1 | Score 2 | Score 3 |
+| ----- | ------: | ------: | ------: |
+| Teensy 4.1 | -0.44% | +2.17% | +3.83% |
+| Pico2 | +2.53% | +4.85% | +6.03% |
+| Core2 | +2.33% | +5.73% | |
+| CoreS3 | +2.04% | +4.74% | +5.83% |
 
-## Example Aggregate Mean FPS
+Full data:
 
-| Board | Example | Previous | New | Delta |
-| ----- | ------- | -------: | --: | ----: |
-| core2 | borg_cube | 46.4246 | 46.4144 | -0.022% |
-| core2 | donkeykong | 28.451 | 27.832 | -2.176% |
-| core2 | scream | 15.16 | 15.3636 | +1.343% |
-| cores3 | borg_cube | 49.581 | 49.6278 | +0.094% |
-| cores3 | donkeykong | 32.0311 | 32.4788 | +1.398% |
-| cores3 | scream | 23.2203 | 23.5337 | +1.350% |
-| pico2 | borg_cube | 31 | 30.9944 | -0.018% |
-| pico2 | bunny_fig | 27.6614 | 27.773 | +0.403% |
-| pico2 | scream | 25.3107 | 25.7416 | +1.702% |
-| teensy41 | buddha | 29.6431 | 29.681 | +0.128% |
-| teensy41 | mars | 62.3685 | 61.9863 | -0.613% |
-| teensy41 | test-shading | 80.9711 | 83.4098 | +3.012% |
-| teensy41 | test-texture | 73.5801 | 77.4054 | +5.199% |
+- `comparison_previous_benchmark_global.csv`
 
-Detailed per-scene deltas are in `comparison_previous_example_summary.csv`.
+## Selected Example Deltas
+
+| Board | Example / scene | Delta |
+| ----- | --------------- | ----: |
+| Teensy 4.1 | `buddha / buddha_rotation` | -5.18% frame time |
+| Teensy 4.1 | `test-texture / spot_tex_nearest` | -7.35% frame time |
+| Teensy 4.1 | `mars / movie` | +1.31% frame time |
+| Pico2 | `bunny_fig / gouraud` | -10.30% frame time |
+| Pico2 | `bunny_fig / gouraud_texture` | -18.84% frame time |
+| Pico2 | `scream` | +20.47% FPS |
+| Core2 | `donkeykong / gouraud` | -8.24% frame time |
+| Core2 | `donkeykong / gouraud_texture` | -9.29% frame time |
+| Core2 | `scream` | +11.37% FPS |
+| CoreS3 | `donkeykong / gouraud` | -7.55% frame time |
+| CoreS3 | `donkeykong / gouraud_texture` | -9.21% frame time |
+| CoreS3 | `scream` | +14.35% FPS |
+
+Full data:
+
+- `comparison_previous_example_summary.csv`
+- `comparison_previous_example_aggregate.csv`
+
+## RP2040 / Pico W Note
+
+Pico W was checked separately because it has no FPU. It should not use the same incremental-float defaults as Pico2/RP2350.
+
+Best measured Pico W choice:
+
+```cpp
+TGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL=0
+TGX_SHADER_GOURAUD_RGB565_FLOAT_INCREMENTAL=0
+```
+
+Full data:
+
+- `picow_rp2040_flag_matrix_delta_vs_head.csv`
+- `picow_rp2040_flag_matrix_best_variant.csv`

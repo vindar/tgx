@@ -1,0 +1,9 @@
+board,variant,example,scene,frame_avg_us,fps_avg,rows,frames_sum,source
+picow,head,bunny_fig,flat,130111.74285714286,7.770714285714284,14,116,validation\performance\parsed\picow_fpuless_head_bunny_picow_example.csv
+picow,head,bunny_fig,gouraud,156622.59285714285,6.474285714285714,14,99,validation\performance\parsed\picow_fpuless_head_bunny_picow_example.csv
+picow,head,bunny_fig,gouraud_texture,215089.89047619049,4.705714285714286,21,108,validation\performance\parsed\picow_fpuless_head_bunny_picow_example.csv
+picow,head,bunny_fig,wireframe,77099.892,13.0748,25,337,validation\performance\parsed\picow_fpuless_head_bunny_picow_example.csv
+picow,cand_11,bunny_fig,flat,122172.80000000002,8.266,15,131,validation\performance\parsed\picow_fpuless_cand11_bunny_picow_example.csv
+picow,cand_11,bunny_fig,gouraud,190254.38571428575,5.325,14,84,validation\performance\parsed\picow_fpuless_cand11_bunny_picow_example.csv
+picow,cand_11,bunny_fig,gouraud_texture,227208.59047619053,4.463809523809525,21,104,validation\performance\parsed\picow_fpuless_cand11_bunny_picow_example.csv
+picow,cand_11,bunny_fig,wireframe,77590.332,12.988800000000003,25,337,validation\performance\parsed\picow_fpuless_cand11_bunny_picow_example.csv

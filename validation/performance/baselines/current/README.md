@@ -1,14 +1,20 @@
 # Current Performance Baseline
 
-Compact TGX performance baseline captured on 2026-06-14 after the current `Rasterizer.h` signature/update work.
+Compact TGX performance baseline promoted on 2026-06-15 after accepting the `src/Shaders.h` Gouraud incremental shader candidate.
 
 Source state:
 
 ```text
 branch: main
-commit: 0f42085f76cf9cdf5a2a87289bce31c1ceb7e9fd
+base commit before local source diff: fa99d8894028ab824f64435375094c605d633e6b
 working tree source diff: see source_diff_stat.txt/source_diff.patch
-label: baseline_20260614_current
+label: baseline_20260615_shader_incremental
+```
+
+The previous current baseline was archived to:
+
+```text
+validation/performance/baselines/previous/2026-06-14-before-shader-incremental/
 ```
 
 ## Boards And Build Options
@@ -20,42 +26,76 @@ label: baseline_20260614_current
 
 All runs used `validation/performance/tools/upload_and_capture.ps1` with parsed benchmark/example telemetry.
 
+## Shader Flags
+
+This baseline corresponds to the accepted candidate default on the four primary boards:
+
+```cpp
+TGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL=1
+TGX_SHADER_GOURAUD_RGB565_FLOAT_INCREMENTAL=1
+```
+
+Extra Pico W / RP2040 checks showed that RP2040 without FPU should not use those incremental-float paths:
+
+```cpp
+TGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL=0
+TGX_SHADER_GOURAUD_RGB565_FLOAT_INCREMENTAL=0
+```
+
+The Pico W matrix is retained in:
+
+- `picow_rp2040_flag_matrix_delta_vs_head.csv`
+- `picow_rp2040_flag_matrix_best_variant.csv`
+- `picow_rp2040_flag_matrix_binary_size.csv`
+
 ## Benchmark Global Scores
 
 | Board | Score 1 | Score 2 | Score 3 |
-| ----- | ------- | ------- | ------- |
-| teensy41 | 116.42 | 85.47 | 74.33 |
-| pico2 | 20.97 | 15.89 | 13.92 |
-| core2 | 30.97 | 21.29 |  |
-| cores3 | 41.59 | 28.71 | 24.89 |
+| ----- | ------: | ------: | ------: |
+| Teensy 4.1 | 115.90 | 87.32 | 77.18 |
+| Pico2 | 21.50 | 16.66 | 14.76 |
+| Core2 | 31.69 | 22.51 | |
+| CoreS3 | 42.44 | 30.07 | 26.34 |
 
-Comparison against the previous current baseline is stored in `comparison_previous_benchmark_global.csv`.
+Comparison against the same-session clean `HEAD` baseline is stored in `comparison_previous_benchmark_global.csv`.
 
 ## Selected Real Examples
 
-Teensy 4.1: `mars`, `test-shading`, `test-texture`, `buddha`.
+Teensy 4.1:
 
-Pico2: `borg_cube`, `bunny_fig`, `scream`.
+- `mars`
+- `test-shading`
+- `test-texture`
+- `buddha`
 
-Core2/CoreS3: `borg_cube`, `donkeykong`, `scream`.
+Pico2:
 
-Aggregate example comparison vs previous current baseline:
+- `borg_cube`
+- `bunny_fig`
+- `scream`
 
-| Board | Example | Previous mean fps | New mean fps | Delta |
-| ----- | ------- | ----------------: | -----------: | ----: |
-| core2 | borg_cube | 46.4246 | 46.4144 | -0.022% |
-| core2 | donkeykong | 28.451 | 27.832 | -2.176% |
-| core2 | scream | 15.16 | 15.3636 | +1.343% |
-| cores3 | borg_cube | 49.581 | 49.6278 | +0.094% |
-| cores3 | donkeykong | 32.0311 | 32.4788 | +1.398% |
-| cores3 | scream | 23.2203 | 23.5337 | +1.350% |
-| pico2 | borg_cube | 31 | 30.9944 | -0.018% |
-| pico2 | bunny_fig | 27.6614 | 27.773 | +0.403% |
-| pico2 | scream | 25.3107 | 25.7416 | +1.702% |
-| teensy41 | buddha | 29.6431 | 29.681 | +0.128% |
-| teensy41 | mars | 62.3685 | 61.9863 | -0.613% |
-| teensy41 | test-shading | 80.9711 | 83.4098 | +3.012% |
-| teensy41 | test-texture | 73.5801 | 77.4054 | +5.199% |
+Core2/CoreS3:
+
+- `borg_cube`
+- `donkeykong`
+- `scream`
+
+Important candidate-vs-HEAD examples:
+
+| Board | Example / scene | Delta |
+| ----- | --------------- | ----: |
+| Teensy 4.1 | `buddha / buddha_rotation` | -5.18% frame time |
+| Teensy 4.1 | `test-texture / spot_tex_nearest` | -7.35% frame time |
+| Teensy 4.1 | `mars / movie` | +1.31% frame time |
+| Pico2 | `bunny_fig / gouraud` | -10.30% frame time |
+| Pico2 | `bunny_fig / gouraud_texture` | -18.84% frame time |
+| Pico2 | `scream` | +20.47% FPS |
+| Core2 | `donkeykong / gouraud` | -8.24% frame time |
+| Core2 | `donkeykong / gouraud_texture` | -9.29% frame time |
+| Core2 | `scream` | +11.37% FPS |
+| CoreS3 | `donkeykong / gouraud` | -7.55% frame time |
+| CoreS3 | `donkeykong / gouraud_texture` | -9.21% frame time |
+| CoreS3 | `scream` | +14.35% FPS |
 
 Use `example_telemetry_summary.csv` for per-scene values and `comparison_previous_example_summary.csv` for per-scene deltas.
 
@@ -77,4 +117,10 @@ Use `example_telemetry_summary.csv` for per-scene values and `comparison_previou
 
 ## Reuse Policy
 
-Reuse this baseline only with the same source state, board/display setup, build profile, benchmark/example sketch, and robust upload/capture tooling.
+Reuse this baseline only with the same source state, board/display setup, build profile, benchmark/example sketch, shader flag defaults, and robust upload/capture tooling.
+
+The detailed investigation report and flag matrix remain in:
+
+```text
+validation/performance/investigations/2026-06-shader-incremental-flag-matrix/
+```
