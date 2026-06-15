@@ -232,6 +232,35 @@ namespace tgx
 
 
     /**
+    * Fast (very approximate) computation of 1/x. Version for float.
+    * Use only when speed is more important than accuracy...
+    */
+    TGX_INLINE inline float fast_inv_approx(float x)
+        {
+#if defined(__XTENSA__) && !defined(__XTENSA_SOFT_FLOAT__)
+        // One Newton-Raphson iteration instead of two.
+        // Less accurate than fast_inv(), but cheaper.
+        float t, result;
+        asm volatile (
+            "recip0.s   %0, %2\n\t"
+            "const.s    %1, 1\n\t"
+            "msub.s     %1, %2, %0\n\t"
+            "madd.s     %0, %0, %1"
+            : "=&f" (result),
+                "=&f" (t)
+            : "f" (x)
+        );
+        return result;
+#else
+        return fast_inv(x);
+#endif
+        }
+
+
+
+
+
+    /**
     * Fast (approximate) computation of 1/x. Version for double.
     */
     TGX_INLINE inline double fast_inv(double x)
