@@ -55,9 +55,10 @@ namespace tgx
         SHADER_GOURAUD = (1 << 5),              ///< enable Gouraud shading
         SHADER_UNLIT = (1 << 6),                ///< enable unlit shading: no lighting computation
 
-        // Shaders for texturing mode: no-texture, texture-wrap, texture-clamp 
+        // Shaders for texturing mode: no-texture, perspective-correct texture, affine texture
         SHADER_NOTEXTURE = (1 << 7),            ///< disable texture mapping
-        SHADER_TEXTURE = (1 << 8),              ///< enable texture mapping
+        SHADER_TEXTURE = (1 << 8),              ///< enable perspective-correct texture mapping
+        SHADER_TEXTURE_AFFINE = (1 << 9),       ///< enable affine (non perspective-correct) texture mapping
 
         // Shaders for texture quality: nearest, bilinear
         SHADER_TEXTURE_NEAREST = (1 << 11),     ///< use point sampling texture mapping
@@ -89,7 +90,7 @@ namespace tgx
     #define TGX_SHADER_MASK_PROJECTION      (SHADER_PERSPECTIVE | SHADER_ORTHO)
     #define TGX_SHADER_MASK_ZBUFFER         (SHADER_NOZBUFFER | SHADER_ZBUFFER)
     #define TGX_SHADER_MASK_SHADING         (SHADER_FLAT | SHADER_GOURAUD | SHADER_UNLIT)
-    #define TGX_SHADER_MASK_TEXTURE         (SHADER_NOTEXTURE | SHADER_TEXTURE)
+    #define TGX_SHADER_MASK_TEXTURE         (SHADER_NOTEXTURE | SHADER_TEXTURE | SHADER_TEXTURE_AFFINE)
     #define TGX_SHADER_MASK_TEXTURE_QUALITY (SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_NEAREST)
     #define TGX_SHADER_MASK_TEXTURE_MODE    (SHADER_TEXTURE_WRAP_POW2 | SHADER_TEXTURE_CLAMP)
     #define TGX_SHADER_MASK_ALL             (TGX_SHADER_MASK_PROJECTION | TGX_SHADER_MASK_ZBUFFER | TGX_SHADER_MASK_SHADING | TGX_SHADER_MASK_TEXTURE | TGX_SHADER_MASK_TEXTURE_QUALITY | TGX_SHADER_MASK_TEXTURE_MODE)
@@ -115,6 +116,8 @@ namespace tgx
             TGX_SHADER_HAS_FLAT(enabled_shader_type))
     #define TGX_SHADER_HAS_NOTEXTURE(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_NOTEXTURE))
     #define TGX_SHADER_HAS_TEXTURE(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE))
+    #define TGX_SHADER_HAS_TEXTURE_AFFINE(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE_AFFINE))
+    #define TGX_SHADER_HAS_TEXTURING_ENABLED(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , (SHADER_TEXTURE | SHADER_TEXTURE_AFFINE)))
     #define TGX_SHADER_HAS_TEXTURE_NEAREST(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE_NEAREST))
     #define TGX_SHADER_HAS_TEXTURE_BILINEAR(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE_BILINEAR))
     #define TGX_SHADER_HAS_TEXTURE_WRAP_POW2(shader_type) (TGX_SHADER_HAS_ONE_FLAG(shader_type , SHADER_TEXTURE_WRAP_POW2))
@@ -129,6 +132,8 @@ namespace tgx
     #define TGX_SHADER_REMOVE_UNLIT(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_UNLIT)
     #define TGX_SHADER_REMOVE_NOTEXTURE(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_NOTEXTURE)
     #define TGX_SHADER_REMOVE_TEXTURE(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE)
+    #define TGX_SHADER_REMOVE_TEXTURE_AFFINE(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE_AFFINE)
+    #define TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , (SHADER_TEXTURE | SHADER_TEXTURE_AFFINE))
     #define TGX_SHADER_REMOVE_TEXTURE_NEAREST(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE_NEAREST)
     #define TGX_SHADER_REMOVE_TEXTURE_BILINEAR(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE_BILINEAR)
     #define TGX_SHADER_REMOVE_TEXTURE_WRAP_POW2(shader_type) TGX_SHADER_REMOVE_FLAGS(shader_type , SHADER_TEXTURE_WRAP_POW2)
@@ -143,6 +148,7 @@ namespace tgx
     #define TGX_SHADER_ADD_UNLIT(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_UNLIT)
     #define TGX_SHADER_ADD_NOTEXTURE(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_NOTEXTURE)
     #define TGX_SHADER_ADD_TEXTURE(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE)
+    #define TGX_SHADER_ADD_TEXTURE_AFFINE(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE_AFFINE)
     #define TGX_SHADER_ADD_TEXTURE_NEAREST(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE_NEAREST)
     #define TGX_SHADER_ADD_TEXTURE_BILINEAR(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE_BILINEAR)
     #define TGX_SHADER_ADD_TEXTURE_WRAP_POW2(shader_type) TGX_SHADER_ADD_FLAGS(shader_type , SHADER_TEXTURE_WRAP_POW2)
