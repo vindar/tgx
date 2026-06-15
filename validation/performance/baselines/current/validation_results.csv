@@ -1,4 +1,5 @@
 item,status,notes
 benchmark_and_example_capture,PASS,85/85 matrix runs succeeded in shader incremental investigation; current baseline uses cand_11 rows for four primary boards.
 pico_w_rp2040_extra_check,WARN,RP2040/Pico W prefers both incremental flags disabled; see picow_rp2040_flag_matrix_* and FPULLESS_EXTRA_BOARDS.md.
-cpu_validation,NOT_RUN_IN_THIS_PASS,This pass was performance telemetry only; prior CPU validation remains archived with previous baselines.
+cpu_2d_validation,PASS,validation/2d/run_cpu.ps1 -Golden passed on 2026-06-15.
+cpu_3d_validation,PASS,validation/3d/run_cpu.ps1 -Compare strict passed on 2026-06-15 after refreshing validation/3d/baselines/cpu_validation.csv and validation/3d/golden/cpu.
