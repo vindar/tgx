@@ -13,6 +13,7 @@ var _misc_8h =
     [ "uint32_as_float", "_misc_8h.html#abdccf53ba822b139c97ee3acc7bcde0b", null ],
     [ "safeMultB", "_misc_8h.html#a2e813ebb271d39da4f92c63d87decc11", null ],
     [ "fast_inv", "_misc_8h.html#ac1f902347993c1de2e39bc4fc52ff3c2", null ],
+    [ "fast_inv_approx", "_misc_8h.html#ae0209f7e64144b3b999bf8a9ab11e487", null ],
     [ "fast_inv", "_misc_8h.html#a40244cc372b1073cc6d174321838d765", null ],
     [ "precise_sqrt", "_misc_8h.html#a451d472c6c503647be51558acf19259e", null ],
     [ "precise_sqrt", "_misc_8h.html#ac51532caf368521b1dd9035e3a2045fb", null ],

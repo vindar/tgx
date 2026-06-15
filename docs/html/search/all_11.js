@@ -17,11 +17,12 @@ var searchData=
   ['tgx_5frgb64_5forder_5fbgr_14',['TGX_RGB64_ORDER_BGR',['../_color_8h.html#a68f618aed61307d6065d7b7df06535ca',1,'Color.h']]],
   ['tgx_5frgbf_5forder_5fbgr_15',['TGX_RGBf_ORDER_BGR',['../_color_8h.html#a8003974197229409b1626359a3e13d6e',1,'Color.h']]],
   ['tgx_5fshader_5fcan_5fuse_5fflat_5for_5funlit_16',['TGX_SHADER_CAN_USE_FLAT_OR_UNLIT',['../_shader_params_8h.html#aa0e7775f50060815f177a13abcc0ee73',1,'ShaderParams.h']]],
-  ['tgx_5fsingle_5fprecision_5fcomputations_17',['TGX_SINGLE_PRECISION_COMPUTATIONS',['../tgx__config_8h.html#a78253ceb4e0c2b6a3714006768f62dcb',1,'tgx_config.h']]],
-  ['tgx_5fuse_5ffast_5finv_5ftrick_18',['TGX_USE_FAST_INV_TRICK',['../tgx__config_8h.html#aba55b26e9f69fa58c832655a6639e39d',1,'tgx_config.h']]],
-  ['tgx_5fuse_5ffma_5fmath_19',['TGX_USE_FMA_MATH',['../tgx__config_8h.html#ad2b26d4599d9c7bb8c6b9cef32d45b50',1,'tgx_config.h']]],
-  ['top_20',['TOP',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25afa0e22d6ef68249280e1a69d269f3503',1,'tgx']]],
-  ['topleft_21',['TOPLEFT',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25a5d63db503eeb72cf0ffb70ab48431c3b',1,'tgx']]],
-  ['topright_22',['TOPRIGHT',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25a6ea6a055de1df58cc6e094685ea16ae5',1,'tgx']]],
-  ['transpose_23',['transpose',['../structtgx_1_1_mat4.html#a2f153b9f2c36d9421acdf96174de6711',1,'tgx::Mat4']]]
+  ['tgx_5fshader_5fgouraud_5ftexture_5ffloat_5fincremental_17',['TGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL',['../tgx__config_8h.html#a0db6b1df081d4c0cc524c8a755052299',1,'tgx_config.h']]],
+  ['tgx_5fsingle_5fprecision_5fcomputations_18',['TGX_SINGLE_PRECISION_COMPUTATIONS',['../tgx__config_8h.html#a78253ceb4e0c2b6a3714006768f62dcb',1,'tgx_config.h']]],
+  ['tgx_5fuse_5ffast_5finv_5ftrick_19',['TGX_USE_FAST_INV_TRICK',['../tgx__config_8h.html#aba55b26e9f69fa58c832655a6639e39d',1,'tgx_config.h']]],
+  ['tgx_5fuse_5ffma_5fmath_20',['TGX_USE_FMA_MATH',['../tgx__config_8h.html#ad2b26d4599d9c7bb8c6b9cef32d45b50',1,'tgx_config.h']]],
+  ['top_21',['TOP',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25afa0e22d6ef68249280e1a69d269f3503',1,'tgx']]],
+  ['topleft_22',['TOPLEFT',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25a5d63db503eeb72cf0ffb70ab48431c3b',1,'tgx']]],
+  ['topright_23',['TOPRIGHT',['../_box2_8h.html#aff4a1af530c6d3577e58eaaf69ce6c25a6ea6a055de1df58cc6e094685ea16ae5',1,'tgx']]],
+  ['transpose_24',['transpose',['../structtgx_1_1_mat4.html#a2f153b9f2c36d9421acdf96174de6711',1,'tgx::Mat4']]]
 ];

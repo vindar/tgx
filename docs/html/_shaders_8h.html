@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.1</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.2</span>
    </div>
    <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
@@ -116,15 +116,46 @@ template&lt;typename color_t , typename ZBUFFER_t &gt; </td></tr>
 <tr class="memitem:a8514413de53a2b80f9c1cbc0f3d2717c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tgx::shader_test</b> (const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly, const int32_t dx1, const int32_t dy1, int32_t O1, const tgx::RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const tgx::RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const tgx::RasterizerVec4 &amp;fP3, const tgx::RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>
 <tr class="memdesc:a8514413de53a2b80f9c1cbc0f3d2717c"><td class="mdescLeft">&#160;</td><td class="mdescRight">For test purposes... <br /></td></tr>
 <tr class="separator:a8514413de53a2b80f9c1cbc0f3d2717c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93de9020862f2b84bc7d04c75717b058"><td class="memItemLeft" align="right" valign="top"><a id="a93de9020862f2b84bc7d04c75717b058" name="a93de9020862f2b84bc7d04c75717b058"></a>
+TGX_INLINE int&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::tgx_clamp_i32</b> (const int x, const int lo, const int hi)</td></tr>
+<tr class="separator:a93de9020862f2b84bc7d04c75717b058"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5db896282f7711f0fba91266a867f2d9"><td class="memItemLeft" align="right" valign="top"><a id="a5db896282f7711f0fba91266a867f2d9" name="a5db896282f7711f0fba91266a867f2d9"></a>
+TGX_INLINE uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::tgx_rgb565_pack_raw_u16</b> (const int r, const int g, const int b)</td></tr>
+<tr class="separator:a5db896282f7711f0fba91266a867f2d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0b6baa2d8c9b83bc1bab1c48a84cc3a"><td class="memItemLeft" align="right" valign="top"><a id="ae0b6baa2d8c9b83bc1bab1c48a84cc3a" name="ae0b6baa2d8c9b83bc1bab1c48a84cc3a"></a>
+TGX_INLINE int&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::tgx_rgb565_r5</b> (const RGB565 c)</td></tr>
+<tr class="separator:ae0b6baa2d8c9b83bc1bab1c48a84cc3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2816e18ca8ab7f34b062415c35973cf"><td class="memItemLeft" align="right" valign="top"><a id="aa2816e18ca8ab7f34b062415c35973cf" name="aa2816e18ca8ab7f34b062415c35973cf"></a>
+TGX_INLINE int&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::tgx_rgb565_g6</b> (const RGB565 c)</td></tr>
+<tr class="separator:aa2816e18ca8ab7f34b062415c35973cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e5a06e7bb091c05f481bd92a8d6a558"><td class="memItemLeft" align="right" valign="top"><a id="a0e5a06e7bb091c05f481bd92a8d6a558" name="a0e5a06e7bb091c05f481bd92a8d6a558"></a>
+TGX_INLINE int&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::tgx_rgb565_b5</b> (const RGB565 c)</td></tr>
+<tr class="separator:a0e5a06e7bb091c05f481bd92a8d6a558"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d0d4c76bc3ea8707d0af6d724989ae2"><td class="memItemLeft" align="right" valign="top"><a id="a6d0d4c76bc3ea8707d0af6d724989ae2" name="a6d0d4c76bc3ea8707d0af6d724989ae2"></a>
+TGX_INLINE RGB565&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::tgx_rgb565_modulate256</b> (const RGB565 c, const int mr, const int mg, const int mb)</td></tr>
+<tr class="separator:a6d0d4c76bc3ea8707d0af6d724989ae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4e4b82de434c694abf1592910b89b2a"><td class="memItemLeft" align="right" valign="top"><a id="ab4e4b82de434c694abf1592910b89b2a" name="ab4e4b82de434c694abf1592910b89b2a"></a>
+TGX_INLINE RGB565&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::tgx_rgb565_bilinear_fast</b> (const RGB565 &amp;C00, const RGB565 &amp;C10, const RGB565 &amp;C01, const RGB565 &amp;C11, const float ax, const float ay)</td></tr>
+<tr class="separator:ab4e4b82de434c694abf1592910b89b2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5911a85482bc1d730525f6ff672aac9"><td class="memItemLeft" align="right" valign="top"><a id="af5911a85482bc1d730525f6ff672aac9" name="af5911a85482bc1d730525f6ff672aac9"></a>
+TGX_INLINE RGB565&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::tgx_rgb565_bilinear_modulate256</b> (const RGB565 &amp;C00, const RGB565 &amp;C10, const RGB565 &amp;C01, const RGB565 &amp;C11, const float ax, const float ay, const int mr, const int mg, const int mb)</td></tr>
+<tr class="separator:af5911a85482bc1d730525f6ff672aac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c9cacae4633ec227654a3b7e56ea496"><td class="memItemLeft" align="right" valign="top"><a id="a9c9cacae4633ec227654a3b7e56ea496" name="a9c9cacae4633ec227654a3b7e56ea496"></a>
+TGX_INLINE RGB565&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::tgx_make_rgb565_from_raw</b> (const int r, const int g, const int b)</td></tr>
+<tr class="separator:a9c9cacae4633ec227654a3b7e56ea496"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c8b31c4c2603210b730b42dd91c1935"><td class="memTemplParams" colspan="2">template&lt;typename color_t , typename ZBUFFER_t , bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE, bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP, bool USE_UNLIT = false&gt; </td></tr>
+<tr class="memitem:a7c8b31c4c2603210b730b42dd91c1935"><td class="memTemplItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_shaders_8h.html#a7c8b31c4c2603210b730b42dd91c1935">tgx::uber_shader_inline</a> (const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly, const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 &amp;fP3, const RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>
+<tr class="memdesc:a7c8b31c4c2603210b730b42dd91c1935"><td class="mdescLeft">&#160;</td><td class="mdescRight">UBER-SHADER for all 3D rendering variants.  <a href="_shaders_8h.html#a7c8b31c4c2603210b730b42dd91c1935">More...</a><br /></td></tr>
+<tr class="separator:a7c8b31c4c2603210b730b42dd91c1935"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad055163be1eee2b98dac500ac8f9a662"><td class="memTemplParams" colspan="2">template&lt;typename color_t , typename ZBUFFER_t , bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE, bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP, bool USE_UNLIT = false&gt; </td></tr>
 <tr class="memitem:ad055163be1eee2b98dac500ac8f9a662"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_shaders_8h.html#ad055163be1eee2b98dac500ac8f9a662">tgx::uber_shader</a> (const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly, const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 &amp;fP3, const RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>
 <tr class="memdesc:ad055163be1eee2b98dac500ac8f9a662"><td class="mdescLeft">&#160;</td><td class="mdescRight">UBER-SHADER for all 3D rendering variants.  <a href="_shaders_8h.html#ad055163be1eee2b98dac500ac8f9a662">More...</a><br /></td></tr>
 <tr class="separator:ad055163be1eee2b98dac500ac8f9a662"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab05d02568eafd7a5ad92b0841254183b"><td class="memTemplParams" colspan="2"><a id="ab05d02568eafd7a5ad92b0841254183b" name="ab05d02568eafd7a5ad92b0841254183b"></a>
+<tr class="memitem:a2fc7b1ebe71d9830f1337ef05c39cf3b"><td class="memTemplParams" colspan="2"><a id="a2fc7b1ebe71d9830f1337ef05c39cf3b" name="a2fc7b1ebe71d9830f1337ef05c39cf3b"></a>
 template&lt;int SHADER_FLAGS_ENABLED, typename color_t , typename ZBUFFER_t &gt; </td></tr>
-<tr class="memitem:ab05d02568eafd7a5ad92b0841254183b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tgx::shader_select</b> (const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly, const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 &amp;fP3, const RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>
-<tr class="memdesc:ab05d02568eafd7a5ad92b0841254183b"><td class="mdescLeft">&#160;</td><td class="mdescRight">META-Shader THAT DISPATCH TO THE CORRECT Shader ABOVE (IF ENABLED). <br /></td></tr>
-<tr class="separator:ab05d02568eafd7a5ad92b0841254183b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fc7b1ebe71d9830f1337ef05c39cf3b"><td class="memTemplItemLeft" align="right" valign="top">TGX_INLINE void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tgx::shader_select</b> (const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly, const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 &amp;fP3, const RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;data)</td></tr>
+<tr class="memdesc:a2fc7b1ebe71d9830f1337ef05c39cf3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">META-Shader THAT DISPATCH TO THE CORRECT Shader ABOVE (IF ENABLED). <br /></td></tr>
+<tr class="separator:a2fc7b1ebe71d9830f1337ef05c39cf3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69d28d9dc23e07f668100a6a1365f70a"><td class="memTemplParams" colspan="2"><a id="a69d28d9dc23e07f668100a6a1365f70a" name="a69d28d9dc23e07f668100a6a1365f70a"></a>
 template&lt;bool USE_BLENDING, typename color_t_im &gt; </td></tr>
 <tr class="memitem:a69d28d9dc23e07f668100a6a1365f70a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tgx::shader_2D_gradient</b> (const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly, const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4 &amp;fP1, const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4 &amp;fP2, const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4 &amp;fP3, const RasterizerParams&lt; color_t_im, color_t_im, float &gt; &amp;data)</td></tr>
@@ -144,6 +175,137 @@ template&lt;typename BLEND_OP , typename color_t_im , typename color_t_tex &gt; 
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Triangle shader functions. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a7c8b31c4c2603210b730b42dd91c1935" name="a7c8b31c4c2603210b730b42dd91c1935"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c8b31c4c2603210b730b42dd91c1935">&#9670;&#160;</a></span>uber_shader_inline()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename color_t , typename ZBUFFER_t , bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE, bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP, bool USE_UNLIT = false&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGX_INLINE void tgx::uber_shader_inline </td>
+          <td>(</td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>oox</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>ooy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>lx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>ly</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>dx1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>dy1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>O1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const RasterizerVec4 &amp;&#160;</td>
+          <td class="paramname"><em>fP1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>dx2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>dy2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>O2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const RasterizerVec4 &amp;&#160;</td>
+          <td class="paramname"><em>fP2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>dx3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int32_t&#160;</td>
+          <td class="paramname"><em>dy3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>O3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const RasterizerVec4 &amp;&#160;</td>
+          <td class="paramname"><em>fP3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const RasterizerParams&lt; color_t, color_t, ZBUFFER_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>UBER-SHADER for all 3D rendering variants. </p>
+<p >forced-inline version </p>
+
+</div>
+</div>
 <a id="ad055163be1eee2b98dac500ac8f9a662" name="ad055163be1eee2b98dac500ac8f9a662"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad055163be1eee2b98dac500ac8f9a662">&#9670;&#160;</a></span>uber_shader()</h2>
 

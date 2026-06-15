@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.1</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.2</span>
    </div>
    <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
@@ -101,11 +101,21 @@ $(document).ready(function(){initNavTree('tgx__config_8h.html',''); initResizabl
 
 <p>Configuration file depending on the architecture.  
 <a href="#details">More...</a></p>
-
+<div class="textblock"><code>#include &quot;esp_attr.h&quot;</code><br />
+</div>
 <p><a href="tgx__config_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a7d4c24b82af3472e266de29b2c532686"><td class="memItemLeft" align="right" valign="top"><a id="a7d4c24b82af3472e266de29b2c532686" name="a7d4c24b82af3472e266de29b2c532686"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_COMPILER_HAS_FPU</b>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a7d4c24b82af3472e266de29b2c532686"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e437f6cdc83dad656b413bbf0736d62"><td class="memItemLeft" align="right" valign="top"><a id="a5e437f6cdc83dad656b413bbf0736d62" name="a5e437f6cdc83dad656b413bbf0736d62"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_RUN_ON_TEENSY4</b></td></tr>
+<tr class="separator:a5e437f6cdc83dad656b413bbf0736d62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad864b5d24ac7e8e3544603cd41e04832"><td class="memItemLeft" align="right" valign="top"><a id="ad864b5d24ac7e8e3544603cd41e04832" name="ad864b5d24ac7e8e3544603cd41e04832"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_HAS_FPU</b>&#160;&#160;&#160;TGX_COMPILER_HAS_FPU</td></tr>
+<tr class="separator:ad864b5d24ac7e8e3544603cd41e04832"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba55b26e9f69fa58c832655a6639e39d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tgx__config_8h.html#aba55b26e9f69fa58c832655a6639e39d">TGX_USE_FAST_INV_TRICK</a>&#160;&#160;&#160;1</td></tr>
 <tr class="memdesc:aba55b26e9f69fa58c832655a6639e39d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable the fast approximate inverse trick on architectures where it is beneficial.  <a href="tgx__config_8h.html#aba55b26e9f69fa58c832655a6639e39d">More...</a><br /></td></tr>
 <tr class="separator:aba55b26e9f69fa58c832655a6639e39d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,6 +128,25 @@ Macros</h2></td></tr>
 <tr class="memitem:a8e8eb1ee229f2b148ebe266e54882976"><td class="memItemLeft" align="right" valign="top"><a id="a8e8eb1ee229f2b148ebe266e54882976" name="a8e8eb1ee229f2b148ebe266e54882976"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_INLINE_ZDIVIDE</b>&#160;&#160;&#160;__attribute__((always_inline))</td></tr>
 <tr class="separator:a8e8eb1ee229f2b148ebe266e54882976"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea2bc18c11be150f9c2a285bd0a921b5"><td class="memItemLeft" align="right" valign="top"><a id="aea2bc18c11be150f9c2a285bd0a921b5" name="aea2bc18c11be150f9c2a285bd0a921b5"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_HOT_IRAM</b>&#160;&#160;&#160;IRAM_ATTR</td></tr>
+<tr class="separator:aea2bc18c11be150f9c2a285bd0a921b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0db6b1df081d4c0cc524c8a755052299"><td class="memItemLeft" align="right" valign="top"><a id="a0db6b1df081d4c0cc524c8a755052299" name="a0db6b1df081d4c0cc524c8a755052299"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL</b>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:a0db6b1df081d4c0cc524c8a755052299"><td class="mdescLeft">&#160;</td><td class="mdescRight">flags for uber_shader compilation <br /></td></tr>
+<tr class="separator:a0db6b1df081d4c0cc524c8a755052299"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c0fe179d7a6e445f2d8c567a045b863"><td class="memItemLeft" align="right" valign="top"><a id="a9c0fe179d7a6e445f2d8c567a045b863" name="a9c0fe179d7a6e445f2d8c567a045b863"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_SHADER_GOURAUD_RGB565_FLOAT_INCREMENTAL</b>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a9c0fe179d7a6e445f2d8c567a045b863"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacbafedbb13745c347279365c95fc1ec"><td class="memItemLeft" align="right" valign="top"><a id="aacbafedbb13745c347279365c95fc1ec" name="aacbafedbb13745c347279365c95fc1ec"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_SHADER_RGB565_FAST_TEXTURE_MODULATE</b>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:aacbafedbb13745c347279365c95fc1ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf04e381dbdb7bc94e2dcd5879d2ce18"><td class="memItemLeft" align="right" valign="top"><a id="acf04e381dbdb7bc94e2dcd5879d2ce18" name="acf04e381dbdb7bc94e2dcd5879d2ce18"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_SHADER_RGB565_FAST_BILINEAR</b>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:acf04e381dbdb7bc94e2dcd5879d2ce18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8658b0ab70f813cd12463b0df2995770"><td class="memItemLeft" align="right" valign="top"><a id="a8658b0ab70f813cd12463b0df2995770" name="a8658b0ab70f813cd12463b0df2995770"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_SHADER_RGB565_FAST_CLAMP</b>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a8658b0ab70f813cd12463b0df2995770"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78253ceb4e0c2b6a3714006768f62dcb"><td class="memItemLeft" align="right" valign="top"><a id="a78253ceb4e0c2b6a3714006768f62dcb" name="a78253ceb4e0c2b6a3714006768f62dcb"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>TGX_SINGLE_PRECISION_COMPUTATIONS</b>&#160;&#160;&#160;1</td></tr>
 <tr class="memdesc:a78253ceb4e0c2b6a3714006768f62dcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set to 1 to use float as the default floating point type, or to 0 to use double precision. <br /></td></tr>

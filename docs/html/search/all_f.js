@@ -2,7 +2,7 @@ var searchData=
 [
   ['r_0',['R',['../structtgx_1_1_r_g_b64.html#aad49a5edb184508e46c216366f81ddd6',1,'tgx::RGB64::R()'],['../structtgx_1_1_r_g_b32.html#a873caa8f05cc224d99d1d45fba6ee16c',1,'tgx::RGB32::R()'],['../structtgx_1_1_r_g_bf.html#a2b71a1a0e983dad999c030197dfb9f7b',1,'tgx::RGBf::R()'],['../structtgx_1_1_r_g_b565.html#ad4158f42b011e2cbf5f2308d9a651e1c',1,'tgx::RGB565::R()'],['../structtgx_1_1_r_g_b24.html#a35177162554466411a0591c27bef4d2f',1,'tgx::RGB24::R()']]],
   ['rasterizer_2eh_1',['Rasterizer.h',['../_rasterizer_8h.html',1,'']]],
-  ['rasterizetriangle_2',['rasterizeTriangle',['../_rasterizer_8h.html#a4cd2f1a2d5b322ad6585cb696fd4b715',1,'tgx']]],
+  ['rasterizetriangle_2',['rasterizeTriangle',['../_rasterizer_8h.html#aeda83ec8a6da2ae6eedd6baa36ae7665',1,'tgx']]],
   ['ratio_3',['ratio',['../structtgx_1_1_box2.html#a643aaf8d9eb8058c4ad86a76be8f2a63',1,'tgx::Box2']]],
   ['readpixel_4',['readPixel',['../classtgx_1_1_image.html#a31d1ea8d424eefcf8b30889d429db6a6',1,'tgx::Image']]],
   ['readpixelf_5',['readPixelf',['../classtgx_1_1_image.html#ac4b995f36ba86cad72756df15beae389',1,'tgx::Image']]],

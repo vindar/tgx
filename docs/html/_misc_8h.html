@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.1</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.2</span>
    </div>
    <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
@@ -168,6 +168,9 @@ TGX_INLINE int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::sa
 <tr class="memitem:ac1f902347993c1de2e39bc4fc52ff3c2"><td class="memItemLeft" align="right" valign="top">TGX_INLINE float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_misc_8h.html#ac1f902347993c1de2e39bc4fc52ff3c2">tgx::fast_inv</a> (float x)</td></tr>
 <tr class="memdesc:ac1f902347993c1de2e39bc4fc52ff3c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fast (approximate) computation of 1/x.  <a href="_misc_8h.html#ac1f902347993c1de2e39bc4fc52ff3c2">More...</a><br /></td></tr>
 <tr class="separator:ac1f902347993c1de2e39bc4fc52ff3c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0209f7e64144b3b999bf8a9ab11e487"><td class="memItemLeft" align="right" valign="top">TGX_INLINE float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_misc_8h.html#ae0209f7e64144b3b999bf8a9ab11e487">tgx::fast_inv_approx</a> (float x)</td></tr>
+<tr class="memdesc:ae0209f7e64144b3b999bf8a9ab11e487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fast (very approximate) computation of 1/x.  <a href="_misc_8h.html#ae0209f7e64144b3b999bf8a9ab11e487">More...</a><br /></td></tr>
+<tr class="separator:ae0209f7e64144b3b999bf8a9ab11e487"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40244cc372b1073cc6d174321838d765"><td class="memItemLeft" align="right" valign="top">TGX_INLINE double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_misc_8h.html#a40244cc372b1073cc6d174321838d765">tgx::fast_inv</a> (double x)</td></tr>
 <tr class="memdesc:a40244cc372b1073cc6d174321838d765"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fast (approximate) computation of 1/x.  <a href="_misc_8h.html#a40244cc372b1073cc6d174321838d765">More...</a><br /></td></tr>
 <tr class="separator:a40244cc372b1073cc6d174321838d765"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -252,6 +255,35 @@ TGX_INLINE double&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::fas
 <p>Fast (approximate) computation of 1/x. </p>
 <p >Version for float.</p>
 <p >Credit Ken Cooke (@joestash) </p>
+
+</div>
+</div>
+<a id="ae0209f7e64144b3b999bf8a9ab11e487" name="ae0209f7e64144b3b999bf8a9ab11e487"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0209f7e64144b3b999bf8a9ab11e487">&#9670;&#160;</a></span>fast_inv_approx()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGX_INLINE float tgx::fast_inv_approx </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Fast (very approximate) computation of 1/x. </p>
+<p >Version for float. Use only when speed is more important than accuracy... </p>
 
 </div>
 </div>

@@ -11,7 +11,8 @@ var searchData=
   ['tgx_5frgb64_5forder_5fbgr_8',['TGX_RGB64_ORDER_BGR',['../_color_8h.html#a68f618aed61307d6065d7b7df06535ca',1,'Color.h']]],
   ['tgx_5frgbf_5forder_5fbgr_9',['TGX_RGBf_ORDER_BGR',['../_color_8h.html#a8003974197229409b1626359a3e13d6e',1,'Color.h']]],
   ['tgx_5fshader_5fcan_5fuse_5fflat_5for_5funlit_10',['TGX_SHADER_CAN_USE_FLAT_OR_UNLIT',['../_shader_params_8h.html#aa0e7775f50060815f177a13abcc0ee73',1,'ShaderParams.h']]],
-  ['tgx_5fsingle_5fprecision_5fcomputations_11',['TGX_SINGLE_PRECISION_COMPUTATIONS',['../tgx__config_8h.html#a78253ceb4e0c2b6a3714006768f62dcb',1,'tgx_config.h']]],
-  ['tgx_5fuse_5ffast_5finv_5ftrick_12',['TGX_USE_FAST_INV_TRICK',['../tgx__config_8h.html#aba55b26e9f69fa58c832655a6639e39d',1,'tgx_config.h']]],
-  ['tgx_5fuse_5ffma_5fmath_13',['TGX_USE_FMA_MATH',['../tgx__config_8h.html#ad2b26d4599d9c7bb8c6b9cef32d45b50',1,'tgx_config.h']]]
+  ['tgx_5fshader_5fgouraud_5ftexture_5ffloat_5fincremental_11',['TGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL',['../tgx__config_8h.html#a0db6b1df081d4c0cc524c8a755052299',1,'tgx_config.h']]],
+  ['tgx_5fsingle_5fprecision_5fcomputations_12',['TGX_SINGLE_PRECISION_COMPUTATIONS',['../tgx__config_8h.html#a78253ceb4e0c2b6a3714006768f62dcb',1,'tgx_config.h']]],
+  ['tgx_5fuse_5ffast_5finv_5ftrick_13',['TGX_USE_FAST_INV_TRICK',['../tgx__config_8h.html#aba55b26e9f69fa58c832655a6639e39d',1,'tgx_config.h']]],
+  ['tgx_5fuse_5ffma_5fmath_14',['TGX_USE_FMA_MATH',['../tgx__config_8h.html#ad2b26d4599d9c7bb8c6b9cef32d45b50',1,'tgx_config.h']]]
 ];
