@@ -57,4 +57,4 @@ See:
 validation/performance/baselines/current/
 ```
 
-These files collect the currently reusable hardware benchmark baselines and the latest Core2/CoreS3 sanity rows from the Image blit investigation. The baseline README explains commit/source-state caveats.
+These files collect the currently reusable hardware benchmark/example baselines. The baseline README explains the exact commit, build options, boards, and reuse caveats.

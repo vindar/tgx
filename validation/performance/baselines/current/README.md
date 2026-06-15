@@ -6,8 +6,8 @@ Source state:
 
 ```text
 branch: main
-base commit before local source diff: fa99d8894028ab824f64435375094c605d633e6b
-working tree source diff: see source_diff_stat.txt/source_diff.patch
+commit: 384d12ffa0aeaa01897cf45bcd695fdf4d776084
+working tree source diff: none; the accepted shader changes are committed
 label: baseline_20260615_shader_incremental
 ```
 
@@ -114,6 +114,10 @@ Use `example_telemetry_summary.csv` for per-scene values and `comparison_previou
 - `source_diff_stat.txt`
 - `source_diff_name_only.txt`
 - `source_diff.patch`
+
+The `source_diff.*` files are intentionally empty for this baseline because it
+is tied to the committed `main` source state above, not to a local candidate
+diff.
 
 ## Reuse Policy
 
