@@ -1,11 +1,13 @@
 # TGX - A Tiny Graphics Library
 
-***LATEST VERSION 1.1.1***
+***LATEST VERSION 1.1.2***
 
 Release highlights:
 - New `Mesh3Dv2` format: more compact, faster, and designed for meshlet culling.
 - New graphical and command-line tools to create, convert, inspect and analyze TGX assets.
 - Faster 3D rendering pipeline, including a new efficient anti-aliased wireframe path.
+- Improved performance on Pico 2 / ESP32 especially for textured drawing.
+- Added support for multiple directional lights.
 - New `SHADER_UNLIT` rendering mode.
 - New and updated examples for Teensy, ESP32, Pico/RP2040/RP2350 and M5Stack boards.
 - Expanded documentation, including a much more complete 3D guide.
@@ -56,7 +58,7 @@ Here are the main features of the library:
 - Depth buffer testing (16-bit or 32-bit precision).
 - Three wireframe drawing paths: *fast* aliased lines, optimized one-pixel antialiased lines, and a much slower adjustable thickness + AA path.
 - Flat and Gouraud shading.
-- Phong lighting model with separate ambient, diffuse, and specular components. The default renderer uses one directional light; `Renderer3D` can also be instantiated with a fixed capacity for multiple directional lights.
+- Phong lighting model with separate ambient, diffuse, and specular components. Supports multiple directional lights (spotlight is WIP).
 - Per-object material properties.
 - Perspective-correct texture mapping with selectable point sampling or bilinear filtering. Wrap modes: repeat (for power-of-two textures) or clamp to edge.
 - Perspective and orthographic projection.
