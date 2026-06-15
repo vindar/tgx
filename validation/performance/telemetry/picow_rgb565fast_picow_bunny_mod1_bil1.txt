@@ -1,0 +1,287 @@
+
+[TGX telemetry] cycle=1 scene=gouraud_texture fps=4.79 frame_avg_us=208770.0 frame_min_us=194258 frame_max_us=218087 display=DMA frames=5
+
+[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.15 frame_avg_us=194145.5 frame_min_us=191083 frame_max_us=197354 display=DMA frames=6
+
+[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.05 frame_avg_us=197895.2 frame_min_us=191224 frame_max_us=207375 display=DMA frames=6
+
+[TGX telemetry] cycle=1 scene=gouraud_texture fps=4.64 frame_avg_us=215359.2 frame_min_us=211029 frame_max_us=217753 display=DMA frames=5
+
+[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.04 frame_avg_us=198205.0 frame_min_us=192286 frame_max_us=209127 display=DMA frames=6
+
+[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.24 frame_avg_us=191062.5 frame_min_us=188247 frame_max_us=194903 display=DMA frames=6
+
+[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.12 frame_avg_us=195140.8 frame_min_us=188130 frame_max_us=199851 display=DMA frames=6
+
+[TGX scene] cycle=2 scene=wireframe
+
+[TGX telemetry] cycle=2 scene=wireframe fps=13.31 frame_avg_us=80952.7 frame_min_us=78431 frame_max_us=82203 display=DMA frames=14
+
+[TGX telemetry] cycle=2 scene=wireframe fps=13.78 frame_avg_us=72558.9 frame_min_us=69958 frame_max_us=78685 display=DMA frames=14
+
+[TGX telemetry] cycle=2 scene=wireframe fps=12.97 frame_avg_us=77037.5 frame_min_us=69911 frame_max_us=81314 display=DMA frames=14
+
+[TGX telemetry] cycle=2 scene=wireframe fps=12.32 frame_avg_us=81140.1 frame_min_us=80653 frame_max_us=81530 display=DMA frames=13
+
+[TGX telemetry] cycle=2 scene=wireframe fps=12.46 frame_avg_us=80198.8 frame_min_us=76830 frame_max_us=81810 display=DMA frames=13
+
+[TGX telemetry] cycle=2 scene=wireframe fps=14.03 frame_avg_us=71238.8 frame_min_us=69878 frame_max_us=76025 display=DMA frames=15
+
+[TGX telemetry] cycle=2 scene=wireframe fps=12.62 frame_avg_us=79173.7 frame_min_us=76019 frame_max_us=80724 display=DMA frames=13
+
+[TGX telemetry] cycle=2 scene=wireframe fps=12.54 frame_avg_us=79675.6 frame_min_us=79012 frame_max_us=80519 display=DMA frames=13
+
+[TGX telemetry] cycle=2 scene=wireframe fps=12.94 frame_avg_us=77223.7 frame_min_us=68889 frame_max_us=80108 display=DMA frames=13
+
+[TGX telemetry] cycle=2 scene=wireframe fps=14.35 frame_avg_us=69646.7 frame_min_us=68413 frame_max_us=75075 display=DMA frames=15
+
+[TGX telemetry] cycle=2 scene=wireframe fps=12.80 frame_avg_us=78116.8 frame_min_us=74842 frame_max_us=79587 display=DMA frames=13
+
+[TGX telemetry] cycle=2 scene=wireframe fps=12.58 frame_avg_us=79419.2 frame_min_us=78916 frame_max_us=79858 display=DMA frames=13
+
+[TGX telemetry] cycle=2 scene=wireframe fps=13.18 frame_avg_us=75789.9 frame_min_us=68940 frame_max_us=80137 display=DMA frames=14
+
+[TGX telemetry] cycle=2 scene=wireframe fps=14.08 frame_avg_us=70951.5 frame_min_us=68419 frame_max_us=77817 display=DMA frames=15
+
+[TGX telemetry] cycle=2 scene=wireframe fps=12.40 frame_avg_us=80562.0 frame_min_us=77322 frame_max_us=81570 display=DMA frames=13
+
+[TGX scene] cycle=3 scene=flat
+
+[TGX telemetry] cycle=3 scene=flat fps=9.12 frame_avg_us=122116.9 frame_min_us=117880 frame_max_us=125125 display=DMA frames=10
+
+[TGX telemetry] cycle=3 scene=flat fps=8.95 frame_avg_us=111672.1 frame_min_us=108428 frame_max_us=117541 display=DMA frames=9
+
+[TGX telemetry] cycle=3 scene=flat fps=8.57 frame_avg_us=116555.8 frame_min_us=109202 frame_max_us=122419 display=DMA frames=9
+
+[TGX telemetry] cycle=3 scene=flat fps=8.11 frame_avg_us=123299.6 frame_min_us=122348 frame_max_us=124080 display=DMA frames=9
+
+[TGX telemetry] cycle=3 scene=flat fps=8.30 frame_avg_us=120370.2 frame_min_us=116646 frame_max_us=123319 display=DMA frames=9
+
+[TGX telemetry] cycle=3 scene=flat fps=8.98 frame_avg_us=111168.5 frame_min_us=108824 frame_max_us=118273 display=DMA frames=10
+
+[TGX telemetry] cycle=3 scene=flat fps=8.30 frame_avg_us=120376.7 frame_min_us=117674 frame_max_us=123465 display=DMA frames=9
+
+[TGX telemetry] cycle=3 scene=flat fps=8.19 frame_avg_us=122058.3 frame_min_us=120918 frame_max_us=123131 display=DMA frames=9
+
+[TGX telemetry] cycle=3 scene=flat fps=8.75 frame_avg_us=114247.1 frame_min_us=107930 frame_max_us=119450 display=DMA frames=9
+
+[TGX telemetry] cycle=3 scene=flat fps=9.18 frame_avg_us=108854.8 frame_min_us=105599 frame_max_us=113927 display=DMA frames=10
+
+[TGX telemetry] cycle=3 scene=flat fps=8.33 frame_avg_us=120047.1 frame_min_us=116752 frame_max_us=123173 display=DMA frames=9
+
+[TGX telemetry] cycle=3 scene=flat fps=8.27 frame_avg_us=120869.6 frame_min_us=117298 frame_max_us=123164 display=DMA frames=9
+
+[TGX telemetry] cycle=3 scene=flat fps=9.10 frame_avg_us=109915.6 frame_min_us=106498 frame_max_us=114995 display=DMA frames=10
+
+[TGX telemetry] cycle=3 scene=flat fps=8.76 frame_avg_us=114041.3 frame_min_us=107096 frame_max_us=121871 display=DMA frames=9
+
+[TGX scene] cycle=4 scene=gouraud
+
+[TGX telemetry] cycle=4 scene=gouraud fps=7.82 frame_avg_us=146317.5 frame_min_us=140939 frame_max_us=148935 display=DMA frames=8
+
+[TGX telemetry] cycle=4 scene=gouraud fps=7.52 frame_avg_us=132878.1 frame_min_us=129487 frame_max_us=139959 display=DMA frames=8
+
+[TGX telemetry] cycle=4 scene=gouraud fps=7.21 frame_avg_us=138680.1 frame_min_us=129374 frame_max_us=146876 display=DMA frames=8
+
+[TGX telemetry] cycle=4 scene=gouraud fps=6.78 frame_avg_us=147431.4 frame_min_us=146471 frame_max_us=148537 display=DMA frames=7
+
+[TGX telemetry] cycle=4 scene=gouraud fps=6.92 frame_avg_us=144370.7 frame_min_us=140863 frame_max_us=148436 display=DMA frames=7
+
+[TGX telemetry] cycle=4 scene=gouraud fps=7.58 frame_avg_us=131771.7 frame_min_us=128977 frame_max_us=139231 display=DMA frames=8
+
+[TGX telemetry] cycle=4 scene=gouraud fps=6.99 frame_avg_us=142974.5 frame_min_us=139597 frame_max_us=147642 display=DMA frames=8
+
+[TGX telemetry] cycle=4 scene=gouraud fps=6.82 frame_avg_us=146751.3 frame_min_us=145163 frame_max_us=148180 display=DMA frames=7
+
+[TGX telemetry] cycle=4 scene=gouraud fps=7.32 frame_avg_us=136621.5 frame_min_us=127613 frame_max_us=145184 display=DMA frames=8
+
+[TGX telemetry] cycle=4 scene=gouraud fps=7.68 frame_avg_us=130174.8 frame_min_us=127315 frame_max_us=137594 display=DMA frames=8
+
+[TGX telemetry] cycle=4 scene=gouraud fps=7.00 frame_avg_us=142819.5 frame_min_us=135363 frame_max_us=147529 display=DMA frames=8
+
+[TGX telemetry] cycle=4 scene=gouraud fps=6.87 frame_avg_us=145536.3 frame_min_us=142328 frame_max_us=147374 display=DMA frames=7
+
+[TGX telemetry] cycle=4 scene=gouraud fps=7.52 frame_avg_us=132988.0 frame_min_us=127573 frame_max_us=139131 display=DMA frames=8
+
+[TGX telemetry] cycle=4 scene=gouraud fps=7.48 frame_avg_us=133539.4 frame_min_us=127607 frame_max_us=141015 display=DMA frames=8
+
+[TGX scene] cycle=5 scene=gouraud_texture
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=6.23 frame_avg_us=188062.6 frame_min_us=179408 frame_max_us=193821 display=DMA frames=7
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=5.73 frame_avg_us=174647.8 frame_min_us=171045 frame_max_us=180297 display=DMA frames=6
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=5.55 frame_avg_us=180065.5 frame_min_us=169998 frame_max_us=188006 display=DMA frames=6
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=5.21 frame_avg_us=191827.7 frame_min_us=189627 frame_max_us=194239 display=DMA frames=6
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=5.52 frame_avg_us=181010.5 frame_min_us=169926 frame_max_us=190537 display=DMA frames=6
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=5.66 frame_avg_us=176596.7 frame_min_us=171873 frame_max_us=188678 display=DMA frames=6
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=5.05 frame_avg_us=198180.3 frame_min_us=187212 frame_max_us=213032 display=DMA frames=6
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=4.73 frame_avg_us=211542.8 frame_min_us=201673 frame_max_us=217763 display=DMA frames=5
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=5.14 frame_avg_us=194617.3 frame_min_us=192632 frame_max_us=197206 display=DMA frames=6
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=5.12 frame_avg_us=195061.2 frame_min_us=191454 frame_max_us=200895 display=DMA frames=6
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=4.67 frame_avg_us=214188.6 frame_min_us=207383 frame_max_us=217453 display=DMA frames=5
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=4.94 frame_avg_us=202333.8 frame_min_us=192748 frame_max_us=213197 display=DMA frames=5
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=5.19 frame_avg_us=192677.8 frame_min_us=188162 frame_max_us=198735 display=DMA frames=6
+
+[TGX telemetry] cycle=5 scene=gouraud_texture fps=5.19 frame_avg_us=192689.3 frame_min_us=186077 frame_max_us=198849 display=DMA frames=6
+
+[TGX scene] cycle=6 scene=wireframe
+
+[TGX telemetry] cycle=6 scene=wireframe fps=13.32 frame_avg_us=80900.1 frame_min_us=78567 frame_max_us=82262 display=DMA frames=14
+
+[TGX telemetry] cycle=6 scene=wireframe fps=13.82 frame_avg_us=72316.4 frame_min_us=69847 frame_max_us=78778 display=DMA frames=14
+
+[TGX telemetry] cycle=6 scene=wireframe fps=12.99 frame_avg_us=76934.5 frame_min_us=70188 frame_max_us=81137 display=DMA frames=13
+
+[TGX telemetry] cycle=6 scene=wireframe fps=12.32 frame_avg_us=81083.7 frame_min_us=80507 frame_max_us=81560 display=DMA frames=13
+
+[TGX telemetry] cycle=6 scene=wireframe fps=12.43 frame_avg_us=80465.3 frame_min_us=78415 frame_max_us=81757 display=DMA frames=13
+
+[TGX telemetry] cycle=6 scene=wireframe fps=13.99 frame_avg_us=71415.7 frame_min_us=70000 frame_max_us=77076 display=DMA frames=14
+
+[TGX telemetry] cycle=6 scene=wireframe fps=12.77 frame_avg_us=78216.6 frame_min_us=70417 frame_max_us=80710 display=DMA frames=13
+
+[TGX telemetry] cycle=6 scene=wireframe fps=12.52 frame_avg_us=79775.1 frame_min_us=78936 frame_max_us=80628 display=DMA frames=13
+
+[TGX telemetry] cycle=6 scene=wireframe fps=12.80 frame_avg_us=78116.0 frame_min_us=74159 frame_max_us=79850 display=DMA frames=13
+
+[TGX telemetry] cycle=6 scene=wireframe fps=14.44 frame_avg_us=69211.4 frame_min_us=68467 frame_max_us=74527 display=DMA frames=15
+
+[TGX telemetry] cycle=6 scene=wireframe fps=12.91 frame_avg_us=77412.2 frame_min_us=73923 frame_max_us=79608 display=DMA frames=13
+
+[TGX telemetry] cycle=6 scene=wireframe fps=12.58 frame_avg_us=79405.6 frame_min_us=78890 frame_max_us=79880 display=DMA frames=13
+
+[TGX telemetry] cycle=6 scene=wireframe fps=12.87 frame_avg_us=77663.2 frame_min_us=74273 frame_max_us=79850 display=DMA frames=13
+
+[TGX telemetry] cycle=6 scene=wireframe fps=14.37 frame_avg_us=69596.7 frame_min_us=68354 frame_max_us=75849 display=DMA frames=15
+
+[TGX telemetry] cycle=6 scene=wireframe fps=12.54 frame_avg_us=79680.8 frame_min_us=75860 frame_max_us=82101 display=DMA frames=13
+
+[TGX scene] cycle=7 scene=flat
+
+[TGX telemetry] cycle=7 scene=flat fps=9.11 frame_avg_us=122155.6 frame_min_us=117403 frame_max_us=124880 display=DMA frames=10
+
+[TGX telemetry] cycle=7 scene=flat fps=8.94 frame_avg_us=111777.6 frame_min_us=108702 frame_max_us=117645 display=DMA frames=9
+
+[TGX telemetry] cycle=7 scene=flat fps=8.58 frame_avg_us=116502.8 frame_min_us=108536 frame_max_us=122559 display=DMA frames=9
+
+[TGX telemetry] cycle=7 scene=flat fps=8.11 frame_avg_us=123305.6 frame_min_us=122848 frame_max_us=124163 display=DMA frames=9
+
+[TGX telemetry] cycle=7 scene=flat fps=8.29 frame_avg_us=120485.3 frame_min_us=116841 frame_max_us=123481 display=DMA frames=9
+
+[TGX telemetry] cycle=7 scene=flat fps=9.05 frame_avg_us=110412.2 frame_min_us=108413 frame_max_us=117462 display=DMA frames=10
+
+[TGX telemetry] cycle=7 scene=flat fps=8.29 frame_avg_us=120451.2 frame_min_us=117641 frame_max_us=122726 display=DMA frames=9
+
+[TGX telemetry] cycle=7 scene=flat fps=8.20 frame_avg_us=121889.2 frame_min_us=120904 frame_max_us=123359 display=DMA frames=9
+
+[TGX telemetry] cycle=7 scene=flat fps=8.86 frame_avg_us=112850.7 frame_min_us=106245 frame_max_us=118837 display=DMA frames=9
+
+[TGX telemetry] cycle=7 scene=flat fps=9.09 frame_avg_us=109970.1 frame_min_us=106663 frame_max_us=114861 display=DMA frames=10
+
+[TGX telemetry] cycle=7 scene=flat fps=8.31 frame_avg_us=120260.1 frame_min_us=117029 frame_max_us=122279 display=DMA frames=9
+
+[TGX telemetry] cycle=7 scene=flat fps=8.28 frame_avg_us=120761.7 frame_min_us=116591 frame_max_us=123091 display=DMA frames=9
+
+[TGX telemetry] cycle=7 scene=flat fps=9.09 frame_avg_us=109988.7 frame_min_us=106469 frame_max_us=115161 display=DMA frames=10
+
+[TGX telemetry] cycle=7 scene=flat fps=8.75 frame_avg_us=114248.2 frame_min_us=107488 frame_max_us=121565 display=DMA frames=9
+
+[TGX scene] cycle=8 scene=gouraud
+
+[TGX telemetry] cycle=8 scene=gouraud fps=7.85 frame_avg_us=145715.6 frame_min_us=139707 frame_max_us=148418 display=DMA frames=8
+
+[TGX telemetry] cycle=8 scene=gouraud fps=7.53 frame_avg_us=132574.0 frame_min_us=129526 frame_max_us=140505 display=DMA frames=8
+
+[TGX telemetry] cycle=8 scene=gouraud fps=7.13 frame_avg_us=140188.5 frame_min_us=130421 frame_max_us=146190 display=DMA frames=8
+
+[TGX telemetry] cycle=8 scene=gouraud fps=6.76 frame_avg_us=147769.7 frame_min_us=146954 frame_max_us=148646 display=DMA frames=7
+
+[TGX telemetry] cycle=8 scene=gouraud fps=6.96 frame_avg_us=143665.0 frame_min_us=138801 frame_max_us=149786 display=DMA frames=7
+
+[TGX telemetry] cycle=8 scene=gouraud fps=7.57 frame_avg_us=132072.7 frame_min_us=129798 frame_max_us=138467 display=DMA frames=8
+
+[TGX telemetry] cycle=8 scene=gouraud fps=6.98 frame_avg_us=143111.4 frame_min_us=139912 frame_max_us=147639 display=DMA frames=8
+
+[TGX telemetry] cycle=8 scene=gouraud fps=6.81 frame_avg_us=146674.0 frame_min_us=145774 frame_max_us=147752 display=DMA frames=7
+
+[TGX telemetry] cycle=8 scene=gouraud fps=7.31 frame_avg_us=136652.4 frame_min_us=128890 frame_max_us=145136 display=DMA frames=8
+
+[TGX telemetry] cycle=8 scene=gouraud fps=7.69 frame_avg_us=129869.0 frame_min_us=126270 frame_max_us=136346 display=DMA frames=8
+
+[TGX telemetry] cycle=8 scene=gouraud fps=6.97 frame_avg_us=143198.7 frame_min_us=138553 frame_max_us=147271 display=DMA frames=8
+
+[TGX telemetry] cycle=8 scene=gouraud fps=6.88 frame_avg_us=145330.1 frame_min_us=142843 frame_max_us=146790 display=DMA frames=7
+
+[TGX telemetry] cycle=8 scene=gouraud fps=7.50 frame_avg_us=133152.1 frame_min_us=128253 frame_max_us=139234 display=DMA frames=8
+
+[TGX telemetry] cycle=8 scene=gouraud fps=7.41 frame_avg_us=135025.1 frame_min_us=128170 frame_max_us=142343 display=DMA frames=8
+
+[TGX scene] cycle=9 scene=gouraud_texture
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=6.25 frame_avg_us=187642.0 frame_min_us=179811 frame_max_us=194250 display=DMA frames=7
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=5.77 frame_avg_us=173142.5 frame_min_us=170262 frame_max_us=180302 display=DMA frames=6
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=5.55 frame_avg_us=180237.0 frame_min_us=169814 frame_max_us=189002 display=DMA frames=6
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=5.21 frame_avg_us=191922.7 frame_min_us=190505 frame_max_us=192622 display=DMA frames=6
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=5.51 frame_avg_us=181316.7 frame_min_us=171515 frame_max_us=189957 display=DMA frames=6
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=5.65 frame_avg_us=176928.5 frame_min_us=171651 frame_max_us=188105 display=DMA frames=6
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=5.02 frame_avg_us=199240.0 frame_min_us=186085 frame_max_us=214777 display=DMA frames=6
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=4.73 frame_avg_us=211168.2 frame_min_us=200643 frame_max_us=217201 display=DMA frames=5
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=5.13 frame_avg_us=194981.2 frame_min_us=192152 frame_max_us=199587 display=DMA frames=6
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=5.13 frame_avg_us=194788.2 frame_min_us=189729 frame_max_us=202894 display=DMA frames=6
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=4.65 frame_avg_us=215030.8 frame_min_us=209202 frame_max_us=218110 display=DMA frames=5
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=4.97 frame_avg_us=201128.2 frame_min_us=193449 frame_max_us=210681 display=DMA frames=5
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=5.21 frame_avg_us=191901.3 frame_min_us=185135 frame_max_us=200056 display=DMA frames=6
+
+[TGX telemetry] cycle=9 scene=gouraud_texture fps=5.19 frame_avg_us=192547.3 frame_min_us=186104 frame_max_us=198597 display=DMA frames=6
+
+[TGX scene] cycle=10 scene=wireframe
+
+[TGX telemetry] cycle=10 scene=wireframe fps=13.26 frame_avg_us=81230.0 frame_min_us=80077 frame_max_us=82045 display=DMA frames=14
+
+[TGX telemetry] cycle=10 scene=wireframe fps=13.61 frame_avg_us=73471.1 frame_min_us=69869 frame_max_us=78856 display=DMA frames=14
+
+[TGX telemetry] cycle=10 scene=wireframe fps=13.20 frame_avg_us=75762.0 frame_min_us=70310 frame_max_us=80758 display=DMA frames=14
+
+[TGX telemetry] cycle=10 scene=wireframe fps=12.33 frame_avg_us=81068.8 frame_min_us=80793 frame_max_us=81503 display=DMA frames=13
+
+[TGX telemetry] cycle=10 scene=wireframe fps=12.40 frame_avg_us=80588.0 frame_min_us=78323 frame_max_us=81621 display=DMA frames=13
+
+[TGX telemetry] cycle=10 scene=wireframe fps=13.90 frame_avg_us=71865.8 frame_min_us=70133 frame_max_us=77062 display=DMA frames=14
+
+[TGX telemetry] cycle=10 scene=wireframe fps=12.91 frame_avg_us=77393.8 frame_min_us=70222 frame_max_us=80551 display=DMA frames=13
+
+[TGX telemetry] cycle=10 scene=wireframe fps=12.51 frame_avg_us=79862.9 frame_min_us=78925 frame_max_us=81117 display=DMA frames=13
+
+[TGX telemetry] cycle=10 scene=wireframe fps=12.72 frame_avg_us=78541.2 frame_min_us=75275 frame_max_us=80022 display=DMA frames=13
+
+[TGX telemetry] cycle=10 scene=wireframe fps=14.35 frame_avg_us=69618.8 frame_min_us=68514 frame_max_us=74499 display=DMA frames=15
+
+[TGX telemetry] cycle=10 scene=wireframe fps=13.02 frame_avg_us=76786.0 frame_min_us=68907 frame_max_us=79724 display=DMA frames=14
+
+[TGX telemetry] cycle=10 scene=wireframe fps=12.58 frame_avg_us=79398.9 frame_min_us=78896 frame_max_us=79921 display=DMA frames=13
+
+[TGX telemetry] cycle=10 scene=wireframe fps=12.87 frame_avg_us=77683.9 frame_min_us=74116 frame_max_us=79836 display=DMA frames=13
+

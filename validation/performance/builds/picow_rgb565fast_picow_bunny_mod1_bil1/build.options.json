@@ -1,0 +1,9 @@
+{
+  "additionalFiles": "..\\..,..\\..,..\\..",
+  "compiler.optimization_flags": "",
+  "customBuildProperties": "compiler.cpp.extra_flags=-DTGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL=0 -DTGX_SHADER_GOURAUD_RGB565_FLOAT_INCREMENTAL=0 -DTGX_SHADER_RGB565_FAST_TEXTURE_MODULATE=1 -DTGX_SHADER_RGB565_FAST_BILINEAR=1",
+  "fqbn": "rp2040:rp2040:rpipicow",
+  "hardwareFolders": "C:\\Users\\Vindar\\AppData\\Local\\Arduino15\\packages\\rp2040\\hardware\\rp2040\\5.6.0,C:\\Users\\Vindar\\AppData\\Local\\Arduino15\\packages\\rp2040\\hardware\\rp2040\\5.6.0",
+  "otherLibrariesFolders": "D:\\Programmation\\arduino\\libraries,C:\\Users\\Vindar\\Documents\\Arduino\\libraries",
+  "sketchLocation": "D:\\Programmation\\tgx\\examples\\Pico_RP2040_RP2350\\bunny_fig"
+}

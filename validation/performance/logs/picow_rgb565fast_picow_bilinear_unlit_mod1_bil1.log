@@ -1,0 +1,50 @@
+
+2026-06-15 13:37:37.732 BOARD=picow
+2026-06-15 13:37:37.745 PORT=COM19
+2026-06-15 13:37:37.747 UPLOAD_PORT=COM19
+2026-06-15 13:37:37.749 FQBN=rp2040:rp2040:rpipicow
+2026-06-15 13:37:37.751 SKETCH=D:\Programmation\tgx\validation\performance\investigations\2026-06-current-shader-smoke\sketches\PicoWShaderBilinearFlagBench
+2026-06-15 13:37:37.752 PARSE_MODE=generic
+2026-06-15 13:37:37.754 VISIBLE_PORTS_BEFORE=COM19,COM6,COM7
+2026-06-15 13:37:37.756 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port  Protocol Type              Board Name                 FQBN                                   Core
+COM19 serial   Serial Port (USB) Degz Robotics Suibo RP2040 rp2040:rp2040:degz_suibo               rp2040:rp2040
+               Serial Port (USB) EVN Alpha                  rp2040:rp2040:evn_alpha                rp2040:rp2040
+               Serial Port (USB) Generic RP2040             rp2040:rp2040:generic                  rp2040:rp2040
+               Serial Port (USB) Generic Sea-Picro          rp2040:rp2040:sea_picro                rp2040:rp2040
+               Serial Port (USB) Raspberry Pi Pico W        rp2040:rp2040:rpipicow                 rp2040:rp2040
+               Serial Port (USB) Vicharak Shrike-Lite       rp2040:rp2040:vicharak_shrike-lite     rp2040:rp2040
+               Serial Port (USB) Waveshare RP2350B Plus W   rp2040:rp2040:waveshare_rp2350b_plus_w rp2040:rp2040
+COM6  serial   Serial Port       Unknown
+COM7  serial   Serial Port       Unknown
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-15 13:37:37.762 ATTEMPT=1
+2026-06-15 13:37:38.107 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-15 13:37:38.120 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn rp2040:rp2040:rpipicow --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\validation\performance\builds\picow_rgb565fast_picow_bilinear_unlit_mod1_bil1 --build-property compiler.cpp.extra_flags=-DTGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL=0 -DTGX_SHADER_GOURAUD_RGB565_FLOAT_INCREMENTAL=0 -DTGX_SHADER_RGB565_FAST_TEXTURE_MODULATE=1 -DTGX_SHADER_RGB565_FAST_BILINEAR=1 --port COM19 --upload D:\Programmation\tgx\validation\performance\investigations\2026-06-current-shader-smoke\sketches\PicoWShaderBilinearFlagBench
+2026-06-15 13:38:10.710 ARDUINO: Le croquis utilise 104816 octets (5%) de l'espace de stockage de programmes. Le maximum est de 2093056 octets.
+2026-06-15 13:38:10.712 ARDUINO: Les variables globales utilisent 109128 octets (41%) de mémoire dynamique, ce qui laisse 153016 octets pour les variables locales. Le maximum est de 262144 octets.
+2026-06-15 13:38:10.714 ARDUINO: Resetting COM19
+2026-06-15 13:38:10.715 ARDUINO: Converting to uf2, output size: 244224, start address: 0x2000
+2026-06-15 13:38:10.717 ARDUINO: Scanning for RP2040 devices
+2026-06-15 13:38:10.719 ARDUINO: Flashing E: (RPI-RP2)
+2026-06-15 13:38:10.721 ARDUINO: Wrote 244224 bytes to E:/NEW.UF2
+2026-06-15 13:38:10.722 ARDUINO_EXIT_CODE=0
+2026-06-15 13:38:10.726 VISIBLE_PORTS_AFTER_UPLOAD=COM19,COM6,COM7
+2026-06-15 13:38:10.730 POST_UPLOAD_DELAY_SECONDS=2
+2026-06-15 13:38:12.749 WAIT_PORT_OK=True SEEN=True PORTS=COM19,COM6,COM7
+2026-06-15 13:38:14.843 CAPTURE_STATUS=SUCCESS LINES=5 START=True END=True MATCHES=0
+2026-06-15 13:38:19.520 ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN
+Port  Protocol Type              Board Name                 FQBN                                   Core
+COM19 serial   Serial Port (USB) Degz Robotics Suibo RP2040 rp2040:rp2040:degz_suibo               rp2040:rp2040
+               Serial Port (USB) EVN Alpha                  rp2040:rp2040:evn_alpha                rp2040:rp2040
+               Serial Port (USB) Generic RP2040             rp2040:rp2040:generic                  rp2040:rp2040
+               Serial Port (USB) Generic Sea-Picro          rp2040:rp2040:sea_picro                rp2040:rp2040
+               Serial Port (USB) Raspberry Pi Pico W        rp2040:rp2040:rpipicow                 rp2040:rp2040
+               Serial Port (USB) Vicharak Shrike-Lite       rp2040:rp2040:vicharak_shrike-lite     rp2040:rp2040
+               Serial Port (USB) Waveshare RP2350B Plus W   rp2040:rp2040:waveshare_rp2350b_plus_w rp2040:rp2040
+COM6  serial   Serial Port       Unknown
+COM7  serial   Serial Port       Unknown
+
+ARDUINO_BOARD_LIST_AFTER_UPLOAD_END
+2026-06-15 13:38:19.532 FINAL_STATUS=SUCCESS

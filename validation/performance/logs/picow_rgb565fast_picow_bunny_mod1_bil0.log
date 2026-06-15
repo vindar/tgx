@@ -1,0 +1,59 @@
+
+2026-06-15 13:13:49.529 BOARD=picow
+2026-06-15 13:13:49.540 PORT=COM19
+2026-06-15 13:13:49.541 UPLOAD_PORT=COM19
+2026-06-15 13:13:49.544 FQBN=rp2040:rp2040:rpipicow
+2026-06-15 13:13:49.546 SKETCH=D:\Programmation\tgx\examples\Pico_RP2040_RP2350\bunny_fig
+2026-06-15 13:13:49.547 PARSE_MODE=example
+2026-06-15 13:13:49.549 VISIBLE_PORTS_BEFORE=COM19,COM6,COM7
+2026-06-15 13:13:49.551 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port  Protocol Type              Board Name                 FQBN                                   Core
+COM19 serial   Serial Port (USB) Degz Robotics Suibo RP2040 rp2040:rp2040:degz_suibo               rp2040:rp2040
+               Serial Port (USB) EVN Alpha                  rp2040:rp2040:evn_alpha                rp2040:rp2040
+               Serial Port (USB) Generic RP2040             rp2040:rp2040:generic                  rp2040:rp2040
+               Serial Port (USB) Generic Sea-Picro          rp2040:rp2040:sea_picro                rp2040:rp2040
+               Serial Port (USB) Raspberry Pi Pico W        rp2040:rp2040:rpipicow                 rp2040:rp2040
+               Serial Port (USB) Vicharak Shrike-Lite       rp2040:rp2040:vicharak_shrike-lite     rp2040:rp2040
+               Serial Port (USB) Waveshare RP2350B Plus W   rp2040:rp2040:waveshare_rp2350b_plus_w rp2040:rp2040
+COM6  serial   Serial Port       Unknown
+COM7  serial   Serial Port       Unknown
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-15 13:13:49.558 ATTEMPT=1
+2026-06-15 13:13:49.896 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-15 13:13:49.908 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn rp2040:rp2040:rpipicow --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\validation\performance\builds\picow_rgb565fast_picow_bunny_mod1_bil0 --build-property compiler.cpp.extra_flags=-DTGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL=0 -DTGX_SHADER_GOURAUD_RGB565_FLOAT_INCREMENTAL=0 -DTGX_SHADER_RGB565_FAST_TEXTURE_MODULATE=1 -DTGX_SHADER_RGB565_FAST_BILINEAR=0 --port COM19 --upload D:\Programmation\tgx\examples\Pico_RP2040_RP2350\bunny_fig
+2026-06-15 13:14:39.226 ARDUINO: In file included from D:\Programmation\tgx\examples\Pico_RP2040_RP2350\bunny_fig\bunny_fig.ino:23:
+2026-06-15 13:14:39.227 ARDUINO: D:\Programmation\arduino\libraries\TFT_eSPI/TFT_eSPI.h:973:8: warning: #warning >>>>------>> TOUCH_CS pin not defined, TFT_eSPI touch functions will not be available! [-Wcpp]
+2026-06-15 13:14:39.229 ARDUINO:   973 |       #warning >>>>------>> TOUCH_CS pin not defined, TFT_eSPI touch functions will not be available!
+2026-06-15 13:14:39.231 ARDUINO:       |        ^~~~~~~
+2026-06-15 13:14:39.233 ARDUINO: In file included from D:\Programmation\arduino\libraries\TFT_eSPI\TFT_eSPI.cpp:16:
+2026-06-15 13:14:39.234 ARDUINO: D:\Programmation\arduino\libraries\TFT_eSPI\TFT_eSPI.h:973:8: warning: #warning >>>>------>> TOUCH_CS pin not defined, TFT_eSPI touch functions will not be available! [-Wcpp]
+2026-06-15 13:14:39.236 ARDUINO:   973 |       #warning >>>>------>> TOUCH_CS pin not defined, TFT_eSPI touch functions will not be available!
+2026-06-15 13:14:39.237 ARDUINO:       |        ^~~~~~~
+2026-06-15 13:14:39.239 ARDUINO: Le croquis utilise 571684 octets (27%) de l'espace de stockage de programmes. Le maximum est de 2093056 octets.
+2026-06-15 13:14:39.240 ARDUINO: La mémoire disponible faible, des problèmes de stabilité pourraient survenir.
+2026-06-15 13:14:39.242 ARDUINO: Les variables globales utilisent 205884 octets (78%) de mémoire dynamique, ce qui laisse 56260 octets pour les variables locales. Le maximum est de 262144 octets.
+2026-06-15 13:14:39.243 ARDUINO: Resetting COM19
+2026-06-15 13:14:39.245 ARDUINO: Converting to uf2, output size: 1179136, start address: 0x2000
+2026-06-15 13:14:39.247 ARDUINO: Scanning for RP2040 devices
+2026-06-15 13:14:39.249 ARDUINO: Flashing E: (RPI-RP2)
+2026-06-15 13:14:39.250 ARDUINO: Wrote 1179136 bytes to E:/NEW.UF2
+2026-06-15 13:14:39.252 ARDUINO_EXIT_CODE=0
+2026-06-15 13:14:39.255 VISIBLE_PORTS_AFTER_UPLOAD=COM19,COM6,COM7
+2026-06-15 13:14:39.259 POST_UPLOAD_DELAY_SECONDS=2
+2026-06-15 13:14:41.272 WAIT_PORT_OK=True SEEN=True PORTS=COM19,COM6,COM7
+2026-06-15 13:17:11.401 CAPTURE_STATUS=SUCCESS LINES=287 START=True END=True MATCHES=134
+2026-06-15 13:17:16.024 ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN
+Port  Protocol Type              Board Name                 FQBN                                   Core
+COM19 serial   Serial Port (USB) Degz Robotics Suibo RP2040 rp2040:rp2040:degz_suibo               rp2040:rp2040
+               Serial Port (USB) EVN Alpha                  rp2040:rp2040:evn_alpha                rp2040:rp2040
+               Serial Port (USB) Generic RP2040             rp2040:rp2040:generic                  rp2040:rp2040
+               Serial Port (USB) Generic Sea-Picro          rp2040:rp2040:sea_picro                rp2040:rp2040
+               Serial Port (USB) Raspberry Pi Pico W        rp2040:rp2040:rpipicow                 rp2040:rp2040
+               Serial Port (USB) Vicharak Shrike-Lite       rp2040:rp2040:vicharak_shrike-lite     rp2040:rp2040
+               Serial Port (USB) Waveshare RP2350B Plus W   rp2040:rp2040:waveshare_rp2350b_plus_w rp2040:rp2040
+COM6  serial   Serial Port       Unknown
+COM7  serial   Serial Port       Unknown
+
+ARDUINO_BOARD_LIST_AFTER_UPLOAD_END
+2026-06-15 13:17:16.065 FINAL_STATUS=SUCCESS

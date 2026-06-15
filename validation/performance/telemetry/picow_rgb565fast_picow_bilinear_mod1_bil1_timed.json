@@ -1,0 +1,18 @@
+[
+    {
+        "t_ms":  379,
+        "line":  "CASE=bilinear_flat FRAMES=10 PRIMITIVES_PER_FRAME=4 TIME_US=665454 AVG_FRAME_US=66545.40 AVG_PRIMITIVE_US=16636.35 CHECKSUM=0"
+    },
+    {
+        "t_ms":  1168,
+        "line":  "CASE=bilinear_gouraud FRAMES=10 PRIMITIVES_PER_FRAME=4 TIME_US=664268 AVG_FRAME_US=66426.80 AVG_PRIMITIVE_US=16606.70 CHECKSUM=0"
+    },
+    {
+        "t_ms":  1168,
+        "line":  "SUMMARY_HASH=0"
+    },
+    {
+        "t_ms":  1168,
+        "line":  "TGX_FAST_BILINEAR_PROBE_END"
+    }
+]
