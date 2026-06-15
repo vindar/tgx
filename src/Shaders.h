@@ -445,6 +445,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
             int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
+            (void)C1;
 
             float cw_z = 0.0f;
             float cw_p = 0.0f;
