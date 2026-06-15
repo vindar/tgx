@@ -70,50 +70,109 @@ namespace tgx
 
 
 
-#ifndef TGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL
-#define TGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL 1
-#endif
-
-
-#ifndef TGX_SHADER_GOURAUD_RGB565_FLOAT_INCREMENTAL
-#define TGX_SHADER_GOURAUD_RGB565_FLOAT_INCREMENTAL 1
-#endif
-
-#ifndef TGX_SHADER_GOURAUD_RGB565_CLAMP
-#define TGX_SHADER_GOURAUD_RGB565_CLAMP 0
-#endif
-
-
 TGX_INLINE inline int tgx_clamp_i32(const int x, const int lo, const int hi)
     {
     return (x < lo) ? lo : ((x > hi) ? hi : x);
     }
 
 
-TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, const int b)
+TGX_INLINE inline uint16_t tgx_rgb565_pack_raw_u16(const int r, const int g, const int b)
     {
-    #if TGX_SHADER_GOURAUD_RGB565_CLAMP
-    const int rr = tgx_clamp_i32(r, 0, 31);
-    const int gg = tgx_clamp_i32(g, 0, 63);
-    const int bb = tgx_clamp_i32(b, 0, 31);
-    #else
-    const int rr = r;
-    const int gg = g;
-    const int bb = b;
-    #endif
+    #if TGX_SHADER_RGB565_FAST_CLAMP
+    const uint32_t rr = (uint32_t)tgx_clamp_i32(r, 0, 31);
+    const uint32_t gg = (uint32_t)tgx_clamp_i32(g, 0, 63);
+    const uint32_t bb = (uint32_t)tgx_clamp_i32(b, 0, 31);
     #if TGX_RGB565_ORDER_BGR
-    return RGB565((uint16_t)(((uint16_t)rr << 11) | ((uint16_t)gg << 5) | (uint16_t)bb));
+    return (uint16_t)((rr << 11) | (gg << 5) | bb);
     #else
-    return RGB565((uint16_t)(((uint16_t)bb << 11) | ((uint16_t)gg << 5) | (uint16_t)rr));
+    return (uint16_t)((bb << 11) | (gg << 5) | rr);
+    #endif
+    #else // Same spirit as RGB565 bitfields: keep only the useful low bits.
+    #if TGX_RGB565_ORDER_BGR
+    return (uint16_t)(((uint32_t)r << 11) | ((uint32_t)g << 5) | (uint32_t)b);
+    #else
+    return (uint16_t)(((uint32_t)b << 11) | ((uint32_t)g << 5) | (uint32_t)r);
+    #endif
     #endif
     }
+
+
+TGX_INLINE inline int tgx_rgb565_r5(const RGB565 c)
+    {
+    #if TGX_RGB565_ORDER_BGR
+    return (int)((c.val >> 11) & 31u);
+    #else
+    return (int)(c.val & 31u);
+    #endif
+    }
+
+
+TGX_INLINE inline int tgx_rgb565_g6(const RGB565 c)
+    {
+    return (int)((c.val >> 5) & 63u);
+    }
+
+
+TGX_INLINE inline int tgx_rgb565_b5(const RGB565 c)
+    {
+    #if TGX_RGB565_ORDER_BGR
+    return (int)(c.val & 31u);
+    #else
+    return (int)((c.val >> 11) & 31u);
+    #endif
+    }
+
+
+TGX_INLINE inline RGB565 tgx_rgb565_modulate256(const RGB565 c, const int mr, const int mg, const int mb)
+    {
+    const int r = (tgx_rgb565_r5(c) * mr) >> 8;
+    const int g = (tgx_rgb565_g6(c) * mg) >> 8;
+    const int b = (tgx_rgb565_b5(c) * mb) >> 8;
+    return RGB565(tgx_rgb565_pack_raw_u16(r, g, b));
+    }
+
+
+TGX_INLINE inline RGB565 tgx_rgb565_bilinear_fast(const RGB565& C00, const RGB565& C10, const RGB565& C01, const RGB565& C11, const float ax, const float ay)
+    {
+    const int iax = (int)(ax * 256);
+    const int iay = (int)(ay * 256);
+    const int rax = 256 - iax;
+    const int ray = 256 - iay;
+    const int R = rax * (ray * tgx_rgb565_r5(C00) + iay * tgx_rgb565_r5(C01)) + iax * (ray * tgx_rgb565_r5(C10) + iay * tgx_rgb565_r5(C11));
+    const int G = rax * (ray * tgx_rgb565_g6(C00) + iay * tgx_rgb565_g6(C01)) + iax * (ray * tgx_rgb565_g6(C10) + iay * tgx_rgb565_g6(C11));
+    const int B = rax * (ray * tgx_rgb565_b5(C00) + iay * tgx_rgb565_b5(C01)) + iax * (ray * tgx_rgb565_b5(C10) + iay * tgx_rgb565_b5(C11));
+    return RGB565(tgx_rgb565_pack_raw_u16(R >> 16, G >> 16, B >> 16));
+    }
+
+
+TGX_INLINE inline RGB565 tgx_rgb565_bilinear_modulate256(const RGB565& C00, const RGB565& C10, const RGB565& C01, const RGB565& C11, const float ax, const float ay,const int mr, const int mg, const int mb)
+    {
+    const int iax = (int)(ax * 256);
+    const int iay = (int)(ay * 256);
+    const int rax = 256 - iax;
+    const int ray = 256 - iay;
+    const int R = rax * (ray * tgx_rgb565_r5(C00) + iay * tgx_rgb565_r5(C01)) + iax * (ray * tgx_rgb565_r5(C10) + iay * tgx_rgb565_r5(C11));
+    const int G = rax * (ray * tgx_rgb565_g6(C00) + iay * tgx_rgb565_g6(C01)) + iax * (ray * tgx_rgb565_g6(C10) + iay * tgx_rgb565_g6(C11));
+    const int B = rax * (ray * tgx_rgb565_b5(C00) + iay * tgx_rgb565_b5(C01)) + iax * (ray * tgx_rgb565_b5(C10) + iay * tgx_rgb565_b5(C11));
+    const int r = (R * mr) >> 24;
+    const int g = (G * mg) >> 24;
+    const int b = (B * mb) >> 24;
+    return RGB565(tgx_rgb565_pack_raw_u16(r, g, b));
+    }
+
+
+TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, const int b)
+    {
+    return RGB565(tgx_rgb565_pack_raw_u16(r, g, b));
+    }
+
 
 
 
 
     /**
     * UBER-SHADER for all 3D rendering variants.
-    * forced-inline version
+    * forced-inline version 
     **/
     template<typename color_t, typename ZBUFFER_t,
              bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE,
@@ -306,7 +365,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
             texsize_y_mm = texsize_y - 1;
             texstride = data.tex->stride();
 
-            T1 = fP1.T; T2 = fP2.T; T3 = fP3.T;
+            T1 = fP1.T; T2 = fP2.T; T3 = fP3.T;            
 
             if constexpr (USE_ORTHO)
                 {
@@ -486,51 +545,154 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                         float icw = 1.0f;
                         if constexpr (!USE_ORTHO)
                             {
-                            icw = fast_inv(cw_p);
+                            icw = fast_inv_approx(cw_p);
                             }
 
                         float xx = tx * icw;
                         float yy = ty * icw;
 
-                        if constexpr (TEXTURE_BILINEAR)
-                            {
-                            const int ttx = lfloorf(xx);
-                            const int tty = lfloorf(yy);
-                            const float ax = xx - ttx;
-                            const float ay = yy - tty;
-
-                            const int minx = TEXTURE_WRAP ? (ttx & texsize_x_mm) : shaderclip(ttx, texsize_x_mm);
-                            const int maxx = TEXTURE_WRAP ? ((ttx + 1) & texsize_x_mm) : shaderclip(ttx + 1, texsize_x_mm);
-                            const int miny = (TEXTURE_WRAP ? (tty & texsize_y_mm) : shaderclip(tty, texsize_y_mm)) * texstride;
-                            const int maxy = (TEXTURE_WRAP ? ((tty + 1) & texsize_y_mm) : shaderclip(tty + 1, texsize_y_mm)) * texstride;
-
-                            final_color = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);
-                            }
-                        else // Nearest neighbor
-                            {
-                            const int ttx = TEXTURE_WRAP ? ((int)(xx)) & texsize_x_mm : shaderclip((int)(xx), texsize_x_mm);
-                            const int tty = TEXTURE_WRAP ? ((int)(yy)) & texsize_y_mm : shaderclip((int)(yy), texsize_y_mm);
-                            final_color = tex[ttx + tty * texstride];
-                            }
+                        int modR = 256;
+                        int modG = 256;
+                        int modB = 256;
 
                         if constexpr (USE_GOURAUD)
                             {
 #if TGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL
-                            const int r = (int)gR;
-                            const int g = (int)gG;
-                            const int b = (int)gB;
+                            modR = (int)gR;
+                            modG = (int)gG;
+                            modB = (int)gB;
 #else
                             const int32_t C2s = C2 >> shiftC;
                             const int32_t C3s = C3 >> shiftC;
-                            const int r = fP1R + ((C2s * fP21R + C3s * fP31R) / aeraShifted);
-                            const int g = fP1G + ((C2s * fP21G + C3s * fP31G) / aeraShifted);
-                            const int b = fP1B + ((C2s * fP21B + C3s * fP31B) / aeraShifted);
+                            modR = fP1R + ((C2s * fP21R + C3s * fP31R) / aeraShifted);
+                            modG = fP1G + ((C2s * fP21G + C3s * fP31G) / aeraShifted);
+                            modB = fP1B + ((C2s * fP21B + C3s * fP31B) / aeraShifted);
 #endif
-                            final_color.mult256(r, g, b);
                             }
                         else if constexpr (!USE_UNLIT) // Flat
                             {
-                            final_color.mult256(fPR, fPG, fPB);
+                            modR = fPR;
+                            modG = fPG;
+                            modB = fPB;
+                            }
+
+#if TGX_SHADER_RGB565_FAST_TEXTURE_MODULATE
+                        if constexpr (std::is_same<color_t, RGB565>::value)
+                            {
+                            if constexpr (TEXTURE_BILINEAR)
+                                {
+                                const int ttx = lfloorf(xx);
+                                const int tty = lfloorf(yy);
+                                const float ax = xx - ttx;
+                                const float ay = yy - tty;
+
+                                const int minx = TEXTURE_WRAP ? (ttx & texsize_x_mm) : shaderclip(ttx, texsize_x_mm);
+                                const int maxx = TEXTURE_WRAP ? ((ttx + 1) & texsize_x_mm) : shaderclip(ttx + 1, texsize_x_mm);
+                                const int miny = (TEXTURE_WRAP ? (tty & texsize_y_mm) : shaderclip(tty, texsize_y_mm)) * texstride;
+                                const int maxy = (TEXTURE_WRAP ? ((tty + 1) & texsize_y_mm) : shaderclip(tty + 1, texsize_y_mm)) * texstride;
+
+                                if constexpr (USE_UNLIT)
+                                    {
+#if TGX_SHADER_RGB565_FAST_BILINEAR
+                                    final_color = tgx_rgb565_bilinear_fast(
+                                        tex[minx + miny],
+                                        tex[maxx + miny],
+                                        tex[minx + maxy],
+                                        tex[maxx + maxy],
+                                        ax,
+                                        ay);
+#else
+                                    final_color = interpolateColorsBilinear(
+                                        tex[minx + miny],
+                                        tex[maxx + miny],
+                                        tex[minx + maxy],
+                                        tex[maxx + maxy],
+                                        ax,
+                                        ay);
+#endif
+                                    }
+                                else
+                                    {
+                                    final_color = tgx_rgb565_bilinear_modulate256(
+                                        tex[minx + miny],
+                                        tex[maxx + miny],
+                                        tex[minx + maxy],
+                                        tex[maxx + maxy],
+                                        ax,
+                                        ay,
+                                        modR,
+                                        modG,
+                                        modB);
+                                    }
+                                }
+                            else // Nearest neighbor
+                                {
+                                const int ttx = TEXTURE_WRAP ? ((int)(xx)) & texsize_x_mm : shaderclip((int)(xx), texsize_x_mm);
+                                const int tty = TEXTURE_WRAP ? ((int)(yy)) & texsize_y_mm : shaderclip((int)(yy), texsize_y_mm);
+
+                                if constexpr (USE_UNLIT)
+                                    {
+                                    final_color = tex[ttx + tty * texstride];
+                                    }
+                                else
+                                    {
+                                    final_color = tgx_rgb565_modulate256(tex[ttx + tty * texstride], modR, modG, modB);
+                                    }
+                                }
+                            }
+                        else
+#endif
+                            {
+                            if constexpr (TEXTURE_BILINEAR)
+                                {
+                                const int ttx = lfloorf(xx);
+                                const int tty = lfloorf(yy);
+                                const float ax = xx - ttx;
+                                const float ay = yy - tty;
+
+                                const int minx = TEXTURE_WRAP ? (ttx & texsize_x_mm) : shaderclip(ttx, texsize_x_mm);
+                                const int maxx = TEXTURE_WRAP ? ((ttx + 1) & texsize_x_mm) : shaderclip(ttx + 1, texsize_x_mm);
+                                const int miny = (TEXTURE_WRAP ? (tty & texsize_y_mm) : shaderclip(tty, texsize_y_mm)) * texstride;
+                                const int maxy = (TEXTURE_WRAP ? ((tty + 1) & texsize_y_mm) : shaderclip(tty + 1, texsize_y_mm)) * texstride;
+
+#if TGX_SHADER_RGB565_FAST_BILINEAR
+                                if constexpr (std::is_same<color_t, RGB565>::value)
+                                    {
+                                    final_color = tgx_rgb565_bilinear_fast(
+                                        tex[minx + miny],
+                                        tex[maxx + miny],
+                                        tex[minx + maxy],
+                                        tex[maxx + maxy],
+                                        ax,
+                                        ay);
+                                    }
+                                else
+#endif
+                                    {
+                                    final_color = interpolateColorsBilinear(
+                                        tex[minx + miny],
+                                        tex[maxx + miny],
+                                        tex[minx + maxy],
+                                        tex[maxx + maxy],
+                                        ax,
+                                        ay);
+                                    }
+                                }
+                            else // Nearest neighbor
+                                {
+                                const int ttx = TEXTURE_WRAP ? ((int)(xx)) & texsize_x_mm : shaderclip((int)(xx), texsize_x_mm);
+                                const int tty = TEXTURE_WRAP ? ((int)(yy)) & texsize_y_mm : shaderclip((int)(yy), texsize_y_mm);
+                                final_color = tex[ttx + tty * texstride];
+                                }
+
+                            if constexpr (USE_GOURAUD)
+                                {
+                                final_color.mult256(modR, modG, modB);
+                                }
+                            else if constexpr (!USE_UNLIT) // Flat
+                                {
+                                final_color.mult256(modR, modG, modB);
+                                }
                             }
                         }
                     else // No texture
@@ -553,6 +715,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                             final_color = flat_color;
                             }
                         }
+
 #if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
                     *pix = final_color;
 #else
@@ -583,11 +746,13 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
 #endif
 
                 bx++;
+
 #if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
                 pix++;
 #endif
 
                 if constexpr (USE_ZBUFFER) cw_z += dw_z;
+
 #if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
                 if constexpr (USE_ZBUFFER) zpix++;
 #endif
@@ -611,11 +776,8 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
 
 
 
-    /**
-    * UBER-SHADER for all 3D rendering variants.
-    * forced-inline version
-    **/
-   /*
+
+   /* OLD VERSION 
     template<typename color_t, typename ZBUFFER_t,
              bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE,
              bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP,
@@ -1039,13 +1201,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
         }
 */
 
-
-
-    /**
-    * UBER-SHADER for all 3D rendering variants.
-    * forced-inline version
-    **/
-   /*
+   /* VERY OLD VERSION
     template<typename color_t, typename ZBUFFER_t,
              bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE,
              bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP,
