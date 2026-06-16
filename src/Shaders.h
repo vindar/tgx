@@ -543,14 +543,18 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
 
                     if constexpr (USE_TEXTURE)
                         {
-                        float icw = 1.0f;
+                        float xx, yy;
                         if constexpr (!USE_ORTHO)
                             {
-                            icw = fast_inv_approx(cw_p);
+                            const float icw = fast_inv_approx(cw_p);
+                            xx = tx * icw;
+                            yy = ty * icw;
                             }
-
-                        float xx = tx * icw;
-                        float yy = ty * icw;
+                        else
+                            {
+                            xx = tx;
+                            yy = ty;
+                            }
 
                         int modR = 256;
                         int modG = 256;
