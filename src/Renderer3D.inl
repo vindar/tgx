@@ -1552,7 +1552,11 @@ namespace tgx
                     _precomputeSpecularTable(specularExpo);
                     int raster_type = _shaders;
                     if (mesh->normal == nullptr) { TGX_SHADER_REMOVE_GOURAUD(raster_type) } // gouraud shading not available so we disable it
-                    if ((mesh->texcoord == nullptr) || (mesh->texture == nullptr)) TGX_SHADER_REMOVE_TEXTURING_ENABLED(raster_type) // texturing not available so we disable it
+                    if ((mesh->texcoord == nullptr) || (mesh->texture == nullptr))
+                        {
+                        TGX_SHADER_REMOVE_TEXTURING_ENABLED(raster_type)
+                        TGX_SHADER_ADD_NOTEXTURE(raster_type)
+                        } // texturing not available so we disable it
                     _drawMesh(raster_type, mesh);
                     }
                 mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
@@ -1894,7 +1898,11 @@ namespace tgx
 
                 int raster_type = RASTER_TYPE;
                 if (!HAS_NORMALS) { TGX_SHADER_REMOVE_GOURAUD(raster_type) }
-                if ((!HAS_TEXCOORDS) || (current_texture == nullptr)) { TGX_SHADER_REMOVE_TEXTURING_ENABLED(raster_type) }
+                if ((!HAS_TEXCOORDS) || (current_texture == nullptr))
+                    {
+                    TGX_SHADER_REMOVE_TEXTURING_ENABLED(raster_type)
+                    TGX_SHADER_ADD_NOTEXTURE(raster_type)
+                    }
 
                 if (current_raster_type != raster_type)
                     {
@@ -2096,7 +2104,11 @@ namespace tgx
                 if (!_validDraw()) return;
                 int shader = _shaders;
                 if ((N1 == nullptr) || (N2 == nullptr) || (N3 == nullptr)) { TGX_SHADER_REMOVE_GOURAUD(shader) }
-                if ((T1 == nullptr) || (T2 == nullptr) || (T3 == nullptr) || (texture == nullptr)) { TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader) }
+                if ((T1 == nullptr) || (T2 == nullptr) || (T3 == nullptr) || (texture == nullptr))
+                    {
+                    TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader)
+                    TGX_SHADER_ADD_NOTEXTURE(shader)
+                    }
                 _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
                 _uni.tex = (const Image<color_t>*)texture;
                 _drawTriangle(shader, &P1, &P2, &P3, N1, N2, N3, T1, T2, T3, _r_objectColor, _r_objectColor, _r_objectColor);
@@ -2111,6 +2123,7 @@ namespace tgx
                 if (!_validDraw()) return;
                 int shader = _shaders;
                 TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader)
+                TGX_SHADER_ADD_NOTEXTURE(shader)
                 _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
                 if (TGX_SHADER_HAS_GOURAUD(shader))
                     {
@@ -2146,7 +2159,11 @@ namespace tgx
 
             int shader = _shaders;
             if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud
-            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader) // disable texture
+            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr))
+                {
+                TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader)
+                TGX_SHADER_ADD_NOTEXTURE(shader)
+                } // disable texture
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             nb_triangles *= 3;
 
@@ -2212,7 +2229,11 @@ namespace tgx
 
             int shader = _shaders;
             if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud
-            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader) // disable texture
+            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr))
+                {
+                TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader)
+                TGX_SHADER_ADD_NOTEXTURE(shader)
+                } // disable texture
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             if (TGX_SHADER_HAS_TEXTURING_ENABLED(shader)) _uni.tex = (const Image<color_t>*)texture_image;
             _drawTriangleStrip(shader, nb_indices, ind_vertices, vertices, ind_normals, normals, ind_texture, textures);
@@ -2228,7 +2249,11 @@ namespace tgx
             if (!_validDraw()) return;
             int shader = _shaders;
             if ((N1 == nullptr) || (N2 == nullptr) || (N3 == nullptr) || (N4 == nullptr)) { TGX_SHADER_REMOVE_GOURAUD(shader) }
-            if ((T1 == nullptr) || (T2 == nullptr) || (T3 == nullptr) || (T4 == nullptr) || (texture == nullptr)) { TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader) }
+            if ((T1 == nullptr) || (T2 == nullptr) || (T3 == nullptr) || (T4 == nullptr) || (texture == nullptr))
+                {
+                TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader)
+                TGX_SHADER_ADD_NOTEXTURE(shader)
+                }
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             _uni.tex = (const Image<color_t>*)texture;
             _drawQuad(shader, &P1, &P2, &P3, &P4, N1, N2, N3, N4, T1, T2, T3, T4, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
@@ -2243,6 +2268,7 @@ namespace tgx
             if (!_validDraw()) return;
             int shader = _shaders;
             TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader)
+            TGX_SHADER_ADD_NOTEXTURE(shader)
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
             if (TGX_SHADER_HAS_GOURAUD(shader))
                 {
@@ -2278,7 +2304,11 @@ namespace tgx
 
             int shader = _shaders;
             if ((ind_normals == nullptr) || (normals == nullptr)) TGX_SHADER_REMOVE_GOURAUD(shader) // disable gouraud
-            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr)) TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader) // disable texture
+            if ((ind_texture == nullptr) || (textures == nullptr) || (texture_image == nullptr))
+                {
+                TGX_SHADER_REMOVE_TEXTURING_ENABLED(shader)
+                TGX_SHADER_ADD_NOTEXTURE(shader)
+                } // disable texture
             _precomputeSpecularTable(_specularExponent); // precomputed pow(.specularexpo) if needed
 
             nb_quads *= 4;
@@ -4425,6 +4455,7 @@ namespace tgx
             if (texture == nullptr)
                 {
                 TGX_SHADER_REMOVE_TEXTURING_ENABLED(_shaders);
+                TGX_SHADER_ADD_NOTEXTURE(_shaders);
                 }
 
             // set culling direction = 1 and save previous value
