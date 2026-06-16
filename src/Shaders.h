@@ -1580,8 +1580,62 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
             { // USING ZBUFFER
             if ((!TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_ORTHO(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_ORTHO(raster_type)))
                 { // USING ORTHOGRAPHIC PROJECTION
-                if ((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type)))
+                if (((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_TEXTURE_AFFINE(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type)))
                     { // Texture
+                    if (((!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type)))
+                        { // Gouraud
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, true, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    else if (((!TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_UNLIT(raster_type)))
+                        { // Unlit
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
+                        { // Flat
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    }
+                else if (((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_TEXTURE_AFFINE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_AFFINE(raster_type)))
+                    { // Texture affine
                     if (((!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type)))
                         { // Gouraud
                         if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
@@ -1644,8 +1698,62 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                 }
             else if (TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED))
                 { // USING PERSPECTIVE PROJECTION
-                if ((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type)))
+                if (((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_TEXTURE_AFFINE(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type)))
                     { // Texture
+                    if (((!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type)))
+                        { // Gouraud
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, false, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, true, true, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    else if (((!TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_UNLIT(raster_type)))
+                        { // Unlit
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
+                        { // Flat
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, true, false, true, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    }
+                else if (((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_TEXTURE_AFFINE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_AFFINE(raster_type)))
+                    { // Texture affine
                     if (((!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type)))
                         { // Gouraud
                         if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
@@ -1711,8 +1819,62 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
             { // NOT USING Z-BUFFER
             if ((!TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_ORTHO(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_ORTHO(raster_type)))
                 { // USING ORTHOGRAPHIC PROJECTION
-                if ((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type)))
+                if (((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_TEXTURE_AFFINE(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type)))
                     { // Texture
+                    if (((!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type)))
+                        { // Gouraud
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, true, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    else if (((!TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_UNLIT(raster_type)))
+                        { // Unlit
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
+                        { // Flat
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    }
+                else if (((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_TEXTURE_AFFINE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_AFFINE(raster_type)))
+                    { // Texture affine
                     if (((!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type)))
                         { // Gouraud
                         if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
@@ -1775,8 +1937,62 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                 }
             else if (TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED))
                 { // USING PERSPECTIVE PROJECTION
-                if ((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type)))
+                if (((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_TEXTURE_AFFINE(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE(raster_type)))
                     { // Texture
+                    if (((!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type)))
+                        { // Gouraud
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, false, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, true, true, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    else if (((!TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_UNLIT(raster_type)))
+                        { // Unlit
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, true, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, true, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    else if (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
+                        { // Flat
+                        if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
+                            { // Bilinear
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, true, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        else if (TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+                            { // Nearest
+                            if ((!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type)))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            else if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+                                uber_shader<color_t, ZBUFFER_t, false, false, true, false, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                            }
+                        }
+                    }
+                else if (((!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_TEXTURE_AFFINE(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_AFFINE(raster_type)))
+                    { // Texture affine
                     if (((!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED)) && (!TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED))) || (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_GOURAUD(raster_type)))
                         { // Gouraud
                         if ((!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED)) || (TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED) && TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type)))
