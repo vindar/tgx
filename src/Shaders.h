@@ -186,6 +186,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
         {
         static_assert(!(USE_GOURAUD && USE_UNLIT), "UNLIT and GOURAUD shader variants are mutually exclusive.");
         static_assert((!USE_UNLIT) || USE_TEXTURE, "The dedicated UNLIT shader variant is only useful for textured rendering.");
+        constexpr bool USE_PERSPECTIVE_TEXTURE = USE_TEXTURE && !USE_ORTHO && !USE_TEXTURE_AFFINE;
 
         // --- Common setup for all shaders ---
         const int32_t stride = data.im->stride();
@@ -225,11 +226,12 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
             wa = data.wa;
             wb = data.wb;
 
-            if constexpr (!(USE_TEXTURE && !USE_ORTHO))
+            if constexpr (!USE_PERSPECTIVE_TEXTURE)
                 {
                 // Normal z path, needed for:
                 //   - no texture
                 //   - orthographic texture
+                //   - affine texture
                 //
                 // Use base+delta form:
                 //   cw_z = fP1a_z*aera + C2*(fP2a_z-fP1a_z) + C3*(fP3a_z-fP1a_z)
@@ -367,11 +369,11 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
 
             T1 = fP1.T; T2 = fP2.T; T3 = fP3.T;            
 
-            if constexpr (USE_ORTHO)
+            if constexpr (!USE_PERSPECTIVE_TEXTURE)
                 {
                 T1 *= invaera; T2 *= invaera; T3 *= invaera;
                 }
-            else // Perspective
+            else // Perspective-correct texture
                 {
                 invaera_persp = invaera;
                 fP1a_p = fP1.w * invaera_persp;
@@ -394,7 +396,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
             dtx = (T21x * dx2) + (T31x * dx3);
             dty = (T21y * dx2) + (T31y * dx3);
 
-            if constexpr (!USE_ORTHO)
+            if constexpr (USE_PERSPECTIVE_TEXTURE)
                 {
                 fP21a_p = fP2a_p - fP1a_p;
                 fP31a_p = fP3a_p - fP1a_p;
@@ -478,7 +480,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                 tx = T1x_aera + (T21x * C2) + (T31x * C3);
                 ty = T1y_aera + (T21y * C2) + (T31y * C3);
 
-                if constexpr (!USE_ORTHO)
+                if constexpr (USE_PERSPECTIVE_TEXTURE)
                     {
                     cw_p = fP1a_p_aera + (fP21a_p * C2) + (fP31a_p * C3);
                     if constexpr (USE_ZBUFFER)
@@ -490,7 +492,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
 
             if constexpr (USE_ZBUFFER)
                 {
-                if constexpr (!(USE_TEXTURE && !USE_ORTHO))
+                if constexpr (!USE_PERSPECTIVE_TEXTURE)
                     {
                     cw_z = fP1a_z_aera + (C2 * fP21a_z) + (C3 * fP31a_z);
                     if constexpr (!USE_ORTHO) { cw_z += wb; }
@@ -544,7 +546,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                     if constexpr (USE_TEXTURE)
                         {
                         float xx, yy;
-                        if constexpr (!USE_ORTHO)
+                        if constexpr (USE_PERSPECTIVE_TEXTURE)
                             {
                             const float icw = fast_inv_approx(cw_p);
                             xx = tx * icw;
@@ -766,7 +768,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                     {
                     tx += dtx;
                     ty += dty;
-                    if constexpr (!USE_ORTHO) cw_p += dw_p;
+                    if constexpr (USE_PERSPECTIVE_TEXTURE) cw_p += dw_p;
                     }
                 }
 
