@@ -1365,7 +1365,7 @@ namespace tgx
         template<bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2)
             {
-            rasterizeTriangle<uber_shader<color_t, ZBUFFER_t, false, false, true, false, TEXTURE_BILINEAR, TEXTURE_WRAP, true> >(_lx, _ly, V0, V1, V2, _ox, _oy, _uni);
+            rasterizeTriangle<uber_shader<color_t, ZBUFFER_t, false, false, true, false, TEXTURE_BILINEAR, TEXTURE_WRAP, true, false> >(_lx, _ly, V0, V1, V2, _ox, _oy, _uni);
             }
 
 
