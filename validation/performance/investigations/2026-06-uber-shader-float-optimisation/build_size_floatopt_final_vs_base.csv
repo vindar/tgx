@@ -1,0 +1,14 @@
+board,example,base_code_bytes,final_code_bytes,delta_code_bytes,base_sketch_bytes,final_sketch_bytes,delta_sketch_bytes,base_data_bytes,final_data_bytes,delta_data_bytes,base_headers_bytes,final_headers_bytes,delta_headers_bytes,base_ram1_variables_bytes,final_ram1_variables_bytes,delta_ram1_variables_bytes,base_ram2_variables_bytes,final_ram2_variables_bytes,delta_ram2_variables_bytes,base_dynamic_variables_bytes,final_dynamic_variables_bytes,delta_dynamic_variables_bytes
+teensy41,mars,238064,237936,-128,,,,1646960,1646960,0,8348,8476,128,329824,329824,0,452480,452480,0,,,
+teensy41,test_shading,192292,192292,0,,,,989272,989272,0,8320,8320,0,347040,347040,0,489440,489440,0,,,
+teensy41,test_texture,177316,177316,0,,,,1050608,1050608,0,9064,9064,0,340512,340512,0,521024,521024,0,,,
+teensy41,buddha,142340,142340,0,,,,232576,232576,0,9080,9080,0,344928,344928,0,479456,479456,0,,,
+core2,borg_cube,,,,446867,446867,0,,,,,,,,,,,,,33236,33236,0
+core2,donkeykong,,,,647891,647891,0,,,,,,,,,,,,,24984,24984,0
+core2,scream,,,,478367,478367,0,,,,,,,,,,,,,55332,55332,0
+cores3,borg_cube,,,,434755,434755,0,,,,,,,,,,,,,32716,32716,0
+cores3,donkeykong,,,,634411,634411,0,,,,,,,,,,,,,24572,24572,0
+cores3,scream,,,,465055,465055,0,,,,,,,,,,,,,54812,54812,0
+pico2,borg_cube,,,,173236,173220,-16,,,,,,,,,,,,,442512,442512,0
+pico2,bunny_fig,,,,345348,345308,-40,,,,,,,,,,,,,443836,443836,0
+pico2,scream,,,,205076,205044,-32,,,,,,,,,,,,,293628,293628,0
