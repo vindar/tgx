@@ -350,8 +350,11 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
             }
         else // Flat or unlit shading
             {
-            flat_color = (color_t)data.facecolor;
-            if constexpr (USE_TEXTURE && !USE_UNLIT)
+            if constexpr (!USE_TEXTURE)
+                {
+                flat_color = (color_t)data.facecolor;
+                }
+            else if constexpr (!USE_UNLIT)
                 {
                 const RGBf& cf = data.facecolor;
                 fPR = (int)(256 * cf.R); fPG = (int)(256 * cf.G); fPB = (int)(256 * cf.B);
@@ -444,10 +447,8 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                 }
 
             // --- Per-scanline setup ---
-            int32_t C1 = O1 + (dx1 * bx) + E;
             int32_t C2 = O2 + (dx2 * bx);
             int32_t C3 = O3 + (dx3 * bx);
-            (void)C1;
 
             float cw_z = 0.0f;
             float cw_p = 0.0f;
