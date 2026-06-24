@@ -65,6 +65,7 @@ TFT_eSPI tft = TFT_eSPI();
 
 const Shader LOADED_SHADERS = SHADER_ORTHO | SHADER_PERSPECTIVE |
                               SHADER_ZBUFFER | SHADER_FLAT |
+                              SHADER_TEXTURE |
                               SHADER_TEXTURE_NEAREST |
                               SHADER_TEXTURE_WRAP_POW2;
 

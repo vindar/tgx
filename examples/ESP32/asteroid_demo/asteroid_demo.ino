@@ -60,6 +60,7 @@ float render_ratio = 1.0f;
 
 const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER |
                               SHADER_FLAT | SHADER_GOURAUD |
+                              SHADER_TEXTURE |
                               SHADER_TEXTURE_NEAREST |
                               SHADER_TEXTURE_WRAP_POW2 |
                               SHADER_NOTEXTURE;
@@ -117,7 +118,7 @@ void drawHeroShip(const ShipState& ship)
     const float yaw = yawForDirection(ship.v);
     const float pitch = pitchForDirection(ship.v) * 0.55f + ship.pitch;
     setMeshMatrix(ship.p.x, ship.p.y, ship.p.z, ship.scale, yaw, pitch, ship.roll);
-    renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+    renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
     renderer.drawMesh(&xwing_demo, true);
     }
 
@@ -128,7 +129,7 @@ void drawWingShip(const WingShipState& wing)
     const float yaw = yawForDirection(wing.v);
     const float pitch = pitchForDirection(wing.v) * 0.45f;
     setMeshMatrix(wing.p.x, wing.p.y, wing.p.z, wing.scale, yaw, pitch, wing.roll);
-    renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+    renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
     renderer.drawMesh(&tie, true);
     }
 

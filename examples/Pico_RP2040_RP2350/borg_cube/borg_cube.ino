@@ -66,6 +66,7 @@ const uint16_t SCREEN_BORDER_COLOR = TFT_BLACK;
 // Only the shader paths used by this sketch are compiled in.
 const Shader LOADED_SHADERS = SHADER_ORTHO | SHADER_PERSPECTIVE |
                               SHADER_ZBUFFER | SHADER_FLAT |
+                              SHADER_TEXTURE |
                               SHADER_TEXTURE_NEAREST |
                               SHADER_TEXTURE_WRAP_POW2;
 

@@ -1161,7 +1161,7 @@ namespace MachineAnimation
         const fVec3 P3 = { 1.0f, 0.0f, -2.0f };
         const fVec3 P4 = { 1.0f, 0.0f, 2.0f };
         renderer.setMaterial(RGBf(1.0f, 1.0f, 1.0f), 0.2f, 0.7f, 0.5f, 8);
-        renderer.setShaders(SHADER_FLAT | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_CLAMP);
+        renderer.setShaders(SHADER_FLAT | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_CLAMP);
         renderer.drawQuad(P1, P2, P3, P4, nullptr, nullptr, nullptr, nullptr, &t1, &t2, &t3, &t4, &texture);
         }
 
@@ -1176,7 +1176,7 @@ namespace MachineAnimation
         const fVec3 Q2 = { 98.668825f, -24.5161f, 11.181857f };
         const fVec3 Q3 = { 98.668825f, 24.4439f, 11.181857f };
         const fVec3 Q4 = { 89.323831f, 24.4439f, 46.692845f };
-        renderer.setShaders(SHADER_FLAT | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_CLAMP);
+        renderer.setShaders(SHADER_FLAT | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_CLAMP);
         renderer.setTextureWrappingMode(SHADER_TEXTURE_CLAMP);
         renderer.setMaterial(RGBf(1.0f, 1.0f, 1.0f), 0.2f, 0.7f, 0.5f, 8);
         renderer.drawQuad(Q1, Q2, Q3, Q4, nullptr, nullptr, nullptr, nullptr, &t1, &t4, &t3, &t2, displayImage);
@@ -1529,7 +1529,7 @@ namespace MachineAnimation
         const float cradleRot = lerp(t, 0, endDive, 0, 5 * 360, 1, 1);
         drawSARCASM3D(cradleRot, GRIPPER_OPEN_DEG, TUMBLE_PARKED_DEG, M);
 
-        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_CLAMP);
+        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_CLAMP);
         renderer.setMaterial(RGBf(1.0f, 1.0f, 0.0f), 0.2f, 0.7f, 0.5f, 8);
         fMat4 S;
         S.setRotate(0, { 0, 0, 1 });

@@ -58,6 +58,7 @@ const Shader LOADED_SHADERS = SHADER_PERSPECTIVE |
                               SHADER_FLAT |
                               SHADER_GOURAUD |
                               SHADER_NOTEXTURE |
+                              SHADER_TEXTURE |
                               SHADER_TEXTURE_NEAREST |
                               SHADER_TEXTURE_WRAP_POW2;
 

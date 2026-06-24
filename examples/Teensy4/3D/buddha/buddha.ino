@@ -86,8 +86,8 @@ DMAMEM uint16_t zbuf[SLX * SLY];
 // Image that encapsulates fb.
 Image<RGB565> im(fb, SLX, SLY);
 
-// We only use Gouraud shading with perspective projection and a z-buffer.
-const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD;
+// We only use Gouraud shading without texturing, with perspective projection and a z-buffer.
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE;
 
 // The renderer object that performs the 3D drawings.
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
@@ -132,7 +132,7 @@ void setup()
     renderer.setZbuffer(zbuf); // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)SLX) / SLY, 1.0f, 100.0f);  // set the perspective projection matrix.     
     renderer.setMaterial(RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // bronze color with a lot of specular reflection.
-    renderer.setShaders(SHADER_GOURAUD);
+    renderer.setShaders(SHADER_GOURAUD | SHADER_NOTEXTURE);
 
     // cache the mesh payload and small metadata arrays in RAM.
     buddha_cached = tgx::cacheMesh(&buddha, buf_DTCM, DTCM_buf_size);
