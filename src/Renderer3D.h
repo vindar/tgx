@@ -416,12 +416,17 @@ namespace tgx
         *
         * - `SHADER_TEXTURE_AFFINE`:  enable affine texture mapping. Texture coordinates are interpolated linearly in screen space (fast but lower quality). A texture must be stored in an Image<color_t> object.
         *
-        *                      - wrap mode can be set with setTextureWrappingMode() or passing along either `SHADER_TEXTURE_WRAP_POW2` or `SHADER_TEXTURE_CLAMP`.
-        *                      - drawing quality can be set with setTextureQuality() or by passing along either `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`.
+        * Texturing also uses:
+        *
+        * - a wrap mode set with setTextureWrappingMode(), or passed as either `SHADER_TEXTURE_WRAP_POW2` or `SHADER_TEXTURE_CLAMP`.
+        *
+        * - a sampling quality set with setTextureQuality(), or passed as either `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`.
         *
         * @remark
-        * 1. If a shader flag is set with SetShaders() but is disabled in the template parameter LOADED_SHADER,
-        *    then the drawing calls will silently fail (draw nothing).
+        * 1. Every runtime shader choice must be enabled in the template parameter `LOADED_SHADERS`,
+        *    including "disabled" choices such as `SHADER_NOTEXTURE` or `SHADER_NOZBUFFER`.
+        *    If a shader flag is set with setShaders() but is missing from `LOADED_SHADERS`,
+        *    then the drawing calls may silently fail (draw nothing).
         * 2. `SHADER_UNLIT` skips lighting: textured pixels use the texture color directly and untextured pixels use
         *    the current material color.
         * 3. The color on the face (for flat shading) or on the vertices (for gouraud shading) is computed

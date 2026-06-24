@@ -11,6 +11,7 @@ var _shader_params_8h =
       [ "SHADER_UNLIT", "_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a9511f1424480c9eea8160d365a08f502", null ],
       [ "SHADER_NOTEXTURE", "_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a612eed5a49521db755ed897ececc898f", null ],
       [ "SHADER_TEXTURE", "_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a948fe24bc5b2f298510991b6d505fcb1", null ],
+      [ "SHADER_TEXTURE_AFFINE", "_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a66e62b3f251c485c2a180bbba3a3d376", null ],
       [ "SHADER_TEXTURE_NEAREST", "_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a57b5d6d50ba084c8555af3ef00dfec58", null ],
       [ "SHADER_TEXTURE_BILINEAR", "_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07aa5581a155be5220223a3583b265a443c", null ],
       [ "SHADER_TEXTURE_WRAP_POW2", "_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07ae79f091d5822a4c1a59a43c7ef890f4e", null ],

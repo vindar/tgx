@@ -64,8 +64,8 @@ uint16_t zbuffer[W * H];
 tgx::Image<tgx::RGB565> image(framebuffer, W, H);
 
 // Keep only the shader variants that this program will actually use.
-const tgx::Shader shaders_loaded = tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER | tgx::SHADER_FLAT | tgx::SHADER_GOURAUD |
-                                   tgx::SHADER_NOTEXTURE | tgx::SHADER_TEXTURE_NEAREST | tgx::SHADER_TEXTURE_WRAP_POW2;
+const tgx::Shader shaders_loaded = tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER |
+                                   tgx::SHADER_GOURAUD | tgx::SHADER_NOTEXTURE;
 
 using Renderer = tgx::Renderer3D<tgx::RGB565, shaders_loaded, uint16_t>;
 Renderer renderer({ W, H }, &image, zbuffer);
@@ -374,7 +374,9 @@ tgx::Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_
 - `MAX_SPOT_LIGHTS` is reserved for future spotlight support and defaults to `0`; spotlights are not rendered yet.
 
 The default `LOADED_SHADERS` enables every shader variant. This is convenient while experimenting. On MCU targets,
-load only the variants you use: it reduces code size and can help speed.
+load only the variants you really use: it reduces code size and can help speed because unused drawing paths disappear.
+This also applies to "negative" choices such as `SHADER_NOTEXTURE` and `SHADER_NOZBUFFER`: they must be listed in
+`LOADED_SHADERS` if the sketch may select them at runtime.
 
 No shader flag is needed for multiple directional lights. To keep the fastest legacy path, leave
 `MAX_DIRECTIONAL_LIGHTS` at its default value. To enable the advanced directional-light API, instantiate the renderer
@@ -392,13 +394,15 @@ texture sampling and power-of-two texture wrapping can be declared as:
 
 ~~~{.cpp}
 const tgx::Shader shaders_loaded = tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER | tgx::SHADER_GOURAUD |
+                                   tgx::SHADER_TEXTURE |
                                    tgx::SHADER_TEXTURE_NEAREST | tgx::SHADER_TEXTURE_WRAP_POW2;
 using Renderer = tgx::Renderer3D<tgx::RGB565, shaders_loaded, uint16_t>;
 ~~~
 
 @warning Runtime shader changes can only select variants that were enabled in `LOADED_SHADERS`. If a draw call needs
-a missing variant, it may draw nothing. This keeps hot drawing paths small and fast, so double-check the shader list
-when a scene unexpectedly disappears.
+a missing variant, including a "disabled" mode such as `SHADER_NOTEXTURE` or `SHADER_NOZBUFFER`, it may draw
+nothing. This keeps hot drawing paths small and fast, so double-check the shader list when a scene unexpectedly
+disappears.
 
 
 @subsection sec_3D_shaders Shader state
@@ -408,7 +412,7 @@ The renderer combines several independent shader choices:
 - projection: `SHADER_PERSPECTIVE` or `SHADER_ORTHO`;
 - depth mode: `SHADER_ZBUFFER` or `SHADER_NOZBUFFER`;
 - shading path: `SHADER_UNLIT`, `SHADER_FLAT` or `SHADER_GOURAUD`;
-- texture usage: `SHADER_NOTEXTURE` or `SHADER_TEXTURE`;
+- texture mapping: `SHADER_NOTEXTURE`, `SHADER_TEXTURE` or `SHADER_TEXTURE_AFFINE`;
 - texture sampling: `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`;
 - texture addressing: `SHADER_TEXTURE_WRAP_POW2` or `SHADER_TEXTURE_CLAMP`.
 
@@ -422,7 +426,8 @@ Runtime shader state describes the next draw call:
 | Projection path | perspective or orthographic. |
 | Depth path | with or without Z-buffer. |
 | Shading path | unlit, flat or Gouraud. |
-| Texture path | no texture, nearest texture, or bilinear texture. |
+| Texture mapping path | no texture, perspective-correct texture, or affine texture. |
+| Texture sampling path | nearest or bilinear texture lookup. |
 | Addressing path | wrapping or clamping texture coordinates. |
 
 | Shader choice | Meaning | Typical use |
@@ -435,7 +440,8 @@ Runtime shader state describes the next draw call:
 | `SHADER_FLAT` | One lighting result per triangle. | Fast faceted rendering. |
 | `SHADER_GOURAUD` | Lighting at vertices, interpolated across triangles. | Smoother curved meshes. |
 | `SHADER_NOTEXTURE` | Use material or vertex colors only. | Untextured models and debug views. |
-| `SHADER_TEXTURE` | Enable texture mapping for the next draw call. | Textured meshes or textured primitives. |
+| `SHADER_TEXTURE` | Use perspective-correct texture mapping. | Textured 3D meshes where quality matters. |
+| `SHADER_TEXTURE_AFFINE` | Use affine texture mapping, with texture coordinates interpolated in screen space. | Faster textured rendering when the distortion is acceptable. |
 | `SHADER_TEXTURE_NEAREST` | Nearest-neighbor texture lookup. | Fast textured rendering. |
 | `SHADER_TEXTURE_BILINEAR` | Bilinear texture filtering. | Smoother textures when speed allows. |
 | `SHADER_TEXTURE_WRAP_POW2` | Repeat power-of-two textures. | Fast tiling textures. |
@@ -458,6 +464,7 @@ const tgx::Shader shaders_loaded =
     tgx::SHADER_FLAT |
     tgx::SHADER_GOURAUD |
     tgx::SHADER_NOTEXTURE |
+    tgx::SHADER_TEXTURE |
     tgx::SHADER_TEXTURE_NEAREST |
     tgx::SHADER_TEXTURE_BILINEAR |
     tgx::SHADER_TEXTURE_WRAP_POW2;
@@ -470,7 +477,9 @@ renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);
 ~~~
 
 If a sketch only uses unlit textured geometry, do not load the flat or Gouraud lighting paths. If it switches between
-a flat debug view and a textured view, load both `SHADER_FLAT` and the texture mode.
+a flat debug view and a textured view, load both `SHADER_FLAT` and the texture mode. If it switches between textured
+and untextured drawing, load both the texture mode and `SHADER_NOTEXTURE`. If it sometimes draws without depth
+testing, load `SHADER_NOZBUFFER` too.
 
 Texture quality and wrapping may also be selected explicitly:
 
@@ -640,6 +649,9 @@ renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);
 renderer.setTextureWrappingMode(tgx::SHADER_TEXTURE_WRAP_POW2);
 renderer.drawCube(&texture, &texture, &texture, &texture, &texture, &texture);
 ~~~
+
+Use `SHADER_TEXTURE` for perspective-correct texture mapping. Use `SHADER_TEXTURE_AFFINE` for faster screen-space
+interpolation when the visual distortion on perspective triangles is acceptable.
 
 Two sampling modes are available:
 
@@ -870,6 +882,7 @@ uint16_t zbuffer[W * H];
 tgx::Image<tgx::RGB565> image(framebuffer, W, H);
 
 const tgx::Shader shaders_loaded = tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER | tgx::SHADER_GOURAUD |
+                                   tgx::SHADER_TEXTURE |
                                    tgx::SHADER_TEXTURE_NEAREST | tgx::SHADER_TEXTURE_WRAP_POW2;
 
 tgx::Renderer3D<tgx::RGB565, shaders_loaded, uint16_t> renderer({ W, H }, &image, zbuffer);

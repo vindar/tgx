@@ -152,8 +152,8 @@ What Renderer3D Does</h1>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> image(framebuffer, W, H);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Keep only the shader variants that this program will actually use.</span></div>
-<div class="line"><span class="keyword">const</span> <a class="code hl_enumeration" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">tgx::Shader</a> shaders_loaded = tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER | tgx::SHADER_FLAT | tgx::SHADER_GOURAUD |</div>
-<div class="line">                                   tgx::SHADER_NOTEXTURE | tgx::SHADER_TEXTURE_NEAREST | tgx::SHADER_TEXTURE_WRAP_POW2;</div>
+<div class="line"><span class="keyword">const</span> <a class="code hl_enumeration" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">tgx::Shader</a> shaders_loaded = tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER |</div>
+<div class="line">                                   tgx::SHADER_GOURAUD | tgx::SHADER_NOTEXTURE;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using </span>Renderer = <a class="code hl_class" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D&lt;tgx::RGB565, shaders_loaded, uint16_t&gt;</a>;</div>
 <div class="line">Renderer renderer({ W, H }, &amp;image, zbuffer);</div>
@@ -180,7 +180,7 @@ What Renderer3D Does</h1>
 <div class="line">}</div>
 <div class="ttc" id="a_shader_params_8h_html_ab84545b1975d51484ba2f5970b858d07"><div class="ttname"><a href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">tgx::Shader</a></div><div class="ttdeci">Shader</div><div class="ttdoc">List of shaders available for 3D graphics.</div><div class="ttdef"><b>Definition:</b> ShaderParams.h:44</div></div>
 <div class="ttc" id="aclasstgx_1_1_image_html"><div class="ttname"><a href="classtgx_1_1_image.html">tgx::Image</a></div><div class="ttdoc">Image class [MAIN CLASS FOR THE 2D API].</div><div class="ttdef"><b>Definition:</b> Image.h:145</div></div>
-<div class="ttc" id="aclasstgx_1_1_renderer3_d_html"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a></div><div class="ttdoc">Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].</div><div class="ttdef"><b>Definition:</b> Renderer3D.h:115</div></div>
+<div class="ttc" id="aclasstgx_1_1_renderer3_d_html"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D</a></div><div class="ttdoc">Class for drawing 3D objects onto a Image [MAIN CLASS FOR THE 3D API].</div><div class="ttdef"><b>Definition:</b> Renderer3D.h:117</div></div>
 <div class="ttc" id="aclasstgx_1_1_renderer3_d_html_ad03234d6a56d930f9674ad20ddf809f6"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#ad03234d6a56d930f9674ad20ddf809f6">tgx::Renderer3D::clearZbuffer</a></div><div class="ttdeci">void clearZbuffer()</div><div class="ttdoc">Clear the Zbuffer.</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_b565_html"><div class="ttname"><a href="structtgx_1_1_r_g_b565.html">tgx::RGB565</a></div><div class="ttdoc">Color in R5/G6/B5 format.</div><div class="ttdef"><b>Definition:</b> Color.h:216</div></div>
 <div class="ttc" id="astructtgx_1_1_r_g_bf_html"><div class="ttname"><a href="structtgx_1_1_r_g_bf.html">tgx::RGBf</a></div><div class="ttdoc">Color in R,G,B float format.</div><div class="ttdef"><b>Definition:</b> Color.h:2405</div></div>
@@ -447,15 +447,16 @@ Renderer template parameters</h1>
 <li><code>MAX_DIRECTIONAL_LIGHTS</code> is the compile-time capacity for directional lights. It defaults to <code>1</code>.</li>
 <li><code>MAX_SPOT_LIGHTS</code> is reserved for future spotlight support and defaults to <code>0</code>; spotlights are not rendered yet.</li>
 </ul>
-<p >The default <code>LOADED_SHADERS</code> enables every shader variant. This is convenient while experimenting. On MCU targets, load only the variants you use: it reduces code size and can help speed.</p>
+<p >The default <code>LOADED_SHADERS</code> enables every shader variant. This is convenient while experimenting. On MCU targets, load only the variants you really use: it reduces code size and can help speed because unused drawing paths disappear. This also applies to "negative" choices such as <code>SHADER_NOTEXTURE</code> and <code>SHADER_NOZBUFFER</code>: they must be listed in <code>LOADED_SHADERS</code> if the sketch may select them at runtime.</p>
 <p >No shader flag is needed for multiple directional lights. To keep the fastest legacy path, leave <code>MAX_DIRECTIONAL_LIGHTS</code> at its default value. To enable the advanced directional-light API, instantiate the renderer with a larger capacity, for example:</p>
 <div class="fragment"><div class="line"><span class="keyword">using </span>Renderer = <a class="code hl_class" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D&lt;tgx::RGB565, shaders_loaded, uint16_t, 4&gt;</a>;</div>
 </div><!-- fragment --><p >This compile-time shader list is one of the ways TGX stays small. Unused rasterizer paths can be removed by the compiler.</p>
 <p >For example, a fast textured mesh renderer using perspective projection, a Z-buffer, Gouraud lighting, nearest texture sampling and power-of-two texture wrapping can be declared as:</p>
 <div class="fragment"><div class="line"><span class="keyword">const</span> <a class="code hl_enumeration" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">tgx::Shader</a> shaders_loaded = tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER | tgx::SHADER_GOURAUD |</div>
+<div class="line">                                   tgx::SHADER_TEXTURE |</div>
 <div class="line">                                   tgx::SHADER_TEXTURE_NEAREST | tgx::SHADER_TEXTURE_WRAP_POW2;</div>
 <div class="line"><span class="keyword">using </span>Renderer = <a class="code hl_class" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D&lt;tgx::RGB565, shaders_loaded, uint16_t&gt;</a>;</div>
-</div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>Runtime shader changes can only select variants that were enabled in <code>LOADED_SHADERS</code>. If a draw call needs a missing variant, it may draw nothing. This keeps hot drawing paths small and fast, so double-check the shader list when a scene unexpectedly disappears.</dd></dl>
+</div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>Runtime shader changes can only select variants that were enabled in <code>LOADED_SHADERS</code>. If a draw call needs a missing variant, including a "disabled" mode such as <code>SHADER_NOTEXTURE</code> or <code>SHADER_NOZBUFFER</code>, it may draw nothing. This keeps hot drawing paths small and fast, so double-check the shader list when a scene unexpectedly disappears.</dd></dl>
 <h2><a class="anchor" id="sec_3D_shaders"></a>
 Shader state</h2>
 <p >The renderer combines several independent shader choices:</p>
@@ -463,7 +464,7 @@ Shader state</h2>
 <li>projection: <code>SHADER_PERSPECTIVE</code> or <code>SHADER_ORTHO</code>;</li>
 <li>depth mode: <code>SHADER_ZBUFFER</code> or <code>SHADER_NOZBUFFER</code>;</li>
 <li>shading path: <code>SHADER_UNLIT</code>, <code>SHADER_FLAT</code> or <code>SHADER_GOURAUD</code>;</li>
-<li>texture usage: <code>SHADER_NOTEXTURE</code> or <code>SHADER_TEXTURE</code>;</li>
+<li>texture mapping: <code>SHADER_NOTEXTURE</code>, <code>SHADER_TEXTURE</code> or <code>SHADER_TEXTURE_AFFINE</code>;</li>
 <li>texture sampling: <code>SHADER_TEXTURE_NEAREST</code> or <code>SHADER_TEXTURE_BILINEAR</code>;</li>
 <li>texture addressing: <code>SHADER_TEXTURE_WRAP_POW2</code> or <code>SHADER_TEXTURE_CLAMP</code>.</li>
 </ul>
@@ -479,8 +480,10 @@ Shader state</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Shading path   </td><td class="markdownTableBodyNone">unlit, flat or Gouraud.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Texture path   </td><td class="markdownTableBodyNone">no texture, nearest texture, or bilinear texture.    </td></tr>
+<td class="markdownTableBodyNone">Texture mapping path   </td><td class="markdownTableBodyNone">no texture, perspective-correct texture, or affine texture.    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Texture sampling path   </td><td class="markdownTableBodyNone">nearest or bilinear texture lookup.    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Addressing path   </td><td class="markdownTableBodyNone">wrapping or clamping texture coordinates.   </td></tr>
 </table>
 <table class="markdownTable">
@@ -503,14 +506,16 @@ Shader state</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>SHADER_NOTEXTURE</code>   </td><td class="markdownTableBodyNone">Use material or vertex colors only.   </td><td class="markdownTableBodyNone">Untextured models and debug views.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>SHADER_TEXTURE</code>   </td><td class="markdownTableBodyNone">Enable texture mapping for the next draw call.   </td><td class="markdownTableBodyNone">Textured meshes or textured primitives.    </td></tr>
+<td class="markdownTableBodyNone"><code>SHADER_TEXTURE</code>   </td><td class="markdownTableBodyNone">Use perspective-correct texture mapping.   </td><td class="markdownTableBodyNone">Textured 3D meshes where quality matters.    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_AFFINE</code>   </td><td class="markdownTableBodyNone">Use affine texture mapping, with texture coordinates interpolated in screen space.   </td><td class="markdownTableBodyNone">Faster textured rendering when the distortion is acceptable.    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>SHADER_TEXTURE_NEAREST</code>   </td><td class="markdownTableBodyNone">Nearest-neighbor texture lookup.   </td><td class="markdownTableBodyNone">Fast textured rendering.    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_BILINEAR</code>   </td><td class="markdownTableBodyNone">Bilinear texture filtering.   </td><td class="markdownTableBodyNone">Smoother textures when speed allows.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_WRAP_POW2</code>   </td><td class="markdownTableBodyNone">Repeat power-of-two textures.   </td><td class="markdownTableBodyNone">Fast tiling textures.    </td></tr>
+<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_BILINEAR</code>   </td><td class="markdownTableBodyNone">Bilinear texture filtering.   </td><td class="markdownTableBodyNone">Smoother textures when speed allows.    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>SHADER_TEXTURE_WRAP_POW2</code>   </td><td class="markdownTableBodyNone">Repeat power-of-two textures.   </td><td class="markdownTableBodyNone">Fast tiling textures.    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>SHADER_TEXTURE_CLAMP</code>   </td><td class="markdownTableBodyNone">Clamp texture coordinates to the edge.   </td><td class="markdownTableBodyNone">Non-power-of-two textures or non-repeating images.   </td></tr>
 </table>
 <p >The most common runtime call is:</p>
@@ -524,6 +529,7 @@ Shader state</h2>
 <div class="line">    tgx::SHADER_FLAT |</div>
 <div class="line">    tgx::SHADER_GOURAUD |</div>
 <div class="line">    tgx::SHADER_NOTEXTURE |</div>
+<div class="line">    tgx::SHADER_TEXTURE |</div>
 <div class="line">    tgx::SHADER_TEXTURE_NEAREST |</div>
 <div class="line">    tgx::SHADER_TEXTURE_BILINEAR |</div>
 <div class="line">    tgx::SHADER_TEXTURE_WRAP_POW2;</div>
@@ -534,7 +540,7 @@ Shader state</h2>
 <div class="line">renderer.<a class="code hl_function" href="classtgx_1_1_renderer3_d.html#a5d7e2a9ffaf174ff2a6cfc0187f001b6">setShaders</a>(tgx::SHADER_GOURAUD | tgx::SHADER_TEXTURE);</div>
 <div class="line">renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);</div>
 <div class="ttc" id="aclasstgx_1_1_renderer3_d_html_a5d7e2a9ffaf174ff2a6cfc0187f001b6"><div class="ttname"><a href="classtgx_1_1_renderer3_d.html#a5d7e2a9ffaf174ff2a6cfc0187f001b6">tgx::Renderer3D::setShaders</a></div><div class="ttdeci">void setShaders(Shader shaders)</div><div class="ttdoc">Set the shaders to use for subsequent drawing operations.</div></div>
-</div><!-- fragment --><p >If a sketch only uses unlit textured geometry, do not load the flat or Gouraud lighting paths. If it switches between a flat debug view and a textured view, load both <code>SHADER_FLAT</code> and the texture mode.</p>
+</div><!-- fragment --><p >If a sketch only uses unlit textured geometry, do not load the flat or Gouraud lighting paths. If it switches between a flat debug view and a textured view, load both <code>SHADER_FLAT</code> and the texture mode. If it switches between textured and untextured drawing, load both the texture mode and <code>SHADER_NOTEXTURE</code>. If it sometimes draws without depth testing, load <code>SHADER_NOZBUFFER</code> too.</p>
 <p >Texture quality and wrapping may also be selected explicitly:</p>
 <div class="fragment"><div class="line">renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);</div>
 <div class="line">renderer.setTextureWrappingMode(tgx::SHADER_TEXTURE_WRAP_POW2);</div>
@@ -657,7 +663,8 @@ Textures</h2>
 <div class="line">renderer.setTextureQuality(tgx::SHADER_TEXTURE_NEAREST);</div>
 <div class="line">renderer.setTextureWrappingMode(tgx::SHADER_TEXTURE_WRAP_POW2);</div>
 <div class="line">renderer.drawCube(&amp;texture, &amp;texture, &amp;texture, &amp;texture, &amp;texture, &amp;texture);</div>
-</div><!-- fragment --><p >Two sampling modes are available:</p>
+</div><!-- fragment --><p >Use <code>SHADER_TEXTURE</code> for perspective-correct texture mapping. Use <code>SHADER_TEXTURE_AFFINE</code> for faster screen-space interpolation when the visual distortion on perspective triangles is acceptable.</p>
+<p >Two sampling modes are available:</p>
 <ul>
 <li><code>SHADER_TEXTURE_NEAREST</code>: fastest, pixelated when magnified;</li>
 <li><code>SHADER_TEXTURE_BILINEAR</code>: smoother, slower.</li>
@@ -807,6 +814,7 @@ Complete embedded example</h1>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_image.html">tgx::Image&lt;tgx::RGB565&gt;</a> image(framebuffer, W, H);</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">const</span> <a class="code hl_enumeration" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">tgx::Shader</a> shaders_loaded = tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER | tgx::SHADER_GOURAUD |</div>
+<div class="line">                                   tgx::SHADER_TEXTURE |</div>
 <div class="line">                                   tgx::SHADER_TEXTURE_NEAREST | tgx::SHADER_TEXTURE_WRAP_POW2;</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_class" href="classtgx_1_1_renderer3_d.html">tgx::Renderer3D&lt;tgx::RGB565, shaders_loaded, uint16_t&gt;</a> renderer({ W, H }, &amp;image, zbuffer);</div>

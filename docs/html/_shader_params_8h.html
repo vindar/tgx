@@ -133,11 +133,12 @@ Enumerations</h2></td></tr>
 , <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a612eed5a49521db755ed897ececc898f">tgx::SHADER_NOTEXTURE</a> = (1 &lt;&lt; 7)
 , <br />
 &#160;&#160;<a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a948fe24bc5b2f298510991b6d505fcb1">tgx::SHADER_TEXTURE</a> = (1 &lt;&lt; 8)
+, <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a66e62b3f251c485c2a180bbba3a3d376">tgx::SHADER_TEXTURE_AFFINE</a> = (1 &lt;&lt; 9)
 , <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07a57b5d6d50ba084c8555af3ef00dfec58">tgx::SHADER_TEXTURE_NEAREST</a> = (1 &lt;&lt; 11)
 , <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07aa5581a155be5220223a3583b265a443c">tgx::SHADER_TEXTURE_BILINEAR</a> = (1 &lt;&lt; 12)
-, <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07ae79f091d5822a4c1a59a43c7ef890f4e">tgx::SHADER_TEXTURE_WRAP_POW2</a> = (1 &lt;&lt; 13)
 , <br />
-&#160;&#160;<a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07aecffed38f41d96bb98cf0f073c199a0f">tgx::SHADER_TEXTURE_CLAMP</a> = (1 &lt;&lt; 14)
+&#160;&#160;<a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07ae79f091d5822a4c1a59a43c7ef890f4e">tgx::SHADER_TEXTURE_WRAP_POW2</a> = (1 &lt;&lt; 13)
+, <a class="el" href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07aecffed38f41d96bb98cf0f073c199a0f">tgx::SHADER_TEXTURE_CLAMP</a> = (1 &lt;&lt; 14)
 <br />
  }</td></tr>
 <tr class="memdesc:ab84545b1975d51484ba2f5970b858d07"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of shaders available for 3D graphics.  <a href="_shader_params_8h.html#ab84545b1975d51484ba2f5970b858d07">More...</a><br /></td></tr>
@@ -233,7 +234,9 @@ constexpr Shader&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::oper
 </td></tr>
 <tr><td class="fieldname"><a id="ab84545b1975d51484ba2f5970b858d07a612eed5a49521db755ed897ececc898f" name="ab84545b1975d51484ba2f5970b858d07a612eed5a49521db755ed897ececc898f"></a>SHADER_NOTEXTURE&#160;</td><td class="fielddoc"><p >disable texture mapping </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ab84545b1975d51484ba2f5970b858d07a948fe24bc5b2f298510991b6d505fcb1" name="ab84545b1975d51484ba2f5970b858d07a948fe24bc5b2f298510991b6d505fcb1"></a>SHADER_TEXTURE&#160;</td><td class="fielddoc"><p >enable texture mapping </p>
+<tr><td class="fieldname"><a id="ab84545b1975d51484ba2f5970b858d07a948fe24bc5b2f298510991b6d505fcb1" name="ab84545b1975d51484ba2f5970b858d07a948fe24bc5b2f298510991b6d505fcb1"></a>SHADER_TEXTURE&#160;</td><td class="fielddoc"><p >enable perspective-correct texture mapping </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab84545b1975d51484ba2f5970b858d07a66e62b3f251c485c2a180bbba3a3d376" name="ab84545b1975d51484ba2f5970b858d07a66e62b3f251c485c2a180bbba3a3d376"></a>SHADER_TEXTURE_AFFINE&#160;</td><td class="fielddoc"><p >enable affine (non perspective-correct) texture mapping </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ab84545b1975d51484ba2f5970b858d07a57b5d6d50ba084c8555af3ef00dfec58" name="ab84545b1975d51484ba2f5970b858d07a57b5d6d50ba084c8555af3ef00dfec58"></a>SHADER_TEXTURE_NEAREST&#160;</td><td class="fielddoc"><p >use point sampling texture mapping </p>
 </td></tr>
