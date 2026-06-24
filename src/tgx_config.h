@@ -103,7 +103,7 @@
     #define TGX_USE_FAST_SQRT_TRICK 1
     #define TGX_USE_FAST_INV_TRICK 1
     #define TGX_USE_FMA_MATH 1
-    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
     #define TGX_INLINE __attribute__((always_inline))
     #define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_NOINLINE
@@ -288,7 +288,7 @@
     #define TGX_USE_FMA_MATH 1
     #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_INLINE __attribute__((always_inline))
-    #define TGX_INLINE_ZDIVIDE
+    #define TGX_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_NOINLINE
 
 #elif defined(__ARM_ARCH_7EM__)

@@ -503,6 +503,8 @@ class tgx::Renderer3D&lt; color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LI
 <li><code>SHADER_FLAT</code>: enable flat shading</li>
 <li><code>SHADER_GOURAUD</code>: enable Gouraud shading</li>
 <li><code>SHADER_NOTEXTURE</code>: enable rendering without texturing</li>
+<li><code>SHADER_TEXTURE</code>: enable rendering with perspective-correct texturing</li>
+<li><code>SHADER_TEXTURE_AFFINE</code>: enable rendering with affine texturing (faster but lower quality)</li>
 <li><code>SHADER_TEXTURE_NEAREST</code>: enable rendering with texturing using point sampling</li>
 <li><code>SHADER_TEXTURE_BILINEAR</code>: enable rendering with texturing using bilinear sampling</li>
 <li><code>SHADER_TEXTURE_WRAP_POW2</code>: texture can use 'wrap around' mode with dimensions of texture being power of two.</li>
@@ -1185,17 +1187,19 @@ template&lt;typename color_t , <a class="el" href="_shader_params_8h.html#ab8454
 <li><code>SHADER_UNLIT</code>: Use material color or texture color directly, without any lighting computation.</li>
 <li><code>SHADER_FLAT</code>: Use flat shading (i.e. uniform color on faces). This is the fastest drawing method but it usually gives poor results when combined with texturing. Lighting transitions between bright to dark aera may appear to flicker when using color with low resolution such as <a class="el" href="structtgx_1_1_r_g_b565.html" title="Color in R5/G6/B5 format.">RGB565</a>.</li>
 <li><code>SHADER_GOURAUD</code>: Use gouraud shading (linear interpolation of vertex colors) This results in smoother color transitions and works well with texturing but is more CPU intensive.</li>
-<li><code>SHADER_TEXTURE</code>: enable texture mapping. A texture must be stored in an Image&lt;color_t&gt; object.<ul>
-<li>wrap mode can be set with <a class="el" href="classtgx_1_1_renderer3_d.html#a7c5e6f6b50d6661ccc930fc77e8c7a6d" title="Set the wrap mode when for texturing.">setTextureWrappingMode()</a> or passing along either <code>SHADER_TEXTURE_WRAP_POW2</code> or <code>SHADER_TEXTURE_CLAMP</code>.</li>
-<li>drawing quality can be set with <a class="el" href="classtgx_1_1_renderer3_d.html#a040fde621543f0cf79f876cdca1ed969" title="Set the texturing quality.">setTextureQuality()</a> or by passing along either <code>SHADER_TEXTURE_NEAREST</code> or <code>SHADER_TEXTURE_BILINEAR</code>.</li>
+<li><code>SHADER_TEXTURE</code>: enable perspective-correct texture mapping. A texture must be stored in an Image&lt;color_t&gt; object.</li>
+<li><code>SHADER_TEXTURE_AFFINE</code>: enable affine texture mapping. Texture coordinates are interpolated linearly in screen space (fast but lower quality). A texture must be stored in an Image&lt;color_t&gt; object.</li>
 </ul>
-</li>
+<p >Texturing also uses:</p>
+<ul>
+<li>a wrap mode set with <a class="el" href="classtgx_1_1_renderer3_d.html#a7c5e6f6b50d6661ccc930fc77e8c7a6d" title="Set the wrap mode when for texturing.">setTextureWrappingMode()</a>, or passed as either <code>SHADER_TEXTURE_WRAP_POW2</code> or <code>SHADER_TEXTURE_CLAMP</code>.</li>
+<li>a sampling quality set with <a class="el" href="classtgx_1_1_renderer3_d.html#a040fde621543f0cf79f876cdca1ed969" title="Set the texturing quality.">setTextureQuality()</a>, or passed as either <code>SHADER_TEXTURE_NEAREST</code> or <code>SHADER_TEXTURE_BILINEAR</code>.</li>
 </ul>
 <dl class="section remark"><dt>Remarks</dt><dd><ol type="1">
-<li>If a shader flag is set with SetShaders() but is disabled in the template parameter LOADED_SHADER, then the drawing calls will silently fail (draw nothing).</li>
+<li>Every runtime shader choice must be enabled in the template parameter <code>LOADED_SHADERS</code>, including "disabled" choices such as <code>SHADER_NOTEXTURE</code> or <code>SHADER_NOZBUFFER</code>. If a shader flag is set with <a class="el" href="classtgx_1_1_renderer3_d.html#a5d7e2a9ffaf174ff2a6cfc0187f001b6" title="Set the shaders to use for subsequent drawing operations.">setShaders()</a> but is missing from <code>LOADED_SHADERS</code>, then the drawing calls may silently fail (draw nothing).</li>
 <li><code>SHADER_UNLIT</code> skips lighting: textured pixels use the texture color directly and untextured pixels use the current material color.</li>
 <li>The color on the face (for flat shading) or on the vertices (for gouraud shading) is computed according to Phong's lighting <a href="https://en.wikipedia.org/wiki/Phong_reflection_model">https://en.wikipedia.org/wiki/Phong_reflection_model</a>.</li>
-<li>Texture mapping is 'perspective correct'. With <code>SHADER_FLAT</code> or <code>SHADER_GOURAUD</code>, the texture color is combined with the lighting. With <code>SHADER_UNLIT</code>, the texture color is copied directly.</li>
+<li><code>SHADER_TEXTURE</code> mapping is perspective correct. <code>SHADER_TEXTURE_AFFINE</code> skips perspective correction. With <code>SHADER_FLAT</code> or <code>SHADER_GOURAUD</code>, the texture color is combined with the lighting. With <code>SHADER_UNLIT</code>, the texture color is copied directly.</li>
 <li>Large textures stored in flash memory may be VERY slow to access when the texture is not read linearly, which happens for some triangle orientations and can make the cache ineffective. This problem can be somewhat mitigated by:<ul>
 <li>splitting large textured triangles into smaller ones: then each triangle only accesses a small part of the texture. This helps cache locality a lot (this is why models with thousands of faces may display faster than a simple textured cube in some cases).</li>
 <li>moving the image into RAM if possible. Even moving the texture from FLASH to EXTMEM (if available) will usually give a great speed boost ! </li>

@@ -50,7 +50,9 @@ tgx::Image<tgx::RGB32> im(im_buffer, LX, LY);   // ...and associated tgx::Image 
 
 float zbuffer[LX * LY];                         // z-buffer (same sie as the image)
 
-tgx::Renderer3D<tgx::RGB32> renderer;           // the 3D renderer (loads all shaders). 
+const tgx::Shader LOADED_SHADERS = tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER |
+                                   tgx::SHADER_GOURAUD | tgx::SHADER_NOTEXTURE;
+tgx::Renderer3D<tgx::RGB32, LOADED_SHADERS> renderer;           // the 3D renderer.
 
 
 int main()
@@ -62,7 +64,7 @@ int main()
     renderer.setZbuffer(zbuffer);       // set the z buffer for depth testing
     renderer.setPerspective(45, ((float)LX) / LY, 1.0f, 100.0f);  // set the perspective projection matrix.     
     renderer.setMaterial(tgx::RGBf(0.85f, 0.55f, 0.25f), 0.2f, 0.7f, 0.8f, 64); // set material properties
-    renderer.setShaders(tgx::SHADER_GOURAUD); // draw with Gouraud shaders
+    renderer.setShaders(tgx::SHADER_GOURAUD | tgx::SHADER_NOTEXTURE); // draw with Gouraud shaders
 
     // draw the mesh 
     im.clear(tgx::RGB32_Gray);  // clear the image

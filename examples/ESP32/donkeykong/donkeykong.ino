@@ -53,11 +53,19 @@ int render_lx = 0;
 int render_ly = 0;
 float render_ratio = 1.0f;
 
+// Affine texturing is faster on ESP32-S2; other ESP32 variants keep perspective-correct texturing.
+#if defined(TGX_RUN_ON_ESP32S2)
+static constexpr Shader TEXTURE_SHADER = SHADER_TEXTURE_AFFINE;
+#else
+static constexpr Shader TEXTURE_SHADER = SHADER_TEXTURE;
+#endif
+
 const Shader LOADED_SHADERS = SHADER_PERSPECTIVE |
                               SHADER_ZBUFFER |
                               SHADER_FLAT |
                               SHADER_GOURAUD |
                               SHADER_NOTEXTURE |
+                              TEXTURE_SHADER |
                               SHADER_TEXTURE_NEAREST |
                               SHADER_TEXTURE_WRAP_POW2;
 
@@ -298,7 +306,7 @@ void loop()
     switch (loopnumber % 4)
         {
         case 0:
-            renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE);
+            renderer.setShaders(SHADER_GOURAUD | TEXTURE_SHADER);
             renderer.drawMesh(&donkeykong_small, false);
             break;
         case 1:

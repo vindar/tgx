@@ -99,7 +99,7 @@ DMAMEM char mesh_cache[mesh_cache_size];
 
 
 // only load the shaders we need (note that SHADER_NOTEXTURE is needed in order to draw without texturing !).
-const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
@@ -185,7 +185,7 @@ void drawModel(const Mesh3Dv2<RGB565>* mesh, int nb_triangles, float scale, cons
         int part = (em * 3) / maxT;
  
         // choose the shader to use
-        Shader shader = (part == 0) ? SHADER_GOURAUD : ((part == 1) ? (SHADER_GOURAUD | SHADER_TEXTURE_NEAREST) : (SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR));
+        Shader shader = (part == 0) ? SHADER_GOURAUD : ((part == 1) ? (SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST) : (SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR));
         if (part != prev_part)
             {
             prev_part = part;

@@ -63,9 +63,17 @@ uint32_t last_projection_switch_ms = 0;
 TFT_eSPI tft = TFT_eSPI();
 const uint16_t SCREEN_BORDER_COLOR = TFT_BLACK;
 
+// Affine texturing is faster on RP2040; RP2350 keeps perspective-correct texturing.
+#if defined(TGX_RUN_ON_RP2040)
+static constexpr Shader TEXTURE_SHADER = SHADER_TEXTURE_AFFINE;
+#else
+static constexpr Shader TEXTURE_SHADER = SHADER_TEXTURE;
+#endif
+
 // Only the shader paths used by this sketch are compiled in.
 const Shader LOADED_SHADERS = SHADER_ORTHO | SHADER_PERSPECTIVE |
                               SHADER_ZBUFFER | SHADER_FLAT |
+                              TEXTURE_SHADER |
                               SHADER_TEXTURE_NEAREST |
                               SHADER_TEXTURE_WRAP_POW2;
 
@@ -150,7 +158,7 @@ void setupRenderer()
     renderer.setCulling(1);
     renderer.setTextureQuality(SHADER_TEXTURE_NEAREST);
     renderer.setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);
-    renderer.setShaders(SHADER_FLAT | SHADER_TEXTURE);
+    renderer.setShaders(SHADER_FLAT | TEXTURE_SHADER);
     renderer.setPerspective(45, render_ratio, 1.0f, 100.0f);
     }
 

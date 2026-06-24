@@ -69,6 +69,8 @@ namespace tgx
     *                               - `SHADER_FLAT`: enable flat shading
     *                               - `SHADER_GOURAUD`: enable Gouraud shading
     *                               - `SHADER_NOTEXTURE`: enable rendering without texturing
+    *                               - `SHADER_TEXTURE`: enable rendering with perspective-correct texturing
+    *                               - `SHADER_TEXTURE_AFFINE`: enable rendering with affine texturing (faster but lower quality)
     *                               - `SHADER_TEXTURE_NEAREST`: enable rendering with texturing using point sampling
     *                               - `SHADER_TEXTURE_BILINEAR`: enable rendering with texturing using bilinear sampling
     *                               - `SHADER_TEXTURE_WRAP_POW2`: texture can use 'wrap around' mode with dimensions of texture being power of two.
@@ -123,16 +125,18 @@ namespace tgx
         static_assert(MAX_SPOT_LIGHTS >= 0, "MAX_SPOT_LIGHTS must be non-negative");
 
         // true if some kind of texturing may be used.
-        static constexpr int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (SHADER_TEXTURE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));
+        static constexpr int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (SHADER_TEXTURE | SHADER_TEXTURE_AFFINE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));
+        static constexpr int EXPLICIT_TEXTURE_MODE = (TGX_SHADER_HAS_TEXTURING_ENABLED(LOADED_SHADERS));
+        static constexpr Shader DEFAULT_TEXTURE_MODE = EXPLICIT_TEXTURE_MODE ? (Shader)0 : SHADER_TEXTURE;
 
-        static constexpr Shader ENABLED_SHADERS = LOADED_SHADERS | (ENABLE_TEXTURING ? SHADER_TEXTURE : SHADER_NOTEXTURE); // enable texturing when at least one texturing related flag is set
+        static constexpr Shader ENABLED_SHADERS = LOADED_SHADERS | (ENABLE_TEXTURING ? DEFAULT_TEXTURE_MODE : SHADER_NOTEXTURE); // enable perspective texturing by default when only texturing options are set
         // check that disabled shaders do not completely disable all drawing operations.
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), "At least one of the two shaders SHADER_PERSPECTIVE or SHADER_ORTHO must be enabled");
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), "At least one of the two shaders SHADER_NOZBUFFER or SHADER_ZBUFFER must be enabled");
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_SHADING), "At least one of the shaders SHADER_UNLIT, SHADER_FLAT or SHADER_GOURAUD must be enabled");
-        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), "At least one of the two shaders SHADER_TEXTURE or SHADER_NOTEXTURE must be enabled");
-        static_assert((!TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled");
-        static_assert((!TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled");
+        static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), "At least one of the shaders SHADER_NOTEXTURE, SHADER_TEXTURE or SHADER_TEXTURE_AFFINE must be enabled");
+        static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled");
+        static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled");
 
 
 
@@ -408,19 +412,28 @@ namespace tgx
         * - `SHADER_GOURAUD`:  Use gouraud shading (linear interpolation of vertex colors) This results in smoother color transitions and works well with texturing but is more CPU
         *    intensive.
         *
-        * - `SHADER_TEXTURE`:  enable texture mapping. A texture must be stored in an Image<color_t> object.
-        *                      - wrap mode can be set with setTextureWrappingMode() or passing along either `SHADER_TEXTURE_WRAP_POW2` or `SHADER_TEXTURE_CLAMP`.
-        *                      - drawing quality can be set with setTextureQuality() or by passing along either `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`.
+        * - `SHADER_TEXTURE`:  enable perspective-correct texture mapping. A texture must be stored in an Image<color_t> object.
+        *
+        * - `SHADER_TEXTURE_AFFINE`:  enable affine texture mapping. Texture coordinates are interpolated linearly in screen space (fast but lower quality). A texture must be stored in an Image<color_t> object.
+        *
+        * Texturing also uses:
+        *
+        * - a wrap mode set with setTextureWrappingMode(), or passed as either `SHADER_TEXTURE_WRAP_POW2` or `SHADER_TEXTURE_CLAMP`.
+        *
+        * - a sampling quality set with setTextureQuality(), or passed as either `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`.
         *
         * @remark
-        * 1. If a shader flag is set with SetShaders() but is disabled in the template parameter LOADED_SHADER,
-        *    then the drawing calls will silently fail (draw nothing).
+        * 1. Every runtime shader choice must be enabled in the template parameter `LOADED_SHADERS`,
+        *    including "disabled" choices such as `SHADER_NOTEXTURE` or `SHADER_NOZBUFFER`.
+        *    If a shader flag is set with setShaders() but is missing from `LOADED_SHADERS`,
+        *    then the drawing calls may silently fail (draw nothing).
         * 2. `SHADER_UNLIT` skips lighting: textured pixels use the texture color directly and untextured pixels use
         *    the current material color.
         * 3. The color on the face (for flat shading) or on the vertices (for gouraud shading) is computed
         *    according to Phong's lighting https://en.wikipedia.org/wiki/Phong_reflection_model.
-        * 4. Texture mapping is 'perspective correct'. With `SHADER_FLAT` or `SHADER_GOURAUD`, the texture color is
-        *    combined with the lighting. With `SHADER_UNLIT`, the texture color is copied directly.
+        * 4. `SHADER_TEXTURE` mapping is perspective correct. `SHADER_TEXTURE_AFFINE` skips perspective correction.
+        *    With `SHADER_FLAT` or `SHADER_GOURAUD`, the texture color is combined with the lighting.
+        *    With `SHADER_UNLIT`, the texture color is copied directly.
         * 5. Large textures stored in flash memory may be VERY slow to access when the texture is not
         *    read linearly, which happens for some triangle orientations and can make the cache ineffective.
         *    This problem can be somewhat mitigated by:
@@ -2171,6 +2184,9 @@ namespace tgx
         TGX_NOINLINE void _rectifyShaderShading(Shader new_shaders);
 
 
+        TGX_NOINLINE void _rectifyShaderTextureMode();
+
+
         TGX_NOINLINE void _rectifyShaderTextureWrapping();
 
 
@@ -2811,6 +2827,7 @@ namespace tgx
         float _culling_dir;         // culling direction postive/negative or 0 to disable back face culling.
 
         int   _shaders;             // the shaders to use.
+        int   _texture_mode;        // texture mapping mode (perspective-correct or affine)
         int   _texture_wrap_mode;   // wrapping mode (wrap_pow2 or clamp)
         int   _texture_quality;     // texturing quality (nearest or bilinear)
 

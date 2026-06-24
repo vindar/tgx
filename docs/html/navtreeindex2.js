@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classtgx_1_1_renderer3_d.html#a6676eeae84619bb44ee7fae28015a486":[8,0,0,10,3],
 "classtgx_1_1_renderer3_d.html#a6f5069e42ea0e97fc9956de1a438da83":[8,0,0,10,93],
 "classtgx_1_1_renderer3_d.html#a790461f58fe09d9ae61de344f2b6cfd9":[8,0,0,10,86],
 "classtgx_1_1_renderer3_d.html#a7aa41a972196500b56f457ee1683528e":[8,0,0,10,70],
@@ -154,15 +155,15 @@ var NAVTREEINDEX2 =
 "font__tgx___open_sans___italic_8h.html#af0c29d62e49a828f21d791bf9c457acc":[9,0,0,7,8],
 "font__tgx___open_sans___italic_8h.html#af4040027c1ca0579093bbbbe4a642c66":[9,0,0,7,11],
 "font__tgx___open_sans___italic_8h_source.html":[9,0,0,7],
-"functions.html":[8,3,0,0],
 "functions.html":[8,3,0],
+"functions.html":[8,3,0,0],
 "functions_b.html":[8,3,0,1],
 "functions_c.html":[8,3,0,2],
 "functions_d.html":[8,3,0,3],
 "functions_e.html":[8,3,0,4],
 "functions_f.html":[8,3,0,5],
-"functions_func.html":[8,3,1],
 "functions_func.html":[8,3,1,0],
+"functions_func.html":[8,3,1],
 "functions_func_c.html":[8,3,1,1],
 "functions_func_d.html":[8,3,1,2],
 "functions_func_e.html":[8,3,1,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "md_docs_intro_api_3_d.html#sec_3D_lighting":[6,3,2],
 "md_docs_intro_api_3_d.html#sec_3D_math":[6,1,0],
 "md_docs_intro_api_3_d.html#sec_3D_matrices":[6,1,1],
-"md_docs_intro_api_3_d.html#sec_3D_meshes":[6,3],
-"md_docs_intro_api_3_d.html#sec_3D_overview":[6,0]
+"md_docs_intro_api_3_d.html#sec_3D_meshes":[6,3]
 };

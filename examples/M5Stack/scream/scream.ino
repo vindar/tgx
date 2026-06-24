@@ -57,6 +57,7 @@ LGFX lcd;
 // lit with Gouraud shading, and needs a zbuffer because it folds in 3D.
 const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER |
                               SHADER_GOURAUD |
+                              SHADER_TEXTURE |
                               SHADER_TEXTURE_NEAREST |
                               SHADER_TEXTURE_WRAP_POW2;
 

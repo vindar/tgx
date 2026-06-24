@@ -113,7 +113,7 @@ DMAMEM uint16_t zbuf[SLX * SLY];
 Image<RGB565> im(fb, SLX, SLY);
 
 // all the shaders we will use with the renderer
-const Shader LOADED_SHADER = SHADER_ZBUFFER | SHADER_PERSPECTIVE | SHADER_GOURAUD | SHADER_FLAT | SHADER_NOTEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADER = SHADER_ZBUFFER | SHADER_PERSPECTIVE | SHADER_GOURAUD | SHADER_FLAT | SHADER_NOTEXTURE | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2;
 
 // the 3D renderer object.
 Renderer3D<RGB565, LOADED_SHADER, uint16_t> renderer;
@@ -278,7 +278,7 @@ TGX_NOINLINE FLASHMEM void drawBase(bool use_dma_tex = false)
     renderer.setMaterialAmbiantStrength(0.2f);
     renderer.setMaterialDiffuseStrength(0.9f);
     renderer.setMaterialSpecularStrength(0.4f);
-    renderer.setShaders(SHADER_FLAT | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2);
+    renderer.setShaders(SHADER_FLAT | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2);
 
     const float aa = -0.05;
     const float ee = 0.01;
@@ -621,7 +621,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setMaterialDiffuseStrength(0.8f * a);
             renderer.setMaterialSpecularStrength(0.9f * a);
 
-            drawSphere(SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
+            drawSphere(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
             }
         else
             {
@@ -633,7 +633,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setMaterialDiffuseStrength(0.8f);
             renderer.setMaterialSpecularStrength(0.9f);
 
-            drawSphere(SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
+            drawSphere(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
             }
 
 
@@ -667,7 +667,7 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.setMaterialDiffuseStrength(0.8f);
         renderer.setMaterialSpecularStrength(0.9f);
 
-        drawSphere(SHADER_GOURAUD | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
+        drawSphere(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR | SHADER_TEXTURE_WRAP_POW2, &earth_small);
 
         redraw();
         }
@@ -772,7 +772,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
-        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
         renderer.drawMesh(falcon_mesh, true);
 
         if (a < 1)
@@ -812,7 +812,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
-        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
         renderer.drawMesh(falcon_mesh, true);
 
         setModelPosScaleRot(base_pos, { base_width, base_height, base_width });
@@ -842,7 +842,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
-        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
         renderer.drawMesh(falcon_mesh, true);
 
@@ -873,7 +873,7 @@ TGX_NOINLINE FLASHMEM void movie()
 
         setModelPosScaleRot(falcon_pos, { falcon_size, falcon_size, falcon_size }, 0, { 0,1,0 });
         renderer.setCulling(1);
-        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
         renderer.drawMesh(falcon_mesh, true);
 
@@ -911,7 +911,7 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.setModelMatrix(M);
 
         renderer.setCulling(1);
-        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+        renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
         renderer.drawMesh(falcon_mesh, true);
 
@@ -952,7 +952,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setModelMatrix(M);
 
             renderer.setCulling(1);
-            renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+            renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
             renderer.drawMesh(falcon_mesh, true);
 
@@ -996,7 +996,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setModelMatrix(M);
 
             renderer.setCulling(1);
-            renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+            renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
             renderer.drawMesh(falcon_mesh, true);
 
@@ -1042,7 +1042,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setModelMatrix(M);
 
             renderer.setCulling(1);
-            renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
+            renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2);
 
             renderer.drawMesh(falcon_mesh, true);
 

@@ -75,8 +75,15 @@ bool use_dma = false;
 // the tgx::image object that encapsulates framebuffer fb
 Image<RGB565> imfb;
 
+// Affine texturing is faster on ESP32-S2; other ESP32 variants keep perspective-correct texturing.
+#if defined(TGX_RUN_ON_ESP32S2)
+static constexpr Shader TEXTURE_SHADER = SHADER_TEXTURE_AFFINE;
+#else
+static constexpr Shader TEXTURE_SHADER = SHADER_TEXTURE;
+#endif
+
 // only load the shaders we need.
-const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_GOURAUD | SHADER_NOTEXTURE | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2;
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_GOURAUD | SHADER_NOTEXTURE | TEXTURE_SHADER | SHADER_TEXTURE_NEAREST | SHADER_TEXTURE_WRAP_POW2;
 
 // the renderer object that performs the 3D drawings
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t> renderer;
@@ -253,7 +260,7 @@ void loop()
     // choose the shader to use
     switch (loopnumber % 4)
         {
-        case 0: renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE);
+        case 0: renderer.setShaders(SHADER_GOURAUD | TEXTURE_SHADER);
                 renderer.drawMesh(MESH, false);
                 break;
         case 1: renderer.drawWireFrameMeshAA(MESH);

@@ -1,0 +1,10 @@
+base_run,candidate_run,scene,base_frame_median_us,candidate_frame_median_us,frame_delta_us,frame_delta_pct_negative_is_faster,base_fps_median,candidate_fps_median,fps_delta_pct_positive_is_faster,base_rows,candidate_rows
+teensy41_floatopt_base_teensy41_mars,teensy41_floatopt_fastinv1_teensy41_mars,beginning,1949.1999999999998,1948.6,-0.599999999999909,-0.03078185922429366,106.53,111.05,4.242936262085784,6,6
+teensy41_floatopt_base_teensy41_mars,teensy41_floatopt_fastinv1_teensy41_mars,ending,2349.0,2348.6,-0.40000000000009095,-0.01702852277565281,97.8,104.0,6.33946830265848,3,3
+teensy41_floatopt_base_teensy41_mars,teensy41_floatopt_fastinv1_teensy41_mars,falcon,18165.4,16677.0,-1488.4000000000015,-8.193598819734227,42.41,42.57,0.3772695119075742,35,35
+teensy41_floatopt_base_teensy41_mars,teensy41_floatopt_fastinv1_teensy41_mars,intro,135.4,135.85,0.44999999999998863,0.33234859675035366,469.0,470.74,0.3710021321961632,4,4
+teensy41_floatopt_base_teensy41_mars,teensy41_floatopt_fastinv1_teensy41_mars,movie,9682.8,8455.55,-1227.25,-12.674536291155448,43.0,43.075,0.17441860465117198,83,92
+pico2_floatopt_base_pico2_bunny_fig,pico2_floatopt_fastinv1_pico2_bunny_fig,flat,17463.6,17366.65,-96.94999999999709,-0.5551547218213715,30.21,29.73,-1.5888778550148919,30,30
+pico2_floatopt_base_pico2_bunny_fig,pico2_floatopt_fastinv1_pico2_bunny_fig,gouraud,22481.3,22489.449999999997,8.149999999997817,0.036252351954724205,30.04,30.04,0.0,30,30
+pico2_floatopt_base_pico2_bunny_fig,pico2_floatopt_fastinv1_pico2_bunny_fig,gouraud_texture,41205.7,39674.2,-1531.5,-3.716718803466512,24.22,25.17,3.922378199834853,37,37
+pico2_floatopt_base_pico2_bunny_fig,pico2_floatopt_fastinv1_pico2_bunny_fig,wireframe,8800.5,8765.650000000001,-34.849999999998545,-0.3960002272597962,29.73,29.73,0.0,34,44

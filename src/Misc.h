@@ -251,6 +251,11 @@ namespace tgx
             : "f" (x)
         );
         return result;
+#elif TGX_USE_FAST_INV_TRICK
+        // One correction step: faster than fast_inv(), less accurate by design.
+        float y = uint32_as_float(0x7ef335a7 - float_as_uint32(x));
+        y *= fmaf(-x, y, 2.00128722f);
+        return y;
 #else
         return fast_inv(x);
 #endif
