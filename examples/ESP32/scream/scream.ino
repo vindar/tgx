@@ -57,11 +57,18 @@ bool use_dma = false;
 Image<RGB565> im;
 TFT_eSPI tft = TFT_eSPI();
 
+// Affine texturing is faster on ESP32-S2; other ESP32 variants keep perspective-correct texturing.
+#if defined(TGX_RUN_ON_ESP32S2)
+static constexpr Shader TEXTURE_SHADER = SHADER_TEXTURE_AFFINE;
+#else
+static constexpr Shader TEXTURE_SHADER = SHADER_TEXTURE;
+#endif
+
 // Only the shader paths used below are compiled in.  The sheet is textured and
 // lit with Gouraud shading, and needs a zbuffer because it folds in 3D.
 const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER |
                               SHADER_GOURAUD |
-                              SHADER_TEXTURE |
+                              TEXTURE_SHADER |
                               SHADER_TEXTURE_NEAREST |
                               SHADER_TEXTURE_WRAP_POW2;
 
@@ -437,7 +444,7 @@ void setup()
     renderer.setCulling(0);
     renderer.setTextureQuality(SHADER_TEXTURE_NEAREST);
     renderer.setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);
-    renderer.setShaders(SHADER_GOURAUD | SHADER_TEXTURE);
+    renderer.setShaders(SHADER_GOURAUD | TEXTURE_SHADER);
 
     fMat4 M0;
     M0.setIdentity();
