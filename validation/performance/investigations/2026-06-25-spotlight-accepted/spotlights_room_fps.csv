@@ -1,0 +1,7 @@
+board,sketch,config,fqbn,port,display_path,fps_avg,fps_min,fps_max,samples,notes
+Core2,examples/M5Stack/spotlights_room,full geometry with local specular,esp32:esp32:m5stack_core2,COM5,DMA,20.2,20,21,8,Initial accepted M5Stack profile.
+CoreS3,examples/M5Stack/spotlights_room,full geometry with local specular,esp32:esp32:m5stack_cores3,COM10,DMA,37.5,36,39,12,Initial accepted M5Stack profile.
+Pico2,examples/Pico_RP2040_RP2350/spotlights_room,initial full geometry with local specular,rp2040:rp2040:rpipico2:opt=Fast,COM21,DMA,9.4,9,11,9,Too slow; kept only as exploratory reference.
+Pico2,examples/Pico_RP2040_RP2350/spotlights_room,reduced floor/spheres with local specular,rp2040:rp2040:rpipico2:opt=Fast,COM21,DMA,13.4,12,16,10,Accepted Pico2 profile after reducing floor and sphere resolution.
+Pico2,examples/Pico_RP2040_RP2350/spotlights_room,reduced floor/spheres with local specular repeat,rp2040:rp2040:rpipico2:opt=Fast,COM21,DMA,13.17,12,14,12,Repeat measurement used for specular comparison.
+Pico2,examples/Pico_RP2040_RP2350/spotlights_room,reduced floor/spheres without local specular,rp2040:rp2040:rpipico2:opt=Fast,COM21,DMA,15.42,15,17,12,Specular colors set to black for measurement only.

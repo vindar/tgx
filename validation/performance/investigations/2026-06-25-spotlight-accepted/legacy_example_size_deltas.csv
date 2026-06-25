@@ -1,0 +1,13 @@
+board,example,status0,status2,max0_code,max2_code,delta_code,max0_data,max2_data,delta_data,max0_ram1_vars,max2_ram1_vars,delta_ram1_vars,max0_ram1_code,max2_ram1_code,delta_ram1_code,max0_ram1_free,max2_ram1_free,delta_ram1_free,max0_ram2_vars,max2_ram2_vars,delta_ram2_vars,max0_ram2_free,max2_ram2_free,delta_ram2_free,max0_sketch_bytes,max2_sketch_bytes,delta_sketch_bytes,max0_global_bytes,max2_global_bytes,delta_global_bytes
+teensy41,test_shading,SUCCESS,SUCCESS,192292,213732,21440,989272,989272,0,347040,347264,224,135992,157432,21440,13408,13184,-224,489440,489440,0,34848,34848,0,,,,,,
+teensy41,test_texture,SUCCESS,SUCCESS,177252,198692,21440,1050608,1050608,0,340512,340736,224,120952,142392,21440,52704,19712,-32992,521024,521024,0,3264,3264,0,,,,,,
+teensy41,scream,SUCCESS,SUCCESS,140228,161540,21312,173684,173684,0,367328,367584,256,83928,105240,21312,58656,25632,-33024,348320,348320,0,175968,175968,0,,,,,,
+core2,borg_cube,SUCCESS,SUCCESS,,,,,,,,,,,,,,,,,,,,,,446867,461871,15004,33236,33476,240
+core2,donkeykong,SUCCESS,SUCCESS,,,,,,,,,,,,,,,,,,,,,,647891,657475,9584,24992,25224,232
+core2,scream,SUCCESS,SUCCESS,,,,,,,,,,,,,,,,,,,,,,478367,487447,9080,55340,55572,232
+cores3,borg_cube,SUCCESS,SUCCESS,,,,,,,,,,,,,,,,,,,,,,434755,448851,14096,32716,32956,240
+cores3,donkeykong,SUCCESS,SUCCESS,,,,,,,,,,,,,,,,,,,,,,634411,643395,8984,24572,24812,240
+cores3,scream,SUCCESS,SUCCESS,,,,,,,,,,,,,,,,,,,,,,465055,473831,8776,54812,55052,240
+pico2,borg_cube,SUCCESS,SUCCESS,,,,,,,,,,,,,,,,,,,,,,173220,200060,26840,442512,442752,240
+pico2,bunny_fig,SUCCESS,SUCCESS,,,,,,,,,,,,,,,,,,,,,,345308,365412,20104,443836,444076,240
+pico2,scream,SUCCESS,SUCCESS,,,,,,,,,,,,,,,,,,,,,,205044,225356,20312,293628,293868,240
