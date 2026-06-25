@@ -85,7 +85,8 @@ namespace tgx
     *                           The default value `1` preserves the historical one-light rendering path.
     *                           Instantiate with a value larger than 1 to use the advanced directional-light API.
     *
-    * @tparam MAX_SPOT_LIGHTS : Reserved for future spotlight support. Spotlights are not rendered yet.
+    * @tparam MAX_SPOT_LIGHTS : Maximum number of local spot lights supported by this renderer.
+    *                           The default value `0` disables local spot-light support.
     *
     * @remark
     *
@@ -470,9 +471,9 @@ namespace tgx
         /*****************************************************************************************
         *****************************************************************************************/
         /**
-         * @name Scene related methods.
+         * @name Camera related methods.
          *
-         * Methods related to properties specific to the scene: camera position, lighting...
+         * Methods related to the view matrix and camera position.
          */
          ///@{
         /*****************************************************************************************
@@ -565,6 +566,27 @@ namespace tgx
          */
         iVec2 worldToImage(fVec3 P);
 
+
+
+        ///@}
+        /*****************************************************************************************
+        *****************************************************************************************/
+        /**
+         * @name Lighting related methods.
+         *
+         * Methods related to global ambiant lighting, directional lights and local spot lights.
+         *
+         * Directional lights are controlled by `MAX_DIRECTIONAL_LIGHTS`. Local spot lights are controlled
+         * by `MAX_SPOT_LIGHTS`; when `MAX_SPOT_LIGHTS == 0`, spot light support is not compiled in.
+         */
+        ///@{
+        /*****************************************************************************************
+        ******************************************************************************************/
+
+
+        /*****************************************************************************************
+         * Directional lights.
+         ******************************************************************************************/
 
 
          /**
@@ -730,6 +752,208 @@ namespace tgx
          */
         void setDirectionalLight(int index, const fVec3& direction, const RGBf& diffuseColor, const RGBf& specularColor);
 
+
+
+        /*****************************************************************************************
+         * Spot lights.
+         ******************************************************************************************/
+
+
+        /**
+         * Set the number of active spot lights.
+         *
+         * The count is clamped to `[0, MAX_SPOT_LIGHTS]`. A count of 0 disables all local spot lights.
+         *
+         * Spot lights affect rendering only when the renderer is instantiated with `MAX_SPOT_LIGHTS > 0`.
+         * No shader flag is required for spot lighting, but lighting is visible only with flat or Gouraud
+         * shading. With `SHADER_UNLIT`, spot lights are ignored.
+         *
+         * @param count number of active spot lights.
+         */
+        void setSpotLightCount(int count);
+
+
+        /**
+         * Return the number of active spot lights.
+         */
+        int spotLightCount() const;
+
+
+        /**
+         * Return the compile-time spot-light capacity.
+         */
+        static constexpr int maxSpotLightCount() { return MAX_SPOT_LIGHTS; }
+
+
+        /**
+         * Configure one omnidirectional local light.
+         *
+         * This overload configures a spot-light slot as a point light: the light emits in all directions
+         * and does not use a cone test. The position is expressed in world coordinates.
+         *
+         * The range controls both the maximum influence distance and the smooth distance attenuation.
+         * Use a strictly positive value for a finite local light. A range less than or equal to 0 disables
+         * distance attenuation and gives the light infinite range (but you usually don't want that!).
+         *
+         * The local specular contribution is disabled by default. Pass a non-black `specularColor` to enable
+         * local specular highlights for this light. The specular exponent is the current material specular
+         * exponent.
+         *
+         * This method does not change the active spot-light count. Use `setSpotLightCount()` to choose how
+         * many spot-light slots are rendered.
+         *
+         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
+         * @param position position of the light in world coordinates.
+         * @param range maximum influence distance; `range <= 0` means infinite range.
+         * @param diffuseColor diffuse color of the light.
+         * @param specularColor specular color of the light. The default black color disables local specular.
+         */
+        void setSpotLight(int index, const fVec3& position, float range,
+                          const RGBf& diffuseColor,
+                          const RGBf& specularColor = RGBf(0.0f, 0.0f, 0.0f));
+
+
+        /**
+         * Configure one spot light with a hard cone edge.
+         *
+         * The position and direction are expressed in world coordinates. The direction is the direction the
+         * light points toward. The cone is defined by its outer half-angle, in degrees. Points outside the
+         * cone are not lit. Use the overload with `innerAngleDeg` to create a soft cone edge.
+         *
+         * The range controls both the maximum influence distance and the smooth distance attenuation.
+         * Use a strictly positive value for a finite local light. A range less than or equal to 0 disables
+         * distance attenuation and gives the light infinite range (but you usually don't want that!).
+         *
+         * The local specular contribution is disabled by default. Pass a non-black `specularColor` to enable
+         * local specular highlights for this light. The specular exponent is the current material specular
+         * exponent.
+         *
+         * This method does not change the active spot-light count. Use `setSpotLightCount()` to choose how
+         * many spot-light slots are rendered.
+         *
+         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
+         * @param position position of the light in world coordinates.
+         * @param direction direction the light points toward, in world coordinates.
+         * @param range maximum influence distance; `range <= 0` means infinite range.
+         * @param outerAngleDeg outer cone half-angle in degrees. Values greater than or equal to 180 behave
+         *                      like an omnidirectional point light.
+         * @param diffuseColor diffuse color of the light.
+         * @param specularColor specular color of the light. The default black color disables local specular.
+         */
+        void setSpotLight(int index, const fVec3& position, const fVec3& direction,
+                          float range, float outerAngleDeg,
+                          const RGBf& diffuseColor,
+                          const RGBf& specularColor = RGBf(0.0f, 0.0f, 0.0f));
+
+
+        /**
+         * Configure one spot light with a soft cone edge.
+         *
+         * The position and direction are expressed in world coordinates. The direction is the direction the
+         * light points toward. The cone is defined by two half-angles, in degrees: lighting is full inside
+         * `innerAngleDeg`, fades smoothly between `innerAngleDeg` and `outerAngleDeg`, and is zero outside
+         * `outerAngleDeg`.
+         *
+         * The range controls both the maximum influence distance and the smooth distance attenuation.
+         * Use a strictly positive value for a finite local light. A range less than or equal to 0 disables
+         * distance attenuation and gives the light infinite range (but you usually don't want that!).
+         *
+         * The local specular contribution is disabled by default. Pass a non-black `specularColor` to enable
+         * local specular highlights for this light. The specular exponent is the current material specular
+         * exponent.
+         *
+         * This method does not change the active spot-light count. Use `setSpotLightCount()` to choose how
+         * many spot-light slots are rendered.
+         *
+         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
+         * @param position position of the light in world coordinates.
+         * @param direction direction the light points toward, in world coordinates.
+         * @param range maximum influence distance; `range <= 0` means infinite range.
+         * @param outerAngleDeg outer cone half-angle in degrees. Values greater than or equal to 180 behave
+         *                      like an omnidirectional point light.
+         * @param innerAngleDeg inner cone half-angle in degrees. Values less than 0 or greater than
+         *                      `outerAngleDeg` are treated as a hard cone edge.
+         * @param diffuseColor diffuse color of the light.
+         * @param specularColor specular color of the light. The default black color disables local specular.
+         */
+        void setSpotLight(int index, const fVec3& position, const fVec3& direction,
+                          float range, float outerAngleDeg, float innerAngleDeg,
+                          const RGBf& diffuseColor,
+                          const RGBf& specularColor = RGBf(0.0f, 0.0f, 0.0f));
+
+
+        /**
+         * Set the position of one spot light.
+         *
+         * The position is expressed in world coordinates.
+         *
+         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
+         * @param position position of the light in world coordinates.
+         */
+        void setSpotLightPosition(int index, const fVec3& position);
+
+
+        /**
+         * Set the direction of one spot light.
+         *
+         * The direction is expressed in world coordinates and points toward the lit area. It is ignored when
+         * the light is configured as an omnidirectional point light.
+         *
+         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
+         * @param direction direction the light points toward, in world coordinates.
+         */
+        void setSpotLightDirection(int index, const fVec3& direction);
+
+
+        /**
+         * Set the diffuse color of one spot light.
+         *
+         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
+         * @param color diffuse color.
+         */
+        void setSpotLightDiffuse(int index, const RGBf& color);
+
+
+        /**
+         * Set the specular color of one spot light.
+         *
+         * A black specular color disables the local specular contribution for this light. The specular
+         * exponent is the current material specular exponent.
+         *
+         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
+         * @param color specular color (default is black, which disables local specular).
+         */
+        void setSpotLightSpecular(int index, const RGBf& color = RGBf(0.0f, 0.0f, 0.0f));
+
+
+        /**
+         * Set the range of one spot light.
+         *
+         * The range controls both the maximum influence distance and the smooth distance attenuation.
+         * Use a strictly positive value for a finite local light. A range less than or equal to 0 disables
+         * distance attenuation and gives the light infinite range.
+         *
+         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
+         * @param range maximum influence distance; `range <= 0` means infinite range (but you usually don't want that).
+         */
+        void setSpotLightRange(int index, float range);
+
+
+        /**
+         * Set the cone angles of one spot light.
+         *
+         * The cone is defined by two half-angles, in degrees: lighting is full inside `innerAngleDeg`,
+         * fades smoothly between `innerAngleDeg` and `outerAngleDeg`, and is zero outside `outerAngleDeg`.
+         *
+         * Values of `outerAngleDeg` greater than or equal to 180 configure the light as an omnidirectional
+         * point light. Values of `innerAngleDeg` less than 0 or greater than `outerAngleDeg` create a hard
+         * cone edge.
+         *
+         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
+         * @param outerAngleDeg outer cone half-angle in degrees.
+         * @param innerAngleDeg inner cone half-angle in degrees. The default value creates a hard cone edge.
+         */
+        void setSpotLightCone(int index, float outerAngleDeg, float innerAngleDeg = -1.0f);
 
 
 
