@@ -37,6 +37,7 @@
 
 #include "Shaders.h"
 #include "Rasterizer.h"
+#include "Renderer3DSpotLightData.h"
 
 #include "Mesh3D.h"
 #include "Mesh3Dv2.h"
@@ -2915,8 +2916,167 @@ namespace tgx
             }
 
 
+        static TGX_INLINE inline float _spotLightInfiniteRange2()
+            {
+            return 1.0e30f;
+            }
+
+
+        static TGX_INLINE inline bool _spotLightColorIsBlack(const RGBf& color)
+            {
+            return ((color.R <= 0.0f) && (color.G <= 0.0f) && (color.B <= 0.0f));
+            }
+
+
+        /** precompute the finite or infinite range constants of one spot light */
+        TGX_INLINE inline void _setSpotLightRangeValues(int index, float range)
+            {
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                if ((range > 0.0f) && (range < 1.0e15f))
+                    {
+                    _spotLights.range2[index] = range * range;
+                    _spotLights.invRange2[index] = 1.0f / _spotLights.range2[index];
+                    }
+                else
+                    {
+                    _spotLights.range2[index] = _spotLightInfiniteRange2();
+                    _spotLights.invRange2[index] = 0.0f;
+                    }
+                }
+            }
+
+
+        /** precompute the cone constants of one spot light */
+        TGX_INLINE inline void _setSpotLightConeValues(int index, float outerAngleDeg, float innerAngleDeg)
+            {
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                if (outerAngleDeg >= 180.0f)
+                    {
+                    _spotLights.flags[index] &= ~(Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED | Renderer3D_detail::SPOT_LIGHT_SOFT_CONE);
+                    _spotLights.cosOuter[index] = -1.0f;
+                    _spotLights.invCosWidth[index] = 0.0f;
+                    return;
+                    }
+
+                const float outer = clamp(outerAngleDeg, 0.0f, 180.0f);
+                _spotLights.flags[index] |= Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED;
+                _spotLights.flags[index] &= ~Renderer3D_detail::SPOT_LIGHT_SOFT_CONE;
+
+                const float degToRad = (float)(M_PI / 180.0);
+                _spotLights.cosOuter[index] = cosf(outer * degToRad);
+                _spotLights.invCosWidth[index] = 0.0f;
+
+                if ((innerAngleDeg >= 0.0f) && (innerAngleDeg < outer))
+                    {
+                    const float inner = clamp(innerAngleDeg, 0.0f, outer);
+                    const float cosInner = cosf(inner * degToRad);
+                    const float cosWidth = cosInner - _spotLights.cosOuter[index];
+                    if (cosWidth > 0.000001f)
+                        {
+                        _spotLights.flags[index] |= Renderer3D_detail::SPOT_LIGHT_SOFT_CONE;
+                        _spotLights.invCosWidth[index] = 1.0f / cosWidth;
+                        }
+                    }
+                }
+            }
+
+
+        /** recompute one spot-light position after a view or light change */
+        TGX_INLINE inline void _updateSpotLightPositionTransform(int index)
+            {
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                _spotLights.positionView[index] = _viewM.mult1(_spotLights.position[index]);
+                }
+            }
+
+
+        /** recompute one spot-light direction after a view or light change */
+        TGX_INLINE inline void _updateSpotLightDirectionTransform(int index)
+            {
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                fVec3 D = _viewM.mult0(_spotLights.direction[index]);
+                const float d2 = dotProduct(D, D);
+                if (d2 > 0.000001f)
+                    {
+                    D *= tgx::fast_invsqrt(d2);
+                    }
+                else
+                    {
+                    D = fVec3(0.0f, 0.0f, -1.0f);
+                    }
+                _spotLights.directionView[index] = D;
+                }
+            }
+
+
+        /** recompute one spot-light transform after a view or light change */
+        TGX_INLINE inline void _updateSpotLightTransform(int index)
+            {
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                _updateSpotLightPositionTransform(index);
+                _updateSpotLightDirectionTransform(index);
+                }
+            }
+
+
+        /** recompute all active spot-light transforms after a view change */
+        TGX_INLINE inline void _updateActiveSpotLightTransforms()
+            {
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                for (int i = 0; i < _spotLights.count; i++)
+                    {
+                    _updateSpotLightTransform(i);
+                    }
+                }
+            }
+
+
+        /** recompute one spot-light runtime color for the current material strengths */
+        TGX_INLINE inline void _updateSpotLightColor(int index, float diffuseStrength, float specularStrength, int specularExponent)
+            {
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                _spotLights.runtimeDiffuseColor[index] = _spotLights.diffuseColor[index] * diffuseStrength;
+                _spotLights.runtimeSpecularColor[index] = _spotLights.specularColor[index] * specularStrength;
+
+                if ((specularStrength > 0.0f) && (specularExponent > 0) && (!_spotLightColorIsBlack(_spotLights.specularColor[index])))
+                    {
+                    _spotLights.flags[index] |= Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED;
+                    }
+                else
+                    {
+                    _spotLights.flags[index] &= ~Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED;
+                    }
+                }
+            }
+
+
+        /** recompute runtime spot-light colors for the current material strengths */
+        TGX_INLINE inline void _updateActiveSpotLightColors(float diffuseStrength, float specularStrength, int specularExponent)
+            {
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                _spotLights.hasRuntimeSpecular = false;
+                for (int i = 0; i < _spotLights.count; i++)
+                    {
+                    _updateSpotLightColor(i, diffuseStrength, specularStrength, specularExponent);
+                    if (_spotLights.flags[i] & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED)
+                        {
+                        _spotLights.hasRuntimeSpecular = true;
+                        }
+                    }
+                }
+            }
+
+
         /** recompute runtime light colors for the current material strengths */
-        TGX_INLINE inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength)
+        TGX_INLINE inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)
             {
             _r_ambiantColor = _ambiantColor * ambiantStrength;
             for (int i = 0; i < _directionalLightCount; i++)
@@ -2924,6 +3084,14 @@ namespace tgx
                 _r_diffuseColor[i] = _diffuseColor[i] * diffuseStrength;
                 _r_specularColor[i] = _specularColor[i] * specularStrength;
                 }
+            _updateActiveSpotLightColors(diffuseStrength, specularStrength, specularExponent);
+            }
+
+
+        /** recompute runtime light colors for the current material strengths */
+        TGX_INLINE inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength)
+            {
+            _setRuntimeMaterialLighting(ambiantStrength, diffuseStrength, specularStrength, _specularExponent);
             }
 
 
@@ -2940,7 +3108,7 @@ namespace tgx
         
 
         /** compute a vertex light factor or object color according to the current lighting setup */
-        template<bool TEXTURE> TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N) const
+        template<bool TEXTURE> TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const fVec4 & P) const
             {
             RGBf col = _r_ambiantColor;
             if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
@@ -2955,6 +3123,62 @@ namespace tgx
                     col += _r_diffuseColor[i] * max(icu * dotProduct(N, _r_light_inorm[i]), 0.0f);
                     col += _r_specularColor[i] * _powSpecular(icu * dotProduct(N, _r_H_inorm[i]));
                     }
+                }
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                for (int i = 0; i < _spotLights.count; i++)
+                    {
+                    float Lx = _spotLights.positionView[i].x - P.x;
+                    float Ly = _spotLights.positionView[i].y - P.y;
+                    float Lz = _spotLights.positionView[i].z - P.z;
+                    const float d2 = (Lx * Lx) + (Ly * Ly) + (Lz * Lz);
+                    if ((d2 <= 1.0e-12f) || (d2 >= _spotLights.range2[i])) continue;
+
+                    const float invD = tgx::fast_invsqrt(d2);
+                    Lx *= invD;
+                    Ly *= invD;
+                    Lz *= invD;
+
+                    const float diff = icu * _r_inorm * ((N.x * Lx) + (N.y * Ly) + (N.z * Lz));
+                    if (diff <= 0.0f) continue;
+
+                    const int flags = _spotLights.flags[i];
+                    float lightFactor = 1.0f;
+
+                    if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
+                        {
+                        const float cone = -((_spotLights.directionView[i].x * Lx) + (_spotLights.directionView[i].y * Ly) + (_spotLights.directionView[i].z * Lz));
+                        if (cone <= _spotLights.cosOuter[i]) continue;
+                        if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
+                            {
+                            float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
+                            if (spot > 1.0f) spot = 1.0f;
+                            lightFactor *= spot * spot;
+                            }
+                        }
+                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
+                    lightFactor *= atten * atten;
+
+                    col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
+
+                    if (_spotLights.hasRuntimeSpecular && (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED))
+                        {
+                        const float Hx = Lx;
+                        const float Hy = Ly;
+                        const float Hz = Lz + 1.0f;
+                        const float h2 = (Hx * Hx) + (Hy * Hy) + (Hz * Hz);
+                        if (h2 > 1.0e-12f)
+                            {
+                            const float invH = tgx::fast_invsqrt(h2);
+                            const float spec = _powSpecular(icu * _r_inorm * ((N.x * Hx) + (N.y * Hy) + (N.z * Hz)) * invH);
+                            col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                            }
+                        }
+                    }
+                }
+            else
+                {
+                (void)P;
                 }
             if (!(TEXTURE)) col *= _r_objectColor;
             col.clamp();
@@ -2963,7 +3187,7 @@ namespace tgx
 
 
         /** compute a vertex color according to the current lighting setup and a supplied material color */
-        TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const RGBf & color) const
+        TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const fVec4 & P, const RGBf & color) const
             {
             RGBf col = _r_ambiantColor;
             if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
@@ -2978,6 +3202,62 @@ namespace tgx
                     col += _r_diffuseColor[i] * max(icu * dotProduct(N, _r_light_inorm[i]), 0.0f);
                     col += _r_specularColor[i] * _powSpecular(icu * dotProduct(N, _r_H_inorm[i]));
                     }
+                }
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                for (int i = 0; i < _spotLights.count; i++)
+                    {
+                    float Lx = _spotLights.positionView[i].x - P.x;
+                    float Ly = _spotLights.positionView[i].y - P.y;
+                    float Lz = _spotLights.positionView[i].z - P.z;
+                    const float d2 = (Lx * Lx) + (Ly * Ly) + (Lz * Lz);
+                    if ((d2 <= 1.0e-12f) || (d2 >= _spotLights.range2[i])) continue;
+
+                    const float invD = tgx::fast_invsqrt(d2);
+                    Lx *= invD;
+                    Ly *= invD;
+                    Lz *= invD;
+
+                    const float diff = icu * _r_inorm * ((N.x * Lx) + (N.y * Ly) + (N.z * Lz));
+                    if (diff <= 0.0f) continue;
+
+                    const int flags = _spotLights.flags[i];
+                    float lightFactor = 1.0f;
+
+                    if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
+                        {
+                        const float cone = -((_spotLights.directionView[i].x * Lx) + (_spotLights.directionView[i].y * Ly) + (_spotLights.directionView[i].z * Lz));
+                        if (cone <= _spotLights.cosOuter[i]) continue;
+                        if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
+                            {
+                            float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
+                            if (spot > 1.0f) spot = 1.0f;
+                            lightFactor *= spot * spot;
+                            }
+                        }
+                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
+                    lightFactor *= atten * atten;
+
+                    col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
+
+                    if (_spotLights.hasRuntimeSpecular && (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED))
+                        {
+                        const float Hx = Lx;
+                        const float Hy = Ly;
+                        const float Hz = Lz + 1.0f;
+                        const float h2 = (Hx * Hx) + (Hy * Hy) + (Hz * Hz);
+                        if (h2 > 1.0e-12f)
+                            {
+                            const float invH = tgx::fast_invsqrt(h2);
+                            const float spec = _powSpecular(icu * _r_inorm * ((N.x * Hx) + (N.y * Hy) + (N.z * Hz)) * invH);
+                            col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                            }
+                        }
+                    }
+                }
+            else
+                {
+                (void)P;
                 }
 
             col *= color;
@@ -2987,7 +3267,7 @@ namespace tgx
 
 
         /** compute a face light factor or object color according to the current lighting setup */
-        template<bool TEXTURE> TGX_INLINE inline RGBf _shadeFace(const float icu, const fVec3 & N) const
+        template<bool TEXTURE> TGX_INLINE inline RGBf _shadeFace(const float icu, const fVec3 & N, const fVec4 & P) const
             {
             RGBf col = _r_ambiantColor;
             if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
@@ -3003,6 +3283,62 @@ namespace tgx
                     col += _r_specularColor[i] * _powSpecular(icu * dotProduct(N, _r_H[i]));
                     }
                 }
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                for (int i = 0; i < _spotLights.count; i++)
+                    {
+                    float Lx = _spotLights.positionView[i].x - P.x;
+                    float Ly = _spotLights.positionView[i].y - P.y;
+                    float Lz = _spotLights.positionView[i].z - P.z;
+                    const float d2 = (Lx * Lx) + (Ly * Ly) + (Lz * Lz);
+                    if ((d2 <= 1.0e-12f) || (d2 >= _spotLights.range2[i])) continue;
+
+                    const float invD = tgx::fast_invsqrt(d2);
+                    Lx *= invD;
+                    Ly *= invD;
+                    Lz *= invD;
+
+                    const float diff = icu * ((N.x * Lx) + (N.y * Ly) + (N.z * Lz));
+                    if (diff <= 0.0f) continue;
+
+                    const int flags = _spotLights.flags[i];
+                    float lightFactor = 1.0f;
+
+                    if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
+                        {
+                        const float cone = -((_spotLights.directionView[i].x * Lx) + (_spotLights.directionView[i].y * Ly) + (_spotLights.directionView[i].z * Lz));
+                        if (cone <= _spotLights.cosOuter[i]) continue;
+                        if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
+                            {
+                            float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
+                            if (spot > 1.0f) spot = 1.0f;
+                            lightFactor *= spot * spot;
+                            }
+                        }
+                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
+                    lightFactor *= atten * atten;
+
+                    col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
+
+                    if (_spotLights.hasRuntimeSpecular && (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED))
+                        {
+                        const float Hx = Lx;
+                        const float Hy = Ly;
+                        const float Hz = Lz + 1.0f;
+                        const float h2 = (Hx * Hx) + (Hy * Hy) + (Hz * Hz);
+                        if (h2 > 1.0e-12f)
+                            {
+                            const float invH = tgx::fast_invsqrt(h2);
+                            const float spec = _powSpecular(icu * ((N.x * Hx) + (N.y * Hy) + (N.z * Hz)) * invH);
+                            col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                            }
+                        }
+                    }
+                }
+            else
+                {
+                (void)P;
+                }
             if (!(TEXTURE)) col *= _r_objectColor;
             col.clamp();
             return col;
@@ -3010,7 +3346,8 @@ namespace tgx
 
 
         /** compute the uniform face color for flat or unlit shading */
-        TGX_INLINE inline void _setFlatOrUnlitFaceColor(int raster_type, bool texture, fVec3& faceN, float cu)
+        TGX_INLINE inline void _setFlatOrUnlitFaceColor(int raster_type, bool texture, fVec3& faceN, float cu,
+                                                        const fVec4& Q0, const fVec4& Q1, const fVec4& Q2)
             {
             if constexpr (TGX_SHADER_HAS_UNLIT(ENABLED_SHADERS))
                 {
@@ -3023,10 +3360,26 @@ namespace tgx
 
             const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
             faceN.normalize_fast();
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                if (_spotLights.count > 0)
+                    {
+                    const float oneThird = 1.0f / 3.0f;
+                    const fVec4 faceCenter((Q0.x + Q1.x + Q2.x) * oneThird,
+                                           (Q0.y + Q1.y + Q2.y) * oneThird,
+                                           (Q0.z + Q1.z + Q2.z) * oneThird,
+                                           1.0f);
+                    if (texture)
+                        _uni.facecolor = _shadeFace<true>(icu, faceN, faceCenter);
+                    else
+                        _uni.facecolor = _shadeFace<false>(icu, faceN, faceCenter);
+                    return;
+                    }
+                }
             if (texture)
-                _uni.facecolor = _shadeFace<true>(icu, faceN);
+                _uni.facecolor = _shadeFace<true>(icu, faceN, Q0);
             else
-                _uni.facecolor = _shadeFace<false>(icu, faceN);
+                _uni.facecolor = _shadeFace<false>(icu, faceN, Q0);
             }
 
 
@@ -3064,6 +3417,8 @@ namespace tgx
         RGBf    _diffuseColor[MAX_DIRECTIONAL_LIGHTS];  // directional light diffuse colors
         RGBf    _specularColor[MAX_DIRECTIONAL_LIGHTS]; // directional light specular colors
         int     _directionalLightCount; // number of active directional lights
+
+        Renderer3D_detail::SpotLightData<MAX_SPOT_LIGHTS> _spotLights; // local spot-light data
 
 
         // *** model specific parameters ***

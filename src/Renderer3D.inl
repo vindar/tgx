@@ -60,6 +60,27 @@ namespace tgx
                 _diffuseColor[i] = RGBf(0.0f, 0.0f, 0.0f);
                 _specularColor[i] = RGBf(0.0f, 0.0f, 0.0f);
                 }
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                _spotLights.count = 0;
+                _spotLights.hasRuntimeSpecular = false;
+                for (int i = 0; i < MAX_SPOT_LIGHTS; i++)
+                    {
+                    _spotLights.position[i] = fVec3(0.0f, 0.0f, 0.0f);
+                    _spotLights.direction[i] = fVec3(0.0f, 0.0f, -1.0f);
+                    _spotLights.diffuseColor[i] = RGBf(0.0f, 0.0f, 0.0f);
+                    _spotLights.specularColor[i] = RGBf(0.0f, 0.0f, 0.0f);
+                    _spotLights.flags[i] = 0;
+                    _spotLights.range2[i] = _spotLightInfiniteRange2();
+                    _spotLights.invRange2[i] = 0.0f;
+                    _spotLights.cosOuter[i] = -1.0f;
+                    _spotLights.invCosWidth[i] = 0.0f;
+                    _spotLights.positionView[i] = fVec3(0.0f, 0.0f, 0.0f);
+                    _spotLights.directionView[i] = fVec3(0.0f, 0.0f, -1.0f);
+                    _spotLights.runtimeDiffuseColor[i] = RGBf(0.0f, 0.0f, 0.0f);
+                    _spotLights.runtimeSpecularColor[i] = RGBf(0.0f, 0.0f, 0.0f);
+                    }
+                }
 
             const float ar = _validDraw() ? (((float)_lx) / _ly) : 1.5f;
             if (_ortho)
@@ -335,6 +356,7 @@ namespace tgx
             _r_modelViewM = _viewM * _modelM;
             _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
             _updateActiveDirectionalLightTransforms();
+            _updateActiveSpotLightTransforms();
             }
 
 
@@ -489,6 +511,131 @@ namespace tgx
             }
 
 
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightCount(int count)
+            {
+            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
+            _spotLights.count = clamp(count, 0, MAX_SPOT_LIGHTS);
+            _updateActiveSpotLightTransforms();
+            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        int Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::spotLightCount() const
+            {
+            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
+            return _spotLights.count;
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLight(int index, const fVec3& position, float range,
+                                                                                                                   const RGBf& diffuseColor,
+            const RGBf& specularColor)
+            {
+            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
+            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
+            _spotLights.position[index] = position;
+            _spotLights.direction[index] = fVec3(0.0f, 0.0f, -1.0f);
+            _spotLights.diffuseColor[index] = diffuseColor;
+            _spotLights.specularColor[index] = specularColor;
+            _spotLights.flags[index] = 0;
+            _setSpotLightRangeValues(index, range);
+            _updateSpotLightTransform(index);
+            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLight(int index, const fVec3& position, const fVec3& direction,
+                                                                                                                   float range, float outerAngleDeg,
+                                                                                                                   const RGBf& diffuseColor,
+                                                                                                                   const RGBf& specularColor)
+            {
+            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
+            setSpotLight(index, position, direction, range, outerAngleDeg, -1.0f, diffuseColor, specularColor);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLight(int index, const fVec3& position, const fVec3& direction,
+                                                                                                                   float range, float outerAngleDeg, float innerAngleDeg,
+                                                                                                                   const RGBf& diffuseColor,
+            const RGBf& specularColor)
+            {
+            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
+            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
+            _spotLights.position[index] = position;
+            _spotLights.direction[index] = direction;
+            _spotLights.diffuseColor[index] = diffuseColor;
+            _spotLights.specularColor[index] = specularColor;
+            _spotLights.flags[index] = 0;
+            _setSpotLightRangeValues(index, range);
+            _setSpotLightConeValues(index, outerAngleDeg, innerAngleDeg);
+            _updateSpotLightTransform(index);
+            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightPosition(int index, const fVec3& position)
+            {
+            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
+            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
+            _spotLights.position[index] = position;
+            _updateSpotLightPositionTransform(index);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightDirection(int index, const fVec3& direction)
+            {
+            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
+            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
+            _spotLights.direction[index] = direction;
+            _updateSpotLightDirectionTransform(index);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightDiffuse(int index, const RGBf& color)
+            {
+            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
+            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
+            _spotLights.diffuseColor[index] = color;
+            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightSpecular(int index, const RGBf& color)
+            {
+            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
+            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
+            _spotLights.specularColor[index] = color;
+            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightRange(int index, float range)
+            {
+            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
+            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
+            _setSpotLightRangeValues(index, range);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightCone(int index, float outerAngleDeg, float innerAngleDeg)
+            {
+            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
+            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
+            _setSpotLightConeValues(index, outerAngleDeg, innerAngleDeg);
+            }
+
+
 
 
 
@@ -589,6 +736,7 @@ namespace tgx
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setMaterialSpecularExponent(int exponent)
             {
             _specularExponent = clamp(exponent, 0, 100);
+            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
             }
 
 
@@ -777,20 +925,20 @@ namespace tgx
 
                 if (TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE))
                     {
-                    PPC0.color = _shadeVertex<true>(icu, NN0);
-                    PPC1.color = _shadeVertex<true>(icu, NN1);
-                    PPC2.color = _shadeVertex<true>(icu, NN2);
+                    PPC0.color = _shadeVertex<true>(icu, NN0, *Q0);
+                    PPC1.color = _shadeVertex<true>(icu, NN1, *Q1);
+                    PPC2.color = _shadeVertex<true>(icu, NN2, *Q2);
                     }
                 else
                     {
-                    PPC0.color = _shadeVertex(icu, NN0, col0);
-                    PPC1.color = _shadeVertex(icu, NN1, col1);
-                    PPC2.color = _shadeVertex(icu, NN2, col2);
+                    PPC0.color = _shadeVertex(icu, NN0, *Q0, col0);
+                    PPC1.color = _shadeVertex(icu, NN1, *Q1, col1);
+                    PPC2.color = _shadeVertex(icu, NN2, *Q2, col2);
                     }
                 }
             else
                 { // flat shading
-                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu);
+                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, *Q0, *Q1, *Q2);
                 PPC0.color = _uni.facecolor; // unneeded but
                 PPC1.color = _uni.facecolor; // does no harm
                 PPC2.color = _uni.facecolor; // and remove a warning
@@ -1014,20 +1162,20 @@ namespace tgx
 
                 if (TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE))
                     {
-                    PPC0.color = _shadeVertex<true>(icu, NN0);
-                    PPC1.color = _shadeVertex<true>(icu, NN1);
-                    PPC2.color = _shadeVertex<true>(icu, NN2);
+                    PPC0.color = _shadeVertex<true>(icu, NN0, Q0);
+                    PPC1.color = _shadeVertex<true>(icu, NN1, Q1);
+                    PPC2.color = _shadeVertex<true>(icu, NN2, Q2);
                     }
                 else
                     {
-                    PPC0.color = _shadeVertex(icu, NN0, Vcol0);
-                    PPC1.color = _shadeVertex(icu, NN1, Vcol1);
-                    PPC2.color = _shadeVertex(icu, NN2, Vcol2);
+                    PPC0.color = _shadeVertex(icu, NN0, Q0, Vcol0);
+                    PPC1.color = _shadeVertex(icu, NN1, Q1, Vcol1);
+                    PPC2.color = _shadeVertex(icu, NN2, Q2, Vcol2);
                     }
                 }
             else
                 { // flat shading
-                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu);
+                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, Q0, Q1, Q2);
                 }
 
             if (TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE))
@@ -1162,28 +1310,28 @@ namespace tgx
                             {
                             PPC0->N = _r_modelViewM.mult0(normals[PPC0->indn]);
                             if (TEXTURE)
-                                PPC0->color = _shadeVertex<true>(icu, PPC0->N);
+                                PPC0->color = _shadeVertex<true>(icu, PPC0->N, PPC0->P);
                             else
-                                PPC0->color = _shadeVertex<false>(icu, PPC0->N);
+                                PPC0->color = _shadeVertex<false>(icu, PPC0->N, PPC0->P);
                             }
                         if (PPC1->missedP)
                             {
                             PPC1->N = _r_modelViewM.mult0(normals[PPC1->indn]);
                             if (TEXTURE)
-                                PPC1->color = _shadeVertex<true>(icu, PPC1->N);
+                                PPC1->color = _shadeVertex<true>(icu, PPC1->N, PPC1->P);
                             else
-                                PPC1->color = _shadeVertex<false>(icu, PPC1->N);
+                                PPC1->color = _shadeVertex<false>(icu, PPC1->N, PPC1->P);
                             }
                         PPC2->N = _r_modelViewM.mult0(normals[PPC2->indn]);
                         if (TEXTURE)
-                            PPC2->color = _shadeVertex<true>(icu, PPC2->N);
+                            PPC2->color = _shadeVertex<true>(icu, PPC2->N, PPC2->P);
                         else
-                            PPC2->color = _shadeVertex<false>(icu, PPC2->N);
+                            PPC2->color = _shadeVertex<false>(icu, PPC2->N, PPC2->P);
 
                         }
                     else
                         { // flat shading : color on faces
-                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TEXTURE, faceN, cu);
+                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TEXTURE, faceN, cu, PPC0->P, PPC1->P, PPC2->P);
                         }
 
                     if (TEXTURE)
@@ -1324,22 +1472,32 @@ namespace tgx
 
                 if (TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE))
                     {
-                    PPC0.color = _shadeVertex<true>(icu, NN0);
-                    PPC1.color = _shadeVertex<true>(icu, NN1);
-                    PPC2.color = _shadeVertex<true>(icu, NN2);
-                    PPC3.color = _shadeVertex<true>(icu, NN3);
+                    PPC0.color = _shadeVertex<true>(icu, NN0, Q0);
+                    PPC1.color = _shadeVertex<true>(icu, NN1, Q1);
+                    PPC2.color = _shadeVertex<true>(icu, NN2, Q2);
+                    PPC3.color = _shadeVertex<true>(icu, NN3, Q3);
                     }
                 else
                     {
-                    PPC0.color = _shadeVertex(icu, NN0, Vcol0);
-                    PPC1.color = _shadeVertex(icu, NN1, Vcol1);
-                    PPC2.color = _shadeVertex(icu, NN2, Vcol2);
-                    PPC3.color = _shadeVertex(icu, NN3, Vcol3);
+                    PPC0.color = _shadeVertex(icu, NN0, Q0, Vcol0);
+                    PPC1.color = _shadeVertex(icu, NN1, Q1, Vcol1);
+                    PPC2.color = _shadeVertex(icu, NN2, Q2, Vcol2);
+                    PPC3.color = _shadeVertex(icu, NN3, Q3, Vcol3);
                     }
                 }
             else
                 { // flat shading
-                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu);
+                if constexpr (MAX_SPOT_LIGHTS > 0)
+                    {
+                    if (_spotLights.count == 0)
+                        {
+                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, Q0, Q1, Q2);
+                        }
+                    }
+                else
+                    {
+                    _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, Q0, Q1, Q2);
+                    }
                 }
 
             if (TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE))
@@ -1348,6 +1506,18 @@ namespace tgx
                 PPC1.T = *T1;
                 PPC2.T = *T2;
                 PPC3.T = *T3;
+                }
+
+            if constexpr (MAX_SPOT_LIGHTS > 0)
+                {
+                if ((!TGX_SHADER_HAS_GOURAUD(RASTER_TYPE)) && (_spotLights.count > 0))
+                    {
+                    _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, Q0, Q1, Q2);
+                    rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, PPC0, PPC1, PPC2, _ox, _oy, _uni);
+                    _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, Q0, Q2, Q3);
+                    rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, PPC0, PPC2, PPC3, _ox, _oy, _uni);
+                    return;
+                    }
                 }
 
             // go rasterize !
@@ -1544,7 +1714,7 @@ namespace tgx
                     {
                     if (use_mesh_material)
                         {   // use mesh material if requested
-                        _setRuntimeMaterialLighting(mesh->ambiant_strength, mesh->diffuse_strength, mesh->specular_strength);
+                        _setRuntimeMaterialLighting(mesh->ambiant_strength, mesh->diffuse_strength, mesh->specular_strength, mesh->specular_exponent);
                         _r_objectColor = mesh->color;
                         }
                     // precompute pow(.,specularExponent) table if needed
@@ -1564,7 +1734,7 @@ namespace tgx
 
             if (use_mesh_material)
                 { // restore material pre-computed values
-                _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength);
+                _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength, _specularExponent);
                 _r_objectColor = _color;
                 }
             }
@@ -1580,7 +1750,7 @@ namespace tgx
 
             if (use_mesh_material)
                 { // restore material pre-computed values
-                _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength);
+                _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength, _specularExponent);
                 _r_objectColor = _color;
                 }
             }
@@ -1709,28 +1879,28 @@ namespace tgx
                             {
                             PPC0->N = _r_modelViewM.mult0(tab_norm[PPC0->indn]);
                             if (TEXTURE)
-                                PPC0->color = _shadeVertex<true>(icu, PPC0->N);
+                                PPC0->color = _shadeVertex<true>(icu, PPC0->N, PPC0->P);
                             else
-                                PPC0->color = _shadeVertex<false>(icu, PPC0->N);
+                                PPC0->color = _shadeVertex<false>(icu, PPC0->N, PPC0->P);
                             }
                         if (PPC1->missedP)
                             {
                             PPC1->N = _r_modelViewM.mult0(tab_norm[PPC1->indn]);
                             if (TEXTURE)
-                                PPC1->color = _shadeVertex<true>(icu, PPC1->N);
+                                PPC1->color = _shadeVertex<true>(icu, PPC1->N, PPC1->P);
                             else
-                                PPC1->color = _shadeVertex<false>(icu, PPC1->N);
+                                PPC1->color = _shadeVertex<false>(icu, PPC1->N, PPC1->P);
                             }
                         PPC2->N = _r_modelViewM.mult0(tab_norm[PPC2->indn]);
                         if (TEXTURE)
-                            PPC2->color = _shadeVertex<true>(icu, PPC2->N);
+                            PPC2->color = _shadeVertex<true>(icu, PPC2->N, PPC2->P);
                         else
-                            PPC2->color = _shadeVertex<false>(icu, PPC2->N);
+                            PPC2->color = _shadeVertex<false>(icu, PPC2->N, PPC2->P);
 
                         }
                     else
                         { // flat shading : color on faces
-                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TEXTURE, faceN, cu);
+                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TEXTURE, faceN, cu, PPC0->P, PPC1->P, PPC2->P);
                         }
 
                     if (TEXTURE)
@@ -1886,7 +2056,7 @@ namespace tgx
 
                     if (use_mesh_material)
                         {
-                        _setRuntimeMaterialLighting(material.ambiant_strength, material.diffuse_strength, material.specular_strength);
+                        _setRuntimeMaterialLighting(material.ambiant_strength, material.diffuse_strength, material.specular_strength, material.specular_exponent);
                         _r_objectColor = material.color;
                         if (current_exponent != material.specular_exponent)
                             {
@@ -2039,28 +2209,28 @@ namespace tgx
                                 {
                                 PPC0->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC0->indn, normal_sx, normal_sy, normal_sz);
                                 if (TEXTURE)
-                                    PPC0->color = _shadeVertex<true>(icu, PPC0->N);
+                                    PPC0->color = _shadeVertex<true>(icu, PPC0->N, PPC0->P);
                                 else
-                                    PPC0->color = _shadeVertex<false>(icu, PPC0->N);
+                                    PPC0->color = _shadeVertex<false>(icu, PPC0->N, PPC0->P);
                                 }
                             if (PPC1->missedP)
                                 {
                                 PPC1->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC1->indn, normal_sx, normal_sy, normal_sz);
                                 if (TEXTURE)
-                                    PPC1->color = _shadeVertex<true>(icu, PPC1->N);
+                                    PPC1->color = _shadeVertex<true>(icu, PPC1->N, PPC1->P);
                                 else
-                                    PPC1->color = _shadeVertex<false>(icu, PPC1->N);
+                                    PPC1->color = _shadeVertex<false>(icu, PPC1->N, PPC1->P);
                                 }
                             PPC2->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC2->indn, normal_sx, normal_sy, normal_sz);
                             if (TEXTURE)
-                                PPC2->color = _shadeVertex<true>(icu, PPC2->N);
+                                PPC2->color = _shadeVertex<true>(icu, PPC2->N, PPC2->P);
                             else
-                                PPC2->color = _shadeVertex<false>(icu, PPC2->N);
+                                PPC2->color = _shadeVertex<false>(icu, PPC2->N, PPC2->P);
 
                             }
                         else
                             { // flat shading : color on faces
-                            _setFlatOrUnlitFaceColor(raster_type, TEXTURE, faceN, cu);
+                            _setFlatOrUnlitFaceColor(raster_type, TEXTURE, faceN, cu, PPC0->P, PPC1->P, PPC2->P);
                             }
 
                         if (TEXTURE)
