@@ -1,130 +1,122 @@
-# Current Performance Baseline
+# Current TGX 3D performance baseline
 
-Compact TGX performance baseline promoted on 2026-06-15 after accepting the `src/Shaders.h` Gouraud incremental shader candidate.
+Date: 2026-06-26
 
-Source state:
+Branch: `feature/point-spot-lights`
 
-```text
-branch: main
-commit: 384d12ffa0aeaa01897cf45bcd695fdf4d776084
-working tree source diff: none; the accepted shader changes are committed
-label: baseline_20260615_shader_incremental
-```
+Baseline label: `baseline_spotlight_specraw_20260626`
 
-The previous current baseline was archived to:
+This baseline was recorded after the first spotlight runtime optimization pass. It
+uses the point/spot light implementation plus the accepted local-specular guard:
+skip the half-vector inverse square root when the raw specular numerator is not
+positive. The source delta is captured in `source_diff.patch`.
 
-```text
-validation/performance/baselines/previous/2026-06-14-before-shader-incremental/
-```
+The previous `current` baseline was archived under:
 
-## Boards And Build Options
+`validation/performance/baselines/previous/2026-06-15-shader-incremental/`
 
-- Teensy 4.1 + ILI9341: `teensy:avr:teensy41:usb=serial,speed=600,opt=o3std`, upload `usb:80000/3/0/1`, serial `COM3`.
-- Pico2 / RP2350 + ILI9341: `rp2040:rp2040:rpipico2:opt=Fast`, serial/upload `COM21`; `TFT_eSPI` selected `Setup_RP2040_RP2350_ILI9341.h`.
-- Core2 / ESP32: `esp32:esp32:m5stack_core2`, port `COM5`.
-- CoreS3 / ESP32-S3: `esp32:esp32:m5stack_cores3`, port `COM10`.
+## Boards
 
-All runs used `validation/performance/tools/upload_and_capture.ps1` with parsed benchmark/example telemetry.
+| Board | FQBN / profile | Runtime port |
+|---|---|---|
+| Teensy 4.1 + ILI9341 | `teensy:avr:teensy41:usb=serial,speed=600,opt=o3std` | `COM3` |
+| Core2 | `esp32:esp32:m5stack_core2` | `COM5` |
+| CoreS3 | `esp32:esp32:m5stack_cores3` | `COM10` |
+| Pico2 + ILI9341 | `rp2040:rp2040:rpipico2:opt=Fast` | `COM21` |
 
-## Shader Flags
+## Benchmark scores
 
-This baseline corresponds to the accepted candidate default on the four primary boards:
-
-```cpp
-TGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL=1
-TGX_SHADER_GOURAUD_RGB565_FLOAT_INCREMENTAL=1
-```
-
-Extra Pico W / RP2040 checks showed that RP2040 without FPU should not use those incremental-float paths:
-
-```cpp
-TGX_SHADER_GOURAUD_TEXTURE_FLOAT_INCREMENTAL=0
-TGX_SHADER_GOURAUD_RGB565_FLOAT_INCREMENTAL=0
-```
-
-The Pico W matrix is retained in:
-
-- `picow_rp2040_flag_matrix_delta_vs_head.csv`
-- `picow_rp2040_flag_matrix_best_variant.csv`
-- `picow_rp2040_flag_matrix_binary_size.csv`
-
-## Benchmark Global Scores
+These are the global `examples/benchmark` scores. Benchmark capture was run with
+the serial kick enabled because the sketch waits for input before starting.
 
 | Board | Score 1 | Score 2 | Score 3 |
-| ----- | ------: | ------: | ------: |
-| Teensy 4.1 | 115.90 | 87.32 | 77.18 |
-| Pico2 | 21.50 | 16.66 | 14.76 |
-| Core2 | 31.69 | 22.51 | |
-| CoreS3 | 42.44 | 30.07 | 26.34 |
+|---|---:|---:|---:|
+| Teensy 4.1 | 118.55 | 90.37 | 80.65 |
+| Core2 | 32.41 | 23.88 | |
+| CoreS3 | 43.52 | 31.87 | 28.31 |
+| Pico2 | 21.91 | 17.21 | 15.35 |
 
-Comparison against the same-session clean `HEAD` baseline is stored in `comparison_previous_benchmark_global.csv`.
+Comparison against the pre-spotlight baseline
+`validation/performance/baselines/spotlights_prechange_2026-06-25` shows no
+meaningful historical-rendering regression:
 
-## Selected Real Examples
+| Board | Largest benchmark delta |
+|---|---:|
+| Teensy 4.1 | +0.017% / -0.011% |
+| Core2 | 0% |
+| CoreS3 | 0% |
+| Pico2 | +0.046% |
 
-Teensy 4.1:
-
-- `mars`
-- `test-shading`
-- `test-texture`
-- `buddha`
-
-Pico2:
-
-- `borg_cube`
-- `bunny_fig`
-- `scream`
-
-Core2/CoreS3:
-
-- `borg_cube`
-- `donkeykong`
-- `scream`
-
-Important candidate-vs-HEAD examples:
-
-| Board | Example / scene | Delta |
-| ----- | --------------- | ----: |
-| Teensy 4.1 | `buddha / buddha_rotation` | -5.18% frame time |
-| Teensy 4.1 | `test-texture / spot_tex_nearest` | -7.35% frame time |
-| Teensy 4.1 | `mars / movie` | +1.31% frame time |
-| Pico2 | `bunny_fig / gouraud` | -10.30% frame time |
-| Pico2 | `bunny_fig / gouraud_texture` | -18.84% frame time |
-| Pico2 | `scream` | +20.47% FPS |
-| Core2 | `donkeykong / gouraud` | -8.24% frame time |
-| Core2 | `donkeykong / gouraud_texture` | -9.29% frame time |
-| Core2 | `scream` | +11.37% FPS |
-| CoreS3 | `donkeykong / gouraud` | -7.55% frame time |
-| CoreS3 | `donkeykong / gouraud_texture` | -9.21% frame time |
-| CoreS3 | `scream` | +14.35% FPS |
-
-Use `example_telemetry_summary.csv` for per-scene values and `comparison_previous_example_summary.csv` for per-scene deltas.
-
-## Files
+Full data:
 
 - `benchmark_global_scores.csv`
 - `benchmark_subtests.csv`
-- `binary_size.csv`
+- `comparison_pre_spotlight_benchmark_global.csv`
+
+## Example telemetry
+
+The real-example telemetry suite was run successfully on all four boards.
+
+| Board | Examples |
+|---|---|
+| Teensy 4.1 | `mars`, `test-shading`, `test-texture`, `buddha`, `scream` |
+| Core2 | `borg_cube`, `donkeykong`, `scream` |
+| CoreS3 | `borg_cube`, `donkeykong`, `scream` |
+| Pico2 | `borg_cube`, `bunny_fig`, `scream` |
+
+Full data:
+
 - `example_telemetry.csv`
 - `example_telemetry_summary.csv`
-- `run_manifest.csv`
-- `comparison_previous_benchmark_global.csv`
-- `comparison_previous_example_summary.csv`
-- `comparison_previous_example_aggregate.csv`
-- `validation_results.csv`
-- `source_diff_stat.txt`
-- `source_diff_name_only.txt`
-- `source_diff.patch`
+- `comparison_pre_spotlight_example_summary.csv`
 
-The `source_diff.*` files are intentionally empty for this baseline because it
-is tied to the committed `main` source state above, not to a local candidate
-diff.
+Most example deltas are within normal telemetry noise. The Pico2
+`bunny_fig/gouraud_texture` capture is lower than the pre-spotlight comparison
+row by about 6.3%; keep an eye on it in the next refresh, but the benchmark
+suite and the other Pico2 examples are stable.
 
-## Reuse Policy
+## CPU render validation
 
-Reuse this baseline only with the same source state, board/display setup, build profile, benchmark/example sketch, shader flag defaults, and robust upload/capture tooling.
+The accepted source optimization was also checked with a CPU spotlight-render
+comparator against commit `ff8cc0b3`. Three representative frames produced
+identical image hashes:
 
-The detailed investigation report and flag matrix remain in:
+| Frame | Hash |
+|---:|---:|
+| 0 | 14661566424370029289 |
+| 1 | 5422464622175942429 |
+| 2 | 9832561839460195462 |
 
-```text
-validation/performance/investigations/2026-06-shader-incremental-flag-matrix/
+The hash manifests are saved as:
+
+- `spotlight_cpu_current_hashes.csv`
+- `spotlight_cpu_ref_hashes.csv`
+
+## Capture command pattern
+
+Benchmarks used:
+
+```powershell
+validation\performance\tools\upload_and_capture.ps1 `
+  -Board <board> `
+  -Sketch examples\benchmark `
+  -Label baseline_spotlight_specraw_20260626_benchmark `
+  -ParseMode benchmark `
+  -Baud 9600 `
+  -UseBoardBenchmarkDefine `
+  -KickText x `
+  -KickDelayMs 2500
 ```
+
+Examples used the same helper with the board-specific sketch path and
+`-ParseMode telemetry`.
+
+## Files
+
+- `run_manifest.csv`: exact board/sketch capture manifest.
+- `binary_size.csv`: compact memory and binary-size lines from each build log.
+- `source_diff.patch`: source delta for the baseline.
+- `source_diff_stat.txt` / `source_diff_name_only.txt`: compact diff summary.
+
+Raw build directories, serial logs, parsed JSON files, and temporary telemetry
+captures were pruned after the compact CSVs were generated.

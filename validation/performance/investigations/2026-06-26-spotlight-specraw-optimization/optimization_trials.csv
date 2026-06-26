@@ -1,0 +1,6 @@
+"trial","status","main_probe","result","reason"
+"specRaw positive guard","accepted","spotlights_room two point lights with specular","Pico2 29.19 fps vs 28.88 reference; Core2 21.15 vs 20.96; CoreS3 38.27 vs 38.15; Teensy 101.96 vs 102.58","Equivalent rendering by CPU hash; skips local-specular half-vector invsqrt when contribution is zero"
+"normalZ hoist","rejected","Pico2 spotlights_room","about 21.87 fps","Register pressure/codegen loss outweighed one saved multiply"
+"allSpecular global flag","rejected","Pico2 spotlights_room","about 15.87 fps; flash grew to about 221 KB","Extra global path hurt code generation"
+"spotLightCount local hoist","rejected","Pico2 spotlights_room","about 28.67 fps","No reproducible gain"
+"cone precheck","rejected","Pico2 point-light priority path","about 25.3 fps","Enlarged common point-light path and did not help the priority case"

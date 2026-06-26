@@ -1,0 +1,5 @@
+"board","old_version","old_avg","new_version","new_avg","delta_percent","old_flash","new_flash","flash_delta","new_count"
+"pico2","fvec3","16.70","invdot2","23.22","+39.04","242908","240940","-1968","23"
+"core2","fvec3","20.42","invdot2","20.67","+1.22","475627","475323","-304","24"
+"cores3","fvec3","38.12","invdot2","38.38","+0.68","462223","461887","-336","26"
+"teensy41","fvec3","101.77","invdot2","102.23","+0.45","247804","247804","0","26"
