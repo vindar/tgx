@@ -1,0 +1,186 @@
+
+2026-06-26 11:13:16.429 BOARD=pico2
+2026-06-26 11:13:16.436 PORT=COM21
+2026-06-26 11:13:16.438 UPLOAD_PORT=COM21
+2026-06-26 11:13:16.439 FQBN=rp2040:rp2040:rpipico2:opt=Fast
+2026-06-26 11:13:16.442 SKETCH=D:\Programmation\tgx\validation\performance\investigations\2026-06-26-spotlight-optimization-analysis\sketches\spotlights_room_probe
+2026-06-26 11:13:16.443 PARSE_MODE=example
+2026-06-26 11:13:16.445 VISIBLE_PORTS_BEFORE=COM10,COM21,COM3,COM5,COM6,COM7
+2026-06-26 11:13:16.447 ARDUINO_BOARD_LIST_BEFORE_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot DRVKit           esp32:esp32:ozobot_drvkit             esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_BEFORE_END
+2026-06-26 11:13:16.465 ATTEMPT=1
+2026-06-26 11:13:16.780 PRE_UPLOAD_SERIAL_OPEN_TEST=True
+2026-06-26 11:13:16.789 COMPILE_UPLOAD_COMMAND=C:\Users\Vindar\AppData\Local\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe compile --fqbn rp2040:rp2040:rpipico2:opt=Fast --libraries D:\Programmation\arduino\libraries --library D:\Programmation\tgx --build-path D:\Programmation\tgx\validation\performance\builds\pico2_cone_unified_v2_probe_mode3_cone --build-property compiler.cpp.extra_flags=-DTGX_LIGHT_PROBE_MODE=3 --port COM21 --upload D:\Programmation\tgx\validation\performance\investigations\2026-06-26-spotlight-optimization-analysis\sketches\spotlights_room_probe
+2026-06-26 11:14:09.421 ARDUINO: In file included from D:\Programmation\tgx\validation\performance\investigations\2026-06-26-spotlight-optimization-analysis\sketches\spotlights_room_probe\spotlights_room_probe.ino:22:
+2026-06-26 11:14:09.423 ARDUINO: D:\Programmation\arduino\libraries\TFT_eSPI/TFT_eSPI.h:973:8: warning: #warning >>>>------>> TOUCH_CS pin not defined, TFT_eSPI touch functions will not be available! [-Wcpp]
+2026-06-26 11:14:09.424 ARDUINO:   973 |       #warning >>>>------>> TOUCH_CS pin not defined, TFT_eSPI touch functions will not be available!
+2026-06-26 11:14:09.426 ARDUINO:       |        ^~~~~~~
+2026-06-26 11:14:09.427 ARDUINO: In file included from D:\Programmation\arduino\libraries\TFT_eSPI\TFT_eSPI.cpp:16:
+2026-06-26 11:14:09.429 ARDUINO: D:\Programmation\arduino\libraries\TFT_eSPI\TFT_eSPI.h:973:8: warning: #warning >>>>------>> TOUCH_CS pin not defined, TFT_eSPI touch functions will not be available! [-Wcpp]
+2026-06-26 11:14:09.430 ARDUINO:   973 |       #warning >>>>------>> TOUCH_CS pin not defined, TFT_eSPI touch functions will not be available!
+2026-06-26 11:14:09.432 ARDUINO:       |        ^~~~~~~
+2026-06-26 11:14:09.434 ARDUINO: In file included from C:\Users\Vindar\AppData\Local\Arduino15\packages\rp2040\hardware\rp2040\5.6.0\cores\rp2040\lwip\src\core\ipv4\dhcp.c:1:
+2026-06-26 11:14:09.435 ARDUINO: In function 'dhcp_option_byte',
+2026-06-26 11:14:09.437 ARDUINO:     inlined from 'dhcp_discover.isra' at C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1053:25:
+2026-06-26 11:14:09.438 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1453:30: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+2026-06-26 11:14:09.440 ARDUINO:  1453 |   options[options_out_len++] = value;
+2026-06-26 11:14:09.441 ARDUINO:       |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+2026-06-26 11:14:09.442 ARDUINO: In file included from C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/arch.h:48,
+2026-06-26 11:14:09.443 ARDUINO:                  from C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/debug.h:40,
+2026-06-26 11:14:09.446 ARDUINO:                  from C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/opt.h:52,
+2026-06-26 11:14:09.447 ARDUINO:                  from C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:66:
+2026-06-26 11:14:09.449 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h: In function 'dhcp_discover.isra':
+2026-06-26 11:14:09.450 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:26: note: at offset 68 into destination object 'options' of size 68
+2026-06-26 11:14:09.452 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.453 ARDUINO:       |                          ^~~~~~~
+2026-06-26 11:14:09.455 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/src/rp2_common/pico_lwip/include/arch/cc.h:76:30: note: in definition of macro 'PACK_STRUCT_FIELD'
+2026-06-26 11:14:09.456 ARDUINO:    76 | #define PACK_STRUCT_FIELD(x) x
+2026-06-26 11:14:09.463 ARDUINO:       |                              ^
+2026-06-26 11:14:09.465 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:3: note: in expansion of macro 'PACK_STRUCT_FLD_8'
+2026-06-26 11:14:09.467 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.468 ARDUINO:       |   ^~~~~~~~~~~~~~~~~
+2026-06-26 11:14:09.470 ARDUINO: In function 'dhcp_option_byte',
+2026-06-26 11:14:09.472 ARDUINO:     inlined from 'dhcp_discover.isra' at C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1053:25:
+2026-06-26 11:14:09.474 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1453:30: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+2026-06-26 11:14:09.475 ARDUINO:  1453 |   options[options_out_len++] = value;
+2026-06-26 11:14:09.477 ARDUINO:       |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+2026-06-26 11:14:09.479 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h: In function 'dhcp_discover.isra':
+2026-06-26 11:14:09.480 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:26: note: at offset 68 into destination object 'options' of size 68
+2026-06-26 11:14:09.482 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.484 ARDUINO:       |                          ^~~~~~~
+2026-06-26 11:14:09.485 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/src/rp2_common/pico_lwip/include/arch/cc.h:76:30: note: in definition of macro 'PACK_STRUCT_FIELD'
+2026-06-26 11:14:09.487 ARDUINO:    76 | #define PACK_STRUCT_FIELD(x) x
+2026-06-26 11:14:09.489 ARDUINO:       |                              ^
+2026-06-26 11:14:09.490 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:3: note: in expansion of macro 'PACK_STRUCT_FLD_8'
+2026-06-26 11:14:09.492 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.493 ARDUINO:       |   ^~~~~~~~~~~~~~~~~
+2026-06-26 11:14:09.495 ARDUINO: In function 'dhcp_option_byte',
+2026-06-26 11:14:09.497 ARDUINO:     inlined from 'dhcp_reboot.isra' at C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1291:25:
+2026-06-26 11:14:09.499 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1453:30: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+2026-06-26 11:14:09.500 ARDUINO:  1453 |   options[options_out_len++] = value;
+2026-06-26 11:14:09.501 ARDUINO:       |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+2026-06-26 11:14:09.503 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h: In function 'dhcp_reboot.isra':
+2026-06-26 11:14:09.504 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:26: note: at offset 68 into destination object 'options' of size 68
+2026-06-26 11:14:09.506 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.508 ARDUINO:       |                          ^~~~~~~
+2026-06-26 11:14:09.509 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/src/rp2_common/pico_lwip/include/arch/cc.h:76:30: note: in definition of macro 'PACK_STRUCT_FIELD'
+2026-06-26 11:14:09.511 ARDUINO:    76 | #define PACK_STRUCT_FIELD(x) x
+2026-06-26 11:14:09.512 ARDUINO:       |                              ^
+2026-06-26 11:14:09.514 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:3: note: in expansion of macro 'PACK_STRUCT_FLD_8'
+2026-06-26 11:14:09.516 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.517 ARDUINO:       |   ^~~~~~~~~~~~~~~~~
+2026-06-26 11:14:09.518 ARDUINO: In function 'dhcp_option_byte',
+2026-06-26 11:14:09.520 ARDUINO:     inlined from 'dhcp_reboot.isra' at C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1291:25:
+2026-06-26 11:14:09.521 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1453:30: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+2026-06-26 11:14:09.523 ARDUINO:  1453 |   options[options_out_len++] = value;
+2026-06-26 11:14:09.524 ARDUINO:       |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+2026-06-26 11:14:09.526 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h: In function 'dhcp_reboot.isra':
+2026-06-26 11:14:09.527 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:26: note: at offset 68 into destination object 'options' of size 68
+2026-06-26 11:14:09.529 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.530 ARDUINO:       |                          ^~~~~~~
+2026-06-26 11:14:09.532 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/src/rp2_common/pico_lwip/include/arch/cc.h:76:30: note: in definition of macro 'PACK_STRUCT_FIELD'
+2026-06-26 11:14:09.533 ARDUINO:    76 | #define PACK_STRUCT_FIELD(x) x
+2026-06-26 11:14:09.535 ARDUINO:       |                              ^
+2026-06-26 11:14:09.536 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:3: note: in expansion of macro 'PACK_STRUCT_FLD_8'
+2026-06-26 11:14:09.537 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.539 ARDUINO:       |   ^~~~~~~~~~~~~~~~~
+2026-06-26 11:14:09.541 ARDUINO: In function 'dhcp_option_byte',
+2026-06-26 11:14:09.542 ARDUINO:     inlined from 'dhcp_select.isra' at C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:478:25:
+2026-06-26 11:14:09.543 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1453:30: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+2026-06-26 11:14:09.545 ARDUINO:  1453 |   options[options_out_len++] = value;
+2026-06-26 11:14:09.546 ARDUINO:       |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+2026-06-26 11:14:09.548 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h: In function 'dhcp_select.isra':
+2026-06-26 11:14:09.550 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:26: note: at offset 68 into destination object 'options' of size 68
+2026-06-26 11:14:09.551 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.552 ARDUINO:       |                          ^~~~~~~
+2026-06-26 11:14:09.554 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/src/rp2_common/pico_lwip/include/arch/cc.h:76:30: note: in definition of macro 'PACK_STRUCT_FIELD'
+2026-06-26 11:14:09.555 ARDUINO:    76 | #define PACK_STRUCT_FIELD(x) x
+2026-06-26 11:14:09.557 ARDUINO:       |                              ^
+2026-06-26 11:14:09.558 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:3: note: in expansion of macro 'PACK_STRUCT_FLD_8'
+2026-06-26 11:14:09.560 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.562 ARDUINO:       |   ^~~~~~~~~~~~~~~~~
+2026-06-26 11:14:09.564 ARDUINO: In function 'dhcp_option_byte',
+2026-06-26 11:14:09.565 ARDUINO:     inlined from 'dhcp_select.isra' at C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:478:25:
+2026-06-26 11:14:09.567 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1453:30: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+2026-06-26 11:14:09.569 ARDUINO:  1453 |   options[options_out_len++] = value;
+2026-06-26 11:14:09.571 ARDUINO:       |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+2026-06-26 11:14:09.572 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h: In function 'dhcp_select.isra':
+2026-06-26 11:14:09.574 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:26: note: at offset 68 into destination object 'options' of size 68
+2026-06-26 11:14:09.576 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.577 ARDUINO:       |                          ^~~~~~~
+2026-06-26 11:14:09.579 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/src/rp2_common/pico_lwip/include/arch/cc.h:76:30: note: in definition of macro 'PACK_STRUCT_FIELD'
+2026-06-26 11:14:09.581 ARDUINO:    76 | #define PACK_STRUCT_FIELD(x) x
+2026-06-26 11:14:09.582 ARDUINO:       |                              ^
+2026-06-26 11:14:09.584 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:3: note: in expansion of macro 'PACK_STRUCT_FLD_8'
+2026-06-26 11:14:09.586 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.588 ARDUINO:       |   ^~~~~~~~~~~~~~~~~
+2026-06-26 11:14:09.590 ARDUINO: In function 'dhcp_option_byte',
+2026-06-26 11:14:09.591 ARDUINO:     inlined from 'dhcp_renew' at C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1179:25:
+2026-06-26 11:14:09.593 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1453:30: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+2026-06-26 11:14:09.594 ARDUINO:  1453 |   options[options_out_len++] = value;
+2026-06-26 11:14:09.595 ARDUINO:       |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+2026-06-26 11:14:09.597 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h: In function 'dhcp_renew':
+2026-06-26 11:14:09.599 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:26: note: at offset 68 into destination object 'options' of size 68
+2026-06-26 11:14:09.600 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.602 ARDUINO:       |                          ^~~~~~~
+2026-06-26 11:14:09.604 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/src/rp2_common/pico_lwip/include/arch/cc.h:76:30: note: in definition of macro 'PACK_STRUCT_FIELD'
+2026-06-26 11:14:09.606 ARDUINO:    76 | #define PACK_STRUCT_FIELD(x) x
+2026-06-26 11:14:09.607 ARDUINO:       |                              ^
+2026-06-26 11:14:09.609 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:3: note: in expansion of macro 'PACK_STRUCT_FLD_8'
+2026-06-26 11:14:09.610 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.612 ARDUINO:       |   ^~~~~~~~~~~~~~~~~
+2026-06-26 11:14:09.613 ARDUINO: In function 'dhcp_option_byte',
+2026-06-26 11:14:09.615 ARDUINO:     inlined from 'dhcp_renew' at C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1179:25:
+2026-06-26 11:14:09.617 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/core/ipv4/dhcp.c:1453:30: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+2026-06-26 11:14:09.618 ARDUINO:  1453 |   options[options_out_len++] = value;
+2026-06-26 11:14:09.620 ARDUINO:       |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+2026-06-26 11:14:09.621 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h: In function 'dhcp_renew':
+2026-06-26 11:14:09.623 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:26: note: at offset 68 into destination object 'options' of size 68
+2026-06-26 11:14:09.624 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.626 ARDUINO:       |                          ^~~~~~~
+2026-06-26 11:14:09.627 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/src/rp2_common/pico_lwip/include/arch/cc.h:76:30: note: in definition of macro 'PACK_STRUCT_FIELD'
+2026-06-26 11:14:09.629 ARDUINO:    76 | #define PACK_STRUCT_FIELD(x) x
+2026-06-26 11:14:09.630 ARDUINO:       |                              ^
+2026-06-26 11:14:09.632 ARDUINO: C:/Users/Vindar/AppData/Local/Arduino15/packages/rp2040/hardware/rp2040/5.6.0/pico-sdk/lib/lwip/src/include/lwip/prot/dhcp.h:90:3: note: in expansion of macro 'PACK_STRUCT_FLD_8'
+2026-06-26 11:14:09.634 ARDUINO:    90 |   PACK_STRUCT_FLD_8(u8_t options[DHCP_OPTIONS_LEN]);
+2026-06-26 11:14:09.636 ARDUINO:       |   ^~~~~~~~~~~~~~~~~
+2026-06-26 11:14:09.637 ARDUINO: Le croquis utilise 208580 octets (4%) de l'espace de stockage de programmes. Le maximum est de 4186112 octets.
+2026-06-26 11:14:09.639 ARDUINO: Les variables globales utilisent 442876 octets (84%) de mémoire dynamique, ce qui laisse 81412 octets pour les variables locales. Le maximum est de 524288 octets.
+2026-06-26 11:14:09.641 ARDUINO: La mémoire disponible faible, des problèmes de stabilité pourraient survenir.
+2026-06-26 11:14:09.642 ARDUINO: Resetting COM21
+2026-06-26 11:14:09.644 ARDUINO: Converting to uf2, output size: 455680, start address: 0x2000
+2026-06-26 11:14:09.646 ARDUINO: Scanning for RP2040 devices
+2026-06-26 11:14:09.648 ARDUINO: Flashing F: (RP2350)
+2026-06-26 11:14:09.650 ARDUINO: Wrote 455680 bytes to F:/NEW.UF2
+2026-06-26 11:14:09.652 ARDUINO_EXIT_CODE=0
+2026-06-26 11:14:09.655 VISIBLE_PORTS_AFTER_UPLOAD=COM10,COM21,COM3,COM5,COM6,COM7
+2026-06-26 11:14:09.657 POST_UPLOAD_DELAY_SECONDS=2
+2026-06-26 11:14:11.685 WAIT_PORT_OK=True SEEN=True PORTS=COM10,COM21,COM3,COM5,COM6,COM7
+2026-06-26 11:14:35.840 CAPTURE_STATUS=SUCCESS LINES=47 START=True END=True MATCHES=24
+2026-06-26 11:14:40.641 ARDUINO_BOARD_LIST_AFTER_UPLOAD_BEGIN
+Port            Protocol Type              Board Name              FQBN                                  Core
+COM10           serial   Serial Port (USB) ESP32 Family Device     esp32:esp32:esp32_family              esp32:esp32
+                         Serial Port (USB) Ozobot DRVKit           esp32:esp32:ozobot_drvkit             esp32:esp32
+COM21           serial   Serial Port (USB) Pimoroni Plasma2350W    rp2040:rp2040:pimoroni_plasma2350w    rp2040:rp2040
+                         Serial Port (USB) Raspberry Pi Pico 2     rp2040:rp2040:rpipico2                rp2040:rp2040
+                         Serial Port (USB) Waveshare RP2350 PiZero rp2040:rp2040:waveshare_rp2350_pizero rp2040:rp2040
+COM3            serial   Serial Port (USB) Unknown
+COM5            serial   Serial Port (USB) Unknown
+COM6            serial   Serial Port       Unknown
+COM7            serial   Serial Port       Unknown
+usb:80000/3/0/1 teensy   Teensy Ports      Teensy 4.1              teensy:avr:teensy41                   teensy:avr
+
+ARDUINO_BOARD_LIST_AFTER_UPLOAD_END
+2026-06-26 11:14:40.674 FINAL_STATUS=SUCCESS

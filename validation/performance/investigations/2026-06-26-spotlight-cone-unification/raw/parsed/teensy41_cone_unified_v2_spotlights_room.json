@@ -1,0 +1,41 @@
+{
+    "board":  "teensy41",
+    "port":  "COM3",
+    "upload_port":  "usb:80000/3/0/1",
+    "fqbn":  "teensy:avr:teensy41:usb=serial,speed=600,opt=o3std",
+    "sketch":  "D:\\Programmation\\tgx\\examples\\Teensy4\\3D\\spotlights_room",
+    "command":  "C:\\Users\\Vindar\\AppData\\Local\\Programs\\Arduino IDE\\resources\\app\\lib\\backend\\resources\\arduino-cli.exe compile --fqbn teensy:avr:teensy41:usb=serial,speed=600,opt=o3std --libraries D:\\Programmation\\arduino\\libraries --library D:\\Programmation\\tgx --build-path D:\\Programmation\\tgx\\validation\\performance\\builds\\teensy41_cone_unified_v2_spotlights_room --port usb:80000/3/0/1 --upload D:\\Programmation\\tgx\\examples\\Teensy4\\3D\\spotlights_room",
+    "start_time":  "2026-06-26T11:07:35.7736056+02:00",
+    "end_time":  "2026-06-26T11:08:47.0581752+02:00",
+    "upload_status":  "UPLOAD_OK",
+    "serial_status":  "SUCCESS",
+    "run_status":  "SUCCESS",
+    "attempts":  1,
+    "telemetry_file":  "D:\\Programmation\\tgx\\validation\\performance\\telemetry\\teensy41_cone_unified_v2_spotlights_room.txt",
+    "log_file":  "D:\\Programmation\\tgx\\validation\\performance\\logs\\teensy41_cone_unified_v2_spotlights_room.log",
+    "metadata_file":  "D:\\Programmation\\tgx\\validation\\performance\\parsed\\teensy41_cone_unified_v2_spotlights_room.json",
+    "captured_lines":  26,
+    "start_marker_seen":  true,
+    "completion_marker_seen":  true,
+    "parse_mode":  "example",
+    "parse_succeeded":  true,
+    "parsed_global_scores":  null,
+    "parsed_subtests":  null,
+    "parsed_telemetry_rows":  26,
+    "visible_ports_before":  [
+                                 "COM10",
+                                 "COM21",
+                                 "COM3",
+                                 "COM5",
+                                 "COM6",
+                                 "COM7"
+                             ],
+    "visible_ports_after":  [
+                                "COM10",
+                                "COM21",
+                                "COM3",
+                                "COM5",
+                                "COM6",
+                                "COM7"
+                            ]
+}

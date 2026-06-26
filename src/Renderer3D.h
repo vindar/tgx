@@ -3122,41 +3122,9 @@ namespace tgx
                 {
                 const float localNormalScale = icu * _r_inorm;
                 const int spotGlobalFlags = _spotLights.globalFlags;
-                const int localSpecular = spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_RUNTIME_SPECULAR;
+                const bool localSpecular = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_RUNTIME_SPECULAR) != 0;
+                const bool localCone = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_ACTIVE_CONE) != 0;
                 const fVec3 Pv(P.x, P.y, P.z);
-                if (!(spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_ACTIVE_CONE))
-                    {
-                    for (int i = 0; i < _spotLights.count; i++)
-                        {
-                        fVec3 L = _spotLights.positionView[i] - Pv;
-                        const float d2 = dotProduct(L, L);
-                        if ((d2 <= 1.0e-12f) || (d2 >= _spotLights.range2[i])) continue;
-
-                        const float ndotlRaw = dotProduct(N, L);
-                        const float diffRaw = localNormalScale * ndotlRaw;
-                        if (diffRaw <= 0.0f) continue;
-
-                        const float invD = tgx::fast_invsqrt(d2);
-                        const float diff = diffRaw * invD;
-                        const float atten = 1.0f - d2 * _spotLights.invRange2[i];
-                        const float lightFactor = atten * atten;
-
-                        col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
-
-                        if (localSpecular && (_spotLights.flags[i] & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED))
-                            {
-                            const float h2 = 2.0f + (2.0f * L.z * invD);
-                            if (h2 > 1.0e-12f)
-                                {
-                                const float invH = tgx::fast_invsqrt(h2);
-                                const float spec = _powSpecular((diff + (localNormalScale * N.z)) * invH);
-                                col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
-                                }
-                            }
-                        }
-                    }
-                else
-                    {
                 for (int i = 0; i < _spotLights.count; i++)
                     {
                     fVec3 L = _spotLights.positionView[i] - Pv;
@@ -3169,36 +3137,42 @@ namespace tgx
 
                     const float invD = tgx::fast_invsqrt(d2);
                     const float diff = diffRaw * invD;
-                    const int flags = _spotLights.flags[i];
-                    float lightFactor = 1.0f;
+                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
+                    float lightFactor = atten * atten;
 
-                    if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
+                    int flags = 0;
+                    if (localCone)
                         {
-                        const float cone = -dotProduct(_spotLights.directionView[i], L) * invD;
-                        if (cone <= _spotLights.cosOuter[i]) continue;
-                        if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
+                        flags = _spotLights.flags[i];
+                        if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
                             {
-                            float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
-                            if (spot > 1.0f) spot = 1.0f;
-                            lightFactor *= spot * spot;
+                            const float cone = -dotProduct(_spotLights.directionView[i], L) * invD;
+                            if (cone <= _spotLights.cosOuter[i]) continue;
+                            if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
+                                {
+                                float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
+                                if (spot > 1.0f) spot = 1.0f;
+                                lightFactor *= spot * spot;
+                                }
                             }
                         }
-                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
-                    lightFactor *= atten * atten;
 
                     col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
 
-                    if (localSpecular && (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED))
+                    if (localSpecular)
                         {
-                        const float h2 = 2.0f + (2.0f * L.z * invD);
-                        if (h2 > 1.0e-12f)
+                        if (!localCone) flags = _spotLights.flags[i];
+                        if (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED)
                             {
-                            const float invH = tgx::fast_invsqrt(h2);
-                            const float spec = _powSpecular((diff + (localNormalScale * N.z)) * invH);
-                            col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                            const float h2 = 2.0f + (2.0f * L.z * invD);
+                            if (h2 > 1.0e-12f)
+                                {
+                                const float invH = tgx::fast_invsqrt(h2);
+                                const float spec = _powSpecular((diff + (localNormalScale * N.z)) * invH);
+                                col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                                }
                             }
                         }
-                    }
                     }
                 }
             else
@@ -3232,41 +3206,9 @@ namespace tgx
                 {
                 const float localNormalScale = icu * _r_inorm;
                 const int spotGlobalFlags = _spotLights.globalFlags;
-                const int localSpecular = spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_RUNTIME_SPECULAR;
+                const bool localSpecular = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_RUNTIME_SPECULAR) != 0;
+                const bool localCone = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_ACTIVE_CONE) != 0;
                 const fVec3 Pv(P.x, P.y, P.z);
-                if (!(spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_ACTIVE_CONE))
-                    {
-                    for (int i = 0; i < _spotLights.count; i++)
-                        {
-                        fVec3 L = _spotLights.positionView[i] - Pv;
-                        const float d2 = dotProduct(L, L);
-                        if ((d2 <= 1.0e-12f) || (d2 >= _spotLights.range2[i])) continue;
-
-                        const float ndotlRaw = dotProduct(N, L);
-                        const float diffRaw = localNormalScale * ndotlRaw;
-                        if (diffRaw <= 0.0f) continue;
-
-                        const float invD = tgx::fast_invsqrt(d2);
-                        const float diff = diffRaw * invD;
-                        const float atten = 1.0f - d2 * _spotLights.invRange2[i];
-                        const float lightFactor = atten * atten;
-
-                        col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
-
-                        if (localSpecular && (_spotLights.flags[i] & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED))
-                            {
-                            const float h2 = 2.0f + (2.0f * L.z * invD);
-                            if (h2 > 1.0e-12f)
-                                {
-                                const float invH = tgx::fast_invsqrt(h2);
-                                const float spec = _powSpecular((diff + (localNormalScale * N.z)) * invH);
-                                col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
-                                }
-                            }
-                        }
-                    }
-                else
-                    {
                 for (int i = 0; i < _spotLights.count; i++)
                     {
                     fVec3 L = _spotLights.positionView[i] - Pv;
@@ -3279,36 +3221,42 @@ namespace tgx
 
                     const float invD = tgx::fast_invsqrt(d2);
                     const float diff = diffRaw * invD;
-                    const int flags = _spotLights.flags[i];
-                    float lightFactor = 1.0f;
+                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
+                    float lightFactor = atten * atten;
 
-                    if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
+                    int flags = 0;
+                    if (localCone)
                         {
-                        const float cone = -dotProduct(_spotLights.directionView[i], L) * invD;
-                        if (cone <= _spotLights.cosOuter[i]) continue;
-                        if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
+                        flags = _spotLights.flags[i];
+                        if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
                             {
-                            float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
-                            if (spot > 1.0f) spot = 1.0f;
-                            lightFactor *= spot * spot;
+                            const float cone = -dotProduct(_spotLights.directionView[i], L) * invD;
+                            if (cone <= _spotLights.cosOuter[i]) continue;
+                            if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
+                                {
+                                float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
+                                if (spot > 1.0f) spot = 1.0f;
+                                lightFactor *= spot * spot;
+                                }
                             }
                         }
-                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
-                    lightFactor *= atten * atten;
 
                     col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
 
-                    if (localSpecular && (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED))
+                    if (localSpecular)
                         {
-                        const float h2 = 2.0f + (2.0f * L.z * invD);
-                        if (h2 > 1.0e-12f)
+                        if (!localCone) flags = _spotLights.flags[i];
+                        if (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED)
                             {
-                            const float invH = tgx::fast_invsqrt(h2);
-                            const float spec = _powSpecular((diff + (localNormalScale * N.z)) * invH);
-                            col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                            const float h2 = 2.0f + (2.0f * L.z * invD);
+                            if (h2 > 1.0e-12f)
+                                {
+                                const float invH = tgx::fast_invsqrt(h2);
+                                const float spec = _powSpecular((diff + (localNormalScale * N.z)) * invH);
+                                col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                                }
                             }
                         }
-                    }
                     }
                 }
             else
@@ -3342,41 +3290,9 @@ namespace tgx
             if constexpr (MAX_SPOT_LIGHTS > 0)
                 {
                 const int spotGlobalFlags = _spotLights.globalFlags;
-                const int localSpecular = spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_RUNTIME_SPECULAR;
+                const bool localSpecular = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_RUNTIME_SPECULAR) != 0;
+                const bool localCone = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_ACTIVE_CONE) != 0;
                 const fVec3 Pv(P.x, P.y, P.z);
-                if (!(spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_ACTIVE_CONE))
-                    {
-                    for (int i = 0; i < _spotLights.count; i++)
-                        {
-                        fVec3 L = _spotLights.positionView[i] - Pv;
-                        const float d2 = dotProduct(L, L);
-                        if ((d2 <= 1.0e-12f) || (d2 >= _spotLights.range2[i])) continue;
-
-                        const float ndotlRaw = dotProduct(N, L);
-                        const float diffRaw = icu * ndotlRaw;
-                        if (diffRaw <= 0.0f) continue;
-
-                        const float invD = tgx::fast_invsqrt(d2);
-                        const float diff = diffRaw * invD;
-                        const float atten = 1.0f - d2 * _spotLights.invRange2[i];
-                        const float lightFactor = atten * atten;
-
-                        col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
-
-                        if (localSpecular && (_spotLights.flags[i] & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED))
-                            {
-                            const float h2 = 2.0f + (2.0f * L.z * invD);
-                            if (h2 > 1.0e-12f)
-                                {
-                                const float invH = tgx::fast_invsqrt(h2);
-                                const float spec = _powSpecular((diff + (icu * N.z)) * invH);
-                                col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
-                                }
-                            }
-                        }
-                    }
-                else
-                    {
                 for (int i = 0; i < _spotLights.count; i++)
                     {
                     fVec3 L = _spotLights.positionView[i] - Pv;
@@ -3389,36 +3305,42 @@ namespace tgx
 
                     const float invD = tgx::fast_invsqrt(d2);
                     const float diff = diffRaw * invD;
-                    const int flags = _spotLights.flags[i];
-                    float lightFactor = 1.0f;
+                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
+                    float lightFactor = atten * atten;
 
-                    if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
+                    int flags = 0;
+                    if (localCone)
                         {
-                        const float cone = -dotProduct(_spotLights.directionView[i], L) * invD;
-                        if (cone <= _spotLights.cosOuter[i]) continue;
-                        if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
+                        flags = _spotLights.flags[i];
+                        if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
                             {
-                            float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
-                            if (spot > 1.0f) spot = 1.0f;
-                            lightFactor *= spot * spot;
+                            const float cone = -dotProduct(_spotLights.directionView[i], L) * invD;
+                            if (cone <= _spotLights.cosOuter[i]) continue;
+                            if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
+                                {
+                                float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
+                                if (spot > 1.0f) spot = 1.0f;
+                                lightFactor *= spot * spot;
+                                }
                             }
                         }
-                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
-                    lightFactor *= atten * atten;
 
                     col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
 
-                    if (localSpecular && (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED))
+                    if (localSpecular)
                         {
-                        const float h2 = 2.0f + (2.0f * L.z * invD);
-                        if (h2 > 1.0e-12f)
+                        if (!localCone) flags = _spotLights.flags[i];
+                        if (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED)
                             {
-                            const float invH = tgx::fast_invsqrt(h2);
-                            const float spec = _powSpecular((diff + (icu * N.z)) * invH);
-                            col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                            const float h2 = 2.0f + (2.0f * L.z * invD);
+                            if (h2 > 1.0e-12f)
+                                {
+                                const float invH = tgx::fast_invsqrt(h2);
+                                const float spec = _powSpecular((diff + (icu * N.z)) * invH);
+                                col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                                }
                             }
                         }
-                    }
                     }
                 }
             else

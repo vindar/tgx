@@ -1,0 +1,194 @@
+[
+    {
+        "t_ms":  363,
+        "line":  "spotlights_room M5Stack fps=21"
+    },
+    {
+        "t_ms":  369,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  1373,
+        "line":  "spotlights_room M5Stack fps=20"
+    },
+    {
+        "t_ms":  1374,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  2391,
+        "line":  "spotlights_room M5Stack fps=20"
+    },
+    {
+        "t_ms":  2392,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  3403,
+        "line":  "spotlights_room M5Stack fps=20"
+    },
+    {
+        "t_ms":  3403,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  4453,
+        "line":  "spotlights_room M5Stack fps=21"
+    },
+    {
+        "t_ms":  4454,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  5499,
+        "line":  "spotlights_room M5Stack fps=21"
+    },
+    {
+        "t_ms":  5499,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  6505,
+        "line":  "spotlights_room M5Stack fps=21"
+    },
+    {
+        "t_ms":  6506,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  7521,
+        "line":  "spotlights_room M5Stack fps=20"
+    },
+    {
+        "t_ms":  7521,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  8542,
+        "line":  "spotlights_room M5Stack fps=20"
+    },
+    {
+        "t_ms":  8543,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  9560,
+        "line":  "spotlights_room M5Stack fps=20"
+    },
+    {
+        "t_ms":  9561,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  10580,
+        "line":  "spotlights_room M5Stack fps=20"
+    },
+    {
+        "t_ms":  10580,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  11603,
+        "line":  "spotlights_room M5Stack fps=20"
+    },
+    {
+        "t_ms":  11604,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  12651,
+        "line":  "spotlights_room M5Stack fps=21"
+    },
+    {
+        "t_ms":  12652,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  13704,
+        "line":  "spotlights_room M5Stack fps=21"
+    },
+    {
+        "t_ms":  13705,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  14707,
+        "line":  "spotlights_room M5Stack fps=21"
+    },
+    {
+        "t_ms":  14708,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  15757,
+        "line":  "spotlights_room M5Stack fps=21"
+    },
+    {
+        "t_ms":  15758,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  16798,
+        "line":  "spotlights_room M5Stack fps=21"
+    },
+    {
+        "t_ms":  16798,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  17817,
+        "line":  "spotlights_room M5Stack fps=22"
+    },
+    {
+        "t_ms":  17818,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  18833,
+        "line":  "spotlights_room M5Stack fps=22"
+    },
+    {
+        "t_ms":  18834,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  19834,
+        "line":  "spotlights_room M5Stack fps=22"
+    },
+    {
+        "t_ms":  19835,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  20886,
+        "line":  "spotlights_room M5Stack fps=22"
+    },
+    {
+        "t_ms":  20887,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  21901,
+        "line":  "spotlights_room M5Stack fps=22"
+    },
+    {
+        "t_ms":  21902,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  22911,
+        "line":  "spotlights_room M5Stack fps=22"
+    },
+    {
+        "t_ms":  22912,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  23913,
+        "line":  "spotlights_room M5Stack fps=22"
+    },
+    {
+        "t_ms":  23914,
+        "line":  "spotlights_room M5Stack display=DMA"
+    }
+]

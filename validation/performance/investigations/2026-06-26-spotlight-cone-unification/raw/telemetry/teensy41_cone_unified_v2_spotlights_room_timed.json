@@ -1,0 +1,106 @@
+[
+    {
+        "t_ms":  8,
+        "line":  "spotlights_room Teensy4 fps=100"
+    },
+    {
+        "t_ms":  14,
+        "line":  "spotlights_room Teensy4 fps=98"
+    },
+    {
+        "t_ms":  210,
+        "line":  "spotlights_room Teensy4 fps=101"
+    },
+    {
+        "t_ms":  1211,
+        "line":  "spotlights_room Teensy4 fps=104"
+    },
+    {
+        "t_ms":  2214,
+        "line":  "spotlights_room Teensy4 fps=112"
+    },
+    {
+        "t_ms":  3219,
+        "line":  "spotlights_room Teensy4 fps=103"
+    },
+    {
+        "t_ms":  4230,
+        "line":  "spotlights_room Teensy4 fps=99"
+    },
+    {
+        "t_ms":  5230,
+        "line":  "spotlights_room Teensy4 fps=96"
+    },
+    {
+        "t_ms":  6242,
+        "line":  "spotlights_room Teensy4 fps=100"
+    },
+    {
+        "t_ms":  7246,
+        "line":  "spotlights_room Teensy4 fps=100"
+    },
+    {
+        "t_ms":  8250,
+        "line":  "spotlights_room Teensy4 fps=99"
+    },
+    {
+        "t_ms":  9257,
+        "line":  "spotlights_room Teensy4 fps=102"
+    },
+    {
+        "t_ms":  10267,
+        "line":  "spotlights_room Teensy4 fps=110"
+    },
+    {
+        "t_ms":  11267,
+        "line":  "spotlights_room Teensy4 fps=104"
+    },
+    {
+        "t_ms":  12275,
+        "line":  "spotlights_room Teensy4 fps=100"
+    },
+    {
+        "t_ms":  13281,
+        "line":  "spotlights_room Teensy4 fps=97"
+    },
+    {
+        "t_ms":  14290,
+        "line":  "spotlights_room Teensy4 fps=103"
+    },
+    {
+        "t_ms":  15297,
+        "line":  "spotlights_room Teensy4 fps=104"
+    },
+    {
+        "t_ms":  16301,
+        "line":  "spotlights_room Teensy4 fps=102"
+    },
+    {
+        "t_ms":  17306,
+        "line":  "spotlights_room Teensy4 fps=104"
+    },
+    {
+        "t_ms":  18317,
+        "line":  "spotlights_room Teensy4 fps=104"
+    },
+    {
+        "t_ms":  19329,
+        "line":  "spotlights_room Teensy4 fps=105"
+    },
+    {
+        "t_ms":  20329,
+        "line":  "spotlights_room Teensy4 fps=103"
+    },
+    {
+        "t_ms":  21329,
+        "line":  "spotlights_room Teensy4 fps=104"
+    },
+    {
+        "t_ms":  22335,
+        "line":  "spotlights_room Teensy4 fps=105"
+    },
+    {
+        "t_ms":  23344,
+        "line":  "spotlights_room Teensy4 fps=108"
+    }
+]

@@ -1,0 +1,47 @@
+spotlights_room_probe mode=3 Pico fps=29
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=28
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=28
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=29
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=28
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=28
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=30
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=29
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=29
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=29
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=29
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=30
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=29
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=30
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=31
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=30
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=30
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=30
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=30
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=30
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=30
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=30
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=30
+spotlights_room Pico display=DMA
+spotlights_room_probe mode=3 Pico fps=29

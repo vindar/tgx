@@ -1,0 +1,210 @@
+[
+    {
+        "t_ms":  13,
+        "line":  "spotlights_room M5Stack display DMA enabled"
+    },
+    {
+        "t_ms":  19,
+        "line":  "spotlights_room M5Stack fps=39"
+    },
+    {
+        "t_ms":  20,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  20,
+        "line":  "spotlights_room M5Stack fps=39"
+    },
+    {
+        "t_ms":  20,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  571,
+        "line":  "spotlights_room M5Stack fps=38"
+    },
+    {
+        "t_ms":  572,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  1576,
+        "line":  "spotlights_room M5Stack fps=37"
+    },
+    {
+        "t_ms":  1577,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  2584,
+        "line":  "spotlights_room M5Stack fps=37"
+    },
+    {
+        "t_ms":  2584,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  3620,
+        "line":  "spotlights_room M5Stack fps=38"
+    },
+    {
+        "t_ms":  3620,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  4637,
+        "line":  "spotlights_room M5Stack fps=39"
+    },
+    {
+        "t_ms":  4638,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  5646,
+        "line":  "spotlights_room M5Stack fps=39"
+    },
+    {
+        "t_ms":  5647,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  6677,
+        "line":  "spotlights_room M5Stack fps=38"
+    },
+    {
+        "t_ms":  6678,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  7716,
+        "line":  "spotlights_room M5Stack fps=37"
+    },
+    {
+        "t_ms":  7716,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  8716,
+        "line":  "spotlights_room M5Stack fps=37"
+    },
+    {
+        "t_ms":  8717,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  9748,
+        "line":  "spotlights_room M5Stack fps=38"
+    },
+    {
+        "t_ms":  9748,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  10781,
+        "line":  "spotlights_room M5Stack fps=38"
+    },
+    {
+        "t_ms":  10781,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  11784,
+        "line":  "spotlights_room M5Stack fps=37"
+    },
+    {
+        "t_ms":  11789,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  12794,
+        "line":  "spotlights_room M5Stack fps=39"
+    },
+    {
+        "t_ms":  12795,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  13807,
+        "line":  "spotlights_room M5Stack fps=39"
+    },
+    {
+        "t_ms":  13808,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  14841,
+        "line":  "spotlights_room M5Stack fps=38"
+    },
+    {
+        "t_ms":  14841,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  15877,
+        "line":  "spotlights_room M5Stack fps=38"
+    },
+    {
+        "t_ms":  15877,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  16916,
+        "line":  "spotlights_room M5Stack fps=37"
+    },
+    {
+        "t_ms":  16916,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  17939,
+        "line":  "spotlights_room M5Stack fps=38"
+    },
+    {
+        "t_ms":  17939,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  18958,
+        "line":  "spotlights_room M5Stack fps=38"
+    },
+    {
+        "t_ms":  18959,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  19969,
+        "line":  "spotlights_room M5Stack fps=39"
+    },
+    {
+        "t_ms":  19969,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  20971,
+        "line":  "spotlights_room M5Stack fps=40"
+    },
+    {
+        "t_ms":  20972,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  21997,
+        "line":  "spotlights_room M5Stack fps=38"
+    },
+    {
+        "t_ms":  21997,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  23017,
+        "line":  "spotlights_room M5Stack fps=38"
+    },
+    {
+        "t_ms":  23018,
+        "line":  "spotlights_room M5Stack display=DMA"
+    },
+    {
+        "t_ms":  24028,
+        "line":  "spotlights_room M5Stack fps=39"
+    }
+]
