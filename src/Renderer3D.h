@@ -3164,12 +3164,16 @@ namespace tgx
                         if (!localCone) flags = _spotLights.flags[i];
                         if (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED)
                             {
-                            const float h2 = 2.0f + (2.0f * L.z * invD);
-                            if (h2 > 1.0e-12f)
+                            const float specRaw = diff + (localNormalScale * N.z);
+                            if (specRaw > 0.0f)
                                 {
-                                const float invH = tgx::fast_invsqrt(h2);
-                                const float spec = _powSpecular((diff + (localNormalScale * N.z)) * invH);
-                                col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                                const float h2 = 2.0f + (2.0f * L.z * invD);
+                                if (h2 > 1.0e-12f)
+                                    {
+                                    const float invH = tgx::fast_invsqrt(h2);
+                                    const float spec = _powSpecular(specRaw * invH);
+                                    col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                                    }
                                 }
                             }
                         }
@@ -3248,12 +3252,16 @@ namespace tgx
                         if (!localCone) flags = _spotLights.flags[i];
                         if (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED)
                             {
-                            const float h2 = 2.0f + (2.0f * L.z * invD);
-                            if (h2 > 1.0e-12f)
+                            const float specRaw = diff + (localNormalScale * N.z);
+                            if (specRaw > 0.0f)
                                 {
-                                const float invH = tgx::fast_invsqrt(h2);
-                                const float spec = _powSpecular((diff + (localNormalScale * N.z)) * invH);
-                                col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                                const float h2 = 2.0f + (2.0f * L.z * invD);
+                                if (h2 > 1.0e-12f)
+                                    {
+                                    const float invH = tgx::fast_invsqrt(h2);
+                                    const float spec = _powSpecular(specRaw * invH);
+                                    col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                                    }
                                 }
                             }
                         }
@@ -3332,12 +3340,16 @@ namespace tgx
                         if (!localCone) flags = _spotLights.flags[i];
                         if (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED)
                             {
-                            const float h2 = 2.0f + (2.0f * L.z * invD);
-                            if (h2 > 1.0e-12f)
+                            const float specRaw = diff + (icu * N.z);
+                            if (specRaw > 0.0f)
                                 {
-                                const float invH = tgx::fast_invsqrt(h2);
-                                const float spec = _powSpecular((diff + (icu * N.z)) * invH);
-                                col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                                const float h2 = 2.0f + (2.0f * L.z * invD);
+                                if (h2 > 1.0e-12f)
+                                    {
+                                    const float invH = tgx::fast_invsqrt(h2);
+                                    const float spec = _powSpecular(specRaw * invH);
+                                    col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
+                                    }
                                 }
                             }
                         }
