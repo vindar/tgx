@@ -42,6 +42,13 @@ namespace tgx
             };
 
 
+        enum SpotLightGlobalFlag
+            {
+            SPOT_LIGHT_GLOBAL_RUNTIME_SPECULAR = 1u << 0,
+            SPOT_LIGHT_GLOBAL_ACTIVE_CONE      = 1u << 1
+            };
+
+
         /**
         * Internal storage for local spot lights.
         *
@@ -55,7 +62,7 @@ namespace tgx
             static_assert(MAX_SPOT_LIGHTS > 0, "MAX_SPOT_LIGHTS must be positive for this specialization");
 
             int count;                                      ///< Number of active spot-light slots.
-            bool hasRuntimeSpecular;                        ///< True when at least one active light has local specular.
+            int globalFlags;                                ///< Bitwise OR of SpotLightGlobalFlag values.
 
             // User-space scene parameters.
             fVec3 position[MAX_SPOT_LIGHTS];                ///< Light positions in world space.

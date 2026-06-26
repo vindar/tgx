@@ -69,6 +69,10 @@ uint16_t floor_indices[FLOOR_INDICES];
 uint16_t floor_normal_indices[FLOOR_INDICES];
 fVec3 floor_normals[1] = { { 0.0f, 1.0f, 0.0f } };
 
+uint32_t fps_last_ms = 0;
+uint32_t fps_frames = 0;
+uint32_t fps_render_sum_us = 0;
+
 
 struct PathKey
     {
@@ -335,6 +339,22 @@ void drawLightMarkers(float phase)
     }
 
 
+void updateFPS(uint32_t render_us)
+    {
+    fps_frames++;
+    fps_render_sum_us += render_us;
+    const uint32_t now = millis();
+    if (now - fps_last_ms >= 1000)
+        {
+        Serial.print("spotlights_room Teensy4 fps=");
+        Serial.println(fps_render_sum_us ? (uint32_t)((1000000ULL * fps_frames) / fps_render_sum_us) : 0);
+        fps_frames = 0;
+        fps_render_sum_us = 0;
+        fps_last_ms = now;
+        }
+    }
+
+
 void setup()
     {
     Serial.begin(9600);
@@ -379,6 +399,7 @@ void setup()
     renderer.setSpotLightCount(2);
     renderer.setSpotLight(0, warm.position, 5.8f, WARM_DIFFUSE, WARM_SPECULAR);
     renderer.setSpotLight(1, cool.position, 5.6f, COOL_DIFFUSE, COOL_SPECULAR);
+    fps_last_ms = millis();
     }
 
 
@@ -389,12 +410,15 @@ void loop()
     updateCamera();
     updateMovingPointLights(phase);
 
+    const uint32_t render_start_us = micros();
+
     im.fillScreen(RGB565_Black);
     renderer.clearZbuffer();
-
     drawRoom();
     drawLightMarkers(phase);
+    const uint32_t render_us = micros() - render_start_us;
 
     tft.overlayFPS(fb);
     tft.update(fb);
+    updateFPS(render_us);
     }

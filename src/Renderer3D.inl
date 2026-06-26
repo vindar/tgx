@@ -63,7 +63,7 @@ namespace tgx
             if constexpr (MAX_SPOT_LIGHTS > 0)
                 {
                 _spotLights.count = 0;
-                _spotLights.hasRuntimeSpecular = false;
+                _spotLights.globalFlags = 0;
                 for (int i = 0; i < MAX_SPOT_LIGHTS; i++)
                     {
                     _spotLights.position[i] = fVec3(0.0f, 0.0f, 0.0f);
@@ -71,7 +71,7 @@ namespace tgx
                     _spotLights.diffuseColor[i] = RGBf(0.0f, 0.0f, 0.0f);
                     _spotLights.specularColor[i] = RGBf(0.0f, 0.0f, 0.0f);
                     _spotLights.flags[i] = 0;
-                    _spotLights.range2[i] = _spotLightInfiniteRange2();
+                    _spotLights.range2[i] = 1.0e30f;
                     _spotLights.invRange2[i] = 0.0f;
                     _spotLights.cosOuter[i] = -1.0f;
                     _spotLights.invCosWidth[i] = 0.0f;
@@ -543,7 +543,8 @@ namespace tgx
             _spotLights.flags[index] = 0;
             _setSpotLightRangeValues(index, range);
             _updateSpotLightTransform(index);
-            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
+            _updateSpotLightColor(index, _diffuseStrength, _specularStrength, _specularExponent);
+            _updateActiveSpotLightFlags();
             }
 
 
@@ -574,7 +575,8 @@ namespace tgx
             _setSpotLightRangeValues(index, range);
             _setSpotLightConeValues(index, outerAngleDeg, innerAngleDeg);
             _updateSpotLightTransform(index);
-            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
+            _updateSpotLightColor(index, _diffuseStrength, _specularStrength, _specularExponent);
+            _updateActiveSpotLightFlags();
             }
 
 
@@ -604,7 +606,7 @@ namespace tgx
             static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
             if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
             _spotLights.diffuseColor[index] = color;
-            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
+            _spotLights.runtimeDiffuseColor[index] = color * _diffuseStrength;
             }
 
 
@@ -614,7 +616,8 @@ namespace tgx
             static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
             if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
             _spotLights.specularColor[index] = color;
-            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
+            _updateSpotLightColor(index, _diffuseStrength, _specularStrength, _specularExponent);
+            _updateActiveSpotLightFlags();
             }
 
 
@@ -633,6 +636,7 @@ namespace tgx
             static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
             if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
             _setSpotLightConeValues(index, outerAngleDeg, innerAngleDeg);
+            _updateActiveSpotLightFlags();
             }
 
 
