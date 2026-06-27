@@ -63,6 +63,7 @@
 // - TGX_USE_FAST_SQRT_TRICK : fast 'quake like' square root trick to speed up computations.
 // - TGX_USE_FAST_INV_TRICK : fast inverse 'quake like' trick to speed up computations.
 // - TGX_USE_FMA_MATH : use explicit fused multiply-add in small floating-point vector/matrix operations.
+// - TGX_USE_FMA_MATH_MISC : use explicit fused multiply-add in Misc.h fast math approximations.
 //
 // - TGX_INLINE/TGX_NOINLINE : inlining strategy for time critical/non-critical functions.
 //
@@ -83,6 +84,16 @@
  * unless explicitly overridden before including TGX headers or from the
  * compiler command line.
  */
+/**
+ * @def TGX_USE_FMA_MATH_MISC
+ * Use explicit fused multiply-add instructions in Misc.h fast math
+ * approximation helpers when this improves performance on the target
+ * architecture.
+ *
+ * This is selected automatically from the target board/architecture below,
+ * unless explicitly overridden before including TGX headers or from the
+ * compiler command line.
+ */
 
 #if defined(_WIN32) || defined(_WIN64) || defined(__linux__) || defined(__APPLE__) || defined(__MACH__) || defined(__ANDROID__) || defined(__unix__)
     // TGX is running on a computer.
@@ -93,6 +104,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0
     #define TGX_CONFIG_USE_FAST_INV_TRICK 0
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -107,6 +119,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 1
     #define TGX_CONFIG_USE_FAST_INV_TRICK 1
     #define TGX_CONFIG_USE_FMA_MATH 1
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
@@ -121,6 +134,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0
     #define TGX_CONFIG_USE_FAST_INV_TRICK 1
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -135,6 +149,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0
     #define TGX_CONFIG_USE_FAST_INV_TRICK 1
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -149,6 +164,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0
     #define TGX_CONFIG_USE_FAST_INV_TRICK 1
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -163,6 +179,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0
     #define TGX_CONFIG_USE_FAST_INV_TRICK 0
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -177,6 +194,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 1
     #define TGX_CONFIG_USE_FAST_INV_TRICK 1
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
     #define TGX_CONFIG_INLINE  __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
@@ -191,6 +209,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0
     #define TGX_CONFIG_USE_FAST_INV_TRICK 0
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -205,6 +224,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0
     #define TGX_CONFIG_USE_FAST_INV_TRICK 0
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -219,6 +239,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0     //
     #define TGX_CONFIG_USE_FAST_INV_TRICK 0      // unused: specific assembly code used instead.
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
@@ -233,6 +254,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 1
     #define TGX_CONFIG_USE_FAST_INV_TRICK 1
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -248,6 +270,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0     //
     #define TGX_CONFIG_USE_FAST_INV_TRICK 0      //
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -262,6 +285,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0
     #define TGX_CONFIG_USE_FAST_INV_TRICK 0
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -276,6 +300,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0
     #define TGX_CONFIG_USE_FAST_INV_TRICK 1
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE  __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -290,6 +315,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 1
     #define TGX_CONFIG_USE_FAST_INV_TRICK 1
     #define TGX_CONFIG_USE_FMA_MATH 1
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
@@ -304,6 +330,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0
     #define TGX_CONFIG_USE_FAST_INV_TRICK 1
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -318,6 +345,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 1
     #define TGX_CONFIG_USE_FAST_INV_TRICK 1
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
@@ -332,6 +360,7 @@
     #define TGX_CONFIG_USE_FAST_SQRT_TRICK 0
     #define TGX_CONFIG_USE_FAST_INV_TRICK 0
     #define TGX_CONFIG_USE_FMA_MATH 0
+    #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
@@ -362,6 +391,10 @@
 
 #ifndef TGX_USE_FMA_MATH
     #define TGX_USE_FMA_MATH TGX_CONFIG_USE_FMA_MATH
+#endif
+
+#ifndef TGX_USE_FMA_MATH_MISC
+    #define TGX_USE_FMA_MATH_MISC TGX_CONFIG_USE_FMA_MATH_MISC
 #endif
 
 #ifndef TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
