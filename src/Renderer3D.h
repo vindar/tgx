@@ -2959,14 +2959,13 @@ namespace tgx
                 _spotLights.flags[index] |= Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED;
                 _spotLights.flags[index] &= ~Renderer3D_detail::SPOT_LIGHT_SOFT_CONE;
 
-                const float degToRad = (float)(M_PI / 180.0);
-                _spotLights.cosOuter[index] = cosf(outer * degToRad);
+                _spotLights.cosOuter[index] = tgx_fast_cos_deg_clamped(outer);
                 _spotLights.invCosWidth[index] = 0.0f;
 
                 if ((innerAngleDeg >= 0.0f) && (innerAngleDeg < outer))
                     {
                     const float inner = clamp(innerAngleDeg, 0.0f, outer);
-                    const float cosInner = cosf(inner * degToRad);
+                    const float cosInner = tgx_fast_cos_deg_clamped(inner);
                     const float cosWidth = cosInner - _spotLights.cosOuter[index];
                     if (cosWidth > 0.00001f)
                         {

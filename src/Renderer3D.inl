@@ -4636,7 +4636,6 @@ namespace tgx
             float save_culling = _culling_dir;
             if (_culling_dir != 0) _culling_dir = 1;
 
-            const float MPI = 3.141592653589793238f;
             const int MAX_SECTORS = 256;
             if (nb_sectors > MAX_SECTORS) nb_sectors = 256;
             if (nb_sectors < 3) nb_sectors = 3;
@@ -4646,21 +4645,23 @@ namespace tgx
             float cosTheta[MAX_SECTORS];
             float sinTheta[MAX_SECTORS];
 
-            const float d_sector = 2*MPI / nb_sectors;
+            const float d_sector = 360.0f / nb_sectors;
             for(int i = 0; i < nb_sectors; i++)
                 {
-                cosTheta[i] = cosf(i * d_sector);
-                sinTheta[i] = sinf(i * d_sector);
+                float theta = i * d_sector;
+                if (theta > 180.0f) theta -= 360.0f;
+                cosTheta[i] = tgx_fast_cos_deg_clamped(theta);
+                sinTheta[i] = tgx_fast_sin_deg_clamped(theta);
                 }
 
-            const float d_stack = MPI / nb_stacks;
+            const float d_stack = 180.0f / nb_stacks;
 
             fVec3 P1, P2, P3, P4;
 
             // top part, top vertex at {0,1,0}
 
-            float cosPhi = cosf(d_stack);
-            float sinPhi = sinf(d_stack);
+            float cosPhi = tgx_fast_cos_deg_clamped(d_stack);
+            float sinPhi = tgx_fast_sin_deg_clamped(d_stack);
 
             P1 = { 0,1,0 };
 
@@ -4703,8 +4704,9 @@ namespace tgx
             for (int j = 2; j < nb_stacks; j++)
                 {
 
-                float new_cosPhi = cosf(d_stack * j);
-                float new_sinPhi = sinf(d_stack * j);
+                const float phi = d_stack * j;
+                float new_cosPhi = tgx_fast_cos_deg_clamped(phi);
+                float new_sinPhi = tgx_fast_sin_deg_clamped(phi);
 
                 P1.x = sinPhi * cosTheta[nb_sectors - 1];
                 P1.y = cosPhi;
