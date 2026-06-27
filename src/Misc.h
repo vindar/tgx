@@ -457,7 +457,48 @@ namespace tgx
     #endif
 #endif
         }
+
+        
+    /**
+     * Fast cosine approximation for an angle expressed in degrees.
+     * value in degrees clamped to `[-180, 180]`.
+     * accuracy:  mean absolute error `5.05195e-4`, RMS error `5.96683e-4`, maximum absolute error `1.09041e-3`.
+     */
+    TGX_INLINE inline float tgx_fast_cos_deg_clamped(float deg)
+        {       
+        if (deg < 0.0f) deg = -deg;
+        if (deg >= 180.0f) return -1.0f; 
+        constexpr float INV_90 = 1.0f / 90.0f;
+        const float u  = (deg - 90.0f) * INV_90;
+        const float au = (u < 0.0f) ? -u : u;
+        const float c  = -u * (2.0f - au);
+        const float ac = (c < 0.0f) ? -c : c;
+        return c + 0.225f * (c * ac - c); 
+        }        
+
+
+    /**
+     * Fast sine approximation for an angle expressed in degrees.
+     * value in degrees clamped to `[-180, 180]`.
+     * accuracy:  mean absolute error `5.05195e-4`, RMS error `5.96683e-4`, maximum absolute error `1.09041e-3`.
+     */
+    TGX_INLINE inline float tgx_fast_sin_deg_clamped(float deg)
+        {
+        if (deg > 180.0f) return 0.0f;
+        if (deg < -180.0f) return 0.0f;
+        constexpr float INV_180 = 1.0f / 180.0f;
+        const float x  = deg * INV_180;
+        const float ax = (x < 0.0f) ? -x : x;
+        const float s  = 4.0f * x * (1.0f - ax); 
+        const float as = (s < 0.0f) ? -s : s;
+        return s + 0.225f * (s * as - s);
+        }
+
 }
+
+
+
+
 
 #endif
 
