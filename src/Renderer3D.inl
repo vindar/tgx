@@ -4619,6 +4619,281 @@ namespace tgx
             }
 
 
+#if TGX_DRAWSPHERE_USE_STRIP_BANDS
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSphereGouraudStripBand(const int sphere_shader, int nb_sectors,
+            const float* cosTheta, const float* sinTheta,
+            float cosPhi, float sinPhi, float new_cosPhi, float new_sinPhi,
+            float v, float vv, float dtx,
+            float CLIPBOUND_XY, bool sphere_cliptestneeded)
+            {
+            _uni.shader_type = sphere_shader;
+
+            struct SphereStripVertex
+                {
+                ExtVec4 E;
+                fVec3 N;
+                };
+
+            SphereStripVertex QQA, QQB, QQC;
+            SphereStripVertex* PPC0 = &QQA;
+            SphereStripVertex* PPC1 = &QQB;
+            SphereStripVertex* PPC2 = &QQC;
+
+            const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURING_ENABLED(sphere_shader));
+            const bool ortho = _ortho;
+
+            auto loadSphereStripVertex = [&](SphereStripVertex* V, const int strip_index)
+                {
+                const int pair_index = strip_index >> 1;
+                const bool lower_ring = ((strip_index & 1) == 0);
+                const int sector = (pair_index == 0) ? (nb_sectors - 1) : (pair_index - 1);
+                const float tex_u = pair_index * dtx;
+                const float ring_y = lower_ring ? new_cosPhi : cosPhi;
+                const float ring_radius = lower_ring ? new_sinPhi : sinPhi;
+
+                V->N.x = ring_radius * cosTheta[sector];
+                V->N.y = ring_y;
+                V->N.z = ring_radius * sinTheta[sector];
+                V->E.P = _r_modelViewM.mult1(V->N);
+                if (TEXTURE) V->E.T = fVec2(tex_u, lower_ring ? vv : v);
+                V->E.missedP = true;
+                };
+
+            loadSphereStripVertex(PPC0, 0);
+            loadSphereStripVertex(PPC1, 1);
+            loadSphereStripVertex(PPC2, 2);
+
+            const int strip_count = 2 * (nb_sectors + 1);
+            for (int tri = 0; ; tri++)
+                {
+                fVec3 faceN = crossProduct(PPC1->E.P - PPC0->E.P, PPC2->E.P - PPC0->E.P);
+                const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, PPC0->E.P);
+                float icu;
+                if (cu * _culling_dir > 0) goto rasterize_next_sphere_strip_triangle;
+
+                *((fVec4*)&PPC2->E) = _projM * PPC2->E.P;
+                if (ortho) { PPC2->E.w = 1.0f - PPC2->E.z; } else { PPC2->E.zdivide(); }
+
+                if (PPC0->E.missedP)
+                    {
+                    *((fVec4*)&PPC0->E) = _projM * PPC0->E.P;
+                    if (ortho) { PPC0->E.w = 1.0f - PPC0->E.z; } else { PPC0->E.zdivide(); }
+                    }
+                if (PPC1->E.missedP)
+                    {
+                    *((fVec4*)&PPC1->E) = _projM * PPC1->E.P;
+                    if (ortho) { PPC1->E.w = 1.0f - PPC1->E.z; } else { PPC1->E.zdivide(); }
+                    }
+
+                if (sphere_cliptestneeded)
+                    {
+                    const bool needclip = (PPC2->E.P.z >= 0)
+                        | (PPC2->E.x < -CLIPBOUND_XY) | (PPC2->E.x > CLIPBOUND_XY)
+                        | (PPC2->E.y < -CLIPBOUND_XY) | (PPC2->E.y > CLIPBOUND_XY)
+                        | (PPC2->E.z < -1) | (PPC2->E.z > 1)
+                        | (PPC0->E.P.z >= 0)
+                        | (PPC0->E.x < -CLIPBOUND_XY) | (PPC0->E.x > CLIPBOUND_XY)
+                        | (PPC0->E.y < -CLIPBOUND_XY) | (PPC0->E.y > CLIPBOUND_XY)
+                        | (PPC0->E.z < -1) | (PPC0->E.z > 1)
+                        | (PPC1->E.P.z >= 0)
+                        | (PPC1->E.x < -CLIPBOUND_XY) | (PPC1->E.x > CLIPBOUND_XY)
+                        | (PPC1->E.y < -CLIPBOUND_XY) | (PPC1->E.y > CLIPBOUND_XY)
+                        | (PPC1->E.z < -1) | (PPC1->E.z > 1);
+                    if (needclip)
+                        {
+                        if (!_discardTriangle(*((fVec4*)&PPC0->E), *((fVec4*)&PPC1->E), *((fVec4*)&PPC2->E)))
+                            {
+                            _drawTriangleClipped(sphere_shader,
+                                                 &(PPC0->E.P), &(PPC1->E.P), &(PPC2->E.P),
+                                                 &(PPC0->N), &(PPC1->N), &(PPC2->N),
+                                                 ((TEXTURE) ? &(PPC0->E.T) : nullptr), ((TEXTURE) ? &(PPC1->E.T) : nullptr), ((TEXTURE) ? &(PPC2->E.T) : nullptr),
+                                                 _r_objectColor, _r_objectColor, _r_objectColor);
+                            }
+                        goto rasterize_next_sphere_strip_triangle;
+                        }
+                    }
+
+                icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
+                if (PPC0->E.missedP)
+                    {
+                    PPC0->E.N = fVec4(_r_modelViewM.mult0(PPC0->N), 0.0f);
+                    if (TEXTURE)
+                        PPC0->E.color = _shadeVertex<true>(icu, PPC0->E.N, PPC0->E.P);
+                    else
+                        PPC0->E.color = _shadeVertex<false>(icu, PPC0->E.N, PPC0->E.P);
+                    }
+                if (PPC1->E.missedP)
+                    {
+                    PPC1->E.N = fVec4(_r_modelViewM.mult0(PPC1->N), 0.0f);
+                    if (TEXTURE)
+                        PPC1->E.color = _shadeVertex<true>(icu, PPC1->E.N, PPC1->E.P);
+                    else
+                        PPC1->E.color = _shadeVertex<false>(icu, PPC1->E.N, PPC1->E.P);
+                    }
+                PPC2->E.N = fVec4(_r_modelViewM.mult0(PPC2->N), 0.0f);
+                if (TEXTURE)
+                    PPC2->E.color = _shadeVertex<true>(icu, PPC2->E.N, PPC2->E.P);
+                else
+                    PPC2->E.color = _shadeVertex<false>(icu, PPC2->E.N, PPC2->E.P);
+
+                PPC0->E.missedP = false;
+                PPC1->E.missedP = false;
+                PPC2->E.missedP = false;
+
+                rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)QQA.E, (RasterizerVec4)QQB.E, (RasterizerVec4)QQC.E, _ox, _oy, _uni);
+
+            rasterize_next_sphere_strip_triangle:
+
+                if (tri >= strip_count - 3) break;
+
+                if ((tri & 1) == 0)
+                    {
+                    swap(PPC0, PPC2);
+                    }
+                else
+                    {
+                    swap(PPC1, PPC2);
+                    }
+                loadSphereStripVertex(PPC2, tri + 3);
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSphereGouraudCap(const int sphere_shader, int nb_sectors, bool top_cap,
+            const float* cosTheta, const float* sinTheta,
+            float ring_y, float ring_radius, float ring_v, float dtx,
+            float CLIPBOUND_XY, bool sphere_cliptestneeded)
+            {
+            _uni.shader_type = sphere_shader;
+
+            struct SphereCapVertex
+                {
+                ExtVec4 E;
+                fVec3 N;
+                };
+
+            SphereCapVertex QQPole, QQA, QQB;
+            SphereCapVertex* PPPrev = &QQA;
+            SphereCapVertex* PPCur = &QQB;
+
+            const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURING_ENABLED(sphere_shader));
+            const bool ortho = _ortho;
+
+            QQPole.N = top_cap ? fVec3(0.0f, 1.0f, 0.0f) : fVec3(0.0f, -1.0f, 0.0f);
+            QQPole.E.P = _r_modelViewM.mult1(QQPole.N);
+            if (TEXTURE) QQPole.E.T = top_cap ? fVec2(0.0f, 1.0f) : fVec2(0.0f, 0.0f);
+            QQPole.E.missedP = true;
+
+            auto loadSphereCapRingVertex = [&](SphereCapVertex* V, const int fan_index)
+                {
+                const int sector = (fan_index == 0) ? (nb_sectors - 1) : (fan_index - 1);
+
+                V->N.x = ring_radius * cosTheta[sector];
+                V->N.y = ring_y;
+                V->N.z = ring_radius * sinTheta[sector];
+                V->E.P = _r_modelViewM.mult1(V->N);
+                if (TEXTURE) V->E.T = fVec2(fan_index * dtx, ring_v);
+                V->E.missedP = true;
+                };
+
+            loadSphereCapRingVertex(PPPrev, 0);
+            loadSphereCapRingVertex(PPCur, 1);
+
+            for (int tri = 0; ; tri++)
+                {
+                SphereCapVertex* PPC0 = &QQPole;
+                SphereCapVertex* PPC1 = top_cap ? PPCur : PPPrev;
+                SphereCapVertex* PPC2 = top_cap ? PPPrev : PPCur;
+
+                fVec3 faceN = crossProduct(PPC1->E.P - PPC0->E.P, PPC2->E.P - PPC0->E.P);
+                const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, PPC0->E.P);
+                float icu;
+                if (cu * _culling_dir > 0) goto rasterize_next_sphere_cap_triangle;
+
+                *((fVec4*)&PPCur->E) = _projM * PPCur->E.P;
+                if (ortho) { PPCur->E.w = 1.0f - PPCur->E.z; } else { PPCur->E.zdivide(); }
+
+                if (QQPole.E.missedP)
+                    {
+                    *((fVec4*)&QQPole.E) = _projM * QQPole.E.P;
+                    if (ortho) { QQPole.E.w = 1.0f - QQPole.E.z; } else { QQPole.E.zdivide(); }
+                    }
+                if (PPPrev->E.missedP)
+                    {
+                    *((fVec4*)&PPPrev->E) = _projM * PPPrev->E.P;
+                    if (ortho) { PPPrev->E.w = 1.0f - PPPrev->E.z; } else { PPPrev->E.zdivide(); }
+                    }
+
+                if (sphere_cliptestneeded)
+                    {
+                    const bool needclip = (PPC2->E.P.z >= 0)
+                        | (PPC2->E.x < -CLIPBOUND_XY) | (PPC2->E.x > CLIPBOUND_XY)
+                        | (PPC2->E.y < -CLIPBOUND_XY) | (PPC2->E.y > CLIPBOUND_XY)
+                        | (PPC2->E.z < -1) | (PPC2->E.z > 1)
+                        | (PPC0->E.P.z >= 0)
+                        | (PPC0->E.x < -CLIPBOUND_XY) | (PPC0->E.x > CLIPBOUND_XY)
+                        | (PPC0->E.y < -CLIPBOUND_XY) | (PPC0->E.y > CLIPBOUND_XY)
+                        | (PPC0->E.z < -1) | (PPC0->E.z > 1)
+                        | (PPC1->E.P.z >= 0)
+                        | (PPC1->E.x < -CLIPBOUND_XY) | (PPC1->E.x > CLIPBOUND_XY)
+                        | (PPC1->E.y < -CLIPBOUND_XY) | (PPC1->E.y > CLIPBOUND_XY)
+                        | (PPC1->E.z < -1) | (PPC1->E.z > 1);
+                    if (needclip)
+                        {
+                        if (!_discardTriangle(*((fVec4*)&PPC0->E), *((fVec4*)&PPC1->E), *((fVec4*)&PPC2->E)))
+                            {
+                            _drawTriangleClipped(sphere_shader,
+                                                 &(PPC0->E.P), &(PPC1->E.P), &(PPC2->E.P),
+                                                 &(PPC0->N), &(PPC1->N), &(PPC2->N),
+                                                 ((TEXTURE) ? &(PPC0->E.T) : nullptr), ((TEXTURE) ? &(PPC1->E.T) : nullptr), ((TEXTURE) ? &(PPC2->E.T) : nullptr),
+                                                 _r_objectColor, _r_objectColor, _r_objectColor);
+                            }
+                        goto rasterize_next_sphere_cap_triangle;
+                        }
+                    }
+
+                icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
+                if (QQPole.E.missedP)
+                    {
+                    QQPole.E.N = fVec4(_r_modelViewM.mult0(QQPole.N), 0.0f);
+                    if (TEXTURE)
+                        QQPole.E.color = _shadeVertex<true>(icu, QQPole.E.N, QQPole.E.P);
+                    else
+                        QQPole.E.color = _shadeVertex<false>(icu, QQPole.E.N, QQPole.E.P);
+                    }
+                if (PPPrev->E.missedP)
+                    {
+                    PPPrev->E.N = fVec4(_r_modelViewM.mult0(PPPrev->N), 0.0f);
+                    if (TEXTURE)
+                        PPPrev->E.color = _shadeVertex<true>(icu, PPPrev->E.N, PPPrev->E.P);
+                    else
+                        PPPrev->E.color = _shadeVertex<false>(icu, PPPrev->E.N, PPPrev->E.P);
+                    }
+                PPCur->E.N = fVec4(_r_modelViewM.mult0(PPCur->N), 0.0f);
+                if (TEXTURE)
+                    PPCur->E.color = _shadeVertex<true>(icu, PPCur->E.N, PPCur->E.P);
+                else
+                    PPCur->E.color = _shadeVertex<false>(icu, PPCur->E.N, PPCur->E.P);
+
+                QQPole.E.missedP = false;
+                PPPrev->E.missedP = false;
+                PPCur->E.missedP = false;
+
+                rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)(PPC0->E), (RasterizerVec4)(PPC1->E), (RasterizerVec4)(PPC2->E), _ox, _oy, _uni);
+
+            rasterize_next_sphere_cap_triangle:
+
+                if (tri >= nb_sectors - 1) break;
+
+                swap(PPPrev, PPCur);
+                loadSphereCapRingVertex(PPCur, tri + 2);
+                }
+            }
+#endif
+
+
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<bool WIREFRAME, int MODE> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
@@ -4636,10 +4911,44 @@ namespace tgx
             float save_culling = _culling_dir;
             if (_culling_dir != 0) _culling_dir = 1;
 
+            if (!_validDraw())
+                {
+                _culling_dir = save_culling;
+                _shaders = save_shaders;
+                return;
+                }
+
+            const int sphere_shader = _shaders;
+            if (!WIREFRAME)
+                {
+                _precomputeSpecularTable(_specularExponent);
+                _uni.tex = (const Image<color_t>*)texture;
+                }
+
             const int MAX_SECTORS = 256;
             if (nb_sectors > MAX_SECTORS) nb_sectors = 256;
             if (nb_sectors < 3) nb_sectors = 3;
             if (nb_stacks < 3) nb_stacks = 3;
+
+#if TGX_DRAWSPHERE_USE_STRIP_BANDS
+            const bool sphere_use_strip = ((!WIREFRAME) && TGX_SHADER_HAS_GOURAUD(sphere_shader));
+#else
+            const bool sphere_use_strip = false;
+#endif
+            const float CLIPBOUND_XY = sphere_use_strip ? _clipbound_xy() : 0.0f;
+            bool sphere_cliptestneeded = false;
+            if (sphere_use_strip)
+                {
+                const fBox3 sphere_bb(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+                const fMat4 sphere_proj_modelview = _projM * _r_modelViewM;
+                if (_discardBox(sphere_bb, sphere_proj_modelview))
+                    {
+                    _culling_dir = save_culling;
+                    _shaders = save_shaders;
+                    return;
+                    }
+                sphere_cliptestneeded = _clipTestNeeded(CLIPBOUND_XY, sphere_bb, sphere_proj_modelview);
+                }
 
             // precomputed sin/cos for sectors as we will need them often
             float cosTheta[MAX_SECTORS];
@@ -4663,41 +4972,53 @@ namespace tgx
             float cosPhi = tgx_fast_cos_deg_clamped(d_stack);
             float sinPhi = tgx_fast_sin_deg_clamped(d_stack);
 
-            P1 = { 0,1,0 };
-
-            P2.x = sinPhi * cosTheta[nb_sectors-1];
-            P2.y = cosPhi;
-            P2.z = sinPhi * sinTheta[nb_sectors - 1];
-
-            P3.y = cosPhi;
-
             const float dtx = 1.0f / nb_sectors;
 
             float v = 0.5f * cosPhi + 0.5f;
-            float u = 0;
+            float u;
 
-            for (int i = 0; i < nb_sectors; i++)
+#if TGX_DRAWSPHERE_USE_STRIP_BANDS
+            if (sphere_use_strip)
                 {
-                P3.x = sinPhi * cosTheta[i];
-                P3.z = sinPhi * sinTheta[i];
+                _drawSphereGouraudCap(sphere_shader, nb_sectors, true, cosTheta, sinTheta,
+                                      cosPhi, sinPhi, v, dtx, CLIPBOUND_XY, sphere_cliptestneeded);
+                }
+            else
+#endif
+                {
+                P1 = { 0,1,0 };
 
-                if (WIREFRAME)
-                    {
-                    if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameTriangle(P1, P3, P2);
-                    else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameTriangleAA(P1, P3, P2);
-                    else drawWireFrameTriangle(P1, P3, P2, thickness, color, opacity);
-                    }
-                else
-                    {
-                    fVec2 T1(0, 1);
-                    fVec2 T2(u + dtx, v);
-                    fVec2 T3(u, v);
-                    drawTriangle(P1, P3, P2, &P1, &P3, &P2, &T1, &T2, &T3, texture);
-                    }
+                P2.x = sinPhi * cosTheta[nb_sectors-1];
+                P2.y = cosPhi;
+                P2.z = sinPhi * sinTheta[nb_sectors - 1];
 
-                u += dtx;
-                P2.x = P3.x;
-                P2.z = P3.z;
+                P3.y = cosPhi;
+                u = 0;
+
+                for (int i = 0; i < nb_sectors; i++)
+                    {
+                    P3.x = sinPhi * cosTheta[i];
+                    P3.z = sinPhi * sinTheta[i];
+
+                    if (WIREFRAME)
+                        {
+                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameTriangle(P1, P3, P2);
+                        else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameTriangleAA(P1, P3, P2);
+                        else drawWireFrameTriangle(P1, P3, P2, thickness, color, opacity);
+                        }
+                    else
+                        {
+                        fVec2 T1(0, 1);
+                        fVec2 T2(u + dtx, v);
+                        fVec2 T3(u, v);
+                        _drawTriangle(sphere_shader, &P1, &P3, &P2, &P1, &P3, &P2, &T1, &T2, &T3,
+                                      _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+
+                    u += dtx;
+                    P2.x = P3.x;
+                    P2.z = P3.z;
+                    }
                 }
 
             // main part
@@ -4725,34 +5046,46 @@ namespace tgx
 
                 u = 0;
 
-                for (int i = 0; i < nb_sectors; i++)
+#if TGX_DRAWSPHERE_USE_STRIP_BANDS
+                if (sphere_use_strip)
                     {
-                    const float uu = u + dtx;
-                    P3.x = sinPhi * cosTheta[i];
-                    P3.z = sinPhi * sinTheta[i];
-                    P4.x = new_sinPhi * cosTheta[i];
-                    P4.z = new_sinPhi * sinTheta[i];
-
-                    if (WIREFRAME)
+                    _drawSphereGouraudStripBand(sphere_shader, nb_sectors, cosTheta, sinTheta,
+                                                cosPhi, sinPhi, new_cosPhi, new_sinPhi,
+                                                v, vv, dtx, CLIPBOUND_XY, sphere_cliptestneeded);
+                    }
+                else
+#endif
+                    {
+                    for (int i = 0; i < nb_sectors; i++)
                         {
-                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameQuad(P1, P3, P4, P2);
-                        else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameQuadAA(P1, P3, P4, P2);
-                        else drawWireFrameQuad(P1, P3, P4, P2, thickness, color, opacity);
-                        }
+                        const float uu = u + dtx;
+                        P3.x = sinPhi * cosTheta[i];
+                        P3.z = sinPhi * sinTheta[i];
+                        P4.x = new_sinPhi * cosTheta[i];
+                        P4.z = new_sinPhi * sinTheta[i];
+
+                        if (WIREFRAME)
+                            {
+                            if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameQuad(P1, P3, P4, P2);
+                            else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameQuadAA(P1, P3, P4, P2);
+                            else drawWireFrameQuad(P1, P3, P4, P2, thickness, color, opacity);
+                            }
                         else
-                        {
-                        fVec2 T1(u, v);
-                        fVec2 T2(uu, v);
-                        fVec2 T3(uu, vv);
-                        fVec2 T4(u, vv);
-                        drawQuad(P1, P3, P4, P2, &P1, &P3, &P4, &P2, &T1, &T2, &T3, &T4, texture);
-                        }
+                            {
+                            fVec2 T1(u, v);
+                            fVec2 T2(uu, v);
+                            fVec2 T3(uu, vv);
+                            fVec2 T4(u, vv);
+                            _drawQuad(sphere_shader, &P1, &P3, &P4, &P2, &P1, &P3, &P4, &P2, &T1, &T2, &T3, &T4,
+                                      _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
+                            }
 
-                    u += dtx;
-                    P1.x = P3.x;
-                    P1.z = P3.z;
-                    P2.x = P4.x;
-                    P2.z = P4.z;
+                        u += dtx;
+                        P1.x = P3.x;
+                        P1.z = P3.z;
+                        P2.x = P4.x;
+                        P2.z = P4.z;
+                        }
                     }
 
                 cosPhi = new_cosPhi;
@@ -4760,39 +5093,49 @@ namespace tgx
                 }
 
 
-            // bottom part, bottom vertex at {0,1,0}
-            P1 = { 0,-1,0 };
-
-            P2.x = sinPhi * cosTheta[nb_sectors - 1];
-            P2.y = cosPhi;
-            P2.z = sinPhi * sinTheta[nb_sectors - 1];
-
-            P3.y = cosPhi;
-
-            u = 0;
-
-            for (int i = 0; i < nb_sectors; i++)
+            // bottom part, bottom vertex at {0,-1,0}
+#if TGX_DRAWSPHERE_USE_STRIP_BANDS
+            if (sphere_use_strip)
                 {
-                P3.x = sinPhi * cosTheta[i];
-                P3.z = sinPhi * sinTheta[i];
+                _drawSphereGouraudCap(sphere_shader, nb_sectors, false, cosTheta, sinTheta,
+                                      cosPhi, sinPhi, v, dtx, CLIPBOUND_XY, sphere_cliptestneeded);
+                }
+            else
+#endif
+                {
+                P1 = { 0,-1,0 };
 
-                if (WIREFRAME)
-                    {
-                    if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameTriangle(P1, P2, P3);
-                    else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameTriangleAA(P1, P2, P3);
-                    else drawWireFrameTriangle(P1, P2, P3, thickness, color, opacity);
-                    }
-                else
-                    {
-                    fVec2 T1(0, 0);
-                    fVec2 T2(u, v);
-                    fVec2 T3(u + dtx, v);
-                    drawTriangle(P1, P2, P3, &P1, &P2, &P3, &T1, &T2, &T3, texture);
-                    }
+                P2.x = sinPhi * cosTheta[nb_sectors - 1];
+                P2.y = cosPhi;
+                P2.z = sinPhi * sinTheta[nb_sectors - 1];
 
-                u += dtx;
-                P2.x = P3.x;
-                P2.z = P3.z;
+                P3.y = cosPhi;
+                u = 0;
+
+                for (int i = 0; i < nb_sectors; i++)
+                    {
+                    P3.x = sinPhi * cosTheta[i];
+                    P3.z = sinPhi * sinTheta[i];
+
+                    if (WIREFRAME)
+                        {
+                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameTriangle(P1, P2, P3);
+                        else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameTriangleAA(P1, P2, P3);
+                        else drawWireFrameTriangle(P1, P2, P3, thickness, color, opacity);
+                        }
+                    else
+                        {
+                        fVec2 T1(0, 0);
+                        fVec2 T2(u, v);
+                        fVec2 T3(u + dtx, v);
+                        _drawTriangle(sphere_shader, &P1, &P2, &P3, &P1, &P2, &P3, &T1, &T2, &T3,
+                                      _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+
+                    u += dtx;
+                    P2.x = P3.x;
+                    P2.z = P3.z;
+                    }
                 }
 
             // restore culling direction

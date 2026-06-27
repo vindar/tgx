@@ -64,6 +64,7 @@
 // - TGX_USE_FAST_INV_TRICK : fast inverse 'quake like' trick to speed up computations.
 // - TGX_USE_FMA_MATH : use explicit fused multiply-add in small floating-point vector/matrix operations.
 // - TGX_USE_FMA_MATH_MISC : use explicit fused multiply-add in Misc.h fast math approximations.
+// - TGX_DRAWSPHERE_USE_STRIP_BANDS : use triangle strips for Gouraud shaded sphere bands.
 //
 // - TGX_INLINE/TGX_NOINLINE : inlining strategy for time critical/non-critical functions.
 //
@@ -94,6 +95,14 @@
  * unless explicitly overridden before including TGX headers or from the
  * compiler command line.
  */
+/**
+ * @def TGX_DRAWSPHERE_USE_STRIP_BANDS
+ * Use a triangle-strip path for the middle bands of Gouraud shaded spheres.
+ *
+ * This is selected automatically from the target board/architecture below,
+ * unless explicitly overridden before including TGX headers or from the
+ * compiler command line.
+ */
 
 #if defined(_WIN32) || defined(_WIN64) || defined(__linux__) || defined(__APPLE__) || defined(__MACH__) || defined(__ANDROID__) || defined(__unix__)
     // TGX is running on a computer.
@@ -106,6 +115,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 1
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -121,6 +131,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 1
     #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 1
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
@@ -136,6 +147,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -151,6 +163,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -166,6 +179,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -181,6 +195,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -196,6 +211,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE  __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
@@ -211,6 +227,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -226,6 +243,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -241,6 +259,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 1
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
@@ -256,6 +275,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 1
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -272,6 +292,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 1
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE __attribute__((noinline, noclone))
@@ -287,6 +308,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -302,6 +324,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE  __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -317,6 +340,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 1
     #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 1
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
@@ -332,6 +356,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -347,6 +372,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
@@ -362,6 +388,7 @@
     #define TGX_CONFIG_USE_FMA_MATH 0
     #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
+    #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 0
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
@@ -399,6 +426,10 @@
 
 #ifndef TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
     #define TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
+#endif
+
+#ifndef TGX_DRAWSPHERE_USE_STRIP_BANDS
+    #define TGX_DRAWSPHERE_USE_STRIP_BANDS TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS
 #endif
 
 #ifndef TGX_INLINE

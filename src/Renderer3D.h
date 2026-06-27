@@ -2614,6 +2614,19 @@ namespace tgx
 
         template<bool WIREFRAME, int MODE> void _drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity);
 
+#if TGX_DRAWSPHERE_USE_STRIP_BANDS
+        void _drawSphereGouraudStripBand(const int sphere_shader, int nb_sectors,
+                                         const float* cosTheta, const float* sinTheta,
+                                         float cosPhi, float sinPhi, float new_cosPhi, float new_sinPhi,
+                                         float v, float vv, float dtx,
+                                         float CLIPBOUND_XY, bool sphere_cliptestneeded);
+
+        void _drawSphereGouraudCap(const int sphere_shader, int nb_sectors, bool top_cap,
+                                   const float* cosTheta, const float* sinTheta,
+                                   float ring_y, float ring_radius, float ring_v, float dtx,
+                                   float CLIPBOUND_XY, bool sphere_cliptestneeded);
+#endif
+
 
 
         /***********************************************************
