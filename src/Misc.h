@@ -222,8 +222,13 @@ namespace tgx
         // error < 16.5 ULP (1.03e-6)
         float y = uint32_as_float(0x7ef335a7 - float_as_uint32(x));
 
+#if TGX_USE_FMA_MATH_MISC
         y *= fmaf(-x, y, 2.00128722f);
         y *= fmaf(-x, y, 2.00000072f);
+#else
+        y *= 2.00128722f - x * y;
+        y *= 2.00000072f - x * y;
+#endif
         return y;
 #else 
         return ((x == 0) ? 1.0f : (1.0f / x));
@@ -254,7 +259,11 @@ namespace tgx
 #elif TGX_USE_FAST_INV_TRICK
         // One correction step: faster than fast_inv(), less accurate by design.
         float y = uint32_as_float(0x7ef335a7 - float_as_uint32(x));
+#if TGX_USE_FMA_MATH_MISC
         y *= fmaf(-x, y, 2.00128722f);
+#else
+        y *= 2.00128722f - x * y;
+#endif
         return y;
 #else
         return fast_inv(x);
@@ -305,7 +314,11 @@ namespace tgx
         // error < 11321 ULP (8.81e-4)
         float y = uint32_as_float(0x5f0b3892 - (float_as_uint32(x) >> 1));
 
+#if TGX_USE_FMA_MATH_MISC
         return x * y * fmaf(-x, y * y, 1.89099002f);
+#else
+        return x * y * (1.89099002f - x * y * y);
+#endif
 #else 
         return precise_sqrt(x);
 #endif            
@@ -369,7 +382,6 @@ namespace tgx
         return (s == 0) ? 1.0 : (1.0 / s);
         }
 
-    
     /**
     * Compute a fast approximation of the inverse square root of a float.
     * 
@@ -400,7 +412,11 @@ namespace tgx
         // error < 12536 ULP (8.81e-4)
         float y = uint32_as_float(0x5f0b3892 - (float_as_uint32(x) >> 1));
 
+#if TGX_USE_FMA_MATH_MISC
         return y * fmaf(-x, y * y, 1.89099002f);
+#else
+        return y * (1.89099002f - x * y * y);
+#endif
 #else      
         return precise_invsqrt(x);
 #endif
