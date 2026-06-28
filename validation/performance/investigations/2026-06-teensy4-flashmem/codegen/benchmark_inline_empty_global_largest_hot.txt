@@ -1,0 +1,12 @@
+000193b8  10080 tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31163, unsigned short, 1, 0>::_drawMesh(int, tgx::Mesh3Dv2<tgx::RGB565> const*, bool)
+00014d88   4196 tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31163, unsigned short, 1, 0>::_drawTriangleStrip(int, int, unsigned short const*, tgx::Vec3<float> const*, unsigned short const*, tgx::Vec3<float> const*, unsigned short const*, tgx::Vec2<float> const*)
+0000a0a4   3754 void tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31163, unsigned short, 1, 0>::_drawWireFrameMesh<0>(tgx::Mesh3Dv2<tgx::RGB565> const*, tgx::RGB565, float, float) [clone .isra.0]
+00025bc8   3688 void tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31163, unsigned short, 1, 0>::_drawWireFrameMesh<4>(tgx::Mesh3Dv2<tgx::RGB565> const*, tgx::RGB565, float, float)
+00008e1c   3564 void tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31163, unsigned short, 1, 0>::_drawWireFrameMesh<3>(tgx::Mesh3Dv2<tgx::RGB565> const*, tgx::RGB565, float, float)
+00008030   3564 void tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31163, unsigned short, 1, 0>::_drawWireFrameMesh<2>(tgx::Mesh3Dv2<tgx::RGB565> const*, tgx::RGB565, float, float)
+00017c28   3278 tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31163, unsigned short, 1, 0>::_drawSphereGouraudCap(int, int, bool, float const*, float const*, float, float, float, float, float, bool)
+00016fb0   3192 tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31163, unsigned short, 1, 0>::_drawSphereGouraudStripBand(int, int, float const*, float const*, float, float, float, float, float, float, float, float, bool)
+00012a44   3060 void tgx::shader_select<31163, tgx::RGB565, unsigned short>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+00004c54   3036 void tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31163, unsigned short, 1, 0>::_drawSphere<true, 0>(int, int, tgx::Image<tgx::RGB565> const*, float, tgx::RGB565, float) [clone .isra.0]
+000188f8   2750 void tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31163, unsigned short, 1, 0>::_drawSphere<false, 0>(int, int, tgx::Image<tgx::RGB565> const*, float, tgx::RGB565, float) [clone .isra.0]
+0000ce8c   2604 void tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31163, unsigned short, 1, 0>::_drawCircleZbuf<false, true>(int, int, int, tgx::RGB565, float, float)

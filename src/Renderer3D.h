@@ -3114,7 +3114,7 @@ namespace tgx
         
 
         /** compute a vertex light factor or object color according to the current lighting setup */
-        template<bool TEXTURE> TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const fVec4 & P) const
+        template<bool TEXTURE> TGX_RENDERER3D_SHADING_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const fVec4 & P) const
             {
             RGBf col = _r_ambiantColor;
             if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
@@ -3202,7 +3202,7 @@ namespace tgx
 
 
         /** compute a vertex color according to the current lighting setup and a supplied material color */
-        TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const fVec4 & P, const RGBf & color) const
+        TGX_RENDERER3D_SHADING_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const fVec4 & P, const RGBf & color) const
             {
             RGBf col = _r_ambiantColor;
             if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
@@ -3291,7 +3291,7 @@ namespace tgx
 
 
         /** compute a face light factor or object color according to the current lighting setup */
-        template<bool TEXTURE> TGX_INLINE inline RGBf _shadeFace(const float icu, const fVec3 & N, const fVec4 & P) const
+        template<bool TEXTURE> TGX_RENDERER3D_SHADING_INLINE inline RGBf _shadeFace(const float icu, const fVec3 & N, const fVec4 & P) const
             {
             RGBf col = _r_ambiantColor;
             if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
@@ -3378,7 +3378,7 @@ namespace tgx
 
 
         /** compute the uniform face color for flat or unlit shading */
-        TGX_INLINE inline void _setFlatOrUnlitFaceColor(int raster_type, bool texture, fVec3& faceN, float cu,
+        TGX_RENDERER3D_SHADING_INLINE inline void _setFlatOrUnlitFaceColor(int raster_type, bool texture, fVec3& faceN, float cu,
                                                         const fVec4& Q0, const fVec4& Q1, const fVec4& Q2)
             {
             if constexpr (TGX_SHADER_HAS_UNLIT(ENABLED_SHADERS))

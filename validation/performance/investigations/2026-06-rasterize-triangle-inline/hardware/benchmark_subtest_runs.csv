@@ -1,0 +1,2215 @@
+board,round,variant,renderer_size,subtest,fps,avg_us
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha GOURAUD,56.56,17681.73
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha FLAT,64.54,15493.4
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha ORTHO,61.35,16299.33
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (close),63.05,15860.57
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (clipped),71.27,14031.9
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (far),65.32,15309.03
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (farclip),62.71,15945.23
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,92.18,10848.8
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 FLAT,106.39,9399.4
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,64.93,15400.9
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,53.89,18557.43
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (close),72.59,13775.77
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (far),101.7,9833.2
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (farclip),102.13,9791.83
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny GOURAUD,444.07,2251.9
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny FLAT,527.95,1894.13
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,215.3,4644.63
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,194.54,5140.33
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,251.2,3980.9
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (close),306.69,3260.6
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (far),590.75,1692.77
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (farclip),567.95,1760.73
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Large tris FLAT Z,11337.87,88.2
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Grid small FLAT,1775.57,563.2
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Grid small TEX,957.3,1044.6
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon triangles,1311.19,762.67
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon strip,1663.16,601.27
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon quads,1603.93,623.47
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri fast,2590.67,386.0
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip fast,3710.58,269.5
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad fast,3404.26,293.75
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri AA,717.88,1393.0
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip AA,1123.28,890.25
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad AA,1160.6,861.62
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri thick,83.59,11963.5
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip thick,130.52,7661.5
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad thick,130.96,7636.12
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Grid near clip TEX,1007.46,992.6
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Cube direct FLAT,5415.16,184.67
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Cube direct TEX,606.09,1649.93
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Sphere direct GOUR,1907.31,524.3
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Sphere direct TEX,1164.55,858.7
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Vertex color direct,6402.05,156.2
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Point cloud pixels,11971.27,83.53
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Point cloud dots,2086.81,479.2
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube fast,78125.0,12.8
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube AA,28653.29,34.9
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube thick,5167.96,193.5
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere fast,7640.88,130.88
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere AA,2686.37,372.25
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere thick,363.88,2748.12
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny fast,742.74,1346.38
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny AA,321.41,3111.25
+teensy41,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny thick,33.19,30126.25
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Buddha GOURAUD,47.64,20991.4
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Buddha FLAT,55.08,18154.53
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Buddha ORTHO,52.27,19129.9
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Buddha (close),55.59,17988.7
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Buddha (clipped),66.48,15042.8
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Buddha (far),64.13,15593.47
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Buddha (farclip),61.83,16172.43
+teensy41,1,raster_empty,200 x 200 (medium / balanced),R2D2 GOURAUD,76.72,13034.97
+teensy41,1,raster_empty,200 x 200 (medium / balanced),R2D2 FLAT,90.8,11013.4
+teensy41,1,raster_empty,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,45.28,22085.7
+teensy41,1,raster_empty,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,37.36,26768.1
+teensy41,1,raster_empty,200 x 200 (medium / balanced),R2D2 (close),41.74,23956.4
+teensy41,1,raster_empty,200 x 200 (medium / balanced),R2D2 (far),91.65,10911.37
+teensy41,1,raster_empty,200 x 200 (medium / balanced),R2D2 (farclip),93.63,10680.37
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Bunny GOURAUD,325.81,3069.23
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Bunny FLAT,394.6,2534.2
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Bunny TEX_NEAREST,144.86,6903.0
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,126.97,7875.7
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Bunny ORTHO TEX,154.58,6469.23
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Bunny (close),151.28,6610.37
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Bunny (far),478.81,2088.5
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Bunny (farclip),485.15,2061.2
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Large tris FLAT Z,2853.88,350.4
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Grid small FLAT,1136.71,879.73
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Grid small TEX,444.26,2250.93
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Ribbon triangles,761.89,1312.53
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Ribbon strip,866.3,1154.33
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Ribbon quads,859.3,1163.73
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire rib tri fast,2163.33,462.25
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire rib strip fast,3267.97,306.0
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire rib quad fast,3001.88,333.12
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire rib tri AA,522.88,1912.5
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire rib strip AA,859.85,1163.0
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire rib quad AA,883.98,1131.25
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire rib tri thick,70.26,14233.38
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire rib strip thick,112.75,8869.12
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire rib quad thick,113.21,8833.38
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Grid near clip TEX,418.55,2389.2
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Cube direct FLAT,1362.03,734.2
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Cube direct TEX,152.04,6577.2
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Sphere direct GOUR,798.98,1251.6
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Sphere direct TEX,398.34,2510.4
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Vertex color direct,1643.12,608.6
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Point cloud pixels,11389.52,87.8
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Point cloud dots,1890.0,529.1
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire cube fast,65789.48,15.2
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire cube AA,17513.13,57.1
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire cube thick,3455.43,289.4
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire sphere fast,6837.61,146.25
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire sphere AA,1976.28,506.0
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire sphere thick,305.11,3277.5
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire bunny fast,694.44,1440.0
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire bunny AA,275.34,3631.88
+teensy41,1,raster_empty,200 x 200 (medium / balanced),Wire bunny thick,30.81,32459.5
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Buddha GOURAUD,45.2,22124.47
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Buddha FLAT,52.52,19038.9
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Buddha ORTHO,49.57,20173.2
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Buddha (close),48.14,20770.7
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Buddha (clipped),61.9,16155.7
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Buddha (far),63.56,15733.83
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Buddha (farclip),61.39,16288.0
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),R2D2 GOURAUD,71.59,13967.47
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),R2D2 FLAT,85.71,11667.1
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,40.84,24485.27
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,33.47,29876.7
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),R2D2 (close),26.55,37670.23
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),R2D2 (far),87.88,11379.6
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),R2D2 (farclip),90.67,11029.3
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Bunny GOURAUD,292.83,3414.9
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Bunny FLAT,359.86,2778.87
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,131.99,7576.2
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,110.1,9082.4
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Bunny ORTHO TEX,142.4,7022.5
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Bunny (close),96.79,10331.23
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Bunny (far),443.56,2254.5
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Bunny (farclip),449.71,2223.67
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Large tris FLAT Z,1849.57,540.67
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Grid small FLAT,878.99,1137.67
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Grid small TEX,303.33,3296.73
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Ribbon triangles,545.24,1834.07
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Ribbon strip,595.57,1679.07
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Ribbon quads,595.57,1679.07
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire rib tri fast,1977.75,505.62
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire rib strip fast,3038.36,329.12
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire rib quad fast,2817.89,354.88
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire rib tri AA,446.78,2238.25
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire rib strip AA,749.98,1333.38
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire rib quad AA,769.97,1298.75
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire rib tri thick,63.85,15661.0
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire rib strip thick,103.64,9649.0
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire rib quad thick,104.07,9608.62
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Grid near clip TEX,256.69,3895.7
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Cube direct FLAT,872.14,1146.6
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Cube direct TEX,96.86,10324.0
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Sphere direct GOUR,599.95,1666.8
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Sphere direct TEX,289.26,3457.1
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Vertex color direct,1135.85,880.4
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Point cloud pixels,10924.98,91.53
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Point cloud dots,1731.0,577.7
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire cube fast,54644.81,18.3
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire cube AA,11286.68,88.6
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire cube thick,2512.56,398.0
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire sphere fast,6541.29,152.88
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire sphere AA,1783.72,560.62
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire sphere thick,287.39,3479.62
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire bunny fast,682.42,1465.38
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire bunny AA,261.57,3823.12
+teensy41,1,raster_empty,320 x 240 (large / ILI9341),Wire bunny thick,30.03,33298.38
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha GOURAUD,56.55,17683.53
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha FLAT,64.56,15490.17
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha ORTHO,61.35,16299.4
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (close),63.04,15861.8
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (clipped),71.28,14029.67
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (far),65.34,15305.3
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (farclip),62.73,15942.6
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,92.15,10851.33
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 FLAT,106.48,9391.73
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,64.91,15405.17
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,53.86,18567.47
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (close),72.64,13765.77
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (far),101.7,9832.37
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (farclip),102.11,9793.1
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny GOURAUD,445.16,2246.4
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny FLAT,526.61,1898.93
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,215.73,4635.47
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,194.74,5135.0
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,251.56,3975.23
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (close),306.76,3259.87
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (far),592.34,1688.23
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (farclip),567.17,1763.13
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Large tris FLAT Z,11312.22,88.4
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid small FLAT,1772.0,564.33
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid small TEX,955.66,1046.4
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon triangles,1311.76,762.33
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon strip,1663.16,601.27
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon quads,1605.48,622.87
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri fast,2593.19,385.62
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip fast,3707.14,269.75
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad fast,3402.81,293.88
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri AA,717.88,1393.0
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip AA,1123.75,889.88
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad AA,1160.77,861.5
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri thick,83.59,11963.5
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip thick,130.53,7661.25
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad thick,130.95,7636.38
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid near clip TEX,1007.46,992.6
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Cube direct FLAT,5407.35,184.93
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Cube direct TEX,606.11,1649.87
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Sphere direct GOUR,1908.4,524.0
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Sphere direct TEX,1165.37,858.1
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Vertex color direct,6396.59,156.33
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Point cloud pixels,11980.83,83.47
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Point cloud dots,2087.68,479.0
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube fast,79365.08,12.6
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube AA,28818.44,34.7
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube thick,5165.29,193.6
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere fast,7648.18,130.75
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere AA,2688.17,372.0
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere thick,363.9,2748.0
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny fast,740.06,1351.25
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny AA,321.52,3110.25
+teensy41,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny thick,33.19,30130.12
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Buddha GOURAUD,47.65,20986.13
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Buddha FLAT,55.09,18150.53
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Buddha ORTHO,52.26,19135.93
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Buddha (close),55.59,17990.37
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Buddha (clipped),66.48,15041.73
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Buddha (far),64.14,15591.53
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Buddha (farclip),61.83,16173.77
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),R2D2 GOURAUD,76.7,13037.9
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),R2D2 FLAT,90.77,11016.77
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,45.28,22084.8
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,37.36,26764.3
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),R2D2 (close),41.76,23948.73
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),R2D2 (far),91.63,10912.87
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),R2D2 (farclip),93.63,10679.97
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Bunny GOURAUD,326.68,3061.13
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Bunny FLAT,394.83,2532.73
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Bunny TEX_NEAREST,144.87,6902.57
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,127.08,7869.13
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Bunny ORTHO TEX,154.23,6483.9
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Bunny (close),151.32,6608.47
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Bunny (far),475.54,2102.87
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Bunny (farclip),485.96,2057.77
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Large tris FLAT Z,2866.97,348.8
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Grid small FLAT,1136.11,880.2
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Grid small TEX,444.08,2251.87
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Ribbon triangles,761.58,1313.07
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Ribbon strip,866.45,1154.13
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Ribbon quads,859.25,1163.8
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire rib tri fast,2163.33,462.25
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire rib strip fast,3265.31,306.25
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire rib quad fast,3001.88,333.12
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire rib tri AA,522.88,1912.5
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire rib strip AA,858.28,1165.12
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire rib quad AA,884.37,1130.75
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire rib tri thick,70.26,14233.25
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire rib strip thick,112.75,8869.0
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire rib quad thick,113.21,8833.5
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Grid near clip TEX,418.64,2388.7
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Cube direct FLAT,1362.65,733.87
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Cube direct TEX,152.04,6577.07
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Sphere direct GOUR,799.42,1250.9
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Sphere direct TEX,398.3,2510.7
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Vertex color direct,1644.02,608.27
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Point cloud pixels,11380.88,87.87
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Point cloud dots,1888.22,529.6
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire cube fast,64516.13,15.5
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire cube AA,17543.86,57.0
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire cube thick,3451.85,289.7
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire sphere fast,6837.61,146.25
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire sphere AA,1976.77,505.88
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire sphere thick,305.13,3277.25
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire bunny fast,690.61,1448.0
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire bunny AA,275.61,3628.25
+teensy41,1,raster_noinline,200 x 200 (medium / balanced),Wire bunny thick,30.81,32461.75
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Buddha GOURAUD,45.19,22128.43
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Buddha FLAT,52.52,19041.1
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Buddha ORTHO,49.57,20171.9
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Buddha (close),48.14,20772.07
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Buddha (clipped),61.89,16158.5
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Buddha (far),63.55,15736.27
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Buddha (farclip),61.4,16287.07
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 GOURAUD,71.56,13973.6
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 FLAT,85.75,11661.93
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,40.87,24469.37
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,33.45,29891.77
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 (close),26.54,37674.04
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 (far),87.85,11383.47
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 (farclip),90.62,11035.1
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Bunny GOURAUD,293.18,3410.9
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Bunny FLAT,359.66,2780.37
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,131.81,7586.57
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,110.24,9070.8
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Bunny ORTHO TEX,142.45,7020.07
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Bunny (close),96.86,10323.87
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Bunny (far),442.01,2262.37
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Bunny (farclip),449.5,2224.7
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Large tris FLAT Z,1855.75,538.87
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Grid small FLAT,878.89,1137.8
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Grid small TEX,303.32,3296.87
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Ribbon triangles,544.56,1836.33
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Ribbon strip,595.81,1678.4
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Ribbon quads,595.45,1679.4
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib tri fast,1977.26,505.75
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib strip fast,3040.67,328.88
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib quad fast,2817.89,354.88
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib tri AA,446.8,2238.12
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib strip AA,750.12,1333.12
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib quad AA,769.82,1299.0
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib tri thick,63.85,15661.0
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib strip thick,103.63,9649.5
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib quad thick,104.07,9608.62
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Grid near clip TEX,256.71,3895.5
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Cube direct FLAT,871.64,1147.27
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Cube direct TEX,96.86,10323.87
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Sphere direct GOUR,600.1,1666.4
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Sphere direct TEX,289.33,3456.3
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Vertex color direct,1135.07,881.0
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Point cloud pixels,10877.45,91.93
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Point cloud dots,1728.61,578.5
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire cube fast,54945.05,18.2
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire cube AA,11286.68,88.6
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire cube thick,2513.83,397.8
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire sphere fast,6557.38,152.5
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire sphere AA,1784.12,560.5
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire sphere thick,287.38,3479.75
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire bunny fast,679.64,1471.38
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire bunny AA,261.52,3823.75
+teensy41,1,raster_noinline,320 x 240 (large / ILI9341),Wire bunny thick,30.03,33298.5
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha GOURAUD,57.35,17438.07
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha FLAT,64.66,15465.9
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha ORTHO,61.86,16164.67
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (close),63.25,15809.87
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (clipped),71.29,14026.27
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (far),65.38,15294.67
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (farclip),62.74,15939.6
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,93.01,10751.17
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 FLAT,106.62,9379.1
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,65.22,15332.47
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,54.05,18502.93
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (close),72.71,13753.73
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (far),101.9,9813.13
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (farclip),102.34,9771.53
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny GOURAUD,451.25,2216.07
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny FLAT,528.94,1890.57
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,216.6,4616.73
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,196.08,5099.87
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,252.09,3966.77
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (close),306.93,3258.1
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (far),594.95,1680.8
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (farclip),570.08,1754.13
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Large tris FLAT Z,11252.81,88.87
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid small FLAT,1760.36,568.07
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid small TEX,957.98,1043.87
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon triangles,1306.96,765.13
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon strip,1669.08,599.13
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon quads,1608.92,621.53
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri fast,2592.35,385.75
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip fast,3710.58,269.5
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad fast,3404.26,293.75
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri AA,718.0,1392.75
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip AA,1125.18,888.75
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad AA,1159.92,862.12
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri thick,83.61,11960.75
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip thick,130.54,7660.38
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad thick,130.96,7636.12
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid near clip TEX,1011.02,989.1
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Cube direct FLAT,5397.62,185.27
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Cube direct TEX,606.21,1649.6
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Sphere direct GOUR,1949.32,513.0
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Sphere direct TEX,1173.3,852.3
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Vertex color direct,6402.05,156.2
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Point cloud pixels,11952.19,83.67
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Point cloud dots,2086.38,479.3
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube fast,78740.16,12.7
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube AA,28735.63,34.8
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube thick,5159.96,193.8
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere fast,7640.88,130.88
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere AA,2681.86,372.88
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere thick,363.93,2747.75
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny fast,737.74,1355.5
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny AA,321.7,3108.5
+teensy41,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny thick,33.19,30131.25
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha GOURAUD,48.41,20657.3
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha FLAT,55.14,18136.73
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha ORTHO,52.83,18928.13
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (close),55.71,17949.53
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (clipped),66.5,15036.93
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (far),64.29,15554.8
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (farclip),61.94,16145.27
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 GOURAUD,77.39,12921.1
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 FLAT,90.78,11016.2
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,45.45,22003.8
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,37.45,26704.97
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 (close),41.8,23922.43
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 (far),91.94,10876.3
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 (farclip),93.87,10653.4
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny GOURAUD,330.19,3028.53
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny FLAT,395.81,2526.47
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny TEX_NEAREST,145.08,6892.87
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,127.31,7854.83
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny ORTHO TEX,155.11,6446.97
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny (close),151.46,6602.47
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny (far),480.15,2082.7
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny (farclip),486.26,2056.53
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Large tris FLAT Z,2881.84,347.0
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Grid small FLAT,1129.35,885.47
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Grid small TEX,445.16,2246.4
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Ribbon triangles,759.46,1316.73
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Ribbon strip,867.6,1152.6
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Ribbon quads,860.78,1161.73
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib tri fast,2160.99,462.75
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib strip fast,3266.64,306.12
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib quad fast,3001.88,333.12
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib tri AA,522.77,1912.88
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib strip AA,860.12,1162.62
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib quad AA,883.88,1131.38
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib tri thick,70.27,14230.62
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib strip thick,112.77,8867.88
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib quad thick,113.2,8833.62
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Grid near clip TEX,419.13,2385.9
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Cube direct FLAT,1360.54,735.0
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Cube direct TEX,152.04,6577.2
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Sphere direct GOUR,805.87,1240.9
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Sphere direct TEX,399.11,2505.6
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Vertex color direct,1646.72,607.27
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Point cloud pixels,11363.64,88.0
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Point cloud dots,1890.36,529.0
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire cube fast,65789.48,15.2
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire cube AA,17482.52,57.2
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire cube thick,3449.47,289.9
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire sphere fast,6849.31,146.0
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire sphere AA,1973.36,506.75
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire sphere thick,305.15,3277.12
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire bunny fast,691.8,1445.5
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire bunny AA,275.71,3627.0
+teensy41,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire bunny thick,30.81,32458.38
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha GOURAUD,45.88,21797.0
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha FLAT,52.59,19015.47
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha ORTHO,50.13,19947.6
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha (close),48.32,20696.77
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha (clipped),61.96,16139.8
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha (far),63.77,15680.6
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha (farclip),61.55,16246.63
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 GOURAUD,72.19,13852.2
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 FLAT,85.72,11665.3
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,40.99,24394.47
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,33.55,29806.37
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 (close),26.57,37639.54
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 (far),88.15,11344.37
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 (farclip),90.95,10995.4
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny GOURAUD,296.47,3373.07
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny FLAT,361.45,2766.6
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,132.3,7558.33
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,110.34,9063.23
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny ORTHO TEX,142.79,7003.07
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny (close),96.89,10321.27
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny (far),444.55,2249.47
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny (farclip),455.12,2197.2
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Large tris FLAT Z,1864.51,536.33
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Grid small FLAT,875.09,1142.73
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Grid small TEX,303.71,3292.6
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Ribbon triangles,543.6,1839.6
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Ribbon strip,596.23,1677.2
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Ribbon quads,596.04,1677.73
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib tri fast,1977.26,505.75
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib strip fast,3039.51,329.0
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib quad fast,2817.89,354.88
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib tri AA,446.73,2238.5
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib strip AA,750.12,1333.12
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib quad AA,769.75,1299.12
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib tri thick,63.86,15658.88
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib strip thick,103.64,9648.5
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib quad thick,104.07,9608.88
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Grid near clip TEX,256.98,3891.4
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Cube direct FLAT,870.98,1148.13
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Cube direct TEX,96.87,10323.2
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Sphere direct GOUR,603.54,1656.9
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Sphere direct TEX,289.64,3452.6
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Vertex color direct,1136.88,879.6
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Point cloud pixels,10885.34,91.87
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Point cloud dots,1726.82,579.1
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire cube fast,55248.62,18.1
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire cube AA,11299.43,88.5
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire cube thick,2512.56,398.0
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire sphere fast,6546.65,152.75
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire sphere AA,1781.74,561.25
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire sphere thick,287.39,3479.62
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire bunny fast,679.69,1471.25
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire bunny AA,261.87,3818.62
+teensy41,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire bunny thick,30.03,33297.62
+core2,1,default,100 x 100 (small / vertex-heavy),Buddha GOURAUD,14.27,70066.04
+core2,1,default,100 x 100 (small / vertex-heavy),Buddha FLAT,15.29,65399.79
+core2,1,default,100 x 100 (small / vertex-heavy),Buddha ORTHO,15.47,64641.88
+core2,1,default,100 x 100 (small / vertex-heavy),Buddha (close),16.01,62459.67
+core2,1,default,100 x 100 (small / vertex-heavy),Buddha (clipped),18.8,53198.83
+core2,1,default,100 x 100 (small / vertex-heavy),Buddha (far),16.66,60008.83
+core2,1,default,100 x 100 (small / vertex-heavy),Buddha (farclip),15.87,63008.04
+core2,1,default,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,25.15,39759.0
+core2,1,default,100 x 100 (small / vertex-heavy),R2D2 FLAT,28.16,35511.29
+core2,1,default,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,20.97,47697.33
+core2,1,default,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,18.61,53741.71
+core2,1,default,100 x 100 (small / vertex-heavy),R2D2 (close),18.19,54983.33
+core2,1,default,100 x 100 (small / vertex-heavy),R2D2 (far),30.14,33175.75
+core2,1,default,100 x 100 (small / vertex-heavy),R2D2 (farclip),28.97,34518.12
+core2,1,default,100 x 100 (small / vertex-heavy),Bunny GOURAUD,105.74,9456.79
+core2,1,default,100 x 100 (small / vertex-heavy),Bunny FLAT,117.24,8529.88
+core2,1,default,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,78.0,12820.38
+core2,1,default,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,67.36,14844.58
+core2,1,default,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,84.17,11881.17
+core2,1,default,100 x 100 (small / vertex-heavy),Bunny (close),79.73,12542.17
+core2,1,default,100 x 100 (small / vertex-heavy),Bunny (far),139.23,7182.5
+core2,1,default,100 x 100 (small / vertex-heavy),Bunny (farclip),128.66,7772.71
+core2,1,default,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1205.79,829.33
+core2,1,default,100 x 100 (small / vertex-heavy),Grid small FLAT,393.55,2541.0
+core2,1,default,100 x 100 (small / vertex-heavy),Grid small TEX,197.5,5063.33
+core2,1,default,100 x 100 (small / vertex-heavy),Ribbon triangles,247.32,4043.42
+core2,1,default,100 x 100 (small / vertex-heavy),Ribbon strip,300.89,3323.5
+core2,1,default,100 x 100 (small / vertex-heavy),Ribbon quads,300.31,3329.92
+core2,1,default,100 x 100 (small / vertex-heavy),Wire rib tri fast,570.9,1751.62
+core2,1,default,100 x 100 (small / vertex-heavy),Wire rib strip fast,795.62,1256.88
+core2,1,default,100 x 100 (small / vertex-heavy),Wire rib quad fast,788.1,1268.88
+core2,1,default,100 x 100 (small / vertex-heavy),Wire rib tri AA,116.11,8612.5
+core2,1,default,100 x 100 (small / vertex-heavy),Wire rib strip AA,190.63,5245.88
+core2,1,default,100 x 100 (small / vertex-heavy),Wire rib quad AA,191.02,5235.12
+core2,1,default,100 x 100 (small / vertex-heavy),Wire rib tri thick,10.86,92054.12
+core2,1,default,100 x 100 (small / vertex-heavy),Wire rib strip thick,15.53,64390.75
+core2,1,default,100 x 100 (small / vertex-heavy),Wire rib quad thick,17.45,57313.25
+core2,1,default,100 x 100 (small / vertex-heavy),Grid near clip TEX,233.46,4283.38
+core2,1,default,100 x 100 (small / vertex-heavy),Cube direct FLAT,583.86,1712.75
+core2,1,default,100 x 100 (small / vertex-heavy),Cube direct TEX,110.32,9064.25
+core2,1,default,100 x 100 (small / vertex-heavy),Sphere direct GOUR,358.15,2792.12
+core2,1,default,100 x 100 (small / vertex-heavy),Sphere direct TEX,232.72,4297.0
+core2,1,default,100 x 100 (small / vertex-heavy),Vertex color direct,880.35,1135.92
+core2,1,default,100 x 100 (small / vertex-heavy),Point cloud pixels,2039.08,490.42
+core2,1,default,100 x 100 (small / vertex-heavy),Point cloud dots,383.14,2610.0
+core2,1,default,100 x 100 (small / vertex-heavy),Wire cube fast,12288.79,81.38
+core2,1,default,100 x 100 (small / vertex-heavy),Wire cube AA,4474.27,223.5
+core2,1,default,100 x 100 (small / vertex-heavy),Wire cube thick,604.5,1654.25
+core2,1,default,100 x 100 (small / vertex-heavy),Wire sphere fast,1557.63,642.0
+core2,1,default,100 x 100 (small / vertex-heavy),Wire sphere AA,441.84,2263.25
+core2,1,default,100 x 100 (small / vertex-heavy),Wire sphere thick,49.55,20179.62
+core2,1,default,100 x 100 (small / vertex-heavy),Wire bunny fast,168.9,5920.5
+core2,1,default,100 x 100 (small / vertex-heavy),Wire bunny AA,54.0,18518.25
+core2,1,default,100 x 100 (small / vertex-heavy),Wire bunny thick,4.78,209264.88
+core2,1,default,200 x 200 (large for this target),Buddha GOURAUD,11.81,84707.59
+core2,1,default,200 x 200 (large for this target),Buddha FLAT,12.87,77672.5
+core2,1,default,200 x 200 (large for this target),Buddha ORTHO,12.95,77226.5
+core2,1,default,200 x 200 (large for this target),Buddha (close),13.49,74145.09
+core2,1,default,200 x 200 (large for this target),Buddha (clipped),16.96,58946.71
+core2,1,default,200 x 200 (large for this target),Buddha (far),16.36,61129.79
+core2,1,default,200 x 200 (large for this target),Buddha (farclip),15.64,63956.08
+core2,1,default,200 x 200 (large for this target),R2D2 GOURAUD,19.33,51729.5
+core2,1,default,200 x 200 (large for this target),R2D2 FLAT,22.44,44563.54
+core2,1,default,200 x 200 (large for this target),R2D2 TEX_NEAREST,14.49,69026.88
+core2,1,default,200 x 200 (large for this target),R2D2 TEX_BILINEAR,11.86,84351.04
+core2,1,default,200 x 200 (large for this target),R2D2 (close),8.71,114816.79
+core2,1,default,200 x 200 (large for this target),R2D2 (far),28.22,35434.46
+core2,1,default,200 x 200 (large for this target),R2D2 (farclip),27.58,36257.5
+core2,1,default,200 x 200 (large for this target),Bunny GOURAUD,77.0,12986.83
+core2,1,default,200 x 200 (large for this target),Bunny FLAT,90.6,11037.42
+core2,1,default,200 x 200 (large for this target),Bunny TEX_NEAREST,51.62,19370.54
+core2,1,default,200 x 200 (large for this target),Bunny TEX_BILINEAR,39.71,25185.54
+core2,1,default,200 x 200 (large for this target),Bunny ORTHO TEX,58.05,17227.5
+core2,1,default,200 x 200 (large for this target),Bunny (close),34.83,28714.04
+core2,1,default,200 x 200 (large for this target),Bunny (far),122.85,8140.12
+core2,1,default,200 x 200 (large for this target),Bunny (farclip),117.43,8515.38
+core2,1,default,200 x 200 (large for this target),Large tris FLAT Z,316.02,3164.33
+core2,1,default,200 x 200 (large for this target),Grid small FLAT,210.04,4761.08
+core2,1,default,200 x 200 (large for this target),Grid small TEX,90.77,11017.42
+core2,1,default,200 x 200 (large for this target),Ribbon triangles,141.6,7062.0
+core2,1,default,200 x 200 (large for this target),Ribbon strip,161.13,6206.0
+core2,1,default,200 x 200 (large for this target),Ribbon quads,159.18,6282.17
+core2,1,default,200 x 200 (large for this target),Wire rib tri fast,429.78,2326.75
+core2,1,default,200 x 200 (large for this target),Wire rib strip fast,643.66,1553.62
+core2,1,default,200 x 200 (large for this target),Wire rib quad fast,643.4,1554.25
+core2,1,default,200 x 200 (large for this target),Wire rib tri AA,79.99,12501.62
+core2,1,default,200 x 200 (large for this target),Wire rib strip AA,137.59,7268.12
+core2,1,default,200 x 200 (large for this target),Wire rib quad AA,138.0,7246.25
+core2,1,default,200 x 200 (large for this target),Wire rib tri thick,8.46,118157.38
+core2,1,default,200 x 200 (large for this target),Wire rib strip thick,12.84,77875.12
+core2,1,default,200 x 200 (large for this target),Wire rib quad thick,14.14,70728.38
+core2,1,default,200 x 200 (large for this target),Grid near clip TEX,94.17,10619.5
+core2,1,default,200 x 200 (large for this target),Cube direct FLAT,154.58,6469.33
+core2,1,default,200 x 200 (large for this target),Cube direct TEX,28.02,35688.75
+core2,1,default,200 x 200 (large for this target),Sphere direct GOUR,140.35,7124.88
+core2,1,default,200 x 200 (large for this target),Sphere direct TEX,78.8,12690.5
+core2,1,default,200 x 200 (large for this target),Vertex color direct,243.48,4107.17
+core2,1,default,200 x 200 (large for this target),Point cloud pixels,2038.39,490.58
+core2,1,default,200 x 200 (large for this target),Point cloud dots,361.86,2763.5
+core2,1,default,200 x 200 (large for this target),Wire cube fast,10309.28,97.0
+core2,1,default,200 x 200 (large for this target),Wire cube AA,2726.65,366.75
+core2,1,default,200 x 200 (large for this target),Wire cube thick,383.6,2606.88
+core2,1,default,200 x 200 (large for this target),Wire sphere fast,1342.73,744.75
+core2,1,default,200 x 200 (large for this target),Wire sphere AA,307.31,3254.0
+core2,1,default,200 x 200 (large for this target),Wire sphere thick,38.7,25839.88
+core2,1,default,200 x 200 (large for this target),Wire bunny fast,153.57,6511.62
+core2,1,default,200 x 200 (large for this target),Wire bunny AA,44.99,22228.62
+core2,1,default,200 x 200 (large for this target),Wire bunny thick,4.32,231537.62
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha GOURAUD,14.51,68894.62
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha FLAT,15.68,63777.29
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha ORTHO,15.59,64137.83
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (close),16.21,61684.54
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (clipped),18.99,52672.83
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (far),16.78,59606.33
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (farclip),15.92,62810.04
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,25.54,39147.08
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 FLAT,29.13,34333.04
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,21.47,46566.42
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,18.77,53271.46
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (close),18.33,54554.62
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (far),30.42,32874.21
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (farclip),29.23,34208.62
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny GOURAUD,107.22,9326.42
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny FLAT,122.45,8166.54
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,80.04,12494.46
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,67.47,14822.21
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,88.06,11355.83
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (close),80.43,12433.0
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (far),140.46,7119.33
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (farclip),129.22,7738.96
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1154.73,866.0
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Grid small FLAT,310.51,3220.5
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Grid small TEX,228.05,4385.0
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon triangles,275.9,3624.5
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon strip,304.82,3280.58
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon quads,319.63,3128.58
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri fast,570.74,1752.12
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip fast,797.53,1253.88
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad fast,785.39,1273.25
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri AA,116.14,8610.38
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip AA,190.33,5254.12
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad AA,190.6,5246.5
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri thick,12.25,81613.62
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip thick,19.83,50427.38
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad thick,19.87,50328.75
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Grid near clip TEX,245.67,4070.5
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Cube direct FLAT,576.37,1735.0
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Cube direct TEX,110.48,9051.5
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Sphere direct GOUR,359.66,2780.38
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Sphere direct TEX,235.77,4241.38
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Vertex color direct,904.57,1105.5
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Point cloud pixels,2039.78,490.25
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Point cloud dots,383.14,2610.0
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube fast,12578.62,79.5
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube AA,4171.01,239.75
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube thick,653.11,1531.12
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere fast,1540.54,649.12
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere AA,439.73,2274.12
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere thick,54.18,18456.25
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny fast,169.14,5912.38
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny AA,54.24,18437.62
+core2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny thick,4.12,242747.88
+core2,1,raster_empty,200 x 200 (large for this target),Buddha GOURAUD,12.02,83217.38
+core2,1,raster_empty,200 x 200 (large for this target),Buddha FLAT,13.38,74737.75
+core2,1,raster_empty,200 x 200 (large for this target),Buddha ORTHO,13.06,76568.54
+core2,1,raster_empty,200 x 200 (large for this target),Buddha (close),13.63,73349.62
+core2,1,raster_empty,200 x 200 (large for this target),Buddha (clipped),17.12,58402.04
+core2,1,raster_empty,200 x 200 (large for this target),Buddha (far),16.5,60611.12
+core2,1,raster_empty,200 x 200 (large for this target),Buddha (farclip),15.7,63696.42
+core2,1,raster_empty,200 x 200 (large for this target),R2D2 GOURAUD,19.6,51010.33
+core2,1,raster_empty,200 x 200 (large for this target),R2D2 FLAT,23.39,42744.67
+core2,1,raster_empty,200 x 200 (large for this target),R2D2 TEX_NEAREST,14.78,67658.66
+core2,1,raster_empty,200 x 200 (large for this target),R2D2 TEX_BILINEAR,11.91,83940.71
+core2,1,raster_empty,200 x 200 (large for this target),R2D2 (close),8.74,114379.12
+core2,1,raster_empty,200 x 200 (large for this target),R2D2 (far),28.51,35069.92
+core2,1,raster_empty,200 x 200 (large for this target),R2D2 (farclip),27.88,35873.0
+core2,1,raster_empty,200 x 200 (large for this target),Bunny GOURAUD,77.86,12843.71
+core2,1,raster_empty,200 x 200 (large for this target),Bunny FLAT,94.24,10611.54
+core2,1,raster_empty,200 x 200 (large for this target),Bunny TEX_NEAREST,52.64,18995.58
+core2,1,raster_empty,200 x 200 (large for this target),Bunny TEX_BILINEAR,39.59,25257.92
+core2,1,raster_empty,200 x 200 (large for this target),Bunny ORTHO TEX,60.63,16494.21
+core2,1,raster_empty,200 x 200 (large for this target),Bunny (close),34.97,28598.12
+core2,1,raster_empty,200 x 200 (large for this target),Bunny (far),125.34,7978.33
+core2,1,raster_empty,200 x 200 (large for this target),Bunny (farclip),119.13,8394.21
+core2,1,raster_empty,200 x 200 (large for this target),Large tris FLAT Z,307.08,3256.5
+core2,1,raster_empty,200 x 200 (large for this target),Grid small FLAT,182.57,5477.33
+core2,1,raster_empty,200 x 200 (large for this target),Grid small TEX,97.31,10276.75
+core2,1,raster_empty,200 x 200 (large for this target),Ribbon triangles,154.07,6490.5
+core2,1,raster_empty,200 x 200 (large for this target),Ribbon strip,162.29,6161.67
+core2,1,raster_empty,200 x 200 (large for this target),Ribbon quads,168.58,5931.83
+core2,1,raster_empty,200 x 200 (large for this target),Wire rib tri fast,429.67,2327.38
+core2,1,raster_empty,200 x 200 (large for this target),Wire rib strip fast,645.06,1550.25
+core2,1,raster_empty,200 x 200 (large for this target),Wire rib quad fast,642.16,1557.25
+core2,1,raster_empty,200 x 200 (large for this target),Wire rib tri AA,80.01,12498.12
+core2,1,raster_empty,200 x 200 (large for this target),Wire rib strip AA,137.5,7272.88
+core2,1,raster_empty,200 x 200 (large for this target),Wire rib quad AA,137.75,7259.75
+core2,1,raster_empty,200 x 200 (large for this target),Wire rib tri thick,9.28,107715.25
+core2,1,raster_empty,200 x 200 (large for this target),Wire rib strip thick,15.65,63907.88
+core2,1,raster_empty,200 x 200 (large for this target),Wire rib quad thick,15.69,63738.88
+core2,1,raster_empty,200 x 200 (large for this target),Grid near clip TEX,96.3,10383.75
+core2,1,raster_empty,200 x 200 (large for this target),Cube direct FLAT,151.44,6603.33
+core2,1,raster_empty,200 x 200 (large for this target),Cube direct TEX,28.03,35677.75
+core2,1,raster_empty,200 x 200 (large for this target),Sphere direct GOUR,140.57,7113.75
+core2,1,raster_empty,200 x 200 (large for this target),Sphere direct TEX,79.17,12630.5
+core2,1,raster_empty,200 x 200 (large for this target),Vertex color direct,245.44,4074.33
+core2,1,raster_empty,200 x 200 (large for this target),Point cloud pixels,2037.7,490.75
+core2,1,raster_empty,200 x 200 (large for this target),Point cloud dots,361.89,2763.25
+core2,1,raster_empty,200 x 200 (large for this target),Wire cube fast,10403.12,96.12
+core2,1,raster_empty,200 x 200 (large for this target),Wire cube AA,2605.86,383.75
+core2,1,raster_empty,200 x 200 (large for this target),Wire cube thick,403.12,2480.62
+core2,1,raster_empty,200 x 200 (large for this target),Wire sphere fast,1328.24,752.88
+core2,1,raster_empty,200 x 200 (large for this target),Wire sphere AA,306.22,3265.62
+core2,1,raster_empty,200 x 200 (large for this target),Wire sphere thick,41.46,24117.88
+core2,1,raster_empty,200 x 200 (large for this target),Wire bunny fast,153.83,6500.5
+core2,1,raster_empty,200 x 200 (large for this target),Wire bunny AA,45.16,22144.38
+core2,1,raster_empty,200 x 200 (large for this target),Wire bunny thick,3.76,266033.5
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha GOURAUD,14.51,68894.71
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha FLAT,15.68,63778.58
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha ORTHO,15.59,64136.71
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (close),16.21,61685.12
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (clipped),18.99,52673.12
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (far),16.78,59605.46
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (farclip),15.92,62811.17
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,25.55,39146.38
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 FLAT,29.13,34332.96
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,21.47,46567.42
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,18.77,53271.42
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (close),18.33,54555.88
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (far),30.42,32873.67
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (farclip),29.23,34206.12
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny GOURAUD,107.22,9326.58
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny FLAT,122.44,8167.12
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,80.03,12494.54
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,67.47,14820.5
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,88.07,11354.83
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (close),80.44,12432.33
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (far),140.46,7119.5
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (farclip),129.23,7737.88
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1153.74,866.75
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid small FLAT,310.52,3220.42
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid small TEX,228.02,4385.58
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon triangles,275.98,3623.42
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon strip,304.89,3279.83
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon quads,319.72,3127.75
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri fast,571.14,1750.88
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip fast,798.56,1252.25
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad fast,786.09,1272.12
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri AA,116.12,8611.88
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip AA,190.36,5253.12
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad AA,190.54,5248.38
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri thick,12.25,81614.38
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip thick,19.83,50426.75
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad thick,19.87,50325.5
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid near clip TEX,245.62,4071.38
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Cube direct FLAT,576.31,1735.17
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Cube direct TEX,110.47,9052.17
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Sphere direct GOUR,359.7,2780.12
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Sphere direct TEX,235.81,4240.75
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Vertex color direct,904.23,1105.92
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Point cloud pixels,2040.47,490.08
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Point cloud dots,383.01,2610.88
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube fast,12578.62,79.5
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube AA,4188.48,238.75
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube thick,653.7,1529.75
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere fast,1538.46,650.0
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere AA,439.58,2274.88
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere thick,54.18,18455.62
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny fast,169.14,5912.25
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny AA,54.25,18432.38
+core2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny thick,4.12,242751.5
+core2,1,raster_noinline,200 x 200 (large for this target),Buddha GOURAUD,12.02,83218.34
+core2,1,raster_noinline,200 x 200 (large for this target),Buddha FLAT,13.38,74738.04
+core2,1,raster_noinline,200 x 200 (large for this target),Buddha ORTHO,13.06,76570.09
+core2,1,raster_noinline,200 x 200 (large for this target),Buddha (close),13.63,73349.54
+core2,1,raster_noinline,200 x 200 (large for this target),Buddha (clipped),17.12,58401.67
+core2,1,raster_noinline,200 x 200 (large for this target),Buddha (far),16.5,60610.12
+core2,1,raster_noinline,200 x 200 (large for this target),Buddha (farclip),15.7,63695.71
+core2,1,raster_noinline,200 x 200 (large for this target),R2D2 GOURAUD,19.6,51009.71
+core2,1,raster_noinline,200 x 200 (large for this target),R2D2 FLAT,23.4,42743.75
+core2,1,raster_noinline,200 x 200 (large for this target),R2D2 TEX_NEAREST,14.78,67658.66
+core2,1,raster_noinline,200 x 200 (large for this target),R2D2 TEX_BILINEAR,11.91,83939.16
+core2,1,raster_noinline,200 x 200 (large for this target),R2D2 (close),8.74,114378.96
+core2,1,raster_noinline,200 x 200 (large for this target),R2D2 (far),28.51,35070.42
+core2,1,raster_noinline,200 x 200 (large for this target),R2D2 (farclip),27.88,35873.17
+core2,1,raster_noinline,200 x 200 (large for this target),Bunny GOURAUD,77.85,12844.42
+core2,1,raster_noinline,200 x 200 (large for this target),Bunny FLAT,94.23,10611.83
+core2,1,raster_noinline,200 x 200 (large for this target),Bunny TEX_NEAREST,52.65,18995.08
+core2,1,raster_noinline,200 x 200 (large for this target),Bunny TEX_BILINEAR,39.59,25257.88
+core2,1,raster_noinline,200 x 200 (large for this target),Bunny ORTHO TEX,60.63,16493.67
+core2,1,raster_noinline,200 x 200 (large for this target),Bunny (close),34.97,28598.04
+core2,1,raster_noinline,200 x 200 (large for this target),Bunny (far),125.36,7976.83
+core2,1,raster_noinline,200 x 200 (large for this target),Bunny (farclip),119.13,8393.88
+core2,1,raster_noinline,200 x 200 (large for this target),Large tris FLAT Z,307.07,3256.58
+core2,1,raster_noinline,200 x 200 (large for this target),Grid small FLAT,182.56,5477.58
+core2,1,raster_noinline,200 x 200 (large for this target),Grid small TEX,97.31,10276.25
+core2,1,raster_noinline,200 x 200 (large for this target),Ribbon triangles,154.07,6490.67
+core2,1,raster_noinline,200 x 200 (large for this target),Ribbon strip,162.29,6161.75
+core2,1,raster_noinline,200 x 200 (large for this target),Ribbon quads,168.6,5931.25
+core2,1,raster_noinline,200 x 200 (large for this target),Wire rib tri fast,429.71,2327.12
+core2,1,raster_noinline,200 x 200 (large for this target),Wire rib strip fast,645.11,1550.12
+core2,1,raster_noinline,200 x 200 (large for this target),Wire rib quad fast,642.11,1557.38
+core2,1,raster_noinline,200 x 200 (large for this target),Wire rib tri AA,80.0,12499.38
+core2,1,raster_noinline,200 x 200 (large for this target),Wire rib strip AA,137.47,7274.12
+core2,1,raster_noinline,200 x 200 (large for this target),Wire rib quad AA,137.76,7259.25
+core2,1,raster_noinline,200 x 200 (large for this target),Wire rib tri thick,9.28,107715.62
+core2,1,raster_noinline,200 x 200 (large for this target),Wire rib strip thick,15.65,63910.25
+core2,1,raster_noinline,200 x 200 (large for this target),Wire rib quad thick,15.69,63735.62
+core2,1,raster_noinline,200 x 200 (large for this target),Grid near clip TEX,96.3,10384.5
+core2,1,raster_noinline,200 x 200 (large for this target),Cube direct FLAT,151.44,6603.25
+core2,1,raster_noinline,200 x 200 (large for this target),Cube direct TEX,28.03,35677.33
+core2,1,raster_noinline,200 x 200 (large for this target),Sphere direct GOUR,140.57,7114.0
+core2,1,raster_noinline,200 x 200 (large for this target),Sphere direct TEX,79.17,12630.25
+core2,1,raster_noinline,200 x 200 (large for this target),Vertex color direct,245.41,4074.75
+core2,1,raster_noinline,200 x 200 (large for this target),Point cloud pixels,2036.66,491.0
+core2,1,raster_noinline,200 x 200 (large for this target),Point cloud dots,361.86,2763.5
+core2,1,raster_noinline,200 x 200 (large for this target),Wire cube fast,10376.13,96.38
+core2,1,raster_noinline,200 x 200 (large for this target),Wire cube AA,2607.56,383.5
+core2,1,raster_noinline,200 x 200 (large for this target),Wire cube thick,403.16,2480.38
+core2,1,raster_noinline,200 x 200 (large for this target),Wire sphere fast,1328.24,752.88
+core2,1,raster_noinline,200 x 200 (large for this target),Wire sphere AA,306.21,3265.75
+core2,1,raster_noinline,200 x 200 (large for this target),Wire sphere thick,41.46,24116.88
+core2,1,raster_noinline,200 x 200 (large for this target),Wire bunny fast,153.84,6500.12
+core2,1,raster_noinline,200 x 200 (large for this target),Wire bunny AA,45.15,22146.38
+core2,1,raster_noinline,200 x 200 (large for this target),Wire bunny thick,3.76,266031.75
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha GOURAUD,14.52,68893.88
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha FLAT,15.68,63778.04
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha ORTHO,15.59,64138.21
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (close),16.21,61684.83
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (clipped),18.98,52673.54
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (far),16.78,59605.58
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (farclip),15.92,62811.67
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,25.54,39147.29
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 FLAT,29.13,34333.04
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,21.47,46566.54
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,18.77,53271.04
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (close),18.33,54555.96
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (far),30.42,32873.83
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (farclip),29.23,34208.0
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny GOURAUD,107.22,9326.54
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny FLAT,122.45,8166.5
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,80.04,12493.54
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,67.47,14821.29
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,88.06,11355.71
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (close),80.43,12432.58
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (far),140.47,7119.0
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (farclip),129.22,7738.71
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1154.51,866.17
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid small FLAT,310.48,3220.83
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid small TEX,228.06,4384.83
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon triangles,275.93,3624.17
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon strip,304.87,3280.08
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon quads,319.64,3128.5
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri fast,571.18,1750.75
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip fast,798.4,1252.5
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad fast,785.62,1272.88
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri AA,116.13,8610.75
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip AA,190.35,5253.38
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad AA,190.59,5246.88
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri thick,12.25,81612.62
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip thick,19.83,50426.38
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad thick,19.87,50328.5
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid near clip TEX,245.65,4070.88
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Cube direct FLAT,576.23,1735.42
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Cube direct TEX,110.49,9050.92
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Sphere direct GOUR,359.63,2780.62
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Sphere direct TEX,235.82,4240.5
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Vertex color direct,904.7,1105.33
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Point cloud pixels,2040.47,490.08
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Point cloud dots,383.11,2610.25
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube fast,12578.62,79.5
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube AA,4171.01,239.75
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube thick,652.79,1531.88
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere fast,1541.13,648.88
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere AA,439.71,2274.25
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere thick,54.18,18455.5
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny fast,169.13,5912.5
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny AA,54.25,18434.12
+core2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny thick,4.12,242751.62
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Buddha GOURAUD,12.02,83219.41
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Buddha FLAT,13.38,74739.09
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Buddha ORTHO,13.06,76569.91
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Buddha (close),13.63,73349.66
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Buddha (clipped),17.12,58402.17
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Buddha (far),16.5,60610.75
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Buddha (farclip),15.7,63696.08
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),R2D2 GOURAUD,19.6,51011.62
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),R2D2 FLAT,23.39,42744.71
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),R2D2 TEX_NEAREST,14.78,67658.5
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),R2D2 TEX_BILINEAR,11.91,83940.12
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),R2D2 (close),8.74,114378.09
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),R2D2 (far),28.51,35070.0
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),R2D2 (farclip),27.88,35872.29
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Bunny GOURAUD,77.86,12843.83
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Bunny FLAT,94.23,10611.83
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Bunny TEX_NEAREST,52.64,18995.88
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Bunny TEX_BILINEAR,39.58,25265.46
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Bunny ORTHO TEX,60.63,16493.58
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Bunny (close),34.97,28598.12
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Bunny (far),125.35,7977.62
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Bunny (farclip),119.11,8395.83
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Large tris FLAT Z,307.09,3256.42
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Grid small FLAT,182.57,5477.25
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Grid small TEX,97.31,10276.25
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Ribbon triangles,154.05,6491.25
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Ribbon strip,162.28,6162.0
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Ribbon quads,168.6,5931.08
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire rib tri fast,429.78,2326.75
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire rib strip fast,645.32,1549.62
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire rib quad fast,641.54,1558.75
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire rib tri AA,80.01,12497.88
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire rib strip AA,137.48,7273.62
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire rib quad AA,137.74,7260.12
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire rib tri thick,9.28,107715.12
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire rib strip thick,15.65,63912.62
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire rib quad thick,15.69,63739.62
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Grid near clip TEX,96.28,10386.12
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Cube direct FLAT,151.46,6602.25
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Cube direct TEX,28.03,35676.67
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Sphere direct GOUR,140.59,7113.12
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Sphere direct TEX,79.17,12630.75
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Vertex color direct,245.34,4075.92
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Point cloud pixels,2038.74,490.5
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Point cloud dots,362.15,2761.25
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire cube fast,10389.61,96.25
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire cube AA,2612.67,382.75
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire cube thick,403.0,2481.38
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire sphere fast,1325.6,754.38
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire sphere AA,306.18,3266.0
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire sphere thick,41.46,24117.88
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire bunny fast,153.83,6500.62
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire bunny AA,45.15,22147.12
+core2,1,raster_noinline_noclone,200 x 200 (large for this target),Wire bunny thick,3.76,266030.88
+cores3,1,default,100 x 100 (small / vertex-heavy),Buddha GOURAUD,18.68,53527.08
+cores3,1,default,100 x 100 (small / vertex-heavy),Buddha FLAT,19.95,50115.54
+cores3,1,default,100 x 100 (small / vertex-heavy),Buddha ORTHO,20.3,49257.12
+cores3,1,default,100 x 100 (small / vertex-heavy),Buddha (close),21.14,47300.21
+cores3,1,default,100 x 100 (small / vertex-heavy),Buddha (clipped),25.02,39974.21
+cores3,1,default,100 x 100 (small / vertex-heavy),Buddha (far),21.96,45536.83
+cores3,1,default,100 x 100 (small / vertex-heavy),Buddha (farclip),21.04,47532.38
+cores3,1,default,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,33.11,30199.46
+cores3,1,default,100 x 100 (small / vertex-heavy),R2D2 FLAT,37.17,26902.79
+cores3,1,default,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,28.27,35371.17
+cores3,1,default,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,24.77,40372.38
+cores3,1,default,100 x 100 (small / vertex-heavy),R2D2 (close),23.88,41874.12
+cores3,1,default,100 x 100 (small / vertex-heavy),R2D2 (far),40.53,24671.79
+cores3,1,default,100 x 100 (small / vertex-heavy),R2D2 (farclip),38.88,25719.38
+cores3,1,default,100 x 100 (small / vertex-heavy),Bunny GOURAUD,140.55,7115.08
+cores3,1,default,100 x 100 (small / vertex-heavy),Bunny FLAT,156.5,6389.75
+cores3,1,default,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,105.69,9461.79
+cores3,1,default,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,90.03,11107.33
+cores3,1,default,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,117.5,8511.0
+cores3,1,default,100 x 100 (small / vertex-heavy),Bunny (close),108.93,9180.5
+cores3,1,default,100 x 100 (small / vertex-heavy),Bunny (far),191.06,5233.96
+cores3,1,default,100 x 100 (small / vertex-heavy),Bunny (farclip),173.92,5749.67
+cores3,1,default,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1547.19,646.33
+cores3,1,default,100 x 100 (small / vertex-heavy),Grid small FLAT,480.13,2082.75
+cores3,1,default,100 x 100 (small / vertex-heavy),Grid small TEX,286.26,3493.33
+cores3,1,default,100 x 100 (small / vertex-heavy),Ribbon triangles,341.48,2928.42
+cores3,1,default,100 x 100 (small / vertex-heavy),Ribbon strip,376.36,2657.0
+cores3,1,default,100 x 100 (small / vertex-heavy),Ribbon quads,391.25,2555.92
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire rib tri fast,752.37,1329.12
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire rib strip fast,1033.73,967.38
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire rib quad fast,1001.25,998.75
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire rib tri AA,148.98,6712.5
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire rib strip AA,240.83,4152.25
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire rib quad AA,243.14,4112.88
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire rib tri thick,14.83,67415.25
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire rib strip thick,24.57,40693.88
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire rib quad thick,22.91,43643.75
+cores3,1,default,100 x 100 (small / vertex-heavy),Grid near clip TEX,309.12,3235.0
+cores3,1,default,100 x 100 (small / vertex-heavy),Cube direct FLAT,748.32,1336.33
+cores3,1,default,100 x 100 (small / vertex-heavy),Cube direct TEX,146.36,6832.42
+cores3,1,default,100 x 100 (small / vertex-heavy),Sphere direct GOUR,433.77,2305.38
+cores3,1,default,100 x 100 (small / vertex-heavy),Sphere direct TEX,291.77,3427.38
+cores3,1,default,100 x 100 (small / vertex-heavy),Vertex color direct,1032.08,968.92
+cores3,1,default,100 x 100 (small / vertex-heavy),Point cloud pixels,2717.39,368.0
+cores3,1,default,100 x 100 (small / vertex-heavy),Point cloud dots,523.7,1909.5
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire cube fast,14787.43,67.62
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire cube AA,4917.03,203.38
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire cube thick,682.59,1465.0
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire sphere fast,2062.92,484.75
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire sphere AA,530.29,1885.75
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire sphere thick,58.78,17013.0
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire bunny fast,243.91,4099.88
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire bunny AA,71.38,14009.62
+cores3,1,default,100 x 100 (small / vertex-heavy),Wire bunny thick,5.93,168754.88
+cores3,1,default,200 x 200 (medium / balanced),Buddha GOURAUD,15.34,65188.67
+cores3,1,default,200 x 200 (medium / balanced),Buddha FLAT,16.8,59523.83
+cores3,1,default,200 x 200 (medium / balanced),Buddha ORTHO,16.84,59385.46
+cores3,1,default,200 x 200 (medium / balanced),Buddha (close),17.83,56086.04
+cores3,1,default,200 x 200 (medium / balanced),Buddha (clipped),22.62,44204.17
+cores3,1,default,200 x 200 (medium / balanced),Buddha (far),21.55,46411.96
+cores3,1,default,200 x 200 (medium / balanced),Buddha (farclip),20.71,48275.92
+cores3,1,default,200 x 200 (medium / balanced),R2D2 GOURAUD,25.27,39567.62
+cores3,1,default,200 x 200 (medium / balanced),R2D2 FLAT,29.41,34004.08
+cores3,1,default,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,19.48,51332.54
+cores3,1,default,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,15.68,63761.54
+cores3,1,default,200 x 200 (medium / balanced),R2D2 (close),11.26,88820.09
+cores3,1,default,200 x 200 (medium / balanced),R2D2 (far),37.87,26403.83
+cores3,1,default,200 x 200 (medium / balanced),R2D2 (farclip),36.94,27072.67
+cores3,1,default,200 x 200 (medium / balanced),Bunny GOURAUD,101.87,9816.21
+cores3,1,default,200 x 200 (medium / balanced),Bunny FLAT,120.09,8327.38
+cores3,1,default,200 x 200 (medium / balanced),Bunny TEX_NEAREST,70.48,14188.71
+cores3,1,default,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,52.92,18897.96
+cores3,1,default,200 x 200 (medium / balanced),Bunny ORTHO TEX,82.91,12060.58
+cores3,1,default,200 x 200 (medium / balanced),Bunny (close),47.05,21256.21
+cores3,1,default,200 x 200 (medium / balanced),Bunny (far),167.37,5974.92
+cores3,1,default,200 x 200 (medium / balanced),Bunny (farclip),158.11,6324.67
+cores3,1,default,200 x 200 (medium / balanced),Large tris FLAT Z,413.85,2416.33
+cores3,1,default,200 x 200 (medium / balanced),Grid small FLAT,263.77,3791.17
+cores3,1,default,200 x 200 (medium / balanced),Grid small TEX,126.1,7930.25
+cores3,1,default,200 x 200 (medium / balanced),Ribbon triangles,196.49,5089.33
+cores3,1,default,200 x 200 (medium / balanced),Ribbon strip,206.93,4832.58
+cores3,1,default,200 x 200 (medium / balanced),Ribbon quads,214.06,4671.67
+cores3,1,default,200 x 200 (medium / balanced),Wire rib tri fast,590.84,1692.5
+cores3,1,default,200 x 200 (medium / balanced),Wire rib strip fast,868.62,1151.25
+cores3,1,default,200 x 200 (medium / balanced),Wire rib quad fast,849.53,1177.12
+cores3,1,default,200 x 200 (medium / balanced),Wire rib tri AA,105.04,9520.12
+cores3,1,default,200 x 200 (medium / balanced),Wire rib strip AA,178.18,5612.25
+cores3,1,default,200 x 200 (medium / balanced),Wire rib quad AA,179.45,5572.62
+cores3,1,default,200 x 200 (medium / balanced),Wire rib tri thick,11.47,87165.12
+cores3,1,default,200 x 200 (medium / balanced),Wire rib strip thick,19.8,50515.75
+cores3,1,default,200 x 200 (medium / balanced),Wire rib quad thick,18.63,53663.75
+cores3,1,default,200 x 200 (medium / balanced),Grid near clip TEX,125.16,7989.62
+cores3,1,default,200 x 200 (medium / balanced),Cube direct FLAT,202.43,4940.0
+cores3,1,default,200 x 200 (medium / balanced),Cube direct TEX,37.4,26734.67
+cores3,1,default,200 x 200 (medium / balanced),Sphere direct GOUR,182.44,5481.12
+cores3,1,default,200 x 200 (medium / balanced),Sphere direct TEX,102.57,9749.38
+cores3,1,default,200 x 200 (medium / balanced),Vertex color direct,314.2,3182.67
+cores3,1,default,200 x 200 (medium / balanced),Point cloud pixels,2715.55,368.25
+cores3,1,default,200 x 200 (medium / balanced),Point cloud dots,497.05,2011.88
+cores3,1,default,200 x 200 (medium / balanced),Wire cube fast,12738.85,78.5
+cores3,1,default,200 x 200 (medium / balanced),Wire cube AA,3308.52,302.25
+cores3,1,default,200 x 200 (medium / balanced),Wire cube thick,465.5,2148.25
+cores3,1,default,200 x 200 (medium / balanced),Wire sphere fast,1818.6,549.88
+cores3,1,default,200 x 200 (medium / balanced),Wire sphere AA,386.21,2589.25
+cores3,1,default,200 x 200 (medium / balanced),Wire sphere thick,46.75,21389.88
+cores3,1,default,200 x 200 (medium / balanced),Wire bunny fast,223.73,4469.75
+cores3,1,default,200 x 200 (medium / balanced),Wire bunny AA,59.95,16681.12
+cores3,1,default,200 x 200 (medium / balanced),Wire bunny thick,5.39,185677.25
+cores3,1,default,240 x 240 (large for this target),Buddha GOURAUD,14.41,69417.5
+cores3,1,default,240 x 240 (large for this target),Buddha FLAT,15.96,62671.17
+cores3,1,default,240 x 240 (large for this target),Buddha ORTHO,15.83,63169.25
+cores3,1,default,240 x 240 (large for this target),Buddha (close),16.49,60625.75
+cores3,1,default,240 x 240 (large for this target),Buddha (clipped),21.54,46432.46
+cores3,1,default,240 x 240 (large for this target),Buddha (far),21.33,46889.5
+cores3,1,default,240 x 240 (large for this target),Buddha (farclip),20.56,48634.12
+cores3,1,default,240 x 240 (large for this target),R2D2 GOURAUD,22.8,43854.5
+cores3,1,default,240 x 240 (large for this target),R2D2 FLAT,26.87,37216.67
+cores3,1,default,240 x 240 (large for this target),R2D2 TEX_NEAREST,17.1,58482.04
+cores3,1,default,240 x 240 (large for this target),R2D2 TEX_BILINEAR,13.34,74942.21
+cores3,1,default,240 x 240 (large for this target),R2D2 (close),8.65,115659.62
+cores3,1,default,240 x 240 (large for this target),R2D2 (far),36.83,27151.21
+cores3,1,default,240 x 240 (large for this target),R2D2 (farclip),36.17,27648.5
+cores3,1,default,240 x 240 (large for this target),Bunny GOURAUD,90.23,11082.83
+cores3,1,default,240 x 240 (large for this target),Bunny FLAT,108.33,9230.71
+cores3,1,default,240 x 240 (large for this target),Bunny TEX_NEAREST,60.95,16405.79
+cores3,1,default,240 x 240 (large for this target),Bunny TEX_BILINEAR,43.6,22936.17
+cores3,1,default,240 x 240 (large for this target),Bunny ORTHO TEX,73.95,13522.71
+cores3,1,default,240 x 240 (large for this target),Bunny (close),35.43,28221.83
+cores3,1,default,240 x 240 (large for this target),Bunny (far),158.94,6291.5
+cores3,1,default,240 x 240 (large for this target),Bunny (farclip),150.42,6648.21
+cores3,1,default,240 x 240 (large for this target),Large tris FLAT Z,290.03,3447.92
+cores3,1,default,240 x 240 (large for this target),Grid small FLAT,211.65,4724.75
+cores3,1,default,240 x 240 (large for this target),Grid small TEX,95.96,10421.08
+cores3,1,default,240 x 240 (large for this target),Ribbon triangles,164.91,6063.75
+cores3,1,default,240 x 240 (large for this target),Ribbon strip,171.85,5818.92
+cores3,1,default,240 x 240 (large for this target),Ribbon quads,177.69,5627.83
+cores3,1,default,240 x 240 (large for this target),Wire rib tri fast,549.45,1820.0
+cores3,1,default,240 x 240 (large for this target),Wire rib strip fast,820.85,1218.25
+cores3,1,default,240 x 240 (large for this target),Wire rib quad fast,802.25,1246.5
+cores3,1,default,240 x 240 (large for this target),Wire rib tri AA,94.06,10631.12
+cores3,1,default,240 x 240 (large for this target),Wire rib strip AA,161.66,6185.88
+cores3,1,default,240 x 240 (large for this target),Wire rib quad AA,162.78,6143.25
+cores3,1,default,240 x 240 (large for this target),Wire rib tri thick,10.54,94884.75
+cores3,1,default,240 x 240 (large for this target),Wire rib strip thick,18.39,54391.25
+cores3,1,default,240 x 240 (large for this target),Wire rib quad thick,17.35,57637.0
+cores3,1,default,240 x 240 (large for this target),Grid near clip TEX,93.47,10698.25
+cores3,1,default,240 x 240 (large for this target),Cube direct FLAT,142.06,7039.25
+cores3,1,default,240 x 240 (large for this target),Cube direct TEX,26.05,38389.83
+cores3,1,default,240 x 240 (large for this target),Sphere direct GOUR,137.89,7252.0
+cores3,1,default,240 x 240 (large for this target),Sphere direct TEX,74.82,13365.75
+cores3,1,default,240 x 240 (large for this target),Vertex color direct,223.94,4465.5
+cores3,1,default,240 x 240 (large for this target),Point cloud pixels,2705.75,369.58
+cores3,1,default,240 x 240 (large for this target),Point cloud dots,495.57,2017.88
+cores3,1,default,240 x 240 (large for this target),Wire cube fast,12030.08,83.12
+cores3,1,default,240 x 240 (large for this target),Wire cube AA,2863.28,349.25
+cores3,1,default,240 x 240 (large for this target),Wire cube thick,411.42,2430.62
+cores3,1,default,240 x 240 (large for this target),Wire sphere fast,1730.85,577.75
+cores3,1,default,240 x 240 (large for this target),Wire sphere AA,347.75,2875.62
+cores3,1,default,240 x 240 (large for this target),Wire sphere thick,43.32,23083.12
+cores3,1,default,240 x 240 (large for this target),Wire bunny fast,217.95,4588.12
+cores3,1,default,240 x 240 (large for this target),Wire bunny AA,56.43,17721.5
+cores3,1,default,240 x 240 (large for this target),Wire bunny thick,5.21,192099.12
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha GOURAUD,18.83,53104.88
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha FLAT,20.16,49595.58
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha ORTHO,20.33,49191.92
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (close),21.05,47515.46
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (clipped),24.8,40320.12
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (far),21.66,46168.83
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (farclip),20.86,47937.92
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,33.51,29842.83
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 FLAT,38.0,26316.21
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,28.63,34923.0
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,25.05,39914.83
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (close),23.9,41836.42
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (far),40.44,24727.96
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (farclip),39.09,25582.12
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny GOURAUD,143.02,6991.92
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny FLAT,161.28,6200.46
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,107.64,9290.04
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,91.51,10927.62
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,120.2,8319.21
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (close),109.0,9174.46
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (far),191.92,5210.42
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (farclip),176.05,5680.17
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1776.2,563.0
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Grid small FLAT,498.79,2004.83
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Grid small TEX,285.28,3505.33
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon triangles,339.49,2945.58
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon strip,379.99,2631.67
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon quads,391.96,2551.25
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri fast,757.43,1320.25
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip fast,1048.08,954.12
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad fast,1001.63,998.38
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri AA,149.38,6694.5
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip AA,240.81,4152.62
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad AA,244.07,4097.12
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri thick,14.74,67846.88
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip thick,23.38,42779.0
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad thick,23.32,42887.12
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Grid near clip TEX,308.4,3242.5
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Cube direct FLAT,863.74,1157.75
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Cube direct TEX,146.74,6814.67
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Sphere direct GOUR,442.31,2260.88
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Sphere direct TEX,291.42,3431.5
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Vertex color direct,1127.08,887.25
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Point cloud pixels,2707.58,369.33
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Point cloud dots,526.39,1899.75
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube fast,15810.28,63.25
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube AA,5322.69,187.88
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube thick,677.56,1475.88
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere fast,2110.82,473.75
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere AA,534.19,1872.0
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere thick,62.14,16091.5
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny fast,246.41,4058.25
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny AA,71.45,13996.25
+cores3,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny thick,6.29,158864.5
+cores3,1,raster_empty,200 x 200 (medium / balanced),Buddha GOURAUD,15.58,64164.58
+cores3,1,raster_empty,200 x 200 (medium / balanced),Buddha FLAT,17.29,57829.38
+cores3,1,raster_empty,200 x 200 (medium / balanced),Buddha ORTHO,17.07,58599.08
+cores3,1,raster_empty,200 x 200 (medium / balanced),Buddha (close),17.77,56276.04
+cores3,1,raster_empty,200 x 200 (medium / balanced),Buddha (clipped),22.46,44526.58
+cores3,1,raster_empty,200 x 200 (medium / balanced),Buddha (far),21.32,46911.79
+cores3,1,raster_empty,200 x 200 (medium / balanced),Buddha (farclip),20.61,48517.79
+cores3,1,raster_empty,200 x 200 (medium / balanced),R2D2 GOURAUD,25.61,39054.33
+cores3,1,raster_empty,200 x 200 (medium / balanced),R2D2 FLAT,30.69,32586.88
+cores3,1,raster_empty,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,19.72,50707.46
+cores3,1,raster_empty,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,15.84,63124.0
+cores3,1,raster_empty,200 x 200 (medium / balanced),R2D2 (close),11.27,88768.46
+cores3,1,raster_empty,200 x 200 (medium / balanced),R2D2 (far),37.97,26338.67
+cores3,1,raster_empty,200 x 200 (medium / balanced),R2D2 (farclip),37.18,26892.62
+cores3,1,raster_empty,200 x 200 (medium / balanced),Bunny GOURAUD,103.38,9673.38
+cores3,1,raster_empty,200 x 200 (medium / balanced),Bunny FLAT,126.11,7929.5
+cores3,1,raster_empty,200 x 200 (medium / balanced),Bunny TEX_NEAREST,71.48,13990.04
+cores3,1,raster_empty,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,53.5,18691.21
+cores3,1,raster_empty,200 x 200 (medium / balanced),Bunny ORTHO TEX,84.52,11831.25
+cores3,1,raster_empty,200 x 200 (medium / balanced),Bunny (close),47.05,21252.21
+cores3,1,raster_empty,200 x 200 (medium / balanced),Bunny (far),169.58,5897.04
+cores3,1,raster_empty,200 x 200 (medium / balanced),Bunny (farclip),161.04,6209.79
+cores3,1,raster_empty,200 x 200 (medium / balanced),Large tris FLAT Z,474.93,2105.58
+cores3,1,raster_empty,200 x 200 (medium / balanced),Grid small FLAT,284.6,3513.75
+cores3,1,raster_empty,200 x 200 (medium / balanced),Grid small TEX,125.92,7941.58
+cores3,1,raster_empty,200 x 200 (medium / balanced),Ribbon triangles,195.93,5103.75
+cores3,1,raster_empty,200 x 200 (medium / balanced),Ribbon strip,208.41,4798.33
+cores3,1,raster_empty,200 x 200 (medium / balanced),Ribbon quads,214.29,4666.58
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire rib tri fast,593.65,1684.5
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire rib strip fast,877.0,1140.25
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire rib quad fast,852.24,1173.38
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire rib tri AA,105.22,9503.5
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire rib strip AA,177.92,5620.38
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire rib quad AA,179.95,5557.12
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire rib tri thick,11.45,87350.38
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire rib strip thick,18.86,53015.0
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire rib quad thick,18.8,53185.38
+cores3,1,raster_empty,200 x 200 (medium / balanced),Grid near clip TEX,125.09,7994.5
+cores3,1,raster_empty,200 x 200 (medium / balanced),Cube direct FLAT,232.31,4304.67
+cores3,1,raster_empty,200 x 200 (medium / balanced),Cube direct TEX,37.44,26708.42
+cores3,1,raster_empty,200 x 200 (medium / balanced),Sphere direct GOUR,183.92,5437.0
+cores3,1,raster_empty,200 x 200 (medium / balanced),Sphere direct TEX,102.67,9740.12
+cores3,1,raster_empty,200 x 200 (medium / balanced),Vertex color direct,322.17,3103.92
+cores3,1,raster_empty,200 x 200 (medium / balanced),Point cloud pixels,2718.01,367.92
+cores3,1,raster_empty,200 x 200 (medium / balanced),Point cloud dots,499.72,2001.12
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire cube fast,13698.63,73.0
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire cube AA,3440.86,290.62
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire cube thick,463.93,2155.5
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire sphere fast,1865.67,536.0
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire sphere AA,386.53,2587.12
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire sphere thick,48.95,20429.25
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire bunny fast,225.91,4426.5
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire bunny AA,60.02,16661.38
+cores3,1,raster_empty,200 x 200 (medium / balanced),Wire bunny thick,5.68,175942.62
+cores3,1,raster_empty,240 x 240 (large for this target),Buddha GOURAUD,14.64,68286.54
+cores3,1,raster_empty,240 x 240 (large for this target),Buddha FLAT,16.49,60633.17
+cores3,1,raster_empty,240 x 240 (large for this target),Buddha ORTHO,16.07,62218.5
+cores3,1,raster_empty,240 x 240 (large for this target),Buddha (close),16.44,60809.29
+cores3,1,raster_empty,240 x 240 (large for this target),Buddha (clipped),21.39,46751.21
+cores3,1,raster_empty,240 x 240 (large for this target),Buddha (far),21.13,47315.29
+cores3,1,raster_empty,240 x 240 (large for this target),Buddha (farclip),20.48,48821.25
+cores3,1,raster_empty,240 x 240 (large for this target),R2D2 GOURAUD,23.09,43313.67
+cores3,1,raster_empty,240 x 240 (large for this target),R2D2 FLAT,28.24,35416.88
+cores3,1,raster_empty,240 x 240 (large for this target),R2D2 TEX_NEAREST,17.29,57825.12
+cores3,1,raster_empty,240 x 240 (large for this target),R2D2 TEX_BILINEAR,13.46,74272.0
+cores3,1,raster_empty,240 x 240 (large for this target),R2D2 (close),8.65,115604.66
+cores3,1,raster_empty,240 x 240 (large for this target),R2D2 (far),36.97,27045.88
+cores3,1,raster_empty,240 x 240 (large for this target),R2D2 (farclip),36.4,27470.25
+cores3,1,raster_empty,240 x 240 (large for this target),Bunny GOURAUD,91.43,10937.79
+cores3,1,raster_empty,240 x 240 (large for this target),Bunny FLAT,114.52,8731.83
+cores3,1,raster_empty,240 x 240 (large for this target),Bunny TEX_NEAREST,61.7,16207.88
+cores3,1,raster_empty,240 x 240 (large for this target),Bunny TEX_BILINEAR,44.0,22728.46
+cores3,1,raster_empty,240 x 240 (large for this target),Bunny ORTHO TEX,75.25,13288.83
+cores3,1,raster_empty,240 x 240 (large for this target),Bunny (close),35.44,28216.83
+cores3,1,raster_empty,240 x 240 (large for this target),Bunny (far),161.49,6192.5
+cores3,1,raster_empty,240 x 240 (large for this target),Bunny (farclip),153.59,6510.88
+cores3,1,raster_empty,240 x 240 (large for this target),Large tris FLAT Z,332.65,3006.17
+cores3,1,raster_empty,240 x 240 (large for this target),Grid small FLAT,230.68,4334.92
+cores3,1,raster_empty,240 x 240 (large for this target),Grid small TEX,95.86,10432.08
+cores3,1,raster_empty,240 x 240 (large for this target),Ribbon triangles,164.33,6085.5
+cores3,1,raster_empty,240 x 240 (large for this target),Ribbon strip,172.95,5782.08
+cores3,1,raster_empty,240 x 240 (large for this target),Ribbon quads,177.76,5625.58
+cores3,1,raster_empty,240 x 240 (large for this target),Wire rib tri fast,551.46,1813.38
+cores3,1,raster_empty,240 x 240 (large for this target),Wire rib strip fast,827.81,1208.0
+cores3,1,raster_empty,240 x 240 (large for this target),Wire rib quad fast,807.1,1239.0
+cores3,1,raster_empty,240 x 240 (large for this target),Wire rib tri AA,94.21,10614.25
+cores3,1,raster_empty,240 x 240 (large for this target),Wire rib strip AA,161.69,6184.62
+cores3,1,raster_empty,240 x 240 (large for this target),Wire rib quad AA,163.21,6127.0
+cores3,1,raster_empty,240 x 240 (large for this target),Wire rib tri thick,10.53,94976.75
+cores3,1,raster_empty,240 x 240 (large for this target),Wire rib strip thick,17.56,56961.75
+cores3,1,raster_empty,240 x 240 (large for this target),Wire rib quad thick,17.52,57079.12
+cores3,1,raster_empty,240 x 240 (large for this target),Grid near clip TEX,93.44,10702.5
+cores3,1,raster_empty,240 x 240 (large for this target),Cube direct FLAT,162.86,6140.08
+cores3,1,raster_empty,240 x 240 (large for this target),Cube direct TEX,26.06,38369.92
+cores3,1,raster_empty,240 x 240 (large for this target),Sphere direct GOUR,138.52,7219.38
+cores3,1,raster_empty,240 x 240 (large for this target),Sphere direct TEX,74.91,13348.75
+cores3,1,raster_empty,240 x 240 (large for this target),Vertex color direct,227.56,4394.5
+cores3,1,raster_empty,240 x 240 (large for this target),Point cloud pixels,2714.32,368.42
+cores3,1,raster_empty,240 x 240 (large for this target),Point cloud dots,498.01,2008.0
+cores3,1,raster_empty,240 x 240 (large for this target),Wire cube fast,13245.03,75.5
+cores3,1,raster_empty,240 x 240 (large for this target),Wire cube AA,2998.5,333.5
+cores3,1,raster_empty,240 x 240 (large for this target),Wire cube thick,411.93,2427.62
+cores3,1,raster_empty,240 x 240 (large for this target),Wire sphere fast,1785.32,560.12
+cores3,1,raster_empty,240 x 240 (large for this target),Wire sphere AA,348.9,2866.12
+cores3,1,raster_empty,240 x 240 (large for this target),Wire sphere thick,45.48,21985.38
+cores3,1,raster_empty,240 x 240 (large for this target),Wire bunny fast,220.09,4543.5
+cores3,1,raster_empty,240 x 240 (large for this target),Wire bunny AA,56.43,17721.88
+cores3,1,raster_empty,240 x 240 (large for this target),Wire bunny thick,5.48,182421.25
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha GOURAUD,18.83,53105.38
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha FLAT,20.16,49595.92
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha ORTHO,20.33,49191.62
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (close),21.04,47520.54
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (clipped),24.8,40320.21
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (far),21.66,46170.12
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (farclip),20.86,47936.92
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,33.51,29844.46
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 FLAT,38.0,26315.0
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,28.63,34924.75
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,25.06,39911.12
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (close),23.9,41835.5
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (far),40.44,24728.33
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (farclip),39.09,25583.12
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny GOURAUD,143.0,6992.83
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny FLAT,161.27,6200.79
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,107.67,9287.42
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,91.54,10924.21
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,120.2,8319.62
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (close),108.99,9175.04
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (far),191.95,5209.75
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (farclip),175.97,5682.71
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1780.42,561.67
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid small FLAT,498.88,2004.5
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid small TEX,285.18,3506.58
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon triangles,339.78,2943.08
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon strip,379.95,2631.92
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon quads,391.8,2552.33
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri fast,756.22,1322.38
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip fast,1048.63,953.62
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad fast,1005.78,994.25
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri AA,149.43,6691.88
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip AA,240.84,4152.12
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad AA,244.01,4098.25
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri thick,14.75,67819.0
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip thick,23.36,42801.75
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad thick,23.29,42942.75
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid near clip TEX,308.51,3241.38
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Cube direct FLAT,863.68,1157.83
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Cube direct TEX,146.92,6806.5
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Sphere direct GOUR,442.53,2259.75
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Sphere direct TEX,292.23,3422.0
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Vertex color direct,1122.44,890.92
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Point cloud pixels,2721.09,367.5
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Point cloud dots,525.59,1902.62
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube fast,15968.06,62.62
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube AA,5336.89,187.38
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube thick,677.22,1476.62
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere fast,2123.14,471.0
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere AA,533.26,1875.25
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere thick,62.16,16086.5
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny fast,246.5,4056.75
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny AA,71.44,13997.88
+cores3,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny thick,6.29,158876.88
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Buddha GOURAUD,15.58,64168.33
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Buddha FLAT,17.29,57830.25
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Buddha ORTHO,17.07,58598.33
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Buddha (close),17.77,56275.04
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Buddha (clipped),22.46,44527.83
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Buddha (far),21.32,46911.04
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Buddha (farclip),20.61,48517.88
+cores3,1,raster_noinline,200 x 200 (medium / balanced),R2D2 GOURAUD,25.6,39055.04
+cores3,1,raster_noinline,200 x 200 (medium / balanced),R2D2 FLAT,30.69,32587.5
+cores3,1,raster_noinline,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,19.72,50707.83
+cores3,1,raster_noinline,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,15.84,63125.04
+cores3,1,raster_noinline,200 x 200 (medium / balanced),R2D2 (close),11.27,88767.16
+cores3,1,raster_noinline,200 x 200 (medium / balanced),R2D2 (far),37.97,26338.17
+cores3,1,raster_noinline,200 x 200 (medium / balanced),R2D2 (farclip),37.18,26892.75
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Bunny GOURAUD,103.38,9673.38
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Bunny FLAT,126.11,7929.54
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Bunny TEX_NEAREST,71.48,13989.92
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,53.51,18689.46
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Bunny ORTHO TEX,84.52,11832.04
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Bunny (close),47.05,21251.75
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Bunny (far),169.6,5896.21
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Bunny (farclip),160.95,6213.08
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Large tris FLAT Z,474.85,2105.92
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Grid small FLAT,284.58,3514.0
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Grid small TEX,125.88,7944.08
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Ribbon triangles,195.88,5105.17
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Ribbon strip,208.33,4800.0
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Ribbon quads,214.4,4664.25
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire rib tri fast,593.69,1684.38
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire rib strip fast,877.58,1139.5
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire rib quad fast,851.43,1174.5
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire rib tri AA,105.22,9503.75
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire rib strip AA,177.85,5622.75
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire rib quad AA,179.95,5557.25
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire rib tri thick,11.45,87317.75
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire rib strip thick,18.87,53001.12
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire rib quad thick,18.8,53178.88
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Grid near clip TEX,125.1,7993.5
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Cube direct FLAT,232.25,4305.75
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Cube direct TEX,37.43,26718.67
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Sphere direct GOUR,183.81,5440.38
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Sphere direct TEX,102.6,9746.88
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Vertex color direct,321.85,3107.0
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Point cloud pixels,2711.86,368.75
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Point cloud dots,499.53,2001.88
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire cube fast,13769.36,72.62
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire cube AA,3398.47,294.25
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire cube thick,462.53,2162.0
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire sphere fast,1866.11,535.88
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire sphere AA,386.47,2587.5
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire sphere thick,48.94,20431.88
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire bunny fast,225.87,4427.38
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire bunny AA,59.99,16669.25
+cores3,1,raster_noinline,200 x 200 (medium / balanced),Wire bunny thick,5.69,175850.5
+cores3,1,raster_noinline,240 x 240 (large for this target),Buddha GOURAUD,14.64,68286.04
+cores3,1,raster_noinline,240 x 240 (large for this target),Buddha FLAT,16.49,60630.88
+cores3,1,raster_noinline,240 x 240 (large for this target),Buddha ORTHO,16.07,62219.62
+cores3,1,raster_noinline,240 x 240 (large for this target),Buddha (close),16.44,60811.25
+cores3,1,raster_noinline,240 x 240 (large for this target),Buddha (clipped),21.39,46748.46
+cores3,1,raster_noinline,240 x 240 (large for this target),Buddha (far),21.13,47317.08
+cores3,1,raster_noinline,240 x 240 (large for this target),Buddha (farclip),20.48,48820.42
+cores3,1,raster_noinline,240 x 240 (large for this target),R2D2 GOURAUD,23.09,43313.58
+cores3,1,raster_noinline,240 x 240 (large for this target),R2D2 FLAT,28.24,35416.12
+cores3,1,raster_noinline,240 x 240 (large for this target),R2D2 TEX_NEAREST,17.29,57824.0
+cores3,1,raster_noinline,240 x 240 (large for this target),R2D2 TEX_BILINEAR,13.46,74271.62
+cores3,1,raster_noinline,240 x 240 (large for this target),R2D2 (close),8.65,115607.54
+cores3,1,raster_noinline,240 x 240 (large for this target),R2D2 (far),36.97,27048.04
+cores3,1,raster_noinline,240 x 240 (large for this target),R2D2 (farclip),36.4,27468.96
+cores3,1,raster_noinline,240 x 240 (large for this target),Bunny GOURAUD,91.43,10937.33
+cores3,1,raster_noinline,240 x 240 (large for this target),Bunny FLAT,114.53,8731.62
+cores3,1,raster_noinline,240 x 240 (large for this target),Bunny TEX_NEAREST,61.7,16207.54
+cores3,1,raster_noinline,240 x 240 (large for this target),Bunny TEX_BILINEAR,44.0,22728.46
+cores3,1,raster_noinline,240 x 240 (large for this target),Bunny ORTHO TEX,75.25,13289.54
+cores3,1,raster_noinline,240 x 240 (large for this target),Bunny (close),35.44,28216.62
+cores3,1,raster_noinline,240 x 240 (large for this target),Bunny (far),161.44,6194.25
+cores3,1,raster_noinline,240 x 240 (large for this target),Bunny (farclip),153.56,6512.21
+cores3,1,raster_noinline,240 x 240 (large for this target),Large tris FLAT Z,332.74,3005.33
+cores3,1,raster_noinline,240 x 240 (large for this target),Grid small FLAT,230.6,4336.5
+cores3,1,raster_noinline,240 x 240 (large for this target),Grid small TEX,95.84,10433.75
+cores3,1,raster_noinline,240 x 240 (large for this target),Ribbon triangles,164.39,6083.25
+cores3,1,raster_noinline,240 x 240 (large for this target),Ribbon strip,172.88,5784.25
+cores3,1,raster_noinline,240 x 240 (large for this target),Ribbon quads,177.85,5622.75
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire rib tri fast,551.76,1812.38
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire rib strip fast,827.47,1208.5
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire rib quad fast,807.75,1238.0
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire rib tri AA,94.22,10613.12
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire rib strip AA,161.65,6186.38
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire rib quad AA,163.16,6129.0
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire rib tri thick,10.53,94970.62
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire rib strip thick,17.57,56928.5
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire rib quad thick,17.51,57114.75
+cores3,1,raster_noinline,240 x 240 (large for this target),Grid near clip TEX,93.41,10705.12
+cores3,1,raster_noinline,240 x 240 (large for this target),Cube direct FLAT,162.89,6139.17
+cores3,1,raster_noinline,240 x 240 (large for this target),Cube direct TEX,26.06,38369.92
+cores3,1,raster_noinline,240 x 240 (large for this target),Sphere direct GOUR,138.49,7220.75
+cores3,1,raster_noinline,240 x 240 (large for this target),Sphere direct TEX,74.89,13353.0
+cores3,1,raster_noinline,240 x 240 (large for this target),Vertex color direct,227.52,4395.17
+cores3,1,raster_noinline,240 x 240 (large for this target),Point cloud pixels,2714.93,368.33
+cores3,1,raster_noinline,240 x 240 (large for this target),Point cloud dots,497.95,2008.25
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire cube fast,12618.3,79.25
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire cube AA,3010.91,332.12
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire cube thick,412.31,2425.38
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire sphere fast,1776.99,562.75
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire sphere AA,348.86,2866.5
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire sphere thick,45.46,21998.5
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire bunny fast,220.05,4544.5
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire bunny AA,56.45,17714.25
+cores3,1,raster_noinline,240 x 240 (large for this target),Wire bunny thick,5.48,182442.0
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha GOURAUD,18.83,53105.83
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha FLAT,20.16,49595.54
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha ORTHO,20.33,49193.46
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (close),21.04,47517.33
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (clipped),24.8,40320.54
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (far),21.66,46171.92
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (farclip),20.86,47936.58
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,33.51,29843.08
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 FLAT,38.0,26317.38
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,28.63,34922.83
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,25.05,39914.08
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (close),23.9,41833.0
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (far),40.44,24727.5
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (farclip),39.08,25585.75
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny GOURAUD,142.99,6993.58
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny FLAT,161.27,6200.88
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,107.66,9288.25
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,91.54,10923.75
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,120.21,8318.75
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (close),109.01,9173.08
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (far),191.92,5210.42
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (farclip),176.0,5681.96
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1764.19,566.83
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid small FLAT,498.88,2004.5
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid small TEX,285.08,3507.75
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon triangles,339.63,2944.42
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon strip,379.7,2633.67
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon quads,391.7,2553.0
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri fast,756.79,1321.38
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip fast,1049.32,953.0
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad fast,1005.91,994.12
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri AA,149.34,6696.0
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip AA,240.78,4153.12
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad AA,243.98,4098.75
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri thick,14.74,67828.75
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip thick,23.36,42805.0
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad thick,23.29,42943.12
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid near clip TEX,308.44,3242.12
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Cube direct FLAT,864.24,1157.08
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Cube direct TEX,146.81,6811.67
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Sphere direct GOUR,439.9,2273.25
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Sphere direct TEX,292.28,3421.38
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Vertex color direct,1122.54,890.83
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Point cloud pixels,2722.32,367.33
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Point cloud dots,526.14,1900.62
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube fast,16000.0,62.5
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube AA,5398.11,185.25
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube thick,679.93,1470.75
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere fast,2115.84,472.62
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere AA,534.12,1872.25
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere thick,62.14,16092.88
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny fast,246.35,4059.25
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny AA,71.4,14006.25
+cores3,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny thick,6.29,158913.25
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha GOURAUD,15.58,64165.17
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha FLAT,17.29,57831.12
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha ORTHO,17.07,58598.25
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (close),17.77,56275.33
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (clipped),22.46,44530.83
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (far),21.32,46910.58
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (farclip),20.61,48516.08
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 GOURAUD,25.6,39055.83
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 FLAT,30.69,32588.12
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,19.72,50707.67
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,15.84,63121.96
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 (close),11.27,88769.41
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 (far),37.97,26339.25
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 (farclip),37.18,26898.83
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny GOURAUD,103.34,9677.12
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny FLAT,126.13,7928.29
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny TEX_NEAREST,71.46,13994.25
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,53.5,18691.29
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny ORTHO TEX,84.51,11832.88
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny (close),47.04,21257.42
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny (far),169.6,5896.17
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny (farclip),160.96,6212.54
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Large tris FLAT Z,475.0,2105.25
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Grid small FLAT,284.55,3514.33
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Grid small TEX,125.9,7943.0
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Ribbon triangles,195.91,5104.5
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Ribbon strip,208.4,4798.5
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Ribbon quads,214.37,4664.75
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib tri fast,594.71,1681.5
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib strip fast,876.04,1141.5
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib quad fast,851.79,1174.0
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib tri AA,105.22,9503.75
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib strip AA,178.03,5617.0
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib quad AA,180.0,5555.62
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib tri thick,11.45,87369.75
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib strip thick,18.93,52840.0
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib quad thick,18.81,53170.62
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Grid near clip TEX,125.1,7993.5
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Cube direct FLAT,232.26,4305.5
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Cube direct TEX,37.43,26715.58
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Sphere direct GOUR,183.54,5448.38
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Sphere direct TEX,102.65,9741.38
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Vertex color direct,321.72,3108.33
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Point cloud pixels,2714.93,368.33
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Point cloud dots,499.06,2003.75
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire cube fast,13937.28,71.75
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire cube AA,3429.06,291.62
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire cube thick,463.93,2155.5
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire sphere fast,1852.71,539.75
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire sphere AA,386.73,2585.75
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire sphere thick,49.02,20398.38
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire bunny fast,225.84,4428.0
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire bunny AA,59.98,16672.38
+cores3,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire bunny thick,5.69,175879.0
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Buddha GOURAUD,14.64,68285.16
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Buddha FLAT,16.49,60631.12
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Buddha ORTHO,16.07,62219.25
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Buddha (close),16.45,60808.46
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Buddha (clipped),21.39,46751.54
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Buddha (far),21.13,47316.67
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Buddha (farclip),20.48,48821.42
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),R2D2 GOURAUD,23.09,43314.0
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),R2D2 FLAT,28.23,35419.46
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),R2D2 TEX_NEAREST,17.29,57826.67
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),R2D2 TEX_BILINEAR,13.46,74270.88
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),R2D2 (close),8.65,115605.79
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),R2D2 (far),36.97,27045.88
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),R2D2 (farclip),36.41,27467.58
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Bunny GOURAUD,91.45,10935.12
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Bunny FLAT,114.53,8731.08
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Bunny TEX_NEAREST,61.7,16207.5
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Bunny TEX_BILINEAR,44.0,22727.29
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Bunny ORTHO TEX,75.25,13288.71
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Bunny (close),35.44,28217.62
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Bunny (far),161.43,6194.46
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Bunny (farclip),153.67,6507.25
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Large tris FLAT Z,332.71,3005.58
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Grid small FLAT,230.55,4337.5
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Grid small TEX,95.86,10431.83
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Ribbon triangles,164.36,6084.17
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Ribbon strip,172.89,5784.08
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Ribbon quads,177.78,5624.83
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire rib tri fast,551.72,1812.5
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire rib strip fast,827.99,1207.75
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire rib quad fast,807.92,1237.75
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire rib tri AA,94.23,10612.75
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire rib strip AA,161.65,6186.25
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire rib quad AA,163.17,6128.62
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire rib tri thick,10.53,94994.0
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire rib strip thick,17.55,56967.25
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire rib quad thick,17.52,57066.0
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Grid near clip TEX,93.44,10701.88
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Cube direct FLAT,162.9,6138.75
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Cube direct TEX,26.06,38368.5
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Sphere direct GOUR,138.46,7222.38
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Sphere direct TEX,74.88,13354.12
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Vertex color direct,227.65,4392.67
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Point cloud pixels,2705.75,369.58
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Point cloud dots,498.19,2007.25
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire cube fast,13029.32,76.75
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire cube AA,3007.52,332.5
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire cube thick,413.05,2421.0
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire sphere fast,1781.34,561.38
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire sphere AA,349.12,2864.38
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire sphere thick,45.47,21992.12
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire bunny fast,220.08,4543.88
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire bunny AA,56.44,17719.0
+cores3,1,raster_noinline_noclone,240 x 240 (large for this target),Wire bunny thick,5.48,182459.0
+pico2,1,default,100 x 100 (small / vertex-heavy),Buddha GOURAUD,10.15,98539.56
+pico2,1,default,100 x 100 (small / vertex-heavy),Buddha FLAT,13.11,76274.94
+pico2,1,default,100 x 100 (small / vertex-heavy),Buddha ORTHO,11.51,86887.62
+pico2,1,default,100 x 100 (small / vertex-heavy),Buddha (close),11.51,86900.62
+pico2,1,default,100 x 100 (small / vertex-heavy),Buddha (clipped),13.29,75226.94
+pico2,1,default,100 x 100 (small / vertex-heavy),Buddha (far),12.2,81964.81
+pico2,1,default,100 x 100 (small / vertex-heavy),Buddha (farclip),10.84,92263.0
+pico2,1,default,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,17.16,58278.0
+pico2,1,default,100 x 100 (small / vertex-heavy),R2D2 FLAT,22.57,44314.56
+pico2,1,default,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,13.92,71854.5
+pico2,1,default,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,12.82,78022.81
+pico2,1,default,100 x 100 (small / vertex-heavy),R2D2 (close),13.37,74804.88
+pico2,1,default,100 x 100 (small / vertex-heavy),R2D2 (far),19.69,50784.56
+pico2,1,default,100 x 100 (small / vertex-heavy),R2D2 (farclip),16.22,61638.5
+pico2,1,default,100 x 100 (small / vertex-heavy),Bunny GOURAUD,72.1,13869.31
+pico2,1,default,100 x 100 (small / vertex-heavy),Bunny FLAT,94.15,10621.75
+pico2,1,default,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,52.31,19117.75
+pico2,1,default,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,45.41,22023.81
+pico2,1,default,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,63.16,15833.75
+pico2,1,default,100 x 100 (small / vertex-heavy),Bunny (close),58.76,17019.81
+pico2,1,default,100 x 100 (small / vertex-heavy),Bunny (far),86.98,11496.44
+pico2,1,default,100 x 100 (small / vertex-heavy),Bunny (farclip),70.22,14241.5
+pico2,1,default,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1509.72,662.38
+pico2,1,default,100 x 100 (small / vertex-heavy),Grid small FLAT,339.3,2947.25
+pico2,1,default,100 x 100 (small / vertex-heavy),Grid small TEX,200.36,4991.0
+pico2,1,default,100 x 100 (small / vertex-heavy),Ribbon triangles,202.83,4930.12
+pico2,1,default,100 x 100 (small / vertex-heavy),Ribbon strip,240.67,4155.0
+pico2,1,default,100 x 100 (small / vertex-heavy),Ribbon quads,149.28,6698.62
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire rib tri fast,526.11,1900.75
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire rib strip fast,799.92,1250.12
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire rib quad fast,758.51,1318.38
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire rib tri AA,175.85,5686.75
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire rib strip AA,285.14,3507.0
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire rib quad AA,278.01,3597.0
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire rib tri thick,3.63,275570.5
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire rib strip thick,5.74,174091.5
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire rib quad thick,5.23,191336.5
+pico2,1,default,100 x 100 (small / vertex-heavy),Grid near clip TEX,208.07,4806.12
+pico2,1,default,100 x 100 (small / vertex-heavy),Cube direct FLAT,715.31,1398.0
+pico2,1,default,100 x 100 (small / vertex-heavy),Cube direct TEX,98.83,10118.12
+pico2,1,default,100 x 100 (small / vertex-heavy),Sphere direct GOUR,323.79,3088.38
+pico2,1,default,100 x 100 (small / vertex-heavy),Sphere direct TEX,208.67,4792.25
+pico2,1,default,100 x 100 (small / vertex-heavy),Vertex color direct,844.77,1183.75
+pico2,1,default,100 x 100 (small / vertex-heavy),Point cloud pixels,2811.95,355.62
+pico2,1,default,100 x 100 (small / vertex-heavy),Point cloud dots,517.77,1931.38
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire cube fast,5034.61,198.62
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire cube AA,2833.86,352.88
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire cube thick,259.47,3854.0
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire sphere fast,1598.4,625.62
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire sphere AA,590.89,1692.38
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire sphere thick,13.27,75339.38
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire bunny fast,126.9,7880.5
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire bunny AA,67.11,14900.12
+pico2,1,default,100 x 100 (small / vertex-heavy),Wire bunny thick,1.17,855874.5
+pico2,1,default,200 x 200 (medium / balanced),Buddha GOURAUD,8.58,116600.88
+pico2,1,default,200 x 200 (medium / balanced),Buddha FLAT,11.16,89607.19
+pico2,1,default,200 x 200 (medium / balanced),Buddha ORTHO,9.83,101706.69
+pico2,1,default,200 x 200 (medium / balanced),Buddha (close),10.13,98711.31
+pico2,1,default,200 x 200 (medium / balanced),Buddha (clipped),12.36,80905.62
+pico2,1,default,200 x 200 (medium / balanced),Buddha (far),11.79,84792.69
+pico2,1,default,200 x 200 (medium / balanced),Buddha (farclip),10.49,95335.25
+pico2,1,default,200 x 200 (medium / balanced),R2D2 GOURAUD,14.0,71436.5
+pico2,1,default,200 x 200 (medium / balanced),R2D2 FLAT,18.73,53389.5
+pico2,1,default,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,10.13,98707.56
+pico2,1,default,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,8.67,115390.19
+pico2,1,default,200 x 200 (medium / balanced),R2D2 (close),7.45,134191.0
+pico2,1,default,200 x 200 (medium / balanced),R2D2 (far),18.44,54239.19
+pico2,1,default,200 x 200 (medium / balanced),R2D2 (farclip),15.31,65311.06
+pico2,1,default,200 x 200 (medium / balanced),Bunny GOURAUD,56.88,17580.0
+pico2,1,default,200 x 200 (medium / balanced),Bunny FLAT,76.64,13048.12
+pico2,1,default,200 x 200 (medium / balanced),Bunny TEX_NEAREST,35.58,28102.38
+pico2,1,default,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,28.62,34938.62
+pico2,1,default,200 x 200 (medium / balanced),Bunny ORTHO TEX,44.66,22391.69
+pico2,1,default,200 x 200 (medium / balanced),Bunny (close),30.67,32606.44
+pico2,1,default,200 x 200 (medium / balanced),Bunny (far),78.57,12728.06
+pico2,1,default,200 x 200 (medium / balanced),Bunny (farclip),64.12,15596.94
+pico2,1,default,200 x 200 (medium / balanced),Large tris FLAT Z,445.91,2242.62
+pico2,1,default,200 x 200 (medium / balanced),Grid small FLAT,213.39,4686.25
+pico2,1,default,200 x 200 (medium / balanced),Grid small TEX,95.83,10435.38
+pico2,1,default,200 x 200 (medium / balanced),Ribbon triangles,117.4,8517.75
+pico2,1,default,200 x 200 (medium / balanced),Ribbon strip,129.54,7719.88
+pico2,1,default,200 x 200 (medium / balanced),Ribbon quads,96.1,10405.38
+pico2,1,default,200 x 200 (medium / balanced),Wire rib tri fast,414.1,2414.88
+pico2,1,default,200 x 200 (medium / balanced),Wire rib strip fast,657.84,1520.12
+pico2,1,default,200 x 200 (medium / balanced),Wire rib quad fast,632.56,1580.88
+pico2,1,default,200 x 200 (medium / balanced),Wire rib tri AA,119.39,8376.0
+pico2,1,default,200 x 200 (medium / balanced),Wire rib strip AA,203.92,4904.0
+pico2,1,default,200 x 200 (medium / balanced),Wire rib quad AA,199.54,5011.5
+pico2,1,default,200 x 200 (medium / balanced),Wire rib tri thick,3.36,297392.12
+pico2,1,default,200 x 200 (medium / balanced),Wire rib strip thick,5.28,189353.88
+pico2,1,default,200 x 200 (medium / balanced),Wire rib quad thick,4.85,206200.62
+pico2,1,default,200 x 200 (medium / balanced),Grid near clip TEX,92.24,10841.12
+pico2,1,default,200 x 200 (medium / balanced),Cube direct FLAT,214.27,4667.0
+pico2,1,default,200 x 200 (medium / balanced),Cube direct TEX,25.6,39060.12
+pico2,1,default,200 x 200 (medium / balanced),Sphere direct GOUR,139.37,7175.38
+pico2,1,default,200 x 200 (medium / balanced),Sphere direct TEX,76.56,13061.25
+pico2,1,default,200 x 200 (medium / balanced),Vertex color direct,263.41,3796.38
+pico2,1,default,200 x 200 (medium / balanced),Point cloud pixels,2758.62,362.5
+pico2,1,default,200 x 200 (medium / balanced),Point cloud dots,513.87,1946.0
+pico2,1,default,200 x 200 (medium / balanced),Wire cube fast,4319.65,231.5
+pico2,1,default,200 x 200 (medium / balanced),Wire cube AA,2208.11,452.88
+pico2,1,default,200 x 200 (medium / balanced),Wire cube thick,225.27,4439.12
+pico2,1,default,200 x 200 (medium / balanced),Wire sphere fast,1340.03,746.25
+pico2,1,default,200 x 200 (medium / balanced),Wire sphere AA,418.72,2388.25
+pico2,1,default,200 x 200 (medium / balanced),Wire sphere thick,12.58,79487.12
+pico2,1,default,200 x 200 (medium / balanced),Wire bunny fast,118.2,8460.25
+pico2,1,default,200 x 200 (medium / balanced),Wire bunny AA,57.13,17503.5
+pico2,1,default,200 x 200 (medium / balanced),Wire bunny thick,1.12,891246.88
+pico2,1,default,320 x 240 (large / ILI9341),Buddha GOURAUD,8.15,122748.5
+pico2,1,default,320 x 240 (large / ILI9341),Buddha FLAT,10.63,94100.0
+pico2,1,default,320 x 240 (large / ILI9341),Buddha ORTHO,9.33,107153.44
+pico2,1,default,320 x 240 (large / ILI9341),Buddha (close),8.74,114451.5
+pico2,1,default,320 x 240 (large / ILI9341),Buddha (clipped),11.43,87526.12
+pico2,1,default,320 x 240 (large / ILI9341),Buddha (far),11.64,85943.19
+pico2,1,default,320 x 240 (large / ILI9341),Buddha (farclip),10.37,96398.19
+pico2,1,default,320 x 240 (large / ILI9341),R2D2 GOURAUD,12.97,77084.75
+pico2,1,default,320 x 240 (large / ILI9341),R2D2 FLAT,17.47,57244.5
+pico2,1,default,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,9.1,109948.44
+pico2,1,default,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,7.56,132188.06
+pico2,1,default,320 x 240 (large / ILI9341),R2D2 (close),4.67,213924.0
+pico2,1,default,320 x 240 (large / ILI9341),R2D2 (far),18.0,55564.19
+pico2,1,default,320 x 240 (large / ILI9341),R2D2 (farclip),14.98,66743.38
+pico2,1,default,320 x 240 (large / ILI9341),Bunny GOURAUD,51.96,19246.94
+pico2,1,default,320 x 240 (large / ILI9341),Bunny FLAT,70.87,14110.38
+pico2,1,default,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,31.64,31606.19
+pico2,1,default,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,24.36,41050.31
+pico2,1,default,320 x 240 (large / ILI9341),Bunny ORTHO TEX,40.13,24918.88
+pico2,1,default,320 x 240 (large / ILI9341),Bunny (close),19.81,50486.56
+pico2,1,default,320 x 240 (large / ILI9341),Bunny (far),75.52,13242.0
+pico2,1,default,320 x 240 (large / ILI9341),Bunny (farclip),62.17,16084.38
+pico2,1,default,320 x 240 (large / ILI9341),Large tris FLAT Z,294.55,3395.0
+pico2,1,default,320 x 240 (large / ILI9341),Grid small FLAT,161.18,6204.12
+pico2,1,default,320 x 240 (large / ILI9341),Grid small TEX,64.15,15589.12
+pico2,1,default,320 x 240 (large / ILI9341),Ribbon triangles,90.57,11041.62
+pico2,1,default,320 x 240 (large / ILI9341),Ribbon strip,97.72,10233.5
+pico2,1,default,320 x 240 (large / ILI9341),Ribbon quads,75.79,13195.12
+pico2,1,default,320 x 240 (large / ILI9341),Wire rib tri fast,371.61,2691.0
+pico2,1,default,320 x 240 (large / ILI9341),Wire rib strip fast,601.5,1662.5
+pico2,1,default,320 x 240 (large / ILI9341),Wire rib quad fast,586.12,1706.12
+pico2,1,default,320 x 240 (large / ILI9341),Wire rib tri AA,99.24,10076.25
+pico2,1,default,320 x 240 (large / ILI9341),Wire rib strip AA,172.69,5790.88
+pico2,1,default,320 x 240 (large / ILI9341),Wire rib quad AA,169.03,5916.0
+pico2,1,default,320 x 240 (large / ILI9341),Wire rib tri thick,3.11,321046.5
+pico2,1,default,320 x 240 (large / ILI9341),Wire rib strip thick,4.89,204559.62
+pico2,1,default,320 x 240 (large / ILI9341),Wire rib quad thick,4.53,220675.0
+pico2,1,default,320 x 240 (large / ILI9341),Grid near clip TEX,57.77,17311.0
+pico2,1,default,320 x 240 (large / ILI9341),Cube direct FLAT,140.24,7130.88
+pico2,1,default,320 x 240 (large / ILI9341),Cube direct TEX,16.37,61099.12
+pico2,1,default,320 x 240 (large / ILI9341),Sphere direct GOUR,105.8,9451.75
+pico2,1,default,320 x 240 (large / ILI9341),Sphere direct TEX,56.61,17666.12
+pico2,1,default,320 x 240 (large / ILI9341),Vertex color direct,185.85,5380.62
+pico2,1,default,320 x 240 (large / ILI9341),Point cloud pixels,2748.2,363.88
+pico2,1,default,320 x 240 (large / ILI9341),Point cloud dots,490.86,2037.25
+pico2,1,default,320 x 240 (large / ILI9341),Wire cube fast,4542.87,220.12
+pico2,1,default,320 x 240 (large / ILI9341),Wire cube AA,1636.66,611.0
+pico2,1,default,320 x 240 (large / ILI9341),Wire cube thick,181.18,5519.5
+pico2,1,default,320 x 240 (large / ILI9341),Wire sphere fast,1276.94,783.12
+pico2,1,default,320 x 240 (large / ILI9341),Wire sphere AA,377.22,2651.0
+pico2,1,default,320 x 240 (large / ILI9341),Wire sphere thick,12.38,80785.88
+pico2,1,default,320 x 240 (large / ILI9341),Wire bunny fast,115.91,8627.12
+pico2,1,default,320 x 240 (large / ILI9341),Wire bunny AA,53.84,18575.25
+pico2,1,default,320 x 240 (large / ILI9341),Wire bunny thick,1.11,900786.12
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha GOURAUD,10.62,94181.25
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha FLAT,13.23,75571.12
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha ORTHO,11.44,87414.5
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (close),11.65,85857.06
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (clipped),13.27,75351.81
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (far),12.21,81866.81
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Buddha (farclip),10.92,91598.31
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,17.43,57367.25
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 FLAT,22.81,43834.44
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,14.76,67729.0
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,12.77,78293.62
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (close),13.51,73993.19
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (far),19.81,50486.19
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),R2D2 (farclip),17.1,58477.19
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny GOURAUD,72.61,13771.62
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny FLAT,94.23,10612.38
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,55.96,17869.44
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,44.95,22246.94
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,60.93,16413.5
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (close),60.63,16494.25
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (far),89.42,11182.88
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Bunny (farclip),75.16,13305.62
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1476.83,677.12
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Grid small FLAT,333.24,3000.88
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Grid small TEX,191.92,5210.62
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon triangles,191.02,5235.0
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon strip,239.76,4170.88
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Ribbon quads,219.29,4560.25
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri fast,529.42,1888.88
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip fast,760.02,1315.75
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad fast,772.13,1295.12
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri AA,175.13,5710.0
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip AA,284.17,3519.0
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad AA,282.12,3544.62
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib tri thick,3.56,280801.38
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib strip thick,5.63,177548.5
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire rib quad thick,5.08,196768.12
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Grid near clip TEX,206.15,4850.88
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Cube direct FLAT,733.41,1363.5
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Cube direct TEX,99.16,10084.5
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Sphere direct GOUR,293.64,3405.5
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Sphere direct TEX,161.1,6207.5
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Vertex color direct,850.07,1176.38
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Point cloud pixels,2849.0,351.0
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Point cloud dots,509.98,1960.88
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube fast,5148.01,194.25
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube AA,2945.51,339.5
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire cube thick,248.0,4032.25
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere fast,1556.12,642.62
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere AA,573.64,1743.25
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire sphere thick,13.14,76121.0
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny fast,127.4,7849.38
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny AA,67.58,14797.88
+pico2,1,raster_empty,100 x 100 (small / vertex-heavy),Wire bunny thick,1.14,874490.38
+pico2,1,raster_empty,200 x 200 (medium / balanced),Buddha GOURAUD,9.03,110773.81
+pico2,1,raster_empty,200 x 200 (medium / balanced),Buddha FLAT,11.41,87633.88
+pico2,1,raster_empty,200 x 200 (medium / balanced),Buddha ORTHO,9.85,101480.12
+pico2,1,raster_empty,200 x 200 (medium / balanced),Buddha (close),10.24,97613.44
+pico2,1,raster_empty,200 x 200 (medium / balanced),Buddha (clipped),12.37,80861.62
+pico2,1,raster_empty,200 x 200 (medium / balanced),Buddha (far),11.92,83860.75
+pico2,1,raster_empty,200 x 200 (medium / balanced),Buddha (farclip),10.68,93611.19
+pico2,1,raster_empty,200 x 200 (medium / balanced),R2D2 GOURAUD,14.24,70205.19
+pico2,1,raster_empty,200 x 200 (medium / balanced),R2D2 FLAT,19.03,52542.75
+pico2,1,raster_empty,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,10.78,92797.31
+pico2,1,raster_empty,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,8.63,115862.56
+pico2,1,raster_empty,200 x 200 (medium / balanced),R2D2 (close),7.51,133198.44
+pico2,1,raster_empty,200 x 200 (medium / balanced),R2D2 (far),18.68,53547.06
+pico2,1,raster_empty,200 x 200 (medium / balanced),R2D2 (farclip),16.23,61629.19
+pico2,1,raster_empty,200 x 200 (medium / balanced),Bunny GOURAUD,57.27,17461.44
+pico2,1,raster_empty,200 x 200 (medium / balanced),Bunny FLAT,76.88,13007.0
+pico2,1,raster_empty,200 x 200 (medium / balanced),Bunny TEX_NEAREST,38.06,26273.31
+pico2,1,raster_empty,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,28.28,35359.56
+pico2,1,raster_empty,200 x 200 (medium / balanced),Bunny ORTHO TEX,43.2,23146.38
+pico2,1,raster_empty,200 x 200 (medium / balanced),Bunny (close),31.64,31607.0
+pico2,1,raster_empty,200 x 200 (medium / balanced),Bunny (far),82.02,12192.62
+pico2,1,raster_empty,200 x 200 (medium / balanced),Bunny (farclip),70.48,14188.94
+pico2,1,raster_empty,200 x 200 (medium / balanced),Large tris FLAT Z,439.92,2273.12
+pico2,1,raster_empty,200 x 200 (medium / balanced),Grid small FLAT,209.64,4770.12
+pico2,1,raster_empty,200 x 200 (medium / balanced),Grid small TEX,92.82,10773.88
+pico2,1,raster_empty,200 x 200 (medium / balanced),Ribbon triangles,113.45,8814.75
+pico2,1,raster_empty,200 x 200 (medium / balanced),Ribbon strip,128.77,7765.62
+pico2,1,raster_empty,200 x 200 (medium / balanced),Ribbon quads,123.7,8084.12
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire rib tri fast,416.19,2402.75
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire rib strip fast,632.06,1582.12
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire rib quad fast,641.95,1557.75
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire rib tri AA,118.97,8405.62
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire rib strip AA,203.64,4910.62
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire rib quad AA,202.02,4950.12
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire rib tri thick,3.31,302207.5
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire rib strip thick,5.2,192290.12
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire rib quad thick,4.75,210734.88
+pico2,1,raster_empty,200 x 200 (medium / balanced),Grid near clip TEX,90.94,10996.12
+pico2,1,raster_empty,200 x 200 (medium / balanced),Cube direct FLAT,215.35,4643.5
+pico2,1,raster_empty,200 x 200 (medium / balanced),Cube direct TEX,25.63,39016.38
+pico2,1,raster_empty,200 x 200 (medium / balanced),Sphere direct GOUR,130.77,7647.0
+pico2,1,raster_empty,200 x 200 (medium / balanced),Sphere direct TEX,69.15,14462.12
+pico2,1,raster_empty,200 x 200 (medium / balanced),Vertex color direct,263.03,3801.88
+pico2,1,raster_empty,200 x 200 (medium / balanced),Point cloud pixels,2900.65,344.75
+pico2,1,raster_empty,200 x 200 (medium / balanced),Point cloud dots,508.03,1968.38
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire cube fast,4634.99,215.75
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire cube AA,2333.72,428.5
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire cube thick,218.44,4577.88
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire sphere fast,1341.38,745.5
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire sphere AA,408.75,2446.5
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire sphere thick,12.44,80390.38
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire bunny fast,118.93,8408.25
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire bunny AA,57.43,17413.38
+pico2,1,raster_empty,200 x 200 (medium / balanced),Wire bunny thick,1.1,909906.0
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Buddha GOURAUD,8.57,116721.56
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Buddha FLAT,10.89,91868.12
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Buddha ORTHO,9.37,106731.19
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Buddha (close),8.84,113083.0
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Buddha (clipped),11.48,87133.06
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Buddha (far),11.82,84632.44
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Buddha (farclip),10.6,94321.56
+pico2,1,raster_empty,320 x 240 (large / ILI9341),R2D2 GOURAUD,13.19,75836.38
+pico2,1,raster_empty,320 x 240 (large / ILI9341),R2D2 FLAT,17.74,56375.31
+pico2,1,raster_empty,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,9.67,103435.0
+pico2,1,raster_empty,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,7.54,132708.5
+pico2,1,raster_empty,320 x 240 (large / ILI9341),R2D2 (close),4.71,212506.31
+pico2,1,raster_empty,320 x 240 (large / ILI9341),R2D2 (far),18.27,54730.19
+pico2,1,raster_empty,320 x 240 (large / ILI9341),R2D2 (farclip),15.94,62727.88
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Bunny GOURAUD,52.25,19139.38
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Bunny FLAT,71.15,14055.69
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,33.83,29559.81
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,24.1,41496.44
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Bunny ORTHO TEX,38.82,25758.81
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Bunny (close),20.43,48949.19
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Bunny (far),79.34,12603.81
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Bunny (farclip),68.68,14560.12
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Large tris FLAT Z,292.69,3416.62
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Grid small FLAT,158.27,6318.5
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Grid small TEX,62.27,16057.88
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Ribbon triangles,87.84,11384.12
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Ribbon strip,97.36,10270.75
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Ribbon quads,93.94,10644.88
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire rib tri fast,371.89,2689.0
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire rib strip fast,582.96,1715.38
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire rib quad fast,594.97,1680.75
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire rib tri AA,99.13,10088.0
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire rib strip AA,172.53,5796.0
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire rib quad AA,171.22,5840.38
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire rib tri thick,3.08,324595.25
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire rib strip thick,4.84,206570.38
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire rib quad thick,4.45,224750.88
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Grid near clip TEX,56.97,17552.62
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Cube direct FLAT,140.84,7100.12
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Cube direct TEX,16.37,61072.38
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Sphere direct GOUR,100.23,9977.38
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Sphere direct TEX,52.42,19077.88
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Vertex color direct,185.88,5379.88
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Point cloud pixels,2809.98,355.88
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Point cloud dots,485.58,2059.38
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire cube fast,4790.42,208.75
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire cube AA,1653.58,604.75
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire cube thick,177.24,5642.0
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire sphere fast,1275.51,784.0
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire sphere AA,368.32,2715.0
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire sphere thick,12.25,81653.88
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire bunny fast,116.88,8556.0
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire bunny AA,54.27,18425.12
+pico2,1,raster_empty,320 x 240 (large / ILI9341),Wire bunny thick,1.09,919485.38
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha GOURAUD,10.62,94192.62
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha FLAT,13.23,75583.0
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha ORTHO,11.44,87390.31
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (close),11.65,85829.12
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (clipped),13.27,75331.25
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (far),12.22,81842.06
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Buddha (farclip),10.91,91653.19
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,17.42,57402.88
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 FLAT,22.83,43797.81
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,14.75,67775.44
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,12.76,78339.62
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (close),13.52,73978.0
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (far),19.82,50449.75
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),R2D2 (farclip),17.08,58535.56
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny GOURAUD,72.62,13769.69
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny FLAT,94.36,10598.25
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,55.88,17894.44
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,44.91,22265.62
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,60.95,16407.81
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (close),60.7,16474.56
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (far),89.33,11194.88
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Bunny (farclip),75.15,13306.31
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1473.84,678.5
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid small FLAT,332.36,3008.75
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid small TEX,191.83,5213.0
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon triangles,191.64,5218.25
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon strip,239.68,4172.25
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Ribbon quads,219.04,4565.38
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri fast,527.32,1896.38
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip fast,762.05,1312.25
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad fast,769.6,1299.38
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri AA,175.25,5706.25
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip AA,284.08,3520.12
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad AA,281.06,3558.0
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib tri thick,3.56,280795.25
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib strip thick,5.63,177638.5
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire rib quad thick,5.09,196589.88
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Grid near clip TEX,205.82,4858.5
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Cube direct FLAT,735.02,1360.5
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Cube direct TEX,99.02,10098.62
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Sphere direct GOUR,293.67,3405.12
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Sphere direct TEX,161.13,6206.25
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Vertex color direct,850.88,1175.25
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Point cloud pixels,2859.19,349.75
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Point cloud dots,510.56,1958.62
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube fast,5239.03,190.88
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube AA,2952.03,338.75
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire cube thick,249.0,4016.12
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere fast,1605.46,622.88
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere AA,574.05,1742.0
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire sphere thick,13.14,76101.38
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny fast,127.71,7830.25
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny AA,67.71,14769.12
+pico2,1,raster_noinline,100 x 100 (small / vertex-heavy),Wire bunny thick,1.14,874325.5
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Buddha GOURAUD,9.03,110777.0
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Buddha FLAT,11.41,87652.25
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Buddha ORTHO,9.85,101475.75
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Buddha (close),10.24,97641.31
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Buddha (clipped),12.37,80866.0
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Buddha (far),11.93,83809.38
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Buddha (farclip),10.68,93638.19
+pico2,1,raster_noinline,200 x 200 (medium / balanced),R2D2 GOURAUD,14.25,70180.25
+pico2,1,raster_noinline,200 x 200 (medium / balanced),R2D2 FLAT,19.02,52575.06
+pico2,1,raster_noinline,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,10.78,92795.88
+pico2,1,raster_noinline,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,8.63,115873.19
+pico2,1,raster_noinline,200 x 200 (medium / balanced),R2D2 (close),7.51,133205.31
+pico2,1,raster_noinline,200 x 200 (medium / balanced),R2D2 (far),18.69,53490.38
+pico2,1,raster_noinline,200 x 200 (medium / balanced),R2D2 (farclip),16.24,61583.88
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Bunny GOURAUD,57.25,17468.69
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Bunny FLAT,76.71,13036.88
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Bunny TEX_NEAREST,38.04,26288.06
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,28.27,35373.38
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Bunny ORTHO TEX,43.17,23161.94
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Bunny (close),31.67,31580.19
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Bunny (far),81.99,12196.88
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Bunny (farclip),70.52,14180.56
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Large tris FLAT Z,441.72,2263.88
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Grid small FLAT,209.58,4771.5
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Grid small TEX,92.76,10780.88
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Ribbon triangles,113.07,8843.88
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Ribbon strip,129.11,7745.38
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Ribbon quads,123.63,8088.75
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire rib tri fast,414.7,2411.38
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire rib strip fast,632.01,1582.25
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire rib quad fast,641.59,1558.62
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire rib tri AA,118.85,8413.88
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire rib strip AA,203.21,4921.0
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire rib quad AA,201.52,4962.25
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire rib tri thick,3.31,302187.12
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire rib strip thick,5.2,192276.88
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire rib quad thick,4.75,210656.5
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Grid near clip TEX,91.0,10988.5
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Cube direct FLAT,216.26,4624.12
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Cube direct TEX,25.62,39027.62
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Sphere direct GOUR,130.98,7634.75
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Sphere direct TEX,69.11,14469.62
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Vertex color direct,262.53,3809.12
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Point cloud pixels,2829.85,353.38
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Point cloud dots,506.55,1974.12
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire cube fast,4621.61,216.38
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire cube AA,2320.19,431.0
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire cube thick,217.53,4597.0
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire sphere fast,1349.07,741.25
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire sphere AA,408.04,2450.75
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire sphere thick,12.42,80483.38
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire bunny fast,119.47,8370.12
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire bunny AA,57.4,17421.12
+pico2,1,raster_noinline,200 x 200 (medium / balanced),Wire bunny thick,1.1,909693.0
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Buddha GOURAUD,8.57,116722.56
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Buddha FLAT,10.89,91854.56
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Buddha ORTHO,9.37,106746.31
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Buddha (close),8.84,113060.19
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Buddha (clipped),11.48,87073.38
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Buddha (far),11.82,84592.38
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Buddha (farclip),10.61,94277.5
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 GOURAUD,13.18,75860.0
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 FLAT,17.74,56354.5
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,9.67,103462.31
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,7.54,132705.38
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 (close),4.71,212502.38
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 (far),18.27,54733.38
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),R2D2 (farclip),15.94,62723.88
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Bunny GOURAUD,52.27,19132.44
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Bunny FLAT,71.11,14062.88
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,33.84,29551.56
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,24.11,41478.06
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Bunny ORTHO TEX,38.82,25762.44
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Bunny (close),20.43,48956.0
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Bunny (far),79.34,12603.62
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Bunny (farclip),68.7,14555.69
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Large tris FLAT Z,292.48,3419.0
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Grid small FLAT,158.15,6323.12
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Grid small TEX,62.33,16043.5
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Ribbon triangles,87.84,11384.25
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Ribbon strip,97.4,10267.0
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Ribbon quads,93.94,10644.62
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib tri fast,371.7,2690.38
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib strip fast,581.44,1719.88
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib quad fast,593.69,1684.38
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib tri AA,99.1,10091.12
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib strip AA,172.54,5795.62
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib quad AA,171.34,5836.25
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib tri thick,3.08,324590.75
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib strip thick,4.84,206552.5
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire rib quad thick,4.45,224861.25
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Grid near clip TEX,56.93,17566.5
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Cube direct FLAT,140.86,7099.38
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Cube direct TEX,16.37,61075.75
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Sphere direct GOUR,100.21,9978.62
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Sphere direct TEX,52.38,19091.75
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Vertex color direct,185.76,5383.38
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Point cloud pixels,2856.12,350.12
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Point cloud dots,486.2,2056.75
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire cube fast,4773.27,209.5
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire cube AA,1663.2,601.25
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire cube thick,177.58,5631.25
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire sphere fast,1281.23,780.5
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire sphere AA,368.07,2716.88
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire sphere thick,12.25,81652.0
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire bunny fast,116.81,8561.25
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire bunny AA,54.33,18406.12
+pico2,1,raster_noinline,320 x 240 (large / ILI9341),Wire bunny thick,1.09,919255.12
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha GOURAUD,10.62,94180.44
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha FLAT,13.23,75585.75
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha ORTHO,11.44,87420.75
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (close),11.65,85868.25
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (clipped),13.27,75334.62
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (far),12.22,81813.56
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Buddha (farclip),10.91,91627.38
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 GOURAUD,17.44,57350.5
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 FLAT,22.81,43834.31
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 TEX_NEAREST,14.76,67752.38
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 TEX_BILINEAR,12.75,78400.69
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (close),13.52,73941.5
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (far),19.81,50469.88
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),R2D2 (farclip),17.1,58491.88
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny GOURAUD,72.68,13758.25
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny FLAT,94.13,10624.0
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny TEX_NEAREST,55.92,17883.75
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny TEX_BILINEAR,44.95,22246.44
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny ORTHO TEX,60.99,16395.25
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (close),60.63,16494.75
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (far),89.44,11180.06
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Bunny (farclip),75.01,13332.19
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Large tris FLAT Z,1476.01,677.5
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid small FLAT,333.18,3001.38
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid small TEX,191.66,5217.62
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon triangles,191.26,5228.38
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon strip,239.47,4175.88
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Ribbon quads,218.93,4567.62
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri fast,526.63,1898.88
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip fast,758.58,1318.25
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad fast,776.02,1288.62
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri AA,175.08,5711.62
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip AA,282.95,3534.25
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad AA,281.73,3549.5
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib tri thick,3.56,280782.12
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib strip thick,5.63,177600.0
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire rib quad thick,5.09,196619.0
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Grid near clip TEX,206.11,4851.75
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Cube direct FLAT,737.53,1355.88
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Cube direct TEX,99.0,10100.75
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Sphere direct GOUR,294.0,3401.38
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Sphere direct TEX,161.16,6205.12
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Vertex color direct,845.04,1183.38
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Point cloud pixels,2838.89,352.25
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Point cloud dots,512.16,1952.5
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube fast,5245.9,190.62
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube AA,2912.27,343.38
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire cube thick,248.52,4023.88
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere fast,1614.2,619.5
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere AA,573.35,1744.12
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire sphere thick,13.13,76182.5
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny fast,128.06,7808.62
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny AA,67.81,14746.75
+pico2,1,raster_noinline_noclone,100 x 100 (small / vertex-heavy),Wire bunny thick,1.14,874231.75
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha GOURAUD,9.03,110757.31
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha FLAT,11.4,87684.12
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha ORTHO,9.86,101439.94
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (close),10.24,97629.31
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (clipped),12.36,80876.88
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (far),11.93,83827.81
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Buddha (farclip),10.68,93675.25
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 GOURAUD,14.26,70144.38
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 FLAT,19.02,52564.31
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 TEX_NEAREST,10.77,92830.31
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 TEX_BILINEAR,8.63,115836.94
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 (close),7.51,133171.75
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 (far),18.7,53479.06
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),R2D2 (farclip),16.25,61545.5
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny GOURAUD,57.25,17467.19
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny FLAT,76.86,13010.19
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny TEX_NEAREST,38.07,26270.44
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny TEX_BILINEAR,28.28,35361.38
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny ORTHO TEX,43.19,23153.12
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny (close),31.65,31598.81
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny (far),82.1,12180.75
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Bunny (farclip),70.49,14187.25
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Large tris FLAT Z,440.19,2271.75
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Grid small FLAT,209.37,4776.12
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Grid small TEX,92.81,10774.25
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Ribbon triangles,113.39,8819.5
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Ribbon strip,128.85,7761.25
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Ribbon quads,123.78,8078.88
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib tri fast,415.69,2405.62
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib strip fast,631.41,1583.75
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib quad fast,644.49,1551.62
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib tri AA,118.87,8412.75
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib strip AA,203.03,4925.38
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib quad AA,201.98,4951.0
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib tri thick,3.31,302258.62
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib strip thick,5.2,192184.0
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire rib quad thick,4.74,210837.62
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Grid near clip TEX,90.95,10994.5
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Cube direct FLAT,215.7,4636.0
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Cube direct TEX,25.62,39030.38
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Sphere direct GOUR,130.98,7634.75
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Sphere direct TEX,69.18,14456.0
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Vertex color direct,263.1,3800.88
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Point cloud pixels,2853.07,350.5
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Point cloud dots,507.71,1969.62
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire cube fast,4576.66,218.5
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire cube AA,2291.61,436.38
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire cube thick,217.87,4589.88
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire sphere fast,1342.96,744.62
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire sphere AA,407.81,2452.12
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire sphere thick,12.43,80448.5
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire bunny fast,119.18,8390.62
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire bunny AA,57.45,17407.25
+pico2,1,raster_noinline_noclone,200 x 200 (medium / balanced),Wire bunny thick,1.1,909682.62
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha GOURAUD,8.57,116686.06
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha FLAT,10.89,91832.25
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha ORTHO,9.37,106708.88
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha (close),8.84,113122.94
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha (clipped),11.49,87060.88
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha (far),11.82,84602.62
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Buddha (farclip),10.61,94295.12
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 GOURAUD,13.18,75868.19
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 FLAT,17.74,56367.81
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 TEX_NEAREST,9.67,103416.69
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 TEX_BILINEAR,7.54,132685.12
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 (close),4.71,212500.5
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 (far),18.28,54718.38
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),R2D2 (farclip),15.95,62699.88
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny GOURAUD,52.28,19129.0
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny FLAT,71.16,14052.56
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny TEX_NEAREST,33.81,29580.75
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny TEX_BILINEAR,24.1,41501.25
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny ORTHO TEX,38.83,25750.88
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny (close),20.43,48939.12
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny (far),79.39,12596.06
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Bunny (farclip),68.71,14554.5
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Large tris FLAT Z,292.5,3418.75
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Grid small FLAT,158.32,6316.38
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Grid small TEX,62.26,16060.88
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Ribbon triangles,87.75,11396.38
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Ribbon strip,97.31,10276.25
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Ribbon quads,93.91,10649.0
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib tri fast,372.27,2686.25
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib strip fast,581.86,1718.62
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib quad fast,593.3,1685.5
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib tri AA,99.1,10090.75
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib strip AA,172.64,5792.25
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib quad AA,170.97,5849.12
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib tri thick,3.08,324603.0
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib strip thick,4.84,206639.88
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire rib quad thick,4.45,224829.25
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Grid near clip TEX,56.98,17549.12
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Cube direct FLAT,140.98,7093.12
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Cube direct TEX,16.37,61082.62
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Sphere direct GOUR,100.11,9989.38
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Sphere direct TEX,52.42,19077.75
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Vertex color direct,185.96,5377.5
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Point cloud pixels,2854.08,350.38
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Point cloud dots,485.97,2057.75
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire cube fast,4753.42,210.38
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire cube AA,1681.03,594.88
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire cube thick,177.47,5634.62
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire sphere fast,1279.59,781.5
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire sphere AA,367.11,2724.0
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire sphere thick,12.25,81620.12
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire bunny fast,116.96,8549.75
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire bunny AA,54.26,18430.62
+pico2,1,raster_noinline_noclone,320 x 240 (large / ILI9341),Wire bunny thick,1.09,919216.38

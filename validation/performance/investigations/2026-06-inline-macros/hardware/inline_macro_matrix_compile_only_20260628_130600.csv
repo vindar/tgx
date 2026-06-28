@@ -1,0 +1,8 @@
+﻿"board","variant","kind","example","label","flags","exit_code"
+"teensy41","default","benchmark","benchmark","inline_default_benchmark_teensy41","","System.Object[]"
+"teensy41","uber_empty","benchmark","benchmark","inline_uber_empty_benchmark_teensy41","-DTGX_UBER_SHADER_INLINE=","System.Object[]"
+"teensy41","uber_noinline","benchmark","benchmark","inline_uber_noinline_benchmark_teensy41","-DTGX_UBER_SHADER_INLINE=__attribute__((noinline))","System.Object[]"
+"teensy41","select_empty","benchmark","benchmark","inline_select_empty_benchmark_teensy41","-DTGX_SHADER_SELECT_INLINE=","System.Object[]"
+"teensy41","raster_empty","benchmark","benchmark","inline_raster_empty_benchmark_teensy41","-DTGX_RASTERIZE_TRIANGLE_INLINE=","System.Object[]"
+"teensy41","shading_empty","benchmark","benchmark","inline_shading_empty_benchmark_teensy41","-DTGX_RENDERER3D_SHADING_INLINE=","System.Object[]"
+"teensy41","all_empty","benchmark","benchmark","inline_all_empty_benchmark_teensy41","-DTGX_UBER_SHADER_INLINE= -DTGX_SHADER_SELECT_INLINE= -DTGX_RASTERIZE_TRIANGLE_INLINE= -DTGX_RENDERER3D_SHADING_INLINE=","System.Object[]"

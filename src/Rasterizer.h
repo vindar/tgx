@@ -139,7 +139,7 @@ TGX_INLINE inline int32_t tgx_ceil_div_subpixel_i32(const int32_t x)
     * - Color are passed in RGBf format irrespectively of the image color type to improve quality and simplify handling of different image types.
     */
     template<auto shader_function, typename RASTERIZER_PARAMS>
-    TGX_INLINE inline void rasterizeTriangle(const int LX, const int LY, const RasterizerVec4 & V0, const RasterizerVec4 & V1, const RasterizerVec4 & V2, const int32_t offset_x, const int32_t offset_y, const RASTERIZER_PARAMS & data)
+    TGX_RASTERIZE_TRIANGLE_INLINE inline void rasterizeTriangle(const int LX, const int LY, const RasterizerVec4 & V0, const RasterizerVec4 & V1, const RasterizerVec4 & V2, const int32_t offset_x, const int32_t offset_y, const RASTERIZER_PARAMS & data)
         {
         // assuming that clipping was already perfomed and that V0, V1, V2 are in a reasonable "range" so no overflow will occur.
         const int32_t hx = TGX_RASTERIZE_MULT128(LX);

@@ -1,0 +1,7 @@
+00001f10 00000008 t ___Z12plain_prefixi_veneer
+00001f20 00000008 t ___Z17plain_decl_suffixi_veneer
+60001618 0000000c T plain_prefix(int)
+00000070 0000000c W int templ_prefix<int>(int)
+60001624 0000000c T plain_decl_suffix(int)
+0000007c 0000000c W int templ_decl_suffix<int>(int)
+00000088 0000000c W int templ_prefix_direct<int>(int)

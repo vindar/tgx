@@ -178,7 +178,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
              bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE,
              bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP,
              bool USE_UNLIT, bool USE_TEXTURE_AFFINE>
-    TGX_INLINE inline void uber_shader_inline(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+    TGX_UBER_SHADER_INLINE inline void uber_shader_inline(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -790,7 +790,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
              bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE,
              bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP,
              bool USE_UNLIT>
-    TGX_INLINE inline void uber_shader_inline(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+    TGX_UBER_SHADER_INLINE inline void uber_shader_inline(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -1214,7 +1214,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
              bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE,
              bool USE_ORTHO, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP,
              bool USE_UNLIT>
-    TGX_INLINE inline void uber_shader_inline_old(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+    TGX_UBER_SHADER_INLINE inline void uber_shader_inline_old(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
@@ -1576,7 +1576,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
     * META-Shader THAT DISPATCH TO THE CORRECT Shader ABOVE (IF ENABLED).
     **/
     template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t>
-    inline TGX_INLINE void shader_select(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+    inline TGX_SHADER_SELECT_INLINE void shader_select(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
         const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
         const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
         const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,

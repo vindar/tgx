@@ -1,0 +1,9 @@
+D:\Programmation\tgx\validation\performance\builds\teensy41_flashmem_template_probe\sketch\FlashmemTemplateProbe.ino.cpp.o:     file format elf32-littlearm
+Idx Name          Size      VMA       LMA       File off  Algn
+  3 .text         00000000  00000000  00000000  0000004c  2**1
+  6 .flashmem     00000018  00000000  00000000  0000004c  2**2
+  7 .text.loop    00000008  00000000  00000000  00000064  2**2
+  8 .text._Z12templ_prefixIiEiT_ 0000000c  00000000  00000000  0000006c  2**2
+  9 .text._Z17templ_decl_suffixIiEiT_ 0000000c  00000000  00000000  00000078  2**2
+ 10 .text._Z19templ_prefix_directIiEiT_ 0000000c  00000000  00000000  00000084  2**2
+ 11 .text.setup   00000050  00000000  00000000  00000090  2**2

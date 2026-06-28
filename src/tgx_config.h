@@ -65,6 +65,7 @@
 // - TGX_USE_FMA_MATH : use explicit fused multiply-add in small floating-point vector/matrix operations.
 // - TGX_USE_FMA_MATH_MISC : use explicit fused multiply-add in Misc.h fast math approximations.
 // - TGX_DRAWSPHERE_USE_STRIP_BANDS : use triangle strips for Gouraud shaded sphere bands.
+// - TGX_RASTERIZE_TRIANGLE_INLINE : inlining strategy for the main triangle rasterizer entry point.
 //
 // - TGX_INLINE/TGX_NOINLINE : inlining strategy for time critical/non-critical functions.
 //
@@ -132,6 +133,7 @@
     #define TGX_CONFIG_USE_FMA_MATH_MISC 1
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 1
     #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 1
+    #define TGX_CONFIG_RASTERIZE_TRIANGLE_INLINE
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
@@ -260,6 +262,7 @@
     #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 1
+    #define TGX_CONFIG_RASTERIZE_TRIANGLE_INLINE
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
@@ -293,6 +296,7 @@
     #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 1
+    #define TGX_CONFIG_RASTERIZE_TRIANGLE_INLINE
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE __attribute__((noinline, noclone))
@@ -444,7 +448,25 @@
     #define TGX_NOINLINE TGX_CONFIG_NOINLINE
 #endif
 
+#ifndef TGX_RASTERIZE_TRIANGLE_INLINE
+    #ifdef TGX_CONFIG_RASTERIZE_TRIANGLE_INLINE
+        #define TGX_RASTERIZE_TRIANGLE_INLINE TGX_CONFIG_RASTERIZE_TRIANGLE_INLINE
+    #else
+        #define TGX_RASTERIZE_TRIANGLE_INLINE TGX_INLINE
+    #endif
+#endif
 
+#ifndef TGX_UBER_SHADER_INLINE
+    #define TGX_UBER_SHADER_INLINE TGX_INLINE
+#endif
+
+#ifndef TGX_SHADER_SELECT_INLINE
+    #define TGX_SHADER_SELECT_INLINE TGX_INLINE
+#endif
+
+#ifndef TGX_RENDERER3D_SHADING_INLINE
+    #define TGX_RENDERER3D_SHADING_INLINE TGX_INLINE
+#endif
 
 #if defined(ESP32) || defined(ESP_PLATFORM)
     #include "esp_attr.h"
