@@ -1,0 +1,13 @@
+label,board,case,sectors,stacks,scale,shading,texture,light,specular,frames,avg_us,fps,hash,source
+core2,core2,small_low_flat_dir,10,6,0.620,flat,none,directional,off,240,766.37,1304.84,23065,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
+core2,core2,small_low_gouraud_dir,10,6,0.620,gouraud,none,directional,off,240,936.08,1068.28,19235,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
+core2,core2,small_low_gouraud_tex_dir,10,6,0.620,gouraud,checker,directional,on,240,1170.86,854.07,303,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
+core2,core2,medium_flat_tex_dir,18,10,0.920,flat,checker,directional,on,240,2210.76,452.33,15988,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
+core2,core2,medium_gouraud_point,18,10,0.920,gouraud,checker,point,off,240,2645.45,378.01,28285,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
+core2,core2,medium_gouraud_point_spec,18,10,0.920,gouraud,checker,point,on,240,2672.40,374.20,48688,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
+core2,core2,high_small_gouraud_dir,48,24,0.580,gouraud,none,directional,on,87,7536.89,132.68,30519,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
+core2,core2,high_small_gouraud_tex_dir,48,24,0.580,gouraud,checker,directional,on,82,8020.72,124.68,59018,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
+core2,core2,high_small_gouraud_point,48,24,0.580,gouraud,checker,point,on,75,8729.71,114.55,18433,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
+core2,core2,high_small_gouraud_spot,48,24,0.580,gouraud,checker,spot,on,74,8844.81,113.06,38255,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
+core2,core2,high_large_flat_tex_spot,48,24,1.280,flat,checker,spot,on,72,9124.62,109.59,55305,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
+core2,core2,high_large_gouraud_tex_spot,48,24,1.280,gouraud,checker,spot,on,64,10263.23,97.44,28151,validation\performance\telemetry\core2_sphere_opt3_cap_fan_noclip_core2_rerun.txt
