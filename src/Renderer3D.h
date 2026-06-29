@@ -1613,8 +1613,7 @@ namespace tgx
          * - The texture is mapped using the Mercator projection.
          *
          * @param   texture The texture image mapped via Mercator projection.
-         * @param   quality (Optional) Quality of the mesh. Should be positive, typically between 0.5f
-         *                  and 2.0f.
+         * @param   quality (Optional) Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
          *                  - `1` : default quality
          *                  - `>1`: finer mesh. Improve quality but decrease speed.
          *                  - `<1`: coarser mesh. Decrease quality but improve speed.
@@ -1622,6 +1621,103 @@ namespace tgx
         void drawAdaptativeSphere(const Image<color_t>* texture, float quality = 1.0f);
 
 
+
+
+        /**
+         * Draw a unit cylinder in model space.
+         *
+         * The cylinder is centered at the origin, has radius `1`, and extends from
+         * `y = -1` to `y = 1`. The model transform matrix may be used to scale,
+         * rotate and position it anywhere in world space.
+         *
+         * @param nb_sectors  Number of sectors used around the cylinder. minimum `3`.
+         * @param bottom_cap  Draw the bottom disk at `y = -1`.
+         * @param top_cap     Draw the top disk at `y = 1`.
+         *
+         * @remark
+         * - If both caps are present, the primitive is closed and uses the usual local
+         *   culling convention for generated solids.
+         * - If a cap is missing, culling is disabled locally while drawing this primitive
+         *   so the inside remains visible. The renderer culling state is restored before
+         *   returning.
+         */
+        void drawCylinder(int nb_sectors, bool bottom_cap = true, bool top_cap = true);
+
+
+        /**
+         * Draw a textured unit cylinder in model space.
+         *
+         * @param nb_sectors      Number of sectors used around the cylinder.
+         * @param texture_side    Texture for the lateral surface, or `nullptr` to draw it without texturing.
+         * @param texture_bottom  Texture for the bottom disk, or `nullptr` to draw it without texturing.
+         * @param texture_top     Texture for the top disk, or `nullptr` to draw it without texturing.
+         * @param bottom_cap      Draw the bottom disk at `y = -1`.
+         * @param top_cap         Draw the top disk at `y = 1`.
+         *
+         * @remark
+         * - The side texture is unwrapped with `u` around the cylinder and `v` from bottom (`0`) to top (`1`).
+         * - Cap textures use a radial projection of the disk into the full texture image.
+         * - A `nullptr` texture disables texturing for that part only; use `bottom_cap` and `top_cap` to remove cap geometry.
+         */
+        void drawCylinder(int nb_sectors, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom = nullptr, const Image<color_t>* texture_top = nullptr, bool bottom_cap = true, bool top_cap = true);
+
+
+        /**
+         * Draw a unit cone in model space.
+         *
+         * The cone is centered on the Y axis, with base radius `1` at `y = -1` and
+         * apex at `y = 1`.
+         *
+         * @param nb_sectors  Number of sectors used around the cone.
+         * @param bottom_cap  Draw the bottom disk at `y = -1`.
+         */
+        void drawCone(int nb_sectors, bool bottom_cap = true);
+
+
+        /**
+         * Draw a textured unit cone in model space.
+         *
+         * @param nb_sectors      Number of sectors used around the cone.
+         * @param texture_side    Texture for the lateral surface, or `nullptr` to draw it without texturing.
+         * @param texture_bottom  Texture for the bottom disk, or `nullptr` to draw it without texturing.
+         * @param bottom_cap      Draw the bottom disk at `y = -1`.
+         *
+         * @remark The side and cap texture mapping follows the same convention as `drawCylinder()`.
+         */
+        void drawCone(int nb_sectors, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom = nullptr, bool bottom_cap = true);
+
+
+        /**
+         * Draw a truncated cone in model space.
+         *
+         * The shape is centered on the Y axis and extends from `y = -1` to `y = 1`.
+         * `bottom_radius` is the radius of the bottom ring and `top_radius` is the
+         * radius of the top ring. A radius less than or equal to zero creates an apex.
+         *
+         * @param nb_sectors      Number of sectors used around the shape.
+         * @param bottom_radius   Radius of the bottom ring at `y = -1`.
+         * @param top_radius      Radius of the top ring at `y = 1`.
+         * @param bottom_cap      Draw the bottom disk when `bottom_radius > 0`.
+         * @param top_cap         Draw the top disk when `top_radius > 0`.
+         */
+        void drawTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap = true, bool top_cap = true);
+
+
+        /**
+         * Draw a textured truncated cone in model space.
+         *
+         * @param nb_sectors      Number of sectors used around the shape.
+         * @param bottom_radius   Radius of the bottom ring at `y = -1`.
+         * @param top_radius      Radius of the top ring at `y = 1`.
+         * @param texture_side    Texture for the lateral surface, or `nullptr` to draw it without texturing.
+         * @param texture_bottom  Texture for the bottom disk, or `nullptr` to draw it without texturing.
+         * @param texture_top     Texture for the top disk, or `nullptr` to draw it without texturing.
+         * @param bottom_cap      Draw the bottom disk when `bottom_radius > 0`.
+         * @param top_cap         Draw the top disk when `top_radius > 0`.
+         *
+         * @remark The side and cap texture mapping follows the same convention as `drawCylinder()`.
+         */
+        void drawTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom = nullptr, const Image<color_t>* texture_top = nullptr, bool bottom_cap = true, bool top_cap = true);
 
 
 
@@ -2614,17 +2710,22 @@ namespace tgx
 
         template<bool WIREFRAME, int MODE> void _drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity);
 
-#if TGX_DRAWSPHERE_USE_STRIP_BANDS
-        void _drawSphereGouraudStripBand(const int sphere_shader, int nb_sectors,
-                                         const float* cosTheta, const float* sinTheta,
-                                         float cosPhi, float sinPhi, float new_cosPhi, float new_sinPhi,
-                                         float v, float vv, float dtx,
-                                         float CLIPBOUND_XY, bool sphere_cliptestneeded);
+        void _drawTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom, const Image<color_t>* texture_top, bool bottom_cap, bool top_cap);
 
-        void _drawSphereGouraudCap(const int sphere_shader, int nb_sectors, bool top_cap,
-                                   const float* cosTheta, const float* sinTheta,
-                                   float ring_y, float ring_radius, float ring_v, float dtx,
-                                   float CLIPBOUND_XY, bool sphere_cliptestneeded);
+        struct ExtVec4;
+
+        void _drawTruncatedConeGouraudCachedTriangle(const int cone_shader,  ExtVec4& E0, fVec3& N0, ExtVec4& E1, fVec3& N1, ExtVec4& E2, fVec3& N2, bool textured, bool ortho, float CLIPBOUND_XY, bool cliptestneeded);
+
+        void _drawTruncatedConeGouraudSideStrip(const int cone_shader, int nb_sectors, float bottom_radius, float top_radius, const float* cosTheta, const float* sinTheta, float inv_side_normal, float side_normal_y, float dtx, float CLIPBOUND_XY, bool cliptestneeded);
+
+        void _drawTruncatedConeGouraudConeFan(const int cone_shader, int nb_sectors, bool top_apex, float ring_radius, const float* cosTheta, const float* sinTheta, float inv_side_normal, float side_normal_y, float dtx, float CLIPBOUND_XY, bool cliptestneeded);
+
+        void _drawTruncatedConeGouraudCapFan(const int cap_shader, int nb_sectors, bool top_cap, float radius, const float* cosTheta, const float* sinTheta, float CLIPBOUND_XY, bool cliptestneeded);
+
+#if TGX_DRAWSPHERE_USE_STRIP_BANDS
+        void _drawSphereGouraudStripBand(const int sphere_shader, int nb_sectors, const float* cosTheta, const float* sinTheta, float cosPhi, float sinPhi, float new_cosPhi, float new_sinPhi, float v, float vv, float dtx, float CLIPBOUND_XY, bool sphere_cliptestneeded);
+
+        void _drawSphereGouraudCap(const int sphere_shader, int nb_sectors, bool top_cap, const float* cosTheta, const float* sinTheta, float ring_y, float ring_radius, float ring_v, float dtx, float CLIPBOUND_XY, bool sphere_cliptestneeded);
 #endif
 
 
@@ -2823,7 +2924,7 @@ namespace tgx
         *
         * Return > 0 if inside, return < 0 if outside (and 0 on the plane).
         **/
-        inline float _cpdist(const tgx::fVec4& CP, float off, const tgx::fVec4& P)
+        TGX_INLINE inline float _cpdist(const tgx::fVec4& CP, float off, const tgx::fVec4& P)
             {
             return (CP.x * P.x) + (CP.y * P.y) + (CP.z * P.z) + (CP.w * P.w) + off;
             }
@@ -2838,14 +2939,14 @@ namespace tgx
         *
         * return alpha such that P = A + alpha * (B - A)
         **/
-        inline float _cpfactor(const tgx::fVec4& CP, const float sdistA, const float sdistB)
+        TGX_INLINE inline float _cpfactor(const tgx::fVec4& CP, const float sdistA, const float sdistB)
             {
             return sdistA / (sdistA - sdistB);
             }
 
 
         /** used by _triangleClip when only 1 point is inside the view */
-        void _triangleClip1in(int shader, tgx::fVec4 CP,
+        TGX_INLINE inline void _triangleClip1in(int shader, tgx::fVec4 CP,
             float cp1, float cp2, float cp3,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4);

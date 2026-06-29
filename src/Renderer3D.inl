@@ -4469,6 +4469,445 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawCylinder(int nb_sectors, bool bottom_cap, bool top_cap)
+            {
+            drawTruncatedCone(nb_sectors, 1.0f, 1.0f, bottom_cap, top_cap);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawCylinder(int nb_sectors, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom, const Image<color_t>* texture_top, bool bottom_cap, bool top_cap)
+            {
+            drawTruncatedCone(nb_sectors, 1.0f, 1.0f, texture_side, texture_bottom, texture_top, bottom_cap, top_cap);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawCone(int nb_sectors, bool bottom_cap)
+            {
+            drawTruncatedCone(nb_sectors, 1.0f, 0.0f, bottom_cap, true);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawCone(int nb_sectors, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom, bool bottom_cap)
+            {
+            drawTruncatedCone(nb_sectors, 1.0f, 0.0f, texture_side, texture_bottom, nullptr, bottom_cap, true);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap)
+            {
+            _drawTruncatedCone(nb_sectors, bottom_radius, top_radius, nullptr, nullptr, nullptr, bottom_cap, top_cap);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom, const Image<color_t>* texture_top, bool bottom_cap, bool top_cap)
+            {
+            _drawTruncatedCone(nb_sectors, bottom_radius, top_radius, texture_side, texture_bottom, texture_top, bottom_cap, top_cap);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTruncatedConeGouraudCachedTriangle(const int cone_shader, ExtVec4& E0, fVec3& N0, ExtVec4& E1, fVec3& N1, ExtVec4& E2, fVec3& N2,
+                                                                                                                                              bool textured, bool ortho, float CLIPBOUND_XY, bool cliptestneeded)
+            {
+            fVec3 faceN = crossProduct(E1.P - E0.P, E2.P - E0.P);
+            const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, E0.P);
+            if (cu * _culling_dir > 0) return;
+
+            if (E0.missedP) { *((fVec4*)&E0) = _projM * E0.P; if (ortho) { E0.w = 1.0f - E0.z; } else { E0.zdivide(); } }
+            if (E1.missedP) { *((fVec4*)&E1) = _projM * E1.P; if (ortho) { E1.w = 1.0f - E1.z; } else { E1.zdivide(); } }
+            if (E2.missedP) { *((fVec4*)&E2) = _projM * E2.P; if (ortho) { E2.w = 1.0f - E2.z; } else { E2.zdivide(); } }
+
+            if (cliptestneeded)
+                {
+                const bool needclip = (E0.P.z >= 0)
+                    | (E0.x < -CLIPBOUND_XY) | (E0.x > CLIPBOUND_XY)
+                    | (E0.y < -CLIPBOUND_XY) | (E0.y > CLIPBOUND_XY)
+                    | (E0.z < -1) | (E0.z > 1)
+                    | (E1.P.z >= 0)
+                    | (E1.x < -CLIPBOUND_XY) | (E1.x > CLIPBOUND_XY)
+                    | (E1.y < -CLIPBOUND_XY) | (E1.y > CLIPBOUND_XY)
+                    | (E1.z < -1) | (E1.z > 1)
+                    | (E2.P.z >= 0)
+                    | (E2.x < -CLIPBOUND_XY) | (E2.x > CLIPBOUND_XY)
+                    | (E2.y < -CLIPBOUND_XY) | (E2.y > CLIPBOUND_XY)
+                    | (E2.z < -1) | (E2.z > 1);
+                if (needclip)
+                    {
+                    if (!_discardTriangle(*((fVec4*)&E0), *((fVec4*)&E1), *((fVec4*)&E2)))
+                        {
+                        _drawTriangleClipped(cone_shader, &E0.P, &E1.P, &E2.P, &N0, &N1, &N2, textured ? &E0.T : nullptr, textured ? &E1.T : nullptr, textured ? &E2.T : nullptr, _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    return;
+                    }
+                }
+            const float icu = 1.0f;
+            if (E0.missedP)
+                {
+                E0.N = fVec4(_r_modelViewM.mult0(N0), 0.0f);
+                E0.color = (textured) ? _shadeVertex<true>(icu, E0.N, E0.P) : _shadeVertex<false>(icu, E0.N, E0.P);
+                E0.missedP = false;
+                }
+            if (E1.missedP)
+                {
+                E1.N = fVec4(_r_modelViewM.mult0(N1), 0.0f);
+                E1.color = (textured) ? _shadeVertex<true>(icu, E1.N, E1.P) : _shadeVertex<false>(icu, E1.N, E1.P);
+                E1.missedP = false;
+                }
+            if (E2.missedP)
+                {
+                E2.N = fVec4(_r_modelViewM.mult0(N2), 0.0f);
+                E2.color = (textured) ? _shadeVertex<true>(icu, E2.N, E2.P) : _shadeVertex<false>(icu, E2.N, E2.P);
+                E2.missedP = false;
+                }
+            rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)E0, (RasterizerVec4)E1, (RasterizerVec4)E2, _ox, _oy, _uni);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTruncatedConeGouraudSideStrip(const int cone_shader, int nb_sectors, float bottom_radius, float top_radius, const float* cosTheta, const float* sinTheta,
+                                                                                                                                         float inv_side_normal, float side_normal_y, float dtx, float CLIPBOUND_XY, bool cliptestneeded)
+            {
+            _uni.shader_type = cone_shader;
+
+            struct ConeStripVertex
+                {
+                ExtVec4 E;
+                fVec3 N;
+                };
+
+            const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURING_ENABLED(cone_shader));
+            const bool ortho = _ortho;
+
+            auto loadSideVertex = [&](ConeStripVertex* V, bool top, int sector, float tex_u)
+                {
+                const float c = cosTheta[sector];
+                const float s = sinTheta[sector];
+                const float radius = top ? top_radius : bottom_radius;
+                const float y = top ? 1.0f : -1.0f;
+
+                V->E.P = _r_modelViewM.mult1(fVec3(radius * c, y, radius * s));
+                V->N = fVec3(inv_side_normal * c, side_normal_y, inv_side_normal * s);
+                if (TEXTURE) V->E.T = fVec2(tex_u, top ? 1.0f : 0.0f);
+                V->E.missedP = true;
+                };
+
+            ConeStripVertex TopPrev, BottomPrev, TopCur, BottomCur;
+            loadSideVertex(&TopPrev, true, nb_sectors - 1, 0.0f);
+            loadSideVertex(&BottomPrev, false, nb_sectors - 1, 0.0f);
+            float u = 0.0f;
+            for (int i = 0; i < nb_sectors; i++)
+                {
+                const float uu = u + dtx;
+                loadSideVertex(&TopCur, true, i, uu);
+                loadSideVertex(&BottomCur, false, i, uu);
+                _drawTruncatedConeGouraudCachedTriangle(cone_shader,TopPrev.E, TopPrev.N, TopCur.E, TopCur.N, BottomCur.E, BottomCur.N,TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded);
+                _drawTruncatedConeGouraudCachedTriangle(cone_shader,TopPrev.E, TopPrev.N, BottomCur.E, BottomCur.N, BottomPrev.E, BottomPrev.N, TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded);
+                u = uu;
+                TopPrev = TopCur;
+                BottomPrev = BottomCur;
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTruncatedConeGouraudConeFan(const int cone_shader, int nb_sectors, bool top_apex, float ring_radius, const float* cosTheta, const float* sinTheta,
+                                                                                                                                       float inv_side_normal, float side_normal_y, float dtx, float CLIPBOUND_XY, bool cliptestneeded)
+            {
+            _uni.shader_type = cone_shader;
+
+            struct ConeFanVertex
+                {
+                ExtVec4 E;
+                fVec3 N;
+                };
+
+            const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURING_ENABLED(cone_shader));
+            const bool ortho = _ortho;
+            const float ring_y = top_apex ? -1.0f : 1.0f;
+            const float apex_y = top_apex ? 1.0f : -1.0f;
+            const fVec4 apexP = _r_modelViewM.mult1(fVec3(0.0f, apex_y, 0.0f));
+
+            auto loadRingVertex = [&](ConeFanVertex* V, int sector, float tex_u)
+                {
+                const float c = cosTheta[sector];
+                const float s = sinTheta[sector];
+                V->E.P = _r_modelViewM.mult1(fVec3(ring_radius * c, ring_y, ring_radius * s));
+                V->N = fVec3(inv_side_normal * c, side_normal_y, inv_side_normal * s);
+                if (TEXTURE) V->E.T = fVec2(tex_u, top_apex ? 0.0f : 1.0f);
+                V->E.missedP = true;
+                };
+
+            auto loadApexVertex = [&](ConeFanVertex* V, const fVec3& N, float tex_u)
+                {
+                V->E.P = apexP;
+                V->N = N;
+                if (TEXTURE) V->E.T = fVec2(tex_u, top_apex ? 1.0f : 0.0f);
+                V->E.missedP = true;
+                };
+
+            ConeFanVertex Apex, Prev, Cur;
+            loadRingVertex(&Prev, nb_sectors - 1, 0.0f);
+
+            float u = 0.0f;
+            for (int i = 0; i < nb_sectors; i++)
+                {
+                const float uu = u + dtx;
+                loadRingVertex(&Cur, i, uu);
+                loadApexVertex(&Apex, Cur.N, 0.5f * (u + uu));
+                if (top_apex) { _drawTruncatedConeGouraudCachedTriangle(cone_shader, Apex.E, Apex.N, Cur.E, Cur.N, Prev.E, Prev.N, TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded); }
+                else { _drawTruncatedConeGouraudCachedTriangle(cone_shader, Prev.E, Prev.N, Cur.E, Cur.N, Apex.E, Apex.N, TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded);}
+                u = uu;
+                Prev = Cur;
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTruncatedConeGouraudCapFan(const int cap_shader, int nb_sectors, bool top_cap, float radius, const float* cosTheta, const float* sinTheta, float CLIPBOUND_XY, bool cliptestneeded)
+            {
+            _uni.shader_type = cap_shader;
+
+            struct ConeCapVertex
+                {
+                ExtVec4 E;
+                fVec3 N;
+                };
+
+            const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURING_ENABLED(cap_shader));
+            const bool ortho = _ortho;
+            const float y = top_cap ? 1.0f : -1.0f;
+            const fVec3 capN(0.0f, top_cap ? 1.0f : -1.0f, 0.0f);
+
+            auto loadCenter = [&](ConeCapVertex* V)
+                {
+                V->E.P = _r_modelViewM.mult1(fVec3(0.0f, y, 0.0f));
+                V->N = capN;
+                if (TEXTURE) V->E.T = fVec2(0.5f, 0.5f);
+                V->E.missedP = true;
+                };
+
+            auto loadRingVertex = [&](ConeCapVertex* V, int sector)
+                {
+                const float c = cosTheta[sector];
+                const float s = sinTheta[sector];
+                V->E.P = _r_modelViewM.mult1(fVec3(radius * c, y, radius * s));
+                V->N = capN;
+                if (TEXTURE) V->E.T = fVec2(0.5f + 0.5f * c, 0.5f + 0.5f * s);
+                V->E.missedP = true;
+                };
+
+            ConeCapVertex Center, Prev, Cur;
+            loadCenter(&Center);
+            loadRingVertex(&Prev, nb_sectors - 1);
+            for (int i = 0; i < nb_sectors; i++)
+                {
+                loadRingVertex(&Cur, i);
+                if (top_cap) { _drawTruncatedConeGouraudCachedTriangle(cap_shader, Center.E, Center.N, Cur.E, Cur.N, Prev.E, Prev.N, TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded); }
+                else { _drawTruncatedConeGouraudCachedTriangle(cap_shader, Center.E, Center.N, Prev.E, Prev.N, Cur.E, Cur.N, TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded); }
+                Prev = Cur;
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTruncatedCone(
+            int nb_sectors, float bottom_radius, float top_radius, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom, const Image<color_t>* texture_top, bool bottom_cap, bool top_cap)
+            {
+            if (!_validDraw()) return;
+
+            const float EPS_RADIUS = 1.0e-6f;
+
+            if (bottom_radius <= EPS_RADIUS) bottom_radius = 0.0f;
+            if (top_radius <= EPS_RADIUS) top_radius = 0.0f;
+            if ((bottom_radius == 0.0f) && (top_radius == 0.0f)) return;
+
+            const int MAX_SECTORS = 256;
+            if (nb_sectors > MAX_SECTORS) nb_sectors = MAX_SECTORS;
+            if (nb_sectors < 3) nb_sectors = 3;
+
+            // set local culling state and save previous value
+            const float save_culling = _culling_dir;
+            const bool open_shape = ((bottom_radius > 0.0f) && (!bottom_cap)) || ((top_radius > 0.0f) && (!top_cap));
+            if (open_shape) { _culling_dir = 0.0f; } else if (_culling_dir != 0.0f) { _culling_dir = 1.0f; }
+
+            _precomputeSpecularTable(_specularExponent);
+
+            int side_shader = _shaders;
+            int bottom_shader = _shaders;
+            int top_shader = _shaders;
+
+            if (texture_side == nullptr)
+                {
+                TGX_SHADER_REMOVE_TEXTURING_ENABLED(side_shader)
+                TGX_SHADER_ADD_NOTEXTURE(side_shader)
+                }
+            if (texture_bottom == nullptr)
+                {
+                TGX_SHADER_REMOVE_TEXTURING_ENABLED(bottom_shader)
+                TGX_SHADER_ADD_NOTEXTURE(bottom_shader)
+                }
+            if (texture_top == nullptr)
+                {
+                TGX_SHADER_REMOVE_TEXTURING_ENABLED(top_shader)
+                TGX_SHADER_ADD_NOTEXTURE(top_shader)
+                }
+
+            float cosTheta[MAX_SECTORS];
+            float sinTheta[MAX_SECTORS];
+
+            const float d_sector = 360.0f / nb_sectors;
+            for (int i = 0; i < nb_sectors; i++)
+                {
+                float theta = i * d_sector;
+                if (theta > 180.0f) theta -= 360.0f;
+                cosTheta[i] = tgx_fast_cos_deg_clamped(theta);
+                sinTheta[i] = tgx_fast_sin_deg_clamped(theta);
+                }
+
+            const float slope = 0.5f * (top_radius - bottom_radius);
+            const float inv_side_normal = tgx::fast_invsqrt(1.0f + slope * slope);
+            const float side_normal_y = -slope * inv_side_normal;
+            const float dtx = 1.0f / nb_sectors;
+            const bool fast_gouraud = (_culling_dir != 0.0f);
+            const bool side_fast_gouraud = fast_gouraud && (top_radius > 0.0f) && (bottom_radius > 0.0f) && TGX_SHADER_HAS_GOURAUD(side_shader);
+            const bool cone_side_fast_gouraud = fast_gouraud && (top_radius == 0.0f || bottom_radius == 0.0f) && TGX_SHADER_HAS_GOURAUD(side_shader);
+            const bool bottom_fast_gouraud = fast_gouraud && bottom_cap && (bottom_radius > 0.0f) && TGX_SHADER_HAS_GOURAUD(bottom_shader);
+            const bool top_fast_gouraud = fast_gouraud && top_cap && (top_radius > 0.0f) && TGX_SHADER_HAS_GOURAUD(top_shader);
+
+            float CLIPBOUND_XY = 0.0f;
+            bool cliptestneeded = true;
+            if (side_fast_gouraud || cone_side_fast_gouraud || bottom_fast_gouraud || top_fast_gouraud)
+                {
+                const float max_radius = (bottom_radius > top_radius) ? bottom_radius : top_radius;
+                const fBox3 cone_bb(-max_radius, max_radius, -1.0f, 1.0f, -max_radius, max_radius);
+                const fMat4 cone_proj_modelview = _projM * _r_modelViewM;
+                if (_discardBox(cone_bb, cone_proj_modelview))
+                    {
+                    _culling_dir = save_culling;
+                    return;
+                    }
+                CLIPBOUND_XY = _clipbound_xy();
+                cliptestneeded = _clipTestNeeded(CLIPBOUND_XY, cone_bb, cone_proj_modelview);
+                }
+
+            // lateral surface
+            if (TGX_SHADER_HAS_TEXTURING_ENABLED(side_shader)) _uni.tex = (const Image<color_t>*)texture_side;
+
+            const fVec3 PTopCenter(0.0f, 1.0f, 0.0f);
+            const fVec3 PBottomCenter(0.0f, -1.0f, 0.0f);
+
+            if (side_fast_gouraud)
+                {
+                _drawTruncatedConeGouraudSideStrip(side_shader, nb_sectors, bottom_radius, top_radius, cosTheta, sinTheta, inv_side_normal, side_normal_y, dtx, CLIPBOUND_XY, cliptestneeded);
+                }
+            else if (cone_side_fast_gouraud)
+                {
+                const bool top_apex = (top_radius == 0.0f);
+                const float ring_radius = top_apex ? bottom_radius : top_radius;
+                _drawTruncatedConeGouraudConeFan(side_shader, nb_sectors, top_apex, ring_radius, cosTheta, sinTheta, inv_side_normal, side_normal_y, dtx, CLIPBOUND_XY, cliptestneeded);
+                }
+            else
+                {
+                fVec3 PTopPrev(top_radius * cosTheta[nb_sectors - 1], 1.0f, top_radius * sinTheta[nb_sectors - 1]);
+                fVec3 PBottomPrev(bottom_radius * cosTheta[nb_sectors - 1], -1.0f, bottom_radius * sinTheta[nb_sectors - 1]);
+                fVec3 NPrev(inv_side_normal * cosTheta[nb_sectors - 1], side_normal_y, inv_side_normal * sinTheta[nb_sectors - 1]);
+
+                float u = 0.0f;
+                for (int i = 0; i < nb_sectors; i++)
+                    {
+                    const float uu = u + dtx;
+                    const float c = cosTheta[i];
+                    const float s = sinTheta[i];
+                    const fVec3 PTopCur(top_radius * c, 1.0f, top_radius * s);
+                    const fVec3 PBottomCur(bottom_radius * c, -1.0f, bottom_radius * s);
+                    const fVec3 NCur(inv_side_normal * c, side_normal_y, inv_side_normal * s);
+                    const fVec2 TTopPrev(u, 1.0f);
+                    const fVec2 TTopCur(uu, 1.0f);
+                    const fVec2 TBottomPrev(u, 0.0f);
+                    const fVec2 TBottomCur(uu, 0.0f);
+
+                    if ((top_radius > 0.0f) && (bottom_radius > 0.0f))
+                        {
+                        _drawQuad(side_shader, &PTopPrev, &PTopCur, &PBottomCur, &PBottomPrev, &NPrev, &NCur, &NCur, &NPrev, &TTopPrev, &TTopCur, &TBottomCur, &TBottomPrev, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    else if (top_radius == 0.0f)
+                        {
+                        const fVec2 TTop(0.5f * (u + uu), 1.0f);
+                        _drawTriangle(side_shader, &PTopCenter, &PBottomCur, &PBottomPrev, &NCur, &NCur, &NPrev, &TTop, &TBottomCur, &TBottomPrev, _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    else
+                        {
+                        const fVec2 TBottom(0.5f * (u + uu), 0.0f);
+                        _drawTriangle(side_shader, &PTopPrev, &PTopCur, &PBottomCenter, &NPrev, &NCur, &NCur, &TTopPrev, &TTopCur, &TBottom, _r_objectColor, _r_objectColor, _r_objectColor);
+                        }
+                    u = uu;
+                    PTopPrev = PTopCur;
+                    PBottomPrev = PBottomCur;
+                    NPrev = NCur;
+                    }
+                }
+
+            // bottom cap
+            if (bottom_cap && (bottom_radius > 0.0f))
+                {
+                if (TGX_SHADER_HAS_TEXTURING_ENABLED(bottom_shader)) _uni.tex = (const Image<color_t>*)texture_bottom;
+
+                if (bottom_fast_gouraud)
+                    {
+                    _drawTruncatedConeGouraudCapFan(bottom_shader, nb_sectors, false, bottom_radius, cosTheta, sinTheta, CLIPBOUND_XY, cliptestneeded);
+                    }
+                else
+                    {
+                    const fVec3 NBottom(0.0f, -1.0f, 0.0f);
+                    fVec3 PPrev(bottom_radius * cosTheta[nb_sectors - 1], -1.0f, bottom_radius * sinTheta[nb_sectors - 1]);
+                    fVec2 TPrev(0.5f + 0.5f * cosTheta[nb_sectors - 1], 0.5f + 0.5f * sinTheta[nb_sectors - 1]);
+                    const fVec2 TCenter(0.5f, 0.5f);
+                    for (int i = 0; i < nb_sectors; i++)
+                        {
+                        const fVec3 PCur(bottom_radius * cosTheta[i], -1.0f, bottom_radius * sinTheta[i]);
+                        const fVec2 TCur(0.5f + 0.5f * cosTheta[i], 0.5f + 0.5f * sinTheta[i]);
+                        _drawTriangle(bottom_shader, &PBottomCenter, &PPrev, &PCur, &NBottom, &NBottom, &NBottom, &TCenter, &TPrev, &TCur, _r_objectColor, _r_objectColor, _r_objectColor);
+                        PPrev = PCur;
+                        TPrev = TCur;
+                        }
+                    }
+                }
+
+            // top cap
+            if (top_cap && (top_radius > 0.0f))
+                {
+                if (TGX_SHADER_HAS_TEXTURING_ENABLED(top_shader)) _uni.tex = (const Image<color_t>*)texture_top;
+
+                if (top_fast_gouraud)
+                    {
+                    _drawTruncatedConeGouraudCapFan(top_shader, nb_sectors, true, top_radius, cosTheta, sinTheta, CLIPBOUND_XY, cliptestneeded);
+                    }
+                else
+                    {
+                    const fVec3 NTop(0.0f, 1.0f, 0.0f);
+                    fVec3 PPrev(top_radius * cosTheta[nb_sectors - 1], 1.0f, top_radius * sinTheta[nb_sectors - 1]);
+                    fVec2 TPrev(0.5f + 0.5f * cosTheta[nb_sectors - 1], 0.5f + 0.5f * sinTheta[nb_sectors - 1]);
+                    const fVec2 TCenter(0.5f, 0.5f);
+                    for (int i = 0; i < nb_sectors; i++)
+                        {
+                        const fVec3 PCur(top_radius * cosTheta[i], 1.0f, top_radius * sinTheta[i]);
+                        const fVec2 TCur(0.5f + 0.5f * cosTheta[i], 0.5f + 0.5f * sinTheta[i]);
+                        _drawTriangle(top_shader, &PTopCenter, &PCur, &PPrev, &NTop, &NTop, &NTop, &TCenter, &TCur, &TPrev, _r_objectColor, _r_objectColor, _r_objectColor);
+                        PPrev = PCur;
+                        TPrev = TCur;
+                        }
+                    }
+                }
+            _culling_dir = save_culling;
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSkyBox(
             const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
             const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
