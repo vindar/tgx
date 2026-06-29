@@ -1,0 +1,11 @@
+name,hash,lit_pixels
+cylinder_gouraud_closed,0xed8a6946,12230
+cylinder_open_top_culling,0x92d9dc0d,14993
+cylinder_textured_all,0x903ac1d4,12295
+cylinder_side_texture_open,0x801799bb,12064
+cone_flat_closed,0xddee4797,6509
+cone_gouraud_textured,0x4a9f70fd,6071
+cone_open_bottom_culling,0xff7d109f,7022
+truncated_textured_all,0xcc087463,8538
+inverted_truncated_textured,0x985ef433,7308
+low_sector_faceted_caps,0x4415ed0a,10047
