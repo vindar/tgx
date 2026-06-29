@@ -5672,6 +5672,144 @@ namespace tgx
             }
 
 
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCylinder(int nb_sectors, bool bottom_cap, bool top_cap)
+            {
+            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, 1.0f, 1.0f, bottom_cap, top_cap, 1.0f, color_t(_color), 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCylinderAA(int nb_sectors, bool bottom_cap, bool top_cap)
+            {
+            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_sectors, 1.0f, 1.0f, bottom_cap, top_cap, 1.0f, color_t(_color), 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCylinder(int nb_sectors, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity)
+            {
+            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_sectors, 1.0f, 1.0f, bottom_cap, top_cap, thickness, color, opacity);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCone(int nb_sectors, bool bottom_cap)
+            {
+            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, 1.0f, 0.0f, bottom_cap, true, 1.0f, color_t(_color), 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameConeAA(int nb_sectors, bool bottom_cap)
+            {
+            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_sectors, 1.0f, 0.0f, bottom_cap, true, 1.0f, color_t(_color), 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCone(int nb_sectors, bool bottom_cap, float thickness, color_t color, float opacity)
+            {
+            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_sectors, 1.0f, 0.0f, bottom_cap, true, thickness, color, opacity);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap)
+            {
+            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, bottom_radius, top_radius, bottom_cap, top_cap, 1.0f, color_t(_color), 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTruncatedConeAA(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap)
+            {
+            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_sectors, bottom_radius, top_radius, bottom_cap, top_cap, 1.0f, color_t(_color), 1.0f);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity)
+            {
+            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_sectors, bottom_radius, top_radius, bottom_cap, top_cap, thickness, color, opacity);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        template<int MODE> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity)
+            {
+            if (!_validDraw()) return;
+            if (thickness <= 0) return;
+
+            const float EPS_RADIUS = 1.0e-6f;
+            if (bottom_radius <= EPS_RADIUS) bottom_radius = 0.0f;
+            if (top_radius <= EPS_RADIUS) top_radius = 0.0f;
+            if ((bottom_radius == 0.0f) && (top_radius == 0.0f)) return;
+
+            const int MAX_SECTORS = 256;
+            if (nb_sectors > MAX_SECTORS) nb_sectors = MAX_SECTORS;
+            if (nb_sectors < 3) nb_sectors = 3;
+
+            const float save_culling = _culling_dir;
+            const bool open_shape = ((bottom_radius > 0.0f) && (!bottom_cap)) || ((top_radius > 0.0f) && (!top_cap));
+            if (open_shape) { _culling_dir = 0.0f; } else if (_culling_dir != 0.0f) { _culling_dir = 1.0f; }
+
+            float cosTheta[MAX_SECTORS];
+            float sinTheta[MAX_SECTORS];
+
+            const float d_sector = 360.0f / nb_sectors;
+            for (int i = 0; i < nb_sectors; i++)
+                {
+                float theta = i * d_sector;
+                if (theta > 180.0f) theta -= 360.0f;
+                cosTheta[i] = tgx_fast_cos_deg_clamped(theta);
+                sinTheta[i] = tgx_fast_sin_deg_clamped(theta);
+                }
+
+            const fVec3 PTopCenter(0.0f, 1.0f, 0.0f);
+            const fVec3 PBottomCenter(0.0f, -1.0f, 0.0f);
+
+            fVec3 PTopPrev(top_radius * cosTheta[nb_sectors - 1], 1.0f, top_radius * sinTheta[nb_sectors - 1]);
+            fVec3 PBottomPrev(bottom_radius * cosTheta[nb_sectors - 1], -1.0f, bottom_radius * sinTheta[nb_sectors - 1]);
+            for (int i = 0; i < nb_sectors; i++)
+                {
+                const fVec3 PTopCur(top_radius * cosTheta[i], 1.0f, top_radius * sinTheta[i]);
+                const fVec3 PBottomCur(bottom_radius * cosTheta[i], -1.0f, bottom_radius * sinTheta[i]);
+
+                if ((top_radius > 0.0f) && (bottom_radius > 0.0f)) { _drawWireFrameQuad<MODE>(PTopPrev, PTopCur, PBottomCur, PBottomPrev, color, opacity, thickness);}
+                else if (top_radius == 0.0f) { _drawWireFrameTriangle<MODE>(PTopCenter, PBottomCur, PBottomPrev, color, opacity, thickness); }
+                else { _drawWireFrameTriangle<MODE>(PTopPrev, PTopCur, PBottomCenter, color, opacity, thickness); }
+
+                PTopPrev = PTopCur;
+                PBottomPrev = PBottomCur;
+                }
+
+            if (bottom_cap && (bottom_radius > 0.0f))
+                {
+                fVec3 PPrev(bottom_radius * cosTheta[nb_sectors - 1], -1.0f, bottom_radius * sinTheta[nb_sectors - 1]);
+                for (int i = 0; i < nb_sectors; i++)
+                    {
+                    const fVec3 PCur(bottom_radius * cosTheta[i], -1.0f, bottom_radius * sinTheta[i]);
+                    _drawWireFrameTriangle<MODE>(PBottomCenter, PPrev, PCur, color, opacity, thickness);
+                    PPrev = PCur;
+                    }
+                }
+
+            if (top_cap && (top_radius > 0.0f))
+                {
+                fVec3 PPrev(top_radius * cosTheta[nb_sectors - 1], 1.0f, top_radius * sinTheta[nb_sectors - 1]);
+                for (int i = 0; i < nb_sectors; i++)
+                    {
+                    const fVec3 PCur(top_radius * cosTheta[i], 1.0f, top_radius * sinTheta[i]);
+                    _drawWireFrameTriangle<MODE>(PTopCenter, PCur, PPrev, color, opacity, thickness);
+                    PPrev = PCur;
+                    }
+                }
+
+            _culling_dir = save_culling;
+            }
+
 
 
 

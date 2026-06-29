@@ -2167,7 +2167,7 @@ namespace tgx
         /**
          * @name Drawing basic shapes in wireframe.
          *
-         * Methods for drawing wireframe cubes and spheres.
+         * Methods for drawing wireframe cubes, spheres, cylinders and cones.
          *
          * Two versions for each method:
          * 1. Fast drawing: no thickness, no blending, no anti-aliasing.
@@ -2313,6 +2313,116 @@ namespace tgx
         void drawWireFrameAdaptativeSphere(float quality, float thickness, color_t color, float opacity);
 
 
+        /**
+         * Draw a wireframe unit cylinder in model space [*fast*].
+         *
+         * @remark The cylinder is centered at the origin, has radius `1`, and extends from `y = -1` to `y = 1`.
+         *
+         * @param nb_sectors  Number of sectors used around the cylinder. Minimum `3`.
+         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
+         * @param top_cap     Draw the top disk triangulation at `y = 1`.
+         */
+        void drawWireFrameCylinder(int nb_sectors, bool bottom_cap = true, bool top_cap = true);
+
+
+        /**
+         * Draw a wireframe unit cylinder in model space [*antialiased*].
+         *
+         * @param nb_sectors  Number of sectors used around the cylinder. Minimum `3`.
+         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
+         * @param top_cap     Draw the top disk triangulation at `y = 1`.
+         */
+        void drawWireFrameCylinderAA(int nb_sectors, bool bottom_cap = true, bool top_cap = true);
+
+
+        /**
+         * Draw a wireframe unit cylinder in model space [*adjustable thickness + AA*].
+         *
+         * @warning This method is very slow and may be slower than solid drawing.
+         *
+         * @param nb_sectors  Number of sectors used around the cylinder. Minimum `3`.
+         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
+         * @param top_cap     Draw the top disk triangulation at `y = 1`.
+         * @param thickness   thickness of the lines
+         * @param color       color to use
+         * @param opacity     opacity multiplier in [0.0f, 1.0f]
+         */
+        void drawWireFrameCylinder(int nb_sectors, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity);
+
+
+        /**
+         * Draw a wireframe unit cone in model space [*fast*].
+         *
+         * @remark The cone has base radius `1` at `y = -1` and its apex at `y = 1`.
+         *
+         * @param nb_sectors  Number of sectors used around the cone. Minimum `3`.
+         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
+         */
+        void drawWireFrameCone(int nb_sectors, bool bottom_cap = true);
+
+
+        /**
+         * Draw a wireframe unit cone in model space [*antialiased*].
+         *
+         * @param nb_sectors  Number of sectors used around the cone. Minimum `3`.
+         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
+         */
+        void drawWireFrameConeAA(int nb_sectors, bool bottom_cap = true);
+
+
+        /**
+         * Draw a wireframe unit cone in model space [*adjustable thickness + AA*].
+         *
+         * @warning This method is very slow and may be slower than solid drawing.
+         *
+         * @param nb_sectors  Number of sectors used around the cone. Minimum `3`.
+         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
+         * @param thickness   thickness of the lines
+         * @param color       color to use
+         * @param opacity     opacity multiplier in [0.0f, 1.0f]
+         */
+        void drawWireFrameCone(int nb_sectors, bool bottom_cap, float thickness, color_t color, float opacity);
+
+
+        /**
+         * Draw a wireframe truncated cone in model space [*fast*].
+         *
+         * @param nb_sectors      Number of sectors used around the shape. Minimum `3`.
+         * @param bottom_radius   Radius of the bottom ring at `y = -1`.
+         * @param top_radius      Radius of the top ring at `y = 1`.
+         * @param bottom_cap      Draw the bottom disk triangulation when `bottom_radius > 0`.
+         * @param top_cap         Draw the top disk triangulation when `top_radius > 0`.
+         */
+        void drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap = true, bool top_cap = true);
+
+
+        /**
+         * Draw a wireframe truncated cone in model space [*antialiased*].
+         *
+         * @param nb_sectors      Number of sectors used around the shape. Minimum `3`.
+         * @param bottom_radius   Radius of the bottom ring at `y = -1`.
+         * @param top_radius      Radius of the top ring at `y = 1`.
+         * @param bottom_cap      Draw the bottom disk triangulation when `bottom_radius > 0`.
+         * @param top_cap         Draw the top disk triangulation when `top_radius > 0`.
+         */
+        void drawWireFrameTruncatedConeAA(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap = true, bool top_cap = true);
+
+
+        /**
+         * Draw a wireframe truncated cone in model space [*adjustable thickness + AA*].
+         *
+         * @warning This method is very slow and may be slower than solid drawing.
+         *
+         * @param nb_sectors      Number of sectors used around the shape. Minimum `3`.
+         * @param bottom_radius   Radius of the bottom ring at `y = -1`.
+         * @param top_radius      Radius of the top ring at `y = 1`.
+         * @param bottom_cap      Draw the bottom disk triangulation when `bottom_radius > 0`.
+         * @param top_cap         Draw the top disk triangulation when `top_radius > 0`.
+         * @param thickness       thickness of the lines
+         * @param color           color to use
+         * @param opacity         opacity multiplier in [0.0f, 1.0f]
+         */
+        void drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity);
 
 
 
@@ -2711,6 +2821,8 @@ namespace tgx
         template<bool WIREFRAME, int MODE> void _drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity);
 
         void _drawTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom, const Image<color_t>* texture_top, bool bottom_cap, bool top_cap);
+
+        template<int MODE> void _drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity);
 
         struct ExtVec4;
 
