@@ -1,0 +1,10 @@
+board,example,scene,delta_vs_equivalent_prefix_window_pct,notes
+Core2,core2_donkey_infos_probe,gouraud_texture,0.05,Final accepted probe result vs historical baseline
+CoreS3,donkeykong,gouraud_texture,-0.33,Equivalent-window comparison; in noise
+Pico2,scream,unknown,0.00,Equivalent-window comparison; in noise
+Pico2,bunny_fig,gouraud_texture,0.02,Equivalent-window comparison; in noise
+Pico2,bunny_fig,wireframe,-0.01,Equivalent-window comparison; in noise
+Teensy41,mars,movie,0.05,Equivalent-window comparison; in noise
+Teensy41,test-texture,bob_gouraud,-0.57,Slightly past 0.5% but close; not a clear structural signal
+Teensy41,test-texture,blub_gouraud,-0.60,Slightly past 0.5% but close; not a clear structural signal
+Teensy41,mars,beginning,-0.77,Only 3 rows; weak signal

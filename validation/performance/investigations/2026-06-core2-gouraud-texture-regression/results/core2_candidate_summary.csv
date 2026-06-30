@@ -1,0 +1,8 @@
+case,fps,render_us,delta_vs_baseline_pct,notes
+baseline_ff8cc0b3,25.961,35853.8,0.00,Historical Core2 donkey Gouraud+texture reference
+current_slow,23.409,39952.9,-9.83,Regression reproduced before the final fix
+clipTestNeeded_only,25.567,36409.0,-1.52,Not sufficient
+discardBox_only,26.068,,0.41,Works but larger code-size change than clip2
+discard_runtime_transform,26.101,,0.54,Rejected: includes helpers not in this probe hot path
+clip2_only_final,25.975,35797.6,0.05,Accepted minimal fix
+after_plain_inline_keywords,25.975,35797.6,0.05,No measurable change after extra plain inline keywords
