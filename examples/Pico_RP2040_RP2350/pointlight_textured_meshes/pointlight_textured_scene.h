@@ -1,7 +1,7 @@
 #pragma once
 
-#include "spot.h"
-#include "stormtrooper_v2.h"
+#include "TTRex_lp_v2.h"
+#include "smurfette_lp_v2.h"
 #include "donkeykong_small_v2.h"
 
 static const float POINTLIGHT_TWO_PI = 6.28318530718f;
@@ -24,9 +24,9 @@ struct PointlightMeshScene
 
 static const PointlightMeshScene pointlight_mesh_scenes[] =
     {
-        { &spot,             "spot",             { 0.0f, -0.35f, 0.0f }, { 1.52f, 1.52f, 1.52f }, -12.0f, { 0.0f, 1.0f, 0.0f }, 2.45f, 4.9f },
-        { &stormtrooper_v2,  "stormtrooper",     { 0.0f, -0.95f, 0.0f }, { 1.78f, 1.78f, 1.78f },  18.0f, { 0.0f, 1.0f, 0.0f }, 2.70f, 5.2f },
-        { &donkeykong_small, "donkeykong_small", { 0.0f, -0.55f, 0.0f }, { 1.42f, 1.42f, 1.42f },   0.0f, { 0.0f, 1.0f, 0.0f }, 2.55f, 5.0f },
+        { &TTRex_lp,         "TTRex_lp",         { 0.0f, -0.45f, 0.0f }, { 1.65f, 1.65f, 1.65f },   0.0f, { 0.0f, 1.0f, 0.0f }, 2.60f, 5.1f },
+        { &smurfette_lp,     "smurfette_lp",     { 0.0f, -0.28f, 0.0f }, { 1.72f, 1.72f, 1.72f },   0.0f, { 0.0f, 1.0f, 0.0f }, 2.55f, 5.1f },
+        { &donkeykong_small, "donkey_kong",      { 0.0f, -0.55f, 0.0f }, { 1.42f, 1.42f, 1.42f },  20.0f, { 0.0f, 1.0f, 0.0f }, 2.55f, 5.0f },
     };
 
 

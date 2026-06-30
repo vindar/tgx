@@ -1,58 +1,62 @@
 /********************************************************************
-* tgx library example : moving local point lights.
 *
-*                  EXAMPLE FOR M5STACK Core2 and CoreS3
+* tgx library example: moving local spot lights.
 *
-* This sketch renders a small room-like 3D scene lit by two animated local
-* point lights.  It draws into a TGX framebuffer, then sends that framebuffer
-* to the display with LovyanGFX.
+* EXAMPLE FOR TEENSY 4 / 4.1
 *
-* Instructions:
+* DISPLAY: ILI9341 (320x240)
 *
-* 1. download and install LovyanGFX via Arduino's library manager or directly
-*    from: https://github.com/lovyan03/LovyanGFX
-*
-* 2. Select the board model and serial port and upload the sketch.
 ********************************************************************/
 
-/**************** DMA NOTE ****************
-* LovyanGFX DMA transfers can improve display upload speed on M5Stack boards.
-* DMA is enabled by default here.  The sketch first tries to allocate a
-* DMA-capable transfer buffer; if that fails, it automatically falls back to
-* the blocking pushImage() path.  Uncomment the line below to force that
-* non-DMA path.
-*******************************************/
-// #define DISABLE_DMA
+// This example runs on Teensy 4.0/4.1 with ILI9341 via SPI.
+// The screen driver library: https://github.com/vindar/ILI9341_T4
+#include <ILI9341_T4.h>
 
-#define LGFX_AUTODETECT
-#include <LovyanGFX.hpp>
-
+// The tgx library.
 #include <tgx.h>
 
 using namespace tgx;
 
-// The sketch renders into a smaller off-screen framebuffer, then centers it
-// on the physical display.  This keeps RAM use reasonable on Core2/CoreS3.
-static const int MAX_LX = 240;
-static const int MAX_LY = 180;
 
-uint16_t* fb = nullptr;
-uint16_t* fb2 = nullptr;
-uint16_t* zbuf = nullptr;
-bool use_dma = false;
+//
+// DEFAULT WIRING USING SPI 0 ON TEENSY 4/4.1
+//
+#define PIN_SCK     13
+#define PIN_MISO    12
+#define PIN_MOSI    11
+#define PIN_DC      10
 
-Image<RGB565> im;
-LGFX lcd;
+#define PIN_CS      9
+#define PIN_RESET   6
+#define PIN_BACKLIGHT 255
+#define PIN_TOUCH_IRQ 255
+#define PIN_TOUCH_CS  255
 
-int render_lx = 0;
-int render_ly = 0;
-float render_ratio = 1.0f;
 
-const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER |
-                              SHADER_GOURAUD | SHADER_UNLIT |
-                              SHADER_NOTEXTURE;
+// 30 MHz SPI, we can go higher with short wires.
+#define SPI_SPEED       30000000
 
+
+ILI9341_T4::ILI9341Driver tft(PIN_CS, PIN_DC, PIN_SCK, PIN_MOSI, PIN_MISO, PIN_RESET, PIN_TOUCH_CS, PIN_TOUCH_IRQ);
+
+DMAMEM ILI9341_T4::DiffBuffStatic<8000> diff1;
+DMAMEM ILI9341_T4::DiffBuffStatic<8000> diff2;
+
+static const int SLX = 320;
+static const int SLY = 240;
+
+DMAMEM uint16_t fb[SLX * SLY];
+DMAMEM uint16_t internal_fb[SLX * SLY];
+DMAMEM uint16_t zbuf[SLX * SLY];
+
+Image<RGB565> im(fb, SLX, SLY);
+
+
+const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_UNLIT | SHADER_NOTEXTURE;
+
+// The last template argument gives this renderer two local spot-light slots.
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t, 1, 2> renderer;
+
 
 static const int FLOOR_NX = 20;
 static const int FLOOR_NY = 18;
@@ -282,18 +286,55 @@ void drawLightMarkers(float phase)
     }
 
 
-void setupRenderer()
+void updateFPS(uint32_t render_us)
     {
-    renderer.setViewportSize(render_lx, render_ly);
+    fps_frames++;
+    fps_render_sum_us += render_us;
+    const uint32_t now = millis();
+    if (now - fps_last_ms >= 1000)
+        {
+        Serial.print("pointlight_room Teensy4 fps=");
+        Serial.println(fps_render_sum_us ? (uint32_t)((1000000ULL * fps_frames) / fps_render_sum_us) : 0);
+        fps_frames = 0;
+        fps_render_sum_us = 0;
+        fps_last_ms = now;
+        }
+    }
+
+
+void setup()
+    {
+    Serial.begin(9600);
+
+    while (!tft.begin(SPI_SPEED));
+
+    pinMode(PIN_BACKLIGHT, OUTPUT);
+    digitalWrite(PIN_BACKLIGHT, HIGH);
+
+    tft.setRotation(3);
+    tft.setFramebuffer(internal_fb);
+    tft.setDiffBuffers(&diff1, &diff2);
+    tft.setDiffGap(4);
+    tft.setVSyncSpacing(0);
+    tft.setRefreshRate(140);
+
+    buildGrid(floor_vertices, floor_indices, floor_normal_indices,
+              FLOOR_NX, FLOOR_NY,
+              { -5.5f, -1.25f, -4.5f },
+              { 11.0f, 0.0f, 0.0f },
+              { 0.0f, 0.0f, 9.0f });
+
+    renderer.setViewportSize(SLX, SLY);
     renderer.setOffset(0, 0);
     renderer.setImage(&im);
     renderer.setZbuffer(zbuf);
     renderer.setCulling(0);
-    renderer.setPerspective(48.0f, render_ratio, 0.1f, 80.0f);
+    renderer.setPerspective(48.0f, ((float)SLX) / SLY, 0.1f, 80.0f);
     renderer.setLookAt({ 0.0f, 2.25f, 7.6f },
                        { 0.0f, 0.0f, -1.0f },
                        { 0.0f, 1.0f, 0.0f });
 
+    // Keep the directional light weak so the moving local spot lights dominate.
     renderer.setLight({ -0.35f, -0.75f, -0.35f },
                       RGBf(0.008f, 0.010f, 0.015f),
                       RGBf(0.035f, 0.038f, 0.044f),
@@ -305,179 +346,26 @@ void setupRenderer()
     renderer.setSpotLightCount(2);
     renderer.setSpotLight(0, warm, 5.8f, WARM_DIFFUSE, WARM_SPECULAR);
     renderer.setSpotLight(1, cool, 5.6f, COOL_DIFFUSE, COOL_SPECULAR);
-    }
-
-
-void drawFrame()
-    {
-    const float phase = animationPhase();
-
-    updateCamera();
-    updateMovingPointLights(phase);
-
-    im.fillScreen(RGB565_Black);
-    renderer.clearZbuffer();
-
-    drawRoom();
-    drawLightMarkers(phase);
-    }
-
-
-void updateFPS(uint32_t render_us)
-    {
-    fps_frames++;
-    fps_render_sum_us += render_us;
-    uint32_t now = millis();
-    if (now - fps_last_ms >= 1000)
-        {
-        Serial.print("spotlights_room M5Stack fps=");
-        Serial.println(fps_render_sum_us ? (uint32_t)((1000000ULL * fps_frames) / fps_render_sum_us) : 0);
-        Serial.print("spotlights_room M5Stack display=");
-        Serial.println(use_dma ? "DMA" : "pushImage");
-        fps_frames = 0;
-        fps_render_sum_us = 0;
-        fps_last_ms = now;
-        }
-    }
-
-
-void freeRenderBuffers()
-    {
-    if (fb != nullptr)
-        {
-        free(fb);
-        fb = nullptr;
-        }
-    if (zbuf != nullptr)
-        {
-        free(zbuf);
-        zbuf = nullptr;
-        }
-    if (fb2 != nullptr)
-        {
-        free(fb2);
-        fb2 = nullptr;
-        }
-    use_dma = false;
-    }
-
-
-bool allocateRenderBuffers(size_t pixel_count)
-    {
-    const size_t bytes = pixel_count * sizeof(uint16_t);
-
-#if !defined(DISABLE_DMA)
-    fb2 = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_DMA);
-#endif
-
-    fb = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
-    zbuf = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
-
-    if ((fb == nullptr || zbuf == nullptr) && fb2 != nullptr)
-        {
-        Serial.println("spotlights_room M5Stack DMA buffer released to keep framebuffer/zbuffer");
-        freeRenderBuffers();
-        fb = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
-        zbuf = (uint16_t*)heap_caps_malloc(bytes, MALLOC_CAP_8BIT);
-        }
-
-    if (fb == nullptr || zbuf == nullptr)
-        {
-        freeRenderBuffers();
-        return false;
-        }
-
-#if !defined(DISABLE_DMA)
-    if (fb2 != nullptr)
-        {
-        lcd.initDMA();
-        lcd.startWrite();
-        use_dma = true;
-        Serial.println("spotlights_room M5Stack display DMA enabled");
-        }
-    else
-        {
-        Serial.println("spotlights_room M5Stack display DMA unavailable, using pushImage");
-        }
-#else
-    Serial.println("spotlights_room M5Stack display DMA disabled, using pushImage");
-#endif
-
-    return true;
-    }
-
-
-void copySwapBuffer()
-    {
-    const int n = render_lx * render_ly;
-    for (int i = 0; i < n; i++)
-        {
-        const uint16_t a = fb[i];
-        fb2[i] = (a << 8) | (a >> 8);
-        }
-    }
-
-
-void pushFrame()
-    {
-    const int x = (lcd.width() - render_lx) / 2;
-    const int y = (lcd.height() - render_ly) / 2;
-    if (use_dma)
-        {
-        lcd.waitDMA();
-        copySwapBuffer();
-        lcd.pushImageDMA(x, y, render_lx, render_ly, fb2);
-        }
-    else
-        {
-        lcd.pushImage(x, y, render_lx, render_ly, fb);
-        }
-    }
-
-
-void setup()
-    {
-    Serial.begin(115200);
-
-    lcd.init();
-    lcd.setRotation(1);
-    lcd.setBrightness(200);
-    lcd.setColorDepth(16);
-    lcd.setSwapBytes(true);
-    lcd.fillScreen(TFT_BLACK);
-
-    render_lx = lcd.width();
-    render_ly = lcd.height();
-    if (render_lx > MAX_LX) render_lx = MAX_LX;
-    if (render_ly > MAX_LY) render_ly = MAX_LY;
-    render_ratio = (float)render_lx / (float)render_ly;
-
-    const size_t pixel_count = (size_t)render_lx * (size_t)render_ly;
-    while (!allocateRenderBuffers(pixel_count))
-        {
-        Serial.println("Error: cannot allocate framebuffer/zbuffer");
-        delay(1000);
-        }
-    lcd.setSwapBytes(!use_dma);
-
-    im.set(fb, render_lx, render_ly);
-
-    buildGrid(floor_vertices, floor_indices, floor_normal_indices,
-              FLOOR_NX, FLOOR_NY,
-              { -5.5f, -1.25f, -4.5f },
-              { 11.0f, 0.0f, 0.0f },
-              { 0.0f, 0.0f, 9.0f });
-
-    setupRenderer();
     fps_last_ms = millis();
     }
 
 
 void loop()
     {
+    const float phase = animationPhase();
+
+    updateCamera();
+    updateMovingPointLights(phase);
+
     const uint32_t render_start_us = micros();
-    drawFrame();
+
+    im.fillScreen(RGB565_Black);
+    renderer.clearZbuffer();
+    drawRoom();
+    drawLightMarkers(phase);
     const uint32_t render_us = micros() - render_start_us;
-    pushFrame();
+
+    tft.overlayFPS(fb);
+    tft.update(fb);
     updateFPS(render_us);
     }

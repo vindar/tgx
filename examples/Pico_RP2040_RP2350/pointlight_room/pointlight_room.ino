@@ -341,9 +341,9 @@ void updateFPS(uint32_t render_us)
     uint32_t now = millis();
     if (now - fps_last_ms >= 1000)
         {
-        Serial.print("spotlights_room Pico fps=");
+        Serial.print("pointlight_room Pico fps=");
         Serial.println(fps_render_sum_us ? (uint32_t)((1000000ULL * fps_frames) / fps_render_sum_us) : 0);
-        Serial.print("spotlights_room Pico display=");
+        Serial.print("pointlight_room Pico display=");
         Serial.println(use_dma ? "DMA" : "pushImage");
         fps_frames = 0;
         fps_render_sum_us = 0;
@@ -358,11 +358,11 @@ void setupDMA()
     if (use_dma)
         {
         tft.startWrite();
-        Serial.println("spotlights_room Pico display DMA enabled");
+        Serial.println("pointlight_room Pico display DMA enabled");
         }
     else
         {
-        Serial.println("spotlights_room Pico display DMA unavailable, using pushImage");
+        Serial.println("pointlight_room Pico display DMA unavailable, using pushImage");
         }
     }
 
