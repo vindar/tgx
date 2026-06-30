@@ -299,7 +299,7 @@
     #define TGX_CONFIG_RASTERIZE_TRIANGLE_INLINE
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
-    #define TGX_CONFIG_NOINLINE __attribute__((noinline, noclone))
+    #define TGX_CONFIG_NOINLINE
 
 #elif defined(__ARM_ARCH_6M__)
     // generic Cortex-M0 (use same setting as Teensy LC)

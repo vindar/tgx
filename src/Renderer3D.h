@@ -2701,7 +2701,7 @@ namespace tgx
         void _drawMesh(const int RASTER_TYPE, const Mesh3Dv2<color_t>* mesh, bool use_mesh_material);
 
         /** Return true when a decoded Mesh3Dv2 visibility cone rejects the meshlet for the current view. */
-        TGX_INLINE inline bool _discardMeshlet16b(const fVec3& sphere_center, float sphere_radius, const fVec3& cone_dir, float cone_cos) const
+        inline bool _discardMeshlet16b(const fVec3& sphere_center, float sphere_radius, const fVec3& cone_dir, float cone_cos) const
             {
             if (cone_cos <= -1.0f) return false;
 
@@ -2794,7 +2794,7 @@ namespace tgx
             }
 
 
-        template<bool CHECKRANGE, bool USE_BLENDING> TGX_INLINE inline void drawHLineZbuf(int x, int y, int w, color_t color, float opacity, float z)
+        template<bool CHECKRANGE, bool USE_BLENDING> inline void drawHLineZbuf(int x, int y, int w, color_t color, float opacity, float z)
             {
             if (CHECKRANGE) // optimized away at compile time
                 {
@@ -2870,7 +2870,7 @@ namespace tgx
 
         /* test if a box is outside the image and should be discarded.
            transform the box coords with M then z-divide. */
-        bool _discardBox(const fBox3 & bb, const fMat4 & M)
+        inline bool _discardBox(const fBox3 & bb, const fMat4 & M)
             {
             if ((bb.minX == 0) && (bb.maxX == 0) && (bb.minY == 0) && (bb.maxY == 0) && (bb.minZ == 0) && (bb.maxZ == 0))
                 return false; // do not discard if the bounding box is uninitialized.
@@ -2903,7 +2903,7 @@ namespace tgx
 
         /* test if a triangle is completely outside the image and should be discarded.
          * coords are given after z-divide. */
-        bool _discardTriangle(const fVec4 & P1, const fVec4 & P2, const fVec4 & P3)
+        inline bool _discardTriangle(const fVec4 & P1, const fVec4 & P2, const fVec4 & P3)
             {
             const float bx = (_ox - 1) * _ilx - 1.0f;
             const float Bx = (_ox + _uni.im->width() + 1) * _ilx - 1.0f;
@@ -2922,7 +2922,7 @@ namespace tgx
 
 
         /** used by _clipTestNeeded() */
-        bool _clip2(float clipboundXY, const fVec3 & P, const fMat4 & M)
+        TGX_INLINE bool _clip2(float clipboundXY, const fVec3 & P, const fMat4 & M)
             {
             fVec4 S = M.mult1(P);
             if (!_ortho)
@@ -2937,7 +2937,7 @@ namespace tgx
 
 
         /** test if the mesh may possibly need clipping. If it return false, then cliptest can be skipped. */
-        bool _clipTestNeeded(float clipboundXY, const fBox3 & bb, const fMat4 & M)
+        inline bool _clipTestNeeded(float clipboundXY, const fBox3 & bb, const fMat4 & M)
             {
             return (_clip2(clipboundXY, fVec3(bb.minX, bb.minY, bb.minZ), M)
                  || _clip2(clipboundXY, fVec3(bb.minX, bb.minY, bb.maxZ), M)
@@ -2951,7 +2951,7 @@ namespace tgx
 
 
         /** Return true when AA wireframe lines still need to range-check their secondary pixel. */
-        bool _wireFrameAANeighborCheckNeeded(const fBox3& bb, const fMat4& proj_modelview)
+        inline bool _wireFrameAANeighborCheckNeeded(const fBox3& bb, const fMat4& proj_modelview)
             {
             if ((_uni.im == nullptr) || (_uni.im->lx() <= 2) || (_uni.im->ly() <= 2)) return true;
 
@@ -2988,7 +2988,7 @@ namespace tgx
 
 #if TGX_MESHLET_SPHERE_CLIP
         /** Build object-space clip planes from the current projection-modelview matrix. */
-        TGX_INLINE inline void _meshletClipPlanes(float clipboundXY, const fMat4& M, fVec4* planes, float* plane_norms) const
+        inline void _meshletClipPlanes(float clipboundXY, const fMat4& M, fVec4* planes, float* plane_norms) const
             {
             const float cx = clipboundXY;
             planes[0] = fVec4(M.M[0] + cx * M.M[3], M.M[4] + cx * M.M[7], M.M[8] + cx * M.M[11], M.M[12] + cx * M.M[15]);
@@ -3006,7 +3006,7 @@ namespace tgx
 
 
         /** Return -1 when outside, 0 when fully inside, 1 when intersecting the clipping frustum. */
-        TGX_INLINE inline int _meshletSphereClip(const fVec3& center, float radius, const fVec4* planes, const float* plane_norms) const
+        inline int _meshletSphereClip(const fVec3& center, float radius, const fVec4* planes, const float* plane_norms) const
             {
             bool intersects = false;
             for (int i = 0; i < 6; i++)
@@ -3058,20 +3058,20 @@ namespace tgx
 
 
         /** used by _triangleClip when only 1 point is inside the view */
-        TGX_INLINE inline void _triangleClip1in(int shader, tgx::fVec4 CP,
+        inline void _triangleClip1in(int shader, tgx::fVec4 CP,
             float cp1, float cp2, float cp3,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4);
 
 
         /** used by _triangleClip when only 2 points are inside the view */
-        void _triangleClip2in(int shader, tgx::fVec4 CP,
+        inline void _triangleClip2in(int shader, tgx::fVec4 CP,
             float cp1, float cp2, float cp3,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4);
 
 
-        int _triangleClip(int shader, tgx::fVec4 CP, float off,
+        inline int _triangleClip(int shader, tgx::fVec4 CP, float off,
             const RasterizerVec4 & P1, const RasterizerVec4 & P2, const RasterizerVec4 & P3,
             RasterizerVec4 & nP1, RasterizerVec4 & nP2, RasterizerVec4 & nP3, RasterizerVec4 & nP4);
 
@@ -3108,7 +3108,7 @@ namespace tgx
 
 
         /** recompute a directional light after a view or light change */
-        TGX_INLINE inline void _updateDirectionalLightTransform(int index)
+        inline void _updateDirectionalLightTransform(int index)
             {
             _r_light[index] = _viewM.mult0(_light[index]);
             _r_light[index] = -_r_light[index];
@@ -3122,7 +3122,7 @@ namespace tgx
 
 
         /** recompute directional light normal-scaled vectors after a model change */
-        TGX_INLINE inline void _updateActiveDirectionalLightInorms()
+        inline void _updateActiveDirectionalLightInorms()
             {
             for (int i = 0; i < _directionalLightCount; i++)
                 {
@@ -3133,7 +3133,7 @@ namespace tgx
 
 
         /** recompute all active directional light transforms after a view change */
-        TGX_INLINE inline void _updateActiveDirectionalLightTransforms()
+        inline void _updateActiveDirectionalLightTransforms()
             {
             for (int i = 0; i < _directionalLightCount; i++)
                 {
@@ -3150,7 +3150,7 @@ namespace tgx
 
 
         /** precompute the finite or infinite range constants of one spot light */
-        TGX_INLINE inline void _setSpotLightRangeValues(int index, float range)
+        inline void _setSpotLightRangeValues(int index, float range)
             {
             if constexpr (MAX_SPOT_LIGHTS > 0)
                 {
@@ -3169,7 +3169,7 @@ namespace tgx
 
 
         /** precompute the cone constants of one spot light */
-        TGX_INLINE inline void _setSpotLightConeValues(int index, float outerAngleDeg, float innerAngleDeg)
+        inline void _setSpotLightConeValues(int index, float outerAngleDeg, float innerAngleDeg)
             {
             if constexpr (MAX_SPOT_LIGHTS > 0)
                 {
@@ -3204,7 +3204,7 @@ namespace tgx
 
 
         /** recompute one spot-light position after a view or light change */
-        TGX_INLINE inline void _updateSpotLightPositionTransform(int index)
+        inline void _updateSpotLightPositionTransform(int index)
             {
             if constexpr (MAX_SPOT_LIGHTS > 0)
                 {
@@ -3214,7 +3214,7 @@ namespace tgx
 
 
         /** recompute one spot-light direction after a view or light change */
-        TGX_INLINE inline void _updateSpotLightDirectionTransform(int index)
+        inline void _updateSpotLightDirectionTransform(int index)
             {
             if constexpr (MAX_SPOT_LIGHTS > 0)
                 {
@@ -3227,7 +3227,7 @@ namespace tgx
 
 
         /** recompute one spot-light transform after a view or light change */
-        TGX_INLINE inline void _updateSpotLightTransform(int index)
+        inline void _updateSpotLightTransform(int index)
             {
             if constexpr (MAX_SPOT_LIGHTS > 0)
                 {
@@ -3238,7 +3238,7 @@ namespace tgx
 
 
         /** recompute all active spot-light transforms after a view change */
-        TGX_INLINE inline void _updateActiveSpotLightTransforms()
+        inline void _updateActiveSpotLightTransforms()
             {
             if constexpr (MAX_SPOT_LIGHTS > 0)
                 {
@@ -3248,7 +3248,7 @@ namespace tgx
 
 
         /** recompute compact runtime flags for the active spot lights */
-        TGX_INLINE inline void _updateActiveSpotLightFlags()
+        inline void _updateActiveSpotLightFlags()
             {
             if constexpr (MAX_SPOT_LIGHTS > 0)
                 {
@@ -3265,7 +3265,7 @@ namespace tgx
 
 
         /** recompute one spot-light runtime color for the current material strengths */
-        TGX_INLINE inline void _updateSpotLightColor(int index, float diffuseStrength, float specularStrength, int specularExponent)
+        inline void _updateSpotLightColor(int index, float diffuseStrength, float specularStrength, int specularExponent)
             {
             if constexpr (MAX_SPOT_LIGHTS > 0)
                 {
@@ -3284,7 +3284,7 @@ namespace tgx
 
 
         /** recompute runtime spot-light colors for the current material strengths */
-        TGX_INLINE inline void _updateActiveSpotLightColors(float diffuseStrength, float specularStrength, int specularExponent)
+        inline void _updateActiveSpotLightColors(float diffuseStrength, float specularStrength, int specularExponent)
             {
             if constexpr (MAX_SPOT_LIGHTS > 0)
                 {
@@ -3295,7 +3295,7 @@ namespace tgx
 
 
         /** recompute runtime light colors for the current material strengths */
-        TGX_INLINE inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)
+        inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)
             {
             _r_ambiantColor = _ambiantColor * ambiantStrength;
             for (int i = 0; i < _directionalLightCount; i++)
@@ -3308,14 +3308,14 @@ namespace tgx
 
 
         /** recompute runtime light colors for the current material strengths */
-        TGX_INLINE inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength)
+        inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength)
             {
             _setRuntimeMaterialLighting(ambiantStrength, diffuseStrength, specularStrength, _specularExponent);
             }
 
 
         /** recompute one directional light runtime color for the current material strengths */
-        TGX_INLINE inline void _updateDirectionalLightColor(int index)
+        inline void _updateDirectionalLightColor(int index)
             {
             _r_diffuseColor[index] = _diffuseColor[index] * _diffuseStrength;
             _r_specularColor[index] = _specularColor[index] * _specularStrength;

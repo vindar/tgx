@@ -248,7 +248,7 @@ namespace tgx
         /**
          * unary negation operator
          **/
-        inline Vec2 operator-() const 
+        TGX_INLINE inline Vec2 operator-() const 
             {
             return Vec2{ -x, -y };
             }
@@ -260,7 +260,7 @@ namespace tgx
          *
          * @sa norm(), norm_fast()
         **/
-        inline T norm2() const
+        TGX_INLINE inline T norm2() const
             { 
             return x*x + y*y; 
             }
@@ -289,7 +289,7 @@ namespace tgx
          *
          * @sa norm()
          */
-        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat norm_fast() const
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat norm_fast() const
             { 
             return (Tfloat)tgx::fast_sqrt((Tfloat)(x*x + y*y));
             }
@@ -318,7 +318,7 @@ namespace tgx
          *          
          * @sa invnorm()
          */
-        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat invnorm_fast() const
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat invnorm_fast() const
             { 
             return (Tfloat)tgx::fast_invsqrt((Tfloat)(x*x + y*y));
             }
@@ -349,7 +349,7 @@ namespace tgx
          *
          * @sa normalize()
          */
-        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void normalize_fast()
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline void normalize_fast()
             { 
             Tfloat a = invnorm_fast<Tfloat>(); 
             x = (T)(x * a);
@@ -382,7 +382,7 @@ namespace tgx
          *
          * @sa getNormalize()
          */
-        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Vec2<T> getNormalize_fast() const
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Vec2<T> getNormalize_fast() const
             { 
             Vec2<T> V(*this);
             V.normalize_fast();
@@ -394,7 +394,7 @@ namespace tgx
         /**
          * Rotate this vector by +90 degree (anti-clockise).
          */
-        inline void rotate90()
+        TGX_INLINE inline void rotate90()
             { 
             *this = getRotate90(); 
             }
@@ -403,7 +403,7 @@ namespace tgx
         /**
          * Return the vector obtained after rotation by +90 degree (anti-clockise).
          */
-        inline Vec2<T> getRotate90() const
+        TGX_INLINE inline Vec2<T> getRotate90() const
             { 
             return Vec2<T>(-y, x); 
             }
@@ -595,7 +595,7 @@ namespace tgx
         }
 
 
-    template<typename T> TGX_INLINE inline bool Vec2<T>::setAsIntersection(const Vec2<T> & LA1, const Vec2<T> & LA2, const Vec2<T> & LB1, const Vec2<T> & LB2)
+    template<typename T> inline bool Vec2<T>::setAsIntersection(const Vec2<T> & LA1, const Vec2<T> & LA2, const Vec2<T> & LB1, const Vec2<T> & LB2)
         {
         const T a1 = LA2.y - LA1.y;
         const T b1 = LA1.x - LA2.x;

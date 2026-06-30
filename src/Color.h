@@ -500,7 +500,7 @@ struct RGB565
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0.0f,1.0f].
          */
-        inline void blend(RGB565 fg_col, float alpha)
+        TGX_INLINE inline void blend(RGB565 fg_col, float alpha)
             {
             blend256(fg_col, (uint32_t)(alpha * 256));
             }
@@ -513,7 +513,7 @@ struct RGB565
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,256].
          */
-        inline void blend256(const RGB565 & fg_col, uint32_t alpha)
+        TGX_INLINE inline void blend256(const RGB565 & fg_col, uint32_t alpha)
             {
             const uint32_t a = (alpha >> 3); // map to 0 - 32.
             const uint32_t bg = (val | (val << 16)) & 0b00000111111000001111100000011111;
@@ -526,7 +526,7 @@ struct RGB565
         /**
          * Multiply each color component by a given factor m/256 with m in [0,256]
          */
-        inline void mult256(int mr, int mg, int mb)
+        TGX_INLINE inline void mult256(int mr, int mg, int mb)
             {
             R = (R * mr) >> 8;
             G = (G * mg) >> 8;
@@ -539,7 +539,7 @@ struct RGB565
         *
         * Parameter ma is ignored since there is not alpha channel.
         */
-        inline void mult256(int mr, int mg, int mb, int ma)
+        TGX_INLINE inline void mult256(int mr, int mg, int mb, int ma)
             {
             mult256(mr, mg, mb);
             }
@@ -1006,7 +1006,7 @@ struct RGB24
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0.0f, 1.0f].
          */
-        inline void blend(const RGB24 & fg_col, float alpha)
+        TGX_INLINE inline void blend(const RGB24 & fg_col, float alpha)
             {
             blend256(fg_col, (uint32_t)(alpha * 256));
             }
@@ -1019,7 +1019,7 @@ struct RGB24
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0, 256].
          */
-        inline void blend256(const RGB24& fg_col, uint32_t alpha)
+        TGX_INLINE inline void blend256(const RGB24& fg_col, uint32_t alpha)
             {
             const uint16_t a = (uint16_t)alpha;
             const uint16_t ia = (uint16_t)(256 - alpha);
@@ -1032,7 +1032,7 @@ struct RGB24
         /**
         * Multiply each color component by a given factor m/256 with m in [0,256]
         */
-        inline void mult256(int mr, int mg, int mb)
+        TGX_INLINE inline void mult256(int mr, int mg, int mb)
             {
             R = (R * mr) >> 8;
             G = (G * mg) >> 8;
@@ -1045,7 +1045,7 @@ struct RGB24
         *
         * Parameter ma is ignored since there is not alpha channel.
         */
-        inline void mult256(int mr, int mg, int mb, int ma)
+        TGX_INLINE inline void mult256(int mr, int mg, int mb, int ma)
             {
             mult256(mr, mg, mb);
             }
@@ -1541,7 +1541,7 @@ struct RGB32
          * @param   fg_col  The foreground color.
          * @param   alpha   Additional opacity/alpha multiplier in [0.0f,1.0f].
          */
-        inline void blend(const RGB32 & fg_col, float alpha)
+        TGX_INLINE inline void blend(const RGB32 & fg_col, float alpha)
             {
             blend256(fg_col, (uint32_t)(alpha * 256));
             }
@@ -1556,7 +1556,7 @@ struct RGB32
          * @param   fg_col  The foreground color.
          * @param   alpha   The opacity/alpha multiplier in [0,256].
          */
-        inline void blend256(const RGB32 & fg_col, uint32_t alpha)
+        TGX_INLINE inline void blend256(const RGB32 & fg_col, uint32_t alpha)
             {
             // below is the correct alpha blending with pre-multiplied alpha
             // we do 'real' interpolate with eternal 'alpha' but not with the 'A' component of fg_col
@@ -1576,7 +1576,7 @@ struct RGB32
          *
          * @param   fg_col  The foreground color. The alpha channel of the color is used for blending.
          */
-        inline void blend(RGB32 fg_col)
+        TGX_INLINE inline void blend(RGB32 fg_col)
             {
             blend256(fg_col, 256);
             }
@@ -1585,7 +1585,7 @@ struct RGB32
         /**
          * Multiply each color component by a given factor m/256 with m in [0,256] except the A component.
          */
-        inline void mult256(int mr, int mg, int mb)
+        TGX_INLINE inline void mult256(int mr, int mg, int mb)
             {
             R = (R * mr) >> 8;
             G = (G * mg) >> 8;
@@ -1596,7 +1596,7 @@ struct RGB32
         /**
         * Multiply each color component by a given factor m/256 with m in [0,256]
         */
-        inline void mult256(int mr, int mg, int mb, int ma)
+        TGX_INLINE inline void mult256(int mr, int mg, int mb, int ma)
             {
             R = (R * mr) >> 8;
             G = (G * mg) >> 8;
@@ -1612,7 +1612,7 @@ struct RGB32
          * be used when loading a color from external data (a png image for example) where the colors
          * are not initially pre-multiplied.
          */
-        inline void premultiply()
+        TGX_INLINE inline void premultiply()
             {
             R = (uint8_t)((((uint16_t)R) * A) / 255);
             G = (uint8_t)((((uint16_t)G) * A) / 255);
@@ -1624,7 +1624,7 @@ struct RGB32
          * Return the opacity (alpha channel value) of this color in the range [0,1] (0=fully
          * transparent, 1=fully opaque).
          */
-        float opacity() const
+        TGX_INLINE inline float opacity() const
             {
             return (((float)A)/ 255.0f);
             }
@@ -1637,7 +1637,7 @@ struct RGB32
         *
         * **Remark** Use method multOpacity() instead whenever possible because it is faster.
         */
-        void setOpacity(float op)
+        inline void setOpacity(float op)
             {
             // slow version
             float mo = op * 255.0f;
@@ -1651,7 +1651,7 @@ struct RGB32
         *
         * This method assumes (and returns) a color with pre-multiplied alpha.
         */
-        void multOpacity(float op)
+        inline void multOpacity(float op)
             {
             *this = getMultOpacity(op);
             }

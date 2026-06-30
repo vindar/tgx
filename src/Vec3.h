@@ -295,7 +295,7 @@ namespace tgx
         /**
          * unary negation operator
          **/
-        inline Vec3 operator-() const
+        TGX_INLINE inline Vec3 operator-() const
             {
             return Vec3{ -x, -y, -z };
             }
@@ -307,7 +307,7 @@ namespace tgx
          * 
          * @sa norm(), norm_fast()
         **/
-        inline T norm2() const
+        TGX_INLINE inline T norm2() const
             { 
             return x*x + y*y +z*z; 
             }
@@ -336,7 +336,7 @@ namespace tgx
          *
          * @sa norm()
          */
-        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat norm_fast() const
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat norm_fast() const
             { 
             return (Tfloat)tgx::fast_sqrt((Tfloat)(x*x + y*y +z*z));
             }
@@ -365,7 +365,7 @@ namespace tgx
          *
          * @sa invnorm()
          */
-        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Tfloat invnorm_fast() const
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Tfloat invnorm_fast() const
             { 
             return (Tfloat)tgx::fast_invsqrt((Tfloat)(x*x + y*y +z*z));
             }
@@ -397,7 +397,7 @@ namespace tgx
          *
          * @sa normalize()
          */
-        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline void normalize_fast()
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline void normalize_fast()
             { 
             Tfloat a = invnorm_fast<Tfloat>(); 
             x = (T)(x * a);
@@ -431,7 +431,7 @@ namespace tgx
          *
          * @sa getNormalize()
          */
-        template<typename Tfloat = typename DefaultFPType<T>::fptype > inline Vec3<T> getNormalize_fast() const
+        template<typename Tfloat = typename DefaultFPType<T>::fptype > TGX_INLINE inline Vec3<T> getNormalize_fast() const
             { 
             Vec3<T> V(*this);
             V.normalize_fast();
