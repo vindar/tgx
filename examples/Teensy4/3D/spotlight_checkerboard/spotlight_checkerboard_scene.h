@@ -21,15 +21,6 @@ static float checkerPhase(uint32_t period_ms)
     }
 
 
-static fVec3 checkerNormalize(fVec3 v)
-    {
-    const float n2 = dotProduct(v, v);
-    if (n2 <= 0.000001f) return { 0.0f, -1.0f, 0.0f };
-    v *= tgx::fast_invsqrt(n2);
-    return v;
-    }
-
-
 static fVec3 checkerSpotTarget()
     {
     const float a = CHECKER_TWO_PI * checkerPhase(CHECKER_LOOP_MS);
@@ -43,20 +34,18 @@ static fVec3 checkerSpotTarget()
 
 static fVec3 checkerSpotDirection()
     {
-    return checkerNormalize(checkerSpotTarget() - CHECKER_SPOT_POSITION);
+    fVec3 dir = checkerSpotTarget() - CHECKER_SPOT_POSITION;
+    dir.normalize_fast();
+    return dir;
     }
 
 
 static RGBf checkerMarkerColor(const RGBf& color)
     {
-    float m = color.R;
-    if (color.G > m) m = color.G;
-    if (color.B > m) m = color.B;
+    const float m = tgx::max(tgx::max(color.R, color.G), color.B);
     if (m < 0.001f) return RGBf(1.0f, 1.0f, 1.0f);
-    RGBf c = color * (1.0f / m);
-    c.R = 0.70f + 0.30f * c.R;
-    c.G = 0.70f + 0.30f * c.G;
-    c.B = 0.70f + 0.30f * c.B;
+    RGBf c(0.70f, 0.70f, 0.70f);
+    c += color * (0.30f / m);
     c.clamp();
     return c;
     }
@@ -125,14 +114,16 @@ static void drawCheckerboardFloor()
 
 static void drawSpotlightConeMarker(const fVec3& position, const fVec3& direction)
     {
-    const fVec3 dir = checkerNormalize(direction);
+    fVec3 dir = direction;
+    dir.normalize_fast();
     fVec3 right = crossProduct({ 0.0f, 1.0f, 0.0f }, dir);
     if (dotProduct(right, right) < 0.0001f)
         {
         right = crossProduct({ 1.0f, 0.0f, 0.0f }, dir);
         }
-    right = checkerNormalize(right);
-    const fVec3 up = checkerNormalize(crossProduct(dir, right));
+    right.normalize_fast();
+    fVec3 up = crossProduct(dir, right);
+    up.normalize_fast();
 
     const float len = 0.84f;
     const float radius = 0.38f;
