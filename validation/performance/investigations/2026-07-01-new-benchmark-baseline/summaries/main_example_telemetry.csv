@@ -1,0 +1,258 @@
+board,label,scene,fps,frame_avg_us,frames,line_number,raw,source_run_dir,example_board,example_name
+core2,main_example_core2_borg_cube,unknown,71,,,1,borg_cube M5Stack fps=71,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,67,,,3,borg_cube M5Stack fps=67,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,70,,,5,borg_cube M5Stack fps=70,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,68,,,7,borg_cube M5Stack fps=68,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,70,,,9,borg_cube M5Stack fps=70,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,64,,,11,borg_cube M5Stack fps=64,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,58,,,13,borg_cube M5Stack fps=58,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,61,,,15,borg_cube M5Stack fps=61,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,58,,,17,borg_cube M5Stack fps=58,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,67,,,19,borg_cube M5Stack fps=67,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,62,,,21,borg_cube M5Stack fps=62,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,61,,,23,borg_cube M5Stack fps=61,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,68,,,25,borg_cube M5Stack fps=68,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,68,,,27,borg_cube M5Stack fps=68,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,71,,,29,borg_cube M5Stack fps=71,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_borg_cube,unknown,70,,,31,borg_cube M5Stack fps=70,core2_main_example_core2_borg_cube,core2,borg_cube
+core2,main_example_core2_donkeykong,gouraud_texture,29.15,31576.2,30,3,[TGX telemetry] cycle=1 scene=gouraud_texture fps=29.15 frame_avg_us=31576.2 frame_min_us=31065 frame_max_us=32398 frames=30,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,28.16,32779.8,29,6,[TGX telemetry] cycle=1 scene=gouraud_texture fps=28.16 frame_avg_us=32779.8 frame_min_us=32352 frame_max_us=33895 frames=29,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,27.78,33275.9,28,9,[TGX telemetry] cycle=1 scene=gouraud_texture fps=27.78 frame_avg_us=33275.9 frame_min_us=32679 frame_max_us=33922 frames=28,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,28.35,32539,29,12,[TGX telemetry] cycle=1 scene=gouraud_texture fps=28.35 frame_avg_us=32539.0 frame_min_us=31143 frame_max_us=33281 frames=29,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,26.11,35554.4,27,15,[TGX telemetry] cycle=1 scene=gouraud_texture fps=26.11 frame_avg_us=35554.4 frame_min_us=33162 frame_max_us=38155 frames=27,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,23.03,40716.6,24,18,[TGX telemetry] cycle=1 scene=gouraud_texture fps=23.03 frame_avg_us=40716.6 frame_min_us=38431 frame_max_us=42896 frames=24,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,23.51,39846.3,24,21,[TGX telemetry] cycle=1 scene=gouraud_texture fps=23.51 frame_avg_us=39846.3 frame_min_us=37947 frame_max_us=42549 frames=24,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,26.26,35337.2,27,24,[TGX telemetry] cycle=1 scene=gouraud_texture fps=26.26 frame_avg_us=35337.2 frame_min_us=33177 frame_max_us=37804 frames=27,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,24.73,37701.4,25,27,[TGX telemetry] cycle=1 scene=gouraud_texture fps=24.73 frame_avg_us=37701.4 frame_min_us=35607 frame_max_us=40299 frames=25,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,22.59,41532.7,23,30,[TGX telemetry] cycle=1 scene=gouraud_texture fps=22.59 frame_avg_us=41532.7 frame_min_us=40189 frame_max_us=43358 frames=23,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,23.72,39449.1,24,33,[TGX telemetry] cycle=1 scene=gouraud_texture fps=23.72 frame_avg_us=39449.1 frame_min_us=37658 frame_max_us=41979 frames=24,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,26.19,35457.7,27,36,[TGX telemetry] cycle=1 scene=gouraud_texture fps=26.19 frame_avg_us=35457.7 frame_min_us=33344 frame_max_us=37382 frames=27,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,gouraud_texture,26.24,35375.6,27,39,[TGX telemetry] cycle=1 scene=gouraud_texture fps=26.24 frame_avg_us=35375.6 frame_min_us=34140 frame_max_us=36675 frames=27,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,wireframe,25.59,37862.6,26,44,[TGX telemetry] cycle=2 scene=wireframe fps=25.59 frame_avg_us=37862.6 frame_min_us=36264 frame_max_us=39370 frames=26,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_donkeykong,wireframe,25.54,36451.7,26,47,[TGX telemetry] cycle=2 scene=wireframe fps=25.54 frame_avg_us=36451.7 frame_min_us=34806 frame_max_us=37672 frames=26,core2_main_example_core2_donkeykong,core2,donkeykong
+core2,main_example_core2_scream,unknown,20,,,1,scream M5Stack fps=20,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,20,,,3,scream M5Stack fps=20,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,20,,,5,scream M5Stack fps=20,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,20,,,7,scream M5Stack fps=20,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,20,,,10,scream M5Stack fps=20,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,20,,,12,scream M5Stack fps=20,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,19,,,14,scream M5Stack fps=19,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,19,,,16,scream M5Stack fps=19,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,19,,,19,scream M5Stack fps=19,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,18,,,21,scream M5Stack fps=18,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,17,,,23,scream M5Stack fps=17,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,17,,,25,scream M5Stack fps=17,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,18,,,27,scream M5Stack fps=18,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,18,,,30,scream M5Stack fps=18,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,18,,,32,scream M5Stack fps=18,core2_main_example_core2_scream,core2,scream
+core2,main_example_core2_scream,unknown,19,,,34,scream M5Stack fps=19,core2_main_example_core2_scream,core2,scream
+cores3,main_example_cores3_borg_cube,unknown,210,,,1,borg_cube M5Stack fps=210,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,192,,,3,borg_cube M5Stack fps=192,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,204,,,5,borg_cube M5Stack fps=204,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,194,,,7,borg_cube M5Stack fps=194,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,204,,,9,borg_cube M5Stack fps=204,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,187,,,11,borg_cube M5Stack fps=187,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,153,,,13,borg_cube M5Stack fps=153,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,172,,,15,borg_cube M5Stack fps=172,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,158,,,17,borg_cube M5Stack fps=158,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,191,,,19,borg_cube M5Stack fps=191,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,176,,,21,borg_cube M5Stack fps=176,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,161,,,23,borg_cube M5Stack fps=161,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,200,,,25,borg_cube M5Stack fps=200,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,194,,,27,borg_cube M5Stack fps=194,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,209,,,29,borg_cube M5Stack fps=209,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_borg_cube,unknown,197,,,31,borg_cube M5Stack fps=197,cores3_main_example_cores3_borg_cube,cores3,borg_cube
+cores3,main_example_cores3_donkeykong,gouraud_texture,32.61,18825.6,33,3,[TGX telemetry] cycle=1 scene=gouraud_texture fps=32.61 frame_avg_us=18825.6 frame_min_us=18231 frame_max_us=19261 frames=33,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,gouraud_texture,32,19420.7,32,6,[TGX telemetry] cycle=1 scene=gouraud_texture fps=32.00 frame_avg_us=19420.7 frame_min_us=18875 frame_max_us=20316 frames=32,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,gouraud_texture,32.16,19226.3,33,9,[TGX telemetry] cycle=1 scene=gouraud_texture fps=32.16 frame_avg_us=19226.3 frame_min_us=18978 frame_max_us=20095 frames=33,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,gouraud_texture,31.9,19475.8,32,12,[TGX telemetry] cycle=1 scene=gouraud_texture fps=31.90 frame_avg_us=19475.8 frame_min_us=18096 frame_max_us=21164 frames=32,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,gouraud_texture,29.38,22218.2,30,15,[TGX telemetry] cycle=1 scene=gouraud_texture fps=29.38 frame_avg_us=22218.2 frame_min_us=20819 frame_max_us=23327 frames=30,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,gouraud_texture,27.5,24553.1,28,18,[TGX telemetry] cycle=1 scene=gouraud_texture fps=27.50 frame_avg_us=24553.1 frame_min_us=23376 frame_max_us=25574 frames=28,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,gouraud_texture,29.35,22228,30,21,[TGX telemetry] cycle=1 scene=gouraud_texture fps=29.35 frame_avg_us=22228.0 frame_min_us=20873 frame_max_us=23860 frames=30,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,gouraud_texture,30.91,20502.6,31,24,[TGX telemetry] cycle=1 scene=gouraud_texture fps=30.91 frame_avg_us=20502.6 frame_min_us=19405 frame_max_us=21527 frames=31,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,gouraud_texture,28.63,23134.4,29,27,[TGX telemetry] cycle=1 scene=gouraud_texture fps=28.63 frame_avg_us=23134.4 frame_min_us=21731 frame_max_us=24160 frames=29,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,gouraud_texture,27.56,24506.4,28,30,[TGX telemetry] cycle=1 scene=gouraud_texture fps=27.56 frame_avg_us=24506.4 frame_min_us=23068 frame_max_us=25826 frames=28,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,gouraud_texture,29.67,21895.1,30,33,[TGX telemetry] cycle=1 scene=gouraud_texture fps=29.67 frame_avg_us=21895.1 frame_min_us=19686 frame_max_us=23695 frames=30,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,gouraud_texture,30.54,20919.4,31,36,[TGX telemetry] cycle=1 scene=gouraud_texture fps=30.54 frame_avg_us=20919.4 frame_min_us=19536 frame_max_us=21530 frames=31,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,wireframe,27.97,24908.6,28,42,[TGX telemetry] cycle=2 scene=wireframe fps=27.97 frame_avg_us=24908.6 frame_min_us=23649 frame_max_us=26755 frames=28,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_donkeykong,wireframe,28.18,23687,29,45,[TGX telemetry] cycle=2 scene=wireframe fps=28.18 frame_avg_us=23687.0 frame_min_us=22553 frame_max_us=24759 frames=29,cores3_main_example_cores3_donkeykong,cores3,donkeykong
+cores3,main_example_cores3_scream,unknown,41,,,1,scream M5Stack fps=41,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,41,,,3,scream M5Stack fps=41,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,41,,,5,scream M5Stack fps=41,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,41,,,7,scream M5Stack fps=41,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,41,,,10,scream M5Stack fps=41,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,40,,,12,scream M5Stack fps=40,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,40,,,14,scream M5Stack fps=40,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,40,,,16,scream M5Stack fps=40,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,40,,,19,scream M5Stack fps=40,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,39,,,21,scream M5Stack fps=39,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,38,,,23,scream M5Stack fps=38,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,37,,,25,scream M5Stack fps=37,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,38,,,27,scream M5Stack fps=38,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,38,,,30,scream M5Stack fps=38,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,38,,,32,scream M5Stack fps=38,cores3_main_example_cores3_scream,cores3,scream
+cores3,main_example_cores3_scream,unknown,38,,,34,scream M5Stack fps=38,cores3_main_example_cores3_scream,cores3,scream
+pico2,main_example_pico2_borg_cube,unknown,96,,,1,borg_cube Pico fps=96,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,100,,,3,borg_cube Pico fps=100,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,94,,,5,borg_cube Pico fps=94,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,120,,,7,borg_cube Pico fps=120,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,96,,,9,borg_cube Pico fps=96,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,101,,,11,borg_cube Pico fps=101,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,111,,,13,borg_cube Pico fps=111,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,111,,,15,borg_cube Pico fps=111,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,116,,,17,borg_cube Pico fps=116,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,108,,,19,borg_cube Pico fps=108,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,112,,,21,borg_cube Pico fps=112,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,108,,,23,borg_cube Pico fps=108,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,113,,,25,borg_cube Pico fps=113,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,111,,,27,borg_cube Pico fps=111,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,94,,,29,borg_cube Pico fps=94,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_borg_cube,unknown,104,,,31,borg_cube Pico fps=104,pico2_main_example_pico2_borg_cube,pico2,borg_cube
+pico2,main_example_pico2_bunny_fig,gouraud_texture,25.02,39859.2,26,2,[TGX telemetry] cycle=1 scene=gouraud_texture fps=25.02 frame_avg_us=39859.2 frame_min_us=37306 frame_max_us=42765 display=DMA frames=26,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,gouraud_texture,24.3,41080.1,25,4,[TGX telemetry] cycle=1 scene=gouraud_texture fps=24.30 frame_avg_us=41080.1 frame_min_us=39906 frame_max_us=41773 display=DMA frames=25,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,gouraud_texture,24.75,40308.9,25,6,[TGX telemetry] cycle=1 scene=gouraud_texture fps=24.75 frame_avg_us=40308.9 frame_min_us=38488 frame_max_us=43610 display=DMA frames=25,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,gouraud_texture,22.46,44480.7,23,8,[TGX telemetry] cycle=1 scene=gouraud_texture fps=22.46 frame_avg_us=44480.7 frame_min_us=42249 frame_max_us=45533 display=DMA frames=23,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,gouraud_texture,25.22,39588.1,26,10,[TGX telemetry] cycle=1 scene=gouraud_texture fps=25.22 frame_avg_us=39588.1 frame_min_us=37281 frame_max_us=41844 display=DMA frames=26,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,gouraud_texture,24.98,39949.5,25,12,[TGX telemetry] cycle=1 scene=gouraud_texture fps=24.98 frame_avg_us=39949.5 frame_min_us=37021 frame_max_us=41704 display=DMA frames=25,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,gouraud_texture,27.32,36535.8,28,14,[TGX telemetry] cycle=1 scene=gouraud_texture fps=27.32 frame_avg_us=36535.8 frame_min_us=35292 frame_max_us=37649 display=DMA frames=28,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,wireframe,31.43,9857,32,18,[TGX telemetry] cycle=2 scene=wireframe fps=31.43 frame_avg_us=9857.0 frame_min_us=8090 frame_max_us=34393 display=DMA frames=32,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,wireframe,30.48,8422,31,20,[TGX telemetry] cycle=2 scene=wireframe fps=30.48 frame_avg_us=8422.0 frame_min_us=7249 frame_max_us=33898 display=DMA frames=31,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,wireframe,30.48,8590.4,31,22,[TGX telemetry] cycle=2 scene=wireframe fps=30.48 frame_avg_us=8590.4 frame_min_us=7230 frame_max_us=33897 display=DMA frames=31,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,wireframe,30.48,9067.9,31,24,[TGX telemetry] cycle=2 scene=wireframe fps=30.48 frame_avg_us=9067.9 frame_min_us=8127 frame_max_us=33896 display=DMA frames=31,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,wireframe,30.48,9030.5,31,26,[TGX telemetry] cycle=2 scene=wireframe fps=30.48 frame_avg_us=9030.5 frame_min_us=7884 frame_max_us=33897 display=DMA frames=31,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,wireframe,30.48,8336.3,31,28,[TGX telemetry] cycle=2 scene=wireframe fps=30.48 frame_avg_us=8336.3 frame_min_us=7230 frame_max_us=33896 display=DMA frames=31,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,wireframe,30.48,8852.3,31,30,[TGX telemetry] cycle=2 scene=wireframe fps=30.48 frame_avg_us=8852.3 frame_min_us=7479 frame_max_us=33894 display=DMA frames=31,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_bunny_fig,wireframe,30.45,9006.5,31,32,[TGX telemetry] cycle=2 scene=wireframe fps=30.45 frame_avg_us=9006.5 frame_min_us=7971 frame_max_us=33895 display=DMA frames=31,pico2_main_example_pico2_bunny_fig,pico2,bunny_fig
+pico2,main_example_pico2_scream,unknown,32,,,1,scream Pico fps=32,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,32,,,3,scream Pico fps=32,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,32,,,6,scream Pico fps=32,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,32,,,8,scream Pico fps=32,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,31,,,10,scream Pico fps=31,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,30,,,12,scream Pico fps=30,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,30,,,14,scream Pico fps=30,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,30,,,17,scream Pico fps=30,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,30,,,19,scream Pico fps=30,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,30,,,21,scream Pico fps=30,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,31,,,23,scream Pico fps=31,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,32,,,25,scream Pico fps=32,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,32,,,28,scream Pico fps=32,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,32,,,30,scream Pico fps=32,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,32,,,32,scream Pico fps=32,pico2_main_example_pico2_scream,pico2,scream
+pico2,main_example_pico2_scream,unknown,34,,,34,scream Pico fps=34,pico2_main_example_pico2_scream,pico2,scream
+picow,main_example_picow_borg_cube,unknown,30,,,1,borg_cube Pico fps=30,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,32,,,3,borg_cube Pico fps=32,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,30,,,5,borg_cube Pico fps=30,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,38,,,7,borg_cube Pico fps=38,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,31,,,9,borg_cube Pico fps=31,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,33,,,11,borg_cube Pico fps=33,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,53,,,13,borg_cube Pico fps=53,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,52,,,15,borg_cube Pico fps=52,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,58,,,17,borg_cube Pico fps=58,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,51,,,19,borg_cube Pico fps=51,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,54,,,21,borg_cube Pico fps=54,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,53,,,23,borg_cube Pico fps=53,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,48,,,25,borg_cube Pico fps=48,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,38,,,27,borg_cube Pico fps=38,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,30,,,29,borg_cube Pico fps=30,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_borg_cube,unknown,32,,,31,borg_cube Pico fps=32,picow_main_example_picow_borg_cube,picow,borg_cube
+picow,main_example_picow_bunny_fig,gouraud_texture,5.29,189055.7,6,2,[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.29 frame_avg_us=189055.7 frame_min_us=177422 frame_max_us=195080 display=DMA frames=6,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,gouraud_texture,5.71,174899.7,6,4,[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.71 frame_avg_us=174899.7 frame_min_us=171506 frame_max_us=179742 display=DMA frames=6,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,gouraud_texture,5.62,177890.3,6,6,[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.62 frame_avg_us=177890.3 frame_min_us=170560 frame_max_us=185524 display=DMA frames=6,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,gouraud_texture,5.18,192959.2,6,8,[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.18 frame_avg_us=192959.2 frame_min_us=189500 frame_max_us=195286 display=DMA frames=6,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,gouraud_texture,5.44,183650.5,6,10,[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.44 frame_avg_us=183650.5 frame_min_us=177666 frame_max_us=191219 display=DMA frames=6,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,gouraud_texture,5.77,173197.2,6,12,[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.77 frame_avg_us=173197.2 frame_min_us=170666 frame_max_us=179290 display=DMA frames=6,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,gouraud_texture,5.36,186650.8,6,14,[TGX telemetry] cycle=1 scene=gouraud_texture fps=5.36 frame_avg_us=186650.8 frame_min_us=179346 frame_max_us=193112 display=DMA frames=6,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,wireframe,13.26,81196,14,18,[TGX telemetry] cycle=2 scene=wireframe fps=13.26 frame_avg_us=81196.0 frame_min_us=80013 frame_max_us=82215 display=DMA frames=14,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,wireframe,13.61,73434.4,14,20,[TGX telemetry] cycle=2 scene=wireframe fps=13.61 frame_avg_us=73434.4 frame_min_us=69805 frame_max_us=78845 display=DMA frames=14,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,wireframe,13.21,75696.6,14,22,[TGX telemetry] cycle=2 scene=wireframe fps=13.21 frame_avg_us=75696.6 frame_min_us=70281 frame_max_us=80625 display=DMA frames=14,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,wireframe,12.33,81031.6,13,24,[TGX telemetry] cycle=2 scene=wireframe fps=12.33 frame_avg_us=81031.6 frame_min_us=80558 frame_max_us=81758 display=DMA frames=13,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,wireframe,12.4,80574.5,13,26,[TGX telemetry] cycle=2 scene=wireframe fps=12.40 frame_avg_us=80574.5 frame_min_us=78234 frame_max_us=81787 display=DMA frames=13,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,wireframe,13.89,71968.9,14,28,[TGX telemetry] cycle=2 scene=wireframe fps=13.89 frame_avg_us=71968.9 frame_min_us=69944 frame_max_us=79271 display=DMA frames=14,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,wireframe,12.91,77377.2,13,30,[TGX telemetry] cycle=2 scene=wireframe fps=12.91 frame_avg_us=77377.2 frame_min_us=70217 frame_max_us=80551 display=DMA frames=13,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_bunny_fig,wireframe,12.52,79835.6,13,32,[TGX telemetry] cycle=2 scene=wireframe fps=12.52 frame_avg_us=79835.6 frame_min_us=78828 frame_max_us=81476 display=DMA frames=13,picow_main_example_picow_bunny_fig,picow,bunny_fig
+picow,main_example_picow_scream,unknown,15,,,1,scream Pico fps=15,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,15,,,3,scream Pico fps=15,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,15,,,6,scream Pico fps=15,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,15,,,8,scream Pico fps=15,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,14,,,10,scream Pico fps=14,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,14,,,12,scream Pico fps=14,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,14,,,14,scream Pico fps=14,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,14,,,17,scream Pico fps=14,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,14,,,19,scream Pico fps=14,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,14,,,21,scream Pico fps=14,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,15,,,23,scream Pico fps=15,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,15,,,26,scream Pico fps=15,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,15,,,28,scream Pico fps=15,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,15,,,30,scream Pico fps=15,picow_main_example_picow_scream,picow,scream
+picow,main_example_picow_scream,unknown,15,,,32,scream Pico fps=15,picow_main_example_picow_scream,picow,scream
+teensy41,main_example_teensy41_buddha,buddha_rotation,29.62,22261.9,30,4,[TGX telemetry] cycle=1 scene=buddha_rotation fps=29.62 frame_avg_us=22261.9 frame_min_us=19923 frame_max_us=23456 frames=30,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.13,17213.1,31,6,[TGX telemetry] cycle=1 scene=buddha_rotation fps=30.13 frame_avg_us=17213.1 frame_min_us=16149 frame_max_us=19243 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.33,18682.6,31,8,[TGX telemetry] cycle=1 scene=buddha_rotation fps=30.33 frame_avg_us=18682.6 frame_min_us=16473 frame_max_us=21225 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.36,22194.6,31,12,[TGX telemetry] cycle=2 scene=buddha_rotation fps=30.36 frame_avg_us=22194.6 frame_min_us=19230 frame_max_us=23374 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.13,17120,31,14,[TGX telemetry] cycle=2 scene=buddha_rotation fps=30.13 frame_avg_us=17120.0 frame_min_us=16158 frame_max_us=18985 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.3,18840.3,31,16,[TGX telemetry] cycle=2 scene=buddha_rotation fps=30.30 frame_avg_us=18840.3 frame_min_us=16502 frame_max_us=21462 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.36,22196.8,31,20,[TGX telemetry] cycle=3 scene=buddha_rotation fps=30.36 frame_avg_us=22196.8 frame_min_us=19229 frame_max_us=23376 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.1,17120,31,22,[TGX telemetry] cycle=3 scene=buddha_rotation fps=30.10 frame_avg_us=17120.0 frame_min_us=16153 frame_max_us=18986 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.33,18840.3,31,24,[TGX telemetry] cycle=3 scene=buddha_rotation fps=30.33 frame_avg_us=18840.3 frame_min_us=16479 frame_max_us=21449 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.36,22195.6,31,28,[TGX telemetry] cycle=4 scene=buddha_rotation fps=30.36 frame_avg_us=22195.6 frame_min_us=19234 frame_max_us=23389 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.13,17116.9,31,30,[TGX telemetry] cycle=4 scene=buddha_rotation fps=30.13 frame_avg_us=17116.9 frame_min_us=16153 frame_max_us=18981 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.33,18843.1,31,32,[TGX telemetry] cycle=4 scene=buddha_rotation fps=30.33 frame_avg_us=18843.1 frame_min_us=16503 frame_max_us=21447 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_buddha,buddha_rotation,30.33,22195.6,31,36,[TGX telemetry] cycle=5 scene=buddha_rotation fps=30.33 frame_avg_us=22195.6 frame_min_us=19230 frame_max_us=23379 frames=31,teensy41_main_example_teensy41_buddha,teensy41,buddha
+teensy41,main_example_teensy41_mars,intro,517.82,117.5,523,4,[TGX telemetry] cycle=1 scene=intro fps=517.82 frame_avg_us=117.5 frame_min_us=112 frame_max_us=184 frames=523,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,intro,410,150.1,410,6,[TGX telemetry] cycle=1 scene=intro fps=410.00 frame_avg_us=150.1 frame_min_us=150 frame_max_us=151 frames=410,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,beginning,374.63,1925.4,375,10,[TGX telemetry] cycle=2 scene=beginning fps=374.63 frame_avg_us=1925.4 frame_min_us=1924 frame_max_us=1989 frames=375,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,beginning,114.85,1931.4,116,12,[TGX telemetry] cycle=2 scene=beginning fps=114.85 frame_avg_us=1931.4 frame_min_us=1925 frame_max_us=1991 frames=116,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,beginning,86.31,2120.8,87,14,[TGX telemetry] cycle=2 scene=beginning fps=86.31 frame_avg_us=2120.8 frame_min_us=1947 frame_max_us=2471 frames=87,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,movie,169.15,5178.8,170,18,[TGX telemetry] cycle=3 scene=movie fps=169.15 frame_avg_us=5178.8 frame_min_us=5101 frame_max_us=5668 frames=170,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,movie,73.19,5332.3,74,20,[TGX telemetry] cycle=3 scene=movie fps=73.19 frame_avg_us=5332.3 frame_min_us=5150 frame_max_us=6254 frames=74,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,movie,43.22,7998.9,44,22,[TGX telemetry] cycle=3 scene=movie fps=43.22 frame_avg_us=7998.9 frame_min_us=6364 frame_max_us=9432 frames=44,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,movie,43.48,8776,44,24,[TGX telemetry] cycle=3 scene=movie fps=43.48 frame_avg_us=8776.0 frame_min_us=8316 frame_max_us=9075 frames=44,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,movie,43.35,7668.3,44,26,[TGX telemetry] cycle=3 scene=movie fps=43.35 frame_avg_us=7668.3 frame_min_us=5608 frame_max_us=9278 frames=44,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,movie,38.27,9025.4,39,28,[TGX telemetry] cycle=3 scene=movie fps=38.27 frame_avg_us=9025.4 frame_min_us=8442 frame_max_us=9823 frames=39,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,movie,35.57,7739.3,36,30,[TGX telemetry] cycle=3 scene=movie fps=35.57 frame_avg_us=7739.3 frame_min_us=5554 frame_max_us=9250 frames=36,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,movie,41.75,8699.5,42,32,[TGX telemetry] cycle=3 scene=movie fps=41.75 frame_avg_us=8699.5 frame_min_us=7192 frame_max_us=9288 frames=42,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,movie,43.31,8026.8,44,34,[TGX telemetry] cycle=3 scene=movie fps=43.31 frame_avg_us=8026.8 frame_min_us=5770 frame_max_us=9656 frames=44,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_mars,movie,42.12,8900.8,43,36,[TGX telemetry] cycle=3 scene=movie fps=42.12 frame_avg_us=8900.8 frame_min_us=8539 frame_max_us=9391 frames=43,teensy41_main_example_teensy41_mars,teensy41,mars
+teensy41,main_example_teensy41_scream,explosion,48.09,17504.6,49,2,[TGX telemetry] cycle=1 scene=explosion fps=48.09 frame_avg_us=17504.6 frame_min_us=17346 frame_max_us=18169 frames=49,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,50.65,17596.5,51,4,[TGX telemetry] cycle=1 scene=explosion fps=50.65 frame_avg_us=17596.5 frame_min_us=17467 frame_max_us=17731 frames=51,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,42.07,16282.3,43,6,[TGX telemetry] cycle=1 scene=explosion fps=42.07 frame_avg_us=16282.3 frame_min_us=16196 frame_max_us=16654 frames=43,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,41.38,16059.7,42,8,[TGX telemetry] cycle=1 scene=explosion fps=41.38 frame_avg_us=16059.7 frame_min_us=15728 frame_max_us=16273 frames=42,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,51.95,15829.9,52,12,[TGX telemetry] cycle=2 scene=explosion fps=51.95 frame_avg_us=15829.9 frame_min_us=15465 frame_max_us=16421 frames=52,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,56.21,15535,57,14,[TGX telemetry] cycle=2 scene=explosion fps=56.21 frame_avg_us=15535.0 frame_min_us=15409 frame_max_us=15646 frames=57,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,44.78,14384.2,45,16,[TGX telemetry] cycle=2 scene=explosion fps=44.78 frame_avg_us=14384.2 frame_min_us=13522 frame_max_us=15167 frames=45,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,49,14068.2,49,18,[TGX telemetry] cycle=2 scene=explosion fps=49.00 frame_avg_us=14068.2 frame_min_us=13528 frame_max_us=14646 frames=49,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,58.53,15516.5,59,22,[TGX telemetry] cycle=3 scene=explosion fps=58.53 frame_avg_us=15516.5 frame_min_us=15334 frame_max_us=15744 frames=59,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,58.36,15742.7,59,24,[TGX telemetry] cycle=3 scene=explosion fps=58.36 frame_avg_us=15742.7 frame_min_us=15539 frame_max_us=15932 frames=59,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,52.22,14879.8,53,26,[TGX telemetry] cycle=3 scene=explosion fps=52.22 frame_avg_us=14879.8 frame_min_us=14766 frame_max_us=15646 frames=53,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,56.72,15719.8,57,28,[TGX telemetry] cycle=3 scene=explosion fps=56.72 frame_avg_us=15719.8 frame_min_us=14999 frame_max_us=15947 frames=57,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,58.3,16008.9,59,32,[TGX telemetry] cycle=4 scene=explosion fps=58.30 frame_avg_us=16008.9 frame_min_us=15888 frame_max_us=16063 frames=59,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,58.13,16058.8,59,34,[TGX telemetry] cycle=4 scene=explosion fps=58.13 frame_avg_us=16058.8 frame_min_us=15956 frame_max_us=16183 frames=59,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_scream,explosion,44.16,14742.9,45,36,[TGX telemetry] cycle=4 scene=explosion fps=44.16 frame_avg_us=14742.9 frame_min_us=14564 frame_max_us=14894 frames=45,teensy41_main_example_teensy41_scream,teensy41,scream
+teensy41,main_example_teensy41_test_shading,teapot_wireframe_aa,112.44,4472.3,113,4,[TGX telemetry] cycle=1 scene=teapot_wireframe_aa fps=112.44 frame_avg_us=4472.3 frame_min_us=3704 frame_max_us=4673 frames=113,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,teapot_wireframe_aa,114.89,4201.7,115,6,[TGX telemetry] cycle=1 scene=teapot_wireframe_aa fps=114.89 frame_avg_us=4201.7 frame_min_us=3854 frame_max_us=4553 frames=115,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,teapot_wireframe_aa,111.89,3738.3,112,8,[TGX telemetry] cycle=1 scene=teapot_wireframe_aa fps=111.89 frame_avg_us=3738.3 frame_min_us=3209 frame_max_us=4044 frames=112,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,teapot_flat,173.65,3590.4,174,12,[TGX telemetry] cycle=2 scene=teapot_flat fps=173.65 frame_avg_us=3590.4 frame_min_us=3289 frame_max_us=3859 frames=174,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,teapot_flat,196,3285.3,196,14,[TGX telemetry] cycle=2 scene=teapot_flat fps=196.00 frame_avg_us=3285.3 frame_min_us=2842 frame_max_us=3587 frames=196,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,teapot_flat,167.5,3695.2,168,16,[TGX telemetry] cycle=2 scene=teapot_flat fps=167.50 frame_avg_us=3695.2 frame_min_us=3345 frame_max_us=3943 frames=168,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,teapot_gouraud,182,3794.6,182,20,[TGX telemetry] cycle=3 scene=teapot_gouraud fps=182.00 frame_avg_us=3794.6 frame_min_us=3337 frame_max_us=4094 frames=182,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,teapot_gouraud,167.5,4336.4,168,22,[TGX telemetry] cycle=3 scene=teapot_gouraud fps=167.50 frame_avg_us=4336.4 frame_min_us=4051 frame_max_us=4486 frames=168,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,teapot_gouraud,170.49,4219.3,171,24,[TGX telemetry] cycle=3 scene=teapot_gouraud fps=170.49 frame_avg_us=4219.3 frame_min_us=3899 frame_max_us=4503 frames=171,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,bunny_wireframe_aa,80.28,7759,81,30,[TGX telemetry] cycle=5 scene=bunny_wireframe_aa fps=80.28 frame_avg_us=7759.0 frame_min_us=7435 frame_max_us=8099 frames=81,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,bunny_wireframe_aa,83.67,7211.1,84,32,[TGX telemetry] cycle=5 scene=bunny_wireframe_aa fps=83.67 frame_avg_us=7211.1 frame_min_us=6954 frame_max_us=7633 frames=84,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,bunny_wireframe_aa,88.56,7381.2,89,34,[TGX telemetry] cycle=5 scene=bunny_wireframe_aa fps=88.56 frame_avg_us=7381.2 frame_min_us=7016 frame_max_us=7850 frames=89,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_shading,bunny_flat,109.45,5724.1,110,38,[TGX telemetry] cycle=6 scene=bunny_flat fps=109.45 frame_avg_us=5724.1 frame_min_us=5563 frame_max_us=5971 frames=110,teensy41_main_example_teensy41_test_shading,teensy41,test_shading
+teensy41,main_example_teensy41_test_texture,spot_gouraud,115.19,7369.6,116,4,[TGX telemetry] cycle=1 scene=spot_gouraud fps=115.19 frame_avg_us=7369.6 frame_min_us=6617 frame_max_us=7554 frames=116,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_gouraud,121.51,7225.5,122,6,[TGX telemetry] cycle=1 scene=spot_gouraud fps=121.51 frame_avg_us=7225.5 frame_min_us=7005 frame_max_us=7338 frames=122,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_gouraud,122,7198.5,122,8,[TGX telemetry] cycle=1 scene=spot_gouraud fps=122.00 frame_avg_us=7198.5 frame_min_us=7007 frame_max_us=7321 frames=122,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_gouraud,123.51,7084.1,124,10,[TGX telemetry] cycle=1 scene=spot_gouraud fps=123.51 frame_avg_us=7084.1 frame_min_us=6801 frame_max_us=7341 frames=124,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_gouraud,130.35,6551.8,131,12,[TGX telemetry] cycle=1 scene=spot_gouraud fps=130.35 frame_avg_us=6551.8 frame_min_us=6192 frame_max_us=6860 frames=131,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_tex_nearest,109.34,7752.6,110,16,[TGX telemetry] cycle=2 scene=spot_tex_nearest fps=109.34 frame_avg_us=7752.6 frame_min_us=7393 frame_max_us=7948 frames=110,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_tex_nearest,105.16,8412.8,106,18,[TGX telemetry] cycle=2 scene=spot_tex_nearest fps=105.16 frame_avg_us=8412.8 frame_min_us=7976 frame_max_us=8589 frames=106,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_tex_nearest,99.7,9012.6,100,20,[TGX telemetry] cycle=2 scene=spot_tex_nearest fps=99.70 frame_avg_us=9012.6 frame_min_us=8500 frame_max_us=9256 frames=100,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_tex_nearest,102.9,8722.7,103,22,[TGX telemetry] cycle=2 scene=spot_tex_nearest fps=102.90 frame_avg_us=8722.7 frame_min_us=8420 frame_max_us=9103 frames=103,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_tex_nearest,103.48,8656.2,104,24,[TGX telemetry] cycle=2 scene=spot_tex_nearest fps=103.48 frame_avg_us=8656.2 frame_min_us=8371 frame_max_us=9002 frames=104,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_tex_bilinear,90.55,10025.3,91,28,[TGX telemetry] cycle=3 scene=spot_tex_bilinear fps=90.55 frame_avg_us=10025.3 frame_min_us=9695 frame_max_us=10532 frames=91,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_tex_bilinear,97.32,9259.9,98,30,[TGX telemetry] cycle=3 scene=spot_tex_bilinear fps=97.32 frame_avg_us=9259.9 frame_min_us=8860 frame_max_us=9793 frames=98,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_tex_bilinear,95.71,9423.1,96,32,[TGX telemetry] cycle=3 scene=spot_tex_bilinear fps=95.71 frame_avg_us=9423.1 frame_min_us=9054 frame_max_us=9988 frames=96,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_tex_bilinear,96.33,9365.3,97,34,[TGX telemetry] cycle=3 scene=spot_tex_bilinear fps=96.33 frame_avg_us=9365.3 frame_min_us=8781 frame_max_us=10005 frames=97,teensy41_main_example_teensy41_test_texture,teensy41,test_texture
+teensy41,main_example_teensy41_test_texture,spot_tex_bilinear,93,9735.5,93,36,[TGX telemetry] cycle=3 scene=spot_tex_bilinear fps=93.00 frame_avg_us=9735.5 frame_min_us=9309 frame_max_us=10174 frames=93,teensy41_main_example_teensy41_test_texture,teensy41,test_texture

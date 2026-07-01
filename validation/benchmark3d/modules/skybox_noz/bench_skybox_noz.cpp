@@ -58,7 +58,7 @@ tgx::RGB565 skyColor(int face, int x, int y, int tex_h)
 {
     const int horizon = 120 + (face == 2 ? 32 : 0) - (face == 3 ? 45 : 0);
     const int vertical = (y * 255) / (tex_h - 1);
-    const int wave = (int)(34.0f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180((float)(x * 7 + y * 3 + face * 41))));
+    const int wave = (int)(34.0f * benchFastSinDeg(wrapDeg180((float)(x * 7 + y * 3 + face * 41))));
     const bool star = (((x * 53 + y * 97 + face * 29) & 255) > 250) && (face != 3);
     const bool cloud = (((x * 5 + y * 2 + face * 13) & 31) < 8) && (y > tex_h / 3) && (face != 2);
     int r = 12 + face * 9 + vertical / 9;
@@ -128,11 +128,11 @@ void setCamera(BenchContext& ctx, uint32_t frame_index, float yaw_offset, float 
 {
     const float phase = frame_index ? visualPhaseDeg(frame_index) : 0.0f;
     const float yaw = yaw_offset + phase * 0.65f;
-    const float pitch = 0.10f * tgx::tgx_fast_sin_deg_clamped(phase * 0.75f);
+    const float pitch = 0.10f * benchFastSinDeg(phase * 0.75f);
     tgx::fVec3 dir{
-        tgx::tgx_fast_sin_deg_clamped(yaw),
+        benchFastSinDeg(yaw),
         pitch,
-        -tgx::tgx_fast_cos_deg_clamped(yaw)
+        -benchFastCosDeg(yaw)
     };
     dir.normalize_fast();
     const tgx::fVec3 eye{0.0f, height, 0.0f};
@@ -201,7 +201,7 @@ void renderPartialFaces(BenchContext& ctx, uint32_t frame_index)
 void renderReferenceHeight(BenchContext& ctx, uint32_t frame_index)
 {
     const float phase = frame_index ? visualPhaseDeg(frame_index) : 0.0f;
-    const float height = 1.1f + 0.6f * tgx::tgx_fast_sin_deg_clamped(phase);
+    const float height = 1.1f + 0.6f * benchFastSinDeg(phase);
     setCamera(ctx, frame_index, 10.0f, height);
     drawSky(ctx, 0.0f, -0.35f, 650.0f, tgx::SHADER_TEXTURE_NEAREST, tgx::SHADER_TEXTURE_WRAP_POW2);
 }

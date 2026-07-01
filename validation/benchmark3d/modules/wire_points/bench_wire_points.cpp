@@ -116,8 +116,8 @@ uint8_t* align4(uint8_t* p, const uint8_t* base)
 
 float waveHeight(float x, float y)
 {
-    return 0.18f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180(220.0f * x + 18.0f)) *
-                   tgx::tgx_fast_cos_deg_clamped(wrapDeg180(150.0f * y - 12.0f));
+    return 0.18f * benchFastSinDeg(wrapDeg180(220.0f * x + 18.0f)) *
+                   benchFastCosDeg(wrapDeg180(150.0f * y - 12.0f));
 }
 
 void setBaseScene(BenchContext& ctx, tgx::Shader shaders)
@@ -152,11 +152,11 @@ bool buildLines(const BenchContext& ctx)
         const float b = wrapDeg180((float)i * 61.0f + 35.0f);
         const float r0 = 0.35f + 0.010f * (float)(i % 29);
         const float r1 = 1.00f + 0.005f * (float)(i % 17);
-        const float x0 = r0 * tgx::tgx_fast_cos_deg_clamped(a);
-        const float y0 = r0 * tgx::tgx_fast_sin_deg_clamped(b);
+        const float x0 = r0 * benchFastCosDeg(a);
+        const float y0 = r0 * benchFastSinDeg(b);
         const float z0 = -0.55f + 1.10f * (float)(i % 11) / 10.0f;
-        const float x1 = r1 * tgx::tgx_fast_cos_deg_clamped(a + 72.0f);
-        const float y1 = r1 * tgx::tgx_fast_sin_deg_clamped(b - 48.0f);
+        const float x1 = r1 * benchFastCosDeg(a + 72.0f);
+        const float y1 = r1 * benchFastSinDeg(b - 48.0f);
         const float z1 = -0.55f + 1.10f * (float)((i * 7) % 11) / 10.0f;
         g_wire.line_vertices[i * 2 + 0] = tgx::fVec3{x0, y0, z0};
         g_wire.line_vertices[i * 2 + 1] = tgx::fVec3{x1, y1, z1};
@@ -241,8 +241,8 @@ bool buildStrip(const BenchContext& ctx)
         const float t = (float)i / (float)(count - 1);
         const float x = -1.15f + 2.30f * t;
         const float lane = (i & 1) ? 0.32f : -0.32f;
-        const float y = lane + 0.16f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180(t * 360.0f * 2.0f));
-        const float z = 0.22f * tgx::tgx_fast_cos_deg_clamped(wrapDeg180(t * 360.0f * 1.5f));
+        const float y = lane + 0.16f * benchFastSinDeg(wrapDeg180(t * 360.0f * 2.0f));
+        const float z = 0.22f * benchFastCosDeg(wrapDeg180(t * 360.0f * 1.5f));
         g_wire.strip_vertices[i] = tgx::fVec3{x, y, z};
         g_wire.strip_indices[i] = (uint16_t)i;
         }
@@ -427,9 +427,9 @@ bool buildPoints(const BenchContext& ctx)
         const float a = wrapDeg180((float)i * 137.5f);
         const float b = wrapDeg180((float)i * 47.0f + 20.0f);
         const float ring = 0.35f + 0.80f * (float)(i % 37) / 36.0f;
-        const float x = ring * tgx::tgx_fast_cos_deg_clamped(a);
-        const float y = 0.72f * tgx::tgx_fast_sin_deg_clamped(b);
-        const float z = ring * tgx::tgx_fast_sin_deg_clamped(a) * 0.72f;
+        const float x = ring * benchFastCosDeg(a);
+        const float y = 0.72f * benchFastSinDeg(b);
+        const float z = ring * benchFastSinDeg(a) * 0.72f;
         g_wire.point_positions[i] = tgx::fVec3{x, y, z};
         g_wire.color_indices[i] = i % 6;
         g_wire.opacity_indices[i] = (i / 3) % 4;

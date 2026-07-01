@@ -155,6 +155,8 @@ def arduino_compile_upload_command(board: Dict[str, Any], module: Dict[str, Any]
         str(board["fqbn"]),
         "--libraries",
         str(ARDUINO_LIBRARIES),
+        "--library",
+        str(ROOT),
         "--libraries",
         str(BENCH_ROOT / "arduino"),
     ]

@@ -338,7 +338,7 @@ void renderTruncatedOpenClipped(BenchContext& ctx, uint32_t frame_index)
 {
     ctx.renderer.setMaterial(tgx::RGBf{0.34f, 0.82f, 0.86f}, 0.16f, 0.84f, 0.22f, 24);
     const float phase = frame_index ? visualPhaseDeg(frame_index) : 0.0f;
-    const float x = frame_index ? 0.18f * tgx::tgx_fast_sin_deg_clamped(phase) : 0.0f;
+    const float x = frame_index ? 0.18f * benchFastSinDeg(phase) : 0.0f;
     setModel(ctx, tgx::fVec3{x, 0.0f, -1.45f}, tgx::fVec3{1.25f, 1.30f, 1.25f}, 20.0f + phase * 0.15f, tgx::fVec3{0.45f, 1.0f, 0.25f});
     ctx.renderer.drawTruncatedCone(sectorsLow(ctx), 1.0f, 0.35f, false, true);
 }

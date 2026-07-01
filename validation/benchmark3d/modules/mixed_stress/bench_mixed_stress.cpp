@@ -96,9 +96,9 @@ int sectorsForCaps(const BenchContext& ctx)
 
 float surfaceHeight(float x, float y)
 {
-    return 0.18f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180(x * 180.0f)) *
-                   tgx::tgx_fast_cos_deg_clamped(wrapDeg180(y * 210.0f)) +
-           0.05f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180((x - y) * 145.0f));
+    return 0.18f * benchFastSinDeg(wrapDeg180(x * 180.0f)) *
+                   benchFastCosDeg(wrapDeg180(y * 210.0f)) +
+           0.05f * benchFastSinDeg(wrapDeg180((x - y) * 145.0f));
 }
 
 tgx::fVec3 surfaceNormal(float x, float y)
@@ -148,7 +148,7 @@ tgx::RGB565 accentColor(int x, int y)
 tgx::RGB565 skyColor(int face, int x, int y)
 {
     const int v = (y * 255) / (MIX_SKY_H - 1);
-    const int wave = (int)(22.0f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180((float)(x * 11 + y * 7 + face * 29))));
+    const int wave = (int)(22.0f * benchFastSinDeg(wrapDeg180((float)(x * 11 + y * 7 + face * 29))));
     const bool star = (((x * 43 + y * 89 + face * 31) & 255) > 249) && (face != 3);
     int r = 16 + face * 5 + v / 12;
     int g = 30 + face * 3 + v / 7;
@@ -316,8 +316,8 @@ bool buildStripGeometry(BenchContext& ctx)
         {
         const float u = (float)p / (float)(pairs - 1);
         const float x = -2.4f + 4.8f * u;
-        const float z = 0.10f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180(u * 360.0f));
-        const float y_center = 0.18f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180(u * 540.0f));
+        const float z = 0.10f * benchFastSinDeg(wrapDeg180(u * 360.0f));
+        const float y_center = 0.18f * benchFastSinDeg(wrapDeg180(u * 540.0f));
         const int a = 2 * p;
         const int b = a + 1;
         g_mix.strip_vertices[a] = tgx::fVec3{x, y_center - 0.34f, z};
@@ -369,9 +369,9 @@ void setCamera(BenchContext& ctx, uint32_t frame_index, float yaw_offset, float 
     const float phase = frame_index ? visualPhaseDeg(frame_index) : 0.0f;
     const float yaw = yaw_offset + phase * 0.22f;
     const tgx::fVec3 eye{
-        distance * tgx::tgx_fast_sin_deg_clamped(yaw),
-        1.2f + 0.18f * tgx::tgx_fast_sin_deg_clamped(phase * 0.7f),
-        -0.2f + distance * tgx::tgx_fast_cos_deg_clamped(yaw)
+        distance * benchFastSinDeg(yaw),
+        1.2f + 0.18f * benchFastSinDeg(phase * 0.7f),
+        -0.2f + distance * benchFastCosDeg(yaw)
     };
     ctx.renderer.setLookAt(eye, tgx::fVec3{0.0f, -0.05f, -5.5f}, tgx::fVec3{0.0f, 1.0f, 0.0f});
 }
@@ -486,8 +486,8 @@ void drawNoZOverlay(BenchContext& ctx, uint32_t frame_index)
     ctx.renderer.drawWireFrameLine(tgx::fVec3{-1.8f, -1.05f, 0.0f}, tgx::fVec3{1.8f, 1.05f, 0.0f},
                                    1.25f, tgx::RGB565(31, 54, 10), 0.82f);
     ctx.renderer.drawWireFrameLine(tgx::fVec3{-1.8f, 1.05f, 0.0f}, tgx::fVec3{1.8f, -1.05f, 0.0f});
-    ctx.renderer.drawDot(tgx::fVec3{0.75f * tgx::tgx_fast_sin_deg_clamped(phase),
-                                    0.45f * tgx::tgx_fast_cos_deg_clamped(phase * 1.3f), 0.0f},
+    ctx.renderer.drawDot(tgx::fVec3{0.75f * benchFastSinDeg(phase),
+                                    0.45f * benchFastCosDeg(phase * 1.3f), 0.0f},
                          3, tgx::RGB565(31, 58, 18), 0.9f);
 }
 
@@ -508,8 +508,8 @@ void renderLayeredFullScene(BenchContext& ctx, uint32_t frame_index)
     const float phase = visualPhaseDeg(frame_index);
     setCamera(ctx, frame_index, -7.0f, 0.95f);
     drawSkyLayer(ctx, frame_index);
-    ctx.renderer.setSpotLightPosition(0, tgx::fVec3{-1.2f + 0.75f * tgx::tgx_fast_sin_deg_clamped(phase),
-                                                    0.85f + 0.25f * tgx::tgx_fast_cos_deg_clamped(phase * 1.2f),
+    ctx.renderer.setSpotLightPosition(0, tgx::fVec3{-1.2f + 0.75f * benchFastSinDeg(phase),
+                                                    0.85f + 0.25f * benchFastCosDeg(phase * 1.2f),
                                                     -3.7f});
     drawGroundMesh(ctx, frame_index, true);
     drawFlatPrimitives(ctx, frame_index);
@@ -618,13 +618,13 @@ void renderLightingStateChurn(BenchContext& ctx, uint32_t frame_index)
 {
     const float phase = visualPhaseDeg(frame_index);
     setCamera(ctx, frame_index, -16.0f, 0.9f);
-    ctx.renderer.setSpotLightPosition(0, tgx::fVec3{-1.25f + 0.60f * tgx::tgx_fast_sin_deg_clamped(phase),
+    ctx.renderer.setSpotLightPosition(0, tgx::fVec3{-1.25f + 0.60f * benchFastSinDeg(phase),
                                                     0.85f,
-                                                    -3.75f + 0.22f * tgx::tgx_fast_cos_deg_clamped(phase)});
+                                                    -3.75f + 0.22f * benchFastCosDeg(phase)});
     if (ctx.caps.power_class >= 4)
         {
         ctx.renderer.setSpotLightPosition(1, tgx::fVec3{1.20f,
-                                                        -0.40f + 0.50f * tgx::tgx_fast_cos_deg_clamped(phase * 1.2f),
+                                                        -0.40f + 0.50f * benchFastCosDeg(phase * 1.2f),
                                                         -4.10f});
         }
 
@@ -651,7 +651,7 @@ void renderClippingOverlay(BenchContext& ctx, uint32_t frame_index)
 
     setShaderMode(ctx, tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER | tgx::SHADER_GOURAUD |
                        tgx::SHADER_TEXTURE | tgx::SHADER_TEXTURE_NEAREST | tgx::SHADER_TEXTURE_WRAP_POW2);
-    setModel(ctx, tgx::fVec3{-0.15f + 0.10f * tgx::tgx_fast_sin_deg_clamped(phase), -0.20f, -1.35f},
+    setModel(ctx, tgx::fVec3{-0.15f + 0.10f * benchFastSinDeg(phase), -0.20f, -1.35f},
              tgx::fVec3{0.92f, 0.65f, 0.92f}, 18.0f + phase * 0.12f,
              tgx::fVec3{0.2f, 1.0f, 0.3f});
     ctx.renderer.drawMesh(&g_mix.mesh, true, true);

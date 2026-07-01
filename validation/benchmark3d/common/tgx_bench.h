@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <math.h>
+
 #include <tgx.h>
 
 #ifndef TGX_BENCH_BOARD_NAME
@@ -116,6 +118,16 @@
 
 namespace tgxbench
 {
+
+inline float benchFastSinDeg(float angle)
+{
+    return sinf(angle * 0.017453292519943295769f);
+}
+
+inline float benchFastCosDeg(float angle)
+{
+    return cosf(angle * 0.017453292519943295769f);
+}
 
 enum class BenchMemoryKind
     {

@@ -47,9 +47,9 @@ int chooseGridN(const BenchContext& ctx)
 
 float surfaceWave(float fx, float fy)
 {
-    return 0.26f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180(fx * 360.0f)) *
-                   tgx::tgx_fast_cos_deg_clamped(wrapDeg180(fy * 300.0f)) +
-           0.10f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180((fx + 0.65f * fy) * 230.0f));
+    return 0.26f * benchFastSinDeg(wrapDeg180(fx * 360.0f)) *
+                   benchFastCosDeg(wrapDeg180(fy * 300.0f)) +
+           0.10f * benchFastSinDeg(wrapDeg180((fx + 0.65f * fy) * 230.0f));
 }
 
 tgx::RGB565 lightingTextureColor(int x, int y)
@@ -164,8 +164,8 @@ void applyVisualMotion(BenchContext& ctx, uint32_t frame_index)
         }
 
     const float angle = visualPhaseDeg(frame_index);
-    const float x = 0.18f * tgx::tgx_fast_sin_deg_clamped(angle);
-    const float y = 0.10f * tgx::tgx_fast_cos_deg_clamped(angle * 0.8f);
+    const float x = 0.18f * benchFastSinDeg(angle);
+    const float y = 0.10f * benchFastCosDeg(angle * 0.8f);
     ctx.renderer.setModelPosScaleRot(tgx::fVec3{x, y, 0.0f},
                                      tgx::fVec3{1.0f, 1.0f, 1.0f},
                                      angle * 0.20f,
@@ -408,8 +408,8 @@ bool setupPointMovingUpdate(BenchContext& ctx)
 void renderPointMovingUpdate(BenchContext& ctx, uint32_t frame_index)
 {
     const float angle = visualPhaseDeg(frame_index);
-    const float x = 1.45f * tgx::tgx_fast_sin_deg_clamped(angle);
-    const float y = 0.95f * tgx::tgx_fast_cos_deg_clamped(angle * 0.75f);
+    const float x = 1.45f * benchFastSinDeg(angle);
+    const float y = 0.95f * benchFastCosDeg(angle * 0.75f);
     ctx.renderer.setSpotLightPosition(0, tgx::fVec3{x, y, -3.55f});
     applyVisualMotion(ctx, frame_index);
     drawSurface(ctx, true, false);

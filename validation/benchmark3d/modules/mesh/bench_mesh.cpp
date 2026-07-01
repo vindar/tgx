@@ -91,9 +91,9 @@ int16_t qTex(float value)
 
 float surfaceHeight(float x, float y)
 {
-    return 0.18f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180(x * 210.0f)) *
-                   tgx::tgx_fast_cos_deg_clamped(wrapDeg180(y * 170.0f)) +
-           0.07f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180((x - y) * 160.0f));
+    return 0.18f * benchFastSinDeg(wrapDeg180(x * 210.0f)) *
+                   benchFastCosDeg(wrapDeg180(y * 170.0f)) +
+           0.07f * benchFastSinDeg(wrapDeg180((x - y) * 160.0f));
 }
 
 tgx::fVec3 surfaceNormal(float x, float y)
@@ -610,7 +610,7 @@ bool setupV2NearClip(BenchContext& ctx)
 void renderV2NearClip(BenchContext& ctx, uint32_t frame_index)
 {
     const float phase = frame_index ? visualPhaseDeg(frame_index) : 0.0f;
-    const float z = -1.22f + (frame_index ? 0.08f * tgx::tgx_fast_sin_deg_clamped(phase) : 0.0f);
+    const float z = -1.22f + (frame_index ? 0.08f * benchFastSinDeg(phase) : 0.0f);
     setModel(ctx, frame_index, tgx::fVec3{0.0f, 0.0f, z}, tgx::fVec3{1.55f, 1.20f, 1.55f}, 12.0f);
     ctx.renderer.drawMesh(&g_mesh.grid_mesh, true);
 }
@@ -624,7 +624,7 @@ bool setupV2PartialViewport(BenchContext& ctx)
 void renderV2PartialViewport(BenchContext& ctx, uint32_t frame_index)
 {
     const float phase = frame_index ? visualPhaseDeg(frame_index) : 0.0f;
-    const float x = 2.45f + (frame_index ? 0.20f * tgx::tgx_fast_sin_deg_clamped(phase) : 0.0f);
+    const float x = 2.45f + (frame_index ? 0.20f * benchFastSinDeg(phase) : 0.0f);
     setModel(ctx, frame_index, tgx::fVec3{x, 0.0f, -5.4f}, tgx::fVec3{1.80f, 1.25f, 1.80f}, 18.0f);
     ctx.renderer.drawMesh(&g_mesh.grid_mesh, true);
 }
@@ -638,7 +638,7 @@ bool setupV2FarGouraud(BenchContext& ctx)
 void renderV2FarGouraud(BenchContext& ctx, uint32_t frame_index)
 {
     const float phase = frame_index ? visualPhaseDeg(frame_index) : 0.0f;
-    const float z = -74.0f + (frame_index ? 3.0f * tgx::tgx_fast_sin_deg_clamped(phase) : 0.0f);
+    const float z = -74.0f + (frame_index ? 3.0f * benchFastSinDeg(phase) : 0.0f);
     setModel(ctx, frame_index, tgx::fVec3{0.0f, 0.0f, z}, tgx::fVec3{16.0f, 11.0f, 16.0f}, -12.0f);
     ctx.renderer.drawMesh(&g_mesh.low_mesh, true);
 }

@@ -34,9 +34,9 @@ float wrapDeg180(float angle)
 
 float gridWave(float fx, float fy)
 {
-    return 0.30f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180(fx * 360.0f)) *
-                   tgx::tgx_fast_cos_deg_clamped(wrapDeg180(fy * 270.0f)) +
-           0.11f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180((fx - fy) * 220.0f));
+    return 0.30f * benchFastSinDeg(wrapDeg180(fx * 360.0f)) *
+                   benchFastCosDeg(wrapDeg180(fy * 270.0f)) +
+           0.11f * benchFastSinDeg(wrapDeg180((fx - fy) * 220.0f));
 }
 
 float visualPhaseDeg(uint32_t frame_index)
@@ -64,8 +64,8 @@ void applyVisualMotion(BenchContext& ctx, uint32_t frame_index, float angle_scal
         return;
         }
     const float angle = visualPhaseDeg(frame_index) * angle_scale;
-    const float x = 0.16f * tgx::tgx_fast_sin_deg_clamped(angle);
-    const float y = 0.10f * tgx::tgx_fast_cos_deg_clamped(angle);
+    const float x = 0.16f * benchFastSinDeg(angle);
+    const float y = 0.10f * benchFastCosDeg(angle);
     ctx.renderer.setModelPosScaleRot(tgx::fVec3{x, y, 0.0f}, tgx::fVec3{1.0f, 1.0f, 1.0f}, angle, axis);
 }
 
@@ -77,8 +77,8 @@ void applyVisualDrift(BenchContext& ctx, uint32_t frame_index, float amplitude)
         return;
         }
     const float angle = visualPhaseDeg(frame_index);
-    const float x = amplitude * tgx::tgx_fast_sin_deg_clamped(angle);
-    const float y = 0.55f * amplitude * tgx::tgx_fast_cos_deg_clamped(angle);
+    const float x = amplitude * benchFastSinDeg(angle);
+    const float y = 0.55f * amplitude * benchFastCosDeg(angle);
     ctx.renderer.setModelPosScaleRot(tgx::fVec3{x, y, 0.0f}, tgx::fVec3{1.0f, 1.0f, 1.0f}, 0.0f);
 }
 

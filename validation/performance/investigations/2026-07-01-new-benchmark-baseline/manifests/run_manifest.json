@@ -1,0 +1,52 @@
+{
+  "created_at": "2026-07-01T07:50:50.366389",
+  "current_repo": "D:\\Programmation\\tgx",
+  "dev_branch": "feature/point-spot-lights",
+  "dev_commit": "1849ef549cdf4bf457733b40052e18a489757192",
+  "main_worktree": "D:\\Programmation\\tgx_main_release_baseline_20260701",
+  "main_branch": "main",
+  "main_commit": "d46bdb8f89e79ac2e571de1cf97525c9d195510f",
+  "boards": {
+    "teensy41": {
+      "port": "COM3",
+      "upload_port": "usb:80000/3/0/1",
+      "fqbn": "teensy:avr:teensy41:usb=serial,speed=600,opt=o3std"
+    },
+    "core2": {
+      "port": "COM5",
+      "fqbn": "esp32:esp32:m5stack_core2"
+    },
+    "cores3": {
+      "port": "COM10",
+      "fqbn": "esp32:esp32:m5stack_cores3"
+    },
+    "picow": {
+      "port": "COM19",
+      "fqbn": "rp2040:rp2040:rpipicow"
+    },
+    "pico2": {
+      "port": "COM21",
+      "fqbn": "rp2040:rp2040:rpipico2:opt=Fast"
+    },
+    "esp32p4": {
+      "port": "COM27",
+      "toolchain": "ESP-IDF 5.5.4 / idf.py"
+    }
+  },
+  "valid_result_files": {
+    "dev_benchmark": "summaries/dev_benchmark_local_results.csv",
+    "main_benchmark": "summaries/main_benchmark_local_results.csv",
+    "benchmark_comparison": "summaries/benchmark_dev_vs_main_comparison.csv",
+    "dev_examples": "summaries/dev_example_telemetry_summary.csv",
+    "main_examples": "summaries/main_example_telemetry_summary.csv",
+    "example_comparison": "summaries/example_dev_vs_main_comparison.csv"
+  },
+  "invalidated_initial_runs": "First attempts were invalidated and raw logs were pruned; use only summaries/*_local_* benchmark CSV files.",
+  "harness_adjustments": [
+    "run_bench3d.py now passes --library <repo-under-test> explicitly for Arduino benchmark builds.",
+    "benchmark modules use benchFastSinDeg/benchFastCosDeg wrappers so the same harness compiles against main, which lacks tgx_fast_*_deg_clamped.",
+    "main worktree ESP32P4 run used a temporary local component alias because the worktree folder is not named tgx."
+  ],
+  "main_worktree_removed_after_run": true,
+  "main_worktree_note": "Temporary worktree was removed after all compact CSVs/logs were archived in this investigation folder."
+}

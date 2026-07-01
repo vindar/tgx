@@ -97,7 +97,7 @@ tgx::RGB565 objectColor(int x, int y)
 tgx::RGB565 skyColor(int face, int x, int y)
 {
     const int v = (y * 255) / (SKY_TEX_H - 1);
-    const int wave = (int)(26.0f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180((float)(x * 9 + y * 5 + face * 27))));
+    const int wave = (int)(26.0f * benchFastSinDeg(wrapDeg180((float)(x * 9 + y * 5 + face * 27))));
     const bool star = (((x * 37 + y * 101 + face * 17) & 255) > 251) && (face != 3);
     int r = 10 + face * 6 + v / 10;
     int g = 24 + face * 4 + v / 5;
@@ -110,9 +110,9 @@ tgx::RGB565 skyColor(int face, int x, int y)
 
 float surfaceWave(float x, float y)
 {
-    return 0.18f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180(x * 210.0f)) *
-                   tgx::tgx_fast_cos_deg_clamped(wrapDeg180(y * 170.0f)) +
-           0.07f * tgx::tgx_fast_sin_deg_clamped(wrapDeg180((x + y) * 150.0f));
+    return 0.18f * benchFastSinDeg(wrapDeg180(x * 210.0f)) *
+                   benchFastCosDeg(wrapDeg180(y * 170.0f)) +
+           0.07f * benchFastSinDeg(wrapDeg180((x + y) * 150.0f));
 }
 
 tgx::fVec3 surfaceNormal(float x, float y)
@@ -267,9 +267,9 @@ void setCamera(BenchContext& ctx, uint32_t frame_index, float yaw_offset, float 
     const float phase = frame_index ? visualPhaseDeg(frame_index) : 0.0f;
     const float yaw = yaw_offset + 0.45f * phase;
     const tgx::fVec3 eye{
-        distance * tgx::tgx_fast_sin_deg_clamped(yaw),
-        1.1f + 0.15f * tgx::tgx_fast_sin_deg_clamped(phase * 0.7f),
-        distance * tgx::tgx_fast_cos_deg_clamped(yaw)
+        distance * benchFastSinDeg(yaw),
+        1.1f + 0.15f * benchFastSinDeg(phase * 0.7f),
+        distance * benchFastCosDeg(yaw)
     };
     const tgx::fVec3 target{0.0f, 0.0f, -5.4f};
     ctx.renderer.setLookAt(eye, target, tgx::fVec3{0.0f, 1.0f, 0.0f});
@@ -308,8 +308,8 @@ bool setupTexturedMeshPoint(BenchContext& ctx)
 void renderTexturedMeshPoint(BenchContext& ctx, uint32_t frame_index)
 {
     const float phase = visualPhaseDeg(frame_index);
-    ctx.renderer.setSpotLightPosition(0, tgx::fVec3{1.45f * tgx::tgx_fast_sin_deg_clamped(phase),
-                                                    0.95f * tgx::tgx_fast_cos_deg_clamped(phase * 0.7f),
+    ctx.renderer.setSpotLightPosition(0, tgx::fVec3{1.45f * benchFastSinDeg(phase),
+                                                    0.95f * benchFastCosDeg(phase * 0.7f),
                                                     -3.65f});
     setCamera(ctx, frame_index, 0.0f, 0.0f);
     ctx.renderer.setModelPosScaleRot(tgx::fVec3{0.0f, 0.0f, -5.7f}, tgx::fVec3{0.92f, 0.92f, 0.92f},
@@ -340,9 +340,9 @@ void renderCheckerSpotSweep(BenchContext& ctx, uint32_t frame_index)
 {
     const float phase = visualPhaseDeg(frame_index);
     tgx::fVec3 dir{
-        0.55f * tgx::tgx_fast_sin_deg_clamped(phase),
+        0.55f * benchFastSinDeg(phase),
         -0.70f,
-        -1.0f + 0.26f * tgx::tgx_fast_cos_deg_clamped(phase * 1.4f)
+        -1.0f + 0.26f * benchFastCosDeg(phase * 1.4f)
     };
     ctx.renderer.setSpotLightDirection(0, dir);
     ctx.renderer.setLookAt(tgx::fVec3{0.0f, 1.25f, 0.20f},
@@ -374,8 +374,8 @@ bool setupRoomTwoPoints(BenchContext& ctx)
 void renderRoomTwoPoints(BenchContext& ctx, uint32_t frame_index)
 {
     const float phase = visualPhaseDeg(frame_index);
-    ctx.renderer.setSpotLightPosition(0, tgx::fVec3{-1.45f + 0.45f * tgx::tgx_fast_sin_deg_clamped(phase), 0.85f, -3.6f});
-    ctx.renderer.setSpotLightPosition(1, tgx::fVec3{1.35f, -0.75f + 0.35f * tgx::tgx_fast_cos_deg_clamped(phase), -4.0f});
+    ctx.renderer.setSpotLightPosition(0, tgx::fVec3{-1.45f + 0.45f * benchFastSinDeg(phase), 0.85f, -3.6f});
+    ctx.renderer.setSpotLightPosition(1, tgx::fVec3{1.35f, -0.75f + 0.35f * benchFastCosDeg(phase), -4.0f});
     setCamera(ctx, frame_index, 12.0f, 0.0f);
 
     ctx.renderer.setMaterial(tgx::RGBf{0.78f, 0.78f, 0.74f}, 0.13f, 0.88f, 0.25f, 24);
@@ -418,7 +418,7 @@ void renderSkyboxMixed(BenchContext& ctx, uint32_t frame_index)
     const float phase = visualPhaseDeg(frame_index);
     setCamera(ctx, frame_index, -10.0f, 0.0f);
     drawSky(ctx, frame_index);
-    ctx.renderer.setSpotLightPosition(0, tgx::fVec3{-1.25f + 0.55f * tgx::tgx_fast_sin_deg_clamped(phase), 0.95f, -3.7f});
+    ctx.renderer.setSpotLightPosition(0, tgx::fVec3{-1.25f + 0.55f * benchFastSinDeg(phase), 0.95f, -3.7f});
     ctx.renderer.setModelPosScaleRot(tgx::fVec3{-0.8f, -0.2f, -5.4f}, tgx::fVec3{0.72f, 0.72f, 0.72f},
                                      18.0f + phase * 0.24f, tgx::fVec3{0.2f, 1.0f, 0.2f});
     ctx.renderer.drawCube(&g_scene.object_texture, &g_scene.object_texture, &g_scene.object_texture,
