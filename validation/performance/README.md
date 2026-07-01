@@ -1,14 +1,26 @@
 # TGX Performance Validation
 
-This directory keeps reusable performance tools, compact baselines, and compact records of past optimization investigations.
+This directory keeps reusable performance tools, compact baselines, and compact
+records of past optimization investigations.
 
 Start here:
 
 - `tools/README.md` for upload/capture and parsing tools.
-- `baselines/current/README.md` for current reusable benchmark baselines.
+- `baselines/README.md` for the baseline directory policy.
+- `baselines/current/README.md` for the current reusable benchmark baseline.
 - `ARTIFACTS.md` for what should be kept or pruned.
 - `investigations/README.md` for the compact history of tested optimization paths.
 - `cleanup/` for manifests of raw artifacts that were pruned.
+
+## Directory Roles
+
+- `tools/`: reusable scripts only.
+- `baselines/current/`: the active compact baseline used for quick comparisons.
+- `baselines/previous/`: older compact baselines that are still useful as
+  reference points.
+- `baselines/archive/`: older long-term snapshots kept for historical context.
+- `investigations/`: dated reports and compact per-investigation evidence.
+- `cleanup/`: manifests of large raw artifacts that were intentionally pruned.
 
 ## Current Policy
 

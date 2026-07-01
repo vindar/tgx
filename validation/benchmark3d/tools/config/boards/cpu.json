@@ -1,0 +1,7 @@
+{
+  "id": "cpu",
+  "kind": "cpu",
+  "modules": ["core_raster", "texture_raster", "lighting_shading", "primitives", "mesh", "wire_points", "skybox_noz", "integrated", "mixed_stress"],
+  "compile_timeout_s": 120,
+  "run_timeout_s": 120
+}

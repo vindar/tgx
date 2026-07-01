@@ -14,6 +14,14 @@ It should not contain persistent Arduino build directories or large raw capture 
   - Compact CSV baselines used for quick comparison before running new benchmarks.
   - These are the first files to check before deciding whether a full hardware baseline must be rerun.
 
+- `baselines/previous/`
+  - Older compact baselines that remain useful for non-regression comparisons.
+  - Keep only summaries, CSVs and small READMEs.
+
+- `baselines/archive/`
+  - Older long-term snapshots kept for historical context.
+  - Do not add raw build or serial artifacts here.
+
 - `investigations/`
   - Compact history plus one final report or summary per dated investigation.
   - Keep enough detail to understand what was accepted or rejected without storing the whole lab notebook.

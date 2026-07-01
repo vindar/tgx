@@ -6,12 +6,13 @@ These tools are intentionally stored outside `tmp/` so future optimization sessi
 
 ## Purpose
 
-- Upload probe, benchmark, or example sketches to known boards.
+- Upload probe or example sketches to known boards.
 - Wait for USB serial ports to disappear/reappear after upload.
 - Capture complete serial telemetry with start/end marker checks.
 - Reject missing, stale, partial, or unparseable telemetry.
-- Parse benchmark output, example telemetry, macro probes, and codegen summaries.
-- Aggregate candidate benchmark runs into compact CSVs.
+- Parse legacy benchmark output, example telemetry, macro probes, and codegen
+  summaries.
+- Aggregate historical benchmark runs into compact CSVs.
 
 ## June 2026 Fixed Ports
 
@@ -54,17 +55,16 @@ validation/performance/tools/sketches/
 
 ## Benchmark Capture
 
-Use the candidate benchmark runner when testing a source patch:
+The old monolithic Arduino benchmark under `examples/benchmark` has been
+removed. New benchmark runs should use the modular suite:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File validation\performance\tools\run_benchmark_candidate.ps1 `
-  -Candidate my_candidate_name `
-  -Boards pico2 `
-  -TimeoutSeconds 180 `
-  -RetryCount 1
+& "C:\Users\Vindar\anaconda3\envs\tgxmesh3d2\python.exe" validation\benchmark3d\tools\run_bench3d.py --board <board> --module <module>
 ```
 
-The runner delegates upload and serial capture to `upload_and_capture.ps1` and writes metadata, logs, and telemetry under `tmp/hardware_validation/` by default.
+The parsers and aggregators in this directory are kept for old investigation
+data and compact baseline files. They are not the entry point for new 3D
+benchmark campaigns.
 
 Aggregate renderer-style candidate outputs with:
 

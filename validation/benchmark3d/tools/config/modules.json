@@ -1,0 +1,49 @@
+{
+  "modules": {
+    "core_raster": {
+      "define": "TGX_BENCH_MODULE_CORE_RASTER=1",
+      "sketch": "sketches/core_raster",
+      "cpu_exe": "bench3d_cpu_core_raster.exe"
+    },
+    "texture_raster": {
+      "define": "TGX_BENCH_MODULE_TEXTURE_RASTER=1",
+      "sketch": "sketches/texture_raster",
+      "cpu_exe": "bench3d_cpu_texture_raster.exe"
+    },
+    "lighting_shading": {
+      "define": "TGX_BENCH_MODULE_LIGHTING_SHADING=1",
+      "sketch": "sketches/lighting_shading",
+      "cpu_exe": "bench3d_cpu_lighting_shading.exe"
+    },
+    "primitives": {
+      "define": "TGX_BENCH_MODULE_PRIMITIVES=1",
+      "sketch": "sketches/primitives",
+      "cpu_exe": "bench3d_cpu_primitives.exe"
+    },
+    "mesh": {
+      "define": "TGX_BENCH_MODULE_MESH=1",
+      "sketch": "sketches/mesh",
+      "cpu_exe": "bench3d_cpu_mesh.exe"
+    },
+    "wire_points": {
+      "define": "TGX_BENCH_MODULE_WIRE_POINTS=1",
+      "sketch": "sketches/wire_points",
+      "cpu_exe": "bench3d_cpu_wire_points.exe"
+    },
+    "skybox_noz": {
+      "define": "TGX_BENCH_MODULE_SKYBOX_NOZ=1",
+      "sketch": "sketches/skybox_noz",
+      "cpu_exe": "bench3d_cpu_skybox_noz.exe"
+    },
+    "integrated": {
+      "define": "TGX_BENCH_MODULE_INTEGRATED=1",
+      "sketch": "sketches/integrated",
+      "cpu_exe": "bench3d_cpu_integrated.exe"
+    },
+    "mixed_stress": {
+      "define": "TGX_BENCH_MODULE_MIXED_STRESS=1",
+      "sketch": "sketches/mixed_stress",
+      "cpu_exe": "bench3d_cpu_mixed_stress.exe"
+    }
+  }
+}

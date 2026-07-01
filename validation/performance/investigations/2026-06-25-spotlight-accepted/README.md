@@ -11,7 +11,7 @@ Purpose: compact validation record for the first accepted local point/spot light
 The reference baseline taken before adding private spot-light data/runtime code is preserved in:
 
 ```text
-validation/performance/baselines/spotlights_prechange_2026-06-25/
+validation/performance/baselines/previous/2026-06-25-spotlights-prechange/
 ```
 
 Use that baseline as the non-regression reference for historical rendering paths while continuing the spotlight work. It contains:

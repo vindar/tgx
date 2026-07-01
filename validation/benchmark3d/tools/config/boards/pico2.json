@@ -1,0 +1,13 @@
+{
+  "id": "pico2",
+  "kind": "arduino",
+  "modules": ["core_raster", "texture_raster", "lighting_shading", "primitives", "mesh", "wire_points", "skybox_noz", "integrated", "mixed_stress"],
+  "fqbn": "rp2040:rp2040:rpipico2:opt=Fast",
+  "upload_port": "COM21",
+  "serial_port": "COM21",
+  "serial_baud": 115200,
+  "serial_timeout_s": 120,
+  "serial_dtr": true,
+  "serial_rts": true,
+  "compile_timeout_s": 300
+}

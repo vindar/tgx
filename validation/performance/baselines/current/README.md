@@ -1,19 +1,19 @@
 # Current TGX 3D performance baseline
 
-Date: 2026-06-26
+Date: 2026-06-30
 
 Branch: `feature/point-spot-lights`
 
-Baseline label: `baseline_spotlight_specraw_20260626`
+Baseline label: `baseline_20260630_dev`
 
-This baseline was recorded after the first spotlight runtime optimization pass. It
-uses the point/spot light implementation plus the accepted local-specular guard:
-skip the half-vector inverse square root when the raw specular numerator is not
-positive. The source delta is captured in `source_diff.patch`.
+This baseline was recorded after the point/spot light work, the new textured
+point-light examples, and the recent primitive / inline cleanup work. It covers
+the five currently connected boards and includes the new point/spot-light
+examples as first-class telemetry rows.
 
-The previous `current` baseline was archived under:
+The previous current baseline was archived under:
 
-`validation/performance/baselines/previous/2026-06-15-shader-incremental/`
+`validation/performance/baselines/previous/2026-06-26-spotlight-specraw/`
 
 ## Boards
 
@@ -23,100 +23,90 @@ The previous `current` baseline was archived under:
 | Core2 | `esp32:esp32:m5stack_core2` | `COM5` |
 | CoreS3 | `esp32:esp32:m5stack_cores3` | `COM10` |
 | Pico2 + ILI9341 | `rp2040:rp2040:rpipico2:opt=Fast` | `COM21` |
+| FeatherS3 + ILI9341 | `esp32:esp32:adafruit_feather_esp32s3_tft` | upload `COM13`, runtime `COM14` |
 
-## Benchmark scores
+`TFT_eSPI/User_Setup_Select.h` was switched to FeatherS3 for Feather runs and
+back to Pico2 for Pico runs.
 
-These are the global `examples/benchmark` scores. Benchmark capture was run with
-the serial kick enabled because the sketch waits for input before starting.
+## Benchmark Scores
+
+These are historical global scores from the legacy monolithic
+`examples/benchmark` sketch. That sketch has since been removed in favor of the
+modular `validation/benchmark3d` suite, but the rows are kept in this
+baseline so old comparisons remain interpretable.
 
 | Board | Score 1 | Score 2 | Score 3 |
 |---|---:|---:|---:|
-| Teensy 4.1 | 118.55 | 90.37 | 80.65 |
-| Core2 | 32.41 | 23.88 | |
-| CoreS3 | 43.52 | 31.87 | 28.31 |
-| Pico2 | 21.91 | 17.21 | 15.35 |
+| Core2 | 31.86 | 23.59 | |
+| CoreS3 | 43.08 | 31.88 | 28.37 |
+| FeatherS3 | 43.13 | 31.92 | 28.41 |
+| Pico2 | 22.78 | 17.81 | 15.85 |
 
-Comparison against the pre-spotlight baseline
-`validation/performance/baselines/spotlights_prechange_2026-06-25` shows no
-meaningful historical-rendering regression:
+The Teensy 4.1 benchmark does not fit in RAM1 with Teensyduino 1.62.0 under the
+current `o3std` profile. `teensy_size` reports:
 
-| Board | Largest benchmark delta |
-|---|---:|
-| Teensy 4.1 | +0.017% / -0.011% |
-| Core2 | 0% |
-| CoreS3 | 0% |
-| Pico2 | +0.046% |
+```text
+main: RAM1 free for local variables: -6720
+dev:  RAM1 free for local variables: -39488
+```
 
-Full data:
+So the Teensy benchmark is marked as failed in `run_manifest.csv`; the real
+Teensy examples below compile, upload, and run successfully.
 
-- `benchmark_global_scores.csv`
-- `benchmark_subtests.csv`
-- `comparison_pre_spotlight_benchmark_global.csv`
+## Example Telemetry
 
-## Example telemetry
-
-The real-example telemetry suite was run successfully on all four boards.
+The real-example telemetry suite was run successfully on all five boards.
 
 | Board | Examples |
 |---|---|
-| Teensy 4.1 | `mars`, `test-shading`, `test-texture`, `buddha`, `scream` |
-| Core2 | `borg_cube`, `donkeykong`, `scream` |
-| CoreS3 | `borg_cube`, `donkeykong`, `scream` |
-| Pico2 | `borg_cube`, `bunny_fig`, `scream` |
+| Teensy 4.1 | `mars`, `test-shading`, `test-texture`, `buddha`, `scream`, `pointlight_room`, `pointlight_textured_meshes`, `spotlight_checkerboard` |
+| Core2 | `borg_cube`, `donkeykong`, `scream`, `pointlight_room`, `pointlight_textured_meshes`, `spotlight_checkerboard` |
+| CoreS3 | `borg_cube`, `donkeykong`, `scream`, `pointlight_room`, `pointlight_textured_meshes`, `spotlight_checkerboard` |
+| Pico2 | `borg_cube`, `bunny_fig`, `scream`, `pointlight_room`, `pointlight_textured_meshes`, `spotlight_checkerboard` |
+| FeatherS3 | `borg_cube`, `donkeykong`, `scream`, `pointlight_room`, `pointlight_textured_meshes`, `spotlight_checkerboard` |
 
-Full data:
+Representative new-light example averages:
 
-- `example_telemetry.csv`
-- `example_telemetry_summary.csv`
-- `comparison_pre_spotlight_example_summary.csv`
+| Board | `pointlight_room` | `pointlight_textured_meshes` | `spotlight_checkerboard` |
+|---|---:|---:|---:|
+| Teensy 4.1 | 107.56 | 39.93-47.27 by mesh | 193.89 |
+| Core2 | 21.33 | 17.27-18.00 by mesh | 24.08 |
+| CoreS3 | 40.81 | 27.00-27.70 by mesh | 42.00 |
+| Pico2 | 22.12 | 12.67-13.55 by mesh | 31.00 |
+| FeatherS3 | 31.54 | 27.00-27.64 by mesh | 42.00 |
 
-Most example deltas are within normal telemetry noise. The Pico2
-`bunny_fig/gouraud_texture` capture is lower than the pre-spotlight comparison
-row by about 6.3%; keep an eye on it in the next refresh, but the benchmark
-suite and the other Pico2 examples are stable.
+## Main Comparison
 
-## CPU render validation
+Comparable tests were also run from a separate `main` worktree at commit
+`d46bdb8f89e79ac2e571de1cf97525c9d195510f`.
 
-The accepted source optimization was also checked with a CPU spotlight-render
-comparator against commit `ff8cc0b3`. Three representative frames produced
-identical image hashes:
+Benchmark deltas versus `main`:
 
-| Frame | Hash |
-|---:|---:|
-| 0 | 14661566424370029289 |
-| 1 | 5422464622175942429 |
-| 2 | 9832561839460195462 |
+| Board | Largest global-score delta |
+|---|---:|
+| Core2 | -1.70% |
+| CoreS3 | -1.01% |
+| FeatherS3 | -0.71% |
+| Pico2 | +3.64% |
 
-The hash manifests are saved as:
+The real examples are mostly stable. The largest negative example deltas are
+`teensy41/mars/intro` at -5.49% and `pico2/scream` at -3.20%; both are short
+scene windows and should be watched in future refreshes. Common mesh/texturing
+examples are otherwise near noise or improved, especially wireframe paths.
 
-- `spotlight_cpu_current_hashes.csv`
-- `spotlight_cpu_ref_hashes.csv`
+The detailed `main` comparison CSVs are kept with the dated investigation:
 
-## Capture command pattern
-
-Benchmarks used:
-
-```powershell
-validation\performance\tools\upload_and_capture.ps1 `
-  -Board <board> `
-  -Sketch examples\benchmark `
-  -Label baseline_spotlight_specraw_20260626_benchmark `
-  -ParseMode benchmark `
-  -Baud 9600 `
-  -UseBoardBenchmarkDefine `
-  -KickText x `
-  -KickDelayMs 2500
-```
-
-Examples used the same helper with the board-specific sketch path and
-`-ParseMode telemetry`.
+`validation/performance/investigations/2026-06-30-five-board-baseline/`
 
 ## Files
 
-- `run_manifest.csv`: exact board/sketch capture manifest.
-- `binary_size.csv`: compact memory and binary-size lines from each build log.
-- `source_diff.patch`: source delta for the baseline.
-- `source_diff_stat.txt` / `source_diff_name_only.txt`: compact diff summary.
+- `run_manifest.csv`: dev branch run status, commands, ports, and sketches.
+- `benchmark_global_scores.csv`: dev global benchmark scores.
+- `benchmark_subtests.csv`: dev benchmark subtest matrix.
+- `example_telemetry.csv`: dev per-line example FPS telemetry.
+- `example_telemetry_summary.csv`: dev summarized FPS by board/example/scene.
+- `binary_size.csv`: compact build size lines.
 
-Raw build directories, serial logs, parsed JSON files, and temporary telemetry
-captures were pruned after the compact CSVs were generated.
+Raw build folders, serial logs, parsed JSON files, source diffs and comparison
+matrices are treated as investigation artifacts rather than current baseline
+files.

@@ -1,0 +1,13 @@
+{
+  "id": "cores3",
+  "kind": "arduino",
+  "modules": ["core_raster", "texture_raster", "lighting_shading", "primitives", "mesh", "wire_points", "skybox_noz", "integrated", "mixed_stress"],
+  "fqbn": "esp32:esp32:m5stack_cores3",
+  "upload_port": "COM10",
+  "serial_port": "COM10",
+  "serial_baud": 115200,
+  "serial_timeout_s": 120,
+  "serial_dtr": false,
+  "serial_rts": false,
+  "compile_timeout_s": 300
+}

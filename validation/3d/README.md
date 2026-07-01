@@ -1,7 +1,8 @@
 # TGX 3D CPU Validation Suite
 
 This directory contains the CPU-side 3D validation suite. It is separate from
-`examples/benchmark`, which is focused on timing and frame-rate measurements.
+`validation/benchmark3d`, which is focused on timing and frame-rate
+measurements.
 
 The CPU suite renders fixed 800x600 scenes with both:
 

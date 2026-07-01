@@ -39,6 +39,7 @@ Retained files:
 - `2026-06-esp32s3-image-span-copyfill/REPORT_ESP32S3_IMAGE_SPAN_COPYFILL.md`
 - `2026-06-skybox-specialized/REPORT_SKYBOX_SPECIALIZED.md`
 - `2026-06-skybox-specialized/SKYBOX_RADIUS_API.md`
+- `2026-06-30-five-board-baseline/reports/final_report.md`
 
 ## Future Policy
 

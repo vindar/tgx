@@ -1,0 +1,14 @@
+{
+  "id": "esp32p4",
+  "kind": "espidf",
+  "modules": ["core_raster", "texture_raster", "lighting_shading", "primitives", "mesh", "wire_points", "skybox_noz", "integrated", "mixed_stress"],
+  "target": "esp32p4",
+  "project": "idf/tgx_benchmark3d",
+  "upload_port": "COM27",
+  "serial_port": "COM27",
+  "serial_baud": 115200,
+  "serial_timeout_s": 120,
+  "serial_dtr": false,
+  "serial_rts": false,
+  "compile_timeout_s": 600
+}
