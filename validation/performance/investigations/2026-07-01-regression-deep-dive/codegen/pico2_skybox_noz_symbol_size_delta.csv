@@ -1,0 +1,21 @@
+abs_delta,delta_dev_minus_main,main_size,dev_size,symbol
+2292,2292,2820,5112,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_drawTriangleClipped(int, tgx::Vec4<float> const*, tgx::Vec4<float> const*, tgx::Vec4<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::RGBf const&, tgx::RGBf const&, tgx::RGBf const&) [clone .isra.0]"
+2040,2040,404,2444,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_drawTriangleClippedSub(int, int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&) [clone .constprop.1]"
+2026,2026,408,2434,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_drawTriangleClippedSub(int, int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&) [clone .constprop.2]"
+1994,1994,512,2506,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_drawSkyBoxTriangleClippedSub(int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::Shader, tgx::Shader) [clone .constprop.3]"
+1986,1986,506,2492,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_drawSkyBoxTriangleClippedSub(int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::Shader, tgx::Shader) [clone .constprop.1]"
+1882,1882,3318,5200,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_drawTriangleClippedSub(int, int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&)"
+1874,1874,506,2380,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_drawSkyBoxTriangleClippedSub(int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::Shader, tgx::Shader) [clone .constprop.2]"
+1728,1728,636,2364,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_drawSkyBoxTriangleClipped(tgx::Vec4<float> const*, tgx::Vec4<float> const*, tgx::Vec4<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::Shader, tgx::Shader)"
+1514,1514,1594,3108,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_drawSkyBoxTriangleClippedSub(int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::Shader, tgx::Shader)"
+796,-796,796,0,"tgxbench::(anonymous namespace)::setupCommon(tgxbench::BenchContext&, tgx::Shader) [clone .part.0]"
+740,740,28,768,tgxbench::(anonymous namespace)::setupSkyObject(tgxbench::BenchContext&)
+740,740,28,768,tgxbench::(anonymous namespace)::setupNearestWrap(tgxbench::BenchContext&)
+740,740,28,768,tgxbench::(anonymous namespace)::setupBilinearClamp(tgxbench::BenchContext&)
+506,-506,506,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_triangleClip2in(int, tgx::Vec4<float>, float, float, float, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&) [clone .isra.0]"
+456,-456,456,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_triangleClip1in(int, tgx::Vec4<float>, float, float, float, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&) [clone .isra.0]"
+454,-454,454,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::_triangleClip(int, tgx::Vec4<float>, float, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&) [clone .isra.0]"
+320,320,784,1104,tgxbench::benchInitContext(tgxbench::BenchContext&)
+286,-286,286,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::setLightDirection(tgx::Vec3<float> const&)"
+228,228,2000,2228,tgxbench::benchRunModule(tgxbench::BenchModule const&)
+212,-212,212,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31213, unsigned short, 1, 0>::setPerspective(float, float, float, float)"

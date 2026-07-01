@@ -1,0 +1,673 @@
+20026479 00000001 B __otherCoreIdled
+2002647a 00000001 b _app_driver_count
+2002647b 00000001 b _cdcd_fifo_cfg
+2002647c 00000001 b _sof_enable
+200265b3 00000001 b _usbd_queued_setup
+200010dc 00000001 t _usbd_rhport
+20026478 00000001 B _MFIFO::_doorbell
+20001040 00000001 t USBClass::addEntry(USBClass::Entry**, int, void (*)(int, unsigned char*, int, void*), void const*, unsigned int, int, unsigned long)::id
+20001bb0 00000001 b completed.1
+200265b6 00000001 V core1_disable_systick
+200265b7 00000001 V core1_separate_stack
+200265ba 00000001 b irq_handler_chain_free_slot_head
+200010dd 00000001 t striped_spin_lock_num
+200265c3 00000001 b user_irq_claimed
+20000d20 00000002 W __aeabi_idiv0
+20000d20 00000002 W __aeabi_ldiv0
+100306d4 00000002 T __retarget_lock_close_recursive
+2002649d 00000002 B _tusb_rhport_role
+10031524 00000002 R tgx::RGB565_Black
+200265b4 00000002 b claimed
+100244c2 00000002 t core1_trampoline
+200265b8 00000002 b doorbell_claimed
+100246bc 00000002 t first_per_core_initializer
+1003074c 00000002 W hidd_init
+10030754 00000002 W hidd_reset
+100227b8 00000002 W initVariant
+10030764 00000002 W midid_init
+1003076c 00000002 W midid_reset
+1003077c 00000002 W mscd_init
+10030780 00000002 W mscd_reset
+10030790 00000002 W netd_init
+10030798 00000002 W netd_reset
+10026d0c 00000002 T rp2040_usb_device_enumeration_fix
+10024970 00000002 W tud_event_hook_cb
+10024980 00000002 W tud_mount_cb
+10024986 00000002 W tud_resume_cb
+10024972 00000002 W tud_sof_cb
+10024984 00000002 W tud_suspend_cb
+10024982 00000002 W tud_umount_cb
+10022714 00000002 W yield
+20001c04 00000004 B __atexit
+200016b8 00000004 T __atexit_recursive_mutex
+1002cbc8 00000004 T __localeconv_l
+20001bf8 00000004 B __malloc_max_sbrked_mem
+20001bfc 00000004 B __malloc_max_total_mem
+200012a8 00000004 T __malloc_sbrk_base
+20001bcc 00000004 B __malloc_top_pad
+200012ac 00000004 T __malloc_trim_threshold
+100308b4 00000004 T __pre_init_first_per_core_initializer
+1003089c 00000004 T __pre_init_runtime_init_boot_locks_reset
+100308a4 00000004 T __pre_init_runtime_init_bootrom_locking_enable
+10030888 00000004 T __pre_init_runtime_init_bootrom_reset
+10030894 00000004 T __pre_init_runtime_init_clocks
+100308b0 00000004 T __pre_init_runtime_init_default_alarm_pool
+1003088c 00000004 T __pre_init_runtime_init_early_resets
+100308ac 00000004 T __pre_init_runtime_init_install_ram_vector_table
+100308a8 00000004 T __pre_init_runtime_init_mutex
+100308b8 00000004 T __pre_init_runtime_init_per_core_bootrom_reset
+100308bc 00000004 T __pre_init_runtime_init_per_core_enable_coprocessors
+100308c4 00000004 T __pre_init_runtime_init_per_core_irq_priorities
+10030898 00000004 T __pre_init_runtime_init_post_clock_resets
+100308a0 00000004 T __pre_init_runtime_init_spin_locks_reset
+10030890 00000004 T __pre_init_runtime_init_usb_power_down
+100308c0 00000004 T __pre_init_spinlock_set_extexclall
+100306d8 00000004 T __retarget_lock_acquire_recursive
+100306d0 00000004 T __retarget_lock_init_recursive
+100306dc 00000004 T __retarget_lock_release_recursive
+1002bb18 00000004 T __seofread
+20001710 00000004 B __stdio_exit_handler
+20025cdc 00000004 b _app_driver
+100307a8 00000004 W _exit
+200010e0 00000004 T _impure_ptr
+20026004 00000004 b _usbd_mutex
+20026008 00000004 b _usbd_q
+100306e0 00000004 W _write
+20001c6c 00000004 b _impure_ptr1
+2002600c 00000004 b claimed
+20026038 00000004 B core1_separate_stack_address
+10026c14 00000004 T dcd_edpt_close_all
+2002603c 00000004 B e15_last_sof
+20001c00 00000004 B errno
+2002604c 00000004 b heap_end.0
+1003075c 00000004 W hidd_control_xfer_cb
+10030750 00000004 W hidd_deinit
+10030758 00000004 W hidd_open
+10030760 00000004 W hidd_xfer_cb
+10030774 00000004 W midid_control_xfer_cb
+10030768 00000004 W midid_deinit
+10030770 00000004 W midid_open
+10030778 00000004 W midid_xfer_cb
+10030788 00000004 W mscd_control_xfer_cb
+10030784 00000004 W mscd_open
+1003078c 00000004 W mscd_xfer_cb
+100307a0 00000004 W netd_control_xfer_cb
+10030794 00000004 W netd_deinit
+1003079c 00000004 W netd_open
+100307a4 00000004 W netd_xfer_cb
+20026450 00000004 b next_buffer_ptr
+1002385c 00000004 W runtime_init_boot_locks_reset
+100247b0 00000004 W runtime_init_spin_locks_reset
+20026474 00000004 b sleep_notifier
+10024974 00000004 W tud_descriptor_bos_cb
+10024978 00000004 W tud_descriptor_device_qualifier_cb
+1002497c 00000004 W tud_descriptor_other_speed_configuration_cb
+100248cc 00000004 W tud_vendor_control_xfer_cb
+10025a80 00000004 T tusb_inited
+20001044 00000004 V usb_hid_poll_interval
+10030744 00000006 W _read
+10030870 00000008 t ____aeabi_f2d_veneer
+10030858 00000008 t ____aeabi_idiv_veneer
+10030818 00000008 t ____aeabi_idivmod_veneer
+10030830 00000008 t ____aeabi_uidiv_veneer
+10030868 00000008 t ____aeabi_uldivmod_veneer
+10030878 00000008 t ___hw_endpoint_buffer_control_update32_veneer
+20000d18 00000008 T __aeabi_idivmod
+20000b44 00000008 T __aeabi_uidivmod
+20001010 00000008 t __best_effort_wfe_or_timeout_veneer
+10030838 00000008 t __e15_is_bulkin_ep_veneer
+10030848 00000008 t __e15_is_critical_frame_period_veneer
+1002b328 00000008 T __errno
+10030810 00000008 t __hw_endpoint_start_next_buffer_veneer
+20000fe0 00000008 t __interrupts_veneer
+200016c4 00000008 T __lock___arc4random_mutex
+200016ec 00000008 T __lock___at_quick_exit_mutex
+200016f4 00000008 T __lock___atexit_recursive_mutex
+200016cc 00000008 T __lock___dd_hash_mutex
+200016dc 00000008 T __lock___env_recursive_mutex
+200016e4 00000008 T __lock___malloc_recursive_mutex
+200016fc 00000008 T __lock___sfp_recursive_mutex
+20001704 00000008 T __lock___sinit_recursive_mutex
+200016d4 00000008 T __lock___tz_mutex
+20001000 00000008 t __memset_veneer
+10030808 00000008 t __mutex_enter_blocking_veneer
+10030820 00000008 t __mutex_enter_timeout_ms_veneer
+10030850 00000008 t __mutex_exit_veneer
+10030840 00000008 t __mutex_try_enter_veneer
+20001018 00000008 t __noInterrupts_veneer
+20001008 00000008 t __panic_veneer
+10030860 00000008 t __recursive_mutex_enter_blocking_veneer
+10030828 00000008 t __recursive_mutex_exit_veneer
+10030880 00000008 t __reset_non_control_endpoints_veneer
+20001020 00000008 t __rp2040_usb_device_enumeration_fix_veneer
+20000ff0 00000008 t __time_us_64_veneer
+20000fe8 00000008 t __tu_fifo_write_veneer
+20000ff8 00000008 t __tud_event_hook_cb_veneer
+1002f450 00000008 T _getpid_r
+1002cbcc 00000008 T _localeconv_r
+20025ffc 00000008 b _ubsd_mutexdef
+20001c70 00000008 b _irqStackTop
+200016bc 00000008 t _irqMutex
+20001c78 00000008 b _irqStack
+20001a00 00000008 b SerialUSB::write(unsigned char const*, unsigned int)::last_avail_time
+10023414 00000008 T alarm_pool_get_default
+10026b34 00000008 T dcd_int_enable
+1002270c 00000008 W delay
+1002cbd4 00000008 T localeconv
+1000b194 00000008 T loop
+200265bb 00000008 b retrieved_id
+1002c00c 0000000a T __assert
+2000094c 0000000a T hw_endpoint_reset_transfer
+1002bb88 0000000c T __sclose
+2000129c 0000000c T __sglue
+20001028 0000000c t tgxbench::(anonymous namespace)::g_bulk
+20001034 0000000c t tgxbench::(anonymous namespace)::g_fast
+10021f80 0000000c T USBClass::unregisterEndpointIn(int)
+100237b0 0000000c T busy_wait_ms
+100261dc 0000000c T clock_get_hz
+20026040 0000000c B emptyString
+100246c0 0000000c W hard_assertion_failure
+1002610c 0000000c T lock_init
+1002273c 0000000c T micros
+10031a58 0000000c r p05.0
+10021704 0000000c T setup
+10023656 0000000c T sleep_ms
+10023760 0000000c T time_us_64
+10022340 0000000c T tud_descriptor_configuration_cb
+10025448 0000000c T usbd_control_set_complete_callback
+10021fb0 0000000e T USBClass::unregisterEndpointOut(int)
+10029694 0000000e T abort
+100260e4 0000000e t spinlock_set_extexclall
+100253b0 0000000e t status_stage_xact.isra.0
+1002b6a0 00000010 T __malloc_lock
+1002b6b0 00000010 T __malloc_unlock
+10029538 00000010 T __sfp_lock_acquire
+10029548 00000010 T __sfp_lock_release
+1002bf10 00000010 T __sigtramp
+100306e4 00000010 W _close
+100306f4 00000010 W _fstat
+10030704 00000010 T _getpid
+10030714 00000010 W _isatty
+10030724 00000010 T _kill
+10030734 00000010 W _lseek
+10029118 00000010 T _vprintf_r
+1002b2fc 00000010 T _wctomb_r
+10031248 00000010 r tgxbench::(anonymous namespace)::MESH_MODULE
+10031d84 00000010 r blanks.1
+10031f10 00000010 r blanks.1
+10031934 00000010 r blanks.1
+100237bc 00000010 T busy_wait_until
+1002376c 00000010 T busy_wait_us
+100261cc 00000010 T clock_configure_undivided
+100244c4 00000010 T core1_wrapper
+10026b74 00000010 T dcd_connect
+10026b64 00000010 T dcd_disconnect
+10026b3c 00000010 T dcd_set_address
+10023860 00000010 T exception_get_vtable_handler
+10029684 00000010 T fclose
+1002b340 00000010 T free
+10022ce0 00000010 T irq_get_vtable_handler
+1002b330 00000010 T malloc
+100244d4 00000010 t multicore_fifo_push_blocking_inline
+10026f58 00000010 T puts
+1002be84 00000010 T raise
+1002370c 00000010 T timer_time_us_64
+10025cf0 00000010 T tu_fifo_empty
+10024988 00000010 T tud_connected
+10024a10 00000010 T tud_inited
+10024998 00000010 T tud_mounted
+100249a8 00000010 T tud_suspended
+10025438 00000010 T usbd_control_reset
+10031d94 00000010 r zeroes.0
+10031f20 00000010 r zeroes.0
+10031944 00000010 r zeroes.0
+10021d10 00000012 W USBClass::simpleInterface(int, unsigned char*, int, void*)
+100244b0 00000012 t multicore_fifo_pop_blocking_inline
+20025fe8 00000014 b _ctrl_xfer
+10029598 00000014 T calloc
+10025ff8 00000014 T hw_claim_unlock
+10029748 00000014 T realloc
+100237fe 00000014 T rom_func_lookup
+1002382c 00000014 W runtime_init_bootrom_locking_enable
+10024788 00000014 W runtime_init_bootrom_reset
+1002479c 00000014 W runtime_init_per_core_bootrom_reset
+10026270 00000014 T tick_start
+10025600 00000014 T tud_cdc_n_peek
+100249fc 00000014 T tud_connect
+100249e8 00000014 T tud_disconnect
+10022988 00000016 T __wrap_free
+10022bb4 00000016 T CoreMutex::~CoreMutex()
+10022bb4 00000016 T CoreMutex::~CoreMutex()
+1002600c 00000016 T hw_is_claimed
+1002371c 00000016 T timer_busy_wait_until
+10029100 00000016 T vprintf
+10022938 00000018 T __wrap_malloc
+1002f02c 00000018 T _fiprintf_r
+10029128 00000018 T _mbtowc_r
+1000c160 00000018 t tgxbench::(anonymous namespace)::setupV2Discard(tgxbench::BenchContext&)
+1000c148 00000018 t tgxbench::(anonymous namespace)::setupV2FlatLow(tgxbench::BenchContext&)
+1000c1c8 00000018 t tgxbench::(anonymous namespace)::setupV2NearClip(tgxbench::BenchContext&)
+1000c1f8 00000018 t tgxbench::(anonymous namespace)::setupV2FarGouraud(tgxbench::BenchContext&)
+1000c210 00000018 t tgxbench::(anonymous namespace)::setupLegacyGouraud(tgxbench::BenchContext&)
+1000c118 00000018 t tgxbench::(anonymous namespace)::setupV2GridFlatNoZ(tgxbench::BenchContext&)
+1000c1b0 00000018 t tgxbench::(anonymous namespace)::setupV2GridGouraud(tgxbench::BenchContext&)
+1000c130 00000018 t tgxbench::(anonymous namespace)::setupV2GouraudOverride(tgxbench::BenchContext&)
+1000c1e0 00000018 t tgxbench::(anonymous namespace)::setupV2PartialViewport(tgxbench::BenchContext&)
+10021d24 00000018 T USBClass::timerTask(long, void*)
+10025b88 00000018 t advance_index
+10026b4c 00000018 T dcd_remote_wakeup
+200010a8 00000018 t default_alarm_pool
+10022cc8 00000018 T irq_set_pending
+100260ac 00000018 T next_striped_spin_lock_num
+20001bb4 00000018 b object.0
+100260f4 00000018 T spin_locks_reset
+1002377c 00000018 T timer_busy_wait_us_32
+100255b8 00000018 T tud_cdc_n_available
+100256d0 00000018 T tud_cdc_n_write_available
+10030628 00000018 T vfiprintf
+1002ee98 00000018 T vfprintf
+20025c80 00000019 b USBClass::tud_descriptor_device_cb()::idString
+1000c194 0000001a t tgxbench::(anonymous namespace)::setupLegacyTextured(tgxbench::BenchContext&)
+1000c178 0000001a t tgxbench::(anonymous namespace)::setupV2MultiMaterial(tgxbench::BenchContext&)
+1000c0c4 0000001a t tgxbench::(anonymous namespace)::setupV2TextureAffine(tgxbench::BenchContext&)
+1000c0fc 0000001a t tgxbench::(anonymous namespace)::setupV2TextureNearest(tgxbench::BenchContext&)
+1000c0e0 0000001a t tgxbench::(anonymous namespace)::setupV2TextureBilinear(tgxbench::BenchContext&)
+10022fe0 0000001a T mutex_init
+10022ffa 0000001a T recursive_mutex_init
+10023812 0000001a T rom_reset_usb_boot
+1002ef40 0000001a T sysconf
+1002b30c 0000001c T __ascii_wctomb
+100292e4 0000001c t __fp_lock
+10029300 0000001c t __fp_unlock
+100227bc 0000001c W __wrap___getreent
+10022950 0000001c T __wrap_calloc
+1002296c 0000001c T __wrap_realloc
+10020e34 0000001c t _GLOBAL__sub_I__ZN8tgxbench19benchMemoryKindNameENS_15BenchMemoryKindE
+200010c0 0000001c T _usbd_qdef
+10021710 0000001c T SerialUSB::write(unsigned char)
+10023840 0000001c T boot_locks_reset
+10026118 0000001c T critical_section_init
+10026ba0 0000001c T dcd_edpt0_status_complete
+10026b84 0000001c T dcd_sof_enable
+10024954 0000001c t invoke_class_control
+100245f8 0000001c T multicore_launch_core1
+1002474c 0000001c W runtime_init_per_core_enable_coprocessors
+10024730 0000001c W runtime_init_usb_power_down
+100246cc 0000001c T runtime_run_initializers
+100246e8 0000001c T runtime_run_per_core_initializers
+20001c08 0000001c B Serial
+1002928c 0000001c t stdio_exit_handler
+10023794 0000001c T timer_busy_wait_ms
+10025454 0000001c T usbd_control_set_request
+10024cbc 0000001c T usbd_edpt_stalled
+10029558 00000020 T __fp_lock_all
+10029578 00000020 T __fp_unlock_all
+1002f458 00000020 T __sprint_r
+2002647d 00000020 B _sw_spin_locks
+1000c0a4 00000020 t tgxbench::(anonymous namespace)::setupV2Culling(tgxbench::BenchContext&)
+1002b76c 00000020 T exit
+10022ca8 00000020 T irq_is_enabled
+20026454 00000020 b pools
+10022c5c 00000020 W runtime_init_per_core_irq_priorities
+10024768 00000020 W runtime_init_post_clock_resets
+100260c4 00000020 T spin_lock_claim_unused
+10024ba8 00000020 T usbd_edpt_claim
+10024bc8 00000020 T usbd_edpt_release
+10026e6c 00000020 T vsnprintf
+10025cce 00000022 T tu_fifo_count
+10025d00 00000022 T tu_fifo_full
+1002f288 00000024 T _close_r
+1002f4a0 00000024 T _isatty_r
+1002b6c0 00000024 T _sbrk_r
+10021f5c 00000024 T USBClass::registerEndpointIn()
+10021f8c 00000024 T USBClass::registerEndpointOut()
+1002575c 00000024 T cdcd_deinit
+10026c6c 00000024 T dcd_edpt_clear_stall
+10026c18 00000024 T dcd_edpt_xfer
+20000888 00000024 t e15_is_bulkin_ep
+10025fd4 00000024 T hw_claim_lock
+10022718 00000024 T millis
+10022c38 00000024 t set_raw_irq_handler_and_unlock
+100233f0 00000024 t time_reached
+100236e8 00000024 T timer_hardware_alarm_claim
+10025b64 00000024 T tu_edpt_bind_driver
+10025d22 00000024 T tu_fifo_remaining
+10021c68 00000024 W tud_cdc_line_coding_cb
+100253c0 00000024 T tud_control_status
+1002f044 00000026 T fiprintf
+20001bd0 00000028 B __malloc_current_mallinfo
+10031a90 00000028 R __mprec_bigtens
+10031a68 00000028 R __mprec_tinytens
+1002baf0 00000028 T __sread
+1002f478 00000028 T _fstat_r
+10021ce8 00000028 t _GLOBAL__sub_I__ZN9SerialUSBC2Ev
+1002f428 00000028 T _kill_r
+1002f2ac 00000028 T _lseek_r
+1002f2d4 00000028 T _read_r
+1002f260 00000028 T _write_r
+20000110 00000028 W RP2040::_SystickHandler()
+10021d3c 00000028 T USBClass::usbIRQ()
+20026010 00000028 b configured_freq
+200008ac 00000028 t e15_is_critical_frame_period
+10023ef2 00000028 t fpow_1
+20001b88 00000028 B rp2040
+10022fb8 00000028 T user_irq_claim_unused
+10026284 00000028 T xosc_init
+20000922 0000002a t _hw_endpoint_xfer_sync
+100225e4 0000002a T arduino::Print::write(unsigned char const*, unsigned int)
+10023e8e 0000002a t fisoddint
+10023e64 0000002a t fldexp
+10029140 0000002c T __ascii_mbtowc
+1002c324 0000002c T __i2b
+1002bb5c 0000002c T __sseek
+100307ac 0000002c W _sbrk
+1002bd34 0000002c T fflush
+10022c7c 0000002c T irq_set_enabled
+100245cc 0000002c T multicore_launch_core1_with_stack
+10022c0c 0000002c T panic
+100307d8 0000002c T runtime_init
+10024704 0000002c W runtime_init_early_resets
+10023014 0000002c W runtime_init_mutex
+1002558c 0000002c T tud_cdc_n_connected
+1002bd60 0000002e T _init_signal_r
+10023628 0000002e T sleep_us
+10023732 0000002e T timer_busy_wait_us
+100227d8 00000030 t _GLOBAL__sub_I_rp2040
+1000b164 00000030 T tgxbench::benchPrintf(char const*, ...)
+10026c3c 00000030 T dcd_edpt_stall
+10026a9c 00000030 t hw_endpoint_alloc.isra.0
+10025dca 00000030 T tu_fifo_peek
+10021c38 00000030 W tud_cdc_line_state_cb
+100255d0 00000030 T tud_cdc_n_read
+100249b8 00000030 T tud_remote_wakeup
+1002bedc 00000032 T _init_signal
+100237cc 00000032 t rom_reboot.constprop.0.isra.0
+100225b0 00000034 t _GLOBAL__sub_I_USB
+1002cb08 00000034 T _mprec_log10
+1002464c 00000034 t _retrieve_unique_id_on_boot
+10031528 00000034 R vtable for SerialUSB
+10022af0 00000034 T interrupts
+200002d2 00000034 T mutex_enter_timeout_ms
+20000306 00000034 T mutex_exit
+100233bc 00000034 W runtime_init_default_alarm_pool
+10025ad0 00000036 T tu_edpt_release
+10025f62 00000036 T tu_fifo_clear
+10029500 00000038 T __sinit
+10022058 00000038 T USBClass::unregisterInterface(unsigned int)
+10021a3c 00000038 t SerialUSB::checkSerialReset() [clone .part.0]
+20000a00 00000038 T hw_endpoint_xfer_continue
+10024614 00000038 T multicore_doorbell_claim_unused
+1002c700 0000003a T __mcmp
+10022b78 0000003a T CoreMutex::CoreMutex(mutex*, unsigned char)
+10022b78 0000003a T CoreMutex::CoreMutex(mutex*, unsigned char)
+100234d8 0000003a T alarm_pool_add_alarm_at
+10023eb8 0000003a t fpow_int2
+10026022 0000003a T hw_claim_or_assert
+10025f98 0000003a T tu_fifo_set_overwritable
+20000f8c 0000003c T __clzsi2
+10021a00 0000003c T SerialUSB::end()
+10025780 0000003c T cdcd_reset
+100292a8 0000003c t cleanup_stdio
+10026cd0 0000003c T hw_endpoint_xfer_start
+10024680 0000003c T pico_get_unique_board_id_string
+20000598 0000003c t reset_non_control_endpoints
+10023040 0000003c t sleep_until_callback
+10025694 0000003c T tud_cdc_n_write
+10024c80 0000003c T usbd_edpt_clear_stall
+10024c44 0000003c T usbd_edpt_stall
+20000d24 0000003e T __aeabi_uldivmod
+1002cb3c 0000003e T __copybits
+10022bcc 0000003e T arduino::String::String(char const*)
+10022bcc 0000003e T arduino::String::String(char const*)
+10025d46 0000003e T tu_fifo_read
+1002bfcc 00000040 T __assert_func
+1002bb1c 00000040 T __swrite
+1002c8e4 00000040 T __ulp
+20025fa8 00000040 b _ctrl_epbuf
+20025c9c 00000040 b USBClass::tud_descriptor_string_cb(unsigned char, unsigned short)::desc_str
+10026c90 00000040 T rp2040_usb_init
+1002bf88 00000044 T _fwalk_sglue
+20000958 00000044 T _hw_endpoint_buffer_control_update32
+1002bd90 00000044 T _signal_r
+20000138 00000044 W _MFIFO::_irq()
+10021868 00000044 T SerialUSB::flush()
+100247b4 00000044 T runtime_init_install_ram_vector_table
+10024b08 00000044 T usbd_edpt_open
+10025d84 00000046 T tu_fifo_read_n
+10021820 00000048 T SerialUSB::availableForWrite()
+10021784 00000048 T SerialUSB::available()
+100219b8 00000048 T SerialUSB::operator bool()
+10023870 00000048 T exception_set_exclusive_handler
+2000033a 00000048 T recursive_mutex_exit
+1002be94 00000048 T signal
+20001c24 00000048 B USB
+1002cb7c 0000004a T __any_on
+10025ba0 0000004a t _tu_fifo_peek
+1002c09c 0000004c T _Bfree
+200010e4 0000004c T _impure_data
+10022cf0 0000004c T irq_set_exclusive_handler
+2000017c 0000004c T mutex_enter_blocking
+20000220 0000004c T mutex_try_enter
+10025a84 0000004c T tu_edpt_claim
+1002605c 0000004e T hw_claim_unused_from_range
+200008d4 0000004e t sync_ep_buffer
+1002bdd4 00000052 T _raise_r
+2002649f 00000054 b _usbd_dev
+100217cc 00000054 T SerialUSB::read()
+1002535c 00000054 t data_stage_xact
+10022b24 00000054 T noInterrupts
+100253e4 00000054 T tud_control_xfer
+1002b78c 00000058 T __ssprint_r
+1002f3d0 00000058 T __swhatbuf_r
+1002172c 00000058 T SerialUSB::peek()
+10026bbc 00000058 T dcd_edpt_open
+200001c8 00000058 T recursive_mutex_enter_blocking
+1002be28 0000005a T __sigtramp_r
+10025c74 0000005a T tu_fifo_config
+10021c8c 0000005c W arduino::serialEventRun()
+10022610 0000005c T arduino::Print::print(char const*)
+1002916c 0000005c T strlen
+10026d10 0000005c T strncpy
+10024be8 0000005c T usbd_edpt_xfer
+10024b4c 0000005c T usbd_open_edpt_pair
+1002c234 0000005e T __hi0bits
+10025b06 0000005e T tu_edpt_validate
+10025dfa 0000005e T tu_fifo_write
+1002bcd4 00000060 T _fflush_r
+1002234c 00000060 T tud_descriptor_string_cb
+20000824 00000062 t prepare_ep_buffer
+2000099c 00000064 T hw_endpoint_start_next_buffer
+10025a1c 00000064 T tusb_rhport_init
+2000026c 00000066 T mutex_enter_block_until
+1002caa0 00000068 T __ratio
+10026acc 00000068 T dcd_init
+1002bf20 00000068 T frexp
+10026e00 0000006a T _vsnprintf_r
+10021af4 0000006c T SerialUSB::begin(unsigned long)
+1002455c 0000006e T multicore_launch_core1_raw
+1002551c 00000070 t _prep_out_transaction.isra.0
+10022748 00000070 T main1()
+10023512 00000072 T alarm_pool_cancel_alarm
+100256e8 00000074 T cdcd_init
+100244e4 00000078 t multicore_doorbell_claim_under_lock
+10029d18 0000007c T memchr
+20025ce0 00000080 b _cdcd_epbuf
+10021a74 00000080 W SerialUSB::begin(unsigned long, unsigned short)
+10026a1c 00000080 t hw_endpoint_init
+200005d4 00000080 t hw_handle_buff_status
+10025614 00000080 T tud_cdc_n_write_flush
+1002c018 00000084 T _Balloc
+10022090 00000084 T USBClass::registerString(char const*)
+10023664 00000084 T best_effort_wfe_or_timeout
+100248d0 00000084 t configuration_reset
+1002b6e4 00000084 T strcmp
+100261e8 00000088 T pll_init
+10025bea 0000008a t _tu_fifo_peek_n.constprop.0
+100223ac 0000008c T USBClass::disconnect()
+10022438 0000008c T USBClass::connect()
+10023330 0000008c t alarm_pool_post_alloc_init
+1002c294 0000008e T __lo0bits
+20000efc 00000090 T __aeabi_f2d
+10030640 00000090 t __sbprintf
+1002eeb0 00000090 t __sbprintf
+10023f1a 00000090 t fpow_0
+10026d6c 00000092 T memset
+10021fc0 00000098 T USBClass::registerInterface(int, void (*)(int, unsigned char*, int, void*), void*, unsigned int, int, unsigned long)
+10026134 00000098 t clock_configure_internal
+1002c0e8 0000009c T __multadd
+10031690 000000a0 r _usbd_driver
+1002266c 000000a0 T arduino::Print::println(char const*)
+100296a4 000000a4 T _calloc_r
+10023584 000000a4 T sleep_until
+100257bc 000000a8 T cdcd_open
+10022f10 000000a8 T irq_add_tail_to_free_list
+10025470 000000ac T usbd_control_xfer_cb
+1002c184 000000b0 T __s2b
+1002b058 000000b4 T _malloc_trim_r
+1002c924 000000b8 T __b2d
+1002341c 000000bc T alarm_pool_add_alarm_at_force_in_context
+200264f3 000000c0 B _usbd_qdef_buf
+1002c9dc 000000c4 T __d2b
+100291c8 000000c4 T memmove
+10031ab8 000000c8 R __mprec_tens
+10029438 000000c8 T __sfp
+10026e8c 000000cc T _puts_r
+10025864 000000cc T cdcd_control_xfer_cb
+1002ef5c 000000d0 T __ssputs_r
+1001f8e0 000000d0 W tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::drawMesh(tgx::Mesh3Dv2<tgx::RGB565> const*, bool)
+10003420 000000d0 t tgxbench::(anonymous namespace)::surfaceNormal(float, float)
+1002f2fc 000000d2 T __smakebuf_r
+100247f8 000000d4 W runtime_init_clocks
+100295ac 000000d6 T _fclose_r
+10021b60 000000d8 W SerialUSB::_cb(int, unsigned char*, int, void*)
+10024a20 000000e8 T tud_rhport_init
+100224c4 000000ec T USBClass::begin()
+10025930 000000ec T cdcd_xfer_cb
+1000b19c 000000f0 W tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::setMaterial(tgx::RGBf, float, float, float, int)
+1002f06c 000000f2 T __swsetup_r
+1002c60c 000000f4 T __lshift
+1002f160 00000100 T __call_exitprocs
+10031954 00000101 R _ctype_
+20000a38 0000010a T __udivsi3
+10025e58 0000010a T tu_fifo_write_n
+1002c500 0000010c T __pow5mult
+100218ac 0000010c T SerialUSB::write(unsigned char const*, unsigned int)
+20000000 00000110 B ram_vector_table
+1001ff30 0000011c t tgxbench::(anonymous namespace)::renderV2Discard(tgxbench::BenchContext&, unsigned long)
+1002931c 0000011c t global_stdio_init.part.0
+10023fac 00000124 T __wrap_powf
+1001c1e0 00000130 t tgxbench::(anonymous namespace)::renderLegacyTextured(tgxbench::BenchContext&, unsigned long)
+10022808 00000130 W main
+1001c310 00000134 t tgxbench::(anonymous namespace)::renderLegacyGouraud(tgxbench::BenchContext&, unsigned long)
+1002bb94 00000140 T __sflush_r
+20001718 00000150 B __sf
+10029d94 00000150 t quorem
+20001130 0000016c T __global_locale
+20001a08 00000180 b default_alarm_pool_entries
+100034f0 00000194 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, false, false, false, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+20000d64 00000198 T __udivmoddi4
+20001868 00000198 b tgxbench::(anonymous namespace)::g_mesh
+1000b28c 000001a2 W tgx::Image<tgx::RGB565>::clear(tgx::RGB565)
+1002c73c 000001a8 T __mdiff
+1002c350 000001b0 T __multiply
+1000326c 000001b4 t tgxbench::(anonymous namespace)::surfaceHeight(float, float)
+20000b4c 000001cc T __divsi3
+1001f9b0 000001d0 t tgxbench::(anonymous namespace)::renderV2FarGouraud(tgxbench::BenchContext&, unsigned long)
+20000654 000001d0 t dcd_rp2040_irq
+1001fd5c 000001d4 t tgxbench::(anonymous namespace)::renderV2NearClip(tgxbench::BenchContext&, unsigned long)
+10022d3c 000001d4 T irq_add_shared_handler
+1001fb80 000001dc t tgxbench::(anonymous namespace)::renderV2PartialViewport(tgxbench::BenchContext&, unsigned long)
+1002b10c 000001f0 T _free_r
+1002004c 000001f4 t tgxbench::(anonymous namespace)::renderV2Culling(tgxbench::BenchContext&, unsigned long)
+10020a10 000001f4 t tgxbench::(anonymous namespace)::renderV2FlatLow(tgxbench::BenchContext&, unsigned long)
+10020628 000001f4 t tgxbench::(anonymous namespace)::renderV2GridFlatNoZ(tgxbench::BenchContext&, unsigned long)
+1002081c 000001f4 t tgxbench::(anonymous namespace)::renderV2GridGouraud(tgxbench::BenchContext&, unsigned long)
+10020434 000001f4 t tgxbench::(anonymous namespace)::renderV2TextureGrid(tgxbench::BenchContext&, unsigned long)
+10020240 000001f4 t tgxbench::(anonymous namespace)::renderV2MultiMaterial(tgxbench::BenchContext&, unsigned long)
+10021d64 000001f8 t USBClass::setupUSBDescriptor() [clone .part.0]
+20000384 00000214 T dcd_event_handler
+10031258 0000021c r tgxbench::(anonymous namespace)::MESH_TESTS
+10022114 0000022c T tud_descriptor_device_cb
+10020c04 00000230 t tgxbench::(anonymous namespace)::renderV2GouraudOverride(tgxbench::BenchContext&, unsigned long)
+20025d60 00000248 b _cdcd_itf
+1001bf74 0000026c W tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::drawMesh(tgx::Mesh3D<tgx::RGB565> const*, bool, bool)
+10003684 000002ac t void tgx::uber_shader<tgx::RGB565, unsigned short, false, true, false, false, false, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10023080 000002b0 t alarm_pool_irq_handler
+10008f58 000002d0 t void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, false, false, false, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10004db8 000002d8 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, false, false, true, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+1002b7e4 0000030c T __sfvwrite_r
+10003e18 00000330 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, false, false, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10006c74 00000338 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, false, true, true, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10006fac 0000034c t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, false, false, true, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+1002b350 00000350 T _realloc_r
+1000b918 00000354 W tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::setViewMatrix(tgx::Mat4<float> const&)
+100142c8 0000035c W void tgx::uber_shader<tgx::RGB565, unsigned short, true, true, false, false, false, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+100126c4 00000378 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, false, false, true, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+100152bc 0000038e W void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, false, true, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+1000f20c 0000039a W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, false, true, true, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10014f18 000003a4 W void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, false, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+1000ee68 000003a4 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, false, false, true, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10005090 000003b8 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, true, true, true, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10004148 000003de t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, true, true, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10005448 000003e6 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, true, false, true, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10013900 000003f4 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, false, false, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+100098fc 00000400 t tgxbench::(anonymous namespace)::writeLowMeshlet(unsigned long*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, unsigned char) [clone .isra.0]
+20026050 00000400 b hw_endpoints
+100103c0 00000404 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, false, true, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+200012b0 00000408 T __malloc_av_
+100072f8 0000040c t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, true, true, true, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+1000ffa4 0000041c W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, false, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10005e3c 0000041e t void tgx::uber_shader<tgx::RGB565, unsigned short, false, true, true, false, false, false, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10004528 00000430 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, true, false, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+1000bc6c 00000438 t tgxbench::(anonymous namespace)::setBaseScene(tgxbench::BenchContext&, tgx::Shader)
+1000c228 00000450 T tgxbench::benchInitContext(tgxbench::BenchContext&)
+10014ac4 00000452 W void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, true, true, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10007704 0000045a t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, true, false, true, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10004958 0000045e t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, false, true, true, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10012260 00000464 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, true, true, true, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10007b60 00000480 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, true, true, false, false, true, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+1000e9e0 00000488 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, true, true, true, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10007fe0 00000494 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, true, true, false, false, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10014624 000004a0 W void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, true, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10013460 000004a0 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, true, true, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10011da4 000004ba W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, true, false, true, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+1000fae0 000004c4 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, true, true, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+1000e504 000004dc W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, true, false, true, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+1001132c 000004de W void tgx::uber_shader<tgx::RGB565, unsigned short, true, true, true, false, false, false, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+1000625c 000004e0 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, true, true, false, true, true, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+1000b430 000004e8 W tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::setModelPosScaleRot(tgx::Vec3<float> const&, tgx::Vec3<float> const&, float, tgx::Vec3<float> const&)
+10003930 000004e8 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, false, true, false, false, true, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+1000e01c 000004e8 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, true, true, false, false, true, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10012f5c 00000504 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, true, false, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10012a3c 0000051e W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, false, true, true, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+1000dae8 00000534 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, true, true, false, false, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+1000673c 00000536 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, true, true, false, true, false, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+1000f5a8 00000536 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, true, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10008474 00000550 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, true, true, false, true, true, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+10010da4 00000588 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, true, true, false, true, true, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+100089c4 00000594 t void tgx::uber_shader<tgx::RGB565, unsigned short, false, true, true, false, true, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+1001180c 00000598 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, true, true, false, false, true, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+1002975c 000005bc T _malloc_r
+1000d518 000005d0 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, true, true, false, true, true, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10013cf4 000005d4 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, false, true, false, false, true, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+100107c4 000005de W void tgx::uber_shader<tgx::RGB565, unsigned short, true, true, true, false, true, false, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10005830 0000060a t void tgx::uber_shader<tgx::RGB565, unsigned short, false, true, true, false, false, true, false, true>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&) [clone .isra.0]
+1000cee0 00000638 W void tgx::uber_shader<tgx::RGB565, unsigned short, true, true, true, false, true, false, false, false>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)
+10024cd8 00000684 T tud_task_ext
+10009228 000006d4 t tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_clipTestNeeded(float, tgx::Box3<float> const&, tgx::Mat4<float> const&) [clone .isra.0]
+20080000 00000800 b core1_stack
+1000c678 00000866 W tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_discardBox(tgx::Box3<float> const&, tgx::Mat4<float> const&)
+10020e50 000008b4 T tgxbench::benchRunModule(tgxbench::BenchModule const&)
+10017108 00000982 t tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_drawTriangleClippedSub(int, int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&) [clone .constprop.2]
+10017a8c 0000098c t tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_drawTriangleClippedSub(int, int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&) [clone .constprop.1]
+1002f4c4 00001164 T _vfiprintf_r
+10029ee4 00001174 T _dtoa_r
+10018418 00001410 W tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_drawTriangleClipped(int, tgx::Vec4<float> const*, tgx::Vec4<float> const*, tgx::Vec4<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::RGBf const&, tgx::RGBf const&, tgx::RGBf const&)
+10009cfc 00001468 t tgxbench::(anonymous namespace)::ensureMeshes(tgxbench::BenchContext&)
+1001564c 00001aba W tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_drawTriangleClippedSub(int, int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&)
+10026f68 00002198 T _svfprintf_r
+1002cbdc 000022bc T _vfprintf_r
+10019828 0000274a W tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_drawMesh(int, tgx::Mesh3D<tgx::RGB565> const*)
+1001c444 0000349a W tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_drawMesh(int, tgx::Mesh3Dv2<tgx::RGB565> const*, bool)
+20021c80 00004000 b tgxbench::(anonymous namespace)::g_fast_arena
+20001c80 00020000 b tgxbench::(anonymous namespace)::g_bulk_arena

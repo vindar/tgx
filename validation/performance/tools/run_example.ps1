@@ -7,7 +7,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..\..")
 $outDir = Join-Path $repoRoot "tmp\config_optimization\example_logs"
 $buildRoot = Join-Path $repoRoot "tmp\config_optimization\example_builds"
 New-Item -ItemType Directory -Force $outDir,$buildRoot | Out-Null
@@ -46,6 +46,8 @@ $exampleMap = @{
     teensy41_characters = "examples\Teensy4\3D\characters"
     teensy41_test_texture = "examples\Teensy4\3D\test-texture"
     teensy41_test_shading = "examples\Teensy4\3D\test-shading"
+    teensy41_mars = "examples\Teensy4\3D\mars"
+    teensy41_buddha = "examples\Teensy4\3D\buddha"
     teensy41_borg_cube = "examples\Teensy4\3D\borg_cube"
     teensy41_scream = "examples\Teensy4\3D\scream"
     teensy36_characters = "examples\Teensy3\3D\characters"

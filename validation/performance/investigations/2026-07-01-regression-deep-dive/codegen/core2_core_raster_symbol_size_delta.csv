@@ -1,0 +1,72 @@
+abs_delta,delta_dev_minus_main,main_size,dev_size,symbol
+3674,3674,0,3674,"void tgx::rasterizeTriangle<&(void tgx::shader_select<191, tgx::RGB565, unsigned short>(long, long, long, long, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, long, long, long, tgx::RasterizerVec4 const&, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)), tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> >(int, int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, long, long, tgx::RasterizerParams<tgx::RGB565, tgx::RGB565, unsigned short, void> const&)"
+3223,-3223,8004,4781,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_drawQuad(int, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::RGBf const&, tgx::RGBf const&, tgx::RGBf const&, tgx::RGBf const&)"
+1262,-1262,4886,3624,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_drawTriangle(int, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::RGBf const&, tgx::RGBf const&, tgx::RGBf const&)"
+1157,-1157,2049,892,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_drawTriangleClippedSub(int, int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&)"
+662,662,927,1589,tgxbench::benchRunModule(tgxbench::BenchModule const&)
+584,-584,584,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::Renderer3D(tgx::Vec2<int> const&, tgx::Image<tgx::RGB565>*, unsigned short*)"
+478,-478,478,0,_ZN3tgx11uber_shaderINS_6RGB565EtLb0ELb1ELb0ELb1ELb0ELb0ELb0ELb0EEEvlllllllRKNS_14RasterizerVec4ElllS4_lllS4_RKNS_16RasterizerParamsIT_S6_T0_vEE$isra$0
+478,-478,478,0,_ZN3tgx11uber_shaderINS_6RGB565EtLb0ELb1ELb0ELb0ELb0ELb0ELb0ELb0EEEvlllllllRKNS_14RasterizerVec4ElllS4_lllS4_RKNS_16RasterizerParamsIT_S6_T0_vEE$isra$0
+476,-476,476,0,_ZN3tgx11uber_shaderINS_6RGB565EtLb1ELb0ELb0ELb1ELb0ELb0ELb0ELb0EEEvlllllllRKNS_14RasterizerVec4ElllS4_lllS4_RKNS_16RasterizerParamsIT_S6_T0_vEE$isra$0
+476,-476,476,0,_ZN3tgx11uber_shaderINS_6RGB565EtLb1ELb0ELb0ELb0ELb0ELb0ELb0ELb0EEEvlllllllRKNS_14RasterizerVec4ElllS4_lllS4_RKNS_16RasterizerParamsIT_S6_T0_vEE$isra$0
+439,-439,439,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_triangleClip2in(int, tgx::Vec4<float>, float, float, float, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&)"
+435,435,0,435,_ZN3tgx10Renderer3DINS_6RGB565ELNS_6ShaderE191EtLi1ELi0EE16_triangleClip2inEiNS_4Vec4IfEEfffRKNS_14RasterizerVec4ES8_S8_RS6_S9_S9_S9_$isra$0
+400,-400,400,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_triangleClip1in(int, tgx::Vec4<float>, float, float, float, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&)"
+395,395,0,395,_ZN3tgx10Renderer3DINS_6RGB565ELNS_6ShaderE191EtLi1ELi0EE16_triangleClip1inEiNS_4Vec4IfEEfffRKNS_14RasterizerVec4ES8_S8_RS6_S9_S9_S9_$isra$0
+359,-359,359,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setViewMatrix(tgx::Mat4<float> const&)"
+355,-355,355,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_triangleClip(int, tgx::Vec4<float>, float, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&)"
+258,258,0,258,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_updateDirectionalLightTransform(int)"
+256,-256,256,0,_ZN3tgx11uber_shaderINS_6RGB565EtLb0ELb0ELb0ELb1ELb0ELb0ELb0ELb0EEEvlllllllRKNS_14RasterizerVec4ElllS4_lllS4_RKNS_16RasterizerParamsIT_S6_T0_vEE$isra$0
+256,-256,256,0,_ZN3tgx11uber_shaderINS_6RGB565EtLb0ELb0ELb0ELb0ELb0ELb0ELb0ELb0EEEvlllllllRKNS_14RasterizerVec4ElllS4_lllS4_RKNS_16RasterizerParamsIT_S6_T0_vEE$isra$0
+217,-217,217,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setLightDirection(tgx::Vec3<float> const&)"
+209,-209,209,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setOrtho(float, float, float, float, float, float)"
+184,-184,184,0,"tgx::Mat4<float>::setFrustum(float, float, float, float, float, float)"
+166,-166,166,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_rectifyShaderShading(tgx::Shader)"
+159,159,54,213,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setLookAt(float, float, float, float, float, float, float, float, float)"
+146,146,441,587,"tgxbench::(anonymous namespace)::renderVertexColorGouraud(tgxbench::BenchContext&, unsigned long)"
+143,143,53,196,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setLight(tgx::Vec3<float>, tgx::RGBf const&, tgx::RGBf const&, tgx::RGBf const&)"
+137,137,93,230,"tgx::Mat4<float>::setPerspective(float, float, float, float)"
+134,134,47,181,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setMaterial(tgx::RGBf, float, float, float, int)"
+133,-133,133,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setMaterialSpecularStrength(float)"
+133,-133,133,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setMaterialDiffuseStrength(float)"
+133,-133,133,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setMaterialAmbiantStrength(float)"
+104,104,0,104,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_setRuntimeMaterialLighting(float, float, float)"
+92,92,353,445,"tgxbench::(anonymous namespace)::renderBigGouraud(tgxbench::BenchContext&, unsigned long)"
+70,70,84,154,tgxbench::(anonymous namespace)::setupFrustumFlat(tgxbench::BenchContext&)
+65,-65,65,0,void tgx::Vec3<float>::normalize_fast<float>()
+63,63,154,217,tgxbench::(anonymous namespace)::setupOrthoVertexColorQuad(tgxbench::BenchContext&)
+58,-58,58,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setLightSpecular(tgx::RGBf const&)"
+58,-58,58,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setLightDiffuse(tgx::RGBf const&)"
+57,57,369,426,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::drawTriangleWithVertexColor(tgx::Vec3<float> const&, tgx::Vec3<float> const&, tgx::Vec3<float> const&, tgx::RGBf const&, tgx::RGBf const&, tgx::RGBf const&, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*)"
+54,-54,54,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setLookAt(tgx::Vec3<float>, tgx::Vec3<float>, tgx::Vec3<float>)"
+53,-53,53,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setDirectionalLightAmbiant(tgx::RGBf const&)"
+52,-52,52,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_rectifyShaderTextureWrapping()"
+52,-52,52,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_rectifyShaderTextureQuality()"
+50,-50,50,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_rectifyShaderTextureMode()"
+43,-43,43,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setFrustum(float, float, float, float, float, float)"
+39,-39,39,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_rectifyShaderOrtho()"
+36,-36,36,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::clearZbuffer()"
+34,-34,34,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setPerspective(float, float, float, float)"
+33,-33,33,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setOffset(int, int)"
+32,32,8184,8216,_stext
+32,-32,32,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setTextureWrappingMode(tgx::Shader)"
+32,-32,32,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setTextureQuality(tgx::Shader)"
+30,-30,30,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setMaterialColor(tgx::RGBf)"
+30,-30,30,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setCulling(int)"
+26,-26,26,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setProjectionMatrix(tgx::Mat4<float> const&)"
+24,24,88,112,tgxbench::benchClearTarget(tgxbench::BenchContext&)
+23,-23,394,371,tgxbench::benchInitContext(tgxbench::BenchContext&)
+22,-22,22,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setMaterialSpecularExponent(int)"
+20,20,636,656,_ZN8tgxbench12_GLOBAL__N_1L10ensureGridERNS_12BenchContextE$isra$0
+20,20,221,241,_ZN8tgxbench12_GLOBAL__N_1L11setupCommonERNS_12BenchContextEN3tgx6ShaderE$isra$0
+19,19,155,174,tgxbench::(anonymous namespace)::setupCustomOrthoProjection(tgxbench::BenchContext&)
+18,-18,18,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setShaders(tgx::Shader)"
+17,-17,17,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setViewportSize(tgx::Vec2<int> const&)"
+16,-16,16,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setZbuffer(unsigned short*)"
+15,-15,15,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setLightAmbiant(tgx::RGBf const&)"
+12,12,28,40,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::usePerspectiveProjection()"
+12,12,28,40,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::useOrthographicProjection()"
+11,-11,2380,2369,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::_drawTriangleClipped(int, tgx::Vec4<float> const*, tgx::Vec4<float> const*, tgx::Vec4<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::RGBf const&, tgx::RGBf const&, tgx::RGBf const&)"
+11,-11,11,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)191, unsigned short, 1, 0>::setImage(tgx::Image<tgx::RGB565>*)"
+5,5,448,453,"tgxbench::(anonymous namespace)::renderOrthoVertexColorQuad(tgxbench::BenchContext&, unsigned long)"
+5,5,25,30,tgxbench::(anonymous namespace)::setupCullingFlat(tgxbench::BenchContext&)

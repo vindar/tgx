@@ -1,0 +1,17 @@
+abs_delta,delta_dev_minus_main,main_size,dev_size,symbol
+2040,2040,404,2444,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_drawTriangleClippedSub(int, int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&) [clone .constprop.1]"
+2026,2026,408,2434,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_drawTriangleClippedSub(int, int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&) [clone .constprop.2]"
+1948,1948,3188,5136,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_drawTriangleClipped(int, tgx::Vec4<float> const*, tgx::Vec4<float> const*, tgx::Vec4<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec3<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::Vec2<float> const*, tgx::RGBf const&, tgx::RGBf const&, tgx::RGBf const&)"
+1748,1748,0,1748,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_clipTestNeeded(float, tgx::Box3<float> const&, tgx::Mat4<float> const&) [clone .isra.0]"
+1748,-1748,1748,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_clipTestNeeded(float, tgx::Box3<float> const&, tgx::Mat4<float> const&)"
+1744,1744,5098,6842,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_drawTriangleClippedSub(int, int, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&)"
+506,-506,506,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_triangleClip2in(int, tgx::Vec4<float>, float, float, float, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&) [clone .isra.0]"
+456,-456,456,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_triangleClip1in(int, tgx::Vec4<float>, float, float, float, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4 const&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&, tgx::RasterizerVec4&) [clone .isra.0]"
+286,-286,286,0,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::setLightDirection(tgx::Vec3<float> const&)"
+244,244,860,1104,tgxbench::benchInitContext(tgxbench::BenchContext&)
+236,-236,5460,5224,tgxbench::(anonymous namespace)::ensureMeshes(tgxbench::BenchContext&)
+228,228,2000,2228,tgxbench::benchRunModule(tgxbench::BenchModule const&)
+228,228,852,1080,"tgxbench::(anonymous namespace)::setBaseScene(tgxbench::BenchContext&, tgx::Shader)"
+208,208,0,208,"tgxbench::(anonymous namespace)::surfaceNormal(float, float)"
+12,-12,220,208,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::drawMesh(tgx::Mesh3Dv2<tgx::RGB565> const*, bool)"
+4,4,13462,13466,"tgx::Renderer3D<tgx::RGB565, (tgx::Shader)31741, unsigned short, 1, 0>::_drawMesh(int, tgx::Mesh3Dv2<tgx::RGB565> const*, bool)"

@@ -1,0 +1,35 @@
+board,example,scene,current_rows,dev_rows,main_rows,current_fps_mean,dev_fps_mean,main_fps_mean,current_vs_dev_pct,current_vs_main_pct,verdict_vs_dev,verdict_vs_main,current_fps_median,dev_fps_median,main_fps_median,current_vs_dev_median_pct,current_vs_main_median_pct,verdict_vs_dev_median,verdict_vs_main_median,notes
+core2,borg_cube,unknown,18,16,16,66.2778,66.2500,65.8750,0.042,0.611,noise,noise,68.0000,68.5000,67.5000,-0.730,0.741,regression,improvement,
+core2,donkeykong,gouraud_texture,15,13,13,26.2387,25.9308,25.8323,1.187,1.573,improvement,improvement,26.2600,26.1900,26.1900,0.267,0.267,noise,noise,
+core2,donkeykong,wireframe,10,2,2,27.1970,27.3450,25.5650,-0.541,6.384,noise,improvement,26.9450,27.3450,25.5650,-1.463,5.398,regression,improvement,
+core2,scream,unknown,14,16,16,18.8571,18.8750,18.8750,-0.095,-0.095,noise,noise,19.0000,19.0000,19.0000,0.000,0.000,noise,noise,
+cores3,borg_cube,unknown,18,16,16,188.2222,186.9380,187.6250,0.687,0.318,noise,noise,193.0000,192.0000,193.0000,0.521,0.000,noise,noise,
+cores3,donkeykong,gouraud_texture,15,12,12,30.5547,30.1250,30.1842,1.426,1.227,improvement,improvement,30.5100,30.0900,30.1050,1.396,1.345,improvement,improvement,
+cores3,donkeykong,wireframe,10,2,2,29.7770,29.6000,28.0750,0.598,6.062,noise,improvement,29.5300,29.6000,28.0750,-0.236,5.183,noise,improvement,
+cores3,scream,unknown,13,16,16,40.3077,39.5625,39.4375,1.884,2.207,improvement,improvement,40.0000,40.0000,40.0000,0.000,0.000,noise,noise,
+pico2,borg_cube,unknown,14,16,16,106.6429,105.6250,105.9380,0.964,0.665,improvement,noise,108.0000,108.0000,108.0000,0.000,0.000,noise,noise,
+pico2,bunny_fig,gouraud_texture,9,7,7,24.7200,24.8886,24.8643,-0.677,-0.580,noise,noise,24.9000,25.0000,24.9800,-0.400,-0.320,noise,noise,
+pico2,bunny_fig,wireframe,6,8,8,30.6333,30.5038,30.5950,0.425,0.125,noise,noise,30.4800,30.4800,30.4800,0.000,0.000,noise,noise,
+pico2,scream,unknown,13,16,16,31.1538,30.3750,31.3750,2.564,-0.705,improvement,regression,31.0000,31.0000,32.0000,0.000,-3.125,noise,regression,
+picow,borg_cube,unknown,13,16,16,42.3846,41.2500,41.4375,2.751,2.286,improvement,improvement,38.0000,37.5000,38.0000,1.333,0.000,improvement,noise,
+picow,bunny_fig,gouraud_texture,9,7,7,5.4311,5.4514,5.4814,-0.373,-0.918,noise,regression,5.5000,5.5000,5.4400,0.000,1.103,noise,improvement,
+picow,bunny_fig,wireframe,6,8,8,13.1000,12.9962,13.0162,0.799,0.644,improvement,noise,13.1800,12.9800,13.0600,1.541,0.919,improvement,improvement,
+picow,scream,unknown,14,15,15,14.5714,14.6000,14.6000,-0.196,-0.196,noise,noise,15.0000,15.0000,15.0000,0.000,0.000,noise,noise,
+teensy41,buddha,buddha_rotation,11,14,13,30.0809,30.0343,30.2162,0.155,-0.448,noise,noise,30.2100,30.1000,30.3300,0.365,-0.396,noise,noise,
+teensy41,mars,beginning,3,3,3,192.2533,189.8000,191.9300,1.293,0.168,improvement,noise,113.1000,111.1100,114.8500,1.791,-1.524,improvement,regression,
+teensy41,mars,intro,2,2,2,457.2400,462.2550,463.9100,-1.085,-1.438,regression,regression,457.2400,462.2550,463.9100,-1.085,-1.438,regression,regression,
+teensy41,mars,movie,24,10,10,54.6717,56.9680,57.3410,-4.031,-4.655,regression,regression,43.1800,42.9400,43.2650,0.559,-0.196,noise,noise,
+teensy41,scream,explosion,16,15,15,51.6713,51.3820,51.3700,0.563,0.586,noise,noise,51.4200,52.0000,51.9500,-1.115,-1.020,regression,regression,
+teensy41,test_shading,bunny_flat,3,1,1,106.9833,108.6700,109.4500,-1.552,-2.254,regression,regression,108.7800,108.6700,109.4500,0.101,-0.612,noise,noise,
+teensy41,test_shading,bunny_gouraud,3,,,100.9933,,,,,,,103.5900,,,,,,,not present in both baselines
+teensy41,test_shading,bunny_wireframe_aa,3,3,3,84.1100,84.1067,84.1700,0.004,-0.071,noise,noise,83.5800,83.5800,83.6700,0.000,-0.108,noise,noise,
+teensy41,test_shading,skull_flat,1,,,85.6600,,,,,,,85.6600,,,,,,,not present in both baselines
+teensy41,test_shading,skull_wireframe_aa,3,,,60.0700,,,,,,,59.8800,,,,,,,not present in both baselines
+teensy41,test_shading,teapot_flat,3,3,3,180.4267,178.8230,179.0500,0.897,0.769,improvement,improvement,174.3000,174.4800,173.6500,-0.103,0.374,noise,noise,
+teensy41,test_shading,teapot_gouraud,3,3,3,175.7000,171.8670,173.3300,2.230,1.367,improvement,improvement,173.1300,169.3200,170.4900,2.250,1.548,improvement,improvement,
+teensy41,test_shading,teapot_wireframe_aa,3,3,3,112.9967,113.0370,113.0730,-0.036,-0.068,noise,noise,112.4400,112.4400,112.4400,0.000,0.000,noise,noise,
+teensy41,test_texture,bob_gouraud,5,,,84.7620,,,,,,,84.8300,,,,,,,not present in both baselines
+teensy41,test_texture,bob_tex_nearest,1,,,65.7400,,,,,,,65.7400,,,,,,,not present in both baselines
+teensy41,test_texture,spot_gouraud,5,5,5,126.8380,123.3200,122.5120,2.853,3.531,improvement,improvement,126.8700,122.7500,122.0000,3.356,3.992,improvement,improvement,
+teensy41,test_texture,spot_tex_bilinear,5,5,5,96.6200,94.3220,94.5820,2.436,2.155,improvement,improvement,97.5100,95.5200,95.7100,2.083,1.881,improvement,improvement,
+teensy41,test_texture,spot_tex_nearest,5,5,5,107.3840,104.3440,104.1160,2.913,3.139,improvement,improvement,107.4600,103.7900,103.4800,3.536,3.846,improvement,improvement,

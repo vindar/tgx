@@ -1,0 +1,3107 @@
+﻿diff --git a/src/Renderer3D.h b/src/Renderer3D.h
+index f8c60e63..0a0c869b 100644
+--- a/src/Renderer3D.h
++++ b/src/Renderer3D.h
+@@ -37,6 +37,7 @@
+ 
+ #include "Shaders.h"
+ #include "Rasterizer.h"
++#include "Renderer3DSpotLightData.h"
+ 
+ #include "Mesh3D.h"
+ #include "Mesh3Dv2.h"
+@@ -85,7 +86,8 @@ namespace tgx
+     *                           The default value `1` preserves the historical one-light rendering path.
+     *                           Instantiate with a value larger than 1 to use the advanced directional-light API.
+     *
+-    * @tparam MAX_SPOT_LIGHTS : Reserved for future spotlight support. Spotlights are not rendered yet.
++    * @tparam MAX_SPOT_LIGHTS : Maximum number of local spot lights supported by this renderer.
++    *                           The default value `0` disables local spot-light support.
+     *
+     * @remark
+     *
+@@ -470,9 +472,9 @@ namespace tgx
+         /*****************************************************************************************
+         *****************************************************************************************/
+         /**
+-         * @name Scene related methods.
++         * @name Camera related methods.
+          *
+-         * Methods related to properties specific to the scene: camera position, lighting...
++         * Methods related to the view matrix and camera position.
+          */
+          ///@{
+         /*****************************************************************************************
+@@ -567,6 +569,27 @@ namespace tgx
+ 
+ 
+ 
++        ///@}
++        /*****************************************************************************************
++        *****************************************************************************************/
++        /**
++         * @name Lighting related methods.
++         *
++         * Methods related to global ambiant lighting, directional lights and local spot lights.
++         *
++         * Directional lights are controlled by `MAX_DIRECTIONAL_LIGHTS`. Local spot lights are controlled
++         * by `MAX_SPOT_LIGHTS`; when `MAX_SPOT_LIGHTS == 0`, spot light support is not compiled in.
++         */
++        ///@{
++        /*****************************************************************************************
++        ******************************************************************************************/
++
++
++        /*****************************************************************************************
++         * Directional lights.
++         ******************************************************************************************/
++
++
+          /**
+          * Set the scene ambiant light color.
+          *
+@@ -732,6 +755,208 @@ namespace tgx
+ 
+ 
+ 
++        /*****************************************************************************************
++         * Spot lights.
++         ******************************************************************************************/
++
++
++        /**
++         * Set the number of active spot lights.
++         *
++         * The count is clamped to `[0, MAX_SPOT_LIGHTS]`. A count of 0 disables all local spot lights.
++         *
++         * Spot lights affect rendering only when the renderer is instantiated with `MAX_SPOT_LIGHTS > 0`.
++         * No shader flag is required for spot lighting, but lighting is visible only with flat or Gouraud
++         * shading. With `SHADER_UNLIT`, spot lights are ignored.
++         *
++         * @param count number of active spot lights.
++         */
++        void setSpotLightCount(int count);
++
++
++        /**
++         * Return the number of active spot lights.
++         */
++        int spotLightCount() const;
++
++
++        /**
++         * Return the compile-time spot-light capacity.
++         */
++        static constexpr int maxSpotLightCount() { return MAX_SPOT_LIGHTS; }
++
++
++        /**
++         * Configure one omnidirectional local light.
++         *
++         * This overload configures a spot-light slot as a point light: the light emits in all directions
++         * and does not use a cone test. The position is expressed in world coordinates.
++         *
++         * The range controls both the maximum influence distance and the smooth distance attenuation.
++         * Use a strictly positive value for a finite local light. A range less than or equal to 0 disables
++         * distance attenuation and gives the light infinite range (but you usually don't want that!).
++         *
++         * The local specular contribution is disabled by default. Pass a non-black `specularColor` to enable
++         * local specular highlights for this light. The specular exponent is the current material specular
++         * exponent.
++         *
++         * This method does not change the active spot-light count. Use `setSpotLightCount()` to choose how
++         * many spot-light slots are rendered.
++         *
++         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
++         * @param position position of the light in world coordinates.
++         * @param range maximum influence distance; `range <= 0` means infinite range.
++         * @param diffuseColor diffuse color of the light.
++         * @param specularColor specular color of the light. The default black color disables local specular.
++         */
++        void setSpotLight(int index, const fVec3& position, float range,
++                          const RGBf& diffuseColor,
++                          const RGBf& specularColor = RGBf(0.0f, 0.0f, 0.0f));
++
++
++        /**
++         * Configure one spot light with a hard cone edge.
++         *
++         * The position and direction are expressed in world coordinates. The direction is the direction the
++         * light points toward. The cone is defined by its outer half-angle, in degrees. Points outside the
++         * cone are not lit. Use the overload with `innerAngleDeg` to create a soft cone edge.
++         *
++         * The range controls both the maximum influence distance and the smooth distance attenuation.
++         * Use a strictly positive value for a finite local light. A range less than or equal to 0 disables
++         * distance attenuation and gives the light infinite range (but you usually don't want that!).
++         *
++         * The local specular contribution is disabled by default. Pass a non-black `specularColor` to enable
++         * local specular highlights for this light. The specular exponent is the current material specular
++         * exponent.
++         *
++         * This method does not change the active spot-light count. Use `setSpotLightCount()` to choose how
++         * many spot-light slots are rendered.
++         *
++         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
++         * @param position position of the light in world coordinates.
++         * @param direction direction the light points toward, in world coordinates.
++         * @param range maximum influence distance; `range <= 0` means infinite range.
++         * @param outerAngleDeg outer cone half-angle in degrees. Values greater than or equal to 180 behave
++         *                      like an omnidirectional point light.
++         * @param diffuseColor diffuse color of the light.
++         * @param specularColor specular color of the light. The default black color disables local specular.
++         */
++        void setSpotLight(int index, const fVec3& position, const fVec3& direction,
++                          float range, float outerAngleDeg,
++                          const RGBf& diffuseColor,
++                          const RGBf& specularColor = RGBf(0.0f, 0.0f, 0.0f));
++
++
++        /**
++         * Configure one spot light with a soft cone edge.
++         *
++         * The position and direction are expressed in world coordinates. The direction is the direction the
++         * light points toward. The cone is defined by two half-angles, in degrees: lighting is full inside
++         * `innerAngleDeg`, fades smoothly between `innerAngleDeg` and `outerAngleDeg`, and is zero outside
++         * `outerAngleDeg`.
++         *
++         * The range controls both the maximum influence distance and the smooth distance attenuation.
++         * Use a strictly positive value for a finite local light. A range less than or equal to 0 disables
++         * distance attenuation and gives the light infinite range (but you usually don't want that!).
++         *
++         * The local specular contribution is disabled by default. Pass a non-black `specularColor` to enable
++         * local specular highlights for this light. The specular exponent is the current material specular
++         * exponent.
++         *
++         * This method does not change the active spot-light count. Use `setSpotLightCount()` to choose how
++         * many spot-light slots are rendered.
++         *
++         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
++         * @param position position of the light in world coordinates.
++         * @param direction direction the light points toward, in world coordinates.
++         * @param range maximum influence distance; `range <= 0` means infinite range.
++         * @param outerAngleDeg outer cone half-angle in degrees. Values greater than or equal to 180 behave
++         *                      like an omnidirectional point light.
++         * @param innerAngleDeg inner cone half-angle in degrees. Values less than 0 or greater than
++         *                      `outerAngleDeg` are treated as a hard cone edge.
++         * @param diffuseColor diffuse color of the light.
++         * @param specularColor specular color of the light. The default black color disables local specular.
++         */
++        void setSpotLight(int index, const fVec3& position, const fVec3& direction,
++                          float range, float outerAngleDeg, float innerAngleDeg,
++                          const RGBf& diffuseColor,
++                          const RGBf& specularColor = RGBf(0.0f, 0.0f, 0.0f));
++
++
++        /**
++         * Set the position of one spot light.
++         *
++         * The position is expressed in world coordinates.
++         *
++         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
++         * @param position position of the light in world coordinates.
++         */
++        void setSpotLightPosition(int index, const fVec3& position);
++
++
++        /**
++         * Set the direction of one spot light.
++         *
++         * The direction is expressed in world coordinates and points toward the lit area. It is ignored when
++         * the light is configured as an omnidirectional point light.
++         *
++         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
++         * @param direction direction the light points toward, in world coordinates.
++         */
++        void setSpotLightDirection(int index, const fVec3& direction);
++
++
++        /**
++         * Set the diffuse color of one spot light.
++         *
++         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
++         * @param color diffuse color.
++         */
++        void setSpotLightDiffuse(int index, const RGBf& color);
++
++
++        /**
++         * Set the specular color of one spot light.
++         *
++         * A black specular color disables the local specular contribution for this light. The specular
++         * exponent is the current material specular exponent.
++         *
++         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
++         * @param color specular color (default is black, which disables local specular).
++         */
++        void setSpotLightSpecular(int index, const RGBf& color = RGBf(0.0f, 0.0f, 0.0f));
++
++
++        /**
++         * Set the range of one spot light.
++         *
++         * The range controls both the maximum influence distance and the smooth distance attenuation.
++         * Use a strictly positive value for a finite local light. A range less than or equal to 0 disables
++         * distance attenuation and gives the light infinite range.
++         *
++         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
++         * @param range maximum influence distance; `range <= 0` means infinite range (but you usually don't want that).
++         */
++        void setSpotLightRange(int index, float range);
++
++
++        /**
++         * Set the cone angles of one spot light.
++         *
++         * The cone is defined by two half-angles, in degrees: lighting is full inside `innerAngleDeg`,
++         * fades smoothly between `innerAngleDeg` and `outerAngleDeg`, and is zero outside `outerAngleDeg`.
++         *
++         * Values of `outerAngleDeg` greater than or equal to 180 configure the light as an omnidirectional
++         * point light. Values of `innerAngleDeg` less than 0 or greater than `outerAngleDeg` create a hard
++         * cone edge.
++         *
++         * @param index index of the spot light in `[0, MAX_SPOT_LIGHTS - 1]`.
++         * @param outerAngleDeg outer cone half-angle in degrees.
++         * @param innerAngleDeg inner cone half-angle in degrees. The default value creates a hard cone edge.
++         */
++        void setSpotLightCone(int index, float outerAngleDeg, float innerAngleDeg = -1.0f);
++
++
+ 
+ 
+         ///@}
+@@ -1388,8 +1613,7 @@ namespace tgx
+          * - The texture is mapped using the Mercator projection.
+          *
+          * @param   texture The texture image mapped via Mercator projection.
+-         * @param   quality (Optional) Quality of the mesh. Should be positive, typically between 0.5f
+-         *                  and 2.0f.
++         * @param   quality (Optional) Quality of the mesh. Should be positive, typically between 0.5f and 2.0f.
+          *                  - `1` : default quality
+          *                  - `>1`: finer mesh. Improve quality but decrease speed.
+          *                  - `<1`: coarser mesh. Decrease quality but improve speed.
+@@ -1399,6 +1623,103 @@ namespace tgx
+ 
+ 
+ 
++        /**
++         * Draw a unit cylinder in model space.
++         *
++         * The cylinder is centered at the origin, has radius `1`, and extends from
++         * `y = -1` to `y = 1`. The model transform matrix may be used to scale,
++         * rotate and position it anywhere in world space.
++         *
++         * @param nb_sectors  Number of sectors used around the cylinder. minimum `3`.
++         * @param bottom_cap  Draw the bottom disk at `y = -1`.
++         * @param top_cap     Draw the top disk at `y = 1`.
++         *
++         * @remark
++         * - If both caps are present, the primitive is closed and uses the usual local
++         *   culling convention for generated solids.
++         * - If a cap is missing, culling is disabled locally while drawing this primitive
++         *   so the inside remains visible. The renderer culling state is restored before
++         *   returning.
++         */
++        void drawCylinder(int nb_sectors, bool bottom_cap = true, bool top_cap = true);
++
++
++        /**
++         * Draw a textured unit cylinder in model space.
++         *
++         * @param nb_sectors      Number of sectors used around the cylinder.
++         * @param texture_side    Texture for the lateral surface, or `nullptr` to draw it without texturing.
++         * @param texture_bottom  Texture for the bottom disk, or `nullptr` to draw it without texturing.
++         * @param texture_top     Texture for the top disk, or `nullptr` to draw it without texturing.
++         * @param bottom_cap      Draw the bottom disk at `y = -1`.
++         * @param top_cap         Draw the top disk at `y = 1`.
++         *
++         * @remark
++         * - The side texture is unwrapped with `u` around the cylinder and `v` from bottom (`0`) to top (`1`).
++         * - Cap textures use a radial projection of the disk into the full texture image.
++         * - A `nullptr` texture disables texturing for that part only; use `bottom_cap` and `top_cap` to remove cap geometry.
++         */
++        void drawCylinder(int nb_sectors, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom = nullptr, const Image<color_t>* texture_top = nullptr, bool bottom_cap = true, bool top_cap = true);
++
++
++        /**
++         * Draw a unit cone in model space.
++         *
++         * The cone is centered on the Y axis, with base radius `1` at `y = -1` and
++         * apex at `y = 1`.
++         *
++         * @param nb_sectors  Number of sectors used around the cone.
++         * @param bottom_cap  Draw the bottom disk at `y = -1`.
++         */
++        void drawCone(int nb_sectors, bool bottom_cap = true);
++
++
++        /**
++         * Draw a textured unit cone in model space.
++         *
++         * @param nb_sectors      Number of sectors used around the cone.
++         * @param texture_side    Texture for the lateral surface, or `nullptr` to draw it without texturing.
++         * @param texture_bottom  Texture for the bottom disk, or `nullptr` to draw it without texturing.
++         * @param bottom_cap      Draw the bottom disk at `y = -1`.
++         *
++         * @remark The side and cap texture mapping follows the same convention as `drawCylinder()`.
++         */
++        void drawCone(int nb_sectors, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom = nullptr, bool bottom_cap = true);
++
++
++        /**
++         * Draw a truncated cone in model space.
++         *
++         * The shape is centered on the Y axis and extends from `y = -1` to `y = 1`.
++         * `bottom_radius` is the radius of the bottom ring and `top_radius` is the
++         * radius of the top ring. A radius less than or equal to zero creates an apex.
++         *
++         * @param nb_sectors      Number of sectors used around the shape.
++         * @param bottom_radius   Radius of the bottom ring at `y = -1`.
++         * @param top_radius      Radius of the top ring at `y = 1`.
++         * @param bottom_cap      Draw the bottom disk when `bottom_radius > 0`.
++         * @param top_cap         Draw the top disk when `top_radius > 0`.
++         */
++        void drawTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap = true, bool top_cap = true);
++
++
++        /**
++         * Draw a textured truncated cone in model space.
++         *
++         * @param nb_sectors      Number of sectors used around the shape.
++         * @param bottom_radius   Radius of the bottom ring at `y = -1`.
++         * @param top_radius      Radius of the top ring at `y = 1`.
++         * @param texture_side    Texture for the lateral surface, or `nullptr` to draw it without texturing.
++         * @param texture_bottom  Texture for the bottom disk, or `nullptr` to draw it without texturing.
++         * @param texture_top     Texture for the top disk, or `nullptr` to draw it without texturing.
++         * @param bottom_cap      Draw the bottom disk when `bottom_radius > 0`.
++         * @param top_cap         Draw the top disk when `top_radius > 0`.
++         *
++         * @remark The side and cap texture mapping follows the same convention as `drawCylinder()`.
++         */
++        void drawTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom = nullptr, const Image<color_t>* texture_top = nullptr, bool bottom_cap = true, bool top_cap = true);
++
++
+ 
+ 
+ 
+@@ -1846,7 +2167,7 @@ namespace tgx
+         /**
+          * @name Drawing basic shapes in wireframe.
+          *
+-         * Methods for drawing wireframe cubes and spheres.
++         * Methods for drawing wireframe cubes, spheres, cylinders and cones.
+          *
+          * Two versions for each method:
+          * 1. Fast drawing: no thickness, no blending, no anti-aliasing.
+@@ -1992,6 +2313,116 @@ namespace tgx
+         void drawWireFrameAdaptativeSphere(float quality, float thickness, color_t color, float opacity);
+ 
+ 
++        /**
++         * Draw a wireframe unit cylinder in model space [*fast*].
++         *
++         * @remark The cylinder is centered at the origin, has radius `1`, and extends from `y = -1` to `y = 1`.
++         *
++         * @param nb_sectors  Number of sectors used around the cylinder. Minimum `3`.
++         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
++         * @param top_cap     Draw the top disk triangulation at `y = 1`.
++         */
++        void drawWireFrameCylinder(int nb_sectors, bool bottom_cap = true, bool top_cap = true);
++
++
++        /**
++         * Draw a wireframe unit cylinder in model space [*antialiased*].
++         *
++         * @param nb_sectors  Number of sectors used around the cylinder. Minimum `3`.
++         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
++         * @param top_cap     Draw the top disk triangulation at `y = 1`.
++         */
++        void drawWireFrameCylinderAA(int nb_sectors, bool bottom_cap = true, bool top_cap = true);
++
++
++        /**
++         * Draw a wireframe unit cylinder in model space [*adjustable thickness + AA*].
++         *
++         * @warning This method is very slow and may be slower than solid drawing.
++         *
++         * @param nb_sectors  Number of sectors used around the cylinder. Minimum `3`.
++         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
++         * @param top_cap     Draw the top disk triangulation at `y = 1`.
++         * @param thickness   thickness of the lines
++         * @param color       color to use
++         * @param opacity     opacity multiplier in [0.0f, 1.0f]
++         */
++        void drawWireFrameCylinder(int nb_sectors, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity);
++
++
++        /**
++         * Draw a wireframe unit cone in model space [*fast*].
++         *
++         * @remark The cone has base radius `1` at `y = -1` and its apex at `y = 1`.
++         *
++         * @param nb_sectors  Number of sectors used around the cone. Minimum `3`.
++         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
++         */
++        void drawWireFrameCone(int nb_sectors, bool bottom_cap = true);
++
++
++        /**
++         * Draw a wireframe unit cone in model space [*antialiased*].
++         *
++         * @param nb_sectors  Number of sectors used around the cone. Minimum `3`.
++         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
++         */
++        void drawWireFrameConeAA(int nb_sectors, bool bottom_cap = true);
++
++
++        /**
++         * Draw a wireframe unit cone in model space [*adjustable thickness + AA*].
++         *
++         * @warning This method is very slow and may be slower than solid drawing.
++         *
++         * @param nb_sectors  Number of sectors used around the cone. Minimum `3`.
++         * @param bottom_cap  Draw the bottom disk triangulation at `y = -1`.
++         * @param thickness   thickness of the lines
++         * @param color       color to use
++         * @param opacity     opacity multiplier in [0.0f, 1.0f]
++         */
++        void drawWireFrameCone(int nb_sectors, bool bottom_cap, float thickness, color_t color, float opacity);
++
++
++        /**
++         * Draw a wireframe truncated cone in model space [*fast*].
++         *
++         * @param nb_sectors      Number of sectors used around the shape. Minimum `3`.
++         * @param bottom_radius   Radius of the bottom ring at `y = -1`.
++         * @param top_radius      Radius of the top ring at `y = 1`.
++         * @param bottom_cap      Draw the bottom disk triangulation when `bottom_radius > 0`.
++         * @param top_cap         Draw the top disk triangulation when `top_radius > 0`.
++         */
++        void drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap = true, bool top_cap = true);
++
++
++        /**
++         * Draw a wireframe truncated cone in model space [*antialiased*].
++         *
++         * @param nb_sectors      Number of sectors used around the shape. Minimum `3`.
++         * @param bottom_radius   Radius of the bottom ring at `y = -1`.
++         * @param top_radius      Radius of the top ring at `y = 1`.
++         * @param bottom_cap      Draw the bottom disk triangulation when `bottom_radius > 0`.
++         * @param top_cap         Draw the top disk triangulation when `top_radius > 0`.
++         */
++        void drawWireFrameTruncatedConeAA(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap = true, bool top_cap = true);
++
++
++        /**
++         * Draw a wireframe truncated cone in model space [*adjustable thickness + AA*].
++         *
++         * @warning This method is very slow and may be slower than solid drawing.
++         *
++         * @param nb_sectors      Number of sectors used around the shape. Minimum `3`.
++         * @param bottom_radius   Radius of the bottom ring at `y = -1`.
++         * @param top_radius      Radius of the top ring at `y = 1`.
++         * @param bottom_cap      Draw the bottom disk triangulation when `bottom_radius > 0`.
++         * @param top_cap         Draw the top disk triangulation when `top_radius > 0`.
++         * @param thickness       thickness of the lines
++         * @param color           color to use
++         * @param opacity         opacity multiplier in [0.0f, 1.0f]
++         */
++        void drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity);
+ 
+ 
+ 
+@@ -2270,7 +2701,7 @@ namespace tgx
+         void _drawMesh(const int RASTER_TYPE, const Mesh3Dv2<color_t>* mesh, bool use_mesh_material);
+ 
+         /** Return true when a decoded Mesh3Dv2 visibility cone rejects the meshlet for the current view. */
+-        TGX_INLINE inline bool _discardMeshlet16b(const fVec3& sphere_center, float sphere_radius, const fVec3& cone_dir, float cone_cos) const
++        inline bool _discardMeshlet16b(const fVec3& sphere_center, float sphere_radius, const fVec3& cone_dir, float cone_cos) const
+             {
+             if (cone_cos <= -1.0f) return false;
+ 
+@@ -2363,7 +2794,7 @@ namespace tgx
+             }
+ 
+ 
+-        template<bool CHECKRANGE, bool USE_BLENDING> TGX_INLINE inline void drawHLineZbuf(int x, int y, int w, color_t color, float opacity, float z)
++        template<bool CHECKRANGE, bool USE_BLENDING> inline void drawHLineZbuf(int x, int y, int w, color_t color, float opacity, float z)
+             {
+             if (CHECKRANGE) // optimized away at compile time
+                 {
+@@ -2389,6 +2820,26 @@ namespace tgx
+ 
+         template<bool WIREFRAME, int MODE> void _drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity);
+ 
++        void _drawTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom, const Image<color_t>* texture_top, bool bottom_cap, bool top_cap);
++
++        template<int MODE> void _drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity);
++
++        struct ExtVec4;
++
++        void _drawTruncatedConeGouraudCachedTriangle(const int cone_shader,  ExtVec4& E0, fVec3& N0, ExtVec4& E1, fVec3& N1, ExtVec4& E2, fVec3& N2, bool textured, bool ortho, float CLIPBOUND_XY, bool cliptestneeded);
++
++        void _drawTruncatedConeGouraudSideStrip(const int cone_shader, int nb_sectors, float bottom_radius, float top_radius, const float* cosTheta, const float* sinTheta, float inv_side_normal, float side_normal_y, float dtx, float CLIPBOUND_XY, bool cliptestneeded);
++
++        void _drawTruncatedConeGouraudConeFan(const int cone_shader, int nb_sectors, bool top_apex, float ring_radius, const float* cosTheta, const float* sinTheta, float inv_side_normal, float side_normal_y, float dtx, float CLIPBOUND_XY, bool cliptestneeded);
++
++        void _drawTruncatedConeGouraudCapFan(const int cap_shader, int nb_sectors, bool top_cap, float radius, const float* cosTheta, const float* sinTheta, float CLIPBOUND_XY, bool cliptestneeded);
++
++#if TGX_DRAWSPHERE_USE_STRIP_BANDS
++        void _drawSphereGouraudStripBand(const int sphere_shader, int nb_sectors, const float* cosTheta, const float* sinTheta, float cosPhi, float sinPhi, float new_cosPhi, float new_sinPhi, float v, float vv, float dtx, float CLIPBOUND_XY, bool sphere_cliptestneeded);
++
++        void _drawSphereGouraudCap(const int sphere_shader, int nb_sectors, bool top_cap, const float* cosTheta, const float* sinTheta, float ring_y, float ring_radius, float ring_v, float dtx, float CLIPBOUND_XY, bool sphere_cliptestneeded);
++#endif
++
+ 
+ 
+         /***********************************************************
+@@ -2419,7 +2870,7 @@ namespace tgx
+ 
+         /* test if a box is outside the image and should be discarded.
+            transform the box coords with M then z-divide. */
+-        bool _discardBox(const fBox3 & bb, const fMat4 & M)
++        inline bool _discardBox(const fBox3 & bb, const fMat4 & M)
+             {
+             if ((bb.minX == 0) && (bb.maxX == 0) && (bb.minY == 0) && (bb.maxY == 0) && (bb.minZ == 0) && (bb.maxZ == 0))
+                 return false; // do not discard if the bounding box is uninitialized.
+@@ -2452,7 +2903,7 @@ namespace tgx
+ 
+         /* test if a triangle is completely outside the image and should be discarded.
+          * coords are given after z-divide. */
+-        bool _discardTriangle(const fVec4 & P1, const fVec4 & P2, const fVec4 & P3)
++        inline bool _discardTriangle(const fVec4 & P1, const fVec4 & P2, const fVec4 & P3)
+             {
+             const float bx = (_ox - 1) * _ilx - 1.0f;
+             const float Bx = (_ox + _uni.im->width() + 1) * _ilx - 1.0f;
+@@ -2471,7 +2922,7 @@ namespace tgx
+ 
+ 
+         /** used by _clipTestNeeded() */
+-        bool _clip2(float clipboundXY, const fVec3 & P, const fMat4 & M)
++        TGX_INLINE bool _clip2(float clipboundXY, const fVec3 & P, const fMat4 & M)
+             {
+             fVec4 S = M.mult1(P);
+             if (!_ortho)
+@@ -2486,7 +2937,7 @@ namespace tgx
+ 
+ 
+         /** test if the mesh may possibly need clipping. If it return false, then cliptest can be skipped. */
+-        bool _clipTestNeeded(float clipboundXY, const fBox3 & bb, const fMat4 & M)
++        inline bool _clipTestNeeded(float clipboundXY, const fBox3 & bb, const fMat4 & M)
+             {
+             return (_clip2(clipboundXY, fVec3(bb.minX, bb.minY, bb.minZ), M)
+                  || _clip2(clipboundXY, fVec3(bb.minX, bb.minY, bb.maxZ), M)
+@@ -2500,7 +2951,7 @@ namespace tgx
+ 
+ 
+         /** Return true when AA wireframe lines still need to range-check their secondary pixel. */
+-        bool _wireFrameAANeighborCheckNeeded(const fBox3& bb, const fMat4& proj_modelview)
++        inline bool _wireFrameAANeighborCheckNeeded(const fBox3& bb, const fMat4& proj_modelview)
+             {
+             if ((_uni.im == nullptr) || (_uni.im->lx() <= 2) || (_uni.im->ly() <= 2)) return true;
+ 
+@@ -2537,7 +2988,7 @@ namespace tgx
+ 
+ #if TGX_MESHLET_SPHERE_CLIP
+         /** Build object-space clip planes from the current projection-modelview matrix. */
+-        TGX_INLINE inline void _meshletClipPlanes(float clipboundXY, const fMat4& M, fVec4* planes, float* plane_norms) const
++        inline void _meshletClipPlanes(float clipboundXY, const fMat4& M, fVec4* planes, float* plane_norms) const
+             {
+             const float cx = clipboundXY;
+             planes[0] = fVec4(M.M[0] + cx * M.M[3], M.M[4] + cx * M.M[7], M.M[8] + cx * M.M[11], M.M[12] + cx * M.M[15]);
+@@ -2555,7 +3006,7 @@ namespace tgx
+ 
+ 
+         /** Return -1 when outside, 0 when fully inside, 1 when intersecting the clipping frustum. */
+-        TGX_INLINE inline int _meshletSphereClip(const fVec3& center, float radius, const fVec4* planes, const float* plane_norms) const
++        inline int _meshletSphereClip(const fVec3& center, float radius, const fVec4* planes, const float* plane_norms) const
+             {
+             bool intersects = false;
+             for (int i = 0; i < 6; i++)
+@@ -2585,7 +3036,7 @@ namespace tgx
+         *
+         * Return > 0 if inside, return < 0 if outside (and 0 on the plane).
+         **/
+-        inline float _cpdist(const tgx::fVec4& CP, float off, const tgx::fVec4& P)
++        TGX_INLINE inline float _cpdist(const tgx::fVec4& CP, float off, const tgx::fVec4& P)
+             {
+             return (CP.x * P.x) + (CP.y * P.y) + (CP.z * P.z) + (CP.w * P.w) + off;
+             }
+@@ -2600,27 +3051,27 @@ namespace tgx
+         *
+         * return alpha such that P = A + alpha * (B - A)
+         **/
+-        inline float _cpfactor(const tgx::fVec4& CP, const float sdistA, const float sdistB)
++        TGX_INLINE inline float _cpfactor(const tgx::fVec4& CP, const float sdistA, const float sdistB)
+             {
+             return sdistA / (sdistA - sdistB);
+             }
+ 
+ 
+         /** used by _triangleClip when only 1 point is inside the view */
+-        void _triangleClip1in(int shader, tgx::fVec4 CP,
++        inline void _triangleClip1in(int shader, tgx::fVec4 CP,
+             float cp1, float cp2, float cp3,
+             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
+             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4);
+ 
+ 
+         /** used by _triangleClip when only 2 points are inside the view */
+-        void _triangleClip2in(int shader, tgx::fVec4 CP,
++        inline void _triangleClip2in(int shader, tgx::fVec4 CP,
+             float cp1, float cp2, float cp3,
+             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
+             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4);
+ 
+ 
+-        int _triangleClip(int shader, tgx::fVec4 CP, float off,
++        inline int _triangleClip(int shader, tgx::fVec4 CP, float off,
+             const RasterizerVec4 & P1, const RasterizerVec4 & P2, const RasterizerVec4 & P3,
+             RasterizerVec4 & nP1, RasterizerVec4 & nP2, RasterizerVec4 & nP3, RasterizerVec4 & nP4);
+ 
+@@ -2657,7 +3108,7 @@ namespace tgx
+ 
+ 
+         /** recompute a directional light after a view or light change */
+-        TGX_INLINE inline void _updateDirectionalLightTransform(int index)
++        inline void _updateDirectionalLightTransform(int index)
+             {
+             _r_light[index] = _viewM.mult0(_light[index]);
+             _r_light[index] = -_r_light[index];
+@@ -2671,7 +3122,7 @@ namespace tgx
+ 
+ 
+         /** recompute directional light normal-scaled vectors after a model change */
+-        TGX_INLINE inline void _updateActiveDirectionalLightInorms()
++        inline void _updateActiveDirectionalLightInorms()
+             {
+             for (int i = 0; i < _directionalLightCount; i++)
+                 {
+@@ -2682,7 +3133,7 @@ namespace tgx
+ 
+ 
+         /** recompute all active directional light transforms after a view change */
+-        TGX_INLINE inline void _updateActiveDirectionalLightTransforms()
++        inline void _updateActiveDirectionalLightTransforms()
+             {
+             for (int i = 0; i < _directionalLightCount; i++)
+                 {
+@@ -2691,8 +3142,160 @@ namespace tgx
+             }
+ 
+ 
++
++        static TGX_INLINE inline bool _spotLightColorIsBlack(const RGBf& color)
++            {
++            return ((color.R <= 0.0f) && (color.G <= 0.0f) && (color.B <= 0.0f));
++            }
++
++
++        /** precompute the finite or infinite range constants of one spot light */
++        inline void _setSpotLightRangeValues(int index, float range)
++            {
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                if ((range > 0.0f) && (range < 1.0e15f))
++                    {
++                    _spotLights.range2[index] = range * range;
++                    _spotLights.invRange2[index] = 1.0f / _spotLights.range2[index];
++                    }
++                else
++                    {
++                    _spotLights.range2[index] = 1.0e30f;
++                    _spotLights.invRange2[index] = 0.0f;
++                    }
++                }
++            }
++
++
++        /** precompute the cone constants of one spot light */
++        inline void _setSpotLightConeValues(int index, float outerAngleDeg, float innerAngleDeg)
++            {
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                if (outerAngleDeg >= 180.0f)
++                    {
++                    _spotLights.flags[index] &= ~(Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED | Renderer3D_detail::SPOT_LIGHT_SOFT_CONE);
++                    _spotLights.cosOuter[index] = -1.0f;
++                    _spotLights.invCosWidth[index] = 0.0f;
++                    return;
++                    }
++
++                const float outer = clamp(outerAngleDeg, 0.0f, 180.0f);
++                _spotLights.flags[index] |= Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED;
++                _spotLights.flags[index] &= ~Renderer3D_detail::SPOT_LIGHT_SOFT_CONE;
++
++                _spotLights.cosOuter[index] = tgx_fast_cos_deg_clamped(outer);
++                _spotLights.invCosWidth[index] = 0.0f;
++
++                if ((innerAngleDeg >= 0.0f) && (innerAngleDeg < outer))
++                    {
++                    const float inner = clamp(innerAngleDeg, 0.0f, outer);
++                    const float cosInner = tgx_fast_cos_deg_clamped(inner);
++                    const float cosWidth = cosInner - _spotLights.cosOuter[index];
++                    if (cosWidth > 0.00001f)
++                        {
++                        _spotLights.flags[index] |= Renderer3D_detail::SPOT_LIGHT_SOFT_CONE;
++                        _spotLights.invCosWidth[index] = 1.0f / cosWidth;
++                        }
++                    }
++                }
++            }
++
++
++        /** recompute one spot-light position after a view or light change */
++        inline void _updateSpotLightPositionTransform(int index)
++            {
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                _spotLights.positionView[index] = _viewM.mult1(_spotLights.position[index]);
++                }
++            }
++
++
++        /** recompute one spot-light direction after a view or light change */
++        inline void _updateSpotLightDirectionTransform(int index)
++            {
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                fVec3 D = _viewM.mult0(_spotLights.direction[index]);
++                const float d2 = dotProduct(D, D);
++                if (d2 > 0.000001f) { D *= tgx::fast_invsqrt(d2); } else { D = fVec3(0.0f, 0.0f, -1.0f); }
++                _spotLights.directionView[index] = D;
++                }
++            }
++
++
++        /** recompute one spot-light transform after a view or light change */
++        inline void _updateSpotLightTransform(int index)
++            {
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                _updateSpotLightPositionTransform(index);
++                _updateSpotLightDirectionTransform(index);
++                }
++            }
++
++
++        /** recompute all active spot-light transforms after a view change */
++        inline void _updateActiveSpotLightTransforms()
++            {
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                for (int i = 0; i < _spotLights.count; i++)  { _updateSpotLightTransform(i); }
++                }
++            }
++
++
++        /** recompute compact runtime flags for the active spot lights */
++        inline void _updateActiveSpotLightFlags()
++            {
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                int globalFlags = 0;
++                for (int i = 0; i < _spotLights.count; i++)
++                    {
++                    const int flags = _spotLights.flags[i];
++                    if (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED) { globalFlags |= Renderer3D_detail::SPOT_LIGHT_GLOBAL_RUNTIME_SPECULAR; }
++                    if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED) { globalFlags |= Renderer3D_detail::SPOT_LIGHT_GLOBAL_ACTIVE_CONE; }
++                    }
++                _spotLights.globalFlags = globalFlags;
++                }
++            }
++
++
++        /** recompute one spot-light runtime color for the current material strengths */
++        inline void _updateSpotLightColor(int index, float diffuseStrength, float specularStrength, int specularExponent)
++            {
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                _spotLights.runtimeDiffuseColor[index] = _spotLights.diffuseColor[index] * diffuseStrength;
++                _spotLights.runtimeSpecularColor[index] = _spotLights.specularColor[index] * specularStrength;
++                if ((specularStrength > 0.0f) && (specularExponent > 0) && (!_spotLightColorIsBlack(_spotLights.specularColor[index])))
++                    {
++                    _spotLights.flags[index] |= Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED;
++                    }
++                else
++                    {
++                    _spotLights.flags[index] &= ~Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED;
++                    }
++                }
++            }
++
++
++        /** recompute runtime spot-light colors for the current material strengths */
++        inline void _updateActiveSpotLightColors(float diffuseStrength, float specularStrength, int specularExponent)
++            {
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                for (int i = 0; i < _spotLights.count; i++) { _updateSpotLightColor(i, diffuseStrength, specularStrength, specularExponent); }
++                _updateActiveSpotLightFlags();
++                }
++            }
++
++
+         /** recompute runtime light colors for the current material strengths */
+-        TGX_INLINE inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength)
++        inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength, int specularExponent)
+             {
+             _r_ambiantColor = _ambiantColor * ambiantStrength;
+             for (int i = 0; i < _directionalLightCount; i++)
+@@ -2700,11 +3303,19 @@ namespace tgx
+                 _r_diffuseColor[i] = _diffuseColor[i] * diffuseStrength;
+                 _r_specularColor[i] = _specularColor[i] * specularStrength;
+                 }
++            _updateActiveSpotLightColors(diffuseStrength, specularStrength, specularExponent);
++            }
++
++
++        /** recompute runtime light colors for the current material strengths */
++        inline void _setRuntimeMaterialLighting(float ambiantStrength, float diffuseStrength, float specularStrength)
++            {
++            _setRuntimeMaterialLighting(ambiantStrength, diffuseStrength, specularStrength, _specularExponent);
+             }
+ 
+ 
+         /** recompute one directional light runtime color for the current material strengths */
+-        TGX_INLINE inline void _updateDirectionalLightColor(int index)
++        inline void _updateDirectionalLightColor(int index)
+             {
+             _r_diffuseColor[index] = _diffuseColor[index] * _diffuseStrength;
+             _r_specularColor[index] = _specularColor[index] * _specularStrength;
+@@ -2716,7 +3327,7 @@ namespace tgx
+         
+ 
+         /** compute a vertex light factor or object color according to the current lighting setup */
+-        template<bool TEXTURE> TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N) const
++        template<bool TEXTURE> TGX_RENDERER3D_SHADING_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const fVec4 & P) const
+             {
+             RGBf col = _r_ambiantColor;
+             if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
+@@ -2732,6 +3343,71 @@ namespace tgx
+                     col += _r_specularColor[i] * _powSpecular(icu * dotProduct(N, _r_H_inorm[i]));
+                     }
+                 }
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                const float localNormalScale = icu * _r_inorm;
++                const int spotGlobalFlags = _spotLights.globalFlags;
++                const bool localSpecular = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_RUNTIME_SPECULAR) != 0;
++                const bool localCone = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_ACTIVE_CONE) != 0;
++                const fVec3 Pv(P.x, P.y, P.z);
++                for (int i = 0; i < _spotLights.count; i++)
++                    {
++                    fVec3 L = _spotLights.positionView[i] - Pv;
++                    const float d2 = dotProduct(L, L);
++                    if ((d2 <= 1.0e-12f) || (d2 >= _spotLights.range2[i])) continue;
++
++                    const float ndotlRaw = dotProduct(N, L);
++                    const float diffRaw = localNormalScale * ndotlRaw;
++                    if (diffRaw <= 0.0f) continue;
++
++                    const float invD = tgx::fast_invsqrt(d2);
++                    const float diff = diffRaw * invD;
++                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
++                    float lightFactor = atten * atten;
++
++                    int flags = 0;
++                    if (localCone)
++                        {
++                        flags = _spotLights.flags[i];
++                        if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
++                            {
++                            const float cone = -dotProduct(_spotLights.directionView[i], L) * invD;
++                            if (cone <= _spotLights.cosOuter[i]) continue;
++                            if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
++                                {
++                                float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
++                                if (spot > 1.0f) spot = 1.0f;
++                                lightFactor *= spot * spot;
++                                }
++                            }
++                        }
++
++                    col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
++
++                    if (localSpecular)
++                        {
++                        if (!localCone) flags = _spotLights.flags[i];
++                        if (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED)
++                            {
++                            const float specRaw = diff + (localNormalScale * N.z);
++                            if (specRaw > 0.0f)
++                                {
++                                const float h2 = 2.0f + (2.0f * L.z * invD);
++                                if (h2 > 1.0e-12f)
++                                    {
++                                    const float invH = tgx::fast_invsqrt(h2);
++                                    const float spec = _powSpecular(specRaw * invH);
++                                    col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
++                                    }
++                                }
++                            }
++                        }
++                    }
++                }
++            else
++                {
++                (void)P;
++                }
+             if (!(TEXTURE)) col *= _r_objectColor;
+             col.clamp();
+             return col;
+@@ -2739,7 +3415,7 @@ namespace tgx
+ 
+ 
+         /** compute a vertex color according to the current lighting setup and a supplied material color */
+-        TGX_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const RGBf & color) const
++        TGX_RENDERER3D_SHADING_INLINE inline RGBf _shadeVertex(const float icu, const fVec3 & N, const fVec4 & P, const RGBf & color) const
+             {
+             RGBf col = _r_ambiantColor;
+             if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
+@@ -2755,6 +3431,71 @@ namespace tgx
+                     col += _r_specularColor[i] * _powSpecular(icu * dotProduct(N, _r_H_inorm[i]));
+                     }
+                 }
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                const float localNormalScale = icu * _r_inorm;
++                const int spotGlobalFlags = _spotLights.globalFlags;
++                const bool localSpecular = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_RUNTIME_SPECULAR) != 0;
++                const bool localCone = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_ACTIVE_CONE) != 0;
++                const fVec3 Pv(P.x, P.y, P.z);
++                for (int i = 0; i < _spotLights.count; i++)
++                    {
++                    fVec3 L = _spotLights.positionView[i] - Pv;
++                    const float d2 = dotProduct(L, L);
++                    if ((d2 <= 1.0e-12f) || (d2 >= _spotLights.range2[i])) continue;
++
++                    const float ndotlRaw = dotProduct(N, L);
++                    const float diffRaw = localNormalScale * ndotlRaw;
++                    if (diffRaw <= 0.0f) continue;
++
++                    const float invD = tgx::fast_invsqrt(d2);
++                    const float diff = diffRaw * invD;
++                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
++                    float lightFactor = atten * atten;
++
++                    int flags = 0;
++                    if (localCone)
++                        {
++                        flags = _spotLights.flags[i];
++                        if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
++                            {
++                            const float cone = -dotProduct(_spotLights.directionView[i], L) * invD;
++                            if (cone <= _spotLights.cosOuter[i]) continue;
++                            if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
++                                {
++                                float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
++                                if (spot > 1.0f) spot = 1.0f;
++                                lightFactor *= spot * spot;
++                                }
++                            }
++                        }
++
++                    col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
++
++                    if (localSpecular)
++                        {
++                        if (!localCone) flags = _spotLights.flags[i];
++                        if (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED)
++                            {
++                            const float specRaw = diff + (localNormalScale * N.z);
++                            if (specRaw > 0.0f)
++                                {
++                                const float h2 = 2.0f + (2.0f * L.z * invD);
++                                if (h2 > 1.0e-12f)
++                                    {
++                                    const float invH = tgx::fast_invsqrt(h2);
++                                    const float spec = _powSpecular(specRaw * invH);
++                                    col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
++                                    }
++                                }
++                            }
++                        }
++                    }
++                }
++            else
++                {
++                (void)P;
++                }
+ 
+             col *= color;
+             col.clamp();
+@@ -2763,7 +3504,7 @@ namespace tgx
+ 
+ 
+         /** compute a face light factor or object color according to the current lighting setup */
+-        template<bool TEXTURE> TGX_INLINE inline RGBf _shadeFace(const float icu, const fVec3 & N) const
++        template<bool TEXTURE> TGX_RENDERER3D_SHADING_INLINE inline RGBf _shadeFace(const float icu, const fVec3 & N, const fVec4 & P) const
+             {
+             RGBf col = _r_ambiantColor;
+             if constexpr (MAX_DIRECTIONAL_LIGHTS == 1)
+@@ -2779,6 +3520,70 @@ namespace tgx
+                     col += _r_specularColor[i] * _powSpecular(icu * dotProduct(N, _r_H[i]));
+                     }
+                 }
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                const int spotGlobalFlags = _spotLights.globalFlags;
++                const bool localSpecular = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_RUNTIME_SPECULAR) != 0;
++                const bool localCone = (spotGlobalFlags & Renderer3D_detail::SPOT_LIGHT_GLOBAL_ACTIVE_CONE) != 0;
++                const fVec3 Pv(P.x, P.y, P.z);
++                for (int i = 0; i < _spotLights.count; i++)
++                    {
++                    fVec3 L = _spotLights.positionView[i] - Pv;
++                    const float d2 = dotProduct(L, L);
++                    if ((d2 <= 1.0e-12f) || (d2 >= _spotLights.range2[i])) continue;
++
++                    const float ndotlRaw = dotProduct(N, L);
++                    const float diffRaw = icu * ndotlRaw;
++                    if (diffRaw <= 0.0f) continue;
++
++                    const float invD = tgx::fast_invsqrt(d2);
++                    const float diff = diffRaw * invD;
++                    const float atten = 1.0f - d2 * _spotLights.invRange2[i];
++                    float lightFactor = atten * atten;
++
++                    int flags = 0;
++                    if (localCone)
++                        {
++                        flags = _spotLights.flags[i];
++                        if (flags & Renderer3D_detail::SPOT_LIGHT_CONE_ENABLED)
++                            {
++                            const float cone = -dotProduct(_spotLights.directionView[i], L) * invD;
++                            if (cone <= _spotLights.cosOuter[i]) continue;
++                            if (flags & Renderer3D_detail::SPOT_LIGHT_SOFT_CONE)
++                                {
++                                float spot = (cone - _spotLights.cosOuter[i]) * _spotLights.invCosWidth[i];
++                                if (spot > 1.0f) spot = 1.0f;
++                                lightFactor *= spot * spot;
++                                }
++                            }
++                        }
++
++                    col += _spotLights.runtimeDiffuseColor[i] * (diff * lightFactor);
++
++                    if (localSpecular)
++                        {
++                        if (!localCone) flags = _spotLights.flags[i];
++                        if (flags & Renderer3D_detail::SPOT_LIGHT_RUNTIME_SPECULAR_ENABLED)
++                            {
++                            const float specRaw = diff + (icu * N.z);
++                            if (specRaw > 0.0f)
++                                {
++                                const float h2 = 2.0f + (2.0f * L.z * invD);
++                                if (h2 > 1.0e-12f)
++                                    {
++                                    const float invH = tgx::fast_invsqrt(h2);
++                                    const float spec = _powSpecular(specRaw * invH);
++                                    col += _spotLights.runtimeSpecularColor[i] * (spec * lightFactor);
++                                    }
++                                }
++                            }
++                        }
++                    }
++                }
++            else
++                {
++                (void)P;
++                }
+             if (!(TEXTURE)) col *= _r_objectColor;
+             col.clamp();
+             return col;
+@@ -2786,7 +3591,8 @@ namespace tgx
+ 
+ 
+         /** compute the uniform face color for flat or unlit shading */
+-        TGX_INLINE inline void _setFlatOrUnlitFaceColor(int raster_type, bool texture, fVec3& faceN, float cu)
++        TGX_RENDERER3D_SHADING_INLINE inline void _setFlatOrUnlitFaceColor(int raster_type, bool texture, fVec3& faceN, float cu,
++                                                        const fVec4& Q0, const fVec4& Q1, const fVec4& Q2)
+             {
+             if constexpr (TGX_SHADER_HAS_UNLIT(ENABLED_SHADERS))
+                 {
+@@ -2799,10 +3605,26 @@ namespace tgx
+ 
+             const float icu = ((cu > 0) ? -1.0f : 1.0f); // -1 if we need to reverse the face normal.
+             faceN.normalize_fast();
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                if (_spotLights.count > 0)
++                    {
++                    const float oneThird = 1.0f / 3.0f;
++                    const fVec4 faceCenter((Q0.x + Q1.x + Q2.x) * oneThird,
++                                           (Q0.y + Q1.y + Q2.y) * oneThird,
++                                           (Q0.z + Q1.z + Q2.z) * oneThird,
++                                           1.0f);
++                    if (texture)
++                        _uni.facecolor = _shadeFace<true>(icu, faceN, faceCenter);
++                    else
++                        _uni.facecolor = _shadeFace<false>(icu, faceN, faceCenter);
++                    return;
++                    }
++                }
+             if (texture)
+-                _uni.facecolor = _shadeFace<true>(icu, faceN);
++                _uni.facecolor = _shadeFace<true>(icu, faceN, Q0);
+             else
+-                _uni.facecolor = _shadeFace<false>(icu, faceN);
++                _uni.facecolor = _shadeFace<false>(icu, faceN, Q0);
+             }
+ 
+ 
+@@ -2841,6 +3663,8 @@ namespace tgx
+         RGBf    _specularColor[MAX_DIRECTIONAL_LIGHTS]; // directional light specular colors
+         int     _directionalLightCount; // number of active directional lights
+ 
++        Renderer3D_detail::SpotLightData<MAX_SPOT_LIGHTS> _spotLights; // local spot-light data
++
+ 
+         // *** model specific parameters ***
+ 
+diff --git a/src/Renderer3D.inl b/src/Renderer3D.inl
+index efcf530d..84dc3b80 100644
+--- a/src/Renderer3D.inl
++++ b/src/Renderer3D.inl
+@@ -60,6 +60,27 @@ namespace tgx
+                 _diffuseColor[i] = RGBf(0.0f, 0.0f, 0.0f);
+                 _specularColor[i] = RGBf(0.0f, 0.0f, 0.0f);
+                 }
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                _spotLights.count = 0;
++                _spotLights.globalFlags = 0;
++                for (int i = 0; i < MAX_SPOT_LIGHTS; i++)
++                    {
++                    _spotLights.position[i] = fVec3(0.0f, 0.0f, 0.0f);
++                    _spotLights.direction[i] = fVec3(0.0f, 0.0f, -1.0f);
++                    _spotLights.diffuseColor[i] = RGBf(0.0f, 0.0f, 0.0f);
++                    _spotLights.specularColor[i] = RGBf(0.0f, 0.0f, 0.0f);
++                    _spotLights.flags[i] = 0;
++                    _spotLights.range2[i] = 1.0e30f;
++                    _spotLights.invRange2[i] = 0.0f;
++                    _spotLights.cosOuter[i] = -1.0f;
++                    _spotLights.invCosWidth[i] = 0.0f;
++                    _spotLights.positionView[i] = fVec3(0.0f, 0.0f, 0.0f);
++                    _spotLights.directionView[i] = fVec3(0.0f, 0.0f, -1.0f);
++                    _spotLights.runtimeDiffuseColor[i] = RGBf(0.0f, 0.0f, 0.0f);
++                    _spotLights.runtimeSpecularColor[i] = RGBf(0.0f, 0.0f, 0.0f);
++                    }
++                }
+ 
+             const float ar = _validDraw() ? (((float)_lx) / _ly) : 1.5f;
+             if (_ortho)
+@@ -335,6 +356,7 @@ namespace tgx
+             _r_modelViewM = _viewM * _modelM;
+             _r_inorm = _r_modelViewM.mult0(fVec3{ 0,0,1 }).invnorm();
+             _updateActiveDirectionalLightTransforms();
++            _updateActiveSpotLightTransforms();
+             }
+ 
+ 
+@@ -489,6 +511,135 @@ namespace tgx
+             }
+ 
+ 
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightCount(int count)
++            {
++            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
++            _spotLights.count = clamp(count, 0, MAX_SPOT_LIGHTS);
++            _updateActiveSpotLightTransforms();
++            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        int Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::spotLightCount() const
++            {
++            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
++            return _spotLights.count;
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLight(int index, const fVec3& position, float range,
++                                                                                                                   const RGBf& diffuseColor,
++            const RGBf& specularColor)
++            {
++            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
++            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
++            _spotLights.position[index] = position;
++            _spotLights.direction[index] = fVec3(0.0f, 0.0f, -1.0f);
++            _spotLights.diffuseColor[index] = diffuseColor;
++            _spotLights.specularColor[index] = specularColor;
++            _spotLights.flags[index] = 0;
++            _setSpotLightRangeValues(index, range);
++            _updateSpotLightTransform(index);
++            _updateSpotLightColor(index, _diffuseStrength, _specularStrength, _specularExponent);
++            _updateActiveSpotLightFlags();
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLight(int index, const fVec3& position, const fVec3& direction,
++                                                                                                                   float range, float outerAngleDeg,
++                                                                                                                   const RGBf& diffuseColor,
++                                                                                                                   const RGBf& specularColor)
++            {
++            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
++            setSpotLight(index, position, direction, range, outerAngleDeg, -1.0f, diffuseColor, specularColor);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLight(int index, const fVec3& position, const fVec3& direction,
++                                                                                                                   float range, float outerAngleDeg, float innerAngleDeg,
++                                                                                                                   const RGBf& diffuseColor,
++            const RGBf& specularColor)
++            {
++            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
++            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
++            _spotLights.position[index] = position;
++            _spotLights.direction[index] = direction;
++            _spotLights.diffuseColor[index] = diffuseColor;
++            _spotLights.specularColor[index] = specularColor;
++            _spotLights.flags[index] = 0;
++            _setSpotLightRangeValues(index, range);
++            _setSpotLightConeValues(index, outerAngleDeg, innerAngleDeg);
++            _updateSpotLightTransform(index);
++            _updateSpotLightColor(index, _diffuseStrength, _specularStrength, _specularExponent);
++            _updateActiveSpotLightFlags();
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightPosition(int index, const fVec3& position)
++            {
++            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
++            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
++            _spotLights.position[index] = position;
++            _updateSpotLightPositionTransform(index);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightDirection(int index, const fVec3& direction)
++            {
++            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
++            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
++            _spotLights.direction[index] = direction;
++            _updateSpotLightDirectionTransform(index);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightDiffuse(int index, const RGBf& color)
++            {
++            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
++            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
++            _spotLights.diffuseColor[index] = color;
++            _spotLights.runtimeDiffuseColor[index] = color * _diffuseStrength;
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightSpecular(int index, const RGBf& color)
++            {
++            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
++            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
++            _spotLights.specularColor[index] = color;
++            _updateSpotLightColor(index, _diffuseStrength, _specularStrength, _specularExponent);
++            _updateActiveSpotLightFlags();
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightRange(int index, float range)
++            {
++            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
++            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
++            _setSpotLightRangeValues(index, range);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setSpotLightCone(int index, float outerAngleDeg, float innerAngleDeg)
++            {
++            static_assert(MAX_SPOT_LIGHTS > 0, "Spot-light API requires MAX_SPOT_LIGHTS > 0");
++            if ((index < 0) || (index >= MAX_SPOT_LIGHTS)) return;
++            _setSpotLightConeValues(index, outerAngleDeg, innerAngleDeg);
++            _updateActiveSpotLightFlags();
++            }
++
++
+ 
+ 
+ 
+@@ -589,6 +740,7 @@ namespace tgx
+         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setMaterialSpecularExponent(int exponent)
+             {
+             _specularExponent = clamp(exponent, 0, 100);
++            _updateActiveSpotLightColors(_diffuseStrength, _specularStrength, _specularExponent);
+             }
+ 
+ 
+@@ -618,7 +770,7 @@ namespace tgx
+         *********************************************************/
+ 
+ 
+-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_triangleClip1in(int shader, tgx::fVec4 CP,
+             float cp1, float cp2, float cp3,
+             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
+@@ -650,8 +802,8 @@ namespace tgx
+             }
+ 
+ 
+-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_triangleClip2in(int shader, tgx::fVec4 CP,
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        inline void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_triangleClip2in(int shader, tgx::fVec4 CP,
+             float cp1, float cp2, float cp3,
+             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
+             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
+@@ -687,8 +839,8 @@ namespace tgx
+ 
+ 
+ 
+-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+-        int Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_triangleClip(int shader, tgx::fVec4 CP, float off,
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        inline int Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_triangleClip(int shader, tgx::fVec4 CP, float off,
+             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
+             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4)
+             {
+@@ -777,20 +929,20 @@ namespace tgx
+ 
+                 if (TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE))
+                     {
+-                    PPC0.color = _shadeVertex<true>(icu, NN0);
+-                    PPC1.color = _shadeVertex<true>(icu, NN1);
+-                    PPC2.color = _shadeVertex<true>(icu, NN2);
++                    PPC0.color = _shadeVertex<true>(icu, NN0, *Q0);
++                    PPC1.color = _shadeVertex<true>(icu, NN1, *Q1);
++                    PPC2.color = _shadeVertex<true>(icu, NN2, *Q2);
+                     }
+                 else
+                     {
+-                    PPC0.color = _shadeVertex(icu, NN0, col0);
+-                    PPC1.color = _shadeVertex(icu, NN1, col1);
+-                    PPC2.color = _shadeVertex(icu, NN2, col2);
++                    PPC0.color = _shadeVertex(icu, NN0, *Q0, col0);
++                    PPC1.color = _shadeVertex(icu, NN1, *Q1, col1);
++                    PPC2.color = _shadeVertex(icu, NN2, *Q2, col2);
+                     }
+                 }
+             else
+                 { // flat shading
+-                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu);
++                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, *Q0, *Q1, *Q2);
+                 PPC0.color = _uni.facecolor; // unneeded but
+                 PPC1.color = _uni.facecolor; // does no harm
+                 PPC2.color = _uni.facecolor; // and remove a warning
+@@ -1014,20 +1166,20 @@ namespace tgx
+ 
+                 if (TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE))
+                     {
+-                    PPC0.color = _shadeVertex<true>(icu, NN0);
+-                    PPC1.color = _shadeVertex<true>(icu, NN1);
+-                    PPC2.color = _shadeVertex<true>(icu, NN2);
++                    PPC0.color = _shadeVertex<true>(icu, NN0, Q0);
++                    PPC1.color = _shadeVertex<true>(icu, NN1, Q1);
++                    PPC2.color = _shadeVertex<true>(icu, NN2, Q2);
+                     }
+                 else
+                     {
+-                    PPC0.color = _shadeVertex(icu, NN0, Vcol0);
+-                    PPC1.color = _shadeVertex(icu, NN1, Vcol1);
+-                    PPC2.color = _shadeVertex(icu, NN2, Vcol2);
++                    PPC0.color = _shadeVertex(icu, NN0, Q0, Vcol0);
++                    PPC1.color = _shadeVertex(icu, NN1, Q1, Vcol1);
++                    PPC2.color = _shadeVertex(icu, NN2, Q2, Vcol2);
+                     }
+                 }
+             else
+                 { // flat shading
+-                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu);
++                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, Q0, Q1, Q2);
+                 }
+ 
+             if (TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE))
+@@ -1162,28 +1314,28 @@ namespace tgx
+                             {
+                             PPC0->N = _r_modelViewM.mult0(normals[PPC0->indn]);
+                             if (TEXTURE)
+-                                PPC0->color = _shadeVertex<true>(icu, PPC0->N);
++                                PPC0->color = _shadeVertex<true>(icu, PPC0->N, PPC0->P);
+                             else
+-                                PPC0->color = _shadeVertex<false>(icu, PPC0->N);
++                                PPC0->color = _shadeVertex<false>(icu, PPC0->N, PPC0->P);
+                             }
+                         if (PPC1->missedP)
+                             {
+                             PPC1->N = _r_modelViewM.mult0(normals[PPC1->indn]);
+                             if (TEXTURE)
+-                                PPC1->color = _shadeVertex<true>(icu, PPC1->N);
++                                PPC1->color = _shadeVertex<true>(icu, PPC1->N, PPC1->P);
+                             else
+-                                PPC1->color = _shadeVertex<false>(icu, PPC1->N);
++                                PPC1->color = _shadeVertex<false>(icu, PPC1->N, PPC1->P);
+                             }
+                         PPC2->N = _r_modelViewM.mult0(normals[PPC2->indn]);
+                         if (TEXTURE)
+-                            PPC2->color = _shadeVertex<true>(icu, PPC2->N);
++                            PPC2->color = _shadeVertex<true>(icu, PPC2->N, PPC2->P);
+                         else
+-                            PPC2->color = _shadeVertex<false>(icu, PPC2->N);
++                            PPC2->color = _shadeVertex<false>(icu, PPC2->N, PPC2->P);
+ 
+                         }
+                     else
+                         { // flat shading : color on faces
+-                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TEXTURE, faceN, cu);
++                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TEXTURE, faceN, cu, PPC0->P, PPC1->P, PPC2->P);
+                         }
+ 
+                     if (TEXTURE)
+@@ -1324,22 +1476,32 @@ namespace tgx
+ 
+                 if (TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE))
+                     {
+-                    PPC0.color = _shadeVertex<true>(icu, NN0);
+-                    PPC1.color = _shadeVertex<true>(icu, NN1);
+-                    PPC2.color = _shadeVertex<true>(icu, NN2);
+-                    PPC3.color = _shadeVertex<true>(icu, NN3);
++                    PPC0.color = _shadeVertex<true>(icu, NN0, Q0);
++                    PPC1.color = _shadeVertex<true>(icu, NN1, Q1);
++                    PPC2.color = _shadeVertex<true>(icu, NN2, Q2);
++                    PPC3.color = _shadeVertex<true>(icu, NN3, Q3);
+                     }
+                 else
+                     {
+-                    PPC0.color = _shadeVertex(icu, NN0, Vcol0);
+-                    PPC1.color = _shadeVertex(icu, NN1, Vcol1);
+-                    PPC2.color = _shadeVertex(icu, NN2, Vcol2);
+-                    PPC3.color = _shadeVertex(icu, NN3, Vcol3);
++                    PPC0.color = _shadeVertex(icu, NN0, Q0, Vcol0);
++                    PPC1.color = _shadeVertex(icu, NN1, Q1, Vcol1);
++                    PPC2.color = _shadeVertex(icu, NN2, Q2, Vcol2);
++                    PPC3.color = _shadeVertex(icu, NN3, Q3, Vcol3);
+                     }
+                 }
+             else
+                 { // flat shading
+-                _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu);
++                if constexpr (MAX_SPOT_LIGHTS > 0)
++                    {
++                    if (_spotLights.count == 0)
++                        {
++                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, Q0, Q1, Q2);
++                        }
++                    }
++                else
++                    {
++                    _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, Q0, Q1, Q2);
++                    }
+                 }
+ 
+             if (TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE))
+@@ -1350,6 +1512,18 @@ namespace tgx
+                 PPC3.T = *T3;
+                 }
+ 
++            if constexpr (MAX_SPOT_LIGHTS > 0)
++                {
++                if ((!TGX_SHADER_HAS_GOURAUD(RASTER_TYPE)) && (_spotLights.count > 0))
++                    {
++                    _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, Q0, Q1, Q2);
++                    rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, PPC0, PPC1, PPC2, _ox, _oy, _uni);
++                    _setFlatOrUnlitFaceColor(RASTER_TYPE, TGX_SHADER_HAS_TEXTURING_ENABLED(RASTER_TYPE), faceN, cu, Q0, Q2, Q3);
++                    rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, PPC0, PPC2, PPC3, _ox, _oy, _uni);
++                    return;
++                    }
++                }
++
+             // go rasterize !
+             rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, PPC0, PPC1, PPC2, _ox, _oy, _uni);
+             rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, PPC0, PPC2, PPC3, _ox, _oy, _uni);
+@@ -1544,7 +1718,7 @@ namespace tgx
+                     {
+                     if (use_mesh_material)
+                         {   // use mesh material if requested
+-                        _setRuntimeMaterialLighting(mesh->ambiant_strength, mesh->diffuse_strength, mesh->specular_strength);
++                        _setRuntimeMaterialLighting(mesh->ambiant_strength, mesh->diffuse_strength, mesh->specular_strength, mesh->specular_exponent);
+                         _r_objectColor = mesh->color;
+                         }
+                     // precompute pow(.,specularExponent) table if needed
+@@ -1564,7 +1738,7 @@ namespace tgx
+ 
+             if (use_mesh_material)
+                 { // restore material pre-computed values
+-                _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength);
++                _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength, _specularExponent);
+                 _r_objectColor = _color;
+                 }
+             }
+@@ -1580,7 +1754,7 @@ namespace tgx
+ 
+             if (use_mesh_material)
+                 { // restore material pre-computed values
+-                _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength);
++                _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength, _specularExponent);
+                 _r_objectColor = _color;
+                 }
+             }
+@@ -1709,28 +1883,28 @@ namespace tgx
+                             {
+                             PPC0->N = _r_modelViewM.mult0(tab_norm[PPC0->indn]);
+                             if (TEXTURE)
+-                                PPC0->color = _shadeVertex<true>(icu, PPC0->N);
++                                PPC0->color = _shadeVertex<true>(icu, PPC0->N, PPC0->P);
+                             else
+-                                PPC0->color = _shadeVertex<false>(icu, PPC0->N);
++                                PPC0->color = _shadeVertex<false>(icu, PPC0->N, PPC0->P);
+                             }
+                         if (PPC1->missedP)
+                             {
+                             PPC1->N = _r_modelViewM.mult0(tab_norm[PPC1->indn]);
+                             if (TEXTURE)
+-                                PPC1->color = _shadeVertex<true>(icu, PPC1->N);
++                                PPC1->color = _shadeVertex<true>(icu, PPC1->N, PPC1->P);
+                             else
+-                                PPC1->color = _shadeVertex<false>(icu, PPC1->N);
++                                PPC1->color = _shadeVertex<false>(icu, PPC1->N, PPC1->P);
+                             }
+                         PPC2->N = _r_modelViewM.mult0(tab_norm[PPC2->indn]);
+                         if (TEXTURE)
+-                            PPC2->color = _shadeVertex<true>(icu, PPC2->N);
++                            PPC2->color = _shadeVertex<true>(icu, PPC2->N, PPC2->P);
+                         else
+-                            PPC2->color = _shadeVertex<false>(icu, PPC2->N);
++                            PPC2->color = _shadeVertex<false>(icu, PPC2->N, PPC2->P);
+ 
+                         }
+                     else
+                         { // flat shading : color on faces
+-                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TEXTURE, faceN, cu);
++                        _setFlatOrUnlitFaceColor(RASTER_TYPE, TEXTURE, faceN, cu, PPC0->P, PPC1->P, PPC2->P);
+                         }
+ 
+                     if (TEXTURE)
+@@ -1886,7 +2060,7 @@ namespace tgx
+ 
+                     if (use_mesh_material)
+                         {
+-                        _setRuntimeMaterialLighting(material.ambiant_strength, material.diffuse_strength, material.specular_strength);
++                        _setRuntimeMaterialLighting(material.ambiant_strength, material.diffuse_strength, material.specular_strength, material.specular_exponent);
+                         _r_objectColor = material.color;
+                         if (current_exponent != material.specular_exponent)
+                             {
+@@ -2039,28 +2213,28 @@ namespace tgx
+                                 {
+                                 PPC0->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC0->indn, normal_sx, normal_sy, normal_sz);
+                                 if (TEXTURE)
+-                                    PPC0->color = _shadeVertex<true>(icu, PPC0->N);
++                                    PPC0->color = _shadeVertex<true>(icu, PPC0->N, PPC0->P);
+                                 else
+-                                    PPC0->color = _shadeVertex<false>(icu, PPC0->N);
++                                    PPC0->color = _shadeVertex<false>(icu, PPC0->N, PPC0->P);
+                                 }
+                             if (PPC1->missedP)
+                                 {
+                                 PPC1->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC1->indn, normal_sx, normal_sy, normal_sz);
+                                 if (TEXTURE)
+-                                    PPC1->color = _shadeVertex<true>(icu, PPC1->N);
++                                    PPC1->color = _shadeVertex<true>(icu, PPC1->N, PPC1->P);
+                                 else
+-                                    PPC1->color = _shadeVertex<false>(icu, PPC1->N);
++                                    PPC1->color = _shadeVertex<false>(icu, PPC1->N, PPC1->P);
+                                 }
+                             PPC2->N = Mesh3Dv2_detail::load_normal_transformed(tab_norm, PPC2->indn, normal_sx, normal_sy, normal_sz);
+                             if (TEXTURE)
+-                                PPC2->color = _shadeVertex<true>(icu, PPC2->N);
++                                PPC2->color = _shadeVertex<true>(icu, PPC2->N, PPC2->P);
+                             else
+-                                PPC2->color = _shadeVertex<false>(icu, PPC2->N);
++                                PPC2->color = _shadeVertex<false>(icu, PPC2->N, PPC2->P);
+ 
+                             }
+                         else
+                             { // flat shading : color on faces
+-                            _setFlatOrUnlitFaceColor(raster_type, TEXTURE, faceN, cu);
++                            _setFlatOrUnlitFaceColor(raster_type, TEXTURE, faceN, cu, PPC0->P, PPC1->P, PPC2->P);
+                             }
+ 
+                         if (TEXTURE)
+@@ -4295,242 +4469,1004 @@ namespace tgx
+ 
+ 
+         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSkyBox(
+-            const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
+-            const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
+-            const fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
+-            const fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
+-            const fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
+-            const fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right,
+-            float rot_angle_y,
+-            float reference_height,
+-            float skybox_radius,
+-            Shader texture_quality,
+-            Shader texture_mode
+-            )
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawCylinder(int nb_sectors, bool bottom_cap, bool top_cap)
+             {
+-            if (!_validDraw()) return;
+-            if (_ortho) return;
+-            if (skybox_radius <= 0.0f) return;
+-
+-            if constexpr (TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS))
+-                {
+-                fMat4 rot;
+-                rot.setRotate(rot_angle_y, 0.0f, 1.0f, 0.0f);
+-
+-                // Recover the camera world Y coordinate so reference_height stays in world units.
+-                const float camera_y = -(_viewM.M[4] * _viewM.M[12] + _viewM.M[5] * _viewM.M[13] + _viewM.M[6] * _viewM.M[14]);
+-
+-                fVec4 skybox_vertices[8];
+-                for (int i = 0; i < 8; i++)
+-                    {
+-                    const fVec4 P = rot.mult0(UNIT_CUBE_VERTICES[i]);
+-                    fVec4 Q = _viewM.mult0(fVec3(skybox_radius * P.x,
+-                                                 skybox_radius * P.y + reference_height - camera_y,
+-                                                 skybox_radius * P.z));
+-                    Q.w = 1.0f;
+-                    skybox_vertices[i] = Q;
+-                    }
+-
+-                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES,      v_front_ABCD,  texture_front,  texture_quality, texture_mode);
+-                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES + 4,  v_back_EFGH,   texture_back,   texture_quality, texture_mode);
+-                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES + 8,  v_top_HADE,    texture_top,    texture_quality, texture_mode);
+-                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES + 12, v_bottom_BGFC, texture_bottom, texture_quality, texture_mode);
+-                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES + 16, v_left_HGBA,   texture_left,   texture_quality, texture_mode);
+-                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES + 20, v_right_DCFE,  texture_right,  texture_quality, texture_mode);
+-                }
++            drawTruncatedCone(nb_sectors, 1.0f, 1.0f, bottom_cap, top_cap);
+             }
+ 
+ 
+         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSkyBox(
+-            const Image<color_t>* texture_front,
+-            const Image<color_t>* texture_back,
+-            const Image<color_t>* texture_top,
+-            const Image<color_t>* texture_bottom,
+-            const Image<color_t>* texture_left,
+-            const Image<color_t>* texture_right,
+-            float rot_angle_y,
+-            float reference_height,
+-            float skybox_radius,
+-            Shader texture_quality,
+-            Shader texture_mode
+-            )
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawCylinder(int nb_sectors, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom, const Image<color_t>* texture_top, bool bottom_cap, bool top_cap)
+             {
+-            float epsx = 0, epsy = 0;
+-            if (texture_front)
+-                {
+-                epsx = fast_inv((float)(texture_front->lx() - 1));
+-                epsy = fast_inv((float)(texture_front->ly() - 1));
+-                }
+-            tgx::fVec2 t_front[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+-
+-            if (texture_back)
+-                {
+-                epsx = fast_inv((float)(texture_back->lx() - 1));
+-                epsy = fast_inv((float)(texture_back->ly() - 1));
+-                }
+-            tgx::fVec2 t_back[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+-
+-            if (texture_top)
+-                {
+-                epsx = fast_inv((float)(texture_top->lx() - 1));
+-                epsy = fast_inv((float)(texture_top->ly() - 1));
+-                }
+-            tgx::fVec2 t_top[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+-
+-            if (texture_bottom)
+-                {
+-                epsx = fast_inv((float)(texture_bottom->lx() - 1));
+-                epsy = fast_inv((float)(texture_bottom->ly() - 1));
+-                }
+-            tgx::fVec2 t_bottom[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+-
+-            if (texture_left)
+-                {
+-                epsx = fast_inv((float)(texture_left->lx() - 1));
+-                epsy = fast_inv((float)(texture_left->ly() - 1));
+-                }
+-            tgx::fVec2 t_left[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+-
+-            if (texture_right)
+-                {
+-                epsx = fast_inv((float)(texture_right->lx() - 1));
+-                epsy = fast_inv((float)(texture_right->ly() - 1));
+-                }
+-            tgx::fVec2 t_right[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
+-
+-            drawSkyBox(
+-                t_front, texture_front,
+-                t_back, texture_back,
+-                t_top, texture_top,
+-                t_bottom, texture_bottom,
+-                t_left, texture_left,
+-                t_right, texture_right,
+-                rot_angle_y, reference_height, skybox_radius, texture_quality, texture_mode);
++            drawTruncatedCone(nb_sectors, 1.0f, 1.0f, texture_side, texture_bottom, texture_top, bottom_cap, top_cap);
+             }
+ 
+ 
+-
+-
+         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSphere(int nb_sectors, int nb_stacks)
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawCone(int nb_sectors, bool bottom_cap)
+             {
+-            drawSphere(nb_sectors, nb_stacks, nullptr);
++            drawTruncatedCone(nb_sectors, 1.0f, 0.0f, bottom_cap, true);
+             }
+ 
+ 
+         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture)
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawCone(int nb_sectors, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom, bool bottom_cap)
+             {
+-            _drawSphere<false, Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
++            drawTruncatedCone(nb_sectors, 1.0f, 0.0f, texture_side, texture_bottom, nullptr, bottom_cap, true);
+             }
+ 
+ 
+         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawAdaptativeSphere(float quality)
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap)
+             {
+-            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+-            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
+-            drawSphere(nb_stacks * 2 - 2, nb_stacks, nullptr);
++            _drawTruncatedCone(nb_sectors, bottom_radius, top_radius, nullptr, nullptr, nullptr, bottom_cap, top_cap);
+             }
+ 
+ 
+         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawAdaptativeSphere(const Image<color_t>* texture, float quality)
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom, const Image<color_t>* texture_top, bool bottom_cap, bool top_cap)
+             {
+-            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
+-            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
+-            drawSphere(nb_stacks * 2 - 2, nb_stacks, texture);
++            _drawTruncatedCone(nb_sectors, bottom_radius, top_radius, texture_side, texture_bottom, texture_top, bottom_cap, top_cap);
+             }
+ 
+ 
+-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+-        template<bool WIREFRAME, int MODE> TGX_NOINLINE
+-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTruncatedConeGouraudCachedTriangle(const int cone_shader, ExtVec4& E0, fVec3& N0, ExtVec4& E1, fVec3& N1, ExtVec4& E2, fVec3& N2,
++                                                                                                                                              bool textured, bool ortho, float CLIPBOUND_XY, bool cliptestneeded)
+             {
++            fVec3 faceN = crossProduct(E1.P - E0.P, E2.P - E0.P);
++            const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, E0.P);
++            if (cu * _culling_dir > 0) return;
+ 
+-            const int save_shaders = _shaders;
++            if (E0.missedP) { *((fVec4*)&E0) = _projM * E0.P; if (ortho) { E0.w = 1.0f - E0.z; } else { E0.zdivide(); } }
++            if (E1.missedP) { *((fVec4*)&E1) = _projM * E1.P; if (ortho) { E1.w = 1.0f - E1.z; } else { E1.zdivide(); } }
++            if (E2.missedP) { *((fVec4*)&E2) = _projM * E2.P; if (ortho) { E2.w = 1.0f - E2.z; } else { E2.zdivide(); } }
+ 
+-            if (texture == nullptr)
++            if (cliptestneeded)
+                 {
+-                TGX_SHADER_REMOVE_TEXTURING_ENABLED(_shaders);
+-                TGX_SHADER_ADD_NOTEXTURE(_shaders);
++                const bool needclip = (E0.P.z >= 0)
++                    | (E0.x < -CLIPBOUND_XY) | (E0.x > CLIPBOUND_XY)
++                    | (E0.y < -CLIPBOUND_XY) | (E0.y > CLIPBOUND_XY)
++                    | (E0.z < -1) | (E0.z > 1)
++                    | (E1.P.z >= 0)
++                    | (E1.x < -CLIPBOUND_XY) | (E1.x > CLIPBOUND_XY)
++                    | (E1.y < -CLIPBOUND_XY) | (E1.y > CLIPBOUND_XY)
++                    | (E1.z < -1) | (E1.z > 1)
++                    | (E2.P.z >= 0)
++                    | (E2.x < -CLIPBOUND_XY) | (E2.x > CLIPBOUND_XY)
++                    | (E2.y < -CLIPBOUND_XY) | (E2.y > CLIPBOUND_XY)
++                    | (E2.z < -1) | (E2.z > 1);
++                if (needclip)
++                    {
++                    if (!_discardTriangle(*((fVec4*)&E0), *((fVec4*)&E1), *((fVec4*)&E2)))
++                        {
++                        _drawTriangleClipped(cone_shader, &E0.P, &E1.P, &E2.P, &N0, &N1, &N2, textured ? &E0.T : nullptr, textured ? &E1.T : nullptr, textured ? &E2.T : nullptr, _r_objectColor, _r_objectColor, _r_objectColor);
++                        }
++                    return;
++                    }
+                 }
++            const float icu = 1.0f;
++            if (E0.missedP)
++                {
++                E0.N = fVec4(_r_modelViewM.mult0(N0), 0.0f);
++                E0.color = (textured) ? _shadeVertex<true>(icu, E0.N, E0.P) : _shadeVertex<false>(icu, E0.N, E0.P);
++                E0.missedP = false;
++                }
++            if (E1.missedP)
++                {
++                E1.N = fVec4(_r_modelViewM.mult0(N1), 0.0f);
++                E1.color = (textured) ? _shadeVertex<true>(icu, E1.N, E1.P) : _shadeVertex<false>(icu, E1.N, E1.P);
++                E1.missedP = false;
++                }
++            if (E2.missedP)
++                {
++                E2.N = fVec4(_r_modelViewM.mult0(N2), 0.0f);
++                E2.color = (textured) ? _shadeVertex<true>(icu, E2.N, E2.P) : _shadeVertex<false>(icu, E2.N, E2.P);
++                E2.missedP = false;
++                }
++            rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)E0, (RasterizerVec4)E1, (RasterizerVec4)E2, _ox, _oy, _uni);
++            }
+ 
+-            // set culling direction = 1 and save previous value
+-            float save_culling = _culling_dir;
+-            if (_culling_dir != 0) _culling_dir = 1;
+-
+-            const float MPI = 3.141592653589793238f;
+-            const int MAX_SECTORS = 256;
+-            if (nb_sectors > MAX_SECTORS) nb_sectors = 256;
+-            if (nb_sectors < 3) nb_sectors = 3;
+-            if (nb_stacks < 3) nb_stacks = 3;
+ 
+-            // precomputed sin/cos for sectors as we will need them often
+-            float cosTheta[MAX_SECTORS];
+-            float sinTheta[MAX_SECTORS];
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTruncatedConeGouraudSideStrip(const int cone_shader, int nb_sectors, float bottom_radius, float top_radius, const float* cosTheta, const float* sinTheta,
++                                                                                                                                         float inv_side_normal, float side_normal_y, float dtx, float CLIPBOUND_XY, bool cliptestneeded)
++            {
++            _uni.shader_type = cone_shader;
+ 
+-            const float d_sector = 2*MPI / nb_sectors;
+-            for(int i = 0; i < nb_sectors; i++)
++            struct ConeStripVertex
+                 {
+-                cosTheta[i] = cosf(i * d_sector);
+-                sinTheta[i] = sinf(i * d_sector);
+-                }
++                ExtVec4 E;
++                fVec3 N;
++                };
+ 
+-            const float d_stack = MPI / nb_stacks;
++            const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURING_ENABLED(cone_shader));
++            const bool ortho = _ortho;
+ 
+-            fVec3 P1, P2, P3, P4;
++            auto loadSideVertex = [&](ConeStripVertex* V, bool top, int sector, float tex_u)
++                {
++                const float c = cosTheta[sector];
++                const float s = sinTheta[sector];
++                const float radius = top ? top_radius : bottom_radius;
++                const float y = top ? 1.0f : -1.0f;
++
++                V->E.P = _r_modelViewM.mult1(fVec3(radius * c, y, radius * s));
++                V->N = fVec3(inv_side_normal * c, side_normal_y, inv_side_normal * s);
++                if (TEXTURE) V->E.T = fVec2(tex_u, top ? 1.0f : 0.0f);
++                V->E.missedP = true;
++                };
+ 
+-            // top part, top vertex at {0,1,0}
++            ConeStripVertex TopPrev, BottomPrev, TopCur, BottomCur;
++            loadSideVertex(&TopPrev, true, nb_sectors - 1, 0.0f);
++            loadSideVertex(&BottomPrev, false, nb_sectors - 1, 0.0f);
++            float u = 0.0f;
++            for (int i = 0; i < nb_sectors; i++)
++                {
++                const float uu = u + dtx;
++                loadSideVertex(&TopCur, true, i, uu);
++                loadSideVertex(&BottomCur, false, i, uu);
++                _drawTruncatedConeGouraudCachedTriangle(cone_shader,TopPrev.E, TopPrev.N, TopCur.E, TopCur.N, BottomCur.E, BottomCur.N,TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded);
++                _drawTruncatedConeGouraudCachedTriangle(cone_shader,TopPrev.E, TopPrev.N, BottomCur.E, BottomCur.N, BottomPrev.E, BottomPrev.N, TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded);
++                u = uu;
++                TopPrev = TopCur;
++                BottomPrev = BottomCur;
++                }
++            }
+ 
+-            float cosPhi = cosf(d_stack);
+-            float sinPhi = sinf(d_stack);
+ 
+-            P1 = { 0,1,0 };
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTruncatedConeGouraudConeFan(const int cone_shader, int nb_sectors, bool top_apex, float ring_radius, const float* cosTheta, const float* sinTheta,
++                                                                                                                                       float inv_side_normal, float side_normal_y, float dtx, float CLIPBOUND_XY, bool cliptestneeded)
++            {
++            _uni.shader_type = cone_shader;
++
++            struct ConeFanVertex
++                {
++                ExtVec4 E;
++                fVec3 N;
++                };
+ 
+-            P2.x = sinPhi * cosTheta[nb_sectors-1];
+-            P2.y = cosPhi;
+-            P2.z = sinPhi * sinTheta[nb_sectors - 1];
++            const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURING_ENABLED(cone_shader));
++            const bool ortho = _ortho;
++            const float ring_y = top_apex ? -1.0f : 1.0f;
++            const float apex_y = top_apex ? 1.0f : -1.0f;
++            const fVec4 apexP = _r_modelViewM.mult1(fVec3(0.0f, apex_y, 0.0f));
+ 
+-            P3.y = cosPhi;
++            auto loadRingVertex = [&](ConeFanVertex* V, int sector, float tex_u)
++                {
++                const float c = cosTheta[sector];
++                const float s = sinTheta[sector];
++                V->E.P = _r_modelViewM.mult1(fVec3(ring_radius * c, ring_y, ring_radius * s));
++                V->N = fVec3(inv_side_normal * c, side_normal_y, inv_side_normal * s);
++                if (TEXTURE) V->E.T = fVec2(tex_u, top_apex ? 0.0f : 1.0f);
++                V->E.missedP = true;
++                };
+ 
+-            const float dtx = 1.0f / nb_sectors;
++            auto loadApexVertex = [&](ConeFanVertex* V, const fVec3& N, float tex_u)
++                {
++                V->E.P = apexP;
++                V->N = N;
++                if (TEXTURE) V->E.T = fVec2(tex_u, top_apex ? 1.0f : 0.0f);
++                V->E.missedP = true;
++                };
+ 
+-            float v = 0.5f * cosPhi + 0.5f;
+-            float u = 0;
++            ConeFanVertex Apex, Prev, Cur;
++            loadRingVertex(&Prev, nb_sectors - 1, 0.0f);
+ 
++            float u = 0.0f;
+             for (int i = 0; i < nb_sectors; i++)
+                 {
+-                P3.x = sinPhi * cosTheta[i];
+-                P3.z = sinPhi * sinTheta[i];
++                const float uu = u + dtx;
++                loadRingVertex(&Cur, i, uu);
++                loadApexVertex(&Apex, Cur.N, 0.5f * (u + uu));
++                if (top_apex) { _drawTruncatedConeGouraudCachedTriangle(cone_shader, Apex.E, Apex.N, Cur.E, Cur.N, Prev.E, Prev.N, TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded); }
++                else { _drawTruncatedConeGouraudCachedTriangle(cone_shader, Prev.E, Prev.N, Cur.E, Cur.N, Apex.E, Apex.N, TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded);}
++                u = uu;
++                Prev = Cur;
++                }
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTruncatedConeGouraudCapFan(const int cap_shader, int nb_sectors, bool top_cap, float radius, const float* cosTheta, const float* sinTheta, float CLIPBOUND_XY, bool cliptestneeded)
++            {
++            _uni.shader_type = cap_shader;
++
++            struct ConeCapVertex
++                {
++                ExtVec4 E;
++                fVec3 N;
++                };
++
++            const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURING_ENABLED(cap_shader));
++            const bool ortho = _ortho;
++            const float y = top_cap ? 1.0f : -1.0f;
++            const fVec3 capN(0.0f, top_cap ? 1.0f : -1.0f, 0.0f);
++
++            auto loadCenter = [&](ConeCapVertex* V)
++                {
++                V->E.P = _r_modelViewM.mult1(fVec3(0.0f, y, 0.0f));
++                V->N = capN;
++                if (TEXTURE) V->E.T = fVec2(0.5f, 0.5f);
++                V->E.missedP = true;
++                };
++
++            auto loadRingVertex = [&](ConeCapVertex* V, int sector)
++                {
++                const float c = cosTheta[sector];
++                const float s = sinTheta[sector];
++                V->E.P = _r_modelViewM.mult1(fVec3(radius * c, y, radius * s));
++                V->N = capN;
++                if (TEXTURE) V->E.T = fVec2(0.5f + 0.5f * c, 0.5f + 0.5f * s);
++                V->E.missedP = true;
++                };
++
++            ConeCapVertex Center, Prev, Cur;
++            loadCenter(&Center);
++            loadRingVertex(&Prev, nb_sectors - 1);
++            for (int i = 0; i < nb_sectors; i++)
++                {
++                loadRingVertex(&Cur, i);
++                if (top_cap) { _drawTruncatedConeGouraudCachedTriangle(cap_shader, Center.E, Center.N, Cur.E, Cur.N, Prev.E, Prev.N, TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded); }
++                else { _drawTruncatedConeGouraudCachedTriangle(cap_shader, Center.E, Center.N, Prev.E, Prev.N, Cur.E, Cur.N, TEXTURE, ortho, CLIPBOUND_XY, cliptestneeded); }
++                Prev = Cur;
++                }
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTruncatedCone(
++            int nb_sectors, float bottom_radius, float top_radius, const Image<color_t>* texture_side, const Image<color_t>* texture_bottom, const Image<color_t>* texture_top, bool bottom_cap, bool top_cap)
++            {
++            if (!_validDraw()) return;
++
++            const float EPS_RADIUS = 1.0e-6f;
++
++            if (bottom_radius <= EPS_RADIUS) bottom_radius = 0.0f;
++            if (top_radius <= EPS_RADIUS) top_radius = 0.0f;
++            if ((bottom_radius == 0.0f) && (top_radius == 0.0f)) return;
++
++            const int MAX_SECTORS = 256;
++            if (nb_sectors > MAX_SECTORS) nb_sectors = MAX_SECTORS;
++            if (nb_sectors < 3) nb_sectors = 3;
++
++            // set local culling state and save previous value
++            const float save_culling = _culling_dir;
++            const bool open_shape = ((bottom_radius > 0.0f) && (!bottom_cap)) || ((top_radius > 0.0f) && (!top_cap));
++            if (open_shape) { _culling_dir = 0.0f; } else if (_culling_dir != 0.0f) { _culling_dir = 1.0f; }
++
++            _precomputeSpecularTable(_specularExponent);
++
++            int side_shader = _shaders;
++            int bottom_shader = _shaders;
++            int top_shader = _shaders;
++
++            if (texture_side == nullptr)
++                {
++                TGX_SHADER_REMOVE_TEXTURING_ENABLED(side_shader)
++                TGX_SHADER_ADD_NOTEXTURE(side_shader)
++                }
++            if (texture_bottom == nullptr)
++                {
++                TGX_SHADER_REMOVE_TEXTURING_ENABLED(bottom_shader)
++                TGX_SHADER_ADD_NOTEXTURE(bottom_shader)
++                }
++            if (texture_top == nullptr)
++                {
++                TGX_SHADER_REMOVE_TEXTURING_ENABLED(top_shader)
++                TGX_SHADER_ADD_NOTEXTURE(top_shader)
++                }
++
++            float cosTheta[MAX_SECTORS];
++            float sinTheta[MAX_SECTORS];
++
++            const float d_sector = 360.0f / nb_sectors;
++            for (int i = 0; i < nb_sectors; i++)
++                {
++                float theta = i * d_sector;
++                if (theta > 180.0f) theta -= 360.0f;
++                cosTheta[i] = tgx_fast_cos_deg_clamped(theta);
++                sinTheta[i] = tgx_fast_sin_deg_clamped(theta);
++                }
++
++            const float slope = 0.5f * (top_radius - bottom_radius);
++            const float inv_side_normal = tgx::fast_invsqrt(1.0f + slope * slope);
++            const float side_normal_y = -slope * inv_side_normal;
++            const float dtx = 1.0f / nb_sectors;
++            const bool fast_gouraud = (_culling_dir != 0.0f);
++            const bool side_fast_gouraud = fast_gouraud && (top_radius > 0.0f) && (bottom_radius > 0.0f) && TGX_SHADER_HAS_GOURAUD(side_shader);
++            const bool cone_side_fast_gouraud = fast_gouraud && (top_radius == 0.0f || bottom_radius == 0.0f) && TGX_SHADER_HAS_GOURAUD(side_shader);
++            const bool bottom_fast_gouraud = fast_gouraud && bottom_cap && (bottom_radius > 0.0f) && TGX_SHADER_HAS_GOURAUD(bottom_shader);
++            const bool top_fast_gouraud = fast_gouraud && top_cap && (top_radius > 0.0f) && TGX_SHADER_HAS_GOURAUD(top_shader);
++
++            float CLIPBOUND_XY = 0.0f;
++            bool cliptestneeded = true;
++            if (side_fast_gouraud || cone_side_fast_gouraud || bottom_fast_gouraud || top_fast_gouraud)
++                {
++                const float max_radius = (bottom_radius > top_radius) ? bottom_radius : top_radius;
++                const fBox3 cone_bb(-max_radius, max_radius, -1.0f, 1.0f, -max_radius, max_radius);
++                const fMat4 cone_proj_modelview = _projM * _r_modelViewM;
++                if (_discardBox(cone_bb, cone_proj_modelview))
++                    {
++                    _culling_dir = save_culling;
++                    return;
++                    }
++                CLIPBOUND_XY = _clipbound_xy();
++                cliptestneeded = _clipTestNeeded(CLIPBOUND_XY, cone_bb, cone_proj_modelview);
++                }
++
++            // lateral surface
++            if (TGX_SHADER_HAS_TEXTURING_ENABLED(side_shader)) _uni.tex = (const Image<color_t>*)texture_side;
++
++            const fVec3 PTopCenter(0.0f, 1.0f, 0.0f);
++            const fVec3 PBottomCenter(0.0f, -1.0f, 0.0f);
++
++            if (side_fast_gouraud)
++                {
++                _drawTruncatedConeGouraudSideStrip(side_shader, nb_sectors, bottom_radius, top_radius, cosTheta, sinTheta, inv_side_normal, side_normal_y, dtx, CLIPBOUND_XY, cliptestneeded);
++                }
++            else if (cone_side_fast_gouraud)
++                {
++                const bool top_apex = (top_radius == 0.0f);
++                const float ring_radius = top_apex ? bottom_radius : top_radius;
++                _drawTruncatedConeGouraudConeFan(side_shader, nb_sectors, top_apex, ring_radius, cosTheta, sinTheta, inv_side_normal, side_normal_y, dtx, CLIPBOUND_XY, cliptestneeded);
++                }
++            else
++                {
++                fVec3 PTopPrev(top_radius * cosTheta[nb_sectors - 1], 1.0f, top_radius * sinTheta[nb_sectors - 1]);
++                fVec3 PBottomPrev(bottom_radius * cosTheta[nb_sectors - 1], -1.0f, bottom_radius * sinTheta[nb_sectors - 1]);
++                fVec3 NPrev(inv_side_normal * cosTheta[nb_sectors - 1], side_normal_y, inv_side_normal * sinTheta[nb_sectors - 1]);
++
++                float u = 0.0f;
++                for (int i = 0; i < nb_sectors; i++)
++                    {
++                    const float uu = u + dtx;
++                    const float c = cosTheta[i];
++                    const float s = sinTheta[i];
++                    const fVec3 PTopCur(top_radius * c, 1.0f, top_radius * s);
++                    const fVec3 PBottomCur(bottom_radius * c, -1.0f, bottom_radius * s);
++                    const fVec3 NCur(inv_side_normal * c, side_normal_y, inv_side_normal * s);
++                    const fVec2 TTopPrev(u, 1.0f);
++                    const fVec2 TTopCur(uu, 1.0f);
++                    const fVec2 TBottomPrev(u, 0.0f);
++                    const fVec2 TBottomCur(uu, 0.0f);
++
++                    if ((top_radius > 0.0f) && (bottom_radius > 0.0f))
++                        {
++                        _drawQuad(side_shader, &PTopPrev, &PTopCur, &PBottomCur, &PBottomPrev, &NPrev, &NCur, &NCur, &NPrev, &TTopPrev, &TTopCur, &TBottomCur, &TBottomPrev, _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
++                        }
++                    else if (top_radius == 0.0f)
++                        {
++                        const fVec2 TTop(0.5f * (u + uu), 1.0f);
++                        _drawTriangle(side_shader, &PTopCenter, &PBottomCur, &PBottomPrev, &NCur, &NCur, &NPrev, &TTop, &TBottomCur, &TBottomPrev, _r_objectColor, _r_objectColor, _r_objectColor);
++                        }
++                    else
++                        {
++                        const fVec2 TBottom(0.5f * (u + uu), 0.0f);
++                        _drawTriangle(side_shader, &PTopPrev, &PTopCur, &PBottomCenter, &NPrev, &NCur, &NCur, &TTopPrev, &TTopCur, &TBottom, _r_objectColor, _r_objectColor, _r_objectColor);
++                        }
++                    u = uu;
++                    PTopPrev = PTopCur;
++                    PBottomPrev = PBottomCur;
++                    NPrev = NCur;
++                    }
++                }
++
++            // bottom cap
++            if (bottom_cap && (bottom_radius > 0.0f))
++                {
++                if (TGX_SHADER_HAS_TEXTURING_ENABLED(bottom_shader)) _uni.tex = (const Image<color_t>*)texture_bottom;
++
++                if (bottom_fast_gouraud)
++                    {
++                    _drawTruncatedConeGouraudCapFan(bottom_shader, nb_sectors, false, bottom_radius, cosTheta, sinTheta, CLIPBOUND_XY, cliptestneeded);
++                    }
++                else
++                    {
++                    const fVec3 NBottom(0.0f, -1.0f, 0.0f);
++                    fVec3 PPrev(bottom_radius * cosTheta[nb_sectors - 1], -1.0f, bottom_radius * sinTheta[nb_sectors - 1]);
++                    fVec2 TPrev(0.5f + 0.5f * cosTheta[nb_sectors - 1], 0.5f + 0.5f * sinTheta[nb_sectors - 1]);
++                    const fVec2 TCenter(0.5f, 0.5f);
++                    for (int i = 0; i < nb_sectors; i++)
++                        {
++                        const fVec3 PCur(bottom_radius * cosTheta[i], -1.0f, bottom_radius * sinTheta[i]);
++                        const fVec2 TCur(0.5f + 0.5f * cosTheta[i], 0.5f + 0.5f * sinTheta[i]);
++                        _drawTriangle(bottom_shader, &PBottomCenter, &PPrev, &PCur, &NBottom, &NBottom, &NBottom, &TCenter, &TPrev, &TCur, _r_objectColor, _r_objectColor, _r_objectColor);
++                        PPrev = PCur;
++                        TPrev = TCur;
++                        }
++                    }
++                }
++
++            // top cap
++            if (top_cap && (top_radius > 0.0f))
++                {
++                if (TGX_SHADER_HAS_TEXTURING_ENABLED(top_shader)) _uni.tex = (const Image<color_t>*)texture_top;
++
++                if (top_fast_gouraud)
++                    {
++                    _drawTruncatedConeGouraudCapFan(top_shader, nb_sectors, true, top_radius, cosTheta, sinTheta, CLIPBOUND_XY, cliptestneeded);
++                    }
++                else
++                    {
++                    const fVec3 NTop(0.0f, 1.0f, 0.0f);
++                    fVec3 PPrev(top_radius * cosTheta[nb_sectors - 1], 1.0f, top_radius * sinTheta[nb_sectors - 1]);
++                    fVec2 TPrev(0.5f + 0.5f * cosTheta[nb_sectors - 1], 0.5f + 0.5f * sinTheta[nb_sectors - 1]);
++                    const fVec2 TCenter(0.5f, 0.5f);
++                    for (int i = 0; i < nb_sectors; i++)
++                        {
++                        const fVec3 PCur(top_radius * cosTheta[i], 1.0f, top_radius * sinTheta[i]);
++                        const fVec2 TCur(0.5f + 0.5f * cosTheta[i], 0.5f + 0.5f * sinTheta[i]);
++                        _drawTriangle(top_shader, &PTopCenter, &PCur, &PPrev, &NTop, &NTop, &NTop, &TCenter, &TCur, &TPrev, _r_objectColor, _r_objectColor, _r_objectColor);
++                        PPrev = PCur;
++                        TPrev = TCur;
++                        }
++                    }
++                }
++            _culling_dir = save_culling;
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSkyBox(
++            const fVec2 v_front_ABCD[4] , const Image<color_t>* texture_front,
++            const fVec2 v_back_EFGH[4]  , const Image<color_t>* texture_back,
++            const fVec2 v_top_HADE[4]   , const Image<color_t>* texture_top,
++            const fVec2 v_bottom_BGFC[4], const Image<color_t>* texture_bottom,
++            const fVec2 v_left_HGBA[4]  , const Image<color_t>* texture_left,
++            const fVec2 v_right_DCFE[4] , const Image<color_t>* texture_right,
++            float rot_angle_y,
++            float reference_height,
++            float skybox_radius,
++            Shader texture_quality,
++            Shader texture_mode
++            )
++            {
++            if (!_validDraw()) return;
++            if (_ortho) return;
++            if (skybox_radius <= 0.0f) return;
++
++            if constexpr (TGX_SHADER_HAS_PERSPECTIVE(ENABLED_SHADERS))
++                {
++                fMat4 rot;
++                rot.setRotate(rot_angle_y, 0.0f, 1.0f, 0.0f);
++
++                // Recover the camera world Y coordinate so reference_height stays in world units.
++                const float camera_y = -(_viewM.M[4] * _viewM.M[12] + _viewM.M[5] * _viewM.M[13] + _viewM.M[6] * _viewM.M[14]);
++
++                fVec4 skybox_vertices[8];
++                for (int i = 0; i < 8; i++)
++                    {
++                    const fVec4 P = rot.mult0(UNIT_CUBE_VERTICES[i]);
++                    fVec4 Q = _viewM.mult0(fVec3(skybox_radius * P.x,
++                                                 skybox_radius * P.y + reference_height - camera_y,
++                                                 skybox_radius * P.z));
++                    Q.w = 1.0f;
++                    skybox_vertices[i] = Q;
++                    }
++
++                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES,      v_front_ABCD,  texture_front,  texture_quality, texture_mode);
++                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES + 4,  v_back_EFGH,   texture_back,   texture_quality, texture_mode);
++                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES + 8,  v_top_HADE,    texture_top,    texture_quality, texture_mode);
++                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES + 12, v_bottom_BGFC, texture_bottom, texture_quality, texture_mode);
++                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES + 16, v_left_HGBA,   texture_left,   texture_quality, texture_mode);
++                _drawSkyBoxFace(skybox_vertices, UNIT_CUBE_FACES + 20, v_right_DCFE,  texture_right,  texture_quality, texture_mode);
++                }
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSkyBox(
++            const Image<color_t>* texture_front,
++            const Image<color_t>* texture_back,
++            const Image<color_t>* texture_top,
++            const Image<color_t>* texture_bottom,
++            const Image<color_t>* texture_left,
++            const Image<color_t>* texture_right,
++            float rot_angle_y,
++            float reference_height,
++            float skybox_radius,
++            Shader texture_quality,
++            Shader texture_mode
++            )
++            {
++            float epsx = 0, epsy = 0;
++            if (texture_front)
++                {
++                epsx = fast_inv((float)(texture_front->lx() - 1));
++                epsy = fast_inv((float)(texture_front->ly() - 1));
++                }
++            tgx::fVec2 t_front[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
++
++            if (texture_back)
++                {
++                epsx = fast_inv((float)(texture_back->lx() - 1));
++                epsy = fast_inv((float)(texture_back->ly() - 1));
++                }
++            tgx::fVec2 t_back[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
++
++            if (texture_top)
++                {
++                epsx = fast_inv((float)(texture_top->lx() - 1));
++                epsy = fast_inv((float)(texture_top->ly() - 1));
++                }
++            tgx::fVec2 t_top[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
++
++            if (texture_bottom)
++                {
++                epsx = fast_inv((float)(texture_bottom->lx() - 1));
++                epsy = fast_inv((float)(texture_bottom->ly() - 1));
++                }
++            tgx::fVec2 t_bottom[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
++
++            if (texture_left)
++                {
++                epsx = fast_inv((float)(texture_left->lx() - 1));
++                epsy = fast_inv((float)(texture_left->ly() - 1));
++                }
++            tgx::fVec2 t_left[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
++
++            if (texture_right)
++                {
++                epsx = fast_inv((float)(texture_right->lx() - 1));
++                epsy = fast_inv((float)(texture_right->ly() - 1));
++                }
++            tgx::fVec2 t_right[4] = { tgx::fVec2(epsx,epsy), tgx::fVec2(epsx,1 - epsy), tgx::fVec2(1 - epsx,1 - epsy), tgx::fVec2(1 - epsx,epsy) };
++
++            drawSkyBox(
++                t_front, texture_front,
++                t_back, texture_back,
++                t_top, texture_top,
++                t_bottom, texture_bottom,
++                t_left, texture_left,
++                t_right, texture_right,
++                rot_angle_y, reference_height, skybox_radius, texture_quality, texture_mode);
++            }
++
++
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSphere(int nb_sectors, int nb_stacks)
++            {
++            drawSphere(nb_sectors, nb_stacks, nullptr);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture)
++            {
++            _drawSphere<false, Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, nb_stacks, texture, 1.0f, color_t(_color), 1.0f);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawAdaptativeSphere(float quality)
++            {
++            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
++            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
++            drawSphere(nb_stacks * 2 - 2, nb_stacks, nullptr);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawAdaptativeSphere(const Image<color_t>* texture, float quality)
++            {
++            const float l = _unitSphereScreenDiameter(); // compute the diameter in pixel of the projected sphere on the screen
++            const int nb_stacks = 2 + (int)tgx::fast_sqrt(l * quality); // Why this formula ? Well, why not...
++            drawSphere(nb_stacks * 2 - 2, nb_stacks, texture);
++            }
++
++
++#if TGX_DRAWSPHERE_USE_STRIP_BANDS
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSphereGouraudStripBand(const int sphere_shader, int nb_sectors,
++            const float* cosTheta, const float* sinTheta,
++            float cosPhi, float sinPhi, float new_cosPhi, float new_sinPhi,
++            float v, float vv, float dtx,
++            float CLIPBOUND_XY, bool sphere_cliptestneeded)
++            {
++            _uni.shader_type = sphere_shader;
++
++            struct SphereStripVertex
++                {
++                ExtVec4 E;
++                fVec3 N;
++                };
++
++            SphereStripVertex QQA, QQB, QQC;
++            SphereStripVertex* PPC0 = &QQA;
++            SphereStripVertex* PPC1 = &QQB;
++            SphereStripVertex* PPC2 = &QQC;
++
++            const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURING_ENABLED(sphere_shader));
++            const bool ortho = _ortho;
++
++            auto loadSphereStripVertex = [&](SphereStripVertex* V, const int strip_index)
++                {
++                const int pair_index = strip_index >> 1;
++                const bool lower_ring = ((strip_index & 1) == 0);
++                const int sector = (pair_index == 0) ? (nb_sectors - 1) : (pair_index - 1);
++                const float tex_u = pair_index * dtx;
++                const float ring_y = lower_ring ? new_cosPhi : cosPhi;
++                const float ring_radius = lower_ring ? new_sinPhi : sinPhi;
++
++                V->N.x = ring_radius * cosTheta[sector];
++                V->N.y = ring_y;
++                V->N.z = ring_radius * sinTheta[sector];
++                V->E.P = _r_modelViewM.mult1(V->N);
++                if (TEXTURE) V->E.T = fVec2(tex_u, lower_ring ? vv : v);
++                V->E.missedP = true;
++                };
++
++            loadSphereStripVertex(PPC0, 0);
++            loadSphereStripVertex(PPC1, 1);
++            loadSphereStripVertex(PPC2, 2);
++
++            const int strip_count = 2 * (nb_sectors + 1);
++            for (int tri = 0; ; tri++)
++                {
++                fVec3 faceN = crossProduct(PPC1->E.P - PPC0->E.P, PPC2->E.P - PPC0->E.P);
++                const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, PPC0->E.P);
++                float icu;
++                if (cu * _culling_dir > 0) goto rasterize_next_sphere_strip_triangle;
++
++                *((fVec4*)&PPC2->E) = _projM * PPC2->E.P;
++                if (ortho) { PPC2->E.w = 1.0f - PPC2->E.z; } else { PPC2->E.zdivide(); }
++
++                if (PPC0->E.missedP)
++                    {
++                    *((fVec4*)&PPC0->E) = _projM * PPC0->E.P;
++                    if (ortho) { PPC0->E.w = 1.0f - PPC0->E.z; } else { PPC0->E.zdivide(); }
++                    }
++                if (PPC1->E.missedP)
++                    {
++                    *((fVec4*)&PPC1->E) = _projM * PPC1->E.P;
++                    if (ortho) { PPC1->E.w = 1.0f - PPC1->E.z; } else { PPC1->E.zdivide(); }
++                    }
++
++                if (sphere_cliptestneeded)
++                    {
++                    const bool needclip = (PPC2->E.P.z >= 0)
++                        | (PPC2->E.x < -CLIPBOUND_XY) | (PPC2->E.x > CLIPBOUND_XY)
++                        | (PPC2->E.y < -CLIPBOUND_XY) | (PPC2->E.y > CLIPBOUND_XY)
++                        | (PPC2->E.z < -1) | (PPC2->E.z > 1)
++                        | (PPC0->E.P.z >= 0)
++                        | (PPC0->E.x < -CLIPBOUND_XY) | (PPC0->E.x > CLIPBOUND_XY)
++                        | (PPC0->E.y < -CLIPBOUND_XY) | (PPC0->E.y > CLIPBOUND_XY)
++                        | (PPC0->E.z < -1) | (PPC0->E.z > 1)
++                        | (PPC1->E.P.z >= 0)
++                        | (PPC1->E.x < -CLIPBOUND_XY) | (PPC1->E.x > CLIPBOUND_XY)
++                        | (PPC1->E.y < -CLIPBOUND_XY) | (PPC1->E.y > CLIPBOUND_XY)
++                        | (PPC1->E.z < -1) | (PPC1->E.z > 1);
++                    if (needclip)
++                        {
++                        if (!_discardTriangle(*((fVec4*)&PPC0->E), *((fVec4*)&PPC1->E), *((fVec4*)&PPC2->E)))
++                            {
++                            _drawTriangleClipped(sphere_shader,
++                                                 &(PPC0->E.P), &(PPC1->E.P), &(PPC2->E.P),
++                                                 &(PPC0->N), &(PPC1->N), &(PPC2->N),
++                                                 ((TEXTURE) ? &(PPC0->E.T) : nullptr), ((TEXTURE) ? &(PPC1->E.T) : nullptr), ((TEXTURE) ? &(PPC2->E.T) : nullptr),
++                                                 _r_objectColor, _r_objectColor, _r_objectColor);
++                            }
++                        goto rasterize_next_sphere_strip_triangle;
++                        }
++                    }
++
++                icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
++                if (PPC0->E.missedP)
++                    {
++                    PPC0->E.N = fVec4(_r_modelViewM.mult0(PPC0->N), 0.0f);
++                    if (TEXTURE)
++                        PPC0->E.color = _shadeVertex<true>(icu, PPC0->E.N, PPC0->E.P);
++                    else
++                        PPC0->E.color = _shadeVertex<false>(icu, PPC0->E.N, PPC0->E.P);
++                    }
++                if (PPC1->E.missedP)
++                    {
++                    PPC1->E.N = fVec4(_r_modelViewM.mult0(PPC1->N), 0.0f);
++                    if (TEXTURE)
++                        PPC1->E.color = _shadeVertex<true>(icu, PPC1->E.N, PPC1->E.P);
++                    else
++                        PPC1->E.color = _shadeVertex<false>(icu, PPC1->E.N, PPC1->E.P);
++                    }
++                PPC2->E.N = fVec4(_r_modelViewM.mult0(PPC2->N), 0.0f);
++                if (TEXTURE)
++                    PPC2->E.color = _shadeVertex<true>(icu, PPC2->E.N, PPC2->E.P);
++                else
++                    PPC2->E.color = _shadeVertex<false>(icu, PPC2->E.N, PPC2->E.P);
++
++                PPC0->E.missedP = false;
++                PPC1->E.missedP = false;
++                PPC2->E.missedP = false;
++
++                rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)QQA.E, (RasterizerVec4)QQB.E, (RasterizerVec4)QQC.E, _ox, _oy, _uni);
++
++            rasterize_next_sphere_strip_triangle:
++
++                if (tri >= strip_count - 3) break;
++
++                if ((tri & 1) == 0)
++                    {
++                    swap(PPC0, PPC2);
++                    }
++                else
++                    {
++                    swap(PPC1, PPC2);
++                    }
++                loadSphereStripVertex(PPC2, tri + 3);
++                }
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSphereGouraudCap(const int sphere_shader, int nb_sectors, bool top_cap,
++            const float* cosTheta, const float* sinTheta,
++            float ring_y, float ring_radius, float ring_v, float dtx,
++            float CLIPBOUND_XY, bool sphere_cliptestneeded)
++            {
++            _uni.shader_type = sphere_shader;
++
++            struct SphereCapVertex
++                {
++                ExtVec4 E;
++                fVec3 N;
++                };
++
++            SphereCapVertex QQPole, QQA, QQB;
++            SphereCapVertex* PPPrev = &QQA;
++            SphereCapVertex* PPCur = &QQB;
++
++            const bool TEXTURE = (bool)(TGX_SHADER_HAS_TEXTURING_ENABLED(sphere_shader));
++            const bool ortho = _ortho;
++
++            QQPole.N = top_cap ? fVec3(0.0f, 1.0f, 0.0f) : fVec3(0.0f, -1.0f, 0.0f);
++            QQPole.E.P = _r_modelViewM.mult1(QQPole.N);
++            if (TEXTURE) QQPole.E.T = top_cap ? fVec2(0.0f, 1.0f) : fVec2(0.0f, 0.0f);
++            QQPole.E.missedP = true;
++
++            auto loadSphereCapRingVertex = [&](SphereCapVertex* V, const int fan_index)
++                {
++                const int sector = (fan_index == 0) ? (nb_sectors - 1) : (fan_index - 1);
++
++                V->N.x = ring_radius * cosTheta[sector];
++                V->N.y = ring_y;
++                V->N.z = ring_radius * sinTheta[sector];
++                V->E.P = _r_modelViewM.mult1(V->N);
++                if (TEXTURE) V->E.T = fVec2(fan_index * dtx, ring_v);
++                V->E.missedP = true;
++                };
++
++            loadSphereCapRingVertex(PPPrev, 0);
++            loadSphereCapRingVertex(PPCur, 1);
++
++            for (int tri = 0; ; tri++)
++                {
++                SphereCapVertex* PPC0 = &QQPole;
++                SphereCapVertex* PPC1 = top_cap ? PPCur : PPPrev;
++                SphereCapVertex* PPC2 = top_cap ? PPPrev : PPCur;
++
++                fVec3 faceN = crossProduct(PPC1->E.P - PPC0->E.P, PPC2->E.P - PPC0->E.P);
++                const float cu = (ortho) ? (-faceN.z) : dotProduct(faceN, PPC0->E.P);
++                float icu;
++                if (cu * _culling_dir > 0) goto rasterize_next_sphere_cap_triangle;
++
++                *((fVec4*)&PPCur->E) = _projM * PPCur->E.P;
++                if (ortho) { PPCur->E.w = 1.0f - PPCur->E.z; } else { PPCur->E.zdivide(); }
++
++                if (QQPole.E.missedP)
++                    {
++                    *((fVec4*)&QQPole.E) = _projM * QQPole.E.P;
++                    if (ortho) { QQPole.E.w = 1.0f - QQPole.E.z; } else { QQPole.E.zdivide(); }
++                    }
++                if (PPPrev->E.missedP)
++                    {
++                    *((fVec4*)&PPPrev->E) = _projM * PPPrev->E.P;
++                    if (ortho) { PPPrev->E.w = 1.0f - PPPrev->E.z; } else { PPPrev->E.zdivide(); }
++                    }
++
++                if (sphere_cliptestneeded)
++                    {
++                    const bool needclip = (PPC2->E.P.z >= 0)
++                        | (PPC2->E.x < -CLIPBOUND_XY) | (PPC2->E.x > CLIPBOUND_XY)
++                        | (PPC2->E.y < -CLIPBOUND_XY) | (PPC2->E.y > CLIPBOUND_XY)
++                        | (PPC2->E.z < -1) | (PPC2->E.z > 1)
++                        | (PPC0->E.P.z >= 0)
++                        | (PPC0->E.x < -CLIPBOUND_XY) | (PPC0->E.x > CLIPBOUND_XY)
++                        | (PPC0->E.y < -CLIPBOUND_XY) | (PPC0->E.y > CLIPBOUND_XY)
++                        | (PPC0->E.z < -1) | (PPC0->E.z > 1)
++                        | (PPC1->E.P.z >= 0)
++                        | (PPC1->E.x < -CLIPBOUND_XY) | (PPC1->E.x > CLIPBOUND_XY)
++                        | (PPC1->E.y < -CLIPBOUND_XY) | (PPC1->E.y > CLIPBOUND_XY)
++                        | (PPC1->E.z < -1) | (PPC1->E.z > 1);
++                    if (needclip)
++                        {
++                        if (!_discardTriangle(*((fVec4*)&PPC0->E), *((fVec4*)&PPC1->E), *((fVec4*)&PPC2->E)))
++                            {
++                            _drawTriangleClipped(sphere_shader,
++                                                 &(PPC0->E.P), &(PPC1->E.P), &(PPC2->E.P),
++                                                 &(PPC0->N), &(PPC1->N), &(PPC2->N),
++                                                 ((TEXTURE) ? &(PPC0->E.T) : nullptr), ((TEXTURE) ? &(PPC1->E.T) : nullptr), ((TEXTURE) ? &(PPC2->E.T) : nullptr),
++                                                 _r_objectColor, _r_objectColor, _r_objectColor);
++                            }
++                        goto rasterize_next_sphere_cap_triangle;
++                        }
++                    }
+ 
+-                if (WIREFRAME)
++                icu = (_culling_dir != 0) ? 1.0f : ((cu > 0) ? -1.0f : 1.0f);
++                if (QQPole.E.missedP)
++                    {
++                    QQPole.E.N = fVec4(_r_modelViewM.mult0(QQPole.N), 0.0f);
++                    if (TEXTURE)
++                        QQPole.E.color = _shadeVertex<true>(icu, QQPole.E.N, QQPole.E.P);
++                    else
++                        QQPole.E.color = _shadeVertex<false>(icu, QQPole.E.N, QQPole.E.P);
++                    }
++                if (PPPrev->E.missedP)
+                     {
+-                    if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameTriangle(P1, P3, P2);
+-                    else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameTriangleAA(P1, P3, P2);
+-                    else drawWireFrameTriangle(P1, P3, P2, thickness, color, opacity);
++                    PPPrev->E.N = fVec4(_r_modelViewM.mult0(PPPrev->N), 0.0f);
++                    if (TEXTURE)
++                        PPPrev->E.color = _shadeVertex<true>(icu, PPPrev->E.N, PPPrev->E.P);
++                    else
++                        PPPrev->E.color = _shadeVertex<false>(icu, PPPrev->E.N, PPPrev->E.P);
+                     }
++                PPCur->E.N = fVec4(_r_modelViewM.mult0(PPCur->N), 0.0f);
++                if (TEXTURE)
++                    PPCur->E.color = _shadeVertex<true>(icu, PPCur->E.N, PPCur->E.P);
+                 else
++                    PPCur->E.color = _shadeVertex<false>(icu, PPCur->E.N, PPCur->E.P);
++
++                QQPole.E.missedP = false;
++                PPPrev->E.missedP = false;
++                PPCur->E.missedP = false;
++
++                rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)(PPC0->E), (RasterizerVec4)(PPC1->E), (RasterizerVec4)(PPC2->E), _ox, _oy, _uni);
++
++            rasterize_next_sphere_cap_triangle:
++
++                if (tri >= nb_sectors - 1) break;
++
++                swap(PPPrev, PPCur);
++                loadSphereCapRingVertex(PPCur, tri + 2);
++                }
++            }
++#endif
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        template<bool WIREFRAME, int MODE> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawSphere(int nb_sectors, int nb_stacks, const Image<color_t>* texture, float thickness, color_t color, float opacity)
++            {
++
++            const int save_shaders = _shaders;
++
++            if (texture == nullptr)
++                {
++                TGX_SHADER_REMOVE_TEXTURING_ENABLED(_shaders);
++                TGX_SHADER_ADD_NOTEXTURE(_shaders);
++                }
++
++            // set culling direction = 1 and save previous value
++            float save_culling = _culling_dir;
++            if (_culling_dir != 0) _culling_dir = 1;
++
++            if (!_validDraw())
++                {
++                _culling_dir = save_culling;
++                _shaders = save_shaders;
++                return;
++                }
++
++            const int sphere_shader = _shaders;
++            if (!WIREFRAME)
++                {
++                _precomputeSpecularTable(_specularExponent);
++                _uni.tex = (const Image<color_t>*)texture;
++                }
++
++            const int MAX_SECTORS = 256;
++            if (nb_sectors > MAX_SECTORS) nb_sectors = 256;
++            if (nb_sectors < 3) nb_sectors = 3;
++            if (nb_stacks < 3) nb_stacks = 3;
++
++#if TGX_DRAWSPHERE_USE_STRIP_BANDS
++            const bool sphere_use_strip = ((!WIREFRAME) && TGX_SHADER_HAS_GOURAUD(sphere_shader));
++#else
++            const bool sphere_use_strip = false;
++#endif
++            const float CLIPBOUND_XY = sphere_use_strip ? _clipbound_xy() : 0.0f;
++            bool sphere_cliptestneeded = false;
++            if (sphere_use_strip)
++                {
++                const fBox3 sphere_bb(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
++                const fMat4 sphere_proj_modelview = _projM * _r_modelViewM;
++                if (_discardBox(sphere_bb, sphere_proj_modelview))
+                     {
+-                    fVec2 T1(0, 1);
+-                    fVec2 T2(u + dtx, v);
+-                    fVec2 T3(u, v);
+-                    drawTriangle(P1, P3, P2, &P1, &P3, &P2, &T1, &T2, &T3, texture);
++                    _culling_dir = save_culling;
++                    _shaders = save_shaders;
++                    return;
+                     }
++                sphere_cliptestneeded = _clipTestNeeded(CLIPBOUND_XY, sphere_bb, sphere_proj_modelview);
++                }
++
++            // precomputed sin/cos for sectors as we will need them often
++            float cosTheta[MAX_SECTORS];
++            float sinTheta[MAX_SECTORS];
++
++            const float d_sector = 360.0f / nb_sectors;
++            for(int i = 0; i < nb_sectors; i++)
++                {
++                float theta = i * d_sector;
++                if (theta > 180.0f) theta -= 360.0f;
++                cosTheta[i] = tgx_fast_cos_deg_clamped(theta);
++                sinTheta[i] = tgx_fast_sin_deg_clamped(theta);
++                }
++
++            const float d_stack = 180.0f / nb_stacks;
++
++            fVec3 P1, P2, P3, P4;
++
++            // top part, top vertex at {0,1,0}
++
++            float cosPhi = tgx_fast_cos_deg_clamped(d_stack);
++            float sinPhi = tgx_fast_sin_deg_clamped(d_stack);
++
++            const float dtx = 1.0f / nb_sectors;
++
++            float v = 0.5f * cosPhi + 0.5f;
++            float u;
++
++#if TGX_DRAWSPHERE_USE_STRIP_BANDS
++            if (sphere_use_strip)
++                {
++                _drawSphereGouraudCap(sphere_shader, nb_sectors, true, cosTheta, sinTheta,
++                                      cosPhi, sinPhi, v, dtx, CLIPBOUND_XY, sphere_cliptestneeded);
++                }
++            else
++#endif
++                {
++                P1 = { 0,1,0 };
++
++                P2.x = sinPhi * cosTheta[nb_sectors-1];
++                P2.y = cosPhi;
++                P2.z = sinPhi * sinTheta[nb_sectors - 1];
++
++                P3.y = cosPhi;
++                u = 0;
+ 
+-                u += dtx;
+-                P2.x = P3.x;
+-                P2.z = P3.z;
++                for (int i = 0; i < nb_sectors; i++)
++                    {
++                    P3.x = sinPhi * cosTheta[i];
++                    P3.z = sinPhi * sinTheta[i];
++
++                    if (WIREFRAME)
++                        {
++                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameTriangle(P1, P3, P2);
++                        else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameTriangleAA(P1, P3, P2);
++                        else drawWireFrameTriangle(P1, P3, P2, thickness, color, opacity);
++                        }
++                    else
++                        {
++                        fVec2 T1(0, 1);
++                        fVec2 T2(u + dtx, v);
++                        fVec2 T3(u, v);
++                        _drawTriangle(sphere_shader, &P1, &P3, &P2, &P1, &P3, &P2, &T1, &T2, &T3,
++                                      _r_objectColor, _r_objectColor, _r_objectColor);
++                        }
++
++                    u += dtx;
++                    P2.x = P3.x;
++                    P2.z = P3.z;
++                    }
+                 }
+ 
+             // main part
+             for (int j = 2; j < nb_stacks; j++)
+                 {
+ 
+-                float new_cosPhi = cosf(d_stack * j);
+-                float new_sinPhi = sinf(d_stack * j);
++                const float phi = d_stack * j;
++                float new_cosPhi = tgx_fast_cos_deg_clamped(phi);
++                float new_sinPhi = tgx_fast_sin_deg_clamped(phi);
+ 
+                 P1.x = sinPhi * cosTheta[nb_sectors - 1];
+                 P1.y = cosPhi;
+@@ -4549,34 +5485,46 @@ namespace tgx
+ 
+                 u = 0;
+ 
+-                for (int i = 0; i < nb_sectors; i++)
++#if TGX_DRAWSPHERE_USE_STRIP_BANDS
++                if (sphere_use_strip)
+                     {
+-                    const float uu = u + dtx;
+-                    P3.x = sinPhi * cosTheta[i];
+-                    P3.z = sinPhi * sinTheta[i];
+-                    P4.x = new_sinPhi * cosTheta[i];
+-                    P4.z = new_sinPhi * sinTheta[i];
+-
+-                    if (WIREFRAME)
++                    _drawSphereGouraudStripBand(sphere_shader, nb_sectors, cosTheta, sinTheta,
++                                                cosPhi, sinPhi, new_cosPhi, new_sinPhi,
++                                                v, vv, dtx, CLIPBOUND_XY, sphere_cliptestneeded);
++                    }
++                else
++#endif
++                    {
++                    for (int i = 0; i < nb_sectors; i++)
+                         {
+-                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameQuad(P1, P3, P4, P2);
+-                        else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameQuadAA(P1, P3, P4, P2);
+-                        else drawWireFrameQuad(P1, P3, P4, P2, thickness, color, opacity);
+-                        }
++                        const float uu = u + dtx;
++                        P3.x = sinPhi * cosTheta[i];
++                        P3.z = sinPhi * sinTheta[i];
++                        P4.x = new_sinPhi * cosTheta[i];
++                        P4.z = new_sinPhi * sinTheta[i];
++
++                        if (WIREFRAME)
++                            {
++                            if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameQuad(P1, P3, P4, P2);
++                            else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameQuadAA(P1, P3, P4, P2);
++                            else drawWireFrameQuad(P1, P3, P4, P2, thickness, color, opacity);
++                            }
+                         else
+-                        {
+-                        fVec2 T1(u, v);
+-                        fVec2 T2(uu, v);
+-                        fVec2 T3(uu, vv);
+-                        fVec2 T4(u, vv);
+-                        drawQuad(P1, P3, P4, P2, &P1, &P3, &P4, &P2, &T1, &T2, &T3, &T4, texture);
+-                        }
++                            {
++                            fVec2 T1(u, v);
++                            fVec2 T2(uu, v);
++                            fVec2 T3(uu, vv);
++                            fVec2 T4(u, vv);
++                            _drawQuad(sphere_shader, &P1, &P3, &P4, &P2, &P1, &P3, &P4, &P2, &T1, &T2, &T3, &T4,
++                                      _r_objectColor, _r_objectColor, _r_objectColor, _r_objectColor);
++                            }
+ 
+-                    u += dtx;
+-                    P1.x = P3.x;
+-                    P1.z = P3.z;
+-                    P2.x = P4.x;
+-                    P2.z = P4.z;
++                        u += dtx;
++                        P1.x = P3.x;
++                        P1.z = P3.z;
++                        P2.x = P4.x;
++                        P2.z = P4.z;
++                        }
+                     }
+ 
+                 cosPhi = new_cosPhi;
+@@ -4584,39 +5532,49 @@ namespace tgx
+                 }
+ 
+ 
+-            // bottom part, bottom vertex at {0,1,0}
+-            P1 = { 0,-1,0 };
++            // bottom part, bottom vertex at {0,-1,0}
++#if TGX_DRAWSPHERE_USE_STRIP_BANDS
++            if (sphere_use_strip)
++                {
++                _drawSphereGouraudCap(sphere_shader, nb_sectors, false, cosTheta, sinTheta,
++                                      cosPhi, sinPhi, v, dtx, CLIPBOUND_XY, sphere_cliptestneeded);
++                }
++            else
++#endif
++                {
++                P1 = { 0,-1,0 };
+ 
+-            P2.x = sinPhi * cosTheta[nb_sectors - 1];
+-            P2.y = cosPhi;
+-            P2.z = sinPhi * sinTheta[nb_sectors - 1];
++                P2.x = sinPhi * cosTheta[nb_sectors - 1];
++                P2.y = cosPhi;
++                P2.z = sinPhi * sinTheta[nb_sectors - 1];
+ 
+-            P3.y = cosPhi;
++                P3.y = cosPhi;
++                u = 0;
+ 
+-            u = 0;
++                for (int i = 0; i < nb_sectors; i++)
++                    {
++                    P3.x = sinPhi * cosTheta[i];
++                    P3.z = sinPhi * sinTheta[i];
+ 
+-            for (int i = 0; i < nb_sectors; i++)
+-                {
+-                P3.x = sinPhi * cosTheta[i];
+-                P3.z = sinPhi * sinTheta[i];
++                    if (WIREFRAME)
++                        {
++                        if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameTriangle(P1, P2, P3);
++                        else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameTriangleAA(P1, P2, P3);
++                        else drawWireFrameTriangle(P1, P2, P3, thickness, color, opacity);
++                        }
++                    else
++                        {
++                        fVec2 T1(0, 0);
++                        fVec2 T2(u, v);
++                        fVec2 T3(u + dtx, v);
++                        _drawTriangle(sphere_shader, &P1, &P2, &P3, &P1, &P2, &P3, &T1, &T2, &T3,
++                                      _r_objectColor, _r_objectColor, _r_objectColor);
++                        }
+ 
+-                if (WIREFRAME)
+-                    {
+-                    if (MODE == Renderer3D_detail::WIREFRAME_FAST) drawWireFrameTriangle(P1, P2, P3);
+-                    else if (MODE == Renderer3D_detail::WIREFRAME_AA_FAST) drawWireFrameTriangleAA(P1, P2, P3);
+-                    else drawWireFrameTriangle(P1, P2, P3, thickness, color, opacity);
+-                    }
+-                else
+-                    {
+-                    fVec2 T1(0, 0);
+-                    fVec2 T2(u, v);
+-                    fVec2 T3(u + dtx, v);
+-                    drawTriangle(P1, P2, P3, &P1, &P2, &P3, &T1, &T2, &T3, texture);
++                    u += dtx;
++                    P2.x = P3.x;
++                    P2.z = P3.z;
+                     }
+-
+-                u += dtx;
+-                P2.x = P3.x;
+-                P2.z = P3.z;
+                 }
+ 
+             // restore culling direction
+@@ -4714,6 +5672,144 @@ namespace tgx
+             }
+ 
+ 
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCylinder(int nb_sectors, bool bottom_cap, bool top_cap)
++            {
++            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, 1.0f, 1.0f, bottom_cap, top_cap, 1.0f, color_t(_color), 1.0f);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCylinderAA(int nb_sectors, bool bottom_cap, bool top_cap)
++            {
++            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_sectors, 1.0f, 1.0f, bottom_cap, top_cap, 1.0f, color_t(_color), 1.0f);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCylinder(int nb_sectors, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity)
++            {
++            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_sectors, 1.0f, 1.0f, bottom_cap, top_cap, thickness, color, opacity);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCone(int nb_sectors, bool bottom_cap)
++            {
++            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, 1.0f, 0.0f, bottom_cap, true, 1.0f, color_t(_color), 1.0f);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameConeAA(int nb_sectors, bool bottom_cap)
++            {
++            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_sectors, 1.0f, 0.0f, bottom_cap, true, 1.0f, color_t(_color), 1.0f);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameCone(int nb_sectors, bool bottom_cap, float thickness, color_t color, float opacity)
++            {
++            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_sectors, 1.0f, 0.0f, bottom_cap, true, thickness, color, opacity);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap)
++            {
++            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_FAST>(nb_sectors, bottom_radius, top_radius, bottom_cap, top_cap, 1.0f, color_t(_color), 1.0f);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTruncatedConeAA(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap)
++            {
++            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_FAST>(nb_sectors, bottom_radius, top_radius, bottom_cap, top_cap, 1.0f, color_t(_color), 1.0f);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity)
++            {
++            _drawWireFrameTruncatedCone<Renderer3D_detail::WIREFRAME_AA_THICK>(nb_sectors, bottom_radius, top_radius, bottom_cap, top_cap, thickness, color, opacity);
++            }
++
++
++        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
++        template<int MODE> TGX_NOINLINE
++        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawWireFrameTruncatedCone(int nb_sectors, float bottom_radius, float top_radius, bool bottom_cap, bool top_cap, float thickness, color_t color, float opacity)
++            {
++            if (!_validDraw()) return;
++            if (thickness <= 0) return;
++
++            const float EPS_RADIUS = 1.0e-6f;
++            if (bottom_radius <= EPS_RADIUS) bottom_radius = 0.0f;
++            if (top_radius <= EPS_RADIUS) top_radius = 0.0f;
++            if ((bottom_radius == 0.0f) && (top_radius == 0.0f)) return;
++
++            const int MAX_SECTORS = 256;
++            if (nb_sectors > MAX_SECTORS) nb_sectors = MAX_SECTORS;
++            if (nb_sectors < 3) nb_sectors = 3;
++
++            const float save_culling = _culling_dir;
++            const bool open_shape = ((bottom_radius > 0.0f) && (!bottom_cap)) || ((top_radius > 0.0f) && (!top_cap));
++            if (open_shape) { _culling_dir = 0.0f; } else if (_culling_dir != 0.0f) { _culling_dir = 1.0f; }
++
++            float cosTheta[MAX_SECTORS];
++            float sinTheta[MAX_SECTORS];
++
++            const float d_sector = 360.0f / nb_sectors;
++            for (int i = 0; i < nb_sectors; i++)
++                {
++                float theta = i * d_sector;
++                if (theta > 180.0f) theta -= 360.0f;
++                cosTheta[i] = tgx_fast_cos_deg_clamped(theta);
++                sinTheta[i] = tgx_fast_sin_deg_clamped(theta);
++                }
++
++            const fVec3 PTopCenter(0.0f, 1.0f, 0.0f);
++            const fVec3 PBottomCenter(0.0f, -1.0f, 0.0f);
++
++            fVec3 PTopPrev(top_radius * cosTheta[nb_sectors - 1], 1.0f, top_radius * sinTheta[nb_sectors - 1]);
++            fVec3 PBottomPrev(bottom_radius * cosTheta[nb_sectors - 1], -1.0f, bottom_radius * sinTheta[nb_sectors - 1]);
++            for (int i = 0; i < nb_sectors; i++)
++                {
++                const fVec3 PTopCur(top_radius * cosTheta[i], 1.0f, top_radius * sinTheta[i]);
++                const fVec3 PBottomCur(bottom_radius * cosTheta[i], -1.0f, bottom_radius * sinTheta[i]);
++
++                if ((top_radius > 0.0f) && (bottom_radius > 0.0f)) { _drawWireFrameQuad<MODE>(PTopPrev, PTopCur, PBottomCur, PBottomPrev, color, opacity, thickness);}
++                else if (top_radius == 0.0f) { _drawWireFrameTriangle<MODE>(PTopCenter, PBottomCur, PBottomPrev, color, opacity, thickness); }
++                else { _drawWireFrameTriangle<MODE>(PTopPrev, PTopCur, PBottomCenter, color, opacity, thickness); }
++
++                PTopPrev = PTopCur;
++                PBottomPrev = PBottomCur;
++                }
++
++            if (bottom_cap && (bottom_radius > 0.0f))
++                {
++                fVec3 PPrev(bottom_radius * cosTheta[nb_sectors - 1], -1.0f, bottom_radius * sinTheta[nb_sectors - 1]);
++                for (int i = 0; i < nb_sectors; i++)
++                    {
++                    const fVec3 PCur(bottom_radius * cosTheta[i], -1.0f, bottom_radius * sinTheta[i]);
++                    _drawWireFrameTriangle<MODE>(PBottomCenter, PPrev, PCur, color, opacity, thickness);
++                    PPrev = PCur;
++                    }
++                }
++
++            if (top_cap && (top_radius > 0.0f))
++                {
++                fVec3 PPrev(top_radius * cosTheta[nb_sectors - 1], 1.0f, top_radius * sinTheta[nb_sectors - 1]);
++                for (int i = 0; i < nb_sectors; i++)
++                    {
++                    const fVec3 PCur(top_radius * cosTheta[i], 1.0f, top_radius * sinTheta[i]);
++                    _drawWireFrameTriangle<MODE>(PTopCenter, PCur, PPrev, color, opacity, thickness);
++                    PPrev = PCur;
++                    }
++                }
++
++            _culling_dir = save_culling;
++            }
++
+ 
+ 
+ 

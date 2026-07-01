@@ -1,0 +1,7 @@
+board_id,board,profile,module,test,status,width,height,shaders,frames,total_us,mean_us,min_us,max_us,stddev_us,fps,checksum,reason
+esp32p4,esp32p4,espidf,skybox_noz,skybox_noz.nearest.wrap,OK,160,120,10565,83,252812,3045.93,3043,3052,3.53,328.31,0xf586d4f1177f26e9,
+esp32p4,esp32p4,espidf,skybox_noz,skybox_noz.bilinear.clamp,OK,160,120,20805,19,250005,13158.16,13154,13164,3.48,76.00,0x3f4287e3120a6b38,
+esp32p4,esp32p4,espidf,skybox_noz,skybox_noz.partial_faces,OK,160,120,10565,600,159294,265.49,265,275,1.49,3766.62,0x156b15d9ecf0302a,
+esp32p4,esp32p4,espidf,skybox_noz,skybox_noz.reference_height,OK,160,120,10565,83,252688,3044.43,3039,3051,3.77,328.47,0xe433bf1763301b64,
+esp32p4,esp32p4,espidf,skybox_noz,skybox_noz.object_front.z,OK,160,120,10537,78,250544,3212.10,3209,3220,4.31,311.32,0xdd0190e8e3be8dad,
+esp32p4,esp32p4,espidf,skybox_noz,skybox_noz.overlay.noz,OK,160,120,10565,77,253173,3287.96,3284,3294,3.94,304.14,0x2c0002c5d2bb7161,
