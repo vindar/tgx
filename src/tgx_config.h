@@ -66,6 +66,8 @@
 // - TGX_USE_FMA_MATH_MISC : use explicit fused multiply-add in Misc.h fast math approximations.
 // - TGX_DRAWSPHERE_USE_STRIP_BANDS : use triangle strips for Gouraud shaded sphere bands.
 // - TGX_RASTERIZE_TRIANGLE_INLINE : inlining strategy for the main triangle rasterizer entry point.
+// - TGX_RENDERER3D_CLIP_NOINLINE : noinline strategy for Renderer3D clipping helpers.
+// - TGX_BSEG_RUNTIME_MOVE_INLINE : inlining strategy for the runtime Bresenham move wrapper.
 //
 // - TGX_INLINE/TGX_NOINLINE : inlining strategy for time critical/non-critical functions.
 //
@@ -120,6 +122,8 @@
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)
     // teensy 4.0 and 4.1
@@ -137,6 +141,8 @@
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(ARDUINO_TEENSY36)
     // teensy 3.6
@@ -153,6 +159,8 @@
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(ARDUINO_TEENSY35)
     // teensy 3.5
@@ -169,6 +177,8 @@
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(ARDUINO_TEENSY32) || defined(ARDUINO_TEENSY31)
     // teensy 3.1 and 3.2
@@ -185,6 +195,8 @@
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(ARDUINO_TEENSYLC)
     // teensy LC
@@ -201,6 +213,8 @@
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(ARDUINO_ARCH_RP2350) || defined(PICO_RP2350) || defined(TARGET_RP2350)
     // Raspberry Pico 2350
@@ -217,6 +231,8 @@
     #define TGX_CONFIG_INLINE  __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE
 
 #elif defined(ARDUINO_ARCH_RP2040) || defined(PICO_RP2040) || defined(TARGET_RP2040)
     // Raspberry Pico 2040
@@ -233,6 +249,8 @@
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE
 
 #elif defined(CONFIG_IDF_TARGET_ESP32S2) || defined(ESP32S2)
     // ESP32 S2
@@ -249,6 +267,8 @@
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(CONFIG_IDF_TARGET_ESP32S3) || defined(ESP32S3)
     // ESP32 S3
@@ -266,6 +286,8 @@
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(CONFIG_IDF_TARGET_ESP32P4) || defined(ESP32P4)
     // ESP32 P4
@@ -282,6 +304,8 @@
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(CONFIG_IDF_TARGET_ESP32) || defined(ESP32)
     // fallback to original
@@ -296,10 +320,12 @@
     #define TGX_CONFIG_USE_FMA_MATH_MISC 0
     #define TGX_CONFIG_SHADER_USE_INCREMENTAL_PIXEL_POINTERS 0
     #define TGX_CONFIG_DRAWSPHERE_USE_STRIP_BANDS 1
-    #define TGX_CONFIG_RASTERIZE_TRIANGLE_INLINE
+    #define TGX_CONFIG_RASTERIZE_TRIANGLE_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE __attribute__((noinline, noclone))
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(__ARM_ARCH_6M__)
     // generic Cortex-M0 (use same setting as Teensy LC)
@@ -316,6 +342,8 @@
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(__ARM_ARCH_7M__)
     // generic Cortex-M3 (use same setting as Teensy3.2)
@@ -332,6 +360,8 @@
     #define TGX_CONFIG_INLINE  __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif (defined(__ARM_ARCH_7EM__) && defined(__ARM_FP) && ((__ARM_FP & 0x8) != 0)) || defined(STM32H7xx)
     // generic Cortex-M7 (use same setting as Teensy 4.0/4.1)
@@ -348,6 +378,8 @@
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(__ARM_ARCH_7EM__)
     // generic Cortex-M4 (use same setting as Teensy 3.6/3.5)
@@ -364,6 +396,8 @@
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(__ARM_ARCH_8M_MAIN__)
     // generic Cortex-M33 (use same setting as RP2350)
@@ -380,6 +414,8 @@
     #define TGX_CONFIG_INLINE __attribute__((always_inline))
     #define TGX_CONFIG_INLINE_ZDIVIDE __attribute__((always_inline))
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE
 
 #else
     // unknown board/architecture
@@ -396,6 +432,8 @@
     #define TGX_CONFIG_INLINE
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
+    #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+    #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 #endif
 
 
@@ -466,6 +504,14 @@
 
 #ifndef TGX_RENDERER3D_SHADING_INLINE
     #define TGX_RENDERER3D_SHADING_INLINE TGX_INLINE
+#endif
+
+#ifndef TGX_RENDERER3D_CLIP_NOINLINE
+    #define TGX_RENDERER3D_CLIP_NOINLINE TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+#endif
+
+#ifndef TGX_BSEG_RUNTIME_MOVE_INLINE
+    #define TGX_BSEG_RUNTIME_MOVE_INLINE TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE
 #endif
 
 #if defined(ESP32) || defined(ESP_PLATFORM)

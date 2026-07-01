@@ -3058,20 +3058,20 @@ namespace tgx
 
 
         /** used by _triangleClip when only 1 point is inside the view */
-        inline void _triangleClip1in(int shader, tgx::fVec4 CP,
+        TGX_RENDERER3D_CLIP_NOINLINE void _triangleClip1in(int shader, tgx::fVec4 CP,
             float cp1, float cp2, float cp3,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4);
 
 
         /** used by _triangleClip when only 2 points are inside the view */
-        inline void _triangleClip2in(int shader, tgx::fVec4 CP,
+        TGX_RENDERER3D_CLIP_NOINLINE void _triangleClip2in(int shader, tgx::fVec4 CP,
             float cp1, float cp2, float cp3,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3,
             RasterizerVec4& nP1, RasterizerVec4& nP2, RasterizerVec4& nP3, RasterizerVec4& nP4);
 
 
-        inline int _triangleClip(int shader, tgx::fVec4 CP, float off,
+        TGX_RENDERER3D_CLIP_NOINLINE int _triangleClip(int shader, tgx::fVec4 CP, float off,
             const RasterizerVec4 & P1, const RasterizerVec4 & P2, const RasterizerVec4 & P3,
             RasterizerVec4 & nP1, RasterizerVec4 & nP2, RasterizerVec4 & nP3, RasterizerVec4 & nP4);
 
@@ -3663,9 +3663,6 @@ namespace tgx
         RGBf    _specularColor[MAX_DIRECTIONAL_LIGHTS]; // directional light specular colors
         int     _directionalLightCount; // number of active directional lights
 
-        Renderer3D_detail::SpotLightData<MAX_SPOT_LIGHTS> _spotLights; // local spot-light data
-
-
         // *** model specific parameters ***
 
         fMat4   _modelM;            // model transform matrix
@@ -3690,6 +3687,8 @@ namespace tgx
         RGBf _r_diffuseColor[MAX_DIRECTIONAL_LIGHTS];   // diffuse colors multiplied by object diffuse strength
         RGBf _r_specularColor[MAX_DIRECTIONAL_LIGHTS];  // specular colors multiplied by object specular strength
         RGBf _r_objectColor;        // color to use for drawing the object (either _color or mesh->color).
+
+        Renderer3D_detail::SpotLightData<MAX_SPOT_LIGHTS> _spotLights; // local spot-light data
 
 
         /**

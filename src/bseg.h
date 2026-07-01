@@ -161,7 +161,7 @@ namespace tgx
 
 
 		/** Same as above but not templated **/
-		TGX_INLINE inline void move()
+		TGX_BSEG_RUNTIME_MOVE_INLINE inline void move()
 			{
 			if (_x_major) move<true>(); else move<false>();
 			}
