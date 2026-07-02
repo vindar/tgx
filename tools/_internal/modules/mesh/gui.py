@@ -615,7 +615,7 @@ class TGXMeshConverterApp(tk.Tk):
     def _texture_size_text(self, path_text: str, symbol: str = "") -> str:
         if not path_text:
             return ""
-        path = Path(path_text)
+        path = self._texture_path_from_text(path_text)
         if not path.exists():
             return "missing"
         if path.suffix.lower() in TGX_SOURCE_EXTENSIONS:
@@ -814,33 +814,38 @@ class TGXMeshConverterApp(tk.Tk):
         existing = {item["name"] for key, item in self.material_rows.items() if key != exclude_key}
         return self._unique_name(wanted, existing, fallback="material")
 
+    @staticmethod
+    def _texture_path_from_text(path_text: str) -> Path:
+        return Path(path_text.strip().strip('"').strip("'")).expanduser()
+
     def _texture_key(self, path_text: str, symbol: str = "") -> str:
         if path_text:
             try:
-                return "path:" + str(Path(path_text).expanduser().resolve()).lower()
+                return "path:" + str(self._texture_path_from_text(path_text).resolve()).lower()
             except Exception:
                 return "path:" + path_text.lower()
         return "symbol:" + symbol
 
     def _add_texture_asset(self, path_text: str, *, name: str = "", symbol: str = "") -> str:
+        stored_path = str(self._texture_path_from_text(path_text)) if path_text else ""
         if path_text and not symbol:
-            path = Path(path_text)
+            path = self._texture_path_from_text(stored_path)
             if path.suffix.lower() in TGX_SOURCE_EXTENSIONS:
                 symbol = _first_tgx_image_symbol(path)
-        key = self._texture_key(path_text, symbol)
+        key = self._texture_key(stored_path, symbol)
         existing = self.texture_key_to_id.get(key)
         if existing:
             return existing
         texture_id = f"tex{self.next_texture_id}"
         self.next_texture_id += 1
-        path = Path(path_text) if path_text else Path(name or symbol or "texture")
+        path = self._texture_path_from_text(stored_path) if stored_path else Path(name or symbol or "texture")
         texture_name = self._unique_texture_name(name or path.stem or symbol or texture_id)
         self.texture_assets[texture_id] = {
             "id": texture_id,
             "name": texture_name,
-            "path": path_text,
+            "path": stored_path,
             "symbol": symbol,
-            "size": self._texture_size_text(path_text, symbol),
+            "size": self._texture_size_text(stored_path, symbol),
             "resize": "",
             "resize_w": "",
             "resize_h": "",
@@ -915,7 +920,7 @@ class TGXMeshConverterApp(tk.Tk):
 
     def _insert_texture_row(self, texture_id: str) -> None:
         row = self.texture_assets[texture_id]
-        iid = f"texture_{len(self.texture_iid_to_id)}"
+        iid = f"texture_{texture_id}"
         self.texture_iid_to_id[iid] = texture_id
         self.texture_id_to_iid[texture_id] = iid
         self.texture_table.insert("", "end", iid=iid, image=self._texture_size_icon(row), values=self._texture_values(row))
@@ -1612,7 +1617,7 @@ class TGXMeshConverterApp(tk.Tk):
                 original_preview.configure(image="", text="Original\nNo texture selected")
                 resized_preview.configure(image="", text="Export size\nNo texture selected")
                 return
-            path = Path(path_text)
+            path = self._texture_path_from_text(path_text)
             if not path.exists():
                 original_preview.configure(image="", text=f"Original\n{path.name}\nmissing file")
                 resized_preview.configure(image="", text=f"Export size\n{path.name}\nmissing file")
@@ -1666,9 +1671,10 @@ class TGXMeshConverterApp(tk.Tk):
                 messagebox.showerror("Invalid texture options", str(exc), parent=dialog)
                 return
             new_path = path_var.get().strip()
+            new_path = str(self._texture_path_from_text(new_path)) if new_path else ""
             new_symbol = row.get("symbol", "")
             if new_path:
-                new_path_obj = Path(new_path)
+                new_path_obj = self._texture_path_from_text(new_path)
                 if new_path_obj.suffix.lower() in TGX_SOURCE_EXTENSIONS:
                     new_symbol = _first_tgx_image_symbol(new_path_obj)
                 else:

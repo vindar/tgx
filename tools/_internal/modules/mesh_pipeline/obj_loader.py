@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 
 import numpy as np
 
 from .mesh import FaceVertex, Material, ObjMesh, Triangle
+
+
+IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".bmp", ".tga", ".tif", ".tiff", ".gif"}
 
 
 def _parse_index(token: str, current_count: int, line_no: int) -> int:
@@ -49,6 +53,47 @@ def _mean3(values: tuple[float, float, float]) -> float:
     return max(0.0, min(1.0, float(sum(values) / 3.0)))
 
 
+def _strip_comment(raw: str) -> str:
+    in_single = False
+    in_double = False
+    for index, char in enumerate(raw):
+        if char == "'" and not in_double:
+            in_single = not in_single
+        elif char == '"' and not in_single:
+            in_double = not in_double
+        elif char == "#" and not in_single and not in_double:
+            return raw[:index]
+    return raw
+
+
+def _split_statement(raw: str) -> list[str]:
+    line = _strip_comment(raw).strip()
+    if not line:
+        return []
+    out: list[str] = []
+    for match in re.finditer(r'"([^"]*)"|\'([^\']*)\'|(\S+)', line):
+        for group in match.groups():
+            if group is not None:
+                out.append(group)
+                break
+    return out
+
+
+def _looks_like_texture_path_token(token: str) -> bool:
+    return Path(token).suffix.lower() in IMAGE_SUFFIXES
+
+
+def _looks_like_option_value(token: str) -> bool:
+    low = token.lower()
+    if low in {"on", "off", "r", "g", "b", "m", "l", "z"}:
+        return True
+    try:
+        float(token)
+        return True
+    except ValueError:
+        return False
+
+
 def _texture_token(parts: list[str]) -> str:
     """Return the texture path part of an MTL map line.
 
@@ -69,7 +114,10 @@ def _texture_token(parts: list[str]) -> str:
         "-texres": 1,
         "-clamp": 1,
         "-bm": 1,
+        "-cc": 1,
+        "-imfchan": 1,
         "-type": 1,
+        "-halo": 0,
     }
     while i < len(tokens):
         token = tokens[i]
@@ -77,7 +125,11 @@ def _texture_token(parts: list[str]) -> str:
             return " ".join(tokens[i:])
         option = token.lower()
         i += 1
-        count = option_args.get(option, 0)
+        if option not in option_args:
+            while i < len(tokens) and not tokens[i].startswith("-") and not _looks_like_texture_path_token(tokens[i]) and _looks_like_option_value(tokens[i]):
+                i += 1
+            continue
+        count = option_args[option]
         for _ in range(count):
             if i >= len(tokens) or tokens[i].startswith("-"):
                 break
@@ -93,10 +145,9 @@ def _parse_mtl(path: Path) -> dict[str, Material]:
 
     with path.open("r", encoding="utf-8", errors="replace") as f:
         for raw in f:
-            line = raw.split("#", 1)[0].strip()
-            if not line:
+            parts = _split_statement(raw)
+            if not parts:
                 continue
-            parts = line.split()
             tag = parts[0].lstrip("\ufeff").lower()
             if tag == "newmtl":
                 name = " ".join(parts[1:]) if len(parts) > 1 else ""
@@ -139,10 +190,9 @@ def load_obj(path: str | Path) -> ObjMesh:
 
     with path.open("r", encoding="utf-8", errors="replace") as f:
         for line_no, raw in enumerate(f, start=1):
-            line = raw.split("#", 1)[0].strip()
-            if not line:
+            parts = _split_statement(raw)
+            if not parts:
                 continue
-            parts = line.split()
             tag = parts[0].lstrip("\ufeff")
 
             if tag == "v":

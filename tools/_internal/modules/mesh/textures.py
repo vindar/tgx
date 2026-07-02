@@ -1,20 +1,22 @@
 from __future__ import annotations
 
-import difflib
-import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from tools._internal.modules.mesh_pipeline.mesh import Material, ObjMesh
 
+from .texture_heuristics import (
+    DIFFUSE_HINTS,
+    DIFFUSE_ROLES,
+    EMISSIVE_HINTS,
+    EMISSIVE_ROLES,
+    NON_DIFFUSE_HINTS,
+    NON_EMISSIVE_HINTS,
+    score_texture_candidates,
+)
+
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".bmp", ".tga", ".tif", ".tiff", ".gif"}
-DIFFUSE_ROLES = ("map_kd", "map_basecolor", "map_albedo", "map_diffuse")
-EMISSIVE_ROLES = ("map_ke", "map_emissive", "map_emission", "map_emit")
-DIFFUSE_HINTS = ("diffuse", "diff", "albedo", "basecolor", "base_color", "color", "col", "_d")
-NON_DIFFUSE_HINTS = ("normal", "norm", "bump", "spec", "rough", "metal", "emit", "emiss", "reflection", "refl")
-EMISSIVE_HINTS = ("emissive", "emission", "emiss", "emit", "glow", "_e")
-NON_EMISSIVE_HINTS = ("normal", "norm", "bump", "spec", "rough", "metal", "diffuse", "diff", "albedo", "basecolor", "base_color")
 
 
 @dataclass
@@ -68,9 +70,9 @@ def resolve_mesh_textures(
             selected = overrides[material].expanduser().resolve()
             candidates = [TextureCandidate(selected, 10_000.0, "user override")]
         elif requested is not None:
-            selected, candidates = _resolve_requested_texture(requested, material, requested_role, images)
+            selected, candidates = _resolve_requested_texture(requested, material, requested_role, images, desc.texture_refs, mesh.name)
         elif guess_when_missing:
-            candidates = _guess_material_texture(material, images, role)
+            candidates = _guess_material_texture(material, images, role, desc.texture_refs, mesh.name)
             selected = candidates[0].path if candidates and candidates[0].score >= 0.70 else None
 
         choices[material] = TextureChoice(
@@ -217,67 +219,31 @@ def _requested_texture(refs: dict[str, Path], texture_path: Path | None, preferr
     return preferred_role, None
 
 
-def _resolve_requested_texture(requested: Path, material: str, role: str, images: list[Path]) -> tuple[Path | None, list[TextureCandidate]]:
+def _resolve_requested_texture(requested: Path, material: str, role: str, images: list[Path], refs: dict[str, Path], mesh_name: str) -> tuple[Path | None, list[TextureCandidate]]:
     requested = requested.expanduser().resolve()
     if requested.exists():
         return requested, [TextureCandidate(requested, 1.0, "exact path")]
 
     same_dir = [p for p in images if p.parent == requested.parent]
-    candidates = _score_candidates(requested, material, role, same_dir or images)
+    candidates = _score_candidates(requested, material, role, same_dir or images, refs, mesh_name)
     selected = candidates[0].path if candidates and candidates[0].score >= 0.60 else None
     return selected, candidates
 
 
-def _guess_material_texture(material: str, images: list[Path], role: str = "map_kd") -> list[TextureCandidate]:
+def _guess_material_texture(material: str, images: list[Path], role: str = "map_kd", refs: dict[str, Path] | None = None, mesh_name: str = "") -> list[TextureCandidate]:
     pseudo = Path(material or "texture")
-    return _score_candidates(pseudo, material, role, images)
+    return _score_candidates(pseudo, material, role, images, refs or {}, mesh_name)
 
 
-def _score_candidates(requested: Path, material: str, role: str, images: list[Path]) -> list[TextureCandidate]:
-    req_stem = _norm(requested.stem)
-    req_name = _norm(requested.name)
-    mat = _norm(material)
-    role = role.lower()
-    out: list[TextureCandidate] = []
-
-    for image in images:
-        stem = _norm(image.stem)
-        name = _norm(image.name)
-        stem_ratio = difflib.SequenceMatcher(None, req_stem, stem).ratio() if req_stem else 0.0
-        name_ratio = difflib.SequenceMatcher(None, req_name, name).ratio() if req_name else 0.0
-        material_ratio = difflib.SequenceMatcher(None, mat, stem).ratio() if mat else 0.0
-        score = max(stem_ratio, name_ratio * 0.96, material_ratio * 0.80)
-        reasons = [f"name similarity {score:.2f}"]
-
-        if requested.suffix and image.suffix.lower() == requested.suffix.lower():
-            score += 0.05
-            reasons.append("same extension")
-        if image.parent == requested.parent:
-            score += 0.12
-            reasons.append("same directory")
-        if role in DIFFUSE_ROLES:
-            if any(h in stem for h in DIFFUSE_HINTS):
-                score += 0.12
-                reasons.append("diffuse-like name")
-            if any(h in stem for h in NON_DIFFUSE_HINTS):
-                score -= 0.25
-                reasons.append("non-diffuse-like name")
-        elif role in EMISSIVE_ROLES:
-            if any(h in stem for h in EMISSIVE_HINTS):
-                score += 0.18
-                reasons.append("emissive-like name")
-            if any(h in stem for h in NON_EMISSIVE_HINTS):
-                score -= 0.20
-                reasons.append("non-emissive-like name")
-        if req_stem and (stem.startswith(req_stem) or req_stem.startswith(stem)):
-            score += 0.15
-            reasons.append("prefix match")
-
-        out.append(TextureCandidate(image, max(0.0, score), ", ".join(reasons)))
-
-    out.sort(key=lambda c: (-c.score, len(str(c.path))))
-    return out
-
-
-def _norm(text: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "", text.lower())
+def _score_candidates(requested: Path | None, material: str, role: str, images: list[Path], refs: dict[str, Path] | None = None, mesh_name: str = "") -> list[TextureCandidate]:
+    return [
+        TextureCandidate(candidate.path, candidate.score, candidate.reason)
+        for candidate in score_texture_candidates(
+            requested=requested,
+            material=material,
+            role=role,
+            images=images,
+            refs=refs,
+            mesh_name=mesh_name,
+        )
+    ]
