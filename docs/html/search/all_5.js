@@ -40,7 +40,7 @@ var searchData=
   ['filltriangle_37',['fillTriangle',['../classtgx_1_1_image.html#adc3f4da7c4b2062077d0c6e88345751c',1,'tgx::Image']]],
   ['filltriangleaa_38',['fillTriangleAA',['../classtgx_1_1_image.html#ace764dbf0276f484c1bbd1e7d0aa2916',1,'tgx::Image']]],
   ['first_39',['first',['../struct_g_f_xfont.html#a8f7483c87a9208a6251d9ac354a33dbb',1,'GFXfont']]],
-  ['flags_40',['flags',['../structtgx_1_1_mesh_material_extra3_dv2.html#a67343ce82167b01a32c3ce929cb9746b',1,'tgx::MeshMaterialExtra3Dv2']]],
+  ['flags_40',['flags',['../structtgx_1_1_mesh_material_extra3_dv2.html#a67343ce82167b01a32c3ce929cb9746b',1,'tgx::MeshMaterialExtra3Dv2::flags()'],['../structtgx_1_1_renderer3_d__detail_1_1_spot_light_data.html#a5fcc216845b8bb258989f8854abcbce6',1,'tgx::Renderer3D_detail::SpotLightData::flags()']]],
   ['float_5fas_5fuint32_41',['float_as_uint32',['../_misc_8h.html#a39c607a544f512ddf2cab86eb6cce255',1,'tgx']]],
   ['fmat4_42',['fMat4',['../_mat4_8h.html#aa543bb38f59d79a08113a6254b587322',1,'tgx']]],
   ['font_5ftgx_5farial_2eh_43',['font_tgx_Arial.h',['../font__tgx___arial_8h.html',1,'']]],

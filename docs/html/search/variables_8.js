@@ -5,5 +5,7 @@ var searchData=
   ['index1_5ffirst_2',['index1_first',['../struct_i_l_i9341__t3__font__t.html#a7b7b7d5de0cb3f320a27290c1b0cde38',1,'ILI9341_t3_font_t']]],
   ['index1_5flast_3',['index1_last',['../struct_i_l_i9341__t3__font__t.html#a829bafcaba75c5db249df293c3be73d0',1,'ILI9341_t3_font_t']]],
   ['index2_5ffirst_4',['index2_first',['../struct_i_l_i9341__t3__font__t.html#ad0fdfbf1973bae389ad049687d3fed6a',1,'ILI9341_t3_font_t']]],
-  ['index2_5flast_5',['index2_last',['../struct_i_l_i9341__t3__font__t.html#a2661e389426d39f5b04a00d4a6e156e4',1,'ILI9341_t3_font_t']]]
+  ['index2_5flast_5',['index2_last',['../struct_i_l_i9341__t3__font__t.html#a2661e389426d39f5b04a00d4a6e156e4',1,'ILI9341_t3_font_t']]],
+  ['invcoswidth_6',['invCosWidth',['../structtgx_1_1_renderer3_d__detail_1_1_spot_light_data.html#a1a03d2398cf79adce82246c5d0c651df',1,'tgx::Renderer3D_detail::SpotLightData']]],
+  ['invrange2_7',['invRange2',['../structtgx_1_1_renderer3_d__detail_1_1_spot_light_data.html#a7b593498d62351b8e469378f51e87005',1,'tgx::Renderer3D_detail::SpotLightData']]]
 ];

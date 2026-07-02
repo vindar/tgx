@@ -23,5 +23,7 @@ var _misc_8h =
     [ "precise_invsqrt", "_misc_8h.html#ab8115fbbf686bc8937de9591cea71e7c", null ],
     [ "fast_invsqrt", "_misc_8h.html#a44fe774228b06a2f4216bfc851ae06dd", null ],
     [ "fast_invsqrt", "_misc_8h.html#aa181066cf27d4efe69379fe53bdea107", null ],
-    [ "lfloorf", "_misc_8h.html#a069a8413ad3930a20497382aa087ea9b", null ]
+    [ "lfloorf", "_misc_8h.html#a069a8413ad3930a20497382aa087ea9b", null ],
+    [ "tgx_fast_cos_deg_clamped", "_misc_8h.html#a81bb8c49d4864e6b283af82744b6d747", null ],
+    [ "tgx_fast_sin_deg_clamped", "_misc_8h.html#a3f90955eb64289e7e6bdbfb618fc69af", null ]
 ];

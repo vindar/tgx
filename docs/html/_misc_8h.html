@@ -206,6 +206,12 @@ TGX_INLINE double&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::fas
 <tr class="memitem:a069a8413ad3930a20497382aa087ea9b"><td class="memItemLeft" align="right" valign="top">TGX_INLINE int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_misc_8h.html#a069a8413ad3930a20497382aa087ea9b">tgx::lfloorf</a> (float x)</td></tr>
 <tr class="memdesc:a069a8413ad3930a20497382aa087ea9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute (int32_t)floorf(x).  <a href="_misc_8h.html#a069a8413ad3930a20497382aa087ea9b">More...</a><br /></td></tr>
 <tr class="separator:a069a8413ad3930a20497382aa087ea9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81bb8c49d4864e6b283af82744b6d747"><td class="memItemLeft" align="right" valign="top">TGX_INLINE float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_misc_8h.html#a81bb8c49d4864e6b283af82744b6d747">tgx::tgx_fast_cos_deg_clamped</a> (float deg)</td></tr>
+<tr class="memdesc:a81bb8c49d4864e6b283af82744b6d747"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fast cosine approximation for an angle expressed in degrees.  <a href="_misc_8h.html#a81bb8c49d4864e6b283af82744b6d747">More...</a><br /></td></tr>
+<tr class="separator:a81bb8c49d4864e6b283af82744b6d747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f90955eb64289e7e6bdbfb618fc69af"><td class="memItemLeft" align="right" valign="top">TGX_INLINE float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_misc_8h.html#a3f90955eb64289e7e6bdbfb618fc69af">tgx::tgx_fast_sin_deg_clamped</a> (float deg)</td></tr>
+<tr class="memdesc:a3f90955eb64289e7e6bdbfb618fc69af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fast sine approximation for an angle expressed in degrees.  <a href="_misc_8h.html#a3f90955eb64289e7e6bdbfb618fc69af">More...</a><br /></td></tr>
+<tr class="separator:a3f90955eb64289e7e6bdbfb618fc69af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Utility/miscellaneous functions used throughout the library. </p>
@@ -429,6 +435,64 @@ TGX_INLINE double&#160;</td><td class="memItemRight" valign="bottom"><b>tgx::fas
 
 <p>Compute (int32_t)floorf(x). </p>
 <p >Credit Ken Cooke (@joestash) </p>
+
+</div>
+</div>
+<a id="a81bb8c49d4864e6b283af82744b6d747" name="a81bb8c49d4864e6b283af82744b6d747"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81bb8c49d4864e6b283af82744b6d747">&#9670;&#160;</a></span>tgx_fast_cos_deg_clamped()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGX_INLINE float tgx::tgx_fast_cos_deg_clamped </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>deg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Fast cosine approximation for an angle expressed in degrees. </p>
+<p >value in degrees clamped to <code>[-180, 180]</code>. accuracy: mean absolute error <code>5.05195e-4</code>, RMS error <code>5.96683e-4</code>, maximum absolute error <code>1.09041e-3</code>. </p>
+
+</div>
+</div>
+<a id="a3f90955eb64289e7e6bdbfb618fc69af" name="a3f90955eb64289e7e6bdbfb618fc69af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f90955eb64289e7e6bdbfb618fc69af">&#9670;&#160;</a></span>tgx_fast_sin_deg_clamped()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGX_INLINE float tgx::tgx_fast_sin_deg_clamped </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>deg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Fast sine approximation for an angle expressed in degrees. </p>
+<p >value in degrees clamped to <code>[-180, 180]</code>. accuracy: mean absolute error <code>5.05195e-4</code>, RMS error <code>5.96683e-4</code>, maximum absolute error <code>1.09041e-3</code>. </p>
 
 </div>
 </div>

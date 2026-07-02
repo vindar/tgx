@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="contents">
 <div class="textblock"><div style="text-align:center; margin: 1.4rem 0 2.0rem;"> <img src="tgx_logo_large.png" alt="TGX logo" style="width:min(364px, 60vw); height:auto;" class="inline"/> </div><h1><a class="anchor" id="about"></a>
 About the library</h1>
-<p >TGX is a tiny but full-featured C++ library for drawing 2D and 3D graphics onto a memory framebuffer. The library runs on both microprocessors and microcontrollers but specifically targets 'powerful' 32 bits MCUs such as <a href="https://www.espressif.com/en/products/socs/esp32">ESP32</a>, <a href="https://www.raspberrypi.com/documentation/microcontrollers/silicon.html">RP2040/RP2350</a>, <a href="https://www.pjrc.com/teensy/">Teensy 3/4</a>...</p>
+<p >TGX is a tiny but full-featured C++ library for drawing 2D and 3D graphics onto a memory framebuffer. The library runs on both microprocessors and microcontrollers but specifically targets 'powerful' 32 bits MCUs such as <a href="https://www.espressif.com/en/products/socs/esp32">ESP32 family (ESP32, ESP32S3, ESP32P4...)</a>, <a href="https://www.raspberrypi.com/documentation/microcontrollers/silicon.html">RP2040/RP2350</a>, <a href="https://www.pjrc.com/teensy/">Teensy 3/4</a>...</p>
 <p ><b>Features</b></p>
 <ul>
 <li>Hardware agnostic: the library simply draws on a memory framebuffer.</li>
@@ -108,11 +108,15 @@ About the library</h1>
 <li>Multiple color formats supported: <a class="el" href="structtgx_1_1_r_g_b565.html">RGB565</a>, <a class="el" href="structtgx_1_1_r_g_b24.html">RGB24</a>, <a class="el" href="structtgx_1_1_r_g_b32.html">RGB32</a>, <a class="el" href="structtgx_1_1_r_g_b64.html">RGB64</a>, <a class="el" href="structtgx_1_1_r_g_bf.html">RGBf</a>, <a class="el" href="structtgx_1_1_h_s_v.html">HSV</a></li>
 <li><a class="el" href="classtgx_1_1_image.html">Image</a> class that encapsulates a memory buffer and allows the creation of sub-images for clipping any drawing operations.</li>
 <li><b>Extensive 2D API:</b><ul>
-<li>Methods for converting, blitting, copying and resizing sprites with high quality (bilinear filtering, sub-pixel precision).</li>
-<li>Methods for drawing lines, polylines, polygons, triangles, rectangles, rounded rectangles, quads, circles, arcs, ellipses, Bezier curves and splines.</li>
+<li>Methods for converting, <em>blitting</em>, <em>copying and resizing sprites</em> with high quality (bilinear filtering, sub-pixel precision).</li>
+<li>Methods for drawing <em>lines</em>, <em>polylines</em>, <em>polygons</em>, <em>triangles</em>, <em>rectangles</em>, <em>rounded rectangles</em>, <em>quads</em>, <em>circles</em>, <em>arcs</em>, <em>ellipses</em>, <em>Bezier curves and splines</em>.</li>
 <li>Methods for drawing text with support for multiple font formats with anti-aliasing</li>
 <li>Alpha-blending supported for all drawing operations.</li>
-<li>Several drawing methods come in two flavours: 'fast' methods and 'high quality' methods which are slower but draw using anti-aliasing and/or sub-pixel precision.</li>
+<li>Drawing methods come in two flavours:<ul>
+<li><em>fast methods</em> : aim for speed over quality.</li>
+<li><em>high quality</em> : slower but uses anti-aliasing and/or subixel precision.</li>
+</ul>
+</li>
 <li>Easy interfacing with other libraries for<ul>
 <li>drawing text with TrueType font using the <a href="https://github.com/takkaO/OpenFontRender">OpenFontRender library</a></li>
 <li>drawing JPEG images using the <a href="https://github.com/bitbank2/JPEGDEC">JPEGDEC library</a></li>
@@ -127,14 +131,15 @@ About the library</h1>
 <li>Depth buffer testing (selectable 16 bits or 32 bits precision).</li>
 <li>Multiple drawing modes: fast wireframe, antialiased wireframe and solid rendering with shaders.</li>
 <li>Unlit, flat and Gouraud shading.</li>
-<li>Phong lighting model with separate ambient/diffuse/specular color components and optional multiple directional lights.</li>
+<li>Phong lighting model with separate ambient/diffuse/specular color components.</li>
+<li>Support for multiple directional lights and local point/spot lights.</li>
 <li>Per object material properties.</li>
-<li>Perspective-correct texture mapping with selectable point sampling/bilinear filtering and multiple wrapping modes.</li>
+<li>Perspective-correct or affine texture mapping with selectable point sampling/bilinear filtering and multiple wrapping modes.</li>
 <li>Perspective and orthographic projections.</li>
 <li>Optional backface culling.</li>
 <li>Tile rasterization: it is possible to render the viewport in multiple passes to save RAM.</li>
 <li>Template classes for all the needed maths: <a class="el" href="structtgx_1_1_vec2.html">Vec2</a>, <a class="el" href="structtgx_1_1_vec3.html">Vec3</a>, <a class="el" href="structtgx_1_1_vec4.html">Vec4</a> (vectors), <a class="el" href="structtgx_1_1_mat4.html">Mat4</a> (4x4 matrix) and <a class="el" href="structtgx_1_1_box2.html">Box2</a>, <a class="el" href="structtgx_1_1_box3.html">Box3</a> (boxes).</li>
-<li>Legacy <a class="el" href="structtgx_1_1_mesh3_d.html">Mesh3D</a> and compact meshlet-based <a class="el" href="structtgx_1_1_mesh3_dv2.html">Mesh3Dv2</a> model formats. Meshes and textures can be read directly from flash memory to save RAM.</li>
+<li>Legacy <a class="el" href="structtgx_1_1_mesh3_d.html">Mesh3D</a> and new meshlet-based <a class="el" href="structtgx_1_1_mesh3_dv2.html">Mesh3Dv2</a> model formats. Meshes and textures can be read from flash memory to save RAM.</li>
 </ul>
 </li>
 <li><b>Graphical tools with matching command-line versions:</b><ul>

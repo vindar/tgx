@@ -1,6 +1,10 @@
 var annotated_dup =
 [
     [ "tgx", null, [
+      [ "Renderer3D_detail", null, [
+        [ "SpotLightData", "structtgx_1_1_renderer3_d__detail_1_1_spot_light_data.html", "structtgx_1_1_renderer3_d__detail_1_1_spot_light_data" ],
+        [ "SpotLightData< 0 >", "structtgx_1_1_renderer3_d__detail_1_1_spot_light_data_3_010_01_4.html", null ]
+      ] ],
       [ "Box2", "structtgx_1_1_box2.html", "structtgx_1_1_box2" ],
       [ "Box3", "structtgx_1_1_box3.html", "structtgx_1_1_box3" ],
       [ "HSV", "structtgx_1_1_h_s_v.html", "structtgx_1_1_h_s_v" ],

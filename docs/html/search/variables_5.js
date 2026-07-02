@@ -2,7 +2,7 @@ var searchData=
 [
   ['face_0',['face',['../structtgx_1_1_mesh3_d.html#ad88b21201134a76b31e577921201e04e',1,'tgx::Mesh3D']]],
   ['first_1',['first',['../struct_g_f_xfont.html#a8f7483c87a9208a6251d9ac354a33dbb',1,'GFXfont']]],
-  ['flags_2',['flags',['../structtgx_1_1_mesh_material_extra3_dv2.html#a67343ce82167b01a32c3ce929cb9746b',1,'tgx::MeshMaterialExtra3Dv2']]],
+  ['flags_2',['flags',['../structtgx_1_1_mesh_material_extra3_dv2.html#a67343ce82167b01a32c3ce929cb9746b',1,'tgx::MeshMaterialExtra3Dv2::flags()'],['../structtgx_1_1_renderer3_d__detail_1_1_spot_light_data.html#a5fcc216845b8bb258989f8854abcbce6',1,'tgx::Renderer3D_detail::SpotLightData::flags()']]],
   ['font_5ftgx_5farial_5f10_3',['font_tgx_Arial_10',['../font__tgx___arial_8h.html#a61cf6c569671145a9a44da28dc5d20af',1,'font_tgx_Arial.h']]],
   ['font_5ftgx_5farial_5f11_4',['font_tgx_Arial_11',['../font__tgx___arial_8h.html#a8c9005e8fb0900f16641073a52b55f66',1,'font_tgx_Arial.h']]],
   ['font_5ftgx_5farial_5f12_5',['font_tgx_Arial_12',['../font__tgx___arial_8h.html#a9a9f31f17a714d08e4590f4b93a0ee7d',1,'font_tgx_Arial.h']]],

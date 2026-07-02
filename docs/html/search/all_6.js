@@ -8,12 +8,13 @@ var searchData=
   ['getmodelmatrix_5',['getModelMatrix',['../classtgx_1_1_renderer3_d.html#a9375b386649b40e2de3c82492614e2a0',1,'tgx::Renderer3D']]],
   ['getmultopacity_6',['getMultOpacity',['../structtgx_1_1_r_g_b32.html#a3bbc8afe02b2223caa3ba9484bd5b66c',1,'tgx::RGB32::getMultOpacity()'],['../structtgx_1_1_r_g_b64.html#a3703d1e5b5c8142400a2e73afba3cdfb',1,'tgx::RGB64::getMultOpacity()']]],
   ['getnormalize_7',['getNormalize',['../structtgx_1_1_vec2.html#a57a5d8782f0e5a413742cf2964180d23',1,'tgx::Vec2::getNormalize()'],['../structtgx_1_1_vec3.html#a1e36a77477b01aa50c6c94832b079e66',1,'tgx::Vec3::getNormalize()'],['../structtgx_1_1_vec4.html#a8a9b09ed5ce746238ec9d1d93af9f3ef',1,'tgx::Vec4::getNormalize()']]],
-  ['getnormalize_5ffast_8',['getNormalize_fast',['../structtgx_1_1_vec2.html#a79668061ab638aa414c21ded96b73b14',1,'tgx::Vec2::getNormalize_fast()'],['../structtgx_1_1_vec3.html#a23cd15e1b2f3e3c1de96604d3ccdde7d',1,'tgx::Vec3::getNormalize_fast()'],['../structtgx_1_1_vec4.html#af70d41894b0bc798e38670a1282009c7',1,'tgx::Vec4::getNormalize_fast()']]],
+  ['getnormalize_5ffast_8',['getNormalize_fast',['../structtgx_1_1_vec2.html#addbe419840182a652d3a19c082a9f69d',1,'tgx::Vec2::getNormalize_fast()'],['../structtgx_1_1_vec3.html#a02a0471ddeb0d6dc4c4ce1bbc44dce16',1,'tgx::Vec3::getNormalize_fast()'],['../structtgx_1_1_vec4.html#a0afaf65b44786d35a882cb1ed56bec83',1,'tgx::Vec4::getNormalize_fast()']]],
   ['getprojectionmatrix_9',['getProjectionMatrix',['../classtgx_1_1_renderer3_d.html#a5252a0e6323fe799a2d01aa27c53fd4c',1,'tgx::Renderer3D']]],
-  ['getrotate90_10',['getRotate90',['../structtgx_1_1_vec2.html#a0e7fdb36c34634adee5419874414fb98',1,'tgx::Vec2']]],
+  ['getrotate90_10',['getRotate90',['../structtgx_1_1_vec2.html#a4430d7ddcf5e1b873629cea7cf47bc42',1,'tgx::Vec2']]],
   ['getsplit_5ffixed_11',['getSplit_fixed',['../structtgx_1_1_box2.html#add91ecc6069411b7f1fe6c27d26fe2af',1,'tgx::Box2']]],
   ['getviewmatrix_12',['getViewMatrix',['../classtgx_1_1_renderer3_d.html#a7c835852a899217db08a2ccd77d1e14e',1,'tgx::Renderer3D']]],
   ['gfxfont_13',['GFXfont',['../struct_g_f_xfont.html',1,'']]],
   ['gifplayframe_14',['GIFplayFrame',['../classtgx_1_1_image.html#afa3e95f25f3533ebc2e4d50041d98fc5',1,'tgx::Image']]],
-  ['glyph_15',['glyph',['../struct_g_f_xfont.html#af63d88fa053c9a634e86eab7c96db290',1,'GFXfont']]]
+  ['globalflags_15',['globalFlags',['../structtgx_1_1_renderer3_d__detail_1_1_spot_light_data.html#a321051e8fcc95536334ecf55964af186',1,'tgx::Renderer3D_detail::SpotLightData']]],
+  ['glyph_16',['glyph',['../struct_g_f_xfont.html#af63d88fa053c9a634e86eab7c96db290',1,'GFXfont']]]
 ];

@@ -20,6 +20,8 @@ var hierarchy =
     [ "tgx::RGB565", "structtgx_1_1_r_g_b565.html", null ],
     [ "tgx::RGB64", "structtgx_1_1_r_g_b64.html", null ],
     [ "tgx::RGBf", "structtgx_1_1_r_g_bf.html", null ],
+    [ "tgx::Renderer3D_detail::SpotLightData< MAX_SPOT_LIGHTS >", "structtgx_1_1_renderer3_d__detail_1_1_spot_light_data.html", null ],
+    [ "tgx::Renderer3D_detail::SpotLightData< 0 >", "structtgx_1_1_renderer3_d__detail_1_1_spot_light_data_3_010_01_4.html", null ],
     [ "tgx::Vec2< T >", "structtgx_1_1_vec2.html", [
       [ "tgx::Vec3< float >", "structtgx_1_1_vec3.html", null ],
       [ "tgx::Vec3< T >", "structtgx_1_1_vec3.html", [

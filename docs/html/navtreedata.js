@@ -80,30 +80,40 @@ var NAVTREE =
       ] ],
       [ "Where to go next", "md_docs_intro_api_2_d.html#sec_2D_next", null ]
     ] ],
-    [ "Using the 3D API.", "md_docs_intro_api_3_d.html", [
-      [ "What Renderer3D Does", "md_docs_intro_api_3_d.html#sec_3D_overview", null ],
-      [ "Coordinate Spaces", "md_docs_intro_api_3_d.html#sec_3D_pipeline", [
-        [ "Vectors, Points and Matrices", "md_docs_intro_api_3_d.html#sec_3D_math", null ],
-        [ "Renderer Matrices", "md_docs_intro_api_3_d.html#sec_3D_matrices", null ],
-        [ "Projection and Viewport Mapping", "md_docs_intro_api_3_d.html#sec_3D_projection", null ]
+    [ "Using the 3D API", "md_docs_intro_api_3_d.html", [
+      [ "Renderer3D Overview", "md_docs_intro_api_3_d.html#sec_3D_overview", null ],
+      [ "Minimal Render Loop", "md_docs_intro_api_3_d.html#sec_3D_minimal_loop", null ],
+      [ "Destination Image, Viewport and Depth Buffer", "md_docs_intro_api_3_d.html#sec_3D_buffers", [
+        [ "Tile Rendering", "md_docs_intro_api_3_d.html#sec_3D_tiling", null ]
       ] ],
-      [ "Renderer template parameters", "md_docs_intro_api_3_d.html#sec_3D_renderer_template", [
-        [ "Shader state", "md_docs_intro_api_3_d.html#sec_3D_shaders", null ],
-        [ "Z-buffer", "md_docs_intro_api_3_d.html#sec_3D_zbuffer", null ]
+      [ "From 3D Coordinates to Pixels", "md_docs_intro_api_3_d.html#sec_3D_coordinates", [
+        [ "Math Types, Points and Normals", "md_docs_intro_api_3_d.html#sec_3D_math", null ],
+        [ "Model, View and Projection", "md_docs_intro_api_3_d.html#sec_3D_model_view_projection", null ],
+        [ "Projection and Viewport Mapping", "md_docs_intro_api_3_d.html#sec_3D_projection_viewport", null ]
       ] ],
-      [ "Mesh3Dv2, Mesh3D and generated models", "md_docs_intro_api_3_d.html#sec_3D_meshes", [
-        [ "Drawing primitives directly", "md_docs_intro_api_3_d.html#sec_3D_primitives", null ],
-        [ "Textures", "md_docs_intro_api_3_d.html#sec_3D_textures", null ],
-        [ "Light and material", "md_docs_intro_api_3_d.html#sec_3D_lighting", null ],
-        [ "Back-face culling", "md_docs_intro_api_3_d.html#sec_3D_culling", null ],
-        [ "Tile rendering", "md_docs_intro_api_3_d.html#sec_3D_tiling", null ],
-        [ "Wireframe and debug drawing", "md_docs_intro_api_3_d.html#sec_3D_wireframe", null ],
+      [ "Compile-time and Runtime Rendering Paths", "md_docs_intro_api_3_d.html#sec_3D_render_paths", [
+        [ "Renderer Template Parameters", "md_docs_intro_api_3_d.html#sec_3D_template", null ],
+        [ "Runtime Shader State", "md_docs_intro_api_3_d.html#sec_3D_shader_state", null ]
+      ] ],
+      [ "Geometry Sources", "md_docs_intro_api_3_d.html#sec_3D_geometry", [
+        [ "Back-face Culling", "md_docs_intro_api_3_d.html#sec_3D_culling", null ],
+        [ "Meshes", "md_docs_intro_api_3_d.html#sec_3D_meshes", null ],
+        [ "Generated Solid Shapes", "md_docs_intro_api_3_d.html#sec_3D_generated_shapes", null ],
+        [ "Low-level Primitives", "md_docs_intro_api_3_d.html#sec_3D_low_level", null ],
         [ "Skyboxes", "md_docs_intro_api_3_d.html#sec_3D_skybox", null ]
       ] ],
-      [ "Embedded performance checklist", "md_docs_intro_api_3_d.html#sec_3D_performance", null ],
-      [ "Complete embedded example", "md_docs_intro_api_3_d.html#sec_3D_complete_example", null ],
-      [ "Useful examples", "md_docs_intro_api_3_d.html#sec_3D_examples", null ],
-      [ "Common pitfalls", "md_docs_intro_api_3_d.html#sec_3D_pitfalls", null ]
+      [ "Appearance: Textures, Materials and Lighting", "md_docs_intro_api_3_d.html#sec_3D_appearance", [
+        [ "Textures", "md_docs_intro_api_3_d.html#sec_3D_textures", null ],
+        [ "Materials", "md_docs_intro_api_3_d.html#sec_3D_materials", null ],
+        [ "Lighting Model", "md_docs_intro_api_3_d.html#sec_3D_lighting", null ],
+        [ "Directional Lights", "md_docs_intro_api_3_d.html#sec_3D_directional_lights", null ],
+        [ "Point and Spot Lights", "md_docs_intro_api_3_d.html#sec_3D_spot_lights", null ]
+      ] ],
+      [ "Wireframe and Debug Drawing", "md_docs_intro_api_3_d.html#sec_3D_wireframe", null ],
+      [ "Embedded Performance Checklist", "md_docs_intro_api_3_d.html#sec_3D_performance", null ],
+      [ "Complete Embedded Example", "md_docs_intro_api_3_d.html#sec_3D_complete_example", null ],
+      [ "Useful Examples", "md_docs_intro_api_3_d.html#sec_3D_examples", null ],
+      [ "Common Pitfalls", "md_docs_intro_api_3_d.html#sec_3D_pitfalls", null ]
     ] ],
     [ "TGX tools", "md_docs_tools.html", [
       [ "Installing the tools", "md_docs_tools.html#tools_install", null ],
@@ -139,11 +149,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_box2_8h.html",
-"_vec3_8h.html#a3d74576a897ad4d7dc0c7bd5ca7e1071",
-"classtgx_1_1_renderer3_d.html#a6676eeae84619bb44ee7fae28015a486",
-"md_docs_intro_api_3_d.html#sec_3D_overview",
-"structtgx_1_1_mesh3_dv2.html#a9bcde76156136f841a5d8a8f2dc65b72",
-"structtgx_1_1_r_g_bf.html#a3e05d8a006db4637a42b03d5a35f5593"
+"_vec3_8h.html#a23ffddab7450671e7f90d512261f459a",
+"classtgx_1_1_renderer3_d.html#a5252a0e6323fe799a2d01aa27c53fd4c",
+"md_docs_intro_api_2_d.html#subsec_PNGdec",
+"structtgx_1_1_mat4.html#a92aeb4ffcd35c1fd5abe692dd26250f9",
+"structtgx_1_1_r_g_b64.html#a5af6e0e286a042ec99aca8e0ae228ccb"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
