@@ -52,7 +52,7 @@ float zbuffer[LX * LY];                         // z-buffer (same sie as the ima
 
 const tgx::Shader LOADED_SHADERS = tgx::SHADER_PERSPECTIVE | tgx::SHADER_ZBUFFER |
                                    tgx::SHADER_GOURAUD | tgx::SHADER_NOTEXTURE;
-tgx::Renderer3D<tgx::RGB32, LOADED_SHADERS> renderer;           // the 3D renderer.
+tgx::Renderer3D<tgx::RGB32, LOADED_SHADERS, float> renderer;    // the 3D renderer.
 
 
 int main()

@@ -59,9 +59,9 @@ namespace tgx
     * A Renderer3D objects creates a "virtual viewport" and provides a set of methods to manage a scene and
     * draw 3D primitives onto this viewport which is  then mapped to a `tgx::Image`.
     *
-    * @tparam LOADED_SHADERS    list of all shaders that may be used. By default, all shaders are enabled but
-    *                           it is possible to select only a subset of shaders to improve rendering speed and
-    *                           decrease memory usage significantly. Must be a `|` combination of the following flags:
+    * @tparam LOADED_SHADERS    List of all shaders that may be used. This parameter is required so the renderer only
+    *                           compiles the shader paths that are actually needed, improving rendering speed and
+    *                           decreasing memory usage significantly. Must be a `|` combination of the following flags:
     *                               - `SHADER_PERSPECTIVE`: enable perspective projection
     *                               - `SHADER_ORTHO`: enable orthographic projection
     *                               - `SHADER_NOZBUFFER`: enable rendering without using a z-buffer
@@ -77,7 +77,8 @@ namespace tgx
     *                               - `SHADER_TEXTURE_WRAP_POW2`: texture can use 'wrap around' mode with dimensions of texture being power of two.
     *                               - `SHADER_TEXTURE_CLAMP`: texture can use 'clamping to edge' mode.
     *
-    * @tparam ZBUFFER_t :       Type used for storing z-buffer values. Must be either `float` or `uint16_t`. The z-buffer must be
+    * @tparam ZBUFFER_t :       Type used for storing z-buffer values. Must be either `float` or `uint16_t`.
+    *                           The default is `uint16_t`. The z-buffer must be
     *                           as large as the image (but can be smaller than the viewport when using an offset).
     *                               - `float`: higher quality but requires 4 bytes per pixel.
     *                               - `uint16_t` : lower quality (z-fighting may occur) but only 2 bytes per pixel.
@@ -114,7 +115,7 @@ namespace tgx
     *    with adjustable thickness + AA use the general thick-line path and can be very slow.
     *
     */
-    template<typename color_t, Shader LOADED_SHADERS = TGX_SHADER_MASK_ALL, typename ZBUFFER_t = float, int MAX_DIRECTIONAL_LIGHTS = 1, int MAX_SPOT_LIGHTS = 0>
+    template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t = uint16_t, int MAX_DIRECTIONAL_LIGHTS = 1, int MAX_SPOT_LIGHTS = 0>
     class Renderer3D
     {
 
