@@ -141,6 +141,8 @@ namespace tgx
         static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled");
         static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled");
 
+        template<Shader SHADERS> static constexpr Shader _validatedDrawCallShaders();
+
 
 
        public:
@@ -1180,6 +1182,27 @@ namespace tgx
          * quantized meshlet sphere/cone metadata, optionally rejects the whole meshlet, then
          * reads and rasterizes the local 16-bit payload only for visible meshlets.
          */
+        void drawMesh(const Mesh3Dv2<color_t>* mesh, bool use_mesh_material = true);
+
+
+        /**
+         * Draw a Mesh3Dv2 object using only the shader subset listed in `SHADERS`.
+         *
+         * This overload is useful when a renderer is compiled with several shader paths but
+         * one specific mesh draw call only needs a smaller, known-at-compile-time subset.
+         * `SHADERS` must be a complete subset of the renderer enabled shaders and must include
+         * one flag from each mandatory category: projection, z-buffer mode, shading mode and
+         * texture mode. In particular, include `SHADER_NOTEXTURE` if the mesh may be drawn
+         * without texture data. At runtime, the current renderer shader state is intersected
+         * with this subset; if the intersection does not select a valid shader path, nothing
+         * is drawn.
+         *
+         * @tparam SHADERS              Compile-time shader subset available to this draw call.
+         * @param   mesh                The mesh to draw.
+         * @param   use_mesh_material   True (default) to use Mesh3Dv2 material colors and
+         *                              coefficients, otherwise use the current renderer material.
+         */
+        template<Shader SHADERS>
         void drawMesh(const Mesh3Dv2<color_t>* mesh, bool use_mesh_material = true);
 
 
@@ -2630,7 +2653,8 @@ namespace tgx
         ************************************************************/
 
 
-        /** draw a triangle and takes care of clipping (slow, called by the other methods only when necessary) */
+        /** draw a triangle with a restricted compile-time shader set and takes care of clipping */
+        template<Shader RASTERIZER_SHADERS = ENABLED_SHADERS>
         void _drawTriangleClipped(const int RASTER_TYPE,
             const fVec4* Q0, const fVec4* Q1, const fVec4* Q2,
             const fVec3* N0, const fVec3* N1, const fVec3* N2,
@@ -2639,6 +2663,7 @@ namespace tgx
 
 
         /** used by _drawTriangleClipped() */
+        template<Shader RASTERIZER_SHADERS = ENABLED_SHADERS>
         void _drawTriangleClippedSub(const int RASTER_TYPE, const int plane,
             const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3);
 
@@ -2698,7 +2723,8 @@ namespace tgx
         /** Method called by drawMesh() which does the actual drawing. */
         void _drawMesh(const int RASTER_TYPE, const Mesh3D<color_t>* mesh);
 
-        /** Method called by drawMesh() which does the actual Mesh3Dv2 drawing. */
+        /** Method called by drawMesh<SHADERS>() which does the actual Mesh3Dv2 drawing. */
+        template<Shader RASTERIZER_SHADERS = ENABLED_SHADERS>
         void _drawMesh(const int RASTER_TYPE, const Mesh3Dv2<color_t>* mesh, bool use_mesh_material);
 
         /** Return true when a decoded Mesh3Dv2 visibility cone rejects the meshlet for the current view. */

@@ -124,6 +124,21 @@ namespace tgx
             }
 
 
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        template<Shader SHADERS>
+        constexpr Shader Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_validatedDrawCallShaders()
+            {
+            constexpr Shader DRAW_SHADERS = ENABLED_SHADERS & SHADERS;
+            static_assert((((int)SHADERS) & ~((int)ENABLED_SHADERS)) == 0, "draw call SHADERS must be a subset of Renderer3D enabled shaders");
+            static_assert(TGX_SHADER_HAS_ONE_FLAG(DRAW_SHADERS, TGX_SHADER_MASK_PROJECTION), "draw call SHADERS must enable SHADER_PERSPECTIVE or SHADER_ORTHO");
+            static_assert(TGX_SHADER_HAS_ONE_FLAG(DRAW_SHADERS, TGX_SHADER_MASK_ZBUFFER), "draw call SHADERS must enable SHADER_ZBUFFER or SHADER_NOZBUFFER");
+            static_assert(TGX_SHADER_HAS_ONE_FLAG(DRAW_SHADERS, TGX_SHADER_MASK_SHADING), "draw call SHADERS must enable SHADER_UNLIT, SHADER_FLAT or SHADER_GOURAUD");
+            static_assert(TGX_SHADER_HAS_ONE_FLAG(DRAW_SHADERS, TGX_SHADER_MASK_TEXTURE), "draw call SHADERS must enable SHADER_NOTEXTURE, SHADER_TEXTURE or SHADER_TEXTURE_AFFINE");
+            static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(DRAW_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(DRAW_SHADERS, TGX_SHADER_MASK_TEXTURE_QUALITY)), "draw call textured SHADERS must enable SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST");
+            static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(DRAW_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(DRAW_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "draw call textured SHADERS must enable SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP");
+            return DRAW_SHADERS;
+            }
+
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_precomputeSpecularTable2(int exponent)
             {
@@ -895,7 +910,8 @@ namespace tgx
 
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        template<Shader RASTERIZER_SHADERS> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangleClipped(const int RASTER_TYPE,
             const fVec4* Q0, const fVec4* Q1, const fVec4* Q2,
             const fVec3* N0, const fVec3* N1, const fVec3* N2,
@@ -956,11 +972,12 @@ namespace tgx
                 }
 
             // ok, now PPC0, PPC1 and PPC2 contain the points in NDC coord with associated color and texture indices, let's go (recursively) !
-            _drawTriangleClippedSub(RASTER_TYPE, 0, PPC0, PPC1, PPC2);
+            _drawTriangleClippedSub<RASTERIZER_SHADERS>(RASTER_TYPE, 0, PPC0, PPC1, PPC2);
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        template<Shader RASTERIZER_SHADERS> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangleClippedSub(const int RASTER_TYPE, const int plane, const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3)
             {
 
@@ -1067,7 +1084,7 @@ namespace tgx
                         V2.zdivide();
                         V3.zdivide();
                         }
-                    rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, V1, V2, V3, _ox, _oy, _uni);
+                    rasterizeTriangle<shader_select<RASTERIZER_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, V1, V2, V3, _ox, _oy, _uni);
                     return;
                     }
                 }
@@ -1075,12 +1092,12 @@ namespace tgx
             switch (nbt)
                 {
                 case 0:
-                    _drawTriangleClippedSub(RASTER_TYPE, plane + 1, P1, P2, P3);
+                    _drawTriangleClippedSub<RASTERIZER_SHADERS>(RASTER_TYPE, plane + 1, P1, P2, P3);
                     break;
                 case 2:
-                    _drawTriangleClippedSub(RASTER_TYPE, plane + 1, V1, V3, V4);
+                    _drawTriangleClippedSub<RASTERIZER_SHADERS>(RASTER_TYPE, plane + 1, V1, V3, V4);
                 case 1:
-                    _drawTriangleClippedSub(RASTER_TYPE, plane + 1, V1, V2, V3);
+                    _drawTriangleClippedSub<RASTERIZER_SHADERS>(RASTER_TYPE, plane + 1, V1, V2, V3);
                 }
             return;
             }
@@ -1744,13 +1761,24 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> inline
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawMesh(const Mesh3Dv2<color_t>* mesh, bool use_mesh_material)
+            {
+            drawMesh<ENABLED_SHADERS>(mesh, use_mesh_material);
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        template<Shader SHADERS> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawMesh(const Mesh3Dv2<color_t>* mesh, bool use_mesh_material)
             {
             if (!_validDraw()) return;
             if ((mesh == nullptr) || (mesh->meshlets == nullptr) || (mesh->payload == nullptr) || (mesh->materials == nullptr)) return;
 
-            _drawMesh(_shaders, mesh, use_mesh_material);
+            constexpr Shader DRAW_SHADERS = _validatedDrawCallShaders<SHADERS>();
+            const int raster_type = _shaders & ((int)DRAW_SHADERS);
+
+            _drawMesh<DRAW_SHADERS>(raster_type, mesh, use_mesh_material);
 
             if (use_mesh_material)
                 { // restore material pre-computed values
@@ -1938,7 +1966,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>  TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        template<Shader RASTERIZER_SHADERS> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawMesh(const int RASTER_TYPE, const Mesh3Dv2<color_t>* mesh, bool use_mesh_material)
             {
             const bool bbox_uninitialized = ((mesh->bounding_box.minX == 0) && (mesh->bounding_box.maxX == 0) &&
@@ -2193,7 +2222,7 @@ namespace tgx
                                     const fVec2 CT0 = (TEXTURE) ? Mesh3Dv2_detail::load_texcoord(tab_tex, PPC0->indt, texcoord_scale) : fVec2();
                                     const fVec2 CT1 = (TEXTURE) ? Mesh3Dv2_detail::load_texcoord(tab_tex, PPC1->indt, texcoord_scale) : fVec2();
                                     const fVec2 CT2 = (TEXTURE) ? Mesh3Dv2_detail::load_texcoord(tab_tex, PPC2->indt, texcoord_scale) : fVec2();
-                                    _drawTriangleClipped(raster_type,
+                                    _drawTriangleClipped<RASTERIZER_SHADERS>(raster_type,
                                                     &(PPC0->P), &(PPC1->P), &(PPC2->P),
                                                     ((GOURAUD) ? &CN0 : nullptr), ((GOURAUD) ? &CN1 : nullptr), ((GOURAUD) ? &CN2 : nullptr),
                                                     ((TEXTURE) ? &CT0 : nullptr), ((TEXTURE) ? &CT1 : nullptr), ((TEXTURE) ? &CT2 : nullptr),
@@ -2250,7 +2279,7 @@ namespace tgx
                         PPC2->missedP = false;
 
                         // go rasterize !
-                        rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni);
+                        rasterizeTriangle<shader_select<RASTERIZER_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni);
 
                     rasterize_next_meshlet_triangle:
 
