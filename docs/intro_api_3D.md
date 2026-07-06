@@ -777,6 +777,9 @@ For MCU targets, these choices often matter most:
 - clear the image and Z-buffer once per frame, not before every object;
 - avoid adjustable-thickness wireframe in every frame unless the visual effect is worth the cost.
 
+Large Teensy 4.x / Teensyduino sketches that are short on RAM1 can explicitly place selected heavy
+`Renderer3D` template paths in flash with `TGX_PLACE_RENDERER3D_*_PATH_IN_FLASH(renderer)`. This is a  space-saving tool (no-op on targets other than Teensy 4/4.1) which will trade speed for ram usage.
+
 
 @section sec_3D_complete_example Complete Embedded Example
 
