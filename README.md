@@ -58,9 +58,9 @@ Here are the main features of the library:
 - Depth buffer testing (16-bit or 32-bit precision).
 - Three wireframe drawing paths: *fast* aliased lines, optimized one-pixel antialiased lines, and a much slower adjustable thickness + AA path.
 - Flat and Gouraud shading.
-- Phong lighting model with separate ambient, diffuse, and specular components. Supports multiple directional lights (spotlight is WIP).
+- Phong lighting model with separate ambient, diffuse, and specular components. Supports multiple directional lights and local point/spot lights.
 - Per-object material properties.
-- Perspective-correct texture mapping with selectable point sampling or bilinear filtering. Wrap modes: repeat (for power-of-two textures) or clamp to edge.
+- Perspective-correct or affine texture mapping with selectable point sampling or bilinear filtering. Wrap modes: repeat (for power-of-two textures) or clamp to edge.
 - Perspective and orthographic projection.
 - Optional backface culling.
 - Tile rasterization: render only part of the viewport at a time to save RAM, using a smaller image and z-buffer.
