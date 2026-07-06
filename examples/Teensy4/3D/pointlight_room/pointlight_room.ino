@@ -1,6 +1,6 @@
 /********************************************************************
 *
-* tgx library example: moving local spot lights.
+* tgx library example: moving local point lights.
 *
 * EXAMPLE FOR TEENSY 4 / 4.1
 *
@@ -54,7 +54,7 @@ Image<RGB565> im(fb, SLX, SLY);
 
 const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_UNLIT | SHADER_NOTEXTURE;
 
-// The last template argument gives this renderer two local spot-light slots.
+// The last template argument gives this renderer two local light slots.
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t, 1, 2> renderer;
 
 
@@ -334,7 +334,7 @@ void setup()
                        { 0.0f, 0.0f, -1.0f },
                        { 0.0f, 1.0f, 0.0f });
 
-    // Keep the directional light weak so the moving local spot lights dominate.
+    // Keep the directional light weak so the moving local point lights dominate.
     renderer.setLight({ -0.35f, -0.75f, -0.35f },
                       RGBf(0.008f, 0.010f, 0.015f),
                       RGBf(0.035f, 0.038f, 0.044f),

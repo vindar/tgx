@@ -118,18 +118,8 @@ const Shader LOADED_SHADER = SHADER_ZBUFFER | SHADER_PERSPECTIVE | SHADER_GOURAU
 // the 3D renderer object.
 Renderer3D<RGB565, LOADED_SHADER, uint16_t> renderer;
 
-namespace tgx
-{
-template __attribute__((section(".flashmem.tgx.drawsphere"))) void Renderer3D<RGB565, ::LOADED_SHADER, uint16_t, 1, 0>::drawSphere(int, int);
-template __attribute__((section(".flashmem.tgx.drawsphere"))) void Renderer3D<RGB565, ::LOADED_SHADER, uint16_t, 1, 0>::drawSphere(int, int, const Image<RGB565>*);
-template __attribute__((section(".flashmem.tgx.drawsphere"))) void Renderer3D<RGB565, ::LOADED_SHADER, uint16_t, 1, 0>::drawAdaptativeSphere(float);
-template __attribute__((section(".flashmem.tgx.drawsphere"))) void Renderer3D<RGB565, ::LOADED_SHADER, uint16_t, 1, 0>::drawAdaptativeSphere(const Image<RGB565>*, float);
-template __attribute__((section(".flashmem.tgx.drawsphere"))) void Renderer3D<RGB565, ::LOADED_SHADER, uint16_t, 1, 0>::_drawSphere<false, Renderer3D_detail::WIREFRAME_FAST>(int, int, const Image<RGB565>*, float, RGB565, float);
-#if TGX_DRAWSPHERE_USE_STRIP_BANDS
-template __attribute__((section(".flashmem.tgx.drawsphere"))) void Renderer3D<RGB565, ::LOADED_SHADER, uint16_t, 1, 0>::_drawSphereGouraudStripBand(const int, int, const float*, const float*, float, float, float, float, float, float, float, float, bool);
-template __attribute__((section(".flashmem.tgx.drawsphere"))) void Renderer3D<RGB565, ::LOADED_SHADER, uint16_t, 1, 0>::_drawSphereGouraudCap(const int, int, bool, const float*, const float*, float, float, float, float, float, bool);
-#endif
-}
+// place some code in flash (related to drawing sphere) to reduce the RAM footprint on Teensy 4
+TGX_PLACE_RENDERER3D_SPHERE_PATH_IN_FLASH(renderer)
 
 // additional memory in DMAMEM (175Kb)
 // used to load temporary objects.

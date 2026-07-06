@@ -60,6 +60,9 @@ const Shader LOADED_SHADERS = SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT 
 Renderer3D<RGB565, LOADED_SHADERS, uint16_t, 4> renderer;
 
 
+#include "tgx_example_telemetry.h"
+
+
 bool multi_light_mode = false;
 
 
@@ -88,6 +91,7 @@ void setFourDirectionalLights()
 void setup()
     {
     Serial.begin(9600);
+    telemetryBegin();
 
     while (!tft.begin(SPI_SPEED));
 
@@ -108,6 +112,7 @@ void setup()
     renderer.setPerspective(45, ((float)SLX) / SLY, 1.0f, 100.0f);
     renderer.setCulling(1);
     setOneDirectionalLight();
+    telemetrySetScene("one_directional_light");
     }
 
 
@@ -126,9 +131,12 @@ void loop()
         multi_light_mode = use_multi;
         if (multi_light_mode) setFourDirectionalLights();
         else setOneDirectionalLight();
+        telemetrySetScene(multi_light_mode ? "four_directional_lights" : "one_directional_light");
         }
 
     const float a = millis() * 0.055f;
+
+    telemetryStartFrame();
 
     im.fillScreen(RGB565(8, 10, 18));
     renderer.clearZbuffer();
@@ -145,5 +153,6 @@ void loop()
 
     drawLabel(multi_light_mode ? "4 colored directional lights" : "simple one-light API");
     tft.overlayFPS(fb);
+    telemetryEndFrame();
     tft.update(fb);
     }
