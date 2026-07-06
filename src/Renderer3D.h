@@ -1171,6 +1171,19 @@ namespace tgx
 
 
         /**
+         * Advanced version of drawMesh() restricted to the shader subset listed in `SHADERS`.
+         *
+         * Prefer the non-template overload for normal use and for the parameter details.
+         * This overload is only meant for draw calls where the usable shader paths are known
+         * at compile time and should be narrowed explicitly.
+         *
+         * @tparam SHADERS Complete shader subset available to this draw call. Must be a valid subset of the renderer `LOADED_SHADERS`.
+         */
+        template<Shader SHADERS>
+        void drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material = true, bool draw_chained_meshes = true);
+
+
+        /**
          * Draw a Mesh3Dv2 object.
          *
          * @param   mesh                The mesh to draw.
@@ -1186,21 +1199,13 @@ namespace tgx
 
 
         /**
-         * Draw a Mesh3Dv2 object using only the shader subset listed in `SHADERS`.
+         * Advanced version of drawMesh() restricted to the shader subset listed in `SHADERS`.
          *
-         * This overload is useful when a renderer is compiled with several shader paths but
-         * one specific mesh draw call only needs a smaller, known-at-compile-time subset.
-         * `SHADERS` must be a complete subset of the renderer enabled shaders and must include
-         * one flag from each mandatory category: projection, z-buffer mode, shading mode and
-         * texture mode. In particular, include `SHADER_NOTEXTURE` if the mesh may be drawn
-         * without texture data. At runtime, the current renderer shader state is intersected
-         * with this subset; if the intersection does not select a valid shader path, nothing
-         * is drawn.
+         * Prefer the non-template overload for normal use and for the parameter details.
+         * This overload is only meant for draw calls where the usable shader paths are known
+         * at compile time and should be narrowed explicitly.
          *
-         * @tparam SHADERS              Compile-time shader subset available to this draw call.
-         * @param   mesh                The mesh to draw.
-         * @param   use_mesh_material   True (default) to use Mesh3Dv2 material colors and
-         *                              coefficients, otherwise use the current renderer material.
+         * @tparam SHADERS Complete shader subset available to this draw call. Must be a valid subset of the renderer `LOADED_SHADERS`.
          */
         template<Shader SHADERS>
         void drawMesh(const Mesh3Dv2<color_t>* mesh, bool use_mesh_material = true);
@@ -2720,7 +2725,8 @@ namespace tgx
             Shader texture_quality, Shader texture_mode);
 
 
-        /** Method called by drawMesh() which does the actual drawing. */
+        /** Method called by drawMesh() / drawMesh<SHADERS>() which does the actual legacy Mesh3D drawing. */
+        template<Shader RASTERIZER_SHADERS = ENABLED_SHADERS>
         void _drawMesh(const int RASTER_TYPE, const Mesh3D<color_t>* mesh);
 
         /** Method called by drawMesh<SHADERS>() which does the actual Mesh3Dv2 drawing. */
@@ -3741,6 +3747,7 @@ namespace tgx
 
 
 #include "Renderer3D.inl"
+#include "Renderer3DFlash.h"
 
 
 #endif

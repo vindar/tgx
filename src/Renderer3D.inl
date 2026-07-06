@@ -1748,7 +1748,47 @@ namespace tgx
                         TGX_SHADER_REMOVE_TEXTURING_ENABLED(raster_type)
                         TGX_SHADER_ADD_NOTEXTURE(raster_type)
                         } // texturing not available so we disable it
-                    _drawMesh(raster_type, mesh);
+                    _drawMesh<ENABLED_SHADERS>(raster_type, mesh);
+                    }
+                mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
+                }
+
+            if (use_mesh_material)
+                { // restore material pre-computed values
+                _setRuntimeMaterialLighting(_ambiantStrength, _diffuseStrength, _specularStrength, _specularExponent);
+                _r_objectColor = _color;
+                }
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        template<Shader SHADERS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::drawMesh(const Mesh3D<color_t>* mesh, bool use_mesh_material, bool draw_chained_meshes)
+            {
+            if (!_validDraw()) return;
+
+            constexpr Shader DRAW_SHADERS = _validatedDrawCallShaders<SHADERS>();
+
+            while (mesh)
+                {
+                if ((mesh->vertice) && (mesh->face))
+                    {
+                    if (use_mesh_material)
+                        {   // use mesh material if requested
+                        _setRuntimeMaterialLighting(mesh->ambiant_strength, mesh->diffuse_strength, mesh->specular_strength, mesh->specular_exponent);
+                        _r_objectColor = mesh->color;
+                        }
+                    // precompute pow(.,specularExponent) table if needed
+                    const int specularExpo = (use_mesh_material ? mesh->specular_exponent : _specularExponent);
+                    _precomputeSpecularTable(specularExpo);
+                    int raster_type = _shaders & ((int)DRAW_SHADERS);
+                    if (mesh->normal == nullptr) { TGX_SHADER_REMOVE_GOURAUD(raster_type) } // gouraud shading not available so we disable it
+                    if ((mesh->texcoord == nullptr) || (mesh->texture == nullptr))
+                        {
+                        TGX_SHADER_REMOVE_TEXTURING_ENABLED(raster_type)
+                        TGX_SHADER_ADD_NOTEXTURE(raster_type)
+                        } // texturing not available so we disable it
+                    _drawMesh<DRAW_SHADERS>(raster_type, mesh);
                     }
                 mesh = ((draw_chained_meshes) ? mesh->next : nullptr);
                 }
@@ -1788,7 +1828,8 @@ namespace tgx
             }
 
 
-        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>  TGX_NOINLINE
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        template<Shader RASTERIZER_SHADERS> TGX_NOINLINE
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawMesh(const int RASTER_TYPE, const Mesh3D<color_t>* mesh)
             {
             _uni.shader_type = RASTER_TYPE;
@@ -1891,7 +1932,7 @@ namespace tgx
                             { // need cliiping, test is we can just discard the triangle if not shown on screen
                             if (!_discardTriangle(*((fVec4*)PPC0), *((fVec4*)PPC1), *((fVec4*)PPC2)))
                                 { // no, use the slow drawing method with clipping
-                                _drawTriangleClipped(RASTER_TYPE,
+                                _drawTriangleClipped<RASTERIZER_SHADERS>(RASTER_TYPE,
                                                 &(PPC0->P), &(PPC1->P), &(PPC2->P),
                                                 ((GOURAUD) ? tab_norm + PPC0->indn : nullptr), ((GOURAUD) ? tab_norm + PPC1->indn : nullptr), ((GOURAUD) ? tab_norm + PPC2->indn : nullptr),
                                                 ((TEXTURE) ? tab_tex + PPC0->indt : nullptr), ((TEXTURE) ? tab_tex + PPC1->indt : nullptr), ((TEXTURE) ? tab_tex + PPC2->indt : nullptr),
@@ -1948,7 +1989,7 @@ namespace tgx
                     PPC2->missedP = false;
 
                     // go rasterize !
-                    rasterizeTriangle<shader_select<ENABLED_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni);
+                    rasterizeTriangle<shader_select<RASTERIZER_SHADERS, color_t, ZBUFFER_t> >(_lx, _ly, (RasterizerVec4)QQA, (RasterizerVec4)QQB, (RasterizerVec4)QQC, _ox, _oy, _uni);
 
                 rasterize_next_triangle:
 
