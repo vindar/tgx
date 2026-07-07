@@ -10,12 +10,14 @@ because it has CPU, Arduino and ESP-IDF backends plus shared tooling.
   `Mesh3Dv2`, texturing, lighting, clipping, z-buffer, direct primitives,
   wireframe and point paths.
 - `performance/`: reusable scripts and documentation for timing, code-size and
-  board-specific performance work. Generated performance results are kept
-  locally under `performance/local_results/`, which is ignored by Git.
+  board-specific performance work. Generated performance results, release
+  baselines and development baselines are kept locally under
+  `local_results/performance/`, which is ignored by Git.
 - `benchmark3d/`: modular 3D benchmark suite under active development. It
   uses board-independent test modules, CPU/MCU backends and parseable telemetry.
-- `local_results/`: ignored local workspace for generated validation outputs,
-  release/development performance baselines, telemetry and image golden data.
+- `local_results/`: ignored local workspace for generated validation and
+  performance outputs that are useful locally but too large or too specific for
+  the public repository.
 
 Run from the repository root:
 
@@ -37,4 +39,4 @@ hash baselines remain checked in under `validation/2d/baselines/` and
 `validation/3d/baselines/`. Large image golden files and performance telemetry
 must stay under ignored local directories, primarily
 `validation/local_results/golden/` and
-`validation/performance/local_results/`.
+`validation/local_results/performance/`.

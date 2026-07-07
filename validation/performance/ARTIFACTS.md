@@ -14,7 +14,7 @@ Commit only reusable material:
 
 ## Keep Local Only
 
-Keep all generated data under `validation/performance/local_results/`, which is
+Keep all generated data under `validation/local_results/performance/`, which is
 ignored by Git:
 
 - full benchmark baselines;
@@ -31,7 +31,7 @@ ignored by Git:
 Use this local structure:
 
 ```text
-validation/performance/local_results/
+validation/local_results/performance/
   baselines/
     dev/<commit-or-topic>/
     releases/<version_commit>/
@@ -46,8 +46,6 @@ Release baselines are kept complete locally. The current development baseline is
 also kept complete locally while it is the active reference. Older exploratory
 data should be pruned once a compact local report preserves the decision.
 
-## Public Placeholders
-
-The tracked directories `baselines/`, `investigations/` and `cleanup/` contain
-README files only. They document where local data should be stored, but they are
-not the storage location for generated results.
+Do not create public placeholder directories for generated data. Keep the
+tracked tree simple: reusable tools and documentation live here; generated
+baselines, reports and logs live under the ignored `local_results/` tree.

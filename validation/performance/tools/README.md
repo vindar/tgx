@@ -73,7 +73,7 @@ To validate the optional Teensy4 `Renderer3D` flash-placement macros, use:
 ```powershell
 & "C:\Users\Vindar\anaconda3\envs\tgxmesh3d2\python.exe" `
   validation\performance\tools\run_teensy4_flash_macro_matrix.py `
-  --out validation\performance\local_results\investigations\<YYYY-MM-DD>-teensy4-flash-macro-matrix
+  --out validation\local_results\performance\investigations\<YYYY-MM-DD>-teensy4-flash-macro-matrix
 ```
 
 The script runs the modular benchmark on `teensy41` for these candidates:
@@ -188,7 +188,7 @@ then runtime `COM11`. For sketches using `TFT_eSPI`, set
 Store future performance work under:
 
 ```text
-validation/performance/local_results/investigations/<date-and-topic>/
+validation/local_results/performance/investigations/<date-and-topic>/
 ```
 
 Recommended structure:
@@ -203,6 +203,6 @@ raw_or_large_artifacts/
 ```
 
 Keep reusable scripts in this `tools/` directory rather than inside dated local
-investigation folders. `validation/performance/local_results/` is ignored by
+investigation folders. `validation/local_results/performance/` is ignored by
 Git and is the right place for generated telemetry, baselines, reports, codegen
 dumps and build outputs.

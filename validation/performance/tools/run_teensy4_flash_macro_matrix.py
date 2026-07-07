@@ -23,7 +23,7 @@ from typing import Iterable
 ROOT = Path(__file__).resolve().parents[3]
 RUN_BENCH3D = ROOT / "validation" / "benchmark3d" / "tools" / "run_bench3d.py"
 DEFAULT_OUT_ROOT = (
-    ROOT / "validation" / "performance" / "local_results" / "investigations"
+    ROOT / "validation" / "local_results" / "performance" / "investigations"
     / (_dt.datetime.now().strftime("%Y-%m-%d") + "-teensy4-flash-macro-matrix")
 )
 
