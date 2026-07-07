@@ -1,16 +1,13 @@
 # TGX - A Tiny Graphics Library
 
-***LATEST VERSION 1.1.2***
-
-Release highlights:
-- Compact `Mesh3Dv2` format with meshlet culling.
-- Graphical and command-line tools to create, convert, inspect and analyze TGX assets.
-- Faster 3D rendering pipeline, including efficient anti-aliased wireframe paths.
-- Directional lights plus optional local point/spot lights for flat and Gouraud shading.
-- Perspective-correct or affine texture mapping, with nearest or bilinear sampling.
-- Generated 3D primitives: cube, sphere, cylinder, cone and truncated cone, with wireframe variants.
+***Version 1.1.3 highlights***
+- Optional local point and spot lights for flat and Gouraud 3D shading, with range attenuation, cone falloff and optional local specular highlights.
+- New generated 3D primitives: cylinder, cone and truncated cone, with solid, textured and wireframe variants.
+- New affine texture mapping path (`SHADER_TEXTURE_AFFINE`) alongside the existing perspective-correct texture mapper.
+- Advanced `drawMesh<SHADERS>()` overloads for sketches that want to restrict compiled shader paths per draw call.
+- Teensy 4.x helpers to place selected heavy `Renderer3D` template paths in flash when RAM1/ITCM is tight.
 - New and updated examples for Teensy, ESP32, ESP32-P4, Pico/RP2040/RP2350 and M5Stack boards.
-- Expanded documentation, including a much more complete 3D guide.
+- Reworked 3D tutorial and refreshed TGX tools documentation.
 
 ***Full documentation is now available at https://vindar.github.io/tgx/***
 
