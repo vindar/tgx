@@ -1,6 +1,6 @@
 # TGX - A Tiny Graphics Library
 
-***Version 1.1.3 highlights***
+***Version 1.1.4 highlights***
 - Optional local point and spot lights for flat and Gouraud 3D shading, with range attenuation, cone falloff and optional local specular highlights.
 - New generated 3D primitives: cylinder, cone and truncated cone, with solid, textured and wireframe variants.
 - New affine texture mapping path (`SHADER_TEXTURE_AFFINE`) alongside the existing perspective-correct texture mapper.
