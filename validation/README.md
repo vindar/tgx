@@ -13,7 +13,7 @@ because it has CPU, Arduino and ESP-IDF backends plus shared tooling.
   board-specific performance work. Generated performance results, release
   baselines and development baselines are kept locally under
   `local_results/performance/`, which is ignored by Git.
-- `benchmark3d/`: modular 3D benchmark suite under active development. It
+- `benchmark3d/`: modular 3D benchmark suite. It
   uses board-independent test modules, CPU/MCU backends and parseable telemetry.
 - `local_results/`: ignored local workspace for generated validation and
   performance outputs that are useful locally but too large or too specific for

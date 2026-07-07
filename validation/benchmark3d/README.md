@@ -1,6 +1,6 @@
 # TGX benchmark3D
 
-Experimental modular 3D benchmark suite.
+Modular 3D benchmark suite.
 
 This directory replaces the legacy monolithic Arduino benchmark that used to
 live under `examples/benchmark`. The benchmark now lives under `validation/`

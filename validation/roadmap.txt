@@ -7,14 +7,18 @@ TGX ROADMAP
 
 3D API
 ------
-1. add direct templated call for drawing e.g. drawMesh<SHADERS>(...)
-2. add spotlights in Renderer3D. 
-3. add blending/masking in Shaders (allow RGB32 textures ? masked color ? uint8_t transparency image ?)
-4. improve 'emissive texture handling' (currently dealt with 'unlit' flag). 
-5. add billboarding (useful with blending for sprite rendering and can use previously implemented fast affine texture mapping)
-6. improve clipping/culling for tile rendering (create a 'cache' system ?)
-7. Hi-Z/Low-Z depth test for fast occlusion acceptance/rejection ? 
-8. Particle effect system ? 
-9. Simple animation framework
-10. create an higher level 'Scene' API. 
+Recently completed:
+1. direct templated drawMesh<SHADERS>(...) overloads for advanced shader-subset draws.
+2. local point/spot lights in Renderer3D.
+3. generated cylinder, cone and truncated-cone primitives.
+
+Future ideas:
+1. add blending/masking in Shaders (allow RGB32 textures ? masked color ? uint8_t transparency image ?)
+2. improve 'emissive texture handling' (currently dealt with 'unlit' flag).
+3. add billboarding (useful with blending for sprite rendering and affine texture mapping)
+4. improve clipping/culling for tile rendering (create a 'cache' system ?)
+5. Hi-Z/Low-Z depth test for fast occlusion acceptance/rejection ?
+6. Particle effect system ?
+7. Simple animation framework
+8. create a higher level 'Scene' API.
 
