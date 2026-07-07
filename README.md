@@ -3,13 +3,13 @@
 ***LATEST VERSION 1.1.2***
 
 Release highlights:
-- New `Mesh3Dv2` format: more compact, faster, and designed for meshlet culling.
-- New graphical and command-line tools to create, convert, inspect and analyze TGX assets.
-- Faster 3D rendering pipeline, including a new efficient anti-aliased wireframe path.
-- Improved performance on Pico 2 / ESP32 especially for textured drawing.
-- Added support for multiple directional lights.
-- New `SHADER_UNLIT` rendering mode.
-- New and updated examples for Teensy, ESP32, Pico/RP2040/RP2350 and M5Stack boards.
+- Compact `Mesh3Dv2` format with meshlet culling.
+- Graphical and command-line tools to create, convert, inspect and analyze TGX assets.
+- Faster 3D rendering pipeline, including efficient anti-aliased wireframe paths.
+- Directional lights plus optional local point/spot lights for flat and Gouraud shading.
+- Perspective-correct or affine texture mapping, with nearest or bilinear sampling.
+- Generated 3D primitives: cube, sphere, cylinder, cone and truncated cone, with wireframe variants.
+- New and updated examples for Teensy, ESP32, ESP32-P4, Pico/RP2040/RP2350 and M5Stack boards.
 - Expanded documentation, including a much more complete 3D guide.
 
 ***Full documentation is now available at https://vindar.github.io/tgx/***
@@ -64,7 +64,7 @@ Here are the main features of the library:
 - Perspective and orthographic projection.
 - Optional backface culling.
 - Tile rasterization: render only part of the viewport at a time to save RAM, using a smaller image and z-buffer.
-- Template classes for all required math operations: `Vec2`, `Vec3`, `Vec4` (vectors), `Mat4` (4×4 matrices), and `Box2` (2D box).
+- Template classes for all required math operations: `Vec2`, `Vec3`, `Vec4` (vectors), `Mat4` (4x4 matrices), and `Box2` (2D box).
 - Optimized mesh data format: meshes and textures can be read directly from flash memory to save RAM.
 - Python tools for easy conversion of texture images, fonts and 3D meshes (in Wavefront `.obj` format) into C++ files that can be directly imported into an Arduino project.
 
@@ -73,4 +73,4 @@ Here are the main features of the library:
 ## Using the Library
 
 - Full documentation is available [here](https://vindar.github.io/tgx/).
-- Examples are located in the `/examples/` subfolder of the library and demonstrate how to use most of the library’s features.
+- Examples are located in the `/examples/` subfolder of the library and demonstrate how to use most of the library's features.

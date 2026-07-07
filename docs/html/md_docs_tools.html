@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.2</span>
+   <div id="projectname">TGX<span id="projectnumber">&#160;1.1.3</span>
    </div>
    <div id="projectbrief">A tiny 2D/3D graphics library optimized for 32 bits microcontrollers.</div>
   </td>
@@ -160,7 +160,7 @@ tgx_mesh</h1>
 <li><a class="el" href="structtgx_1_1_mesh3_dv2.html">Mesh3Dv2</a>, the recommended compact mesh format for new static models;</li>
 <li><a class="el" href="structtgx_1_1_mesh3_d.html">Mesh3D</a>, the legacy format kept for compatibility.</li>
 </ul>
-<p >For OBJ files, the tool reads materials and textures when available. The GUI shows a material list and a texture list. Materials can be renamed and edited without duplicating texture assets: one texture can be linked by several materials as a diffuse or emissive texture, and unused textures are omitted from the final export. Each material stores diffuse color, lighting strengths, specular exponent and an optional diffuse texture.</p>
+<p >For OBJ files, the tool reads materials and textures when available. It tries to pick the most likely diffuse/emissive image from the MTL entries, texture names and nearby image files, while avoiding common normal/roughness/metalness maps. The GUI shows a material list and a texture list. Materials can be renamed and edited without duplicating texture assets: one texture can be linked by several materials as a diffuse or emissive texture, and unused textures are omitted from the final export. Each material stores diffuse color, lighting strengths, specular exponent and an optional diffuse texture.</p>
 <p >For <code>Mesh3Dv2</code>, a material can also use an optional extended material entry with emissive color, emissive strength and an optional emissive texture. OBJ/MTL <code>Ke</code> becomes emissive color and <code>map_Ke</code> becomes the emissive texture. This data is stored in the optional <code>Mesh3Dv2::material_extras</code> table. The current renderer preserves and caches this metadata but does not shade with it yet.</p>
 <p >The GUI can also preview the model with PyVista, including textured rendering and Mesh3Dv2 meshlet visualization.</p>
 <p >For a first conversion, keep the GUI defaults:</p>

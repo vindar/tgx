@@ -104,7 +104,6 @@ $(function(){initNavTree('intro_api_3_d.html',''); initResizable(); });
 <li>For the current compact meshlet container, see <a class="el" href="structtgx_1_1_mesh3_dv2.html">tgx::Mesh3Dv2</a>.</li>
 <li>For the legacy mesh container, see <a class="el" href="structtgx_1_1_mesh3_d.html">tgx::Mesh3D</a>.</li>
 <li>For ready-to-run code, see the 3D examples in <code>/examples/</code>.</li>
-<li>The previous version of this tutorial is temporarily kept at <a class="el" href="intro_api_3_d_legacy.html">Previous 3D API tutorial</a>.</li>
 </ul>
 <p>TGX is a small software rasterizer for embedded systems. It is not a scene graph and it does not own the display driver. A sketch gives TGX a framebuffer, a Z-buffer if needed, a camera, a model transform, a shader state, material and light state, then calls drawing methods. The sketch remains responsible for clearing buffers and uploading pixels to the screen.</p>
 <p>The tutorial is organized in the same order:</p>
@@ -729,6 +728,7 @@ Embedded Performance Checklist</h1>
 <li>clear the image and Z-buffer once per frame, not before every object;</li>
 <li>avoid adjustable-thickness wireframe in every frame unless the visual effect is worth the cost.</li>
 </ul>
+<p>Large Teensy 4.x / Teensyduino sketches that are short on RAM1 can explicitly place selected heavy <code>Renderer3D</code> template paths in flash with <code>TGX_PLACE_RENDERER3D_*_PATH_IN_FLASH(renderer)</code>. This is an advanced space-saving tool, no-op on targets other than Teensy 4/4.1, and can trade some speed for lower RAM1/ITCM usage.</p>
 <h1><a class="anchor" id="sec_3D_complete_example"></a>
 Complete Embedded Example</h1>
 <p>This sketch is a compact starting point for a textured <code>Mesh3Dv2</code> model on an MCU framebuffer. The display upload is left as a comment because it depends on the screen library.</p>

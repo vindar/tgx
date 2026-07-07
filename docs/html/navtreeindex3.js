@@ -1,5 +1,13 @@
 var NAVTREEINDEX3 =
 {
+"md_docs_intro_api_2_d.html#sec_2D_naming":[5,1],
+"md_docs_intro_api_2_d.html#sec_2D_next":[5,5],
+"md_docs_intro_api_2_d.html#sec_2D_overview":[5,0],
+"md_docs_intro_api_2_d.html#sec_2D_performance":[5,2],
+"md_docs_intro_api_2_d.html#sec_2Dprimitives":[5,3],
+"md_docs_intro_api_2_d.html#sec_extensions":[5,4],
+"md_docs_intro_api_2_d.html#subsec_AnimatedGIF":[5,4,3],
+"md_docs_intro_api_2_d.html#subsec_JPEGDEC":[5,4,2],
 "md_docs_intro_api_2_d.html#subsec_PNGdec":[5,4,1],
 "md_docs_intro_api_2_d.html#subsec_arcpies":[5,3,16],
 "md_docs_intro_api_2_d.html#subsec_bezier":[5,3,17],
@@ -241,13 +249,5 @@ var NAVTREEINDEX3 =
 "structtgx_1_1_mat4.html#a559673dc298b417ba65468510c291c93":[8,0,0,5,25],
 "structtgx_1_1_mat4.html#a58642659527614f1ae20f4fd78370bea":[8,0,0,5,6],
 "structtgx_1_1_mat4.html#a614df67aa530e5c1d380415c7c90220a":[8,0,0,5,15],
-"structtgx_1_1_mat4.html#a6202e6d39b331c03a2d29c6bf73cc1c1":[8,0,0,5,27],
-"structtgx_1_1_mat4.html#a6519e9224912a9f636b31891b59d8422":[8,0,0,5,7],
-"structtgx_1_1_mat4.html#a72f0745d34ca940f9afb427f8d8fc987":[8,0,0,5,16],
-"structtgx_1_1_mat4.html#a74effc96cd08d20a0a25d98bfc6549c0":[8,0,0,5,22],
-"structtgx_1_1_mat4.html#a7ab58bbab5ea584275ebfec3c5e40ab7":[8,0,0,5,8],
-"structtgx_1_1_mat4.html#a7b4b318e743ae3bdcc341233bcdc1906":[8,0,0,5,12],
-"structtgx_1_1_mat4.html#a84755579f574a455e70b17c9e54bdc96":[8,0,0,5,2],
-"structtgx_1_1_mat4.html#a889b971f27605704e7c5161e95e2ebce":[8,0,0,5,5],
-"structtgx_1_1_mat4.html#a8f023a5d8bb793c6411a74a57c92e161":[8,0,0,5,10]
+"structtgx_1_1_mat4.html#a6202e6d39b331c03a2d29c6bf73cc1c1":[8,0,0,5,27]
 };

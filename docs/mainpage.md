@@ -24,7 +24,7 @@ The library runs on both microprocessors and microcontrollers but specifically t
     - Alpha-blending supported for all drawing operations.
     - Drawing methods come in two flavours:
         - *fast methods* : aim for speed over quality.
-        - *high quality* : slower but uses anti-aliasing and/or subixel precision.
+        - *high quality* : slower but uses anti-aliasing and/or sub-pixel precision.
     - Easy interfacing with other libraries for
         - drawing text with TrueType font using the [OpenFontRender library](https://github.com/takkaO/OpenFontRender)
         - drawing JPEG images using the [JPEGDEC library](https://github.com/bitbank2/JPEGDEC)
@@ -36,12 +36,13 @@ The library runs on both microprocessors and microcontrollers but specifically t
     - Multiple drawing modes: fast wireframe, antialiased wireframe and solid rendering with shaders.
     - Unlit, flat and Gouraud shading.
     - Phong lighting model with separate ambient/diffuse/specular color components.
-    - Support for  multiple directional lights and local point/spot lights.
+    - Support for multiple directional lights and local point/spot lights.
     - Per object material properties.
     - Perspective-correct or affine texture mapping with selectable point sampling/bilinear filtering and multiple wrapping modes.
     - Perspective and orthographic projections.
     - Optional backface culling.
     - Tile rasterization: it is possible to render the viewport in multiple passes to save RAM.
+    - Generated solid and wireframe primitives: cube, sphere, cylinder, cone and truncated cone.
     - Template classes for all the needed maths: \ref tgx::Vec2 "Vec2", \ref tgx::Vec3 "Vec3", \ref tgx::Vec4 "Vec4" (vectors), \ref tgx::Mat4 "Mat4" (4x4 matrix) and \ref tgx::Box2 "Box2", \ref tgx::Box3 "Box3" (boxes).
     - Legacy \ref tgx::Mesh3D "Mesh3D" and new meshlet-based \ref tgx::Mesh3Dv2 "Mesh3Dv2" model formats. Meshes and textures can be read from flash memory to save RAM.
 - **Graphical tools with matching command-line versions:**

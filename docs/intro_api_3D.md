@@ -6,7 +6,6 @@
 - For the current compact meshlet container, see \ref tgx::Mesh3Dv2.
 - For the legacy mesh container, see \ref tgx::Mesh3D.
 - For ready-to-run code, see the 3D examples in `/examples/`.
-- The previous version of this tutorial is temporarily kept at \ref intro_api_3D_legacy.
 
 TGX is a small software rasterizer for embedded systems. It is not a scene graph and it does not own the display
 driver. A sketch gives TGX a framebuffer, a Z-buffer if needed, a camera, a model transform, a shader state, material
@@ -778,7 +777,8 @@ For MCU targets, these choices often matter most:
 - avoid adjustable-thickness wireframe in every frame unless the visual effect is worth the cost.
 
 Large Teensy 4.x / Teensyduino sketches that are short on RAM1 can explicitly place selected heavy
-`Renderer3D` template paths in flash with `TGX_PLACE_RENDERER3D_*_PATH_IN_FLASH(renderer)`. This is a  space-saving tool (no-op on targets other than Teensy 4/4.1) which will trade speed for ram usage.
+`Renderer3D` template paths in flash with `TGX_PLACE_RENDERER3D_*_PATH_IN_FLASH(renderer)`. This is an advanced
+space-saving tool, no-op on targets other than Teensy 4/4.1, and can trade some speed for lower RAM1/ITCM usage.
 
 
 @section sec_3D_complete_example Complete Embedded Example

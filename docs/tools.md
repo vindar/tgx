@@ -112,12 +112,14 @@ python tools/tgx_mesh.py
   static models;
 - \ref tgx::Mesh3D "Mesh3D", the legacy format kept for compatibility.
 
-For OBJ files, the tool reads materials and textures when available. The GUI
-shows a material list and a texture list. Materials can be renamed and edited
-without duplicating texture assets: one texture can be linked by several
-materials as a diffuse or emissive texture, and unused textures are omitted from
-the final export. Each material stores diffuse color, lighting strengths,
-specular exponent and an optional diffuse texture.
+For OBJ files, the tool reads materials and textures when available. It tries
+to pick the most likely diffuse/emissive image from the MTL entries, texture
+names and nearby image files, while avoiding common normal/roughness/metalness
+maps. The GUI shows a material list and a texture list. Materials can be
+renamed and edited without duplicating texture assets: one texture can be linked
+by several materials as a diffuse or emissive texture, and unused textures are
+omitted from the final export. Each material stores diffuse color, lighting
+strengths, specular exponent and an optional diffuse texture.
 
 For `Mesh3Dv2`, a material can also use an optional extended material entry with
 emissive color, emissive strength and an optional emissive texture. OBJ/MTL

@@ -2,6 +2,11 @@ var annotated_dup =
 [
     [ "tgx", null, [
       [ "Renderer3D_detail", null, [
+        [ "RemoveReference", "structtgx_1_1_renderer3_d__detail_1_1_remove_reference.html", null ],
+        [ "RemoveReference< T & >", "structtgx_1_1_renderer3_d__detail_1_1_remove_reference_3_01_t_01_6_01_4.html", null ],
+        [ "RemoveReference< T && >", "structtgx_1_1_renderer3_d__detail_1_1_remove_reference_3_01_t_01_6_6_01_4.html", null ],
+        [ "Renderer3DFlashTraits", "structtgx_1_1_renderer3_d__detail_1_1_renderer3_d_flash_traits.html", null ],
+        [ "Renderer3DFlashTraits< Renderer3D< color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS > >", "structtgx_1_1_renderer3_d__detail_1_1_renderer3_d_flash_traits_3_01_renderer3_d_3_01color__t_00_47ca85f1abb19f72d5a55d44362e2a6b.html", null ],
         [ "SpotLightData", "structtgx_1_1_renderer3_d__detail_1_1_spot_light_data.html", "structtgx_1_1_renderer3_d__detail_1_1_spot_light_data" ],
         [ "SpotLightData< 0 >", "structtgx_1_1_renderer3_d__detail_1_1_spot_light_data_3_010_01_4.html", null ]
       ] ],
