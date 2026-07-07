@@ -1,0 +1,2 @@
+dependencies:
+  waveshare/esp_lcd_st7703: "*"
