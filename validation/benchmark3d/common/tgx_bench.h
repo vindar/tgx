@@ -215,4 +215,20 @@ int benchRunModule(const BenchModule& module);
 
 } // namespace tgxbench
 
+#if defined(TGX_BENCH_FLASH_SPHERE)
+TGX_PLACE_RENDERER3D_SPHERE_PATH_IN_FLASH((*((::tgxbench::BenchRenderer*)nullptr)))
+#endif
+
+#if defined(TGX_BENCH_FLASH_TRUNCATED_CONE)
+TGX_PLACE_RENDERER3D_TRUNCATED_CONE_PATH_IN_FLASH((*((::tgxbench::BenchRenderer*)nullptr)))
+#endif
+
+#if defined(TGX_BENCH_FLASH_MESH3D)
+TGX_PLACE_RENDERER3D_MESH3D_PATH_IN_FLASH((*((::tgxbench::BenchRenderer*)nullptr)))
+#endif
+
+#if defined(TGX_BENCH_FLASH_MESH3DV2)
+TGX_PLACE_RENDERER3D_MESH3DV2_PATH_IN_FLASH((*((::tgxbench::BenchRenderer*)nullptr)))
+#endif
+
 #endif

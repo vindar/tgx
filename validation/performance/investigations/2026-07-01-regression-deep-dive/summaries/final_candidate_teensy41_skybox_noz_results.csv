@@ -1,7 +1,0 @@
-board_id,board,profile,module,test,status,width,height,shaders,frames,total_us,mean_us,min_us,max_us,stddev_us,fps,checksum,reason
-teensy41,teensy4,mcu-simple,skybox_noz,skybox_noz.nearest.wrap,OK,160,120,10565,237,250084,1055.21,1055,1056,0.40,947.68,0xeb944a4b66bcaf5b,
-teensy41,teensy4,mcu-simple,skybox_noz,skybox_noz.bilinear.clamp,OK,160,120,20805,83,251538,3030.58,3030,3032,0.52,329.97,0x6aa3478f9839f3b1,
-teensy41,teensy4,mcu-simple,skybox_noz,skybox_noz.partial_faces,OK,160,120,10565,600,47760,79.60,79,80,0.49,12562.81,0x9c7c3600db6fcb3b,
-teensy41,teensy4,mcu-simple,skybox_noz,skybox_noz.reference_height,OK,160,120,10565,237,250085,1055.21,1055,1056,0.41,947.68,0xffbb77ea9cb886b1,
-teensy41,teensy4,mcu-simple,skybox_noz,skybox_noz.object_front.z,OK,160,120,10537,227,250603,1103.98,1103,1105,0.36,905.82,0x69a8e12f67d2319e,
-teensy41,teensy4,mcu-simple,skybox_noz,skybox_noz.overlay.noz,OK,160,120,10565,219,250757,1145.01,1144,1149,0.59,873.36,0x24c8d53679991f5a,

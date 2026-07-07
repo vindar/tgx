@@ -1,6 +1,0 @@
-"label","file","start","end","instructions","vfp","arith_like","loads","stores","branches","vmul","vfma","vfms","vadd","vsub","vldr","vstr","cmp","vcmpe"
-"head_old_generic_first_light","pico2_head_drawTriangle.asm","885","1095","122","101","47","32","6","14","19","14","3","1","4","28","6","2","5"
-"final_point_first_light","pico2_final_drawTriangle.asm","5833","5994","97","83","36","26","6","11","12","11","3","3","3","24","6","2","4"
-"head_cone_overhead_only","pico2_head_drawTriangle.asm","953","989","25","19","8","7","2","4","3","2",,,"1","6","2",,"1"
-"head_old_H_setup","pico2_head_drawTriangle.asm","1033","1054","13","12","5","2","0","1","1","3",,"1",,"2",,,"1"
-"final_point_H_identity","pico2_final_drawTriangle.asm","5931","5952","14","12","6","1","0","2","1",,,"3",,"1",,,"1"

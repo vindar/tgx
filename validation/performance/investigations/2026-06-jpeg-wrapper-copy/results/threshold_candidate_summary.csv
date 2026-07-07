@@ -1,5 +1,0 @@
-board,selected_cases,selected_mean_speedup_pct,selected_median_speedup_pct,selected_min_speedup_pct,selected_max_speedup_pct,selected_regressions_below_minus5,notes
-Core2,73,249.22,262.857,40.814,470.661,0,"production helper vs local old-loop reference; old production helper was also TGX_NOINLINE, so fallback timing is not interpreted as source regression"
-CoreS3,73,233.509,216.541,26.059,477.871,0,"production helper vs local old-loop reference; old production helper was also TGX_NOINLINE, so fallback timing is not interpreted as source regression"
-Pico2,73,163.165,154.569,3.459,356.582,0,"production helper vs local old-loop reference; old production helper was also TGX_NOINLINE, so fallback timing is not interpreted as source regression"
-Teensy41,73,5.635,6.604,-33.18,26.786,14,"production helper vs local old-loop reference; old production helper was also TGX_NOINLINE, so fallback timing is not interpreted as source regression"

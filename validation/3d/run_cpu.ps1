@@ -6,7 +6,7 @@ param(
     [switch]$NoBaseline,
     [string]$Compare = "tolerant",
     [switch]$UpdateGolden,
-    [string]$GoldenDir = "validation\3d\golden\cpu",
+    [string]$GoldenDir = "validation\local_results\golden\3d\cpu",
     [switch]$Demo,
     [switch]$DemoOnly
 )

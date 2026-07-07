@@ -1,8 +1,0 @@
-"board","version","count","avg","median","min","max","flash","csv"
-"pico2","unified_v1_point","23","11.43","11","10","13","219988","validation\performance\investigations\2026-06-26-spotlight-cone-unification\raw\parsed\pico2_cone_unified_v1_spotlights_room_example.csv"
-"pico2","unified_v2_point","24","28.88","29","28","30","207708","validation\performance\investigations\2026-06-26-spotlight-cone-unification\raw\parsed\pico2_cone_unified_v2_spotlights_room_example.csv"
-"core2","unified_v2_point","24","20.96","21","20","22","466035","validation\performance\investigations\2026-06-26-spotlight-cone-unification\raw\parsed\core2_cone_unified_v2_spotlights_room_example.csv"
-"cores3","unified_v2_point","26","38.15","38","37","40","452979","validation\performance\investigations\2026-06-26-spotlight-cone-unification\raw\parsed\cores3_cone_unified_v2_spotlights_room_example.csv"
-"cores3","unified_v2_point_confirm","26","38.12","38","37","40","452979","validation\performance\investigations\2026-06-26-spotlight-cone-unification\raw\parsed\cores3_cone_unified_v2_confirm_spotlights_room_example.csv"
-"teensy41","unified_v2_point","26","102.58","103","96","112","226300","validation\performance\investigations\2026-06-26-spotlight-cone-unification\raw\parsed\teensy41_cone_unified_v2_spotlights_room_example.csv"
-"pico2","unified_v2_cone_probe","24","29.38","29.5","28","31","208580","validation\performance\investigations\2026-06-26-spotlight-cone-unification\raw\parsed\pico2_cone_unified_v2_probe_mode3_cone_example.csv"

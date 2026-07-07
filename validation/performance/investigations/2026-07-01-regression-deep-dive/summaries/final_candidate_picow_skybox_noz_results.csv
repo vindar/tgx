@@ -1,7 +1,0 @@
-board_id,board,profile,module,test,status,width,height,shaders,frames,total_us,mean_us,min_us,max_us,stddev_us,fps,checksum,reason
-picow,rp2040,mcu-simple,skybox_noz,skybox_noz.nearest.wrap,OK,160,120,10565,4,258756,64689.00,64624,64745,43.02,15.46,0x3225b772e4ac5dd3,
-picow,rp2040,mcu-simple,skybox_noz,skybox_noz.bilinear.clamp,OK,160,120,20805,3,429745,143248.33,143211,143300,37.72,6.98,0x186defb240c26861,
-picow,rp2040,mcu-simple,skybox_noz,skybox_noz.partial_faces,OK,160,120,10565,47,254945,5424.36,5403,5565,27.90,184.35,0xc93ef45349bd6b86,
-picow,rp2040,mcu-simple,skybox_noz,skybox_noz.reference_height,OK,160,120,10565,4,257589,64397.25,64327,64436,42.01,15.53,0xd63e409d5eba148c,
-picow,rp2040,mcu-simple,skybox_noz,skybox_noz.object_front.z,OK,160,120,10537,4,277268,69317.00,69188,69422,83.60,14.43,0x8aecbaf99c67d78a,
-picow,rp2040,mcu-simple,skybox_noz,skybox_noz.overlay.noz,OK,160,120,10565,4,285493,71373.25,71281,71407,53.39,14.01,0xe8c7a4a6cdae36e4,

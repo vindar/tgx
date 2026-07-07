@@ -1,3 +1,0 @@
-Idx Name          Size      VMA       LMA       File off  Algn
-  1 .text.code    000009ec  60001400  60001400  00011400  2**3
-  3 .text.itcm    00001f30  00000000  60001ef4  00020000  2**3

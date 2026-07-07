@@ -1,5 +1,0 @@
-board,cases,production_mismatching_cases,in_bounds_cases,production_mean_speedup_pct,production_median_speedup_pct,production_min_speedup_pct,production_max_speedup_pct,width16_multiple8_mean_pct,width32plus_mean_pct,fallback_mean_speedup_pct
-Core2,210,0,205,91.916,8.98,-29.526,470.661,249.22,173.231,-0.963
-CoreS3,210,0,205,86.261,9.444,-7.313,477.871,233.509,167.402,-2.2
-Pico2,210,0,205,52.556,-4.974,-14.227,356.582,163.165,114.848,-0.498
-Teensy41,210,0,205,-4.902,-1.6,-48.634,26.786,5.635,4.888,-46.006

@@ -69,4 +69,5 @@ Use `-DemoOnly` when you only want to preview the animation without running the
 validation scenes afterwards.
 
 Generated runtime files are written under `tmp\tgx_3d_cpu_suite` by default.
-Golden images are stored under `validation\3d\golden\cpu`.
+Golden images are stored locally under
+`validation\local_results\golden\3d\cpu` and are intentionally ignored by Git.

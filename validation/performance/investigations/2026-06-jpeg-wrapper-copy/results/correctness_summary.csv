@@ -1,9 +1,0 @@
-board,variant,cases,mismatching_cases,total_mismatches
-Core2,row_memcpy,210,0,0
-Core2,production,210,0,0
-CoreS3,row_memcpy,210,0,0
-CoreS3,production,210,0,0
-Pico2,row_memcpy,210,0,0
-Pico2,production,210,0,0
-Teensy41,row_memcpy,210,0,0
-Teensy41,production,210,0,0

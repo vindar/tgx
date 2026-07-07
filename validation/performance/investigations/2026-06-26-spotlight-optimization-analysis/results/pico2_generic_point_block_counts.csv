@@ -1,4 +1,0 @@
-"label","instructions","vmul","vfma","vfms","vadd","vsub","vcmpe","vldr","vstr","branches","loads","stores"
-"head_old_generic_full_first_light","122","19","14","3","1","4","5","28","6","10","32","6"
-"final_generic_full_first_light","128","18","14","3","1","4","5","33","8","10","36","8"
-"final_point_full_first_light","97","12","11","3","3","3","4","24","6","7","26","6"

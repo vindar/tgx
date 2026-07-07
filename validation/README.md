@@ -9,10 +9,13 @@ because it has CPU, Arduino and ESP-IDF backends plus shared tooling.
 - `3d/`: CPU validation for the 3D renderer, including legacy `Mesh3D`,
   `Mesh3Dv2`, texturing, lighting, clipping, z-buffer, direct primitives,
   wireframe and point paths.
-- `performance/`: compact baselines, investigation summaries and reusable
-  scripts for timing, code-size and board-specific performance work.
+- `performance/`: reusable scripts and documentation for timing, code-size and
+  board-specific performance work. Generated performance results are kept
+  locally under `performance/local_results/`, which is ignored by Git.
 - `benchmark3d/`: modular 3D benchmark suite under active development. It
   uses board-independent test modules, CPU/MCU backends and parseable telemetry.
+- `local_results/`: ignored local workspace for generated validation outputs,
+  release/development performance baselines, telemetry and image golden data.
 
 Run from the repository root:
 
@@ -29,6 +32,9 @@ powershell -ExecutionPolicy Bypass -File validation\2d\upload_teensy.ps1
 powershell -ExecutionPolicy Bypass -File validation\2d\read_teensy_serial.ps1
 ```
 
-Generated runtime files go under the repository-level `tmp/`. Baselines and
-golden images are stored inside each suite directory and should only be updated
-after reviewing an intentional rendering change.
+Generated runtime files go under the repository-level `tmp/`. Small 2D/3D CSV
+hash baselines remain checked in under `validation/2d/baselines/` and
+`validation/3d/baselines/`. Large image golden files and performance telemetry
+must stay under ignored local directories, primarily
+`validation/local_results/golden/` and
+`validation/performance/local_results/`.

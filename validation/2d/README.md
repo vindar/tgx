@@ -43,8 +43,8 @@ powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1 -UpdateBaseli
 ```
 
 For visual regression checks, the CPU suite can compare the generated BMP
-snapshots pixel-by-pixel against archived golden images in
-`validation/2d/golden/cpu`:
+snapshots pixel-by-pixel against local golden images in
+`validation/local_results/golden/2d/cpu`:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1 -Golden
@@ -64,8 +64,9 @@ powershell -ExecutionPolicy Bypass -File validation\2d\run_cpu.ps1 -UpdateGolden
 ```
 
 The golden pass covers the six regular 800x600 snapshots for `RGB24`, `RGB32`
-and `RGBf`. The optional large-frame snapshots are intentionally kept out of the
-archived golden set to avoid very large reference files.
+and `RGBf`. These BMP goldens are intentionally kept out of Git because they
+are large binary files. The optional large-frame snapshots are intentionally
+kept out of the archived golden set to avoid very large reference files.
 
 For desktop stress/performance passes, add `-Large`. This keeps the regular
 800x600 coverage and appends 2048x2048 large-frame groups for gradients,

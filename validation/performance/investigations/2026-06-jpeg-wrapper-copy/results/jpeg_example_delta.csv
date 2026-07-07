@@ -1,5 +1,0 @@
-board,decoder,baseline_available,after_time_us,delta_pct,notes
-Core2,JPEG,0,37207,,same-session before-patch real JPEG example baseline not collected; microbench is primary before/after evidence
-CoreS3,JPEG,0,21345,,same-session before-patch real JPEG example baseline not collected; microbench is primary before/after evidence
-Pico2,JPEG,0,36422,,same-session before-patch real JPEG example baseline not collected; microbench is primary before/after evidence
-Teensy41,JPEG,0,5100,,same-session before-patch real JPEG example baseline not collected; microbench is primary before/after evidence

@@ -1,5 +1,0 @@
-board,port,sketch,compile,upload,serial,result,open_result,hash,time_us,nonzero,notes
-Teensy 4.1,COM3,validation/performance/investigations/2026-06-jpeg-wrapper-copy/sketches/JpegVisual,OK,OK,OK,1,1,93FA7269,5081,51524,"ILI9341_T4 diagnostics printed during capture; image left on display"
-Core2,COM5,validation/performance/investigations/2026-06-jpeg-wrapper-copy/sketches/JpegVisual,OK,OK,OK,1,1,93FA7269,37051,51524,"First validation-sketch compile needed LGFX_AUTODETECT; final upload OK and image left on display"
-CoreS3,COM10,validation/performance/investigations/2026-06-jpeg-wrapper-copy/sketches/JpegVisual,OK,OK,OK,1,1,E984A9E2,21268,52092,"Framebuffer hash differs from Core2/Pico2/Teensy, consistent with previous CoreS3 JPEG real-decode note; visually inspect display"
-Pico2,COM21,validation/performance/investigations/2026-06-jpeg-wrapper-copy/sketches/JpegVisual,OK,OK,OK,1,1,93FA7269,37946,51524,"Retried after blank display report; TFT_eSPI reports 320x240 and final upload uses DISPLAY_MODE=DMA; TOUCH_CS warning is touch-only"

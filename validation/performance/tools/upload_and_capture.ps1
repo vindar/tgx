@@ -20,6 +20,8 @@ param(
     [string]$KickText = "",
     [int]$KickDelayMs = 500,
     [int]$PostUploadDelaySeconds = -1,
+    [string]$LibraryRoot = "",
+    [string]$OutputRoot = "",
     [switch]$FlushOnOpen,
     [switch]$CompileOnly,
     [switch]$SkipCompileUpload,
@@ -36,10 +38,18 @@ $ErrorActionPreference = "Stop"
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $hvRoot = Resolve-Path (Join-Path $scriptRoot "..")
 $repoRoot = Resolve-Path (Join-Path $scriptRoot "..\..\..")
-$logsDir = Join-Path $hvRoot "logs"
-$telemetryDir = Join-Path $hvRoot "telemetry"
-$parsedDir = Join-Path $hvRoot "parsed"
-$buildsDir = Join-Path $hvRoot "builds"
+if (-not $LibraryRoot) { $LibraryRoot = $repoRoot.Path }
+$libraryRootResolved = Resolve-Path $LibraryRoot
+if (-not $OutputRoot) { $OutputRoot = $hvRoot.Path }
+$outputRootResolved = Resolve-Path $OutputRoot -ErrorAction SilentlyContinue
+if (-not $outputRootResolved) {
+    New-Item -ItemType Directory -Force $OutputRoot | Out-Null
+    $outputRootResolved = Resolve-Path $OutputRoot
+}
+$logsDir = Join-Path $outputRootResolved.Path "logs"
+$telemetryDir = Join-Path $outputRootResolved.Path "telemetry"
+$parsedDir = Join-Path $outputRootResolved.Path "parsed"
+$buildsDir = Join-Path $outputRootResolved.Path "builds"
 New-Item -ItemType Directory -Force $logsDir, $telemetryDir, $parsedDir, $buildsDir | Out-Null
 
 $boardConfig = @{
@@ -419,6 +429,8 @@ Add-Log "PORT=$Port"
 Add-Log "UPLOAD_PORT=$UploadPort"
 Add-Log "FQBN=$Fqbn"
 Add-Log "SKETCH=$sketchResolved"
+Add-Log "LIBRARY_ROOT=$($libraryRootResolved.Path)"
+Add-Log "OUTPUT_ROOT=$($outputRootResolved.Path)"
 Add-Log "PARSE_MODE=$ParseMode"
 Add-Log "VISIBLE_PORTS_BEFORE=$($portsBefore -join ',')"
 Add-Log "ARDUINO_BOARD_LIST_BEFORE_BEGIN`n$boardListBefore`nARDUINO_BOARD_LIST_BEFORE_END"
@@ -455,7 +467,7 @@ while ($attempt -le $RetryCount) {
             "compile",
             "--fqbn", $Fqbn,
             "--libraries", $Libraries,
-            "--library", $repoRoot.Path,
+            "--library", $libraryRootResolved.Path,
             "--build-path", $buildPath
         )
         if ($extra) {
@@ -544,6 +556,8 @@ $metadata = [ordered]@{
     upload_port = $UploadPort
     fqbn = $Fqbn
     sketch = $sketchResolved.Path
+    library_root = $libraryRootResolved.Path
+    output_root = $outputRootResolved.Path
     command = $compileCommandText
     start_time = $runStart.ToString("o")
     end_time = $runEnd.ToString("o")

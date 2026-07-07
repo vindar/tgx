@@ -10,7 +10,7 @@ CPU:
 - 800x600 output images
 - BMP snapshots and CSV timings/hashes
 - stable CSV schema and baseline comparison via `validation/2d/baselines/cpu_hashes.csv`
-- optional golden-image comparison against archived BMP snapshots in `validation/2d/golden/cpu`, with diagnostic diff BMPs on mismatch
+- optional golden-image comparison against local BMP snapshots in `validation/local_results/golden/2d/cpu`, with diagnostic diff BMPs on mismatch
 - extra BMP snapshots for state/copy/fill/spline-heavy groups
 - optional `-Large` desktop pass with 2048x2048 default output, configurable with `-LargeSize`, and a separate baseline at `validation/2d/baselines/cpu_large_hashes.csv`
 

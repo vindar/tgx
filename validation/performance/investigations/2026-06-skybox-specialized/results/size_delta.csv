@@ -1,7 +1,0 @@
-metric,old,new,delta,notes
-teensy41_mars_flash_code_bytes,219632,224488,4856,from upload_and_capture old/final mars logs
-teensy41_mars_flash_data_bytes,1645704,1645704,0,unchanged
-teensy41_mars_flash_headers_bytes,8580,8844,264,from Arduino size report
-teensy41_mars_ram1_variables_bytes,329824,329824,0,unchanged
-teensy41_mars_ram1_code_bytes,144616,149864,5248,code in RAM/ITCM increased
-teensy41_mars_ram2_variables_bytes,452480,452480,0,unchanged

@@ -1,12 +1,28 @@
-# TGX Performance Baselines
+# Local Performance Baselines
 
-This directory stores compact benchmark baselines. It should not contain raw
-build folders, serial captures, generated binaries or large per-run logs.
+Baseline data is not stored in the public repository.
 
-## Layout
+Store local baselines under:
 
-- `current/`: active baseline used for quick comparisons during development.
-- `previous/`: older compact baselines that are still useful references.
-- `archive/`: older long-term snapshots kept for historical context.
+```text
+validation/performance/local_results/baselines/
+```
 
-Detailed comparison work belongs under `../investigations/<date-topic>/`.
+Recommended layout:
+
+```text
+validation/performance/local_results/baselines/
+  dev/<commit-or-topic>/
+  releases/<version_commit>/
+  comparisons/
+  current/      # old-format local baselines, if still useful
+  previous/     # old-format local baselines, if still useful
+  archive/      # old-format local baselines, if still useful
+```
+
+A baseline directory should correspond to one exact TGX code state. Do not store
+mixed raw data such as `current-vs-main` as a baseline; put comparisons in
+`comparisons/` and make them reference two existing baseline directories.
+
+Keep official release baselines complete locally. Keep the current development
+baseline complete locally while it is the active reference for ongoing work.

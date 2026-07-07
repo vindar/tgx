@@ -122,11 +122,13 @@ def module_define(module: Dict[str, Any]) -> str:
 
 
 def cpu_compile_command(exe: Path, module: Dict[str, Any]) -> List[str]:
+    extra_flags = os.environ.get("TGX_BENCH_EXTRA_CPP_FLAGS", "").strip().split()
     command = [
         "g++",
         "-std=c++17",
         "-O2",
         f"-D{module_define(module)}",
+        *extra_flags,
         "-I",
         ".",
         "-I",
@@ -161,8 +163,21 @@ def arduino_compile_upload_command(board: Dict[str, Any], module: Dict[str, Any]
         str(BENCH_ROOT / "arduino"),
     ]
 
+    extra_flags = os.environ.get("TGX_BENCH_EXTRA_CPP_FLAGS", "").strip()
+    module_flags = f"-D{module_define(module)}"
+    if extra_flags:
+        module_flags += f" {extra_flags}"
+
     build_properties = list(board.get("build_properties", []))
-    build_properties.append(f"compiler.cpp.extra_flags=-D{module_define(module)}")
+    if str(board["fqbn"]).startswith("teensy:"):
+        teensy_cpp_flags = (
+            "-std=gnu++17 -fno-exceptions -fpermissive -fno-rtti "
+            "-fno-threadsafe-statics -felide-constructors -Wno-error=narrowing "
+            "-Wno-psabi -Wno-maybe-uninitialized"
+        )
+        build_properties.append(f"build.flags.cpp={teensy_cpp_flags} {module_flags}")
+    else:
+        build_properties.append(f"compiler.cpp.extra_flags={module_flags}")
     for prop in build_properties:
         command += ["--build-property", str(prop)]
 

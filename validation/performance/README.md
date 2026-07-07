@@ -1,44 +1,47 @@
 # TGX Performance Validation
 
-This directory keeps reusable performance tools, compact baselines, and compact
-records of past optimization investigations.
+This directory contains reusable performance-validation tooling and documentation.
+It must not contain persistent benchmark results in the public repository.
 
-Start here:
+## Public, Tracked Content
 
-- `tools/README.md` for upload/capture and parsing tools.
-- `baselines/README.md` for the baseline directory policy.
-- `baselines/current/README.md` for the current reusable benchmark baseline.
-- `ARTIFACTS.md` for what should be kept or pruned.
-- `investigations/README.md` for the compact history of tested optimization paths.
-- `cleanup/` for manifests of raw artifacts that were pruned.
+- `tools/`: reusable upload, capture, parsing, aggregation and comparison tools.
+- `baselines/README.md`: local baseline layout policy.
+- `investigations/README.md`: local investigation layout policy.
+- `cleanup/README.md`: local cleanup-note policy.
+- `ARTIFACTS.md`: what belongs in Git and what belongs only locally.
 
-## Directory Roles
+## Local, Ignored Content
 
-- `tools/`: reusable scripts only.
-- `baselines/current/`: the active compact baseline used for quick comparisons.
-- `baselines/previous/`: older compact baselines that are still useful as
-  reference points.
-- `baselines/archive/`: older long-term snapshots kept for historical context.
-- `investigations/`: dated reports and compact per-investigation evidence.
-- `cleanup/`: manifests of large raw artifacts that were intentionally pruned.
-
-## Current Policy
-
-Keep compact evidence:
-
-- final reports or concise summaries;
-- current reusable baseline CSVs;
-- accepted/rejected decision notes;
-- reusable tooling.
-
-Do not keep persistent Arduino build products, raw serial dumps, full objdump dumps, or large per-candidate matrices in the repository. Temporary raw data is fine while working, but it should be summarized before cleanup.
-
-## Current Baselines
-
-Use:
+All benchmark outputs, example telemetry, release baselines, development
+baselines, comparison reports, investigation artifacts, serial logs and build
+products must be stored under:
 
 ```text
-validation/performance/baselines/current/
+validation/performance/local_results/
 ```
 
-These are the quickest benchmark CSVs to compare against before deciding whether a new full hardware baseline is required.
+That directory is ignored by Git. It is the canonical local workspace for
+performance data on the development machine.
+
+Recommended layout:
+
+```text
+validation/performance/local_results/
+  baselines/
+    dev/
+    releases/
+    comparisons/
+    current/      # old-format local baselines, if still useful
+    previous/     # old-format local baselines, if still useful
+    archive/      # old-format local baselines, if still useful
+  investigations/
+  cleanup/
+  builds/
+  notes/
+```
+
+Keep release baselines complete locally. Keep the current development baseline
+complete locally while it is the active comparison reference. Prune temporary
+raw logs and build directories once compact summaries or reports preserve the
+decision.

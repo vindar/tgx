@@ -1,7 +1,0 @@
-label,hot_symbol_count,hot_symbol_total_bytes,hot_symbol_itcm_bytes,hot_symbol_flash_bytes
-spotlight_checkerboard_default,23,81606,81606,0
-spotlight_checkerboard_granular,22,37266,37266,0
-sphere_default,24,82580,82580,0
-sphere_granular,23,38892,38892,0
-benchmark_granular,94,152066,151858,208
-benchmark_inline_empty_global,107,120990,120774,216

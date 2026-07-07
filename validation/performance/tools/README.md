@@ -66,6 +66,51 @@ The parsers and aggregators in this directory are kept for old investigation
 data and compact baseline files. They are not the entry point for new 3D
 benchmark campaigns.
 
+## Teensy4 Renderer3D Flash Macro Matrix
+
+To validate the optional Teensy4 `Renderer3D` flash-placement macros, use:
+
+```powershell
+& "C:\Users\Vindar\anaconda3\envs\tgxmesh3d2\python.exe" `
+  validation\performance\tools\run_teensy4_flash_macro_matrix.py `
+  --out validation\performance\local_results\investigations\<YYYY-MM-DD>-teensy4-flash-macro-matrix
+```
+
+The script runs the modular benchmark on `teensy41` for these candidates:
+
+```text
+none
+sphere
+truncated_cone
+mesh3d
+mesh3dv2
+sphere_cone
+mesh_all
+all
+```
+
+Each candidate is implemented by setting the corresponding
+`TGX_BENCH_FLASH_*` defines and calling
+`validation/benchmark3d/tools/run_bench3d.py`. For Teensyduino 1.62 and newer,
+the benchmark runner passes these flags through `build.flags.cpp`, because
+`compiler.cpp.extra_flags` does not reliably reach all Teensy compilation
+steps.
+
+The matrix output contains:
+
+```text
+matrix_manifest.json
+<candidate>/...
+summary/candidate_status.csv
+summary/perf_delta_vs_none.csv
+summary/size_delta_vs_none.csv
+summary/README.md
+```
+
+Use `--dry-run` to check the commands without compiling/uploading. Use
+`--modules primitives,mesh` or `--candidates none,sphere,all` for shorter
+targeted checks.
+
 Aggregate renderer-style candidate outputs with:
 
 ```powershell
@@ -143,7 +188,7 @@ then runtime `COM11`. For sketches using `TFT_eSPI`, set
 Store future performance work under:
 
 ```text
-validation/performance/investigations/<date-and-topic>/
+validation/performance/local_results/investigations/<date-and-topic>/
 ```
 
 Recommended structure:
@@ -157,4 +202,7 @@ hardware/
 raw_or_large_artifacts/
 ```
 
-Keep reusable scripts in this `tools/` directory rather than inside dated investigation folders.
+Keep reusable scripts in this `tools/` directory rather than inside dated local
+investigation folders. `validation/performance/local_results/` is ignored by
+Git and is the right place for generated telemetry, baselines, reports, codegen
+dumps and build outputs.

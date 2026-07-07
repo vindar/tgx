@@ -8,7 +8,7 @@ param(
     [int]$LargeSize = 2048,
     [switch]$Golden,
     [switch]$UpdateGolden,
-    [string]$GoldenDir = "validation\2d\golden\cpu",
+    [string]$GoldenDir = "validation\local_results\golden\2d\cpu",
     [string]$GoldenDiffDir = ""
 )
 

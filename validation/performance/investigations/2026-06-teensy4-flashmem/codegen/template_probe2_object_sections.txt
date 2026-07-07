@@ -1,9 +1,0 @@
-Idx Name          Size      VMA       LMA       File off  Algn
-  4 .text         00000000  00000000  00000000  00000054  2**1
-  7 .flashmem     00000024  00000000  00000000  00000054  2**2
-  8 .text.loop    00000008  00000000  00000000  00000078  2**2
-  9 .text._Z16regular_templateIiEiT_ 0000000c  00000000  00000000  00000080  2**2
- 10 .text._Z19flash_decl_templateIiEiT_ 0000000c  00000000  00000000  0000008c  2**2
- 11 .text._Z18flash_def_templateIiEiT_ 0000000c  00000000  00000000  00000098  2**2
- 12 .text._Z23flashmem_named_templateIiEiT_ 0000000c  00000000  00000000  000000a4  2**2
- 13 .text.setup   0000006c  00000000  00000000  000000b0  2**2

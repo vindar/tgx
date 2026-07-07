@@ -1,5 +1,0 @@
-"board","old_version","old_avg","new_version","new_avg","delta_percent","old_flash","new_flash","flash_delta","new_count"
-"pico2","invdot2_split_loop","23.22","unified_v2_point","28.88","+24.38","240940","207708","-33232","24"
-"core2","invdot2_split_loop","20.67","unified_v2_point","20.96","+1.40","475323","466035","-9288","24"
-"cores3","invdot2_split_loop","38.38","unified_v2_point","38.15","-0.60","461887","452979","-8908","26"
-"teensy41","invdot2_split_loop","102.23","unified_v2_point","102.58","+0.34","247804","226300","-21504","26"

@@ -1,5 +1,0 @@
-board,selected_cases,mean_speedup_pct,median_speedup_pct,min_speedup_pct,max_speedup_pct,regressions_below_minus5
-Core2,73,252.284,263.6,37.694,492.857,0
-CoreS3,73,239.797,235.802,30.309,475.26,0
-Pico2,73,164.995,154.442,5.819,356.061,0
-Teensy41,73,16.589,18.519,0.752,34.694,0

@@ -35,3 +35,7 @@ tmp/
 __pycache__/
 tools/mesh3d2_converter/cpp/build/
 REPORT_CONFIG_OPTIMIZATION.md
+
+# Local validation/performance outputs
+validation/local_results/
+validation/performance/local_results/
