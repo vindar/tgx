@@ -365,7 +365,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
             {
             if constexpr (USE_MASK_COLOR)
                 {
-                flat_color = (color_t)data.facecolor; // this is the masked color.
+                flat_color = (color_t)data.mask_color; // Reuse flat_color as mask_color in textured mask variants.
                 }
 
             tex = data.tex->data();
@@ -516,6 +516,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
 #endif
             while ((bx < lx) && ((C2 | C3) >= 0))
                 {
+                ZBUFFER_t current_z;
                 bool z_pass = true;
                 if constexpr (USE_ZBUFFER)
                     {
@@ -524,7 +525,6 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
 #else
                     ZBUFFER_t& W = zbuf[bx];
 #endif
-                    ZBUFFER_t current_z;
 
                     if constexpr (std::is_same<ZBUFFER_t, uint16_t>::value)
                         {
@@ -537,7 +537,10 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
 
                     if (W < current_z)
                         {
-                        W = current_z;
+                        if constexpr (!USE_MASK_COLOR)
+                            {
+                            W = current_z; // Update Z-buffer now (but delay update when using color masking)
+                            }
                         }
                     else
                         {
