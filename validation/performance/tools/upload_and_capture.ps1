@@ -104,7 +104,7 @@ $boardConfig = @{
     "teensy41" = @{
         Fqbn = "teensy:avr:teensy41:usb=serial,speed=600,opt=o3std"
         Port = "COM3"
-        UploadPort = "usb:80000/3/0/1"
+        UploadPort = "usb:80000/1/0/5/4/4"
         BenchmarkDefine = "TGX_BENCHMARK_T4"
         PostDelay = 4
         PortWait = 180

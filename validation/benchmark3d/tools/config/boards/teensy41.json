@@ -3,7 +3,7 @@
   "kind": "arduino",
   "modules": ["core_raster", "texture_raster", "lighting_shading", "primitives", "mesh", "wire_points", "skybox_noz", "integrated", "mixed_stress"],
   "fqbn": "teensy:avr:teensy41:usb=serial,speed=600,opt=o3std",
-  "upload_port": "usb:80000/3/0/1",
+  "upload_port": "usb:80000/1/0/5/4/4",
   "serial_port": "COM3",
   "serial_baud": 115200,
   "serial_timeout_s": 120,

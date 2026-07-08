@@ -16,7 +16,7 @@ $boardConfig = @{
     picow = @{ Fqbn = "rp2040:rp2040:rpipicow"; UploadPort = "COM19"; SerialPort = "COM19"; Baud = 115200 }
     core2 = @{ Fqbn = "esp32:esp32:m5stack_core2"; UploadPort = "COM5"; SerialPort = "COM5"; Baud = 115200 }
     cores3 = @{ Fqbn = "esp32:esp32:m5stack_cores3"; UploadPort = "COM10"; SerialPort = "COM10"; Baud = 115200 }
-    teensy41 = @{ Fqbn = "teensy:avr:teensy41:usb=serial,speed=600,opt=o3std"; UploadPort = "usb:80000/3/0/1"; SerialPort = "COM3"; Baud = 115200 }
+    teensy41 = @{ Fqbn = "teensy:avr:teensy41:usb=serial,speed=600,opt=o3std"; UploadPort = "usb:80000/1/0/5/4/4"; SerialPort = "COM3"; Baud = 115200 }
 }
 
 if (-not $boardConfig.ContainsKey($Board)) { throw "Unknown board '$Board'" }
