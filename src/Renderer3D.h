@@ -62,20 +62,31 @@ namespace tgx
     * @tparam LOADED_SHADERS    List of all shaders that may be used. This parameter is required so the renderer only
     *                           compiles the shader paths that are actually needed, improving rendering speed and
     *                           decreasing memory usage significantly. Must be a `|` combination of the following flags:
-    *                               - `SHADER_PERSPECTIVE`: enable perspective projection
-    *                               - `SHADER_ORTHO`: enable orthographic projection
-    *                               - `SHADER_NOZBUFFER`: enable rendering without using a z-buffer
-    *                               - `SHADER_ZBUFFER`: enable rendering with a z-buffer
-    *                               - `SHADER_UNLIT`: enable unlit shading
-    *                               - `SHADER_FLAT`: enable flat shading
-    *                               - `SHADER_GOURAUD`: enable Gouraud shading
-    *                               - `SHADER_NOTEXTURE`: enable rendering without texturing
-    *                               - `SHADER_TEXTURE`: enable rendering with perspective-correct texturing
-    *                               - `SHADER_TEXTURE_AFFINE`: enable rendering with affine texturing (faster but lower quality)
-    *                               - `SHADER_TEXTURE_NEAREST`: enable rendering with texturing using point sampling
-    *                               - `SHADER_TEXTURE_BILINEAR`: enable rendering with texturing using bilinear sampling
-    *                               - `SHADER_TEXTURE_WRAP_POW2`: texture can use 'wrap around' mode with dimensions of texture being power of two.
-    *                               - `SHADER_TEXTURE_CLAMP`: texture can use 'clamping to edge' mode.
+    *                               - [A] `SHADER_PERSPECTIVE`: enable perspective projection
+    *                               - [A] `SHADER_ORTHO`: enable orthographic projection
+    *                               - [B] `SHADER_NOZBUFFER`: enable rendering without using a z-buffer
+    *                               - [B] `SHADER_ZBUFFER`: enable rendering with a z-buffer
+    *                               - [C] `SHADER_UNLIT`: enable unlit shading
+    *                               - [C] `SHADER_FLAT`: enable flat shading
+    *                               - [C] `SHADER_GOURAUD`: enable Gouraud shading
+    *                               - [D] `SHADER_NOTEXTURE`: enable rendering without texturing
+    *                               - [D] `SHADER_TEXTURE`: enable rendering with perspective-correct texturing
+    *                               - [D] `SHADER_TEXTURE_AFFINE`: enable rendering with affine texturing (faster but lower quality)
+    * 
+    *                           The following additional flags control the texturing mode, quality and masking:
+    *                               - [E] `SHADER_TEXTURE_NEAREST`: enable rendering with texturing using point sampling
+    *                               - [E] `SHADER_TEXTURE_BILINEAR`: enable rendering with texturing using bilinear sampling (better quality but slower)
+    *                               - [F] `SHADER_TEXTURE_WRAP_POW2`: texture can use 'wrap around' mode with dimensions of texture being power of two.
+    *                               - [F] `SHADER_TEXTURE_CLAMP`: texture can use 'clamping to edge' mode.
+    *                               - [G] `SHADER_TEXTURE_NOMASK`: disable texture color masking.
+    *                               - [G] `SHADER_TEXTURE_MASK`: enable texture color masking.
+    * 
+    *                           To be valid, LOADED_SHADER must contain at least one flag from each of the groups [A], [B], [C], [D]
+    *                           and also at least one flag from  groups [E], [F] and [G] when texturing is enabled 
+    *                           (i.e. when either `SHADER_TEXTURE` or `SHADER_TEXTURE_AFFINE` is set).
+    * 
+    *                           Code is smallest and fastest when only one flag from each group is enabled, because the corresponding
+    *                           runtime branches can be eliminated at compile time.
     *
     * @tparam ZBUFFER_t :       Type used for storing z-buffer values. Must be either `float` or `uint16_t`.
     *                           The default is `uint16_t`. The z-buffer must be
@@ -94,7 +105,7 @@ namespace tgx
     *
     * 1. If a drawing call is made that requires a shader that was not enabled in the template parameter `LOADED_SHADERS` or
     *    if the Renderer3D object state is not valid (e.g. incorrect image size, enabled but missing z-buffer...) then the operation
-    *    will fail silently. In particular, if drawing without a Z-buffer is performed, the flag `SHADER_NOZBUFFER` **must** be set
+    *    will fail silently. For example, if drawing without a Z-buffer is performed, the flag `SHADER_NOZBUFFER` **must** be set
     *    in LOADED_SHADERS. Similarly, if drawing without texturing is performed, the flag `SHADER_NOTEXTURE` **must** be set in LOADED_SHADERS.
     *
     * 2. Z-buffer testing is enabled as soon as a valid z-buffer is provided (with `Renderer3D::setZbuffer()`).
@@ -128,11 +139,13 @@ namespace tgx
         static_assert(MAX_SPOT_LIGHTS >= 0, "MAX_SPOT_LIGHTS must be non-negative");
 
         // true if some kind of texturing may be used.
-        static constexpr int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (SHADER_TEXTURE | SHADER_TEXTURE_AFFINE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY)));
+        static constexpr int ENABLE_TEXTURING = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS , (SHADER_TEXTURE | SHADER_TEXTURE_AFFINE | TGX_SHADER_MASK_TEXTURE_MODE | TGX_SHADER_MASK_TEXTURE_QUALITY | TGX_SHADER_MASK_TEXTURE_MASK)));
         static constexpr int EXPLICIT_TEXTURE_MODE = (TGX_SHADER_HAS_TEXTURING_ENABLED(LOADED_SHADERS));
         static constexpr Shader DEFAULT_TEXTURE_MODE = EXPLICIT_TEXTURE_MODE ? (Shader)0 : SHADER_TEXTURE;
+        static constexpr int EXPLICIT_TEXTURE_MASK_MODE = (TGX_SHADER_HAS_ONE_FLAG(LOADED_SHADERS, TGX_SHADER_MASK_TEXTURE_MASK));
+        static constexpr Shader DEFAULT_TEXTURE_MASK_MODE = EXPLICIT_TEXTURE_MASK_MODE ? (Shader)0 : SHADER_TEXTURE_NOMASK;
 
-        static constexpr Shader ENABLED_SHADERS = LOADED_SHADERS | (ENABLE_TEXTURING ? DEFAULT_TEXTURE_MODE : SHADER_NOTEXTURE); // enable perspective texturing by default when only texturing options are set
+        static constexpr Shader ENABLED_SHADERS = LOADED_SHADERS | (ENABLE_TEXTURING ? (DEFAULT_TEXTURE_MODE | DEFAULT_TEXTURE_MASK_MODE) : SHADER_NOTEXTURE); // enable perspective/no-mask texturing by default when only texturing options are set
         // check that disabled shaders do not completely disable all drawing operations.
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_PROJECTION), "At least one of the two shaders SHADER_PERSPECTIVE or SHADER_ORTHO must be enabled");
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_ZBUFFER), "At least one of the two shaders SHADER_NOZBUFFER or SHADER_ZBUFFER must be enabled");
@@ -140,6 +153,7 @@ namespace tgx
         static_assert(TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE), "At least one of the shaders SHADER_NOTEXTURE, SHADER_TEXTURE or SHADER_TEXTURE_AFFINE must be enabled");
         static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS,TGX_SHADER_MASK_TEXTURE_QUALITY)),"When using texturing, at least one of the two shaders SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST must be enabled");
         static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "When using texturing, at least one of the two shaders SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP must be enabled");
+        static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(ENABLED_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(ENABLED_SHADERS, TGX_SHADER_MASK_TEXTURE_MASK)), "When using texturing, at least one of the two shaders SHADER_TEXTURE_NOMASK or SHADER_TEXTURE_MASK must be enabled");
 
         template<Shader SHADERS> static constexpr Shader _validatedDrawCallShaders();
 
@@ -427,6 +441,8 @@ namespace tgx
         *
         * - a sampling quality set with setTextureQuality(), or passed as either `SHADER_TEXTURE_NEAREST` or `SHADER_TEXTURE_BILINEAR`.
         *
+        * - a texture mask color is set with setTextureMaskColor() and enabled/disabled with enableTextureMaskColor(), or passed as either `SHADER_TEXTURE_NOMASK` or `SHADER_TEXTURE_MASK`.
+        *
         * @remark
         * 1. Every runtime shader choice must be enabled in the template parameter `LOADED_SHADERS`,
         *    including "disabled" choices such as `SHADER_NOTEXTURE` or `SHADER_NOZBUFFER`.
@@ -468,6 +484,33 @@ namespace tgx
         *                   - `SHADER_TEXTURE_BILINEAR`:   Use bilinear interpolation when texturing (slower but higher quality).
         */
         void setTextureQuality(Shader quality);
+
+
+
+        /**
+        * Enable or disable texture color masking for subsequent textured draw calls.
+        *
+        * This method selects between `SHADER_TEXTURE_MASK` and `SHADER_TEXTURE_NOMASK` 
+        * only when both modes are enabled in the `Renderer3D` template shader flags. 
+        * 
+        * If the renderer was compiled with only one mask mode, this method leaves that 
+        * mode unchanged.
+        */
+        void enableTextureMaskColor(bool enable);
+
+
+        /**
+        * Set the texture mask color.
+        *
+        * Textured pixels equal to this color are discarded when texture masking
+        * is enabled with `enableTextureMaskColor(true)` or `SHADER_TEXTURE_MASK`.
+        *
+        * @warning This method is available only when `SHADER_TEXTURE_MASK` is
+        * listed in the `Renderer3D` template shader flags.
+        */
+        void setTextureMaskColor(color_t color);
+
+
 
 
 
@@ -2652,6 +2695,8 @@ namespace tgx
 
         TGX_NOINLINE void _rectifyShaderTextureQuality();
 
+        TGX_NOINLINE void _rectifyShaderTextureMaskMode();
+
 
        /***********************************************************
         * DRAWING STUFF
@@ -3685,6 +3730,7 @@ namespace tgx
         int   _texture_mode;        // texture mapping mode (perspective-correct or affine)
         int   _texture_wrap_mode;   // wrapping mode (wrap_pow2 or clamp)
         int   _texture_quality;     // texturing quality (nearest or bilinear)
+        int   _texture_mask_mode;   // texture masking mode (no mask or mask color)
 
         // *** scene parameters ***
 

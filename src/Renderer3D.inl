@@ -42,6 +42,7 @@ namespace tgx
             _uni.shader_type = 0;
             _uni.zbuf = nullptr;
             _uni.facecolor = RGBf(1.0f, 1.0f, 1.0f);
+            _uni.mask_color = color_t();
 
             setViewportSize(viewportSize);
             setImage(im);
@@ -105,9 +106,11 @@ namespace tgx
             this->_precomputeSpecularTable(8);
 
             _texture_mode = 0;
+            _texture_mask_mode = 0;
             if constexpr (TGX_SHADER_HAS_TEXTURING_ENABLED(ENABLED_SHADERS) != 0)
                 {
                 _texture_mode = (TGX_SHADER_HAS_TEXTURE(ENABLED_SHADERS) != 0) ? SHADER_TEXTURE : SHADER_TEXTURE_AFFINE;
+                _texture_mask_mode = (TGX_SHADER_HAS_TEXTURE_NOMASK(ENABLED_SHADERS) != 0) ? SHADER_TEXTURE_NOMASK : SHADER_TEXTURE_MASK;
                 }
             setShaders(SHADER_FLAT);
             setTextureWrappingMode(SHADER_TEXTURE_CLAMP); // slow but safer (no need to be power of 2)
@@ -136,6 +139,7 @@ namespace tgx
             static_assert(TGX_SHADER_HAS_ONE_FLAG(DRAW_SHADERS, TGX_SHADER_MASK_TEXTURE), "draw call SHADERS must enable SHADER_NOTEXTURE, SHADER_TEXTURE or SHADER_TEXTURE_AFFINE");
             static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(DRAW_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(DRAW_SHADERS, TGX_SHADER_MASK_TEXTURE_QUALITY)), "draw call textured SHADERS must enable SHADER_TEXTURE_BILINEAR or SHADER_TEXTURE_NEAREST");
             static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(DRAW_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(DRAW_SHADERS, TGX_SHADER_MASK_TEXTURE_MODE)), "draw call textured SHADERS must enable SHADER_TEXTURE_WRAP_POW2 or SHADER_TEXTURE_CLAMP");
+            static_assert((!TGX_SHADER_HAS_TEXTURING_ENABLED(DRAW_SHADERS)) || (TGX_SHADER_HAS_ONE_FLAG(DRAW_SHADERS, TGX_SHADER_MASK_TEXTURE_MASK)), "draw call textured SHADERS must enable SHADER_TEXTURE_NOMASK or SHADER_TEXTURE_MASK");
             return DRAW_SHADERS;
             }
 
@@ -354,6 +358,25 @@ namespace tgx
                     _texture_quality = SHADER_TEXTURE_BILINEAR; // fallback
                 }
                 _rectifyShaderTextureQuality();
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::setTextureMaskColor(color_t color)
+            {
+            static_assert(TGX_SHADER_HAS_TEXTURE_MASK(ENABLED_SHADERS), "shader SHADER_TEXTURE_MASK must be enabled to use setTextureMaskColor()");
+            _uni.mask_color = color;
+            }
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::enableTextureMaskColor(bool enable)
+            {
+            if constexpr (TGX_SHADER_HAS_TEXTURE_MASK(ENABLED_SHADERS) && TGX_SHADER_HAS_TEXTURE_NOMASK(ENABLED_SHADERS))
+                {
+                _texture_mask_mode = enable ? SHADER_TEXTURE_MASK : SHADER_TEXTURE_NOMASK;
+                _rectifyShaderTextureMaskMode();
+                }
             }
 
 
@@ -1556,7 +1579,7 @@ namespace tgx
         template<bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
         void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_rasterizeSkyBoxTriangle(const RasterizerVec4& V0, const RasterizerVec4& V1, const RasterizerVec4& V2)
             {
-            rasterizeTriangle<uber_shader<color_t, ZBUFFER_t, false, false, true, false, TEXTURE_BILINEAR, TEXTURE_WRAP, true, false> >(_lx, _ly, V0, V1, V2, _ox, _oy, _uni);
+            rasterizeTriangle<uber_shader<color_t, ZBUFFER_t, false, false, true, false, TEXTURE_BILINEAR, TEXTURE_WRAP, true, false, false> >(_lx, _ly, V0, V1, V2, _ox, _oy, _uni);
             }
 
 
@@ -5985,47 +6008,69 @@ namespace tgx
                 TGX_SHADER_REMOVE_GOURAUD(_shaders)
                 }
 
-            bool tex = (TGX_SHADER_HAS_TEXTURING_ENABLED(new_shaders) != 0);
+            if constexpr (ENABLE_TEXTURING)
+                {
+                bool tex = (TGX_SHADER_HAS_TEXTURING_ENABLED(new_shaders) != 0);
 
-            if (TGX_SHADER_HAS_TEXTURE_AFFINE(new_shaders))
-                {
-                _texture_mode = SHADER_TEXTURE_AFFINE;
-                tex = true;
-                }
-            else if (TGX_SHADER_HAS_TEXTURE(new_shaders))
-                {
-                _texture_mode = SHADER_TEXTURE;
-                tex = true;
-                }
+                if (TGX_SHADER_HAS_TEXTURE_AFFINE(new_shaders))
+                    {
+                    _texture_mode = SHADER_TEXTURE_AFFINE;
+                    tex = true;
+                    }
+                else if (TGX_SHADER_HAS_TEXTURE(new_shaders))
+                    {
+                    _texture_mode = SHADER_TEXTURE;
+                    tex = true;
+                    }
 
-            if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(new_shaders))
-                {
-                setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);
-                tex = true;
-                }
-            if (TGX_SHADER_HAS_TEXTURE_CLAMP(new_shaders))
-                {
-                setTextureWrappingMode(SHADER_TEXTURE_CLAMP);
-                tex = true;
-                }
-            if (TGX_SHADER_HAS_TEXTURE_NEAREST(new_shaders))
-                {
-                setTextureQuality(SHADER_TEXTURE_NEAREST);
-                tex = true;
-                }
-            if (TGX_SHADER_HAS_TEXTURE_BILINEAR(new_shaders))
-                {
-                setTextureQuality(SHADER_TEXTURE_BILINEAR);
-                tex = true;
-                }
-            if (tex)
-                {
-                _rectifyShaderTextureMode();
+                if (TGX_SHADER_HAS_TEXTURE_WRAP_POW2(new_shaders))
+                    {
+                    setTextureWrappingMode(SHADER_TEXTURE_WRAP_POW2);
+                    tex = true;
+                    }
+                if (TGX_SHADER_HAS_TEXTURE_CLAMP(new_shaders))
+                    {
+                    setTextureWrappingMode(SHADER_TEXTURE_CLAMP);
+                    tex = true;
+                    }
+                if (TGX_SHADER_HAS_TEXTURE_NEAREST(new_shaders))
+                    {
+                    setTextureQuality(SHADER_TEXTURE_NEAREST);
+                    tex = true;
+                    }
+                if (TGX_SHADER_HAS_TEXTURE_BILINEAR(new_shaders))
+                    {
+                    setTextureQuality(SHADER_TEXTURE_BILINEAR);
+                    tex = true;
+                    }
+                if (TGX_SHADER_HAS_TEXTURE_NOMASK(new_shaders))
+                    {
+                    _texture_mask_mode = SHADER_TEXTURE_NOMASK;
+                    tex = true;
+                    }
+                if (TGX_SHADER_HAS_TEXTURE_MASK(new_shaders))
+                    {
+                    _texture_mask_mode = SHADER_TEXTURE_MASK;
+                    tex = true;
+                    }
+                if (tex)
+                    {
+                    _rectifyShaderTextureMode();
+                    }
+                else
+                    {
+                    TGX_SHADER_ADD_NOTEXTURE(_shaders)
+                    TGX_SHADER_REMOVE_TEXTURING_ENABLED(_shaders)
+                    TGX_SHADER_REMOVE_TEXTURE_NOMASK(_shaders)
+                    TGX_SHADER_REMOVE_TEXTURE_MASK(_shaders)
+                    }
                 }
             else
                 {
                 TGX_SHADER_ADD_NOTEXTURE(_shaders)
                 TGX_SHADER_REMOVE_TEXTURING_ENABLED(_shaders)
+                TGX_SHADER_REMOVE_TEXTURE_NOMASK(_shaders)
+                TGX_SHADER_REMOVE_TEXTURE_MASK(_shaders)
                 }
             }
 
@@ -6047,6 +6092,7 @@ namespace tgx
                 TGX_SHADER_REMOVE_TEXTURE_AFFINE(_shaders)
                 }
             TGX_SHADER_REMOVE_NOTEXTURE(_shaders)
+            _rectifyShaderTextureMaskMode();
             }
 
 
@@ -6080,6 +6126,40 @@ namespace tgx
                 {
                 TGX_SHADER_ADD_TEXTURE_NEAREST(_shaders)
                 TGX_SHADER_REMOVE_TEXTURE_BILINEAR(_shaders)
+                }
+            }
+
+
+
+        template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
+        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_rectifyShaderTextureMaskMode()
+            {
+            if constexpr (!TGX_SHADER_HAS_TEXTURE_MASK(ENABLED_SHADERS))
+                {
+                _texture_mask_mode = SHADER_TEXTURE_NOMASK;
+                TGX_SHADER_ADD_TEXTURE_NOMASK(_shaders)
+                TGX_SHADER_REMOVE_TEXTURE_MASK(_shaders)
+                }
+            else if constexpr (!TGX_SHADER_HAS_TEXTURE_NOMASK(ENABLED_SHADERS))
+                {
+                _texture_mask_mode = SHADER_TEXTURE_MASK;
+                TGX_SHADER_ADD_TEXTURE_MASK(_shaders)
+                TGX_SHADER_REMOVE_TEXTURE_NOMASK(_shaders)
+                }
+            else
+                {
+                if (_texture_mask_mode == SHADER_TEXTURE_MASK)
+                    {
+                    _texture_mask_mode = SHADER_TEXTURE_MASK;
+                    TGX_SHADER_ADD_TEXTURE_MASK(_shaders)
+                    TGX_SHADER_REMOVE_TEXTURE_NOMASK(_shaders)
+                    }
+                else
+                    {
+                    _texture_mask_mode = SHADER_TEXTURE_NOMASK;
+                    TGX_SHADER_ADD_TEXTURE_NOMASK(_shaders)
+                    TGX_SHADER_REMOVE_TEXTURE_MASK(_shaders)
+                    }
                 }
             }
 
