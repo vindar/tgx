@@ -950,7 +950,7 @@ void renderWirePathScene(RenderContext<color_t>& ctx, WirePath path, bool mesh_v
     const uint16_t quad_indices[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 
     r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
-    r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+    r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_NOTEXTURE);
 
     r.setModelPosScaleRot({ -1.45f, 0.15f, -9.2f }, { 3.55f, 3.55f, 3.55f }, 36.0f, { 0.1f, 1.0f, 0.0f });
     drawWirePathMesh(ctx, path, mesh_v2, mesh_color);
@@ -1006,7 +1006,7 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
         {
         case SceneId::BunnyGouraud:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE);
             r.setModelPosScaleRot({ 0.0f, 0.15f, -11.0f }, { 5.0f, 5.0f, 5.0f }, 24.0f, { 0.1f, 1.0f, 0.0f });
             r.drawMesh(&ctx.meshes.bunny, false);
             break;
@@ -1031,7 +1031,7 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             setValidationMultiDirectionalLights(mr);
             mr.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
             mr.setMaterial(RGBf(0.92f, 0.64f, 0.32f), 0.16f, 0.82f, 0.46f, 30);
-            mr.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD);
+            mr.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE);
             mr.setModelPosScaleRot({ 0.0f, 0.15f, -11.0f }, { 5.0f, 5.0f, 5.0f }, -32.0f, { 0.1f, 1.0f, 0.0f });
             mr.drawMesh(&ctx.meshes.bunny, false);
             break;
@@ -1040,14 +1040,14 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
         case SceneId::BuddhaFlat:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
             r.setMaterial(RGBf(0.9f, 0.62f, 0.28f), 0.20f, 0.72f, 0.35f, 18);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_NOTEXTURE);
             r.setModelPosScaleRot({ 0.0f, 0.45f, -32.0f }, { 13.0f, 13.0f, 13.0f }, -28.0f, { 0.0f, 1.0f, 0.0f });
             r.drawMesh(&ctx.meshes.buddha_mesh, false);
             break;
 
         case SceneId::BunnyV2Gouraud:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE);
             r.setModelPosScaleRot({ 0.0f, 0.15f, -11.0f }, { 5.0f, 5.0f, 5.0f }, 24.0f, { 0.1f, 1.0f, 0.0f });
             r.drawMesh(&ctx.meshes.bunny_v2, false);
             break;
@@ -1080,7 +1080,7 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
         case SceneId::BuddhaV2Flat:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
             r.setMaterial(RGBf(0.9f, 0.62f, 0.28f), 0.20f, 0.72f, 0.35f, 18);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_NOTEXTURE);
             r.setModelPosScaleRot({ 0.0f, 0.45f, -32.0f }, { 13.0f, 13.0f, 13.0f }, -28.0f, { 0.0f, 1.0f, 0.0f });
             r.drawMesh(&ctx.meshes.buddha_v2, false);
             break;
@@ -1088,7 +1088,7 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
         case SceneId::BuddhaV2Unlit:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 300.0f);
             r.setMaterial(RGBf(0.9f, 0.62f, 0.28f), 0.20f, 0.72f, 0.35f, 18);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_UNLIT);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_UNLIT | SHADER_NOTEXTURE);
             r.setModelPosScaleRot({ 0.0f, 0.45f, -32.0f }, { 13.0f, 13.0f, 13.0f }, -28.0f, { 0.0f, 1.0f, 0.0f });
             r.drawMesh(&ctx.meshes.buddha_v2, false);
             break;
@@ -1171,7 +1171,7 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             const fVec3 Cc = {  1.4f,  1.1f, 0.0f };
             const fVec3 D = { -1.4f,  1.0f, 0.0f };
             r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE);
             r.setModelPosScaleRot({ 0.25f, 0.0f, -8.5f }, { 2.7f, 2.7f, 2.7f }, -28.0f, { 0.0f, 1.0f, 0.0f });
             r.drawQuadWithVertexColor(A, B, Cc, D, RGBf(0.95f, 0.12f, 0.05f), RGBf(1.0f, 0.62f, 0.05f), RGBf(0.6f, 0.1f, 0.9f), RGBf(0.1f, 0.35f, 1.0f), &N, &N, &N, &N);
             r.setModelPosScaleRot({ -0.25f, 0.0f, -7.0f }, { 2.5f, 2.5f, 2.5f }, 34.0f, { 0.0f, 1.0f, 0.0f });
@@ -1183,7 +1183,7 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
             {
             const fVec3 N = { 0.0f, 0.0f, 1.0f };
             r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_GOURAUD | SHADER_NOTEXTURE);
             r.setModelPosScaleRot({ 0.0f, 0.0f, -7.0f }, { 2.5f, 2.2f, 1.0f }, 16.0f, { 0.0f, 1.0f, 0.0f });
             r.drawTriangleWithVertexColor({ -1.8f, -1.25f, 0.0f }, { 1.8f, -1.1f, 0.0f }, { 0.15f, 1.65f, 0.0f },
                                           RGBf(1.0f, 0.18f, 0.10f), RGBf(0.1f, 0.85f, 0.55f), RGBf(0.1f, 0.25f, 1.0f), &N, &N, &N);
@@ -1212,7 +1212,7 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
 
         case SceneId::WireTriangleStripFast:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_NOTEXTURE);
             r.setMaterialColor(C<color_t>(255, 230, 110));
             r.setModelPosScaleRot({ 0.0f, 0.0f, -5.8f }, { 2.25f, 2.25f, 1.0f }, -26.0f, { 0.25f, 1.0f, 0.1f });
             r.drawWireFrameTriangleStrip(int(ctx.strip_indices.size()), ctx.strip_indices.data(), ctx.strip_vertices.data());
@@ -1220,7 +1220,7 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
 
         case SceneId::WireTriangleStripAA:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_NOTEXTURE);
             r.setMaterialColor(C<color_t>(100, 230, 255));
             r.setModelPosScaleRot({ 0.0f, 0.0f, -5.8f }, { 2.25f, 2.25f, 1.0f }, -26.0f, { 0.25f, 1.0f, 0.1f });
             r.drawWireFrameTriangleStripAA(int(ctx.strip_indices.size()), ctx.strip_indices.data(), ctx.strip_vertices.data());
@@ -1228,7 +1228,7 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
 
         case SceneId::WireTriangleStripThickness:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_NOTEXTURE);
             r.setModelPosScaleRot({ 0.0f, 0.0f, -5.8f }, { 2.25f, 2.25f, 1.0f }, -26.0f, { 0.25f, 1.0f, 0.1f });
             r.drawWireFrameTriangleStrip(int(ctx.strip_indices.size()), ctx.strip_indices.data(), ctx.strip_vertices.data(), 1.501f, C<color_t>(255, 150, 210), 1.0f);
             break;
@@ -1244,7 +1244,7 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
 
         case SceneId::WirePoints:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_NOTEXTURE);
             r.setModelPosScaleRot({ -0.8f, 0.15f, -9.0f }, { 4.4f, 4.4f, 4.4f }, 38.0f, { 0.1f, 1.0f, 0.0f });
             r.setMaterialColor(C<color_t>(230, 230, 245));
             r.drawWireFrameMeshAA(&ctx.meshes.bunny, true);
@@ -1266,7 +1266,7 @@ void renderScene(RenderContext<color_t>& ctx, SceneId scene)
 
         case SceneId::WirePointsV2:
             r.setPerspective(45.0f, float(W) / H, 1.0f, 100.0f);
-            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+            r.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_NOTEXTURE);
             r.setModelPosScaleRot({ -0.8f, 0.15f, -9.0f }, { 4.4f, 4.4f, 4.4f }, 38.0f, { 0.1f, 1.0f, 0.0f });
             r.setMaterialColor(C<color_t>(230, 230, 245));
             r.drawWireFrameMeshAA(&ctx.meshes.bunny_v2);
@@ -1622,7 +1622,7 @@ void runDemo()
                                      -a * 1.7f, { 0.2f, 1.0f, 0.0f });
         renderer.drawSphere(22, 12, &meshes.bunny_texture);
 
-        renderer.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT);
+        renderer.setShaders(SHADER_PERSPECTIVE | SHADER_ZBUFFER | SHADER_FLAT | SHADER_NOTEXTURE);
         renderer.setMaterial(RGBf(0.88f, 0.60f, 0.28f), 0.18f, 0.72f, 0.30f, 18);
         renderer.setModelPosScaleRot({ 1.85f, -0.70f, -10.5f },
                                      { 1.05f, 1.05f, 1.05f },
