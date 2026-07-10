@@ -161,6 +161,104 @@ TGX_INLINE inline RGB565 tgx_rgb565_bilinear_modulate256(const RGB565& C00, cons
     }
 
 
+TGX_INLINE inline RGB565 tgx_rgb565_bilinear_masked(const RGB565& C00, const RGB565& C10, const RGB565& C01, const RGB565& C11, const RGB565 mask_color, const float ax, const float ay, bool& pass)
+    {
+    const bool m00 = (C00 == mask_color);
+    const bool m10 = (C10 == mask_color);
+    const bool m01 = (C01 == mask_color);
+    const bool m11 = (C11 == mask_color);
+
+    if (m00 && m10 && m01 && m11) { pass = false; return C00; }
+
+    if (!(m00 || m10 || m01 || m11))
+        {
+#if TGX_SHADER_RGB565_FAST_BILINEAR
+        return tgx_rgb565_bilinear_fast(C00, C10, C01, C11, ax, ay);
+#else
+        return interpolateColorsBilinear(C00, C10, C01, C11, ax, ay);
+#endif
+        }
+
+    const int iax = (int)(ax * 256);
+    const int iay = (int)(ay * 256);
+    const int rax = 256 - iax;
+    const int ray = 256 - iay;
+
+    int W = 0, R = 0, G = 0, B = 0;
+
+    if (!m00)
+        {
+        const int w = rax * ray;
+        W += w;
+        R += w * tgx_rgb565_r5(C00);
+        G += w * tgx_rgb565_g6(C00);
+        B += w * tgx_rgb565_b5(C00);
+        }
+    if (!m10)
+        {
+        const int w = iax * ray;
+        W += w;
+        R += w * tgx_rgb565_r5(C10);
+        G += w * tgx_rgb565_g6(C10);
+        B += w * tgx_rgb565_b5(C10);
+        }
+    if (!m01)
+        {
+        const int w = rax * iay;
+        W += w;
+        R += w * tgx_rgb565_r5(C01);
+        G += w * tgx_rgb565_g6(C01);
+        B += w * tgx_rgb565_b5(C01);
+        }
+    if (!m11)
+        {
+        const int w = iax * iay;
+        W += w;
+        R += w * tgx_rgb565_r5(C11);
+        G += w * tgx_rgb565_g6(C11);
+        B += w * tgx_rgb565_b5(C11);
+        }
+
+    if (W <= 0) { pass = false;  return C00; }
+
+    return RGB565(tgx_rgb565_pack_raw_u16(R / W, G / W, B / W));
+    }
+
+
+template<typename color_t>
+TGX_INLINE inline color_t tgx_bilinear_masked_color(const color_t& C00, const color_t& C10, const color_t& C01, const color_t& C11, const color_t& mask_color, const float ax, const float ay, bool& pass)
+    {
+    const bool m00 = (C00 == mask_color);
+    const bool m10 = (C10 == mask_color);
+    const bool m01 = (C01 == mask_color);
+    const bool m11 = (C11 == mask_color);
+
+    if (m00 && m10 && m01 && m11) { pass = false; return C00; }
+
+    if (!(m00 || m10 || m01 || m11)) { return interpolateColorsBilinear(C00, C10, C01, C11, ax, ay); }
+
+    const float rax = 1.0f - ax;
+    const float ray = 1.0f - ay;
+    const float w00 = rax * ray;
+    const float w10 = ax * ray;
+    const float w01 = rax * ay;
+    const float w11 = ax * ay;
+
+    float W = 0.0f;
+    RGBf col(0.0f, 0.0f, 0.0f);
+
+    if (!m00) { W += w00; col += RGBf(C00) * w00; }
+    if (!m10) { W += w10; col += RGBf(C10) * w10; }
+    if (!m01) { W += w01; col += RGBf(C01) * w01; }
+    if (!m11) { W += w11; col += RGBf(C11) * w11; }
+
+    if (W <= 0.0f) { pass = false;  return C00; }
+
+    col *= (1.0f / W);
+    return color_t(col);
+    }
+
+
 TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, const int b)
     {
     return RGB565(tgx_rgb565_pack_raw_u16(r, g, b));
@@ -551,6 +649,7 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                 if (z_pass)
                     {
                     color_t final_color;
+                    bool texture_mask_pass = true;
 
                     if constexpr (USE_TEXTURE)
                         {
@@ -607,38 +706,32 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                                 const int miny = (TEXTURE_WRAP ? (tty & texsize_y_mm) : shaderclip(tty, texsize_y_mm)) * texstride;
                                 const int maxy = (TEXTURE_WRAP ? ((tty + 1) & texsize_y_mm) : shaderclip(tty + 1, texsize_y_mm)) * texstride;
 
-                                if constexpr (USE_UNLIT)
+                                if constexpr (USE_MASK_COLOR)
+                                    {
+                                    const RGB565 C00 = tex[minx + miny];
+                                    const RGB565 C10 = tex[maxx + miny];
+                                    const RGB565 C01 = tex[minx + maxy];
+                                    const RGB565 C11 = tex[maxx + maxy];
+                                    final_color = tgx_rgb565_bilinear_masked(C00, C10, C01, C11, flat_color, ax, ay, texture_mask_pass);
+                                    if (texture_mask_pass)
+                                        {
+                                        if constexpr (!USE_UNLIT)
+                                            {
+                                            final_color = tgx_rgb565_modulate256(final_color, modR, modG, modB);
+                                            }
+                                        }
+                                    }
+                                else if constexpr (USE_UNLIT)
                                     {
 #if TGX_SHADER_RGB565_FAST_BILINEAR
-                                    final_color = tgx_rgb565_bilinear_fast(
-                                        tex[minx + miny],
-                                        tex[maxx + miny],
-                                        tex[minx + maxy],
-                                        tex[maxx + maxy],
-                                        ax,
-                                        ay);
+                                    final_color = tgx_rgb565_bilinear_fast(tex[minx + miny],tex[maxx + miny],tex[minx + maxy],tex[maxx + maxy],ax,ay);
 #else
-                                    final_color = interpolateColorsBilinear(
-                                        tex[minx + miny],
-                                        tex[maxx + miny],
-                                        tex[minx + maxy],
-                                        tex[maxx + maxy],
-                                        ax,
-                                        ay);
+                                    final_color = interpolateColorsBilinear(tex[minx + miny],tex[maxx + miny],tex[minx + maxy],tex[maxx + maxy],ax,ay);
 #endif
                                     }
                                 else
                                     {
-                                    final_color = tgx_rgb565_bilinear_modulate256(
-                                        tex[minx + miny],
-                                        tex[maxx + miny],
-                                        tex[minx + maxy],
-                                        tex[maxx + maxy],
-                                        ax,
-                                        ay,
-                                        modR,
-                                        modG,
-                                        modB);
+                                    final_color = tgx_rgb565_bilinear_modulate256(tex[minx + miny],tex[maxx + miny],tex[minx + maxy],tex[maxx + maxy],ax,ay,modR,modG,modB);
                                     }
                                 }
                             else // Nearest neighbor
@@ -646,13 +739,32 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                                 const int ttx = TEXTURE_WRAP ? ((int)(xx)) & texsize_x_mm : shaderclip((int)(xx), texsize_x_mm);
                                 const int tty = TEXTURE_WRAP ? ((int)(yy)) & texsize_y_mm : shaderclip((int)(yy), texsize_y_mm);
 
-                                if constexpr (USE_UNLIT)
+                                if constexpr (USE_MASK_COLOR)
                                     {
-                                    final_color = tex[ttx + tty * texstride];
+                                    const color_t texel = tex[ttx + tty * texstride];
+                                    if (texel == flat_color)
+                                        {
+                                        texture_mask_pass = false;
+                                        }
+                                    else if constexpr (USE_UNLIT)
+                                        {
+                                        final_color = texel;
+                                        }
+                                    else
+                                        {
+                                        final_color = tgx_rgb565_modulate256(texel, modR, modG, modB);
+                                        }
                                     }
                                 else
                                     {
-                                    final_color = tgx_rgb565_modulate256(tex[ttx + tty * texstride], modR, modG, modB);
+                                    if constexpr (USE_UNLIT)
+                                        {
+                                        final_color = tex[ttx + tty * texstride];
+                                        }
+                                    else
+                                        {
+                                        final_color = tgx_rgb565_modulate256(tex[ttx + tty * texstride], modR, modG, modB);
+                                        }
                                     }
                                 }
                             }
@@ -671,37 +783,72 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                                 const int miny = (TEXTURE_WRAP ? (tty & texsize_y_mm) : shaderclip(tty, texsize_y_mm)) * texstride;
                                 const int maxy = (TEXTURE_WRAP ? ((tty + 1) & texsize_y_mm) : shaderclip(tty + 1, texsize_y_mm)) * texstride;
 
-#if TGX_SHADER_RGB565_FAST_BILINEAR
-                                if constexpr (std::is_same<color_t, RGB565>::value)
+                                if constexpr (USE_MASK_COLOR)
                                     {
-                                    final_color = tgx_rgb565_bilinear_fast(
-                                        tex[minx + miny],
-                                        tex[maxx + miny],
-                                        tex[minx + maxy],
-                                        tex[maxx + maxy],
-                                        ax,
-                                        ay);
+                                    const color_t C00 = tex[minx + miny];
+                                    const color_t C10 = tex[maxx + miny];
+                                    const color_t C01 = tex[minx + maxy];
+                                    const color_t C11 = tex[maxx + maxy];
+                                    if constexpr (std::is_same<color_t, RGB565>::value)
+                                        {
+                                        final_color = tgx_rgb565_bilinear_masked(C00, C10, C01, C11, flat_color, ax, ay, texture_mask_pass);
+                                        }
+                                    else
+                                        {
+                                        final_color = tgx_bilinear_masked_color(C00, C10, C01, C11, flat_color, ax, ay, texture_mask_pass);
+                                        }
                                     }
                                 else
-#endif
                                     {
-                                    final_color = interpolateColorsBilinear(
-                                        tex[minx + miny],
-                                        tex[maxx + miny],
-                                        tex[minx + maxy],
-                                        tex[maxx + maxy],
-                                        ax,
-                                        ay);
+#if TGX_SHADER_RGB565_FAST_BILINEAR
+                                    if constexpr (std::is_same<color_t, RGB565>::value)
+                                        {
+                                        final_color = tgx_rgb565_bilinear_fast(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);
+                                        }
+                                    else
+#endif
+                                        {
+                                        final_color = interpolateColorsBilinear(tex[minx + miny], tex[maxx + miny], tex[minx + maxy], tex[maxx + maxy], ax, ay);
+                                        }
                                     }
                                 }
                             else // Nearest neighbor
                                 {
                                 const int ttx = TEXTURE_WRAP ? ((int)(xx)) & texsize_x_mm : shaderclip((int)(xx), texsize_x_mm);
                                 const int tty = TEXTURE_WRAP ? ((int)(yy)) & texsize_y_mm : shaderclip((int)(yy), texsize_y_mm);
-                                final_color = tex[ttx + tty * texstride];
+                                if constexpr (USE_MASK_COLOR)
+                                    {
+                                    const color_t texel = tex[ttx + tty * texstride];
+                                    if (texel == flat_color)
+                                        {
+                                        texture_mask_pass = false;
+                                        }
+                                    else
+                                        {
+                                        final_color = texel;
+                                        }
+                                    }
+                                else
+                                    {
+                                    final_color = tex[ttx + tty * texstride];
+                                    }
                                 }
 
-                            if constexpr (USE_GOURAUD)
+                            if constexpr (USE_MASK_COLOR)
+                                {
+                                if (texture_mask_pass)
+                                    {
+                                    if constexpr (USE_GOURAUD)
+                                        {
+                                        final_color.mult256(modR, modG, modB);
+                                        }
+                                    else if constexpr (!USE_UNLIT) // Flat
+                                        {
+                                        final_color.mult256(modR, modG, modB);
+                                        }
+                                    }
+                                }
+                            else if constexpr (USE_GOURAUD)
                                 {
                                 final_color.mult256(modR, modG, modB);
                                 }
@@ -733,9 +880,31 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
                         }
 
 #if TGX_SHADER_USE_INCREMENTAL_PIXEL_POINTERS
-                    *pix = final_color;
+                    if constexpr (USE_TEXTURE && USE_MASK_COLOR)
+                        {
+                        if (texture_mask_pass)
+                            {
+                            if constexpr (USE_ZBUFFER) { *zpix = current_z; }
+                            *pix = final_color;
+                            }
+                        }
+                    else
+                        {
+                        *pix = final_color;
+                        }
 #else
-                    buf[bx] = final_color;
+                    if constexpr (USE_TEXTURE && USE_MASK_COLOR)
+                        {
+                        if (texture_mask_pass)
+                            {
+                            if constexpr (USE_ZBUFFER) { zbuf[bx] = current_z; }
+                            buf[bx] = final_color;
+                            }
+                        }
+                    else
+                        {
+                        buf[bx] = final_color;
+                        }
 #endif
                     }
 
