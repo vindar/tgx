@@ -141,12 +141,12 @@ void loop()
     im.fillScreen(RGB565(8, 10, 18));
     renderer.clearZbuffer();
 
-    renderer.setShaders(SHADER_GOURAUD);
+    renderer.setShaders(SHADER_GOURAUD | SHADER_NOTEXTURE);
     renderer.setMaterial(RGBf(0.88f, 0.78f, 0.62f), 0.15f, 0.82f, 0.62f, 36);
     renderer.setModelPosScaleRot({ -1.45f, 0.05f, -7.8f }, { 1.55f, 1.55f, 1.55f }, a, { 0.15f, 1.0f, 0.10f });
     renderer.drawSphere(28, 15);
 
-    renderer.setShaders(SHADER_FLAT);
+    renderer.setShaders(SHADER_FLAT | SHADER_NOTEXTURE);
     renderer.setMaterial(RGBf(0.62f, 0.74f, 0.98f), 0.14f, 0.76f, 0.50f, 24);
     renderer.setModelPosScaleRot({ 1.45f, 0.0f, -7.8f }, { 1.18f, 1.18f, 1.18f }, -a * 1.3f, { 0.35f, 1.0f, 0.2f });
     renderer.drawCube();

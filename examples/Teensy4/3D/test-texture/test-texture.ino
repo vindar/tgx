@@ -185,7 +185,7 @@ void drawModel(const Mesh3Dv2<RGB565>* mesh, int nb_triangles, float scale, cons
         int part = (em * 3) / maxT;
  
         // choose the shader to use
-        Shader shader = (part == 0) ? SHADER_GOURAUD : ((part == 1) ? (SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST) : (SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR));
+        Shader shader = (part == 0) ? (SHADER_GOURAUD | SHADER_NOTEXTURE) : ((part == 1) ? (SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_NEAREST) : (SHADER_GOURAUD | SHADER_TEXTURE | SHADER_TEXTURE_BILINEAR));
         if (part != prev_part)
             {
             prev_part = part;

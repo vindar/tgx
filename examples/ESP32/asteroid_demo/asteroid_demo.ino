@@ -148,7 +148,7 @@ void drawAsteroid(const AsteroidDraw& a)
     M.multRotate(a.angle, a.axis);
     M.multTranslate(a.p);
     renderer.setModelMatrix(M);
-    renderer.setShaders(SHADER_FLAT);
+    renderer.setShaders(SHADER_FLAT | SHADER_NOTEXTURE);
     renderer.drawMesh((a.mesh_id == 0) ? &asteroid_a : &asteroid_b, true);
     }
 

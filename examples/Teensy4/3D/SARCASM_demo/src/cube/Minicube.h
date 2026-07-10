@@ -106,7 +106,7 @@ public:
         {
         renderer3D.setCulling(0);
         renderer3D.setModelMatrix(M); // set the model-view matrix      
-        renderer3D.setShaders(tgx::SHADER_GOURAUD);
+        renderer3D.setShaders(tgx::SHADER_GOURAUD | tgx::SHADER_NOTEXTURE);
         _mesh_boundary.color = _meshcolor; // set the boundary mesh color
         renderer3D.drawMesh(&_mesh_boundary);   // draw the boundary
         renderer3D.setCulling(1);
@@ -120,7 +120,7 @@ public:
     template<class RENDERER> void drawMinicube(const tgx::fMat4 & M, RENDERER& renderer3D)
         {   
         renderer3D.setModelMatrix(M); // set the model-view matrix      
-        renderer3D.setShaders(tgx::SHADER_GOURAUD);
+        renderer3D.setShaders(tgx::SHADER_GOURAUD | tgx::SHADER_NOTEXTURE);
         _mesh_boundary.color = _meshcolor; // set the boundary mesh color
         renderer3D.drawMesh(&_mesh_boundary);   // draw the boundary
 

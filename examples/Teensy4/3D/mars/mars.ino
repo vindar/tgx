@@ -552,7 +552,7 @@ TGX_NOINLINE FLASHMEM void movie()
         renderer.setMaterialDiffuseStrength(0.5f);
         renderer.setMaterialSpecularStrength(0.9f);
         renderer.setMaterialColor(tgx::RGBf(0, 0, 1));
-        drawSphere(SHADER_GOURAUD);
+        drawSphere(SHADER_GOURAUD | SHADER_NOTEXTURE);
 
 
         if (a < 1)
@@ -596,7 +596,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setMaterialDiffuseStrength(0.5f);
             renderer.setMaterialSpecularStrength(0.9f);
             renderer.setMaterialColor(tgx::RGBf(0, 0, 1));
-            drawSphere(SHADER_GOURAUD);
+            drawSphere(SHADER_GOURAUD | SHADER_NOTEXTURE);
             }
         else if (t < 0.50)
             {
@@ -610,7 +610,7 @@ TGX_NOINLINE FLASHMEM void movie()
             renderer.setMaterialSpecularStrength(0.9f * a);
             renderer.setMaterialColor(tgx::RGBf(0, 0, 1) * a);
 
-            drawSphere(SHADER_GOURAUD);
+            drawSphere(SHADER_GOURAUD | SHADER_NOTEXTURE);
             }
 
         else if (t < 0.66)

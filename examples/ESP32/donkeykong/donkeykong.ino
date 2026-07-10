@@ -313,11 +313,11 @@ void loop()
             renderer.drawWireFrameMeshAA(&donkeykong_small);
             break;
         case 2:
-            renderer.setShaders(SHADER_FLAT);
+            renderer.setShaders(SHADER_FLAT | SHADER_NOTEXTURE);
             renderer.drawMesh(&donkeykong_small, false);
             break;
         case 3:
-            renderer.setShaders(SHADER_GOURAUD);
+            renderer.setShaders(SHADER_GOURAUD | SHADER_NOTEXTURE);
             renderer.drawMesh(&donkeykong_small, false);
             break;
         }

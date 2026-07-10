@@ -228,10 +228,10 @@ void loop()
                 break;
         case 1: renderer.drawWireFrameMesh(MESH);
                 break;
-        case 2: renderer.setShaders(SHADER_FLAT);
+        case 2: renderer.setShaders(SHADER_FLAT | SHADER_NOTEXTURE);
                 renderer.drawMesh(MESH, false);
                 break;
-        case 3: renderer.setShaders(SHADER_GOURAUD);
+        case 3: renderer.setShaders(SHADER_GOURAUD | SHADER_NOTEXTURE);
                 renderer.drawMesh(MESH, false);
                 break;
         }

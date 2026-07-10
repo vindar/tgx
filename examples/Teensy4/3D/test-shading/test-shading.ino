@@ -200,12 +200,12 @@ void drawModel(const Mesh3Dv2<RGB565>* mesh, int nb_triangles, float scale, cons
             renderer.drawWireFrameMeshAA(cached_mesh);
         else if (t == 1)
             {
-            renderer.setShaders(SHADER_FLAT);
+            renderer.setShaders(SHADER_FLAT | SHADER_NOTEXTURE);
             renderer.drawMesh(cached_mesh, false);
             }
         else
             {
-            renderer.setShaders(SHADER_GOURAUD);
+            renderer.setShaders(SHADER_GOURAUD | SHADER_NOTEXTURE);
             renderer.drawMesh(cached_mesh, false);
             }
 
