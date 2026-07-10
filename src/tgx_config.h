@@ -67,6 +67,7 @@
 // - TGX_DRAWSPHERE_USE_STRIP_BANDS : use triangle strips for Gouraud shaded sphere bands.
 // - TGX_RASTERIZE_TRIANGLE_INLINE : inlining strategy for the main triangle rasterizer entry point.
 // - TGX_RENDERER3D_CLIP_NOINLINE : noinline strategy for Renderer3D clipping helpers.
+// - TGX_RENDERER3D_MESHV2_DRAWMESH_ALIGN : optional alignment for the Mesh3Dv2 draw path.
 // - TGX_BSEG_RUNTIME_MOVE_INLINE : inlining strategy for the runtime Bresenham move wrapper.
 //
 // - TGX_INLINE/TGX_NOINLINE : inlining strategy for time critical/non-critical functions.
@@ -325,6 +326,7 @@
     #define TGX_CONFIG_INLINE_ZDIVIDE
     #define TGX_CONFIG_NOINLINE
     #define TGX_CONFIG_RENDERER3D_CLIP_NOINLINE __attribute__((noinline, noclone))
+    #define TGX_CONFIG_RENDERER3D_MESHV2_DRAWMESH_ALIGN __attribute__((aligned(8)))
     #define TGX_CONFIG_BSEG_RUNTIME_MOVE_INLINE TGX_INLINE
 
 #elif defined(__ARM_ARCH_6M__)
@@ -508,6 +510,14 @@
 
 #ifndef TGX_RENDERER3D_CLIP_NOINLINE
     #define TGX_RENDERER3D_CLIP_NOINLINE TGX_CONFIG_RENDERER3D_CLIP_NOINLINE
+#endif
+
+#ifndef TGX_RENDERER3D_MESHV2_DRAWMESH_ALIGN
+    #ifdef TGX_CONFIG_RENDERER3D_MESHV2_DRAWMESH_ALIGN
+        #define TGX_RENDERER3D_MESHV2_DRAWMESH_ALIGN TGX_CONFIG_RENDERER3D_MESHV2_DRAWMESH_ALIGN
+    #else
+        #define TGX_RENDERER3D_MESHV2_DRAWMESH_ALIGN
+    #endif
 #endif
 
 #ifndef TGX_BSEG_RUNTIME_MOVE_INLINE
