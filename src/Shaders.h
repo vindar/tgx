@@ -1956,6 +1956,282 @@ TGX_INLINE inline RGB565 tgx_make_rgb565_from_raw(const int r, const int g, cons
 
 
 
+/*
+
+// Using nested call for shader_select: more elegant but slower... should investiguate further someday.
+
+    template<typename color_t, typename ZBUFFER_t, bool USE_ORTHO, bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_TEXTURE, bool USE_UNLIT, bool USE_TEXTURE_AFFINE, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP, bool USE_MASK_COLOR>
+    TGX_SHADER_SELECT_INLINE inline void shader_select_call_uber(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+        {
+        uber_shader<color_t, ZBUFFER_t, USE_ZBUFFER, USE_GOURAUD, USE_TEXTURE, USE_ORTHO, TEXTURE_BILINEAR, TEXTURE_WRAP, USE_UNLIT, USE_TEXTURE_AFFINE, USE_MASK_COLOR>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+        }
+
+
+    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t, bool USE_ORTHO, bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_UNLIT, bool USE_TEXTURE_AFFINE, bool TEXTURE_BILINEAR, bool TEXTURE_WRAP>
+    TGX_SHADER_SELECT_INLINE inline void shader_select_groupG(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+        {
+        if constexpr (!TGX_SHADER_HAS_TEXTURE_MASK(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_call_uber<color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, true, USE_UNLIT, USE_TEXTURE_AFFINE, TEXTURE_BILINEAR, TEXTURE_WRAP, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else if constexpr (!TGX_SHADER_HAS_TEXTURE_NOMASK(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_call_uber<color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, true, USE_UNLIT, USE_TEXTURE_AFFINE, TEXTURE_BILINEAR, TEXTURE_WRAP, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else
+            {
+            const int raster_type = data.shader_type;
+            if (TGX_SHADER_HAS_TEXTURE_NOMASK(raster_type))
+                {
+                shader_select_call_uber<color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, true, USE_UNLIT, USE_TEXTURE_AFFINE, TEXTURE_BILINEAR, TEXTURE_WRAP, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            else
+                {
+                shader_select_call_uber<color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, true, USE_UNLIT, USE_TEXTURE_AFFINE, TEXTURE_BILINEAR, TEXTURE_WRAP, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            }
+        }
+
+
+    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t, bool USE_ORTHO, bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_UNLIT, bool USE_TEXTURE_AFFINE, bool TEXTURE_BILINEAR>
+    TGX_SHADER_SELECT_INLINE inline void shader_select_groupF(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+        {
+        if constexpr (!TGX_SHADER_HAS_TEXTURE_WRAP_POW2(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupG<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, USE_TEXTURE_AFFINE, TEXTURE_BILINEAR, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else if constexpr (!TGX_SHADER_HAS_TEXTURE_CLAMP(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupG<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, USE_TEXTURE_AFFINE, TEXTURE_BILINEAR, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else
+            {
+            const int raster_type = data.shader_type;
+            if (TGX_SHADER_HAS_TEXTURE_CLAMP(raster_type))
+                {
+                shader_select_groupG<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, USE_TEXTURE_AFFINE, TEXTURE_BILINEAR, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            else
+                {
+                shader_select_groupG<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, USE_TEXTURE_AFFINE, TEXTURE_BILINEAR, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            }
+        }
+
+
+    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t, bool USE_ORTHO, bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_UNLIT, bool USE_TEXTURE_AFFINE>
+    TGX_SHADER_SELECT_INLINE inline void shader_select_groupE(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+        {
+        if constexpr (!TGX_SHADER_HAS_TEXTURE_NEAREST(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupF<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, USE_TEXTURE_AFFINE, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else if constexpr (!TGX_SHADER_HAS_TEXTURE_BILINEAR(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupF<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, USE_TEXTURE_AFFINE, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else
+            {
+            const int raster_type = data.shader_type;
+            if (TGX_SHADER_HAS_TEXTURE_BILINEAR(raster_type))
+                {
+                shader_select_groupF<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, USE_TEXTURE_AFFINE, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            else
+                {
+                shader_select_groupF<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, USE_TEXTURE_AFFINE, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            }
+        }
+
+
+    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t,
+             bool USE_ORTHO, bool USE_ZBUFFER, bool USE_GOURAUD, bool USE_UNLIT>
+    TGX_SHADER_SELECT_INLINE inline void shader_select_groupD(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+        {
+        if constexpr (!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED) && !TGX_SHADER_HAS_TEXTURE_AFFINE(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupE<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else if constexpr (!TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED) && !TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupE<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else if constexpr (!TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED) && !TGX_SHADER_HAS_TEXTURE_AFFINE(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_call_uber<color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, false, false, false, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else
+            {
+            const int raster_type = data.shader_type;
+            if constexpr (TGX_SHADER_HAS_TEXTURE(SHADER_FLAGS_ENABLED))
+                {
+                if (TGX_SHADER_HAS_TEXTURE(raster_type))
+                    {
+                    shader_select_groupE<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                    return;
+                    }
+                }
+            if constexpr (TGX_SHADER_HAS_TEXTURE_AFFINE(SHADER_FLAGS_ENABLED))
+                {
+                if (TGX_SHADER_HAS_TEXTURE_AFFINE(raster_type))
+                    {
+                    shader_select_groupE<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, USE_UNLIT, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                    return;
+                    }
+                }
+            if constexpr (TGX_SHADER_HAS_NOTEXTURE(SHADER_FLAGS_ENABLED))
+                {
+                shader_select_call_uber<color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, USE_GOURAUD, false, false, false, false, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            }
+        }
+
+
+    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t, bool USE_ORTHO, bool USE_ZBUFFER>
+    TGX_SHADER_SELECT_INLINE inline void shader_select_groupC(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+        {
+        if constexpr (!TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED) && !TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupD<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else if constexpr (!TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && !TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupD<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else if constexpr (!TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED) && !TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupD<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else
+            {
+            const int raster_type = data.shader_type;
+            if constexpr (TGX_SHADER_HAS_GOURAUD(SHADER_FLAGS_ENABLED))
+                {
+                if (TGX_SHADER_HAS_GOURAUD(raster_type))
+                    {
+                    shader_select_groupD<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, true, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                    return;
+                    }
+                }
+            if constexpr (TGX_SHADER_HAS_UNLIT(SHADER_FLAGS_ENABLED))
+                {
+                if (TGX_SHADER_HAS_UNLIT(raster_type))
+                    {
+                    shader_select_groupD<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, false, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                    return;
+                    }
+                }
+            if constexpr (TGX_SHADER_HAS_FLAT(SHADER_FLAGS_ENABLED))
+                {
+                shader_select_groupD<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, USE_ZBUFFER, false, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            }
+        }
+
+
+    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t, bool USE_ORTHO>
+    TGX_SHADER_SELECT_INLINE inline void shader_select_groupB(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+        {
+        if constexpr (!TGX_SHADER_HAS_NOZBUFFER(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupC<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else if constexpr (!TGX_SHADER_HAS_ZBUFFER(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupC<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else
+            {
+            const int raster_type = data.shader_type;
+            if (TGX_SHADER_HAS_ZBUFFER(raster_type))
+                {
+                shader_select_groupC<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            else
+                {
+                shader_select_groupC<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, USE_ORTHO, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            }
+        }
+
+
+    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t>
+    TGX_SHADER_SELECT_INLINE inline void shader_select_groupA(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+        {
+        if constexpr (!TGX_SHADER_HAS_PERSPECTIVE(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupB<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else if constexpr (!TGX_SHADER_HAS_ORTHO(SHADER_FLAGS_ENABLED))
+            {
+            shader_select_groupB<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+            }
+        else
+            {
+            const int raster_type = data.shader_type;
+            if (TGX_SHADER_HAS_ORTHO(raster_type))
+                {
+                shader_select_groupB<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, true>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            else
+                {
+                shader_select_groupB<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t, false>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+                }
+            }
+        }
+
+
+    template<int SHADER_FLAGS_ENABLED, typename color_t, typename ZBUFFER_t>
+    TGX_SHADER_SELECT_INLINE inline void shader_select(const int32_t oox, const int32_t ooy, const int32_t lx, const int32_t ly,
+        const int32_t dx1, const int32_t dy1, int32_t O1, const RasterizerVec4& fP1,
+        const int32_t dx2, const int32_t dy2, int32_t O2, const RasterizerVec4& fP2,
+        const int32_t dx3, const int32_t dy3, int32_t O3, const RasterizerVec4& fP3,
+        const RasterizerParams<color_t, color_t, ZBUFFER_t>& data)
+        {
+        shader_select_groupA<SHADER_FLAGS_ENABLED, color_t, ZBUFFER_t>(oox, ooy, lx, ly, dx1, dy1, O1, fP1, dx2, dy2, O2, fP2, dx3, dy3, O3, fP3, data);
+        }
+*/
+
+
+
+
+
+
+
+
     /**
     * 2D shader (gradient)
     **/
