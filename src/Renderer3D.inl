@@ -992,7 +992,7 @@ namespace tgx
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<Shader RASTERIZER_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangleClipped(const int RASTER_TYPE,
+        void TGX_RENDERER3D_DRAWTRIANGLECLIPPED_ALIGN Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangleClipped(const int RASTER_TYPE,
             const fVec4* Q0, const fVec4* Q1, const fVec4* Q2,
             const fVec3* N0, const fVec3* N1, const fVec3* N2,
             const fVec2* T0, const fVec2* T1, const fVec2* T2,
@@ -1058,7 +1058,7 @@ namespace tgx
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS>
         template<Shader RASTERIZER_SHADERS> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangleClippedSub(const int RASTER_TYPE, const int plane, const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3)
+        void TGX_RENDERER3D_DRAWTRIANGLECLIPPEDSUB_ALIGN Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangleClippedSub(const int RASTER_TYPE, const int plane, const RasterizerVec4& P1, const RasterizerVec4& P2, const RasterizerVec4& P3)
             {
 
             const float CLIPBOUND_XY = _clipbound_xy();
@@ -1187,7 +1187,7 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangle(const int RASTER_TYPE,
+        void TGX_RENDERER3D_DRAWTRIANGLE_ALIGN Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawTriangle(const int RASTER_TYPE,
                            const fVec3 * P0, const fVec3 * P1, const fVec3 * P2,
                            const fVec3 * N0, const fVec3 * N1, const fVec3 * N2,
                            const fVec2 * T0, const fVec2 * T1, const fVec2 * T2,
@@ -1479,7 +1479,7 @@ namespace tgx
 
 
         template<typename color_t, Shader LOADED_SHADERS, typename ZBUFFER_t, int MAX_DIRECTIONAL_LIGHTS, int MAX_SPOT_LIGHTS> TGX_NOINLINE
-        void Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawQuad(const int RASTER_TYPE,
+        void TGX_RENDERER3D_DRAWQUAD_ALIGN Renderer3D<color_t, LOADED_SHADERS, ZBUFFER_t, MAX_DIRECTIONAL_LIGHTS, MAX_SPOT_LIGHTS>::_drawQuad(const int RASTER_TYPE,
             const fVec3* P0, const fVec3* P1, const fVec3* P2, const fVec3* P3,
             const fVec3* N0, const fVec3* N1, const fVec3* N2, const fVec3* N3,
             const fVec2* T0, const fVec2* T1, const fVec2* T2, const fVec2* T3,

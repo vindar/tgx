@@ -68,6 +68,11 @@
 // - TGX_RASTERIZE_TRIANGLE_INLINE : inlining strategy for the main triangle rasterizer entry point.
 // - TGX_RENDERER3D_CLIP_NOINLINE : noinline strategy for Renderer3D clipping helpers.
 // - TGX_RENDERER3D_MESHV2_DRAWMESH_ALIGN : optional alignment for the Mesh3Dv2 draw path.
+// - TGX_UBER_SHADER_ALIGN : optional alignment for the non-inlined uber shader entry points.
+// - TGX_RENDERER3D_DRAWTRIANGLE_ALIGN : optional alignment for Renderer3D::_drawTriangle().
+// - TGX_RENDERER3D_DRAWQUAD_ALIGN : optional alignment for Renderer3D::_drawQuad().
+// - TGX_RENDERER3D_DRAWTRIANGLECLIPPED_ALIGN : optional alignment for Renderer3D::_drawTriangleClipped().
+// - TGX_RENDERER3D_DRAWTRIANGLECLIPPEDSUB_ALIGN : optional alignment for Renderer3D::_drawTriangleClippedSub().
 // - TGX_BSEG_RUNTIME_MOVE_INLINE : inlining strategy for the runtime Bresenham move wrapper.
 //
 // - TGX_INLINE/TGX_NOINLINE : inlining strategy for time critical/non-critical functions.
@@ -517,6 +522,46 @@
         #define TGX_RENDERER3D_MESHV2_DRAWMESH_ALIGN TGX_CONFIG_RENDERER3D_MESHV2_DRAWMESH_ALIGN
     #else
         #define TGX_RENDERER3D_MESHV2_DRAWMESH_ALIGN
+    #endif
+#endif
+
+#ifndef TGX_UBER_SHADER_ALIGN
+    #ifdef TGX_CONFIG_UBER_SHADER_ALIGN
+        #define TGX_UBER_SHADER_ALIGN TGX_CONFIG_UBER_SHADER_ALIGN
+    #else
+        #define TGX_UBER_SHADER_ALIGN
+    #endif
+#endif
+
+#ifndef TGX_RENDERER3D_DRAWTRIANGLE_ALIGN
+    #ifdef TGX_CONFIG_RENDERER3D_DRAWTRIANGLE_ALIGN
+        #define TGX_RENDERER3D_DRAWTRIANGLE_ALIGN TGX_CONFIG_RENDERER3D_DRAWTRIANGLE_ALIGN
+    #else
+        #define TGX_RENDERER3D_DRAWTRIANGLE_ALIGN
+    #endif
+#endif
+
+#ifndef TGX_RENDERER3D_DRAWQUAD_ALIGN
+    #ifdef TGX_CONFIG_RENDERER3D_DRAWQUAD_ALIGN
+        #define TGX_RENDERER3D_DRAWQUAD_ALIGN TGX_CONFIG_RENDERER3D_DRAWQUAD_ALIGN
+    #else
+        #define TGX_RENDERER3D_DRAWQUAD_ALIGN
+    #endif
+#endif
+
+#ifndef TGX_RENDERER3D_DRAWTRIANGLECLIPPED_ALIGN
+    #ifdef TGX_CONFIG_RENDERER3D_DRAWTRIANGLECLIPPED_ALIGN
+        #define TGX_RENDERER3D_DRAWTRIANGLECLIPPED_ALIGN TGX_CONFIG_RENDERER3D_DRAWTRIANGLECLIPPED_ALIGN
+    #else
+        #define TGX_RENDERER3D_DRAWTRIANGLECLIPPED_ALIGN
+    #endif
+#endif
+
+#ifndef TGX_RENDERER3D_DRAWTRIANGLECLIPPEDSUB_ALIGN
+    #ifdef TGX_CONFIG_RENDERER3D_DRAWTRIANGLECLIPPEDSUB_ALIGN
+        #define TGX_RENDERER3D_DRAWTRIANGLECLIPPEDSUB_ALIGN TGX_CONFIG_RENDERER3D_DRAWTRIANGLECLIPPEDSUB_ALIGN
+    #else
+        #define TGX_RENDERER3D_DRAWTRIANGLECLIPPEDSUB_ALIGN
     #endif
 #endif
 
