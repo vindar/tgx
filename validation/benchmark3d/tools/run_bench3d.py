@@ -213,7 +213,7 @@ def espidf_build_flash_command(board: Dict[str, Any], module_id: str) -> List[st
     build_dir = TMP_ROOT / "idf_builds" / f"{board['id']}_{module_id}"
     sdkconfig = build_dir / "sdkconfig"
     sdkconfig_defaults = project / "sdkconfig.defaults"
-    return [
+    command = [
         str(ESP_IDF_PYTHON),
         str(ESP_IDF_PATH / "tools" / "idf.py"),
         "-B",
@@ -221,6 +221,11 @@ def espidf_build_flash_command(board: Dict[str, Any], module_id: str) -> List[st
         f"-DSDKCONFIG={sdkconfig}",
         f"-DSDKCONFIG_DEFAULTS={sdkconfig_defaults}",
         f"-DTGX_BENCH_MODULE={module_id}",
+    ]
+    extra_flags = os.environ.get("TGX_BENCH_EXTRA_CPP_FLAGS", "").strip()
+    if extra_flags:
+        command.append(f"-DCMAKE_CXX_FLAGS={extra_flags}")
+    command += [
         "-p",
         str(board["upload_port"]),
         "set-target",
@@ -228,6 +233,7 @@ def espidf_build_flash_command(board: Dict[str, Any], module_id: str) -> List[st
         "build",
         "flash",
     ]
+    return command
 
 
 def parse_build_size(log_text: str) -> Dict[str, Any]:
